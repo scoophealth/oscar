@@ -177,7 +177,7 @@ public class PHRMessageAction extends DispatchAction {
 		
 		DemographicData dd = new DemographicData();
 		org.oscarehr.common.model.Demographic d = dd.getDemographic(demographicNo);
-		ProviderData pp = new ProviderData();
+
 		String providerName = ProviderData.getProviderName(provNo);
 
 		String toName = d.getFirstName() + " " + d.getLastName();
@@ -202,6 +202,7 @@ public class PHRMessageAction extends DispatchAction {
 	public ActionForward sendReply(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long replyToMessageId=new Long(request.getParameter("replyToMessageId"));
 		String message=StringUtils.trimToNull(request.getParameter("body"));
+		boolean replyAll=Boolean.parseBoolean(request.getParameter("replyAll"));
 
 		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 		MessageTransfer3 previousMessage=MessageManager.getMessage(myOscarLoggedInInfo, replyToMessageId);
@@ -209,7 +210,21 @@ public class PHRMessageAction extends DispatchAction {
 		Message2DataTransfer subjectPart=MessageManager.getMessage2DataTransfer(previousMessage, "SUBJECT");
 		String replySubject="re: "+(subjectPart!=null?new String(subjectPart.getContents(), "UTF-8"):"");
 	
-		Long messageId = MessageManager.sendMessage(myOscarLoggedInInfo, previousMessage.getSenderPersonId(), replySubject, message);
+		MessageTransfer3 newMessage=MessageManager.makeBasicMessageTransfer(myOscarLoggedInInfo, replyToMessageId, null, replySubject, message);
+		List<Long> recipientList=newMessage.getRecipientPeopleIds();
+		recipientList.add(previousMessage.getSenderPersonId());
+		
+		if (replyAll)
+		{
+			for (Long recipientId : previousMessage.getRecipientPeopleIds())
+			{
+				if (myOscarLoggedInInfo.getLoggedInPersonId().equals(recipientId)) continue;
+
+				recipientList.add(recipientId);
+			}
+		}
+		
+		Long messageId = MessageManager.sendMessage(myOscarLoggedInInfo, newMessage);
 
 		if(request.getParameter("andPasteToEchart")!= null && request.getParameter("andPasteToEchart").equals("yes")){
 			ActionRedirect redirect = new ActionRedirect(mapping.findForward("echart"));
@@ -235,7 +250,7 @@ public class PHRMessageAction extends DispatchAction {
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 		Long recipientMyOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
-		Long messageId = MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
+		MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
 
 		return mapping.findForward("view");
 	}
