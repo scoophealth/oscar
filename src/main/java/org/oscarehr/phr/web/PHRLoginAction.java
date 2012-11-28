@@ -40,6 +40,7 @@ import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.LoginResultTransfer;
+import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
@@ -91,6 +92,12 @@ public class PHRLoginAction extends DispatchAction
 				boolean saveMyOscarPassword=WebUtils.isChecked(request, "saveMyOscarPassword");
 				if (saveMyOscarPassword) saveMyOscarPassword(session, myoscarPassword);
 			}
+		}
+		catch (NotAuthorisedException_Exception e)
+		{
+			MiscUtils.getLogger().error("Error", e);
+			request.setAttribute("phrUserLoginErrorMsg", "Invalid user/password.");
+			return(ar);
 		}
 		catch (Exception e)
 		{
