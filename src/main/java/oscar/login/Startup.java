@@ -184,6 +184,7 @@ public class Startup implements ServletContextListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent arg0) {
+		// nothing to do right now
 	}
 
 }
