@@ -172,11 +172,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 			return null;
 		}
 		
-		int page=1;
-		int section=0;
-		
 		for(Page p:model.getSurvey().getBody().getPageArray()) {
-			section=0;
 			
 			for(Page.QContainer container:p.getQContainerArray()) {
 				if(container.isSetQuestion()) {
@@ -206,10 +202,8 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 							keyMap.put(q.getDescription(),"select");
 						} 						
 					}
-					section++;
 				}
 			}		
-			page++;
 		}	
 		return keyMap;
 	}
@@ -243,7 +237,6 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		//get form instances - for each one, output a line
 		List result = this.getHibernateTemplate().find("select f.id,f.clientId,f.dateCreated from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
 		for(x=0;x<result.size();x++) {
-			Object o = result.get(x);
 			Long instanceId = (Long)((Object[])result.get(x))[0];
 			
 			//get data for this instance

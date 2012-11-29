@@ -254,7 +254,7 @@ public class SurveyTestAction extends AbstractSurveyAction {
 				String realKey = key.substring(9);
 				String value = (String)data.getValues().get(key);
 				if(value.equals("checked")) {
-					
+					// do nothing
 				} else {
 					test.put(realKey,null);
 					//data.getValues().put(realKey,null);
