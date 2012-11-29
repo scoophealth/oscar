@@ -39,7 +39,7 @@ public class AppointmentStatusDao extends AbstractDao<AppointmentStatus> {
 	}
     
     public List<AppointmentStatus> findActive() {
-    	Query q = entityManager.createQuery("select a from AppointmentStatus a where a.status=?1");
+    	Query q = entityManager.createQuery("select a from AppointmentStatus a where a.active=?1");
     	q.setParameter(1, 1);
     	
     	@SuppressWarnings("unchecked")
