@@ -921,4 +921,10 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		List<BillingService> bss = dao.findByServiceCodeAndDate("PRSHA", new Date());
 		assertNotNull(bss);
 	}
+	
+	@Test
+	public void testFindGsts() {
+		List<BillingService> bss = dao.findGst("CODE", new Date());
+		assertNotNull(bss);
+	}
 }

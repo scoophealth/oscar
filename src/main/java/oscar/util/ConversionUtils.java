@@ -162,7 +162,8 @@ public class ConversionUtils {
 	 * @return
 	 * 		Returns the parsed integer
 	 */
-	public static Integer fromIntString(String intString) {
+	public static Integer fromIntString(Object obj) {
+		String intString = (obj == null) ? null : obj.toString();
 		if (intString == null || intString.trim().isEmpty()) return ZERO_INT;
 		return Integer.parseInt(intString);
 	}

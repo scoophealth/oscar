@@ -27,71 +27,61 @@
 
 package oscar.oscarBilling.ca.on.administration;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Vector;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.BillingONExtDao;
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.BillingONExt;
+import org.oscarehr.common.model.BillingService;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.SpringUtils;
 
-/**
- *
- * @author andrewleung
- */
+import oscar.util.ConversionUtils;
+
 public class GstReport {
-    
 
-    
-    public Vector getGST(String providerNo, String startDate, String endDate) throws SQLException{
-        
-        Properties props;
-        Vector billno = new Vector();
-        Vector list = new Vector();
-        // First find all the billing_no referreing to the selected provider_no.
-        String sql = "SELECT billing_no from billing_on_ext where key_val = 'provider_no' AND value ='" + providerNo + "';";
-        ResultSet rs1 = DBHandler.GetSQL(sql);
-        // Place all the billing_no in a list
-        while (rs1.next()){
-            billno.add(rs1.getString("billing_no"));
-        }
-        rs1.close();
-        // For every bill the provider is involved with, search the gst value, date, demo no within the chosen dates
-        for (int i = 0; i < billno.size(); i++){
-            sql = "SELECT value, LEFT(date_time, 10) as date_time, demographic_no from billing_on_ext where billing_no = '" + (String)billno.get(i) + "' AND key_val = 'gst' AND date_time >= '" + startDate + "' AND date_time <= '" + endDate + "';";
-            rs1 = DBHandler.GetSQL(sql);
-            ResultSet rs2;
-            while (rs1.next()){
-                props = new Properties();
-                props.setProperty("gst", rs1.getString("value"));
-                props.setProperty("date", rs1.getString("date_time"));
-                props.setProperty("demographic_no", rs1.getString("demographic_no"));
-                sql = "select CONCAT(first_name, ' ', last_name) as name from demographic where demographic_no = '" + props.getProperty("demographic_no", "") + "';"; 
-                rs2 = DBHandler.GetSQL(sql);
-                if( rs2.next() ){
-                    props.setProperty("name", rs2.getString("name"));
-                }
-                rs2.close();
-                sql = "SELECT value from billing_on_ext where billing_no = '" + (String)billno.get(i) + "' AND key_val = 'total' AND date_time > '" + startDate + "' AND date_time < '" + endDate + "';";
-                rs2 = DBHandler.GetSQL(sql);
-                if( rs2.next() ){
-                    props.setProperty("total", rs2.getString("value"));
-                }
-                rs2.close();
-                list.add(props);
-            }
-            rs1.close();
-        }
-        return list;
-    }
-    
-    public String getGstFlag(String code, String date) throws SQLException{
-        
-        String sql = "SELECT b.gstFlag from billingservice b where b.service_code ='" + code + "' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code ='" + code + "' and b2.billingservice_date <= '" + date + "');";
-        ResultSet rs = DBHandler.GetSQL(sql);
-        String ret = "";
-        if( rs.next() ){
-            ret = rs.getString("gstFlag");
-        }
-        return ret;
-    }
+	public Vector<Properties> getGST(String providerNo, String startDate, String endDate) throws SQLException {
+		Properties props;
+		Vector<String> billno = new Vector<String>();
+		Vector<Properties> list = new Vector<Properties>();
+		// First find all the billing_no referreing to the selected provider_no.
+		BillingONExtDao dao = SpringUtils.getBean(BillingONExtDao.class);
+		DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
+
+		for (BillingONExt e : dao.find("provider_no", providerNo)) {
+			billno.add("" + e.getBillingNo());
+		}
+
+		// For every bill the provider is involved with, search the gst value, date, demo no within the chosen dates
+		for (int i = 0; i < billno.size(); i++) {
+			for (BillingONExt e : dao.find(ConversionUtils.fromIntString(billno.get(i)), "gst", ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate))) {
+				props = new Properties();
+				props.setProperty("gst", e.getValue());
+				props.setProperty("date", ConversionUtils.toDateString(e.getDateTime()));
+				props.setProperty("demographic_no", "" + e.getDemographicNo());
+
+				Demographic demo = demoDao.getDemographic("" + e.getDemographicNo());
+				if (demo != null) {
+					props.setProperty("name", demo.getFirstName() + " " + demo.getLastName());
+				}
+
+				for (BillingONExt ee : dao.find(ConversionUtils.fromIntString(billno.get(i)), "total", ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate))) {
+					props.setProperty("total", ee.getValue());
+				}
+				list.add(props);
+			}
+		}
+		return list;
+	}
+
+	public String getGstFlag(String code, String date) throws SQLException {
+		BillingServiceDao dao = SpringUtils.getBean(BillingServiceDao.class);
+		for (BillingService bs : dao.findGst(code, ConversionUtils.fromDateString(date))) {
+			return ConversionUtils.toBoolString(bs.getGstFlag());
+		}
+		return "";
+	}
 }

@@ -218,6 +218,7 @@ public class BillingDao extends AbstractDao<Billing> {
     }
 	
 	@SuppressWarnings("unchecked")
+
 	@NativeSql({"billing", "provider", "billingmaster"})
     public List<Object[]> findByManyThings(String statusType, String providerNo, String startDate, String endDate, String demoNo, boolean excludeWCB, boolean excludeMSP, boolean excludePrivate, boolean exludeICBC) {
 		String providerQuery = "";
@@ -329,5 +330,19 @@ public class BillingDao extends AbstractDao<Billing> {
 		query.setParameter("no",  billingmasterNo);
 		return query.getResultList();
     }
+
+    public List<Object[]> findBillingsByManyThings(Integer billing, Date billingDate, String ohipNo, String serviceCode) {
+		Query q = entityManager.createQuery("FROM Billing b, BillingDetail bd " +
+				"WHERE b.id = :billing " +
+				"AND b.billingDate = :billingDate " +
+				"AND b.providerOhipNo = :ohipNo " +
+				"AND bd.billingNo = b.id " +
+				"AND bd.serviceCode = :serviceCode");
+		q.setParameter("billing", billing);
+		q.setParameter("billingDate", billingDate);
+		q.setParameter("ohipNo", ohipNo);
+		q.setParameter("serviceCode", serviceCode);
+		return q.getResultList();
+	}
 
 }
