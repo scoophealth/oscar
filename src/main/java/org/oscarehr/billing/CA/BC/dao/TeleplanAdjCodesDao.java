@@ -21,28 +21,28 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.PMmodule.dao;
+package org.oscarehr.billing.CA.BC.dao;
 
-import static org.junit.Assert.assertNotNull;
+import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.oscarehr.common.dao.DaoTestFixtures;
-import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.util.SpringUtils;
+import javax.persistence.Query;
 
-public class ProgramDaoTest extends DaoTestFixtures {
+import org.oscarehr.billing.CA.BC.model.TeleplanAdjCodes;
+import org.oscarehr.common.dao.AbstractDao;
+import org.springframework.stereotype.Repository;
 
-	private ProgramDao dao = SpringUtils.getBean(ProgramDao.class);
+@Repository
+public class TeleplanAdjCodesDao extends AbstractDao<TeleplanAdjCodes>{
 
-	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("program","admission","Facility","program_queue");
-	}
+	protected TeleplanAdjCodesDao() {
+	    super(TeleplanAdjCodes.class);
+    }
 
-	@Test
-	public void testGetActivePrograms() {
-		assertNotNull(dao.getActivePrograms());
-	}
+	@SuppressWarnings("unchecked")
+    public List<TeleplanAdjCodes> findByCode(String code) {
+	    Query q = createQuery("t", "t.adjCode = :c");
+	    q.setParameter("c", code);
+	    return q.getResultList();
+    }
 
 }

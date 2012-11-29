@@ -33,6 +33,7 @@ import org.oscarehr.common.model.BillingPaymentType;
 import org.springframework.stereotype.Repository;
 
 import oscar.entities.Billingmaster;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 @Repository
 public class BillingHistoryDao extends AbstractDao<BillingHistory> {
@@ -70,7 +71,8 @@ public class BillingHistoryDao extends AbstractDao<BillingHistory> {
 	 * @return
 	 * 		Returns the list of triples containing {@link Billingmaster}, {@link BillingHistory}, {@link BillingPaymentType} instances 
 	 */
-	public List<Object[]> findBillingHistoryByBillingMasterNo(Integer billingMasterNo) {
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findBillingHistoryByBillingMasterNo(Integer billingMasterNo) {
 		// "from billingmaster bm, billing_history bh left join billing_payment_type bt on bh.payment_type_id = bt.id 
 		//     where bh.billingmaster_no = bm.billingmaster_no and bm.billing_no = " + billingNo;
 		Query query = entityManager.createQuery("FROM "
@@ -80,7 +82,24 @@ public class BillingHistoryDao extends AbstractDao<BillingHistory> {
 				+ " bpt WHERE (bh.paymentTypeId = bpt.id OR bpt.id IS NULL) AND bm.billingMasterNo = bh.billingMasterNo AND bm.billingMasterNo = :bmn");
 		query.setParameter("bmn", billingMasterNo);
 		return query.getResultList();
-
-
+    }
+	
+	public Double getTotalPaidFromHistory(Integer bmn, boolean ignoreIA) {
+	    String historyQry = "SELECT SUM(bh.amountReceived) FROM BillingHistory bh where bh.billingMasterNo = :bmn";
+		if (ignoreIA) {
+			historyQry += " and bh.paymentTypeId <> " + MSPReconcile.PAYTYPE_IA;
+		}
+		Query query = entityManager.createQuery(historyQry);
+		query.setParameter("bmn", bmn);
+		List<?> result = query.getResultList();
+		if (result.isEmpty()) {
+			return 0.0;
+		}
+		
+		Double d = (Double) result.get(0);
+		if (d == null) {
+			return 0.0;
+		}
+		return d;
     }
 }

@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.billing.CA.BC.dao;
 
 import java.util.ArrayList;
@@ -35,18 +34,24 @@ import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TeleplanS00Dao extends AbstractDao<TeleplanS00>{
+public class TeleplanS00Dao extends AbstractDao<TeleplanS00> {
 
 	public TeleplanS00Dao() {
 		super(TeleplanS00.class);
 	}
 
 	@SuppressWarnings("unchecked")
-    public List<TeleplanS00> findByBillingNo(String mspCtlNo) {
+	public List<TeleplanS00> findByBillingNo(String mspCtlNo) {
 		Query q = createQuery("t", "t.mspCtlNo = :no");
 		q.setParameter("no", mspCtlNo);
-	    return q.getResultList();
-    }
+		return q.getResultList();
+	}
+
+	public List<TeleplanS00> findByOfficeNumber(String officeNumber) {
+		List<String> numbers = new ArrayList<String>();
+		numbers.add(officeNumber);
+		return findByOfficeNumbers(numbers);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<TeleplanS00> findByOfficeNumbers(List<String> officeNumbers) {
@@ -56,6 +61,13 @@ public class TeleplanS00Dao extends AbstractDao<TeleplanS00>{
 
 		Query q = createQuery("t", "t.officeNo IN (:no)");
 		q.setParameter("no", officeNumbers);
-	    return q.getResultList();
+		return q.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TeleplanS00> findBgs() {
+		Query q = createQuery("t", "t.exp1 = :s OR t.exp2 = :s OR t.exp3 = :s OR t.exp4 = :s OR t.exp5 = :s OR t.exp6 = :s OR t.exp7 = :s");
+		q.setParameter("s", "BG");
+		return q.getResultList();
     }
 }

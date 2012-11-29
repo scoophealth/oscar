@@ -56,8 +56,18 @@ public class BillingHistoryDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void findByBillingMasterNo() {
+	public void testFindByBillingMasterNo() {
 		List<Object[]> bs = dao.findByBillingMasterNo(100);
 		assertNotNull(bs);
 	}
+	
+	@Test
+	public void testGetTotalPaidFromHistory() {
+		Double dd = dao.getTotalPaidFromHistory(100, true);
+		assertNotNull(dd);
+		
+		dd = dao.getTotalPaidFromHistory(100, false);
+		assertNotNull(dd);
+	}
+	
 }
