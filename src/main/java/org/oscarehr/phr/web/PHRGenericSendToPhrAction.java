@@ -53,7 +53,6 @@ import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
-import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
@@ -67,7 +66,6 @@ import oscar.dms.EDocFactory;
 import oscar.dms.EDocUtil;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarPrevention.pageUtil.PreventionPrintPdf;
-import oscar.oscarProvider.data.ProviderData;
 
 /**
  *
@@ -133,8 +131,6 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
         MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
         Long patientMyOscarUserId=MyOscarUtils.getMyOscarUserIdFromOscarDemographicId(myOscarLoggedInInfo, demographicNo);
         
-        int recipientType = PHRDocument.TYPE_DEMOGRAPHIC;
-
         EDocFactory eDocFactory = new EDocFactory();
         String description = "";
         String type = "document";
@@ -194,8 +190,6 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
             request.setAttribute("providerNo", providerNo);
 
             String documentNo = EDocUtil.addDocumentSQL(newEDoc);
-
-            ProviderData senderProviderData = new ProviderData(providerNo);
 
             EDoc eDoc = EDocUtil.getDoc(documentNo);
 
