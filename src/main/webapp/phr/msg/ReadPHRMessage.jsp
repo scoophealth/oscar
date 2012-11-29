@@ -180,7 +180,9 @@ function gotoEchart3(demoNo) {
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
                                         <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><%=StringEscapeUtils.escapeHtml(messageBody)%></textarea><br>
-                                        <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>&demographicNo=<%=demographicNo%>'"/>
+                                        <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>&amp;demographicNo=<%=demographicNo%>'"/>
+                                        <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReplyAll"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyAll=true&amp;replyToMessageId=<%=messageId%>&amp;demographicNo=<%=demographicNo%>'"/>
+ 
                                         <%
     		                                String myOscarUserName=minimalPersonSender.getUserName();
 		                                	Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
