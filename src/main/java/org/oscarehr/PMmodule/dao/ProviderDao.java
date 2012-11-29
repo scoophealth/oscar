@@ -190,7 +190,7 @@ public class ProviderDao extends HibernateDaoSupport {
 
 	@SuppressWarnings("unchecked")
     public List<Provider> getBillableProviders() {
-		List<Provider> rs = getHibernateTemplate().find("FROM Provider p where p.OhipNo != '' and p.Status = '1'");
+		List<Provider> rs = getHibernateTemplate().find("FROM Provider p where p.OhipNo != '' and p.Status = '1' order by p.LastName");
 		return rs;
 	}
 
