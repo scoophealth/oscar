@@ -92,31 +92,20 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 <link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath()%>/share/calendar/calendar.css" title="win2k-cold-1" />
 
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/prototype.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/scriptaculous.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/oscarMDSIndex.js"></script>
 
-<script type="text/javascript">
-	$.noConflict();
-</script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery.form.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/scriptaculous.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
-
-
-        <script language="javascript" type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/Oscar.js" ></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/prototype.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/effects.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/controls.js"></script>
-
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/yui/js/yahoo-dom-event.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/yui/js/connection-min.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/yui/js/animation-min.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/yui/js/datasource-min.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/yui/js/autocomplete-min.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/js/demographicProviderAutocomplete.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/oscarMDSIndex.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/js/demographicProviderAutocomplete.js"></script>        
 
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/yui/css/fonts-min.css"/>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/yui/css/autocomplete.css"/>
@@ -132,6 +121,8 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/oscarMDS/encounterStyles.css">
 
 <script type="text/javascript" >
+	jQuery.noConflict();
+	
 	function split(id) {
 		var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id;
 		popupStart(1100, 1100, loc, "Splitter");
@@ -161,7 +152,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 		if (p == "Next") { page++; }
 		else if (p == "Previous") { page--; }
 		else { page = p; }
-		if (request != null) { request.abort(); }
+		if (request != null) { request.transport.abort(); }
 		request = updateListView();
 	};
 
@@ -213,50 +204,12 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 		}
 		var div;
 		if (!isListView || page == 1) {
-			div = "#docViews";
+			div = document.getElementById("docViews");
 		}
 		else {
-			div = "#summaryView";
-		}
-		
-		return jQuery.ajax({
-			url: url,
-			method: "get",
-			data: query,
-			dataType: 'html',
-			success: function(data) {
-				loadingDocs = false;
-				
-				var tmp = jQuery("#tempLoader");
-				if (tmp != null) { tmp.remove(); }
-				if (isListView) {
-					if (page == 1) { jQuery("#tempLoader").remove(); }
-					else { document.getElementById("loader").style.display = "none"; }
-				}
-				
-				if (page == 1) {
-					if (isListView) {
-						document.getElementById("docViews").style.overflow = "hidden";
-					}
-					else {
-						document.getElementById("docViews").style.overflow = "auto";
-					}
-				}
-				
-				jQuery(div).append(data);
-				
-				if (data.indexOf("<input type=\"hidden\" name=\"NoMoreItems\" value=\"true\" />") >= 0) {
-					canLoad = false;
-				}
-				else {
-					// It is possible that the current amount of loaded items has not filled up the page enough
-					// to create a scroll bar. So we fake a scroll (since no scroll bar is equivalent to reaching the bottom).
-					setTimeout("fakeScroll();", 1000);
-				}
-			}
-		})
-		
-		/*return new Ajax.Updater(div,url,{method:'get',parameters:query,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
+			div = document.getElementById("summaryView");
+		}				
+		return new Ajax.Updater(div,url,{method:'get',parameters:query,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
 			loadingDocs = false;
 			var tmp = jQuery("#tempLoader");
 			if (tmp != null) { tmp.remove(); }
@@ -281,7 +234,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 				// to create a scroll bar. So we fake a scroll (since no scroll bar is equivalent to reaching the bottom).
 				setTimeout("fakeScroll();", 1000);
 			}
-		}});*/
+		}});
 	}
 
 	function getQuery() {
