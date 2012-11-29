@@ -174,7 +174,6 @@ public class PHRUserManagementAction extends DispatchAction {
     	DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
     	Demographic demographic = demographicDao.getDemographic(demographicNo);
 
-    	final String PAGESIZE = "printPageSize";
         Document document = new Document();
 
         ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
@@ -366,8 +365,6 @@ public class PHRUserManagementAction extends DispatchAction {
 
     public ActionForward setRegistrationLetterData(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) {
     	String nameOffset = request.getParameter("nameOffset");
-    	String upperText  = request.getParameter("upperText");
-    	String lowerText  = request.getParameter("lowerText");
 
     	PropertyDao propertyDao = (PropertyDao) SpringUtils.getBean("propertyDao");
 
