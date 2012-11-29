@@ -54,13 +54,14 @@ OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 String curUser_no = (String) session.getAttribute("user");
 
 %>
-<script language="JavaScript">
+
+<% if (isListView && pageNum == 0) { %>
+		<script type="text/javascript">
 			function submitLabel(lblval){
 		       	 document.forms['TDISLabelForm'].label.value = document.forms['acknowledgeForm'].label.value;
 	       	}
-</script>
-
-<% if (isListView && pageNum == 0) { %>
+		</script>
+		
         <table  oldclass="MainTable" id="scrollNumber1" border="0" name="encounterTable" cellspacing="0" cellpadding="3" width="100%">
             <tr oldclass="MainTableTopRow">
                 <td class="MainTableTopRowRightColumn" colspan="10" align="left">
@@ -125,6 +126,7 @@ String curUser_no = (String) session.getAttribute("user");
 						}
 					</style>
 					<table id="summaryView" width="100%" style="margin:0px;padding:0px;" cellpadding="0" cellspacing="0">
+					<thead>
 						<tr>
                             <th align="left" valign="bottom" class="cell" nowrap>
                                 <input type="checkbox" onclick="checkAll('lab_form');" name="checkA"/>
@@ -158,7 +160,9 @@ String curUser_no = (String) session.getAttribute("user");
                                 Ack #
                             </th>
                         </tr>
-                                                <%
+                          </thead>    
+                          <tbody>
+                                            <%
 							} // End if(pageNum == 1)
                             List<String> doclabid_seq=new ArrayList<String>();
                             Integer number_of_rows_per_page=pageSize;
@@ -370,6 +374,7 @@ String curUser_no = (String) session.getAttribute("user");
 
                             } // End else from if(isListView)
                             if (isListView && pageNum == 0) { %>
+                            </tbody>
                        	</table>
 
                        	<table width="100%" style="margin:0px;padding:0px;" cellpadding="0" cellspacing="0">
