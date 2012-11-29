@@ -102,15 +102,22 @@
                 clinicBillingPhone = clinic.getClinicDelimPhone();
             }
             
-            StringBuilder buildBillTo = new StringBuilder();
-            buildBillTo.append(demo.getFirstName()).append(" ").append(demo.getLastName()).append("\n")
-                    .append(demo.getAddress()).append("\n")
-                    .append(demo.getCity()).append(",").append(demo.getProvince()).append("\n")
-                    .append(demo.getPostal()).append("\n\n")
-                    .append("Email:").append(demo.getEmail()).append("\n")
-                    .append("Tel:").append(demo.getPhone()).append("\n")
-                    .append("\n\n\nStudent ID:").append(demo.getChartNo());
-            billTo = buildBillTo.toString();
+            String overrideUseDemoContact = request.getParameter("overrideUseDemoContact"); 
+            
+            if ((overrideUseDemoContact != null) && overrideUseDemoContact.equals("1")){
+                if (billToBillExt != null)
+                     billTo = billToBillExt.getValue();
+            } else {
+                StringBuilder buildBillTo = new StringBuilder();
+                buildBillTo.append(demo.getFirstName()).append(" ").append(demo.getLastName()).append("\n")
+                        .append(demo.getAddress()).append("\n")
+                        .append(demo.getCity()).append(",").append(demo.getProvince()).append("\n")
+                        .append(demo.getPostal()).append("\n\n")
+                        .append("Email:").append(demo.getEmail()).append("\n")
+                        .append("Tel:").append(demo.getPhone()).append("\n")
+                        .append("\n\n\nStudent ID:").append(demo.getChartNo());
+                billTo = buildBillTo.toString();
+            }
             
             StringBuilder buildRemitTo = new StringBuilder();
             buildRemitTo.append(clinic.getClinicName()).append("\n")
