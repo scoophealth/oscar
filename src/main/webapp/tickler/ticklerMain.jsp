@@ -39,7 +39,12 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-
+<head>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+    <script>
+        jQuery.noConflict();
+    </script>
+</head>
 
  <%
  //select * from tickler where status = 'A' and service_date <= now() and task_assigned_to  = '999998' limit 1;
@@ -440,6 +445,7 @@ var beginD = "1900-01-01"
 </style>
 </head>
 
+<oscar:customInterface section="ticklerMain"/>
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#FFFFFF">
@@ -605,7 +611,7 @@ function changeSite(sel) {
         </TR>
     </thead>
     <tfoot>
-                                <tr bgcolor=#666699><td colspan="8" class="white"><a href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                <tr bgcolor=#666699><td colspan="8" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                     <input type="button" name="button" value="<bean:message key="tickler.ticklerMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn">
                                     <input type="hidden" name="submit_form" value="">
                                     <% if (ticklerview.compareTo("D") == 0){%>
