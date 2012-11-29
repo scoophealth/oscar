@@ -283,10 +283,10 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		String pageName = formBean.getPage();
 		
 		if(pageName.equalsIgnoreCase("Introduction")) {
-			
+			// do nothing
 		}
 		else if(pageName.equals("Closing")) {
-			
+			// do nothing
 		} else {	
 			
 			if(pageName == null || pageName.length()==0) {

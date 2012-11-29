@@ -35,7 +35,6 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -46,7 +45,6 @@ import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -60,7 +58,6 @@ import oscar.util.UtilDateUtilities;
  * @author apavel
  */
 public class PHRViewPatientRecord extends DispatchAction {
-    private static final Logger log2 = MiscUtils.getLogger();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

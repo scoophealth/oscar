@@ -61,7 +61,6 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 
@@ -246,11 +245,6 @@ public class UserPreferenceAction extends DispatchAction {
 		}
 		sb.append("</select>");
 		return sb.toString();
-	}
-	
-	public static void printBillingPreferences() {
-		String billRegion = OscarProperties.getInstance().getProperty("billregion");
-		
 	}
 	
 	private static List<LabelValueBean> getOptions(String key) {
