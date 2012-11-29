@@ -24,6 +24,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
 <%@page import="org.oscarehr.myoscar_server.ws.Message2RecipientPersonAttributesTransfer"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
@@ -33,7 +35,6 @@
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.phr.web.MyOscarMessagesHelper"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MedicalDataType"%>
@@ -61,13 +62,12 @@
 <%@ page import="oscar.util.UtilDateUtilities" %>
 
 <%
-int statusNotAuthorized = PHRAction.STATUS_NOT_AUTHORIZED;
-String providerName = request.getSession().getAttribute("userfirstname") + " " + 
-        request.getSession().getAttribute("userlastname");
-String providerNo = (String) request.getSession().getAttribute("user");
-ProviderData providerData = new ProviderData();
-providerData.setProviderNo(providerNo);
-String providerPhrId = providerData.getMyOscarId();
+LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+String providerName = loggedInInfo.loggedInProvider.getFormattedName();
+
+MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+
 request.setAttribute("forwardto", request.getRequestURI());
 
 //set the "sent" tab to red if there are authorization errors on send
@@ -109,7 +109,6 @@ request.setAttribute("pageMethod",pageMethod);
     //get Actions Pending Approval
     List<PHRAction> actionsPendingApproval = (List<PHRAction>) request.getSession().getAttribute("actionsPendingApproval");
     
-		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -310,7 +309,7 @@ request.setAttribute("pageMethod",pageMethod);
                 <table width="100%">
                     <tr>
                         <td>
-                            <table  cellspacing=3 >
+                            <table  cellspacing=3 style="display:inline">
                                 <tr>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewMessages")) {%>Current<%}%>">
@@ -378,6 +377,7 @@ request.setAttribute("pageMethod",pageMethod);
                                     %>
                                 </tr>
                             </table><!--cell spacing=3-->
+                           	<button style="float:right" onclick="window.open('<%=request.getContextPath()%>/myoscar/myoscar_page_link_action.jsp?redirectPage=/messages/messaging_preferences.jsf');">MyOscar Message Settings</button>
                         </td>
                     </tr>
                 </table><!--table width="100%">-->
