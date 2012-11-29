@@ -56,6 +56,7 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
 	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
 <%@ page import="org.oscarehr.common.model.AppointmentStatus"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -81,7 +82,7 @@
   String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
   Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 
-  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)webApplicationContext.getBean("AppointmentStatusMgr");
+  AppointmentStatusMgr apptStatusMgr = new AppointmentStatusMgrImpl();
   List allStatus = apptStatusMgr.getAllActiveStatus();
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
