@@ -42,7 +42,7 @@ public class TeleplanC12DaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("teleplanC12");
+		SchemaUtils.restoreTable("teleplanC12", "teleplanS21");
 	}
 
 	@Test
@@ -61,5 +61,10 @@ public class TeleplanC12DaoTest extends DaoTestFixtures {
 	@Test
 	public void testFindByOfficeClaimNo() {
 		assertNotNull(dao.findByOfficeClaimNo("100"));
+	}
+	
+	@Test
+	public void testFindRejected() {
+		assertNotNull(dao.findRejected());
 	}
 }

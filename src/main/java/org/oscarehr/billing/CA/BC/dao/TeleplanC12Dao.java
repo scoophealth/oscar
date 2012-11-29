@@ -51,5 +51,13 @@ public class TeleplanC12Dao extends AbstractDao<TeleplanC12> {
 		query.setParameter("claimNo", claimNo);
 		return query.getResultList();
     }
+
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findRejected() {
+		String sql = "FROM TeleplanC12 tc, TeleplanS21 ts " +
+				"WHERE tc.s21Id = ts.id " +
+				"AND tc.status != 'E'";
+		return entityManager.createQuery(sql).getResultList();	    
+    }
 	
 }

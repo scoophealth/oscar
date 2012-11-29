@@ -26,11 +26,13 @@ import java.util.Map.Entry;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.DateRange;
 import org.springframework.stereotype.Repository;
 
 import oscar.entities.Billingmaster;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.util.ConversionUtils;
 
 @Repository
@@ -213,6 +215,119 @@ public class BillingDao extends AbstractDao<Billing> {
     public List<Billing> getMyMagicBillings() {
 		Query q = createQuery("b", "b.status <> 'B' AND b.billingtype IN ('ICBC', 'WCB', 'MSP')"); 
 		return q.getResultList();
+    }
+	
+	@SuppressWarnings("unchecked")
+	@NativeSql({"billing", "provider", "billingmaster"})
+    public List<Object[]> findByManyThings(String statusType, String providerNo, String startDate, String endDate, String demoNo, boolean excludeWCB, boolean excludeMSP, boolean excludePrivate, boolean exludeICBC) {
+		String providerQuery = "";
+	    String startDateQuery = "";
+	    String endDateQuery = "";
+	    String demoQuery = "";
+	    String billingType = "";
+
+	    //  Map s00Map = getS00Map();
+	    if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
+	      providerQuery = " and b.provider_no = '" + providerNo + "'";
+	    }
+
+	    if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
+	      startDateQuery = " and ( to_days(service_date) >= to_days('" + startDate +
+	          "')) ";
+	    }
+
+	    if (endDate != null && !endDate.trim().equalsIgnoreCase("")) {
+	      endDateQuery = " and ( to_days(service_date) <= to_days('" + endDate +
+	          "')) ";
+	    }
+	    if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")) {
+	      demoQuery = " and b.demographic_no = '" + demoNo + "' ";
+	    }
+
+	    if (excludeWCB) {
+	      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_WCB + "'";
+	    }
+
+	    if (excludeMSP) {
+	      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_MSP + "'";
+	    }
+
+	    if (excludePrivate) {
+	      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_PRI + "'";
+	    }
+
+	    if (exludeICBC) {
+	      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_ICBC + "'";
+	    }
+
+	    String statusTypeClause = " and bm.billingstatus";
+	    if ("?".equals(statusType) || "$".equals(statusType)) {
+	      if ("?".equals(statusType)) {
+	        statusTypeClause += " in ('" + MSPReconcile.PAIDWITHEXP + "','" + MSPReconcile.REJECTED +
+	            "','" + MSPReconcile.HELD + "')";
+	      }
+	      else if ("$".equals(statusType)) {
+	        statusTypeClause += " in ('" + MSPReconcile.PAIDWITHEXP + "','" +
+	            MSPReconcile.PAIDPRIVATE +
+	            "','" + MSPReconcile.SETTLED + "')";
+	      }
+	    }
+	    else {
+	      statusTypeClause += " like '" + statusType + "'";
+	    }
+	    //
+	    String p = " select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.billingtype,"
+	        + " b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
+	        +
+	        " bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
+	        +
+	        " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no,p.first_name,p.last_name,bm.billing_unit from billing b left join provider p on p.provider_no = b.provider_no, "
+	        + " billingmaster bm where b.billing_no= bm.billing_no "
+
+	        + statusTypeClause
+	        + providerQuery
+	        + startDateQuery
+	        + endDateQuery
+	        + demoQuery
+	        + billingType
+	        + " order by b.billing_date desc";
+	    
+	    Query query = entityManager.createNativeQuery(p);
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findBillingsByStatus(String statusType) {
+		Query query = entityManager.createQuery("FROM Billing b, Billingmaster bm " +
+				"WHERE b.id = bm.billingNo " +
+				"AND bm.billingstatus = :st");
+		query.setParameter("st", statusType);
+		return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+	public List<Object[]> findOutstandingBills(String demographicNo, String billingType, List<String> statuses) {
+	    // TODO Auto-generated method stub
+		String q = "FROM Billingmaster bm, Billing b " +
+				"WHERE bm.billingmasterNo = b.id " +
+				"AND b.demographicNo = :dNo " +
+				"AND bm.billingstatus NOT IN ( :statuses ) " +
+				"AND b.billingtype = :bType";
+		Query query = entityManager.createQuery(q);
+		query.setParameter("statuses", statuses);
+		query.setParameter("dNo", demographicNo);
+		query.setParameter("bType", billingType);
+		return query.getResultList();
+
+    }
+
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findByBillingMasterNo(Integer billingmasterNo) {
+		Query query = entityManager.createQuery("FROM Billingmaster b, Billing b1 " + 
+				"WHERE b1.id = b.billingNo " + 
+				"AND b.billingmasterNo = :no");
+		query.setParameter("no",  billingmasterNo);
+		return query.getResultList();
     }
 
 }

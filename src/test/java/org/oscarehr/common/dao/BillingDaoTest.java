@@ -43,7 +43,7 @@ public class BillingDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billing", "billingdetail","billingmaster");
+		SchemaUtils.restoreTable("billing", "billingdetail","billingmaster", "provider");
 	}
 
 	@Test
@@ -96,4 +96,29 @@ public class BillingDaoTest extends DaoTestFixtures {
 	public void testGetMyMagicBillings() {
 		assertNotNull(dao.getMyMagicBillings());
 	}
+	
+	@Test
+	public void testFindByManyThings() {
+		boolean[] tt = new boolean[] { true,   	  true,   	  true,   	  true,   
+				true, 	true, 	true, 	false,
+				true, 	true, 	false,	true, 
+				true, 	true, 	false,	false,
+				true, 	false,	true, 	true, 
+				true, 	false,	true, 	false,
+				true, 	false,	false,	true, 
+				true, 	false,	false,	false,
+				false,	true, 	true, 	true, 
+				false,	true, 	true, 	false,
+				false,	true, 	false,	true, 
+				false,	true, 	false,	false,
+				false,	false,	true, 	true, 
+				false,	false,	true, 	false,
+				false,	false,	false,	true, 
+				false,	false,	false,	false};
+		
+		for(int i = 0; i < tt.length; i += 4) {
+			assertNotNull(dao.findByManyThings(null, null, null, null, null, tt[i], tt[i + 1], tt[i + 2], tt[i + 3]));
+			assertNotNull(dao.findByManyThings("STS", "100", "2010-01-01", "2012-12-31", "100", tt[i], tt[i + 1], tt[i + 2], tt[i + 3]));
+		}
+	} 
 }
