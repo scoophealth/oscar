@@ -71,10 +71,15 @@ GregorianCalendar now=new GregorianCalendar();
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"8888-12-31":request.getParameter("xml_appointment_date");
 %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
+ <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+    <script>
+        jQuery.noConflict();
+    </script>   
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="tickler.ticklerDemoMain.title" /></title>
 <script language="JavaScript">
@@ -272,7 +277,7 @@ function setup() {
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/print.css"  />
 </head>
-
+<oscar:customInterface section="ticklerMain"/>
 <body onload="setup();" bgcolor="#FFFFFF" text="#000000" leftmargin="0"
 	rightmargin="0" topmargin="10">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -490,7 +495,7 @@ if (nItems == 0) {
 			</tr>
 			<%}%>
 			<tr bgcolor=#666699>
-				<td colspan="8" class="white"><a href="javascript:CheckAll();"><bean:message
+				<td colspan="8" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnCheckAll" /></a> - <a
 					href="javascript:ClearAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnClearAll" /></a> &nbsp; &nbsp; &nbsp;
