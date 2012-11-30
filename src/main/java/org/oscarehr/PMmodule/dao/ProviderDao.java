@@ -283,15 +283,6 @@ public class ProviderDao extends HibernateDaoSupport {
 
 	}
 
-	public List<Provider> getActiveProvidersByType(String type) {
-		@SuppressWarnings("unchecked")
-		List<Provider> results = this.getHibernateTemplate().find(
-				"from Provider p where p.Status='1' and p.ProviderType = ?",
-				type);
-
-		return results;
-	}
-
 	public static void addProviderToFacility(String provider_no, int facilityId) {
 		try {
 			ProviderFacility pf = new ProviderFacility();

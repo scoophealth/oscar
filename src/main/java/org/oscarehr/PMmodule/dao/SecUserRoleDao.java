@@ -55,6 +55,13 @@ public class SecUserRoleDao extends HibernateDaoSupport {
 
         return results;
     }
+    
+    public List<SecUserRole> findByRoleNameAndProviderNo(String roleName, String providerNo) {
+        @SuppressWarnings("unchecked")
+        List<SecUserRole> results = getHibernateTemplate().find("from SecUserRole s where s.RoleName = ? and s.ProviderNo=?", new Object[]{roleName,providerNo});
+
+        return results;
+    }
 
     public boolean hasAdminRole(String providerNo) {
         if (providerNo == null) {
