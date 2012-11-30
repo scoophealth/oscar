@@ -148,7 +148,6 @@ public class DemographicExtDaoTest extends DaoTestFixtures {
 		}
 	}
 
-	// Fail
 	@Test
 	public void testSaveDemographicExt() {
 		dao.saveDemographicExt(20, "Test", "TestVal");
