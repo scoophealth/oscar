@@ -62,8 +62,12 @@ includes:
 	<display:column property="role.name" sortable="true" title="Role" />
 	<display:column property="program.type" sortable="true"
 		title="Program Type" />
-	<display:column property="program.queueSize" sortable="true"
-		title="Clients in Queue" />
+	<display:column sortable="true" title="Clients in Queue" >
+                        <a
+                        href="<html:rewrite action="/PMmodule/ProgramManagerView.do"/>?method=view&tab=queue&id=<c:out value="${program.programId}"/>">
+                        <c:out value="${program.program.queueSize}"/></a>
+        </display:column>
+
 </display:table>
 <br />
 You belong to the following facilities:
