@@ -25,6 +25,7 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -43,7 +44,9 @@ public class DxResearchDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(new String[]{"dxresearch"});
+		SchemaUtils.restoreTable("dxresearch", "demographic","lst_gender","admission","demographic_merged",
+				"program","health_safety","provider","providersite","site","program_team",
+				"measurements", "measurementType", "measurementsExt");
 	}
 
 	@Test
@@ -55,10 +58,17 @@ public class DxResearchDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void findByDemographicNoResearchCodeAndCodingSystem() {
+	public void testFindByDemographicNoResearchCodeAndCodingSystem() {
 		List<Dxresearch> list = dao.findByDemographicNoResearchCodeAndCodingSystem(1, "CODE", "SYS");
 		assertNotNull(list);
 	}
+	
+	@Test
+	public void testGetDataForInrReport() {
+		List<Object[]> list = dao.getDataForInrReport(new Date(), new Date());
+		assertNotNull(list);
+	}
+
 
 }
 
