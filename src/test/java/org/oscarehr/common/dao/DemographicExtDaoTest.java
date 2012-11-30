@@ -23,7 +23,13 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +38,7 @@ import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.util.SpringUtils;
 
-public class DemographicExtDaoTest extends DaoTestFixtures{
+public class DemographicExtDaoTest extends DaoTestFixtures {
 
 	private DemographicExtDao dao = SpringUtils.getBean(DemographicExtDao.class);
 
@@ -45,11 +51,108 @@ public class DemographicExtDaoTest extends DaoTestFixtures{
 		SchemaUtils.restoreTable("demographicExt");
 	}
 
+
 	@Test
 	public void testCreate() throws Exception {
 		DemographicExt entity = new DemographicExt();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	// Fail
+	@Test
+	public void testGetDemographicExt() throws Exception {
+		DemographicExt entity = new DemographicExt();
+		entity = (DemographicExt)EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		
+		DemographicExt foundEntity = dao.getDemographicExt(1);
+		assertEquals(entity, foundEntity);
+	}
+	@Test
+	public void getDemographicExtByDemographicNo() throws Exception {
+		DemographicExt item1 = new DemographicExt();
+		EntityDataGenerator.generateTestDataForModelClass(item1);
+		item1.setDemographicNo(20);
+		DemographicExt item2 = new DemographicExt();
+		EntityDataGenerator.generateTestDataForModelClass(item2);
+		item2.setDemographicNo(20);
+		DemographicExt item3 = new DemographicExt();
+		EntityDataGenerator.generateTestDataForModelClass(item3);
+		item3.setDemographicNo(20);
+		dao.persist(item1);
+		dao.persist(item2);
+		dao.persist(item3);
+		List<DemographicExt> found = dao.getDemographicExtByDemographicNo(20);
+		List<DemographicExt> items = new ArrayList<DemographicExt>();
+		items.add(item1);
+		items.add(item2);
+		items.add(item3);
+		assertTrue(found.containsAll(items));
+	}
+
+	@Test
+	public void testGetDemographicExtWithKeyAndDemographicNo() throws Exception {
+		DemographicExt entity = new DemographicExt();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setKey("Test");
+		entity.setDemographicNo(20);
+		dao.persist(entity);
+		DemographicExt foundEntity = dao.getDemographicExt(20, "Test");
+		assertEquals(entity, foundEntity);
+	}
+
+	@Test
+	public void testGetLatestDemographic() throws Exception {
+		DemographicExt entity = new DemographicExt();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setKey("Test");
+		entity.setDemographicNo(20);
+		entity.setDateCreated(new Date(111111));
+		dao.persist(entity);
+		DemographicExt newerEntity = new DemographicExt();
+		EntityDataGenerator.generateTestDataForModelClass(newerEntity);
+		newerEntity.setKey("Test");
+		newerEntity.setDemographicNo(20);
+		newerEntity.setDateCreated(new Date(2222222));
+		dao.persist(newerEntity);
+		DemographicExt foundEntity = dao.getLatestDemographicExt(20, "Test");
+		assertEquals(newerEntity, foundEntity);
+	}
+
+	@Test
+	public void testUpdateDemographicExt() throws Exception {
+		DemographicExt entity = new DemographicExt();
+		
+		entity = (DemographicExt)EntityDataGenerator.generateTestDataForModelClass(entity);
+
+		dao.persist(entity);
+		entity.setDemographicNo(20);
+
+		dao.updateDemographicExt(entity);
+		
+		assertTrue(dao.getDemographicExt(1).getDemographicNo() == 20);
+	}
+
+	@Test
+	public void testUpdateDemographicExtExceptionWithNull() throws Exception {
+		DemographicExt entity = new DemographicExt();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		entity = null;
+		try{
+			dao.updateDemographicExt(entity);
+		}catch(IllegalArgumentException ex){
+			assert(true);
+		}
+	}
+
+	// Fail
+	@Test
+	public void testSaveDemographicExt() {
+		dao.saveDemographicExt(20, "Test", "TestVal");
+		DemographicExt result = dao.getDemographicExt(20, "Test");
+		assert("TestVal".equals(result.getValue()));
 	}
 }
