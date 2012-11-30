@@ -28,8 +28,6 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,13 +35,11 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Queue;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class QueueDaoTest extends DaoTestFixtures {
@@ -89,20 +85,7 @@ public class QueueDaoTest extends DaoTestFixtures {
 		
 		List<Hashtable> result = dao.getQueues();
 		List<Hashtable> expectedResult = new ArrayList<Hashtable>(Arrays.asList(htQueue1, htQueue2));
-		
-		Logger logger = MiscUtils.getLogger();
-		
-		if (result.size() != expectedResult.size()) {
-			logger.warn("Array sizes do not match.");
-			fail("Array sizes do not match.");
-		}
-		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items  do not match.");
-				fail("Items  do not match.");
-			}
-		}
-		assertTrue(true);	
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
