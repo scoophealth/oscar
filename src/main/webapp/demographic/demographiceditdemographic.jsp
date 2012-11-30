@@ -1106,6 +1106,15 @@ if(wLReadonly.equals("")){
                             <td> <a href="#" onclick="popup(300,300,'demographicCohort.jsp?demographic_no=<%=demographic.getDemographicNo()%>', 'cohort'); return false;"><bean:message key="demographic.demographiceditdemographic.msgAddPatientSet"/></a>
                             </td>
                         </tr>
+                        
+           <%
+           	if(LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+           %>             
+           <tr>
+               <td> <a href="#" onclick="popup(500,500,'../integrator/manage_linked_clients.jsp?demographicId=<%=demographic.getDemographicNo()%>', 'manage_linked_clients'); return false;">Integrator Linking</a>
+               </td>
+           </tr>
+           <% } %>
 			<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 				<phr:indivoRegistered provider="<%=curProvider_no%>"
 					demographic="<%=demographic_no%>">
