@@ -45,18 +45,12 @@ public class OscarSuperManager {
 
 	private OscarSuperDao appointmentSuperDao;
 
-	private OscarSuperDao receptionistSuperDao;
-
 	private OscarSuperDao providerSuperDao;
 
 	private OscarSuperDao adminSuperDao;
 
 	public void setAppointmentSuperDao(OscarSuperDao appointmentDao) {
 		this.appointmentSuperDao = appointmentDao;
-	}
-
-	public void setReceptionistSuperDao(OscarSuperDao receptionistDao) {
-		this.receptionistSuperDao = receptionistDao;
 	}
 
 	public void setProviderSuperDao(OscarSuperDao providerDao) {
@@ -73,7 +67,6 @@ public class OscarSuperManager {
 	 */
 	public void init() {
 		oscarDaoMap.put("appointmentDao", appointmentSuperDao);
-		oscarDaoMap.put("receptionistDao", receptionistSuperDao);
 		oscarDaoMap.put("providerDao", providerSuperDao);
 		oscarDaoMap.put("adminDao", adminSuperDao);
 
