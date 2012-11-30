@@ -28,11 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
-<%
-
-%>
 <%@ page import="java.util.*,java.sql.*,java.util.ResourceBundle" errorPage="../provider/errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.MyGroup" %>
 <%@ page import="org.oscarehr.common.model.MyGroupPrimaryKey" %>
@@ -44,10 +40,7 @@
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
 	ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
 
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     boolean isSiteAccessPrivacy=false;
@@ -118,7 +111,7 @@ function validate() {
   }
 %>
 
-<FORM NAME="UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp" onsubmit="return validate();">
+<FORM NAME="UPDATEPRE" METHOD="post" ACTION="adminsavemygroup.jsp" onsubmit="return validate();">
 <table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">
@@ -161,7 +154,7 @@ function validate() {
 <%
    }
 %>
-			<input type="hidden" name="displaymode" value='savemygroup'>
+		
 		</table>
 
 		</td>

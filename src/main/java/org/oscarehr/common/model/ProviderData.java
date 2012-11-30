@@ -40,38 +40,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "provider")
 public class ProviderData extends AbstractModel<String> implements Serializable {
-/*
-+------------------------+--------------+------+-----+------------+-------+
-| Field                  | Type         | Null | Key | Default    | Extra |
-+------------------------+--------------+------+-----+------------+-------+
-| provider_no            | varchar(6)   | NO   | PRI |            |       |
-| last_name              | varchar(30)  | NO   |     |            |       |
-| first_name             | varchar(30)  | NO   |     |            |       |
-| provider_type          | varchar(15)  | NO   |     |            |       |
-| specialty              | varchar(40)  | NO   |     |            |       |
-| team                   | varchar(20)  | YES  |     |            |       |
-| sex                    | char(1)      | NO   |     |            |       |
-| dob                    | date         | YES  |     | NULL       |       |
-| address                | varchar(40)  | YES  |     | NULL       |       |
-| phone                  | varchar(20)  | YES  |     | NULL       |       |
-| work_phone             | varchar(50)  | YES  |     | NULL       |       |
-| ohip_no                | varchar(20)  | YES  |     | NULL       |       |
-| rma_no                 | varchar(20)  | YES  |     | NULL       |       |
-| billing_no             | varchar(20)  | YES  |     | NULL       |       |
-| hso_no                 | varchar(10)  | YES  |     | NULL       |       |
-| status                 | char(1)      | YES  |     | NULL       |       |
-| comments               | text         | YES  |     | NULL       |       |
-| provider_activity      | char(3)      | YES  |     | NULL       |       |
-| practitionerNo         | varchar(20)  | YES  |     | NULL       |       |
-| init                   | varchar(10)  | YES  |     | NULL       |       |
-| job_title              | varchar(100) | YES  |     | NULL       |       |
-| email                  | varchar(60)  | YES  |     | NULL       |       |
-| title                  | varchar(20)  | YES  |     | NULL       |       |
-| lastUpdateUser         | varchar(6)   | YES  |     | NULL       |       |
-| lastUpdateDate         | date         | YES  |     | NULL       |       |
-| signed_confidentiality | date         | YES  |     | 0001-01-01 |       |
-+------------------------+--------------+------+-----+------------+-------+ 	
- */
 
 	@Id
 	@Column(name = "provider_no")

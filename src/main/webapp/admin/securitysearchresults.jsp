@@ -160,7 +160,6 @@
 	List<org.oscarehr.common.model.Security> securityList = securityDao.findAllOrderBy("user_name");
 	
 	//if action is good, then give me the result
-	String dboperation = request.getParameter("dboperation");
 	String searchMode = request.getParameter("search_mode");
 	String keyword=request.getParameter("keyword").trim()+"%";
 	
@@ -181,7 +180,7 @@
 
 	<tr bgcolor="<%=toggleLine?"ivory":"white"%>">
 
-		<td><a href='admincontrol.jsp?keyword=<%=securityRecord.getId()%>&displaymode=Security_Update'><%= securityRecord.getUserName() %></a></td>
+		<td><a href='securityupdatesecurity.jsp?keyword=<%=securityRecord.getId()%>'><%= securityRecord.getUserName() %></a></td>
 		<td nowrap>*********</td>
 		<td align="center"><%= securityRecord.getProviderNo() %></td>
 		<td align="center">****</td>

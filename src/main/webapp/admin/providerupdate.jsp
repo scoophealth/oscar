@@ -43,7 +43,6 @@
 <%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@page import="org.oscarehr.common.model.UserProperty"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
@@ -195,8 +194,8 @@
         }
 %>
 <p>
-<h2><bean:message key="admin.providerupdate.msgUpdateSuccess" /><a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("provider_no")%>&displaymode=Provider_Update"><%= request.getParameter("provider_no") %></a>
+<h2><bean:message key="admin.providerupdate.msgUpdateSuccess" />
+<a href="providerupdateprovider.jsp?keyword=<%=request.getParameter("provider_no")%>"><%= request.getParameter("provider_no") %></a>
 </h2>
 <%
   } else {

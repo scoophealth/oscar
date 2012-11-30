@@ -26,7 +26,6 @@
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
@@ -37,9 +36,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page
-	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"	errorPage="errorpage.jsp"%>
 
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
@@ -139,8 +136,7 @@
 	</tr>
 </table>
 <table cellspacing="0" cellpadding="2" width="100%" border="0">
-	<form method="post" action="admincontrol.jsp" name="updatearecord"
-		onsubmit="return onsub()">
+	<form method="post" action="securityupdate.jsp" name="updatearecord" onsubmit="return onsub()">
 <%
 	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
 	Integer securityId = Integer.valueOf(request.getParameter("keyword"));
@@ -223,9 +219,8 @@
 	<tr>
 		<td colspan="2" align="center">
 			<input type="hidden" name="security_no" value="<%= security.getSecurityNo() %>">
-			<input type="hidden" name="displaymode" value="Security_Update_Record">
 			<input type="submit" name="subbutton" value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
-			<input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=security.getSecurityNo()%>&displaymode=Security_Delete'">
+			<input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='securitydelete.jsp?keyword=<%=security.getSecurityNo()%>'">
 		</td>
 	</tr>
 <%

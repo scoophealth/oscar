@@ -29,10 +29,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;
@@ -83,7 +80,7 @@
 <table cellspacing="0" cellpadding="2" width="100%" border="0"
 	BGCOLOR="#C4D9E7">
 
-	<form method="post" action="admincontrol.jsp" name="searchprovider"	onsubmit="return onsub()">
+	<form method="post" action="providersearchresults.jsp" name="searchprovider"	onsubmit="return onsub()">
 	<tr valign="top">
 		<td rowspan="2" align="right" valign="middle"><font	face="Verdana" color="#0000FF">
 			<b><i><bean:message key="admin.search.formSearchCriteria" /></i></b></font></td>
@@ -102,7 +99,7 @@
 			<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name"> 
 
 			<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT TYPE="hidden" NAME="limit2" VALUE="10"> 
-			<INPUT TYPE="hidden" NAME="displaymode" VALUE="Provider_Search"> 
+			
 			<INPUT TYPE="SUBMIT" NAME="button" VALUE=<bean:message key="admin.search.btnSubmit"/> SIZE="17"></td>
 	</tr>
 	</form>

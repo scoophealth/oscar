@@ -71,10 +71,7 @@ function setfocus() {
 </head>
 
 <%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	List<Integer> siteIDs = new ArrayList<Integer>();
     boolean isSiteAccessPrivacy=false;
@@ -104,7 +101,7 @@ function setfocus() {
 	</tr>
 </table>
 
-<form method="post" action="admincontrol.jsp" name="updatearecord">
+<form method="post" action="providerupdate.jsp" name="updatearecord">
 
 <%
 	String keyword = request.getParameter("keyword");
@@ -128,7 +125,7 @@ function setfocus() {
 		<% String provider_no = provider.getId(); %>
 		<%= provider_no %>
 		<input type="hidden" name="provider_no" value="<%= provider_no %>">
-		<input type="hidden" name="dboperation" value="provider_update_record"></td>
+		
 	</tr>
 	<tr>
 		<td>
@@ -424,8 +421,7 @@ for (int i=0; i<sites.size(); i++) {
 	</tr>
 	<tr>
 		<td colspan="2">
-		<div align="center"><input type="hidden" name="displaymode"
-			value="Provider_Update_Record"> <input type="submit"
+		<div align="center"><input type="submit"
 			name="subbutton"
 			value="<bean:message key="admin.providerupdateprovider.btnSubmit"/>">
 		</div>

@@ -39,17 +39,8 @@
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
 %>
 
-
 <%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../login.htm");
-%>
-
-<%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;
@@ -61,10 +52,7 @@
 
 
 
-<%@ page import="java.util.*,java.sql.*"
-	errorPage="../provider/errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp"%>
 
 <html:html locale="true">
 <head>
@@ -82,7 +70,7 @@
 </script>
 
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<FORM NAME="UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp">
+<FORM NAME="UPDATEPRE" METHOD="post" ACTION="adminnewgroup.jsp">
 <table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
@@ -136,8 +124,7 @@ for(MyGroup myGroup : groupList) {
 <%
    }
 %>
-			<INPUT TYPE="hidden" NAME="displaymode" VALUE='newgroup'>
-
+		
 		</table>
 
 		</td>

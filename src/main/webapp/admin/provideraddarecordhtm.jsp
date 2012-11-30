@@ -27,6 +27,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%@ page import="org.oscarehr.common.model.ClinicNbr"%>
 <%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
@@ -36,8 +37,7 @@
 <%@ page import="org.oscarehr.common.dao.SiteDao"%>
 <%@ page import="org.oscarehr.common.model.Site"%>
 <%
-	if(session.getAttribute("user") == null)
-    response.sendRedirect("../logout.jsp");
+
   String curProvider_no,userfirstname,userlastname;
   curProvider_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
@@ -53,7 +53,7 @@
 	  try{
       String pn = h.get("providerNo");
       providerList.add(Integer.valueOf(pn));
-	  }catch(Exception alphaProviderNumber){} /*No need to do anything. Just want to avoid a NumberFormatException from provider numbers with alphanumeric Characters*/
+	  }catch(Exception alphaProviderNumber){/*empty*/} /*No need to do anything. Just want to avoid a NumberFormatException from provider numbers with alphanumeric Characters*/
   }
 
   String suggestProviderNo = "";
@@ -66,8 +66,7 @@
 %>
 
 <%
-	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+   String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     boolean isSiteAccessPrivacy=false;
 %>
@@ -121,8 +120,7 @@ function upCaseCtrl(ctrl) {
 			key="admin.provideraddrecordhtm.description" /></font></th>
 	</tr>
 </table>
-<form method="post" action="admincontrol.jsp" name="searchprovider"
-	onsubmit="return onsub()">
+<form method="post" action="provideraddarecord.jsp" name="searchprovider" onsubmit="return onsub()">
 <table cellspacing="0" cellpadding="2" width="90%" border="0">
 	<tr>
 		<td width="50%" align="right"><bean:message
@@ -376,16 +374,9 @@ for (int i=0; i<sites.size(); i++) {
                 %>
 			</select></td>
 		</tr>
-		<% if (vLocale.getCountry().equals("BR")) { %>
-		<tr>
-			<td align="right"><bean:message
-				key="admin.provider.formProviderActivity" />:</td>
-			<td><input type="text" name="provider_activity" size="5"
-				maxlength="3"></td>
-		</tr>
-		<% } else { %>
+
 		<input type="hidden" name="provider_activity" value="">
-		<% }  %>
+		
 		<tr>
 			<td align="right"><bean:message
 				key="admin.provider.formSlpUsername" />:</td>
@@ -405,9 +396,8 @@ for (int i=0; i<sites.size(); i++) {
 	</caisi:isModuleLoad>
 	<tr>
 		<td colspan="2">
-		<div align="center"><%-- not quite sure why we need both dboperation and displaymode set to the same thing, but
-                 that's the way I found it so that's the way I'll leave it... --%>
-		<input type="hidden" name="displaymode" value="Provider_Add_Record">
+		<div align="center">
+		
 		<input type="submit" name="submitbtn"
 			value="<bean:message key="admin.provideraddrecordhtm.btnProviderAddRecord"/>">
 		</div>

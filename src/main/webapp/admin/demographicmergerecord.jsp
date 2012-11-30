@@ -25,8 +25,6 @@
 --%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%
-	if(session.getValue("user") == null)
-    response.sendRedirect("../login.htm");
 
 // Defaults    		
 String strOffset="0";
