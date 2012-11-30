@@ -554,7 +554,7 @@ SPAN.bold {
 					face="Verdana, Arial, Helvetica, sans-serif" size="1"
 					color="#000000">Service Codes </font><font
 					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
-					type="text" name="svcCode" size="20" value="G590A,G700A"> </font></td>
+					type="text" name="svcCode" size="20" value="G590A,Q590A"> </font></td>
 				<td width="26%"><font size="1">Diagnostic Code <input
 					type="text" name="dxCode" size="20" value="896"> </font></td>
 				<td width="31%"><font
