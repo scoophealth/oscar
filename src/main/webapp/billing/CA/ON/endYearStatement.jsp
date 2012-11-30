@@ -52,7 +52,6 @@ function demographicSearch() {
 	url += '&displaymode=Demographic_Admin_Reports';
 	url += '&search_mode=search_name';
 	url += '&orderby=last_name, first_name';
-	url += '&dboperation=demographic_admin_reports';
 	url += '&limit1=0&limit2=5';
 	url += '&keyword='+search_param;
 	popupPage(700,1000,url,'master');

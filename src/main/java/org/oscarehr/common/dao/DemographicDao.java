@@ -287,7 +287,7 @@ public class DemographicDao extends HibernateDaoSupport {
 
 	public List<Demographic> searchDemographicByName(String searchStr, String limit, String offset) {
 
-		String queryString = "From Demographic d where last_name like :lastName ";
+		String queryString = "From Demographic d where d.LastName like :lastName ";
 
 		String[] name = searchStr.split(",");
 		if(name.length==2) {
@@ -304,6 +304,22 @@ public class DemographicDao extends HibernateDaoSupport {
 		}
 		
 		List list = q.list();
+		return list;
+	}
+
+	public List<Demographic> searchDemographicByLastNameAndNotStatus(String lastName, String statuses, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.LastName like :lastName and d.PatientStatus not in (:statuses)";
+
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+		
+		q.setParameter("lastName", lastName + "%");
+		q.setParameter("statuses", statuses);
+		
+		@SuppressWarnings("unchecked")
+        List<Demographic> list = q.list();
 		return list;
 	}
 
