@@ -299,6 +299,7 @@ public class LabResultData implements Comparable<LabResultData> {
 
 	public Date getDateObj(){
 		if (EXCELLERIS.equals(this.labType)){
+			
 			this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
 		}else if(HL7TEXT.equals(this.labType) || Spire.equals(this.labType)){
 			this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
