@@ -50,8 +50,6 @@ import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayLabAction2 extends EctDisplayAction {
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final String cmd = "labs";

@@ -62,7 +62,6 @@ int indexCount = 0;
   daySheetBean.doConfigure(dbQueries);
   
 
-oscar.oscarSecurity.CookieSecurity cs   = new oscar.oscarSecurity.CookieSecurity();
 EctSessionBean bean = new EctSessionBean();
 bean.demographicNo = demographic_no;
 

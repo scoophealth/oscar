@@ -38,8 +38,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     private static final String cmd = "specshistory";
 

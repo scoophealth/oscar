@@ -35,8 +35,6 @@ import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayMyOscarAction extends EctDisplayAction {
 	
 	Logger logger = MiscUtils.getLogger();

@@ -47,8 +47,6 @@ import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayEFormAction extends EctDisplayAction {
     private static Logger logger = MiscUtils.getLogger();
     //private final static String BGCOLOUR = "11CC00";

@@ -31,8 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayExaminationHistoryAction extends EctDisplayAction {
     private static final String cmd = "examhistory";
     

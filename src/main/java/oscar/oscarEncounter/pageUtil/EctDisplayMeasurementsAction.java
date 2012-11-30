@@ -54,8 +54,6 @@ import oscar.util.StringUtils;
 
 
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayMeasurementsAction extends EctDisplayAction {
 	private static final String cmd = "measurements";
 	FlowsheetDao flowsheetDao = (FlowsheetDao) SpringUtils.getBean("flowsheetDao");

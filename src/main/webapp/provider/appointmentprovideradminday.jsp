@@ -183,8 +183,6 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
         response.sendRedirect("../logout.jsp");
 
 	String curUser_no = (String) session.getAttribute("user");
-	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-    response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.providerCookie));
 
     ProviderPreference providerPreference2=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
 

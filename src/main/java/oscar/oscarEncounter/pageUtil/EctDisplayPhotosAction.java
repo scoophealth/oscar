@@ -44,8 +44,6 @@ import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayPhotosAction extends EctDisplayAction {
     //private static final String BGCOLOUR = "476BB3";
     private static final String cmd = "photos";

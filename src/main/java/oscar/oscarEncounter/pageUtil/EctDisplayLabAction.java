@@ -40,8 +40,6 @@ import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayLabAction extends EctDisplayAction {
 	private static final Logger logger=MiscUtils.getLogger();
 	

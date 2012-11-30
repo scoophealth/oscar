@@ -36,9 +36,6 @@
 
 <%
 
-  oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-  response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.receptionistCookie));
-
   ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
 
   String tickler_no="", textColor="", tickler_note="";

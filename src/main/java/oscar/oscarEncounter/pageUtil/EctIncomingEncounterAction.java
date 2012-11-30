@@ -47,11 +47,8 @@ import org.oscarehr.myoscar_server.ws.MinimalPersonTransfer;
 import org.oscarehr.phr.web.MyOscarMessagesHelper;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarSecurity.CookieSecurity;
 import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
-
-//import oscar.oscarSecurity.CookieSecurity;
 
 public class EctIncomingEncounterAction extends Action {
     
@@ -62,10 +59,9 @@ public class EctIncomingEncounterAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response) throws IOException, ServletException {
 				  
-        UtilDateUtilities dateConvert = new UtilDateUtilities();
-        oscar.oscarSecurity.CookieSecurity cs   = new oscar.oscarSecurity.CookieSecurity();
+       
         EctSessionBean bean = new EctSessionBean();
-        if(cs.FindThisCookie(request.getCookies(),CookieSecurity.providerCookie)){ //pass security???
+       
             if(request.getParameter("appointmentList")!=null){
                     bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean") ;
                     bean.setUpEncounterPage(request.getParameter("appointmentNo"));
@@ -165,10 +161,7 @@ public class EctIncomingEncounterAction extends Action {
                 
                 
             }
-        }
-        else{
-            return (mapping.findForward("failure"));
-        }
+        
         
         ArrayList newDocArr = (ArrayList) request.getSession().getServletContext().getAttribute("newDocArr");
         Boolean useNewEchart = (Boolean) request.getSession().getServletContext().getAttribute("useNewEchart");
