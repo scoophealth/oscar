@@ -381,7 +381,7 @@ if (isMobileOptimized) { %>
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
     <link rel="stylesheet" href="../mobile/receptionistapptstyle.css" type="text/css">
 <% } else {%>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
+<link rel="stylesheet" href="../css/receptionistapptstyle.css" type="text/css">
 <% } %>
 
 <% if (!caseload) { %>

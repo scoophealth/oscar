@@ -283,7 +283,7 @@ if (bMultisites) {
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="provider.appointmentprovideradminmonth.title" /></title>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css"
+<link rel="stylesheet" href="../css/receptionistapptstyle.css"
 	type="text/css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
    <style type="text/css">    

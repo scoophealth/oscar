@@ -100,7 +100,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="receptionist.appointmentreceptionistadminday.title" /></title>
-<link rel="stylesheet" href="receptionistapptstyle.css" type="text/css">
+<link rel="stylesheet" href="../css/receptionistapptstyle.css" type="text/css">
 </head>
 <script language="JavaScript">
 

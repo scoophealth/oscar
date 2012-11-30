@@ -60,7 +60,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PROVIDER</title>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+<link rel="stylesheet" href="../css/receptionistapptstyle.css">
 <script language="JavaScript">
 
                 <!--
