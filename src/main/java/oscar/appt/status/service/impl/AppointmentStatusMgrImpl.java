@@ -42,27 +42,27 @@ public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
   
     public List<AppointmentStatus> getAllStatus(){
         return appointStatusDao.findAll();
-    };
+    }
     
     public List<AppointmentStatus> getAllActiveStatus(){
         return appointStatusDao.findActive();
-    };
+    }
 
     public AppointmentStatus getStatus(int ID){
         return appointStatusDao.find(ID);
-    };
+    }
 
     public void changeStatus(int ID, int iActive){
         appointStatusDao.changeStatus(ID, iActive);
-    };
+    }
 
     public void modifyStatus(int ID, String strDesc, String strColor){
         appointStatusDao.modifyStatus(ID, strDesc, strColor);
-    };
+    }
 
-    public int checkStatusUsuage(List allStatus){
+    public int checkStatusUsuage(List<AppointmentStatus> allStatus){
         return appointStatusDao.checkStatusUsuage(allStatus);
-    };
+    }
     
     public void reset(){
         appointStatusDao.modifyStatus(1, "To Do", "#FDFEC7");

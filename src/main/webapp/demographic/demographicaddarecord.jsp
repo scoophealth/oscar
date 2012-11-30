@@ -48,7 +48,11 @@
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
+
 <%
+	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
@@ -224,9 +228,10 @@
             oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
             String progId = program.getProgram(request.getParameter("staff"));
             if( progId.equals("0") ) {
-                ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
-                if( rsProg.next() )
-                    progId = rsProg.getString("id");
+            	Program p = programDao.getProgramByName("OSCAR");
+            	if(p != null) {
+            		progId = p.getId().toString();
+            	}
             }
             String admissionDate=null;
 

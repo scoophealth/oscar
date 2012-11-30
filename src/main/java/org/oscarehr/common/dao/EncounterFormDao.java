@@ -37,19 +37,6 @@ public class EncounterFormDao extends AbstractDao<EncounterForm> {
 		super(EncounterForm.class);
 	}
 
-	/**
-	 * @return all forms ordered by formName
-	 */
-    public List<EncounterForm> findAll()
-	{
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x order by x.formName");
-		
-		@SuppressWarnings("unchecked")
-		List<EncounterForm> results=query.getResultList();
-		
-		return(results);
-	}
-
     public List<EncounterForm> findByFormName(String formName)
 	{
 		Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formName=?1");
@@ -60,4 +47,15 @@ public class EncounterFormDao extends AbstractDao<EncounterForm> {
 		
 		return(results);
 	}
+    
+    public List<EncounterForm> findByFormTable(String formTable)
+ 	{
+ 		Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formTable=?1");
+ 		query.setParameter(1, formTable);
+
+ 		@SuppressWarnings("unchecked")
+ 		List<EncounterForm> results=query.getResultList();
+ 		
+ 		return(results);
+ 	}
 }

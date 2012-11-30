@@ -51,8 +51,12 @@
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%@ page import="org.oscarehr.common.model.EncounterForm" %>
+<%@ page import="org.oscarehr.common.dao.EncounterFormDao" %>
+
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+	EncounterFormDao encounterFormDao = SpringUtils.getBean(EncounterFormDao.class);
 %>
 <%
   ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
@@ -360,13 +364,13 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 
 	//get chart_no from demographic table if it exists
 	if (!demono.equals("0") && !demono.equals("")) {
-   		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_detail", new Object [] {demono});
-		if (resultList.size() > 0) {
-			Map detail = resultList.get(0);
-			chartno = (String) detail.get("chart_no");
-			phone = (String) detail.get("phone");
-			rosterstatus = (String) detail.get("roster_status");
+		Demographic d = demographicDao.getDemographic(demono);
+		if(d != null) {
+			chartno = d.getChartNo();
+			phone = d.getPhone();
+			rosterstatus = d.getRosterStatus();
 		}
+   		
 		DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demono));
 		if(demographicCust != null) {
 			alert = demographicCust.getAlert();
@@ -826,11 +830,8 @@ if (bMultisites) { %>
     for (String formTblName : formTblNames){
         if ((formTblName != null) && !formTblName.equals("")) {
             //form table name defined
-            List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_formtbl", new Object [] {formTblName});
-            if (resultList.size() > 0) {
-                //form table exists                            
-                Map mFormName = resultList.get(0);
-                String formName = (String) mFormName.get("form_name");
+            for(EncounterForm ef:encounterFormDao.findByFormTable(formTblName)) {
+            	String formName = ef.getFormName();
                 pageContext.setAttribute("formName", formName);
                 boolean formComplete = false;
                 EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(demono, formTblName);
@@ -840,6 +841,7 @@ if (bMultisites) { %>
                 }
                 numForms++;
                 if (numForms == 1) {
+           
 %>
          <table style="font-size: 9pt;" bgcolor="#c0c0c0" align="center" valign="top" cellpadding="3px">
             <tr bgcolor="#ccccff">

@@ -1073,7 +1073,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <td align="right" valign="bottom">
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <INPUT TYPE="text" NAME="providername" VALUE="" WIDTH="2" HEIGHT="10" border="0" size="10" maxlength="10">
-<INPUT TYPE="SUBMIT" NAME="Go" VALUE='<bean:message key="receptionist.appointmentreceptionistadminday.btnGo"/>' onClick="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;">
+<INPUT TYPE="SUBMIT" NAME="Go" VALUE='<bean:message key="provider.appointmentprovideradminmonth.btnGo"/>' onClick="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;">
 &nbsp;&nbsp;
 </caisi:isModuleLoad>
 

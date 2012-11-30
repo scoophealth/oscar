@@ -86,9 +86,10 @@ public class EncounterFormDaoTest extends DaoTestFixtures {
 		}
 
 		// make sure each item in the list is as expected
+		//marc: removed the sort from the DAO
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items not ordered by CodeType and Code.");
+			if (!expectedResult.contains(result.get(i))){
+				//logger.warn("Items not ordered by CodeType and Code.");
 				fail("Items not sorted by CodeType and Code.");
 			}
 		}
