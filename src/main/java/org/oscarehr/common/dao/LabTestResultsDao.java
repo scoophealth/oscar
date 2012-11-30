@@ -32,27 +32,28 @@ import org.oscarehr.common.model.LabTestResults;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class LabTestResultsDao extends AbstractDao<LabTestResults> {
 
 	public LabTestResultsDao() {
 		super(LabTestResults.class);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<LabTestResults> findByTitleAndLabInfoId(Integer labId) {
 		Query query = createQuery("r", "r.title IS NOT EMPTY and r.labPatientPhysicianInfoId = :labId");
 		query.setParameter("labId", labId);
 		return query.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public List<LabTestResults> findByLabInfoId(Integer labId) {
 		Query query = createQuery("r", "r.labPatientPhysicianInfoId = :labId");
 		query.setParameter("labId", labId);
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<LabTestResults> findByAbnAndLabInfoId(String abn, Integer labId) {
 		Query query = createQuery("r", "r.abn = :abn and r.labPatientPhysicianInfoId = :labId");
 		query.setParameter("labId", labId);
@@ -70,7 +71,6 @@ public class LabTestResultsDao extends AbstractDao<LabTestResults> {
 	 * @return
 	 * 		Returns a list of triples containing lab type, test title and test name.
 	 */
-	@SuppressWarnings("unchecked")
     public List<Object[]> findUniqueTestNames(Integer demoNo, String labType) {
         String jpql = "SELECT DISTINCT p.labType, ltr.title, ltr.testName " +
                 "FROM " +
@@ -89,5 +89,12 @@ public class LabTestResultsDao extends AbstractDao<LabTestResults> {
         query.setParameter("labType", labType);
         query.setParameter("demoNo", demoNo);
         return query.getResultList();
+    }
+
+	public List<LabTestResults> findByAbnAndPhysicianId(String abn, Integer lppii) {
+		Query q = createQuery("ltr", "ltr.abn = :abn and ltr.labPatientPhysicianInfoId = :lppii");
+		q.setParameter("abn", abn);
+		q.setParameter("lppii", lppii);
+		return q.getResultList();
     }
 }
