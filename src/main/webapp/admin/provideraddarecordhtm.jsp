@@ -180,29 +180,11 @@ for (int i=0; i<sites.size(); i++) {
 		<td align="right"><bean:message key="admin.provider.formType" /><font
 			color="red">:</font></td>
 		<td><!--input type="text" name="provider_type" --> <%
- 	if (vLocale.getCountry().equals("BR")) {
- %>
-		<select name="provider_type">
-			<option value="receptionist"><bean:message
-				key="admin.provider.formType.optionReceptionist" /></option>
-			<option value="doctor"><bean:message
-				key="admin.provider.formType.optionDoctor" /></option>
-			<option value="doctor"><bean:message
-				key="admin.provider.formType.optionNurse" /></option>
-			<option value="doctor"><bean:message
-				key="admin.provider.formType.optionResident" /></option>
-			<option value="admin"><bean:message
-				key="admin.provider.formType.optionAdmin" /></option>
-			<option value="admin_billing"><bean:message
-				key="admin.provider.formType.optionAdminBilling" /></option>
-			<option value="billing"><bean:message
-				key="admin.provider.formType.optionBilling" /></option>
-		</select> <%
- 	} else {
+ 
  %> <select name="provider_type">
 			<option value="receptionist"><bean:message
 				key="admin.provider.formType.optionReceptionist" /></option>
-			<option value="doctor"><bean:message
+			<option value="doctor" selected="selected"><bean:message
 				key="admin.provider.formType.optionDoctor" /></option>
 			<option value="nurse"><bean:message
 				key="admin.provider.formType.optionNurse" /></option>
@@ -216,9 +198,7 @@ for (int i=0; i<sites.size(); i++) {
 				<option value="er_clerk"><bean:message
 					key="admin.provider.formType.optionErClerk" /></option>
 			</caisi:isModuleLoad>
-		</select> <%
- 	}
- %>
+		</select> 
 		</td>
 	</tr>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">

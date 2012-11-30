@@ -153,8 +153,6 @@ public final class LoginAction extends DispatchAction {
             EncryptionUtils.setDeterministicallyMangledPasswordSecretKeyIntoSession(session, password);
             
 
-            // get View Type
-            String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());
             String providerNo = strAuth[0];
             session.setAttribute("user", strAuth[0]);
             session.setAttribute("userfirstname", strAuth[1]);
@@ -170,43 +168,31 @@ public final class LoginAction extends DispatchAction {
             // get preferences from preference table
         	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
         	
-            if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
+            
                 
-            	if (providerPreference==null) providerPreference=new ProviderPreference();
-             	
-            	session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE, providerPreference);
-            	
-                if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
-                    session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
-                    session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
-                    session.setAttribute("caisiBillingPreferenceNotDelete", String.valueOf(providerPreference.getDefaultDoNotDeleteBilling()));
-                    
-                    default_pmm = providerPreference.getDefaultCaisiPmm();
-                    @SuppressWarnings("unchecked")
-                    ArrayList<String> newDocArr = (ArrayList<String>)request.getSession().getServletContext().getAttribute("CaseMgmtUsers");    
-                    if("enabled".equals(providerPreference.getDefaultNewOscarCme())) {
-                    	newDocArr.add(providerNo);
-                    	session.setAttribute("CaseMgmtUsers", newDocArr);
-                    }
+        	if (providerPreference==null) providerPreference=new ProviderPreference();
+         	
+        	session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE, providerPreference);
+        	
+            if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
+                session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
+                session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
+                session.setAttribute("caisiBillingPreferenceNotDelete", String.valueOf(providerPreference.getDefaultDoNotDeleteBilling()));
+                
+                default_pmm = providerPreference.getDefaultCaisiPmm();
+                @SuppressWarnings("unchecked")
+                ArrayList<String> newDocArr = (ArrayList<String>)request.getSession().getServletContext().getAttribute("CaseMgmtUsers");    
+                if("enabled".equals(providerPreference.getDefaultNewOscarCme())) {
+                	newDocArr.add(providerNo);
+                	session.setAttribute("CaseMgmtUsers", newDocArr);
                 }
-                session.setAttribute("starthour", providerPreference.getStartHour().toString());
-                session.setAttribute("endhour", providerPreference.getEndHour().toString());
-                session.setAttribute("everymin", providerPreference.getEveryMin().toString());
-                session.setAttribute("groupno", providerPreference.getMyGroupNo());
+            }
+            session.setAttribute("starthour", providerPreference.getStartHour().toString());
+            session.setAttribute("endhour", providerPreference.getEndHour().toString());
+            session.setAttribute("everymin", providerPreference.getEveryMin().toString());
+            session.setAttribute("groupno", providerPreference.getMyGroupNo());
                 
-            }
-
-            if (viewType.equalsIgnoreCase("receptionist")) { // go to receptionist view
-                // where =
-                // "receptionist";//receptionistcontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday";
-                where = "provider";
-            }
-            else if (viewType.equalsIgnoreCase("doctor")) { // go to provider view
-                where = "provider"; // providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday";
-            }
-            else if (viewType.equalsIgnoreCase("admin")) { // go to admin view
-                where = "admin";
-            }
+            where = "provider";
 
             if (where.equals("provider") && default_pmm != null && "enabled".equals(default_pmm)) {
                 where = "caisiPMM";
