@@ -24,6 +24,7 @@
 
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
 <%
   if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
@@ -59,7 +60,7 @@
   oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
   String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
 
-  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)webApplicationContext.getBean("AppointmentStatusMgr");
+  AppointmentStatusMgr apptStatusMgr =  new AppointmentStatusMgrImpl();
   List allStatus = apptStatusMgr.getAllActiveStatus();
 
   Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
