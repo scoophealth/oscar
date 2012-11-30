@@ -91,7 +91,7 @@ public class ProviderLabRouting {
 		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 		List<ProviderLabRoutingModel> routings = dao.findByLabNoAndLabTypeAndProviderNo(labId, labType, provider_no);
 
-		if (!routings.isEmpty()) {
+		if (routings.isEmpty()) {
 			String status = fr.getStatus(provider_no);
 			ArrayList<ArrayList<String>> forwardProviders = fr.getProviders(provider_no);
 
