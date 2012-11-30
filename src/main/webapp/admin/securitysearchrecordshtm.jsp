@@ -63,7 +63,6 @@
 </table>
 
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;
@@ -76,7 +75,7 @@
 <table cellspacing="0" cellpadding="2" width="100%" border="0"
 	BGCOLOR="#C4D9E7">
 
-	<form method="post" action="admincontrol.jsp" name="searchprovider"
+	<form method="post" action="securitysearchresults.jsp" name="searchprovider"
 		onsubmit="return onsub()">
 	<tr valign="top">
 		<td rowspan="2" align="right" valign="middle"><font
@@ -95,8 +94,7 @@
 			TYPE="hidden" NAME="orderby" VALUE="user_name"> 
 
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
-			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
-			NAME="displaymode" VALUE="Security_Search"> <INPUT
+			TYPE="hidden" NAME="limit2" VALUE="10"><INPUT
 			TYPE="SUBMIT" NAME="button"
 			VALUE="<bean:message key="admin.securitysearchrecordshtm.btnSearch"/>"
 			SIZE="17"></td>

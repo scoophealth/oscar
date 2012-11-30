@@ -32,8 +32,6 @@
 <%@ page import="org.oscarehr.common.model.ProviderData"%>
 <%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
 	
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -54,8 +52,6 @@
 </head>
 
 <%
-	if (session.getValue("user") == null)
-			response.sendRedirect("../logout.jsp");
 		String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 
 		//Defaults    		
@@ -69,8 +65,6 @@
 		if (request.getParameter("limit2") != null)
 			strLimit = request.getParameter("limit2");
 
-		String displayMode = request.getParameter("displaymode");
-		String dboperation = request.getParameter("dboperation");
 		String keyword = request.getParameter("keyword");
 		String orderBy = request.getParameter("orderby");
 		String searchMode = request.getParameter("search_mode");
@@ -96,7 +90,7 @@
 	</tr>
 </table>
 <table cellspacing="0" cellpadding="0" width="100%" border="0" BGCOLOR="<%=weakcolor%>">
-	<form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
+	<form method="post" action="providersearchresults.jsp" name="searchprovider" onsubmit="return onsub()">
 	<tr valign="top">
 		<td rowspan="2" align="right" valign="middle"><font
 			face="Verdana" color="#0000FF"><b><i><bean:message key="admin.search.formSearchCriteria" /></i></b></font></td>
@@ -112,18 +106,17 @@
 			<bean:message key="admin.provider.formProviderNo" /></font></td>
 		<td nowrap><font size="1" face="Verdana" color="#0000FF">
 		<input type="checkbox" name="search_status" value="1"
-			<%=request.getAttribute("active").equals("1")?"checked":""%>>
+			<%=request.getParameter("search_status")!=null?(request.getParameter("search_status").equals("1")?"checked":""):""%>>
 			<bean:message key="admin.providersearch.formActiveStatus" /><br />
 		<input type="checkbox" name="search_status" value="0"
-			<%=request.getAttribute("inactive").equals("1")?"checked":""%>>
+			<%=request.getParameter("search_status")!=null?(request.getParameter("search_status").equals("0")?"checked":""):""%>>
 			<bean:message key="admin.providersearch.formInactiveStatus" /> </font></td>
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
 			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
 			TYPE="hidden" NAME="orderby" VALUE="last_name"> <INPUT
 
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
-			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
-			NAME="displaymode" VALUE="Provider_Search"> <INPUT
+			TYPE="hidden" NAME="limit2" VALUE="10">  <INPUT
 			TYPE="SUBMIT" NAME="button"
 			VALUE=<bean:message key="admin.providersearchresults.btnSubmit"/>
 			SIZE="17"></td>
@@ -142,13 +135,13 @@
 	bgcolor="ivory">
 	<tr bgcolor="<%=deepcolor%>">
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=provider_no&limit1=0&limit2=10">
+			href="providersearchresults.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&orderby=provider_no&limit1=0&limit2=10">
 			<bean:message key="admin.providersearchresults.ID" /></a></b></TH>
 		<TH align="center" width="19%"><b><a
-			href="admincontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=first_name&limit1=0&limit2=10">
+			href="providersearchresults.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&orderby=first_name&limit1=0&limit2=10">
 			<bean:message key="admin.provider.formFirstName" /></a> </b></TH>
 		<TH align="center" width="19%"><b><a
-			href="admincontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=last_name&limit1=0&limit2=10">
+			href="providersearchresults.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&orderby=last_name&limit1=0&limit2=10">
 			<bean:message key="admin.provider.formLastName" /></a></b></TH>
 		<TH align="center" width="16%"><b>
 			<bean:message key="admin.provider.formSpecialty" /></b></TH>
@@ -196,7 +189,7 @@
 %>
 
 	<tr bgcolor="<%=toggleLine?"white":weakcolor%>">
-		<td align="center"><a href='admincontrol.jsp?keyword=<%=provider.getId()%>&displaymode=Provider_Update'><%= provider.getId() %></a></td>
+		<td align="center"><a href='providerupdateprovider.jsp?keyword=<%=provider.getId()%>'><%= provider.getId() %></a></td>
 		<td><%= provider.getFirstName() %></td>
 		<td><%= provider.getLastName() %></td>
 		<td><%= provider.getSpecialty() %></td>
@@ -219,12 +212,12 @@
   nLastPage=Integer.parseInt(strOffset)-Integer.parseInt(strLimit);
   if(nLastPage>=0) {
 %> <a
-	href="admincontrol.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&displaymode=<%= displayMode %>&dboperation=<%= dboperation %>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>"><bean:message
+	href="providersearchresults.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>"><bean:message
 	key="admin.providersearchresults.btnLastPage" /></a> | <%
   }
   if(nItems==Integer.parseInt(strLimit)) {
 %> <a
-	href="admincontrol.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&displaymode=<%= displayMode%>&dboperation=<%= dboperation %>&orderby=<%= orderBy %>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>"><bean:message
+	href="providersearchresults.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&orderby=<%= orderBy %>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>"><bean:message
 	key="admin.providersearchresults.btnNextPage" /></a> <%
 }
 %>

@@ -79,7 +79,7 @@
 
 <body>
 	
-	<form method="post" action="admincontrol.jsp" name="manageNRB">
+	<form method="post" action="" name="manageNRB">
 	<table>
 	
 		<tr bgcolor="#486ebd">
@@ -110,7 +110,7 @@
 		</tr>
 	</table>
 	</form>
-	<form method="post" action="admincontrol.jsp" name="manageNRB">
+	<form method="post" action="" name="manageNRB">
 		<table>
 		<tr bgcolor="#486ebd">
 			<th align="LEFT" colspan="3"><font face="Helvetica" color="#FFFFFF">Add NBR Code</font></th>

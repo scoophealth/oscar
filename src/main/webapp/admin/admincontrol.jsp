@@ -147,7 +147,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Demographic_Admin_Reports" , "../demographic/demographicsearch2reportresults.jsp"},
 
     {"displaymygroup" , "admindisplaymygroup.jsp"},
-    {"newgroup" , "adminnewgroup.jsp"},
     {"savemygroup" , "adminsavemygroup.jsp"},
 
     {"reboot_confirmation", "rebootConfirmation.jsp"},

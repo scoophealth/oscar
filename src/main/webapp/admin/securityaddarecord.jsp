@@ -26,7 +26,6 @@
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
@@ -36,7 +35,6 @@
 </security:oscarSec>
 
 <%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
 
     boolean isSiteAccessPrivacy=false;
@@ -174,7 +172,7 @@
 			key="admin.securityaddarecord.description" /></font></th>
 	</tr>
 </table>
-<form method="post" action="admincontrol.jsp" name="searchprovider"
+<form method="post" action="securityaddsecurity.jsp" name="searchprovider"
 	onsubmit="return onsub()">
 
 <table cellspacing="0" cellpadding="2" width="90%" border="0">
@@ -282,7 +280,7 @@
 	<tr>
 		<td colspan="2">
 		<div align="center">
-		<input type="hidden" name="displaymode" value="Security_Add_Record">
+		
 		<input type="submit" name="subbutton" value='<bean:message key="admin.securityaddarecord.btnSubmit"/>'>
 		</div>
 		</td>

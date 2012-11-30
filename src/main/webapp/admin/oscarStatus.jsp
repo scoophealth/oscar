@@ -14,15 +14,10 @@
 <%@page import="org.oscarehr.common.model.UserProperty" %>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 String curUser_no;
 curUser_no = (String) session.getAttribute("user");
 String tite = (String) request.getAttribute("provider.title");
-%>
-
-<%
-	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 
 <html:html>
@@ -53,8 +48,7 @@ function doDocuments() {
 <meta http-equiv="Content-Type" content="text/html;">
 <title><bean:message key="admin.oscarStatus.oscarStatus" /></title>
 
-<link rel="stylesheet" type="text/css"
-	href="../oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 
 </head>
 
@@ -152,8 +146,7 @@ onLoad="setTimeout('doDocuments()',3000);"
 	<tr>
 		<td>
 			<div style="margin-top: 10px;">
-				<form method="post" action="admincontrol.jsp" name="confirmOscarReboot">
-					<input type="hidden" name="displaymode" value="reboot_confirmation">
+				<form method="post" action="rebootConfirmation.jsp" name="confirmOscarReboot">
 					If you are having issues with Oscar, click the button below to restart Oscar.
 					<br>
 					<input type="submit" name="subbutton" value="REBOOT OSCAR" > 
