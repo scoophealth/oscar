@@ -30,7 +30,9 @@
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
 	errorPage="../appointment/errorpage.jsp"%>
-
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -172,25 +174,18 @@ function go() {
 					onChange="selectprovider(this)">
 					<option value=""><bean:message
 						key="schedule.scheduletemplatesetting.msgNoProvider" /></option>
-					<%
-   String param = "doctor";
-   ResultSet rsgroup = scheduleMainBean.queryResults(param, dboperation);
- 	 while (rsgroup.next()) { 
-%>
-					<option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
-					<% } 
-   param = "receptionist";
-   rsgroup = scheduleMainBean.queryResults(param, dboperation);
- 	 while (rsgroup.next()) { 
-%>
-					<option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
-					<% } 
-   param = "admin";
-   rsgroup = scheduleMainBean.queryResults(param, dboperation);
- 	 while (rsgroup.next()) { 
-%>
-					<option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
-					<% } %>
+						
+						<%
+							ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+							List<Provider> providers = providerDao.getActiveProviders();
+							//TODO: filter by site/team if necessary
+							
+							for(Provider p:providers) {
+						%>
+							<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></option>
+							
+						<% } %>
+				
 				</select></td>
 			</tr>
 			<tr>
@@ -230,25 +225,13 @@ function go() {
 					name="providerid">
 					<option value="Public"><bean:message
 						key="schedule.scheduletemplatesetting.msgPublic" /></option>
-					<%
-   param = "doctor";
-   rsgroup = scheduleMainBean.queryResults(param, dboperation);
- 	 while (rsgroup.next()) { 
-%>
-					<option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
-					<% } 
-   param = "receptionist";
-   rsgroup = scheduleMainBean.queryResults(param, dboperation);
- 	 while (rsgroup.next()) { 
-%>
-					<option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
-					<% } 
-   param = "admin";
-   rsgroup = scheduleMainBean.queryResults(param, dboperation);
- 	 while (rsgroup.next()) { 
-%>
-					<option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
-					<% } %>
+<%
+							for(Provider p:providers) {
+						%>
+							<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></option>
+							
+						<% } %>
+						
 				</select></td>
 			</tr>
 			<tr>

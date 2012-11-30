@@ -9,6 +9,7 @@
 
 package org.oscarehr.eyeform;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,6 +29,8 @@ import org.apache.struts.actions.DispatchAction;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DiagnosticCodeDao;
@@ -201,7 +204,15 @@ public class EyeformUtilAction extends DispatchAction {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-		List<Provider> activeReceptionists = providerDao.getActiveProvidersByType("receptionist");
+		SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
+		
+		List<Provider> activeReceptionists = new ArrayList<Provider>();
+		for(SecUserRole sur:secUserRoleDao.getSecUserRolesByRoleName("receptionist")) {
+			Provider p = providerDao.getProvider(sur.getProviderNo());
+			if(p != null && p.getStatus().equals("1")) {
+				activeReceptionists.add(p);
+			}
+		}
 
 		TicklerCreator tc = new TicklerCreator();
 		String demographicNo = request.getParameter("demographicNo");
