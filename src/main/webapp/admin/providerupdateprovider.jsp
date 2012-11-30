@@ -38,7 +38,6 @@
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="oscar.OscarProperties"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);

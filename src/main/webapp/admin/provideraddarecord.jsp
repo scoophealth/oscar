@@ -52,7 +52,6 @@
 <%@page import="org.oscarehr.common.model.Site"%>
 
 <%@ page import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
@@ -215,8 +214,6 @@ else {
 	<%
 		}
 	}
-  //apptMainBean.closePstmtConn();
-
 %> <%@ include file="footer2htm.jsp"%></center>
 </body>
 </html:html>

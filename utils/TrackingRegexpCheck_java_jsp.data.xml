@@ -56,7 +56,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/SurveyReport.java:private List entries = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/dao/oscar/hibernate/OscarFormDAOHibernate.java:Map&lt;String[],String&gt; questionAnswers = new LinkedHashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/survey/model/SurveyTestInstance.java:private Set data = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/model/oscar/OscarFormInstance.java:private Set data = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/model/oscar/OscarFormInstanceTmpsave.java:private Set data = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/service/SurveyModelManager.java:List result = new ArrayList();</ViolationValue>
@@ -1015,19 +1014,18 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/dao/hibernate/PHRDocumentDAOHibernate.java:public class PHRDocumentDAOHibernate extends HibernateDaoSupport</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/dao/hibernate/PHRDocumentExtDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/dao/hibernate/PHRDocumentExtDAOHibernate.java:public class PHRDocumentExtDAOHibernate extends HibernateDaoSupport</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/survey/dao/hibernate/SurveyDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/survey/dao/hibernate/SurveyDAOHibernate.java:public class SurveyDAOHibernate extends HibernateDaoSupport implements SurveyDAO {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/survey/dao/hibernate/SurveyTestDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/survey/dao/hibernate/SurveyTestDAOHibernate.java:public class SurveyTestDAOHibernate extends HibernateDaoSupport implements</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/dao/oscar/hibernate/OscarFormDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/dao/oscar/hibernate/OscarFormDAOHibernate.java:public class OscarFormDAOHibernate extends HibernateDaoSupport implements</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/DbConnectionFilter.java:Connection c = ((DataSource) SpringUtils.getBean("dataSource")).getConnection();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:dbPH=new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:if(aKeyword[0].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING) &amp;&amp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:private DBPreparedHandler dbPH=null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:public ResultSet queryResults_paged(DBPreparedHandlerParam[] aKeyword, String dboperation, int iOffSet) throws Exception{</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:rs = DBHelp.searchDBRecord("select SECURITY_NO, PIN from SECURITY");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:rs = DBHelp.searchDBRecord("select value from property where name='IS_PIN_ENCRYPTED'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/OscarAction.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/OscarAction.java:protected DBPreparedHandler handler = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dao/OscarSuperDao.java:* Oscar super DAO implementation created to extract database access code from JSP files. This class should be extended by a scope named DAO class, i.e. AppointmentDao. Do not access methods of this class directly - use OscarSuperManager methods instead.</ViolationValue>
@@ -1158,14 +1156,6 @@
         <ViolationValue>/src/main/java/oscar/form/study/FrmStudydiabetes2subjectRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/DBHelp.java:public final class DBHelp {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/DBHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:ResultSet  rs = DBHandler.GetSQL(p);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:ResultSet rs = DBHandler.GetSQL("select * from billingmaster where billingmaster_no = '"+billingNo+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:ResultSet rs = DBHandler.GetSQL("select billingstatus from billingmaster where billingmaster_no = '"+billingNo+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:ResultSet rs = DBHandler.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanC12 where t_officefolioclaimno = '"+forwardZero(billingNo,7)+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:ResultSet rs = DBHandler.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:ResultSet rs = DBHandler.GetSQL("select t_dataseq from teleplanC12 where t_officefolioclaimno = '"+forwardZero(billingNo,7)+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java:rs = DBHandler.GetSQL("select t_dataseq from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPBillingNote.java:ResultSet rs = DBHandler.GetSQL(notesql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java://          ResultSet rs2 = DBHandler.GetSQL("select * from wcb where billing_no = '" +</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:ResultSet rs = DBHandler.GetSQL(</ViolationValue>
@@ -1460,8 +1450,6 @@
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("role_name", DBHelp.getString(rs,"role_name")!=null?DBHelp.getString(rs,"role_name"):"");</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdateprovider.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdateprovider.jsp:ResultSet siters = DBHelp.searchDBRecord(sqlString);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/unLock.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/onSearch3rdBillAddr.jsp:oscar.oscarDB.DBPreparedHandler dbObj = new oscar.oscarDB.DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/support/natureinjury.jsp:java.sql.ResultSet rs = DBHandler.GetSQL("SELECT code, level1, level2, level3, usagenote FROM wcb_noi_code "+wherestr+" ORDER BY level1, level2, level3");</ViolationValue>
