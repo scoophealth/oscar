@@ -47,9 +47,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 function demographicSearch() {
 	var search_param = document.forms[0].lastNameParam.value;
-	var url = '../../../admin/admincontrol.jsp';
+	var url = '../../../demographic/demographicsearch2reportresults.jsp';
 	url += '?originalpage='+escape('../billing/CA/ON/endYearStatement.do?demosearch=true');
-	url += '&displaymode=Demographic_Admin_Reports';
 	url += '&search_mode=search_name';
 	url += '&orderby=last_name, first_name';
 	url += '&limit1=0&limit2=5';
@@ -91,6 +90,7 @@ function calToday(field) {
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
 	<html:form action="billing/CA/ON/endYearStatement">
+		<html:hidden property="demographicNoParam"/>
 	<tr>
 		<td width="550px" align="center"><font size="3"> 
 			First Name: <html:text property="firstNameParam" size="16" style="font-size:16px" ></html:text> &nbsp;&nbsp;

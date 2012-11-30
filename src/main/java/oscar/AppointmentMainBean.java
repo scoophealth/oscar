@@ -36,6 +36,7 @@ import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.login.DBHelp;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 import oscar.util.UtilDict;
@@ -94,7 +95,7 @@ public class AppointmentMainBean {
 
   public boolean isPINEncrypted() throws Exception{
 	  ResultSet rs =null;
-  	  rs = dbPH.queryResults("select value from property where name='IS_PIN_ENCRYPTED'");
+  	  rs = DBHelp.searchDBRecord("select value from property where name='IS_PIN_ENCRYPTED'");
   	  if(rs.next()==false) return true;
   	  return rs.getInt(1)>0;
   }
@@ -106,7 +107,7 @@ public class AppointmentMainBean {
 	  }
 	  
 	  ResultSet rs =null;
-  	  rs = dbPH.queryResults("select SECURITY_NO, PIN from SECURITY");
+  	  rs = DBHelp.searchDBRecord("select SECURITY_NO, PIN from SECURITY");
   	  while(rs.next()){
   		  Security s = securityDao.find(rs.getInt("SECURITY_NO"));
   		  if(s != null) {

@@ -99,7 +99,7 @@
 <table cellspacing="0" cellpadding="0" width="100%" border="0"
 	BGCOLOR="#C4D9E7">
 
-	<form method="post" action="admincontrol.jsp" name="searchprovider">
+	<form method="post" action="securitysearchresults.jsp" name="searchprovider">
 	<tr valign="top">
 		<td rowspan="2" align="right" valign="middle"><font
 			face="Verdana" color="#0000FF"><b><i><bean:message
@@ -116,8 +116,7 @@
 			TYPE="hidden" NAME="orderby" VALUE="user_name"> 
 
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
-			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
-			NAME="displaymode" VALUE="Security_Search"> <INPUT
+			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT
 			TYPE="SUBMIT" NAME="button"
 			VALUE='<bean:message key="admin.search.btnSubmit"/>' SIZE="17"></td>
 	</tr>
@@ -200,12 +199,12 @@
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
+	href="securitysearchresults.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
 	key="admin.securitysearchresults.btnLastPage" /></a> | <%
   }
   if(true) { //nItems==Integer.parseInt(strLimit2)) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message
+	href="securitysearchresults.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message
 	key="admin.securitysearchresults.btnNextPage" /></a> <%
 }
 %>

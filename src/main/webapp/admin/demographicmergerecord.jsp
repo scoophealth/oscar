@@ -148,7 +148,7 @@ if( outcome !=null){
 
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
 	BGCOLOR="#C4D9E7">
-	<form method="post" name="titlesearch" action="admincontrol.jsp" onSubmit="return checkTypeIn()">
+	<form method="post" name="titlesearch" action="demographicmergerecord.jsp" onSubmit="return checkTypeIn()">
 	<tr valign="top">
 		<td rowspan="2" ALIGN="right" valign="middle"><font
 			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
@@ -168,10 +168,8 @@ if( outcome !=null){
 		<td valign="middle" rowspan="2" ALIGN="left">
 			<input type="text" NAME="keyword" SIZE="17" MAXLENGTH="100"> 
 			<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name"> 
-			<INPUT TYPE="hidden" NAME="dboperation" VALUE="">
 			<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> 
 			<INPUT TYPE="hidden" NAME="limit2" VALUE="10"> 
-			<INPUT TYPE="hidden" NAME="displaymode" VALUE="Demographic_Merge"> 
 			<INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"> 
 			<input type="submit" name="mergebutton" value="Search Merged Records" onclick="searchMerged()">
 		</td>
@@ -210,19 +208,19 @@ if( outcome !=null){
 		<th align="center" width="5%">Main Record</th>
 		<%}%>
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">DEMOGP' NO</a></b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">DEMOGP' NO</a></b></font></TH>
 		<TH align="center" width="20%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>">LAST NAME</a> </b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>">LAST NAME</a> </b></font></TH>
 		<TH align="center" width="20%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=first_name&limit1=0&limit2=<%=strLimit%>">FIRST NAME</a> </b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=first_name&limit1=0&limit2=<%=strLimit%>">FIRST NAME</a> </b></font></TH>
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=age&limit1=0&limit2=<%=strLimit%>">AGE</a></b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=age&limit1=0&limit2=<%=strLimit%>">AGE</a></b></font></TH>
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>">ROSTER STATUS</a></b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>">ROSTER STATUS</a></b></font></TH>
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit%>">SEX</a></B></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=sex&limit1=0&limit2=<%=strLimit%>">SEX</a></B></font></TH>
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=date_of_birth&limit1=0&limit2=<%=strLimit%>">DOB(yy/mm/dd)</a></B></Font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=date_of_birth&limit1=0&limit2=<%=strLimit%>">DOB(yy/mm/dd)</a></B></Font></TH>
 	</tr>
 <%
 
@@ -352,12 +350,12 @@ nNextPage=Integer.parseInt(strLimit)+Integer.parseInt(strOffset);
 nLastPage=Integer.parseInt(strOffset)-Integer.parseInt(strLimit);
 if(nLastPage>=0) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>">Last
+	href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>">Last
 Page</a> | <%
 }
 if(nItems==Integer.parseInt(strLimit)) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>">
+	href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>">
 Next Page</a> <%
 }
 
