@@ -132,10 +132,14 @@
 
 
                     <td colspan="8">
-                        <div style="text-align: right; font-weight: bold"> <a id="firstP" href="javascript:void(0);" onclick="firstPage('<%=docId%>');">First</a>
-                        <a id="prevP" href="javascript:void(0);" onclick="prevPage('<%=docId%>');">Prev</a>
+                        <div style="text-align: right; font-weight: bold"> 
+                        <% if( numOfPage > 1 ) {%> 
+                        <a id="firstP" style="display: none;" href="javascript:void(0);" onclick="firstPage('<%=docId%>');">First</a>
+                        <a id="prevP" style="display: none;" href="javascript:void(0);" onclick="prevPage('<%=docId%>');">Prev</a>
                         <a id="nextP" href="javascript:void(0);" onclick="nextPage('<%=docId%>');">Next</a>
-                        <a id="lastP" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">Last</a></div>
+                        <a id="lastP" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">Last</a>                        
+                        <%}%>
+                        </div>
                         <a href="<%=url2%>" ><img alt="document" src="<%=url%>" id="docImg_<%=docId%>" /></a>
               
                         
