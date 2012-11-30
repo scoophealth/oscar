@@ -38,8 +38,6 @@ import org.oscarehr.util.MiscUtils;
 import oscar.eform.EFormUtil;
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayDiagramAction extends EctDisplayAction {
     private static final String cmd = "diagrams";
     

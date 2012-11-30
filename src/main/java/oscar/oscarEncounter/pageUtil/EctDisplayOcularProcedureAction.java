@@ -40,8 +40,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayOcularProcedureAction extends EctDisplayAction {
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 

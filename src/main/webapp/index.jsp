@@ -38,15 +38,10 @@
 OscarProperties props = OscarProperties.getInstance();
 
 // clear old cookies
-Cookie rcpCookie = new Cookie(CookieSecurity.receptionistCookie, "");
 Cookie prvCookie = new Cookie(CookieSecurity.providerCookie, "");
-Cookie admCookie = new Cookie(CookieSecurity.adminCookie, "");
-rcpCookie.setPath("/");
 prvCookie.setPath("/");
-admCookie.setPath("/");
-response.addCookie(rcpCookie);
 response.addCookie(prvCookie);
-response.addCookie(admCookie);
+
 
 // Initialize browser info variables
 String userAgent = request.getHeader("User-Agent");

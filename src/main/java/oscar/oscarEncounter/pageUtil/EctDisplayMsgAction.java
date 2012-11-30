@@ -43,8 +43,6 @@ import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayMsgAction extends EctDisplayAction {
     
     private static final String cmd = "msgs";

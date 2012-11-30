@@ -35,14 +35,6 @@
 
 
 <%
-
-        oscar.oscarSecurity.CookieSecurity cs   = new oscar.oscarSecurity.CookieSecurity();
-
-        if(!cs.FindThisCookie(request.getCookies(),cs.providerCookie)){
-        response.sendRedirect("error.jsp");
-        return;
-        }
-
 String demoNo   = request.getParameter("val2");
 String prov     = request.getParameter("val1");
 

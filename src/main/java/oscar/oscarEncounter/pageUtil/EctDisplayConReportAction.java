@@ -42,8 +42,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayConReportAction extends EctDisplayAction {
     private static final String cmd = "conReport";
 

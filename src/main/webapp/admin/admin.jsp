@@ -52,8 +52,6 @@
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <%
 	String country = request.getLocale().getCountry();
-	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-	response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.adminCookie));
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

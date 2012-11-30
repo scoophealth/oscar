@@ -41,8 +41,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
-//import oscar.oscarSecurity.CookieSecurity;
-
 public class EctDisplayMacroAction extends EctDisplayAction {
     private static final String cmd = "macro";
     
