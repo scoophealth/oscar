@@ -27,8 +27,6 @@
 <%@ page import="java.util.*, oscar.*, oscar.util.*"
 	errorPage="errorpage.jsp"%>
 <%
-  if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("receptionist"))
-    response.sendRedirect("../logout.jsp");
 
   if(request.getParameter("year")==null && request.getParameter("month")==null && request.getParameter("day")==null && request.getParameter("displaymode")==null && request.getParameter("dboperation")==null) {
     GregorianCalendar now=new GregorianCalendar();

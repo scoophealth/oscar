@@ -24,11 +24,6 @@
 
 --%>
 
-<%
-if(session.getAttribute("user") == null || !( ((String) session.getAttribute("userprofession")).equalsIgnoreCase("doctor") ))
-	response.sendRedirect("../../logout.jsp");
-%>
-
 
 <%@ page contentType="text/xml"%>
 <%@ page

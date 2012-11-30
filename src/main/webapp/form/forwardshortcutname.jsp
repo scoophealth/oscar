@@ -27,7 +27,6 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
@@ -38,8 +37,6 @@
 <%@ page import="java.net.URLDecoder, oscar.form.data.*" errorPage="../errorpage.jsp"%>
 
 <%
-  //if(session.getValue("user") == null || !( ((String) session.getValue("userprofession")).equalsIgnoreCase("doctor") ))
-  //  response.sendRedirect("../logout.jsp");
 
     // forward to the page 'form_link'
     if(true) {

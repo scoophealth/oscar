@@ -43,8 +43,6 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%
-	if (session.getAttribute("user") == null) //|| !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
-	response.sendRedirect("../logout.jsp");
 	String curProvider_no = (String)session.getAttribute("user");
 	String userfirstname = (String)session.getAttribute("userfirstname");
 	String userlastname = (String)session.getAttribute("userlastname");
@@ -55,7 +53,7 @@
 <%
 	String country = request.getLocale().getCountry();
 	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-	response.addCookie(cs.GiveMeACookie(cs.adminCookie));
+	response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.adminCookie));
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

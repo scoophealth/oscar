@@ -159,7 +159,6 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute("user", strAuth[0]);
             session.setAttribute("userfirstname", strAuth[1]);
             session.setAttribute("userlastname", strAuth[2]);
-            session.setAttribute("userprofession", viewType);
             session.setAttribute("userrole", strAuth[4]);
             session.setAttribute("oscar_context_path", request.getContextPath());
             session.setAttribute("expired_days", strAuth[5]);

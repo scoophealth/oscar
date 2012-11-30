@@ -454,7 +454,9 @@ function checkAll(formId){
                                     <%= dm.theime %>
                                     </td>
                                     <td bgcolor="#EEEEFF">
+                                    <%if(dm.demographic_no != null  && dm.demographic_no.length()>0) {%>
                                         <oscar:nameage demographicNo="<%=dm.demographic_no%>"></oscar:nameage>
+                                    <%} %>
                                     </td>
                                 </tr>
                             <%}%>

@@ -28,7 +28,6 @@ package oscar.oscarMessenger.config.data;
 
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.servlet.jsp.JspWriter;
 
@@ -152,31 +151,14 @@ public class MsgMessengerGroupData {
                   out.print("      </td>");
                   out.print("      <td>");
 
-                  String strProviderType = new String();
-                  ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",locale);
+                  String strProviderType = oscar.Misc.getString(rs, "provider_type");
                   
-                  if (oscar.Misc.getString(rs, "provider_type").equals("doctor")) {
-                  	strProviderType = oscarR.getString("admin.provider.formType.optionDoctor");
-                  }else if (oscar.Misc.getString(rs, "provider_type").equals("receptionist")) {
-                  	strProviderType = oscarR.getString("admin.provider.formType.optionReceptionist");
-                  }else if (oscar.Misc.getString(rs, "provider_type").equals("nurse")) {
-                  	strProviderType = oscarR.getString("admin.provider.formType.optionNurse");
-                  }else if (oscar.Misc.getString(rs, "provider_type").equals("resident")) {	
-                  	strProviderType = oscarR.getString("admin.provider.formType.optionResident");
-                  }else if (oscar.Misc.getString(rs, "provider_type").equals("admin")) {
-                  	strProviderType = oscarR.getString("admin.provider.formType.optionAdmin");
-                  }else{
-                  	strProviderType = oscar.Misc.getString(rs, "provider_type");
-                  }
-
                   out.print(strProviderType);
                   
                   out.print("      </td>");
 
-
                   out.print("   </tr>");
               }
-
 
               rs.close();
           }catch (Exception e){MiscUtils.getLogger().error("Error", e); }

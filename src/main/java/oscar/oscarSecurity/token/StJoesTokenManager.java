@@ -163,7 +163,6 @@ public class StJoesTokenManager extends SecurityTokenManager {
         session.setAttribute("user", provider.getProviderNo());
         session.setAttribute("userfirstname", provider.getFirstName());
         session.setAttribute("userlastname", provider.getLastName());
-        session.setAttribute("userprofession", provider.getProviderType());
         session.setAttribute("userrole", sb.toString());
         session.setAttribute("oscar_context_path", httpRequest.getContextPath());
         //session.setAttribute("expired_days", strAuth[5]);

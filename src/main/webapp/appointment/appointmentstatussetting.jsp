@@ -23,7 +23,6 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
@@ -31,11 +30,6 @@
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%
-if(session.getAttribute("user") == null ) //|| !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
-	response.sendRedirect("../logout.jsp");
-  //instatiate/configure the main bean, forward the request to the output file
-%>
 
 <html>
 <head>

@@ -25,8 +25,6 @@
 --%>
 
 <%
-  if(session.getAttribute("user") == null || !( ((String) session.getAttribute("userprofession")).equalsIgnoreCase("doctor") ))
-    response.sendRedirect("../../logout.jsp");
 
     // forward to the page 'form'+study_name+'.jsp'
     if(true) {
