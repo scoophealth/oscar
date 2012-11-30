@@ -25,7 +25,6 @@
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
@@ -34,13 +33,10 @@
 </security:oscarSec>
 
 <%
-  //if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
-  //  response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*,oscar.util.*"	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.EncounterTemplate" %>
 <%@ page import="org.oscarehr.common.dao.EncounterTemplateDao" %>
@@ -48,12 +44,6 @@
 	EncounterTemplateDao encounterTemplateDao = SpringUtils.getBean(EncounterTemplateDao.class);
 %>
 <%
-  String [][] dbQueries=new String[][] {
-{"search_templatename", "select encountertemplate_name from encountertemplate where encountertemplate_name like ? order by encountertemplate_name" },
-{"search_template", "select * from encountertemplate where encountertemplate_name = ?" },
-  };
-  apptMainBean.doConfigure(dbQueries);
-
   //save or delete the settings
   int rowsAffected = 0;
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 ||
@@ -133,10 +123,10 @@ function setfocus() {
   String tName = null;
   String tValue = null;
   if(bEdit) {
-    ResultSet rsdemo = apptMainBean.queryResults(request.getParameter("name"), "search_template");
-    while (rsdemo.next()) {
-      tName = UtilMisc.charEscape(rsdemo.getString("encountertemplate_name"), '"');
-      tValue = rsdemo.getString("encountertemplate_value");
+	  List<EncounterTemplate> templates = encounterTemplateDao.findByName(request.getParameter("name"));
+    for(EncounterTemplate template:templates) {
+      tName = template.getEncounterTemplateName();
+      tValue =template.getEncounterTemplateValue();
 	}
   }
 %>
