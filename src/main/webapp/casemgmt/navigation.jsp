@@ -247,8 +247,6 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 
     <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
     <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/RemoteAttachments.jsp');return false;">OscarComm</a></td></tr>
-    <% } else {%>
-    <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/packageNA.jsp?pkg=oscarComm');return false;">OscarComm</a></td></tr>
     <% } %>
 </caisirole:SecurityAccess>
 

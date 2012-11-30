@@ -907,9 +907,6 @@ function removeSaveFeedback()  {
 				</oscar:oscarPropertiesCheck> <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
 				<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')"><bean:message
 					key="global.oscarComm" /></a><br>
-				<% } else {%> <a
-					href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')"><bean:message
-					key="global.oscarComm" /></a><br>
 				<% } %> <a href=#
 					onClick="popupOscarComm(580,900,'../oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=bean.demographicNo%>&providerNo=<%=provNo%>&quickList=');return false;"><bean:message
 					key="global.disease" /></a><br>
