@@ -35,8 +35,6 @@
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-  if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("receptionist"))
-    response.sendRedirect("../logout.jsp");
 
   oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
   response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.receptionistCookie));
@@ -44,12 +42,11 @@
   ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
 
   String tickler_no="", textColor="", tickler_note="";
-  String curUser_no,userfirstname,userlastname, userprofession, mygroupno;
+  String curUser_no,userfirstname,userlastname, mygroupno;
   curUser_no = (String) session.getAttribute("user");
   mygroupno = providerPreference.getMyGroupNo();  
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
-  userprofession = (String) session.getAttribute("userprofession");
   String newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
 
   int startHour=providerPreference.getStartHour();

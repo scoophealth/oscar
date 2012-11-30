@@ -26,7 +26,6 @@
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
@@ -35,7 +34,6 @@
 </security:oscarSec>
 
 <%
-  //if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin")) response.sendRedirect("../logout.jsp");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 %>
 <%@ page

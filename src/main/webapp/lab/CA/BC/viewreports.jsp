@@ -27,9 +27,6 @@
 <%@page import="org.oscarehr.billing.CA.BC.dao.Hl7LinkDao" %>
 <%@page import="org.oscarehr.billing.CA.BC.model.Hl7Link" %>
 <%
-	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
-    	response.sendRedirect("../../../logout.jsp");
-    }
 
 	Hl7LinkDao linkDao = SpringUtils.getBean(Hl7LinkDao.class);
 

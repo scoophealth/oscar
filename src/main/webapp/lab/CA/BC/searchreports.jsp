@@ -25,9 +25,6 @@
 --%>
 
 <%
-	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
-    	response.sendRedirect("../../../logout.jsp");
-    }
     String start       = oscar.Misc.check(request.getParameter("start"), ""),
            end         = oscar.Misc.check(request.getParameter("end"), ""),
 	        provider_no = oscar.Misc.check(request.getParameter("provider_no"), ""),

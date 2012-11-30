@@ -27,10 +27,6 @@
 <%@page import="org.oscarehr.common.model.StudyLogin"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.StudyLoginDao"%>
-<%
-	if(session.getValue("user") == null || !( ((String) session.getValue("userprofession")).equalsIgnoreCase("doctor") ))
-		response.sendRedirect("../../logout.jsp");
-%>
 <%@ page import="java.sql.*, oscar.oscarDB.*"%>
 
 <%

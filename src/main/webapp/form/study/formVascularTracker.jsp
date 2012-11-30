@@ -28,8 +28,6 @@
 	import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.oscarProvider.data.* "%>
 
 <%
-if(session.getAttribute("user") == null || !( ((String) session.getAttribute("userprofession")).equalsIgnoreCase("doctor") ))
-    response.sendRedirect("../../logout.jsp");
 
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);

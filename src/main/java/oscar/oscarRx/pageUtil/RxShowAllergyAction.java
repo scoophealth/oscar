@@ -63,9 +63,6 @@ public final class RxShowAllergyAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-        if(request.getSession().getAttribute("user") == null  || !( ((String) request.getSession().getAttribute("userprofession")).equalsIgnoreCase("doctor") )  ){
-            return (mapping.findForward("Logout"));
-        }
 
         boolean useRx3=false;
         String rx3 = OscarProperties.getInstance().getProperty("RX3");

@@ -31,18 +31,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class OscarDownload extends GenericDownload  {
-	public void doGet(HttpServletRequest req, HttpServletResponse res)
-			throws IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		HttpSession session = req.getSession(true);
-		String filename = req.getParameter("filename") != null ? req
-				.getParameter("filename") : "null";
-		String homepath = req.getParameter("homepath") != null ? req
-				.getParameter("homepath") : "null";
-		String backupfilepath = ((String) session.getAttribute(homepath)) != null
-				? ((String) session.getAttribute(homepath))
-				: "null";
-		if (filename != null && backupfilepath != null
-				&& ((String) session.getAttribute("userprofession")) != null) {
+		String filename = req.getParameter("filename") != null ? req.getParameter("filename") : "null";
+		String homepath = req.getParameter("homepath") != null ? req.getParameter("homepath") : "null";
+		
+		String backupfilepath = ((String) session.getAttribute(homepath)) != null ? ((String) session.getAttribute(homepath)) : "null";
+		if (filename != null && backupfilepath != null && ((String) session.getAttribute("user")) != null) {
 			ServletOutputStream stream = res.getOutputStream();
 			transferFile(res, stream, backupfilepath, filename);
 			stream.close();

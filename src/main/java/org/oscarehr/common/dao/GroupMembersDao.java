@@ -52,9 +52,9 @@ public class GroupMembersDao extends AbstractDao<GroupMembers>{
 	@SuppressWarnings("unchecked")
     public List<Object[]> findMembersByGroupId(int groupId) {
         String sql = "FROM GroupMembers g, Provider p " 
-        		+ "WHERE g.providerNo = p.id "
+        		+ "WHERE g.providerNo = p.ProviderNo "
                 + "AND g.groupId = :id " 
-        		+ "ORDER BY p.lastName, p.firstName";
+        		+ "ORDER BY p.LastName, p.FirstName";
         Query query = entityManager.createQuery(sql);
         query.setParameter("id", groupId);
         return query.getResultList();
