@@ -23,14 +23,39 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.Hl7Link;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class Hl7LinkDao extends AbstractDao<Hl7Link>{
 
 	public Hl7LinkDao() {
 		super(Hl7Link.class);
 	}
+	
+    public List<Object[]> findLabs() {
+		String sql = "FROM Hl7Pid pid, Hl7Link link, Hl7Obr obr, Demographic demo " +
+				"WHERE link.demographicNo = demo.id " +
+				"AND pid.id = obr.pidId " +
+				"AND ( link.status = 'P' OR link.status IS NULL ) " +
+				"AND link.id = pid.id";
+
+		Query q = entityManager.createQuery(sql);
+		return q.getResultList();
+	}
+    
+    public List<Object[]> findMagicLinks() {
+    	String sql = "FROM Demographic demo, Hl7Pid pid, Hl7Link link " +
+    	"WHERE pid.id = link.id " +
+    	"AND demo.Hin = pid.externalId " +
+    	"AND link.id IS NULL";
+    	Query q = entityManager.createQuery(sql);
+		return q.getResultList();
+    }
 }
