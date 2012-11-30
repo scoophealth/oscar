@@ -61,15 +61,15 @@
 	</header>
 	
 	<header display_name="Renal">
-		<item measurement_type="UACR" display_name="Urine ACR" guideline="Target: &lt; 2.0 M : &lt;2.8 F" graphable="yes" value_name="">
+		<item measurement_type="ACR" display_name="Urine ACR" guideline="Target: &lt; 2.0 M : &lt;2.8 F" graphable="yes" value_name="">
 			<ruleset>
 	        	<rule indicationColor="HIGH">
 	          		<condition type="isMale"  value="true" />
-	          		<condition type="getDataAsDouble" param="UACR" value="&gt;2.0" />
+	          		<condition type="getDataAsDouble" param="ACR" value="&gt;2.0" />
 	       	 	</rule>
 	        	<rule indicationColor="HIGH">
 	          		<condition type="isFemale"  value="true" />
-	          		<condition type="getDataAsDouble" param="UACR" value="&gt;2.8" />
+	          		<condition type="getDataAsDouble" param="ACR" value="&gt;2.8" />
 	        	</rule>
 	     	</ruleset>
 		</item>
@@ -233,7 +233,7 @@
 	  </measurement>
 	  
 	  
-	  <measurement type="UACR" typeDesc="UACR" typeDisplayName="Alb creat ratio" measuringInstrc="">
+	  <measurement type="ACR" typeDesc="ACR" typeDisplayName="Alb creat ratio" measuringInstrc="">
 	    <validationRule name="Numeric Value: 0 to 300" maxValue="300" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
 	  </measurement>
 	  
