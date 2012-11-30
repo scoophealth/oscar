@@ -40,19 +40,19 @@ public final class PatientEndYearStatementForm extends ActionForm {
     private String lastNameParam;
     private String fromDateParam;
     private String toDateParam;
+    private String demographicNoParam;
+    
 //    private Date fromDate;
 //    private Date toDate;
     
     public PatientEndYearStatementForm() {}
-/*    
-	public PatientEndYearStatementForm(String patientId, String fromDate,
-			String toDate) {
-		super();
-		this.patientIdParam = patientId;
-		this.fromDateParam = fromDate;
-		this.toDateParam = toDate;
+
+	public String getDemographicNoParam() {
+		return demographicNoParam;
 	}
-*/	
+	public void setDemographicNoParam(String demographicNoParam) {
+		this.demographicNoParam = demographicNoParam;
+	}
 	public String getFirstNameParam() {
 		return firstNameParam;
 	}

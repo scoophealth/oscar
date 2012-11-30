@@ -18,15 +18,15 @@
 
 package oscar.oscarBilling.ca.on.pageUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Date;
-import java.util.List;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -44,9 +44,9 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
 import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
-import oscar.OscarAction;
 
 /**
  *
@@ -56,7 +56,7 @@ public class PatientEndYearStatementAction extends OscarAction {
 	private static final Logger _logger = Logger.getLogger(BillingStatusPrep.class);
 	private static final String RES_SUCCESS = "success";
 	private static final String RES_FAILURE = "failure";
-    private static final String REPORTS_PATH = "oscar/oscarBilling/ca/on/reports/";
+   // private static final String;
       
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 	   
@@ -75,7 +75,16 @@ public class PatientEndYearStatementAction extends OscarAction {
 
 		   if(request.getParameter("search") != null) {
 			   DemographicDao dao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
-			   List<Demographic> demographicList = dao.searchDemographic(statement.getLastNameParam()+","+statement.getFirstNameParam());
+			   List<Demographic> demographicList = new ArrayList<Demographic>();
+			   if(statement.getDemographicNoParam() != null && statement.getDemographicNoParam().length()>0) {
+				   Demographic d =dao.getDemographic(statement.getDemographicNoParam());
+				   if(d!=null) {
+					   demographicList.add(d);
+				   }
+			   } else {
+				   demographicList = dao.searchDemographic(statement.getLastNameParam()+","+statement.getFirstNameParam());
+					  
+			   }
 			   if(demographicList == null || demographicList.size()==0) {
 				   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("error.billingReport.invalidPatientName"));
 				   saveErrors(request,errors);
@@ -89,7 +98,7 @@ public class PatientEndYearStatementAction extends OscarAction {
 				   return mapping.findForward(RES_FAILURE);			   
 			   }
 			   Demographic demographic = demographicList.get(0);
-			   summary.setPatientNo(demographic.getChartNo());
+			   summary.setPatientNo(demographic.getDemographicNo().toString());
 			   summary.setPatientName(demographic.getFormattedName());
 			   summary.setHin(demographic.getHin());
 			   summary.setAddress(demographic.getAddress()+" "+demographic.getCity()+" "+demographic.getProvince());
@@ -183,12 +192,12 @@ public class PatientEndYearStatementAction extends OscarAction {
 			   reportParams.put("totalPaid", summary.getPaid());
 			   request.setAttribute("fromDateParam",statement.getFromDateParam());
 			   request.setAttribute("toDateParam",statement.getToDateParam());
-			   reportParams.put("SUBREPORT_DIR", REPORTS_PATH);
+			   reportParams.put("SUBREPORT_DIR", "/oscar/oscarBilling/ca/on/reports/");
 			   
 			   ServletOutputStream outputStream = getServletOstream(response);
 
 			   //open corresponding Jasper Report Definition
-			   InputStream reportInstream = osc.getDocumentStream(REPORTS_PATH + "end_year_statement_report.jrxml");
+			   InputStream reportInstream = osc.getDocumentStream("/oscar/oscarBilling/ca/on/reports/" + "end_year_statement_report.jrxml");
 
 			   //COnfigure Reponse Header
 			   cfgHeader(response, "end_year_statement_report.pdf", docFmt);
@@ -208,7 +217,18 @@ public class PatientEndYearStatementAction extends OscarAction {
 	   } else if (request.getParameter("demosearch") != null) {
 		   request.getSession().setAttribute("summary", null);			   
 		   DemographicDao dao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
-		   List<Demographic> demographicList = dao.searchDemographic(statement.getLastNameParam()+","+statement.getFirstNameParam());
+		  
+		   List<Demographic> demographicList = new ArrayList<Demographic>();
+		   if(request.getParameter("demographic_no") != null && request.getParameter("demographic_no").length() > 0) {
+			   Demographic d =dao.getDemographic(request.getParameter("demographic_no"));
+			   if(d!=null) {
+				   demographicList.add(d);
+			   }
+		   } else {
+			   demographicList = dao.searchDemographic(statement.getLastNameParam()+","+statement.getFirstNameParam());
+				  
+		   }
+		   
 		   if(demographicList == null || demographicList.size()==0) {
 			   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("error.billingReport.invalidPatientName"));
 			   saveErrors(request,errors);

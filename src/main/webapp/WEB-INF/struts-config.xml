@@ -493,7 +493,6 @@
 			<form-property name="proc" type="org.oscarehr.eyeform.model.EyeformProcedureBook" />
 		</form-bean>
 
-		<form-bean name="PatientEndYearStatementForm" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementForm" />
 		<form-bean name="AppointmentTypeForm" type="oscar.appt.web.AppointmentTypeForm" />
 
 		<form-bean name="consultationReportForm" type="org.apache.struts.validator.DynaValidatorForm">

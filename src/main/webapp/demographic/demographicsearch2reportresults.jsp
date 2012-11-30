@@ -21,9 +21,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
-<% 
-  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
-  
+<%  
   String curProvider_no = request.getParameter("provider_no");
       
   String strOffset="0";
@@ -44,7 +42,6 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"	scope="session" />
 
 <%
@@ -61,7 +58,6 @@ String statusString = "'IN','DE','IC','ID','MO','FI'";
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="demographic.demographicsearch2apptresults.title" />(demographicsearch2reportresults)</title>
-<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
@@ -129,7 +125,7 @@ var fullname="";
 <%-- RJ 07/10/2006 Need to pass doctor of patient back to referrer --%>
 function addName(demographic_no, lastname, firstname, chartno, messageID, doctorNo) {  
   fullname=lastname+","+firstname;
-  document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&firstNameParam="+firstname+"&lastNameParam="+lastname+"&chart_no="+chartno;
+  document.addform.action="<%=request.getParameter("originalpage")%>&demographicNoParam="+demographic_no+"&demographic_no="+demographic_no+"&firstNameParam="+firstname+"&lastNameParam="+lastname+"&chart_no="+chartno;
   document.addform.submit();
   return true;
 }
@@ -250,19 +246,18 @@ if(nItems==0 && nLastPage<=0) {
     }
 %> <script language="JavaScript">
 <!--
-function last() {
-  document.nextform.action="../admin/admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>" ;
+function last() {		
+  document.nextform.action="demographicsearch2reportresults.jsp?originalpage=<%=request.getParameter("originalpage")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>" ;
   //document.nextform.submit();  
 }
 function next() {
-  document.nextform.action="../admin/admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>" ;
+  document.nextform.action="demographicsearch2reportresults.jsp?originalpage=<%=request.getParameter("originalpage")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>" ;
   //document.nextform.submit();  
 }
 //-->
 </SCRIPT>
 
-<form method="post" name="nextform"
-	action="../admin/admincontrol.jsp">
+<form method="post" name="nextform"	action="demographicsearch2reportresults.jsp">
 <%
   if(nLastPage>=0) {
 %> <input type="submit" class="mbttn" name="submit"
@@ -277,7 +272,7 @@ function next() {
 %> <%
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
-		if(temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("submit")  ||temp.equals("chart_no")) continue;
+		if(temp.equals("submit")  ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
         
   }
