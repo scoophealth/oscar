@@ -86,7 +86,7 @@ boolean isSiteAccessPrivacy=false;
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Log Report</title>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+<link rel="stylesheet" href="../css/receptionistapptstyle.css">
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />

@@ -44,7 +44,7 @@ function setfocus() {
 //-->
 </SCRIPT>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css"
+<link rel="stylesheet" href="../css/receptionistapptstyle.css"
 	type="text/css">
 </head>
 

@@ -231,7 +231,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
       <title>
         PROVIDER
       </title>
-      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+      <link rel="stylesheet" href="../css/receptionistapptstyle.css">
       <script language="JavaScript">
 <!--
 function setfocus() {
