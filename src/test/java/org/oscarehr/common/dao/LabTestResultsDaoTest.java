@@ -43,7 +43,7 @@ public class LabTestResultsDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("labTestResults", "patientLabRouting", "labPatientPhysicianInfo");
+		SchemaUtils.restoreTable("labTestResults", "patientLabRouting", "labPatientPhysicianInfo", "providerLabRouting");
 	}
 
 	@Test
@@ -77,6 +77,11 @@ public class LabTestResultsDaoTest extends DaoTestFixtures {
 	public void testFindUniqueTestNames() {
 		List<Object[]> results = dao.findUniqueTestNames(100, "CML");
 		assertNotNull(results);
-	} 
+	}
+	
+	@Test
+	public void testFindByAbnAndPhysicianId() {
+		assertNotNull(dao.findByAbnAndPhysicianId("ABN", 199));
+	}
 
 }
