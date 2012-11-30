@@ -26,18 +26,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
-<%@page %> <%
-  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
-
+<%
+ 
   String DONOTBOOK = "Do_Not_Book";
   String curProvider_no = request.getParameter("provider_no");
   String curDoctor_no = request.getParameter("doctor_no") != null ? request.getParameter("doctor_no") : "";
   String curUser_no = (String) session.getAttribute("user");
   String userfirstname = (String) session.getAttribute("userfirstname");
   String userlastname = (String) session.getAttribute("userlastname");
-
-  //String curDemoNo = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"";
-  //String curDemoName = request.getParameter("demographic_name")!=null?request.getParameter("demographic_name"):"";
 
   ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
   int everyMin=providerPreference.getEveryMin();
@@ -51,26 +47,33 @@
   String duration = request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin) ;
 %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*, oscar.appt.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
-	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*, oscar.appt.*" errorPage="errorpage.jsp"%>
+<%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
 <%@ page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
-<%@ page import="org.oscarehr.common.model.AppointmentStatus"
-	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="org.oscarehr.common.model.AppointmentStatus"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="oscar.oscarEncounter.data.EctFormData"%>
+<%@ page import="org.oscarehr.common.model.DemographicCust" %>
+<%@ page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.EncounterForm" %>
+<%@ page import="org.oscarehr.common.dao.EncounterFormDao" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%--RJ 07/07/2006 --%>
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@page import="org.oscarehr.util.SpringUtils" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page import="oscar.oscarEncounter.data.EctFormData"%>
-<%@page import="org.oscarehr.common.model.DemographicCust" %>
-<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	EncounterFormDao encounterFormDao = SpringUtils.getBean(EncounterFormDao.class);
 %>
 
 <%
@@ -83,10 +86,11 @@
   Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 
   AppointmentStatusMgr apptStatusMgr = new AppointmentStatusMgrImpl();
-  List allStatus = apptStatusMgr.getAllActiveStatus();
+  List<AppointmentStatus> allStatus = apptStatusMgr.getAllActiveStatus();
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
-<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
+<%@page import="org.oscarehr.common.model.Site"%>
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
 <script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
@@ -366,7 +370,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
   int timeoutSecs = 0; 
   try { 
     timeoutSecs = Integer.parseInt(timeoutSeconds);
-  }catch (NumberFormatException e) {}
+  }catch (NumberFormatException e) {/*empty*/}
   
   int hourInt = caltime.get(Calendar.HOUR_OF_DAY); 
   String hour = String.valueOf(hourInt);
@@ -552,11 +556,10 @@ function pasteAppt(multipleSameDayGroupAppt) {
   // select provider lastname & firstname
   String pLastname = "";
   String pFirstname = "";
-  resultList = oscarSuperManager.find("appointmentDao", "search_provider_name", new Object [] {curProvider_no});
-  if (resultList.size() > 0) {
-	  Map name = resultList.get(0);
-      pLastname = (String) name.get("last_name");
-      pFirstname = (String) name.get("first_name");
+  Provider p = providerDao.getProvider(curProvider_no);
+  if(p != null) {
+	  pLastname = p.getLastName();
+      pFirstname = p.getFirstName();
   }
 %>
 </head>
@@ -622,42 +625,39 @@ function pasteAppt(multipleSameDayGroupAppt) {
 </div>
 <%
   if (!bFirstDisp && request.getParameter("demographic_no") != null && !request.getParameter("demographic_no").equals("")) {
+	  Demographic d = demographicDao.getDemographic(request.getParameter("demographic_no"));
+	  if(d != null) {
+		  patientStatus = d.getPatientStatus();
+		  address = d.getAddress();
+		  city = d.getCity();
+		  province = d.getProvince();
+		  postal = d.getPostal();
+		  phone = d.getPhone();
+		  phone2 = d.getPhone2();
+		  email = d.getEmail();
+		  String year_of_birth   = d.getYearOfBirth();
+	      String month_of_birth  = d.getMonthOfBirth();
+	      String date_of_birth   = d.getDateOfBirth();
+	      dob = "("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+")";
+	      sex = d.getSex();
+	      hin = d.getHin();
+	      String ver = d.getVer();
+	      hin = hin +" "+ ver;
+	        
+	      if (patientStatus == null || patientStatus.equalsIgnoreCase("AC")) {
+	        patientStatus = "";
+	      } else if (patientStatus.equalsIgnoreCase("FI")||patientStatus.equalsIgnoreCase("DE")||patientStatus.equalsIgnoreCase("IN")) {
+	      	disabled = "disabled";
+	      }
 
-        resultList = oscarSuperManager.find("appointmentDao", "search_demographic_statusroster", new Object [] {request.getParameter("demographic_no") });
-	for (Map status : resultList) {
+	      String rosterStatus = d.getRosterStatus();
+	      if (rosterStatus == null || rosterStatus.equalsIgnoreCase("RO")) {
+	      	rosterStatus = "";
+	      }
 
-        patientStatus      = (String) status.get("patient_status");
-        address            = (String) status.get("address");
-        city               = (String) status.get("city");
-        province           = (String) status.get("province");
-        postal             = (String) status.get("postal");
-        phone              = (String) status.get("phone");
-        phone2             = (String) status.get("phone2");
-        email              = (String) status.get("email");
-        String year_of_birth   = (String) status.get("year_of_birth");
-        String month_of_birth  = (String) status.get("month_of_birth");
-        String date_of_birth   = (String) status.get("date_of_birth");
-        dob = "("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+")";
-        sex = (String) status.get("sex");
-        hin                    = (String) status.get("hin");
-        String ver             = (String) status.get("ver");
-        hin = hin +" "+ ver;
-
-        if (patientStatus == null || patientStatus.equalsIgnoreCase("AC")) {
-           patientStatus = "";
-        } else if (patientStatus.equalsIgnoreCase("FI")||patientStatus.equalsIgnoreCase("DE")||patientStatus.equalsIgnoreCase("IN")) {
-           disabled = "disabled";
-        }
-
-        String rosterStatus = (String) status.get("roster_status");
-        if (rosterStatus == null || rosterStatus.equalsIgnoreCase("RO")) {
-           rosterStatus = "";
-        }
-
-
-        if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
-          String rsbgcolor = "BGCOLOR=\"orange\"" ;
-          String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
+	      if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
+	      	String rsbgcolor = "BGCOLOR=\"orange\"" ;
+	        String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
 
 %>
 <table width="98%" <%=rsbgcolor%> border=0 align='center'>
@@ -748,8 +748,8 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     border="0">
                     <% for (int i = 0; i < allStatus.size(); i++) { %>
                     <option
-                            value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()%>"
-                            <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(request.getParameter("status"))?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
+                            value="<%=(allStatus.get(i)).getStatus()%>"
+                            <%=(allStatus.get(i)).getStatus().equals(request.getParameter("status"))?"SELECTED":""%>><%=(allStatus.get(i)).getDescription()%></option>
                     <% } %>
             </select> <%
             }
@@ -1050,11 +1050,8 @@ function pasteAppt(multipleSameDayGroupAppt) {
         for (String formTblName : formTblNames){
             if ((formTblName != null) && !formTblName.equals("")) {
                 //form table name defined
-                resultList = oscarSuperManager.find("appointmentDao", "search_formtbl", new Object [] {formTblName});
-                if (resultList.size() > 0) {
-                    //form table exists
-                    Map mFormName = resultList.get(0);
-                    String formName = (String) mFormName.get("form_name");
+                for(EncounterForm ef:encounterFormDao.findByFormTable(formTblName)) {
+                    String formName = ef.getFormName();
                     pageContext.setAttribute("formName", formName);
                     boolean formComplete = false;
                     EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(demoNo, formTblName);
@@ -1064,6 +1061,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     }
                     numForms++;
                     if (numForms == 1) {
+               
     %>
             <table style="font-size: 9pt;" bgcolor="#c0c0c0" align="center" valign="top" cellpadding="3px">
                 <tr bgcolor="#ccccff">

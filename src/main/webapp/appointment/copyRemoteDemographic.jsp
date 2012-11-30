@@ -38,9 +38,11 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ page import="org.oscarehr.common.model.Admission" %>
 <%@ page import="org.oscarehr.common.dao.AdmissionDao" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
 <%
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
+	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 %>
 <%
 	int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
@@ -66,11 +68,10 @@
 	oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
     String progId = program.getProgram(providerNo);
     if (progId.equals("0")) {
-       ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
-       if (rsProg.next())
-       {
-          progId = rsProg.getString("id");
-       }
+    	Program p = programDao.getProgramByName("OSCAR");
+    	if(p != null) {
+    		progId = p.getId().toString();
+    	}
     }
     GregorianCalendar cal=new GregorianCalendar();
 	String admissionDate=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
@@ -89,40 +90,6 @@
 	admission.setClientStatusId(0);
     admissionDao.saveAdmission(admission);
 
-    //--- build redirect request ---
-
-    // WebUtils.dumpParameters(request);
-	// --- Dump Request Parameters Start ---
-	// duration=15
-	// messageID=null
-	// location=
-	// user_id=oscardoc, doctor
-	// createdatetime=2011-6-13 13:36:24
-	// type=
-	// remarks=
-	// creator=oscardoc, doctor
-	// search_mode=search_name
-	// orderby=last_name, first_name
-	// originalpage=../appointment/addappointment.jsp
-	// doctor_no=000000
-	// bFirstDisp=false
-	// notes=
-	// end_time=09:14
-	// start_time=09:00
-	// ptstatus=active
-	// demographic_no=1
-	// status=t
-	// originalPage=../appointment/addappointment.jsp
-	// appointment_date=2011-06-13
-	// limit2=5
-	// limit1=0
-	// resources=
-	// provider_no=999998
-	// reason=
-	// chart_no=
-	// remoteFacilityId=1
-	// name=ASDF,ASDF
-	// --- Dump Request Parameters End ---
 
 	StringBuilder redirect=new StringBuilder();
 	redirect.append(request.getParameter("originalPage"));
