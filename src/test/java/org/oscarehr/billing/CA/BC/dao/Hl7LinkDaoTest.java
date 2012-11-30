@@ -37,10 +37,10 @@ public class Hl7LinkDaoTest extends DaoTestFixtures {
 
 	private Hl7LinkDao dao = SpringUtils.getBean(Hl7LinkDao.class);
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("hl7_link");
+		SchemaUtils.restoreTable("hl7_link", "hl7_pid", "hl7_link", "hl7_obr", "demographic", "lst_gender", "admission","demographic_merged",
+				"program", "health_safety","provider","providersite","site","program_team");
 	}
 
 	@Test
@@ -50,5 +50,15 @@ public class Hl7LinkDaoTest extends DaoTestFixtures {
 		entity.setId(1);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindLabs() {
+		assertNotNull(dao.findLabs());
+	}
+	
+	@Test
+	public void testFindMagicLinks() {
+		assertNotNull(dao.findMagicLinks());
 	}
 }
