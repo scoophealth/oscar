@@ -166,6 +166,9 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
 	src="../../../share/calendar/calendar-setup.js"></script>
+
+<script language="JavaScript">
+<!--
 var reprintUpdate = 0;
 function updateReprint(hrefValue) {
     var reprintLink = document.getElementById("reprintLink");  
@@ -177,9 +180,6 @@ function updateReprint(hrefValue) {
         reprintLink.href=hrefValue + "&overrideUseDemoContact=1"
     }
 }
-<script language="JavaScript">
-<!--
-
 
 function setfocus() {	
 	document.form1.billing_no.focus();

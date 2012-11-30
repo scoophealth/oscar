@@ -186,24 +186,14 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return list.get(list.size() - 1);
 	}
         
-        public BillingService searchPrivateBillingCode(String privateCode, Date billingDate) {   
-            if (privateCode.startsWith("_"))
-                privateCode = "\\" + privateCode;
-            else 
-                privateCode = "\\_" + privateCode;
+        public BillingService searchPrivateBillingCode(String privateCode, Date billingDate) {               
             
-            Query query = entityManager.createQuery("select bs from BillingService bs where bs.region is null and bs.serviceCode like (:searchStr) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
+            Query query = entityManager.createQuery("select bs from BillingService bs where bs.region is null and bs.serviceCode = :searchStr and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
 
-            query.setParameter("searchStr", privateCode + "%");
+            query.setParameter("searchStr", privateCode);
             query.setParameter("billDate", billingDate);
 
-            
-            List<BillingService> list = query.getResultList();
-            if (list == null || list.isEmpty()) {
-                    return null;
-            }
-
-            return list.get(list.size() - 1);
+            return getSingleResultOrNull(query);
         }
 
 	public boolean editBillingCodeDesc(String desc, String val, String codeId) {
