@@ -396,7 +396,7 @@ public class ProviderDao extends HibernateDaoSupport {
         }
 
 		public List<String> getActiveTeams() {	        
-			List<String> providerList = getHibernateTemplate().find("select distinct p.Team From Provider p where p.status = '1' and p.team != '' order by p.team");
+			List<String> providerList = getHibernateTemplate().find("select distinct p.Team From Provider p where p.Status = '1' and p.Team != '' order by p.Team");
 			return providerList;
         }
 		

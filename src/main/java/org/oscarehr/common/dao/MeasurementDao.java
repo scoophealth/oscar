@@ -485,8 +485,8 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 
 	@SuppressWarnings("unchecked")
     public List<Object[]> findMeasurementsAndTypes(Integer demoNo) {
-		 String sql ="FROM Measurements m, MeasurementType mt " +
-		 		"WHERE m.demographicNo = :demoNo " +
+		 String sql ="FROM Measurement m, MeasurementType mt " +
+		 		"WHERE m.demographicId = :demoNo " +
 		 		"AND m.type = mt.type " +
                 "GROUP BY mt.type " +
                 "ORDER BY m.type ASC";
