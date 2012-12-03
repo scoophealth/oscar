@@ -23,11 +23,9 @@
  */
 package org.oscarehr.common.dao;
 
-import org.oscarehr.util.SpringUtils;
 
 public class SnomedCoreDaoTest extends DaoTestFixtures {
 
-	private SnomedCoreDao dao = SpringUtils.getBean(SnomedCoreDao.class);
 
 	// FIXME snomed is not in the schema for some reason...
 	

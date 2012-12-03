@@ -1502,13 +1502,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	drug  = getDrug(drw.getProviderNo(),	kenLaw.getDemographicNo(), zybanDate,getDate(zybanDate,Calendar.DAY_OF_YEAR,+1000),zybanDate,"ZYBAN 150MG",8838,null,1,1,"BID","1000","D","1000",0,false,false,"ZYBAN 150MG Take 1 TAB BID PO for 1000 days Qty:1000 Repeats:0","","BUPROPION HYDROCHLORIDE",
 				"N06AX12",scriptNo,"02238441","tab","Take","PO","TABLET",jan62006,"150.0 MG",false,"",true,false,false,"","",false,false);
     	drugDao.addNewDrug(drug);
-    	Integer appointmentNo = 0;
-    	//BillingONCHeader1 bill=  getBilling(0,kenLaw.getHin(),kenLaw.getVer(),kenLaw.getDateOfBirth().replaceAll("-",""), "HCP","P","3866",null,"3821",kenLaw.getDemographicNo(),
-  		//	  kenLaw.getProviderNo(),appointmentNo,kenLaw.getLastName()+", "+kenLaw.getFirstName(),kenLaw.getSex(),kenLaw.getProvince(),tenWeeksAgo,getTime("12:34:00"),Long.parseLong("30"),Long.parseLong("0"),"O",
-  		//	  "",kenLaw.getProviderNo(),"",kenLaw.getProviderNo(),"",kenLaw.getProviderNo());
-
-
-
+    	
 		//20 Lou Malatesta 5555666675 ZL 05/May/1955 M 03/Mar/2010       APPT 1 mth ago
 		Demographic louMalatesta = getDemographic(null,"Malatesta", "Lou",  "5555666675", "ZL", "1955", "05", "05", "M", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(louMalatesta);

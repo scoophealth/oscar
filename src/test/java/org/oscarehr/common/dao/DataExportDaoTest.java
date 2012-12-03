@@ -27,8 +27,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +42,6 @@ import org.oscarehr.util.SpringUtils;
 public class DataExportDaoTest extends DaoTestFixtures {
 
 	private DataExportDao dao = (DataExportDao)SpringUtils.getBean(DataExportDao.class);
-	private DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

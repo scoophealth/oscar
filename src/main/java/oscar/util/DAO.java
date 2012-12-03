@@ -42,6 +42,7 @@ public class DAO {
             try {
                 rs.close();
             } catch (SQLException e) {
+            	MiscUtils.getLogger().error("this really shouldn't happen", e);
             }
 
             rs = null;
@@ -53,6 +54,7 @@ public class DAO {
             try {
                 pstmt.close();
             } catch (SQLException e) {
+            	MiscUtils.getLogger().error("this really shouldn't happen", e);
             }
 
             pstmt = null;

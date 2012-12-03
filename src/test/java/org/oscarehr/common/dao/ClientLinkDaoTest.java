@@ -34,11 +34,9 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 
 public class ClientLinkDaoTest extends DaoTestFixtures{
 
-	private ClientLinkDao dao = (ClientLinkDao)SpringUtils.getBean(ClientLinkDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

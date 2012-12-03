@@ -53,6 +53,7 @@ public abstract class OscarAction extends Action {
         try {
             PAGE_LENGTH = Integer.parseInt(prop.getString("list.page.length"));
         } catch (Exception e) {
+        	MiscUtils.getLogger().error("can't be a good thing, too bad original author didn't document it", e);
         }
     }
 

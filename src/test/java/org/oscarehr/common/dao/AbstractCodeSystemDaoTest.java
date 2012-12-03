@@ -28,14 +28,12 @@ import static org.oscarehr.common.dao.AbstractCodeSystemDao.getDaoName;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.util.SpringUtils;
 
 public class AbstractCodeSystemDaoTest extends DaoTestFixtures {
 	
-	private AbstractCodeSystemDao dao = (AbstractCodeSystemDao)SpringUtils.getBean(AbstractCodeSystemDao.class);
-	
 	@Before
 	public void setUp() {
+		// nothing to do right now
 	}
 
 	@Test
