@@ -52,6 +52,7 @@ import org.oscarehr.survey.service.SurveyLaunchManager;
 import org.oscarehr.survey.service.SurveyManager;
 import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.service.SurveyTestManager;
+import org.oscarehr.survey.service.impl.SurveyTestManagerImpl;
 import org.oscarehr.survey.web.formbean.PageNavEntry;
 import org.oscarehr.survey.web.formbean.SurveyManagerFormBean;
 import org.oscarehr.surveymodel.DateDocument;
@@ -71,7 +72,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	private static Logger log = MiscUtils.getLogger();
 
 	private SurveyManager surveyManager;
-	private SurveyTestManager surveyTestManager;
+	private SurveyTestManager surveyTestManager = new SurveyTestManagerImpl();
 	private SurveyLaunchManager surveyLaunchManager;
 	private QuestionTypes questionTypes;
 	

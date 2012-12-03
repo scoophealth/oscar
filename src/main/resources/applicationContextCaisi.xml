@@ -61,11 +61,9 @@
 	<bean id="logManager" class="org.oscarehr.PMmodule.service.LogManager" autowire="byName" />
 	<bean id="oscarSecurityManager" class="org.oscarehr.PMmodule.service.impl.OscarSecurityManagerImpl" autowire="byName" />
 	<bean id="formsManager" class="org.oscarehr.PMmodule.service.impl.FormsManagerImpl" autowire="byName" />
-	<bean id="surveyManager" class="org.oscarehr.survey.service.impl.SurveyManagerImpl" autowire="byName"/>
 	<bean id="oscarFormManager" class="org.oscarehr.survey.service.impl.OscarFormManagerImpl">
 		<property name="oscarFormDAO" ref="oscarFormDAO" />
 	</bean>
-	<bean id="surveyTestManager" class="org.oscarehr.survey.service.impl.SurveyTestManagerImpl" autowire="byName" />
 	<bean id="surveyLaunchManager" class="org.oscarehr.survey.service.impl.SurveyLaunchManagerOscar" autowire="byName" />
 	<bean id="surveyUserManager" class="org.oscarehr.survey.service.impl.UserManagerOscar" autowire="byName" />
 	<bean id="populationReportManager" class="org.oscarehr.common.service.PopulationReportManager" autowire="byName">
