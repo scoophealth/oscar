@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.immunization.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,14 +32,11 @@ import org.apache.struts.action.ActionMapping;
 
 public final class EctImmPassThruForm extends ActionForm {
 
-	public void reset(
-		ActionMapping actionmapping,
-		HttpServletRequest httpservletrequest) {
+	public void reset(ActionMapping actionmapping, HttpServletRequest httpservletrequest) {
+		// doesn't look too useful but I better leave it here since it's a struts action it can be dynamically called so the method should at least exist or it'll error
 	}
 
-	public ActionErrors validate(
-		ActionMapping mapping,
-		HttpServletRequest request) {
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		return errors;
 	}
