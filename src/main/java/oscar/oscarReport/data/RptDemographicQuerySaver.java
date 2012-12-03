@@ -149,8 +149,6 @@ public class RptDemographicQuerySaver {
             }
         sqProviderNo = MsgCommxml.toXML(docRoot);
         }
-        oscar.oscarMessenger.util.MsgStringQuote s = new oscar.oscarMessenger.util.MsgStringQuote();
-
 
     	DemographicQueryFavourite dqf = new DemographicQueryFavourite();
     	dqf.setSelects(sqSelects);
