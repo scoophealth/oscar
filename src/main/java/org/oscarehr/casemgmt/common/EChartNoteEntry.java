@@ -33,7 +33,7 @@ public class EChartNoteEntry {
 	private Object id;
 	private Date date;
 	private String providerNo;
-	private int programId;
+	private Integer programId;
 	private String role;
 	private String type;
 	
@@ -80,11 +80,11 @@ public class EChartNoteEntry {
     	this.issueIds = issueIds;
     }
 
-	public int getProgramId() {
+	public Integer getProgramId() {
     	return programId;
     }
 
-	public void setProgramId(int programId) {
+	public void setProgramId(Integer programId) {
     	this.programId = programId;
     }
 	
