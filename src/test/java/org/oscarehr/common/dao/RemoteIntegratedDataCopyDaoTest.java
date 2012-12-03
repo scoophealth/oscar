@@ -139,7 +139,7 @@ public class RemoteIntegratedDataCopyDaoTest extends DaoTestFixtures {
 		
 		String marshalledObject = ObjectMarshalUtil.marshalToString(providers); 
 		MessageDigest md = MessageDigest.getInstance("SHA");
-		byte[] digest = md.digest(marshalledObject.getBytes());
+		md.digest(marshalledObject.getBytes());
 
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.save(1, providers,"1",1);
 		

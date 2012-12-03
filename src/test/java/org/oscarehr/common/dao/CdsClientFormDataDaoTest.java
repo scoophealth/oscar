@@ -26,8 +26,6 @@ package org.oscarehr.common.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +42,6 @@ import org.oscarehr.util.SpringUtils;
 public class CdsClientFormDataDaoTest extends DaoTestFixtures {
 
 	private CdsClientFormDataDao dao = (CdsClientFormDataDao)SpringUtils.getBean(CdsClientFormDataDao.class);
-	private DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	Logger logger = MiscUtils.getLogger();
 	
 	@Before

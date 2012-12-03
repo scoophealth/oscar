@@ -36,6 +36,6 @@ public class PageNumberStamperTest extends TestCase {
 	@Test
 	public void testPdfGeneration() {
 		
-		
+		// some one will do this some day
 	}
 }

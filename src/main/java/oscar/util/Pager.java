@@ -27,6 +27,8 @@ package oscar.util;
 
 import java.util.ResourceBundle;
 
+import org.oscarehr.util.MiscUtils;
+
 
 public class Pager {
     private static int MAX_PAGE_INDEX = 15;
@@ -39,12 +41,14 @@ public class Pager {
         try {
             HEADER = prop.getString("pager.header.title");
         } catch (Exception e) {
+        	MiscUtils.getLogger().error("can't be a good thing, too bad original author didn't document it", e);
         }
 
         try {
             MAX_PAGE_INDEX = Integer.parseInt(prop.getString(
                         "pager.max.page.index"));
         } catch (Exception e) {
+        	MiscUtils.getLogger().error("can't be a good thing, too bad original author didn't document it", e);
         }
     }
 

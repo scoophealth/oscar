@@ -23,19 +23,13 @@
  */
 package org.oscarehr.common.dao;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 
 public class CdsFormOptionDaoTest {
 
-	private CdsFormOptionDao dao = (CdsFormOptionDao)SpringUtils.getBean(CdsFormOptionDao.class);
-	private DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	Logger logger = MiscUtils.getLogger();
 	
 	@Before

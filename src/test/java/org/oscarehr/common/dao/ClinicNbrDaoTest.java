@@ -112,7 +112,7 @@ public class ClinicNbrDaoTest extends DaoTestFixtures {
 		nbr1.setNbrStatus("A");
 		dao.persist(nbr1);
 		
-		int nbrID = dao.removeEntry(1);
+		dao.removeEntry(1);
 		nbr1 = dao.find(1);
 		assertEquals("D", nbr1.getNbrStatus());
 	}
@@ -132,7 +132,7 @@ public class ClinicNbrDaoTest extends DaoTestFixtures {
 		nbr1.setNbrString(nbrString);
 		nbr1.setNbrValue(nbrValue);
 		
-		int nbrID = dao.addEntry(nbrValue, nbrString);
+		dao.addEntry(nbrValue, nbrString);
 		
 		assertEquals("RMA", nbr1.getNbrString());
 		assertEquals("A", nbr1.getNbrValue());

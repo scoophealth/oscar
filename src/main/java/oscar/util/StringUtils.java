@@ -261,6 +261,7 @@ public class StringUtils {
             fmt.parse(dateString);
             ret = true;
         } catch (ParseException ex) {
+        	MiscUtils.getLogger().error("Looks bad, too bad original author didn't document how bad", ex);
         }
             return ret;
 

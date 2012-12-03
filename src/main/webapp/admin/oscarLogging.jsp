@@ -24,6 +24,8 @@
 
 --%>
 
+<%@page import="java.io.File"%>
+<%@page import="org.apache.commons.io.FileUtils"%>
 <%@page import="oscar.util.*, oscar.*, java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
@@ -133,14 +135,16 @@
                 String suffix = reportDate.replaceAll("-", "");
                 String fileName = "";
                 String contentString = "";
+                
                 if (reportType.equals("general")) { 
                     fileName = path + "report" + suffix + ".html";
-                    ReadLocalFile.writeStreamFromFile(fileName, out);
                 }
                 else if (reportType.equals("mysql")) {
                     fileName = path + "reportmysql" + suffix + ".html";
-                    ReadLocalFile.writeStreamFromFile(fileName, out);
                 }
+                
+                String temp=FileUtils.readFileToString(new File(fileName), "UTF-8");
+                out.write(temp);
              } %>
 		</td>
 	</tr>
