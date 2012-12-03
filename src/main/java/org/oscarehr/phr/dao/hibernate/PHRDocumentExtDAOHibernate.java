@@ -27,11 +27,9 @@ package org.oscarehr.phr.dao.hibernate;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.phr.dao.PHRDocumentExtDAO;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRDocumentExt;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -40,8 +38,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class PHRDocumentExtDAOHibernate extends HibernateDaoSupport
         implements PHRDocumentExtDAO {
-    
-    private static Logger log = MiscUtils.getLogger();
     
     /**
      * Creates a new instance of PHRDocumentDAOHibernate
