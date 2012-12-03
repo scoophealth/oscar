@@ -31,7 +31,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 
@@ -57,13 +56,11 @@ import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 public class Send2Indivo {
     
     private String indivoId;
-    private String indivoPasswd;
     private String indivoFullName;
     private String indivoRole;
     private String indivoDocId;
     private String sessionTicket;
     private String errorMsg;
-    private Map connParams;
     
     public String getDocumentIndex() {
         return indivoDocId;
@@ -181,9 +178,6 @@ public class Send2Indivo {
         binaryDataType.setFileDescription(description);
         binaryDataType.setFilename(fname);
         
-        org.indivo.xml.phr.DocumentGenerator generator  = new   org.indivo.xml.phr.DocumentGenerator();
-        org.indivo.xml.JAXBUtils jaxbUtils              = new   org.indivo.xml.JAXBUtils();
-
         org.indivo.xml.phr.binarydata.ObjectFactory binFactory = new org.indivo.xml.phr.binarydata.ObjectFactory();
 
         BinaryData bd = binFactory.createBinaryData(binaryDataType);
