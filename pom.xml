@@ -327,11 +327,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.indivo</groupId>
-			<artifactId>indivo-security-core</artifactId>
-			<version>3.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.indivo</groupId>
 			<artifactId>indivo-model-phr-jackson</artifactId>
 			<version>3.1-SNAPSHOT</version>
 		</dependency>
