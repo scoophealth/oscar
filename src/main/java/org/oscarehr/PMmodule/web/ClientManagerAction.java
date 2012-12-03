@@ -87,6 +87,7 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -131,7 +132,7 @@ public class ClientManagerAction extends BaseAction {
 
 	private HealthSafetyManager healthSafetyManager;
 	private ClientRestrictionManager clientRestrictionManager;
-	private SurveyManager surveyManager;
+	private SurveyManager surveyManager = new SurveyManagerImpl();
 	private LookupManager lookupManager;
 	private CaseManagementManager caseManagementManager;
 	private AdmissionManager admissionManager;
@@ -159,9 +160,6 @@ public class ClientManagerAction extends BaseAction {
 		this.integratorConsentDao = integratorConsentDao;
 	}
 
-	public void setSurveyManager(SurveyManager mgr) {
-		this.surveyManager = mgr;
-	}
 
 	public void setCdsClientFormDao(CdsClientFormDao cdsClientFormDao) {
 		this.cdsClientFormDao = cdsClientFormDao;

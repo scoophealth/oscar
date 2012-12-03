@@ -48,12 +48,13 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.SurveySecurityDao;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -76,15 +77,11 @@ import org.oscarehr.util.SessionConstants;
 public class SurveyExecuteAction extends DispatchAction {
     private static Logger log = MiscUtils.getLogger();
 
-    private SurveyManager surveyManager;
+    private SurveyManager surveyManager = new SurveyManagerImpl();
     private CaseManagementManager cmeManager;
     private ClientManager clientManager;
     private AdmissionManager admissionManager;
 
-
-    public void setSurveyManager(SurveyManager mgr) {
-        this.surveyManager = mgr;
-    }
 
     public void setCaseManagementManager(CaseManagementManager mgr) {
         this.cmeManager = mgr;
