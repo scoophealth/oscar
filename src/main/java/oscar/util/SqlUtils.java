@@ -42,22 +42,16 @@ import java.util.Properties;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
 public class SqlUtils {
 	private static Logger logger = MiscUtils.getLogger();
-
-	private enum DatabaseTypes {
-		MYSQL, ORACLE, POSTGRESQL
-	}
 
 
 	/**
@@ -422,16 +416,6 @@ public class SqlUtils {
 				logger.warn("Error closing Statement.", e);
 			}
 		}
-	}
-
-	private static DatabaseTypes getDatabaseType() {
-		BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
-		String driverName = basicDataSource.getDriverClassName();
-
-		if (driverName.startsWith("com.mysql.")) return (DatabaseTypes.MYSQL);
-		if (driverName.startsWith("org.postgresql.")) return (DatabaseTypes.POSTGRESQL);
-		if (driverName.startsWith("oracle.")) return (DatabaseTypes.ORACLE);
-		else throw (new IllegalArgumentException("Need a new database driver type added : " + driverName));
 	}
 
 	/**

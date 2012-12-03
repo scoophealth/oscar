@@ -162,7 +162,7 @@ public final class WLEditWaitingListNameAction extends Action {
 			//msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("oscar.waitinglistname.removeSuccess"));
         }
         else{
-        	
+        	// no idea if this is good or bad, original author didn't document
         }
 
         MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): groupNo = "+ groupNo);

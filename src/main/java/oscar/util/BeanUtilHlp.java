@@ -48,7 +48,7 @@ public class BeanUtilHlp {
  * @return String
  */
 public String getPropertyValue(Object bean, String fieldName) {
-  BeanUtils ut = new BeanUtils();
+
   String value = "";
   try {
     value = BeanUtils.getProperty(bean, fieldName);
