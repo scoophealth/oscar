@@ -35,7 +35,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
 import org.oscarehr.common.dao.MeasurementDao;
@@ -52,7 +51,7 @@ import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
 import oscar.util.ConversionUtils;
 
 public class EctMeasurementsDataBeanHandler {
-    private static Logger log = MiscUtils.getLogger();
+    
     Vector<EctMeasurementsDataBean> measurementsDataVector = new Vector<EctMeasurementsDataBean>();
 
     public EctMeasurementsDataBeanHandler(Integer demo) {

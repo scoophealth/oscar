@@ -26,7 +26,6 @@
 package oscar.oscarEncounter.immunization.pageUtil;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +35,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,8 +56,6 @@ public final class EctImmSaveScheduleAction extends Action {
          return mapping.findForward("reload");
       }
             
-      Locale locale = getLocale(request);
-      MessageResources messages = getResources(request);      
       try {
          String sDoc = UtilMisc.decode64(request.getParameter("xmlDoc"));
          Document doc = UtilXML.parseXML(sDoc);

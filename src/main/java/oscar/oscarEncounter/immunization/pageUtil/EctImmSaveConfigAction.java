@@ -26,7 +26,6 @@
 package oscar.oscarEncounter.immunization.pageUtil;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +35,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,8 +51,6 @@ public final class EctImmSaveConfigAction extends Action {
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
 
-      Locale locale = getLocale(request);
-      MessageResources messages = getResources(request);     
       EctSessionBean bean = null;
       bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
       try {
