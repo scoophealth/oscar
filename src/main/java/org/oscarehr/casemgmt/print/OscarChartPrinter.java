@@ -39,7 +39,6 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
@@ -66,7 +65,6 @@ import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -99,15 +97,12 @@ import com.lowagie.text.pdf.PdfWriter;
  */
 public class OscarChartPrinter {
 
-	private static Logger logger = MiscUtils.getLogger();
-
     public final int LINESPACING = 1;
     public final float LEADING = 12;
     public final float FONTSIZE = 10;
     public final int NUMCOLS = 2;
 
     private Demographic demographic;
-    private Appointment appointment;
     private String signingProvider;
 
     private PdfWriter writer;
@@ -157,10 +152,6 @@ public class OscarChartPrinter {
 
     public void setDemographic(Demographic demographic) {
     	this.demographic=demographic;
-    }
-
-    public void setAppointment(Appointment appointment) {
-    	this.appointment=appointment;
     }
 
     public Font getFont() {
@@ -282,8 +273,6 @@ public class OscarChartPrinter {
             document.newPage();
             newPage=false;
         }
-
-        Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
 
         Paragraph p = null;
         Phrase phrase = null;
@@ -558,24 +547,9 @@ public class OscarChartPrinter {
 	}
 
 
-
-
-
-
-
-
-
     public void printAllergies(List<Allergy> allergies) throws DocumentException {
-    	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
- /*
-		if( getNewPage() )
-            getDocument().newPage();
-        else
-            setNewPage(true);
- */
         Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);
-
 
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
@@ -867,7 +841,6 @@ public class OscarChartPrinter {
         document.add(p);
 
         for(CaseManagementIssue issue:issues) {
-        	String type = issue.getType();
         	String description = issue.getIssue().getDescription();
 
         	p = new Paragraph();
