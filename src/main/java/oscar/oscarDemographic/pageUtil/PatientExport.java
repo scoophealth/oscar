@@ -26,14 +26,20 @@ package oscar.oscarDemographic.pageUtil;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -41,10 +47,13 @@ import org.oscarehr.util.SpringUtils;
  * This class models a "patient" which bundles all data required to define a "patient" for export
  */
 public class PatientExport {
+	private static Logger log = MiscUtils.getLogger();
 	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	private static AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
 	private static DrugDao drugDao = (DrugDao)SpringUtils.getBean("drugDao");
 	private static PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean("preventionDao");
+	private static PreventionExtDao preventionExtDao = (PreventionExtDao)SpringUtils.getBean("preventionExtDao");
+	private static ProviderDataDao providerDataDao = (ProviderDataDao)SpringUtils.getBean("providerDataDao");
 	
 	private Date currentDate = new Date();
 	private Integer demographicNo = null;
@@ -61,41 +70,17 @@ public class PatientExport {
 	}
 	
 	public PatientExport(String demoNo) {
-		this.demographicNo = new Integer(demoNo);
-		this.demographic = demographicDao.getDemographic(demoNo);
-		this.allergies = allergyDao.findAllergies(demographicNo);
-		this.drugs = drugDao.findByDemographicId(demographicNo);
-		this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
-		//initialize(demoNo);
-	}
-	
-	/*
-	private void initialize(String demoNo) {
-		RxPrescriptionData.Prescription[] drugs = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demoNo));
-		for(RxPrescriptionData.Prescription d : drugs) {
-			medications.add(parseDrugs(d));
+		try {
+			this.demographicNo = new Integer(demoNo);
+			this.demographic = demographicDao.getDemographic(demoNo);
+			this.allergies = allergyDao.findAllergies(demographicNo);
+			this.drugs = drugDao.findByDemographicId(demographicNo);
+			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 		}
-		
-		Allergy[] allergiesArray = RxPatientData.getPatient(demoNo).getAllergies();
-		for(Allergy a : allergiesArray) {
-			allergies.add(a);
-		}
+	    catch (Exception e) {
+	        log.error(e.getMessage(), e);
+	    }
 	}
-	
-	private Medication parseDrugs(RxPrescriptionData.Prescription drug) {
-		Medication medication = new Medication();
-		
-		medication.setDrugId(Integer.toString(drug.getDrugId()));
-		medication.setStartDate(drug.getRxDate());
-		medication.setEndDate(drug.getEndDate());
-		medication.setDin(drug.getRegionalIdentifier());
-		medication.setAtc(drug.getAtcCode());
-		medication.setGenericName(drug.getGenericName());
-		medication.setBrandName(drug.getBrandName());
-		
-		return medication;
-	}
-	*/
 	
 	/*
 	 * Section Booleans
@@ -214,6 +199,19 @@ public class PatientExport {
 		return!(!exImmunizations || preventions==null || preventions.isEmpty());
 	}
 	
+	// Function to allow access to PreventionsExt table data based on prevention id
+	public static String getImmuExtValue(String id, String keyval) {
+    	try {
+    		List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), keyval);
+    		for (PreventionExt preventionExt : preventionExts) {
+    			return preventionExt.getVal();
+    		}
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return null;
+    }
 	
 	/*
 	 * Medications
@@ -238,92 +236,13 @@ public class PatientExport {
 		return currentDate;
 	}
 	
-	/*
-	 * Medication Sub-object
-	 */
-	/*
-	public static class Medication {
-		private String drugId;
-		private Date startDate;
-		private Date endDate;
-		private String din;
-		private String atc;
-		private String genericName;
-		private String brandName;
-		
-		public Medication() {
-		}
-		
-		// Directly mappable functions
-		public String getDrugId() {
-			return this.drugId;
-		}
-		
-		public void setDrugId(String rhs) {
-			this.drugId = rhs;
-		}
-		
-		public Date getStartDate() {
-			return this.startDate;
-		}
-		
-		public void setStartDate(Date rhs) {
-			this.startDate = rhs;
-		}
-		
-		public Date getEndDate() {
-			return this.endDate;
-		}
-		
-		public void setEndDate(Date rhs) {
-			this.endDate = rhs;
-		}
-		
-		public String getDin() {
-			return this.din;
-		}
-		
-		public void setDin(String rhs) {
-			this.din = rhs;
-		}
-		
-		public String getAtc() {
-			return this.atc;
-		}
-		
-		public void setAtc(String rhs) {
-			this.atc = rhs;
-		}
-		
-		public String getGenericName() {
-			return this.genericName;
-		}
-		
-		public void setGenericName(String rhs) {
-			this.genericName = rhs;
-		}
-		
-		public String getBrandName() {
-			return this.brandName;
-		}
-		
-		public void setBrandName(String rhs) {
-			this.brandName = rhs;
-		}
-		
-		// Output utility functions
-		public boolean isActive() {
-			Date currentDate = new Date();
-			if(currentDate.after(endDate)) return false;
-			else return true;
-		}
-		
-		public boolean isValidAtc() {
-			if (atc != null && !atc.trim().equals("")) {
-				return true;
-			}
-			return false;
-		}
+	public String getProviderFirstName(String providerNo) {
+		ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+		return providerData.getFirstName();
 	}
-	*/
+	
+	public String getProviderLastName(String providerNo) {
+		ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+		return providerData.getLastName();
+	}
 }
