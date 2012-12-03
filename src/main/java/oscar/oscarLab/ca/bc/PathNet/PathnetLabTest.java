@@ -25,19 +25,29 @@
 
 package oscar.oscarLab.ca.bc.PathNet;
 
-import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.Hl7ObrDao;
+import org.oscarehr.billing.CA.BC.dao.Hl7ObxDao;
+import org.oscarehr.billing.CA.BC.dao.Hl7PidDao;
+import org.oscarehr.billing.CA.BC.model.Hl7Msh;
+import org.oscarehr.billing.CA.BC.model.Hl7Obr;
+import org.oscarehr.billing.CA.BC.model.Hl7Obx;
+import org.oscarehr.billing.CA.BC.model.Hl7Pid;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarMDS.data.ReportStatus;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -47,17 +57,6 @@ import oscar.util.UtilDateUtilities;
 public class PathnetLabTest {
 
     Logger logger = Logger.getLogger(PathnetLabTest.class);
-
-    String
-//select_pid_information = "SELECT patient_name, external_id, date_of_birth, patient_address, sex, home_number  FROM hl7_pid WHERE hl7_pid.pid_id='@pid'",
-            select_header_information = "SELECT DISTINCT filler_order_number, requested_date_time, observation_date_time, ordering_provider, result_copies_to FROM hl7_obr WHERE pid_id = '@pid'",
-            select_lab_results = "SELECT hl7_obr.filler_order_number, hl7_obr.universal_service_id, hl7_obr.ordering_provider, hl7_obr.results_report_status_change, hl7_obr.diagnostic_service_sect_id, hl7_obr.result_status, hl7_obr.result_copies_to, hl7_obr.note as obrnote, hl7_obx.set_id, hl7_obx.observation_identifier, hl7_obx.observation_results, hl7_obx.units, hl7_obx.reference_range, hl7_obx.abnormal_flags, hl7_obx.observation_result_status, hl7_obx.note as obxnote FROM hl7_obr left join hl7_obx on hl7_obr.obr_id=hl7_obx.obr_id WHERE hl7_obr.pid_id='@pid' ORDER BY hl7_obr.diagnostic_service_sect_id",
-            select_signed = "SELECT hl7_pid.pid_id, hl7_link.status, hl7_link.provider_no, hl7_link.signed_on, provider.last_name, provider.first_name FROM hl7_pid left join hl7_link on hl7_pid.pid_id=hl7_link.pid_id left join provider on provider.provider_no=hl7_link.provider_no WHERE hl7_pid.pid_id='@pid';",
-            update_lab_report_signed = "UPDATE hl7_link SET hl7_link.status='S', hl7_link.provider_no='@provider_no', hl7_link.signed_on=NOW() WHERE hl7_link.pid_id='@pid';",
-            update_lab_report_viewed = "UPDATE hl7_link SET hl7_link.status='A' WHERE hl7_link.pid_id='@pid' AND hl7_link.status!='S';",
-            select_doc_notes = "SELECT hl7_message.notes FROM hl7_pid, hl7_message WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;",
-            update_doc_notes = "UPDATE hl7_pid, hl7_message SET hl7_message.notes='@notes' WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;";
-
 
     public String pName = "";          //  5. Patient: First name
     public String pSex = "";                //  7. Sex F or M
@@ -78,15 +77,6 @@ public class PathnetLabTest {
     public String multiLabId = "";
 
     public ArrayList labResults = new ArrayList();
-
-//ArrayList labs = gResults.getLabResults();
-//for ( int l =0 ; l < labs.size() ; l++){
-//                            CMLLabTest.LabResult thisResult = (CMLLabTest.LabResult) labs.get(l);
-//                                <td valign="top" align="left"><a href="labValues.jsp?testName=<%=thisResult.testName%>&demo=<%=lab.getDemographicNo()%>&labType=BCP"><%=thisResult.testName %></a></td>
-//                        <%}/*for lab.size*/%>
-//                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=BCP&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
-
-
 
     public PathnetLabTest() {
     }
@@ -143,53 +133,47 @@ public class PathnetLabTest {
     }
 
     public String getDemographicNumByLabId(String id){
-        String ret = null;
-        try{
-
-            String select_demoNo = "select demographic_no from patientLabRouting where lab_type = 'BCP' and lab_no = '"+id+"'";
-            ResultSet rs  = DBHandler.GetSQL(select_demoNo);
-            if(rs.next()){
-                ret = oscar.Misc.getString(rs, "demographic_no");
-            }
-            if (ret != null && ret.equals("0")){
-                ret = null;
-            }
-            rs.close();
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
+        PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
+        for(PatientLabRouting r : dao.findByLabNoAndLabType(ConversionUtils.fromIntString(id), "BCP")) {
+        	return "" + r.getDemographicNo();        	
         }
-        return ret;
+        return null;        
     }
 
     public void populateLab(String labid){
-
         PathnetResultsData data = new PathnetResultsData();
         multiLabId = data.getMatchingLabs(labid);
         demographicNo = getDemographicNumByLabId(labid);
+        
+        Hl7PidDao dao = SpringUtils.getBean(Hl7PidDao.class);
+        Hl7ObrDao obrDao = SpringUtils.getBean(Hl7ObrDao.class); 
+        
         try{
-
-            String select_pid_information = "SELECT pid_id, patient_name, external_id, date_of_birth, patient_address, sex, home_number,sending_facility  FROM hl7_pid, hl7_msh WHERE hl7_pid.message_id = '"+labid+"' and hl7_msh.message_id = hl7_pid.message_id";
-            ResultSet rs = DBHandler.GetSQL(select_pid_information);
-            if(rs.next()){
-                pName = removeCarat(oscar.Misc.getString(rs, "patient_name"));
-                pSex = oscar.Misc.getString(rs, "sex");
-                pHealthNum = oscar.Misc.getString(rs, "external_id");
-                pDOB = getFirstValSpace( oscar.Misc.getString(rs, "date_of_birth") );
-                pPhone = oscar.Misc.getString(rs, "home_number");
-                patientLocation = oscar.Misc.getString(rs, "sending_facility");
-                pid = oscar.Misc.getString(rs, "pid_id");
+            
+            for(Object[] o : dao.findPidsAndMshByMessageId(0)) {
+            	Hl7Pid p = (Hl7Pid) o[0];
+            	Hl7Msh msh = (Hl7Msh) o[1];
+				
+                pName = removeCarat(p.getPatientName());
+                pSex = p.getSex();
+                pHealthNum = p.getExternalId();
+                pDOB = getFirstValSpace(ConversionUtils.toDateString(p.getDateOfBirth()));
+                pPhone = p.getHomeNumber();
+                patientLocation = msh.getSendingFacility();
+                pid = p.getId().toString();
             }
-            rs.close();
-            String select_obr_information = "SELECT * from hl7_obr WHERE pid_id = '"+pid+"'";
-            rs = DBHandler.GetSQL(select_obr_information);
-            if(rs.next()){
-                serviceDate = oscar.Misc.getString(rs, "results_report_status_change");
-                status = oscar.Misc.getString(rs, "result_status"); //.equals("F") ? "Final" : "Partial")
-                Properties p = sepDocNameNum(oscar.Misc.getString(rs, "ordering_provider"));
+            
+            
+            List<Hl7Obr> obrs = obrDao.findByPid(ConversionUtils.fromIntString(pid));
+
+            for(Hl7Obr obr : obrs) {
+                serviceDate = ConversionUtils.toDateString(obr.getResultsReportStatusChange());
+                status = obr.getResultStatus(); //.equals("F") ? "Final" : "Partial")
+                Properties p = sepDocNameNum(obr.getOrderingProvider());
                 docNum = p.getProperty("num","");
-                accessionNum = justGetAccessionNumber(oscar.Misc.getString(rs, "filler_order_number"));
-                docName = p.getProperty("name",oscar.Misc.getString(rs, "ordering_provider"));
-                String ccs = oscar.Misc.getString(rs, "result_copies_to");
+                accessionNum = justGetAccessionNumber(obr.getFillerOrderNumber());
+                docName = p.getProperty("name",obr.getOrderingProvider());
+                String ccs = obr.getResultCopiesTo();
                 String docs[] = ccs.split("~");
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < docs.length; i++){
@@ -243,85 +227,77 @@ public class PathnetLabTest {
         ArrayList<GroupResults> list = new ArrayList<GroupResults>();
         try{
 
-            //ResultSet rs = DBHandler.GetSQL(select_lab_results.replaceAll("@pid", pid));
-            ResultSet rs = DBHandler.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
-
-            logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
-
-            while(rs.next()){
+            Hl7ObrDao dao = SpringUtils.getBean(Hl7ObrDao.class);
+            Hl7ObxDao obxDao = SpringUtils.getBean(Hl7ObxDao.class);
+            
+            for(Hl7Obr o : dao.findByPid(ConversionUtils.fromIntString(pid))) {
                 GroupResults gr = new GroupResults();
-                gr.groupName = oscar.Misc.getString(rs, "diagnostic_service_sect_id")+ " " +oscar.Misc.getString(rs, "universal_service_id").substring(oscar.Misc.getString(rs, "universal_service_id").indexOf("^"));
-                String obrId = oscar.Misc.getString(rs, "obr_id");
-
-                ResultSet rs2 = DBHandler.GetSQL("select set_id, observation_date_time,observation_result_status, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
-                logger.info("select set_id, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
-                while(rs2.next()){
+                gr.groupName = o.getDiagnosticServiceSectId() + " " +o.getUniversalServiceId().substring(o.getUniversalServiceId().indexOf("^"));
+                String obrId = "" + o.getId();
+                
+                for(Hl7Obx obx : obxDao.findByObrId(ConversionUtils.fromIntString(obrId))) {
                     LabResult l = new LabResult();
-                    l.testName = rs2.getString("observation_identifier").substring(rs2.getString("observation_identifier").indexOf("^")+1);
-                    l.result = rs2.getString("observation_results");
-                    l.abn = rs2.getString("abnormal_flags");
-                    l.minimum = rs2.getString("reference_range");
-                    l.maximum =rs2.getString("reference_range");
-                    l.units =rs2.getString("units");
-                    l.timeStamp = rs2.getString("observation_date_time");
-                    l.resultStatus = rs2.getString("observation_result_status");
-                    l.notes = rs2.getString("obxnote");
+                    l.testName = obx.getObservationIdentifier().substring(obx.getObservationIdentifier().indexOf("^")+1);
+                    l.result = obx.getObservationResults();
+                    l.abn = obx.getAbnormalFlags();
+                    l.minimum = obx.getReferenceRange();
+                    l.maximum =obx.getReferenceRange();
+                    l.units =obx.getUnits();
+                    l.timeStamp = ConversionUtils.toDateString(obx.getObservationDateTime());
+                    l.resultStatus = obx.getObservationResultStatus();
+                    l.notes = obx.getNote();
                     if( l.notes != null ){
                         l.notes = l.notes.replaceAll("\\\\\\.br\\\\", " ");
                     }
                     gr.addLabResult(l);
                 }
-                rs2.close();
                 list.add(gr);
             }
-            rs.close();
         }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return list;
     }
 
     public ArrayList<GroupResults> getResults(String pid){
         ArrayList<GroupResults> list = new ArrayList<GroupResults>();
+        Hl7ObrDao dao = SpringUtils.getBean(Hl7ObrDao.class);
+        Hl7ObxDao obxDao = SpringUtils.getBean(Hl7ObxDao.class);
         try{
-
-            //ResultSet rs = DBHandler.GetSQL(select_lab_results.replaceAll("@pid", pid));
-            ResultSet rs = DBHandler.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
-            logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
-
             GroupResults gr = null;
-            while(rs.next()){
-                String gName = oscar.Misc.getString(rs, "diagnostic_service_sect_id");
+            for(Hl7Obr obr : dao.findByPid(ConversionUtils.fromIntString(pid))) {
+                String gName = obr.getDiagnosticServiceSectId(); 
+                
                 if (gr == null || !gName.equals(gr.groupName)){
                     gr = new GroupResults();
-                    gr.groupName = gName; //oscar.Misc.getString(rs,"diagnostic_service_sect_id"); //+ " " +oscar.Misc.getString(rs,"universal_service_id").substring(oscar.Misc.getString(rs,"universal_service_id").indexOf(" "));
+                    gr.groupName = gName;
                     list.add(gr);
                 }
-                gr.addHeaderResults(oscar.Misc.getString(rs, "note"));
-                String obrId = oscar.Misc.getString(rs, "obr_id");
-                ResultSet rs2 = DBHandler.GetSQL("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
-                logger.info("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
-                while(rs2.next()){
+                gr.addHeaderResults(obr.getNote());
+                String obrId = "" + obr.getId();
+                
+               for(Object[] o : obxDao.findObxAndObrByObrId(ConversionUtils.fromIntString(obrId))) {
+            	   Hl7Obx obx2 = (Hl7Obx) o[0];
+            	   Hl7Obr obr2 = (Hl7Obr) o[1];
+            	   
                     LabResult l = new LabResult();
-                    l.service_name = rs2.getString("universal_service_id").substring(rs2.getString("universal_service_id").indexOf("^")+1);
-                    l.testName = rs2.getString("observation_identifier").substring(rs2.getString("observation_identifier").indexOf("^")+1);
-                    l.result = rs2.getString("observation_results");
+                    l.service_name = obr2.getUniversalServiceId().substring(obr2.getUniversalServiceId().indexOf("^")+1);
+                    l.testName = obx2.getObservationIdentifier().substring(obx2.getObservationIdentifier().indexOf("^")+1);
+                    l.result = obx2.getObservationResults();
                     if( l.result != null ){
                         l.result = l.result.replaceAll("\\\\\\.br\\\\", "<br/>");
                     }
-                    l.abn = rs2.getString("abnormal_flags");
-                    l.minimum = rs2.getString("reference_range");
-                    l.maximum =rs2.getString("reference_range");
-                    l.units =rs2.getString("units");
-                    l.timeStamp = rs2.getString("observation_date_time");
-                    l.resultStatus = rs2.getString("observation_result_status");
-                    l.notes = rs2.getString("obxnote");
+                    l.abn = obx2.getAbnormalFlags();
+                    l.minimum = obx2.getReferenceRange();
+                    l.maximum =obx2.getReferenceRange();
+                    l.units =obx2.getUnits();
+                    l.timeStamp = ConversionUtils.toDateString(obx2.getObservationDateTime());
+                    l.resultStatus = obx2.getObservationResultStatus();
+                    l.notes = obx2.getNote();
                     if( l.notes != null ){
                         l.notes = l.notes.replaceAll("\\\\\\.br\\\\", "<br/>");
                     }
                     gr.addLabResult(l);
                 }
-                rs2.close();
             }
-            rs.close();
         }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return list;
     }

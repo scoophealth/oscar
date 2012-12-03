@@ -37,7 +37,6 @@ public class Hl7ObxDaoTest extends DaoTestFixtures {
 
 	private Hl7ObxDao dao = SpringUtils.getBean(Hl7ObxDao.class);
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("hl7_obx");
@@ -50,4 +49,10 @@ public class Hl7ObxDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+
+	@Test
+	public void testFindObxAndObrByObrId() {
+		assertNotNull(dao.findObxAndObrByObrId(100));
+	}
+
 }
