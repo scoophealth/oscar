@@ -43,6 +43,7 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -101,11 +102,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		this.clientImageDAO = clientImageDAO;
 	}
 	
-	private SurveyManager surveyManager;
-
-	public void setSurveyManager(SurveyManager mgr) {
-		this.surveyManager = mgr;
-	}
+	private SurveyManager surveyManager = new SurveyManagerImpl();
+	
 
 	@Override
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

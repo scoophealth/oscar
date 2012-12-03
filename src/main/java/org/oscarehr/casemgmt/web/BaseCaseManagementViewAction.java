@@ -35,6 +35,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -53,7 +54,7 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	protected RolesManager roleMgr;
 	protected ProgramManager programMgr;
 	protected AdmissionManager admissionMgr;
-	protected SurveyManager surveyMgr;
+	protected SurveyManager surveyMgr = new SurveyManagerImpl();
 
 
 	public ApplicationContext getAppContext() {
@@ -88,9 +89,6 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 		this.programMgr = mgr;
 	}
 
-	public void setSurveyManager(SurveyManager mgr) {
-		this.surveyMgr = mgr;
-	}
 
 	public String getDemographicNo(HttpServletRequest request) {
 		String demono= request.getParameter("demographicNo");
