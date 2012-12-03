@@ -45,7 +45,6 @@ import org.apache.xerces.parsers.DOMParser;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
@@ -59,7 +58,7 @@ public class JDBCUtil
        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
        DocumentBuilder builder        = factory.newDocumentBuilder();
        Document doc                   = builder.newDocument();
-       StringEscapeUtils strEscUtils = new StringEscapeUtils();
+
        Element results = doc.createElement("Results");
        doc.appendChild(results);
 
@@ -160,7 +159,7 @@ public class JDBCUtil
         int type = node.getNodeType();
 
         if ( type == Node.ELEMENT_NODE ){
-            NamedNodeMap nnm = node.getAttributes();
+
             String name = node.getNodeName();
             String value = "";
 

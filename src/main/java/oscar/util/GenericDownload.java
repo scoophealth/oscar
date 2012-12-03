@@ -100,11 +100,9 @@ public class GenericDownload extends HttpServlet {
         FileInputStream fis = new FileInputStream(curfile);
         int bufferSize;
         byte[] buffer = new byte[BUFFER_SIZE];
-        long incrementor = 0;
+
         while(( bufferSize = fis.read(buffer)) != -1) {
              stream.write(buffer, 0, bufferSize);
-
-             //incrementor++;
 
         }
         fis.close();
