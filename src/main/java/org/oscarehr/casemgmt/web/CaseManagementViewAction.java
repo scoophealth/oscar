@@ -1902,6 +1902,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Map<String,Object> filteredNotes = new LinkedHashMap<String,Object>();
 
 		//This gets rid of old revisions (better than left join on a computed subset of itself
+		Integer programNo;
 		for(Map<String,Object> note:notes) {
 			if(filteredNotes.get(note.get("uuid"))!=null)
 				continue;
@@ -1910,7 +1911,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			e.setId(note.get("id"));
 			e.setDate((Date)note.get("observation_date"));
 			e.setProviderNo((String)note.get("providerNo"));
-			e.setProgramId(Integer.parseInt((String)note.get("program_no")));
+			
+			programNo = note.get("program_no").equals("") ? null : Integer.parseInt((String)note.get("program_no"));
+			e.setProgramId(programNo);
 			e.setRole((String)note.get("reporter_caisi_role"));
 			e.setType("local_note");
 			entries.add(e);
