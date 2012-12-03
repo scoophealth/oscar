@@ -26,5 +26,5 @@ package org.caisi.model;
 
 public class DefaultCustomFilter extends CustomFilter {
 	
-
+	// not sure what this is here for, some one will figure it out some day... sounds like an interface may have been better *shrugs*
 }
