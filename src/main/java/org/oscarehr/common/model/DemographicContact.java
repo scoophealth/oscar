@@ -73,7 +73,9 @@ public class DemographicContact extends AbstractModel<Integer> {
 	private int facilityId;
 	private String creator;
 
-
+	private Boolean consentToContact = true;
+	private Boolean active = true;
+	
 	@Transient
 	private String contactName;
 
@@ -213,4 +215,22 @@ public class DemographicContact extends AbstractModel<Integer> {
 	protected void jpa_updateTimestamp() {
 		this.setUpdateDate(new Date());
 	}
+
+	public boolean isConsentToContact() {
+		return consentToContact;
+	}
+
+	public void setConsentToContact(boolean consentToContact) {
+		this.consentToContact = consentToContact;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	
 }

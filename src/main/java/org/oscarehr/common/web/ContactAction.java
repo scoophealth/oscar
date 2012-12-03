@@ -131,6 +131,19 @@ public class ContactAction extends DispatchAction {
     			}
     			c.setFacilityId(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
     			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    			
+    			if(request.getParameter("contact_"+x+".consentToContact").equals("1")) {
+    				c.setConsentToContact(true);
+    			} else {
+    				c.setConsentToContact(false);
+    			}
+    			
+    			if(request.getParameter("contact_"+x+".active").equals("1")) {
+    				c.setActive(true);
+    			} else {
+    				c.setActive(false);
+    			}
+    			
     			if(c.getId() == null)
     				demographicContactDao.persist(c);
     			else
@@ -157,6 +170,7 @@ public class ContactAction extends DispatchAction {
 		        			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
 		        			c.setSdm("");
 		        			c.setEc("");
+		        			
 		        			if(c.getId() == null)
 		        				demographicContactDao.persist(c);
 		        			else
@@ -200,7 +214,19 @@ public class ContactAction extends DispatchAction {
     			c.setCategory(DemographicContact.CATEGORY_PROFESSIONAL);
     			c.setFacilityId(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
     			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-
+    			
+    			if(request.getParameter("procontact_"+x+".consentToContact").equals("1")) {
+    				c.setConsentToContact(true);
+    			} else {
+    				c.setConsentToContact(false);
+    			}
+    			
+    			if(request.getParameter("procontact_"+x+".active").equals("1")) {
+    				c.setActive(true);
+    			} else {
+    				c.setActive(false);
+    			}
+    			
     			if(c.getId() == null)
     				demographicContactDao.persist(c);
     			else
