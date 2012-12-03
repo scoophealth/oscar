@@ -41,7 +41,6 @@ public class CaseManagementTmpSave implements Serializable {
 
     // constructors
 	public CaseManagementTmpSave () {
-		initialize();
 	}
 
 	/**
@@ -49,11 +48,7 @@ public class CaseManagementTmpSave implements Serializable {
 	 */
 	public CaseManagementTmpSave (java.lang.Long _id) {
 		this.setId(_id);
-		initialize();
 	}
-
-/*[CONSTRUCTOR MARKER END]*/
-protected void initialize () {}
 
     /**
 	 * Return the unique identifier of this class

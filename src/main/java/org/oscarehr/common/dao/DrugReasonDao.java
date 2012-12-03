@@ -72,7 +72,6 @@ public class DrugReasonDao extends AbstractDao<DrugReason> {
     
     public List<DrugReason>  getReasonsForDrugID(Integer drugId,boolean onlyActive){
     	
-    	String archived = "";
     	String sqlCommand = "select x from DrugReason x where x.drugId=?1 and x.archivedFlag = ?2";
 		
         Query query = entityManager.createQuery(sqlCommand);
