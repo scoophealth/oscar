@@ -65,6 +65,21 @@
 						<option value="Other">Other</option>		            	
 		            </select>
 	            	
+	            	&nbsp;
+	            	
+	            	<select name="contact_<%=id%>.consentToContact" id="procontact_<%=id%>.consentToContact" title="Consent to Contact">
+	            		<option value="1">Consent</option>
+						<option value="0">No Consent</option>
+	            	</select>
+	            	
+	            	&nbsp;
+	            	
+	            	<select name="contact_<%=id%>.active" id="procontact_<%=id%>.active" title="Active">
+	            		<option value="1">Active</option>
+						<option value="0">Inactive</option>
+	            	</select>
+	            	
+	            	&nbsp;
 	            	<!--  they can be an internal (Demographic) or external (Contact) contact -->
 	            		             
 		            <select name="contact_<%=id%>.type" id="contact_<%=id%>.type">

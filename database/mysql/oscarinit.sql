@@ -9028,7 +9028,9 @@ create table DemographicContact (
 	sdm varchar(25),
 	ec varchar(25),
 	note varchar(200),
-KEY (`demographicNo`)
+	consentToContact tinyint(1),
+	active tinyint(1),
+	KEY (`demographicNo`)
 );
 
 
