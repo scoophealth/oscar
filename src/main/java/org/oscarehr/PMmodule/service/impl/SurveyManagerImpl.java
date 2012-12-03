@@ -47,6 +47,7 @@ import org.oscarehr.surveymodel.Section;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -54,12 +55,8 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 
 	Logger log=MiscUtils.getLogger();
 	
-	private SurveyDAO surveyDAO;
+	private SurveyDAO surveyDAO = (SurveyDAO) SpringUtils.getBean("oscarSurveyDAO");
 	
-	public void setSurveyDAO(SurveyDAO dao) {
-		this.surveyDAO = dao;
-	}
-
 	public List getAllFormsForCurrentProviderAndCurrentFacility() {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		

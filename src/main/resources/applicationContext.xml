@@ -230,9 +230,6 @@
 
 	</bean>
 	<bean id="ClientImageManager" class="org.oscarehr.casemgmt.service.ClientImageManager" autowire="byName" />
-	<bean id="oscarSurveyManager" class="org.oscarehr.PMmodule.service.impl.SurveyManagerImpl">
-		<property name="surveyDAO" ref="oscarSurveyDAO" />
-	</bean>
 	<bean id="programManager" class="org.oscarehr.PMmodule.service.ProgramManager" autowire="byName">
 		<property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}" />
 	</bean>
