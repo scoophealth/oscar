@@ -65,7 +65,7 @@ public class ImportMeasurementTypes {
     }
     
     public void importMeasurements(Element root){
-           EctFindMeasurementTypeUtil fmtu = new EctFindMeasurementTypeUtil();
+           
            boolean measurementReInitNeeded = false;
            //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
            List meas = root.getChildren("measurement");

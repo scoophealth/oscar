@@ -27,7 +27,6 @@ package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -127,8 +126,7 @@ public class EctConConstructSpecialistsScriptsFile {
 			String servId = serviceId.elementAt(i);
 			String servDesc = serviceDesc.elementAt(i);
 			stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder("K(")).append(servId).append(",\"").append(servDesc).append("\");\n"))));
-			ResultSet rs = null;
-			String sql = String.valueOf(String.valueOf((new StringBuilder("select ser.specId, pro.fName, pro.lName, pro.proLetters, pro.address , pro.phone, pro.fax  from serviceSpecialists ser, professionalSpecialists pro where pro.specId = ser.specId and ser.serviceId = '")).append(servId).append("' order by pro.lName")));
+
 			for (Object[] o : dao.findSpecialists(ConversionUtils.fromIntString(servId))) {
 				ServiceSpecialists ser = (ServiceSpecialists) o[0];
 				ProfessionalSpecialist pro = (ProfessionalSpecialist) o[1];

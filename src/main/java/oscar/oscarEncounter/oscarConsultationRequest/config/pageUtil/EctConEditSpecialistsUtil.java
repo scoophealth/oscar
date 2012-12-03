@@ -29,11 +29,6 @@ import java.util.Vector;
 
 public class EctConEditSpecialistsUtil
 {
-
-    public void estSpecialistVectorEx()
-    {
-    }
-
     public Vector fNameVec;
     public Vector lNameVec;
     public Vector proLettersVec;

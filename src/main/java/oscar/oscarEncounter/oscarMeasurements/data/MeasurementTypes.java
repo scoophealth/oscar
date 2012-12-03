@@ -53,7 +53,9 @@ public class MeasurementTypes {
        while(loaded == false){         
           try {
             wait();
-          } catch (InterruptedException e) { }
+          } catch (InterruptedException e) {
+        	  MiscUtils.getLogger().error("This doesn't look good, when does wait really ever get interrupted practice...", e);
+          }
        }
        return (EctMeasurementTypesBean) byType.get(type);     
     }
@@ -62,7 +64,9 @@ public class MeasurementTypes {
        while(loaded == false){         
           try {
             wait();
-          } catch (InterruptedException e) { }
+          } catch (InterruptedException e) {
+        	  MiscUtils.getLogger().error("This doesn't look good, when does wait really ever get interrupted in practice...", e);
+          }
        }
        return (EctMeasurementTypesBean) byId.get(type);     
     }
