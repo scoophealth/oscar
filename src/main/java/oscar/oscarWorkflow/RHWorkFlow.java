@@ -51,7 +51,7 @@ public class RHWorkFlow implements WorkFlow {
         WFState wf3 = new WFState("3","Injection 28","");
         WFState wf4 = new WFState("4","Requires Another Injection","");
         WFState wf5 = new WFState("5","Missed Appt","") ;
-        WFState wf6 = new WFState("6","Follow up Appt Booked","");
+        // WFState wf6 = new WFState("6","Follow up Appt Booked","");
         WFState wfC = new WFState("C","Closed","");
 
          states.put("1",wf1);

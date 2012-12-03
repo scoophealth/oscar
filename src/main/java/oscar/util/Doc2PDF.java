@@ -96,7 +96,6 @@ public class Doc2PDF {
         Process process; // Process for HTMLDOC
         Runtime runtime; // Local runtime object
         java.io.InputStream input; // Output from HTMLDOC
-        byte buffer[]; // Buffer for output data
         int bytes; // Number of bytes
 
         // Construct the command string
