@@ -32,6 +32,7 @@ import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class Hl7ObxDao extends AbstractDao<Hl7Obx> {
 
 	public Hl7ObxDao() {
@@ -42,9 +43,17 @@ public class Hl7ObxDao extends AbstractDao<Hl7Obx> {
 		Query q = entityManager.createQuery("select h from Hl7Obx where h.obrId = ?1");
 		q.setParameter(1, obrId);
 		
-		@SuppressWarnings("unchecked")
 		List<Hl7Obx> results = q.getResultList();
-		
 		return results;
 	}
+
+    public List<Object[]> findObxAndObrByObrId(Integer id) {
+		String sql = "FROM Hl7Obx obx, Hl7Obr obr " +
+				"WHERE obr.id = :id " +
+				"AND obr.id = obx.obrId ";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("id", id);
+		return query.getResultList();
+	    
+    }
 }
