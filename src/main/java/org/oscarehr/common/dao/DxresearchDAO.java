@@ -51,7 +51,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 	public DxresearchDAO() {
 		super(Dxresearch.class);
 	}
-
+	
     public List<DxRegistedPTInfo> getPatientRegisted(List<Dxresearch> dList, List<String> doctorList) {
 
         List<DxRegistedPTInfo> rList = new ArrayList<DxRegistedPTInfo>();
@@ -320,4 +320,47 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
         q.setParameter("toDate", toDate);
         return q.getResultList();
     }
+	
+    public Integer countResearches(String researchCode, Date sdate, Date edate) {		
+		String sql = "SELECT DISTINCT x.demographicNo FROM Dxresearch x, Demographic d " +
+				"WHERE x.dxresearchCode = :researchCode " +
+				"AND x.demographicNo = d.id " +
+				"AND x.updateDate >= :sdate " +
+				"AND x.updateDate <= :edate " +
+				"AND x.status <> 'D'";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("researchCode", researchCode);
+		query.setParameter("sdate", sdate);
+		query.setParameter("edate", edate);
+		
+		@SuppressWarnings("unchecked")
+		List<Integer> ids = query.getResultList();
+		return ids.size();
+	}
+    
+    public Integer countBillingResearches(String researchCode, String diagCode, String creator, Date sdate, Date edate) {
+    	String sql = "SELECT DISTINCT x.demographicNo FROM Dxresearch x, Billing b, BillingDetail bd " +
+    			"WHERE x.status <> 'D' " +
+    			"AND x.dxresearchCode= :researchCode " +
+    			"AND x.demographicNo = b.demographicNo " +
+    			"AND b.id = bd.billingNo " +
+    			"AND bd.diagnosticCode = :diagCode " +
+    			"AND b.creator = :creator " +
+    			"AND b.billingDate >= :sdate " +
+    			"AND b.billingDate <= :edate " +
+    			"AND b.status != 'D' " +
+    			"AND bd.status != 'D'" ;
+    	
+    	Query query = entityManager.createQuery(sql);
+		query.setParameter("researchCode", researchCode);
+		query.setParameter("diagCode", diagCode);
+		query.setParameter("creator", creator);
+		query.setParameter("sdate", sdate);
+		query.setParameter("edate", edate);
+		
+		@SuppressWarnings("unchecked")
+		List<Integer> ids = query.getResultList();
+		return ids.size();
+    }
+
 }

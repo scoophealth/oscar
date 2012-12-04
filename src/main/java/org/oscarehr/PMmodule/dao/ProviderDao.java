@@ -264,6 +264,13 @@ public class ProviderDao extends HibernateDaoSupport {
 
 		return results;
 	}
+	
+	public List<Provider> getProvidersByTypePattern(String typePattern) {
+		@SuppressWarnings("unchecked")
+		List<Provider> results = this.getHibernateTemplate().find(
+				"from Provider p where p.ProviderType like ?", typePattern);
+		return results;
+	}
 
 	public List getShelterIds(String provider_no)
 	{
