@@ -51,20 +51,8 @@ public class ProcessSurveyFile{
    
    
    private int maxProcessed(String surveyId){
-      int maxprocessed = 0 ;
-      try{
-         
-         String sql = "select max(processed) as maxprocessed from surveyData  where surveyId = '"+surveyId+"'  ";         
-         ResultSet rs = DBHandler.GetSQL(sql);
-         
-         if(rs.next()){
-            maxprocessed = rs.getInt("maxprocessed");            
-         }            
-         rs.close();         
-      }catch(Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return maxprocessed;
+      SurveyDataDao dao = SpringUtils.getBean(SurveyDataDao.class);
+      return dao.getMaxProcessed(surveyId);
    }
    
    private void setProcessed(String surveyDataId, int processedId){
@@ -99,14 +87,12 @@ public class ProcessSurveyFile{
    public synchronized String processSurveyFile(String surveyId){
       String sStatus = null;
       int numRecordsToProcess = 0;
+      SurveyDataDao dao = SpringUtils.getBean(SurveyDataDao.class);
       try{
-         
-         String processCount = "select count(surveyDataId) as recordsForProcessing from surveyData  where surveyId = '"+surveyId+"' and processed is null and status = 'A'";
-         
-         ResultSet rs = DBHandler.GetSQL(processCount);
-         
-         if (rs.next()){
-            numRecordsToProcess = rs.getInt("recordsForProcessing");            
+         ResultSet rs = null;
+         int count = dao.getProcessCount(surveyId);
+         if (count > 0){
+            numRecordsToProcess = count;            
             if (numRecordsToProcess > 0){                 
                int processedId = maxProcessed(surveyId);
                processedId++;
