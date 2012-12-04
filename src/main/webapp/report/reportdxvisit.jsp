@@ -1,3 +1,10 @@
+<%@page import="org.oscarehr.common.dao.BillingDao"%>
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
+<%@page import="org.oscarehr.common.model.Ichppccode"%>
+<%@page import="org.oscarehr.common.dao.IchppccodeDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%
   //reportdxvisit.jsp?sdate=2003-04-01&edate=2003-12-31
   //
@@ -26,8 +33,6 @@ function setfocus() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
 	leftmargin="0" rightmargin="0">
 <%
-//busy ... busy ... busy ..................................................<br>
-//display splash-msg first
 out.flush();
 
 // get total patientNum/rosterNR/rosterRO/sexF/sexM/
@@ -40,79 +45,37 @@ Vector vServiceDesc = new Vector();
 Vector vBillingDx = new Vector();
 Properties props = new Properties();
 
-
 // get nurse name list
-String sql = "select provider_no, last_name, first_name from provider where provider_type like 'nurse%'";
-ResultSet rs = DBHandler.GetSQL(sql); 
-while (rs.next()) { 
-	vNurse.add(oscar.Misc.getString(rs,"last_name") + ", " + oscar.Misc.getString(rs,"first_name"));
-	vNurseNo.add(oscar.Misc.getString(rs,"provider_no"));
+ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+for(org.oscarehr.common.model.Provider p : dao.getProvidersByTypePattern("nurse%")) {
+	vNurse.add(p.getLastName() + ", " + p.getFirstName());
+	vNurseNo.add(p.getProviderNo());
 }
 
 // get dx code list
-sql = "select ichppccode, description, diagnostic_code from ichppccode order by ichppccode";
-rs = DBHandler.GetSQL(sql); 
-while (rs.next()) { 
-	vServiceCode.add(oscar.Misc.getString(rs,"ichppccode"));
-	vServiceDesc.add(oscar.Misc.getString(rs,"description"));
-	vBillingDx.add(oscar.Misc.getString(rs,"diagnostic_code"));
+IchppccodeDao iDao = SpringUtils.getBean(IchppccodeDao.class);
+for(Ichppccode c : iDao.findAll()) { 
+	vServiceCode.add("" + c.getId());
+	vServiceDesc.add(c.getDescription());
+	vBillingDx.add(c.getDiagnosticCode());
 }
 
+DxresearchDAO dDao = SpringUtils.getBean(DxresearchDAO.class);
+BillingDao bDao = SpringUtils.getBean(BillingDao.class);
 for (int i = 0; i < vServiceCode.size(); i++) {
-	// get total pat
-	sql = "select count(distinct(x.demographic_no)) from dxresearch x, demographic d where x.dxresearch_code='" + vServiceCode.get(i) + "' and x.demographic_no=d.demographic_no  and x.update_date>='" + sdate + "' and x.update_date<='" + edate + "' and x.status!='D' ";
-	rs = DBHandler.GetSQL(sql); 
-	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(x.demographic_no))"));
-	}
-
+	Integer count = dDao.countResearches(String.valueOf(vServiceCode.get(i)), ConversionUtils.fromDateString(sdate), ConversionUtils.fromDateString(edate));
 	// get total vis
-	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd where b.billing_no=bd.billing_no and bd.diagnostic_code='" + vBillingDx.get(i) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'";
-	rs = DBHandler.GetSQL(sql); 
-	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.billing_no))"));
-	}
-
+	props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), "" + count);
 
 	// get pat num for Nurses
 	for (int j = 0; j < vNurseNo.size(); j++) {
-		sql = "select count(distinct(x.demographic_no)) from dxresearch x, billing b, billingdetail bd where x.status!='D' and x.dxresearch_code='" + vServiceCode.get(i) + "' and x.demographic_no=b.demographic_no  and b.billing_no=bd.billing_no and bd.diagnostic_code='" + vBillingDx.get(i) + "' and b.creator='" + vNurseNo.get(j) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'" ;
-		//sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd  where b.billing_no=bd.billing_no and bd.diagnostic_code='" + vServiceCode.get(i) + "' and b.creator='" + vNurseNo.get(j) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'"  ;
-		rs = DBHandler.GetSQL(sql); 
-		while (rs.next()) { 
-			props.setProperty(vServiceCode.get(i) + "patNurse" + j + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(x.demographic_no))"));
-		}
-
-		sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd where b.billing_no=bd.billing_no and bd.diagnostic_code='" + vBillingDx.get(i) + "' and b.creator='" + vNurseNo.get(j) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'" ;
-		//sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd  where b.billing_no=bd.billing_no and bd.diagnostic_code='" + vServiceCode.get(i) + "' and b.creator='" + vNurseNo.get(j) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'"  ;
-		rs = DBHandler.GetSQL(sql); 
-		while (rs.next()) { 
-			props.setProperty(vServiceCode.get(i) + "visNurse" + j + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.billing_no))"));
-		}
-/*
-		out.println("<hr>");
-		out.println("Pat - patNurse (" + vNurse.get(j) + "): " + props.getProperty("patNurse" + j + vServiceDesc.get(i)) + "<br>");
-		out.println("busy ... busy ... busy ..................................................<br>");
-		out.flush();
-
-		sql = "select count(distinct(b.appointment_no)) from billing b, billingdetail bd  where b.billing_no=bd.billing_no and bd.diagnostic_code='" + vServiceCode.get(i) + "' and b.creator='" + vNurseNo.get(j) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'"  ;
-		rs = DBHandler.GetSQL(sql); 
-		while (rs.next()) { 
-			props.setProperty(vServiceCode.get(i) + "visNurse" + j + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.appointment_no))"));
-		}
-/*
-		out.println("<hr>");
-		out.println("Vis - patNurse (" + vNurse.get(j) + "): " + props.getProperty("visNurse" + j + vServiceDesc.get(i)) + "<br>");
-		out.println("busy ... busy ... busy ..................................................<br>");
-		out.flush();
-*/
-
+		Integer researchCount = dDao.countBillingResearches(String.valueOf(vServiceCode.get(i)), String.valueOf(vBillingDx.get(i)), String.valueOf(vNurseNo.get(j)), ConversionUtils.fromDateString(sdate), ConversionUtils.fromDateString(edate));
+		props.setProperty(vServiceCode.get(i) + "patNurse" + j + vServiceDesc.get(i), "" + researchCount);
+		
+		Integer billingCount = bDao.countBillings(String.valueOf(vBillingDx.get(i)), String.valueOf(vNurseNo.get(j)), ConversionUtils.fromDateString(sdate), ConversionUtils.fromDateString(edate));
+		props.setProperty(vServiceCode.get(i) + "visNurse" + j + vServiceDesc.get(i), "" + billingCount);
 	}
-
 }
-
-
-rs.close();
 
 %>
 
