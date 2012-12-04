@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EyeformMacroDaoTest extends DaoTestFixtures {
 
-	private EyeformMacroDao dao = SpringUtils.getBean(EyeformMacroDao.class);
+	protected EyeformMacroDao dao = SpringUtils.getBean(EyeformMacroDao.class);
 
 
 	@Before

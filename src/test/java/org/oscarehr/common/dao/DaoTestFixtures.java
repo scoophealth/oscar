@@ -47,12 +47,20 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package org.oscarehr.common.dao;
 
+import static junit.framework.Assert.fail;
+
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.oscarehr.common.dao.utils.ConfigUtils;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.MiscUtils;
@@ -66,6 +74,7 @@ public abstract class DaoTestFixtures
 		SchemaUtils.dropTable("IntegratorConsent","HnrDataValidation","ClientLink","IntegratorConsentComplexExitInterview",
 				"DigitalSignature","appointment","admission" ,"program","demographic");
 	}
+	
 	@BeforeClass
 	public static void classSetUp() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
@@ -99,6 +108,100 @@ public abstract class DaoTestFixtures
 		secsTaken = (end-start)/1000;
 		MiscUtils.getLogger().info("Setting up spring took " + secsTaken + " seconds.");
 
+	}
+	
+	@Test
+	public void doSimpleExceptionTest() {
+		String[] excludes = {"notify","notifyAll","remove","persist","merge","refresh","saveEntity","wait","equals",
+				"toString","hashCode","getClass","getModelClass","find","getCountAll","findAll","runNativeQuery","save"};
+		List<String> excludeList = Arrays.asList(excludes);
+		
+		String daoClassName = this.getClass().getName().replaceAll("Test$", "");
+		
+		try {
+			Class clazz = Class.forName(daoClassName);
+			
+			Object daoObject = null;
+			
+			
+			for(Field f:this.getClass().getDeclaredFields()) {
+				if(f.getType().equals(clazz)) {
+					daoObject = f.get(this);
+					break;
+				}
+			}
+			
+			if(daoObject == null) {
+				MiscUtils.getLogger().warn("Unable to find dao field of type " + clazz.getName());
+				return;
+			}
+			
+			for(Method m:clazz.getMethods()) {
+				if(excludeList.contains(m.getName())) {
+					continue;
+				}
+				if(m.getParameterTypes().length == 0) {
+					//MiscUtils.getLogger().info("invoking " + m.getName());
+					try {
+						m.invoke(daoObject, new Object[]{});
+					}catch(Exception e) {
+						fail(e.getMessage());
+						MiscUtils.getLogger().error("error",e);
+					}
+				} else {
+					boolean invoke=true;
+					Object[] params = new Object[m.getParameterTypes().length];
+					for(int x=0;x<m.getParameterTypes().length;x++) {
+						Class c = m.getParameterTypes()[x];
+						if(!(c==int.class) && !(c == String.class) && !(c == Integer.class) 
+								&& !(c == java.util.Date.class) && !(c == Boolean.class) && !(c == boolean.class)
+								&& !(c == Long.class) && !(c == long.class)
+								&& !(c == Double.class) && !(c == double.class)
+								&& !(c == Float.class) && !(c == float.class)) {
+							MiscUtils.getLogger().info("can't handle " + c);
+							invoke=false;
+							break;
+						}
+						if(c == int.class || c == Integer.class ) {
+							params[x] = 1;
+						}
+						if(c == long.class || c == Long.class ) {
+							params[x] = 1L;
+						}
+						if(c == Double.class || c == double.class) {
+							params[x] = (double)1.0;
+						}
+						if(c == Float.class || c == float.class) {
+							params[x] = (float)1.0;
+						}
+						if(c == String.class) {
+							params[x] = "test";
+						}
+						if(c == Date.class) {
+							params[x] = new Date();
+						}
+						if(c == Boolean.class || c == boolean.class) {
+							params[x] = true;
+						}
+					}
+					if(invoke) {
+						//MiscUtils.getLogger().info("invoking " + m.getName());
+						try {
+							m.invoke(daoObject, params);
+						}catch(Exception e) {
+							MiscUtils.getLogger().error("error on method " + m.getName(),e);
+							fail(e.getMessage());
+						}
+					} else {
+						MiscUtils.getLogger().info("skipping " + m.getName());
+					}
+				}
+			}
+		} catch(ClassNotFoundException e) {
+			MiscUtils.getLogger().warn("Unable to find class of type " + daoClassName);
+		} catch(Exception e) {
+			MiscUtils.getLogger().error("error",e);
+		}
 	}
 
 }

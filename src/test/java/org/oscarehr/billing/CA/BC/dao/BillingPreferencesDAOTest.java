@@ -38,7 +38,7 @@ import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
 
 public class BillingPreferencesDAOTest extends DaoTestFixtures {
 
-	private BillingPreferencesDAO dao = SpringUtils.getBean(BillingPreferencesDAO.class);
+	public BillingPreferencesDAO dao = SpringUtils.getBean(BillingPreferencesDAO.class);
 
 	@Before
 	public void before() throws Exception {

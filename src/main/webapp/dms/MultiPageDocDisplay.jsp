@@ -571,7 +571,7 @@ function sendMRP(ele){
                                             Linked Providers:
                                             <%
             Properties p = (Properties) session.getAttribute("providerBean");
-            List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", docId);
+            List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", Integer.parseInt(docId));
                                             %>
                                             <ul>
                                                 <%for (ProviderInboxItem pItem : routeList) {

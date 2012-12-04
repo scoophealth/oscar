@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CriteriaTypeDaoTest extends DaoTestFixtures {
 
-	private CriteriaTypeDao dao = SpringUtils.getBean(CriteriaTypeDao.class);
+	public CriteriaTypeDao dao = SpringUtils.getBean(CriteriaTypeDao.class);
 
 
 	@Before

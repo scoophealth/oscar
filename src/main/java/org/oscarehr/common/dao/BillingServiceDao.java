@@ -23,8 +23,6 @@
 
 package org.oscarehr.common.dao;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +31,6 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.BillingService;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 import oscar.util.UtilDateUtilities;
@@ -206,18 +203,18 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
             return list.get(list.size() - 1);
         }
 
-	public boolean editBillingCodeDesc(String desc, String val, String codeId) {
+	public boolean editBillingCodeDesc(String desc, String val, Integer codeId) {
 		boolean retval = true;
-		BillingService billingservice = find(Integer.parseInt(codeId));
+		BillingService billingservice = find(codeId);
 		billingservice.setValue(val);
 		billingservice.setDescription(desc);
 		merge(billingservice);
 		return retval;
 	}
 
-	public boolean editBillingCode(String val, String codeId) {
+	public boolean editBillingCode(String val, Integer codeId) {
 		boolean retval = true;
-		BillingService billingservice = find(Integer.parseInt(codeId));
+		BillingService billingservice = find(codeId);
 		billingservice.setValue(val);
 		merge(billingservice);
 		return retval;
@@ -231,6 +228,8 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		bs.setTerminationDate(UtilDateUtilities.StringToDate(termDate));
 		bs.setBillingserviceDate(UtilDateUtilities.StringToDate(date));
 		bs.setRegion(region);
+		bs.setGstFlag(false);
+		bs.setSliFlag(false);
 		entityManager.persist(bs);
 		return retval;
 	}
@@ -244,17 +243,10 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return date;
 	}
 
-	public Object[] getUnitPrice(String bcode, String referralDate) {
+	public Object[] getUnitPrice(String bcode, Date date) {
 		String sql = "select bs from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1,bcode);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		try {
-			date = sdf.parse(referralDate);
-		}catch(ParseException e) {
-			MiscUtils.getLogger().error("error",e);
-		}
 		query.setParameter(2, getLatestServiceDate(date,bcode));
 
 		
@@ -267,17 +259,10 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 			return null;
 	}
 
-	public String getUnitPercentage(String bcode, String referralDate) {
+	public String getUnitPercentage(String bcode, Date date) {
 		String sql = "select bs from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1,bcode);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		try {
-			date = sdf.parse(referralDate);
-		}catch(ParseException e) {
-			MiscUtils.getLogger().error("error",e);
-		}
 		query.setParameter(2, getLatestServiceDate(date,bcode));
 
 		
@@ -334,11 +319,11 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	
     public List<Object[]> findSomethingByBillingId(Integer billingNo) {
 		String sql = "FROM BillingService bs, Wcb w, Billing b " +
-				"WHERE wcb.billingNo = b.id " +
-				"AND wcb.billingNo = :bNo " +
-                "AND wcb.status = 'O' " +
+				"WHERE w.billingNo = b.id " +
+				"AND w.billingNo = :bNo " +
+                "AND w.status = 'O' " +
                 "AND b.status IN ('O', 'W') " +
-                "AND bs.serviceCode = wcb.feeItem";
+                "AND bs.serviceCode = w.feeItem";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("bNo", billingNo);
 		return query.getResultList();

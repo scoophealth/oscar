@@ -74,12 +74,12 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 	}
 
     @SuppressWarnings("unchecked")
-    public List<PatientLabRouting> findDocByDemographic(String docNum) {
+    public List<PatientLabRouting> findDocByDemographic(Integer docNum) {
 
     	String query = "select x from " + modelClass.getName() + " x where x.labNo=? and x.labType=?";
     	Query q = entityManager.createQuery(query);
 
-    	q.setParameter(1, Integer.parseInt(docNum));
+    	q.setParameter(1, docNum);
     	q.setParameter(2, "DOC");
 
     	return q.getResultList();
@@ -249,13 +249,13 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 
 	@SuppressWarnings("unchecked")
     public List<Object[]> findMdsRoutings(Integer demoNo, String testName, String labType) {
-		String sql = "FROM MdsOBX x, MdsMSH m, PatientLabRouting p " +
-				"WHERE p.labType = :labType " +
-				"AND p.demographicNo = :demoNo " + 
-				"AND p.observationIdentifier like :testName " + 
-				"AND x.id = m.id " +
-				"AND m.idId = p.labNo " +
-				"ORDER BY p.dateTime";
+    	String sql = "FROM MdsOBX x, MdsMSH m, PatientLabRouting p " +
+                "WHERE p.labType = :labType " +
+                "AND p.demographicNo = :demoNo " +
+                "AND x.observationIdentifier like :testName " +
+                "AND x.id = m.id " +
+                "AND m.id = p.labNo " +
+                "ORDER BY m.dateTime";
 		
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("demoNo", demoNo);

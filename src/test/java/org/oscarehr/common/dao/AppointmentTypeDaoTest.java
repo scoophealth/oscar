@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class AppointmentTypeDaoTest extends DaoTestFixtures {
 
-	private AppointmentTypeDao dao = (AppointmentTypeDao)SpringUtils.getBean(AppointmentTypeDao.class);
+	protected AppointmentTypeDao dao = (AppointmentTypeDao)SpringUtils.getBean(AppointmentTypeDao.class);
 
 	@Before
 	public void setup() throws Exception {

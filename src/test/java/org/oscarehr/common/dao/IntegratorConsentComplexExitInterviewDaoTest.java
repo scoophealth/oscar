@@ -37,9 +37,9 @@ import org.oscarehr.util.SpringUtils;
 
 public class IntegratorConsentComplexExitInterviewDaoTest extends DaoTestFixtures {
 
-	private IntegratorConsentComplexExitInterviewDao dao = SpringUtils.getBean(IntegratorConsentComplexExitInterviewDao.class);
-	private FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
-	private DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
+	protected IntegratorConsentComplexExitInterviewDao dao = SpringUtils.getBean(IntegratorConsentComplexExitInterviewDao.class);
+	protected FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
+	protected DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
 	
 	@Before
 	public void before() throws Exception {

@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EFormGroupDaoTest extends DaoTestFixtures {
 
-	private EFormGroupDao dao = (EFormGroupDao) SpringUtils.getBean("EFormGroupDao");
+	protected EFormGroupDao dao = (EFormGroupDao) SpringUtils.getBean("EFormGroupDao");
 
 	@Before
 	public void initSchema() throws Exception {
@@ -62,7 +62,7 @@ public class EFormGroupDaoTest extends DaoTestFixtures {
 		assertNotNull(negativeCheck);
 	}
 
-	private void populate() {
+	protected void populate() {
 		EFormGroup group = new EFormGroup();
 		group.setGroupName("BLAHAMUHA");
 		group.setFormId(10);

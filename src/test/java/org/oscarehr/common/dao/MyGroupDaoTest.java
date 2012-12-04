@@ -37,7 +37,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MyGroupDaoTest extends DaoTestFixtures {
 
-	private MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+	protected MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
 
 	public MyGroupDaoTest() {
 	}

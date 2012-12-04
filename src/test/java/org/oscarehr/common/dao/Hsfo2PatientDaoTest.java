@@ -44,7 +44,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class Hsfo2PatientDaoTest extends DaoTestFixtures {
-	private Hsfo2PatientDao dao = (Hsfo2PatientDao)SpringUtils.getBean(Hsfo2PatientDao.class);
+	protected Hsfo2PatientDao dao = (Hsfo2PatientDao)SpringUtils.getBean(Hsfo2PatientDao.class);
 	
 	@Before
 	public void before() throws Exception {

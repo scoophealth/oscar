@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlSpecialInstructionsDaoTest extends DaoTestFixtures {
 
-	private CtlSpecialInstructionsDao dao = (CtlSpecialInstructionsDao)SpringUtils.getBean("ctlSpecialInstructionsDao");
+	protected CtlSpecialInstructionsDao dao = (CtlSpecialInstructionsDao)SpringUtils.getBean("ctlSpecialInstructionsDao");
 
 	@Before
 	public void before() throws Exception {

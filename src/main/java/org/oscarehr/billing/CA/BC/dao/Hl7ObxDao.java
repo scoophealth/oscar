@@ -40,7 +40,7 @@ public class Hl7ObxDao extends AbstractDao<Hl7Obx> {
 	}
 	
 	public List<Hl7Obx> findByObrId(int obrId) {
-		Query q = entityManager.createQuery("select h from Hl7Obx where h.obrId = ?1");
+		Query q = entityManager.createQuery("select h from Hl7Obx h where h.obrId = ?1");
 		q.setParameter(1, obrId);
 		
 		List<Hl7Obx> results = q.getResultList();

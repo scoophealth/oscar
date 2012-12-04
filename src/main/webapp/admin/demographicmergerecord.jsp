@@ -37,6 +37,9 @@ if(request.getParameter("limit1")!=null)
 if(request.getParameter("limit2")!=null) 
 	strLimit = request.getParameter("limit2");
 
+int offset = Integer.parseInt(strOffset);
+int limit = Integer.parseInt(strLimit);
+
 String outcome = request.getParameter("outcome");
 boolean mergedSearch = false;
 if(request.getParameter("dboperation")!=null && request.getParameter("dboperation").equals("demographic_search_merged")) mergedSearch = true;
@@ -226,35 +229,35 @@ if( outcome !=null){
 
 if(!mergedSearch) {
 	if(searchMode.equals("search_name")) {
-		demoList = demographicDao.searchDemographicByName(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchDemographicByName(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_dob")) {
-		demoList = demographicDao.searchDemographicByDOB(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_phone")) {
-		demoList = demographicDao.searchDemographicByPhone(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_hin")) {
-		demoList = demographicDao.searchDemographicByHIN(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_address")) {
-		demoList = demographicDao.searchDemographicByAddress(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset);
 	}
 } else {
 	if(searchMode.equals("search_name")) {
-		demoList = demographicDao.searchMergedDemographicByName(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchMergedDemographicByName(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_dob")) {
-		demoList = demographicDao.searchMergedDemographicByDOB(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchMergedDemographicByDOB(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_phone")) {
-		demoList = demographicDao.searchMergedDemographicByPhone(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchMergedDemographicByPhone(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_hin")) {
-		demoList = demographicDao.searchMergedDemographicByHIN(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchMergedDemographicByHIN(keyword, limit, offset);
 	}
 	else if(searchMode.equals("search_address")) {
-		demoList = demographicDao.searchMergedDemographicByAddress(keyword, strLimit, strOffset);
+		demoList = demographicDao.searchMergedDemographicByAddress(keyword, limit, offset);
 	}
 	
 }

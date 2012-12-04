@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class Icd9DaoTest extends DaoTestFixtures {
 
-	private Icd9Dao dao = SpringUtils.getBean(Icd9Dao.class);
+	protected Icd9Dao dao = SpringUtils.getBean(Icd9Dao.class);
 
 	public Icd9DaoTest() {
 	}

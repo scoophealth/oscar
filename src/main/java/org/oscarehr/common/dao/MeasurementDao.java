@@ -354,7 +354,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	public Set<Integer> getAppointmentNosByDemographicNoAndType(int demographicNo, String type, Date startDate, Date endDate) {
 		Map<Integer, Boolean> results = new HashMap<Integer, Boolean>();
 
-		String queryStr = "select m from  Measurement m WHERE m.demographicId = " + demographicNo + " and m.type=? and m.dateObserved>=? and m.dateObserved<=? ORDER BY m.dateObserved DESC";
+		String queryStr = "select m from  Measurement m WHERE m.demographicId = ? and m.type=? and m.dateObserved>=? and m.dateObserved<=? ORDER BY m.dateObserved DESC";
 		Query query = entityManager.createQuery(queryStr);
 		query.setParameter(1, demographicNo);
 		query.setParameter(2, type);
@@ -370,8 +370,8 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return results.keySet();
 	}
 	
-	public HashMap<String, Measurement> getMeasurementsPriorToDate(String demographicNo, Date d) {
-		String queryStr = "select m From Measurement m WHERE m.demographicId = " + demographicNo + " AND m.dateObserved <= ?";
+	public HashMap<String, Measurement> getMeasurementsPriorToDate(Integer demographicNo, Date d) {
+		String queryStr = "select m From Measurement m WHERE m.demographicId = ? AND m.dateObserved <= ?";
 		Query query = entityManager.createQuery(queryStr);
 		query.setParameter(1, demographicNo);
 		query.setParameter(2, d);
@@ -388,7 +388,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
     	return map;
 	}
 	
-	public List<Date> getDatesForMeasurements(String demographicNo, String[] types) {
+	public List<Date> getDatesForMeasurements(Integer demographicNo, String[] types) {
 		List<String> lst = new ArrayList<String>();
 		
     	for(String type:types) {

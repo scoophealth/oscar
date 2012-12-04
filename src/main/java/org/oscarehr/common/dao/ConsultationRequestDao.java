@@ -23,6 +23,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -39,25 +40,25 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 
 	public int getCountReferralsAfterCutOffDateAndNotCompleted(Date referralDateCutoff)
 	{
-		Query query = entityManager.createNativeQuery("select count(*) from " + modelClass.getSimpleName() + " where referalDate < ?1 and status != 4", Integer.class);
+		Query query = entityManager.createNativeQuery("select count(*) from consultationRequests where referalDate < ?1 and status != 4");
 		query.setParameter(1, referralDateCutoff);
 
-		return((Integer)query.getSingleResult());
+		return((BigInteger)query.getSingleResult()).intValue();
 	}
 
 	public int getCountReferralsAfterCutOffDateAndNotCompleted(Date referralDateCutoff,String sendto)
 	{
-		Query query = entityManager.createNativeQuery("select count(*) from " + modelClass.getSimpleName() + " where referalDate < ?1 and status != 4 and sendto = ?2", Integer.class);
+		Query query = entityManager.createNativeQuery("select count(*) from consultationRequests where referalDate < ?1 and status != 4 and sendto = ?2");
 		query.setParameter(1, referralDateCutoff);
 		query.setParameter(2, sendto);
 
-		return((Integer)query.getSingleResult());
+		return((BigInteger)query.getSingleResult()).intValue();
 	}
 
-        public List<ConsultationRequest> getConsults(String demoNo) {
+        public List<ConsultationRequest> getConsults(Integer demoNo) {
             StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr, Demographic d, Provider p where d.DemographicNo = cr.demographicId and p.ProviderNo = cr.providerNo and cr.demographicId = ?1");
             Query query = entityManager.createQuery(sql.toString());
-            query.setParameter(1, new Integer(demoNo));
+            query.setParameter(1, demoNo);
             @SuppressWarnings("unchecked")
             List<ConsultationRequest> results = query.getResultList();
             return results;
@@ -122,9 +123,9 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
         }
 
 
-        public List<ConsultationRequest> getConsultationsByStatus(String demographicNo, String status) {
+        public List<ConsultationRequest> getConsultationsByStatus(Integer demographicNo, String status) {
         	Query query = entityManager.createQuery("SELECT c FROM ConsultationRequest c where c.demographicId = ? and c.status = ?");
-        	query.setParameter(1,Integer.parseInt(demographicNo));
+        	query.setParameter(1,demographicNo);
         	query.setParameter(2,status);
 
         	@SuppressWarnings("unchecked")

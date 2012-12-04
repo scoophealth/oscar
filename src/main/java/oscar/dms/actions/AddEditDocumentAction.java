@@ -117,7 +117,7 @@ public class AddEditDocumentAction extends DispatchAction {
 		if (providerId != null) { // TODO: THIS NEEDS TO RUN THRU THE lab forwarding rules!
 			WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
 			ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
-			providerInboxRoutingDao.addToProviderInbox(providerId, doc_no, "DOC");
+			providerInboxRoutingDao.addToProviderInbox(providerId, Integer.parseInt(doc_no), "DOC");
 		}
 		// add to queuelinkdocument
 		String queueId = request.getParameter("queue");

@@ -49,7 +49,7 @@ import org.oscarehr.util.MiscUtils;
 
 public class PrintResourceLogDaoTest extends DaoTestFixtures {
 
-	private PrintResourceLogDao dao = SpringUtils.getBean(PrintResourceLogDao.class);
+	protected PrintResourceLogDao dao = SpringUtils.getBean(PrintResourceLogDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 

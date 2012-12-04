@@ -89,7 +89,7 @@ public class dxResearchUpdateQuickListAction extends Action {
 		boolean valid = true;
 		String[] xml_research = frm.getXmlResearch();
 		ActionMessages errors = new ActionMessages();
-		AbstractCodeSystemDao<AbstractCodeSystemModel<?>> dao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(AbstractCodeSystemDao.getDaoName(codingSystem));
+		AbstractCodeSystemDao<AbstractCodeSystemModel<?>> dao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(AbstractCodeSystemDao.getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codingSystem)));
 
 		for (int i = 0; i < xml_research.length; i++) {
 			if (xml_research[i] == null || xml_research[i].equals("")) {

@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class RemoteDataLogDaoTest extends DaoTestFixtures {
 
-	private RemoteDataLogDao dao = SpringUtils.getBean(RemoteDataLogDao.class);
+	protected RemoteDataLogDao dao = SpringUtils.getBean(RemoteDataLogDao.class);
 
 
 	@Before

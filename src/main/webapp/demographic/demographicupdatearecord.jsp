@@ -205,21 +205,23 @@
   //DemographicExt
      String proNo = (String) session.getValue("user");
 	 String demoNo = request.getParameter("demographic_no");
-	 demographicExtDao.addKey(proNo, demoNo, "demo_cell", request.getParameter("demo_cell"), request.getParameter("demo_cellOrig"));
-	 demographicExtDao.addKey(proNo, demoNo, "aboriginal", request.getParameter("aboriginal"), request.getParameter("aboriginalOrig"));
-     demographicExtDao.addKey(proNo, demoNo, "hPhoneExt", request.getParameter("hPhoneExt"), request.getParameter("hPhoneExtOrig"));
-     demographicExtDao.addKey(proNo, demoNo, "wPhoneExt", request.getParameter("wPhoneExt"), request.getParameter("wPhoneExtOrig"));
-     demographicExtDao.addKey(proNo, demoNo, "cytolNum",  request.getParameter("cytolNum"),  request.getParameter("cytolNumOrig"));
+	 int demographicNo = Integer.parseInt(demoNo);
+	 
+	 demographicExtDao.addKey(proNo, demographicNo, "demo_cell", request.getParameter("demo_cell"), request.getParameter("demo_cellOrig"));
+	 demographicExtDao.addKey(proNo, demographicNo, "aboriginal", request.getParameter("aboriginal"), request.getParameter("aboriginalOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "hPhoneExt", request.getParameter("hPhoneExt"), request.getParameter("hPhoneExtOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "wPhoneExt", request.getParameter("wPhoneExt"), request.getParameter("wPhoneExtOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "cytolNum",  request.getParameter("cytolNum"),  request.getParameter("cytolNumOrig"));
 
-     demographicExtDao.addKey(proNo, demoNo, "ethnicity",  request.getParameter("ethnicity"),  request.getParameter("ethnicityOrig"));
-     demographicExtDao.addKey(proNo, demoNo, "area",		  request.getParameter("area"),		  request.getParameter("areaOrig"));
-     demographicExtDao.addKey(proNo, demoNo, "statusNum",  request.getParameter("statusNum"),  request.getParameter("statusNumOrig"));
-     demographicExtDao.addKey(proNo, demoNo, "fNationCom", request.getParameter("fNationCom"), request.getParameter("fNationComOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "ethnicity",  request.getParameter("ethnicity"),  request.getParameter("ethnicityOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "area",		  request.getParameter("area"),		  request.getParameter("areaOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "statusNum",  request.getParameter("statusNum"),  request.getParameter("statusNumOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "fNationCom", request.getParameter("fNationCom"), request.getParameter("fNationComOrig"));
 
-     demographicExtDao.addKey(proNo, demoNo, "given_consent", request.getParameter("given_consent"), request.getParameter("given_consentOrig"));
-     demographicExtDao.addKey(proNo, demoNo, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), request.getParameter("rxInteractionWarningLevelOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "given_consent", request.getParameter("given_consent"), request.getParameter("given_consentOrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), request.getParameter("rxInteractionWarningLevelOrig"));
 
-     demographicExtDao.addKey(proNo, demoNo, "primaryEMR", request.getParameter("primaryEMR"), request.getParameter("primaryEMROrig"));
+     demographicExtDao.addKey(proNo, demographicNo, "primaryEMR", request.getParameter("primaryEMR"), request.getParameter("primaryEMROrig"));
 
      // for the IBD clinic
 	 OtherIdManager.saveIdDemographic(demoNo, "meditech_id", request.getParameter("meditech_id"));
@@ -228,7 +230,7 @@
      if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	       for(int k=0; k<propDemoExt.length; k++) {
-	    	   demographicExtDao.addKey(proNo,request.getParameter("demographic_no"),propDemoExt[k].replace(' ','_'),request.getParameter(propDemoExt[k].replace(' ','_')),request.getParameter(propDemoExt[k].replace(' ','_')+"Orig"));
+	    	   demographicExtDao.addKey(proNo,Integer.parseInt(request.getParameter("demographic_no")),propDemoExt[k].replace(' ','_'),request.getParameter(propDemoExt[k].replace(' ','_')),request.getParameter(propDemoExt[k].replace(' ','_')+"Orig"));
 	       }
      }
      // customized key

@@ -34,12 +34,12 @@ import org.oscarehr.util.SpringUtils;
 
 public class FunctionalCentreDaoTest extends DaoTestFixtures {
 
-	private FunctionalCentreDao dao = SpringUtils.getBean(FunctionalCentreDao.class);
+	protected FunctionalCentreDao dao = SpringUtils.getBean(FunctionalCentreDao.class);
 
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("FunctionalCentre");
+		SchemaUtils.restoreTable("FunctionalCentre","program");
 	}
 
 	@Test

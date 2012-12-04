@@ -45,7 +45,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ScheduleDateDaoTest extends DaoTestFixtures {
-	private ScheduleDateDao dao = SpringUtils.getBean(ScheduleDateDao.class);
+	protected ScheduleDateDao dao = SpringUtils.getBean(ScheduleDateDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	public ScheduleDateDaoTest() {

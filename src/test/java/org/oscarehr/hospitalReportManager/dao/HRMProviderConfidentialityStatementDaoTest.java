@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class HRMProviderConfidentialityStatementDaoTest extends DaoTestFixtures {
 
-	private HRMProviderConfidentialityStatementDao dao = SpringUtils.getBean(HRMProviderConfidentialityStatementDao.class);
+	public HRMProviderConfidentialityStatementDao dao = SpringUtils.getBean(HRMProviderConfidentialityStatementDao.class);
 
 
 	@Before

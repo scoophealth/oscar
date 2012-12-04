@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MeasurementCSSLocationDaoTest extends DaoTestFixtures {
 
-	private MeasurementCSSLocationDao dao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
+	protected MeasurementCSSLocationDao dao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
 
 
 	@Before

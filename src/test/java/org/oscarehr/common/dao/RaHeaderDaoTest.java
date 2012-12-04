@@ -44,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class RaHeaderDaoTest extends DaoTestFixtures {
 
-	private RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
+	protected RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	
 	@Before

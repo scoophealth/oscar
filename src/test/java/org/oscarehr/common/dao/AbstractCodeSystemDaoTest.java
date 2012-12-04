@@ -38,19 +38,19 @@ public class AbstractCodeSystemDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testGetDaoName_Valid() {
-		String codeSystem = "ICD9";
-		assertEquals("icd9Dao", getDaoName(codeSystem));
+		String codeSystem = "Icd9";
+		assertEquals("icd9Dao", getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codeSystem)));
 		
-		codeSystem = "ICHPPCCODE";
-		assertEquals("ichppccodeDao", getDaoName(codeSystem));
+		codeSystem = "Ichppccode";
+		assertEquals("ichppccodeDao", getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codeSystem)));
 		
-		codeSystem = "SNOMEDCORE";
-		assertEquals("snomedCoreDao", getDaoName(codeSystem));
+		codeSystem = "SnomedCore";
+		assertEquals("snomedCoreDao", getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codeSystem)));
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetDaoName_Invalid() {
 		String codeSystem = "FAIL";
-		assertEquals("failDao", getDaoName(codeSystem));
+		assertEquals("failDao", getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codeSystem)));
 	}
 }

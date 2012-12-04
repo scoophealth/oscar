@@ -49,7 +49,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class RaDetailDaoTest extends DaoTestFixtures {
 
-	private RaDetailDao dao = SpringUtils.getBean(RaDetailDao.class);	
+	protected RaDetailDao dao = SpringUtils.getBean(RaDetailDao.class);	
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	@Before

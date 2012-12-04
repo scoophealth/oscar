@@ -2299,13 +2299,6 @@
 			<forward name="edit" path="/appointment/appointmentstatusedit.jsp" />
 		</action>
 
-		<action path="/PMmodule/MergeClient" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="mergeClientForm" scope="request">
-			<forward name="view" path="page.pmm.client.merge" />
-			<forward name="unmerge" path="/PMmodule/UnmergeClient.do" redirect="true" />
-		</action>
-		<action path="/PMmodule/UnmergeClient" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="mergeClientForm" scope="request">
-			<forward name="view" path="page.pmm.client.merge" />
-		</action>
 		<action path="/PMmodule/Admin/SysAdmin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
 			<forward name="admin" path="page.admin.home" />
 		</action>

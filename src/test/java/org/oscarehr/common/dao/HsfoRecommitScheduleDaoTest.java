@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class HsfoRecommitScheduleDaoTest {
 
-	private HsfoRecommitScheduleDao dao = SpringUtils.getBean(HsfoRecommitScheduleDao.class);
+	protected HsfoRecommitScheduleDao dao = SpringUtils.getBean(HsfoRecommitScheduleDao.class);
 
 	@Before
 	public void before() throws Exception {

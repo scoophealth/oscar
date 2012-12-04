@@ -44,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class Hl7TextMessageDaoTest extends DaoTestFixtures {
 	
-	private Hl7TextMessageDao dao = (Hl7TextMessageDao)SpringUtils.getBean(Hl7TextMessageDao.class);
+	protected Hl7TextMessageDao dao = (Hl7TextMessageDao)SpringUtils.getBean(Hl7TextMessageDao.class);
 	
 	@Before
 	public void before() throws Exception {

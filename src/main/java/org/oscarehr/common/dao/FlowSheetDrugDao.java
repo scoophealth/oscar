@@ -39,14 +39,14 @@ public class FlowSheetDrugDao extends AbstractDao<FlowSheetDrug>{
 		super(FlowSheetDrug.class);
 	}
 
-    public FlowSheetDrug getFlowSheetDrug(String id){
-        return this.find(Integer.valueOf(id));
+    public FlowSheetDrug getFlowSheetDrug(Integer id){
+        return this.find(id);
     }
 
-    public List<FlowSheetDrug> getFlowSheetDrugs(String flowsheet,String demographic){
+    public List<FlowSheetDrug> getFlowSheetDrugs(String flowsheet,Integer demographic){
     	Query query = entityManager.createQuery("SELECT fd FROM FlowSheetDrug fd WHERE fd.flowsheet=? and fd.archived=0 and fd.demographicNo=?");
     	query.setParameter(1, flowsheet);
-    	query.setParameter(2, Integer.parseInt(demographic));
+    	query.setParameter(2, demographic);
 
         @SuppressWarnings("unchecked")
         List<FlowSheetDrug> list = query.getResultList();

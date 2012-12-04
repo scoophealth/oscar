@@ -341,7 +341,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         String flowsheet = request.getParameter("flowsheet");
         String demographicNo = request.getParameter("demographic");
 
-        FlowSheetCustomization cust = flowSheetCustomizationDao.getFlowSheetCustomization(id);
+        FlowSheetCustomization cust = flowSheetCustomizationDao.getFlowSheetCustomization(Integer.parseInt(id));
         if(cust != null) {
         	cust.setArchived(true);
         	cust.setArchivedDate(new Date());

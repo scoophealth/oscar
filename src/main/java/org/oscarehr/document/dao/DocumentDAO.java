@@ -176,11 +176,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 		buf.append(" ORDER BY ").append(sort);
 
 		// TODO Refactor TX handling here to use Spring infrastructure. At the moment this is impossible as DAOs are non-interface based 
-		Session session = null;
+		Session session = getSession();
 		try {
-			session = getHibernateTemplate().getSessionFactory().openSession();
 			
-			Query query = getSession().createQuery(buf.toString());
+			Query query = session.createQuery(buf.toString());
 			for (Entry<String, Object> entry : params.entrySet())
 				query.setParameter(entry.getKey(), entry.getValue());
 			
@@ -189,24 +188,20 @@ public class DocumentDAO extends HibernateDaoSupport {
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to find documents", e);
 		} finally {
-			if (session != null)
-				session.close();
+			this.releaseSession(session);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
     public List<CtlDocument> findByDocumentNoAndModule(Integer ctlDocNo, String module) {
-		Session session = null;
+		Session session = getSession();
 		try {
-			session = getHibernateTemplate().getSessionFactory().openSession();
-			
-			Query query = getSession().createQuery("FROM CtlDocument c WHERE c.id.documentNo = :cltDocNo AND c.id.module = :module");
+			Query query = session.createQuery("FROM CtlDocument c WHERE c.id.documentNo = :cltDocNo AND c.id.module = :module");
 			query.setParameter("cltDocNo", ctlDocNo);
 			query.setParameter("module", module);
 			return query.list();
 		} finally {
-			if (session != null)
-				session.close();
+			this.releaseSession(session);
 		}
     }
 

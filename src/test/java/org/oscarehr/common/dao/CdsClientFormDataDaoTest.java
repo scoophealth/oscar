@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CdsClientFormDataDaoTest extends DaoTestFixtures {
 
-	private CdsClientFormDataDao dao = (CdsClientFormDataDao)SpringUtils.getBean(CdsClientFormDataDao.class);
+	protected CdsClientFormDataDao dao = (CdsClientFormDataDao)SpringUtils.getBean(CdsClientFormDataDao.class);
 	Logger logger = MiscUtils.getLogger();
 	
 	@Before

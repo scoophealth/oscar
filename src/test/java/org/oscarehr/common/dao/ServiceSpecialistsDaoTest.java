@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ServiceSpecialistsDaoTest extends DaoTestFixtures {
 
-	private ServiceSpecialistsDao dao = SpringUtils.getBean(ServiceSpecialistsDao.class);
+	protected ServiceSpecialistsDao dao = SpringUtils.getBean(ServiceSpecialistsDao.class);
 
 	public ServiceSpecialistsDaoTest() {
 	}

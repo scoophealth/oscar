@@ -43,7 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class FlowsheetDaoTest extends DaoTestFixtures {
 
-	private FlowsheetDao dao = SpringUtils.getBean(FlowsheetDao.class);
+	protected FlowsheetDao dao = SpringUtils.getBean(FlowsheetDao.class);
 
 	@Before
 	public void before() throws Exception {

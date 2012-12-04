@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class TeleplanSubmissionLinkDaoTest extends DaoTestFixtures {
 
-	private TeleplanSubmissionLinkDao dao = SpringUtils.getBean(TeleplanSubmissionLinkDao.class);
+	public TeleplanSubmissionLinkDao dao = SpringUtils.getBean(TeleplanSubmissionLinkDao.class);
 
 	public TeleplanSubmissionLinkDaoTest() {
 	}

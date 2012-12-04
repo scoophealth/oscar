@@ -44,7 +44,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class OscarLogDaoTest extends DaoTestFixtures {
-	private OscarLogDao dao = (OscarLogDao)SpringUtils.getBean(OscarLogDao.class);
+	protected OscarLogDao dao = (OscarLogDao)SpringUtils.getBean(OscarLogDao.class);
 	
 	@Before
 	public void before() throws Exception {

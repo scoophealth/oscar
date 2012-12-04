@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class LogTeleplanTxDaoTest extends DaoTestFixtures {
 
-	private LogTeleplanTxDao dao = SpringUtils.getBean(LogTeleplanTxDao.class);
+	public LogTeleplanTxDao dao = SpringUtils.getBean(LogTeleplanTxDao.class);
 
 	public LogTeleplanTxDaoTest() {
 	}

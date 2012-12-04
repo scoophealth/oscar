@@ -32,7 +32,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PrescriptionDaoTest extends DaoTestFixtures {
 
-	private PrescriptionDao dao = SpringUtils.getBean(PrescriptionDao.class);
+	protected PrescriptionDao dao = SpringUtils.getBean(PrescriptionDao.class);
 
 	@Before
 	public void before() throws Exception {
@@ -42,7 +42,7 @@ public class PrescriptionDaoTest extends DaoTestFixtures {
 	@Test
 	public void testAll() {
 		dao.findByDemographicIdUpdatedAfterDate(999, new Date());
-		dao.updatePrescriptionsByScriptNo("100", "comment");
+		dao.updatePrescriptionsByScriptNo(100, "comment");
 	}
 	
 	

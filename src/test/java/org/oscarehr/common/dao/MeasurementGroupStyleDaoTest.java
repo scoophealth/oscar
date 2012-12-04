@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MeasurementGroupStyleDaoTest extends DaoTestFixtures {
 
-	private MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
+	protected MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
 
 	@Before
 	public void before() throws Exception {

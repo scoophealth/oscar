@@ -39,11 +39,11 @@ import oscar.util.ConversionUtils;
 
 public class ConsultationRequestDaoTest extends DaoTestFixtures {
 
-	private ConsultationRequestDao dao = SpringUtils.getBean(ConsultationRequestDao.class);
+	protected ConsultationRequestDao dao = SpringUtils.getBean(ConsultationRequestDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("consultationRequests");
+		SchemaUtils.restoreTable("consultationRequests","professionalSpecialists","consultationServices");
 	}
 
 	@Test

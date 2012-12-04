@@ -31,8 +31,6 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.Prescription;
 import org.springframework.stereotype.Repository;
 
-import oscar.util.ConversionUtils;
-
 @Repository
 public class PrescriptionDao extends AbstractDao<Prescription> {
 
@@ -64,10 +62,10 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 		return (results);
 	}
 
-	public int updatePrescriptionsByScriptNo(String scriptNo, String comment) {
+	public int updatePrescriptionsByScriptNo(Integer scriptNo, String comment) {
 		Query query = entityManager.createQuery("UPDATE Prescription p SET p.comments = :comments WHERE p.id = :id");
 		query.setParameter("comments", comment);
-		query.setParameter("id", ConversionUtils.fromIntString(scriptNo));
+		query.setParameter("id", scriptNo);
 		return query.executeUpdate();
 	}
 }

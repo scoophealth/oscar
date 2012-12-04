@@ -37,7 +37,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class GstControlDaoTest extends DaoTestFixtures {
 
-	private GstControlDao dao = SpringUtils.getBean(GstControlDao.class);
+	public GstControlDao dao = SpringUtils.getBean(GstControlDao.class);
 
 	public GstControlDaoTest() {
 	}

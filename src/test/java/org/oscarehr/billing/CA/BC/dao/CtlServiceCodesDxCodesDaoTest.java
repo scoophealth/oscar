@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlServiceCodesDxCodesDaoTest {
 
-	private CtlServiceCodesDxCodesDao dao = SpringUtils.getBean(CtlServiceCodesDxCodesDao.class);
+	public CtlServiceCodesDxCodesDao dao = SpringUtils.getBean(CtlServiceCodesDxCodesDao.class);
 
 	public CtlServiceCodesDxCodesDaoTest() {
 	}

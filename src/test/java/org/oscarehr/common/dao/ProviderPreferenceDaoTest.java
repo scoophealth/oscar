@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProviderPreferenceDaoTest extends DaoTestFixtures {
 
-	private ProviderPreferenceDao dao = SpringUtils.getBean(ProviderPreferenceDao.class);
+	protected ProviderPreferenceDao dao = SpringUtils.getBean(ProviderPreferenceDao.class);
 
 
 	@Before

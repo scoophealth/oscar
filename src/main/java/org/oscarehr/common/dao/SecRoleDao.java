@@ -57,8 +57,8 @@ public class SecRoleDao extends AbstractDao<SecRole> {
     	Query q = entityManager.createQuery("select x from SecRole x where x.name=?");
 
     	q.setParameter(1, name);
-    	SecRole result = (SecRole)q.getSingleResult();
-    	return result;
+    	
+    	return this.getSingleResultOrNull(q);
     }
 
     public List<SecRole> findAllOrderByRole()

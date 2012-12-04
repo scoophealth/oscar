@@ -602,7 +602,7 @@ table.ele thead {
                           <td bgcolor="<%=dis.color%>"><%=providerName%></td>
                           <td bgcolor="<%=dis.color%>">
                               <% if( billCode != null && setBill ) {
-                                  numDays = bCh1Dao.getDaysSinceBilled(billCode, dis.demographicNo.toString());
+                                  numDays = bCh1Dao.getDaysSinceBilled(billCode, dis.demographicNo);
                                   //we only want to enable billing if it has been a year since the last invoice was created
                                   enabled = numDays >= 0 && numDays < 365 ? "disabled" : "checked";
                               %>

@@ -35,14 +35,14 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingONDiskNameDaoTest extends DaoTestFixtures{
 
-	private BillingONDiskNameDao dao = SpringUtils.getBean(BillingONDiskNameDao.class);
+	public BillingONDiskNameDao dao = SpringUtils.getBean(BillingONDiskNameDao.class);
 
 	public BillingONDiskNameDaoTest() {
 	}
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billing_on_diskname");
+		SchemaUtils.restoreTable("billing_on_diskname","billing_on_filename");
 	}
 
 	@Test

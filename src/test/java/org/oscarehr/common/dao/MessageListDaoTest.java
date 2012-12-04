@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MessageListDaoTest extends DaoTestFixtures {
 
-	private MessageListDao dao = SpringUtils.getBean(MessageListDao.class);
+	protected MessageListDao dao = SpringUtils.getBean(MessageListDao.class);
 
 	@Before
 	public void before() throws Exception {

@@ -43,7 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class QueueDocumentLinkDaoTest extends DaoTestFixtures {
 
-	private QueueDocumentLinkDao dao = SpringUtils.getBean(QueueDocumentLinkDao.class);
+	protected QueueDocumentLinkDao dao = SpringUtils.getBean(QueueDocumentLinkDao.class);
 
 	public QueueDocumentLinkDaoTest() {
 	}

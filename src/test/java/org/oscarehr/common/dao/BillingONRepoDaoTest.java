@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingONRepoDaoTest extends DaoTestFixtures {
 
-	private BillingONRepoDao dao = SpringUtils.getBean(BillingONRepoDao.class);
+	protected BillingONRepoDao dao = SpringUtils.getBean(BillingONRepoDao.class);
 
 	@Before
 	public void before() throws Exception {

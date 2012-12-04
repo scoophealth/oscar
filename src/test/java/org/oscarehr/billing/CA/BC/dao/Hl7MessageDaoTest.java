@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class Hl7MessageDaoTest extends DaoTestFixtures {
 	
-	private Hl7MessageDao dao = SpringUtils.getBean(Hl7MessageDao.class);
+	public Hl7MessageDao dao = SpringUtils.getBean(Hl7MessageDao.class);
 
 	public Hl7MessageDaoTest() {
 	}

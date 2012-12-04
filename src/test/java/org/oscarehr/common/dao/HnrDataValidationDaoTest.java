@@ -38,10 +38,10 @@ import org.oscarehr.util.SpringUtils;
 
 public class HnrDataValidationDaoTest extends DaoTestFixtures {
 
-	private HnrDataValidationDao dao = SpringUtils.getBean(HnrDataValidationDao.class);
-	private FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
-	private DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
-	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	protected HnrDataValidationDao dao = SpringUtils.getBean(HnrDataValidationDao.class);
+	protected FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
+	protected DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
+	protected ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 
 
 	@Before

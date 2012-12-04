@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ReportTableFieldCaptionDaoTest extends DaoTestFixtures {
 
-	private ReportTableFieldCaptionDao dao = SpringUtils.getBean(ReportTableFieldCaptionDao.class);
+	protected ReportTableFieldCaptionDao dao = SpringUtils.getBean(ReportTableFieldCaptionDao.class);
 
 
 	@Before

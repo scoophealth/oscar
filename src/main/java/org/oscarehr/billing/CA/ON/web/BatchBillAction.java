@@ -85,7 +85,7 @@ public class BatchBillAction extends DispatchAction {
             String[] temp;
             for( int idx = 0; idx < billingInfo.length; ++idx ) {
                 temp = billingInfo[idx].split(";");
-                this.billingONCHeader1Dao.createBill(temp[2], temp[1], temp[0], clinic_view, billingDate, curUser);
+                this.billingONCHeader1Dao.createBill(temp[2], Integer.parseInt(temp[1]), temp[0], clinic_view, billingDate, curUser);
             }
 
         }
@@ -131,7 +131,7 @@ public class BatchBillAction extends DispatchAction {
 			for( int idx = 0; idx < billingInfo.length; ++idx ) {
 				temp = billingInfo[idx].split(";");
 				//passed in order is billing provider, demographic no, service code, dx code
-				total = this.billingONCHeader1Dao.createBill(temp[3], temp[2], temp[0], temp[1], clinic_view, billingDate, curUser);
+				total = this.billingONCHeader1Dao.createBill(temp[3], Integer.parseInt(temp[2]), temp[0], temp[1], clinic_view, billingDate, curUser);
 				
 				batchBillingList = batchBillingDAO.find(Integer.parseInt(temp[2]), temp[0]);
 				batchBilling = batchBillingList.get(0);				

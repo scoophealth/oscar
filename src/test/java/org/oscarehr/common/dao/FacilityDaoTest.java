@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class FacilityDaoTest extends DaoTestFixtures {
 
-	private FacilityDao dao = SpringUtils.getBean(FacilityDao.class);
+	protected FacilityDao dao = SpringUtils.getBean(FacilityDao.class);
 
 
 	@Before

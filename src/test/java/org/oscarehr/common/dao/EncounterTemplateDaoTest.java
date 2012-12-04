@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EncounterTemplateDaoTest extends DaoTestFixtures {
 
-	private EncounterTemplateDao dao = SpringUtils.getBean(EncounterTemplateDao.class);
+	protected EncounterTemplateDao dao = SpringUtils.getBean(EncounterTemplateDao.class);
 
 	public EncounterTemplateDaoTest() {
 

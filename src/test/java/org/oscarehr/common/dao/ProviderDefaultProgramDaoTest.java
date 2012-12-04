@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProviderDefaultProgramDaoTest extends DaoTestFixtures {
 
-	private ProviderDefaultProgramDao dao = SpringUtils.getBean(ProviderDefaultProgramDao.class);
+	protected ProviderDefaultProgramDao dao = SpringUtils.getBean(ProviderDefaultProgramDao.class);
 
 	@Before
 	public void before() throws Exception {

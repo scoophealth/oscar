@@ -38,7 +38,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CaisiAccessTypeDaoTest extends DaoTestFixtures {
 
-	private CaisiAccessTypeDao dao = (CaisiAccessTypeDao)SpringUtils.getBean(CaisiAccessTypeDao.class);
+	protected CaisiAccessTypeDao dao = (CaisiAccessTypeDao)SpringUtils.getBean(CaisiAccessTypeDao.class);
 	
 	@Before
 	public void setUp() throws Exception {

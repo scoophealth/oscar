@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlDiagCodeDaoTest extends DaoTestFixtures {
 
-	private CtlDiagCodeDao dao = SpringUtils.getBean(CtlDiagCodeDao.class);
+	protected CtlDiagCodeDao dao = SpringUtils.getBean(CtlDiagCodeDao.class);
 
 	@Before
 	public void before() throws Exception {

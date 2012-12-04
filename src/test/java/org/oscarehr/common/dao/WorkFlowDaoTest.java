@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class WorkFlowDaoTest extends DaoTestFixtures {
 
-	private WorkFlowDao dao = SpringUtils.getBean(WorkFlowDao.class);
+	protected WorkFlowDao dao = SpringUtils.getBean(WorkFlowDao.class);
 
 	@Before
 	public void before() throws Exception {

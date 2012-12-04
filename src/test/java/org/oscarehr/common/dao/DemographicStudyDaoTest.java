@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicStudyDaoTest extends DaoTestFixtures {
 
-	private DemographicStudyDao dao = SpringUtils.getBean(DemographicStudyDao.class);
+	protected DemographicStudyDao dao = SpringUtils.getBean(DemographicStudyDao.class);
 
 	public DemographicStudyDaoTest() {
 	}

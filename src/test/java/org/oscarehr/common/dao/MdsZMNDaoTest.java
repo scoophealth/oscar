@@ -30,7 +30,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MdsZMNDaoTest extends DaoTestFixtures {
 
-	private MdsZMNDao dao = SpringUtils.getBean(MdsZMNDao.class);
+	protected MdsZMNDao dao = SpringUtils.getBean(MdsZMNDao.class);
 
 	@Before
 	public void before() throws Exception {

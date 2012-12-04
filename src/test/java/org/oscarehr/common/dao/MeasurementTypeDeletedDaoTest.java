@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MeasurementTypeDeletedDaoTest extends DaoTestFixtures {
 
-	private MeasurementTypeDeletedDao dao = SpringUtils.getBean(MeasurementTypeDeletedDao.class);
+	protected MeasurementTypeDeletedDao dao = SpringUtils.getBean(MeasurementTypeDeletedDao.class);
 
 
 	@Before

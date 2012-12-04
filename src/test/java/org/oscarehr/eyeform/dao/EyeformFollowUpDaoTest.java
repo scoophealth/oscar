@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EyeformFollowUpDaoTest extends DaoTestFixtures {
 
-	private EyeformFollowUpDao dao = SpringUtils.getBean(EyeformFollowUpDao.class);
+	public EyeformFollowUpDao dao = SpringUtils.getBean(EyeformFollowUpDao.class);
 
 	@Before
 	public void before() throws Exception {

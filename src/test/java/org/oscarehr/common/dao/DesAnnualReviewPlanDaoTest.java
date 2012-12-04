@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DesAnnualReviewPlanDaoTest extends DaoTestFixtures {
 
-	private DesAnnualReviewPlanDao dao = SpringUtils.getBean(DesAnnualReviewPlanDao.class);
+	protected DesAnnualReviewPlanDao dao = SpringUtils.getBean(DesAnnualReviewPlanDao.class);
 
 	public DesAnnualReviewPlanDaoTest() {
 	}

@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class RecycleBinDaoTest extends DaoTestFixtures{
 
-	private RecycleBinDao dao = SpringUtils.getBean(RecycleBinDao.class);
+	protected RecycleBinDao dao = SpringUtils.getBean(RecycleBinDao.class);
 
 	public RecycleBinDaoTest() {
 	}
