@@ -46,7 +46,7 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("consultdocs");
+		SchemaUtils.restoreTable("consultdocs", "patientLabRouting");
 	}
 
         @Test
@@ -121,5 +121,11 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
 		}
 		assertTrue(true);
 	}
+
+	@Test
+	public void testfindByConsultationIdAndType()  {
+		assertNotNull(dao.findByConsultationIdAndType(199, "F"));
+	}
+	
 
 }

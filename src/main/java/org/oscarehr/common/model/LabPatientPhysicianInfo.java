@@ -288,5 +288,7 @@ public class LabPatientPhysicianInfo extends AbstractModel<Integer> {
     	this.collectionDate = collectionDate;
     }
 
-
+	public String getPatientFullName() {
+		return getPatientLastName() + ", " + getPatientFirstName();
+	}
 }
