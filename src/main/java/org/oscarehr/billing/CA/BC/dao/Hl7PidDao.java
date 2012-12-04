@@ -32,20 +32,19 @@ import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class Hl7PidDao extends AbstractDao<Hl7Pid>{
 
 	public Hl7PidDao() {
 		super(Hl7Pid.class);
 	}
 
-	@SuppressWarnings("unchecked")
     public List<Hl7Pid> findByMessageId(int messageId) {
 		Query q = createQuery("h", "h.messageId = :msgId");
 		q.setParameter("msgId", messageId);
 		return q.getResultList();
     }
 
-	@SuppressWarnings("unchecked")
     public List<Object[]> findPidsByStatus(String status) {
 		String sql = "FROM Hl7Pid p, Hl7Link l " +
 				"WHERE p.id = l.id " +
@@ -53,6 +52,15 @@ public class Hl7PidDao extends AbstractDao<Hl7Pid>{
 				"OR l.status IS NULL)";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("status", status);
+		return query.getResultList();
+    }
+
+    public List<Object[]> findPidsAndMshByMessageId(Integer messageId) {
+		String sql = "FROM Hl7Pid pid, Hl7Msh msh " +
+				"WHERE pid.messageId = :msgId " +
+				"AND msh.messageId = pid.messageId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("msgId", messageId);
 		return query.getResultList();
     }
 }

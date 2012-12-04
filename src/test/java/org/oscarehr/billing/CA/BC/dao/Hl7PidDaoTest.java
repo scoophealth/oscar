@@ -39,7 +39,7 @@ public class Hl7PidDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("hl7_pid", "hl7_link");
+		SchemaUtils.restoreTable("hl7_pid", "hl7_link", "hl7_msh");
 	}
 
 	@Test
@@ -59,4 +59,10 @@ public class Hl7PidDaoTest extends DaoTestFixtures {
 	public void testFindPidsByStatus () {
 		assertNotNull(dao.findPidsByStatus("F"));
 	}
+	
+	@Test
+	public void testFindPidsAndMshByMessageId () {
+		assertNotNull(dao.findPidsAndMshByMessageId(100));
+	}
+		
 }
