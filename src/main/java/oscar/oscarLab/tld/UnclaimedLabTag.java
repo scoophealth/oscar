@@ -22,57 +22,45 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarLab.tld;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
  * @author Jay Gallagher
  */
 public class UnclaimedLabTag extends TagSupport {
-   
-  
-   public UnclaimedLabTag() {
-	numNewLabs = 0;
-   }
-   
-   public int doStartTag() throws JspException    {
-        try {
 
-            
-            String sql = new String("select count(*) from providerLabRouting where provider_no = '0' and status = 'N'");            
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-               numNewLabs = (rs.getInt(1));
+    private static final long serialVersionUID = 1L;
 
-            }
-            rs.close();
-        }catch(SQLException e){
-          MiscUtils.getLogger().error("Error", e);
-        }
+	public UnclaimedLabTag() {
+		numNewLabs = 0;
+	}
+
+	public int doStartTag() throws JspException    {
+	   ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+	   List<ProviderLabRoutingModel> rs = dao.findByProviderNo("0", "N");
+	   numNewLabs = rs.size();
         
         if(numNewLabs > 0){
-
-           return(EVAL_BODY_INCLUDE);
+           return EVAL_BODY_INCLUDE;
         }else{
 
-           return(SKIP_BODY);                        
+           return SKIP_BODY;
         }
     }
-         
-    public int doEndTag() throws JspException {
-       return (EVAL_PAGE);
-    }
-   
-    private int numNewLabs;
+
+	public int doEndTag() throws JspException {
+		return EVAL_PAGE;
+	}
+
+	private int numNewLabs;
 }
