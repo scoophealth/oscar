@@ -24,6 +24,9 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.PatientLabRouting"%>
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="org.oscarehr.common.dao.PatientLabRoutingDao"%>
 <%@page errorPage="../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
@@ -33,7 +36,6 @@
 		 oscar.oscarLab.ca.all.parsers.*,
 		 oscar.oscarLab.LabRequestReportLink,
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
-         oscar.oscarDB.DBHandler,
          oscar.OscarProperties,
 		 org.apache.commons.codec.binary.Base64,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo,
 		 org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
@@ -49,7 +51,6 @@ String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
 String patientMatched = request.getParameter("patientMatched");
-String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
 
 UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
@@ -71,13 +72,11 @@ String reqID = reqIDL==null ? "" : reqIDL.toString();
 reqIDL = LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
 String reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
-ResultSet rs = DBHandler.GetSQL(sql);
+PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
 String demographicID = "";
-
-while(rs.next()){
-    demographicID = oscar.Misc.getString(rs,"demographic_no");
+for(PatientLabRouting r : dao.findByLabNoAndLabType(ConversionUtils.fromIntString(segmentID), "HL7")) {
+    demographicID = "" + r.getDemographicNo();
 }
-rs.close();
 
 boolean isLinkedToDemographic=false;
 if(demographicID != null && !demographicID.equals("")&& !demographicID.equals("0")){
