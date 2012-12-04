@@ -24,17 +24,13 @@
 
 package oscar.oscarTickler;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 import org.caisi.dao.TicklerDAO;
+import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarDB.DBHandler;
 
 public class TicklerCreator {
 	TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
@@ -76,27 +72,13 @@ public class TicklerCreator {
    * @return boolean
    */
   public boolean ticklerExists(String demoNo, String message) {
-    String sql = "select * from tickler where demographic_no = " + demoNo +
-        " and message = '" + message + "'" +
-        " and status = 'A'";
-    
-    ResultSet rs = null;
-    try {
-      
-      rs = DBHandler.GetSQL(sql);
-      return rs.next();
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
-    finally {
-      try {
-        rs.close();
-      }
-      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
-      }
-    }
-    return false;
-
+	  org.oscarehr.casemgmt.dao.TicklerDAO dao = SpringUtils.getBean(org.oscarehr.casemgmt.dao.TicklerDAO.class);
+	  CustomFilter filter=  new CustomFilter();
+	  filter.setDemographic_no(demoNo);
+	  filter.setMessage(message);
+	  filter.setStatus("A");
+	  List<Tickler> ticklers = dao.getTicklers(filter);
+	  return !ticklers.isEmpty();
   }
 
   /**
