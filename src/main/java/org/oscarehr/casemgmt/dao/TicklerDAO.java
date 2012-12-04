@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.caisi.model.CustomFilter;
+import org.caisi.model.Tickler;
 import org.oscarehr.common.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -39,7 +40,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class TicklerDAO extends HibernateDaoSupport {
 
-    public List getTicklers(CustomFilter filter) {
+    public List<Tickler> getTicklers(CustomFilter filter) {
 
         String tickler_date_order = filter.getSort_order();
         String query = "from Tickler t where t.service_date >= ? and t.service_date <= ? ";
@@ -48,6 +49,7 @@ public class TicklerDAO extends HibernateDaoSupport {
         boolean includeStatusClause = true;
         boolean includeClientClause = true;
         boolean includeDemographicClause = true;
+        boolean includeMessage = true;
 
         if (filter.getStartDate() == null || filter.getStartDate().length() == 0) {
             filter.setStartDate("1900-01-01");
@@ -68,12 +70,14 @@ public class TicklerDAO extends HibernateDaoSupport {
         if (filter.getDemographic_no() == null || filter.getDemographic_no().equals("")) {
             includeDemographicClause = false;
         }
-
         if (filter.getStatus().equals("") || filter.getStatus().equals("Z")) {
             includeStatusClause = false;
         }
+        if (filter.getMessage() == null || filter.getMessage().trim().isEmpty()) {
+        	includeMessage = false;
+        }
 
-        List paramList = new ArrayList();
+        List<Object> paramList = new ArrayList<Object>();
         paramList.add(filter.getStart_date());
         paramList.add(new java.util.Date(filter.getEnd_date().getTime() + DateUtils.MILLIS_PER_DAY));
 
@@ -108,20 +112,23 @@ public class TicklerDAO extends HibernateDaoSupport {
         }
 
         if (includeStatusClause) {
-            query = query + " and t.status = ?";
+            query = query + " and t.status = ? ";
             paramList.add(String.valueOf(filter.getStatus()));
         }
         if (includeClientClause) {
-            query = query + "and t.demographic_no = ?";
+            query = query + " and t.demographic_no = ? ";
             paramList.add(filter.getClient());
         }
         if (includeDemographicClause) {
-            query = query + "and t.demographic_no = ?";
+            query = query + " and t.demographic_no = ? ";
             paramList.add(filter.getDemographic_no());
+        }
+        if (includeMessage) {
+        	query = query + " and t.message = ? ";
+        	paramList.add(filter.getMessage());
         }
         Object params[] = paramList.toArray(new Object[paramList.size()]);
 
         return getHibernateTemplate().find(query + "order by t.service_date " + tickler_date_order, params);
     }
-
 }
