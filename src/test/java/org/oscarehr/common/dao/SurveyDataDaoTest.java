@@ -23,7 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,4 +51,22 @@ public class SurveyDataDaoTest extends DaoTestFixtures {
 		 dao.persist(ql);
 		 assertNotNull(ql.getId());
 	}
+	
+	@Test
+	public void testGetMaxProcessed() throws Exception {
+		SurveyData ql = new SurveyData();
+		EntityDataGenerator.generateTestDataForModelClass(ql);
+		ql.setSurveyId("test");
+		ql.setProcessed(1);
+		dao.persist(ql);
+		
+		assertEquals(1, dao.getMaxProcessed(ql.getSurveyId()));
+	}
+	
+	@Test
+	public void testGetProcessCount() {		
+		assertNotNull(dao.getProcessCount("TEST"));
+	}
+	
+	
 }

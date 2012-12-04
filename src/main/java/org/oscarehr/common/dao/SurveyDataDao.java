@@ -25,6 +25,8 @@
 
 package org.oscarehr.common.dao;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.SurveyData;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +36,30 @@ public class SurveyDataDao extends AbstractDao<SurveyData>{
 	public SurveyDataDao() {
 		super(SurveyData.class);
 	}
+
+	public int getMaxProcessed(String surveyId) {
+	    Query q = entityManager.createQuery("SELECT MAX(s.processed) FROM SurveyData s WHERE s.surveyId = :sid");
+	    q.setParameter("sid", surveyId);
+	    Object result = q.getSingleResult();
+	    if (result == null) {
+	    	return 0;
+	    }
+	    return (Integer)result;
+    }
+
+	public int getProcessCount(String surveyId) {
+		String sql = "SELECT COUNT(s.id) FROM SurveyData s " +
+				"WHERE s.surveyId = :sid " +
+				"AND s.processed IS NULL " +
+				"AND s.status = 'A'";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("sid", surveyId);
+		Object result = query.getSingleResult();
+	    if (result == null) {
+	    	return 0;
+	    }
+	    return ((Long)result).intValue();	    
+    }
+	
+	
 }
