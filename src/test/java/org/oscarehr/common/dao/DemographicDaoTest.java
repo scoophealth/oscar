@@ -36,13 +36,12 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicDaoTest extends DaoTestFixtures {
 
-	private DemographicDao dao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	private DemographicDao dao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
 	@Before
 	public void before() throws Exception {
 		this.beforeForInnoDB();
-		SchemaUtils.restoreTable("demographic","lst_gender","admission","demographic_merged",
-				"program","health_safety","provider","providersite","site","program_team");
+		SchemaUtils.restoreTable("demographic", "lst_gender", "admission", "demographic_merged", "program", "health_safety", "provider", "providersite", "site", "program_team");
 	}
 
 	@Test
@@ -76,10 +75,10 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		dao.save(entity);
 
 		assertNotNull(dao.getDemographicByProvider(entity.getProviderNo()));
-		assertNotNull(dao.getDemographicByProvider(entity.getProviderNo(),false));
+		assertNotNull(dao.getDemographicByProvider(entity.getProviderNo(), false));
 
-		assertEquals(1,dao.getDemographicByProvider(entity.getProviderNo()).size());
-		assertEquals(1,dao.getDemographicByProvider(entity.getProviderNo(),false).size());
+		assertEquals(1, dao.getDemographicByProvider(entity.getProviderNo()).size());
+		assertEquals(1, dao.getDemographicByProvider(entity.getProviderNo(), false).size());
 	}
 
 	@Test
@@ -103,8 +102,8 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		entity.setPatientStatus("AC");
 		dao.save(entity);
 
-		assertNotNull(dao.getActiveDemosByHealthCardNo(entity.getHin(),entity.getHcType()));
-		assertEquals(1,dao.getActiveDemosByHealthCardNo(entity.getHin(),entity.getHcType()).size());
+		assertNotNull(dao.getActiveDemosByHealthCardNo(entity.getHin(), entity.getHcType()));
+		assertEquals(1, dao.getActiveDemosByHealthCardNo(entity.getHin(), entity.getHcType()).size());
 	}
 
 	@Test
@@ -116,12 +115,11 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		entity.setFirstName("John");
 		dao.save(entity);
 
-		assertEquals(1,dao.searchDemographic("Smi").size());
-		assertEquals(0,dao.searchDemographic("Doe").size());
-		assertEquals(1,dao.searchDemographic("Smi,Jo").size());
-		assertEquals(0,dao.searchDemographic("Smi,Ja").size());
+		assertEquals(1, dao.searchDemographic("Smi").size());
+		assertEquals(0, dao.searchDemographic("Doe").size());
+		assertEquals(1, dao.searchDemographic("Smi,Jo").size());
+		assertEquals(0, dao.searchDemographic("Smi,Ja").size());
 	}
-
 
 	@Test
 	public void testGetRosterStatuses() throws Exception {
@@ -143,9 +141,8 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		entity.setRosterStatus("AC");
 		dao.save(entity);
 
-		assertEquals(2,dao.getRosterStatuses().size());
+		assertEquals(2, dao.getRosterStatuses().size());
 	}
-
 
 	@Test
 	public void testClientExists() throws Exception {
@@ -166,7 +163,7 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		dao.save(entity);
 
 		assertNotNull(dao.getClientsByChartNo(entity.getChartNo()));
-		assertEquals(1,dao.getClientsByChartNo(entity.getChartNo()).size());
+		assertEquals(1, dao.getClientsByChartNo(entity.getChartNo()).size());
 
 	}
 
@@ -179,8 +176,8 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		entity.setHcType("ontario");
 		dao.save(entity);
 
-		assertNotNull(dao.getClientsByHealthCard(entity.getHin(),entity.getHcType()));
-		assertEquals(1,dao.getClientsByHealthCard(entity.getHin(),entity.getHcType()).size());
+		assertNotNull(dao.getClientsByHealthCard(entity.getHin(), entity.getHcType()));
+		assertEquals(1, dao.getClientsByHealthCard(entity.getHin(), entity.getHcType()).size());
 
 	}
 
@@ -193,7 +190,7 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		dao.save(entity);
 
 		assertNotNull(dao.searchByHealthCard(entity.getHin()));
-		assertEquals(1,dao.searchByHealthCard(entity.getHin()).size());
+		assertEquals(1, dao.searchByHealthCard(entity.getHin()).size());
 
 	}
 
@@ -210,7 +207,7 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		dao.save(entity);
 
 		assertNotNull(dao.getDemographicByNamePhoneEmail(entity.getFirstName(), entity.getLastName(), entity.getPhone(), entity.getPhone2(), entity.getEmail()));
-		assertEquals(entity.getDemographicNo(),dao.getDemographicByNamePhoneEmail(entity.getFirstName(), entity.getLastName(), entity.getPhone(), entity.getPhone2(), entity.getEmail()).getDemographicNo());
+		assertEquals(entity.getDemographicNo(), dao.getDemographicByNamePhoneEmail(entity.getFirstName(), entity.getLastName(), entity.getPhone(), entity.getPhone2(), entity.getEmail()).getDemographicNo());
 	}
 
 	@Test
@@ -225,14 +222,29 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		entity.setDateOfBirth("01");
 		dao.save(entity);
 
-		assertNotNull(dao.getDemographicWithLastFirstDOB(entity.getLastName(),entity.getFirstName(), entity.getYearOfBirth(), entity.getMonthOfBirth(), entity.getDateOfBirth()));
-		assertEquals(1,dao.getDemographicWithLastFirstDOB(entity.getLastName(),entity.getFirstName(), entity.getYearOfBirth(), entity.getMonthOfBirth(), entity.getDateOfBirth()).size());
+		assertNotNull(dao.getDemographicWithLastFirstDOB(entity.getLastName(), entity.getFirstName(), entity.getYearOfBirth(), entity.getMonthOfBirth(), entity.getDateOfBirth()));
+		assertEquals(1, dao.getDemographicWithLastFirstDOB(entity.getLastName(), entity.getFirstName(), entity.getYearOfBirth(), entity.getMonthOfBirth(), entity.getDateOfBirth()).size());
 
 	}
-	
+
 	@Test
 	public void testFindByCriterion() {
 		assertNotNull(dao.findByCriterion(new DemographicDao.DemographicCriterion(null, "", "", "", "", "", "", "")));
 		assertNotNull(dao.findByCriterion(new DemographicDao.DemographicCriterion("", "", "", "", "", "", "", "")));
+	}
+
+	@Test
+	public void testGetAllPatientStatuses() {
+		assertNotNull(dao.getAllPatientStatuses());
+	}
+
+	@Test
+	public void testGetAllRosterStatuses() {
+		assertNotNull(dao.getAllRosterStatuses());
+	}
+
+	@Test
+	public void testGetAllProviderNumers() {
+		assertNotNull(dao.getAllProviderNumbers());
 	}
 }
