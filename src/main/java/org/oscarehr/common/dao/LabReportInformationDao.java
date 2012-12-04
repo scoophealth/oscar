@@ -39,7 +39,7 @@ public class LabReportInformationDao extends AbstractDao<LabReportInformation> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Object[]> findReportsByPhysicianId(String physicianId) {
+	public List<Object[]> findReportsByPhysicianId(Integer physicianId) {
 		String sql = "FROM LabReportInformation lri, LabPatientPhysicianInfo lpp " 
 				+ "WHERE lpp.id = :physicianId "
 				+ "AND lri.id = lpp.labReportInfoId";

@@ -47,7 +47,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class BillingONPaymentDaoTest extends DaoTestFixtures {
-	private BillingONPaymentDao dao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
+	protected BillingONPaymentDao dao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	
 	@Before

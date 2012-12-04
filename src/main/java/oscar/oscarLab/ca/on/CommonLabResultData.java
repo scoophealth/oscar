@@ -374,6 +374,8 @@ public class CommonLabResultData {
 			Logger l = Logger.getLogger(CommonLabResultData.class);
 			l.error("exception in MDSResultsData.updateReportStatus()", e);
 			return false;
+		} finally {
+			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
 	}
 

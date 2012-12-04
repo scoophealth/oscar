@@ -64,8 +64,8 @@ request.setAttribute("demographic", demographic);
 
 String defaultNewUserName=RegistrationHelper.getDefaultUserName(demographicId);
 
-String hPhoneExt = demographicExtDao.getValueForDemoKey(demographicNo, "hPhoneExt");
-String wPhoneExt = demographicExtDao.getValueForDemoKey(demographicNo, "wPhoneExt");
+String hPhoneExt = demographicExtDao.getValueForDemoKey(Integer.parseInt(demographicNo), "hPhoneExt");
+String wPhoneExt = demographicExtDao.getValueForDemoKey(Integer.parseInt(demographicNo), "wPhoneExt");
 if (hPhoneExt != null)
     request.setAttribute("demographicHomeExt", " " + hPhoneExt);
 if (wPhoneExt != null)

@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillRecipientsDaoTest extends DaoTestFixtures {
 
-	private BillRecipientsDao dao = SpringUtils.getBean(BillRecipientsDao.class);
+	public BillRecipientsDao dao = SpringUtils.getBean(BillRecipientsDao.class);
 
 	@Before
 	public void before() throws Exception {

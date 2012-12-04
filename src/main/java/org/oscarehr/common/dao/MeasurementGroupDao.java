@@ -40,7 +40,7 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 	}
 	
 	public List<MeasurementGroup> findByNameAndTypeDisplayName(String name, String typeDisplayName) {
-		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.name=? AND x.typeDisplayName=?2";
+		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.name=?1 AND x.typeDisplayName=?2";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, name);

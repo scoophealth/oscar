@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MeasurementsExtDaoTest extends DaoTestFixtures {
 
-	private MeasurementsExtDao dao = SpringUtils.getBean(MeasurementsExtDao.class);
+	protected MeasurementsExtDao dao = SpringUtils.getBean(MeasurementsExtDao.class);
 
 	public MeasurementsExtDaoTest() {
 	}

@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DataExportDaoTest extends DaoTestFixtures {
 
-	private DataExportDao dao = (DataExportDao)SpringUtils.getBean(DataExportDao.class);
+	protected DataExportDao dao = (DataExportDao)SpringUtils.getBean(DataExportDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

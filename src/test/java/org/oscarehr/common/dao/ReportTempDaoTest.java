@@ -45,7 +45,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ReportTempDaoTest extends DaoTestFixtures {
-	private ReportTempDao dao = (ReportTempDao)SpringUtils.getBean(ReportTempDao.class);
+	protected ReportTempDao dao = (ReportTempDao)SpringUtils.getBean(ReportTempDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	
 	@Before

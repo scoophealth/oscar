@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlDocumentDaoTest extends DaoTestFixtures {
 
-	private DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
+	protected DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
 
 	@Before
 	public void before() throws Exception {

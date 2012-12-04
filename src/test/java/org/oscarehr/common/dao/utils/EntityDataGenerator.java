@@ -27,6 +27,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -84,6 +85,9 @@ public class EntityDataGenerator {
 	        }
 	        else if(f[i].getType() == Date.class) {
 	        	f[i].set(model,new Date());
+	        }
+	        else if(f[i].getType() == Timestamp.class) {
+	        	f[i].set(model,Timestamp.valueOf("2010-10-23 12:05:16"));
 	        }
 	        else if(f[i].getType() == Calendar.class) {
 	        	f[i].set(model,Calendar.getInstance());

@@ -37,7 +37,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DiagnosticCodeDaoTest extends DaoTestFixtures {
 
-	private DiagnosticCodeDao dao = SpringUtils.getBean(DiagnosticCodeDao.class);
+	protected DiagnosticCodeDao dao = SpringUtils.getBean(DiagnosticCodeDao.class);
 
 	public DiagnosticCodeDaoTest() {
 	}

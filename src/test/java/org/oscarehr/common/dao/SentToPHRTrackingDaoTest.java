@@ -38,7 +38,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class SentToPHRTrackingDaoTest extends DaoTestFixtures {
 
-	private SentToPHRTrackingDao dao = SpringUtils.getBean(SentToPHRTrackingDao.class);
+	protected SentToPHRTrackingDao dao = SpringUtils.getBean(SentToPHRTrackingDao.class);
 
 	@Before
 	public void before() throws Exception {

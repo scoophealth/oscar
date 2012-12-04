@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingONProcDaoTest extends DaoTestFixtures {
 
-	private BillingONProcDao dao = SpringUtils.getBean(BillingONProcDao.class);
+	public BillingONProcDao dao = SpringUtils.getBean(BillingONProcDao.class);
 
 	public BillingONProcDaoTest() {
 	}

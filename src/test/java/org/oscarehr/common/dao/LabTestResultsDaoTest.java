@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class LabTestResultsDaoTest extends DaoTestFixtures {
 
-	private LabTestResultsDao dao = SpringUtils.getBean(LabTestResultsDao.class);
+	protected LabTestResultsDao dao = SpringUtils.getBean(LabTestResultsDao.class);
 
 	public LabTestResultsDaoTest() {
 	}

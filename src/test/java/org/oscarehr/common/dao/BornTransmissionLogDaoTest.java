@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BornTransmissionLogDaoTest extends DaoTestFixtures {
 
-	private BornTransmissionLogDao dao = SpringUtils.getBean(BornTransmissionLogDao.class);
+	protected BornTransmissionLogDao dao = SpringUtils.getBean(BornTransmissionLogDao.class);
 
 	public BornTransmissionLogDaoTest() {
 	}

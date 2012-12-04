@@ -44,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProviderLabRoutingFavoritesDaoTest extends DaoTestFixtures {
 	
-	private ProviderLabRoutingFavoritesDao dao = (ProviderLabRoutingFavoritesDao)SpringUtils.getBean(ProviderLabRoutingFavoritesDao.class);
+	protected ProviderLabRoutingFavoritesDao dao = (ProviderLabRoutingFavoritesDao)SpringUtils.getBean(ProviderLabRoutingFavoritesDao.class);
 	
 	@Before
 	public void before() throws Exception {

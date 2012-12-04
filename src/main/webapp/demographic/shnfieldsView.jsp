@@ -31,7 +31,7 @@
 <%
 String demographic_no = request.getParameter("demo");
 DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographic_no);
+Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(Integer.parseInt(demographic_no));
 
 Hashtable h = new Hashtable();
             h.put("-1","Not Asked");

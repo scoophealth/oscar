@@ -912,7 +912,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 	
 	private void fetchInvoices(ArrayList<NoteDisplay>notes, String demographicNo) {
-		List<BillingONCHeader1>bills = billingONCHeader1Dao.getInvoices(demographicNo, MAX_INVOICES);
+		List<BillingONCHeader1>bills = billingONCHeader1Dao.getInvoices(Integer.parseInt(demographicNo), MAX_INVOICES);
 
 		for( BillingONCHeader1 h1 : bills ) {
 			notes.add(new NoteDisplayNonNote(h1));
@@ -1988,7 +1988,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		List<Map<String,Object>>bills = null;
 		if( oscar.OscarProperties.getInstance().getProperty("billregion","").equalsIgnoreCase("ON") ) {
-			bills= billingONCHeader1Dao.getInvoicesMeta(demoNo);
+			bills= billingONCHeader1Dao.getInvoicesMeta(Integer.parseInt(demoNo));
 			for( Map<String,Object> h1 : bills ) {
 				EChartNoteEntry e = new EChartNoteEntry();
 				e.setId(h1.get("id"));

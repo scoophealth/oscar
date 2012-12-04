@@ -45,7 +45,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class RScheduleDaoTest extends DaoTestFixtures {
 
-	private RScheduleDao dao = (RScheduleDao) SpringUtils.getBean("rScheduleDao");
+	protected RScheduleDao dao = (RScheduleDao) SpringUtils.getBean("rScheduleDao");
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	@Before

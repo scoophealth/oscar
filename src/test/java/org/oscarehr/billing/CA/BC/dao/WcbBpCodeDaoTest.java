@@ -39,7 +39,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class WcbBpCodeDaoTest extends DaoTestFixtures {
 
-	private WcbBpCodeDao dao = SpringUtils.getBean(WcbBpCodeDao.class);
+	public WcbBpCodeDao dao = SpringUtils.getBean(WcbBpCodeDao.class);
 
 
 	@Before

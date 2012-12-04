@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ScheduleTemplateDaoTest extends DaoTestFixtures {
 
-	private ScheduleTemplateDao dao = SpringUtils.getBean(ScheduleTemplateDao.class);
+	protected ScheduleTemplateDao dao = SpringUtils.getBean(ScheduleTemplateDao.class);
 
 	public ScheduleTemplateDaoTest() {
 	}

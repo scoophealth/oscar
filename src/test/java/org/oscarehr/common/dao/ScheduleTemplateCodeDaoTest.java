@@ -43,7 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ScheduleTemplateCodeDaoTest extends DaoTestFixtures {
 
-	private ScheduleTemplateCodeDao dao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
+	protected ScheduleTemplateCodeDao dao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
 
 	public ScheduleTemplateCodeDaoTest() {
 	}

@@ -295,7 +295,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 		String commentId = request.getParameter("commentId");
 		
 		try {
-			hrmDocumentCommentDao.deleteComment(commentId);
+			hrmDocumentCommentDao.deleteComment(Integer.parseInt(commentId));
 			request.setAttribute("success", true);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't delete comment on HRM document", e);

@@ -46,7 +46,7 @@ import org.oscarehr.util.MiscUtils;
 
 public class MyGroupAccessRestrictionDaoTest extends DaoTestFixtures {
 
-	private MyGroupAccessRestrictionDao dao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
+	protected MyGroupAccessRestrictionDao dao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
 	
 	@Before
 	public void before() throws Exception {

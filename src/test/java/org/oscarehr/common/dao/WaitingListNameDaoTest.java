@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class WaitingListNameDaoTest extends DaoTestFixtures {
 
-	private WaitingListNameDao dao = SpringUtils.getBean(WaitingListNameDao.class);
+	protected WaitingListNameDao dao = SpringUtils.getBean(WaitingListNameDao.class);
 
 	@Before
 	public void before() throws Exception {

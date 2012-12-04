@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlBillingServiceDaoTest extends DaoTestFixtures {
 
-	private CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
+	protected CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
 
 	@Before
 	public void before() throws Exception {

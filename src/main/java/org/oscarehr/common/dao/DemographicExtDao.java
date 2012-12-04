@@ -86,6 +86,20 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
  		return result;
  	}
 
+ 	
+ 	public List<DemographicExt> getDemographicExtByKeyAndValue(String key,String value) {
+
+ 		Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.key = ? and d.value=? order by d.dateCreated DESC");
+ 		query.setParameter(1, key);
+ 		query.setParameter(2, value);
+
+ 	    @SuppressWarnings("unchecked")
+ 		List<DemographicExt> results = query.getResultList();
+
+ 	    return results;
+ 	}
+ 	
+ 	
  	public DemographicExt getLatestDemographicExt(Integer demographicNo, String key) {
 
  		if (demographicNo == null || demographicNo.intValue() <= 0) {
@@ -174,10 +188,10 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
 
  	}
 
-    public Map<String,String> getAllValuesForDemo(String demo){
+    public Map<String,String> getAllValuesForDemo(Integer demo){
     	Map<String,String> retval =  new HashMap<String,String>();
     	Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.demographicNo=?");
- 		query.setParameter(1, Integer.parseInt(demo));
+ 		query.setParameter(1, demo);
 
  		@SuppressWarnings("unchecked")
         List<DemographicExt> demographicExts = query.getResultList();
@@ -198,10 +212,10 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
      * @param key The key ie "cellphone"
      * @param value The value for this key
      */
-    public void addKey(String providerNo, String demo,String key, String value){
+    public void addKey(String providerNo, Integer demo,String key, String value){
     	DemographicExt demographicExt = new DemographicExt();
     	demographicExt.setProviderNo(providerNo);
-    	demographicExt.setDemographicNo(Integer.parseInt(demo));
+    	demographicExt.setDemographicNo(demo);
     	demographicExt.setKey(key);
     	demographicExt.setValue(value);
     	demographicExt.setDateCreated(new java.util.Date());
@@ -209,14 +223,14 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
     }
 
 
-    public void addKey(String providerNo, String demo,String key, String newValue,String oldValue){
+    public void addKey(String providerNo, Integer demo,String key, String newValue,String oldValue){
        if ( oldValue == null ){
     	   oldValue = "";
        }
        if (newValue != null && !oldValue.equalsIgnoreCase(newValue)){
 			DemographicExt demographicExt = new DemographicExt();
 			demographicExt.setProviderNo(providerNo);
-			demographicExt.setDemographicNo(Integer.parseInt(demo));
+			demographicExt.setDemographicNo(demo);
 			demographicExt.setKey(key);
 			demographicExt.setValue(newValue);
 			demographicExt.setDateCreated(new java.util.Date());
@@ -238,12 +252,12 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
         return  arr;
      }
 
-     public List<String[]> getListOfValuesForDemo(String demo){
+     public List<String[]> getListOfValuesForDemo(Integer demo){
         return hashtable2ArrayList(getAllValuesForDemo(demo));
      }
 
-     public String getValueForDemoKey(String demo, String key){
-    	 DemographicExt ext = this.getDemographicExt(Integer.parseInt(demo), key);
+     public String getValueForDemoKey(Integer demo, String key){
+    	 DemographicExt ext = this.getDemographicExt(demo, key);
     	 if(ext != null) {
     		 return ext.getValue();
     	 }

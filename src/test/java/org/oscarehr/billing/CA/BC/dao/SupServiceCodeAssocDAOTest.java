@@ -41,7 +41,7 @@ import oscar.oscarBilling.ca.bc.data.SupServiceCodeAssocDAO;
 
 public class SupServiceCodeAssocDAOTest extends DaoTestFixtures {
 
-	private SupServiceCodeAssocDAO dao = SpringUtils.getBean(SupServiceCodeAssocDAO.class);
+	public SupServiceCodeAssocDAO dao = SpringUtils.getBean(SupServiceCodeAssocDAO.class);
 
 	@Before
 	public void before() throws Exception {

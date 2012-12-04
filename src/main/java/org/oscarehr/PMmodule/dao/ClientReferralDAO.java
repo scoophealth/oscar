@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Program;
@@ -222,13 +223,18 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
     @SuppressWarnings("unchecked")
     public List<ClientReferral> search(ClientReferral referral) {
-        Criteria criteria = getSession().createCriteria(ClientReferral.class);
-
-        if (referral != null && referral.getProgramId().longValue() > 0) {
-            criteria.add(Expression.eq("ProgramId", referral.getProgramId()));
-        }
-
-        return criteria.list();
+    	Session session = getSession();
+    	try {
+	        Criteria criteria = session.createCriteria(ClientReferral.class);
+	
+	        if (referral != null && referral.getProgramId().longValue() > 0) {
+	            criteria.add(Expression.eq("ProgramId", referral.getProgramId()));
+	        }
+	
+	        return criteria.list();
+    	}finally {
+    		this.releaseSession(session);
+    	}
     }
     
     public List<ClientReferral> getClientReferralsByProgram(int programId) {

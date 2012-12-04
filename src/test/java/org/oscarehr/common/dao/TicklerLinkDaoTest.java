@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class TicklerLinkDaoTest {
 
-	private TicklerLinkDao dao = SpringUtils.getBean(TicklerLinkDao.class);
+	protected TicklerLinkDao dao = SpringUtils.getBean(TicklerLinkDao.class);
 
 	public TicklerLinkDaoTest() {
 	}

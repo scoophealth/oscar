@@ -661,7 +661,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			cpp.setDemographic_no(demographicNo);
 		}
 
-		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, null, null, null);
+		caseManagementMgr.saveNote(cpp, note, providerNo, null, null, null);
 		addNewNoteLink(note.getId());
 
 
@@ -1638,7 +1638,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("demoDOB", getDemoDOB(demono));
 
 		request.setAttribute("from", request.getParameter("from"));
-		long noteId = noteSave(cform, request);
+		noteSave(cform, request);
 		/*
 		 * CaseManagementNote preNote=new CaseManagementNote(); if(cform.getNoteId()!=null) { Long nId=Long.parseLong(cform.getNoteId()); preNote.setId(nId); }
 		 */
@@ -1989,7 +1989,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		String chain = request.getParameter("chain");
 
-		SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
+		SurveillanceMaster.getInstance();
 		if (!SurveillanceMaster.surveysEmpty()) {
 			request.setAttribute("demoNo", demoNo);
 			if (chain != null && !chain.equals("")) {
@@ -2186,12 +2186,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		// check to see if this issue has already been associated with this demographic
-		boolean issueExists = false;
+		//boolean issueExists = false;
 		long lIssueId = Long.parseLong(issueId);
 		CheckBoxBean[] existingCaseIssueList = sessionFrm.getIssueCheckList();
 		for (int idx = 0; idx < existingCaseIssueList.length; ++idx) {
 			if (existingCaseIssueList[idx].getIssue().getIssue_id() == lIssueId) {
-				issueExists = true;
+				//issueExists = true;
 				break;
 			}
 		}
@@ -2866,7 +2866,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				}
 			}
 			for (LabResultData result : accessionMap.values()) {
-				Date d = result.getDateObj();
+				//Date d = result.getDateObj();
 				// TODO:filter out the ones which aren't in our date range if there's a date range????
 				String segmentId = result.segmentID;
 				MessageHandler handler = Factory.getHandler(segmentId);
@@ -2895,12 +2895,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		MacroDao macroDao = (MacroDao) SpringUtils.getBean("macroDao");
 		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("macro.id")));
 		logger.info("loaded macro " + macro.getLabel());
+		/*
 		boolean cppFromMeasurements = false;
 		String cpp = request.getParameter("cpp");
 		if (cpp != null && cpp.equals("measurements")) {
 			cppFromMeasurements = true;
 		}
-
+*/
 		cform.setCaseNote_note(cform.getCaseNote_note() + "\n" + macro.getImpression());
 
 		ActionForward fwd = saveAndExit(mapping, form, request, response);
@@ -3004,7 +3005,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					if (StringUtils.isBlank(bcodes[i])) continue;
 					String[] codes = bcodes[i].split("\\|");
 					mockReq.addParameter("xserviceCode_" + i, codes[0]);
-					Object[] priceg = billingServiceDao.getUnitPrice(codes[0], serviceDate);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					Object[] priceg = billingServiceDao.getUnitPrice(codes[0], sdf.parse(serviceDate));
 					mockReq.addParameter("xserviceUnit_" + i, codes[1]);
 					String sliCode = OscarProperties.getInstance().getProperty("clinic_no");
 					if(codes.length==3 && !codes[2].equals("NA")) {
@@ -3032,7 +3034,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				// now process percent codes
 				BigDecimal stotal = new BigDecimal(0);
 				for (String[] code : percentUnits) {
-					String pct = billingServiceDao.getUnitPercentage(code[0], serviceDate);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String pct = billingServiceDao.getUnitPercentage(code[0], sdf.parse(serviceDate));
 					stotal = stotal.add(btotal.multiply(new BigDecimal(pct)));
 				}
 				btotal = btotal.add(stotal);

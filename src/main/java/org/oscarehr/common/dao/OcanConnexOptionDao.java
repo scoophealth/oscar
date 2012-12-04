@@ -100,11 +100,8 @@ public class OcanConnexOptionDao extends AbstractDao<OcanConnexOption> {
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, connexOptionId);
 				
-		// run query
-		@SuppressWarnings("unchecked")
-		OcanConnexOption result = (OcanConnexOption)query.getSingleResult();
-
-		return result;
+		
+		return this.getSingleResultOrNull(query);
 	}
 	
 	

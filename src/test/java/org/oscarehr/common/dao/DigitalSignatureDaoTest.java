@@ -38,10 +38,10 @@ import org.oscarehr.util.SpringUtils;
 
 public class DigitalSignatureDaoTest extends DaoTestFixtures {
 
-	private DigitalSignatureDao dao = SpringUtils.getBean(DigitalSignatureDao.class);
-	private FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
-	private DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
-	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	protected DigitalSignatureDao dao = SpringUtils.getBean(DigitalSignatureDao.class);
+	protected FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
+	protected DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
+	protected ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 
 	@Before
 	public void before() throws Exception {

@@ -47,7 +47,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PreventionDaoTest extends DaoTestFixtures {
 	
-	private PreventionDao dao = (PreventionDao)SpringUtils.getBean(PreventionDao.class);
+	protected PreventionDao dao = (PreventionDao)SpringUtils.getBean(PreventionDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	
 	@Before

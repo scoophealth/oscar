@@ -51,7 +51,7 @@ public class VacancyDao extends AbstractDao<Vacancy> {
 	
 	@SuppressWarnings("unchecked")
     public List<Vacancy> findByStatusAndVacancyId(String status, int vacancyId) {
-		String sqlCommand = "select x from Vacancy x where x.status=?1 and x.id=?";
+		String sqlCommand = "select x from Vacancy x where x.status=?1 and x.id=?2";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, status);

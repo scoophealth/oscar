@@ -101,7 +101,7 @@ public abstract class FrmRecord {
 	protected void setDemographicExt(int demographicNo) {
 		if(this.demographicExtDao != null) {
 			this.demographicExt = demographicExtDao.getDemographicExt(demographicNo);
-			this.demographicExtMap = demographicExtDao.getAllValuesForDemo(""+demographicNo);
+			this.demographicExtMap = demographicExtDao.getAllValuesForDemo(demographicNo);
 		}
 	} 
 }

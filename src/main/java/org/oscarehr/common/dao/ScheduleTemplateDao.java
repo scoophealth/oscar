@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.ScheduleTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +38,14 @@ public class ScheduleTemplateDao extends AbstractDao<ScheduleTemplate> {
 	public ScheduleTemplateDao() {
 		super(ScheduleTemplate.class);
 	}
+	
+	public List<ScheduleTemplate> findBySummary(String summary) {
+		Query query = entityManager.createQuery("SELECT e FROM ScheduleTemplate e WHERE e.summary=? ");
+		query.setParameter(1, summary);
+		
+		@SuppressWarnings("unchecked")
+        List<ScheduleTemplate> results = query.getResultList();
+		return results;
+	} 
 	
 }

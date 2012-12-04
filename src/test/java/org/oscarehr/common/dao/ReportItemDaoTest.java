@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ReportItemDaoTest extends DaoTestFixtures {
 
-	private ReportItemDao dao = SpringUtils.getBean(ReportItemDao.class);
+	protected ReportItemDao dao = SpringUtils.getBean(ReportItemDao.class);
 
 
 	@Before

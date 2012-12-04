@@ -144,7 +144,7 @@ public class MeasurementDataAction extends DispatchAction {
 		String demographicNo = request.getParameter("demographicNo");
 		String[] types = (request.getParameter("types") != null ? request.getParameter("types") : "").split(",");
 
-		List<Date> measurementDates = measurementDao.getDatesForMeasurements(demographicNo, types);
+		List<Date> measurementDates = measurementDao.getDatesForMeasurements(Integer.parseInt(demographicNo), types);
 		HashMap<String, HashMap<String, Measurement>> measurementsMap = new HashMap<String, HashMap<String, Measurement>>();
 
 		for (Date d : measurementDates) {
@@ -154,7 +154,7 @@ public class MeasurementDataAction extends DispatchAction {
 			Date outDate = c.getTime();
 
 			if (!measurementsMap.keySet().contains(outDate.getTime() + ""))
-				measurementsMap.put(outDate.getTime() + "", measurementDao.getMeasurementsPriorToDate(demographicNo, d));
+				measurementsMap.put(outDate.getTime() + "", measurementDao.getMeasurementsPriorToDate(Integer.parseInt(demographicNo), d));
 		}
 
 		boolean isJsonRequest = request.getParameter("json") != null && request.getParameter("json").equalsIgnoreCase("true");

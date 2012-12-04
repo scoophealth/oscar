@@ -52,14 +52,13 @@ public class PharmacyInfoDao extends AbstractDao<PharmacyInfo>{
         } else {
         	id2++;
         }
-        String ID = Integer.toString(id2);
-
-        updatePharmacy(ID,name,address,city,province,postalCode,phone1,phone2, fax,email, serviceLocationIdentifier, notes);
+        
+        updatePharmacy(id2,name,address,city,province,postalCode,phone1,phone2, fax,email, serviceLocationIdentifier, notes);
     }
 
-    public void updatePharmacy(String ID,String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email, String serviceLocationIdentifier, String notes){
+    public void updatePharmacy(Integer ID,String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email, String serviceLocationIdentifier, String notes){
     	PharmacyInfo pharmacyInfo = new PharmacyInfo();
-    	pharmacyInfo.setId2(Integer.parseInt(ID));
+    	pharmacyInfo.setId2(ID);
     	pharmacyInfo.setName(name);
     	pharmacyInfo.setAddress(address);
     	pharmacyInfo.setCity(city);
@@ -76,17 +75,17 @@ public class PharmacyInfoDao extends AbstractDao<PharmacyInfo>{
     	persist(pharmacyInfo);
      }
 
-    public void deletePharmacy(String ID){
+    public void deletePharmacy(Integer ID){
           String sql = "update PharmacyInfo set status = '0' where id2 = ?";
           Query query = entityManager.createQuery(sql);
-          query.setParameter(1, Integer.parseInt(ID));
+          query.setParameter(1, ID);
           query.executeUpdate();
      }
 
-    public PharmacyInfo getPharmacy(String ID){
+    public PharmacyInfo getPharmacy(Integer ID){
     	String sql = "SELECT x FROM  PharmacyInfo x where x.id2 = ? order by x.id desc";
         Query query = entityManager.createQuery(sql);
-        query.setParameter(1,Integer.parseInt(ID));
+        query.setParameter(1,ID);
         @SuppressWarnings("unchecked")
         List<PharmacyInfo> results = query.getResultList();
         if(results.size()>0) {
@@ -95,10 +94,10 @@ public class PharmacyInfoDao extends AbstractDao<PharmacyInfo>{
         return null;
      }
 
-    public PharmacyInfo getPharmacyByRecordID(String recordID){
+    public PharmacyInfo getPharmacyByRecordID(Integer recordID){
     	String sql = "SELECT x FROM  PharmacyInfo x where x.id = ?";
         Query query = entityManager.createQuery(sql);
-        query.setParameter(1,Integer.parseInt(recordID));
+        query.setParameter(1,recordID);
         @SuppressWarnings("unchecked")
         List<PharmacyInfo> results = query.getResultList();
         if(results.size()>0) {
@@ -116,7 +115,7 @@ public class PharmacyInfoDao extends AbstractDao<PharmacyInfo>{
         List<Integer> ids = query.getResultList();
 
         for(Integer id:ids) {
-        	pharmacyList.add(getPharmacyByRecordID(String.valueOf(id)));
+        	pharmacyList.add(getPharmacyByRecordID(id));
         }
 
         return pharmacyList;

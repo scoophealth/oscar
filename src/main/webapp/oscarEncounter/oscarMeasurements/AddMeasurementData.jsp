@@ -48,7 +48,7 @@
 
 
 
-  List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
+  List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),Integer.parseInt(demographic_no));
   MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
 
   EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();

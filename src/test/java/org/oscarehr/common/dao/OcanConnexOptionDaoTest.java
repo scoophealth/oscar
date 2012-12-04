@@ -46,7 +46,7 @@ import org.oscarehr.util.MiscUtils;
 
 public class OcanConnexOptionDaoTest extends DaoTestFixtures {
 
-	private OcanConnexOptionDao dao = SpringUtils.getBean(OcanConnexOptionDao.class);
+	protected OcanConnexOptionDao dao = SpringUtils.getBean(OcanConnexOptionDao.class);
 
 
 	@Before

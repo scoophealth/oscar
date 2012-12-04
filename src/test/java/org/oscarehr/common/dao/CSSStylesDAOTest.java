@@ -40,7 +40,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CSSStylesDAOTest extends DaoTestFixtures {
 
-	private CSSStylesDAO dao = (CSSStylesDAO)SpringUtils.getBean(CSSStylesDAO.class);
+	protected CSSStylesDAO dao = (CSSStylesDAO)SpringUtils.getBean(CSSStylesDAO.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

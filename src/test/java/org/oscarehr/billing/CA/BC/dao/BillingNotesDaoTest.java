@@ -31,7 +31,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingNotesDaoTest extends DaoTestFixtures {
 
-	private BillingNoteDao dao = SpringUtils.getBean(BillingNoteDao.class);
+	public BillingNoteDao dao = SpringUtils.getBean(BillingNoteDao.class);
 
 	@Before
 	public void before() throws Exception {

@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ConfigImmunizationDaoTest extends DaoTestFixtures {
 
-	private ConfigImmunizationDao dao = (ConfigImmunizationDao)SpringUtils.getBean(ConfigImmunizationDao.class);
+	protected ConfigImmunizationDao dao = (ConfigImmunizationDao)SpringUtils.getBean(ConfigImmunizationDao.class);
 
 	@Before
 	public void before() throws Exception {

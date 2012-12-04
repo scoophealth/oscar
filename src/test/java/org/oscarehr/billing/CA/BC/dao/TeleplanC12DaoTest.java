@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class TeleplanC12DaoTest extends DaoTestFixtures {
 
-	private TeleplanC12Dao dao = SpringUtils.getBean(TeleplanC12Dao.class);
+	public TeleplanC12Dao dao = SpringUtils.getBean(TeleplanC12Dao.class);
 
 	public TeleplanC12DaoTest() {
 	}

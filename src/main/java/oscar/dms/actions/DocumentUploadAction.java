@@ -84,7 +84,7 @@ public class DocumentUploadAction extends DispatchAction {
 			if (providerId != null) { 
 				WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
 				ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
-				providerInboxRoutingDao.addToProviderInbox(providerId, doc_no, "DOC");
+				providerInboxRoutingDao.addToProviderInbox(providerId, Integer.parseInt(doc_no), "DOC");
 			}
 	
 			String queueId=request.getParameter("queue");

@@ -160,20 +160,11 @@ String _appPath = request.getContextPath();
 			<tr>
 				<th></th>
 				<th style="vertical-align: middle">
-					<security:oscarSec objectName="<%=KeyConstants.FUN_ADMIN_MERGECLIENT %>" rights="<%=KeyConstants.ACCESS_READ%>">
-						<a id="lnkMergeClient"	href="<c:out value='${ctx}'/>/PMmodule/MergeClient.do"> 
-						<img ID="lnkMereg1" src="<%=_appPath%>/images/ClientMerge.gif" Height="60"
-						Width="60" border="0" style="vertical-align: middle"/></a>
-					</security:oscarSec>		
 				</th>
 				<th style="vertical-align: middle">
 				<table align="left">
 					<tr>
 						<th align="left" style="vertical-align: middle" class="clsHomePageLabels">
-							<security:oscarSec objectName="<%=KeyConstants.FUN_ADMIN_MERGECLIENT %>" rights="<%=KeyConstants.ACCESS_READ%>">
-							<a	id="lnkMerge2"	href="<c:out value='${ctx}'/>/PMmodule/MergeClient.do">
-							Merge Client</a>
-							</security:oscarSec>
 						</th>
 					</tr>
 				</table>

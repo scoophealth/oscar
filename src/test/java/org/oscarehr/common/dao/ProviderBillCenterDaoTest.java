@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProviderBillCenterDaoTest extends DaoTestFixtures {
 
-	private ProviderBillCenterDao dao = SpringUtils.getBean(ProviderBillCenterDao.class);
+	protected ProviderBillCenterDao dao = SpringUtils.getBean(ProviderBillCenterDao.class);
 
 	public ProviderBillCenterDaoTest() {
 	}

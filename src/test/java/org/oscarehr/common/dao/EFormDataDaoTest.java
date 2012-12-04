@@ -39,7 +39,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EFormDataDaoTest extends DaoTestFixtures {
 
-	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
+	protected EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 
 	public EFormDataDaoTest() {
 	}

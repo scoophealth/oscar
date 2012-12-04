@@ -47,7 +47,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ReportAgeSexDaoTest extends DaoTestFixtures {
 	
-	private ReportAgeSexDao dao = (ReportAgeSexDao)SpringUtils.getBean(ReportAgeSexDao.class);
+	protected ReportAgeSexDao dao = (ReportAgeSexDao)SpringUtils.getBean(ReportAgeSexDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	
 	@Before

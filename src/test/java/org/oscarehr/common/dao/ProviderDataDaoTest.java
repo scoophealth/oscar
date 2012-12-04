@@ -38,7 +38,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProviderDataDaoTest extends DaoTestFixtures {
 
-	private ProviderDataDao dao = SpringUtils.getBean(ProviderDataDao.class);
+	protected ProviderDataDao dao = SpringUtils.getBean(ProviderDataDao.class);
 
 	@Before
 	public void before() throws Exception {
@@ -109,7 +109,7 @@ public class ProviderDataDaoTest extends DaoTestFixtures {
 		assertEquals(new Integer(-1001), id);
 	}
 
-	private ProviderData newProvider(String id) {
+	protected ProviderData newProvider(String id) {
 	    ProviderData result = new ProviderData();
 	    result.set(id);
 	    try {

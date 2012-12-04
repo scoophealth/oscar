@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class RemoteReferralDaoTest extends DaoTestFixtures {
 
-	private RemoteReferralDao dao = (RemoteReferralDao)SpringUtils.getBean("remoteReferralDao");
+	protected RemoteReferralDao dao = (RemoteReferralDao)SpringUtils.getBean("remoteReferralDao");
 
 	public RemoteReferralDaoTest() {
 	}

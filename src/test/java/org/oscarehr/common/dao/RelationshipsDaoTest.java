@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class RelationshipsDaoTest extends DaoTestFixtures {
 
-	private RelationshipsDao dao = SpringUtils.getBean(RelationshipsDao.class);
+	protected RelationshipsDao dao = SpringUtils.getBean(RelationshipsDao.class);
 
 	@Before
 	public void before() throws Exception {

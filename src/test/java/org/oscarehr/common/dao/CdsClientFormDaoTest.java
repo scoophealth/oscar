@@ -45,8 +45,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class CdsClientFormDaoTest extends DaoTestFixtures {
 
-	private CdsClientFormDao dao = SpringUtils.getBean(CdsClientFormDao.class);
-	private DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
+	protected CdsClientFormDao dao = SpringUtils.getBean(CdsClientFormDao.class);
+	protected DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	Logger logger = MiscUtils.getLogger();
 	

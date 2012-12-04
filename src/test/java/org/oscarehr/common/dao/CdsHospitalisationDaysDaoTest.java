@@ -40,7 +40,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CdsHospitalisationDaysDaoTest extends DaoTestFixtures {
 
-	private CdsHospitalisationDaysDao dao = (CdsHospitalisationDaysDao)SpringUtils.getBean(CdsHospitalisationDaysDao.class);
+	protected CdsHospitalisationDaysDao dao = (CdsHospitalisationDaysDao)SpringUtils.getBean(CdsHospitalisationDaysDao.class);
 	Logger logger = MiscUtils.getLogger(); 
 	
 	@Before

@@ -44,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PublicKeyDaoTest extends DaoTestFixtures {
 	
-	private PublicKeyDao dao =(PublicKeyDao)SpringUtils.getBean(PublicKeyDao.class);
+	protected PublicKeyDao dao =(PublicKeyDao)SpringUtils.getBean(PublicKeyDao.class);
 	
 	@Before
 	public void before() throws Exception {

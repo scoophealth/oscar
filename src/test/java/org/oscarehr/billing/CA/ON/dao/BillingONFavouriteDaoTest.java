@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingONFavouriteDaoTest extends DaoTestFixtures {
 
-	private BillingONFavouriteDao dao = SpringUtils.getBean(BillingONFavouriteDao.class);
+	public BillingONFavouriteDao dao = SpringUtils.getBean(BillingONFavouriteDao.class);
 
 	public BillingONFavouriteDaoTest() {
 	}

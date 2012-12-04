@@ -106,8 +106,8 @@ import oscar.form.FrmLabReq07Record;
 
 
 public class OntarioMDSpec4DataTest extends DaoTestFixtures {
-	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-	private Integer oscarProgramID;
+	protected AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+	protected Integer oscarProgramID;
 	
 	@Before
 	public void before() throws Exception {

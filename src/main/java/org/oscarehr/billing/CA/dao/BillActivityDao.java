@@ -42,7 +42,7 @@ public class BillActivityDao extends AbstractDao<BillActivity>{
 	}
 	
 	public List<BillActivity> findCurrentByMonthCodeAndGroupNo(String monthCode, String groupNo, Date updateDateTime) {
-		Query q = entityManager.createQuery("SELECT b FROM BillActivity WHERE b.monthCode=? AND b.groupNo=? AND b.updateDateTime > ? AND b.status != 'D' ORDER BY b.batchCount");
+		Query q = entityManager.createQuery("SELECT b FROM BillActivity b WHERE b.monthCode=? AND b.groupNo=? AND b.updateDateTime > ? AND b.status != 'D' ORDER BY b.batchCount");
 		q.setParameter(1, monthCode);
 		q.setParameter(2, groupNo);
 		q.setParameter(3, updateDateTime);
@@ -54,7 +54,7 @@ public class BillActivityDao extends AbstractDao<BillActivity>{
 	}
 	
 	public List<BillActivity> findCurrentByDateRange(Date startDate, Date endDate) {
-		Query q = entityManager.createQuery("SELECT b FROM BillActivity WHERE b.updateDateTime >= ? AND  b.updateDateTime <= ? AND b.status != 'D' ORDER BY b.id DESC");
+		Query q = entityManager.createQuery("SELECT b FROM BillActivity b WHERE b.updateDateTime >= ? AND  b.updateDateTime <= ? AND b.status != 'D' ORDER BY b.id DESC");
 		q.setParameter(1, startDate);
 		q.setParameter(2, endDate);
 	

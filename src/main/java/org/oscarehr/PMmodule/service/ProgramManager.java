@@ -157,15 +157,7 @@ public class ProgramManager {
         }
     }
 
-    /**
-      * facilityId can be null, it will return all programs optionally filtering by facility id if filtering is enabled.
-     */
-    public List<Program> getPrograms(String programStatus, String providerNo,Integer shelterId) {
-         return programDao.getAllPrograms(programStatus,null,null,providerNo,shelterId);
-    }
-    public List<Program> getPrograms(Integer clientId,String providerNo,Integer shelterId) {
-        return programDao.getAllPrograms(Program.PROGRAM_STATUS_ACTIVE,null,null,clientId,providerNo,shelterId);
-    }
+ 
     public List<Program> getPrograms(Integer facilityId) {
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
             return programDao.getProgramsByFacilityId(facilityId);
@@ -185,10 +177,6 @@ public class ProgramManager {
 
     public Program[] getBedPrograms(Integer facilityId) {
         return programDao.getBedPrograms(facilityId);
-    }
-
-	public List<Program> getBedPrograms(String providerNo,Integer shelterId) {
-        return programDao.getAllPrograms(Program.PROGRAM_STATUS_ACTIVE,Program.BED_TYPE,null,providerNo, shelterId);
     }
 
     public List<Program> getServicePrograms() {

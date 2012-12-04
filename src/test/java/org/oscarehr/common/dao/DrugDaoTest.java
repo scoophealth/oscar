@@ -33,12 +33,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.myoscar.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class DrugDaoTest extends DaoTestFixtures {
 
-	private DrugDao dao = SpringUtils.getBean(DrugDao.class);
+	protected DrugDao dao = SpringUtils.getBean(DrugDao.class);
 
+	@Override
+	@Test
+	public void doSimpleExceptionTest() {
+		MiscUtils.getLogger().error("Unable to run doSimpleExceptionTest on this DAO");
+	}
+	
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("drugs", "prescription", "demographic_merged");
@@ -63,7 +70,7 @@ public class DrugDaoTest extends DaoTestFixtures {
 		drugs = dao.findByDemographicIdAndRegion(999, "");
 		assertNotNull(drugs);
 
-		drugs = dao.findByDemographicIdAndDrugId(999, "");
+		drugs = dao.findByDemographicIdAndDrugId(999, 0);
 		assertNotNull(drugs);
 
 		dao.findByEverything(null, 0, null, null, null, null, 0, null, 0, 0, null, null, null, null, null, 0, null, false, false, null, null, null, false, false, false, false, null, null, null, false);

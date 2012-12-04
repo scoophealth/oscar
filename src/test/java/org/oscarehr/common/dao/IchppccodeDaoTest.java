@@ -30,7 +30,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class IchppccodeDaoTest extends DaoTestFixtures {
 
-	private IchppccodeDao dao = SpringUtils.getBean(IchppccodeDao.class);
+	protected IchppccodeDao dao = SpringUtils.getBean(IchppccodeDao.class);
 
 	@Before
 	public void before() throws Exception {

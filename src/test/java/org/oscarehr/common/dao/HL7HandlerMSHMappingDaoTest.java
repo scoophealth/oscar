@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class HL7HandlerMSHMappingDaoTest extends DaoTestFixtures {
 
-	private HL7HandlerMSHMappingDao dao = SpringUtils.getBean(HL7HandlerMSHMappingDao.class);
+	protected HL7HandlerMSHMappingDao dao = SpringUtils.getBean(HL7HandlerMSHMappingDao.class);
 
 
 	@Before

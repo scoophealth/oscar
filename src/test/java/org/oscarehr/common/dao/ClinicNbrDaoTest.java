@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ClinicNbrDaoTest extends DaoTestFixtures {
 
-	private ClinicNbrDao dao = (ClinicNbrDao)SpringUtils.getBean(ClinicNbrDao.class);
+	protected ClinicNbrDao dao = (ClinicNbrDao)SpringUtils.getBean(ClinicNbrDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

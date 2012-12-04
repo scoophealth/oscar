@@ -88,7 +88,7 @@ public class RxPharmacyData {
     * @param notes
     */
    public void updatePharmacy(String ID,String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email, String serviceLocationIdentifier, String notes){
-		pharmacyInfoDao.updatePharmacy(ID, name, address, city, province, postalCode, phone1, phone2, fax, email, serviceLocationIdentifier, notes);
+		pharmacyInfoDao.updatePharmacy(Integer.parseInt(ID), name, address, city, province, postalCode, phone1, phone2, fax, email, serviceLocationIdentifier, notes);
    }
 
    /**
@@ -96,7 +96,7 @@ public class RxPharmacyData {
     * @param ID
     */
    public void deletePharmacy(String ID){
-	   pharmacyInfoDao.deletePharmacy(ID);
+	   pharmacyInfoDao.deletePharmacy(Integer.parseInt(ID));
    }
 
    /**
@@ -105,7 +105,7 @@ public class RxPharmacyData {
     * @return returns a pharmacy class corresponding latest data from the pharmacy ID
     */
    public PharmacyInfo getPharmacy(String ID){
-      PharmacyInfo pharmacyInfo = pharmacyInfoDao.getPharmacy(ID);
+      PharmacyInfo pharmacyInfo = pharmacyInfoDao.getPharmacy(Integer.parseInt(ID));
       return pharmacyInfo;
    }
 
@@ -115,7 +115,7 @@ public class RxPharmacyData {
     * @return Pharmacy data class
     */
    public PharmacyInfo getPharmacyByRecordID(String recordID){
-      return pharmacyInfoDao.getPharmacyByRecordID(recordID);
+      return pharmacyInfoDao.getPharmacyByRecordID(Integer.parseInt(recordID));
    }
 
 
@@ -133,7 +133,7 @@ public class RxPharmacyData {
     * @param demographicNo Patient demographic number
     */
    public void addPharmacyToDemographic(String pharmacyId,String demographicNo){
-      demographicPharmacyDao.addPharmacyToDemographic(pharmacyId, demographicNo);
+      demographicPharmacyDao.addPharmacyToDemographic(Integer.parseInt(pharmacyId), Integer.parseInt(demographicNo));
    }
 
    /**
@@ -143,9 +143,9 @@ public class RxPharmacyData {
     * @return Pharmacy data object
     */
    public PharmacyInfo getPharmacyFromDemographic(String demographicNo){
-	   DemographicPharmacy dp = demographicPharmacyDao.findByDemographicId(demographicNo);
+	   DemographicPharmacy dp = demographicPharmacyDao.findByDemographicId(Integer.parseInt(demographicNo));
 	   if(dp != null) {
-		   return pharmacyInfoDao.getPharmacy(String.valueOf(dp.getPharmacyId()));
+		   return pharmacyInfoDao.getPharmacy(dp.getPharmacyId());
 	   }
 	   return null;
    }

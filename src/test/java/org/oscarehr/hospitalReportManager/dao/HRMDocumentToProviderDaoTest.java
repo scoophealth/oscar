@@ -35,12 +35,12 @@ import org.oscarehr.util.SpringUtils;
 
 public class HRMDocumentToProviderDaoTest extends DaoTestFixtures {
 
-	private HRMDocumentToProviderDao dao = SpringUtils.getBean(HRMDocumentToProviderDao.class);
+	public HRMDocumentToProviderDao dao = SpringUtils.getBean(HRMDocumentToProviderDao.class);
 
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("HRMDocumentToProvider");
+		SchemaUtils.restoreTable("HRMDocumentToProvider","HRMDocument");
 	}
 
 	@Test

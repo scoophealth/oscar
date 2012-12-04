@@ -40,7 +40,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicExtDaoTest extends DaoTestFixtures {
 
-	private DemographicExtDao dao = SpringUtils.getBean(DemographicExtDao.class);
+	protected DemographicExtDao dao = SpringUtils.getBean(DemographicExtDao.class);
 
 	public DemographicExtDaoTest() {
 

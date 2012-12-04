@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class SurveyTestDataDaoTest extends DaoTestFixtures {
 
-	private SurveyTestDataDao dao = SpringUtils.getBean(SurveyTestDataDao.class);
+	protected SurveyTestDataDao dao = SpringUtils.getBean(SurveyTestDataDao.class);
 
 
 	@Before

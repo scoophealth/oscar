@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DxDaoTest extends DaoTestFixtures {
 	
-	private DxDao dao = (DxDao)SpringUtils.getBean(DxDao.class);
+	protected DxDao dao = (DxDao)SpringUtils.getBean(DxDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

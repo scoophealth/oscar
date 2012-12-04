@@ -31,6 +31,10 @@
   String keyword = request.getParameter("keyword");
   if(request.getParameter("limit1")!=null) strOffset = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit = request.getParameter("limit2");
+  
+  int limit = Integer.parseInt(strLimit);
+  int offset = Integer.parseInt(strOffset);
+  
   boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
   
    
@@ -173,7 +177,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 boolean toggleLine = false;
 int nItems=0;
 
-demoList = demographicDao.searchDemographicByLastNameAndNotStatus(keyword, statusString, strLimit, strOffset);
+demoList = demographicDao.searchDemographicByLastNameAndNotStatus(keyword, statusString, limit, offset);
 int dSize = demoList.size();
 
 

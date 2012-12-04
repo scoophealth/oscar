@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingBCDaoTest extends DaoTestFixtures {
 
-	private BillingBCDao dao = SpringUtils.getBean(BillingBCDao.class);
+	public BillingBCDao dao = SpringUtils.getBean(BillingBCDao.class);
 
 	@Before
 	public void before() throws Exception {

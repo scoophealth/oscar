@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EyeformProcedureBookDaoTest extends DaoTestFixtures {
 
-	private EyeformProcedureBookDao dao = SpringUtils.getBean(EyeformProcedureBookDao.class);
+	public EyeformProcedureBookDao dao = SpringUtils.getBean(EyeformProcedureBookDao.class);
 
 
 	@Before
