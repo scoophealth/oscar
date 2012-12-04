@@ -33,6 +33,7 @@ import org.oscarehr.common.model.ConsultDocs;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
 
 	public ConsultDocsDao() {
@@ -46,8 +47,21 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
     	query.setParameter(2,documentNo);
     	query.setParameter(3,docType);
 
-        @SuppressWarnings("unchecked")
         List<ConsultDocs> results = query.getResultList();
         return results;
 	}
+
+	public List<Object[]> findByConsultationIdAndType(Integer consultationId, String docType) {
+		String sql = "FROM ConsultDocs cd, PatientLabRouting plr " +
+				"WHERE plr.id = cd.documentNo " +
+				"AND cd.requestId = :consultationId " +
+				"AND cd.docType = :docType " +
+				"AND cd.deleted IS NULL " +
+				"ORDER BY cd.documentNo";
+		Query q = entityManager.createQuery(sql);
+		q.setParameter("consultationId", consultationId);
+		q.setParameter("docType", docType);
+		return q.getResultList();
+		
+    }
 }

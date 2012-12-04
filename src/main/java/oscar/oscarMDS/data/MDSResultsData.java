@@ -29,27 +29,30 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.PatientLabRoutingDao;
-import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.dao.ConsultDocsDao;
+import org.oscarehr.common.dao.LabPatientPhysicianInfoDao;
+import org.oscarehr.common.dao.LabTestResultsDao;
+import org.oscarehr.common.model.ConsultDocs;
+import org.oscarehr.common.model.LabPatientPhysicianInfo;
+import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.LabResultData;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 
 public class MDSResultsData {
-
+	
     Logger logger = Logger.getLogger(MDSResultsData.class);
-    private PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
-    private ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
-
     
     public ArrayList<String> segmentID;
     public ArrayList<String> acknowledgedStatus;
-
     public ArrayList<String> healthNumber;
     public ArrayList<String> patientName;
     public ArrayList<String> sex;
@@ -59,46 +62,39 @@ public class MDSResultsData {
     public ArrayList<String> requestingClient;
     public ArrayList<String> discipline;
     public ArrayList<String> reportStatus;
-
-
     public ArrayList<LabResultData> labResults;
 
     /**
      *Lists labs predicated on relationship to patient's consultation
      */
     public ArrayList<LabResultData> populateCMLResultsData(String demographicNo, String consultationId, boolean attached) {
-        String sql = "SELECT lpp.id, lpp.collection_date, lpp.accession_num, patientLabRouting.id AS labId FROM labPatientPhysicianInfo lpp, patientLabRouting"
-                +" WHERE patientLabRouting.lab_type = 'CML' AND lpp.id = patientLabRouting.lab_no AND"
-                +" patientLabRouting.demographic_no="+demographicNo;
-
-        String attachQuery = "SELECT document_no FROM consultdocs, patientLabRouting WHERE patientLabRouting.id = consultdocs.document_no AND " +
-                "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY document_no";
-
+    	LabPatientPhysicianInfoDao dao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
+    	ConsultDocsDao consDao = SpringUtils.getBean(ConsultDocsDao.class);
+    	
         labResults = new ArrayList<LabResultData>();
         ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
 
         try {
-
-            ResultSet rs = DBHandler.GetSQL(attachQuery);
-
-            while(rs.next()) {
+        	for(Object[] co : consDao.findByConsultationIdAndType(ConversionUtils.fromIntString(consultationId), "L")) {
+            	ConsultDocs cd = (ConsultDocs) co[0];
+            	PatientLabRouting plr = (PatientLabRouting) co[1];
+            	
                 LabResultData lbData = new LabResultData(LabResultData.CML);
                 lbData.labType = LabResultData.CML;
-                lbData.labPatientId = oscar.Misc.getString(rs, "document_no");
+                lbData.labPatientId = "" + cd.getDocumentNo();
                 attachedLabs.add(lbData);
             }
-            rs.close();
-
-
-            rs = DBHandler.GetSQL(sql);
+            
             LabResultData lbData = new LabResultData(LabResultData.CML);
             LabResultData.CompareId c = lbData.getComparatorId();
-            while(rs.next()){
+        	for(Object[] o : dao.findRoutings(ConversionUtils.fromIntString(demographicNo), "CML")) {
+        		LabPatientPhysicianInfo lpp = (LabPatientPhysicianInfo) o[0];
+        		PatientLabRouting r = (PatientLabRouting) o[1];
 
                 lbData.labType = LabResultData.CML;
-                lbData.labPatientId = oscar.Misc.getString(rs, "labId");
-                lbData.segmentID = oscar.Misc.getString(rs, "id");
-                lbData.dateTime = oscar.Misc.getString(rs, "collection_date");
+                lbData.labPatientId = "" + r.getId();
+                lbData.segmentID = "" + lpp.getId();
+                lbData.dateTime = lpp.getCollectionDate();
                 lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
 
                 if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
@@ -108,19 +104,19 @@ public class MDSResultsData {
 
                 lbData = new LabResultData(LabResultData.CML);
             }
-            rs.close();
-
         }catch(Exception e){
             logger.error("exception in CMLPopulate", e);
-
         }
 
         return labResults;
-
     }
 
 
  public ArrayList<LabResultData> populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+	 return populateLabResultsData("Epsilon", providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+ }
+ 
+ private ArrayList<LabResultData> populateLabResultsData(String labName, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         //logger.info("populateCMLResultsData getting called now");
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -130,192 +126,71 @@ public class MDSResultsData {
 
 
         labResults =  new ArrayList<LabResultData>();
-        String sql = "";
         try {
-
+        	LabPatientPhysicianInfoDao dao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
+        	
+        	List<Object[]> infos;
             if ( demographicNo == null) {
-                 sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num, providerLabRouting.status "
-                        +" from labPatientPhysicianInfo lpp, providerLabRouting "
-                        +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'"
-                        +" AND providerLabRouting.lab_type = 'Epsilon' "
-                        +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
+            	infos = dao.findByPatientName(status, labName, providerNo, patientLastName, patientFirstName, patientHealthNumber);
             } else {
-
-                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num "
-                        +" from labPatientPhysicianInfo lpp, patientLabRouting "
-                        +" where patientLabRouting.lab_type = 'Epsilon' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
+            	infos = dao.findByDemographic(ConversionUtils.fromIntString(demographicNo), labName);
             }
-
-            logger.info(sql);
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while(rs.next()){
+            
+            for(Object [] o : infos) {
+            	LabPatientPhysicianInfo lpp = (LabPatientPhysicianInfo) o[0];
+            	
                 LabResultData lbData = new LabResultData(LabResultData.CML);
-
                 lbData.labType = LabResultData.CML;
-
-                lbData.segmentID = oscar.Misc.getString(rs,"id");
+                lbData.segmentID = "" + lpp.getId();
 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = oscar.Misc.getString(rs,"status");
+                	ProviderLabRoutingModel m = (ProviderLabRoutingModel) o[1]; 
+                    lbData.acknowledgedStatus = m.getStatus();
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
 
-
-                lbData.healthNumber = oscar.Misc.getString(rs,"patient_health_num");
-                lbData.patientName = oscar.Misc.getString(rs,"patientName");
-                lbData.sex = oscar.Misc.getString(rs,"patient_sex");
-
-
+                lbData.healthNumber = lpp.getPatientHin();
+                lbData.patientName = lpp.getPatientFullName();
+                lbData.sex = lpp.getPatientSex();
                 lbData.resultStatus = "0"; //TODO
                 // solve lbData.resultStatus.add(db.getString(rs,"abnormalFlag"));
 
-
-                lbData.dateTime = oscar.Misc.getString(rs,"collection_date");
+                lbData.dateTime = lpp.getCollectionDate();
                 lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
 
                 //priority
                 lbData.priority = "----";
 
-                lbData.requestingClient = oscar.Misc.getString(rs,"doc_name");
-                lbData.reportStatus =  oscar.Misc.getString(rs,"lab_status");
-                lbData.accessionNumber = oscar.Misc.getString(rs,"accession_num");
+                lbData.requestingClient = lpp.getDocName();
+                lbData.reportStatus =  lpp.getLabStatus();
+                lbData.accessionNumber = lpp.getAccessionNum();
 
                 if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
                     lbData.finalRes = true;
-                }else{
-                    lbData.finalRes = false;
+                } else {
+                	lbData.finalRes = false;
                 }
-
                 lbData.discipline = "Hem/Chem/Other";
-
                 labResults.add(lbData);
             }
-            rs.close();
         }catch(Exception e){
             logger.error("exception in CMLPopulate", e);
-
         }
-
+        
         return labResults;
-
-}
+ 	}
 
     public ArrayList<LabResultData> populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-        //logger.info("populateCMLResultsData getting called now");
-        if ( providerNo == null) { providerNo = ""; }
-        if ( patientFirstName == null) { patientFirstName = ""; }
-        if ( patientLastName == null) { patientLastName = ""; }
-        if ( patientHealthNumber == null) { patientHealthNumber = ""; }
-        if ( status == null ) { status = ""; }
-
-
-        labResults =  new ArrayList<LabResultData>();
-        // select lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name), lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status from labPatientPhysicianInfo lpp;
-        String sql = "";
-        try {
-
-            if ( demographicNo == null) {
-                // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
-                // for the provider number if unable to find correct provider
-
-                //sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, providerLabRouting.status "
-                //+" from labPatientPhysicianInfo lpp, providerLabRouting "
-                //+"where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
-                //"AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like  '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' "; //group by mdsMSH.segmentID";
-
-                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num, providerLabRouting.status "
-                        +" from labPatientPhysicianInfo lpp, providerLabRouting "
-                        +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'"
-                        +" AND providerLabRouting.lab_type = 'CML' "
-                        +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
-            } else {
-
-                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num "
-                        +" from labPatientPhysicianInfo lpp, patientLabRouting "
-                        +" where patientLabRouting.lab_type = 'CML' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
-            }
-
-
-            logger.info(sql);
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while(rs.next()){
-                LabResultData lbData = new LabResultData(LabResultData.CML);
-
-                lbData.labType = LabResultData.CML;
-
-                lbData.segmentID = oscar.Misc.getString(rs, "id");
-
-                if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
-                } else {
-                    lbData.acknowledgedStatus ="U";
-                }
-
-
-                lbData.healthNumber = oscar.Misc.getString(rs, "patient_health_num");
-                lbData.patientName = oscar.Misc.getString(rs, "patientName");
-                lbData.sex = oscar.Misc.getString(rs, "patient_sex");
-
-
-                lbData.resultStatus = "0"; //TODO
-                // solve lbData.resultStatus.add(oscar.Misc.getString(rs,"abnormalFlag"));
-
-                lbData.dateTime = oscar.Misc.getString(rs, "collection_date");
-                lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
-
-                //priority
-                lbData.priority = "----";
-
-                lbData.requestingClient = oscar.Misc.getString(rs, "doc_name");
-                lbData.reportStatus =  oscar.Misc.getString(rs, "lab_status");
-                lbData.accessionNumber = oscar.Misc.getString(rs, "accession_num");
-
-                if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
-                    lbData.finalRes = true;
-                }else{
-                    lbData.finalRes = false;
-                }
-
-                //if ( oscar.Misc.getString(rs,"reportGroupDesc").startsWith("MICRO") ) {
-                //   discipline.add("Microbiology");
-                //} else if ( oscar.Misc.getString(rs,"reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
-                //   discipline.add("Diagnostic Imaging");
-                //} else {
-                lbData.discipline = "Hem/Chem/Other";
-                //}
-
-                labResults.add(lbData);
-            }
-            rs.close();
-        }catch(Exception e){
-            logger.error("exception in CMLPopulate", e);
-
-        }
-
-        return labResults;
+        return populateLabResultsData("CML", providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
     }
 
     public int findCMLAdnormalResults(String labId){
-        int count = 0;
-        try {
-
-
-            String sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
-
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while(rs.next()){
-                count++;
-            }
-            rs.close();
-        }catch(Exception e){
-            logger.error("exception in MDSResultsData", e);
-        }
-        return count;
+        LabTestResultsDao dao = SpringUtils.getBean(LabTestResultsDao.class);
+        return dao.findByAbnAndPhysicianId("A", ConversionUtils.fromIntString(labId)).size();
     }
 
     public void populateMDSResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
         if ( patientLastName == null) { patientLastName = ""; }

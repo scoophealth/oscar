@@ -39,10 +39,9 @@ public class LabPatientPhysicianInfoDaoTest extends DaoTestFixtures {
 	public LabPatientPhysicianInfoDaoTest() {
 	}
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("labPatientPhysicianInfo");
+		SchemaUtils.restoreTable("labPatientPhysicianInfo", "patientLabRouting", "labPatientPhysicianInfo", "providerLabRouting");
 	}
 
 	@Test
@@ -52,5 +51,20 @@ public class LabPatientPhysicianInfoDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFindRoutings() {
+		assertNotNull(dao.findRoutings(100, "T"));
+	}
+
+	@Test
+	public void testFindByPatientName() {
+		assertNotNull(dao.findByPatientName("ST", "LAB", "100", "LNAME", "FNAME", "HIN"));
+	}
+
+	@Test
+	public void testFindByDemographic() {
+		assertNotNull(dao.findByDemographic(199, "D"));
 	}
 }
