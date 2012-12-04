@@ -24,6 +24,7 @@
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,6 +44,7 @@ import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
  * @author toby
  */
 @Repository
+@SuppressWarnings("unchecked")
 public class DxresearchDAO extends AbstractDao<Dxresearch>{
 
 
@@ -96,7 +98,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
     }
 
 
-    @SuppressWarnings("unchecked")
+    
     public List<DxRegistedPTInfo> patientRegistedDistincted(List<dxCodeSearchBean> searchItems, List<String> doctorList){
         List<Dxresearch> dList = null;
        List<dxCodeSearchBean> listItems = searchItems;
@@ -136,7 +138,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
         }
     }
 
-    @SuppressWarnings("unchecked")
+    
     public List<DxRegistedPTInfo> patientRegistedAll(List<dxCodeSearchBean> searchItems, List<String> doctorList){
         List<Dxresearch> dList = null;
         List<dxCodeSearchBean> listItems = searchItems;
@@ -190,7 +192,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
         return patientRegistedStatus("D",searchItems, doctorList);
     }
 
-    @SuppressWarnings("unchecked")
+    
     public List<DxRegistedPTInfo> patientRegistedStatus(String status,List<dxCodeSearchBean> searchItems, List<String> doctorList){
         List<Dxresearch> dList = null;
 
@@ -245,7 +247,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
     	Query query = entityManager.createQuery(hql);
     	query.setParameter(1,demographicNo);
 
-    	@SuppressWarnings("unchecked")
+    	
     	List<Dxresearch> items = query.getResultList();
 
     	return items;
@@ -265,7 +267,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
     	Query query = entityManager.createQuery(hql);
     	query.setParameter(1,demographicNo);
 
-    	@SuppressWarnings("unchecked")
+    	
     	List<Dxresearch> items = query.getResultList();
 
 		return items;
@@ -278,7 +280,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
     	query.setParameter(2,codeType);
     	query.setParameter(3,code);
 
-    	@SuppressWarnings("unchecked")
+    	
     	List<Dxresearch> items = query.getResultList();
 
 		return !items.isEmpty();
@@ -291,12 +293,31 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 		query.executeUpdate();
 	}
 
-	@SuppressWarnings("unchecked")
     public List<Dxresearch> findByDemographicNoResearchCodeAndCodingSystem(Integer demographicNo, String dxresearchCode, String codingSystem) {
 		Query query = entityManager.createQuery("FROM Dxresearch d WHERE d.demographicNo = :dn AND d.dxresearchCode = :dxrc and (d.status = 'A' or d.status = 'C') and d.codingSystem = :cs");
 		query.setParameter("dn", demographicNo);
 		query.setParameter("dxrc", dxresearchCode);
 		query.setParameter("cs", codingSystem);
 	    return query.getResultList();
+    }
+
+	public List<Object[]> getDataForInrReport(Date fromDate, Date toDate) {
+        String sql = "FROM Demographic d, Measurement m, Dxresearch dx " +
+        		"wHERE m.demographicId = dx.demographicNo " +
+        		"AND dx.status != 'D' " +
+        		"AND dx.codingSystem = 'icd9' " +
+        		"AND (" +
+        		"	dx.dxresearchCode = '42731' " +
+        		"	OR dx.dxresearchCode = 'V5861' " +
+        		"	OR dx.dxresearchCode = 'V1251'" +
+        		") AND m.demographicId = d.DemographicNo " +
+        		"AND m.type = 'INR' " +
+        		"AND m.dateObserved >= :fromDate " +
+        		"AND m.dateObserved <= :toDate " +
+        		"ORDER BY d.LastName, d.FirstName, m.dateObserved";
+        Query q = entityManager.createQuery(sql);
+        q.setParameter("fromDate", fromDate);
+        q.setParameter("toDate", toDate);
+        return q.getResultList();
     }
 }
