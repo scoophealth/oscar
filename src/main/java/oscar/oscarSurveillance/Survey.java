@@ -194,24 +194,6 @@ public class Survey {
       return isinsurvey;
    }
    
-   private void getRecordsForPeriod(String demographic_no){
-      try{
-         
-         String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
-         "select * from surveyData where demographic_no = '"+demographic_no+"' and (to_days(now()) - to_days(survey_date) < "+period+") ";
-         
-         ResultSet rs = DBHandler.GetSQL(sql);
-         if(rs.next()){
-            surveyStatus = oscar.Misc.getString(rs, "status");            
-         }            
-         rs.close();
-         
-      }catch(Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }
-   }
-   
-   
    private String getSurveyStatusForPeriod(String demographic_no){
       String sStatus = null;
       try{

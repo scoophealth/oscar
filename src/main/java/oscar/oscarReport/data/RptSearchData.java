@@ -22,110 +22,80 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.data;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicQueryFavouritesDao;
 import org.oscarehr.common.model.DemographicQueryFavourite;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 /**
  *
  * @author  McMaster
  */
+@SuppressWarnings("rawtypes")
 public class RptSearchData {
 
-    java.util.ArrayList rosterTypes;
-    java.util.ArrayList patientTypes;
-    java.util.ArrayList savedQueries;
+	ArrayList rosterTypes;
+	ArrayList patientTypes;
+	ArrayList savedQueries;
 
-    private DemographicQueryFavouritesDao demographicQueryFavouritesDao = SpringUtils.getBean(DemographicQueryFavouritesDao.class);
+	private DemographicQueryFavouritesDao demographicQueryFavouritesDao = SpringUtils.getBean(DemographicQueryFavouritesDao.class);
 
-    /**
-     *This function runs through the demographic table and retrieves all the roster types currently being used
-     * @return  ArrayList  of roster status types in the demographic table*/
-    public java.util.ArrayList getRosterTypes(){
-            java.util.ArrayList retval = new java.util.ArrayList();
-         try{
+	/**
+	 *This function runs through the demographic table and retrieves all the roster types currently being used
+	 * @return  ArrayList  of roster status types in the demographic table*/
 
-              java.sql.ResultSet rs;
-              rs = DBHandler.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");
+	public ArrayList<String> getRosterTypes() {
+		ArrayList<String> retval = new ArrayList<String>();
+		DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
+		retval.addAll(dao.getAllRosterStatuses());
+		return retval;
+	}
 
-              while (rs.next()) {
-                retval.add( oscar.Misc.getString(rs, "roster_status") );
+	/**
+	 * @return  */
+	public ArrayList<String> getPatientTypes() {
+		ArrayList<String> retval = new ArrayList<String>();
+		DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
+		retval.addAll(dao.getAllPatientStatuses());
+		return retval;
+	}
 
-              }
-              rs.close();
-            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
-            return retval;
-    }
+	public ArrayList<String> getProvidersWithDemographics() {
+		ArrayList<String> retval = new ArrayList<String>();
+		DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
+		retval.addAll(dao.getAllProviderNumbers());
+		return retval;
+	}
 
-    /**
-     * @return  */
-    public java.util.ArrayList getPatientTypes(){
-            java.util.ArrayList retval = new java.util.ArrayList();
-         try{
+	public ArrayList getQueryTypes() {
+		ArrayList<SearchCriteria> retval = new ArrayList<SearchCriteria>();
+		List<DemographicQueryFavourite> results = demographicQueryFavouritesDao.findByArchived("1");
+		for (DemographicQueryFavourite result : results) {
+			SearchCriteria sc = new SearchCriteria();
+			sc.id = String.valueOf(result.getId());
+			sc.queryName = result.getQueryName();
 
-              java.sql.ResultSet rs;
-              rs = DBHandler.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");
+			retval.add(sc);
+		}
 
-              while (rs.next()) {
-                retval.add( oscar.Misc.getString(rs, "patient_status") );
+		return retval;
+	}
 
-              }
-              rs.close();
-            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
-            return retval;
-    }
+	public void deleteQueryFavourite(String id) {
+		DemographicQueryFavourite d = demographicQueryFavouritesDao.find(Integer.parseInt(id));
+		if (d != null) {
+			d.setArchived("0");
+			demographicQueryFavouritesDao.merge(d);
+		}
+	}
 
-    public java.util.ArrayList getProvidersWithDemographics(){
-            java.util.ArrayList retval = new java.util.ArrayList();
-         try{
-
-              java.sql.ResultSet rs;
-              rs = DBHandler.GetSQL("select distinct provider_no from demographic order by provider_no");
-
-              while (rs.next()) {
-                retval.add( oscar.Misc.getString(rs, "provider_no") );
-
-              }
-              rs.close();
-            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
-            return retval;
-    }
-
-    public java.util.ArrayList getQueryTypes(){
-            java.util.ArrayList retval = new java.util.ArrayList();
-            List<DemographicQueryFavourite> results = demographicQueryFavouritesDao.findByArchived("1");
-            for(DemographicQueryFavourite result:results) {
-            	SearchCriteria sc = new SearchCriteria();
-                sc.id = String.valueOf(result.getId());
-                sc.queryName = result.getQueryName();
-
-                retval.add( sc );
-            }
-
-            return retval;
-    }
-
-
-    public void deleteQueryFavourite(String id){
-    	DemographicQueryFavourite d = demographicQueryFavouritesDao.find(Integer.parseInt(id));
-    	if(d != null) {
-    		d.setArchived("0");
-    		demographicQueryFavouritesDao.merge(d);
-    	}
-    }
-
-
-
-public class SearchCriteria {
-    public String id;
-    public String queryName;
-};
+	public class SearchCriteria {
+		public String id;
+		public String queryName;
+	}
 }
