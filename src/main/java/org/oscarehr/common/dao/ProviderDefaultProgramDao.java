@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.ProviderDefaultProgram;
 import org.springframework.stereotype.Repository;
 
@@ -86,4 +87,14 @@ public class ProviderDefaultProgramDao extends AbstractDao<ProviderDefaultProgra
        }
     }
 
+	public List<Program> findProgramsByProvider(String providerNo) {
+		String sql = "FROM Program p WHERE p.id IN (SELECT pdp.programId FROM ProviderDefaultProgram pdp WHERE pdp.providerNo = :pr)";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("pr", providerNo);
+		
+		@SuppressWarnings("unchecked")
+        List<Program> results = query.getResultList();
+        return results;
+	    
+    }
 }

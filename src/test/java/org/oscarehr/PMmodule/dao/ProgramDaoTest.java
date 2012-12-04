@@ -21,36 +21,28 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
+package org.oscarehr.PMmodule.dao;
 
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.ProviderDefaultProgram;
 import org.oscarehr.util.SpringUtils;
 
-public class ProviderDefaultProgramDaoTest extends DaoTestFixtures {
+public class ProgramDaoTest extends DaoTestFixtures {
 
-	private ProviderDefaultProgramDao dao = SpringUtils.getBean(ProviderDefaultProgramDao.class);
+	private ProgramDao dao = SpringUtils.getBean(ProgramDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("provider_default_program", "program", "admission", "program_queue", "Facility");
+		SchemaUtils.restoreTable("program");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		ProviderDefaultProgram entity = new ProviderDefaultProgram();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testGetActivePrograms() {
+		assertNotNull(dao.getActivePrograms());
 	}
-	
-	@Test
-	public void testFindProgramsByProvider() {
-		assertNotNull(dao.findProgramsByProvider("100"));
-	}
+
 }

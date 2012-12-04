@@ -272,7 +272,7 @@ public class ProgramDao extends HibernateDaoSupport {
     }
     
     public List<Program> getActivePrograms() {
-        String queryStr = "FROM Program p WHERE p.type != 'community' and p.programStatus='active'";
+        String queryStr = "FROM Program p WHERE p.type <> 'community' and p.programStatus = 'active'";
 
         @SuppressWarnings("unchecked")
         List<Program> rs = getHibernateTemplate().find(queryStr);
