@@ -24,6 +24,9 @@
 
 --%>
 
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="org.oscarehr.common.dao.PatientLabRoutingDao"%>
+<%@page import="org.oscarehr.common.model.PatientLabRouting"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="java.net.URLEncoder"%>
@@ -115,14 +118,10 @@ if (remoteFacilityIdString==null) // local lab
 	reqIDL = LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID));
 	reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
-	String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
-
-	ResultSet rs = DBHandler.GetSQL(sql);
-
-	while(rs.next()){
-	    demographicID = oscar.Misc.getString(rs,"demographic_no");
+	PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class); 
+	for(PatientLabRouting r : dao.findByLabNoAndLabType(ConversionUtils.fromIntString(segmentID), "HL7")) {
+		demographicID = "" + r.getDemographicNo();
 	}
-	rs.close();
 
 	if(demographicID != null && !demographicID.equals("")&& !demographicID.equals("0")){
 	    isLinkedToDemographic=true;
