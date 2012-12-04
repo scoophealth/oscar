@@ -140,7 +140,7 @@ GregorianCalendar now=new GregorianCalendar();
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%@page import="org.oscarehr.util.DbConnectionFilter"%>
-<%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
+<html:html locale="true">
 <head>
 <title><bean:message key="tickler.ticklerMain.title"/></title>
 
