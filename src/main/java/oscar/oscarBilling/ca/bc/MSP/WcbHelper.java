@@ -25,12 +25,11 @@
 
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
-
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.billing.CA.BC.dao.WcbDao;
+import org.oscarehr.billing.CA.BC.model.Wcb;
+import org.oscarehr.util.SpringUtils;
+import oscar.util.ConversionUtils;
 
 /**
  *
@@ -51,23 +50,17 @@ public class WcbHelper {
    public ArrayList getEmployers(String demographic_no){
       ArrayList employers  = new ArrayList();
       
-      try{
-      
-      String sql = "select distinct w_empname,w_emparea,w_empphone,w_opaddress,w_opcity from wcb where demographic_no = '"+demographic_no+"'";
-      ResultSet rs = DBHandler.GetSQL(sql);
-      while(rs.next()){         
+      WcbDao dao = SpringUtils.getBean(WcbDao.class);
+      for(Wcb w : dao.findByDemographic(ConversionUtils.fromIntString(demographic_no))) {
          WCBEmployer wcbEmp = new WCBEmployer();
-            wcbEmp.w_empname   = rs.getString("w_empname");
-            wcbEmp.w_emparea   = rs.getString("w_emparea");
-            wcbEmp.w_empphone  = rs.getString("w_empphone");
-            wcbEmp.w_opaddress = rs.getString("w_opaddress");
-            wcbEmp.w_opcity    = rs.getString("w_opcity");         
+            wcbEmp.w_empname   = w.getEmpName();
+            wcbEmp.w_emparea   = w.getEmpArea();
+            wcbEmp.w_empphone  = w.getEmpPhone();
+            wcbEmp.w_opaddress = w.getOpAddress();
+            wcbEmp.w_opcity    = w.getOpCity();         
          employers.add(wcbEmp);                  
       }
-      rs.close();                    
-      }catch (Exception e){
-         MiscUtils.getLogger().error("Error", e);        
-      }
+      
       return employers;
    }
    
@@ -75,61 +68,45 @@ public class WcbHelper {
    private void getInfo(String demographic_no){
       empList = new ArrayList();
       claimList = new ArrayList();
-      try{
       
-      String sql = "select * from wcb where demographic_no = '"+demographic_no+"'";
-      ResultSet rs = DBHandler.GetSQL(sql);
-      while(rs.next()){
-         MiscUtils.getLogger().debug("wcbno "+rs.getString("w_wcbno"));
-         WCBClaim wcb = new WCBClaim(rs.getString("w_wcbno"));
+      WcbDao dao = SpringUtils.getBean(WcbDao.class);
+      for(Wcb w : dao.findByDemographic(ConversionUtils.fromIntString(demographic_no))) {
+
+
+         WCBClaim wcb = new WCBClaim(w.getWcbNo());
          WCBEmployer wcbEmp = new WCBEmployer();
-            wcbEmp.w_empname   = rs.getString("w_empname");
-            wcbEmp.w_emparea   = rs.getString("w_emparea");
-            wcbEmp.w_empphone  = rs.getString("w_empphone");
-            wcbEmp.w_opaddress = rs.getString("w_opaddress");
-            wcbEmp.w_opcity    = rs.getString("w_opcity");
+            wcbEmp.w_empname   = w.getEmpName();
+            wcbEmp.w_emparea   = w.getEmpArea();
+            wcbEmp.w_empphone  = w.getEmpPhone();
+            wcbEmp.w_opaddress = w.getOpAddress();
+            wcbEmp.w_opcity    = w.getOpCity();
          wcb.wcbEmp = wcbEmp;
          empList.add(wcbEmp);
          
          claimList.add(wcb);
       }
-      rs.close();                    
-      }catch (Exception e){
-         MiscUtils.getLogger().error("Error", e);        
-      }
-      
    }
    
    public ArrayList getClaimInfo(String demographic_no){      
       ArrayList claimList = new ArrayList();
-      try{
-      
-      String sql = "select distinct w_empname,w_emparea,w_empphone,w_opaddress,w_opcity,w_wcbno,w_icd9,w_bp,w_side,w_noi,w_doi from wcb where demographic_no = '"+demographic_no+"'";
-
-
-
-      ResultSet rs = DBHandler.GetSQL(sql);
-      while(rs.next()){
+      WcbDao dao = SpringUtils.getBean(WcbDao.class);
+      for(Wcb w : dao.findByDemographic(ConversionUtils.fromIntString(demographic_no))) {
          
-         WCBClaim wcb = new WCBClaim(rs.getString("w_wcbno"));
-         wcb.w_icd9 = rs.getString("w_icd9");
-         wcb.w_bp   = rs.getString("w_bp");
-         wcb.w_side = rs.getString("w_side");
-         wcb.w_noi  = rs.getString("w_noi");
-         wcb.w_doi  = rs.getString("w_doi");
+         WCBClaim wcb = new WCBClaim(w.getWcbNo());
+         wcb.w_icd9 = w.getIcd9();
+         wcb.w_bp   = w.getBp();
+         wcb.w_side = w.getSide();
+         wcb.w_noi  = w.getNoi();
+         wcb.w_doi  = ConversionUtils.toDateString(w.getDoi());
 
          WCBEmployer wcbEmp = new WCBEmployer();
-            wcbEmp.w_empname   = rs.getString("w_empname");
-            wcbEmp.w_emparea   = rs.getString("w_emparea");
-            wcbEmp.w_empphone  = rs.getString("w_empphone");
-            wcbEmp.w_opaddress = rs.getString("w_opaddress");
-            wcbEmp.w_opcity    = rs.getString("w_opcity");
+            wcbEmp.w_empname   = w.getEmpName();
+            wcbEmp.w_emparea   = w.getEmpArea();
+            wcbEmp.w_empphone  = w.getEmpPhone();
+            wcbEmp.w_opaddress = w.getOpAddress();
+            wcbEmp.w_opcity    = w.getOpCity();
          wcb.wcbEmp = wcbEmp;                  
          claimList.add(wcb);
-      }
-      rs.close();                    
-      }catch (Exception e){
-         MiscUtils.getLogger().error("Error", e);        
       }
       return claimList;
    }
