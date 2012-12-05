@@ -2432,6 +2432,9 @@
                         <forward name="success" path="/billing/CA/ON/genRADesc.jsp" />                        
                         <forward name="failure" path="/failure.jsp" />                       
 		</action>
+		
+		 <action path="/oscarEncounter/displayContacts" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayContactsAction" />
+		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />

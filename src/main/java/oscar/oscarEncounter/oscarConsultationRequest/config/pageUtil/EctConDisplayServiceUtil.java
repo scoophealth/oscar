@@ -98,6 +98,7 @@ public class EctConDisplayServiceUtil
             websiteVec.add(ps.getWebSite());
             emailVec.add(ps.getEmailAddress());
             specTypeVec.add(ps.getSpecialtyType());
+            specIdVec.add(ps.getId().toString());
         }
     }
 

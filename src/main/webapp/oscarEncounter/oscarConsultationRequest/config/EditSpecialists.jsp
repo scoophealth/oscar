@@ -112,13 +112,13 @@ function BackToOscar()
 							<td><!--<div class="ChooseRecipientsBox1">--> <%
 
                                  for(int i=0;i < displayServiceUtil.specIdVec.size(); i++){
-                                 String  specId     = (String) displayServiceUtil.specIdVec.elementAt(i);
-                                 String  fName      = (String) displayServiceUtil.fNameVec.elementAt(i);
-                                 String  lName      = (String) displayServiceUtil.lNameVec.elementAt(i);
-                                 String  proLetters = (String) displayServiceUtil.proLettersVec.elementAt(i);
-                                 String  address    = (String) displayServiceUtil.addressVec.elementAt(i);
-                                 String  phone      = (String) displayServiceUtil.phoneVec.elementAt(i);
-                                 String  fax        = (String) displayServiceUtil.faxVec.elementAt(i);
+                                 String  specId     = displayServiceUtil.specIdVec.elementAt(i);
+                                 String  fName      = displayServiceUtil.fNameVec.elementAt(i);
+                                 String  lName      = displayServiceUtil.lNameVec.elementAt(i);
+                                 String  proLetters = displayServiceUtil.proLettersVec.elementAt(i);
+                                 String  address    = displayServiceUtil.addressVec.elementAt(i);
+                                 String  phone      = displayServiceUtil.phoneVec.elementAt(i);
+                                 String  fax        = displayServiceUtil.faxVec.elementAt(i);
                               %>
 							
 						<tr>

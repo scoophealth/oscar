@@ -29,11 +29,6 @@
 <%@page import="org.oscarehr.common.model.DemographicContact"%>
 
 <%
-  if (session.getAttribute("user") == null) {
-    response.sendRedirect("../logout.jsp");
-  }
-%>
-<%
   String demographic_no = request.getParameter("demographic_no");
   if(demographic_no == null) {
 	  demographic_no = (String)request.getAttribute("demographic_no");
@@ -220,6 +215,8 @@ jQuery(document).ready(function() {
 					setInput(num,'contact','id','<%=dc.getId()%>');
 					setSelect(num,'contact','role','<%=dc.getRole()%>');
 					setSelect(num,'contact','type','<%=dc.getType()%>');
+					setSelect(num,'contact','consentToContact','<%=dc.isConsentToContact()?"1":"0"%>');
+					setSelect(num,'contact','active','<%=dc.isActive()?"1":"0"%>');
 					setInput(num,'contact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'contact','contactName','<%=dc.getContactName()%>');
 					setTextarea(num,'contact','note','<%=dc.getNote()!=null?dc.getNote():""%>');
@@ -238,6 +235,8 @@ jQuery(document).ready(function() {
 					var num = jQuery("#procontact_num").val();
 					setInput(num,'procontact','id','<%=dc.getId()%>');
 					setSelect(num,'procontact','role','<%=dc.getRole()%>');
+					setSelect(num,'procontact','consentToContact','<%=dc.isConsentToContact()?"1":"0"%>');
+					setSelect(num,'procontact','active','<%=dc.isActive()?"1":"0"%>');
 					setSelect(num,'procontact','type','<%=dc.getType()%>');
 					setInput(num,'procontact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'procontact','contactName','<%=dc.getContactName()%>');
