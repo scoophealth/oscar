@@ -34,6 +34,7 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
 <%
 String demo=request.getParameter("demographicNo");
+String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <script type="text/javascript">
 
@@ -58,7 +59,7 @@ String demo=request.getParameter("demographicNo");
 </script>
 
 <!--dummmy div to force browser to allocate space -->
-<caisi:isModuleLoad moduleName="caisi">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.photo" rights="r">
 <c:choose>
 				<c:when test="${not empty requestScope.image_exists}">
 					<c:set var="clientId" value="${demographicNo}"></c:set>
@@ -72,7 +73,8 @@ String demo=request.getParameter("demographicNo");
 						onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;" />
 				</c:otherwise>
 			</c:choose>
-</caisi:isModuleLoad>
+</security:oscarSec>
+
 
 <div id="rightColLoader" style="width: 100%;">
 <h3 style="width: 100%; background-color: #CCCCFF;">
