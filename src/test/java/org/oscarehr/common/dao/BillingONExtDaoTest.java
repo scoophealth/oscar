@@ -24,9 +24,11 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -479,6 +481,11 @@ public class BillingONExtDaoTest extends DaoTestFixtures {
 		
 		BillingONExt billingRecord = dao.getBillToInactive(cHeader1);
 		assertNull(billingRecord);
+	}
+	
+	@Test
+	public void testFind() {
+		assertNotNull(dao.find(100, "KEY", new Date(), new Date()));
 	}
 	
 //	@Test @Ignore

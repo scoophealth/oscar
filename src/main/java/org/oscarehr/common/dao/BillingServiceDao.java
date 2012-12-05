@@ -39,6 +39,7 @@ import org.springframework.stereotype.Repository;
 import oscar.util.UtilDateUtilities;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class BillingServiceDao extends AbstractDao<BillingService> {
 	static public final String BC = "BC";
 
@@ -55,7 +56,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		q.setParameter("serviceCode", serviceCode);
 		q.setParameter("now", new Date());
 		
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> results = q.getResultList();
 		
 		return results;
@@ -65,7 +66,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and sliFlag = TRUE");
 		query.setParameter("code", code + "%");
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		return list.size() > 0;
 	}
@@ -75,7 +76,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("code", code + "%");
 		query.setParameter("region", region);
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
@@ -84,7 +85,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode = ? order by bs.billingserviceDate desc");
 		query.setParameter(1, code);
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
@@ -94,7 +95,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter(1, code);
 		query.setParameter(2, date);
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
@@ -104,7 +105,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode IN (:codes)");
 		query.setParameter("codes", codes);
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
@@ -113,7 +114,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		Query query = entityManager.createQuery("select bs from BillingService bs where bs.serviceCode LIKE :serviceCode");
 		query.setParameter("serviceCode", "\\_%");
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
@@ -133,7 +134,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("billDate", billingDate);
 		// query.setParameter("order", orderByClause);
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 
 		return list;
@@ -146,7 +147,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("code", code + "%");
 		query.setParameter("billDate", Calendar.getInstance().getTime());
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		if (list.size() == 0) { return "----"; }
 		return list.get(0).getDescription();
@@ -160,7 +161,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
                 query.setParameter("billDate", billingDate);
 		// String sql = "select * from billingservice where service_code like '"+str+"' or description like '%"+str+"%' ";
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
@@ -176,7 +177,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("searchStr", str + "%");
 		query.setParameter("billDate", billingDate);
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> list = query.getResultList();
 		if (list == null || list.size() < 1) {
 			return null;
@@ -196,7 +197,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
             query.setParameter("searchStr", privateCode + "%");
             query.setParameter("billDate", billingDate);
 
-            @SuppressWarnings("unchecked")
+            
             List<BillingService> list = query.getResultList();
             if (list == null || list.isEmpty()) {
                     return null;
@@ -256,7 +257,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		}
 		query.setParameter(2, getLatestServiceDate(date,bcode));
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> results = query.getResultList();
 
 		if (results.size() > 0) {
@@ -279,7 +280,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		}
 		query.setParameter(2, getLatestServiceDate(date,bcode));
 
-		@SuppressWarnings("unchecked")
+		
 		List<BillingService> results = query.getResultList();
 
 		if(results.size()>0) {
@@ -289,7 +290,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<BillingService> findBillingCodesByFontStyle(Integer styleId) {
 		String sql = "select bs from BillingService bs where bs.displayStyle = ?";
 		Query query = entityManager.createQuery(sql);
@@ -298,7 +299,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<BillingService> findByRegionGroupAndType(String billRegion, String serviceGroup, String serviceType) {
 		Query query = entityManager.createQuery("SELECT b FROM BillingService b, CtlBillingService c" +
 				" WHERE b.serviceCode= c.serviceCode and b.region= :region and c.serviceGroup= :serviceGroup " + 
@@ -309,15 +310,13 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return query.getResultList();
     }
 	
-	@SuppressWarnings("unchecked")
     public List<BillingService> findByServiceCodeOrDescription(String serviceCode) {
 		Query query = createQuery("bs", "bs.serviceCode like :sc or bs.description like :ds");
 		query.setParameter("sc", serviceCode);
 		query.setParameter("ds", "%" + serviceCode + "%");
 		return query.getResultList();
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@NativeSql("billingservice")
     public List<BillingService> findMostRecentByServiceCode(String serviceCode) {
 		Query query = entityManager.createNativeQuery("select * from billingservice b where b.service_code like :serviceCode and b.billingservice_date = " +
@@ -327,13 +326,12 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	}
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<BillingService> findAll() {
 	    Query query = entityManager.createQuery("FROM BillingService bs ORDER BY TRIM(bs.description)");
 	    return query.getResultList();
     }
 
-	@SuppressWarnings("unchecked")
+	
     public List<Object[]> findSomethingByBillingId(Integer billingNo) {
 		String sql = "FROM BillingService bs, Wcb w, Billing b " +
 				"WHERE wcb.billingNo = b.id " +
@@ -345,5 +343,20 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("bNo", billingNo);
 		return query.getResultList();
 
+    }
+
+	public List<BillingService> findGst(String code, Date date) {
+		String sql = "FROM BillingService b " +
+				"WHERE b.serviceCode = :code " +
+				"AND b.billingserviceDate = " +
+				"(" +
+				"SELECT MAX(b2.billingserviceDate) FROM BillingService b2 " +
+				"	WHERE b2.serviceCode = :code " +
+				"	AND b2.billingserviceDate <= :date" +
+				")";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("code", code);
+		query.setParameter("date", date);
+		return query.getResultList();
     }
 }

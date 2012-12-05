@@ -98,6 +98,7 @@ public class BillingDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
+
 	public void testFindByManyThings() {
 		boolean[] tt = new boolean[] { true,   	  true,   	  true,   	  true,   
 				true, 	true, 	true, 	false,
@@ -121,4 +122,7 @@ public class BillingDaoTest extends DaoTestFixtures {
 			assertNotNull(dao.findByManyThings("STS", "100", "2010-01-01", "2012-12-31", "100", tt[i], tt[i + 1], tt[i + 2], tt[i + 3]));
 		}
 	} 
+	public void testGetByManyThings() {
+		assertNotNull(dao.findBillingsByManyThings(100, new Date(), "OHIP", "SVC"));
+	}
 }
