@@ -50,4 +50,9 @@ public class WcbDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+        
+        @Test
+        public void testFindByDemographic() {
+            assertNotNull(dao.findByDemographic(100));
+        }
 }
