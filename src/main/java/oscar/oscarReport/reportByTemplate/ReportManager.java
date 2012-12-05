@@ -27,11 +27,8 @@
 //   -Saves/loads parameters
 //   -Parses/saves all XML
 
-
-
 package oscar.oscarReport.reportByTemplate;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,344 +42,319 @@ import org.oscarehr.common.model.ReportTemplates;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilXML;
 
 /**
  * Created on December 27, 2006, 10:54 AM
+ * 
  * @apavel (Paul)
  */
 public class ReportManager {
 
 	private ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
 
-    /** Creates a new instance of reportManager */
-    public ReportManager() {
-    }
+	/** Creates a new instance of reportManager */
+	public ReportManager() {
+	}
 
-    public ArrayList<ReportObjectGeneric> getReportTemplatesNoParam() {
-        String sql = "SELECT templateid, templatetitle, templatedescription FROM reportTemplates WHERE active=1";
-        ArrayList<ReportObjectGeneric> reports = new ArrayList<ReportObjectGeneric>();
-        try {
+	public ArrayList<ReportObjectGeneric> getReportTemplatesNoParam() {
+		ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
+		ArrayList<ReportObjectGeneric> reports = new ArrayList<ReportObjectGeneric>();
+		for (ReportTemplates r : dao.findActive()) {
+			ReportObjectGeneric curReport = new ReportObjectGeneric(r.getId().toString(), r.getTemplateTitle(), r.getTemplateDescription());
+			reports.add(curReport);
+		}
+		return reports;
+	}
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                ReportObjectGeneric curReport = new ReportObjectGeneric(rs.getString("templateid"), rs.getString("templatetitle"), rs.getString("templatedescription"));
-                reports.add(curReport);
-            }
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
-        }
-        return reports;
-    }
+	//gets the ReportObject without the parameters (don't always need parameters, no need to parse XML)
+	public ReportObject getReportTemplateNoParam(String templateid) {
+		ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
+		ReportTemplates rt = dao.find(ConversionUtils.fromIntString(templateid));
 
+		ReportObjectGeneric curReport = new ReportObjectGeneric();
+		if (rt == null) {
+			return curReport;
+		}
 
+		String templatetitle = rt.getTemplateTitle();
+		String templatedescription = rt.getTemplateDescription();
+		curReport.setTemplateId(templateid);
+		curReport.setTitle(templatetitle);
+		curReport.setDescription(templatedescription);
 
-    //gets the ReportObject without the parameters (don't always need parameters, no need to parse XML)
-    public ReportObject getReportTemplateNoParam(String templateid) {
-        String sql = "SELECT * FROM reportTemplates WHERE templateId='" + templateid + "'";
-        ReportObjectGeneric curReport = new ReportObjectGeneric();
-        try {
+		return curReport;
+	}
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                String templatetitle = rs.getString("templatetitle");
-                String templatedescription = rs.getString("templatedescription");
-                curReport.setTemplateId(templateid);
-                curReport.setTitle(templatetitle);
-                curReport.setDescription(templatedescription);
-            }
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
-        }
-        return curReport;
-    }
+	@SuppressWarnings("unchecked")
     public ReportObject getReportTemplate(String templateid) {
-        String sql = "SELECT * FROM reportTemplates WHERE templateId='" + templateid + "'";
-        try {
+		ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
+		ReportTemplates rt = dao.find(ConversionUtils.fromIntString(templateid));
+		if (rt == null) {
+			return new ReportObjectGeneric(templateid, "Template Not Found");
+		}
+		
+		try {
+			String templatetitle = rt.getTemplateTitle();
+			String templatedescription = rt.getTemplateDescription();
+			String type = rt.getType() == null ? "" : rt.getType();
+			String paramXML = rt.getTemplateXml();
+			ArrayList<Parameter> params = new ArrayList<Parameter>();
+			if (!paramXML.equals("")) {
+				paramXML = UtilXML.escapeXML(paramXML); //escapes anomalies such as "date >= {mydate}" the '>' character
+				SAXBuilder parser = new SAXBuilder();
+				Document doc = parser.build(new java.io.ByteArrayInputStream(paramXML.getBytes()));
+				Element root = doc.getRootElement();
+				List<Element> paramsXml = root.getChildren("param");
+				for (int i = 0; i < paramsXml.size(); i++) {
+					Element param = paramsXml.get(i);
+					String paramid = param.getAttributeValue("id");
+					if (paramid == null) return new ReportObjectGeneric(templateid, "Error: Param id not found");
+					String paramtype = param.getAttributeValue("type");
+					if (paramtype == null) return new ReportObjectGeneric(templateid, "Error: Param type not found on param '" + paramid + "'");
+					String paramdescription = param.getAttributeValue("description");
+					if (paramdescription == null) return new ReportObjectGeneric(templateid, "Error: Param description not found on param '" + paramid + "'");
+					List<Element> choicesXml = param.getChildren("choice");
+					ArrayList<Choice> choices = new ArrayList<Choice>();
+					String paramquery = param.getChildText("param-query"); //if retrieving choices from the DB
+					if (paramquery != null) {
+						for(Object[] o : dao.runNativeQuery(paramquery)) {							
+							String choiceid = "", choicetext = "";
+							if (o.length >= 1) {
+								choiceid = String.valueOf(o[0]);
+							}
+							
+							if (o.length >= 2) {
+								choicetext = String.valueOf(o[1]);
+							}
+							
+							if (choicetext == null) {
+								choicetext = choiceid;
+							}
+							Choice curchoice = new Choice(choiceid, choicetext);
+							choices.add(curchoice);
+						}
+					}
+					for (int i2 = 0; i2 < choicesXml.size(); i2++) {
+						Element choice = choicesXml.get(i2);
+						String choiceid = choice.getAttributeValue("id");
+						String choicetext = choice.getTextTrim();
+						if (choiceid == null) choiceid = choicetext;
+						Choice curchoice = new Choice(choiceid, choicetext);
+						choices.add(curchoice);
+					}
+					Parameter curparam = new Parameter(paramid, paramtype, paramdescription, choices);
+					params.add(curparam);
+				}
+			}
+			ReportObjectGeneric curreport = new ReportObjectGeneric(templateid, templatetitle, templatedescription, type, params);
+			return curreport;
+			
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			return new ReportObjectGeneric(templateid, "Parameter Parsing Exception: check the configuration file");
+		}
+	}
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                String templatetitle = rs.getString("templatetitle");
-                String templatedescription = rs.getString("templatedescription");
-                String type = rs.getString("type") == null?"":rs.getString("type");
-                String paramXML = rs.getString("templatexml");
-                ArrayList<Parameter> params = new ArrayList<Parameter>();
-                if (!paramXML.equals("")) {
-                    paramXML = UtilXML.escapeXML(paramXML);  //escapes anomalies such as "date >= {mydate}" the '>' character
-                    SAXBuilder parser = new SAXBuilder();
-                    Document doc = parser.build(new java.io.ByteArrayInputStream(paramXML.getBytes()));
-                    Element root = doc.getRootElement();
-                    List<Element> paramsXml = root.getChildren("param");
-                    for (int i=0; i<paramsXml.size(); i++) {
-                        Element param = paramsXml.get(i);
-                        String paramid = param.getAttributeValue("id");
-                        if (paramid == null) return new ReportObjectGeneric(templateid, "Error: Param id not found");
-                        String paramtype = param.getAttributeValue("type");
-                        if (paramtype == null) return new ReportObjectGeneric(templateid, "Error: Param type not found on param '" + paramid + "'");
-                        String paramdescription = param.getAttributeValue("description");
-                        if (paramdescription == null) return new ReportObjectGeneric(templateid, "Error: Param description not found on param '" + paramid + "'");
-                        List<Element> choicesXml = param.getChildren("choice");
-                        ArrayList<Choice> choices = new ArrayList<Choice>();
-                        String paramquery = param.getChildText("param-query"); //if retrieving choices from the DB
-                        if (paramquery != null) {
-                            ResultSet rschoices = DBHandler.GetSQL(paramquery);
-                            while (rschoices.next()) {
-                                String choiceid = rschoices.getString(1);
-                                String choicetext = rschoices.getString(2);
-                                if (choicetext == null) choicetext = choiceid;
-                                Choice curchoice = new Choice(choiceid, choicetext);
-                                choices.add(curchoice);
-                            }
-                        }
-                        for (int i2=0; i2<choicesXml.size(); i2++) {
-                            Element choice = choicesXml.get(i2);
-                            String choiceid = choice.getAttributeValue("id");
-                            String choicetext = choice.getTextTrim();
-                            if (choiceid == null) choiceid = choicetext;
-                            Choice curchoice = new Choice(choiceid, choicetext);
-                            choices.add(curchoice);
-                        }
-                        Parameter curparam = new Parameter(paramid, paramtype, paramdescription, choices);
-                        params.add(curparam);
-                    }
-                }
-                ReportObjectGeneric curreport = new ReportObjectGeneric(templateid, templatetitle, templatedescription, type, params);
-                return curreport;
-            } else {
-                return new ReportObjectGeneric(templateid, "Template Not Found");
-            }
-        } catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);
-            return new ReportObjectGeneric(templateid, "Parameter Parsing Exception: check the configuration file");
-        }
-        /*
-         *
-<param id="preventionType" type="list" description="Prevention Type">
-      <element id="dTap">dTap</element>
-      <element id="DTaP-IPV">DTaP-IPV</element>
-      <element id="Flu">Influenza</element>
-      <element id="Hib">Hib</element>
-      <element id="MAM">Mammogram</element>
-      <element id="PAP">Pap smear</element>
-      <element id="Pneu-C">Pneu-C</element>
-      <element id="Pneumovax">Pneumovax</element>
-      <element id="Td">Td</element>
-      <element id="TdP">TdP</element>
-      <element id="VZ">VZ</element>
-</param>*/
-    }
+	public String getSQL(String templateId) {
+		ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
+		ReportTemplates rt = dao.find(ConversionUtils.fromIntString(templateId));
+		if (rt == null) {
+			return "";
+		}
+		return rt.getTemplateSql();
+	}
 
-    public String getSQL(String templateId) {
-        String sql = "SELECT templatesql FROM reportTemplates WHERE templateid='" + templateId + "'";
-        try {
+	public String getTemplateXml(String templateid) {
+		ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
+		ReportTemplates rt = dao.find(ConversionUtils.fromIntString(templateid));
+		if (rt == null) {
+			return "";
+		}
+		return rt.getTemplateXml();
+	}
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                return rs.getString("templatesql");
-            } else return "";
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
-            return "";
-        }
-    }
+	public String updateTemplateXml(String xmltext) {
+		for (ReportTemplates r : dao.findAll()) {
+			dao.remove(r.getId());
+		}
+		
+		ReportTemplates r = new ReportTemplates();
+		r.setTemplateTitle("globalxml");
+		r.setTemplateDescription("Global XML File");
+		r.setTemplateSql("");
+		r.setTemplateXml(UtilXML.unescapeXML(xmltext));
+		r.setActive(0);
+		r.setType("");
 
-    public String getTemplateXml(String templateid) {
-        String sql = "SELECT templatexml FROM reportTemplates WHERE templateid='" + templateid + "'";
-        String xml = "";
-        try {
+		return loadInReports();
+	}
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) xml = rs.getString("templatexml");
-            if (xml == null) xml = "";
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
-        }
-        return xml;
-    }
-
-    public String updateTemplateXml(String xmltext) {
-          
-        for(ReportTemplates r:dao.findAll()) {
-        	dao.remove(r.getId());
-        }
-        ReportTemplates r = new ReportTemplates();
-        r.setTemplateTitle("globalxml");
-        r.setTemplateDescription("Global XML File");
-        r.setTemplateSql("");
-        r.setTemplateXml(UtilXML.unescapeXML(xmltext));
-        r.setActive(0);
-        r.setType("");
-        
-        
-        return loadInReports();
-    }
-
-    //templateid must not repeat
+	//templateid must not repeat
+	@SuppressWarnings("unchecked")
     public String loadInReports() {
-        String xml = getTemplateXml("1");
-        if (xml == "") return "Error: Could not save the template file in the database.";
-        try {
-            SAXBuilder parser = new SAXBuilder();
-            xml = UtilXML.escapeXML(xml);  //escapes anomalies such as "date >= {mydate}" the '>' character
-            //xml = UtilXML.escapeAllXML(xml, "<param-list>");  //escapes all markup in <report> tag, otherwise can't retrieve element.getText()
-            Document doc = parser.build(new java.io.ByteArrayInputStream(xml.getBytes()));
-            Element root = doc.getRootElement();
-            List<Element> reports = root.getChildren("report");
+		String xml = getTemplateXml("1");
+		if (xml == "") return "Error: Could not save the template file in the database.";
+		try {
+			SAXBuilder parser = new SAXBuilder();
+			xml = UtilXML.escapeXML(xml); //escapes anomalies such as "date >= {mydate}" the '>' character
+			//xml = UtilXML.escapeAllXML(xml, "<param-list>");  //escapes all markup in <report> tag, otherwise can't retrieve element.getText()
+			Document doc = parser.build(new java.io.ByteArrayInputStream(xml.getBytes()));
+			Element root = doc.getRootElement();
+			List<Element> reports = root.getChildren("report");
 
-            for (int i=0; i<reports.size(); i++) {
-                Element report = reports.get(i);
+			for (int i = 0; i < reports.size(); i++) {
+				Element report = reports.get(i);
 
-                String templateid = StringEscapeUtils.escapeSql(report.getAttributeValue("id"));
-                if (templateid == null) return "Error: Attribute 'id' missing in <report> tag";
+				String templateid = StringEscapeUtils.escapeSql(report.getAttributeValue("id"));
+				if (templateid == null) return "Error: Attribute 'id' missing in <report> tag";
 
-                String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
-                if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
+				String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
+				if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
 
-                String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
-                if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
+				String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
+				if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
 
-                String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
-                if (querysql == null || querysql.length() == 0) return "Error: The sql query is missing in <report> tag";
-                XMLOutputter reportout = new XMLOutputter();
-                String reportXML = reportout.outputString(report).trim();
-                reportXML = UtilXML.unescapeXML(reportXML);
-                reportXML = StringEscapeUtils.escapeSql(reportXML);
-                String active = report.getAttributeValue("active");
-                int activeint;
-                try {
-                    activeint = Integer.parseInt(active);
-                } catch (Exception e) {
-                    activeint = 1;
-                }
-                String sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active) " +
-                        "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + reportXML + "', " + activeint + ")";
+				String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
+				if (querysql == null || querysql.length() == 0) return "Error: The sql query is missing in <report> tag";
+				XMLOutputter reportout = new XMLOutputter();
+				String reportXML = reportout.outputString(report).trim();
+				reportXML = UtilXML.unescapeXML(reportXML);
+				reportXML = StringEscapeUtils.escapeSql(reportXML);
+				String active = report.getAttributeValue("active");
+				int activeint;
+				try {
+					activeint = Integer.parseInt(active);
+				} catch (Exception e) {
+					activeint = 1;
+				}
+				
+				ReportTemplates r = new ReportTemplates();
+				r.setTemplateTitle(templateTitle);
+				r.setTemplateDescription(templateDescription);
+				r.setTemplateSql(querysql);
+				r.setTemplateXml(reportXML);
+				r.setActive(activeint);
+				r.setType("");
+				dao.persist(r);
 
-                ReportTemplates r = new ReportTemplates();
-                r.setTemplateTitle(templateTitle);
-                r.setTemplateDescription(templateDescription);
-                r.setTemplateSql(querysql);
-                r.setTemplateXml(reportXML);
-                r.setActive(activeint);
-                r.setType("");
-                dao.persist(r);
-               
-            }
-        } catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);
-            return "Error parsing template file.";
-        }
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			return "Error parsing template file.";
+		}
 
-        return "Saved Successfully";
-    }
+		return "Saved Successfully";
+	}
 
-    public Document readXml(String xml) throws Exception {
-        SAXBuilder parser = new SAXBuilder();
-        xml = UtilXML.escapeXML(xml);  //escapes anomalies such as "date >= {mydate}" the '>' character
-        //xml  UtilXML.escapeAllXML(xml, "<param-list>");  //escapes all markup in <report> tag, otherwise can't retrieve element.getText()
-        Document doc = parser.build(new java.io.ByteArrayInputStream(xml.getBytes()));
-        if (doc.getRootElement().getName().equals("report")) {
-            Element newRoot = new Element("report-list");
-            Element oldRoot = doc.detachRootElement();
-            newRoot.setContent(oldRoot);
-            doc.removeContent();
-            doc.setRootElement(newRoot);
-        }
-        return doc;
-    }
+	public Document readXml(String xml) throws Exception {
+		SAXBuilder parser = new SAXBuilder();
+		xml = UtilXML.escapeXML(xml); //escapes anomalies such as "date >= {mydate}" the '>' character
+		//xml  UtilXML.escapeAllXML(xml, "<param-list>");  //escapes all markup in <report> tag, otherwise can't retrieve element.getText()
+		Document doc = parser.build(new java.io.ByteArrayInputStream(xml.getBytes()));
+		if (doc.getRootElement().getName().equals("report")) {
+			Element newRoot = new Element("report-list");
+			Element oldRoot = doc.detachRootElement();
+			newRoot.setContent(oldRoot);
+			doc.removeContent();
+			doc.setRootElement(newRoot);
+		}
+		return doc;
+	}
 
-    //returns any error messages
-    //templateId = null if adding a new template
+	//returns any error messages
+	//templateId = null if adding a new template
+	@SuppressWarnings("unchecked")
     public String addUpdateTemplate(String templateId, Document templateXML) {
-        try {
-            Element rootElement = templateXML.getRootElement();
-            List<Element> reports = rootElement.getChildren();
-            for (int i=0; i<reports.size(); i++) {
-                Element report = reports.get(i);
-//reading title
-                String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
-                if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
-//reading description
-                String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
-                if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
-//reading type
-                String type = report.getChildTextTrim("type");
-                if( type == null ) {
-                    type = "";
-                }
-//reading sql
-                String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
-                if (type.equalsIgnoreCase(ReportFactory.SQL_TYPE) && (querysql == null || querysql.length() == 0)) return "Error: The sql query is missing in <report> tag";
-//reading active switch
-                String active = report.getAttributeValue("active");
-                int activeint;
-                try {
-                    activeint = Integer.parseInt(active);
-                } catch (Exception e) {
-                    activeint = 1;
-                }
+		try {
+			Element rootElement = templateXML.getRootElement();
+			List<Element> reports = rootElement.getChildren();
+			for (int i = 0; i < reports.size(); i++) {
+				Element report = reports.get(i);
+				//reading title
+				String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
+				if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
+				//reading description
+				String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
+				if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
+				//reading type
+				String type = report.getChildTextTrim("type");
+				if (type == null) {
+					type = "";
+				}
+				//reading sql
+				String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
+				if (type.equalsIgnoreCase(ReportFactory.SQL_TYPE) && (querysql == null || querysql.length() == 0)) return "Error: The sql query is missing in <report> tag";
+				//reading active switch
+				String active = report.getAttributeValue("active");
+				int activeint;
+				try {
+					activeint = Integer.parseInt(active);
+				} catch (Exception e) {
+					activeint = 1;
+				}
 
-//processing XML for sql storage
-                XMLOutputter templateout = new XMLOutputter();
-                String templateXMLstr = templateout.outputString(report).trim();
-                templateXMLstr = UtilXML.unescapeXML(templateXMLstr);
-                templateXMLstr = StringEscapeUtils.escapeSql(templateXMLstr);
-                String sql = "";
+				//processing XML for sql storage
+				XMLOutputter templateout = new XMLOutputter();
+				String templateXMLstr = templateout.outputString(report).trim();
+				templateXMLstr = UtilXML.unescapeXML(templateXMLstr);
+				templateXMLstr = StringEscapeUtils.escapeSql(templateXMLstr);
 
-                if (templateId == null) {
-                	 ReportTemplates r = new ReportTemplates();
-                     r.setTemplateTitle(templateTitle);
-                     r.setTemplateDescription(templateDescription);
-                     r.setTemplateSql(querysql);
-                     r.setTemplateXml(templateXMLstr);
-                     r.setActive(activeint);
-                     r.setType(type);
-                     dao.persist(r);
-                } else {
-                	ReportTemplates r = dao.find(Integer.parseInt(templateId));
-                	if(r != null) {
-                		r.setTemplateTitle(templateTitle);
-                        r.setTemplateDescription(templateDescription);
-                        r.setTemplateSql(querysql);
-                        r.setTemplateXml(templateXMLstr);
-                        r.setActive(activeint);
-                        r.setType(type);
-                        dao.merge(r);
-                	}
-                    
-                }
-               
-            }
-        } catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);
-            return "Error parsing template file, make sure the root element is set.";
-        }
-        return "Saved Successfully";
-    }
+				if (templateId == null) {
+					ReportTemplates r = new ReportTemplates();
+					r.setTemplateTitle(templateTitle);
+					r.setTemplateDescription(templateDescription);
+					r.setTemplateSql(querysql);
+					r.setTemplateXml(templateXMLstr);
+					r.setActive(activeint);
+					r.setType(type);
+					dao.persist(r);
+				} else {
+					ReportTemplates r = dao.find(Integer.parseInt(templateId));
+					if (r != null) {
+						r.setTemplateTitle(templateTitle);
+						r.setTemplateDescription(templateDescription);
+						r.setTemplateSql(querysql);
+						r.setTemplateXml(templateXMLstr);
+						r.setActive(activeint);
+						r.setType(type);
+						dao.merge(r);
+					}
 
-    public String deleteTemplate(String templateid) {
-    	dao.remove(dao.find(Integer.parseInt(templateid)).getId());
-        return "";
-    }
+				}
 
-    public String addTemplate(String templateXML) {
-        try {
-            Document templateXMLdoc = readXml(templateXML);
-            return addUpdateTemplate(null, templateXMLdoc);
-        } catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);
-            return "Error: Error parsing file, make sure the root element is set.";
-        }
-    }
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			return "Error parsing template file, make sure the root element is set.";
+		}
+		return "Saved Successfully";
+	}
 
-    public String updateTemplate(String templateId, String templateXML) {
-        try {
-            Document templateXMLdoc = readXml(templateXML);
-            return addUpdateTemplate(templateId, templateXMLdoc);
-        } catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);
-            return "Error: Error parsing file";
-        }
-    }
+	public String deleteTemplate(String templateid) {
+		dao.remove(dao.find(Integer.parseInt(templateid)).getId());
+		return "";
+	}
+
+	public String addTemplate(String templateXML) {
+		try {
+			Document templateXMLdoc = readXml(templateXML);
+			return addUpdateTemplate(null, templateXMLdoc);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			return "Error: Error parsing file, make sure the root element is set.";
+		}
+	}
+
+	public String updateTemplate(String templateId, String templateXML) {
+		try {
+			Document templateXMLdoc = readXml(templateXML);
+			return addUpdateTemplate(templateId, templateXMLdoc);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			return "Error: Error parsing file";
+		}
+	}
 
 }

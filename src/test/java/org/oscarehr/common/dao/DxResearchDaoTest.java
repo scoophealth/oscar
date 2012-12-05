@@ -37,7 +37,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DxResearchDaoTest extends DaoTestFixtures {
 
-	private DxresearchDAO dao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
+	private DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
 
 	public DxResearchDaoTest() {
 	}
@@ -51,10 +51,10 @@ public class DxResearchDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testCreate() throws Exception {
-		 Dxresearch dr = new Dxresearch();
-		 EntityDataGenerator.generateTestDataForModelClass(dr);
-		 dao.persist(dr);
-		 assertNotNull(dr.getId());
+		Dxresearch dr = new Dxresearch();
+		EntityDataGenerator.generateTestDataForModelClass(dr);
+		dao.persist(dr);
+		assertNotNull(dr.getId());
 	}
 
 	@Test
@@ -70,5 +70,13 @@ public class DxResearchDaoTest extends DaoTestFixtures {
 	}
 
 
-}
+	@Test
+	public void testCountResearches() {
+		assertNotNull(dao.countResearches("CDE", new Date(), new Date()));
+	}
 
+	@Test
+	public void testCountBillingResearches() {
+		assertNotNull(dao.countBillingResearches("CDE", "DIAG", "CREATOR", new Date(), new Date()));
+	}
+}
