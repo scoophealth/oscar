@@ -38,7 +38,7 @@ public class SurveyTestInstanceDao extends AbstractDao<SurveyTestInstance>{
 	}
 	
 	public SurveyTestInstance getSurveyInstance(Integer surveyId, Integer clientId) {
-		Query query = entityManager.createQuery("select s from SurveyTestInstance s where s.surveyId = ?1 and s.clientId = ?1 order by s.dateCreated DESC");
+		Query query = entityManager.createQuery("select s from SurveyTestInstance s where s.surveyId = ?1 and s.clientId = ?2 order by s.dateCreated DESC");
 		query.setParameter(1,surveyId);
 		query.setParameter(2, clientId);
 		
