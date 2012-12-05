@@ -74,7 +74,7 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 	}
 	
 	public List<MeasurementType> findByTypeDisplayName(String typeDisplayName) {
-		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.typeDisplayName=?2";
+		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.typeDisplayName=?1";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, typeDisplayName);
