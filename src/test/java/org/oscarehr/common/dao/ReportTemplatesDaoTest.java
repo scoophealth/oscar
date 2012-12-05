@@ -36,7 +36,6 @@ public class ReportTemplatesDaoTest extends DaoTestFixtures {
 
 	private ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("reportTemplates");
@@ -48,5 +47,10 @@ public class ReportTemplatesDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindActive() {
+		assertNotNull(dao.findActive());
 	}
 }

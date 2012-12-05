@@ -26,7 +26,6 @@
 package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +36,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
 public class ReportStatusUpdateAction extends DispatchAction {
@@ -118,19 +119,10 @@ public class ReportStatusUpdateAction extends DispatchAction {
     private static String getDemographicIdFromLab(String labType, int labNo)
     {
     	String demographicID="";
-        try{
-            String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type = '"+labType+"' and lab_no='"+labNo+"'";
-
-            ResultSet rs = DBHandler.GetSQL(sql);
-
-            while(rs.next()){
-                demographicID = oscar.Misc.getString(rs, "demographic_no");
-            }
-            rs.close();
-        }catch(Exception e){
-        	logger.error("Error", e);
-        }
-
-        return(demographicID);
+    	PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
+    	for(PatientLabRouting r : dao.findByLabNoAndLabType(labNo, labType)) {
+    		demographicID = "" + r.getDemographicNo();
+    	}
+        return demographicID;
     }
 }

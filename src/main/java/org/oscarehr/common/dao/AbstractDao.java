@@ -261,4 +261,19 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		else persist(entity);
 		return entity;
 	}
+	
+	/**
+	 * Runs native SQL query.
+	 * 
+	 * @param sql
+	 * 		SQL query to run.
+	 * @return
+	 * 		Returns list containing query results.
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+    public List<Object[]> runNativeQuery(String sql) {
+		Query query = entityManager.createNativeQuery(sql);
+		List resultList = query.getResultList();
+		return resultList;
+	}
 }

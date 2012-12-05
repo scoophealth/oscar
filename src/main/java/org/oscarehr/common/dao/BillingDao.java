@@ -218,7 +218,6 @@ public class BillingDao extends AbstractDao<Billing> {
     }
 	
 	@SuppressWarnings("unchecked")
-
 	@NativeSql({"billing", "provider", "billingmaster"})
     public List<Object[]> findByManyThings(String statusType, String providerNo, String startDate, String endDate, String demoNo, boolean excludeWCB, boolean excludeMSP, boolean excludePrivate, boolean exludeICBC) {
 		String providerQuery = "";
@@ -343,6 +342,26 @@ public class BillingDao extends AbstractDao<Billing> {
 		q.setParameter("ohipNo", ohipNo);
 		q.setParameter("serviceCode", serviceCode);
 		return q.getResultList();
+	}
+
+	public Integer countBillings(String diagCode, String creator, Date sdate, Date edate) {
+		String sql = "SELECT DISTINCT b.id FROM Billing b, BillingDetail bd " +
+				"WHERE b.id = bd.billingNo " +
+				"AND bd.diagnosticCode = :diagCode " +
+				"AND b.creator = :creator " +
+				"AND b.billingDate >= :sdate " +
+				"AND b.billingDate <= :edate " +
+				"AND b.status != 'D' " +
+				"AND bd.status!='D'";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("diagCode", diagCode);
+		query.setParameter("creator", creator);
+		query.setParameter("sdate", sdate);
+		query.setParameter("edate", edate);
+		
+		@SuppressWarnings("unchecked")
+		List<Integer> ids = query.getResultList();
+		return ids.size();
 	}
 
 }

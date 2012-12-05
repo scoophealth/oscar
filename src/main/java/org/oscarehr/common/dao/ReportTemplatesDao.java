@@ -25,13 +25,23 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.ReportTemplates;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class ReportTemplatesDao extends AbstractDao<ReportTemplates>{
 
 	public ReportTemplatesDao() {
 		super(ReportTemplates.class);
 	}
+
+    public List<ReportTemplates> findActive() {
+		Query q = createQuery("t", "t.active = 1");
+		return q.getResultList();
+    }
 }
