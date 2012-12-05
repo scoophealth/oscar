@@ -24,9 +24,7 @@
 package org.oscarehr.billing.CA.BC.dao;
 
 import java.util.List;
-
 import javax.persistence.Query;
-
 import org.oscarehr.billing.CA.BC.model.Wcb;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -48,4 +46,10 @@ public class WcbDao extends AbstractDao<Wcb>{
 		return results;
 		
 	}
+
+    public List<Wcb> findByDemographic(Integer demoNo) {
+        Query q = createQuery("w", "w.demographicNo = :demoNo");
+        q.setParameter("demoNo", demoNo);
+        return q.getResultList();
+    }
 }
