@@ -26,6 +26,7 @@ package org.oscarehr.common.dao;
 
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -42,19 +43,27 @@ import org.springframework.stereotype.Repository;
  * @author mweston4
  */
 @Repository
+@SuppressWarnings("unchecked")
 public class BillingONExtDao extends AbstractDao<BillingONExt>{
     
     public BillingONExtDao() {
         super(BillingONExt.class);
     }
     
+	public List<BillingONExt> find(String key, String value) {
+		Query q = createQuery("q", "q.keyVal = :key AND q.value = :value");
+		q.setParameter("key", key);
+		q.setParameter("value", value);
+		return q.getResultList();
+	}
+
+    
     public List<BillingONExt> findByBillingNoAndKey(Integer billingNo, String key) {
     	String sql = "select bExt from BillingONExt bExt where bExt.billingNo=? and bExt.keyVal=?";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1, billingNo);
         query.setParameter(2, key);       
-         
-        @SuppressWarnings("unchecked")
+
         List<BillingONExt> results = query.getResultList();
         
         return results;
@@ -75,7 +84,6 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         query.setParameter(2, paymentRecord.getBillingNo());       
         query.setParameter(3, "payment");
          
-        @SuppressWarnings("unchecked")
         List<BillingONExt> results = query.getResultList();
         
         BigDecimal amtPaid = null;
@@ -105,7 +113,6 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         query.setParameter(2, paymentRecord.getBillingNo());       
         query.setParameter(3, "refund");
          
-        @SuppressWarnings("unchecked")
         List<BillingONExt> results = query.getResultList();
         
         BigDecimal amtRefunded = null;
@@ -136,7 +143,6 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         query.setParameter(2, '1');
         query.setParameter(3, "remitTo");
          
-        @SuppressWarnings("unchecked")
         List<BillingONExt> results = query.getResultList();
         
         if (results.size() > 1) {
@@ -157,7 +163,6 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         query.setParameter(2, '1');
         query.setParameter(3, "billTo");
          
-        @SuppressWarnings("unchecked")
         List<BillingONExt> results = query.getResultList();
         
         if (results.size() > 1) {
@@ -178,7 +183,6 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         query.setParameter(2, '0');
         query.setParameter(3, "billTo");
          
-        @SuppressWarnings("unchecked")
         List<BillingONExt> results = query.getResultList();
         
         if (results.size() > 1) {
@@ -188,5 +192,14 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         if (!results.isEmpty())
             bExt = results.get(0);
         return bExt;
+    }
+
+    public List<BillingONExt> find(Integer billingNo, String key, Date start, Date end) {
+		Query q = createQuery("b", "b.billingNo = :bNo AND b.keyVal = :key AND b.dateTime >= :start AND b.dateTime <= :end");
+		q.setParameter("bNo", billingNo);
+		q.setParameter("key", key);
+		q.setParameter("start", start);
+		q.setParameter("end", end);
+	    return q.getResultList();
     }           
 }
