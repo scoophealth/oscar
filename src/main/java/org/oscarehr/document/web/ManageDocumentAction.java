@@ -76,7 +76,6 @@ import org.oscarehr.common.model.SecRole;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -139,11 +138,11 @@ public class ManageDocumentAction extends DispatchAction {
 		if (flagproviders != null && flagproviders.length > 0) { // TODO: THIS NEEDS TO RUN THRU THE lab forwarding rules!
 			try {
 				for (String proNo : flagproviders) {
-					providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
+					providerInboxRoutingDAO.addToProviderInbox(proNo, Integer.parseInt(documentId), LabResultData.DOCUMENT);
 				}
 
 				// Removes the link to the "0" provider so that the document no longer shows up as "unclaimed"
-				providerInboxRoutingDAO.removeLinkFromDocument("DOC", documentId, "0");
+				providerInboxRoutingDAO.removeLinkFromDocument("DOC", Integer.parseInt(documentId), "0");
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Error", e);
 			}
@@ -191,9 +190,7 @@ public class ManageDocumentAction extends DispatchAction {
 		
 		
 		if (flagproviders != null) {
-			for (String str : flagproviders) {
-
-			}
+			
 		}
 		if (ret != null && !ret.equals("")) {
 			// response.getOutputStream().print(ret);
@@ -231,9 +228,9 @@ public class ManageDocumentAction extends DispatchAction {
 		String docId = request.getParameter("docId");
 		String providerNo = request.getParameter("providerNo");
 
-		providerInboxRoutingDAO.removeLinkFromDocument(docType, docId, providerNo);
+		providerInboxRoutingDAO.removeLinkFromDocument(docType, Integer.parseInt(docId), providerNo);
 		HashMap hm = new HashMap();
-		hm.put("linkedProviders", providerInboxRoutingDAO.getProvidersWithRoutingForDocument(docType, docId));
+		hm.put("linkedProviders", providerInboxRoutingDAO.getProvidersWithRoutingForDocument(docType, Integer.parseInt(docId)));
 
 		JSONObject jsonObject = JSONObject.fromObject(hm);
 		try {
@@ -268,7 +265,7 @@ public class ManageDocumentAction extends DispatchAction {
 		if (flagproviders != null && flagproviders.length > 0) { // TODO: THIS NEEDS TO RUN THRU THE lab forwarding rules!
 			try {
 				for (String proNo : flagproviders) {
-					providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
+					providerInboxRoutingDAO.addToProviderInbox(proNo, Integer.parseInt(documentId), LabResultData.DOCUMENT);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Error", e);
@@ -398,16 +395,6 @@ public class ManageDocumentAction extends DispatchAction {
 		}
 		return outfile;
 	}
-
-	private File hasCacheVersion(Document d) {
-		File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
-		File outfile = new File(documentCacheDir, d.getDocfilename() + ".png");
-		if (!outfile.exists()) {
-			outfile = null;
-		}
-		return outfile;
-	}
-
 
 	public static void deleteCacheVersion(org.oscarehr.document.model.Document d, int pageNum) {
 		File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
@@ -797,8 +784,7 @@ public class ManageDocumentAction extends DispatchAction {
 			remotePk.setIntegratorFacilityId(remoteFacilityId);
 			remotePk.setCaisiItemId(Integer.parseInt(doc_no));
 
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
+			
 			CachedDemographicDocument remoteDocument = null;
 			CachedDemographicDocumentContents remoteDocumentContents = null;
 

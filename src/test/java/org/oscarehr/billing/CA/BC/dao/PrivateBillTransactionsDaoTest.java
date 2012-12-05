@@ -39,7 +39,7 @@ import oscar.oscarBilling.ca.bc.data.PrivateBillTransactionsDAO;
 
 public class PrivateBillTransactionsDaoTest extends DaoTestFixtures {;
 
-	private PrivateBillTransactionsDAO dao = SpringUtils.getBean(PrivateBillTransactionsDAO.class);
+	public PrivateBillTransactionsDAO dao = SpringUtils.getBean(PrivateBillTransactionsDAO.class);
 
 	@Before
 	public void before() throws Exception {

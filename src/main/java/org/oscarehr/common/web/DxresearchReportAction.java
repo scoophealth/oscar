@@ -320,8 +320,7 @@ public class DxresearchReportAction extends DispatchAction {
             HttpServletRequest request, HttpServletResponse response)
              {
 
-        DynaBean lazyForm = (DynaBean) form;
-
+        
         //String quickListName = (String)lazyForm.get("quicklistname");
         //List codeSearch = dxresearchdao.getQuickListItems(quickListName);;
         List existcodeSearch =null;

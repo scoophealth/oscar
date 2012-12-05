@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CountryCodeDaoTest extends DaoTestFixtures {
 
-	private CountryCodeDao dao = SpringUtils.getBean(CountryCodeDao.class);
+	protected CountryCodeDao dao = SpringUtils.getBean(CountryCodeDao.class);
 
 	public CountryCodeDaoTest() {
 

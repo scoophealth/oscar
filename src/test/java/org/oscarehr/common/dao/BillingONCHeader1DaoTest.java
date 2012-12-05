@@ -35,14 +35,14 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 
-	private BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+	protected BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 
 	public BillingONCHeader1DaoTest() {
 	}
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billing_on_cheader1","billing_on_item");
+		SchemaUtils.restoreTable("billing_on_cheader1","billing_on_item","gstControl","billingservice");
 	}
 
 	@Test

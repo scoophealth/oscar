@@ -520,7 +520,7 @@ public class DSDemographicAccess {
 
     	if(hasFlowSheet) {
 
-			List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheetId,providerNo,demographicNo);
+			List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheetId,providerNo,Integer.parseInt(demographicNo));
 
 	        MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(flowsheetId,custList);
 
@@ -561,7 +561,7 @@ public class DSDemographicAccess {
                 int numDays = -1;
                 for (String code: codes){
                     //This returns how many days since the last time this code was paid and -1 if it never has been settled
-                    numDays = billingONCHeader1Dao.getDaysSincePaid(code, demographicNo);
+                    numDays = billingONCHeader1Dao.getDaysSincePaid(code, Integer.parseInt(demographicNo));
 
                     //If any of the codes has been paid in the number of days then return false
                     if (numDays < notInDays && numDays != -1){
@@ -570,7 +570,7 @@ public class DSDemographicAccess {
                     }
                     else {
                     	//if no paid bills in last number of days check to see if it has been billed within last 2 months and waits to be settled
-                    	numDays = billingONCHeader1Dao.getDaysSinceBilled(code, demographicNo);
+                    	numDays = billingONCHeader1Dao.getDaysSinceBilled(code, Integer.parseInt(demographicNo));
 
                     	if( numDays < 60 && numDays != -1 ) {
                     		retval = false;
@@ -641,7 +641,7 @@ public class DSDemographicAccess {
                         numDays = bcCodeValidation.daysSinceCodeLastBilled(demographicNo,code) ;
                      }
                      else if( billregion.equalsIgnoreCase("ON") ) {
-                         numDays = billingONCHeader1Dao.getDaysSinceBilled(code, demographicNo);
+                         numDays = billingONCHeader1Dao.getDaysSinceBilled(code, Integer.parseInt(demographicNo));
                      }
 
                     //If any of the codes has been billed in the number of days then return false

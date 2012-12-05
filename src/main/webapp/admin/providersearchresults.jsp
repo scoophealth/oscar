@@ -81,6 +81,9 @@
 				searchStatus = searchStatuses[0];
 			}
 		}
+		
+		int offset = Integer.parseInt(strOffset);
+		int limit = Integer.parseInt(strLimit);
 %>
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
@@ -159,10 +162,10 @@
 	ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
 	
 	if(searchMode.equals("search_name")) {
-		providerList = providerDao.findByProviderName(keyword, searchStatus, strLimit, strOffset);
+		providerList = providerDao.findByProviderName(keyword, searchStatus, limit, offset);
 	}
 	else if(searchMode.equals("search_providerno")) {
-		providerList = providerDao.findByProviderNo(keyword, searchStatus, strLimit, strOffset);
+		providerList = providerDao.findByProviderNo(keyword, searchStatus, limit, offset);
 	}
 	
 	if(orderBy.equals("last_name")) {

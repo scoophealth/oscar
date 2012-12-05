@@ -37,7 +37,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlFrequencyDaoTest extends DaoTestFixtures {
 
-	private CtlFrequencyDao dao = (CtlFrequencyDao)SpringUtils.getBean("ctlFrequencyDao");
+	protected CtlFrequencyDao dao = (CtlFrequencyDao)SpringUtils.getBean("ctlFrequencyDao");
 
 	@Before
 	public void before() throws Exception {

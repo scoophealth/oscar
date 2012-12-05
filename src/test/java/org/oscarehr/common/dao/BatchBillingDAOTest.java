@@ -48,7 +48,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class BatchBillingDAOTest extends DaoTestFixtures{
-	private BatchBillingDAO dao = (BatchBillingDAO)SpringUtils.getBean(BatchBillingDAO.class);
+	protected BatchBillingDAO dao = (BatchBillingDAO)SpringUtils.getBean(BatchBillingDAO.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 	

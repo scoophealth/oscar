@@ -293,8 +293,8 @@ public class WaitlistDao {
 		
 	private static final String QUERY_GET_CLIENT_DATA = "SELECT demographic_no, fdid, var_name, var_value "
 			+ "FROM eform_values LEFT JOIN client_referral cr ON cr.client_id=demographic_no, "
-			+ "(SELECT demographic_no AS dmb,MAX(fdid) AS ffdid FROM eform_values WHERE demographic_no=? "
-			+ "GROUP BY demographic_no) xyz WHERE cr.referral_id IS NULL AND demographic_no= ?1 AND fdid=xyz.ffdid";
+			+ "(SELECT demographic_no AS dmb,MAX(fdid) AS ffdid FROM eform_values WHERE demographic_no=?1 "
+			+ "GROUP BY demographic_no) xyz WHERE cr.referral_id IS NULL AND demographic_no= ?2 AND fdid=xyz.ffdid";
 
 
 	
@@ -332,6 +332,7 @@ public class WaitlistDao {
 		
 		Query query = entityManager.createNativeQuery(QUERY_GET_CLIENT_DATA);
 		query.setParameter(1, clientId);
+		query.setParameter(2, clientId);
 		
 		@SuppressWarnings("unchecked")
 		List<Object[]> rows = query.getResultList();

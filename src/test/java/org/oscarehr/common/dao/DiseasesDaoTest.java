@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DiseasesDaoTest extends DaoTestFixtures {
 
-	private DiseasesDao dao = SpringUtils.getBean(DiseasesDao.class);
+	protected DiseasesDao dao = SpringUtils.getBean(DiseasesDao.class);
 
 	public DiseasesDaoTest() {
 	}

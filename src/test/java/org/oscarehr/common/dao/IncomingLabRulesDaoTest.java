@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class IncomingLabRulesDaoTest extends DaoTestFixtures {
 
-	private IncomingLabRulesDao dao = SpringUtils.getBean(IncomingLabRulesDao.class);
+	protected IncomingLabRulesDao dao = SpringUtils.getBean(IncomingLabRulesDao.class);
 
 
 	@Before

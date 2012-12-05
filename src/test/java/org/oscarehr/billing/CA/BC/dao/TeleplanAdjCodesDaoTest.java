@@ -33,7 +33,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class TeleplanAdjCodesDaoTest extends DaoTestFixtures {
 
-	private TeleplanAdjCodesDao dao = SpringUtils.getBean(TeleplanAdjCodesDao.class);
+	public TeleplanAdjCodesDao dao = SpringUtils.getBean(TeleplanAdjCodesDao.class);
 
 	public TeleplanAdjCodesDaoTest() {
 	}

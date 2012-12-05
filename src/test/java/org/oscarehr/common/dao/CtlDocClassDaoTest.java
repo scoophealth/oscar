@@ -43,7 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlDocClassDaoTest extends DaoTestFixtures {
 
-	private CtlDocClassDao dao = (CtlDocClassDao)SpringUtils.getBean(CtlDocClassDao.class);
+	protected CtlDocClassDao dao = (CtlDocClassDao)SpringUtils.getBean(CtlDocClassDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

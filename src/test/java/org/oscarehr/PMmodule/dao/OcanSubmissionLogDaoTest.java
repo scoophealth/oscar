@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class OcanSubmissionLogDaoTest extends DaoTestFixtures {
 
-	private OcanSubmissionLogDao dao = SpringUtils.getBean(OcanSubmissionLogDao.class);
+	public OcanSubmissionLogDao dao = SpringUtils.getBean(OcanSubmissionLogDao.class);
 
 
 	@Before

@@ -227,7 +227,7 @@ public class DemographicExportAction4 extends Action {
 			if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
 
 			HashMap<String,String> demoExt = new HashMap<String,String>();
-			demoExt.putAll(demographicExtDao.getAllValuesForDemo(demoNo));
+			demoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(demoNo)));
 
 			OmdCdsDocument omdCdsDoc = OmdCdsDocument.Factory.newInstance();
 			OmdCdsDocument.OmdCds omdCds = omdCdsDoc.addNewOmdCds();
@@ -1706,7 +1706,7 @@ public class DemographicExportAction4 extends Action {
 							}
 
 							//Notes
-							List<HRMDocumentComment> comments = hrmDocCommentDao.getCommentsForDocument(hrmDocumentId);
+							List<HRMDocumentComment> comments = hrmDocCommentDao.getCommentsForDocument(Integer.parseInt(hrmDocumentId));
 							String notes = null;
 							for (HRMDocumentComment comment : comments) {
 								notes = Util.addLine(notes, comment.getComment());
@@ -2319,7 +2319,7 @@ public class DemographicExportAction4 extends Action {
 
 		org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(contactId);
 		HashMap<String,String> relDemoExt = new HashMap<String,String>();
-		relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(contactId));
+		relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(contactId)));
 
 		Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
 		if (StringUtils.empty(relDemo.getFirstName())) {

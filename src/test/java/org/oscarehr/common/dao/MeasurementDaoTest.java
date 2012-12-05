@@ -40,7 +40,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MeasurementDaoTest extends DaoTestFixtures {
 
-	private MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+	protected MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
 
 	@Before
 	public void before() throws Exception {
@@ -113,7 +113,7 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 		assertNotNull(ms);
 	}
 
-	private Measurement populate() {
+	protected Measurement populate() {
 		Measurement m = new Measurement();
 		m.setDemographicId(999);
 		m.setAppointmentNo(100);

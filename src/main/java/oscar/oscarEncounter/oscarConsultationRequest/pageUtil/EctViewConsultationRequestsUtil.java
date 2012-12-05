@@ -35,7 +35,6 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
@@ -62,8 +61,6 @@ public class EctViewConsultationRequestsUtil {
       return estConsultationVecByTeam(team,showCompleted,null,null,null,null,null);
    }  
             
-   private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-   
    public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc,String searchDate) {       
       ids = new Vector<String>();
       status = new Vector<String>();
@@ -86,7 +83,6 @@ public class EctViewConsultationRequestsUtil {
           ConsultationRequestDao consultReqDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
           DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
           ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-          ProfessionalSpecialistDao specialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
           ConsultationServiceDao serviceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
           ConsultationRequest consult;
           Demographic demo;
@@ -184,7 +180,7 @@ public class EctViewConsultationRequestsUtil {
           ConsultationServices services;
           String providerId, providerName;
 
-          List consultList = consultReqDao.getConsults(demoNo);
+          List consultList = consultReqDao.getConsults(Integer.parseInt(demoNo));
           for( int idx = 0; idx < consultList.size(); ++idx ) {
               consult = (ConsultationRequest)consultList.get(idx);
               demo = demoDao.getDemographicById(consult.getDemographicId());

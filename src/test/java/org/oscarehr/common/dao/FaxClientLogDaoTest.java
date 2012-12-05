@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class FaxClientLogDaoTest extends DaoTestFixtures {
 
-	private FaxClientLogDao dao = SpringUtils.getBean(FaxClientLogDao.class);
+	protected FaxClientLogDao dao = SpringUtils.getBean(FaxClientLogDao.class);
 
 
 	@Before

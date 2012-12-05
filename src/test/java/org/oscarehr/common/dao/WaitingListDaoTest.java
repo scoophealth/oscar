@@ -42,7 +42,7 @@ import oscar.util.ConversionUtils;
 
 public class WaitingListDaoTest extends DaoTestFixtures {
 
-	private WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);
+	protected WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);
 
 	@Before
 	public void before() throws Exception {

@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class OtherIdDaoTest extends DaoTestFixtures {
 
-	private OtherIdDAO dao = SpringUtils.getBean(OtherIdDAO.class);
+	protected OtherIdDAO dao = SpringUtils.getBean(OtherIdDAO.class);
 
 	public OtherIdDaoTest() {
 	}

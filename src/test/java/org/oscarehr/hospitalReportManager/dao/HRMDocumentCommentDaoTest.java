@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class HRMDocumentCommentDaoTest extends DaoTestFixtures {
 
-	private HRMDocumentCommentDao dao = SpringUtils.getBean(HRMDocumentCommentDao.class);
+	public HRMDocumentCommentDao dao = SpringUtils.getBean(HRMDocumentCommentDao.class);
 
 
 	@Before

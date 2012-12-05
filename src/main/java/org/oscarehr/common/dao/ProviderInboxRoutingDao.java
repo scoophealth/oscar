@@ -50,16 +50,14 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 
 
 
-    public boolean removeLinkFromDocument(String docType, String docId, String providerNo) {
-    	int dId = Integer.parseInt(docId);
-    	return CommonLabResultData.updateReportStatus(dId, providerNo, 'X', "Archived", "DOC");    	
+    public boolean removeLinkFromDocument(String docType, Integer docId, String providerNo) {
+    	return CommonLabResultData.updateReportStatus(docId, providerNo, 'X', "Archived", "DOC");    	
     }
 
-	public List<ProviderInboxItem> getProvidersWithRoutingForDocument(String docType, String docId) {
-		int dId = Integer.parseInt(docId);
+	public List<ProviderInboxItem> getProvidersWithRoutingForDocument(String docType, Integer docId) {
 		Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ?");
 		query.setParameter(1, docType);
-		query.setParameter(2, dId);
+		query.setParameter(2, docId);
 
 		@SuppressWarnings("unchecked")
 		List<ProviderInboxItem> results = query.getResultList();
@@ -67,11 +65,10 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 		return results;
 	}
 
-	public boolean hasProviderBeenLinkedWithDocument(String docType, String docId, String providerNo) {
-		int dId = Integer.parseInt(docId);
+	public boolean hasProviderBeenLinkedWithDocument(String docType, Integer docId, String providerNo) {
 		Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ? and p.providerNo=?");
 		query.setParameter(1, docType);
-		query.setParameter(2, dId);
+		query.setParameter(2, docId);
 		query.setParameter(3, providerNo);
 
 		@SuppressWarnings("unchecked")
@@ -103,7 +100,7 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 	 */
 	// TODO Replace labType parameter with an enum
 	@SuppressWarnings("unchecked")
-    public void addToProviderInbox(String providerNo, String labNo, String labType) {
+    public void addToProviderInbox(String providerNo, Integer labNo, String labType) {
 		ArrayList<String> listofAdditionalProviders = new ArrayList<String>();
 		boolean fileForMainProvider = false;
 

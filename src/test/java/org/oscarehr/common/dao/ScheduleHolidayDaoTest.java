@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ScheduleHolidayDaoTest extends DaoTestFixtures {
 
-	private ScheduleHolidayDao dao = SpringUtils.getBean(ScheduleHolidayDao.class);
+	protected ScheduleHolidayDao dao = SpringUtils.getBean(ScheduleHolidayDao.class);
 
 	public ScheduleHolidayDaoTest() {
 	}

@@ -33,11 +33,11 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProgramDaoTest extends DaoTestFixtures {
 
-	private ProgramDao dao = SpringUtils.getBean(ProgramDao.class);
+	public ProgramDao dao = SpringUtils.getBean(ProgramDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("program","admission","Facility","program_queue");
+		SchemaUtils.restoreTable("program","admission","Facility","program_queue","lst_orgcd","secUserRole");
 	}
 
 	@Test

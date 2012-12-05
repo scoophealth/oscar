@@ -40,7 +40,7 @@ import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 
 public class BillingmasterDaoTest extends DaoTestFixtures {
 
-	private BillingmasterDAO dao =  SpringUtils.getBean(BillingmasterDAO.class);
+	protected BillingmasterDAO dao =  SpringUtils.getBean(BillingmasterDAO.class);
 
 	@Before
 	public void before() throws Exception {

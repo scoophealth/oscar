@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EncounterWindowDaoTest extends DaoTestFixtures {
 
-	private EncounterWindowDao dao = SpringUtils.getBean(EncounterWindowDao.class);
+	protected EncounterWindowDao dao = SpringUtils.getBean(EncounterWindowDao.class);
 
 	public EncounterWindowDaoTest() {
 	}

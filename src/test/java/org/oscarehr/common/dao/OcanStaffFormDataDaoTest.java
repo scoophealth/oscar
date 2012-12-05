@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class OcanStaffFormDataDaoTest extends DaoTestFixtures {
 
-	private OcanStaffFormDataDao dao = SpringUtils.getBean(OcanStaffFormDataDao.class);
+	protected OcanStaffFormDataDao dao = SpringUtils.getBean(OcanStaffFormDataDao.class);
 
 
 	@Before

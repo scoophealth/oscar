@@ -37,7 +37,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DxResearchDaoTest extends DaoTestFixtures {
 
-	private DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
+	protected DxresearchDAO dao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
 
 	public DxResearchDaoTest() {
 	}

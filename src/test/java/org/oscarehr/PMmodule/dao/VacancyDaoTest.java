@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class VacancyDaoTest extends DaoTestFixtures {
 
-	private VacancyDao dao = SpringUtils.getBean(VacancyDao.class);
+	public VacancyDao dao = SpringUtils.getBean(VacancyDao.class);
 
 
 	@Before

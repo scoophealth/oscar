@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EChartDaoTest extends DaoTestFixtures {
 
-	private EChartDao dao = SpringUtils.getBean(EChartDao.class);
+	protected EChartDao dao = SpringUtils.getBean(EChartDao.class);
 
 	@Before
 	public void before() throws Exception {

@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EpisodeDaoTest extends DaoTestFixtures {
 
-	private EpisodeDao dao = SpringUtils.getBean(EpisodeDao.class);
+	protected EpisodeDao dao = SpringUtils.getBean(EpisodeDao.class);
 
 
 	@Before

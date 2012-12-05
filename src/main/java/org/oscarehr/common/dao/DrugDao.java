@@ -34,8 +34,6 @@ import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.util.ConversionUtils;
-
 public class DrugDao extends AbstractDao<Drug> {
 
 	public DrugDao() {
@@ -265,10 +263,10 @@ public class DrugDao extends AbstractDao<Drug> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Drug> findByDemographicIdAndDrugId(int demographicNo, String drugId) {
+	public List<Drug> findByDemographicIdAndDrugId(int demographicNo, Integer drugId) {
 		Query query = createQuery("d", "d.demographicId = :demoId AND d.id = :drugId ORDER BY d.position, d.rxDate DESC, d.id DESC");
 		query.setParameter("demoId", demographicNo);
-		query.setParameter("drugId", ConversionUtils.fromIntString(drugId));
+		query.setParameter("drugId", drugId);
 		return query.getResultList();
 	}
 

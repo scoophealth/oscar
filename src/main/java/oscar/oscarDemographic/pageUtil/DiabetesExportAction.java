@@ -537,7 +537,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         if (StringUtils.filled(data)) demo.setEmail(data);
 
         HashMap<String,String> demoExt = new HashMap<String,String>();
-        demoExt.putAll(demographicExtDao.getAllValuesForDemo(demoNo));
+        demoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(demoNo)));
 
         String phoneNo = Util.onlyNum(demographic.getPhone());
         if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {

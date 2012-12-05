@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class GroupNoteLinkDaoTest extends DaoTestFixtures {
 
-	private GroupNoteLinkDao dao = SpringUtils.getBean(GroupNoteLinkDao.class);
+	protected GroupNoteLinkDao dao = SpringUtils.getBean(GroupNoteLinkDao.class);
 
 
 	@Before

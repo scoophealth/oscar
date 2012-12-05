@@ -198,7 +198,7 @@ public class DrugMergedDemographicDao extends DrugDao {
 	}
 
 	@Override
-	public List<Drug> findByDemographicIdAndDrugId(int demographicNo, final String drugId) {
+	public List<Drug> findByDemographicIdAndDrugId(int demographicNo, final Integer drugId) {
 		List<Drug> result = super.findByDemographicIdAndDrugId(demographicNo, drugId);
 		MergedDemographicTemplate<Drug> template = new MergedDemographicTemplate<Drug>() {
 			@Override

@@ -146,7 +146,7 @@ public class ProviderLabRouting {
 		String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
 
 		ProviderLabRoutingDao providerLabRoutingDao = new ProviderLabRoutingDao();
-		List<ProviderLabRoutingModel> rs = providerLabRoutingDao.getProviderLabRoutingForLabProviderType(labId, provider_no, labType);
+		List<ProviderLabRoutingModel> rs = providerLabRoutingDao.getProviderLabRoutingForLabProviderType(Integer.parseInt(labId), provider_no, labType);
 
 		if (!rs.isEmpty()) {
 			String status = fr.getStatus(provider_no);
@@ -170,9 +170,9 @@ public class ProviderLabRouting {
 			// it is set as a new lab for at least one provider if AUTO_FILE_LABS=yes is not
 			// set in the oscar.properties file
 		} else if (autoFileLabs == null || !autoFileLabs.equalsIgnoreCase("yes")) {
-			rs = providerLabRoutingDao.getProviderLabRoutingForLabAndType(labId, labType);
+			rs = providerLabRoutingDao.getProviderLabRoutingForLabAndType(Integer.parseInt(labId), labType);
 			if (rs.isEmpty()) {
-				providerLabRoutingDao.updateStatus(labId, labType);
+				providerLabRoutingDao.updateStatus(Integer.parseInt(labId), labType);
 			}
 		}
 

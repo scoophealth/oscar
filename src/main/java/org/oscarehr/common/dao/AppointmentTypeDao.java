@@ -48,7 +48,7 @@ public class AppointmentTypeDao extends AbstractDao<AppointmentType>{
     
    public AppointmentType findByAppointmentTypeByName(String name) {
 	   Query query = entityManager.createQuery("from AppointmentType atype where atype.name = :_name").setParameter("_name", name);
-	   return (AppointmentType)query.getSingleResult();
+	   return this.getSingleResultOrNull(query);
    }
 
 }

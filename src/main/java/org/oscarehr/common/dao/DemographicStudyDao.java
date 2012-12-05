@@ -40,7 +40,7 @@ public class DemographicStudyDao extends AbstractDao<DemographicStudy>{
 	}
 
 	public int removeByDemographicNo(Integer demographicNo) {
-		Query query = entityManager.createQuery("delete x from DemographicStudy x where x.demographicNo=?");
+		Query query = entityManager.createQuery("delete from DemographicStudy x where x.id.demographicNo=?");
 		query.setParameter(1, demographicNo);
 		return query.executeUpdate();
 	}

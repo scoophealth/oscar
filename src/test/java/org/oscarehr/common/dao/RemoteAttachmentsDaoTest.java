@@ -33,7 +33,7 @@ import org.oscarehr.common.model.RemoteAttachments;
 import org.oscarehr.util.SpringUtils;
 
 public class RemoteAttachmentsDaoTest {
-	private RemoteAttachmentsDao dao = SpringUtils.getBean(RemoteAttachmentsDao.class);
+	protected RemoteAttachmentsDao dao = SpringUtils.getBean(RemoteAttachmentsDao.class);
 
 	public RemoteAttachmentsDaoTest() {
 	}

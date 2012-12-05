@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MsgDemoMapDaoTest extends DaoTestFixtures {
 
-	private MsgDemoMapDao dao = SpringUtils.getBean(MsgDemoMapDao.class);
+	protected MsgDemoMapDao dao = SpringUtils.getBean(MsgDemoMapDao.class);
 
 	public MsgDemoMapDaoTest() {
 	}

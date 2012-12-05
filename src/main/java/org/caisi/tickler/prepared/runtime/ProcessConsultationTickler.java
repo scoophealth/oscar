@@ -84,7 +84,7 @@ public class ProcessConsultationTickler extends AbstractPreparedTickler implemen
 		formBean = tearForm(request);
 
 		if (formBean.getDemographic_no() != null && formBean.getAction().equals("populate")) {
-			List<ConsultationRequest> consultationRequests = consultationRequestDao.getConsults(formBean.getDemographic_no());
+			List<ConsultationRequest> consultationRequests = consultationRequestDao.getConsults(Integer.parseInt(formBean.getDemographic_no()));
 			request.setAttribute("consultations", consultationRequests);
 			formBean.setAction("");
 			request.setAttribute("formBean", formBean);

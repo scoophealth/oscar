@@ -44,7 +44,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class GroupNoteDaoTest extends DaoTestFixtures {
-	private GroupNoteDao dao = (GroupNoteDao)SpringUtils.getBean(GroupNoteDao.class);
+	protected GroupNoteDao dao = (GroupNoteDao)SpringUtils.getBean(GroupNoteDao.class);
 	
 	@Before
 	public void before() throws Exception {

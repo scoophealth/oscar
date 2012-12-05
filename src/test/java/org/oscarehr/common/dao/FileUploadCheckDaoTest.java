@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class FileUploadCheckDaoTest extends DaoTestFixtures {
 
-	private FileUploadCheckDao dao = SpringUtils.getBean(FileUploadCheckDao.class);
+	protected FileUploadCheckDao dao = SpringUtils.getBean(FileUploadCheckDao.class);
 
 	@Before
 	public void before() throws Exception {

@@ -40,10 +40,10 @@ import org.oscarehr.util.SpringUtils;
 
 public class IntegratorConsentDaoTest extends DaoTestFixtures {
 
-	private IntegratorConsentDao dao = SpringUtils.getBean(IntegratorConsentDao.class);
-	private FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
-	private DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
-	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	protected IntegratorConsentDao dao = SpringUtils.getBean(IntegratorConsentDao.class);
+	protected FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
+	protected DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
+	protected ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 
 
 	@Before

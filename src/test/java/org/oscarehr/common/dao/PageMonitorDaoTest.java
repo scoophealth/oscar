@@ -48,7 +48,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PageMonitorDaoTest extends DaoTestFixtures {
 	
-	private PageMonitorDao dao = (PageMonitorDao)SpringUtils.getBean(PageMonitorDao.class);
+	protected PageMonitorDao dao = (PageMonitorDao)SpringUtils.getBean(PageMonitorDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	
 	@Before

@@ -314,7 +314,7 @@ public class RxPrescriptionData {
 
 	public Prescription getLatestPrescriptionScriptByPatientDrugId(int demographicNo, String drugId) {
 		DrugDao dao = SpringUtils.getBean(DrugDao.class);
-		List<Drug> drugs = dao.findByDemographicIdAndDrugId(demographicNo, drugId);
+		List<Drug> drugs = dao.findByDemographicIdAndDrugId(demographicNo, Integer.parseInt(drugId));
 		if (drugs.isEmpty()) return null;
 		return toPrescription(drugs.get(0), demographicNo);
 	}
@@ -462,12 +462,11 @@ public class RxPrescriptionData {
 		int demographic_no = bean.getDemographicNo();
 
 		Date today = oscar.oscarRx.util.RxUtil.Today();
-		String date_prescribed = oscar.oscarRx.util.RxUtil.DateToString(today, "yyyy/MM/dd");
-		String date_printed = date_prescribed;
+		//String date_prescribed = oscar.oscarRx.util.RxUtil.DateToString(today, "yyyy/MM/dd");
+		//String date_printed = date_prescribed;
 
 		StringBuilder textView = new StringBuilder();
-		String retval = null;
-
+		
 		// ///create full text view
 		oscar.oscarRx.data.RxPatientData.Patient patient = null;
 		oscar.oscarRx.data.RxProviderData.Provider provider = null;
@@ -527,7 +526,7 @@ public class RxPrescriptionData {
 
 	public int setScriptComment(String scriptNo, String comment) {
 		PrescriptionDao dao = SpringUtils.getBean(PrescriptionDao.class);
-		return dao.updatePrescriptionsByScriptNo(scriptNo, comment);
+		return dao.updatePrescriptionsByScriptNo(Integer.parseInt(scriptNo), comment);
 	}
 
 	public String getScriptComment(String scriptNo) {
@@ -1493,14 +1492,14 @@ public class RxPrescriptionData {
 			// check to see if there is an identitical prescription in
 			// the database. If there is we'll return that drugid instead
 			// of adding a new prescription.
-
+/*
 			String endDate;
 			if (this.getEndDate() == null) {
 				endDate = "0001-01-01";
 			} else {
 				endDate = RxUtil.DateToString(this.getEndDate());
 			}
-
+*/
 			DrugDao dao = SpringUtils.getBean(DrugDao.class);
 			// double check if we don't h
 			Drug drug = dao.findByEverything(this.getProviderNo(), this.getDemographicNo(), this.getRxDate(), this.getEndDate(), this.getWrittenDate(), this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getUnitName(), this.getRepeat(), this.getLastRefillDate(), this.getNosubs(), this.getPrn(), escapedSpecial, this.getOutsideProviderName(),

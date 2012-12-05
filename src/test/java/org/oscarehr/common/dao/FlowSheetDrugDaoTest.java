@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class FlowSheetDrugDaoTest extends DaoTestFixtures {
 
-	private FlowSheetDrugDao dao = SpringUtils.getBean(FlowSheetDrugDao.class);
+	protected FlowSheetDrugDao dao = SpringUtils.getBean(FlowSheetDrugDao.class);
 
 	@Before
 	public void before() throws Exception {
@@ -63,7 +63,6 @@ public class FlowSheetDrugDaoTest extends DaoTestFixtures {
 		
 		String flowsheet1 = "alpha";
 		String flowsheet2 = "bravo";
-		String stringDemographicNo1 = "111";
 		
 		boolean isArchived = true;
 		
@@ -92,7 +91,7 @@ public class FlowSheetDrugDaoTest extends DaoTestFixtures {
 		dao.persist(flowSheetDrug3);
 		
 		List<FlowSheetDrug> expectedResult = new ArrayList<FlowSheetDrug>(Arrays.asList(flowSheetDrug1, flowSheetDrug3));
-		List<FlowSheetDrug> result = dao.getFlowSheetDrugs(flowsheet1, stringDemographicNo1);
+		List<FlowSheetDrug> result = dao.getFlowSheetDrugs(flowsheet1, demographicNo1);
 		
 		Logger logger = MiscUtils.getLogger();
 		

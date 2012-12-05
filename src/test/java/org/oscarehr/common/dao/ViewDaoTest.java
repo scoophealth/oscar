@@ -38,7 +38,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ViewDaoTest extends DaoTestFixtures {
 
-	private ViewDao dao = SpringUtils.getBean(ViewDao.class);
+	protected ViewDao dao = SpringUtils.getBean(ViewDao.class);
 
 	public ViewDaoTest() {
 	}

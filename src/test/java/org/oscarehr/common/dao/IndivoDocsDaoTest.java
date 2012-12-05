@@ -30,7 +30,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class IndivoDocsDaoTest extends DaoTestFixtures {
 
-	private IndivoDocsDao dao = SpringUtils.getBean(IndivoDocsDao.class);
+	protected IndivoDocsDao dao = SpringUtils.getBean(IndivoDocsDao.class);
 
 	@Before
 	public void before() throws Exception {

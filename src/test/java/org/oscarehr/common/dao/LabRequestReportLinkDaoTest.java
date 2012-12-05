@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class LabRequestReportLinkDaoTest extends DaoTestFixtures {
 
-	private LabRequestReportLinkDao dao = SpringUtils.getBean(LabRequestReportLinkDao.class);
+	protected LabRequestReportLinkDao dao = SpringUtils.getBean(LabRequestReportLinkDao.class);
 
 
 	@Before

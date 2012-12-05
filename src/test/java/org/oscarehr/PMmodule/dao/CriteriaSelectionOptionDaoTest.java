@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CriteriaSelectionOptionDaoTest extends DaoTestFixtures {
 
-	private CriteriaSelectionOptionDao dao = SpringUtils.getBean(CriteriaSelectionOptionDao.class);
+	public CriteriaSelectionOptionDao dao = SpringUtils.getBean(CriteriaSelectionOptionDao.class);
 
 
 	@Before

@@ -36,12 +36,12 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicDaoTest extends DaoTestFixtures {
 
-	private DemographicDao dao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	protected DemographicDao dao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
 	@Before
 	public void before() throws Exception {
 		this.beforeForInnoDB();
-		SchemaUtils.restoreTable("demographic", "lst_gender", "admission", "demographic_merged", "program", "health_safety", "provider", "providersite", "site", "program_team");
+		SchemaUtils.restoreTable("demographic", "lst_gender", "admission", "demographic_merged", "program", "health_safety", "provider", "providersite", "site", "program_team","log");
 	}
 
 	@Test

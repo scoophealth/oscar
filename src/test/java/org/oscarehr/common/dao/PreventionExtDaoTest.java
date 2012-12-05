@@ -46,7 +46,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PreventionExtDaoTest extends DaoTestFixtures {
 	
-	private PreventionExtDao dao = (PreventionExtDao)SpringUtils.getBean(PreventionExtDao.class);
+	protected PreventionExtDao dao = (PreventionExtDao)SpringUtils.getBean(PreventionExtDao.class);
 	
 	@Before
 	public void before() throws Exception {

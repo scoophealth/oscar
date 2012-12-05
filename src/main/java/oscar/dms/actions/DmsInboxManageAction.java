@@ -131,7 +131,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			String docId = eDoc.getDocId();
 			providerList.add(createrId);
 
-			List<ProviderInboxItem> routeList = providerInboxRoutingDAO.getProvidersWithRoutingForDocument(LabResultData.DOCUMENT, docId);
+			List<ProviderInboxItem> routeList = providerInboxRoutingDAO.getProvidersWithRoutingForDocument(LabResultData.DOCUMENT, Integer.parseInt(docId));
 			for (ProviderInboxItem pii : routeList) {
 				String routingPId = pii.getProviderNo();
 
@@ -292,15 +292,15 @@ public class DmsInboxManageAction extends DispatchAction {
 		} catch (Exception e) {
 
 		}
-		String roleName = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+		//String roleName = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
 		String providerNo = (String) session.getAttribute("user");
 		String searchProviderNo = request.getParameter("searchProviderNo");
 		String status = request.getParameter("status");
-		String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
-		String scannedDocStatus = request.getParameter("scannedDocument");
+		//String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
+		//String scannedDocStatus = request.getParameter("scannedDocument");
 
-		scannedDocStatus = "I";
+		//scannedDocStatus = "I";
 		boolean providerSearch = !"-1".equals(searchProviderNo);
 
 		if (status == null) {
@@ -927,7 +927,7 @@ public class DmsInboxManageAction extends DispatchAction {
 				}
 
 			}
-			List<ProviderInboxItem> providers = providerInboxRoutingDAO.getProvidersWithRoutingForDocument("DOC", Integer.toString(docid));
+			List<ProviderInboxItem> providers = providerInboxRoutingDAO.getProvidersWithRoutingForDocument("DOC", docid);
 			if (providers.size() > 0) {
 				ProviderInboxItem pii = providers.get(0);
 				docStatus.put(docid, pii.getStatus());

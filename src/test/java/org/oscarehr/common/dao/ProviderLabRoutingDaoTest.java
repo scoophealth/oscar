@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProviderLabRoutingDaoTest extends DaoTestFixtures {
 
-	private ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+	protected ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 
 	public ProviderLabRoutingDaoTest() {
 	}

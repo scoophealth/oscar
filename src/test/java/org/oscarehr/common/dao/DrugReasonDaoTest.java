@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DrugReasonDaoTest extends DaoTestFixtures {
 	
-	private DrugReasonDao dao = (DrugReasonDao)SpringUtils.getBean(DrugReasonDao.class);
+	protected DrugReasonDao dao = (DrugReasonDao)SpringUtils.getBean(DrugReasonDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

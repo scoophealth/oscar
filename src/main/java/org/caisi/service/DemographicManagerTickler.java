@@ -49,7 +49,7 @@ public class DemographicManagerTickler {
     }
 
     public List getProgramIdByDemoNo(String demoNo) {
-        return demographicDao.getProgramIdByDemoNo(demoNo);
+        return demographicDao.getProgramIdByDemoNo(Integer.parseInt(demoNo));
     }
 
     public List getDemoProgram(Integer demoNo) {

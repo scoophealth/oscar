@@ -92,7 +92,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         }
     }
     
-    public String createBill(String provider, String demographic, String code, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBill(String provider, Integer demographic, String code, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -103,13 +103,15 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         String total = this.calcTotal(codes,serviceDate);
 
         header1 = this.assembleHeader1(prov, demographic, clinicRefCode, serviceDate, total, curUser, properties);
+        if(header1 == null)
+        	return null;
         this.addItems(header1, codes, dxCodes, serviceDate);
         this.persist(header1);
         
         return total;
     }
     
-    public String createBill(String provider, String demographic, String code, String dxCode, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBill(String provider, Integer demographic, String code, String dxCode, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -122,6 +124,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         String total = this.calcTotal(codes,serviceDate);
         
         header1 = this.assembleHeader1(prov, demographic, clinicRefCode, serviceDate, total, curUser, properties);
+        if(header1 == null)
+        	return null;
         this.addItems(header1, codes, dxCodes, serviceDate);
         this.persist(header1);
         
@@ -136,7 +140,9 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 
         String total = calcTotal(codes,serviceDate);
         for( String demographic : demographic_nos) {
-            header1 = this.assembleHeader1(prov, demographic, clinicRefCode, serviceDate, total, curUser, properties);
+            header1 = this.assembleHeader1(prov, Integer.parseInt(demographic), clinicRefCode, serviceDate, total, curUser, properties);
+            if(header1 == null)
+            	continue;
             this.addItems(header1, codes, dxcodes, serviceDate);
             this.persist(header1);
         }
@@ -144,15 +150,18 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return total;
     }
 
-    private BillingONCHeader1 assembleHeader1(Provider prov, String demographic, String clinicRefCode, Date serviceDate, String total, String curUser, OscarProperties properties) {
+    private BillingONCHeader1 assembleHeader1(Provider prov, Integer demographic, String clinicRefCode, Date serviceDate, String total, String curUser, OscarProperties properties) {
         
         BillingONCHeader1 header1 = new BillingONCHeader1();
         header1.setTranscId(BillingDataHlp.CLAIMHEADER1_TRANSACTIONIDENTIFIER);
         header1.setRecId(BillingDataHlp.CLAIMHEADER1_REORDIDENTIFICATION);
         header1.setHeaderId(0);
 
-        Demographic demo = demographicDao.getDemographic(demographic);
+        Demographic demo = demographicDao.getDemographicById(demographic);
 
+        if(demo == null) {
+        	return null;
+        }
         header1.setHin(demo.getHin());
         header1.setVer(demo.getVer());
         header1.setDob(demo.getDateOfBirth());
@@ -238,20 +247,21 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         for( String code : codes ) {
             billingservice = billingServiceDao.searchBillingCode(code, "ON", serviceDate);
 
-            if( !billingservice.getPercentage().equalsIgnoreCase("")) {
+            if(billingservice != null && billingservice.getPercentage() != null && !billingservice.getPercentage().equalsIgnoreCase("")) {
                 //billingPerc = billingservice
                 aPercentCodes.add(billingservice);
 
             }
             else {
-                if( billingservice.getGstFlag() ) {
+                if( billingservice != null && billingservice.getGstFlag() ) {
                     gst = gstControl.getGstPercent();
                     gst = gst.divide(new BigDecimal(100.0));
                     gstTotal = gst.multiply(new BigDecimal(Double.parseDouble(billingservice.getValue())));
                     total = total.add(gstTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
 
-                total = total.add(new BigDecimal(billingservice.getValue()));
+                if(billingservice != null)
+                	total = total.add(new BigDecimal(billingservice.getValue()));
             }
         }
 
@@ -272,12 +282,12 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return total.toString();
     }
 
-    public int getDaysSinceBilled(String serviceCode, String demographicNo) {
+    public int getDaysSinceBilled(String serviceCode, Integer demographicNo) {
         String sql = "select b from BillingONCHeader1 h1, BillingONItem b where b.ch1Id = h1.id and b.serviceCode = :code and" +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc limit 1";
         Query q = entityManager.createQuery(sql);
         q.setParameter("code", serviceCode);
-        q.setParameter("demo", new Integer(demographicNo));
+        q.setParameter("demo", demographicNo);
         List billingClaims = q.getResultList();
         int numDays = -1;
 
@@ -295,12 +305,12 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return numDays;
     }
     
-    public int getDaysSincePaid(String serviceCode, String demographic_no) {
+    public int getDaysSincePaid(String serviceCode, Integer demographic_no) {
         String sql = "select b from BillingONCHeader1 h1, BillingONItem b where b.ch1Id = h1.id and b.serviceCode = :code and" +
                 " h1.demographicNo = :demo and h1.status = 'S' order by h1.billingDate desc limit 1";
         Query q = entityManager.createQuery(sql);
         q.setParameter("code", serviceCode);
-        q.setParameter("demo", new Integer(demographic_no));
+        q.setParameter("demo", demographic_no);
         List billingClaims = q.getResultList();
         int numDays = -1;
 
@@ -319,24 +329,24 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }    
     
     @SuppressWarnings("unchecked")
-    public List<BillingONCHeader1> getInvoices(String demographicNo, Integer limit) {
+    public List<BillingONCHeader1> getInvoices(Integer demographicNo, Integer limit) {
     	String sql = "select h1 from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
         Query q = entityManager.createQuery(sql);
         
-        q.setParameter("demo", new Integer(demographicNo));
+        q.setParameter("demo", demographicNo);
         q.setMaxResults(limit);
         
         return q.getResultList();
     }
     
     @SuppressWarnings("unchecked")
-    public List<BillingONCHeader1> getInvoices(String demographicNo) {
+    public List<BillingONCHeader1> getInvoices(Integer demographicNo) {
     	String sql = "select h1 from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
         Query q = entityManager.createQuery(sql);
         
-        q.setParameter("demo", new Integer(demographicNo));
+        q.setParameter("demo", demographicNo);
         
         return q.getResultList();
     }
@@ -355,12 +365,12 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
     
     @SuppressWarnings("unchecked")
-    public List<Map<String,Object>> getInvoicesMeta(String demographicNo) {
+    public List<Map<String,Object>> getInvoicesMeta(Integer demographicNo) {
     	String sql = "select new map(h1.id as id, h1.billingDate as billing_date, h1.billingTime as billing_time, h1.providerNo as provider_no) from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
         Query q = entityManager.createQuery(sql);
         
-        q.setParameter("demo", new Integer(demographicNo));
+        q.setParameter("demo", demographicNo);
         
         return q.getResultList();
     }
@@ -418,11 +428,11 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return results;
     }
 
-    public BillingONCHeader1 getLastOHIPBillingDateForServiceCode (String demographicNo, String serviceCode) {            
+    public BillingONCHeader1 getLastOHIPBillingDateForServiceCode (Integer demographicNo, String serviceCode) {            
         String sql = "select b from BillingONItem i, BillingONCHeader1 b where i.ch1Id=b.id and i.status!='D' and i.serviceCode=? and b.demographicNo=?  and (b.payProgram='HCP' or b.payProgram='RMB' or b.payProgram='WCB') and (b.status='S' or b.status='O' or b.status='B') order by b.billingDate desc";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1,serviceCode);
-        query.setParameter(2,Integer.parseInt(demographicNo));
+        query.setParameter(2,demographicNo);
         
         List<BillingONCHeader1> results = query.getResultList();
         BillingONCHeader1 result = null;

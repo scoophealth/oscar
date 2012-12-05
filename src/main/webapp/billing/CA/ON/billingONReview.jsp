@@ -513,7 +513,7 @@ window.onload=function(){
          serviceCodeValue = request.getParameter("serviceCode" + srvCodeIdx);
          //Only worry about this check if we are billing OHIP for A003
          if (serviceCodeValue.equals("A003A") && request.getParameter("xml_billtype").matches("ODP.*")) {
-            BillingONCHeader1 bCh1 = billingONCHeader1Dao.getLastOHIPBillingDateForServiceCode(demo_no,"A003A");
+            BillingONCHeader1 bCh1 = billingONCHeader1Dao.getLastOHIPBillingDateForServiceCode(Integer.parseInt(demo_no),"A003A");
             if (bCh1 != null) {                
                 Calendar serviceDateCal = Calendar.getInstance();                
                 java.util.Date serviceDate = null;               
@@ -602,13 +602,13 @@ window.onload=function(){
 				Vector vecPercMin = new Vector();
 				Vector vecPercMax = new Vector();
 				for(int i=0; i<vecServiceParam[0].size(); i++) {
-					String codeName = (String)vecServiceParam[0].get(i);
-					if(nCode<vecCodeItem.size() && codeName.equals((String) ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeName())) {
+					String codeName = vecServiceParam[0].get(i);
+					if(nCode<vecCodeItem.size() && codeName.equals( ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeName())) {
 						n++;
-						String codeUnit = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
-						String codeFee = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeFee();
-						String codeTotal = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
-                        String strWarning = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getMsg();
+						String codeUnit = ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
+						String codeFee = ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeFee();
+						String codeTotal = ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
+                        String strWarning = ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getMsg();
                                                 gstFlag = gstRep.getGstFlag(codeName,billReferalDate);  // Retrieve whether the code has gst involved
                                                 BigDecimal cTotal = new BigDecimal(codeTotal);
                                                 if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated
@@ -647,7 +647,7 @@ window.onload=function(){
                         }
 						nCode++;
 					}
-					else if(nPerc<vecPercCodeItem.size() && codeName.equals((String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
+					else if(nPerc<vecPercCodeItem.size() && codeName.equals( ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
 			if (codeValid) {
                                             %>
 			<tr class="myPink">
@@ -661,7 +661,7 @@ window.onload=function(){
 						String percFee = percItem.getCodeFee();
 						Vector vecPercFee = percItem.getVecCodeFee();
 						Vector vecPercTotal = percItem.getVecCodeTotal();
-						String codeUnit = (String)percItem.getCodeUnit();
+						String codeUnit = percItem.getCodeUnit();
 						for(int j=0; j<vecPercTotal.size(); j++) {
 							String percTotal = (Float.parseFloat((String)vecPercTotal.get(j)) )*Integer.parseInt(codeUnit) + "";
 				if (codeValid) {
