@@ -61,6 +61,6 @@ public class SurveyTestManagerImpl implements SurveyTestManager {
 	}
 
 	public void clearTestData(String surveyId) {
-		this.surveyTestDAO.clearTestData(Long.valueOf(surveyId));
+		this.surveyTestDAO.clearTestData(Integer.valueOf(surveyId));
 	}
 }

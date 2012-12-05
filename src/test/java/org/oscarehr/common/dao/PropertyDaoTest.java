@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PropertyDaoTest extends DaoTestFixtures {
 
-	private PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
+	protected PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
 
 	@Before
 	public void before() throws Exception {

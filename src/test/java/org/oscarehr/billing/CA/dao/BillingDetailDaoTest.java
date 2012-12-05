@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingDetailDaoTest extends DaoTestFixtures {
 
-	private BillingDetailDao dao = SpringUtils.getBean(BillingDetailDao.class);
+	public BillingDetailDao dao = SpringUtils.getBean(BillingDetailDao.class);
 
 	public BillingDetailDaoTest() {
 	}

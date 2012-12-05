@@ -39,16 +39,16 @@ public class FlowSheetCustomizationDao extends AbstractDao<FlowSheetCustomizatio
 		super(FlowSheetCustomization.class);
 	}
 
-    public FlowSheetCustomization getFlowSheetCustomization(String id){
-    	return this.find(Integer.valueOf(id));
+    public FlowSheetCustomization getFlowSheetCustomization(Integer id){
+    	return this.find(id);
     }
 
-    public List<FlowSheetCustomization> getFlowSheetCustomizations(String flowsheet,String provider,String demographic){
+    public List<FlowSheetCustomization> getFlowSheetCustomizations(String flowsheet,String provider,Integer demographic){
     	Query query = entityManager.createQuery("SELECT fd FROM FlowSheetDrug fd WHERE fd.flowsheet=? and fd.archived=0 and ( ( fd.providerNo = ?  and fd.demographicNo = 0) or (fd.providerNo =? and fd.demographicNo = ?  ) )");
     	query.setParameter(1, flowsheet);
     	query.setParameter(2, provider);
     	query.setParameter(3, provider);
-    	query.setParameter(4, Integer.parseInt(demographic));
+    	query.setParameter(4, demographic);
 
         @SuppressWarnings("unchecked")
         List<FlowSheetCustomization> list = query.getResultList();

@@ -37,7 +37,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EFormValueDaoTest extends DaoTestFixtures {
 
-	private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
+	protected EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
 
 	public EFormValueDaoTest() {
 	}
@@ -65,7 +65,7 @@ public class EFormValueDaoTest extends DaoTestFixtures {
 		assertEquals(3,results.size());
 	}
 
-	private EFormValue generateEFormValue(int fdid) {
+	protected EFormValue generateEFormValue(int fdid) {
 		EFormValue v1 = new EFormValue();
 		v1.setDemographicId(1);
 		v1.setFormDataId(fdid);

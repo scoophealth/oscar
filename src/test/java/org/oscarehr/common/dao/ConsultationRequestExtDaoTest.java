@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ConsultationRequestExtDaoTest extends DaoTestFixtures {
 
-	private ConsultationRequestExtDao dao = (ConsultationRequestExtDao)SpringUtils.getBean(ConsultationRequestExtDao.class);
+	protected ConsultationRequestExtDao dao = (ConsultationRequestExtDao)SpringUtils.getBean(ConsultationRequestExtDao.class);
 	Logger logger = MiscUtils.getLogger();
 	
 	@Before

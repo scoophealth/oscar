@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EyeformSpecsHistoryDaoTest extends DaoTestFixtures {
 
-	private EyeformSpecsHistoryDao dao = SpringUtils.getBean(EyeformSpecsHistoryDao.class);
+	public EyeformSpecsHistoryDao dao = SpringUtils.getBean(EyeformSpecsHistoryDao.class);
 
 
 	@Before

@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ValidationsDaoTest extends DaoTestFixtures {
 
-	private ValidationsDao dao = SpringUtils.getBean(ValidationsDao.class);
+	protected ValidationsDao dao = SpringUtils.getBean(ValidationsDao.class);
 
 
 	@Before

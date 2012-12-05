@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class Hl7LinkDaoTest extends DaoTestFixtures {
 
-	private Hl7LinkDao dao = SpringUtils.getBean(Hl7LinkDao.class);
+	public Hl7LinkDao dao = SpringUtils.getBean(Hl7LinkDao.class);
 
 	@Before
 	public void before() throws Exception {

@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingONHeaderDaoTest extends DaoTestFixtures{
 
-	private BillingONHeaderDao dao = SpringUtils.getBean(BillingONHeaderDao.class);
+	public BillingONHeaderDao dao = SpringUtils.getBean(BillingONHeaderDao.class);
 
 	public BillingONHeaderDaoTest() {
 	}

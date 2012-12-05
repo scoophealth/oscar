@@ -32,7 +32,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PatientLabRoutingDaoTest extends DaoTestFixtures {
 
-	private PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
+	protected PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
 
 	@Before
 	public void before() throws Exception {

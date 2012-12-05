@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class OscarCommLocationsDaoTest extends DaoTestFixtures {
 
-	private OscarCommLocationsDao dao = SpringUtils.getBean(OscarCommLocationsDao.class);
+	protected OscarCommLocationsDao dao = SpringUtils.getBean(OscarCommLocationsDao.class);
 
 
 	@Before

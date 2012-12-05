@@ -52,7 +52,7 @@ import org.oscarehr.util.SpringUtils;
 @SuppressWarnings("unused")
 public class SystemMessageDaoTest extends DaoTestFixtures {
 
-	private SystemMessageDao dao = SpringUtils.getBean(SystemMessageDao.class);
+	protected SystemMessageDao dao = SpringUtils.getBean(SystemMessageDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 

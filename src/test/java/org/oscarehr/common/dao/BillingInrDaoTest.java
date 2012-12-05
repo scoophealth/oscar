@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingInrDaoTest {
 
-	private BillingInrDao dao = SpringUtils.getBean(BillingInrDao.class);
+	protected BillingInrDao dao = SpringUtils.getBean(BillingInrDao.class);
 
 	public BillingInrDaoTest() {
 	}

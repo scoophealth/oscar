@@ -36,7 +36,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlDocTypeDaoTest extends DaoTestFixtures {
 
-	private CtlDocTypeDao dao = (CtlDocTypeDao)SpringUtils.getBean("ctlDocTypeDao");
+	protected CtlDocTypeDao dao = (CtlDocTypeDao)SpringUtils.getBean("ctlDocTypeDao");
 
 	public CtlDocTypeDaoTest() {
 	}

@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class FlowSheetCustomizationDaoTest extends DaoTestFixtures{
 
-	private FlowSheetCustomizationDao dao = SpringUtils.getBean(FlowSheetCustomizationDao.class);
+	protected FlowSheetCustomizationDao dao = SpringUtils.getBean(FlowSheetCustomizationDao.class);
 
 	public FlowSheetCustomizationDaoTest() {
 	}
@@ -42,7 +42,7 @@ public class FlowSheetCustomizationDaoTest extends DaoTestFixtures{
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("flowsheet_customization");
+		SchemaUtils.restoreTable("flowsheet_customization","flowsheet_drug");
 	}
 
 	@Test

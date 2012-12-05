@@ -48,13 +48,13 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingServiceDaoTest extends DaoTestFixtures {
 
-	private BillingServiceDao dao = (BillingServiceDao)SpringUtils.getBean(BillingServiceDao.class);
-	private DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
+	protected BillingServiceDao dao = (BillingServiceDao)SpringUtils.getBean(BillingServiceDao.class);
+	protected DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	Logger logger = MiscUtils.getLogger();
 
 	@Before
 	public void setUp() throws Exception {
-		SchemaUtils.restoreTable("billingservice", "billingperclimit", "ctl_billingservice");
+		SchemaUtils.restoreTable("billingservice", "billingperclimit", "ctl_billingservice","wcb");
 	}
 	
 	@Test
@@ -565,7 +565,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 //	 * @throws Exception
 //	 */
 //	public void testSearchPrivateBillingCode() throws Exception {
-//		String searchString = "private01";
+//		String searchString = "protected01";
 //		Date date = new Date(dfm.parse("20091231").getTime());
 //
 //		// Valid input.
@@ -594,7 +594,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 //	 * @throws Exception
 //	 */
 //	public void testSearchPrivateBillingCode_WithUnderscore() throws Exception {
-//		String searchString = "_private01";
+//		String searchString = "_protected01";
 //		Date date = new Date(dfm.parse("20091231").getTime());
 //
 //		// Valid input.
@@ -618,7 +618,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testSearchPrivateBillingCode_EmptySet() throws Exception {
-		String searchString = "_private01";
+		String searchString = "_protected01";
 		Date date = new Date(dfm.parse("20091231").getTime());
 		BillingService result = dao.searchPrivateBillingCode(searchString, date);
 		assertNull(result);
@@ -628,7 +628,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 	public void testEditBillingCodeDesc() throws Exception {
 		String description = "New description";
 		String value = "value1";
-		String codeID = "1";
+		int codeID = 1;
 		String date = "20091231";
 		BillingService billingService1 = createBillingService("Some service", date);
 		dao.persist(billingService1);
@@ -644,7 +644,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 	@Test 
 	public void testEditBillingCode() throws Exception {
 		String value = "value1";
-		String codeID = "1";
+		int codeID = 1;
 		BillingService billingService1 = createBillingService("Some service", "20090101");
 		dao.persist(billingService1);
 		boolean pass = dao.editBillingCode(value, codeID);
@@ -726,7 +726,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService3);
 
 		Object[] expectedResult = {"value2", true};
-		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
+		Object[] result = dao.getUnitPrice(serviceCode, sdf.parse(referralDate));
 
 		// fail if list sizes aren't the same
 		if (result.length != expectedResult.length) {
@@ -753,10 +753,11 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 //	}
 
 	@Test
-	public void testGetUnitPrice_EmptySet() {
+	public void testGetUnitPrice_EmptySet() throws Exception {
 		String serviceCode = "service001";
 		String referralDate = "2009-12-31";
-		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Object[] result = dao.getUnitPrice(serviceCode, sdf.parse(referralDate));
 		assertNull(result);
 	}
 
@@ -774,7 +775,8 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService2);
 		dao.persist(billingService1);
 		String expectedResult = "40";
-		String result = dao.getUnitPercentage(serviceCode, referralDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String result = dao.getUnitPercentage(serviceCode, sdf.parse(referralDate));
 		assertEquals(expectedResult,result);
 	}
 
@@ -790,10 +792,11 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 //	}
 
 	@Test
-	public void testGetUnitPercentage_EmptySet() {
+	public void testGetUnitPercentage_EmptySet() throws Exception {
 		String serviceCode = "service001";
 		String referralDate = "2009-12-31";
-		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Object[] result = dao.getUnitPrice(serviceCode, sdf.parse(referralDate));
 		assertNull(result);
 	}
 

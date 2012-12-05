@@ -75,7 +75,7 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 		return null;
 	}
 
-	public List<ProviderData> findByProviderNo(String providerNo, String status, String limit, String offset) {
+	public List<ProviderData> findByProviderNo(String providerNo, String status, int limit, int offset) {
 
 		String sqlCommand = "From ProviderData p where p.id like ?";
 
@@ -83,8 +83,8 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 			sqlCommand += " and p.status = :status ";
 
 		Query query = entityManager.createQuery(sqlCommand);
-		query.setFirstResult(Integer.parseInt(offset));
-		query.setMaxResults(Integer.parseInt(limit));
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
 		query.setParameter(1, providerNo + "%");
 		if(status != null)
 			query.setParameter("status", status);
@@ -95,7 +95,7 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 		return results;
 	}
 
-	public  List<ProviderData> findByProviderName(String searchStr, String status, String limit, String offset) {
+	public  List<ProviderData> findByProviderName(String searchStr, String status, int limit, int offset) {
 		
 		String queryString = "From ProviderData p where p.lastName like :lastName ";
 		
@@ -108,8 +108,8 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 			queryString += " and p.status = :status ";
 		
 		Query query = entityManager.createQuery(queryString);
-		query.setFirstResult(Integer.parseInt(offset));
-		query.setMaxResults(Integer.parseInt(limit));
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
 		
 		query.setParameter("lastName", name[0].trim() + "%");
 		if(name.length==2)

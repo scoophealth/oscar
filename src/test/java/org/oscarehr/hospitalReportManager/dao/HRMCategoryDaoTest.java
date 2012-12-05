@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class HRMCategoryDaoTest extends DaoTestFixtures {
 
-	private HRMCategoryDao dao = SpringUtils.getBean(HRMCategoryDao.class);
+	public HRMCategoryDao dao = SpringUtils.getBean(HRMCategoryDao.class);
 
 
 	@Before

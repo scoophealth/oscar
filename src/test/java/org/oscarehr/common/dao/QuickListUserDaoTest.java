@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class QuickListUserDaoTest extends DaoTestFixtures {
 
-	private QuickListUserDao dao = SpringUtils.getBean(QuickListUserDao.class);
+	protected QuickListUserDao dao = SpringUtils.getBean(QuickListUserDao.class);
 
 	@Before
 	public void before() throws Exception {

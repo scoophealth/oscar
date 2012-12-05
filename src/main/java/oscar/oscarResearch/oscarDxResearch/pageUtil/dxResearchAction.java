@@ -95,7 +95,6 @@ public class dxResearchAction extends Action {
         ActionMessages errors = new ActionMessages();  
         DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
         
-		String sql = null;
 		for (int i = 0; i < xml_research.length; i++) {
 			int count = 0;
 			if (multipleCodes) codingSystem = codingSystems[i];
@@ -113,7 +112,7 @@ public class dxResearchAction extends Action {
 				}
 
 				if (count == 0) {
-					String daoName = AbstractCodeSystemDao.getDaoName(codingSystem);
+					String daoName = AbstractCodeSystemDao.getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codingSystem));
 					@SuppressWarnings("unchecked")
 					AbstractCodeSystemDao<AbstractCodeSystemModel<?>> csDao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(daoName);
 

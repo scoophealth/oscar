@@ -29,6 +29,8 @@ import org.oscarehr.common.model.AbstractCodeSystemModel;
 
 public abstract class AbstractCodeSystemDao<T extends AbstractCodeSystemModel<?>> extends AbstractDao<T> {
 
+	public static enum codingSystem {Icd9,Ichppccode,SnomedCore}
+	
 	/**
 	 * Gets the name of the DAO for the specified code system
 	 * 
@@ -37,12 +39,12 @@ public abstract class AbstractCodeSystemDao<T extends AbstractCodeSystemModel<?>
 	 * @return
 	 * 		Return the name of the DAO bean.
 	 */
-	public static String getDaoName(String codeSystem) {
-		if (codeSystem.equalsIgnoreCase("icd9")) return "icd9Dao";
+	public static String getDaoName(codingSystem codeSystem) {
+		if (codeSystem == codingSystem.Icd9) return "icd9Dao";
 
-		if (codeSystem.equalsIgnoreCase("ichppccode")) return "ichppccodeDao";
+		if (codeSystem == codingSystem.Ichppccode) return "ichppccodeDao";
 
-		if (codeSystem.equalsIgnoreCase("snomedcore")) return "snomedCoreDao";
+		if (codeSystem == codingSystem.SnomedCore) return "snomedCoreDao";
 
 		throw new IllegalArgumentException("Unsupported code system: " + codeSystem + ". Please use one of icd9, ichppccode, snomedcore");
 	}

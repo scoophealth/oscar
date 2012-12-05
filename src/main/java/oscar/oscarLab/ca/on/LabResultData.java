@@ -307,7 +307,7 @@ public class LabResultData implements Comparable<LabResultData> {
 			String date="";
 			
 			LabReportInformationDao dao = SpringUtils.getBean(LabReportInformationDao.class);
-			for(Object[] i : dao.findReportsByPhysicianId(this.getSegmentID())) {
+			for(Object[] i : dao.findReportsByPhysicianId(Integer.parseInt(this.getSegmentID()))) {
 				LabReportInformation lri = (LabReportInformation) i[0];  
 				date = lri.getPrintDate() + lri.getPrintTime(); 
 			}

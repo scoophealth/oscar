@@ -54,7 +54,7 @@ public class BillingDao extends AbstractDao<Billing> {
 	}
 	
 	public List<Billing> findByBillingType(String type) {
-		Query q = entityManager.createQuery("select x from Billing x where x.billingType=?");
+		Query q = entityManager.createQuery("select x from Billing x where x.billingtype=?");
 		q.setParameter(1, type);
 		
 		@SuppressWarnings("unchecked")

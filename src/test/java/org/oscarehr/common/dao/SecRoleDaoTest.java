@@ -45,7 +45,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class SecRoleDaoTest extends DaoTestFixtures {
 	
-	private SecRoleDao dao = (SecRoleDao)SpringUtils.getBean(SecRoleDao.class);
+	protected SecRoleDao dao = (SecRoleDao)SpringUtils.getBean(SecRoleDao.class);
 	
 	@Before
 	public void before() throws Exception {

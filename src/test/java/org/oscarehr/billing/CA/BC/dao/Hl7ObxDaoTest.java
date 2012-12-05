@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class Hl7ObxDaoTest extends DaoTestFixtures {
 
-	private Hl7ObxDao dao = SpringUtils.getBean(Hl7ObxDao.class);
+	public Hl7ObxDao dao = SpringUtils.getBean(Hl7ObxDao.class);
 
 	@Before
 	public void before() throws Exception {

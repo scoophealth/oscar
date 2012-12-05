@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class HRMSubClassDaoTest extends DaoTestFixtures {
 
-	private HRMSubClassDao dao = SpringUtils.getBean(HRMSubClassDao.class);
+	public HRMSubClassDao dao = SpringUtils.getBean(HRMSubClassDao.class);
 
 
 	@Before

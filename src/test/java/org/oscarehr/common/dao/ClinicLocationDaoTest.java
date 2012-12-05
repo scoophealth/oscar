@@ -43,7 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ClinicLocationDaoTest extends DaoTestFixtures {
 
-	private ClinicLocationDao dao = (ClinicLocationDao)SpringUtils.getBean(ClinicLocationDao.class);
+	protected ClinicLocationDao dao = (ClinicLocationDao)SpringUtils.getBean(ClinicLocationDao.class);
 
 	@Before
 	public void before() throws Exception {

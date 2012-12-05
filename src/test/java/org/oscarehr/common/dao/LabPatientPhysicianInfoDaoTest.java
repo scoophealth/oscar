@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class LabPatientPhysicianInfoDaoTest extends DaoTestFixtures {
 
-	private LabPatientPhysicianInfoDao dao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
+	protected LabPatientPhysicianInfoDao dao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
 
 	public LabPatientPhysicianInfoDaoTest() {
 	}

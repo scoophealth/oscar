@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class LabReportInformationDaoTest extends DaoTestFixtures {
 
-	private LabReportInformationDao dao = SpringUtils.getBean(LabReportInformationDao.class);
+	protected LabReportInformationDao dao = SpringUtils.getBean(LabReportInformationDao.class);
 
 	public LabReportInformationDaoTest() {
 	}
@@ -42,7 +42,7 @@ public class LabReportInformationDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("labReportInformation");
+		SchemaUtils.restoreTable("labReportInformation","labPatientPhysicianInfo");
 	}
 
 	@Test

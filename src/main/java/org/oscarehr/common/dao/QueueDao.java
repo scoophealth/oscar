@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Queue;
@@ -79,34 +80,38 @@ public class QueueDao extends AbstractDao<Queue>{
 
     public String getLastId(){
         String r="";
-        Query query=entityManager.createQuery("select MAX(q.id) from Queue q");
-        Integer ri=(Integer)query.getSingleResult();
-        if(ri!=null){
-            r=ri.toString();
+        try {
+	        Query query=entityManager.createQuery("select MAX(q.id) from Queue q");
+	        Integer ri=(Integer)query.getSingleResult();
+	        r = ri.toString();
+        }catch(NoResultException e) {
+        	//ignore
         }
+       
         return r;
     }
     public String getQueueName(int id){
 
         String q="select q from Queue q where q.id="+id;
         Query query=entityManager.createQuery(q);
-        Queue result=(Queue)query.getSingleResult();
-        if(result!=null){
-            return result.getName();
-        }else{
-            return "";
+        try {
+        	Queue result=(Queue)query.getSingleResult();
+        	return result.getName();
+        }catch(NoResultException e) {
+        	//ignore
         }
-
+        return "";
     }
     public String getQueueid(String name){
         String q="select q from Queue q where q.name="+name;
         Query query=entityManager.createQuery(q);
-        Queue result=(Queue)query.getSingleResult();
-        if(result!=null){
-            return result.getId().toString();
-        }else{
-            return "";
+        try {
+        	Queue result=(Queue)query.getSingleResult();
+        	return result.getId().toString();
+        }catch(NoResultException e) {
+        	//ignore
         }
+       return "";
     }
     public boolean addNewQueue(String qn){
        try{

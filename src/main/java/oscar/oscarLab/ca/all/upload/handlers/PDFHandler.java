@@ -86,7 +86,7 @@ public class PDFHandler  implements MessageHandler{
             if ((batchPDFProviderNo != null) && !batchPDFProviderNo.isEmpty()) {
                 
                 ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) SpringUtils.getBean("providerInboxRoutingDAO");
-                providerInboxRoutingDao.addToProviderInbox(batchPDFProviderNo, doc_no, "DOC");
+                providerInboxRoutingDao.addToProviderInbox(batchPDFProviderNo, Integer.parseInt(doc_no), "DOC");
                 
                 //Add to default queue for now, not sure how or if any other queues can be used anyway (MAB)                 
                 QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) SpringUtils.getBean("queueDocumentLinkDAO");          

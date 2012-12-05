@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicMergedDaoTest {
 
-	private DemographicMergedDao dao = SpringUtils.getBean(DemographicMergedDao.class);
+	protected DemographicMergedDao dao = SpringUtils.getBean(DemographicMergedDao.class);
 
 	public DemographicMergedDaoTest() {
 

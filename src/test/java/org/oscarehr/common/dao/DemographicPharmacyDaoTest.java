@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicPharmacyDaoTest extends DaoTestFixtures {
 
-	private DemographicPharmacyDao dao = (DemographicPharmacyDao)SpringUtils.getBean(DemographicPharmacyDao.class);
+	protected DemographicPharmacyDao dao = (DemographicPharmacyDao)SpringUtils.getBean(DemographicPharmacyDao.class);
 
 	public DemographicPharmacyDaoTest() {
 	}
@@ -56,7 +56,7 @@ public class DemographicPharmacyDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testDataMethods()  {
-		dao.addPharmacyToDemographic("1","100");
-		assertEquals(1,dao.findByDemographicId("100").getPharmacyId());
+		dao.addPharmacyToDemographic(1,100);
+		assertEquals(1,dao.findByDemographicId(100).getPharmacyId());
 	}
 }

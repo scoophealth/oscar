@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class Billing3rdPartyAddressDaoTest extends DaoTestFixtures{
 
-	private Billing3rdPartyAddressDao dao = SpringUtils.getBean(Billing3rdPartyAddressDao.class);
+	protected Billing3rdPartyAddressDao dao = SpringUtils.getBean(Billing3rdPartyAddressDao.class);
 
 	public Billing3rdPartyAddressDaoTest() {
 	}

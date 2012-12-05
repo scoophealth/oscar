@@ -88,7 +88,7 @@ public class NotifyConsultationTickler extends AbstractPreparedTickler implement
 		formBean = tearForm(request);
 
 		if (formBean.getDemographic_no() != null && formBean.getAction().equals("populate")) {
-			List<ConsultationRequest> consultationRequests = consultationRequestDao.getConsultationsByStatus(formBean.getDemographic_no(), "1");
+			List<ConsultationRequest> consultationRequests = consultationRequestDao.getConsultationsByStatus(Integer.parseInt(formBean.getDemographic_no()), "1");
 			request.setAttribute("consultations", consultationRequests);
 			formBean.setAction("");
 			request.setAttribute("formBean", formBean);

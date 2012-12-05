@@ -41,7 +41,7 @@ import oscar.util.ConversionUtils;
 
 public class TicklerDaoTest extends DaoTestFixtures {
 
-	private TicklerDAO dao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
+	protected TicklerDAO dao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
 
 	public TicklerDaoTest() {
 	}

@@ -40,10 +40,17 @@ import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Queue;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class QueueDaoTest extends DaoTestFixtures {
-	private QueueDao dao = (QueueDao)SpringUtils.getBean(QueueDao.class);
+	protected QueueDao dao = (QueueDao)SpringUtils.getBean(QueueDao.class);
+	
+	@Override
+	@Test
+	public void doSimpleExceptionTest() {
+		MiscUtils.getLogger().error("Unable to run doSimpleExceptionTest on this DAO");
+	}
 	
 	@Before
 	public void before() throws Exception {

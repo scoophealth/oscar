@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ReportByExamplesFavoriteDaoTest extends DaoTestFixtures {
 
-	private ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
+	protected ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
 
 
 	@Before

@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ScratchPadDaoTest extends DaoTestFixtures {
 
-	private ScratchPadDao dao = SpringUtils.getBean(ScratchPadDao.class);
+	protected ScratchPadDao dao = SpringUtils.getBean(ScratchPadDao.class);
 
 	public ScratchPadDaoTest() {
 	}

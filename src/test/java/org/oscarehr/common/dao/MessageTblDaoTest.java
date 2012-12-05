@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MessageTblDaoTest extends DaoTestFixtures {
 
-	private MessageTblDao dao = SpringUtils.getBean(MessageTblDao.class);
+	protected MessageTblDao dao = SpringUtils.getBean(MessageTblDao.class);
 
 	public MessageTblDaoTest() {
 	}

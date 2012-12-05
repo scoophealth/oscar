@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class GroupsDaoTest {
 
-	private GroupsDao dao = SpringUtils.getBean(GroupsDao.class);
+	protected GroupsDao dao = SpringUtils.getBean(GroupsDao.class);
 
 	@Before
 	public void before() throws Exception {

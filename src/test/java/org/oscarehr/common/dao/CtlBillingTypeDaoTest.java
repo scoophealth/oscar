@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CtlBillingTypeDaoTest extends DaoTestFixtures {
 
-	private CtlBillingTypeDao dao = SpringUtils.getBean(CtlBillingTypeDao.class);
+	protected CtlBillingTypeDao dao = SpringUtils.getBean(CtlBillingTypeDao.class);
 
 
 	@Before

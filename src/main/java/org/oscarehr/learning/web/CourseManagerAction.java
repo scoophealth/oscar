@@ -48,8 +48,10 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.LoggedInInfo;
@@ -69,7 +71,7 @@ public class CourseManagerAction extends DispatchAction {
 	private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-
+	private static DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
 	public ActionForward createCourse(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 		throws IOException
@@ -205,8 +207,11 @@ public class CourseManagerAction extends DispatchAction {
 		}
 		logger.info("course id is " + id);
 
-		List<Demographic> demographics = demographicDao.getDemographicsByExtKey("course",String.valueOf(id));
-
+		List<Demographic> demographics = new ArrayList<Demographic>();
+		for(DemographicExt de :demographicExtDao.getDemographicExtByKeyAndValue("course", String.valueOf(id))) {
+			demographics.add(demographicDao.getDemographicById(de.getDemographicNo()));
+		}
+		
 		logger.info("# of demographics in that course according to ext entry: " + demographics.size());
 		List<PatientDetailBean> results = new ArrayList<PatientDetailBean>();
 

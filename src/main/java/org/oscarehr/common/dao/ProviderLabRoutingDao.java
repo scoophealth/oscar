@@ -32,9 +32,9 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<ProviderLabRoutingModel> getProviderLabRoutings(String labNo, String labType, String providerNo, String status) {
+	private List<ProviderLabRoutingModel> getProviderLabRoutings(Integer labNo, String labType, String providerNo, String status) {
 		Query q = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType=? and x.providerNo=? and x.status=?");
-		q.setParameter(1, labNo != null ? Integer.parseInt(labNo) : "%");
+		q.setParameter(1, labNo != null ? labNo : "%");
 		q.setParameter(2, labType != null ? labType : "%");
 		q.setParameter(3, providerNo != null ? providerNo : "%");
 		q.setParameter(4, status != null ? status : "%");
@@ -52,19 +52,19 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		return q.getResultList();
 	}
 	
-	public List<ProviderLabRoutingModel> getProviderLabRoutingDocuments(String labNo) {
+	public List<ProviderLabRoutingModel> getProviderLabRoutingDocuments(Integer labNo) {
 		return getProviderLabRoutings(labNo, "DOC", null, null);
 	}
 
-	public List<ProviderLabRoutingModel> getProviderLabRoutingForLabProviderType(String labNo, String providerNo, String labType) {
+	public List<ProviderLabRoutingModel> getProviderLabRoutingForLabProviderType(Integer labNo, String providerNo, String labType) {
 		return getProviderLabRoutings(labNo, labType, providerNo, null);
 	}
 
-	public List<ProviderLabRoutingModel> getProviderLabRoutingForLabAndType(String labNo, String labType) {
+	public List<ProviderLabRoutingModel> getProviderLabRoutingForLabAndType(Integer labNo, String labType) {
 		return getProviderLabRoutings(labNo, labType, null, "N");
 	}
 
-	public void updateStatus(String labNo, String labType) {
+	public void updateStatus(Integer labNo, String labType) {
 		String updateString = "UPDATE " + modelClass.getName() + " x set x.status='N' WHERE x.labNo=? AND x.labType=?";
 
 		Query query = entityManager.createQuery(updateString);

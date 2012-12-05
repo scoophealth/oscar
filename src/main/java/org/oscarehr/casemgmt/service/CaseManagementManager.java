@@ -854,7 +854,7 @@ public class CaseManagementManager {
 		List<Integer> progList = new ArrayList<Integer>();
 
 		if (programId == null) {
-			for (Object o : demographicDao.getProgramIdByDemoNo(demoNo)) {
+			for (Object o : demographicDao.getProgramIdByDemoNo(Integer.parseInt(demoNo))) {
 				progList.add((Integer) o);
 			}
 		} else {

@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class LogLettersDaoTest extends DaoTestFixtures {
 
-	private LogLettersDao dao = SpringUtils.getBean(LogLettersDao.class);
+	protected LogLettersDao dao = SpringUtils.getBean(LogLettersDao.class);
 
 
 	@Before

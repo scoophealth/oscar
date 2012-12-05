@@ -44,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class TicklerTextSuggestDaoTest extends DaoTestFixtures {
 	
-	private TicklerTextSuggestDao dao = (TicklerTextSuggestDao)SpringUtils.getBean(TicklerTextSuggestDao.class);
+	protected TicklerTextSuggestDao dao = (TicklerTextSuggestDao)SpringUtils.getBean(TicklerTextSuggestDao.class);
 	
 	@Before
 	public void before() throws Exception {

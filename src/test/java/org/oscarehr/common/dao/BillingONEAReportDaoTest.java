@@ -43,7 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingONEAReportDaoTest extends DaoTestFixtures {
 
-	private BillingONEAReportDao dao = (BillingONEAReportDao)SpringUtils.getBean(BillingONEAReportDao.class);
+	protected BillingONEAReportDao dao = (BillingONEAReportDao)SpringUtils.getBean(BillingONEAReportDao.class);
 	
 	@Before
 	public void before() throws Exception {

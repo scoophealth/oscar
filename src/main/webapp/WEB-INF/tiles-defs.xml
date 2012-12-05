@@ -39,14 +39,7 @@
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
 		<put name="body" value="/PMmodule/incVacancyMatches.jsp" />
 	</definition>
-	<definition name="page.pmm.client.merge" path="/PMmodule/layout_quatro.jsp">
-		<put name="leftNav"  value="/PMmodule/navigation_client.jsp" />
-		<put name="body" value="/PMmodule/MergeClient.jsp" />
-	</definition>
-	<definition name="page.pmm.client.unmerge" path="/PMmodule/layout_quatro.jsp">
-		<put name="leftNav"  value="/PMmodule/navigation_client.jsp" />
-		<put name="body" value="/PMmodule/MergedClient.jsp" />
-	</definition>
+	
 	<definition name="page.admin.role.list" path="/PMmodule/layout_quatro.jsp"> 
 		<put name="leftNav" value="/PMmodule/navigation_blank.jsp" />
 		<put name="body" value="/PMmodule/Admin/Role/RoleList.jsp" />

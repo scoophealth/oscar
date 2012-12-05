@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingPercLimitDaoTest extends DaoTestFixtures {
 
-	private BillingPercLimitDao dao = SpringUtils.getBean(BillingPercLimitDao.class);
+	public BillingPercLimitDao dao = SpringUtils.getBean(BillingPercLimitDao.class);
 
 	public BillingPercLimitDaoTest() {
 	}

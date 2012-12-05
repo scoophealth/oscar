@@ -50,7 +50,7 @@ import org.oscarehr.util.MiscUtils;
 
 public class PHRVerificationDaoTest extends DaoTestFixtures {
 
-	private PHRVerificationDao dao = SpringUtils.getBean(PHRVerificationDao.class);
+	protected PHRVerificationDao dao = SpringUtils.getBean(PHRVerificationDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	
 

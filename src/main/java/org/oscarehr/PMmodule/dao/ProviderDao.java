@@ -31,6 +31,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -230,10 +231,13 @@ public class ProviderDao extends HibernateDaoSupport {
 		return rs;
 	}
 
+    @SuppressWarnings("unchecked")
 	public List<Provider> search(String name) {
 		boolean isOracle = OscarProperties.getInstance().getDbType().equals(
 				"oracle");
-		Criteria c = this.getSession().createCriteria(Provider.class);
+		Session session = getSession();
+		
+		Criteria c = session.createCriteria(Provider.class);
 		if (isOracle) {
 			c.add(Restrictions.or(Expression.ilike("FirstName", name + "%"),
 					Expression.ilike("LastName", name + "%")));
@@ -243,8 +247,13 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 		c.addOrder(Order.asc("ProviderNo"));
 
-		@SuppressWarnings("unchecked")
-		List<Provider> results = c.list();
+		List<Provider> results = new ArrayList<Provider>();
+		
+		try {
+			results = c.list();
+		}finally {
+			this.releaseSession(session);
+		}
 
 		if (log.isDebugEnabled()) {
 			log.debug("search: # of results=" + results.size());
@@ -274,18 +283,20 @@ public class ProviderDao extends HibernateDaoSupport {
 
 	public List getShelterIds(String provider_no)
 	{
-		/*
-		String sql = "select distinct substr(codetree,18,7) as shelter_id from lst_orgcd" ;
-		sql += " where code in (select orgcd from secuserrole where provider_no=?)";
-		sql += " and fullcode like '%S%'";
-		*/
+		
 		String sql ="select distinct c.id as shelter_id from lst_shelter c, lst_orgcd a, secUserRole b  where instr('RO',substr(b.orgcd,1,1)) = 0 and a.codecsv like '%' || b.orgcd || ',%'" +
 				" and b.provider_no=? and a.codecsv like '%S' || c.id  || ',%'";
-
-		Query query = getSession().createSQLQuery(sql);
+		Session session = getSession();
+		
+		Query query = session.createSQLQuery(sql);
     	((SQLQuery) query).addScalar("shelter_id", Hibernate.INTEGER);
     	query.setString(0, provider_no);
-        List lst=query.list();
+    	List lst = new ArrayList();
+    	try {
+    		lst=query.list();
+    	}finally {
+    		this.releaseSession(session);
+    	}
         return lst;
 
 	}
@@ -410,10 +421,15 @@ public class ProviderDao extends HibernateDaoSupport {
 		@NativeSql({"provider", "providersite"})
 		@SuppressWarnings("unchecked")
         public List<String> getActiveTeamsViaSites(String providerNo) {
-			// providersite is not mapped in hibernate - this can be rewritten w.o. subselect with a cross product IHMO 
-			SQLQuery query = getSession().createSQLQuery("select distinct team from provider p inner join providersite s on s.provider_no = p.provider_no " +
-            		" where s.site_id in (select site_id from providersite where provider_no = '" + providerNo + "') order by team ");
-			return query.list();
+			Session session = getSession();
+			try {
+				// providersite is not mapped in hibernate - this can be rewritten w.o. subselect with a cross product IHMO 
+				SQLQuery query = session.createSQLQuery("select distinct team from provider p inner join providersite s on s.provider_no = p.provider_no " +
+	            		" where s.site_id in (select site_id from providersite where provider_no = '" + providerNo + "') order by team ");
+				return query.list();
+			}finally {
+				this.releaseSession(session);
+			}
         }
 
 		@SuppressWarnings("unchecked")

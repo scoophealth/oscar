@@ -39,8 +39,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class EFormDaoTest extends DaoTestFixtures {
 
-	private static Integer populatedFormId;
-	private static EFormDao dao = (EFormDao)SpringUtils.getBean("EFormDao");
+	protected static Integer populatedFormId;
+	protected static EFormDao dao = (EFormDao)SpringUtils.getBean("EFormDao");
 
 	@BeforeClass
 	public static void initSchema() throws Exception {

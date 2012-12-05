@@ -40,21 +40,21 @@ public class DemographicPharmacyDao extends AbstractDao<DemographicPharmacy>{
 		super(DemographicPharmacy.class);
 	}
 
-	   public void addPharmacyToDemographic(String pharmacyId,String demographicNo){
+	   public void addPharmacyToDemographic(Integer pharmacyId,Integer demographicNo){
 		   DemographicPharmacy dp = new DemographicPharmacy();
 		   dp.setAddDate(new Date());
 		   dp.setStatus("1");
-		   dp.setDemographicNo(Integer.parseInt(demographicNo));
-		   dp.setPharmacyId(Integer.parseInt(pharmacyId));
+		   dp.setDemographicNo(demographicNo);
+		   dp.setPharmacyId(pharmacyId);
 		   persist(dp);
 	   }
 
-	   public DemographicPharmacy findByDemographicId(String demographicNo){
+	   public DemographicPharmacy findByDemographicId(Integer demographicNo){
 		      DemographicPharmacy record = null;
 		      String sql = "select x from DemographicPharmacy x where x.status=? and x.demographicNo=? order by x.addDate desc";
 		      Query query = entityManager.createQuery(sql);
 		      query.setParameter(1,"1");
-		      query.setParameter(2,Integer.parseInt(demographicNo));
+		      query.setParameter(2,demographicNo);
 		      @SuppressWarnings("unchecked")
 		      List<DemographicPharmacy> results = query.getResultList();
 		      if(results.size()>0) {

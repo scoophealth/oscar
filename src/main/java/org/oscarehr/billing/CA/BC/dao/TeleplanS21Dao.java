@@ -43,8 +43,8 @@ public class TeleplanS21Dao extends AbstractDao<TeleplanS21>{
 	public List<TeleplanS21> findByFilenamePaymentPayeeNo(String filename, String payment, String payeeNo) {
 		Query q = entityManager.createQuery("SELECT t from TeleplanS21 t WHERE t.fileName=? AND t.payment=? AND t.payeeNo=? ORDER BY t.payment");
 		q.setParameter(1, filename);
-		q.setParameter(1, payment);
-		q.setParameter(1, payeeNo);
+		q.setParameter(2, payment);
+		q.setParameter(3, payeeNo);
 		
 		@SuppressWarnings("unchecked")
 		List<TeleplanS21> results = q.getResultList();

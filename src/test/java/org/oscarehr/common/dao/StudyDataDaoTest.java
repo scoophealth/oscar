@@ -44,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class StudyDataDaoTest extends DaoTestFixtures {
 	
-	private StudyDataDao dao = (StudyDataDao)SpringUtils.getBean(StudyDataDao.class);
+	protected StudyDataDao dao = (StudyDataDao)SpringUtils.getBean(StudyDataDao.class);
 	
 	@Before
 	public void before() throws Exception {

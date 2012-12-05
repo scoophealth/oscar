@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class IssueGroupDaoTest extends DaoTestFixtures {
 
-	private IssueGroupDao dao = SpringUtils.getBean(IssueGroupDao.class);
+	protected IssueGroupDao dao = SpringUtils.getBean(IssueGroupDao.class);
 
 
 	@Before

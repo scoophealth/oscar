@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class MeasurementMapDaoTest extends DaoTestFixtures{
 
-	private MeasurementMapDao dao = SpringUtils.getBean(MeasurementMapDao.class);
+	protected MeasurementMapDao dao = SpringUtils.getBean(MeasurementMapDao.class);
 
 	public MeasurementMapDaoTest() {
 	}

@@ -89,7 +89,7 @@ public class EctMeasurementsAction extends Action {
             FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
             MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
-            List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( template,(String) session.getAttribute("user"),demographicNo);
+            List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( template,(String) session.getAttribute("user"),Integer.parseInt(demographicNo));
             mFlowsheet = templateConfig.getFlowSheet(template,custList);
         }
 

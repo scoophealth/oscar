@@ -685,10 +685,10 @@ import cdsDt.PersonNameStandard.OtherNames;
 	            saveLinkNote(dmNote, CaseManagementNoteLink.DEMOGRAPHIC, Long.valueOf(demographicNo));
             }
 
-            if (!workExt.equals("")) demographicExtDao.addKey(primaryPhysician, demographicNo, "wPhoneExt", workExt);
-            if (!homeExt.equals("")) demographicExtDao.addKey(primaryPhysician, demographicNo, "hPhoneExt", homeExt);
-            if (!cellPhone.equals("")) demographicExtDao.addKey(primaryPhysician, demographicNo, "demo_cell", cellPhone);
-            if(courseId>0) demographicExtDao.addKey(primaryPhysician, demographicNo, "course", String.valueOf(courseId));
+            if (!workExt.equals("")) demographicExtDao.addKey(primaryPhysician, Integer.parseInt(demographicNo), "wPhoneExt", workExt);
+            if (!homeExt.equals("")) demographicExtDao.addKey(primaryPhysician, Integer.parseInt(demographicNo), "hPhoneExt", homeExt);
+            if (!cellPhone.equals("")) demographicExtDao.addKey(primaryPhysician, Integer.parseInt(demographicNo), "demo_cell", cellPhone);
+            if(courseId>0) demographicExtDao.addKey(primaryPhysician, Integer.parseInt(demographicNo), "course", String.valueOf(courseId));
 
 
             //Demographic Contacts
@@ -740,9 +740,9 @@ import cdsDt.PersonNameStandard.OtherNames;
                 	cDemoNo = demoRes.getId();
                     err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
 
-                    if (!workExt.equals("")) demographicExtDao.addKey("", cDemoNo, "wPhoneExt", workExt);
-                    if (!homeExt.equals("")) demographicExtDao.addKey("", cDemoNo, "hPhoneExt", homeExt);
-                    if (!cellPhone.equals("")) demographicExtDao.addKey("", cDemoNo, "demo_cell", cellPhone);
+                    if (!workExt.equals("")) demographicExtDao.addKey("", Integer.parseInt(cDemoNo), "wPhoneExt", workExt);
+                    if (!homeExt.equals("")) demographicExtDao.addKey("", Integer.parseInt(cDemoNo), "hPhoneExt", homeExt);
+                    if (!cellPhone.equals("")) demographicExtDao.addKey("", Integer.parseInt(cDemoNo), "demo_cell", cellPhone);
                 }
                 insertIntoAdmission(cDemoNo);
 

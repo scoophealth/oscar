@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class FlowSheetDxDaoTest extends DaoTestFixtures {
 
-	private FlowSheetDxDao dao = SpringUtils.getBean(FlowSheetDxDao.class);
+	protected FlowSheetDxDao dao = SpringUtils.getBean(FlowSheetDxDao.class);
 
 	public FlowSheetDxDaoTest() {
 	}

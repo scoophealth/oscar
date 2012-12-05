@@ -51,7 +51,7 @@ String measurement = request.getParameter("measurement");
 String demographic = request.getParameter("demographic");
 
 long start = System.currentTimeMillis() ;
-List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),demographic);
+List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),Integer.parseInt(demographic));
 MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(flowsheet,custList);
 long end = System.currentTimeMillis() ;
 long diff = end - start;

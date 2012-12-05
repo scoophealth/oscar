@@ -23,10 +23,12 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.oscarehr.PMmodule.model.FunctionalUserType;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.util.MiscUtils;
@@ -144,10 +146,16 @@ public class ProgramFunctionalUserDAO extends HibernateDaoSupport {
 
         Long result = null;
 
-        Query q = getSession().createQuery("select pfu.ProgramId from ProgramFunctionalUser pfu where pfu.ProgramId = ? and pfu.UserTypeId = ?");
+        Session session = getSession();
+        Query q = session.createQuery("select pfu.ProgramId from ProgramFunctionalUser pfu where pfu.ProgramId = ? and pfu.UserTypeId = ?");
         q.setLong(0, programId.longValue());
         q.setLong(1, userTypeId.longValue());
-        List results = q.list();
+        List results = new ArrayList();
+        try {
+        	 results = q.list();
+        }finally {
+        	releaseSession(session);
+        }
         if (results.size() > 0) {
             result = (Long)results.get(0);
         }

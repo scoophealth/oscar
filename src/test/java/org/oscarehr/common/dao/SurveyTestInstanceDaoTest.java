@@ -37,8 +37,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class SurveyTestInstanceDaoTest extends DaoTestFixtures {
 
-	private SurveyTestInstanceDao dao = SpringUtils.getBean(SurveyTestInstanceDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
+	protected SurveyTestInstanceDao dao = SpringUtils.getBean(SurveyTestInstanceDao.class);
 
 	@Before
 	public void before() throws Exception {

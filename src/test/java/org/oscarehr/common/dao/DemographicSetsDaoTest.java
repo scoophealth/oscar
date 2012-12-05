@@ -38,7 +38,7 @@ import org.oscarehr.common.model.DemographicSets;
 import org.oscarehr.util.SpringUtils;
 
 public class DemographicSetsDaoTest extends DaoTestFixtures {
-	private DemographicSetsDao dao = SpringUtils.getBean(DemographicSetsDao.class);
+	protected DemographicSetsDao dao = SpringUtils.getBean(DemographicSetsDao.class);
 
 	public DemographicSetsDaoTest() {
 	}

@@ -29,33 +29,31 @@ import org.oscarehr.common.merge.MergedDemographicTemplate;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.springframework.stereotype.Repository;
 
-import oscar.util.ConversionUtils;
-
 @Repository("consultationRequestDao")
 public class ConsultationRequestMergedDemographicDao extends ConsultationRequestDao {
 
 	@Override
-	public List<ConsultationRequest> getConsults(String demoNo) {
+	public List<ConsultationRequest> getConsults(Integer demoNo) {
 		List<ConsultationRequest> result = super.getConsults(demoNo);
 		MergedDemographicTemplate<ConsultationRequest> template = new MergedDemographicTemplate<ConsultationRequest>() {
 			@Override
 			protected List<ConsultationRequest> findById(Integer demographic_no) {
-				return ConsultationRequestMergedDemographicDao.super.getConsults(demographic_no.toString());
+				return ConsultationRequestMergedDemographicDao.super.getConsults(demographic_no);
 			}
 		};
-		return template.findMerged(ConversionUtils.fromIntString(demoNo), result);
+		return template.findMerged(demoNo, result);
 	}
 
 	@Override
-	public List<ConsultationRequest> getConsultationsByStatus(String demographicNo, final String status) {
+	public List<ConsultationRequest> getConsultationsByStatus(Integer demographicNo, final String status) {
 		List<ConsultationRequest> result = super.getConsultationsByStatus(demographicNo, status);
 		MergedDemographicTemplate<ConsultationRequest> template = new MergedDemographicTemplate<ConsultationRequest>() {
 			@Override
 			protected List<ConsultationRequest> findById(Integer demographic_no) {
-				return ConsultationRequestMergedDemographicDao.super.getConsultationsByStatus(demographic_no.toString(), status);
+				return ConsultationRequestMergedDemographicDao.super.getConsultationsByStatus(demographic_no, status);
 			}
 		};
-		return template.findMerged(ConversionUtils.fromIntString(demographicNo), result);
+		return template.findMerged(demographicNo, result);
 	}
 
 }

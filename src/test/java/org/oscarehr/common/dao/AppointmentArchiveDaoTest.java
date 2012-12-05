@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class AppointmentArchiveDaoTest extends DaoTestFixtures{
 
-	private AppointmentArchiveDao dao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	protected AppointmentArchiveDao dao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 
 	public AppointmentArchiveDaoTest() {
 	}

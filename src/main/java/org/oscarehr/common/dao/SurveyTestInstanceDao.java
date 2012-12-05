@@ -51,7 +51,7 @@ public class SurveyTestInstanceDao extends AbstractDao<SurveyTestInstance>{
 		return null;
 	}
 	
-	public void clearTestData(Long surveyId) {
+	public void clearTestData(Integer surveyId) {
 		Query query = entityManager.createQuery("select s from SurveyTestInstance s where s.surveyId = ?1");
 		query.setParameter(1,surveyId);
 		

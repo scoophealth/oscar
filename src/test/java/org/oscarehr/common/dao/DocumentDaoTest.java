@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DocumentDaoTest extends DaoTestFixtures {
 
-	private DocumentDao dao = SpringUtils.getBean(DocumentDao.class);
+	protected DocumentDao dao = SpringUtils.getBean(DocumentDao.class);
 
 	public DocumentDaoTest() {
 	}

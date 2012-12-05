@@ -122,8 +122,8 @@
 
         Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 	ProvinceNames pNames = ProvinceNames.getInstance();
-	List<String[]> arr = demographicExtDao.getListOfValuesForDemo(demographic_no);
-	Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographic_no);
+	List<String[]> arr = demographicExtDao.getListOfValuesForDemo(Integer.parseInt(demographic_no));
+	Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(Integer.parseInt(demographic_no));
 
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);

@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicQueryFavouritesDaoTest extends DaoTestFixtures {
 
-	private DemographicQueryFavouritesDao dao = (DemographicQueryFavouritesDao)SpringUtils.getBean(DemographicQueryFavouritesDao.class);
+	protected DemographicQueryFavouritesDao dao = (DemographicQueryFavouritesDao)SpringUtils.getBean(DemographicQueryFavouritesDao.class);
 
 	public DemographicQueryFavouritesDaoTest() {
 	}

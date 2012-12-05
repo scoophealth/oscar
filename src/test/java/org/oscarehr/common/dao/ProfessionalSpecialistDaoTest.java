@@ -45,7 +45,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProfessionalSpecialistDaoTest extends DaoTestFixtures {
 	
-	private ProfessionalSpecialistDao dao = (ProfessionalSpecialistDao)SpringUtils.getBean(ProfessionalSpecialistDao.class);
+	protected ProfessionalSpecialistDao dao = (ProfessionalSpecialistDao)SpringUtils.getBean(ProfessionalSpecialistDao.class);
 	
 	@Before
 	public void before() throws Exception {

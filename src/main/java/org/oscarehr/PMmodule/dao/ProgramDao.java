@@ -23,11 +23,13 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -36,9 +38,6 @@ import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
-
-import com.quatro.common.KeyConstants;
-import com.quatro.util.Utility;
 
 public class ProgramDao extends HibernateDaoSupport {
 
@@ -191,37 +190,6 @@ public class ProgramDao extends HibernateDaoSupport {
     	}
     }
 
-    public List<Program> getAllPrograms(String programStatus, String type, Integer facilityId, String providerNo,Integer shelterId)
-    {
-    	return getAllPrograms(programStatus, type,facilityId,null,providerNo,shelterId);
-    }
-    public List<Program> getAllPrograms(String programStatus, String type, Integer facilityId, Integer clientId, String providerNo,Integer shelterId)
-    {
-    	Criteria c = getSession().createCriteria(Program.class);
-    	if (!(Utility.IsEmpty(programStatus))) {
-    		c.add(Restrictions.eq("programStatus", programStatus));
-    	}
-    	if (null != type && !("Any".equalsIgnoreCase(type) || "".equals(type))) {
-    		c.add(Restrictions.eq("type", type));
-    	}
-    	if (null != facilityId && facilityId.intValue() > 0) {
-    		c.add(Restrictions.eq("facilityId", facilityId));
-    	}
-    	if (null != clientId && clientId.intValue() > 0) {
-    		String clientProgram = "id in (select itk.program_id from intake itk where itk.client_id=" + clientId.toString() + ")";
-    		c.add(Restrictions.sqlRestriction(clientProgram));
-    	}
-    	c.add(Restrictions.sqlRestriction("id in " + Utility.getUserOrgSqlString(providerNo, shelterId)));
-    	c.addOrder(Order.asc("name"));
-    	@SuppressWarnings("unchecked")
-        List<Program> list = c.list();
-    	for(int i=0; i<list.size(); i++)
-    	{
-    		Program p = list.get(i);
-    		if(p.getType().equals(KeyConstants.PROGRAM_TYPE_Service)) p.setNumOfMembers(p.getNumOfIntakes());
-    	}
-    	return 	list;
-    }
 
     public List<Program> getAllPrograms() {
         @SuppressWarnings("unchecked")
@@ -248,18 +216,23 @@ public class ProgramDao extends HibernateDaoSupport {
     
     public List <Program> getAllPrograms(String programStatus, String type, int facilityId)
     {
-        @SuppressWarnings("unchecked")
-    	Criteria c = getSession().createCriteria(Program.class);
-    	if (!"Any".equals(programStatus)) {
-    		c.add(Restrictions.eq("programStatus", programStatus));
+    	Session session = getSession();
+    	try {
+	        @SuppressWarnings("unchecked")
+	    	Criteria c = session.createCriteria(Program.class);
+	    	if (!"Any".equals(programStatus)) {
+	    		c.add(Restrictions.eq("programStatus", programStatus));
+	    	}
+	    	if (!"Any".equals(type)) {
+	    		c.add(Restrictions.eq("type", type));
+	    	}
+	    	if (facilityId > 0) {
+	    		c.add(Restrictions.eq("facilityId", facilityId));
+	    	}
+	    	return 	c.list();
+    	}finally {
+    		releaseSession(session);
     	}
-    	if (!"Any".equals(type)) {
-    		c.add(Restrictions.eq("type", type));
-    	}
-    	if (facilityId > 0) {
-    		c.add(Restrictions.eq("facilityId", facilityId));
-    	}
-    	return 	c.list();
     }
  
     public List<Program> getPrograms() {
@@ -390,12 +363,16 @@ public class ProgramDao extends HibernateDaoSupport {
         if (programId == null || programId <= 0) {
             throw new IllegalArgumentException();
         }
-
-        Object program = getHibernateTemplate().load(Program.class, programId);
-        getHibernateTemplate().delete(program);
-
-        if (log.isDebugEnabled()) {
-            log.debug("deleteProgram: " + programId);
+        try {
+        	Object program = getHibernateTemplate().load(Program.class, programId);
+        
+	        getHibernateTemplate().delete(program);
+	
+	        if (log.isDebugEnabled()) {
+	            log.debug("deleteProgram: " + programId);
+	        }
+        } catch(Exception e) {
+        	MiscUtils.getLogger().warn("Unable to delete program " + programId);
         }
     }
 
@@ -404,8 +381,9 @@ public class ProgramDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
         boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
-        Criteria criteria = getSession().createCriteria(Program.class);
-
+        Session session = getSession();
+        Criteria criteria = session.createCriteria(Program.class);
+        
         if (program.getName() != null && program.getName().length() > 0) {
             String programName = StringEscapeUtils.escapeSql(program.getName());
             String sql = "";
@@ -467,7 +445,12 @@ public class ProgramDao extends HibernateDaoSupport {
         }
         criteria.addOrder(Order.asc("name"));
 
-        List results = criteria.list();
+        List results = new ArrayList();
+        try {
+        	results = criteria.list();
+        }finally {
+        	this.releaseSession(session);
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("search: # results: " + results.size());
@@ -485,7 +468,8 @@ public class ProgramDao extends HibernateDaoSupport {
         }
 
         boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
-        Criteria criteria = getSession().createCriteria(Program.class);
+        Session session = getSession();
+        Criteria criteria = session.createCriteria(Program.class);
 
         if (program.getName() != null && program.getName().length() > 0) {
             String programName = StringEscapeUtils.escapeSql(program.getName());
@@ -551,7 +535,12 @@ public class ProgramDao extends HibernateDaoSupport {
         
         criteria.addOrder(Order.asc("name"));
 
-        List results = criteria.list();
+        List results = new ArrayList();
+        try {
+        	results = criteria.list();
+        }finally{
+        	releaseSession(session);
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("search: # results: " + results.size());
@@ -618,6 +607,10 @@ public class ProgramDao extends HibernateDaoSupport {
     	
     	Program p1 = getProgram(programId1);
     	Program p2 = getProgram(programId2);
+    	
+    	if(p1 == null || p2 == null)
+    		return false;
+    	
     	return(p1.getFacilityId()==p2.getFacilityId());
     }
     

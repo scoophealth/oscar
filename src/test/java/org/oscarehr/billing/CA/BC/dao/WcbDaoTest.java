@@ -35,7 +35,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class WcbDaoTest extends DaoTestFixtures {
 
-	private WcbDao dao = SpringUtils.getBean(WcbDao.class);
+	public WcbDao dao = SpringUtils.getBean(WcbDao.class);
 
 
 	@Before

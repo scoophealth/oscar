@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class EncounterFormDaoTest extends DaoTestFixtures {
 
-	private EncounterFormDao dao = (EncounterFormDao)SpringUtils.getBean(EncounterFormDao.class);
+	protected EncounterFormDao dao = (EncounterFormDao)SpringUtils.getBean(EncounterFormDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before

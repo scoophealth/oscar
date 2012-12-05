@@ -39,7 +39,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class SecurityTokenDaoTest extends DaoTestFixtures {
 
-	private SecurityTokenDao dao = SpringUtils.getBean(SecurityTokenDao.class);
+	protected SecurityTokenDao dao = SpringUtils.getBean(SecurityTokenDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 

@@ -47,7 +47,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class UserPropertyDAOTest extends DaoTestFixtures{
 	
-	private UserPropertyDAO dao = (UserPropertyDAO)SpringUtils.getBean(UserPropertyDAO.class);
+	protected UserPropertyDAO dao = (UserPropertyDAO)SpringUtils.getBean(UserPropertyDAO.class);
 	
 	@Before
 	public void before() throws Exception {

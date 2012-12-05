@@ -40,7 +40,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class UserDSMessagePrefsDaoTest extends DaoTestFixtures {
 
-	private UserDSMessagePrefsDao dao = SpringUtils.getBean(UserDSMessagePrefsDao.class);
+	protected UserDSMessagePrefsDao dao = SpringUtils.getBean(UserDSMessagePrefsDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	@Before
