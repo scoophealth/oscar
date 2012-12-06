@@ -286,5 +286,21 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	    return query.getResultList();
     }
 
-	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findAppointments(Date sDate, Date eDate) {
+		String sql = "FROM Appointment a, Demographic d " +
+				"WHERE a.demographicNo = d.DemographicNo " +
+				"AND d.Hin <> '' " +
+				"AND a.appointmentDate >= :sDate " +
+				"AND a.appointmentDate <= :eDate " +
+				"AND (" +
+				"	UPPER(d.Province) = 'ONTARIO' " +
+				"	OR d.Province='ON' " +
+				") GROUP BY d.DemographicNo " +
+				"ORDER BY d.LastName";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("sDate", sDate == null ? new Date(Long.MIN_VALUE) : sDate);
+		query.setParameter("eDate", eDate == null ? new Date(Long.MAX_VALUE) : eDate);
+		return query.getResultList();
+	}
 }
