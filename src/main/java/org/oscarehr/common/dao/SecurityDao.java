@@ -100,5 +100,11 @@ public class SecurityDao  extends AbstractDao<Security> {
     	
     	return secList.get(0);
     }
+    
+    public List<Object[]> findProviders() {
+    	String sql = "FROM Security s, Provider p WHERE p.providerNo = s.providerNo ORDER BY p.lastName";
+    	Query query = entityManager.createQuery(sql);
+    	return query.getResultList();
+    }
 	
 }
