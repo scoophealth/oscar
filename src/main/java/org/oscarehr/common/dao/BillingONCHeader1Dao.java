@@ -451,4 +451,36 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         
         return q.getResultList();
     }
+
+    @SuppressWarnings("unchecked")
+    public List<Object[]> countBillingVisitsByProvider(String providerNo, Date dateBegin, Date dateEnd) {
+        String sql = "SELECT b.visitType, count(b) FROM BillingONCHeader1 b "
+                + "WHERE b.status <> 'D' "
+                + "AND b.appointmentNo <> '0' "
+                + "AND b.apptProviderNo = :providerNo "
+                + "AND b.billingDate >= :dateBegin "
+                + "AND b.billingDate <= :dateEnd "
+                + "GROUP BY b.visitType";
+        Query q = entityManager.createQuery(sql);
+        q.setParameter("providerNo", providerNo);
+        q.setParameter("dateBegin", dateBegin);
+        q.setParameter("dateEnd", dateEnd);
+        return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Object[]> countBillingVisitsByCreator(String providerNo, Date dateBegin, Date dateEnd) {
+        String sql = "SELECT b.visitType, count(b) FROM BillingONCHeader1 b "
+                + "WHERE b.status <> 'D' "
+                + "AND b.appointmentNo <> '0' "
+                + "AND b.creator = :providerNo "
+                + "AND b.billingDate >= :dateBegin "
+                + "AND b.billingDate <= :dateEnd "
+                + "GROUP BY b.visitType";
+        Query q = entityManager.createQuery(sql);
+        q.setParameter("providerNo", providerNo);
+        q.setParameter("dateBegin", dateBegin);
+        q.setParameter("dateEnd", dateEnd);
+        return q.getResultList();
+    }
 }

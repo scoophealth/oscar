@@ -68,7 +68,7 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
 		String sql = "FROM ConsultDocs c, PatientLabRouting p " +
 				"WHERE p.id = c.documentNo " +
 				"AND c.requestId = :cid " +
-				"AND c.doctype = 'L' " +
+				"AND c.docType = 'L' " +
 				"AND c.deleted IS NULL " +
 				"ORDER BY c.documentNo";
 		Query q = entityManager.createQuery(sql);
