@@ -21,48 +21,29 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
+package org.oscarehr.billing.CA.BC.dao;
 
-import java.util.Date;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.common.model.BillingONCHeader1;
-
+import org.oscarehr.billing.CA.BC.model.Wcb;
+import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class BillingONCHeader1DaoTest extends DaoTestFixtures {
+public class WcbNoiCodeDaoTest extends DaoTestFixtures {
 
-	protected BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
-
-	public BillingONCHeader1DaoTest() {
-	}
+	public WcbNoiCodeDao dao = SpringUtils.getBean(WcbNoiCodeDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billing_on_cheader1", "billing_on_item", "gstControl", "billingservice", "provider", 
-				"demographic", "lst_gender", "admission", "demographic_merged", "program", 
-				"health_safety", "provider", "providersite", "site", "program_team","log", "Facility");
+		SchemaUtils.restoreTable("wcb_noi_code");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		BillingONCHeader1 entity = new BillingONCHeader1();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
-         
-    @Test
-	public void testCountBillingVisitsByCreator() {
-        assertNotNull(dao.countBillingVisitsByCreator("100", new Date(), new Date()));
-    }
-        
-    @Test
-	public void testCountBillingVisitsByProvider() {
-        assertNotNull(dao.countBillingVisitsByProvider("100", new Date(), new Date()));
+	public void testFindByDemographic() {
+		assertNotNull(dao.findByCodeOrLevel("BLAH"));
 	}
 }

@@ -23,6 +23,9 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.billing.CA.BC.model.WcbNoiCode"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.billing.CA.BC.dao.WcbNoiCodeDao"%>
 <%
   	if (session.getAttribute("user") == null){
 		response.sendRedirect("../../logout.jsp");
@@ -73,19 +76,18 @@ function posttoText(index){
 	</tr>
 	<%
 	boolean color = false;
-   String wherestr = "where code like '"+searchStr+"' or level1 like '"+searchStr+"' or level2 like '"+searchStr+"' or level3 like '"+searchStr+"'";
-	java.sql.ResultSet rs = DBHandler.GetSQL("SELECT code, level1, level2, level3, usagenote FROM wcb_noi_code "+wherestr+" ORDER BY level1, level2, level3");
-	while (rs.next()){
+	WcbNoiCodeDao dao = SpringUtils.getBean(WcbNoiCodeDao.class);
+	for(WcbNoiCode c : dao.findByCodeOrLevel(searchStr)){
 %>
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left"
 		valign="top">
 		<td class="SmallerText"><a href=#
-			onClick="posttoText('<%=rs.getString("code")%>');"><%=rs.getString("code")%></a>
+			onClick="posttoText('<%=c.getCode()%>');"><%=c.getCode()%></a>
 		</td>
-		<td class="SmallerText"><%=oscar.Misc.getString(rs,"level1")%></td>
-		<td class="SmallerText"><%=oscar.Misc.getString(rs,"level2")%></td>
-		<td class="SmallerText"><%=oscar.Misc.getString(rs,"level3")%></td>
-		<td class="SmallerText"><%=oscar.Misc.getString(rs,"usagenote")%></td>
+		<td class="SmallerText"><%=c.getLevel1()%></td>
+		<td class="SmallerText"><%=c.getLevel2()%></td>
+		<td class="SmallerText"><%=c.getLevel3()%></td>
+		<td class="SmallerText"><%=c.getUsagenote()%></td>
 	</tr>
 	<%
 		color = !(color);

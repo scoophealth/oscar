@@ -22,8 +22,11 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.common.model.Security"%>
+<%@page import="org.oscarehr.common.dao.SecurityDao"%>
 <%@page
-	import="java.util.Collections, java.util.Arrays, java.util.ArrayList, java.sql.ResultSet, java.sql.SQLException, oscar.oscarDB.DBHandler"%>
+	import="java.util.Collections, java.util.Arrays, java.util.ArrayList"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -78,30 +81,25 @@
 
 <form method="post" action="newCaseManagementEnable.jsp" id="sbForm">
 <%            
-            try {
-                String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
-                ResultSet rs = DBHandler.GetSQL(sql);                            
-                
-                while(rs.next()) {
-                    String provNo = oscar.Misc.getString(rs,"provider_no");
+				SecurityDao dao = SpringUtils.getBean(SecurityDao.class);
+				for(Object[] o : dao.findProviders()) {
+					Security s = (Security) o[0];
+					Provider p = (Provider) o[1];
+                    String provNo = p.getProviderNo();
                     if(!userNo.equals(provNo)) 
                     	continue;
                     if( newDocArr.contains("all") || newDocArr.contains(provNo)) {
-%> <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=oscar.Misc.getString(rs,"last_name")%>,
-<%=oscar.Misc.getString(rs,"first_name")%><br>
+%> <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=p.getLastName()%>,
+<%=p.getFirstName()%><br>
 <%
                     }
                     else {
-%> <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=oscar.Misc.getString(rs,"last_name")%>,
-<%=oscar.Misc.getString(rs,"first_name")%><br>
+%> <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=p.getLastName()%>,
+<%=p.getFirstName()%><br>
 <%                   
                     }                
                 }
-%> <input type="submit" value="Update"> <%                
-            }catch(SQLException ex ) {
-            	MiscUtils.getLogger().error("SQL Error", ex);
-            }
-%>
+%> <input type="submit" value="Update">
 </form>
 <%
         }
@@ -111,11 +109,13 @@
             if( encTesters == null ) {                
                 
                 if( newDocArr.contains("all") ) {
-                    newDocArr.clear();                    
-                    String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
-                    ResultSet rs = DBHandler.GetSQL(sql); 
-                    while(rs.next()) {
-                        String provNo = oscar.Misc.getString(rs,"provider_no");
+                    newDocArr.clear();
+                    SecurityDao dao = SpringUtils.getBean(SecurityDao.class);
+    				for(Object[] o : dao.findProviders()) {
+    					Security s = (Security) o[0];
+    					Provider p = (Provider) o[1];
+                    
+                        String provNo = p.getProviderNo();
                         if( userNo.equals(provNo) ) 
                             continue;
                             

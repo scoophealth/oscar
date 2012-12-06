@@ -54,7 +54,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void setUp() throws Exception {
-		SchemaUtils.restoreTable("billingservice", "billingperclimit", "ctl_billingservice","wcb");
+		SchemaUtils.restoreTable("billingservice", "billingperclimit", "ctl_billingservice","wcb", "billing");
 	}
 	
 	@Test
