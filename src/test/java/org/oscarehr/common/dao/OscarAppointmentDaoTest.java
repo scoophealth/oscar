@@ -50,7 +50,8 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 	@Before
 	public void before() throws Exception {
 		//nothing here yet. should clean up the appointment table to a known state
-		SchemaUtils.restoreTable("appointment");
+		SchemaUtils.restoreTable("appointment", "demographic", "lst_gender", "admission", "demographic_merged", "program", 
+				"health_safety", "provider", "providersite", "site", "program_team","log", "Facility");
 	}
 
 
@@ -208,5 +209,11 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 	@Test
 	public void testFindByProviderAndDate() {
 		assertNotNull(dao.findByProviderAndDate("100", new Date()));
+	}
+
+	@Test
+	public void testFindAppointments() {
+		assertNotNull(dao.findAppointments(null, null));
+		assertNotNull(dao.findAppointments(new Date(), new Date()));
 	}
 }

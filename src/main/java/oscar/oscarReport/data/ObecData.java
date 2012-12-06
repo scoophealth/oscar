@@ -27,17 +27,19 @@ package oscar.oscarReport.data;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
+import oscar.util.ConversionUtils;
 
 /**
  *This classes main function ObecGenerate collects a group of patients with health insurance number for OHIP validation in the last specified date
@@ -60,34 +62,31 @@ public class ObecData {
 		String retval = "";
 		String filename = "";
 		if (sDate == null || sDate.compareTo("") == 0) {
-			sDate = "9999/00/00";
+			sDate = null;
 		}
 		if (eDate == null || eDate.compareTo("") == 0) {
-			eDate = "9999/12/31";
+			eDate = null;
 		}
-		try {
-
-			String sql = "select d.demographic_no, d.last_name, d.first_name, LEFT(d.address, 32) as address, LEFT(d.city, 30) as city, d.postal, d.hin, d.ver, d.province from appointment a, demographic d where a.demographic_no=d.demographic_no and d.hin <> '' and a.appointment_date>= '" + sDate + "' and appointment_date<='" + eDate + "' and (d.province='Ontario' or d.province='ON' or d.province='ONTARIO') group by d.demographic_no order by d.last_name";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				count = count + 1;
-				if (count == 1) {
-					retval = retval + "OBEC01" + space(oscar.Misc.getString(rs, "hin"), 10) + space(oscar.Misc.getString(rs, "ver"), 2) + "\r";
-				} else {
-					retval = retval + "\n" + "OBEC01" + space(oscar.Misc.getString(rs, "hin"), 10) + space(oscar.Misc.getString(rs, "ver"), 2) + "\r";
-				}
-			}
-			rs.close();
-			if (retval.compareTo("") == 0) {
-				filename = "0";
+		
+		OscarAppointmentDao dao = SpringUtils.getBean(OscarAppointmentDao.class);
+		for(Object[] o : dao.findAppointments(ConversionUtils.fromDateString(sDate), ConversionUtils.fromDateString(eDate))) {
+			Appointment a = (Appointment) o[0];
+			Demographic d = (Demographic) o[1];
+			
+			count = count + 1;
+			if (count == 1) {
+				retval = retval + "OBEC01" + space(d.getHin(), 10) + space(d.getVer(), 2) + "\r";
 			} else {
-				filename = writeFile(retval, pp);
+				retval = retval + "\n" + "OBEC01" + space(d.getHin(), 10) + space(d.getVer(), 2) + "\r";
 			}
-		} catch (SQLException e) {
-			MiscUtils.getLogger().debug("There has been an error while retrieving a Obec");
-			MiscUtils.getLogger().error("Error", e);
 		}
-
+		
+		if (retval.compareTo("") == 0) {
+			filename = "0";
+		} else {
+			filename = writeFile(retval, pp);
+		}
+	
 		return filename;
 	}
 
