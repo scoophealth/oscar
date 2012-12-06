@@ -67,9 +67,7 @@ public class CheckForMultipleBedAdmissions {
 			if(admission.getProgramName() == null) {
 				return;
 			}
-			if(admission.getProgramType().equals("Bed")) {
-				
-			}
+			
 		}
     }
     public static void main(String args[]) throws Exception {

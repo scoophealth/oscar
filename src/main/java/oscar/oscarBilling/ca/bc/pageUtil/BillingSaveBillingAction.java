@@ -83,8 +83,7 @@ public class BillingSaveBillingAction extends Action {
         BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
         MiscUtils.getLogger().debug("appointment_no---: " + bean.getApptNo());
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
-        String sql = "";
-
+        
         Date curDate = new Date();
         String billingid = "";
         ArrayList<String> billingIds = new ArrayList<String>();
@@ -298,6 +297,7 @@ public class BillingSaveBillingAction extends Action {
         try {
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
         } catch (Exception moneyException) {
+        	MiscUtils.getLogger().warn("warning",moneyException);
         }
         return moneyStr;
     }
