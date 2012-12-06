@@ -60,10 +60,10 @@ public class EctViewConsultationRequestsAction extends Action {
         }                        
         try{
            startDate = UtilDateUtilities.getDateFromString(frm.getStartDate(),defaultPattern);            
-        }catch(Exception e){}        
+        }catch(Exception e){/*ignore*/}        
         try{
            endDate = UtilDateUtilities.getDateFromString(frm.getEndDate(),defaultPattern);            
-        }catch(Exception e){}
+        }catch(Exception e){/*ignore*/}
                                 
         request.setAttribute("startDate",startDate);               
         request.setAttribute("endDate",endDate);               

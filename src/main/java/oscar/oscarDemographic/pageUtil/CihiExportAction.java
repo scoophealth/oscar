@@ -466,7 +466,7 @@ public class CihiExportAction extends DispatchAction {
 				dateFullorPartial.setFullDate(cal);
 			}
 		} catch( Exception e ) {
-
+			MiscUtils.getLogger().error("Error",e);
 		}
 
 	}
@@ -532,7 +532,7 @@ public class CihiExportAction extends DispatchAction {
                 	try {
                 		familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
                 	}catch(NumberFormatException e) {
-
+                		//ignore
                 	}
                 }
 

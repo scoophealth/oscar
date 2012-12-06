@@ -74,14 +74,6 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
         MiscUtils.getLogger().debug("PI: Target: " + target + " and Data: " + data);
     }
 
-    public void startPrefixMapping(String prefix, String uri) {
-
-    }
-
-    public void endPrefixMapping(String prefix) {
-
-    }
-
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
             throws SAXException {
         MiscUtils.getLogger().debug("startElement: localName " + localName + " rawName " + rawName);

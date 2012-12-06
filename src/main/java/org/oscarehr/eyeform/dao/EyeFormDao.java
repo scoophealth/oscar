@@ -30,6 +30,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.eyeform.model.EyeForm;
+import org.oscarehr.myoscar.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -55,7 +56,9 @@ public class EyeFormDao extends AbstractDao<EyeForm> {
 	
 		try {
 			eyeform = (EyeForm)query.getSingleResult();
-		} catch(NoResultException e) {}
+		} catch(NoResultException e) {
+			MiscUtils.getLogger().warn("warning",e);
+		}
 	
 		return eyeform;
 		
