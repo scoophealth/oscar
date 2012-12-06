@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
@@ -51,5 +52,15 @@ public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+         
+    @Test
+	public void testCountBillingVisitsByCreator() {
+        assertNotNull(dao.countBillingVisitsByCreator("100", new Date(), new Date()));
+    }
+        
+    @Test
+	public void testCountBillingVisitsByProvider() {
+        assertNotNull(dao.countBillingVisitsByProvider("100", new Date(), new Date()));
 	}
 }

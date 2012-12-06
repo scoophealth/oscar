@@ -22,110 +22,109 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.BillingDao;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
-
+import oscar.util.ConversionUtils;
 
 public class VisitReportData {
 
+	private String dateBegin = null;
+	private String dateEnd = null;
+	private String providerNo = null;
 
-  private String dateBegin=null;
-  private String dateEnd=null;
-  private String providerNo=null;
+	public VisitReportData() {
+	}
 
-  public VisitReportData() {}
+	public void setDateBegin(String value) {
+		dateBegin = value;
+	}
 
- 	  public void setDateBegin(String value) {
-	    dateBegin=value;
-	  }
+	public void setDateEnd(String value) {
+		dateEnd = value;
+	}
 
- 	  public void setDateEnd(String value) {
-	    dateEnd=value;
-	  }
+	public void setProviderNo(String value) {
+		providerNo = value;
+	}
 
-	   public void setProviderNo(String value) {
-	  	    providerNo=value;
-	  }
+	public String[] getCreatorCount() {
+		String retval, retcount;
+		String[] retVisit = new String[6];
+		Arrays.fill(retVisit, "0");
 
+		List<Object[]> billingCounts;
+		boolean isNewBilling = OscarProperties.getInstance().getBooleanProperty("isNewONbilling", "true");
+		if (isNewBilling) {
+			BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+			billingCounts = dao.countBillingVisitsByCreator(providerNo, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
+		} else {
+			BillingDao dao = SpringUtils.getBean(BillingDao.class);
+			billingCounts = dao.countBillingVisitsByCreator(providerNo, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
+		}
 
-    public String[] getCreatorCount(){
-       String retval = "";
-       String retcount = "";
-       String[] retVisit = new String[6];
-       retVisit[0] = "0";
-       retVisit[1] = "0";
-       retVisit[2] = "0";
-       retVisit[3] = "0";
-       retVisit[4] = "0";
-       retVisit[5] = "0";
-
-       try{
-             
-             String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
-             MiscUtils.getLogger().debug(sql);
-             if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
-                sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
-             }
-             MiscUtils.getLogger().debug(sql);
-             ResultSet rs = DBHandler.GetSQL(sql);
-             while (rs.next()){
-                retval = oscar.Misc.getString(rs, "visit");
-                retcount =oscar.Misc.getString(rs, "n");
-                retVisit[Integer.parseInt(retval)] = retcount;
-
+		for (Object[] o : billingCounts) {
+			String visitType = String.valueOf(o[0]);
+			if (visitType != null && !visitType.equals("")) {
+				// get last character
+				visitType = visitType.substring(visitType.length() - 1);
+			} else {
+				visitType = "";
 			}
-             rs.close();
-          }
-          catch(SQLException e){
-             MiscUtils.getLogger().debug("There has been an error while retrieving a visit count");
-             MiscUtils.getLogger().error("Error", e);
-          }
 
-       return retVisit;
-    }
+			retval = visitType;
+			retcount = String.valueOf(o[1]);
 
-        public String[] getApptProviderCount(){
-	       String retval = "";
-	       String retcount = "";
-	       String[] retVisit = new String[6];
-	       retVisit[0] = "0";
-	       retVisit[1] = "0";
-	       retVisit[2] = "0";
-	       retVisit[3] = "0";
-	       retVisit[4] = "0";
-               retVisit[5] = "0";
+			int retvalAsInt = Integer.parseInt(retval);
+			if ((retvalAsInt >= 0) && (retvalAsInt < retVisit.length)) {
+				retVisit[retvalAsInt] = retcount;
+			}
+		}
 
-	       try{
-	             
-	             String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
-                     MiscUtils.getLogger().debug(sql);
-                     if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
-                        sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
-                     }
-                     MiscUtils.getLogger().debug(sql);
-                     ResultSet rs = DBHandler.GetSQL(sql);
-	             while (rs.next()){
-	                retval = oscar.Misc.getString(rs, "visit");
-	                retcount =oscar.Misc.getString(rs, "n");
-	                retVisit[Integer.parseInt(retval)] = retcount;
+		return retVisit;
+	}
+	
+	public String[] getApptProviderCount() {
+		String retval, retcount;
+		String[] retVisit = new String[6];
+		Arrays.fill(retVisit, "0");
 
-				}
-	             rs.close();
-	          }
-	          catch(SQLException e){
-	             MiscUtils.getLogger().debug("There has been an error while retrieving a visit count");
-	             MiscUtils.getLogger().error("Error", e);
-	          }
+		List<Object[]> billingCounts;
+		boolean isNewBilling = OscarProperties.getInstance().getBooleanProperty("isNewONbilling", "true");
+		if (isNewBilling) {
+			BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+			billingCounts = dao.countBillingVisitsByProvider(providerNo, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
+		} else {
+			BillingDao dao = SpringUtils.getBean(BillingDao.class);
+			billingCounts = dao.countBillingVisitsByProvider(providerNo, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
+		}
 
-	       return retVisit;
-    }
+		for (Object[] o : billingCounts) {
+			String visitType = String.valueOf(o[0]);
+			if (visitType != null && !visitType.equals("")) {
+				// get last character
+				visitType = visitType.substring(visitType.length() - 1);
+			} else {
+				visitType = "";
+			}
 
-  }
+			retval = visitType;
+			retcount = String.valueOf(o[1]);
+
+			int retvalAsInt = Integer.parseInt(retval);
+			if ((retvalAsInt >= 0) && (retvalAsInt < retVisit.length)) {
+				retVisit[retvalAsInt] = retcount;
+			}
+		}
+
+		return retVisit;
+	}
+
+}

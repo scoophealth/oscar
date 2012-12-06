@@ -128,4 +128,14 @@ public class BillingDaoTest extends DaoTestFixtures {
 	public void testCountBillings() {
 		assertNotNull(dao.countBillings("DAI", "CR", new Date(), new Date()));
 	}
+        
+    @Test
+	public void testCountBillingVisitsByCreator() {
+        assertNotNull(dao.countBillingVisitsByCreator("100", new Date(), new Date()));
+    }
+
+    @Test
+	public void testCountBillingVisitsByProvider() {
+        assertNotNull(dao.countBillingVisitsByProvider("100", new Date(), new Date()));
+	}
 }
