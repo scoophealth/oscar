@@ -23,7 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class ClinicDAOTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("clinic");
+		SchemaUtils.restoreTable(false, "clinic");
 	}
 
 	@Test
@@ -47,5 +47,26 @@ public class ClinicDAOTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testGetClinic() throws Exception {
+		
+		Clinic clinic1 = new Clinic();
+		EntityDataGenerator.generateTestDataForModelClass(clinic1);
+		dao.persist(clinic1);
+		
+		Clinic clinic2 = new Clinic();
+		EntityDataGenerator.generateTestDataForModelClass(clinic2);
+		dao.persist(clinic2);
+		
+		Clinic clinic3 = new Clinic();
+		EntityDataGenerator.generateTestDataForModelClass(clinic3);
+		dao.persist(clinic3);
+		
+		Clinic expectedResult = clinic1;
+		Clinic result = dao.getClinic();
+		
+		assertEquals(expectedResult, result);
 	}
 }
