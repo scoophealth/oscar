@@ -17,16 +17,20 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ page import="java.util.*, java.sql.*, oscar.login.*, oscar.*" errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.ReportProvider" %>
+<%@ page import="org.oscarehr.common.dao.ReportProviderDao" %>
 <%
-if(session.getAttribute("user") == null ) response.sendRedirect("../../../../../logout.jsp");
+	ProviderDao providerDao= SpringUtils.getBean(ProviderDao.class);
+    ReportProviderDao reportProviderDao= SpringUtils.getBean(ReportProviderDao.class);
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.login.*, oscar.*"
-	errorPage="errorpage.jsp"%>
 <%@ include file="../../../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbFLU.jspf"%>
+
 <%
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);
@@ -40,27 +44,31 @@ String nowDateTime = String.valueOf(curYear)+"-"+String.valueOf(curMonth) + "-" 
 String nowDate = String.valueOf(curYear)+"-"+String.valueOf(curMonth) + "-" + String.valueOf(curDay);
 String proFirst1="", proLast1="", proOHIP1="", proNo="";
 int Count = 0;
-ResultSet rslocal = apptMainBean.queryResults(request.getParameter("creator"), "search_provider_name");
-while(rslocal.next()){
-	proFirst1 = rslocal.getString("first_name");
-	proLast1 = rslocal.getString("last_name");
-	proOHIP1 = rslocal.getString("provider_no");
+Provider p = providerDao.getProvider(request.getParameter("creator"));
+if(p != null) {
+	proFirst1 = p.getFirstName();
+	proLast1 = p.getLastName();
+	proOHIP1 = p.getProviderNo();
 }
 
-DBHelp dbObj = new DBHelp();
 Vector billingProvider = new Vector();
-String sql = "select distinct p.provider_no, p.ohip_no, p.last_name, p.first_name from reportprovider r, provider p where r.provider_no=p.provider_no order by p.last_name, p.first_name";
-ResultSet rs = dbObj.searchDBRecord(sql);
-while(rs.next()){
-	billingProvider.add(dbObj.getString(rs,"p.provider_no"));
-	billingProvider.add(dbObj.getString(rs,"p.ohip_no"));
-	billingProvider.add(dbObj.getString(rs,"p.last_name") +","+ dbObj.getString(rs,"p.first_name"));
+
+List<String> ids = new ArrayList<String>();
+for(ReportProvider rp : reportProviderDao.findAll()) {
+	if(!ids.contains(rp.getProviderNo()))
+		ids.add(rp.getProviderNo());
+}
+for(String id:ids) {
+	Provider pd = providerDao.getProvider(id);
+	if(pd != null) {
+		billingProvider.add(pd.getProviderNo());
+		billingProvider.add(pd.getOhipNo());
+		billingProvider.add(pd.getFormattedName());
+	}
 }
 
-String actionPage = "dbAddFluBilling.jsp";
-if(oscarVariables.getProperty("isNewONbilling", "").equals("true")) {
-	actionPage = "onDbAddFluBilling.jsp";
-}
+String actionPage = "onDbAddFluBilling.jsp";
+
 %>
 
 <html>
@@ -475,32 +483,6 @@ SPAN.bold {
 						<%=(request.getParameter("creator").equals(specialty_code)||billingProvider.size()==3)?"selected":""%>><%=proName%></option>
 					<%	} %>
 
-					<%--
-                String proFirst="";
-		             String proLast="";
-		             String proOHIP="";
-		             String specialty_code;
-		  String billinggroup_no;
-
-		       //   ResultSet rslocal;
-		          rslocal = null;
-		   rslocal = apptMainBean.queryResults("%", "search_provider_dt");
-		   while(rslocal.next()){
-		   proFirst = rslocal.getString("first_name");
-		   proLast = rslocal.getString("last_name");
-		   proOHIP = rslocal.getString("ohip_no");
-		 //  billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-		 // specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-		   specialty_code = rslocal.getString("provider_no");
-
-		   // %>
-           //     <option value="<%=proOHIP%>|<%=specialty_code%>" <%=request.getParameter("creator").equals(specialty_code)?"selected":""%>><%=proLast%>,
-           //     <%=proFirst%></option>
-           //     <%
-
-		   //}
-		  //
-  --%>
 				</select> </font></td>
 				<td width="26%"><font size="1"
 					face="Verdana, Arial, Helvetica, sans-serif">Appointment
@@ -508,23 +490,14 @@ SPAN.bold {
 					<option value=""
 						<%=request.getParameter("creator").equals("")?"selected":""%>>Select
 					Provider</option>
-					<%// String proFirst="";
-		          //   String proLast="";
-		          //   String proOHIP="";
-		          //   String specialty_code;
-		 // String billinggroup_no;
-
-		       //   ResultSet rslocal;
-		          rslocal = null;
-		   rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
-		   while(rslocal.next()){
-		   proFirst = rslocal.getString("first_name");
-		   proLast = rslocal.getString("last_name");
-		   proOHIP = rslocal.getString("provider_no");
-		 //  billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-		 // specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-		 //  specialty_code = rslocal.getString("provider_no");
-
+					<%
+		          
+					for(Provider prov:providerDao.getActiveProviders()) {
+		         
+					   proFirst = prov.getFirstName();
+					   proLast = prov.getLastName();
+					   proOHIP = prov.getProviderNo();
+					
 %>
 					<option value="<%=proOHIP%>"
 						<%=request.getParameter("creator").equals(proOHIP)?"selected":""%>><%=proLast%>,
