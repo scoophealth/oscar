@@ -22,12 +22,8 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarLab.ca.all;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -35,806 +31,626 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.ConsultDocsDao;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementMapDao;
 import org.oscarehr.common.dao.MeasurementsDeletedDao;
 import org.oscarehr.common.dao.MeasurementsExtDao;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.model.ConsultDocs;
+import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementMap;
+import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.MeasurementsDeleted;
 import org.oscarehr.common.model.MeasurementsExt;
-import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.on.LabResultData;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 public class Hl7textResultsData {
 
-    private static Logger logger = MiscUtils.getLogger();
-    private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
-    private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
-    private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+	private static Logger logger = MiscUtils.getLogger();
+	private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
+	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
+	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
 
-    private Hl7textResultsData() {
-    	// no one should instantiate this
-    }
+	private Hl7textResultsData() {
+		// no one should instantiate this
+	}
 
-    public static void populateMeasurementsTable(String lab_no, String demographic_no){
-        MessageHandler h = Factory.getHandler(lab_no);
+	public static void populateMeasurementsTable(String lab_no, String demographic_no) {
+		MessageHandler h = Factory.getHandler(lab_no);
 
-        java.util.Calendar calender = java.util.Calendar.getInstance();
-        String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
-        String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
-        String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
-        String hour = Integer.toString(calender.get(java.util.Calendar.HOUR));
-        String min = Integer.toString(calender.get(java.util.Calendar.MINUTE));
-        String second = Integer.toString(calender.get(java.util.Calendar.SECOND));
-        String dateEntered = year+"-"+month+"-"+day+" " + hour + ":" + min + ":" + second + ":";
+		java.util.Calendar calender = java.util.Calendar.getInstance();
+		String day = Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
+		String month = Integer.toString(calender.get(java.util.Calendar.MONTH) + 1);
+		String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
+		String hour = Integer.toString(calender.get(java.util.Calendar.HOUR));
+		String min = Integer.toString(calender.get(java.util.Calendar.MINUTE));
+		String second = Integer.toString(calender.get(java.util.Calendar.SECOND));
+		String dateEntered = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + second + ":";
 
-        try{
+		//Check for other versions of this lab
+		String[] matchingLabs = getMatchingLabs(lab_no).split(",");
+		//if this lab is the latest version delete the measurements from the previous version and add the new ones
 
-            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
+		int k = 0;
+		while (k < matchingLabs.length && !matchingLabs[k].equals(lab_no)) {
+			k++;
+		}
 
-            //Check for other versions of this lab
-            String[] matchingLabs = getMatchingLabs(lab_no).split(",");
-            //if this lab is the latest version delete the measurements from the previous version and add the new ones
+		if (k != 0) {
+			MeasurementsDeleted measurementsDeleted;
+			MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+			for (Measurement m : dao.findByValue("lab_no", matchingLabs[k - 1])) {
+				measurementsDeleted = new MeasurementsDeleted(m);
+				measurementsDeletedDao.persist(measurementsDeleted);
+				measurementDao.remove(m);
+			}
+		}
+		// loop through the measurements for the lab and add them
 
-            int k = 0;
-            while ( k < matchingLabs.length && !matchingLabs[k].equals(lab_no)){
-                k++;
-            }
+		for (int i = 0; i < h.getOBRCount(); i++) {
+			for (int j = 0; j < h.getOBXCount(i); j++) {
 
-            if(k != 0){
-            	MeasurementsDeleted measurementsDeleted;
+				String result = h.getOBXResult(i, j);
 
-                String sql = "SELECT m.* FROM measurements m LEFT JOIN measurementsExt e ON m.id = measurement_id AND e.keyval='lab_no' WHERE e.val='"+matchingLabs[k-1]+"'";
-                ResultSet rs = DBHandler.GetSQL(sql);
-                while(rs.next()){
-                	measurementsDeleted  = new MeasurementsDeleted();
-                	measurementsDeleted.setType(oscar.Misc.getString(rs, "type"));
-                	measurementsDeleted.setDemographicNo(Integer.valueOf(oscar.Misc.getString(rs, "demographicNo")));
-                	measurementsDeleted.setProviderNo(oscar.Misc.getString(rs, "providerNo"));
-                	measurementsDeleted.setDataField(oscar.Misc.getString(rs, "dataField"));
-                	measurementsDeleted.setMeasuringInstruction(oscar.Misc.getString(rs, "measuringInstruction"));
-                	measurementsDeleted.setComments(oscar.Misc.getString(rs, "comments"));
-                	measurementsDeleted.setDateObserved(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "dateObserved"), "yyyy-MM-dd hh:mm:ss"));
-                	measurementsDeleted.setDateEntered(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "dateEntered"), "yyyy-MM-dd hh:mm:ss"));
-                	measurementsDeleted.setOriginalId(Integer.valueOf(oscar.Misc.getString(rs, "id")));
-                	measurementsDeletedDao.persist(measurementsDeleted);
-
-                	measurementDao.remove(measurementDao.find(Integer.parseInt(oscar.Misc.getString(rs, "id"))));
-                    
-                }
-
-            }
-            // loop through the measurements for the lab and add them
-
-            for (int i=0; i < h.getOBRCount(); i++){
-                for (int j=0; j < h.getOBXCount(i); j++){
-
-                    String result = h.getOBXResult(i, j);
-
-                    // only add if there is a result and it is supposed to be viewed
-                    if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
-                        continue;
-                    logger.debug("obx("+j+") should be added");
-                    String identifier = h.getOBXIdentifier(i,j);
-                    String name = h.getOBXName(i,j);
-                    String unit = h.getOBXUnits(i,j);
-                    String labname = h.getPatientLocation();
-                    String accession = h.getAccessionNum();
-                    String req_datetime = h.getRequestDate(i);
-                    String datetime = h.getTimeStamp(i,j);
-                    String olis_status = h.getOBXResultStatus(i, j);
-                    String abnormal = h.getOBXAbnormalFlag(i,j);
-                    if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
-                        abnormal = "A";
-                    }else if ( abnormal != null && abnormal.startsWith("L")){
-                        abnormal = "L";
-                    }else{
-                        abnormal = "N";
-                    }
-                    String[] refRange = splitRefRange(h.getOBXReferenceRange(i,j));
-                    String comments = "";
-                    for (int l=0; l<h.getOBXCommentCount(i,j); l++) {
-                    	comments += comments.length()>0 ? "\n"+h.getOBXComment(i,j,l) : h.getOBXComment(i,j,l);
-                	}
-
-                    String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code=? AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, identifier);
-                    String measType="";
-                    String measInst="";
-                    ResultSet rs = pstmt.executeQuery();
-                    if(rs.next()){
-                        measType = oscar.Misc.getString(rs, "ident_code");
-                        measInst = oscar.Misc.getString(rs, "measuringInstruction");
-                    }else{
-                       logger.debug("CODE:"+identifier+ " needs to be mapped");
-                    }
-
-                    Measurement m = new Measurement();
-                    m.setType(measType);
-                    m.setDemographicId(Integer.parseInt(demographic_no));
-                    m.setProviderNo("0");
-                    m.setDataField(result);
-                    m.setMeasuringInstruction(measInst);
-                    m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
-                    
-                    measurementDao.persist(m);
-
-                    
-                    int mId = m.getId();
-
-                    
-                    MeasurementsExt me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("lab_no");
-                    me.setVal(lab_no);
-                    measurementsExtDao.persist(me);
-
-                    
-                    me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("abnormal");
-                    me.setVal(abnormal);
-                    measurementsExtDao.persist(me);
-
-                    me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("identifier");
-                    me.setVal(identifier);
-                    measurementsExtDao.persist(me);
-                    
-                    me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("name");
-                    me.setVal(name);
-                    measurementsExtDao.persist(me);
-                    
-                    me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("labname");
-                    me.setVal(labname);
-                    measurementsExtDao.persist(me);
-                    
-                    me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("accession");
-                    me.setVal(accession);
-                    measurementsExtDao.persist(me);
-                    
-                    me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("request_datetime");
-                    me.setVal(req_datetime);
-                    measurementsExtDao.persist(me);
-                    
-                    
-                    me = new MeasurementsExt();
-                    me.setMeasurementId(mId);
-                    me.setKeyVal("datetime");
-                    me.setVal(datetime);
-                    measurementsExtDao.persist(me);
-                   
-
-                    if (olis_status!=null && olis_status.length()>0) {
-                    	 me = new MeasurementsExt();
-                         me.setMeasurementId(mId);
-                         me.setKeyVal("olis_status");
-                         me.setVal(olis_status);
-                         measurementsExtDao.persist(me);
-                    }
-
-				    if (unit!=null && unit.length()>0) {
-				    	 me = new MeasurementsExt();
-                         me.setMeasurementId(mId);
-                         me.setKeyVal("unit");
-                         me.setVal(unit);
-                         measurementsExtDao.persist(me);
-				    }
-		
-				    if (refRange[0].length()>0) {
-				    	 me = new MeasurementsExt();
-                         me.setMeasurementId(mId);
-                         me.setKeyVal("range");
-                         me.setVal(refRange[0]);
-                         measurementsExtDao.persist(me);
-				    } else {
-						if (refRange[1].length()>0) {
-							 me = new MeasurementsExt();
-	                         me.setMeasurementId(mId);
-	                         me.setKeyVal("minimum");
-	                         me.setVal(refRange[1]);
-	                         measurementsExtDao.persist(me);
-						}
-						
-						me = new MeasurementsExt();
-                        me.setMeasurementId(mId);
-                        me.setKeyVal("other_id");
-                        me.setVal(i+"-"+j);
-                        measurementsExtDao.persist(me);
-				    }
+				// only add if there is a result and it is supposed to be viewed
+				if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS")) continue;
+				logger.debug("obx(" + j + ") should be added");
+				String identifier = h.getOBXIdentifier(i, j);
+				String name = h.getOBXName(i, j);
+				String unit = h.getOBXUnits(i, j);
+				String labname = h.getPatientLocation();
+				String accession = h.getAccessionNum();
+				String req_datetime = h.getRequestDate(i);
+				String datetime = h.getTimeStamp(i, j);
+				String olis_status = h.getOBXResultStatus(i, j);
+				String abnormal = h.getOBXAbnormalFlag(i, j);
+				if (abnormal != null && (abnormal.equals("A") || abnormal.startsWith("H"))) {
+					abnormal = "A";
+				} else if (abnormal != null && abnormal.startsWith("L")) {
+					abnormal = "L";
+				} else {
+					abnormal = "N";
 				}
-            }
+				String[] refRange = splitRefRange(h.getOBXReferenceRange(i, j));
+				String comments = "";
+				for (int l = 0; l < h.getOBXCommentCount(i, j); l++) {
+					comments += comments.length() > 0 ? "\n" + h.getOBXComment(i, j, l) : h.getOBXComment(i, j, l);
+				}
 
-		}catch(Exception e){
-			logger.error("Exception in HL7 populateMeasurementsTable", e);
+				String measType = "";
+				String measInst = "";
+				MeasurementMapDao dao = SpringUtils.getBean(MeasurementMapDao.class);
+				List<Object[]> measurements = dao.findMeasurements("FLOWSHEET", identifier);
+				if (measurements.isEmpty()) {
+					logger.warn("CODE:" + identifier + " needs to be mapped");
+				} else {
+					for (Object[] o : measurements) {
+						MeasurementMap mm = (MeasurementMap) o[1];
+						MeasurementType type = (MeasurementType) o[2];
+
+						measType = mm.getIdentCode();
+						measInst = type.getMeasuringInstruction();
+					}
+				}
+
+				Measurement m = new Measurement();
+				m.setType(measType);
+				m.setDemographicId(Integer.parseInt(demographic_no));
+				m.setProviderNo("0");
+				m.setDataField(result);
+				m.setMeasuringInstruction(measInst);
+				m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
+
+				measurementDao.persist(m);
+
+				int mId = m.getId();
+
+				MeasurementsExt me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("lab_no");
+				me.setVal(lab_no);
+				measurementsExtDao.persist(me);
+
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("abnormal");
+				me.setVal(abnormal);
+				measurementsExtDao.persist(me);
+
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("identifier");
+				me.setVal(identifier);
+				measurementsExtDao.persist(me);
+
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("name");
+				me.setVal(name);
+				measurementsExtDao.persist(me);
+
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("labname");
+				me.setVal(labname);
+				measurementsExtDao.persist(me);
+
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("accession");
+				me.setVal(accession);
+				measurementsExtDao.persist(me);
+
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("request_datetime");
+				me.setVal(req_datetime);
+				measurementsExtDao.persist(me);
+
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("datetime");
+				me.setVal(datetime);
+				measurementsExtDao.persist(me);
+
+				if (olis_status != null && olis_status.length() > 0) {
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("olis_status");
+					me.setVal(olis_status);
+					measurementsExtDao.persist(me);
+				}
+
+				if (unit != null && unit.length() > 0) {
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("unit");
+					me.setVal(unit);
+					measurementsExtDao.persist(me);
+				}
+
+				if (refRange[0].length() > 0) {
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("range");
+					me.setVal(refRange[0]);
+					measurementsExtDao.persist(me);
+				} else {
+					if (refRange[1].length() > 0) {
+						me = new MeasurementsExt();
+						me.setMeasurementId(mId);
+						me.setKeyVal("minimum");
+						me.setVal(refRange[1]);
+						measurementsExtDao.persist(me);
+					}
+
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("other_id");
+					me.setVal(i + "-" + j);
+					measurementsExtDao.persist(me);
+				}
+			}
 		}
 
 	}
 
-	public static String getMatchingLabs(String lab_no){
-		String sql = "SELECT a.lab_no, a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b WHERE a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no='"+lab_no+"' ORDER BY a.obr_date, a.final_result_count, a.lab_no";
+	public static String getMatchingLabs(String lab_no) {
 		String ret = "";
 		int monthsBetween = 0;
 
-		try{
+		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
+		for (Object[] o : dao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
+			Hl7TextInfo a = (Hl7TextInfo) o[0];
+			Hl7TextInfo b = (Hl7TextInfo) o[1];
 
-			ResultSet rs = DBHandler.GetSQL(sql);
+			int labNo = a.getLabNumber();
 
-
-			while(rs.next()) {
-
-				//Accession numbers may be recycled, accession
-				//numbers for a lab should have lab dates within less than 4
-				//months of eachother even this is a large timespan
-				Date dateA = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "obr_date"), "yyyy-MM-dd hh:mm:ss");
-				Date dateB = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "labDate"), "yyyy-MM-dd hh:mm:ss");
-				if (dateA.before(dateB)){
-					monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
-				}else{
-					monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
-				}
-				logger.debug("monthsBetween: "+monthsBetween);
-				logger.debug("lab_no: "+oscar.Misc.getString(rs, "lab_no")+" lab: "+lab_no);
-				if (monthsBetween < 4){
-					if(ret.equals(""))
-						ret = oscar.Misc.getString(rs, "lab_no");
-					else
-						ret = ret+","+oscar.Misc.getString(rs, "lab_no");
-				}
+			//Accession numbers may be recycled, accession
+			//numbers for a lab should have lab dates within less than 4
+			//months of each other even this is a large time span
+			Date dateA = ConversionUtils.fromTimestampString(a.getObrDate());
+			Date dateB = ConversionUtils.fromTimestampString(b.getObrDate());
+			if (dateA.before(dateB)) {
+				monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
+			} else {
+				monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
 			}
-			rs.close();
-		}catch(Exception e){
-			logger.error("Exception in HL7 getMatchingLabs: ", e);
+
+			logger.debug("monthsBetween: " + monthsBetween);
+			logger.debug("lab_no: " + labNo + " lab: " + lab_no);
+
+			if (monthsBetween < 4) {
+				if (ret.equals("")) ret = "" + labNo;
+				else ret = ret + "," + labNo;
+			}
 		}
-		if (ret.equals(""))
-			return(lab_no);
-		else
-			return(ret);
+
+		if (ret.equals("")) return (lab_no);
+		else return (ret);
 	}
 
 	/**
 	 *Populates ArrayList with labs attached to a consultation request
 	 */
+	@SuppressWarnings("unchecked")
 	public static ArrayList<LabResultData> populateHL7ResultsData(String demographicNo, String consultationId, boolean attached) {
-		String sql = "SELECT hl7.label,hl7.lab_no, hl7.obr_date, hl7.discipline, hl7.accessionNum, hl7.final_result_count, patientLabRouting.id " +
-		"FROM hl7TextInfo hl7, patientLabRouting " +
-		"WHERE patientLabRouting.lab_no = hl7.lab_no "+
-		"AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no=" + demographicNo+" GROUP BY hl7.lab_no";
-
-		String attachQuery = "SELECT consultdocs.document_no FROM consultdocs, patientLabRouting " +
-		"WHERE patientLabRouting.id = consultdocs.document_no AND " +
-		"consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY consultdocs.document_no";
-
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
 		ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
-		try {
 
-
-			ResultSet rs = DBHandler.GetSQL(attachQuery);
-			while(rs.next()) {
-				LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-				lbData.labPatientId = oscar.Misc.getString(rs, "document_no");
-				attachedLabs.add(lbData);
-			}
-			rs.close();
+		ConsultDocsDao cdDao = SpringUtils.getBean(ConsultDocsDao.class);
+		for (Object[] o : cdDao.findDocs(ConversionUtils.fromIntString(consultationId))) {
+			ConsultDocs c = (ConsultDocs) o[0];
 
 			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-			LabResultData.CompareId c = lbData.getComparatorId();
-			rs = DBHandler.GetSQL(sql);
-
-			while(rs.next()){
-
-				lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
-				lbData.labPatientId = oscar.Misc.getString(rs, "id");
-				lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
-				lbData.discipline = oscar.Misc.getString(rs, "discipline");
-				lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
-				lbData.finalResultsCount = rs.getInt("final_result_count");
-				lbData.label = oscar.Misc.getString(rs,"label");
-
-				if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
-					labResults.add(lbData);
-				else if( !attached && Collections.binarySearch(attachedLabs, lbData, c) < 0 )
-					labResults.add(lbData);
-
-				lbData = new LabResultData(LabResultData.HL7TEXT);
-			}
-			rs.close();
-		}catch(Exception e){
-			logger.error("exception in HL7Populate",e);
+			lbData.labPatientId = ConversionUtils.toIntString(c.getDocumentNo());
+			attachedLabs.add(lbData);
 		}
+
+		LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
+		LabResultData.CompareId c = lbData.getComparatorId();
+		Hl7TextInfoDao hlDao = SpringUtils.getBean(Hl7TextInfoDao.class);
+		for (Object[] o : hlDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo))) {
+			Hl7TextInfo i = (Hl7TextInfo) o[0];
+			PatientLabRouting p = (PatientLabRouting) o[1];
+
+			lbData.segmentID = ConversionUtils.toIntString(i.getLabNumber());
+			lbData.labPatientId = p.getId().toString();
+			lbData.dateTime = i.getObrDate();
+			lbData.discipline = i.getDiscipline();
+			lbData.accessionNumber = i.getAccessionNumber();
+			lbData.finalResultsCount = i.getFinalResultCount();
+			lbData.label = i.getLabel();
+
+			if (attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0) labResults.add(lbData);
+			else if (!attached && Collections.binarySearch(attachedLabs, lbData, c) < 0) labResults.add(lbData);
+
+			lbData = new LabResultData(LabResultData.HL7TEXT);
+		}
+
 		return labResults;
 	}
 
-	public static ArrayList<LabResultData> getNotAckLabsFromLabNos(List<String> labNos){
-		ArrayList<LabResultData> ret=new ArrayList<LabResultData>();
-		LabResultData lrd=new LabResultData();
-		for(String labNo:labNos){
-			lrd=getNotAckLabResultDataFromLabNo(labNo);
+	public static ArrayList<LabResultData> getNotAckLabsFromLabNos(List<String> labNos) {
+		ArrayList<LabResultData> ret = new ArrayList<LabResultData>();
+		LabResultData lrd = new LabResultData();
+		for (String labNo : labNos) {
+			lrd = getNotAckLabResultDataFromLabNo(labNo);
 			ret.add(lrd);
 		}
 		return ret;
 	}
 
-	public static LabResultData getNotAckLabResultDataFromLabNo(String labNo){
+	public static LabResultData getNotAckLabResultDataFromLabNo(String labNo) {
 		LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-		String sql = "";
-		try {
+		// note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+		// for the provider number if unable to find correct provider
 
+		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
+		List<Hl7TextInfo> infos = dao.findByLabId(ConversionUtils.fromIntString(labNo));
 
-			// note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
-			// for the provider number if unable to find correct provider
+		if (infos.isEmpty()) return lbData;
 
-			sql = "select info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, "
-				+ "info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
-				"from hl7TextInfo info " +
-				" where info.lab_no = "+labNo +" ORDER BY info.obr_date DESC";
+		Hl7TextInfo info = infos.get(0);
 
-			logger.debug(sql);
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if(rs.first()){
-
-				if (logger.isDebugEnabled())
-				{
-					int columns=rs.getMetaData().getColumnCount();
-					StringBuilder sb=new StringBuilder();
-					for (int i=0; i<columns; i++)
-					{
-						sb.append(rs.getString(i+1));
-						sb.append(", ");
-					}
-					logger.debug("Record found : "+sb.toString());
-				}
-
-
-				lbData.labType = LabResultData.HL7TEXT;
-				lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
-				//check if any demographic is linked to this lab
-				if(lbData.isMatchedToPatient()){
-					//get matched demographic no
-					String sql2="select * from patientLabRouting plr where plr.lab_no="+Integer.parseInt(lbData.segmentID)+" and plr.lab_type='"+lbData.labType+"'";
-					logger.debug("sql2="+sql2);
-					ResultSet rs2=DBHandler.GetSQL(sql2);
-					if(rs2.next())
-						lbData.setLabPatientId(oscar.Misc.getString(rs2, "demographic_no"));
-					else
-						lbData.setLabPatientId("-1");
-				}else{
-					lbData.setLabPatientId("-1");
-				}
-				lbData.acknowledgedStatus ="U";
-				lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
-				lbData.healthNumber = oscar.Misc.getString(rs, "health_no");
-				lbData.patientName = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
-				lbData.sex = oscar.Misc.getString(rs, "sex");
-
-				lbData.resultStatus = oscar.Misc.getString(rs, "result_status");
-				if (lbData.resultStatus.equals("A"))
-					lbData.abn = true;
-
-				lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
-
-				//priority
-				String priority = oscar.Misc.getString(rs, "priority");
-
-				if(priority != null && !priority.equals("")){
-					switch ( priority.charAt(0) ) {
-					case 'C' : lbData.priority = "Critical"; break;
-					case 'S' : lbData.priority = "Stat/Urgent"; break;
-					case 'U' : lbData.priority = "Unclaimed"; break;
-					case 'A' : lbData.priority = "ASAP"; break;
-					case 'L' : lbData.priority = "Alert"; break;
-					default: lbData.priority = "Routine"; break;
-					}
-				}else{
-					lbData.priority = "----";
-				}
-
-				lbData.requestingClient = oscar.Misc.getString(rs, "requesting_client");
-				lbData.reportStatus =  oscar.Misc.getString(rs, "report_status");
-
-				// the "C" is for corrected excelleris labs
-				if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
-					lbData.finalRes = true;
-				}else{
-					lbData.finalRes = false;
-				}
-
-				lbData.discipline = oscar.Misc.getString(rs, "discipline");
-				lbData.finalResultsCount = rs.getInt("final_result_count");
-
+		lbData.labType = LabResultData.HL7TEXT;
+		lbData.segmentID = "" + info.getLabNumber();
+		//check if any demographic is linked to this lab
+		if (lbData.isMatchedToPatient()) {
+			//get matched demographic no
+			PatientLabRoutingDao rDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+			List<PatientLabRouting> rs = rDao.findByLabNoAndLabType(Integer.parseInt(lbData.segmentID), lbData.labType);
+			if (!rs.isEmpty()) {
+				lbData.setLabPatientId("" + rs.get(0).getDemographicNo());
+			} else {
+				lbData.setLabPatientId("-1");
 			}
-			rs.close();
-		}catch(Exception e){
-			logger.error("exception in getNotAckLabResultDataFromLabNo:", e);
+		} else {
+			lbData.setLabPatientId("-1");
 		}
+		lbData.acknowledgedStatus = "U";
+		lbData.accessionNumber = info.getAccessionNumber();
+		lbData.healthNumber = info.getHealthNumber();
+		lbData.patientName = info.getLastName() + ", " + info.getFirstName();
+		lbData.sex = info.getSex();
+
+		lbData.resultStatus = info.getResultStatus();
+		if (lbData.resultStatus.equals("A")) lbData.abn = true;
+
+		lbData.dateTime = info.getObrDate();
+
+		//priority
+		String priority = info.getPriority();
+
+		if (priority != null && !priority.equals("")) {
+			switch (priority.charAt(0)) {
+			case 'C':
+				lbData.priority = "Critical";
+				break;
+			case 'S':
+				lbData.priority = "Stat/Urgent";
+				break;
+			case 'U':
+				lbData.priority = "Unclaimed";
+				break;
+			case 'A':
+				lbData.priority = "ASAP";
+				break;
+			case 'L':
+				lbData.priority = "Alert";
+				break;
+			default:
+				lbData.priority = "Routine";
+				break;
+			}
+		} else {
+			lbData.priority = "----";
+		}
+
+		lbData.requestingClient = info.getRequestingProvider();
+		lbData.reportStatus = info.getReportStatus();
+
+		// the "C" is for corrected excelleris labs
+		if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))) {
+			lbData.finalRes = true;
+		} else {
+			lbData.finalRes = false;
+		}
+
+		lbData.discipline = info.getDiscipline();
+		lbData.finalResultsCount = info.getFinalResultCount();
+
 		return lbData;
 	}
 
 	public static ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
 
-		if ( providerNo == null) { providerNo = ""; }
-		if ( patientFirstName == null) { patientFirstName = ""; }
-		if ( patientLastName == null) { patientLastName = ""; }
-		if ( status == null ) { status = ""; }
+		if (providerNo == null) {
+			providerNo = "";
+		}
+		if (patientFirstName == null) {
+			patientFirstName = "";
+		}
+		if (patientLastName == null) {
+			patientLastName = "";
+		}
+		if (status == null) {
+			status = "";
+		}
 
-		patientHealthNumber=StringUtils.trimToNull(patientHealthNumber);
+		patientHealthNumber = StringUtils.trimToNull(patientHealthNumber);
 
-		ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
-		String sql = "";
-		try {
+		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
 
-			if ( demographicNo == null) {
-				// note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
-				// for the provider number if unable to find correct provider
+		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
+		List<Object[]> routings = null;
 
-				sql = "select info.label,info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, providerLabRouting.status " +
-				"from hl7TextInfo info, providerLabRouting " +
-				" where info.lab_no = providerLabRouting.lab_no "+
-				" AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
-				" AND providerLabRouting.lab_type = 'HL7' " +
-				" AND info.first_name like '"+patientFirstName+"%' AND info.last_name like '"+patientLastName+"%'";
+		if (demographicNo == null) {
+			// note to self: lab reports not found in the providerLabRouting table will not show up - 
+			// need to ensure every lab is entered in providerLabRouting, with '0'
+			// for the provider number if unable to find correct provider				
+			routings = dao.findLabsViaMagic(status, providerNo, patientFirstName, patientLastName, patientHealthNumber);
+		} else {
+			routings = dao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+		}
 
-				if (patientHealthNumber!=null) sql=sql+" AND info.health_no like '%"+patientHealthNumber+"%'";
+		for (Object[] o : routings) {
+			Hl7TextInfo hl7 = (Hl7TextInfo) o[0];
+			PatientLabRouting p = (PatientLabRouting) o[1];
 
-				sql=sql+" ORDER BY info.lab_no DESC";
+			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
+			lbData.labType = LabResultData.HL7TEXT;
+			lbData.segmentID = "" + p.getLabNo();
 
-			} else {
+			//check if any demographic is linked to this lab
+			if (lbData.isMatchedToPatient()) {
+				//get matched demographic no
+				PatientLabRoutingDao pDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+				List<PatientLabRouting> lst = pDao.findByLabNoAndLabType(Integer.parseInt(lbData.segmentID), lbData.labType);
 
-				sql = "select info.label,info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
-				"from hl7TextInfo info, patientLabRouting " +
-				" where info.lab_no = patientLabRouting.lab_no "+
-				" AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";
-			}
-
-			logger.debug(sql);
-			ResultSet rs = DBHandler.GetSQL(sql);
-			while(rs.next()){
-
-				if (logger.isDebugEnabled())
-				{
-					int columns=rs.getMetaData().getColumnCount();
-					StringBuilder sb=new StringBuilder();
-					for (int i=0; i<columns; i++)
-					{
-						sb.append(rs.getString(i+1));
-						sb.append(", ");
-					}
-					logger.debug("Record found : "+sb.toString());
-				}
-
-				LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-				lbData.labType = LabResultData.HL7TEXT;
-				lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
-				//check if any demographic is linked to this lab
-				if(lbData.isMatchedToPatient()){
-					//get matched demographic no
-					String sql2="select * from patientLabRouting plr where plr.lab_no="+Integer.parseInt(lbData.segmentID)+" and plr.lab_type='"+lbData.labType+"'";
-					logger.debug("sql2="+sql2);
-					ResultSet rs2=DBHandler.GetSQL(sql2);
-					if(rs2.next())
-						lbData.setLabPatientId(oscar.Misc.getString(rs2, "demographic_no"));
-					else
-						lbData.setLabPatientId("-1");
-				}else{
+				if (!lst.isEmpty()) {
+					lbData.setLabPatientId("" + lst.get(0).getDemographicNo());
+				} else {
 					lbData.setLabPatientId("-1");
 				}
-
-				if (demographicNo == null && !providerNo.equals("0")) {
-					lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
-				} else {
-					lbData.acknowledgedStatus ="U";
-				}
-
-				lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
-				lbData.healthNumber = oscar.Misc.getString(rs, "health_no");
-				lbData.patientName = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
-				lbData.sex = oscar.Misc.getString(rs, "sex");
-				lbData.label = oscar.Misc.getString(rs, "label");
-
-				lbData.resultStatus = oscar.Misc.getString(rs, "result_status");
-				if (lbData.resultStatus.equals("A"))
-					lbData.abn = true;
-
-				lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
-
-				//priority
-				String priority = oscar.Misc.getString(rs, "priority");
-
-				if(priority != null && !priority.equals("")){
-					switch ( priority.charAt(0) ) {
-					case 'C' : lbData.priority = "Critical"; break;
-					case 'S' : lbData.priority = "Stat/Urgent"; break;
-					case 'U' : lbData.priority = "Unclaimed"; break;
-					case 'A' : lbData.priority = "ASAP"; break;
-					case 'L' : lbData.priority = "Alert"; break;
-					default: lbData.priority = "Routine"; break;
-					}
-				}else{
-					lbData.priority = "----";
-				}
-
-				lbData.requestingClient = oscar.Misc.getString(rs, "requesting_client");
-				lbData.reportStatus =  oscar.Misc.getString(rs, "report_status");
-
-				// the "C" is for corrected excelleris labs
-				if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
-					lbData.finalRes = true;
-				}else{
-					lbData.finalRes = false;
-				}
-
-				lbData.discipline = oscar.Misc.getString(rs, "discipline");
-				lbData.finalResultsCount = rs.getInt("final_result_count");
-				labResults.add(lbData);
+			} else {
+				lbData.setLabPatientId("-1");
 			}
-			rs.close();
-		}catch(Exception e){
-			logger.error("exception in Hl7Populate:", e);
+
+			if (demographicNo == null && !providerNo.equals("0")) {
+				lbData.acknowledgedStatus = hl7.getResultStatus();
+			} else {
+				lbData.acknowledgedStatus = "U";
+			}
+
+			lbData.accessionNumber = hl7.getAccessionNumber();
+			lbData.healthNumber = hl7.getHealthNumber();
+			lbData.patientName = hl7.getLastName() + ", " + hl7.getFirstName();
+			lbData.sex = hl7.getSex();
+			lbData.label = hl7.getLabel();
+
+			lbData.resultStatus = hl7.getResultStatus();
+			if (lbData.resultStatus.equals("A")) lbData.abn = true;
+
+			lbData.dateTime = hl7.getObrDate();
+
+			//priority
+			String priority = hl7.getPriority();
+
+			if (priority != null && !priority.equals("")) {
+				switch (priority.charAt(0)) {
+				case 'C':
+					lbData.priority = "Critical";
+					break;
+				case 'S':
+					lbData.priority = "Stat/Urgent";
+					break;
+				case 'U':
+					lbData.priority = "Unclaimed";
+					break;
+				case 'A':
+					lbData.priority = "ASAP";
+					break;
+				case 'L':
+					lbData.priority = "Alert";
+					break;
+				default:
+					lbData.priority = "Routine";
+					break;
+				}
+			} else {
+				lbData.priority = "----";
+			}
+
+			lbData.requestingClient = hl7.getRequestingProvider();
+			lbData.reportStatus = hl7.getReportStatus();
+
+			// the "C" is for corrected excelleris labs
+			if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))) {
+				lbData.finalRes = true;
+			} else {
+				lbData.finalRes = false;
+			}
+
+			lbData.discipline = hl7.getDiscipline();
+			lbData.finalResultsCount = hl7.getFinalResultCount();
+			labResults.add(lbData);
 		}
+
 		return labResults;
 	}
 
-	public static ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber,
-			String status, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
+	public static ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
 
-		if ( providerNo == null) { providerNo = ""; }
-		boolean searchProvider = !"-1".equals(providerNo) && !"".equals(providerNo);
-		if ( patientFirstName == null) { patientFirstName = ""; }
-		if ( patientLastName == null) { patientLastName = ""; }
-		if ( patientHealthNumber == null) { patientHealthNumber = ""; }
-		if ( status == null || "U".equals(status) ) { status = ""; }
-
-		boolean patientSearch = !"".equals(patientFirstName)
-		|| !"".equals(patientLastName)
-		|| !"".equals(patientHealthNumber);
-
-		ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
-		String sql = "";
-		try {
-			// note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
-			// for the provider number if unable to find correct provider
-
-			if (mixLabsAndDocs) {
-				if ("0".equals(demographicNo)  || "0".equals(providerNo)) {
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, X.status "
-						+ " FROM hl7TextInfo info, "
-						+ " (SELECT plr.id, plr.lab_type, plr.lab_no, plr.status "
-						+ "  FROM patientLabRouting plr2, providerLabRouting plr, hl7TextInfo info "
-						+ "  WHERE plr.lab_no = plr2.lab_no "
-						+ (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-						+ "    AND plr.status like '%"+status+"%' "
-						+ "    AND plr.lab_type = 'HL7' "
-						+ "    AND plr2.lab_type = 'HL7' "
-						+ "    AND info.lab_no = plr.lab_no "
-						+ (isAbnormal != null && isAbnormal ? " AND info.result_status = 'A' " :
-							isAbnormal != null && !isAbnormal ? " AND (info.result_status IS NULL OR info.result_status != 'A') " : "")
-							+ " UNION "
-							+ " SELECT plr.id, plr.lab_type, plr.lab_no, plr.status "
-							+ " FROM ctl_document cd, providerLabRouting plr  "
-							+ " WHERE plr.lab_type = 'DOC' AND plr.status like '%"+status+"%' "
-							+ (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-							+ " AND plr.lab_no = cd.document_no "
-							+ " AND 	cd.module_id = -1 "
-							+ " ORDER BY id DESC "
-							+ " ) AS X "
-							+ " WHERE X.lab_type = 'HL7' AND X.lab_no = info.lab_no "
-							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-
-				else if (demographicNo != null && !"".equals(demographicNo)) {
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status,  info.accessionNum, info.final_result_count, X.status "
-						+ " FROM hl7TextInfo info, "
-						+" (SELECT * FROM "
-						+" (SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status FROM providerLabRouting plr, ctl_document cd "
-						+" WHERE 	"
-						+" (cd.module_id = '"+demographicNo+"' "
-						+ "	AND cd.document_no = plr.lab_no"
-						+ "	AND plr.lab_type = 'DOC'  	"
-						+ "	AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' )" : " )")
-						+ " ORDER BY id DESC) AS Y"
-						+ " UNION"
-						+ " SELECT * FROM"
-						+ " (SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status  FROM providerLabRouting plr, patientLabRouting plr2"
-						+ " WHERE"
-						+ "	plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7'"
-						+ "	AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
-						+ " 	AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = '"+demographicNo+"'"
-						+ " ORDER BY id DESC) AS Z"
-						+ " ORDER BY id DESC"
-						+ " ) AS X "
-						+ " WHERE X.lab_type = 'HL7' and X.lab_no = info.lab_no "
-						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-				else if (patientSearch) { // N
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, Z.status "
-						+ " FROM hl7TextInfo info, "
-						+ " (SELECT * FROM "
-						+ "	 (SELECT * FROM  "
-						+ "		(SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status, d.demographic_no "
-						+ "			FROM providerLabRouting plr, ctl_document cd, demographic d "
-						+ "			WHERE 	 "
-						+ "			(d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
-						+ "		AND cd.module_id = d.demographic_no 	AND cd.document_no = plr.lab_no	AND plr.lab_type = 'DOC' "
-						+ "				AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
-						+ "		)ORDER BY id DESC) AS Y "
-						+ " 	UNION "
-						+ "	SELECT * FROM "
-						+ "		(SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status, d.demographic_no "
-						+ "		FROM providerLabRouting plr, patientLabRouting plr2, demographic d" + (isAbnormal != null ? ", hl7TextInfo info " : " ")
-						+ "		WHERE d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
-						+ "		AND	plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7' "
-						+ (isAbnormal != null ? " AND plr.lab_no = info.lab_no AND (info.result_status IS NULL OR info.result_status != 'A') " : " " )
-						+ "				AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
-						+ " 	AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = d.demographic_no ORDER BY id DESC) AS Z "
-						+ " 			ORDER BY id DESC) AS X "
-						+ " 	  ) AS Z  "
-						+ " WHERE Z.lab_type = 'HL7' and Z.lab_no = info.lab_no "
-						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-				else { // N
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status,  info.accessionNum, info.final_result_count, X.status "
-						+ " FROM hl7TextInfo info, "
-						+ " (SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status "
-						+ " FROM providerLabRouting plr"  + (isAbnormal != null ? ", hl7TextInfo info " : " ")
-						+ " WHERE ("
-						+ "       plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-						+ (isAbnormal != null ? "     AND (plr.lab_type = 'DOC' OR (plr.lab_no = info.lab_no AND ("+(!isAbnormal ? "info.result_status IS NULL OR" : "") + " info.result_status "+(isAbnormal ? "" : "!")+"= 'A'))) " : " ")
-						+ "       ) "
-						+ " ORDER BY id DESC "
-						+ " ) AS X "
-						+ " WHERE X.lab_type = 'HL7' and X.lab_no = info.lab_no "
-						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-			}
-			else {
-				if ("0".equals(demographicNo) || "0".equals(providerNo)) { // Unmatched labs
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status,  info.accessionNum, info.final_result_count, plr.status "
-						+ " FROM patientLabRouting plr2, providerLabRouting plr, hl7TextInfo info "
-						+ " WHERE plr.lab_no = plr2.lab_no "
-						+ (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-						+ " AND plr.lab_type = 'HL7' "
-						+ " AND plr.status like '%"+status+"%' "
-						+ " AND plr2.lab_type = 'HL7' "
-						+ " AND plr.lab_no = info.lab_no "
-						+ (isAbnormal != null && isAbnormal ? "AND info.result_status = 'A'" :
-							isAbnormal != null && !isAbnormal ? "AND (info.result_status IS NULL OR info.result_status != 'A')" : "")
-							+ " ORDER BY plr.id DESC "
-							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-				else if (demographicNo != null && !"".equals(demographicNo)) {
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status,  info.accessionNum, info.final_result_count, X.status "
-						+ " FROM hl7TextInfo info, "
-						+ " (SELECT DISTINCT plr.id,plr.lab_no, plr.lab_type,  plr.status, d.demographic_no "
-						+ " FROM providerLabRouting plr, patientLabRouting plr2, demographic d "
-						+ " WHERE 	(d.demographic_no = '"+demographicNo+"' "
-						+ " 		AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = d.demographic_no "
-						+ " 		AND plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7' "
-						+ " 		AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-						+ " 		) "
-						+ " ORDER BY plr.id DESC "
-						+ " ) AS X "
-						+ " WHERE X.lab_type = 'HL7' and X.lab_no = info.lab_no "
-						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-				else if (patientSearch) { // A
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, X.status "
-						+ " FROM hl7TextInfo info, "
-						+ " (SELECT DISTINCT plr.id, plr.lab_type, plr.status, plr.lab_no, d.demographic_no "
-						+ " FROM providerLabRouting plr, patientLabRouting plr2, demographic d "
-						+ " WHERE   (d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
-						+ " 		AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = d.demographic_no "
-						+ " 		AND plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7' "
-						+ " 		AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-						+ " 		) "
-						+ " ORDER BY plr.id DESC "
-						+ " ) AS X "
-						+ " WHERE X.lab_type = 'HL7' and X.lab_no = info.lab_no "
-						+ (isAbnormal != null ? " AND (" + (!isAbnormal ? "info.result_status IS NULL OR" : "") + " info.result_status " + (isAbnormal ? "" : "!") + "= 'A') " : " ")
-						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-				else { // A
-					sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status,  info.accessionNum, info.final_result_count, plr.status "
-						+ " FROM providerLabRouting plr, hl7TextInfo info "
-						+ " WHERE plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-						+ "   AND lab_type = 'HL7' and info.lab_no = plr.lab_no "
-						+ (isAbnormal != null ? " AND (" + (!isAbnormal ? "info.result_status IS NULL OR" : "") + " info.result_status " + (isAbnormal ? "" : "!") + "= 'A') " : " ")
-						+ " ORDER BY plr.id DESC "
-						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
-				}
-			}
-
-			logger.info(sql);
-			ResultSet rs = DBHandler.GetSQL(sql);
-			while(rs.next()){
-
-				LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-				lbData.labType = LabResultData.HL7TEXT;
-				lbData.segmentID = rs.getString("lab_no");
-
-				if (demographicNo == null && !providerNo.equals("0")) {
-					lbData.acknowledgedStatus = rs.getString("status");
-				} else {
-					lbData.acknowledgedStatus ="U";
-				}
-
-				lbData.accessionNumber = rs.getString("accessionNum");
-				lbData.healthNumber = rs.getString("health_no");
-				lbData.patientName = rs.getString("last_name")+", "+rs.getString("first_name");
-				lbData.sex = rs.getString("sex");
-				lbData.label = rs.getString("label");
-
-				lbData.resultStatus = rs.getString("result_status");
-				if (lbData.resultStatus != null && lbData.resultStatus.equals("A"))
-					lbData.abn = true;
-
-				lbData.dateTime = rs.getString("obr_date");
-
-				//priority
-				String priority = rs.getString("priority");
-
-				if(priority != null && !priority.equals("")){
-					switch ( priority.charAt(0) ) {
-					case 'C' : lbData.priority = "Critical"; break;
-					case 'S' : lbData.priority = "Stat/Urgent"; break;
-					case 'U' : lbData.priority = "Unclaimed"; break;
-					case 'A' : lbData.priority = "ASAP"; break;
-					case 'L' : lbData.priority = "Alert"; break;
-					default: lbData.priority = "Routine"; break;
-					}
-				}else{
-					lbData.priority = "----";
-				}
-
-				lbData.requestingClient = rs.getString("requesting_client");
-				lbData.reportStatus =  rs.getString("report_status");
-
-				// the "C" is for corrected excelleris labs
-				if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
-					lbData.finalRes = true;
-				}else if (lbData.reportStatus != null && lbData.reportStatus.equals("X")){
-					lbData.cancelledReport = true;
-				}else{
-					lbData.finalRes = false;
-				}
-
-				lbData.discipline = rs.getString("discipline");
-				lbData.finalResultsCount = rs.getInt("final_result_count");
-				labResults.add(lbData);
-			}
-			rs.close();
-		}catch(Exception e){
-			logger.error("exception in Hl7Populate:", e);
+		if (providerNo == null) {
+			providerNo = "";
 		}
+		boolean searchProvider = !"-1".equals(providerNo) && !"".equals(providerNo);
+		if (patientFirstName == null) {
+			patientFirstName = "";
+		}
+		if (patientLastName == null) {
+			patientLastName = "";
+		}
+		if (patientHealthNumber == null) {
+			patientHealthNumber = "";
+		}
+		if (status == null || "U".equals(status)) {
+			status = "";
+		}
+
+		boolean patientSearch = !"".equals(patientFirstName) || !"".equals(patientLastName) || !"".equals(patientHealthNumber);
+
+		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
+		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
+		// note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+		// for the provider number if unable to find correct provider
+
+		for (Object[] i : dao.findLabAndDocsViaMagic(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, isPaged, page, pageSize, mixLabsAndDocs, isAbnormal, searchProvider, patientSearch)) {
+
+			String label = String.valueOf(i[0]);
+			String lab_no = String.valueOf(i[0]);
+			String sex = String.valueOf(i[0]);
+			String health_no = String.valueOf(i[0]);
+			String result_status = String.valueOf(i[0]);
+			String obr_date = String.valueOf(i[0]);
+			String priority = String.valueOf(i[0]);
+			String requesting_client = String.valueOf(i[0]);
+			String discipline = String.valueOf(i[0]);
+			String last_name = String.valueOf(i[0]);
+			String first_name = String.valueOf(i[0]);
+			String report_status = String.valueOf(i[0]);
+			String accessionNum = String.valueOf(i[0]);
+			String final_result_count = String.valueOf(i[0]);
+			String routingStatus = String.valueOf(i[0]);
+
+			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
+			lbData.labType = LabResultData.HL7TEXT;
+			lbData.segmentID = lab_no;
+
+			if (demographicNo == null && !providerNo.equals("0")) {
+				lbData.acknowledgedStatus = routingStatus;
+			} else {
+				lbData.acknowledgedStatus = "U";
+			}
+
+			lbData.accessionNumber = accessionNum;
+			lbData.healthNumber = health_no;
+			lbData.patientName = last_name + ", " + first_name;
+			lbData.sex = sex;
+			lbData.label = label;
+
+			lbData.resultStatus = result_status;
+			if (lbData.resultStatus != null && lbData.resultStatus.equals("A")) lbData.abn = true;
+
+			lbData.dateTime = obr_date;
+
+			if (priority != null && !priority.equals("")) {
+				switch (priority.charAt(0)) {
+				case 'C':
+					lbData.priority = "Critical";
+					break;
+				case 'S':
+					lbData.priority = "Stat/Urgent";
+					break;
+				case 'U':
+					lbData.priority = "Unclaimed";
+					break;
+				case 'A':
+					lbData.priority = "ASAP";
+					break;
+				case 'L':
+					lbData.priority = "Alert";
+					break;
+				default:
+					lbData.priority = "Routine";
+					break;
+				}
+			} else {
+				lbData.priority = "----";
+			}
+
+			lbData.requestingClient = requesting_client;
+			lbData.reportStatus = report_status;
+
+			// the "C" is for corrected excelleris labs
+			if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))) {
+				lbData.finalRes = true;
+			} else if (lbData.reportStatus != null && lbData.reportStatus.equals("X")) {
+				lbData.cancelledReport = true;
+			} else {
+				lbData.finalRes = false;
+			}
+
+			lbData.discipline = discipline;
+			lbData.finalResultsCount = ConversionUtils.fromIntString(final_result_count);
+			labResults.add(lbData);
+		}
+
 		return labResults;
 	}
 
 	private static String[] splitRefRange(String refRangeTxt) {
 		refRangeTxt = refRangeTxt.trim();
-		String[] refRange = {"","",""};
+		String[] refRange = { "", "", "" };
 		String numeric = "-. 0123456789";
 		boolean textual = false;
-		if (refRangeTxt==null || refRangeTxt.length()==0) return refRange;
+		if (refRangeTxt == null || refRangeTxt.length() == 0) return refRange;
 
-		for (int i=0; i<refRangeTxt.length(); i++) {
-			if (!numeric.contains(refRangeTxt.subSequence(i,i+1))) {
-				if (i>0 || (refRangeTxt.charAt(i)!='>' && refRangeTxt.charAt(i)!='<')) {
+		for (int i = 0; i < refRangeTxt.length(); i++) {
+			if (!numeric.contains(refRangeTxt.subSequence(i, i + 1))) {
+				if (i > 0 || (refRangeTxt.charAt(i) != '>' && refRangeTxt.charAt(i) != '<')) {
 					textual = true;
 					break;
 				}
@@ -843,13 +659,13 @@ public class Hl7textResultsData {
 		if (textual) {
 			refRange[0] = refRangeTxt;
 		} else {
-			if (refRangeTxt.charAt(0)=='>') {
+			if (refRangeTxt.charAt(0) == '>') {
 				refRange[1] = refRangeTxt.substring(1).trim();
-			} else if (refRangeTxt.charAt(0)=='<') {
+			} else if (refRangeTxt.charAt(0) == '<') {
 				refRange[2] = refRangeTxt.substring(1).trim();
 			} else {
 				String[] tmp = refRangeTxt.split("-");
-				if (tmp.length==2) {
+				if (tmp.length == 2) {
 					refRange[1] = tmp[0].trim();
 					refRange[2] = tmp[1].trim();
 				} else {
