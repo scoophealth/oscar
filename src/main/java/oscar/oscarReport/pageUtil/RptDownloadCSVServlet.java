@@ -147,8 +147,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
     private String demoReport(HttpServletRequest request) throws Exception {
         reportName = "clientDatabaseReport";
         String in = "";
-        DBHelp dbObj = new DBHelp();
-
+        
 
         String ARTYPE = "formBCAR";
         if (request.getParameter("bcartype") != null && request.getParameter("bcartype").equals("BCAR2007")){

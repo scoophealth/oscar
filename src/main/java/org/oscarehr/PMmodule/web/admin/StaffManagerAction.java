@@ -54,9 +54,13 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 public class StaffManagerAction extends BaseAction {
 	private static Logger log = MiscUtils.getLogger();
+	
+	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    
 
 	private FacilityDao facilityDao=null;
 
@@ -129,7 +133,7 @@ public class StaffManagerAction extends BaseAction {
 		List<Facility> allFacilities=facilityDao.findAll(true);
         request.setAttribute("all_facilities",allFacilities);
 
-        List<Integer> providerFacilities=ProviderDao.getFacilityIds(provider.getProviderNo());
+        List<Integer> providerFacilities=providerDao.getFacilityIds(provider.getProviderNo());
         request.setAttribute("providerFacilities",providerFacilities);
 	}
 

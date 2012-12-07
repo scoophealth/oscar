@@ -35,7 +35,7 @@
 
 <%@page contentType="text/csv"%>
 <%
-	String agencyName = SqlUtils.getCurrentDatabaseName();
+	String agencyName = oscar.OscarProperties.getInstance().getProperty("db_name","");
 	String startDateString = request.getParameter("startDate");
 	String endDateString = request.getParameter("endDate");
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM");
