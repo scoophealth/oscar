@@ -23,17 +23,19 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.DemographicCust;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class DemographicCustDaoTest extends DaoTestFixtures {
@@ -53,32 +55,148 @@ public class DemographicCustDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
-
-	@Test
+	
+	@Test 
 	public void testFindMultipleMidwife() throws Exception {
-		DemographicCust entity = new DemographicCust();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setId(1);
-		entity.setMidwife("a");
-		dao.persist(entity);
+		
+		int id1 = 101;
+		int id2 = 202;
+		int id3 = 303;
+		
+		String midwife1 = "alpha";
+		String midwife2 = "bravo";
+		
+		DemographicCust demoCust1 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust1);
+		demoCust1.setId(id1);
+		demoCust1.setMidwife(midwife1);
+		dao.persist(demoCust1);
+		
+		DemographicCust demoCust2 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust2);
+		demoCust2.setId(id2);
+		demoCust2.setMidwife(midwife2);
+		dao.persist(demoCust2);
+		
+		DemographicCust demoCust3 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust3);
+		demoCust3.setId(id3);
+		demoCust3.setMidwife(midwife1);
+		dao.persist(demoCust3);
+		
+		List<Integer> demographicNos = new ArrayList<Integer>(Arrays.asList(id1, id2, id3));
+		
+		List<DemographicCust> expectedResult = new ArrayList<DemographicCust>(Arrays.asList(demoCust1, demoCust3));
+		List<DemographicCust> result = dao.findMultipleMidwife(demographicNos, midwife1);
+		
+		Logger logger = MiscUtils.getLogger();
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
 
-		entity = new DemographicCust();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setId(2);
-		entity.setMidwife("a");
-		dao.persist(entity);
-
-		entity = new DemographicCust();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setId(3);
-		entity.setMidwife("b");
-		dao.persist(entity);
-
-		List<Integer> dnos = new ArrayList<Integer>();
-		dnos.add(1); dnos.add(2); dnos.add(3);
-
-		List<DemographicCust> dc = dao.findMultipleMidwife(dnos, "a");
-		assertEquals(dc.size(),2);
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items do not match.");
+				fail("Items do not match.");
+			}
+		}
+		assertTrue(true);	
 	}
+	
+	@Test
+	public void testFindMultipleResident() throws Exception {
+		
+		int id1 = 101;
+		int id2 = 202;
+		int id3 = 303;
+		
+		String resident1 = "alpha";
+		String resident2 = "bravo";
+		
+		DemographicCust demoCust1 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust1);
+		demoCust1.setId(id1);
+		demoCust1.setResident(resident1);
+		dao.persist(demoCust1);
+		
+		DemographicCust demoCust2 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust2);
+		demoCust2.setId(id2);
+		demoCust2.setResident(resident2);
+		dao.persist(demoCust2);
+		
+		DemographicCust demoCust3 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust3);
+		demoCust3.setId(id3);
+		demoCust3.setResident(resident1);
+		dao.persist(demoCust3);
+		
+		List<Integer> demographicNos = new ArrayList<Integer>(Arrays.asList(id1, id2, id3));
+		
+		List<DemographicCust> expectedResult = new ArrayList<DemographicCust>(Arrays.asList(demoCust1, demoCust3));
+		List<DemographicCust> result = dao.findMultipleResident(demographicNos, resident1);
+		
+		Logger logger = MiscUtils.getLogger();
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
 
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items do not match.");
+				fail("Items do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindMultipleNurse() throws Exception {
+		
+		int id1 = 101;
+		int id2 = 202;
+		int id3 = 303;
+		
+		String nurse1 = "alpha";
+		String nurse2 = "bravo";
+		
+		DemographicCust demoCust1 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust1);
+		demoCust1.setId(id1);
+		demoCust1.setNurse(nurse1);
+		dao.persist(demoCust1);
+		
+		DemographicCust demoCust2 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust2);
+		demoCust2.setId(id2);
+		demoCust2.setNurse(nurse2);
+		dao.persist(demoCust2);
+		
+		DemographicCust demoCust3 = new DemographicCust();
+		EntityDataGenerator.generateTestDataForModelClass(demoCust3);
+		demoCust3.setId(id3);
+		demoCust3.setNurse(nurse1);
+		dao.persist(demoCust3);
+		
+		List<Integer> demographicNos = new ArrayList<Integer>(Arrays.asList(id1, id2, id3));
+		
+		List<DemographicCust> expectedResult = new ArrayList<DemographicCust>(Arrays.asList(demoCust1, demoCust3));
+		List<DemographicCust> result = dao.findMultipleNurse(demographicNos, nurse1);
+		
+		Logger logger = MiscUtils.getLogger();
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items do not match.");
+				fail("Items do not match.");
+			}
+		}
+		assertTrue(true);
+	}
 }
