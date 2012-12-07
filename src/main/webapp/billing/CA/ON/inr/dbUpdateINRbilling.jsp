@@ -23,14 +23,15 @@ String curUser_no = (String) session.getAttribute("user");
 
 <%@page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="../../errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbINR.jspf" %>
 <%@page import="org.oscarehr.billing.CA.model.BillingInr" %>
 <%@page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
+<%@page import="org.oscarehr.common.model.BillingService" %>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="oscar.util.ConversionUtils" %>
 <%
 	BillingInrDao dao = SpringUtils.getBean(BillingInrDao.class);
+	BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
 %>
 <html>
 <head>
@@ -67,16 +68,13 @@ if (service_code.trim().compareTo("") == 0){
     String yyyy = String.valueOf(cal.get(Calendar.YEAR));
     String mm = String.valueOf(cal.get(Calendar.MONTH)+1);
     String dd = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-    String[] params1 = new String[2];
-    params1[0] = service_code;
-    params1[1] = yyyy + "-" + mm + "-" + dd;
-	ResultSet rsother = apptMainBean.queryResults(params1, "search_servicecode_detail");  
-	while(rsother.next()){
-		service_desc = rsother.getString("description");
-		service_code = rsother.getString("service_code");
-		service_amount = rsother.getString("value");
-		// otherperc1 = rsother.getString("percentage");
-	}
+   
+    for(BillingService bs:billingServiceDao.findGst(service_code,ConversionUtils.fromDateString( yyyy + "-" + mm + "-" + dd))) {
+    	service_desc = bs.getDescription();
+		service_code = bs.getServiceCode();
+		service_amount = bs.getValue();
+    }
+    
 }
 
 if (diag_code.trim().compareTo("") == 0){
