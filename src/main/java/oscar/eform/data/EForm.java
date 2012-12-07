@@ -605,7 +605,14 @@ public class EForm extends EFormBase {
             if (fieldHeader.substring(1, 9).equalsIgnoreCase("textarea")) return "textarea";
             if (fieldHeader.substring(1, 7).equalsIgnoreCase("select")) return "select";
 
-            return EFormUtil.removeQuotes(EFormUtil.getAttribute("type", fieldHeader));
+			String type = EFormUtil.removeQuotes(EFormUtil.getAttribute("type", fieldHeader));
+
+			if(null == type) {
+				// Browsers should default to text if type is missing
+				type = "text";
+			}
+
+            return type;
         }
 /*
 	private String getFieldType(StringBuilder html, int pointer) {
