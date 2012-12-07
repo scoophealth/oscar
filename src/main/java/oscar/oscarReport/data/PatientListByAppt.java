@@ -22,110 +22,94 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.data;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.SQLException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
-/**
- *
- * @author root
- * @version
- */
 public class PatientListByAppt extends HttpServlet {
 
-    /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws IOException {
-        response.setContentType("plain/text");
-        response.setHeader("Content-disposition", "attachment; filename=patientlist.txt");
 
-        String drNo = request.getParameter("provider_no");
-        String datefrom = request.getParameter("date_from");
-        String dateto = request.getParameter("date_to");
-        try{
+    private static final long serialVersionUID = 1L;
 
+	/** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+	 * @param request servlet request
+	 * @param response servlet response
+	 */
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("plain/text");
+		response.setHeader("Content-disposition", "attachment; filename=patientlist.txt");
 
-            java.sql.ResultSet rs;
-            String sql = "select d.last_name, d.first_name, d.phone,  d.phone2, "+
-                         "       a.appointment_date, a.start_time, a.type,     "+
-                         "       p.last_name, p.first_name, a.location           "+
-                         "from   demographic d, appointment a, provider p       "+
-                         "where  a.demographic_no=d.demographic_no              "+
-                         "and    a.provider_no=p.provider_no                    ";
+		String drNo = request.getParameter("provider_no");
+		// clear dr no value for all doc's
+		if (drNo != null && drNo.equals("all")) {
+			drNo = null;
+		}
+		String datefrom = request.getParameter("date_from");
+		String dateto = request.getParameter("date_to");
 
+		Date from = datefrom != null ? ConversionUtils.fromDateString(datefrom) : null;
+		Date to = dateto != null ? ConversionUtils.fromDateString(dateto) : null;
 
-            if(!drNo.equals("all")){
-                sql = sql + "and a.provider_no='"+drNo +"' ";
-            }
-            if(!datefrom.equals("")){
-                sql = sql + "and a.appointment_date>='"+datefrom +"' ";
-            }if(!dateto.equals("")){
-                sql = sql + "and a.appointment_date<='"+dateto +"' ";
-            }
-            sql = sql + "order by a.appointment_date";
+		OscarAppointmentDao dao = SpringUtils.getBean(OscarAppointmentDao.class);
 
-            rs = DBHandler.GetSQL(sql);
+		PrintStream ps = new PrintStream(response.getOutputStream());
 
-            PrintStream ps = new PrintStream(response.getOutputStream());
+		for (Object[] o : dao.findPatientAppointments(drNo, from, to)) {
+			Demographic d = (Demographic) o[0];
+			Appointment a = (Appointment) o[0];
+			Provider p = (Provider) o[0];
 
-              while(rs.next()){
-               ps.print(oscar.Misc.getString(rs, 1)+",");
-               ps.print(oscar.Misc.getString(rs, 2)+",");
-               ps.print(oscar.Misc.getString(rs, 3)+",");
-               ps.print(oscar.Misc.getString(rs, 4)+",");
-               ps.print(oscar.Misc.getString(rs, 6)+",");
-               ps.print(oscar.Misc.getString(rs, 5)+",");
-               ps.print(oscar.Misc.getString(rs, 7).replaceAll("\r\n","")+",");
-               ps.print(oscar.Misc.getString(rs, 9)+" ");
-               ps.print(rs.getString(8)+",");
-               ps.print(rs.getString(10));
-               ps.print("\n");
-            }
-            ps.println("");
-        }
-        catch(SQLException e){
-            MiscUtils.getLogger().error("Error", e);
-        }
-    }
+			ps.print(d.getLastName() + ",");
+			ps.print(d.getFirstName() + ",");
+			ps.print(d.getPhone() + ",");
+			ps.print(d.getPhone2() + ",");
+			ps.print(ConversionUtils.toTimeString(a.getStartTime()) + ",");
+			ps.print(ConversionUtils.toDateString(a.getAppointmentDate()) + ",");
+			ps.print(a.getType().replaceAll("\r\n", "") + ",");
+			ps.print(p.getFirstName() + " ");
+			ps.print(p.getLastName() + ",");
+			ps.print(a.getLocation());
+			ps.print("\n");
+		}
+		ps.println("");
+	}
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    }
+	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+	/** Handles the HTTP <code>GET</code> method.
+	 * @param request servlet request
+	 * @param response servlet response
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		processRequest(request, response);
+	}
 
-    /** Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    }
+	/** Handles the HTTP <code>POST</code> method.
+	 * @param request servlet request
+	 * @param response servlet response
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		processRequest(request, response);
+	}
 
-    /** Returns a short description of the servlet.
-     */
-    public String getServletInfo() {
-        return "Short description";
-    }
-    // </editor-fold>
+	/** Returns a short description of the servlet.
+	 */
+	public String getServletInfo() {
+		return "Short description";
+	}
+	// </editor-fold>
 }
