@@ -131,9 +131,9 @@ public class BillingSpecPrep {
 		double runningTotal = 0.0;
 		String[] codes = val.getParameter("svcCode").split(",");
 		List tL;
-		for(int idx = 0; idx < codes.length; ++idx  ) {
+		for(int idx = 0; idx < codes.length; idx++  ) {
 			tL = tObj.getBillingCodeAttr(codes[idx].trim());
-			total = tL != null ? (String) tL.get(2) : "0.0";
+			total = (tL != null && tL.size()>0) ? (String) tL.get(2) : "0.0";
 			runningTotal += Double.parseDouble(total);
 		}
 		

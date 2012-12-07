@@ -18,7 +18,7 @@
 
 --%>
 <%
-if(session.getAttribute("user") == null ) response.sendRedirect("../../../../../logout.jsp");
+
 boolean billSaved = false;
 String total = "0.00";
 String content = "", rd="", rdohip="", hctype="";
@@ -38,11 +38,12 @@ userlastname = (String) session.getAttribute("userlastname");
 
 <%@ page import="java.sql.*"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="../../dbBilling.jspf"%>
+
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Billing" %>
 <%@ page import="org.oscarehr.common.dao.BillingDao" %>
+<%@ page import="org.oscarehr.common.model.BillingService" %>
+<%@ page import="org.oscarehr.common.dao.BillingServiceDao" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
 <%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillingDetail"%>
@@ -50,21 +51,17 @@ userlastname = (String) session.getAttribute("userlastname");
 <%
 	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
+	BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
 %>
 
 <%
 String billNo = null, svcDesc = null, svcPrice = null, sPrice = null ;
-String[] param4 = new String[2];
-param4[0] = request.getParameter("functionid");
-param4[1] = request.getParameter("appointment_no");
-ResultSet rsdemo = null;
-String[] param5 = new String[1];
-param5[0] = request.getParameter("svcCode");
-rsdemo = apptMainBean.queryResults(param5, "search_servicecode_detail");
-while(rsdemo.next()){
-	svcDesc = rsdemo.getString("description");
-	svcPrice = rsdemo.getString("value");
+
+for(BillingService bs: billingServiceDao.findByServiceCode(request.getParameter("svcCode"))) {
+	svcDesc = bs.getDescription();
+	svcPrice = bs.getValue();
 }
+
 
 sPrice = svcPrice.substring(0,svcPrice.indexOf(".")) + svcPrice.substring(svcPrice.indexOf(".")+1);
 
@@ -95,10 +92,8 @@ b.setCreator(request.getParameter("doccreator"));
 billingDao.persist(b);
 int rowsAffected=1;
 
-rsdemo= apptMainBean.queryResults(param4, "search_billing_no_by_appt");
-while (rsdemo.next()) {
-	billNo = rsdemo.getString("billing_no");
-}
+billNo = String.valueOf(billingDao.search_billing_no_by_appt(Integer.parseInt(request.getParameter("functionid")), Integer.parseInt(request.getParameter("appointment_no"))));
+
 
 int recordAffected=0;
 
@@ -115,13 +110,10 @@ int recordAffected=0;
    rowsAffected=1;
 
 if (rowsAffected ==1) {
-	String[] param1 =new String[2];
-	param1[0]="B";
-	param1[1]=request.getParameter("appointment_no");
-	rsdemo = apptMainBean.queryResults(request.getParameter("functionid"), "search_billing_no");
-	if (rsdemo.next()) {
-       billSaved = true;
-   }
+	
+	if(billingDao.search_billing_no(Integer.parseInt(request.getParameter("functionid"))) != null) {
+		billSaved=true;
+	}
 
    if ( request.getParameter("goPrev") != null && request.getParameter("goPrev").equals("goPrev") && billSaved){
       response.sendRedirect("../../../../../oscarPrevention/AddPreventionData.jsp?prevention=Flu&demographic_no="+demoNo);

@@ -21,9 +21,6 @@
 <%@ page import="java.util.*, oscar.oscarBilling.ca.on.pageUtil.*"%>
 
 <%//
-			if (session.getAttribute("user") == null)
-				response.sendRedirect("../../../../../logout.jsp");
-
 			BillingSpecPrep obj = new BillingSpecPrep();
 			Vector vec = obj.getBillingClaimObj(request);
 			boolean billSaved = obj.addABillingRecord(vec);
