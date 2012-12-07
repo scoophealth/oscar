@@ -204,4 +204,9 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 	public void testFindMeasurementsAndProvidersByDemoAndType() {
 		dao.findMeasurementsAndProvidersByDemoAndType(100, "TYPE");
 	}
+	
+	@Test
+	public void testFindByValue() {
+		assertNotNull(dao.findByValue("ZPA", "ZPA"));
+	}
 }

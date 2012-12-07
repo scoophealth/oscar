@@ -49,4 +49,5 @@ public class MeasurementsDeletedDao extends AbstractDao<MeasurementsDeleted> {
 
 		return (results);
 	}
+	
 }

@@ -542,5 +542,16 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		}
 		return result.get(0);
     }
+
+	@SuppressWarnings("unchecked")
+    public List<Measurement> findByValue(String key, String value){
+		Query q = entityManager.createQuery("SELECT m FROM Measurement m, MeasurementsExt e " +
+				"WHERE m.id = e.measurementId " +
+				"AND e.keyVal = :key " +
+				"AND e.val = :val");
+		q.setParameter("key", key);
+		q.setParameter("val", value);
+		return q.getResultList();
+	}
 	
 }

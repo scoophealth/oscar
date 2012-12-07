@@ -28,6 +28,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.MeasurementMap;
+import org.oscarehr.common.model.MeasurementType;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -109,5 +110,28 @@ public class MeasurementMapDao extends AbstractDao<MeasurementMap> {
 
 		return rs;    
 	}
+
+	/**
+	 * Finds measurements for the specified lab type and ident code
+	 * 
+	 * @param labType
+	 * 		Lab type to find
+	 * @param idCode
+	 * 		Ident code to find
+	 * @return
+	 * 		Returns a list of triples holding {@link MeasurementMap}, {@link MeasurementMap}, {@link MeasurementType}
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findMeasurements(String labType, String idCode) {
+		String sql = "FROM MeasurementMap a, MeasurementMap b, " + MeasurementType.class.getSimpleName() + " type " +
+				"WHERE b.labType = :labType " +
+				"AND a.identCode = :idCode " +
+				"AND a.loincCode = b.loincCode " +
+				"AND type.type = b.identCode";
+		Query q = entityManager.createQuery(sql);
+		q.setParameter("labType", labType);
+		q.setParameter("idCode", idCode);
+		return q.getResultList();
+    }
 
 }
