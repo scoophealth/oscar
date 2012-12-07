@@ -1419,7 +1419,7 @@
 		<action path="/provider/rxInteractionWarningLevel" type="org.oscarehr.provider.web.ProviderRxInteractionWarningLevelAction" parameter="method" scope="request">
 		</action>
 
-                <action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
+                <action path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp" />
 		</action>
 		<action input="/oscarResearch/oscarDxResearch/dxResearch.jsp" name="dxResearchForm" path="/oscarResearch/oscarDxResearch/dxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchAction">
