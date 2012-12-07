@@ -47,7 +47,7 @@
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<%@page import="oscar.oscarDB.DBHandler"%><html>
+<html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
