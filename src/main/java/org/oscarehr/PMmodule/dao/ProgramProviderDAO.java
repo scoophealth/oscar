@@ -320,7 +320,10 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         	return null;
         }
         List results = this.getHibernateTemplate().find("select distinct fm from FacilityMessage fm where fm.facilityId = ?", facilityId);
-
         return results;
     }
+
+	public void updateProviderRoles(Long providerId, Long roleId) {
+		getHibernateTemplate().bulkUpdate("UPDATE ProgramProvider pp SET pp.RoleId = ? WHERE pp.Id = ?", new Object[] { roleId, providerId });
+	}
 }

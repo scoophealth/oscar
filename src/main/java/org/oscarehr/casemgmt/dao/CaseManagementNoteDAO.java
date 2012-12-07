@@ -66,6 +66,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	private static Logger log = MiscUtils.getLogger();
 
 	@SuppressWarnings("unchecked")
+	public List<CaseManagementNote> findAll() {
+		logger.warn("A METHOD THAT IS LIKELY TO CAUSE A CRASH HAS BEEN INVOKED. PLEASE LIMIT THE USE OF THIS METHOD, AS IT'S LIKELY TO EXHAUST MEMORY AND MAY LEAD TO A SERVER CRASH. CONSIDER PAGINATING THE INVOCATION INSTEAD");
+		return this.getHibernateTemplate().find("FROM CaseManagementNote");
+	}
+	
+	@SuppressWarnings("unchecked")
     public List<Provider> getEditors(CaseManagementNote note) {
 		String uuid = note.getUuid();
 		String hql = "select distinct p from Provider p, CaseManagementNote cmn where p.ProviderNo = cmn.providerNo and cmn.uuid = ?";
