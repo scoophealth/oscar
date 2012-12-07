@@ -216,4 +216,12 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 		assertNotNull(dao.findAppointments(null, null));
 		assertNotNull(dao.findAppointments(new Date(), new Date()));
 	}
+	
+	@Test
+	public void testFindPatientAppointments() {
+		assertNotNull(dao.findPatientAppointments("10", null, null));
+		assertNotNull(dao.findPatientAppointments("10", null, new Date()));
+		assertNotNull(dao.findPatientAppointments("10", new Date(), null));
+		assertNotNull(dao.findPatientAppointments("10", new Date(), new Date()));
+	}
 }
