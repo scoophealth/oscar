@@ -80,7 +80,6 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		Query query = entityManager.createQuery("select x from Prevention x where preventionType=?1 and demographicId=?2 and deleted='0' order by preventionDate");
 		query.setParameter(1, preventionType);
 		query.setParameter(2, demoNo);
-
 		List<Prevention> results = query.getResultList();
 		return (results);
 	}
