@@ -98,7 +98,7 @@
       layoutType = "default";
   }
 
-  List providers = ProviderData.getProviderList();
+  List<Map<String, String>>  providers = ProviderData.getProviderList();
 
   //calc age at time of prevention
   Date dob = PreventionData.getDemographicDateOfBirth(Integer.valueOf(demographic_no));
@@ -352,7 +352,7 @@ clear: left;
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
-                                           Map h = (Map) providers.get(i);%>
+                                           Map<String,String> h = providers.get(i);%>
                                         <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                                       <%}%>
                                       <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
@@ -390,7 +390,7 @@ clear: left;
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
-                                           Hashtable h = (Hashtable) providers.get(i);%>
+                                           Map<String,String> h = providers.get(i);%>
                                         <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                                       <%}%>
                                       <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
@@ -483,7 +483,7 @@ clear: left;
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
-                                           Hashtable h = (Hashtable) providers.get(i);%>
+                                           Map<String,String> h = providers.get(i);%>
                                         <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                                       <%}%>
                                       <option value="-1" >Other</option>
