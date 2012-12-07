@@ -22,16 +22,28 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarPrevention;
 
 import java.util.Date;
+
+import org.oscarehr.common.model.Prevention;
+
+import oscar.util.ConversionUtils;
 
 /**
  * 
  * @author Jay Gallagher
  */
 public class PreventionItem {
+
+	String id = null;
+	String name = null;
+	Date datePreformed = null;
+	Date nextDate = null;
+	String never = null;
+	boolean refused;
+	private boolean inelligible = false;
+	private boolean remoteEntry = false;
 
 	public PreventionItem() {
 	}
@@ -48,13 +60,21 @@ public class PreventionItem {
 		this.nextDate = dNext;
 	}
 
-        public PreventionItem(String name, Date dPreformed, String never, Date dNext, String result) {
+	public PreventionItem(String name, Date dPreformed, String never, Date dNext, String result) {
 		this.name = name;
 		this.datePreformed = dPreformed;
 		this.never = never;
 		this.nextDate = dNext;
-                this.inelligible = result.equalsIgnoreCase("2");
+		this.inelligible = result.equalsIgnoreCase("2");
 	}
+
+	public PreventionItem(Prevention pp) {
+		this.name = pp.getPreventionType();
+		this.datePreformed = pp.getPreventionDate();
+		this.never = ConversionUtils.toBoolString(pp.isNever()); 
+		this.nextDate = pp.getNextDate();
+		this.refused = pp.isRefused();
+    }
 
 	public boolean getNeverVal() {
 		boolean ret = false;
@@ -102,16 +122,6 @@ public class PreventionItem {
 		this.nextDate = nextDate;
 	}
 
-	String id = null;
-	String name = null;
-	Date datePreformed = null;
-	Date nextDate = null;
-	String never = null;
-	// boolean deleted = null; ???
-	boolean refused;
-        private boolean inelligible = false;
-	private boolean remoteEntry=false;
-	
 	public boolean isRemoteEntry() {
 		return remoteEntry;
 	}
@@ -120,11 +130,11 @@ public class PreventionItem {
 		this.remoteEntry = remoteEntry;
 	}
 
-        public boolean isInelligible() {
-            return this.inelligible;
-        }
+	public boolean isInelligible() {
+		return this.inelligible;
+	}
 
-        public void setInelligible(boolean inelligible) {
-            this.inelligible = inelligible;
-        }
+	public void setInelligible(boolean inelligible) {
+		this.inelligible = inelligible;
+	}
 }

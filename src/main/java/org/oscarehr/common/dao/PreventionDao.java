@@ -29,17 +29,17 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.Prevention;
 
+@SuppressWarnings("unchecked")
 public class PreventionDao extends AbstractDao<Prevention> {
 
 	public PreventionDao() {
 		super(Prevention.class);
 	}
-	
+
 	public List<Prevention> findByDemographicId(Integer demographicId) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1");
 		query.setParameter(1, demographicId);
 
-		@SuppressWarnings("unchecked")
 		List<Prevention> results = query.getResultList();
 
 		return (results);
@@ -50,43 +50,44 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		query.setParameter(1, demographicId);
 		query.setParameter(2, dateTime);
 
-		@SuppressWarnings("unchecked")
 		List<Prevention> results = query.getResultList();
 
 		return (results);
 	}
-	
+
 	public List<Prevention> findNotDeletedByDemographicId(Integer demographicId) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and deleted=?2");
 		query.setParameter(1, demographicId);
 		query.setParameter(2, '0');
 
-		@SuppressWarnings("unchecked")
 		List<Prevention> results = query.getResultList();
 
 		return (results);
 	}
-	
+
 	public List<Prevention> findByTypeAndDate(String preventionType, Date startDate, Date endDate) {
 		Query query = entityManager.createQuery("select x from Prevention x where preventionType=?1 and preventionDate>=?2 and preventionDate<=?3 and deleted='0' and refused='0' order by preventionDate");
 		query.setParameter(1, preventionType);
 		query.setParameter(2, startDate);
 		query.setParameter(3, endDate);
-		
-		@SuppressWarnings("unchecked")
+
 		List<Prevention> results = query.getResultList();
 
 		return (results);
 	}
-	
+
 	public List<Prevention> findByTypeAndDemoNo(String preventionType, Integer demoNo) {
 		Query query = entityManager.createQuery("select x from Prevention x where preventionType=?1 and demographicId=?2 and deleted='0' order by preventionDate");
 		query.setParameter(1, preventionType);
 		query.setParameter(2, demoNo);
-		
-		@SuppressWarnings("unchecked")
-		List<Prevention> results = query.getResultList();
 
+		List<Prevention> results = query.getResultList();
 		return (results);
+	}
+
+	public List<Prevention> findActiveByDemoId(Integer demoId) {
+		Query query = createQuery("p", "p.demographicId = :demoNo and p.deleted <> '1' ORDER BY p.preventionType, p.preventionDate");
+		query.setParameter("demoNo", demoId);
+		return query.getResultList();
 	}
 }

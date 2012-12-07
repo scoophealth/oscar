@@ -25,8 +25,6 @@
 
 package oscar.oscarPrevention;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -53,7 +51,6 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.UtilDateUtilities;
 
@@ -333,21 +330,10 @@ public class PreventionData {
 		String sql = null;
 		oscar.oscarPrevention.Prevention p = new oscar.oscarPrevention.Prevention(sex, dob);
 
-		try {
-
-			ResultSet rs;
-			sql = "Select * from preventions where  demographic_no = '" + demoNo + "'  and deleted != 1 order by prevention_type,prevention_date";
-			log.debug(sql);
-			rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				PreventionItem pi = new PreventionItem(oscar.Misc.getString(rs, "prevention_type"), rs.getDate("prevention_date"), oscar.Misc.getString(rs, "never"), rs
-						.getDate("next_date"), rs.getString("refused"));
+		PreventionDao dao = SpringUtils.getBean(PreventionDao.class);
+		for(Prevention pp : dao.findActiveByDemoId(demoNo)) {		
+				PreventionItem pi = new PreventionItem(pp);
 				p.addPreventionItem(pi);
-			}
-		}
-		catch (SQLException e) {
-			log.error(e.getMessage(), e);
-			log.error(sql);
 		}
 		return p;
 	}
