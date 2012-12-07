@@ -25,27 +25,16 @@
 
 package oscar.util;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
 
-import javax.persistence.PersistenceException;
-
-import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
-import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -54,137 +43,7 @@ public class SqlUtils {
 	private static Logger logger = MiscUtils.getLogger();
 
 
-	/**
-	 * A simple and convenient method for retrieving object by criteria from the database. The ActiveRecord pattern is assumed whereby and object represents a row in the database.
-	 * <p>
-	 *
-	 * @param qry
-	 *            String
-	 * @param classType
-	 *            Class
-	 * @return List
-	 */
-	public static List getBeanList(String qry, Class classType) {
-		ArrayList rec = new ArrayList();
-		int colCount = 0;
-		ResultSet rs = null;
 
-		try {
-
-			rs = DBHandler.GetSQL(qry);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			colCount = rsmd.getColumnCount();
-
-			while (rs.next()) {
-				int recordCount = 0; // used to check if an objects methods have been determined
-				Object obj = null;
-				Method method[] = null;
-				Hashtable methodNameMap = new Hashtable(colCount);
-				obj = classType.newInstance();
-				Class cls = obj.getClass();
-				method = cls.getDeclaredMethods();
-				// iterate through each field in record and set data in the appropriate
-				// object field. Each matching method name is to be placed in a list of method names
-				// to be used in subsequent iterations. This will reduce the overhead in having to search those names needlessly
-				for (int i = 0; i < colCount; i++) {
-					String colName = rsmd.getColumnName(i + 1);
-					Object value = getNewType(rs, i + 1);
-
-					// if this is the first record, get list of method names in object
-					// and perform method invocation
-
-					if (recordCount == 0) {
-						for (int j = 0; j < method.length; j++) {
-							String methodName = method[j].getName();
-							char[] b = { '_' };
-							String columnCase = WordUtils.capitalize(colName, b);
-							columnCase = org.apache.commons.lang.StringUtils.remove(columnCase, '_');
-							columnCase = org.apache.commons.lang.StringUtils.capitalize(columnCase);
-
-							if (methodName.equalsIgnoreCase("set" + colName)) {
-								method[j].invoke(obj, new Object[] { value });
-								methodNameMap.put(new Integer(j), methodName);
-							}
-							else if (methodName.equalsIgnoreCase("set" + columnCase)) {
-								method[j].invoke(obj, new Object[] { value });
-								methodNameMap.put(new Integer(j), methodName);
-							}
-						}
-					}
-					// else method names have been determined so perform invocations based on list
-					else {
-						for (Enumeration keys = methodNameMap.keys(); keys.hasMoreElements();) {
-							Integer key = (Integer) keys.nextElement();
-							MiscUtils.getLogger().debug(method[key.intValue()].getName() + " value  " + value.getClass().getName());
-							method[key.intValue()].invoke(obj, new Object[] { value });
-						}
-					}
-				}
-				rec.add(obj);
-				recordCount++;
-			}
-		}
-		catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		catch (IllegalAccessException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		catch (InvocationTargetException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		catch (InstantiationException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			}
-			catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-			}
-		}
-		return rec;
-	}
-
-	private static Object getNewType(ResultSet rs, int colNum) {
-		int type = 0;
-		try {
-			type = rs.getMetaData().getColumnType(colNum);
-			switch (type) {
-			case Types.LONGVARCHAR:
-			case Types.CHAR:
-			case Types.VARCHAR:
-				return oscar.Misc.getString(rs, colNum);
-			case Types.TINYINT:
-			case Types.SMALLINT:
-			case Types.INTEGER:
-				return new Integer(rs.getInt(colNum));
-			case Types.BIGINT:
-				return new Long(rs.getLong(colNum));
-			case Types.FLOAT:
-			case Types.DECIMAL:
-			case Types.REAL:
-			case Types.DOUBLE:
-			case Types.NUMERIC:
-				return new Double(rs.getDouble(colNum));
-				// case Types.B
-			case Types.BIT:
-				return new Boolean(rs.getBoolean(colNum));
-			case Types.TIMESTAMP:
-			case Types.DATE:
-			case Types.TIME:
-				return rs.getDate(colNum);
-			default:
-				return rs.getObject(colNum);
-			}
-		}
-		catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return null;
-	}
 
 	/**
 	 * Returns a List of String[] which contain the results of the specified arbitrary query.
@@ -348,24 +207,6 @@ public class SqlUtils {
 		return (sb.toString());
 	}
 
-	/**
-	 * This method will return a string similar to "(?,?,?,?)". The intent is that this method will be used to build "in clauses" like select * from foo where x in (?,?,?) for
-	 * prepared statements.
-	 */
-	public static String constructInClauseForPreparedStatements(int numberOfParameters) {
-		if (numberOfParameters <= 0) throw (new IllegalArgumentException("Don't call this method if the numberOfParameters is <1 it doesn't make sense."));
-
-		StringBuilder sb = new StringBuilder();
-		sb.append('(');
-
-		for (int i = 0; i < numberOfParameters; i++) {
-			if (i > 0) sb.append(',');
-			sb.append('?');
-		}
-
-		sb.append(')');
-		return (sb.toString());
-	}
 
 	/**
 	 * This method will close the resources passed in. Pass in null for anything you don't want closed. All exceptions will be logged at WARN level but not rethrown. Note that if
@@ -418,76 +259,5 @@ public class SqlUtils {
 		}
 	}
 
-	/**
-	 * deprecated use jpa native queries instead
-	 */
-	public static List<Integer> selectIntList(String sqlCommand) {
-		Connection c = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			c = DbConnectionFilter.getThreadLocalDbConnection();
-			ps = c.prepareStatement(sqlCommand);
-			rs = ps.executeQuery();
-
-			ArrayList<Integer> al = new ArrayList<Integer>();
-
-			while (rs.next())
-				al.add(rs.getInt(1));
-
-			return (al);
-		}
-		catch (SQLException e) {
-			throw (new PersistenceException(e));
-		}
-		finally {
-			closeResources(c, ps, rs);
-		}
-	}
-
-	/**
-	 * deprecated use jpa native queries instead
-	 */
-	public static List<String> selectStringList(String sqlCommand) {
-		Connection c = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			c = DbConnectionFilter.getThreadLocalDbConnection();
-			ps = c.prepareStatement(sqlCommand);
-			rs = ps.executeQuery();
-
-			ArrayList<String> al = new ArrayList<String>();
-
-			while (rs.next())
-				al.add(rs.getString(1));
-
-			return (al);
-		}
-		catch (SQLException e) {
-			throw (new PersistenceException(e));
-		}
-		finally {
-			closeResources(c, ps, rs);
-		}
-	}
-
-
-	public static String getCurrentDatabaseName() {
-		Connection c = null;
-		try {
-			c = DbConnectionFilter.getThreadLocalDbConnection();
-			Statement s = c.createStatement();
-			ResultSet rs = s.executeQuery("select database()");
-			rs.next();
-			return (rs.getString(1));
-		}
-		catch (SQLException e) {
-			throw (new PersistenceException(e));
-		}
-		finally {
-			closeResources(c, null, null);
-		}
-	}
 
 }

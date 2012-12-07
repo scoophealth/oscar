@@ -39,12 +39,16 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.SpringUtils;
 
 public class ProviderInfoAction extends BaseAction {
 
     private FacilityDao facilityDao=null;
     private ProgramManager programManager;
     private ProviderManager providerManager;
+    
+    private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    
     
     public void setFacilityDao(FacilityDao facilityDao) {
         this.facilityDao = facilityDao;
@@ -94,7 +98,7 @@ public class ProviderInfoAction extends BaseAction {
         }
        
 */        
-        List<Integer> facilityIds = ProviderDao.getFacilityIds(providerNo);
+        List<Integer> facilityIds = providerDao.getFacilityIds(providerNo);
         ArrayList<Facility> facilities=new ArrayList<Facility>();
         for (Integer facilityId : facilityIds){
             facilities.add(facilityDao.find(facilityId));

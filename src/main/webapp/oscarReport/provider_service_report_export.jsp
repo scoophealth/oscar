@@ -33,7 +33,7 @@
 <%@page import="java.text.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
-	String agencyName = SqlUtils.getCurrentDatabaseName();
+	String agencyName = oscar.OscarProperties.getInstance().getProperty("db_name","");
 	String startDateString = request.getParameter("startDate");
 	String endDateString = request.getParameter("endDate");
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM");

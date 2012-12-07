@@ -82,6 +82,7 @@ public final class LoginAction extends DispatchAction {
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
+    private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -238,7 +239,7 @@ public final class LoginAction extends DispatchAction {
 	    loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
 	    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo);
             
-            List<Integer> facilityIds = ProviderDao.getFacilityIds(provider.getProviderNo());
+            List<Integer> facilityIds = providerDao.getFacilityIds(provider.getProviderNo());
             if (facilityIds.size() > 1) {
                 return(new ActionForward("/select_facility.jsp?nextPage=" + where));
             }

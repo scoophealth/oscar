@@ -382,7 +382,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushProviders(Date lastDataUpdated, Facility facility) throws MalformedURLException, ShutdownException {
-		List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
+		List<String> providerIds = providerDao.getProviderIds(facility.getId());
 		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility);
 
 		for (String providerId : providerIds) {
@@ -488,7 +488,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
-		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
+		List<String> providerIdsInFacility = providerDao.getProviderIds(facility.getId());
 
 		long startTime = System.currentTimeMillis();
 		int demographicPushCount = 0;

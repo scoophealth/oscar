@@ -61,6 +61,8 @@ public class StJoesTokenManager extends SecurityTokenManager {
 	private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
     private SecUserRoleDao secUserRoleDao=(SecUserRoleDao)SpringUtils.getBean("secUserRoleDao");
+    private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    
     
 	@Override
 	public void requestToken(ServletRequest request, ServletResponse response,
@@ -143,7 +145,7 @@ public class StJoesTokenManager extends SecurityTokenManager {
         //don't really need all this for what we're using this for, but tried to get everything in there.
         //be nice if this was in a common class.
         Integer facilityId = null;
-        List<Integer> facilityIds = ProviderDao.getFacilityIds(st.getProviderNo());
+        List<Integer> facilityIds = providerDao.getFacilityIds(st.getProviderNo());
         if(facilityIds.size()==0) {
         	List<Facility> facility = facilityDao.findAll(null);
         	facilityId = facility.get(0).getId();

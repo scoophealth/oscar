@@ -45,7 +45,6 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
-import oscar.util.SqlUtils;
 
 import com.quatro.model.security.SecProvider;
 
@@ -326,16 +325,29 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 	}
 
-	public static List<Integer> getFacilityIds(String provider_no) {
-		return (SqlUtils
-				.selectIntList("select facility_id from provider_facility,Facility where Facility.id=provider_facility.facility_id and Facility.disabled=0 and provider_no='"
-						+ provider_no + '\''));
+	@SuppressWarnings("unchecked")
+	public List<Integer> getFacilityIds(String provider_no) {
+		Session session = getSession();
+		try {
+			SQLQuery query = session.createSQLQuery("select facility_id from provider_facility,Facility where Facility.id=provider_facility.facility_id and Facility.disabled=0 and provider_no=\'"+provider_no +"\'");
+			List<Integer> results = query.list();
+			return results;
+		}finally {
+			this.releaseSession(session);
+		}
 	}
 
-	public static List<String> getProviderIds(int facilityId) {
-		return (SqlUtils
-				.selectStringList("select provider_no from provider_facility where facility_id="
-						+ facilityId));
+	@SuppressWarnings("unchecked")
+	public List<String> getProviderIds(int facilityId) {
+		Session session = getSession();
+		try {
+			SQLQuery query = session.createSQLQuery("select provider_no from provider_facility where facility_id="+facilityId);
+			List<String> results = query.list();
+			return results;
+		}finally {
+			this.releaseSession(session);
+		}
+	
 	}
 
     public void updateProvider( Provider provider) {
