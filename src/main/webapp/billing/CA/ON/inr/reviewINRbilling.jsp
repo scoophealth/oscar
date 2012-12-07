@@ -17,16 +17,16 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<% 
-if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
+
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.BillingService" %>
+<%@ page import="org.oscarehr.common.dao.BillingServiceDao" %>
+<%
+	BillingServiceDao billingServiceDao= SpringUtils.getBean(BillingServiceDao.class);
 %>
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbINR.jspf"%>
 <%
 
 GregorianCalendar now=new GregorianCalendar();
@@ -55,20 +55,14 @@ if (service_code.trim().compareTo("") == 0){
 errorCode = errorCode + "Please input a service code.<br>"; }else{
 service_code = service_code.substring(0,5);
 
-   ResultSet rsother = null;  
 
- rsother = null;
- String[] params = new String[2];
- params[0] = service_code;
- params[1] = "now()";
- rsother = apptMainBean.queryResults(params, "search_servicecode_detail");
- while(rsother.next()){
-  service_desc = rsother.getString("description");
-  service_code = rsother.getString("service_code");
-  service_amount = rsother.getString("value");
-  // otherperc1 = rsother.getString("percentage");
+for(BillingService bs:billingServiceDao.getBillingCodeAttr(service_code)) {
+	service_desc = bs.getDescription();
+	service_code = bs.getServiceCode();
+	service_amount = bs.getValue();
+}
+
  
-   }
 }
 diag_code = request.getParameter("xml_diagnostic_detail");
 
