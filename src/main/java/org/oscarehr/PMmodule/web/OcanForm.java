@@ -900,10 +900,9 @@ public class OcanForm {
 		
 		int doReassessment = 0;
 		
-		List<Demographic> demographicList = demographicDao.getDemographics();
-		ocanStaffFormDao.findAllByFacility(facilityId);
-		for(Demographic demographic: demographicList) {
-			Integer clientId = demographic.getDemographicNo();
+	
+		List<Integer> demographicList = ocanStaffFormDao.findClientsWithOcan(facilityId);
+		for(Integer clientId: demographicList) {
 			if(isItTimeToDoReassessment(facilityId, clientId)){
 				messages.append(clientId+" , ");
 				doReassessment ++;
@@ -921,16 +920,15 @@ public class OcanForm {
 		
 		boolean result = false;
 		
-		OcanStaffForm ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedInitialOcan(facilityId,clientId);	
+		Object[] ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedInitialOcan_startDates(facilityId,clientId);	
 		
-		OcanStaffForm ocanStaffForm = null;
-		ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment(facilityId,clientId);	
+		Object[] ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment_startDates(facilityId,clientId);	
 				
 		Date startDate = null;
 		if(ocanStaffForm!=null) {
-			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm.getStartDate(),ocanStaffForm.getClientStartDate());
+			startDate = OcanForm.getAssessmentStartDate((Date)ocanStaffForm[0],(Date)ocanStaffForm[1]);
 		} else if(ocanStaffForm1!=null) {			
-			startDate = OcanForm.getAssessmentStartDate(ocanStaffForm1.getStartDate(),ocanStaffForm1.getClientStartDate());			
+			startDate = OcanForm.getAssessmentStartDate((Date)ocanStaffForm1[0],(Date)ocanStaffForm1[1]);			
 		} else {
 			return result;
 		}

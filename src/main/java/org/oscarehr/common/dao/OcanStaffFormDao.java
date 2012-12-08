@@ -49,6 +49,23 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 				
 		return getSingleResultOrNull(query);
 	}
+	
+	public Object[] findLatestCompletedInitialOcan_startDates(Integer facilityId, Integer clientId) {
+
+		String sqlCommand = "select startDate,clientStartDate from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, clientId);
+		query.setParameter(3, "Completed");
+		query.setParameter(4, "IA");
+				
+		//return getSingleResultOrNull(query);
+		List<Object[]> results = query.getResultList();
+		if(results.size()>0)
+			return results.get(0);
+		return null;
+	}
 
 	
 	
@@ -65,6 +82,23 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 				
 		return getSingleResultOrNull(query);
 	}
+	
+	public Object[] findLatestCompletedReassessment_startDates(Integer facilityId, Integer clientId) {
+
+		String sqlCommand = "select startDate,clientStartDate from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, clientId);
+		query.setParameter(3, "Completed");
+		query.setParameter(4, "RA");
+				
+		List<Object[]> results = query.getResultList();
+		if(results.size()>0)
+			return results.get(0);
+		return null;
+	}
+	
 	
 	public OcanStaffForm findLatestCompletedDischargedAssessment(Integer facilityId, Integer clientId) {
 
@@ -92,6 +126,19 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		query.setMaxResults(1);
 		
 		return getSingleResultOrNull(query);
+	}
+	
+	public List<Integer> findClientsWithOcan(Integer facilityId) {
+
+		String sqlCommand = "select distinct o.clientId from OcanStaffForm o where o.facilityId=?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+		
+		return results;
 	}
 
 	public OcanStaffForm getLastCompletedOcanForm(Integer facilityId, Integer clientId) {
