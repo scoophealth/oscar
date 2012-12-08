@@ -1213,7 +1213,10 @@ public class ProgramManagerAction extends BaseAction {
 			request.setAttribute("teams", teams);
 			request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
 
-			request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
+			//this can be pretty big
+			if(request.getAttribute("view.tab") != null && request.getAttribute("view.tab").equals("Clients"))
+				request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
+			
 			request.setAttribute("accesses", programManager.getProgramAccesses(programId));
 			request.setAttribute("queue", programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId)));
 

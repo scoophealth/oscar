@@ -1256,6 +1256,11 @@ public class DemographicDao extends HibernateDaoSupport {
 	public List<Demographic> getDemographicsByHealthNum(String hin) {
 		return this.getHibernateTemplate().find("from Demographic d where d.Hin=?", new Object[] { hin });
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getActiveDemographicIds() {
+		return this.getHibernateTemplate().find("select d.DemographicNo from Demographic d where d.PatientStatus=?", new Object[] { "AC" });
+	}
 
 	@SuppressWarnings("unchecked")
     public List<Demographic> findByCriterion(DemographicCriterion c) {
