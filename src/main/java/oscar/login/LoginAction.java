@@ -51,9 +51,9 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.EncryptionUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.LoggedInUserFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -178,7 +178,8 @@ public final class LoginAction extends DispatchAction {
             	session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE, providerPreference);
             	
                 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
-                    session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
+                	if(providerPreference.getNewTicklerWarningWindow() != null)
+                		session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
                     session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
                     session.setAttribute("caisiBillingPreferenceNotDelete", String.valueOf(providerPreference.getDefaultDoNotDeleteBilling()));
                     
