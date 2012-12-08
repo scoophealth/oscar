@@ -166,9 +166,6 @@
 	  {"pdfchartlabel" , "demographicpdfchartlabel.jsp"},
 	  {"appt_history" , "demographicappthistory.jsp"},
 	  {"Update Record" , "demographicupdatearecord.jsp"},
-
-	  {"Delete" , "demographicdeletearecord.jsp"},
-	  {"Demographic ID" , "adddemographictoeditappt.jsp"},
 	  {"linkMsg2Demo" , "../oscarMessenger/msgSearchDemo.jsp"},
 	};
 	apptMainBean.doConfigure( dbQueries,responseTargets);
