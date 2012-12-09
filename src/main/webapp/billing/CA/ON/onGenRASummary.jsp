@@ -18,20 +18,13 @@
 
 --%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
-<% 
-if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
+
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties"
-	scope="page" />
-<%@ include file="dbBilling.jspf"%>
+<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties" scope="page" />
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.RaHeader" %>
 <%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
@@ -71,8 +64,6 @@ String demo_name ="",demo_hin="", demo_docname="";
 int accountno=0 ;
 
 raNo = request.getParameter("rano");
-
-// sqlOBfee = "select distinct billing_no from radetail where raheader_no='"+raNo+"' and (service_code='P006A' or service_code='P020A' or service_code='P022A' or service_code='P028A' or service_code='P023A' or service_code='P007A' or service_code='P008B' or service_code='P018B' or service_code='E502A' or service_code='C989A' or service_code='E409A' or service_code='E410A' or service_code='E411A' or service_code='H001A')";
 
 BillingRAPrep obj = new BillingRAPrep();
 String obCodes = "'P006A','P020A','P022A','P028A','P023A','P007A','P009A','P011A','P008B','P018B','E502A','C989A','E409A','E410A','E411A','H001A'";	
@@ -174,104 +165,7 @@ for(int i=0; i<aL.size(); i++) {
 	</tr>
 
 	<%
-/*
-	String[] param = new String[2];
-	param[0] = raNo;
-	param[1] = "%";
-	rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
-	while (rsdemo.next()) {   
-		account = rsdemo.getString("billing_no");
-		location = "";  
-		demo_name = "";
-		demo_docname = "";
-		demo_hin = rsdemo.getString("hin") != null? rsdemo.getString("hin") : "";
-		rsdemo3 = apptMainBean.queryResults(account, "search_bill_short"); 
-		while (rsdemo3.next()){
-			demo_name = rsdemo3.getString("demographic_name");
-			if (rsdemo3.getString("hin") != null) {
-				if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
-					demo_hin = "";
-					demo_name ="";
-				}
-			} else {
-				demo_hin = "";
-				demo_name ="";
-			}
-			location = rsdemo3.getString("visittype");
-			localServiceDate = rsdemo3.getString("billing_date");
-			localServiceDate = localServiceDate.replaceAll("-*", "");
-			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
-		}
 
-		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
-		servicecode = rsdemo.getString("service_code");
-		servicedate = rsdemo.getString("service_date");
-		serviceno = rsdemo.getString("service_count");
-		explain = rsdemo.getString("error_code");
-		amountsubmit = rsdemo.getString("amountclaim");
-		amountpay = rsdemo.getString("amountpay");
-
-		//OBflag="0";
-		// get claim/pay amount
-		dCFee = Double.parseDouble(amountsubmit);
-		bdCFee = new BigDecimal(dCFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigCTotal = BigCTotal.add(bdCFee);
-
-		dPFee = Double.parseDouble(amountpay);
-		bdPFee = new BigDecimal(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigPTotal = BigPTotal.add(bdPFee);
-
-		OBflag="0";
-		COflag="0";
-		// set flag
-		for (int i=0; i<OBbilling_no.size(); i++){
-			sqlRAOB = (String)OBbilling_no.get(i);
-			if(sqlRAOB.compareTo(account)==0) {
-				OBflag = "1";
-				break;
-			}
-		}
-		for (int j=0; j<CObilling_no.size(); j++){
-			sqlRACO = (String)CObilling_no.get(j);
-			if(sqlRACO.compareTo(account)==0) {
-				COflag = "1";
-				break;
-			}
-		}
-      	    
-		if(OBflag.equals("1")) {
-			amountOB=amountpay;
-			dOBFee = Double.parseDouble(amountOB);
-			bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-			BigOBTotal = BigOBTotal.add(bdOBFee);
-		} else {
-			amountOB="N/A";
-		} 
-
-		if(COflag.equals("1")) {
-			amountCO=amountpay;
-			dCOFee = Double.parseDouble(amountCO);
-			bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-			BigCOTotal = BigCOTotal.add(bdCOFee);
-		} else {
-			amountCO="N/A";
-		} 
-
-
-		if (explain.compareTo("") == 0 || explain == null){
-			explain = "**";
-		}
-
-		if (location.compareTo("02") == 0) { // hospital
-			dHFee = Double.parseDouble(amountpay);
-			bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-			BigHTotal = BigHTotal.add(bdHFee);
-
-			// is local for hospital
-			if (demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
-				BigLocalHTotal = BigLocalHTotal.add(bdHFee);
-			}
-*/
 %>
 
 	<tr>
@@ -291,14 +185,6 @@ for(int i=0; i<aL.size(); i++) {
 	</tr>
 
 
-	<%/*
-		} else { // clinic && local clinic
-			if (location.compareTo("00") == 0 && billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
-				dFee = Double.parseDouble(amountpay);
-				bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-				BigTotal = BigTotal.add(bdFee);
-*/
-%>
 	<tr>
 		<td height="16"><%=account%></td>
 		<td height="16"><%=demo_docname%></td>
@@ -411,200 +297,13 @@ for(int i=0; i<aL.size(); i++) {
 
 </tr>
 
-		<%-- 	
-	String[] param = new String[2];
-	param[0] = raNo;
-	param[1] = proNo+"%";
-	ResultSet rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
-	while (rsdemo.next()) {   
-		account = rsdemo.getString("billing_no");
-		location = "";
-		demo_name ="";
-		demo_docname = "";
-		demo_hin = rsdemo.getString("hin") != null? rsdemo.getString("hin") : "";
-		ResultSet rsdemo3 = apptMainBean.queryResults(account, "search_bill_short");
-		while (rsdemo3.next()){
-			demo_name = rsdemo3.getString("demographic_name");
-			if (rsdemo3.getString("hin") != null) {
-				if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
-					demo_hin = "";
-					demo_name ="";
-				}
-			} else {
-				demo_hin = "";
-				demo_name ="";
-			}
-			location = rsdemo3.getString("visittype");
-			localServiceDate = rsdemo3.getString("billing_date");
-			localServiceDate = localServiceDate.replaceAll("-*", "");
-			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
-		}
-
-		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
-		servicecode = rsdemo.getString("service_code");
-		servicedate = rsdemo.getString("service_date");
-		serviceno = rsdemo.getString("service_count");
-		explain = rsdemo.getString("error_code");
-		amountsubmit = rsdemo.getString("amountclaim");
-		amountpay = rsdemo.getString("amountpay");
-
-		//k     location = rsdemo.getString("visittype");
-		dCFee = Double.parseDouble(amountsubmit);
-		bdCFee = new BigDecimal(dCFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigCTotal = BigCTotal.add(bdCFee);
-
-		dPFee = Double.parseDouble(amountpay);
-		bdPFee = new BigDecimal(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigPTotal = BigPTotal.add(bdPFee);
-		COflag="0";
-		OBflag="0";
-
-		for (int i=0; i<OBbilling_no.size(); i++){
-			sqlRAOB = (String)OBbilling_no.get(i);
-			if(sqlRAOB.compareTo(account)==0) {
-				OBflag = "1";
-				break;
-			}
-		}
-
-		for (int j=0; j<CObilling_no.size(); j++){
-			sqlRACO = (String)CObilling_no.get(j);
-			if(sqlRACO.compareTo(account)==0) {
-				COflag = "1";
-				break;
-			}
-		}
-
-		if(OBflag.equals("1")) {
-			amountOB=amountpay;
-			dOBFee = Double.parseDouble(amountOB);
-			bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-			BigOBTotal = BigOBTotal.add(bdOBFee);
-		}else{
-			amountOB="N/A";
-		} 
-
-		if(COflag.equals("1")) {
-			amountCO=amountpay;
-			dCOFee = Double.parseDouble(amountCO);
-			bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-			BigCOTotal = BigCOTotal.add(bdCOFee);
-		}else{
-			amountCO="N/A";
-		} 
-
-		if (explain.compareTo("") == 0 || explain == null){
-			explain = "**";
-		}      
-
-		if (location.compareTo("02") == 0) {
-			dHFee = Double.parseDouble(amountpay);
-			bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-			BigHTotal = BigHTotal.add(bdHFee);
-			
-			// is local for hospital
-			if (demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
-				BigLocalHTotal = BigLocalHTotal.add(bdHFee);
-			}
-%>
-<tr> 
-	<td><%=account%></td>
-	<td><%=demo_docname%></td>
-	<td><%=demo_name%></td>
-	<td><%=demo_hin%></td>
-	<td><%=servicedate%></td>
-	<td><%=servicecode%></td>
-	<!--<td width="8%"><%=serviceno%></td>-->
-	<td align=right><%=amountsubmit%></td>
-	<td align=right><%=amountpay%></td>
-	<td align=right>N/A</td>
-	<td align=right><%=amountpay%></td>
-	<td align=right><%=amountOB%></td>
-	<td align=right><%=explain%></td>
-</tr>         
-
-<%
-		} else {     
-			if (location.compareTo("00") == 0 && billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
-				dFee = Double.parseDouble(amountpay);
-				bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-				BigTotal = BigTotal.add(bdFee);
-%>   
-<tr> 
-	<td><%=account%></td>
-	<td><%=demo_docname%></td>
-	<td><%=demo_name%></td>
-	<td><%=demo_hin%></td>
-	<td><%=servicedate%></td>
-	<td><%=servicecode%></td>
-	<!-- <td width="8%"><%=serviceno%></td>-->
-	<td align=right><%=amountsubmit%></td>
-	<td align=right><%=amountpay%></td>
-	<td align=right><%=amountpay%></td>
-	<td align=right>N/A</td>
-	<td align=right><%=amountOB%></td>
-	<td align=right><%=explain%></td>
-</tr>
-
-<%
-			} else{ 
-				dOFee = Double.parseDouble(amountpay);
-				bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-				BigOTotal = BigOTotal.add(bdOFee);
-%>
-<tr> 
-	<td><%=account%></td>
-	<td><%=demo_docname%></td>
-	<td><%=demo_name%></td>
-	<td><%=demo_hin%></td>
-	<td><%=servicedate%></td>
-	<td><%=servicecode%></td>
-	<!-- <td width="8%"><%=serviceno%></td>-->
-	<td align=right><%=amountsubmit%></td>
-	<td align=right><%=amountpay%></td>
-	<td align=right>N/A</td>
-	<td align=right>N/A</td>
-	<td align=right><%=amountOB%></td>
-	<td align=right><%=explain%></td>
-</tr>
-
-<%
-			}
-		}
-
-	}
-}
-
-}
-
-BigLTotal = BigLTotal.add(BigTotal);
-//BigLTotal = BigLTotal.add(BigHTotal);
-BigLTotal = BigLTotal.add(BigLocalHTotal);
-%>
-<tr bgcolor='#FFFF3E'> 
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td>Total</td>
-	<td align=right><%=BigCTotal%></td>
-	<td align=right><%=BigPTotal%><!-- <%=BigOTotal%>--></td>
-	<td align=right><%=BigTotal%><!--<%=BigLTotal%>--></td>
-	<td align=right><%=BigHTotal%></td>
-	<td align=right><%=BigOBTotal%></td>
-	<td></td>
-</tr>
-</table>
-
---%>
 		<%
 
 String transaction="", content="", balancefwd="", xtotal="", other_total="", ob_total=""; 
-ResultSet rslocal = apptMainBean.queryResults(raNo, "search_rahd_content");
-while(rslocal.next()){
-	transaction= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_transaction>","</xml_transaction>");
-	balancefwd= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_balancefwd>","</xml_balancefwd>");
+RaHeader rh = dao.find(Integer.parseInt(raNo));
+if(rh != null) {
+	transaction= SxmlMisc.getXmlContent(rh.getContent(),"<xml_transaction>","</xml_transaction>");
+	balancefwd= SxmlMisc.getXmlContent(rh.getContent(),"<xml_balancefwd>","</xml_balancefwd>");
 }
 
 

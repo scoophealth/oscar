@@ -17,18 +17,17 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.RaHeader" %>
 <%@ page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%@ page import="org.oscarehr.common.model.Billing" %>
+<%@ page import="org.oscarehr.common.dao.BillingDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 <%
 RaHeaderDao raHeaderDao = SpringUtils.getBean(RaHeaderDao.class);
+BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 %>
 
 <html>
@@ -62,8 +61,9 @@ int accountno=0, totalsum=0, flag=0, payFlag=0, count = 0, tCount=0, amountPaySu
 
 
 
-  ResultSet rslocal;
+
 filename = "PB0177.001";
+//request.getRealPath("/download");
 filepath = "/usr/local/tomcat/webapps/oscar_mch/download/";
 FileInputStream file = new FileInputStream(filepath + filename);
 InputStreamReader reader = new InputStreamReader(file);
@@ -71,7 +71,8 @@ BufferedReader input = new BufferedReader(reader);
 String nextline;
 while ((nextline=input.readLine())!=null){
 %>
-<% header = nextline.substring(0,1);
+<% 
+	header = nextline.substring(0,1);
    if (header.compareTo("H") == 0) {
    headerCount = nextline.substring(2,3);
    if (headerCount.compareTo("1") == 0){
@@ -86,16 +87,13 @@ while ((nextline=input.readLine())!=null){
    total = String.valueOf(totalsum);
    total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2);
 
-          String[] param2 = new String[2];
-          param2[0] = filename;
-          param2[1] = paymentdate;
+          
               String raNo = "";
-	  	    ResultSet rsdemo = null;
-	  	    rsdemo = apptMainBean.queryResults(param2, "search_rahd");
-	     while (rsdemo.next()) {
-	     raNo = rsdemo.getString("raheader_no");
-	  }
-
+	  	   for(RaHeader rh:raHeaderDao.findCurrentByFilenamePaymentDate(filename,paymentdate)) {
+	  	    	raNo = rh.getId().toString();
+	  	    }
+	  	    
+	  	  
            if (raNo.compareTo("") == 0 || raNo == null){
 
         	   RaHeader raHeader = new RaHeader();
@@ -107,11 +105,9 @@ while ((nextline=input.readLine())!=null){
 
 
 
-			rsdemo = null;
-	 	    rsdemo = apptMainBean.queryResults(param2, "search_rahd");
-		     while (rsdemo.next()) {
-		     raNo = rsdemo.getString("raheader_no");
-	     }
+         for(RaHeader rh:raHeaderDao.findCurrentByFilenamePaymentDate(filename,paymentdate)) {
+   	  	    	raNo = rh.getId().toString();
+   	  	    }
         }
 
 
@@ -134,15 +130,13 @@ while ((nextline=input.readLine())!=null){
       account = String.valueOf(accountno);
             // proFirst = "";  proLast = ""; demoFirst =""; demoLast = "";  apptDate = "";   apptTime = "";
 
-      rslocal = null;
-       rslocal = apptMainBean.queryResults(account, "search_bill_generic");
-       while(rslocal.next()){
-       proFirst = rslocal.getString("pf");
-       proLast = rslocal.getString("pl");
-       demoFirst = rslocal.getString("df");
-       demoLast = rslocal.getString("dl");
-       apptDate = rslocal.getString("billing_date");
-       apptTime = rslocal.getString("billing_time");
+      for(Object[] res : billingDao.search_bill_generic(Integer.parseInt(account))) {
+       proFirst = (String)res[3]; 
+       proLast = (String)res[2];
+       demoFirst = (String)res[1];
+       demoLast = (String)res[0];
+       apptDate = ConversionUtils.toDateString((java.util.Date)res[5]);
+       apptTime = ConversionUtils.toTimeString((java.util.Date)res[6]);
 
         }
 %>

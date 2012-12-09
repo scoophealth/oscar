@@ -423,5 +423,18 @@ public class BillingDao extends AbstractDao<Billing> {
 		
 		return null;
 	}
+
+	public List<Object[]> search_bill_generic(int billingNo) {
+		Query query = entityManager.createQuery("select distinct d.LastName, d.FirstName, p.LastName, p.FirstName, b.id, b.billingDate, b.billingTime, b.status, b.appointmentNo, b.hin"
+				+ " from Billing b, Provider p, Appointment a, Demographic d "
+				+ "where p.ProviderNo=a.providerNo and d.DemographicNo= b.demographicNo and b.appointmentNo=a.id and b.status <> 'D' and b.id=?");
+		query.setParameter(1, billingNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Object[]> results = query.getResultList();
+		
+		return results;
+	}
 	
+
 }

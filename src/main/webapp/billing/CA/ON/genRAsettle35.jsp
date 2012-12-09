@@ -17,25 +17,20 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<% 
-    if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.RaHeader" %>
 <%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
 <%@page import="org.oscarehr.common.model.Billing" %>
 <%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%@page import="org.oscarehr.common.model.RaDetail" %>
+<%@page import="org.oscarehr.common.dao.RaDetailDao" %>
 <%
 	RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
 	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	RaDetailDao raDetailDao = SpringUtils.getBean(RaDetailDao.class);
 %>
 
 
@@ -53,23 +48,17 @@ if (raNo.compareTo("") == 0)  return;
 ArrayList noErrorBill = new ArrayList();
 ArrayList errorBill = new ArrayList();
 
-String[] param0 = new String[2];
-String[] param = new String[4];
-param[0] = raNo;
-param[1] = "I2";
-param[2] = "35";
-param[3] = proNo+"%";
 
-ResultSet rsdemo = apptMainBean.queryResults(param, "search_raerror35");
-while (rsdemo.next()) {   
-	account = rsdemo.getString("billing_no");
-	errorBill.add((String) account);				  
+for(RaDetail rad:raDetailDao.search_raerror35(Integer.parseInt(raNo),"I2","35",proNo+"%")) {
+	account = String.valueOf(rad.getBillingNo());
+	errorBill.add(account);	
 }
 
 account = "";
-rsdemo = apptMainBean.queryResults(param, "search_ranoerror35");
-while (rsdemo.next()) {   
-	account = rsdemo.getString("billing_no");
+List<Integer> res = raDetailDao.search_ranoerror35(Integer.parseInt(raNo),"I2","35",proNo+"%");
+
+for (Integer r:res) {   
+	account = String.valueOf(r);
 	eFlag="1";
 	for (int i=0; i< errorBill.size(); i++){
 		errorAccount = (String) errorBill.get(i);

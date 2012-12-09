@@ -19,7 +19,6 @@
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean isTeamBillingOnly=false;
     boolean isSiteAccessPrivacy=false;
@@ -35,17 +34,10 @@
 	<%isTeamAccessPrivacy=true; %>
 </security:oscarSec>
 
-<% 
-    if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
-
-<%@ page
-	import="java.io.*, java.sql.*, oscar.*, oscar.util.*, java.util.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.io.*, java.sql.*, oscar.*, oscar.util.*, java.util.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<jsp:useBean id="documentBean" class="oscar.DocumentBean"
-	scope="request" />
+<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" />
 
 <%
 JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();

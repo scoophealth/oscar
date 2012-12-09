@@ -67,6 +67,7 @@ public class RaHeaderDao extends AbstractDao<RaHeader>{
 
 	 }
 	 
+
 	 public List<RaHeader> findAllExcludeStatus(String status) {
 		 Query query = entityManager.createQuery("SELECT r FROM RaHeader r WHERE r.status != :status ORDER BY r.paymentDate DESC, r.readDate DESC");
         

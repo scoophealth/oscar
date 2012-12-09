@@ -17,25 +17,27 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%@page import="org.oscarehr.common.dao.BillingDao"%>
-<% 
-if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat,oscar.oscarDB.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat,oscar.oscarDB.*" errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties"
-	scope="page" />
-<%@ include file="dbBilling.jspf"%>
+
+<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties" scope="page" />
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.RaHeader" %>
 <%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%@page import="org.oscarehr.common.model.RaDetail" %>
+<%@page import="org.oscarehr.common.dao.RaDetailDao" %>
+<%@page import="org.oscarehr.common.dao.BillingDao"%>
+<%@page import="org.oscarehr.common.model.Billing" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%
 	RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
+	RaDetailDao raDetailDao = SpringUtils.getBean(RaDetailDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 %>
 
 
@@ -76,9 +78,10 @@ raNo = request.getParameter("rano");
 // set localClinic record bean
 billingLocalInvNoBean = new Properties();
 String localClinicNo = oscarVariables.getProperty("clinic_no");
-ResultSet rs8 = apptMainBean.queryResults(raNo, "search_rahd_short");
-while (rs8.next()) {
-	filename = rs8.getString("filename");
+
+RaHeader rh = dao.find(Integer.parseInt(raNo));
+if(rh != null && !rh.getStatus().equals("D")) {
+	filename = rh.getFilename();
 }
 
 filepath = oscarVariables.getProperty("DOCUMENT_DIR").trim(); //"/usr/local/OscarDocument/" + url +"/document/";
@@ -126,21 +129,24 @@ while ((nextline=input.readLine())!=null){
 ArrayList OBbilling_no = new ArrayList();
 ArrayList CObilling_no = new ArrayList();
 
-ResultSet rsdemo1 = apptMainBean.queryResults(raNo, "search_raob");
-while (rsdemo1.next()) {
-	OBbilling_no.add((String)rsdemo1.getString("billing_no"));
-}
-ResultSet rsdemo01 = apptMainBean.queryResults(raNo, "search_racolposcopy");
-while (rsdemo01.next()) {
-	CObilling_no.add((String)rsdemo01.getString("billing_no"));
+for(Integer i:raDetailDao.search_raob(Integer.parseInt(raNo))) {
+	OBbilling_no.add(i.toString());
 }
 
-Properties propProvierName = new Properties();
-rsdemo1 = apptMainBean.queryResults("%", "search_provider_ohip_dt");
-while (rsdemo1.next()){
-	propProvierName.setProperty( ("no_" + rsdemo1.getString("provider_no")), (rsdemo1.getString("last_name") + "," + rsdemo1.getString("first_name")) );
-	propProvierName.setProperty(rsdemo1.getString("ohip_no"), (rsdemo1.getString("last_name") + "," + rsdemo1.getString("first_name")) );
+for(Integer i:raDetailDao.search_racolposcopy(Integer.parseInt(raNo))) {
+	CObilling_no.add(i.toString());
 }
+
+
+Properties propProvierName = new Properties();
+
+for(Provider p:providerDao.getActiveProviders()) {
+	if(p.getOhipNo() != null) {
+		propProvierName.setProperty( ("no_" + p.getProviderNo()), (p.getLastName() + "," + p.getFirstName()) );
+		propProvierName.setProperty(p.getOhipNo(), (p.getLastName() + "," + p.getFirstName()) );
+	}
+}
+
 
 BigDecimal bdCFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 BigDecimal bdPFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
@@ -172,7 +178,6 @@ BigDecimal BigLocalHTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_
 String localServiceDate = "";
        	
 proNo = request.getParameter("proNo");
-//raNo = request.getParameter("rano");
 if (raNo.compareTo("") == 0 || raNo == null){
 	flag = "0";
 	return;
@@ -187,14 +192,15 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			<!--option value="all"  <%--=proNo.equals("all")?"selected":""--%>>All Providers</option-->
 
 			<%
-	ResultSet rsdemo = null;
-	ResultSet rsdemo2 = null;
-	ResultSet rsdemo3 = null;
-	rsdemo = apptMainBean.queryResults(raNo, "search_raprovider");
-	while (rsdemo.next()) {   
-		pohipno = rsdemo.getString("providerohip_no");
-		plast = rsdemo.getString("last_name");
-		pfirst = rsdemo.getString("first_name");
+	
+	for(Object[] res:raDetailDao.search_raprovider(Integer.parseInt(raNo))) {
+		RaDetail rad = (RaDetail)res[0];
+		Provider prov = (Provider)res[1];
+		
+		pohipno = rad.getProviderOhipNo();
+		plast = prov.getLastName();
+		pfirst = prov.getFirstName();
+	
 %>
 			<option value="<%=pohipno%>""selected"><%=plast%>,<%=pfirst%></option>
 			<%	} %>
@@ -227,21 +233,17 @@ if (raNo.compareTo("") == 0 || raNo == null){
 	</tr>
 
 	<%
-	String[] param = new String[2];
-	param[0] = raNo;
-	param[1] = "%";
-	rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
-	while (rsdemo.next()) {   
-		account = rsdemo.getString("billing_no");
+	for(RaDetail rad:raDetailDao.search_rasummary_dt(Integer.parseInt(raNo),"%")) {
+		account = String.valueOf(rad.getBillingNo());
 		location = "";  
 		demo_name = "";
 		demo_docname = "";
-		demo_hin = rsdemo.getString("hin") != null? rsdemo.getString("hin") : "";
-		rsdemo3 = apptMainBean.queryResults(account, "search_bill_short"); 
-		while (rsdemo3.next()){
-			demo_name = rsdemo3.getString("demographic_name");
-			if (rsdemo3.getString("hin") != null) {
-				if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
+		demo_hin = rad.getHin() != null? rad.getHin() : "";
+		Billing b = billingDao.find(Integer.parseInt(account));
+		if(b != null) {
+			demo_name = b.getDemographicName();
+			if (b.getHin() != null) {
+				if (!(b.getHin()).startsWith(demo_hin)) {
 					demo_hin = "";
 					demo_name ="";
 				}
@@ -249,19 +251,19 @@ if (raNo.compareTo("") == 0 || raNo == null){
 				demo_hin = "";
 				demo_name ="";
 			}
-			location = rsdemo3.getString("visittype");
-			localServiceDate = rsdemo3.getString("billing_date");
+			location = b.getVisitType();
+			localServiceDate = ConversionUtils.toDateString(b.getBillingDate());
 			localServiceDate = localServiceDate.replaceAll("-*", "");
-			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
+			demo_docname = propProvierName.getProperty(("no_" + b.getProviderNo()), "");
 		}
-                providerOhipNo = rsdemo.getString("providerohip_no");
+        providerOhipNo = rad.getProviderOhipNo();
 		proName = propProvierName.getProperty(providerOhipNo);
-		servicecode = rsdemo.getString("service_code");
-		servicedate = rsdemo.getString("service_date");
-		serviceno = rsdemo.getString("service_count");
-		explain = rsdemo.getString("error_code");
-		amountsubmit = rsdemo.getString("amountclaim");
-		amountpay = rsdemo.getString("amountpay");
+		servicecode = rad.getServiceCode();
+		servicedate = rad.getServiceDate();
+		serviceno = rad.getServiceCount();
+		explain = rad.getErrorCode();
+		amountsubmit =rad.getAmountClaim();
+		amountpay = rad.getAmountPay();
 
 		//OBflag="0";
 		// get claim/pay amount
@@ -413,21 +415,19 @@ if (raNo.compareTo("") == 0 || raNo == null){
 		</tr>
 
 		<%
-	String[] param = new String[2];
-	param[0] = raNo;
-	param[1] = proNo+"%";
-	rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
-	while (rsdemo.next()) {   
-		account = rsdemo.getString("billing_no");
+	for(RaDetail rad:raDetailDao.search_rasummary_dt(Integer.parseInt(raNo), proNo+"%")) {
+		account = String.valueOf(rad.getBillingNo());
 		location = "";
 		demo_name ="";
 		demo_docname = "";
-		demo_hin = rsdemo.getString("hin") != null? rsdemo.getString("hin") : "";
-		rsdemo3 = apptMainBean.queryResults(account, "search_bill_short");
-		while (rsdemo3.next()){
-			demo_name = rsdemo3.getString("demographic_name");
-			if (rsdemo3.getString("hin") != null) {
-				if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
+		demo_hin = rad.getHin() != null? rad.getHin() : "";
+		
+		Billing b = billingDao.find(Integer.parseInt(account));
+		
+		if(b != null) {
+			demo_name = b.getDemographicName();
+			if (b.getHin() != null) {
+				if (!(b.getHin()).startsWith(demo_hin)) {
 					demo_hin = "";
 					demo_name ="";
 				}
@@ -435,20 +435,20 @@ if (raNo.compareTo("") == 0 || raNo == null){
 				demo_hin = "";
 				demo_name ="";
 			}
-			location = rsdemo3.getString("visittype");
-			localServiceDate = rsdemo3.getString("billing_date");
+			location = b.getVisitType();
+			localServiceDate = ConversionUtils.toDateString(b.getBillingDate());
 			localServiceDate = localServiceDate.replaceAll("-*", "");
-			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
+			demo_docname = propProvierName.getProperty(("no_" + b.getProviderNo()), "");
 		}
 
-                providerOhipNo = rsdemo.getString("providerohip_no");
+        providerOhipNo = rad.getProviderOhipNo();
 		proName = propProvierName.getProperty(providerOhipNo);
-		servicecode = rsdemo.getString("service_code");
-		servicedate = rsdemo.getString("service_date");
-		serviceno = rsdemo.getString("service_count");
-		explain = rsdemo.getString("error_code");
-		amountsubmit = rsdemo.getString("amountclaim");
-		amountpay = rsdemo.getString("amountpay");
+		servicecode = rad.getServiceCode();
+		servicedate = rad.getServiceDate();
+		serviceno = rad.getServiceCount();
+		explain = rad.getErrorCode();
+		amountsubmit = rad.getAmountClaim();
+		amountpay = rad.getAmountPay();
 
 		//k     location = rsdemo.getString("visittype");
 		dCFee = Double.parseDouble(amountsubmit);
@@ -601,10 +601,10 @@ BigLTotal = BigLTotal.add(BigLocalHTotal);
 
 	<%
 String transaction="", content="", balancefwd="", xtotal="", other_total="", ob_total=""; 
-ResultSet rslocal = apptMainBean.queryResults(raNo, "search_rahd_content");
-while(rslocal.next()){
-	transaction= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_transaction>","</xml_transaction>");
-	balancefwd= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_balancefwd>","</xml_balancefwd>");
+rh = dao.find(Integer.parseInt(raNo));
+if(rh != null) {
+	transaction= SxmlMisc.getXmlContent(rh.getContent(),"<xml_transaction>","</xml_transaction>");
+	balancefwd= SxmlMisc.getXmlContent(rh.getContent(),"<xml_balancefwd>","</xml_balancefwd>");
 }
 content = content + "<xml_transaction>" + transaction + "</xml_transaction>" + "<xml_balancefwd>" + balancefwd + "</xml_balancefwd>";
 content = content + "<xml_local>" + BigLTotal + "</xml_local>"+ "<xml_total>" + BigPTotal + "</xml_total>" + "<xml_other_total>" + BigOTotal + "</xml_other_total>" + "<xml_ob_total>" + BigOBTotal + "</xml_ob_total>" + "<xml_co_total>" + BigCOTotal + "</xml_co_total>";

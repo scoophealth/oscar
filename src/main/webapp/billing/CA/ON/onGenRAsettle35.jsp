@@ -17,26 +17,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<% 
-    if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.RaHeader" %>
 <%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%@page import="org.oscarehr.common.model.RaDetail" %>
+<%@page import="org.oscarehr.common.dao.RaDetailDao" %>
 <%@page import="org.oscarehr.common.model.Billing" %>
 <%@page import="org.oscarehr.common.dao.BillingDao" %>
 <%
 	RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
 	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	RaDetailDao raDetailDao = SpringUtils.getBean(RaDetailDao.class);
 %>
 
 
@@ -55,28 +50,20 @@ ArrayList noErrorBill = new ArrayList();
 ArrayList errorBill = new ArrayList();
 ArrayList errorBillNoQ = new ArrayList();
 
-String[] param0 = new String[2];
-param0[0] = raNo;
-param0[1] = proNo+"%";
-String[] param = new String[4];
-param[0] = raNo;
-param[1] = "I2";
-param[2] = "35";
-param[3] = proNo+"%";
 
-ResultSet rsdemo = apptMainBean.queryResults(param, "search_raerror35");
-while (rsdemo.next()) {   
-	account = rsdemo.getString("billing_no");
-	errorBill.add((String) account);
-	if(!rsdemo.getString("service_code").matches("Q011A|Q020A|Q130A|Q131A|Q132A|Q133A|Q140A|Q141A|Q142A")) {
-		errorBillNoQ.add((String) account);
+for(RaDetail rad:raDetailDao.search_raerror35(Integer.parseInt(raNo), "I2", "35", proNo+"%")) {
+	account = String.valueOf(rad.getBillingNo());
+	errorBill.add(account);	
+	if(!rad.getServiceCode().matches("Q011A|Q020A|Q130A|Q131A|Q132A|Q133A|Q140A|Q141A|Q142A")) {
+		errorBillNoQ.add(account);
 	}
 }
 
 account = "";
-rsdemo = apptMainBean.queryResults(param, "search_ranoerror35");
-while (rsdemo.next()) {   
-	account = rsdemo.getString("billing_no");
+List<Integer> res = raDetailDao.search_ranoerror35(Integer.parseInt(raNo),"I2","35",proNo+"%");
+
+for (Integer r:res) {   
+	account = String.valueOf(r);
 	eFlag="1";
 	for (int i=0; i< errorBill.size(); i++){
 		errorAccount = (String) errorBill.get(i);
@@ -89,11 +76,15 @@ while (rsdemo.next()) {
 	if(eFlag.compareTo("1")==0) noErrorBill.add(account);
 }      
 
+String[] param0 = new String[2];
+param0[0] = raNo;
+param0[1] = proNo+"%";
+
+
 // settle Qcodes
 account = "";
-rsdemo = apptMainBean.queryResults(param0, "search_ranoerrorQ");
-while (rsdemo.next()) {   
-	account = rsdemo.getString("billing_no");
+for(Integer r: raDetailDao.search_ranoerrorQ(Integer.parseInt(raNo), proNo+"%")) {
+	account = String.valueOf(r);
 	eFlag="1";
 	for (int i=0; i< errorBillNoQ.size(); i++){
 		errorAccount = (String) errorBillNoQ.get(i);

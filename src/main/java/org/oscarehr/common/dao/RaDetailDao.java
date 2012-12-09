@@ -26,6 +26,7 @@
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -137,4 +138,99 @@ public class RaDetailDao extends AbstractDao<RaDetail>{
             
             return errors;
         }
+
+   	 public List<RaDetail> search_raerror35(Integer raHeaderNo, String error1, String error2, String providerOhipNo) {
+		 Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo and rad.errorCode<>'' and rad.errorCode<>:error1 and rad.errorCode<>:error2 and rad.errorCode<>'EV' and rad.errorCode<>'55' and rad.errorCode<>'57' and rad.errorCode<>'HM' and (rad.serviceCode<>'Q200A' or rad.errorCode<>'I9') and rad.providerOhipNo like :ohip");
+        
+		 query.setParameter("raHeaderNo", raHeaderNo);
+		 query.setParameter("error1", error1);
+		 query.setParameter("error2", error2);
+		 query.setParameter("ohip", providerOhipNo);
+
+         @SuppressWarnings("unchecked")
+         List<RaDetail> results = query.getResultList();
+
+         return results;
+
+	 }
+   	 
+   	 public List<Integer> search_ranoerror35(Integer raHeaderNo, String error1, String error2, String providerOhipNo) { 
+   		Query query = entityManager.createQuery("select distinct rad.billingNo from RaDetail rad where rad.raHeaderNo=:raHeaderNo and (rad.errorCode='' or rad.errorCode=:error1 or rad.errorCode=:error2 or rad.errorCode='EV' or rad.errorCode='55' or rad.errorCode='57' or rad.errorCode='HM' or (rad.serviceCode='Q200A' and rad.errorCode='I9')) and rad.providerOhipNo like :ohip");
+   		 
+   		query.setParameter("raHeaderNo", raHeaderNo);
+   		query.setParameter("error1", error1);
+		query.setParameter("error2", error2);
+		query.setParameter("ohip", providerOhipNo);
+
+        @SuppressWarnings("unchecked")
+        List<Integer> results = query.getResultList();
+
+        return results;
+   	 }
+   	 
+   	 public List<Integer> search_raob(Integer raHeaderNo) {
+   	   	String[] arServiceCodes = {"P006A","P020A","P022A","P028A","P023A","P007A","P009A","P011A","P008B","P018B","E502A","C989A","E409A","E410A","E411A","H001A"};
+   	   	
+   	   	Query query = entityManager.createQuery("select distinct rad.billingNo from RaDetail rad where rad.raHeaderNo=:raHeaderNo and rad.serviceCode in (:serviceCodes)");
+   	   	
+   	   	query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("serviceCodes", Arrays.asList(arServiceCodes));
+		
+		@SuppressWarnings("unchecked")
+        List<Integer> results = query.getResultList();
+
+        return results;
+   	 }
+   	 
+   	public List<Integer> search_racolposcopy(Integer raHeaderNo) {
+   	   	String[] arServiceCodes = {"A004A","A005A","Z731A","Z666A","Z730A","Z720A"};
+   	   	
+   	   	Query query = entityManager.createQuery("select distinct rad.billingNo from RaDetail rad where rad.raHeaderNo=:raHeaderNo and rad.serviceCode in (:serviceCodes)");
+   	   	
+   	   	query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("serviceCodes", Arrays.asList(arServiceCodes));
+		
+		@SuppressWarnings("unchecked")
+        List<Integer> results = query.getResultList();
+
+        return results;
+   	 }
+   	
+   	public List<Object[]> search_raprovider(Integer raHeaderNo) {
+   	   	Query query = entityManager.createQuery("from RaDetail r, Provider p where p.OhipNo=r.providerOhipNo and r.raHeaderNo=:raHeaderNo group by r.providerOhipNo");
+   	   	
+   	   	query.setParameter("raHeaderNo", raHeaderNo);
+		
+		@SuppressWarnings("unchecked")
+        List<Object[]> results = query.getResultList();
+
+        return results;
+   	 }
+   	
+   	public List<RaDetail> search_rasummary_dt(Integer raHeaderNo, String providerOhipNo) {
+   		Query query = entityManager.createQuery("select rad from RaDetail rad where rad.raHeaderNo=:raHeaderNo and rad.providerOhipNo like :ohip");
+   		
+   		query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("ohip", providerOhipNo);
+		
+		@SuppressWarnings("unchecked")
+        List<RaDetail> results = query.getResultList();
+
+		return results;
+   	}
+   	
+   	public List<Integer> search_ranoerrorQ(Integer raHeaderNo, String providerOhipNo) {
+   	   	String[] arServiceCodes = {"Q011A","Q020A","Q130A","Q131A","Q132A","Q133A","Q140A","Q141A","Q142A"};
+   	   	
+   	   	Query query = entityManager.createQuery("select distinct rad.billingNo from RaDetail rad where rad.raHeaderNo=:raHeaderNo and rad.serviceCode in (:serviceCodes) and rad.errorCode='30' and rad.providerOhipNo like :ohip");
+   	   	
+   	   	query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("serviceCodes", Arrays.asList(arServiceCodes));
+		query.setParameter("ohip", providerOhipNo);
+		
+		@SuppressWarnings("unchecked")
+        List<Integer> results = query.getResultList();
+
+        return results;
+   	 }
 }

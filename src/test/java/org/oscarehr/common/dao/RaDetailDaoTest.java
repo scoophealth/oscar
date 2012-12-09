@@ -54,7 +54,7 @@ public class RaDetailDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("radetail","raheader");
+		SchemaUtils.restoreTable("radetail","raheader","provider");
 	}
 
 	@Test
