@@ -28,9 +28,7 @@
 
 <%@ page import="java.io.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
 <%@page import="org.oscarehr.common.model.RaHeader" %>
 <%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
 <%
@@ -51,16 +49,16 @@ String message="", message_txt="";
 String xml_ra="", HTMLtransaction="";
 int accountno=0, totalsum=0, txFlag=0, recFlag=0, flag=0, payFlag=0, count = 0, tCount=0, amountPaySum=0, amountSubmitSum=0;
 
-ResultSet rslocal = apptMainBean.queryResults(raNo, "search_rahd_content");
-while(rslocal.next()){
-	filename=rslocal.getString("filename");
-	HTMLtransaction= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_transaction>","</xml_transaction>");
-	htmlContent= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_balancefwd>","</xml_balancefwd>");
-	new_total = SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_total>","</xml_total>");
-	local_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_local>","</xml_local>");
-	other_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_other_total>","</xml_other_total>");
-	ob_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_ob_total>","</xml_ob_total>");
-	co_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_co_total>","</xml_co_total>");
+RaHeader rh = dao.find(Integer.parseInt(raNo));
+if(rh != null && !rh.getStatus().equals("D")) {
+	filename=rh.getFilename();
+	HTMLtransaction= SxmlMisc.getXmlContent(rh.getContent(),"<xml_transaction>","</xml_transaction>");
+	htmlContent= SxmlMisc.getXmlContent(rh.getContent(),"<xml_balancefwd>","</xml_balancefwd>");
+	new_total = SxmlMisc.getXmlContent(rh.getContent(),"<xml_total>","</xml_total>");
+	local_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_local>","</xml_local>");
+	other_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_other_total>","</xml_other_total>");
+	ob_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_ob_total>","</xml_ob_total>");
+	co_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_co_total>","</xml_co_total>");
 }
 
 filepath = oscarVariables.getProperty("DOCUMENT_DIR").trim();
@@ -152,16 +150,16 @@ for(RaHeader r:dao.findByFilenamePaymentDate(filename, paymentdate)) {
 		rowsAffected1++;
 	}
 
-rslocal = apptMainBean.queryResults(raNo, "search_rahd_content");
-while(rslocal.next()){
-	filename=rslocal.getString("filename");
-	HTMLtransaction= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_transaction>","</xml_transaction>");
-	htmlContent= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_balancefwd>","</xml_balancefwd>");
-	new_total = SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_total>","</xml_total>");
-	other_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_other_total>","</xml_other_total>");
-	local_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_local>","</xml_local>");
-	ob_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_ob_total>","</xml_ob_total>");
-	co_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_co_total>","</xml_co_total>");
+rh = dao.find(Integer.parseInt(raNo));
+if(rh != null && !rh.getStatus().equals("D")) {
+	filename=rh.getFilename();
+	HTMLtransaction= SxmlMisc.getXmlContent(rh.getContent(),"<xml_transaction>","</xml_transaction>");
+	htmlContent= SxmlMisc.getXmlContent(rh.getContent(),"<xml_balancefwd>","</xml_balancefwd>");
+	new_total = SxmlMisc.getXmlContent(rh.getContent(),"<xml_total>","</xml_total>");
+	other_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_other_total>","</xml_other_total>");
+	local_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_local>","</xml_local>");
+	ob_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_ob_total>","</xml_ob_total>");
+	co_total= SxmlMisc.getXmlContent(rh.getContent(),"<xml_co_total>","</xml_co_total>");
 }
 
 file.close();
