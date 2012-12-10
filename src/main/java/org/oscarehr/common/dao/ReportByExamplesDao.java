@@ -22,16 +22,41 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Query;
 
 import org.oscarehr.common.model.ReportByExamples;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ReportByExamplesDao extends AbstractDao<ReportByExamples>{
+@SuppressWarnings("unchecked")
+public class ReportByExamplesDao extends AbstractDao<ReportByExamples> {
 
 	public ReportByExamplesDao() {
 		super(ReportByExamples.class);
 	}
+
+	public List<Object[]> findReportsAndProviders() {
+		String sql = "FROM ReportByExamples r, Provider p " 
+				+ "WHERE r.providerNo = p.ProviderNo " 
+				+ "ORDER BY r.date DESC";
+		Query query = entityManager.createQuery(sql);
+		return query.getResultList();
+	}
+
+	public List<Object[]> findReportsAndProviders(Date startDate, Date endDate) {
+		String sql = "FROM ReportByExamples r, Provider p " 
+				+ "WHERE r.providerNo = p.ProviderNo "
+                + "AND r.date >= :startDate " 
+				+ "AND r.date <= :endDate "
+                + "ORDER BY r.date DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		return query.getResultList();
+    }
 }

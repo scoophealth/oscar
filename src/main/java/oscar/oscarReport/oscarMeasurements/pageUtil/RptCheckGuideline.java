@@ -25,46 +25,18 @@
 
 package oscar.oscarReport.oscarMeasurements.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.dao.ValidationsDao;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class RptCheckGuideline{
     
     public RptCheckGuideline(){
-    }
-
-
-    /*****************************************************************************************
-     * get the number of Patient during aspecific time period
-     *
-     * @return ArrayList which contain the result in String format
-     ******************************************************************************************/ 
-    public ArrayList getPatients(DBHandler db, String startDate, String endDate){
-
-        ArrayList patients = new ArrayList();
-        
-        try{
-            String sql = "SELECT DISTINCT demographicNo  FROM eChart WHERE timestamp >= '" + startDate + "' AND timestamp <= '" + endDate + "'";
-            MiscUtils.getLogger().debug("SQL Statement: " + sql);
-            ResultSet rs;
-            
-            for(rs=DBHandler.GetSQL(sql); rs.next();){            
-                String patient = rs.getString("demographicNo");
-                patients.add(patient);                
-            }
-            rs.close();
-        }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
-        }
-       
-        return patients;
     }
 
      /*****************************************************************************************
@@ -73,31 +45,18 @@ public class RptCheckGuideline{
      * @return 0 when it is false, 1 otherwise
      ******************************************************************************************/
     public int getValidation(String measurementType){        
-        
-        try{
-            String sql = "SELECT * FROM measurementType WHERE type='" + measurementType + "'";
-            ResultSet rs;
-            rs = DBHandler.GetSQL(sql);
-            rs.next();
-            String validation = rs.getString("validation");
-            rs.close();
-            sql = "SELECT * FROM validations WHERE id='" + validation + "'";
-            rs = DBHandler.GetSQL(sql);
-            rs.next();
-            if(rs.getString("isNumeric")!=null){
-                MiscUtils.getLogger().debug("isNumeric: " + rs.getInt("isNumeric"));
-                return rs.getInt("isNumeric");
-            }
-            else{
+        MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+        ValidationsDao vDao = SpringUtils.getBean(ValidationsDao.class); 
+        for(MeasurementType mt : dao.findByType(measurementType)) {
+            String validation = mt.getValidation();
+            
+            Validations v = vDao.find(ConversionUtils.fromIntString(validation));
+            if (v != null && v.isNumeric()) {
+            	return 1;
+            } else {
                 return 0;
             }
-            
         }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
-        }
-        
         return 0;
     }
 

@@ -53,4 +53,10 @@ public class ReportByExamplesFavoriteDao extends AbstractDao<ReportByExamplesFav
         query.setParameter("query", queryString);
         return query.getResultList();
     }
+
+	public  List<ReportByExamplesFavorite> findByProvider(String providerNo) {
+		Query query = createQuery("ex", "ex.providerNo = :providerNo");
+        query.setParameter("providerNo", providerNo);
+        return query.getResultList();
+    }
 }

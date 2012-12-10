@@ -348,9 +348,9 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:Vector allQueryVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:Vector favoriteVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:Vector queryVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Collection getAllQueryVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getFavoriteVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getQueryVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Collection&lt;RptByExampleQueryBean&gt; getAllQueryVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getFavoriteVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getQueryVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptConsultReportData.java:ArrayList a = new ArrayList ();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptConsultReportData.java:ArrayList arrayList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptConsultReportData.java:conReplyList = new ArrayList();</ViolationValue>
@@ -1274,7 +1274,6 @@
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLDenominator.java:ResultSet rs = DBHandler.GetSQL(exeSql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLNumerator.java:ResultSet rs = DBHandler.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:DBPreparedHandler accessDB = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/PatientListByAppt.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1342,7 +1341,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:ResultSet rsMT = DBHandler.GetSQL(sqlMT);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next();){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptByExamplesFavoriteAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord("select distinct demographic_no from formBCBirthSumMo");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
@@ -2477,9 +2475,9 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:allQueryVector.add(query);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:favoriteVector.add(query);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Collection getAllQueryVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getFavoriteVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getQueryVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Collection&lt;RptByExampleQueryBean&gt; getAllQueryVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getFavoriteVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getQueryVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:queryVector.add(query);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:return allQueryVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:return favoriteVector;</ViolationValue>
