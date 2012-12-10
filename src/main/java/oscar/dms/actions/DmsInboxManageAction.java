@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -77,7 +76,6 @@ import oscar.oscarLab.ca.on.HRMResultsData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarMDS.data.CategoryData;
 import oscar.oscarMDS.data.PatientInfo;
-import oscar.oscarProvider.data.ProviderData;
 import oscar.util.OscarRoleObjectPrivilege;
 
 import com.quatro.dao.security.SecObjectNameDao;
@@ -109,105 +107,6 @@ public class DmsInboxManageAction extends DispatchAction {
 		return null;
 	}
 
-	private void setProviderDocsInSession(ArrayList<EDoc> privatedocs, HttpServletRequest request) {
-		List<Map<String,String>> providers = ProviderData.getProviderListOfAllTypes();
-		Hashtable<String,List<EDoc>> providerDocs = new Hashtable<String,List<EDoc>>();
-		for (int i = 0; i < providers.size(); i++) {
-			Map<String,String>ht =  providers.get(i);
-			List<EDoc> EDocs = new ArrayList<EDoc>();
-			String providerNo =  ht.get("providerNo");
-			providerDocs.put(providerNo, EDocs);
-		}
-		for (int i = 0; i < privatedocs.size(); i++) {
-			EDoc eDoc = privatedocs.get(i);
-			List<String> providerList = new ArrayList<String>();
-			String createrId = eDoc.getCreatorId();
-			if (providerDocs.containsKey(createrId)) {
-				List<EDoc> EDocs = new ArrayList<EDoc>();
-				EDocs = providerDocs.get(createrId);
-				EDocs.add(eDoc);
-				providerDocs.put(createrId, EDocs);
-			}
-			String docId = eDoc.getDocId();
-			providerList.add(createrId);
-
-			List<ProviderInboxItem> routeList = providerInboxRoutingDAO.getProvidersWithRoutingForDocument(LabResultData.DOCUMENT, Integer.parseInt(docId));
-			for (ProviderInboxItem pii : routeList) {
-				String routingPId = pii.getProviderNo();
-
-				if (!routingPId.equals(createrId) && providerDocs.containsKey(routingPId)) {
-					List<EDoc> EDocs = new ArrayList<EDoc>();
-					EDocs = providerDocs.get(routingPId);
-					EDocs.add(eDoc);
-					providerDocs.put(routingPId, EDocs);
-				}
-			}
-		}
-		// remove providers which has no docs linked to
-		Enumeration<String> keys = providerDocs.keys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-
-			List<EDoc> EDocs = new ArrayList<EDoc>();
-			EDocs = providerDocs.get(key);
-			if (EDocs == null || EDocs.size() == 0) {
-				providerDocs.remove(key);
-
-			}
-		}
-
-		request.getSession().setAttribute("providerDocs", providerDocs);
-	}
-
-	private void setQueueDocsInSession(ArrayList<EDoc> privatedocs, HttpServletRequest request) {
-		// docs according to queue name
-		Hashtable queueDocs = new Hashtable();
-		QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
-		List<Hashtable> queues = queueDao.getQueues();
-		for (int i = 0; i < queues.size(); i++) {
-			Hashtable ht = queues.get(i);
-			List<EDoc> EDocs = new ArrayList<EDoc>();
-			String queueId = (String) ht.get("id");
-			queueDocs.put(queueId, EDocs);
-		}
-		logger.debug("queueDocs=" + queueDocs);
-		for (int i = 0; i < privatedocs.size(); i++) {
-			EDoc eDoc = privatedocs.get(i);
-			String docIdStr = eDoc.getDocId();
-			Integer docId = -1;
-			if (docIdStr != null && !docIdStr.equalsIgnoreCase("")) {
-				docId = Integer.parseInt(docIdStr);
-			}
-			List<QueueDocumentLink> queueDocLinkList = queueDocumentLinkDAO.getQueueFromDocument(docId);
-
-			for (QueueDocumentLink qdl : queueDocLinkList) {
-				Integer qidInt = qdl.getQueueId();
-				String qidStr = qidInt.toString();
-				logger.debug("qid in link=" + qidStr);
-				if (queueDocs.containsKey(qidStr)) {
-					List<EDoc> EDocs = new ArrayList<EDoc>();
-					EDocs = (List<EDoc>) queueDocs.get(qidStr);
-					EDocs.add(eDoc);
-					logger.debug("add edoc id to queue id=" + eDoc.getDocId());
-					queueDocs.put(qidStr, EDocs);
-				}
-			}
-		}
-
-		// remove queues which has no docs linked to
-		Enumeration queueIds = queueDocs.keys();
-		while (queueIds.hasMoreElements()) {
-			String queueId = (String) queueIds.nextElement();
-			List<EDoc> eDocs = new ArrayList<EDoc>();
-			eDocs = (List<EDoc>) queueDocs.get(queueId);
-			if (eDocs == null || eDocs.size() == 0) {
-				queueDocs.remove(queueId);
-				logger.debug("removed queueId=" + queueId);
-			}
-		}
-
-		request.getSession().setAttribute("queueDocs", queueDocs);
-	}
 
 	private void addQueueSecObjectName(String queuename, String queueid) {
 		String q = "_queue.";
@@ -290,7 +189,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			if (session.getAttribute("userrole") == null)
 				response.sendRedirect("../logout.jsp");
 		} catch (Exception e) {
-
+			MiscUtils.getLogger().error("error",e);
 		}
 		//String roleName = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 

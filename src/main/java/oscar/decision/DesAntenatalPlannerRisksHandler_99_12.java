@@ -59,17 +59,6 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 		results += "</td></tr></table></center>\n";
 	}
 
-	public void processingInstruction(String target, String data) throws SAXException {
-
-	}
-
-	public void startPrefixMapping(String prefix, String uri) {
-
-	}
-
-	public void endPrefixMapping(String prefix) {
-
-	}
 
         public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
             if (rawName.equals("section_title")) {
@@ -162,14 +151,6 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 		results += s;
 	}
 
-//	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-//		String s = new String(ch, start, length);
-
-//	}
-
-	public void skippedEntity(String name) throws SAXException {
-
-	}
 
 	public String getResults() {
 		return results;

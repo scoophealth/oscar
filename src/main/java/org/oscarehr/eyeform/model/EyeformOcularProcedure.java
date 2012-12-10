@@ -158,7 +158,9 @@ public class EyeformOcularProcedure extends AbstractModel<Integer> {
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		try {
 			setDate(sdf.parse(d));
-		}catch(ParseException e) {}
+		}catch(ParseException e) {
+			//ignore
+		}
 	}
 	
 }

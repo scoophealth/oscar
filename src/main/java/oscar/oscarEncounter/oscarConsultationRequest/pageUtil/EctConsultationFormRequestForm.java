@@ -265,9 +265,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		return (StringUtils.trimToEmpty(urgency));
 	}
 
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-	}
 
 	public void setAllergies(String str) {
 		allergies = str;

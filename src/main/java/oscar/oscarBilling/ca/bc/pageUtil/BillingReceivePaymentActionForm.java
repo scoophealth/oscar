@@ -78,7 +78,5 @@ public class BillingReceivePaymentActionForm
     return errors;
   }
 
-  public void reset(ActionMapping actionMapping,
-                    HttpServletRequest servletRequest) {
-  }
+
 }

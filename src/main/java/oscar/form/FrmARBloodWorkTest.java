@@ -54,12 +54,15 @@ public class FrmARBloodWorkTest {
 	            }
 
         	}catch(SQLException sqlEx){
+        		MiscUtils.getLogger().error("error",sqlEx);
         	}
             finally {
                 if(rs != null) {
                     try {
                         rs.close();
-                    } catch (SQLException e) {}
+                    } catch (SQLException e) {
+                    	//ignore
+                    }
                 }
             }
         	

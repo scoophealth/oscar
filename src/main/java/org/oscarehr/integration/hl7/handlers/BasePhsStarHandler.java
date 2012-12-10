@@ -105,9 +105,9 @@ public class BasePhsStarHandler {
 		int x=0;
 		while(true) {
 			String identifier = t.get("PID-3("+x+")-1");
-			String authority = t.get("PID-3("+x+")-4");
+			//String authority = t.get("PID-3("+x+")-4");
 			String typeId = t.get("PID-3("+x+")-5");
-			String renewDate = t.get("PID-3("+x+")-8");
+			//String renewDate = t.get("PID-3("+x+")-8");
 			String ver = t.get("PID-3("+x+")-10");
 
 
@@ -127,10 +127,10 @@ public class BasePhsStarHandler {
 		int x=0;
 		while(true) {
 			String identifier = t.get("PID-3("+x+")-1");
-			String authority = t.get("PID-3("+x+")-4");
+			//String authority = t.get("PID-3("+x+")-4");
 			String typeId = t.get("PID-3("+x+")-5");
 			String renewDate = t.get("PID-3("+x+")-8");
-			String ver = t.get("PID-3("+x+")-10");
+			//String ver = t.get("PID-3("+x+")-10");
 
 
 			if(identifier == null && t.get("PID-3("+(x+1)+")-1")==null) {
@@ -265,7 +265,7 @@ public class BasePhsStarHandler {
 	 * 50 - alternate visit id (phs temp patient acct #)
 	 */
 	protected void extractPatientVisitData() {
-
+		//not yet implemented
 	}
 
 	/*
@@ -276,7 +276,7 @@ public class BasePhsStarHandler {
 	 *
 	 */
 	protected void extractAdditionalPatientVisitData() {
-
+		//not yet implemented
 	}
 
 	/*
@@ -285,7 +285,7 @@ public class BasePhsStarHandler {
 	 * 6 - Diagnosis type (A = admitting)
 	 */
 	protected void extractDiagnosis() {
-
+		//not yet implemented
 	}
 
 
@@ -310,18 +310,18 @@ public class BasePhsStarHandler {
 		 * S12^^HS
 		 * ..see comments in spec
 		 */
-		String eventReason1 = this.extractOrEmpty("/SCH-6-1");
-		String eventReason2 = this.extractOrEmpty("/SCH-6-2");
-		String eventReason3 = this.extractOrEmpty("/SCH-6-3");
+		//String eventReason1 = this.extractOrEmpty("/SCH-6-1");
+		//String eventReason2 = this.extractOrEmpty("/SCH-6-2");
+		//String eventReason3 = this.extractOrEmpty("/SCH-6-3");
 
 
 		//SCH-7 appt reason - not on s12
-		String appointmentReason = this.extractOrEmpty("/SCH-7-1");
+		//String appointmentReason = this.extractOrEmpty("/SCH-7-1");
 
 		//SCH-8 appt type (ASMT^ASSESSMENT DIABETES^HS)
-		String abr = t.get("SCH-8-1");
+		//String abr = t.get("SCH-8-1");
 		String apptType = t.get("SCH-8-2");
-		String apptTypeAss = t.get("SCH-8-3");
+		//String apptTypeAss = t.get("SCH-8-3");
 
 		String aptDuration = t.get("SCH-9-1");
 		String aptDurationUnit = t.get("SCH-10-1");
@@ -414,7 +414,7 @@ public class BasePhsStarHandler {
 		String middleName = this.extractOrEmpty("AIP-3-4");
 
 		String role = t.get("AIP-4-1");
-		String rolePool = t.get("AIP-4-2");
+		//String rolePool = t.get("AIP-4-2");
 
 		String strStartTime = t.get("AIP-6-1");
 		Date startTime = this.convertToDate(strStartTime);

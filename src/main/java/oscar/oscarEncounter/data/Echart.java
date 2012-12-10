@@ -129,5 +129,6 @@ public class Echart {
    * @param date Date
    */
   public void setTimeStamp(Date date) {
+	  this.eChartTimeStamp = date;
   }
 }

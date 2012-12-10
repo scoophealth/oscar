@@ -154,7 +154,9 @@ public class EyeformAction extends DispatchAction {
 				   String value = dao.getConsultationRequestExtsByKey(reqId,"cc");
 				   if(value!=null)
 					   cc = value;
-			   } catch(NumberFormatException e){}
+			   } catch(NumberFormatException e){
+				   //ignore
+			   }
 		   }
 		   request.setAttribute("requestCc", cc);
 		   ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
