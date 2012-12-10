@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by Renato Zoratti (OntarioMD) -->
+<xs:schema xmlns="cds" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cdsd="cds_dt" targetNamespace="cds" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="cds_dt" schemaLocation="ontariomd_cds_dt.xsd"/>
+	<xs:element name="OmdCdsDiabetes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PatientRecord"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PatientRecord">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ReportInformation"/>
+				<xs:element ref="Demographics"/>
+				<xs:element ref="ProblemList"/>
+				<xs:element ref="MedicationsAndTreatments" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Immunizations" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="LaboratoryResults" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="CareElements" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ReportInformation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ReportStartDate" type="cdsd:dateTimeYYYYMMDDHHMM"/>
+				<xs:element name="ReportEndDate" type="cdsd:dateTimeYYYYMMDDHHMM"/>
+				<xs:element name="ReportRunDate" type="cdsd:dateTimeYYYYMMDDHHMM"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Demographics">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Names" type="cdsd:personNameStandard"/>
+				<xs:element name="DateOfBirth" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="HealthCard" type="cdsd:healthCard"/>
+				<xs:element name="Gender" type="cdsd:gender"/>
+				<xs:element name="Address" type="cdsd:address" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="PhoneNumber" type="cdsd:phoneNumber" minOccurs="0"/>
+				<xs:element name="OHIPPhysicianId" type="cdsd:ohipPhysicianBillingNumber"/>
+				<xs:element name="Email" type="cdsd:emailAddress" minOccurs="0"/>
+				<xs:element name="PrimaryPhysicianCPSO" type="cdsd:text5" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProblemList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DiagnosisCode" type="cdsd:code"/>
+				<xs:element name="OnsetDate" type="cdsd:dateFullOrPartial"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="MedicationsAndTreatments">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="PrescriptionWrittenDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="StartDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="DrugIdentificationNumber" type="diabetesDinList"/>
+				<xs:element name="DrugName">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Strength" type="cdsd:drugMeasure" minOccurs="0"/>
+				<xs:element name="NumberOfRefills" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="100"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Dosage" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DosageUnitOfMeasure" type="cdsd:text50" minOccurs="0"/>
+				<xs:element name="Form" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Route" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Frequency" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Duration" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="1024"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="RefillDuration" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="1024"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Quantity" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="1024"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="RefillQuantity" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="1024"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LongTermMedication" type="cdsd:ynIndicator" minOccurs="0"/>
+				<xs:element name="PastMedications" type="cdsd:ynIndicator" minOccurs="0"/>
+				<xs:element name="PrescribedBy" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Name" type="cdsd:personNameSimple" minOccurs="0"/>
+							<xs:element name="OHIPPhysicianId" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="cdsd:ohipPhysicianBillingNumber"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Notes" type="cdsd:text32K" minOccurs="0"/>
+				<xs:element name="PrescriptionInstructions" type="cdsd:text32K" minOccurs="0"/>
+				<xs:element name="PatientCompliance" type="cdsd:ynIndicatorAndBlank" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Immunizations">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ImmunizationName">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+							<xs:enumeration value="influenza"/>
+							<xs:enumeration value="pneumococcal"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Date" type="cdsd:dateFullOrPartial"/>
+				<xs:element name="RefusedFlag" type="cdsd:ynIndicator"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LaboratoryResults">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="LaboratoryName">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TestNameReportedByLab" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LabTestCode" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TestName">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+							<xs:enumeration value="4548-4"/>
+							<xs:enumeration value="22748-8"/>
+							<xs:enumeration value="14959-1"/>
+							<xs:enumeration value="33914-3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="AccessionNumber" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="cdsd:text">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Result">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Value" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="cdsd:text">
+										<xs:maxLength value="120"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="UnitOfMeasure" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="cdsd:text">
+										<xs:maxLength value="120"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ReferenceRange" minOccurs="0">
+					<xs:complexType>
+						<xs:choice>
+							<xs:sequence minOccurs="0">
+								<xs:element name="LowLimit" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="cdsd:text">
+											<xs:maxLength value="1024"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="HighLimit" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="cdsd:text">
+											<xs:maxLength value="1024"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+							<xs:element name="ReferenceRangeText" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="cdsd:text">
+										<xs:maxLength value="1024"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LabRequisitionDateTime" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="CollectionDateTime" type="cdsd:dateFullOrPartial"/>
+				<xs:element name="DateTimeResultReviewed" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="ResultReviewer" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Name" type="cdsd:personNameSimple" minOccurs="0"/>
+							<xs:element name="OHIPPhysicianId" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="cdsd:ohipPhysicianBillingNumber"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ResultNormalAbnormalFlag" type="cdsd:resultNormalAbnormalFlag"/>
+				<xs:element name="TestResultsInformationReportedByTheLab" type="cdsd:text32K" minOccurs="0"/>
+				<xs:element name="NotesFromLab" type="cdsd:text32K" minOccurs="0"/>
+				<xs:element name="PhysiciansNotes" type="cdsd:text32K" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CareElements">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SmokingStatus" type="cdsd:smokingStatus" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="SmokingPacks" type="cdsd:smokingPacks" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="Weight" type="cdsd:weight" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="Height" type="cdsd:height" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="WaistCircumference" type="cdsd:waistCircumference" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="BloodPressure" type="cdsd:bloodPressure" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="DiabetesComplicationsScreening" type="cdsd:diabetesComplicationScreening" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="DiabetesMotivationalCounselling" type="cdsd:diabetesMotivationalCounselling" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="DiabetesSelfManagementCollaborative" type="cdsd:diabetesSelfManagementCollaborative" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="DiabetesSelfManagementChallenges" type="cdsd:diabetesSelfManagementChallenges" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="DiabetesEducationalSelfManagement" type="cdsd:diabetesEducationalSelfManagement" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="HypoglycemicEpisodes" type="cdsd:hypoglycemicEpisodes" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="SelfMonitoringBloodGlucose" type="cdsd:selfMonitoringBloodGlucose" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="diabetesDinList">
+		<xs:restriction base="cdsd:drugIdentificationNumber">
+			<xs:enumeration value="00002038"/>
+			<xs:enumeration value="00012599"/>
+			<xs:enumeration value="00012602"/>
+			<xs:enumeration value="00012610"/>
+			<xs:enumeration value="00013889"/>
+			<xs:enumeration value="00015598"/>
+			<xs:enumeration value="00021350"/>
+			<xs:enumeration value="00021849"/>
+			<xs:enumeration value="00024708"/>
+			<xs:enumeration value="00024716"/>
+			<xs:enumeration value="00156663"/>
+			<xs:enumeration value="00156728"/>
+			<xs:enumeration value="00312711"/>
+			<xs:enumeration value="00312762"/>
+			<xs:enumeration value="00337382"/>
+			<xs:enumeration value="00399302"/>
+			<xs:enumeration value="00409472"/>
+			<xs:enumeration value="00430986"/>
+			<xs:enumeration value="00431168"/>
+			<xs:enumeration value="00446564"/>
+			<xs:enumeration value="00446572"/>
+			<xs:enumeration value="00446580"/>
+			<xs:enumeration value="00454753"/>
+			<xs:enumeration value="00464880"/>
+			<xs:enumeration value="00513644"/>
+			<xs:enumeration value="00514535"/>
+			<xs:enumeration value="00514551"/>
+			<xs:enumeration value="00546283"/>
+			<xs:enumeration value="00546291"/>
+			<xs:enumeration value="00546305"/>
+			<xs:enumeration value="00586714"/>
+			<xs:enumeration value="00586773"/>
+			<xs:enumeration value="00587737"/>
+			<xs:enumeration value="00599026"/>
+			<xs:enumeration value="00634093"/>
+			<xs:enumeration value="00642975"/>
+			<xs:enumeration value="00657298"/>
+			<xs:enumeration value="00659606"/>
+			<xs:enumeration value="00670901"/>
+			<xs:enumeration value="00670928"/>
+			<xs:enumeration value="00695661"/>
+			<xs:enumeration value="00708879"/>
+			<xs:enumeration value="00720933"/>
+			<xs:enumeration value="00720941"/>
+			<xs:enumeration value="00733075"/>
+			<xs:enumeration value="00765996"/>
+			<xs:enumeration value="00795852"/>
+			<xs:enumeration value="00795860"/>
+			<xs:enumeration value="00795879"/>
+			<xs:enumeration value="00808733"/>
+			<xs:enumeration value="00808741"/>
+			<xs:enumeration value="00839388"/>
+			<xs:enumeration value="00839396"/>
+			<xs:enumeration value="00839418"/>
+			<xs:enumeration value="00851639"/>
+			<xs:enumeration value="00851647"/>
+			<xs:enumeration value="00851655"/>
+			<xs:enumeration value="00851795"/>
+			<xs:enumeration value="00851833"/>
+			<xs:enumeration value="00851922"/>
+			<xs:enumeration value="00851930"/>
+			<xs:enumeration value="00884324"/>
+			<xs:enumeration value="00884332"/>
+			<xs:enumeration value="00884340"/>
+			<xs:enumeration value="00884359"/>
+			<xs:enumeration value="00884413"/>
+			<xs:enumeration value="00884421"/>
+			<xs:enumeration value="00885827"/>
+			<xs:enumeration value="00885835"/>
+			<xs:enumeration value="00885843"/>
+			<xs:enumeration value="00885851"/>
+			<xs:enumeration value="00889091"/>
+			<xs:enumeration value="00889105"/>
+			<xs:enumeration value="00889113"/>
+			<xs:enumeration value="00889121"/>
+			<xs:enumeration value="00890960"/>
+			<xs:enumeration value="00893595"/>
+			<xs:enumeration value="00893609"/>
+			<xs:enumeration value="00893617"/>
+			<xs:enumeration value="00893625"/>
+			<xs:enumeration value="00893749"/>
+			<xs:enumeration value="00893757"/>
+			<xs:enumeration value="01900927"/>
+			<xs:enumeration value="01900935"/>
+			<xs:enumeration value="01907107"/>
+			<xs:enumeration value="01907115"/>
+			<xs:enumeration value="01910329"/>
+			<xs:enumeration value="01910337"/>
+			<xs:enumeration value="01910361"/>
+			<xs:enumeration value="01910388"/>
+			<xs:enumeration value="01911465"/>
+			<xs:enumeration value="01911473"/>
+			<xs:enumeration value="01911481"/>
+			<xs:enumeration value="01911759"/>
+			<xs:enumeration value="01913654"/>
+			<xs:enumeration value="01913662"/>
+			<xs:enumeration value="01913670"/>
+			<xs:enumeration value="01913689"/>
+			<xs:enumeration value="01913824"/>
+			<xs:enumeration value="01913832"/>
+			<xs:enumeration value="01913840"/>
+			<xs:enumeration value="01913859"/>
+			<xs:enumeration value="01918486"/>
+			<xs:enumeration value="01923846"/>
+			<xs:enumeration value="01934074"/>
+			<xs:enumeration value="01942964"/>
+			<xs:enumeration value="01942972"/>
+			<xs:enumeration value="01942980"/>
+			<xs:enumeration value="01942999"/>
+			<xs:enumeration value="01947664"/>
+			<xs:enumeration value="01947672"/>
+			<xs:enumeration value="01947680"/>
+			<xs:enumeration value="01947699"/>
+			<xs:enumeration value="01959212"/>
+			<xs:enumeration value="01959220"/>
+			<xs:enumeration value="01959239"/>
+			<xs:enumeration value="01959352"/>
+			<xs:enumeration value="01959360"/>
+			<xs:enumeration value="01962639"/>
+			<xs:enumeration value="01962647"/>
+			<xs:enumeration value="01962655"/>
+			<xs:enumeration value="01962663"/>
+			<xs:enumeration value="01966014"/>
+			<xs:enumeration value="01979574"/>
+			<xs:enumeration value="01979582"/>
+			<xs:enumeration value="01986805"/>
+			<xs:enumeration value="01987534"/>
+			<xs:enumeration value="01987836"/>
+			<xs:enumeration value="01999559"/>
+			<xs:enumeration value="02019884"/>
+			<xs:enumeration value="02019892"/>
+			<xs:enumeration value="02019906"/>
+			<xs:enumeration value="02020025"/>
+			<xs:enumeration value="02020734"/>
+			<xs:enumeration value="02020742"/>
+			<xs:enumeration value="02024217"/>
+			<xs:enumeration value="02024225"/>
+			<xs:enumeration value="02024233"/>
+			<xs:enumeration value="02024241"/>
+			<xs:enumeration value="02024268"/>
+			<xs:enumeration value="02024276"/>
+			<xs:enumeration value="02024284"/>
+			<xs:enumeration value="02024292"/>
+			<xs:enumeration value="02024306"/>
+			<xs:enumeration value="02024314"/>
+			<xs:enumeration value="02024322"/>
+			<xs:enumeration value="02024403"/>
+			<xs:enumeration value="02024446"/>
+			<xs:enumeration value="02025248"/>
+			<xs:enumeration value="02025256"/>
+			<xs:enumeration value="02041480"/>
+			<xs:enumeration value="02041499"/>
+			<xs:enumeration value="02045710"/>
+			<xs:enumeration value="02045729"/>
+			<xs:enumeration value="02045737"/>
+			<xs:enumeration value="02049333"/>
+			<xs:enumeration value="02049376"/>
+			<xs:enumeration value="02049384"/>
+			<xs:enumeration value="02050943"/>
+			<xs:enumeration value="02050951"/>
+			<xs:enumeration value="02050978"/>
+			<xs:enumeration value="02050986"/>
+			<xs:enumeration value="02054825"/>
+			<xs:enumeration value="02058456"/>
+			<xs:enumeration value="02058464"/>
+			<xs:enumeration value="02061562"/>
+			<xs:enumeration value="02061570"/>
+			<xs:enumeration value="02083523"/>
+			<xs:enumeration value="02084082"/>
+			<xs:enumeration value="02084341"/>
+			<xs:enumeration value="02085887"/>
+			<xs:enumeration value="02091909"/>
+			<xs:enumeration value="02099233"/>
+			<xs:enumeration value="02103729"/>
+			<xs:enumeration value="02108194"/>
+			<xs:enumeration value="02123274"/>
+			<xs:enumeration value="02123282"/>
+			<xs:enumeration value="02125463"/>
+			<xs:enumeration value="02132680"/>
+			<xs:enumeration value="02132699"/>
+			<xs:enumeration value="02136031"/>
+			<xs:enumeration value="02136058"/>
+			<xs:enumeration value="02139189"/>
+			<xs:enumeration value="02139197"/>
+			<xs:enumeration value="02141795"/>
+			<xs:enumeration value="02142074"/>
+			<xs:enumeration value="02146959"/>
+			<xs:enumeration value="02148765"/>
+			<xs:enumeration value="02155850"/>
+			<xs:enumeration value="02162776"/>
+			<xs:enumeration value="02162822"/>
+			<xs:enumeration value="02162849"/>
+			<xs:enumeration value="02163551"/>
+			<xs:enumeration value="02163578"/>
+			<xs:enumeration value="02163586"/>
+			<xs:enumeration value="02163594"/>
+			<xs:enumeration value="02167786"/>
+			<xs:enumeration value="02181479"/>
+			<xs:enumeration value="02182815"/>
+			<xs:enumeration value="02182874"/>
+			<xs:enumeration value="02182882"/>
+			<xs:enumeration value="02185407"/>
+			<xs:enumeration value="02188929"/>
+			<xs:enumeration value="02188937"/>
+			<xs:enumeration value="02188945"/>
+			<xs:enumeration value="02188953"/>
+			<xs:enumeration value="02190885"/>
+			<xs:enumeration value="02190893"/>
+			<xs:enumeration value="02194422"/>
+			<xs:enumeration value="02207745"/>
+			<xs:enumeration value="02210320"/>
+			<xs:enumeration value="02217481"/>
+			<xs:enumeration value="02217503"/>
+			<xs:enumeration value="02217511"/>
+			<xs:enumeration value="02217538"/>
+			<xs:enumeration value="02217996"/>
+			<xs:enumeration value="02218003"/>
+			<xs:enumeration value="02218011"/>
+			<xs:enumeration value="02218038"/>
+			<xs:enumeration value="02220172"/>
+			<xs:enumeration value="02220180"/>
+			<xs:enumeration value="02220628"/>
+			<xs:enumeration value="02221829"/>
+			<xs:enumeration value="02221837"/>
+			<xs:enumeration value="02221845"/>
+			<xs:enumeration value="02221853"/>
+			<xs:enumeration value="02222051"/>
+			<xs:enumeration value="02223562"/>
+			<xs:enumeration value="02223600"/>
+			<xs:enumeration value="02224550"/>
+			<xs:enumeration value="02224569"/>
+			<xs:enumeration value="02225980"/>
+			<xs:enumeration value="02229516"/>
+			<xs:enumeration value="02229517"/>
+			<xs:enumeration value="02229519"/>
+			<xs:enumeration value="02229595"/>
+			<xs:enumeration value="02229596"/>
+			<xs:enumeration value="02229656"/>
+			<xs:enumeration value="02229704"/>
+			<xs:enumeration value="02229705"/>
+			<xs:enumeration value="02229785"/>
+			<xs:enumeration value="02229994"/>
+			<xs:enumeration value="02230026"/>
+			<xs:enumeration value="02230036"/>
+			<xs:enumeration value="02230037"/>
+			<xs:enumeration value="02230047"/>
+			<xs:enumeration value="02230183"/>
+			<xs:enumeration value="02230203"/>
+			<xs:enumeration value="02230204"/>
+			<xs:enumeration value="02230205"/>
+			<xs:enumeration value="02230206"/>
+			<xs:enumeration value="02230283"/>
+			<xs:enumeration value="02230475"/>
+			<xs:enumeration value="02230476"/>
+			<xs:enumeration value="02230580"/>
+			<xs:enumeration value="02230670"/>
+			<xs:enumeration value="02230711"/>
+			<xs:enumeration value="02230713"/>
+			<xs:enumeration value="02230714"/>
+			<xs:enumeration value="02231058"/>
+			<xs:enumeration value="02231389"/>
+			<xs:enumeration value="02231434"/>
+			<xs:enumeration value="02231457"/>
+			<xs:enumeration value="02231459"/>
+			<xs:enumeration value="02231460"/>
+			<xs:enumeration value="02231495"/>
+			<xs:enumeration value="02231780"/>
+			<xs:enumeration value="02233005"/>
+			<xs:enumeration value="02233006"/>
+			<xs:enumeration value="02233007"/>
+			<xs:enumeration value="02233999"/>
+			<xs:enumeration value="02234513"/>
+			<xs:enumeration value="02234514"/>
+			<xs:enumeration value="02236543"/>
+			<xs:enumeration value="02236548"/>
+			<xs:enumeration value="02236733"/>
+			<xs:enumeration value="02236734"/>
+			<xs:enumeration value="02236808"/>
+			<xs:enumeration value="02236809"/>
+			<xs:enumeration value="02236848"/>
+			<xs:enumeration value="02236969"/>
+			<xs:enumeration value="02236970"/>
+			<xs:enumeration value="02237132"/>
+			<xs:enumeration value="02237133"/>
+			<xs:enumeration value="02237230"/>
+			<xs:enumeration value="02237367"/>
+			<xs:enumeration value="02237368"/>
+			<xs:enumeration value="02237369"/>
+			<xs:enumeration value="02237373"/>
+			<xs:enumeration value="02237374"/>
+			<xs:enumeration value="02237375"/>
+			<xs:enumeration value="02237560"/>
+			<xs:enumeration value="02237701"/>
+			<xs:enumeration value="02237861"/>
+			<xs:enumeration value="02237862"/>
+			<xs:enumeration value="02237863"/>
+			<xs:enumeration value="02237864"/>
+			<xs:enumeration value="02237923"/>
+			<xs:enumeration value="02237924"/>
+			<xs:enumeration value="02237925"/>
+			<xs:enumeration value="02238096"/>
+			<xs:enumeration value="02238097"/>
+			<xs:enumeration value="02238103"/>
+			<xs:enumeration value="02238208"/>
+			<xs:enumeration value="02238449"/>
+			<xs:enumeration value="02238450"/>
+			<xs:enumeration value="02238451"/>
+			<xs:enumeration value="02238551"/>
+			<xs:enumeration value="02238552"/>
+			<xs:enumeration value="02238553"/>
+			<xs:enumeration value="02238554"/>
+			<xs:enumeration value="02238555"/>
+			<xs:enumeration value="02238556"/>
+			<xs:enumeration value="02238557"/>
+			<xs:enumeration value="02238558"/>
+			<xs:enumeration value="02238682"/>
+			<xs:enumeration value="02239081"/>
+			<xs:enumeration value="02239090"/>
+			<xs:enumeration value="02239091"/>
+			<xs:enumeration value="02239092"/>
+			<xs:enumeration value="02239214"/>
+			<xs:enumeration value="02239267"/>
+			<xs:enumeration value="02239498"/>
+			<xs:enumeration value="02239499"/>
+			<xs:enumeration value="02239500"/>
+			<xs:enumeration value="02239744"/>
+			<xs:enumeration value="02239864"/>
+			<xs:enumeration value="02239924"/>
+			<xs:enumeration value="02239925"/>
+			<xs:enumeration value="02239926"/>
+			<xs:enumeration value="02239951"/>
+			<xs:enumeration value="02239955"/>
+			<xs:enumeration value="02239956"/>
+			<xs:enumeration value="02240210"/>
+			<xs:enumeration value="02240294"/>
+			<xs:enumeration value="02240295"/>
+			<xs:enumeration value="02240297"/>
+			<xs:enumeration value="02240306"/>
+			<xs:enumeration value="02240307"/>
+			<xs:enumeration value="02240331"/>
+			<xs:enumeration value="02240332"/>
+			<xs:enumeration value="02240337"/>
+			<xs:enumeration value="02240351"/>
+			<xs:enumeration value="02240352"/>
+			<xs:enumeration value="02240360"/>
+			<xs:enumeration value="02240431"/>
+			<xs:enumeration value="02240432"/>
+			<xs:enumeration value="02240705"/>
+			<xs:enumeration value="02240706"/>
+			<xs:enumeration value="02240769"/>
+			<xs:enumeration value="02240770"/>
+			<xs:enumeration value="02240934"/>
+			<xs:enumeration value="02240945"/>
+			<xs:enumeration value="02240946"/>
+			<xs:enumeration value="02241007"/>
+			<xs:enumeration value="02241112"/>
+			<xs:enumeration value="02241113"/>
+			<xs:enumeration value="02241114"/>
+			<xs:enumeration value="02241283"/>
+			<xs:enumeration value="02241310"/>
+			<xs:enumeration value="02241601"/>
+			<xs:enumeration value="02241602"/>
+			<xs:enumeration value="02241608"/>
+			<xs:enumeration value="02241704"/>
+			<xs:enumeration value="02241818"/>
+			<xs:enumeration value="02241819"/>
+			<xs:enumeration value="02241900"/>
+			<xs:enumeration value="02241901"/>
+			<xs:enumeration value="02242095"/>
+			<xs:enumeration value="02242096"/>
+			<xs:enumeration value="02242126"/>
+			<xs:enumeration value="02242390"/>
+			<xs:enumeration value="02242572"/>
+			<xs:enumeration value="02242573"/>
+			<xs:enumeration value="02242574"/>
+			<xs:enumeration value="02242589"/>
+			<xs:enumeration value="02242726"/>
+			<xs:enumeration value="02242733"/>
+			<xs:enumeration value="02242734"/>
+			<xs:enumeration value="02242783"/>
+			<xs:enumeration value="02242788"/>
+			<xs:enumeration value="02242789"/>
+			<xs:enumeration value="02242790"/>
+			<xs:enumeration value="02242791"/>
+			<xs:enumeration value="02242793"/>
+			<xs:enumeration value="02242794"/>
+			<xs:enumeration value="02242826"/>
+			<xs:enumeration value="02242865"/>
+			<xs:enumeration value="02242866"/>
+			<xs:enumeration value="02242867"/>
+			<xs:enumeration value="02242931"/>
+			<xs:enumeration value="02242974"/>
+			<xs:enumeration value="02242987"/>
+			<xs:enumeration value="02243097"/>
+			<xs:enumeration value="02243127"/>
+			<xs:enumeration value="02243129"/>
+			<xs:enumeration value="02243180"/>
+			<xs:enumeration value="02243297"/>
+			<xs:enumeration value="02243327"/>
+			<xs:enumeration value="02243506"/>
+			<xs:enumeration value="02243507"/>
+			<xs:enumeration value="02243508"/>
+			<xs:enumeration value="02243551"/>
+			<xs:enumeration value="02243552"/>
+			<xs:enumeration value="02243587"/>
+			<xs:enumeration value="02243808"/>
+			<xs:enumeration value="02243824"/>
+			<xs:enumeration value="02243825"/>
+			<xs:enumeration value="02243826"/>
+			<xs:enumeration value="02243942"/>
+			<xs:enumeration value="02244021"/>
+			<xs:enumeration value="02244344"/>
+			<xs:enumeration value="02244350"/>
+			<xs:enumeration value="02244351"/>
+			<xs:enumeration value="02244352"/>
+			<xs:enumeration value="02244353"/>
+			<xs:enumeration value="02244781"/>
+			<xs:enumeration value="02244782"/>
+			<xs:enumeration value="02245247"/>
+			<xs:enumeration value="02245272"/>
+			<xs:enumeration value="02245273"/>
+			<xs:enumeration value="02245274"/>
+			<xs:enumeration value="02245397"/>
+			<xs:enumeration value="02245438"/>
+			<xs:enumeration value="02245439"/>
+			<xs:enumeration value="02245440"/>
+			<xs:enumeration value="02245689"/>
+			<xs:enumeration value="02245822"/>
+			<xs:enumeration value="02245823"/>
+			<xs:enumeration value="02246013"/>
+			<xs:enumeration value="02246014"/>
+			<xs:enumeration value="02246542"/>
+			<xs:enumeration value="02246543"/>
+			<xs:enumeration value="02246568"/>
+			<xs:enumeration value="02246569"/>
+			<xs:enumeration value="02246582"/>
+			<xs:enumeration value="02246583"/>
+			<xs:enumeration value="02246584"/>
+			<xs:enumeration value="02246585"/>
+			<xs:enumeration value="02246624"/>
+			<xs:enumeration value="02246737"/>
+			<xs:enumeration value="02246820"/>
+			<xs:enumeration value="02246821"/>
+			<xs:enumeration value="02246859"/>
+			<xs:enumeration value="02246860"/>
+			<xs:enumeration value="02246930"/>
+			<xs:enumeration value="02246931"/>
+			<xs:enumeration value="02246932"/>
+			<xs:enumeration value="02246955"/>
+			<xs:enumeration value="02246964"/>
+			<xs:enumeration value="02246965"/>
+			<xs:enumeration value="02246989"/>
+			<xs:enumeration value="02246990"/>
+			<xs:enumeration value="02247008"/>
+			<xs:enumeration value="02247009"/>
+			<xs:enumeration value="02247010"/>
+			<xs:enumeration value="02247011"/>
+			<xs:enumeration value="02247012"/>
+			<xs:enumeration value="02247013"/>
+			<xs:enumeration value="02247014"/>
+			<xs:enumeration value="02247015"/>
+			<xs:enumeration value="02247056"/>
+			<xs:enumeration value="02247057"/>
+			<xs:enumeration value="02247067"/>
+			<xs:enumeration value="02247068"/>
+			<xs:enumeration value="02247069"/>
+			<xs:enumeration value="02247070"/>
+			<xs:enumeration value="02247071"/>
+			<xs:enumeration value="02247072"/>
+			<xs:enumeration value="02247075"/>
+			<xs:enumeration value="02247076"/>
+			<xs:enumeration value="02247077"/>
+			<xs:enumeration value="02247078"/>
+			<xs:enumeration value="02247085"/>
+			<xs:enumeration value="02247086"/>
+			<xs:enumeration value="02247087"/>
+			<xs:enumeration value="02247162"/>
+			<xs:enumeration value="02247163"/>
+			<xs:enumeration value="02247164"/>
+			<xs:enumeration value="02247221"/>
+			<xs:enumeration value="02247222"/>
+			<xs:enumeration value="02247223"/>
+			<xs:enumeration value="02247231"/>
+			<xs:enumeration value="02247232"/>
+			<xs:enumeration value="02247297"/>
+			<xs:enumeration value="02247298"/>
+			<xs:enumeration value="02247299"/>
+			<xs:enumeration value="02247300"/>
+			<xs:enumeration value="02247301"/>
+			<xs:enumeration value="02247306"/>
+			<xs:enumeration value="02247489"/>
+			<xs:enumeration value="02247521"/>
+			<xs:enumeration value="02247531"/>
+			<xs:enumeration value="02247532"/>
+			<xs:enumeration value="02247533"/>
+			<xs:enumeration value="02247534"/>
+			<xs:enumeration value="02247535"/>
+			<xs:enumeration value="02247655"/>
+			<xs:enumeration value="02247656"/>
+			<xs:enumeration value="02247657"/>
+			<xs:enumeration value="02247802"/>
+			<xs:enumeration value="02247803"/>
+			<xs:enumeration value="02247827"/>
+			<xs:enumeration value="02247828"/>
+			<xs:enumeration value="02247830"/>
+			<xs:enumeration value="02247831"/>
+			<xs:enumeration value="02247833"/>
+			<xs:enumeration value="02247856"/>
+			<xs:enumeration value="02247857"/>
+			<xs:enumeration value="02247858"/>
+			<xs:enumeration value="02247945"/>
+			<xs:enumeration value="02247946"/>
+			<xs:enumeration value="02247947"/>
+			<xs:enumeration value="02248008"/>
+			<xs:enumeration value="02248009"/>
+			<xs:enumeration value="02248103"/>
+			<xs:enumeration value="02248104"/>
+			<xs:enumeration value="02248105"/>
+			<xs:enumeration value="02248106"/>
+			<xs:enumeration value="02248107"/>
+			<xs:enumeration value="02248182"/>
+			<xs:enumeration value="02248183"/>
+			<xs:enumeration value="02248184"/>
+			<xs:enumeration value="02248210"/>
+			<xs:enumeration value="02248423"/>
+			<xs:enumeration value="02248440"/>
+			<xs:enumeration value="02248441"/>
+			<xs:enumeration value="02248453"/>
+			<xs:enumeration value="02248572"/>
+			<xs:enumeration value="02248573"/>
+			<xs:enumeration value="02249723"/>
+			<xs:enumeration value="02249731"/>
+			<xs:enumeration value="02249758"/>
+			<xs:enumeration value="02249766"/>
+			<xs:enumeration value="02249774"/>
+			<xs:enumeration value="02249782"/>
+			<xs:enumeration value="02250004"/>
+			<xs:enumeration value="02250039"/>
+			<xs:enumeration value="02250144"/>
+			<xs:enumeration value="02250152"/>
+			<xs:enumeration value="02250160"/>
+			<xs:enumeration value="02250179"/>
+			<xs:enumeration value="02250187"/>
+			<xs:enumeration value="02250527"/>
+			<xs:enumeration value="02251515"/>
+			<xs:enumeration value="02251531"/>
+			<xs:enumeration value="02251574"/>
+			<xs:enumeration value="02251582"/>
+			<xs:enumeration value="02251930"/>
+			<xs:enumeration value="02252619"/>
+			<xs:enumeration value="02252635"/>
+			<xs:enumeration value="02252643"/>
+			<xs:enumeration value="02252651"/>
+			<xs:enumeration value="02252678"/>
+			<xs:enumeration value="02253631"/>
+			<xs:enumeration value="02253690"/>
+			<xs:enumeration value="02253704"/>
+			<xs:enumeration value="02253712"/>
+			<xs:enumeration value="02253720"/>
+			<xs:enumeration value="02253739"/>
+			<xs:enumeration value="02253747"/>
+			<xs:enumeration value="02253755"/>
+			<xs:enumeration value="02253763"/>
+			<xs:enumeration value="02253771"/>
+			<xs:enumeration value="02253798"/>
+			<xs:enumeration value="02254719"/>
+			<xs:enumeration value="02254859"/>
+			<xs:enumeration value="02254867"/>
+			<xs:enumeration value="02255316"/>
+			<xs:enumeration value="02255324"/>
+			<xs:enumeration value="02255332"/>
+			<xs:enumeration value="02255944"/>
+			<xs:enumeration value="02255952"/>
+			<xs:enumeration value="02256797"/>
+			<xs:enumeration value="02256800"/>
+			<xs:enumeration value="02256819"/>
+			<xs:enumeration value="02256851"/>
+			<xs:enumeration value="02256878"/>
+			<xs:enumeration value="02256886"/>
+			<xs:enumeration value="02257092"/>
+			<xs:enumeration value="02257106"/>
+			<xs:enumeration value="02257114"/>
+			<xs:enumeration value="02257726"/>
+			<xs:enumeration value="02257734"/>
+			<xs:enumeration value="02258781"/>
+			<xs:enumeration value="02258803"/>
+			<xs:enumeration value="02258811"/>
+			<xs:enumeration value="02259249"/>
+			<xs:enumeration value="02259257"/>
+			<xs:enumeration value="02261979"/>
+			<xs:enumeration value="02261987"/>
+			<xs:enumeration value="02261995"/>
+			<xs:enumeration value="02262339"/>
+			<xs:enumeration value="02262347"/>
+			<xs:enumeration value="02262355"/>
+			<xs:enumeration value="02262401"/>
+			<xs:enumeration value="02262428"/>
+			<xs:enumeration value="02265435"/>
+			<xs:enumeration value="02265540"/>
+			<xs:enumeration value="02265575"/>
+			<xs:enumeration value="02265583"/>
+			<xs:enumeration value="02265885"/>
+			<xs:enumeration value="02265893"/>
+			<xs:enumeration value="02265907"/>
+			<xs:enumeration value="02265923"/>
+			<xs:enumeration value="02265931"/>
+			<xs:enumeration value="02266008"/>
+			<xs:enumeration value="02266016"/>
+			<xs:enumeration value="02266350"/>
+			<xs:enumeration value="02266369"/>
+			<xs:enumeration value="02266377"/>
+			<xs:enumeration value="02267969"/>
+			<xs:enumeration value="02267977"/>
+			<xs:enumeration value="02268493"/>
+			<xs:enumeration value="02269031"/>
+			<xs:enumeration value="02269058"/>
+			<xs:enumeration value="02269074"/>
+			<xs:enumeration value="02269082"/>
+			<xs:enumeration value="02269252"/>
+			<xs:enumeration value="02269260"/>
+			<xs:enumeration value="02269279"/>
+			<xs:enumeration value="02269287"/>
+			<xs:enumeration value="02269295"/>
+			<xs:enumeration value="02269589"/>
+			<xs:enumeration value="02269597"/>
+			<xs:enumeration value="02269619"/>
+			<xs:enumeration value="02270234"/>
+			<xs:enumeration value="02270242"/>
+			<xs:enumeration value="02270250"/>
+			<xs:enumeration value="02270439"/>
+			<xs:enumeration value="02270447"/>
+			<xs:enumeration value="02270528"/>
+			<xs:enumeration value="02271443"/>
+			<xs:enumeration value="02271451"/>
+			<xs:enumeration value="02271478"/>
+			<xs:enumeration value="02271842"/>
+			<xs:enumeration value="02272288"/>
+			<xs:enumeration value="02272296"/>
+			<xs:enumeration value="02272415"/>
+			<xs:enumeration value="02272423"/>
+			<xs:enumeration value="02272431"/>
+			<xs:enumeration value="02273101"/>
+			<xs:enumeration value="02273128"/>
+			<xs:enumeration value="02273136"/>
+			<xs:enumeration value="02273233"/>
+			<xs:enumeration value="02273241"/>
+			<xs:enumeration value="02273268"/>
+			<xs:enumeration value="02273276"/>
+			<xs:enumeration value="02273284"/>
+			<xs:enumeration value="02273292"/>
+			<xs:enumeration value="02273306"/>
+			<xs:enumeration value="02273314"/>
+			<xs:enumeration value="02273551"/>
+			<xs:enumeration value="02273756"/>
+			<xs:enumeration value="02273764"/>
+			<xs:enumeration value="02273772"/>
+			<xs:enumeration value="02273918"/>
+			<xs:enumeration value="02274248"/>
+			<xs:enumeration value="02274256"/>
+			<xs:enumeration value="02274272"/>
+			<xs:enumeration value="02274833"/>
+			<xs:enumeration value="02274841"/>
+			<xs:enumeration value="02274868"/>
+			<xs:enumeration value="02274914"/>
+			<xs:enumeration value="02274922"/>
+			<xs:enumeration value="02274930"/>
+			<xs:enumeration value="02275252"/>
+			<xs:enumeration value="02275260"/>
+			<xs:enumeration value="02275864"/>
+			<xs:enumeration value="02275872"/>
+			<xs:enumeration value="02279460"/>
+			<xs:enumeration value="02280213"/>
+			<xs:enumeration value="02280442"/>
+			<xs:enumeration value="02280450"/>
+			<xs:enumeration value="02280469"/>
+			<xs:enumeration value="02281112"/>
+			<xs:enumeration value="02281546"/>
+			<xs:enumeration value="02281554"/>
+			<xs:enumeration value="02281562"/>
+			<xs:enumeration value="02281570"/>
+			<xs:enumeration value="02281589"/>
+			<xs:enumeration value="02281619"/>
+			<xs:enumeration value="02281627"/>
+			<xs:enumeration value="02281635"/>
+			<xs:enumeration value="02281643"/>
+			<xs:enumeration value="02281651"/>
+			<xs:enumeration value="02283131"/>
+			<xs:enumeration value="02283158"/>
+			<xs:enumeration value="02283166"/>
+			<xs:enumeration value="02283174"/>
+			<xs:enumeration value="02283182"/>
+			<xs:enumeration value="02283778"/>
+			<xs:enumeration value="02283786"/>
+			<xs:enumeration value="02283794"/>
+			<xs:enumeration value="02284421"/>
+			<xs:enumeration value="02284448"/>
+			<xs:enumeration value="02284456"/>
+			<xs:enumeration value="02284545"/>
+			<xs:enumeration value="02284553"/>
+			<xs:enumeration value="02284987"/>
+			<xs:enumeration value="02285061"/>
+			<xs:enumeration value="02285088"/>
+			<xs:enumeration value="02285096"/>
+			<xs:enumeration value="02285118"/>
+			<xs:enumeration value="02285126"/>
+			<xs:enumeration value="02285134"/>
+			<xs:enumeration value="02285215"/>
+			<xs:enumeration value="02285223"/>
+			<xs:enumeration value="02287692"/>
+			<xs:enumeration value="02287706"/>
+			<xs:enumeration value="02287714"/>
+			<xs:enumeration value="02287722"/>
+			<xs:enumeration value="02288044"/>
+			<xs:enumeration value="02288052"/>
+			<xs:enumeration value="02289083"/>
+			<xs:enumeration value="02289091"/>
+			<xs:enumeration value="02289199"/>
+			<xs:enumeration value="02289202"/>
+			<xs:enumeration value="02289229"/>
+			<xs:enumeration value="02289296"/>
+			<xs:enumeration value="02289504"/>
+			<xs:enumeration value="02289970"/>
+			<xs:enumeration value="02290332"/>
+			<xs:enumeration value="02290340"/>
+			<xs:enumeration value="02291134"/>
+			<xs:enumeration value="02291142"/>
+			<xs:enumeration value="02291150"/>
+			<xs:enumeration value="02291398"/>
+			<xs:enumeration value="02291401"/>
+			<xs:enumeration value="02291428"/>
+			<xs:enumeration value="02291436"/>
+			<xs:enumeration value="02291878"/>
+			<xs:enumeration value="02291886"/>
+			<xs:enumeration value="02291894"/>
+			<xs:enumeration value="02291908"/>
+			<xs:enumeration value="02292203"/>
+			<xs:enumeration value="02292211"/>
+			<xs:enumeration value="02292238"/>
+			<xs:enumeration value="02293501"/>
+			<xs:enumeration value="02294230"/>
+			<xs:enumeration value="02294249"/>
+			<xs:enumeration value="02294257"/>
+			<xs:enumeration value="02294338"/>
+			<xs:enumeration value="02294346"/>
+			<xs:enumeration value="02294400"/>
+			<xs:enumeration value="02294524"/>
+			<xs:enumeration value="02294532"/>
+			<xs:enumeration value="02294583"/>
+			<xs:enumeration value="02294591"/>
+			<xs:enumeration value="02294605"/>
+			<xs:enumeration value="02294613"/>
+			<xs:enumeration value="02294621"/>
+			<xs:enumeration value="02294648"/>
+			<xs:enumeration value="02295377"/>
+			<xs:enumeration value="02295385"/>
+			<xs:enumeration value="02295393"/>
+			<xs:enumeration value="02295482"/>
+			<xs:enumeration value="02295490"/>
+			<xs:enumeration value="02295504"/>
+			<xs:enumeration value="02295512"/>
+			<xs:enumeration value="02297736"/>
+			<xs:enumeration value="02297744"/>
+			<xs:enumeration value="02297752"/>
+			<xs:enumeration value="02297841"/>
+			<xs:enumeration value="02297906"/>
+			<xs:enumeration value="02297914"/>
+			<xs:enumeration value="02297922"/>
+			<xs:enumeration value="02298279"/>
+			<xs:enumeration value="02298287"/>
+			<xs:enumeration value="02298295"/>
+			<xs:enumeration value="02299372"/>
+			<xs:enumeration value="02299879"/>
+			<xs:enumeration value="02299887"/>
+			<xs:enumeration value="02299895"/>
+			<xs:enumeration value="02299933"/>
+			<xs:enumeration value="02299941"/>
+			<xs:enumeration value="02299968"/>
+			<xs:enumeration value="02299976"/>
+			<xs:enumeration value="02299984"/>
+			<xs:enumeration value="02299992"/>
+			<xs:enumeration value="02300001"/>
+			<xs:enumeration value="02300028"/>
+			<xs:enumeration value="02300036"/>
+			<xs:enumeration value="02300044"/>
+			<xs:enumeration value="02300052"/>
+			<xs:enumeration value="02300060"/>
+			<xs:enumeration value="02300079"/>
+			<xs:enumeration value="02300087"/>
+			<xs:enumeration value="02300095"/>
+			<xs:enumeration value="02300109"/>
+			<xs:enumeration value="02300117"/>
+			<xs:enumeration value="02300125"/>
+			<xs:enumeration value="02300133"/>
+			<xs:enumeration value="02300141"/>
+			<xs:enumeration value="02300222"/>
+			<xs:enumeration value="02300230"/>
+			<xs:enumeration value="02300451"/>
+			<xs:enumeration value="02300680"/>
+			<xs:enumeration value="02300796"/>
+			<xs:enumeration value="02300818"/>
+			<xs:enumeration value="02300826"/>
+			<xs:enumeration value="02300834"/>
+			<xs:enumeration value="02300958"/>
+			<xs:enumeration value="02300982"/>
+			<xs:enumeration value="02300990"/>
+			<xs:enumeration value="02301148"/>
+			<xs:enumeration value="02301156"/>
+			<xs:enumeration value="02301164"/>
+			<xs:enumeration value="02301172"/>
+			<xs:enumeration value="02301423"/>
+			<xs:enumeration value="02301431"/>
+			<xs:enumeration value="02301458"/>
+			<xs:enumeration value="02301768"/>
+			<xs:enumeration value="02301776"/>
+			<xs:enumeration value="02301784"/>
+			<xs:enumeration value="02302136"/>
+			<xs:enumeration value="02302144"/>
+			<xs:enumeration value="02302152"/>
+			<xs:enumeration value="02302365"/>
+			<xs:enumeration value="02302373"/>
+			<xs:enumeration value="02302381"/>
+			<xs:enumeration value="02302861"/>
+			<xs:enumeration value="02302888"/>
+			<xs:enumeration value="02302896"/>
+			<xs:enumeration value="02302942"/>
+			<xs:enumeration value="02302950"/>
+			<xs:enumeration value="02302977"/>
+			<xs:enumeration value="02303124"/>
+			<xs:enumeration value="02303132"/>
+			<xs:enumeration value="02303140"/>
+			<xs:enumeration value="02303922"/>
+			<xs:enumeration value="02308908"/>
+			<xs:enumeration value="02308916"/>
+			<xs:enumeration value="02310228"/>
+			<xs:enumeration value="02310236"/>
+			<xs:enumeration value="02310503"/>
+			<xs:enumeration value="02310511"/>
+			<xs:enumeration value="02310538"/>
+			<xs:enumeration value="02310546"/>
+			<xs:enumeration value="02310961"/>
+			<xs:enumeration value="02310988"/>
+			<xs:enumeration value="02310996"/>
+			<xs:enumeration value="02311402"/>
+			<xs:enumeration value="02311410"/>
+			<xs:enumeration value="02311429"/>
+			<xs:enumeration value="02311437"/>
+			<xs:enumeration value="02311658"/>
+			<xs:enumeration value="02312670"/>
+			<xs:enumeration value="02312689"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
