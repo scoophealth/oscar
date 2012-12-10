@@ -22,11 +22,10 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.pageUtil;
+
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,100 +41,71 @@ import org.oscarehr.common.model.ReportByExamplesFavorite;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarReport.bean.RptByExampleQueryBeanHandler;
 
 public class RptByExamplesFavoriteAction extends Action {
 
 	private ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
 
-    
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException
-    {   
-        RptByExamplesFavoriteForm frm = (RptByExamplesFavoriteForm) form;     
-        String providerNo = (String) request.getSession().getAttribute("user");
-        if(frm.getNewQuery()!=null){
-            if(frm.getNewQuery().compareTo("")!=0){                
-                frm.setQuery(frm.getNewQuery());
-                if(frm.getNewName()!=null)
-                    frm.setFavoriteName(frm.getNewName());
-                else{
-                    try {
-                                                    
-                        
-                        String sql = "SELECT * from reportByExamplesFavorite WHERE query LIKE '" + StringEscapeUtils.escapeSql(frm.getNewQuery()) + "'";
-                        MiscUtils.getLogger().debug("HERE "+sql);
-                        ResultSet rs = DBHandler.GetSQL(sql);
-                        if(rs.next())
-                            frm.setFavoriteName(rs.getString("name"));
-                    }
-                    catch(SQLException e) {
-                        MiscUtils.getLogger().error("Error", e);            
-                    }
-                }
-                return mapping.findForward("edit");    
-            }
-            else if(frm.getToDelete()!=null){
-                if(frm.getToDelete().compareTo("true")==0){
-                    deleteQuery(frm.getId());                    
-                }
-            }
-        }
-        else{
-            MiscUtils.getLogger().debug("STEP:1 "+frm.getQuery());
-            String favoriteName = frm.getFavoriteName();
-            String query = frm.getQuery();   
-            //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
-            //String queryWithEscapeChar = exampleData.replaceSQLString ("\"","\'",query);
-           
-            StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-            String queryWithEscapeChar = StringEscapeUtils.escapeSql(query   );///queryWithEscapeChar);
-            MiscUtils.getLogger().debug("escapeSql: " + queryWithEscapeChar);
-            write2Database(providerNo, favoriteName, queryWithEscapeChar);            
-        }
-        RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler(providerNo);  
-        request.setAttribute("allFavorites", hd);  
-        return mapping.findForward("success");        
-    }        
-    
-    public void write2Database(String providerNo, String favoriteName, String query){
-        if (query!=null && query.compareTo("")!=0){
-            try {
-                
-                
-                //StringEscapeUtils strEscUtils = new StringEscapeUtils();
-                                
-                //query = strEscUtils.escapeSql(query);
-                MiscUtils.getLogger().debug("Fav "+favoriteName+" query "+query);
-                
-                
-                String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo = '"+providerNo+"' and name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
-                ResultSet rs = DBHandler.GetSQL(sql);
-                if(!rs.next()){
-                	ReportByExamplesFavorite r= new ReportByExamplesFavorite();
-                	r.setProviderNo(providerNo);
-                	r.setName(favoriteName);
-                	r.setQuery(query);
-                	dao.persist(r);
-                }
-                else{
-                	ReportByExamplesFavorite r = dao.find(rs.getInt("id"));
-                	if(r != null) {
-                		r.setName(favoriteName);
-                		r.setQuery(query);
-                		dao.merge(r);
-                	}
-                   
-                }
-            }
-            catch(SQLException e) {
-                MiscUtils.getLogger().error("Error", e);            
-            }
-        }
-    }
-    
-    public void deleteQuery(String id){
-    	dao.remove(Integer.parseInt(id));
-    }
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RptByExamplesFavoriteForm frm = (RptByExamplesFavoriteForm) form;
+		String providerNo = (String) request.getSession().getAttribute("user");
+		if (frm.getNewQuery() != null) {
+			if (frm.getNewQuery().compareTo("") != 0) {
+				frm.setQuery(frm.getNewQuery());
+				if (frm.getNewName() != null) frm.setFavoriteName(frm.getNewName());
+				else {
+					ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
+					for (ReportByExamplesFavorite f : dao.findByQuery(frm.getNewQuery())) {
+						frm.setFavoriteName(f.getName());
+					}
+				}
+				return mapping.findForward("edit");
+			} else if (frm.getToDelete() != null) {
+				if (frm.getToDelete().compareTo("true") == 0) {
+					deleteQuery(frm.getId());
+				}
+			}
+		} else {
+			String favoriteName = frm.getFavoriteName();
+			String query = frm.getQuery();
+
+			String queryWithEscapeChar = StringEscapeUtils.escapeSql(query);///queryWithEscapeChar);
+			MiscUtils.getLogger().debug("escapeSql: " + queryWithEscapeChar);
+			write2Database(providerNo, favoriteName, queryWithEscapeChar);
+		}
+		RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler(providerNo);
+		request.setAttribute("allFavorites", hd);
+		return mapping.findForward("success");
+	}
+
+	public void write2Database(String providerNo, String favoriteName, String query) {
+		if (query == null || query.compareTo("") == 0) {
+			return;
+		}
+
+		MiscUtils.getLogger().debug("Fav " + favoriteName + " query " + query);
+
+		ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
+		List<ReportByExamplesFavorite> favorites = dao.findByEverything(providerNo, favoriteName, query);
+		if (favorites.isEmpty()) {
+			ReportByExamplesFavorite r = new ReportByExamplesFavorite();
+			r.setProviderNo(providerNo);
+			r.setName(favoriteName);
+			r.setQuery(query);
+			dao.persist(r);
+		} else {
+			ReportByExamplesFavorite r = favorites.get(0);
+			if (r != null) {
+				r.setName(favoriteName);
+				r.setQuery(query);
+				dao.merge(r);
+			}
+		}
+
+	}
+
+	public void deleteQuery(String id) {
+		dao.remove(Integer.parseInt(id));
+	}
 }

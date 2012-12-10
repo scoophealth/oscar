@@ -36,7 +36,6 @@ public class ReportByExamplesFavoriteDaoTest extends DaoTestFixtures {
 
 	protected ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("reportByExamplesFavorite");
@@ -48,5 +47,15 @@ public class ReportByExamplesFavoriteDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFindByQuery() {
+		assertNotNull(dao.findByQuery("QUERY"));
+	}
+
+	@Test
+	public void testFindByEverything() {
+		assertNotNull(dao.findByEverything("100", "FAV", "QR"));
 	}
 }
