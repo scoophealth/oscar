@@ -43,7 +43,7 @@ import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
@@ -80,7 +80,7 @@ public final class ImmunizationsManager {
 			if (preventionExt.containsKey("result")) continue; //prevention tests are filtered out
 			
 			logger.debug("sendImmunizationsToMyOscar : preventionId=" + prevention.getId());
-			MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prevention, preventionExt);
+			MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prevention, preventionExt);
 
 			try {
 				MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId());
@@ -131,12 +131,12 @@ public final class ImmunizationsManager {
 	}
 	
 
-	private static MedicalDataTransfer3 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Prevention prevention, HashMap<String,String> preventionExt) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Prevention prevention, HashMap<String,String> preventionExt) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 
 		String providerNo = prevention.getProviderNo();
 
 		if (providerNo != null) {
-			MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(myOscarLoggedInInfo, prevention.getPreventionDate(), providerNo, prevention.getDemographicId());
+			MedicalDataTransfer4 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer(myOscarLoggedInInfo, prevention.getPreventionDate(), providerNo, prevention.getDemographicId());
 			medicalDataTransfer.setCompleted(false); // preventions are changeable, therefore, they're never completed
 
 			Document doc = toXml(prevention, preventionExt);

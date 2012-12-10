@@ -42,7 +42,7 @@ import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.util.LoggedInInfo;
@@ -110,7 +110,7 @@ public class SendDocToPhrAction extends Action {
     		GregorianCalendar dateOfData=new GregorianCalendar();
     		if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
 
-			MedicalDataTransfer3 medicalDataTransfer=new MedicalDataTransfer3();
+			MedicalDataTransfer4 medicalDataTransfer=new MedicalDataTransfer4();
 			medicalDataTransfer.setActive(true);
 			medicalDataTransfer.setCompleted(true);
 			medicalDataTransfer.setData(docAsString);
@@ -121,7 +121,7 @@ public class SendDocToPhrAction extends Action {
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 
-    		medicalDataWs.addMedicalData3(medicalDataTransfer);
+    		medicalDataWs.addMedicalData4(medicalDataTransfer);
 
     		// log the send
     		RemoteDataLog remoteDataLog=new RemoteDataLog();
