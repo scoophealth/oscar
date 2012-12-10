@@ -917,12 +917,7 @@ if(wLReadonly.equals("")){
 			</tr>
 			<tr>
 				<td>
-<% if (vLocale.getCountry().equals("BR")) { %> <!--a href="javascript: function myFunction() {return false; }" onClick="popupPage(500,600,'../billing/billinghistory.jsp?demographic_no=<%=demographic.getDemographicNo()%>&last_name=<%=URLEncoder.encode(demographic.getLastName())%>&first_name=<%=URLEncoder.encode(demographic.getFirstName())%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing History</a-->
-				<a
-					href='../oscar/billing/consultaFaturamentoPaciente/init.do?demographic_no=<%=demographic.getDemographicNo()%>'>Hist&oacute;rico
-				do Faturamento</a>
-
-<% } else if("ON".equals(prov)) {%>
+<% if("ON".equals(prov)) {%>
 				<a href="javascript: function myFunction() {return false; }"
 					onClick="popupPage(500,600,'../billing/CA/ON/billinghistory.jsp?demographic_no=<%=demographic.getDemographicNo()%>&last_name=<%=URLEncoder.encode(demographic.getLastName())%>&first_name=<%=URLEncoder.encode(demographic.getFirstName())%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">
 				<bean:message key="demographic.demographiceditdemographic.msgBillHistory"/></a>
