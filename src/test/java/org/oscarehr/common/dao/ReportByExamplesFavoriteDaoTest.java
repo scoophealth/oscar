@@ -58,4 +58,9 @@ public class ReportByExamplesFavoriteDaoTest extends DaoTestFixtures {
 	public void testFindByEverything() {
 		assertNotNull(dao.findByEverything("100", "FAV", "QR"));
 	}
+
+    @Test
+    public void testFindByProvider() {
+	    assertNotNull(dao.findByProvider("100"));
+    }
 }

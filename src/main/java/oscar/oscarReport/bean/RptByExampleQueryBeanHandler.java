@@ -22,116 +22,80 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.ReportByExamplesDao;
+import org.oscarehr.common.dao.ReportByExamplesFavoriteDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ReportByExamples;
+import org.oscarehr.common.model.ReportByExamplesFavorite;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
+@SuppressWarnings("unchecked")
 public class RptByExampleQueryBeanHandler {
-    
-    Vector favoriteVector = new Vector();
-    Vector allQueryVector = new Vector();
-    Vector queryVector = new Vector();
-    String startDate;
-    String endDate;   
-    
-    public RptByExampleQueryBeanHandler() {       
-    }
-    
-    public RptByExampleQueryBeanHandler(String startDate, String endDate) {   
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-    
-    public RptByExampleQueryBeanHandler(String providerNo) {       
-        getFavoriteCollection(providerNo);
-    }
-        
-    public Collection getFavoriteCollection(String providerNo){
-        try {
-            
-            String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo='" + providerNo + "' ORDER BY name";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-            
-                    StringEscapeUtils strEscUtils = new StringEscapeUtils();                                                   
-                    String queryWithEscapeChar = StringEscapeUtils.escapeJava(oscar.Misc.getString(rs, "query"));                   
-                    //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
-                    //queryWithEscapeChar = exampleData.replaceSQLString (";","",queryWithEscapeChar);
-                    //queryWithEscapeChar = exampleData.replaceSQLString("\"", "\'", queryWithEscapeChar);            
 
-                    String queryNameWithEscapeChar = StringEscapeUtils.escapeJava(oscar.Misc.getString(rs, "name"));
-                    RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), oscar.Misc.getString(rs, "query"), oscar.Misc.getString(rs, "name"));
-                    favoriteVector.add(query);                             
-            }
+	Vector favoriteVector = new Vector();
+	Vector allQueryVector = new Vector();
+	Vector queryVector = new Vector();
+	String startDate;
+	String endDate;
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);            
-        }
-        return favoriteVector;
-    }
-    
-    public Vector getFavoriteVector(){
-        return favoriteVector;
-    }
-    
-    public Collection getAllQueryVector(){
-        try {
-            
-            String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p WHERE r.providerNo=p.provider_No ORDER BY date DESC";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-                //StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-                //String queryWithEscapeChar = strEscUtils.escapeJava(oscar.Misc.getString(rs,"query"));
-                RptByExampleQueryBean query = new RptByExampleQueryBean(oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "query"), oscar.Misc.getString(rs, "date"));
-                allQueryVector.add(query);
-            }
+	public RptByExampleQueryBeanHandler() {
+	}
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);            
-        }
-        return allQueryVector;
-    }
-    
-    public Vector getQueryVector(){
-        try {
-            
-            String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p "
-                         + "WHERE r.providerNo=p.provider_No AND date>= '" + startDate + "' AND date <='" + endDate
-                         + "' ORDER BY date DESC";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
+	public RptByExampleQueryBeanHandler(String startDate, String endDate) {
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
 
-                StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-                String queryWithEscapeChar = StringEscapeUtils.escapeJava(oscar.Misc.getString(rs, "query"));
-                RptByExampleQueryBean query = new RptByExampleQueryBean(oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "query"), oscar.Misc.getString(rs, "date"));
-                queryVector.add(query);
-            }
+	public RptByExampleQueryBeanHandler(String providerNo) {
+		getFavoriteCollection(providerNo);
+	}
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);            
-        }
-        return queryVector;
-    }
+	public Collection<RptByExampleQueryBean> getFavoriteCollection(String providerNo) {
+		ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
+		for (ReportByExamplesFavorite f : dao.findByProvider(providerNo)) {
+			RptByExampleQueryBean query = new RptByExampleQueryBean(f.getId(), f.getQuery(), f.getName());
+			favoriteVector.add(query);
+		}
+		return favoriteVector;
+	}
+
+	public Vector getFavoriteVector() {
+		return favoriteVector;
+	}
+
+	public Collection<RptByExampleQueryBean> getAllQueryVector() {
+		ReportByExamplesDao dao = SpringUtils.getBean(ReportByExamplesDao.class);
+		for (Object[] o : dao.findReportsAndProviders()) {
+			ReportByExamples r = (ReportByExamples) o[0];
+			Provider p = (Provider) o[0];
+			RptByExampleQueryBean query = toBean(r, p);
+			allQueryVector.add(query);
+		}
+		return allQueryVector;
+	}
+
+	private RptByExampleQueryBean toBean(ReportByExamples r, Provider p) {
+		RptByExampleQueryBean query = new RptByExampleQueryBean(p.getLastName(), p.getFirstName(), r.getQuery(), ConversionUtils.toDateString(r.getDate()));
+		return query;
+	}
+
+	public Vector getQueryVector() {
+		ReportByExamplesDao dao = SpringUtils.getBean(ReportByExamplesDao.class);
+		for (Object[] o : dao.findReportsAndProviders(ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate))) {
+			ReportByExamples r = (ReportByExamples) o[0];
+			Provider p = (Provider) o[0];
+
+			RptByExampleQueryBean query = toBean(r, p);
+			queryVector.add(query);
+		}
+
+		return queryVector;
+	}
 }
