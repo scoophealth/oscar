@@ -313,7 +313,9 @@ public class BillingReProcessBillAction extends Action {
         billingmaster.setOinPostalcode(oinPostalcode);
         try{
         billingmaster.setWcbId(Integer.parseInt(request.getParameter("WCBid")));
-        }catch(Exception e){}
+        }catch(Exception e){
+        	MiscUtils.getLogger().warn("warning",e);
+        }
         bill.setProviderNo(providerNo);
         logger.debug("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo());
         billingmasterDAO.update(billingmaster);

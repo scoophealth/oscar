@@ -76,7 +76,7 @@ import com.lowagie.text.pdf.PdfReader;
 public class AddEditDocumentAction extends DispatchAction {
 	public ActionForward html5MultiUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources");
-		Hashtable errors = new Hashtable();
+		
 		AddEditDocumentForm fm = (AddEditDocumentForm) form;
 
 		FormFile docFile = fm.getFiledata();
@@ -130,10 +130,7 @@ public class AddEditDocumentAction extends DispatchAction {
 			queueDocumentLinkDAO.addActiveQueueDocumentLink(qid, did);
 			request.getSession().setAttribute("preferredQueue", queueId);
 		}
-		if (docFile != null) {
-
-		}
-
+		
 		return null;
 
 	}
