@@ -47,6 +47,8 @@ import org.oscarehr.common.model.RaHeader;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.util.ConversionUtils;
+
 public class RaDetailDaoTest extends DaoTestFixtures {
 
 	protected RaDetailDao dao = SpringUtils.getBean(RaDetailDao.class);	
@@ -556,5 +558,15 @@ public class RaDetailDaoTest extends DaoTestFixtures {
 			}
 		}
 		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindByBillingNoServiceDateAndProviderNo() {
+		assertNotNull(dao.findByBillingNoServiceDateAndProviderNo(100, ConversionUtils.toDateString(new Date()), "100"));
+	}
+	
+	@Test
+	public void testFindByBillingNoAndErrorCode() {
+		assertNotNull(dao.findByBillingNoAndErrorCode(100, "CODE"));
 	}
 }

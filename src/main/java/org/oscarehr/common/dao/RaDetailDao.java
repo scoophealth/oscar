@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
@@ -40,105 +39,92 @@ import org.springframework.stereotype.Repository;
 import oscar.util.DateUtils;
 
 @Repository
-public class RaDetailDao extends AbstractDao<RaDetail>{
+public class RaDetailDao extends AbstractDao<RaDetail> {
 
 	public RaDetailDao() {
 		super(RaDetail.class);
 	}
-	
-	 public List<RaDetail> findByBillingNo(Integer billingNo) {
-		 Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.billingNo = :billingNo order by rad.raHeaderNo desc, rad.id ");
-        
-		 query.setParameter("billingNo", billingNo);
 
-         @SuppressWarnings("unchecked")
-         List<RaDetail> results = query.getResultList();
+	public List<RaDetail> findByBillingNo(Integer billingNo) {
+		Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.billingNo = :billingNo order by rad.raHeaderNo desc, rad.id ");
 
-         return results;
+		query.setParameter("billingNo", billingNo);
 
-	 }
-	 
-	 public List<RaDetail> findByRaHeaderNo(Integer raHeaderNo) {
-		 Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo");
-        
-		 query.setParameter("raHeaderNo", raHeaderNo);
+		@SuppressWarnings("unchecked")
+		List<RaDetail> results = query.getResultList();
 
-         @SuppressWarnings("unchecked")
-         List<RaDetail> results = query.getResultList();
+		return results;
 
-         return results;
-
-	 }
-
-	 public List<Integer> findUniqueBillingNoByRaHeaderNoAndProviderAndNotErrorCode(Integer raHeaderNo,String providerOhipNo, String codes) {
-		 Query query = entityManager.createQuery("SELECT distinct(rad.billingNo) from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo and rad.providerOhipNo = :providerOhipNo and rad.errorCode not in (:codes)");
-        
-		 String[] cList = codes.split(",");
-		 List<String> tmp = new ArrayList<String>();
-		 for(int x=0;x<cList.length;x++) {
-			 tmp.add(cList[x]);
-		 }
-		 query.setParameter("raHeaderNo", raHeaderNo);
-		 query.setParameter("providerOhipNo", providerOhipNo);
-		 query.setParameter("codes", tmp);
-         @SuppressWarnings("unchecked")
-         List<Integer> results = query.getResultList();
-
-         return results;
-
-	 }
-
-	
-        
-        public List<RaDetail> getRaDetailByDate(Date startDate, Date endDate, Locale locale) {
-            Query query = entityManager.createQuery("SELECT rad from RaHeader rah, RaDetail rad WHERE rah.paymentDate >= ? and rah.paymentDate < ? and rah.id = rad.raHeaderNo order by rad.raHeaderNo, rad.billingNo, rad.serviceCode");
-            String startDateStr = DateUtils.format("yyyyMMdd", startDate, locale);
-            query.setParameter(1, startDateStr);
-            String endDateStr = DateUtils.format("yyyyMMdd", endDate, locale);
-            query.setParameter(2, endDateStr);
-
-            @SuppressWarnings("unchecked")
-            List<RaDetail> results = query.getResultList();
-
-            return results;
 	}
-        
-        public List<RaDetail> getRaDetailByDate(Provider p, Date startDate, Date endDate, Locale locale) {
-            Query query = entityManager.createQuery("SELECT rad from RaHeader rah, RaDetail rad WHERE rah.paymentDate >= ? and rah.paymentDate < ? and rah.id = rad.raHeaderNo and rad.providerOhipNo = ? order by rad.raHeaderNo, rad.billingNo, rad.serviceCode");
-            String startDateStr = DateUtils.format("yyyyMMdd", startDate, locale);
-            query.setParameter(1, startDateStr);
-            String endDateStr = DateUtils.format("yyyyMMdd", endDate, locale);
-            query.setParameter(2, endDateStr);
-            query.setParameter(3, p.getOhipNo());
 
-            @SuppressWarnings("unchecked")
-            List<RaDetail> results = query.getResultList();
+	public List<RaDetail> findByRaHeaderNo(Integer raHeaderNo) {
+		Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo");
 
-            return results;
+		query.setParameter("raHeaderNo", raHeaderNo);
+
+		@SuppressWarnings("unchecked")
+		List<RaDetail> results = query.getResultList();
+
+		return results;
+
+	}
+
+	public List<Integer> findUniqueBillingNoByRaHeaderNoAndProviderAndNotErrorCode(Integer raHeaderNo, String providerOhipNo, String codes) {
+		Query query = entityManager.createQuery("SELECT distinct(rad.billingNo) from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo and rad.providerOhipNo = :providerOhipNo and rad.errorCode not in (:codes)");
+
+		String[] cList = codes.split(",");
+		List<String> tmp = new ArrayList<String>();
+		for (int x = 0; x < cList.length; x++) {
+			tmp.add(cList[x]);
+		}
+		query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("providerOhipNo", providerOhipNo);
+		query.setParameter("codes", tmp);
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+
+		return results;
+
+	}
+
+	public List<RaDetail> getRaDetailByDate(Date startDate, Date endDate, Locale locale) {
+		Query query = entityManager.createQuery("SELECT rad from RaHeader rah, RaDetail rad WHERE rah.paymentDate >= ? and rah.paymentDate < ? and rah.id = rad.raHeaderNo order by rad.raHeaderNo, rad.billingNo, rad.serviceCode");
+		String startDateStr = DateUtils.format("yyyyMMdd", startDate, locale);
+		query.setParameter(1, startDateStr);
+		String endDateStr = DateUtils.format("yyyyMMdd", endDate, locale);
+		query.setParameter(2, endDateStr);
+
+		@SuppressWarnings("unchecked")
+		List<RaDetail> results = query.getResultList();
+
+		return results;
+	}
+
+	public List<RaDetail> getRaDetailByDate(Provider p, Date startDate, Date endDate, Locale locale) {
+		Query query = entityManager.createQuery("SELECT rad from RaHeader rah, RaDetail rad WHERE rah.paymentDate >= ? and rah.paymentDate < ? and rah.id = rad.raHeaderNo and rad.providerOhipNo = ? order by rad.raHeaderNo, rad.billingNo, rad.serviceCode");
+		String startDateStr = DateUtils.format("yyyyMMdd", startDate, locale);
+		query.setParameter(1, startDateStr);
+		String endDateStr = DateUtils.format("yyyyMMdd", endDate, locale);
+		query.setParameter(2, endDateStr);
+		query.setParameter(3, p.getOhipNo());
+
+		@SuppressWarnings("unchecked")
+		List<RaDetail> results = query.getResultList();
+
+		return results;
+	}
+
+	public List<RaDetail> getRaDetailByClaimNo(String claimNo) {
+
+		Query query = entityManager.createQuery("SELECT rad from RaDetail rad where rad.claimNo = ?");
+		query.setParameter(1, claimNo);
+
+		@SuppressWarnings("unchecked")
+		List<RaDetail> raDetails = query.getResultList();
+
+		return raDetails;
 	}
                         
-        public List<RaDetail> getRaDetailByClaimNo(String claimNo) {
-            
-            Query query = entityManager.createQuery("SELECT rad from RaDetail rad where rad.claimNo = ?");
-            query.setParameter(1, claimNo);
-            
-            @SuppressWarnings("unchecked")
-            List<RaDetail> raDetails = query.getResultList();
-                      
-            return raDetails;
-        }
-        
-        public List<String> getBillingExplanatoryList(Integer billingNo) {
-                        
-            Query query = entityManager.createQuery("SELECT errorCode from RaDetail rad where rad.billingNo = (:billingNo) and rad.errorCode!='' and rad.raHeaderNo=(select max(rad2.raHeaderNo) from RaDetail rad2 where rad2.billingNo=(:billingNo))");
-            query.setParameter("billingNo", billingNo);
-            
-            @SuppressWarnings("unchecked")
-            List<String> errors = query.getResultList();
-            
-            return errors;
-        }
-
    	 public List<RaDetail> search_raerror35(Integer raHeaderNo, String error1, String error2, String providerOhipNo) {
 		 Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo and rad.errorCode<>'' and rad.errorCode<>:error1 and rad.errorCode<>:error2 and rad.errorCode<>'EV' and rad.errorCode<>'55' and rad.errorCode<>'57' and rad.errorCode<>'HM' and (rad.serviceCode<>'Q200A' or rad.errorCode<>'I9') and rad.providerOhipNo like :ohip");
         
@@ -233,4 +219,34 @@ public class RaDetailDao extends AbstractDao<RaDetail>{
 
         return results;
    	 }
+
+
+	public List<String> getBillingExplanatoryList(Integer billingNo) {
+
+		Query query = entityManager.createQuery("SELECT errorCode from RaDetail rad where rad.billingNo = (:billingNo) and rad.errorCode!='' and rad.raHeaderNo=(select max(rad2.raHeaderNo) from RaDetail rad2 where rad2.billingNo=(:billingNo))");
+		query.setParameter("billingNo", billingNo);
+
+		@SuppressWarnings("unchecked")
+		List<String> errors = query.getResultList();
+
+		return errors;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<RaDetail> findByBillingNoServiceDateAndProviderNo(Integer billingNo, String serviceDate, String providerNo) {
+		Query query = createQuery("r", "r.id = :billingNo AND r.serviceDate = :serviceDate and r.providerOhipNo = :providerNo");
+		query.setParameter("billingNo", billingNo);
+		query.setParameter("serviceDate", serviceDate);
+		query.setParameter("providerNo", providerNo);
+		return query.getResultList();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<RaDetail> findByBillingNoAndErrorCode(Integer billingNo, String errorCode) {
+		Query query = createQuery("r", "r.id = :billingNo AND r.errorCode = :errorCode");
+		query.setParameter("billingNo", billingNo);
+		query.setParameter("errorCode", errorCode);
+		return query.getResultList();
+    }
 }
