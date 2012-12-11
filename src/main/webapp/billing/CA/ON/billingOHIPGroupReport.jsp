@@ -18,18 +18,28 @@
 
 --%>
 <% 
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no="";
-user_no = (String) session.getAttribute("user");
+  String user_no= (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.BillCenter" %>
+<%@page import="org.oscarehr.common.dao.BillCenterDao" %>
+<%@page import="org.oscarehr.billing.CA.model.BillActivity" %>
+<%@page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	BillCenterDao billCenterDao = SpringUtils.getBean(BillCenterDao.class);
+	BillActivityDao billActivityDao = SpringUtils.getBean(BillActivityDao.class);
+	
+%>
+
+
 <% 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -126,16 +136,16 @@ String monthCode = "";
            String specialty_code; 
 String billinggroup_no;
            int Count = 0;
-        ResultSet rslocal;
-        rslocal = null;
- rslocal = apptMainBean.queryResults("%", "search_provider_dt");
- while(rslocal.next()){
- proFirst = rslocal.getString("first_name");
- proLast = rslocal.getString("last_name");
- proOHIP = rslocal.getString("ohip_no"); 
- billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
- specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-
+           
+for(Provider p : providerDao.getActiveProviders()) {
+	if(p.getOhipNo() == null || !p.getOhipNo().isEmpty()) {
+		continue;
+	}
+	proFirst = p.getFirstName();
+	proLast = p.getLastName();
+	proOHIP = p.getOhipNo();
+	billinggroup_no= SxmlMisc.getXmlContent(p.getComments(),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+	specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");	
 
  %>
 			<option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>"><%=proLast%>,
@@ -155,12 +165,9 @@ String billinggroup_no;
            String centerDesc="";
            
            int Count1 = 0;
-        ResultSet rsCenter;
-        rsCenter = null;
- rsCenter = apptMainBean.queryResults("%", "search_bill_center");
- while(rsCenter.next()){
- centerCode = rsCenter.getString("billcenter_code");
- centerDesc = rsCenter.getString("billcenter_desc");
+for(BillCenter bc:billCenterDao.findByBillCenterDesc("%")) {
+ centerCode = bc.getBillCenterCode();
+ centerDesc = bc.getBillCenterDesc();
   
  %>
 			<option value="<%=centerCode%>"
@@ -207,22 +214,18 @@ String billinggroup_no;
 
 	<%
    String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
-   rslocal = null;
-   
-   String[] paramYear = new String[2];
-    paramYear[0] = thisyear+"/01/01";
-    paramYear[1] = thisyear+"/12/31 23:59:59";
-       rslocal = null;
-    rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
-   while(rslocal.next()){
-   pro_ohip = rslocal.getString("providerohipno"); 
-   pro_group = rslocal.getString("groupno");
-   updatedate = rslocal.getString("updatedatetime");
-   cr = rslocal.getString("claimrecord");
-   oFile = rslocal.getString("ohipfilename");
-   hFile = rslocal.getString("htmlfilename");
+  
+   List<BillActivity> bas = billActivityDao.findCurrentByDateRange(ConversionUtils.fromDateString(thisyear+"-01-01 00:00:00"), ConversionUtils.fromDateString(thisyear + "-12-31 23:59:59"));
+   Collections.sort(bas,BillActivity.UpdateDateTimeComparator);
+   for(BillActivity ba:bas) {
+	  
+   pro_ohip = ba.getProviderOhipNo();
+   pro_group = ba.getGroupNo();
+   updatedate = ConversionUtils.toDateString(ba.getUpdateDateTime());
+   cr = ba.getClaimRecord();
+   oFile = ba.getOhipFilename();
+   hFile = ba.getHtmlFilename();
  
-
    %>
 
 	<tr>

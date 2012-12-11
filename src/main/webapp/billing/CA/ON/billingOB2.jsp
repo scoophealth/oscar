@@ -18,27 +18,33 @@
 
 --%>
 <%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
+  String curUser_no = (String) session.getAttribute("user");
 
 %>
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
 <%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
 <%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+<%@ page import="org.oscarehr.common.model.Billing" %>
+<%@ page import="org.oscarehr.common.dao.BillingDao" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 <%
 	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
 %>
 <html>
 <head>
@@ -71,81 +77,72 @@
  String visittype="";
  String creator = "";
  String creatdate = "";
- rslocation = null;
- rslocation = apptMainBean.queryResults(billNo, "search_bill");
- while(rslocation.next()){
- DemoNo = rslocation.getString("demographic_no");
- DemoName = rslocation.getString("demographic_name");
- UpdateDate = rslocation.getString("update_date");
- hin = rslocation.getString("hin");
- location = rslocation.getString("clinic_ref_code");
- // BillDate = rslocation.getString("billing_date");
- BillType = rslocation.getString("status");
- proNO= rslocation.getString("provider_no");
-  BillTotal = rslocation.getString("total");
-  visitdate = rslocation.getString("visitdate");
-  visittype = rslocation.getString("visittype");
-  apptProvider_no = rslocation.getString("apptProvider_no");
-    asstProvider_no = rslocation.getString("asstProvider_no");
-    creator = rslocation.getString("creator");
-   }
-
-
+ 
+ Billing b = billingDao.find(Integer.parseInt(billNo));
+ if(b != null) {
+	DemoNo = String.valueOf(b.getDemographicNo());
+	DemoName = b.getDemographicName();
+	UpdateDate = ConversionUtils.toDateString(b.getUpdateDate());
+	hin = b.getHin();
+	location = b.getClinicRefCode();
+	// BillDate = rslocation.getString("billing_date");
+	BillType = b.getStatus();
+	proNO= b.getProviderNo();
+	BillTotal = b.getTotal();
+	visitdate = ConversionUtils.toDateString(b.getVisitDate());
+	visittype = b.getVisitType();
+	apptProvider_no = b.getApptProviderNo();
+	asstProvider_no = b.getAsstProviderNo();
+	creator = b.getCreator();
+ }
+ 
  ClinicLocation clinicLocation = clinicLocationDao.searchBillLocation(1,location);
  if(clinicLocation!=null) {
 	 BillLocation = clinicLocation.getClinicLocationName();
  }
 
- rsPatient = null;
- rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
- while(rsPatient.next()){
- DemoSex = rsPatient.getString("sex");
- DemoAddress = rsPatient.getString("address");
- DemoCity = rsPatient.getString("city");
- DemoProvince = rsPatient.getString("province");
- DemoPostal = rsPatient.getString("postal");
- DemoDOB = rsPatient.getString("year_of_birth") + "-" + rsPatient.getString("month_of_birth") + "-" + rsPatient.getString("date_of_birth");
-
+ Demographic d = demographicDao.getDemographic(DemoNo);
+ if(d != null){
+	 DemoSex = d.getSex();
+	 DemoAddress = d.getAddress();
+	 DemoCity = d.getCity();
+	 DemoProvince = d.getProvince();
+	 DemoPostal = d.getPostal();
+	 DemoDOB = d.getYearOfBirth() + "-" + d.getMonthOfBirth() + "-" + d.getDateOfBirth();
    }
 
-   ResultSet rsprovider = null;
-
-
-     rsprovider = null;
-    rsprovider = apptMainBean.queryResults(proNO, "search_provider_name");
-    while(rsprovider.next()){
-    proFirst = rsprovider.getString("first_name");
-    proLast = rsprovider.getString("last_name");
-     proOHIPNO = rsprovider.getString("ohip_no");
-    proRMA = rsprovider.getString("rma_no");
-     }
-       rsprovider = null;
-      rsprovider = apptMainBean.queryResults(apptProvider_no, "search_provider_name");
-      while(rsprovider.next()){
-     apptFirst = rsprovider.getString("first_name");
-     apptLast = rsprovider.getString("last_name");
-
-     }
-       rsprovider = null;
-      rsprovider = apptMainBean.queryResults(asstProvider_no, "search_provider_name");
-      while(rsprovider.next()){
-    asstFirst = rsprovider.getString("first_name");
-     asstLast = rsprovider.getString("last_name");
-  }
-
-         rsprovider = null;
-        rsprovider = apptMainBean.queryResults(creator, "search_provider_name");
-        while(rsprovider.next()){
-   crFirst = rsprovider.getString("first_name");
-       crLast = rsprovider.getString("last_name");
-  }
-       ResultSet rsBillRec2 = null;
-     rsBillRec2 = null;
- rsBillRec2 = apptMainBean.queryResults(billNo, "search_bill_record");
- while(rsBillRec2.next()){
- BillDate = rsBillRec2.getString("appointment_date");
+Provider p = providerDao.getProvider(proNO);
+if(p != null) {
+	proFirst = p.getFirstName();
+    proLast = p.getLastName();
+    proOHIPNO = p.getOhipNo();
+    proRMA = p.getRmaNo();
 }
- %>
+
+p = providerDao.getProvider(apptProvider_no);
+if(p != null) {
+	apptFirst = p.getFirstName();
+	apptLast = p.getLastName();
+}
+
+p = providerDao.getProvider(asstProvider_no);
+if(p != null) {
+	asstFirst = p.getFirstName();
+	asstLast = p.getLastName();
+}
+
+p = providerDao.getProvider(creator);
+if(p != null) {
+	crFirst = p.getFirstName();
+	crLast = p.getLastName();
+}
+
+BillingDetail bd = billingDetailDao.find(Integer.parseInt(billNo));
+if(bd != null) {
+	BillDate = ConversionUtils.toDateString(bd.getAppointmentDate());	
+}
+
+%>
 
 
 <body bgcolor="#FFFFFF" text="#000000">
@@ -262,15 +259,14 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     String billAmount = "";
     String diagCode = "";
  String billUnit="";
- ResultSet rsBillRec = null;
-     rsBillRec = null;
- rsBillRec = apptMainBean.queryResults(billNo, "search_bill_record");
- while(rsBillRec.next()){
-billUnit = rsBillRec.getString("billingunit");
- serviceCode = rsBillRec.getString("service_code");
- serviceDesc = rsBillRec.getString("service_desc");
- billAmount = rsBillRec.getString("billing_amount");
- diagCode = rsBillRec.getString("diagnostic_code");
+ 
+ BillingDetail bd1 = billingDetailDao.find(Integer.parseInt(billNo));
+ if(bd1 != null) {
+	 billUnit = bd1.getBillingUnit();
+	 serviceCode = bd1.getServiceCode();
+	 serviceDesc = bd1.getServiceDesc();
+	 billAmount = bd1.getBillingAmount();
+	 diagCode = bd1.getDiagnosticCode();
 
 
  %>

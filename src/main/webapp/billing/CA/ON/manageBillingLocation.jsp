@@ -18,7 +18,6 @@
 
 --%>
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 String asstProvider_no = "";
 String color ="";
@@ -32,8 +31,7 @@ String service_form="", service_name="";
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
@@ -155,12 +153,6 @@ function confirmthis(lno) {
 			</tr>
 
 			<%
-
-ResultSet rs2=null ;
-
-String[] param2 =new String[10];
-String[] service_code = new String[45];
-
 
 List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
 int rCount = 0;
