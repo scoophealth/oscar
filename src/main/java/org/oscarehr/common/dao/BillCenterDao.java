@@ -23,6 +23,10 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.BillCenter;
 import org.springframework.stereotype.Repository;
 
@@ -31,5 +35,13 @@ public class BillCenterDao extends AbstractDao<BillCenter>{
 
 	public BillCenterDao() {
 		super(BillCenter.class);
+	}
+	
+	public List<BillCenter> findByBillCenterDesc(String descr) {
+		Query query = entityManager.createQuery("SELECT b FROM BillCenter b WHERE b.billCenterDesc like ?");
+		query.setParameter(1,descr);
+		@SuppressWarnings("unchecked")
+        List<BillCenter> results = query.getResultList();
+		return results;
 	}
 }

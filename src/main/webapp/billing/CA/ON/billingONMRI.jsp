@@ -18,12 +18,25 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillActivity" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 <%@ page import="oscar.login.DBHelp"%>
+<%@ page import="java.util.*,java.sql.*,oscar.*,oscar.util.*,java.net.*" errorPage="errorpage.jsp"%>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+
 
 <%
-	if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	BillActivityDao billActivityDao = SpringUtils.getBean(BillActivityDao.class);
+%>
+<%
 	String curProvider_no = (String) session.getAttribute("user");
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isTeamBillingOnly=false;
@@ -61,21 +74,8 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 }
 %>
 
-<%@ page import="java.util.*,java.sql.*,oscar.*,oscar.util.*,java.net.*"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%if (session.getAttribute("user") == null) {
-				response.sendRedirect("../../../logout.jsp");
-			}
-			String user_no = (String) session.getAttribute("user");
 
-			%>
-<%@ include file="dbBilling.jspf"%>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -225,10 +225,10 @@ obj.visibility=v; }
 			List providerStr; 
 			
 			if (isTeamBillingOnly || isTeamAccessPrivacy) {
-				providerStr = prep.getTeamProviderBillingStr(user_no);
+				providerStr = prep.getTeamProviderBillingStr(curProvider_no);
 			}
 			else if (isSiteAccessPrivacy) {
-				providerStr = prep.getSiteProviderBillingStr(user_no);
+				providerStr = prep.getSiteProviderBillingStr(curProvider_no);
 			}
 			else {
 				providerStr = prep.getProviderBillingStr();
@@ -270,7 +270,7 @@ obj.visibility=v; }
 		<td><input type="submit" name="Submit" value="Create Report">
 		<input type="hidden" name="monthCode" value="<%=monthCode%>">
 		<input type="hidden" name="verCode" value="V03"> <input
-			type="hidden" name="curUser" value="<%=user_no%>"> <input
+			type="hidden" name="curUser" value="<%=curProvider_no%>"> <input
 			type="hidden" name="curDate" value="<%=nowDate%>"></td>
 	</tr>
 	<tr>
@@ -359,11 +359,12 @@ Calendar.setup({ inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", sho
 
 	<% // get old data records
 proName = new Properties();
-ResultSet rspro = null;
-rspro = apptMainBean.queryResults("%", "search_provider_ohip_dt");
-while(rspro.next()){
-	proName.setProperty(rspro.getString("ohip_no"), (rspro.getString("last_name") + ", " + rspro.getString("first_name")));
+for(Provider p : providerDao.getActiveProviders()) {
+	if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
+		proName.setProperty(p.getOhipNo(), (p.getLastName() + ", " +p.getFirstName()));
+	}
 }
+
 
 String[] paramYear = new String[2];
 paramYear[0] = thisyear+"/01/01";
@@ -371,16 +372,17 @@ paramYear[1] = thisyear+"/12/31 23:59:59";
 //String pro_ohip="", pro_group="", pro_name="", updatedate="", cr="", oFile="", hFile="", total="";
 
 //int count = 0;
-ResultSet rslocal = apptMainBean.queryResults(paramYear, "search_billactivity_short");
-while(rslocal.next()){
+List<BillActivity> bas = billActivityDao.findCurrentByDateRange(ConversionUtils.fromDateString(thisyear+"-01-01 00:00:00"), ConversionUtils.fromDateString(thisyear+"-12-31 23:59:59"));
+Collections.sort(bas,BillActivity.UpdateDateTimeComparator);
+for(BillActivity ba:bas) {
 	count++;
-	pro_ohip = rslocal.getString("providerohipno"); 
-	pro_group = rslocal.getString("groupno");
-	updatedate = rslocal.getString("updatedatetime");
-	cr = rslocal.getString("claimrecord");
-	oFile = rslocal.getString("ohipfilename");
-	hFile = rslocal.getString("htmlfilename");
-	total = rslocal.getString("total")==null?"0.00":rslocal.getString("total");
+	pro_ohip = ba.getProviderOhipNo();
+	pro_group = ba.getGroupNo();
+	updatedate = ConversionUtils.toDateString(ba.getUpdateDateTime());
+	cr = ba.getClaimRecord();
+	oFile = ba.getOhipFilename();
+	hFile = ba.getHtmlFilename();
+	total = ba.getTotal()==null?"0.00":ba.getTotal();
 	pro_name = proName.getProperty(pro_ohip);
 %>
 

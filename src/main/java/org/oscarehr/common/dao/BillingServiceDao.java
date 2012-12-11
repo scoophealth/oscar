@@ -334,4 +334,17 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("date", date);
 		return query.getResultList();
     }
+	
+	public List<BillingService> search_service_code(String code, String code1, String code2, String desc, String desc1, String desc2) {
+		String sql = "select b from BillingService b where (b.serviceCode like ? or b.serviceCode like ? or b.serviceCode like ? or b.description like ? or b.description like ? or b.description like ?) and b.id = (select max(b2.id) from BillingService b2 where b2.serviceCode = b.serviceCode)";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, code);
+		query.setParameter(2, code1);
+		query.setParameter(3, code2);
+		query.setParameter(4, desc);
+		query.setParameter(5, desc1);
+		query.setParameter(6, desc2);
+		
+		return query.getResultList();
+	}
 }

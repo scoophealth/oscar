@@ -32,7 +32,7 @@
 <jsp:useBean id="billingItem" scope="page" class="oscar.BillingItemBean" />
 <jsp:useBean id="billingDataBean" class="oscar.BillingDataBean"	scope="session" />
 <jsp:useBean id="billingPatientDataBean" class="oscar.BillingPatientDataBean" scope="session" />
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillingDetail"%>
 <%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao"%>
@@ -46,7 +46,7 @@
 	RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
 	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 %>
-<%@ include file="dbBilling.jspf"%>
+
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message

@@ -18,17 +18,18 @@
 
 --%>
 <% 
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.BillingServiceDao" %>
+<%@ page import="org.oscarehr.common.model.BillingService" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%
+	BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
+%>
+
+
 <% String search = "",search2 = "";
  search = request.getParameter("search"); 
  if (search.compareTo("") == 0){
@@ -36,48 +37,39 @@
  }
  	
     String codeName= "",codeName1 = "", codeName2 = "";
-       String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
-   codeName = request.getParameter("name");
-   codeName1= request.getParameter("name1");
-   codeName2 = request.getParameter("name2");
-  xcodeName = request.getParameter("name");
-     xcodeName1= request.getParameter("name1");
-      xcodeName2 = request.getParameter("name2");
+    String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
+    codeName = request.getParameter("name");
+    codeName1= request.getParameter("name1");
+    codeName2 = request.getParameter("name2");
+    xcodeName = request.getParameter("name");
+    xcodeName1= request.getParameter("name1");
+    xcodeName2 = request.getParameter("name2");
    
    String desc = "", desc1 = "", desc2 = "";
    
  if (codeName.compareTo("") == 0 || codeName == null){
- codeName = " ";
- desc = " ";
- }
- else{
-codeName = codeName + "%";
-desc = "%" + codeName + "%";
+ 	codeName = " ";
+ 	desc = " ";
+ } else{
+	codeName = codeName + "%";
+	desc = "%" + codeName + "%";
 }
+ 
+ 
   if (codeName1.compareTo("") == 0 || codeName1 == null){
-  codeName1 = " ";
-  desc1 = " ";
-  }
-  else{
- codeName1 = codeName1 + "%";
- desc1 ="%" + codeName1 + "%";
+	  codeName1 = " ";
+	  desc1 = " ";
+  } else{
+ 	codeName1 = codeName1 + "%";
+ 	desc1 ="%" + codeName1 + "%";
 }
  if (codeName2.compareTo("") == 0 || codeName2 == null){
- codeName2 = " ";
- desc2 = " ";
- }
- else{
-codeName2 = codeName2 + "%";
-desc2 = "%" + codeName2 + "%";
+	 codeName2 = " ";
+	 desc2 = " ";
+ } else{
+	codeName2 = codeName2 + "%";
+	desc2 = "%" + codeName2 + "%";
 }
-
- String[] param =new String[6];
- param[0] = codeName;
- param[1] = codeName1;
- param[2] = codeName2;
- param[3] = desc;
- param[4] = desc1;
- param[5] = desc2;
 
 %>
 <html>
@@ -124,8 +116,7 @@ if(request.getParameter("nameF") != null) {
 			size="2">Description</font></b></td>
 	</tr>
 
-	<%  ResultSet rslocal = null;  
-      ResultSet rslocal2 = null;
+	<% 
      
      
     String color="";
@@ -137,19 +128,19 @@ if(request.getParameter("nameF") != null) {
 // Retrieving Provider
  
 String Dcode="", DcodeDesc="";
- rslocal = null;
-  rslocal = apptMainBean.queryResults(param, search);
- while(rslocal.next()){
- intCount = intCount + 1;
- Dcode = rslocal.getString("service_code");
-  DcodeDesc = rslocal.getString("description");
- if (Count == 0){
- Count = 1;
- color = "#FFFFFF";
- } else {
- Count = 0;
- color="#EEEEFF";
- }
+
+for (BillingService bss : billingServiceDao.search_service_code(codeName,codeName1,codeName2,desc,desc1,desc2)) {
+	intCount = intCount + 1;
+	Dcode = bss.getServiceCode();
+	DcodeDesc = bss.getDescription();
+	if (Count == 0){
+		 Count = 1;
+		 color = "#FFFFFF";
+	} else {
+		 Count = 0;
+		 color="#EEEEFF";
+	}
+
  %>
 
 	<tr bgcolor="<%=color%>">

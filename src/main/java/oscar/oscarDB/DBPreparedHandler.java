@@ -36,6 +36,7 @@ import org.oscarehr.util.DbConnectionFilter;
 /**
  * deprecated Use JPA instead, no new code should be written against this class.
  */
+@Deprecated
 public final class DBPreparedHandler {
     
     ResultSet rs = null;

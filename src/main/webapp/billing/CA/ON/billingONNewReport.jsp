@@ -21,7 +21,7 @@
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+	String user_no = (String) session.getAttribute("user");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	boolean isTeamBillingOnly=false; 
 %>
@@ -30,9 +30,6 @@
 </security:oscarSec>
 
 <%    
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
-String user_no = (String) session.getAttribute("user");
-
 
 int nItems=0;
 String strLimit1="0";
@@ -42,15 +39,17 @@ if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit
 String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
 
-<%@ page
-	import="java.util.*, java.sql.*, oscar.login.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.login.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ReportProvider" %>
+<%@ page import="org.oscarehr.common.dao.ReportProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
 
+
+<%
+	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
+%>
 <%
 GregorianCalendar now=new GregorianCalendar(); 
 int curYear = now.get(Calendar.YEAR);
@@ -414,13 +413,14 @@ function calToday(field) {
         	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
           	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no); 
           	// now get all report providers
-          	ResultSet rslocal = isTeamBillingOnly
-				?apptMainBean.queryResults(new String[]{"billingreport", user_no, user_no }, "search_reportteam")
-				:apptMainBean.queryResults("billingreport", "search_reportprovider");
+          	
           	HashSet<String> reporters=new HashSet<String>();
-          	while (rslocal.next()) {
-          		reporters.add(rslocal.getString("provider_no"));
+          	for(Object[] res:reportProviderDao.search_reportprovider("billingreport")) {
+          		ReportProvider rp = (ReportProvider)res[0];
+          		Provider p =  (Provider)res[1];
+          		reporters.add(p.getProviderNo());
           	}
+
       %> 
       <script>
 var _providers = [];
@@ -464,13 +464,15 @@ String specialty_code;
 String billinggroup_no;
 int Count = 0;
 
-ResultSet rslocal = isTeamBillingOnly
-?apptMainBean.queryResults(new String[]{"billingreport", user_no, user_no }, "search_reportteam")
-:apptMainBean.queryResults("billingreport", "search_reportprovider");
-while(rslocal.next()){
-	proFirst = rslocal.getString("first_name");
-	proLast = rslocal.getString("last_name");
-	proOHIP = rslocal.getString("provider_no"); 
+
+for(Object[] res:reportProviderDao.search_reportprovider("billingreport")) {
+	ReportProvider rp = (ReportProvider)res[0];
+	Provider p =  (Provider)res[1];
+	proFirst = p.getFirstName();
+	proLast = p.getLastName();
+	proOHIP = p.getProviderNo();
+
+  
 %>
 			<option value="<%=proOHIP%>"
 				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,
