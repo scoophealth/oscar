@@ -588,7 +588,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
   boolean bMultipleSameDayGroupAppt = false;
   String displayStyle = "display:none";
-  String myGroupNo = (String) session.getAttribute("groupno");
+  String myGroupNo = providerPreference.getMyGroupNo();
 
   if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
 
