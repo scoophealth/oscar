@@ -22,50 +22,34 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.oscarMeasurements.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.MeasurementGroupDao;
+import org.oscarehr.common.model.MeasurementGroup;
+import org.oscarehr.util.SpringUtils;
 
 public class RptGroupNameBeanHandler {
-    
-    Vector groupNameVector = new Vector();
- 
-    public RptGroupNameBeanHandler() {
-        init();
-    }
-    
-    public boolean init() {
-        
-        boolean verdict = true;
-        try {
-            
-            String sql = "SELECT DISTINCT name FROM measurementGroup";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-                RptGroupNameBean groupName = new RptGroupNameBean(rs.getString("name"));
-                groupNameVector.add(groupName);
-            }
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	List<RptGroupNameBean> groupNameVector = new ArrayList<RptGroupNameBean>();
 
-    public Collection getGroupNameVector(){
-        return groupNameVector;
-    }
+	public RptGroupNameBeanHandler() {
+		init();
+	}
+
+	public boolean init() {
+		MeasurementGroupDao dao = SpringUtils.getBean(MeasurementGroupDao.class);
+		for (MeasurementGroup mg : dao.findAll()) {
+			RptGroupNameBean groupName = new RptGroupNameBean(mg.getName());
+			groupNameVector.add(groupName);
+		}
+		return true;
+	}
+
+	public Collection getGroupNameVector() {
+		return groupNameVector;
+	}
 }
