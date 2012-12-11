@@ -44,7 +44,7 @@ import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataRelationshipType;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -92,7 +92,7 @@ public final class PrescriptionMedicationManager {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : prescriptionId=" + prescription.getId());
 
 			try {
-				MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prescription);
+				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prescription);
 				try {
 					Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
 					linkPrescriptionToMedications(myOscarLoggedInInfo, prescription, medicalDataTransfer.getOwningPersonId(), remotePrescriptionId, remoteMedicationIdMap);
@@ -125,7 +125,7 @@ public final class PrescriptionMedicationManager {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : drugId=" + drug.getId());
 
 			try {
-				MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, drug);
+				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, drug);
 				Long remoteMedicationId = null;
 				try {
 					remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
@@ -155,8 +155,8 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	private static MedicalDataTransfer3 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-		MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(myOscarLoggedInInfo, prescription.getDatePrescribed(), prescription.getProviderNo(), prescription.getDemographicId());
+	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+		MedicalDataTransfer4 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer(myOscarLoggedInInfo, prescription.getDatePrescribed(), prescription.getProviderNo(), prescription.getDemographicId());
 		// don't ask me why but prescription are currently changeable in oscar, therefore, they're never completed.
 		medicalDataTransfer.setCompleted(false);
 
@@ -262,8 +262,8 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	private static MedicalDataTransfer3 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-		MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(myOscarLoggedInInfo, drug.getRxDate(), drug.getProviderNo(), drug.getDemographicId());
+	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+		MedicalDataTransfer4 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer(myOscarLoggedInInfo, drug.getRxDate(), drug.getProviderNo(), drug.getDemographicId());
 
 		Document doc = toXml(drug);
 		medicalDataTransfer.setData(XmlUtils.toString(doc, false));

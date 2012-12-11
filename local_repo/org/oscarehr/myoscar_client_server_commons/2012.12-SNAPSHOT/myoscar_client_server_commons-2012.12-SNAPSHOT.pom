@@ -4,7 +4,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>myoscar_client_server_commons</artifactId>
 	<packaging>jar</packaging>
-	<version>2012.11-SNAPSHOT</version>
+	<version>2012.12-SNAPSHOT</version>
 	<name>myoscar_client_server_commons</name>
 	<url>http://www.oscarcanada.org</url>
 
