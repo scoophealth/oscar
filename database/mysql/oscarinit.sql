@@ -190,7 +190,7 @@ CREATE TABLE billinginr (
   demographic_name varchar(60) NOT NULL default '',
   hin varchar(12) default NULL,
   dob varchar(8) default NULL,
-  provider_no int(10) default NULL,
+  provider_no varchar(10) default NULL,
   provider_ohip_no varchar(20) default NULL,
   provider_rma_no varchar(20) default NULL,
   creator varchar(6) default NULL,

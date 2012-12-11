@@ -6037,6 +6037,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(10)  default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(10) default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(6) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(6) default NULL,</ViolationValue>

@@ -21,9 +21,9 @@
 	String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*,java.sql.*,oscar.util.*,oscar.*,oscar.oscarBilling.ca.on.data.*" errorPage="../../../errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbINR.jspf"%>
+
 <%@page import="org.oscarehr.billing.CA.model.BillingInr" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
 <%@page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="oscar.util.ConversionUtils" %>
@@ -55,27 +55,29 @@
 				//////////////////////////////////////////////////////////////////////////////////////  	
 
 				ResultSet rsdemo = null;
-				rsdemo = apptMainBean.queryResults(temp.substring(10), "search_inrbilling_dt_billno");
-				while (rsdemo.next()) {
+				List<Object[]> results = billingInrDao.search_inrbilling_dt_billno(Integer.parseInt(temp.substring(10)));
+				for (Object[] result : results) {
 
-					demono = rsdemo.getString("demographic_no");
-					demo_name = rsdemo.getString("demographic_name");
-					demo_hin = rsdemo.getString("hin") + rsdemo.getString("ver");
-					demo_dob = rsdemo.getString("year_of_birth") + rsdemo.getString("month_of_birth")
-							+ rsdemo.getString("date_of_birth");
-					provider_no = rsdemo.getString("provider_no");
-					provider_ohip_no = rsdemo.getString("provider_ohip_no");
-					provider_rma_no = rsdemo.getString("provider_rma_no");
-					diagnostic_code = rsdemo.getString("diagnostic_code");
-					service_code = rsdemo.getString("service_code");
-					service_desc = rsdemo.getString("service_desc");
-					billing_amount = rsdemo.getString("billing_amount");
-					billing_unit = rsdemo.getString("billing_unit");
+					BillingInr b = (BillingInr)result[0];
+					Demographic d = (Demographic)result[1];
+					
+					demono = d.getDemographicNo().toString();
+					demo_name = b.getDemographicName();
+					demo_hin = d.getHin() + d.getVer();
+					demo_dob = d.getYearOfBirth() +d.getMonthOfBirth() + d.getDateOfBirth();
+					provider_no = String.valueOf(b.getProviderNo());
+					provider_ohip_no = b.getProviderOhipNo();
+					provider_rma_no = b.getProviderRmaNo();
+					diagnostic_code = b.getDiagnosticCode();
+					service_code = b.getServiceCode();
+					service_desc = b.getServiceDesc();
+					billing_amount = b.getBillingAmount();
+					billing_unit = b.getBillingUnit();
 
-					String hcType = rsdemo.getString("hc_type");
-					String sex = rsdemo.getString("sex");
-					String last_name = rsdemo.getString("last_name");
-					String first_name = rsdemo.getString("first_name");
+					String hcType = d.getHcType();
+					String sex = d.getSex();
+					String last_name = d.getLastName();
+					String first_name = d.getFirstName();
 
 					String[] param = new String[23];
 					param[0] = clinic_no;
@@ -106,8 +108,8 @@
 
 					claim1Header.setTransc_id(BillingDataHlp.CLAIMHEADER1_TRANSACTIONIDENTIFIER);
 					claim1Header.setRec_id(BillingDataHlp.CLAIMHEADER1_REORDIDENTIFICATION);
-					claim1Header.setHin(rsdemo.getString("hin"));
-					claim1Header.setVer(rsdemo.getString("ver"));
+					claim1Header.setHin(d.getHin());
+					claim1Header.setVer(d.getVer());
 					claim1Header.setDob(demo_dob);
 					// acc_num - billing no
 					String payProg = hcType.equals("ON") ? "HCP" : "RMB";

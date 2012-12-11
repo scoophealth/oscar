@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.billing.CA.ON.dao.BillingONDiskNameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONFilenameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONHeaderDao;
@@ -46,7 +45,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.util.UtilDateUtilities;
 
 public class JdbcBillingClaimImpl {
-	private static final Logger _logger = Logger.getLogger(JdbcBillingClaimImpl.class);
 	
 	private BillingONHeaderDao dao = SpringUtils.getBean(BillingONHeaderDao.class);
 	private BillingONCHeader1Dao cheaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
