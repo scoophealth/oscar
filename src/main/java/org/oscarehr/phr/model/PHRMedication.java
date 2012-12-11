@@ -25,10 +25,8 @@
 
 package org.oscarehr.phr.model;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -41,7 +39,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.indivo.IndivoException;
@@ -63,13 +60,10 @@ import org.indivo.xml.phr.types.DurationType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Drug;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.XmlUtils;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -81,9 +75,6 @@ import oscar.oscarRx.util.RxUtil;
 public class PHRMedication extends PHRDocument {
 	private static Logger logger = MiscUtils.getLogger();
 
-	/** Don't make this static, remember sdf's are note thread safe. */
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
 	/** Creates a new instance of PHRMessage */
 	public PHRMedication() {
 		// super();
@@ -94,7 +85,7 @@ public class PHRMedication extends PHRDocument {
 		parseDocument(doc, providerNo);
 	}
 
-	public PHRMedication(MedicalDataTransfer3 medicalDataTransfer, Integer demoId, Long receiverMyOscarUserId, String providerNo) throws Exception {
+	public PHRMedication(MedicalDataTransfer4 medicalDataTransfer, Integer demoId, Long receiverMyOscarUserId, String providerNo) {
 		setReceiverInfo(demoId, receiverMyOscarUserId);
 		parseDocument(medicalDataTransfer, providerNo);
 	}
@@ -149,14 +140,12 @@ public class PHRMedication extends PHRDocument {
 		this.setDateExchanged(new Date());
 	}
 
-	private void parseDocument(MedicalDataTransfer3 medicalDataTransfer, String providerNo) throws Exception {
+	private void parseDocument(MedicalDataTransfer4 medicalDataTransfer, String providerNo) {
 		logger.debug("------------------start parseDocument----------------------");
 
 		if (medicalDataTransfer.getDateOfData() != null) setDateSent(medicalDataTransfer.getDateOfData().getTime());
 
 		setPhrIndex(medicalDataTransfer.getId().toString());
-
-		createDrugFromMedicalDataTransfer(providerNo, medicalDataTransfer);
 
 		setPhrClassification(MedicalDataType.MEDICATION.name());
 		setReceiverType(TYPE_DEMOGRAPHIC);
@@ -191,8 +180,6 @@ public class PHRMedication extends PHRDocument {
 	private IndivoDocumentType getPhrMedicationDocument(EctProviderData.Provider prov, RxPrescriptionData.Prescription drug) throws JAXBException, IndivoException {
 		String providerFullName = prov.getFirstName() + " " + prov.getSurname();
 		MedicationType medType = createPhrMedication(prov, drug);
-		org.indivo.xml.phr.DocumentGenerator generator = new org.indivo.xml.phr.DocumentGenerator();
-		org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
 		org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
 		Medication med = medFactory.createMedication(medType);
 
@@ -333,152 +320,6 @@ public class PHRMedication extends PHRDocument {
 
 		if (med.getInstructions() != null) drug.setSpecial(med.getInstructions().replace("<pre>", "").replace("</pre>", "").trim());
 		else drug.setSpecial("");
-	}
-
-	public void createDrugFromMedicalDataTransfer(String providerNo, MedicalDataTransfer3 medicalDataTransfer) throws IOException, SAXException, ParserConfigurationException {
-		Document doc = XmlUtils.toDocument(medicalDataTransfer.getData());
-//		XmlMapWrapper docAsMap = new XmlMapWrapper(doc);
-//
-//		String tempString;
-//		Node tempNode = null;
-//
-//		drug = new Drug();
-//
-//		drug.setHideFromDrugProfile(docAsMap.getBooleanValue("HideFromDrugProfile"));
-//		drug.setProviderNo(providerNo);
-//
-//		if (this.getReceiverOscar() != null) drug.setDemographicId(Integer.parseInt(this.getReceiverOscar()));
-//		else drug.setDemographicId(0);
-//
-//		tempNode = docAsMap.getNode("PrescriptionDuration");
-//		if (tempNode != null) {
-//			tempString = XmlUtils.getChildNodeTextContents(tempNode, "StartDate");
-//			if (tempString != null) {
-//				try {
-//					Date date = sdf.parse(tempString);
-//					drug.setRxDate(date);
-//				} catch (ParseException e) {
-//					logger.error("Error parsing date : " + tempString, e);
-//				}
-//			}
-//
-//			tempString = XmlUtils.getChildNodeTextContents(tempNode, "EndDate");
-//			if (tempString != null) {
-//				try {
-//					Date date = sdf.parse(tempString);
-//					drug.setEndDate(date);
-//				} catch (ParseException e) {
-//					logger.error("Error parsing date : " + tempString, e);
-//				}
-//			}
-//		}
-//
-//		drug.setBrandName(docAsMap.getString("BrandName"));
-//		drug.setFreqCode(docAsMap.getString("Frequency"));
-//
-//		tempNode = docAsMap.getNode("DurationUnit");
-//		if (tempNode != null) {
-//			tempString = XmlUtils.getChildNodeTextContents(tempNode, "Code");
-//			drug.setDurUnit(tempString);
-//		}
-//
-//		tempString = docAsMap.getString("Duration");
-//		if (tempNode != null) {
-//			if (drug.getDurUnit() != null) {
-//				tempString = tempString.replace(drug.getDurUnit(), "").trim();
-//			} else {
-//				drug.setDuration(tempString.trim());
-//			}
-//		}
-//
-//		drug.setQuantity(docAsMap.getString("Quantity"));
-//
-//		for (Node node : docAsMap.getChildNodes("RefillHistory")) {
-//			tempString = XmlUtils.getChildNodeTextContents(node, "FillDate");
-//			try {
-//				Date date = sdf.parse(tempString);
-//
-//				Date drugDate = drug.getLastRefillDate();
-//				if (date.after(drugDate)) drug.setLastRefillDate(date);
-//			} catch (ParseException e) {
-//				logger.error("Error parsing date : " + tempString, e);
-//			}
-//		}
-//
-//		drug.setPrn(docAsMap.getBooleanValue("Prn"));
-//		drug.setSpecialInstruction(docAsMap.getString("SpecialInstruction"));
-//		drug.setArchived(docAsMap.getBooleanValue("Archived"));
-//		drug.setGenericName(docAsMap.getString("GenericName"));
-//
-//		for (Node node : docAsMap.getChildNodes("Code")) {
-//			String cs = XmlUtils.getChildNodeTextContents(node, "Code");
-//			Node sys = XmlUtils.getChildNode(node, "CodingSystem");
-//			if (cs != null && sys != null) {
-//				String shortDesc = XmlUtils.getChildNodeTextContents(sys, "ShortDescription");
-//				if (PHRDocument.CODE_ATC.equals(shortDesc)) {
-//					drug.setAtc(cs);
-//				} else if (PHRDocument.CODE_GCN_SEQNO.equals(shortDesc)) {
-//					drug.setGcnSeqNo(Integer.parseInt(cs));
-//				} else if (PHRDocument.CODE_REGIONALIDENTIFIER.equals(shortDesc)) {
-//					drug.setRegionalIdentifier(cs);
-//				}
-//			}
-//		}
-//
-//        drug.setScriptNo(docAsMap.getInteger("ScriptNo"));
-//		drug.setMethod(docAsMap.getString("Method"));
-//		
-//		tempNode=docAsMap.getNode("Route");
-//		if (tempNode != null) drug.setRoute(XmlUtils.getChildNodeTextContents(tempNode, "Code"));
-//		
-//		drug.setDrugForm(docAsMap.getString("DrugForm"));		
-//		drug.setCreateDate(medicalDataTransfer.getDateOfData().getTime());
-//		drug.setUnitName(docAsMap.getString("UnitNameOscar"));
-//		drug.setLongTerm(docAsMap.getBooleanValue("LongTerm"));
-//		drug.setCustomNote(docAsMap.getBooleanValue("CustomNote"));
-//		drug.setPastMed(docAsMap.getBooleanValue("PastMed"));
-//		drug.setPatientCompliance(docAsMap.getBooleanValue("PatientCompliance"));
-//        drug.setWrittenDate(docAsMap.getDate("WrittenDate"));
-//		drug.setOutsideProviderName(medicalDataTransfer.getObserverOfDataPersonName());
-//		drug.setArchivedReason(docAsMap.getString("ArchivedReason"));
-//		drug.setArchivedDate(docAsMap.getDate("ArchivedDate"));
-//
-//		String dose = docAsMap.getString("Dose");
-//		Node doseUnit = docAsMap.getNode("DoseUnit");
-//		if (dose != null) {
-//			if (doseUnit != null) {
-//				String doUnit = XmlUtils.getChildNodeTextContents(doseUnit, "Code");
-//				if (doUnit != null) {
-//					drug.setDosage(dose.replace(doUnit, ""));
-//					drug.setUnit(doUnit);
-//				} else {
-//					drug.setDosage(dose);
-//				}
-//			} else {
-//				drug.setDosage(dose);
-//			}
-//		}
-//
-//		Float tempFloat=docAsMap.getFloat("TakeMin");
-//		if (tempFloat != null) drug.setTakeMin(tempFloat);		
-//		
-//		tempFloat=docAsMap.getFloat("TakeMax");
-//		if (tempFloat != null) drug.setTakeMax(tempFloat);
-//
-//		drug.setNoSubs(docAsMap.getBooleanValue("SubstitutionPermitted"));
-//		
-//		Integer tempInt=docAsMap.getInteger("Refills");
-//		if (tempInt != null) drug.setRepeat(tempInt);
-//
-//		drug.setCustomInstructions(docAsMap.getBooleanValue("CustomInstructions"));
-//		drug.setCustomName(docAsMap.getString("CustomName"));
-//
-//		tempString=docAsMap.getString("Instructions");
-//		if (tempString!=null)
-//		{
-//			tempString=tempString.replace("<pre>", "").replace("</pre>", "").trim();
-//			drug.setSpecial(tempString);
-//		}
 	}
 
 	private MedicationType createPhrMedication2(EctProviderData.Provider prov, Drug drug) {

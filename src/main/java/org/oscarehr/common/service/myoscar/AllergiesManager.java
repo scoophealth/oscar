@@ -39,7 +39,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -69,7 +69,7 @@ public final class AllergiesManager {
 			logger.debug("sendAllergiesToMyOscar : allergyId=" + allergy.getId());
 
 			try {
-				MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, allergy);
+				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, allergy);
 				try {
 					MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_ALLERGIES_DATA_TYPE, allergy.getId());
 				} catch (ItemAlreadyExistsException_Exception e) {
@@ -155,7 +155,7 @@ public final class AllergiesManager {
 	/**
 	 * This method may return null for invalid allergy entries... we have some of those, specifically when no provider can be identified to be responsible for this send.
 	 */
-	private static MedicalDataTransfer3 toMedicalDataTransfer(MyOscarLoggedInInfo  myOscarLoggedInInfo, Allergy allergy) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo  myOscarLoggedInInfo, Allergy allergy) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 
 		// okay big anomaly here, some records do not have providers numbers. This is really invalid data.
 		// Our attempt will be to check for a provider number, if none exists, we'll try to use the person who is sending - if it's a person
@@ -171,7 +171,7 @@ public final class AllergiesManager {
 		}
 
 		if (providerNo != null) {
-			MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(myOscarLoggedInInfo, allergy.getEntryDate(), providerNo, allergy.getDemographicNo());
+			MedicalDataTransfer4 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer(myOscarLoggedInInfo, allergy.getEntryDate(), providerNo, allergy.getDemographicNo());
 			// don't ask me why but allergies are currently changeable in oscar, therefore, they're never completed.
 			medicalDataTransfer.setCompleted(false);
 
