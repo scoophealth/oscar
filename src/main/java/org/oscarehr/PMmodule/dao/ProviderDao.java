@@ -49,6 +49,9 @@ import oscar.OscarProperties;
 import com.quatro.model.security.SecProvider;
 
 public class ProviderDao extends HibernateDaoSupport {
+	
+	public static final String PR_TYPE_DOCTOR = "doctor";
+	
 	private static Logger log = MiscUtils.getLogger();
 
 	public boolean providerExists(String providerNo) {

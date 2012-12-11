@@ -43,7 +43,8 @@ public class ConsultationRequestDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("consultationRequests","professionalSpecialists","consultationServices");
+		SchemaUtils.restoreTable("consultationRequests","professionalSpecialists","consultationServices", "demographic", "lst_gender", "admission", "demographic_merged", "program", 
+				"health_safety", "provider", "providersite", "site", "program_team","log", "Facility");
 	}
 
 	@Test
@@ -80,4 +81,9 @@ public class ConsultationRequestDaoTest extends DaoTestFixtures {
 		assertTrue(crs.size() == 1);
 	}
 
+    @Test
+    public void testFindRequestsByDemoNo() {
+	    assertNotNull(dao.findRequestsByDemoNo(100, new Date()));
+    }
+	
 }

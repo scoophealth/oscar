@@ -25,14 +25,37 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Document;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
+@SuppressWarnings("unchecked")
 public class DocumentDao extends AbstractDao<Document> {
 
+	public enum Module {DEMOGRAPHIC}
+	
+	public enum DocumentType {CONSULT}
+	
 	public DocumentDao() {
 		super(Document.class);
 	}
+
+    public List<Object[]> getCtlDocsAndDocsByDemoId(Integer demoId, Module moduleName, DocumentType docType) {
+		String sql = "FROM CtlDocument c, Document d " +
+				"WHERE c.id.module = :moduleName " +
+				"AND c.id.documentNo = d.documentNo " +
+				"AND d.doctype = :docType " +
+				"AND c.moduleId = :demoNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("moduleName", moduleName.name().toLowerCase());
+		query.setParameter("docType", docType.name().toLowerCase());
+		query.setParameter("demoNo", demoId);
+		return query.getResultList();
+	    
+    }
 }
