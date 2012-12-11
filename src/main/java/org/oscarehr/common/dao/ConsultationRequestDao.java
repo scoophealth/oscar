@@ -32,6 +32,7 @@ import javax.persistence.Query;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.common.model.ConsultationRequest;
 
+@SuppressWarnings("unchecked")
 public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 
 	public ConsultationRequestDao() {
@@ -59,12 +60,12 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr, Demographic d, Provider p where d.DemographicNo = cr.demographicId and p.ProviderNo = cr.providerNo and cr.demographicId = ?1");
             Query query = entityManager.createQuery(sql.toString());
             query.setParameter(1, demoNo);
-            @SuppressWarnings("unchecked")
+            
             List<ConsultationRequest> results = query.getResultList();
             return results;
         }
 
-        @SuppressWarnings("unchecked")
+        
         public List<ConsultationRequest> getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate) {
             StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices service, Demographic d left outer join d.provider p where d.DemographicNo = cr.demographicId and service.id = cr.serviceId ");
 
@@ -128,7 +129,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
         	query.setParameter(1,demographicNo);
         	query.setParameter(2,status);
 
-        	@SuppressWarnings("unchecked")
+        	
             List<ConsultationRequest> results = query.getResultList();
         	return results;
         }
@@ -137,11 +138,35 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             return this.find(requestId);
         }
 
-		@SuppressWarnings("unchecked")
+		
         public List<ConsultationRequest> getReferrals(String providerId, Date cutoffDate) {
 			Query query = createQuery("cr", "cr.referralDate <= :cutoff AND cr.status = '1' and cr.providerNo = :providerNo");
 			query.setParameter("cutoff", cutoffDate);
 			query.setParameter("providerNo", providerId);
+			return query.getResultList();
+        }
+
+		public List<Object[]> findRequests(Date timeLimit, String providerNo) {
+			StringBuilder sql = new StringBuilder("SELECT DISTINCT d.LastName, c.demographicId FROM ConsultationRequest c, Demographic d " +
+					"WHERE c.referralDate >= :timeLimit " +
+					"AND c.demographicId = d.DemographicNo");
+            if (providerNo != null){
+               sql.append(" AND d.ProviderNo = :providerNo ");
+            }
+            sql.append(" ORDER BY d.LastName");
+            
+			Query query = entityManager.createQuery(sql.toString());
+			query.setParameter("timeLimit", timeLimit);
+			if (providerNo != null) {
+				query.setParameter("providerNo", providerNo);
+			}
+			return query.getResultList();
+        }
+
+		public List<ConsultationRequest> findRequestsByDemoNo(Integer demoId, Date cutoffDate) {
+	        Query query = createQuery("cr", "cr.referralDate <= :cutoff AND cr.demographicId = :demoId");
+			query.setParameter("cutoff", cutoffDate);
+			query.setParameter("demoId", demoId);
 			return query.getResultList();
         }
 }
