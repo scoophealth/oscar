@@ -24,6 +24,7 @@
 package oscar.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -31,7 +32,6 @@ import java.util.Vector;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.SecObjPrivilegeDao;
 import org.oscarehr.common.model.SecObjPrivilege;
 import org.oscarehr.util.MiscUtils;
@@ -39,55 +39,28 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import oscar.oscarDB.DBHandler;
-
 public class OscarRoleObjectPrivilege {
 
-	private static Logger logger=MiscUtils.getLogger();
-	
 	private static PageContext pageContext;
 	private static String rights = "r";
 
-	public static Vector getPrivilegeProp(String objName) {
-		Vector ret = new Vector();
-		try {
+	public static Vector<Object> getPrivilegeProp(String objName) {
+		Properties prop = new Properties();
+		Vector<String> roleInObj = new Vector<String>();
+		ArrayList<String> priority = new ArrayList<String>();
 
-			java.sql.ResultSet rs;
-			String[] objectNames = getVecObjectName(objName);
-			StringBuilder objectWhere = new StringBuilder();
-			for (int i = 0; i < objectNames.length; i++) {
-				if (i < (objectNames.length - 1)) {
-					objectWhere.append(" objectName = '" + objectNames[i] + "' or ");
-				} else {
-					objectWhere.append(" objectName = '" + objectNames[i] + "'  ");
-				}
-			}
-
-			
-			String sql = "select roleUserGroup,privilege,priority from secObjPrivilege where " + objectWhere.toString() + " order by priority desc";
-			
-			// this sql looks nasty, OR statements are inherently poor performance items...
-			logger.debug("getPrivilegeProp() sql="+sql);
-
-			rs = DBHandler.GetSQL(sql);
-			Properties prop = new Properties();
-			Vector roleInObj = new Vector();
-			ArrayList<String> priority = new ArrayList<String>();
-			while (rs.next()) {
-				prop.setProperty(oscar.Misc.getString(rs, "roleUserGroup"), oscar.Misc.getString(rs, "privilege"));
-				roleInObj.add(oscar.Misc.getString(rs, "roleUserGroup"));
-				priority.add(oscar.Misc.getString(rs, "priority"));
-			}
-			ret.add(prop);
-			ret.add(roleInObj);
-			ret.add(priority);
-
-			rs.close();
-		} catch (java.sql.SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+		String[] objectNames = getVecObjectName(objName);
+		SecObjPrivilegeDao dao = SpringUtils.getBean(SecObjPrivilegeDao.class);
+		for (SecObjPrivilege s : dao.findByObjectNames(Arrays.asList(objectNames))) {
+			prop.setProperty(s.getId().getRoleUserGroup(), s.getPrivilege());
+			roleInObj.add(s.getId().getRoleUserGroup());
+			priority.add("" + s.getPriority());
 		}
 
-		
+		Vector<Object> ret = new Vector<Object>();
+		ret.add(prop);
+		ret.add(roleInObj);
+		ret.add(priority);
 		return ret;
 	}
 
@@ -136,13 +109,13 @@ public class OscarRoleObjectPrivilege {
 	private static ArrayList<String> getPrivilege(String privilege) {
 		ArrayList<String> vec = new ArrayList<String>();
 		if (privilege != null) {
-		String[] temp = privilege.split("\\|");
-		for (int i = 0; i < temp.length; i++) {
+			String[] temp = privilege.split("\\|");
+			for (int i = 0; i < temp.length; i++) {
 				temp[i] = StringUtils.trimToNull(temp[i]);
 				if (temp[i] == null) continue;
-			vec.add(temp[i]);
+				vec.add(temp[i]);
+			}
 		}
-	}
 
 		return vec;
 	}
@@ -188,7 +161,7 @@ public class OscarRoleObjectPrivilege {
 					return check[0];
 				}
 			}
-			if (priority!=null && priority.get(i)!=null) {
+			if (priority != null && priority.get(i) != null) {
 				// Since higher priority goes first in the list, if priority>0 we can skip the rest
 				if (!priority.get(i).trim().equals("") && !priority.get(i).trim().equals("0")) break;
 			}
