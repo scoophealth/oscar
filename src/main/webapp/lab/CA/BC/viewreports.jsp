@@ -23,11 +23,12 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.util.Date"%>
+<%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.billing.CA.BC.dao.Hl7LinkDao" %>
 <%@page import="org.oscarehr.billing.CA.BC.model.Hl7Link" %>
 <%
-
 	Hl7LinkDao linkDao = SpringUtils.getBean(Hl7LinkDao.class);
 
     String demo_no = request.getParameter("demo_no"),
@@ -43,10 +44,9 @@
 		out.println("<script language=\"JavaScript\">javascript:window.close();</SCRIPT>");
 		return;
 	}
-	String select_lab_reports = "SELECT DISTINCT hl7_link.pid_id, hl7_obr.requested_date_time, hl7_obr.diagnostic_service_sect_id FROM hl7_link, hl7_obr WHERE hl7_link.demographic_no='@demo_no' AND hl7_link.pid_id=hl7_obr.pid_id AND (hl7_link.status='N' OR hl7_link.status='A' OR hl7_link.status='S') ORDER BY hl7_obr.requested_date_time DESC";
 %>
 
-<%@page import="oscar.oscarDB.DBHandler"%><html>
+<html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR PathNET - View Lab Reports</title>
@@ -74,31 +74,31 @@ function PopupLab(pid)
 <form action="viewreports.jsp" method="post">
 <table width="100%">
 	<%
-	java.sql.ResultSet rs = DBHandler.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));
-	if(rs.isBeforeFirst()){
 		String dpid = "",
 		diagnostic = "";
 		java.text.SimpleDateFormat format = null;
 		java.util.Date date = null;
 		boolean other = false;
-		while(rs.next()){
+		for(Object[] o : linkDao.findLinksAndRequestDates(ConversionUtils.fromIntString(demo_no))) {
+			Integer linkId = (Integer) o[0];
+			Date obrRequestedDateTime = (Date) o[1];
+			String obrDiagnosticServiceSectId = (String) o[2];
+			
 			format = new java.text.SimpleDateFormat("yyyy-MM-d HH:mm:ss");
-			date = (format.parse(oscar.Misc.getString(rs,"requested_date_time")));
+			date = obrRequestedDateTime;
 			format.applyPattern("MMM d, yyyy");
-			if(dpid.equals(oscar.Misc.getString(rs,"pid_id"))){
-				diagnostic += ", " + oscar.Misc.getString(rs,"diagnostic_service_sect_id");
-			}else{
+			if(dpid.equals(linkId.toString())){
+				diagnostic += ", " + obrDiagnosticServiceSectId;
+			} else {
 				if(!dpid.equals("")){
 					out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");
 				}
-				dpid = oscar.Misc.getString(rs,"pid_id");
-				diagnostic = oscar.Misc.getString(rs,"diagnostic_service_sect_id");
+				dpid = "" + linkId;
+				diagnostic = "" + obrDiagnosticServiceSectId;
 				other = !other;
 			}
 		}
-		out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");
-		rs.close();
-	}
+		out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");	
 %>
 </table>
 </form>
