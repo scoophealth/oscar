@@ -9,7 +9,7 @@
 
 --%>
 <%@page contentType="text/html"%>
-	<%@page import="java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, org.oscarehr.common.dao.DemographicDao, 
+	<%@page import="java.util.*,org.oscarehr.common.dao.DemographicDao, 
 		org.oscarehr.common.model.Demographic, org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.Provider,
 		org.oscarehr.olis.dao.OLISRequestNomenclatureDao, org.oscarehr.olis.dao.OLISResultNomenclatureDao,
 		org.oscarehr.olis.model.OLISRequestNomenclature, org.oscarehr.olis.model.OLISResultNomenclature, org.oscarehr.util.SpringUtils" %>
