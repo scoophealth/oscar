@@ -396,4 +396,19 @@ public class BillingDao extends AbstractDao<Billing> {
         return q.getResultList();
     }
 
+	public Integer search_billing_no_by_appt(int demographicNo, int appointmentNo) {
+		Query q = entityManager.createQuery("select x from Billing x where x.demographicNo=? and x.appointmentNo = ? and x.status <> ? order by x.updateDate desc, x.updateTime desc");
+		q.setParameter(1, demographicNo);
+		q.setParameter(2, appointmentNo);
+		q.setParameter(3, "D");
+		
+		@SuppressWarnings("unchecked")
+		List<Billing> results = q.getResultList();
+		
+		if(results.size()>0)
+			return results.get(0).getId();
+		
+		return null;
+	}
+	
 }

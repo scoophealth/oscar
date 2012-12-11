@@ -18,19 +18,25 @@
 
 --%>
 <%
-if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
-String user_no="";
-user_no = (String) session.getAttribute("user");
+String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page import="java.util.*, java.sql.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, java.net.*" %>
 <%@ include file="../../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillingInr" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
+<%
+	ProviderDao providerDao= SpringUtils.getBean(ProviderDao.class);
+	BillingInrDao billingInrDao = SpringUtils.getBean(BillingInrDao.class);
+
+%>
+
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 
-<%@ include file="dbINR.jspf"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
@@ -123,16 +129,16 @@ String billinggroup_no;
 ArrayList providerArray = new ArrayList();
 String[] providerArr = new String[2];
            int Count = 0;
-        ResultSet rslocal;
-        rslocal = null;
- rslocal = apptMainBean.queryResults("%", "search_provider_dt");
- while(rslocal.next()){
- proFirst = rslocal.getString("first_name");
- proLast = rslocal.getString("last_name");
+           
+
+for(Provider p:providerDao.getActiveProviders()) {
+	if(p.getOhipNo() == null || p.getOhipNo().isEmpty())
+		continue;
+	
+ proFirst = p.getFirstName();
+ proLast = p.getLastName();
 proName = proFirst + " " + proLast;
- proOHIP = rslocal.getString("provider_no");
-// billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-// specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+ proOHIP = p.getProviderNo();
 
 providerArr[0] = proOHIP;
 providerArr[1] = proName;
@@ -197,33 +203,30 @@ providerArray.add(providerArr);
 
    //  for (int i=0;i<providerArray.size(); i++){
 
+	   for(BillingInr b:billingInrDao.findCurrentByProviderNo("%")) {
 
-     ResultSet rsdemo = null;
-      rsdemo = apptMainBean.queryResults( "%", "search_inrbilling_dt");
-      while(rsdemo.next()){
+      billinginr_no = b.getId().toString();
+      demono = String.valueOf(b.getDemographicNo());
+      demo_name = b.getDemographicName();
+      demo_hin = b.getHin();
+      demo_dob = b.getDob();
+      provider_no = b.getProviderNo();
 
-      billinginr_no = rsdemo.getString("billinginr_no");
-      demono = rsdemo.getString("demographic_no");
-      demo_name = rsdemo.getString("demographic_name");
-      demo_hin = rsdemo.getString("hin");
-      demo_dob = rsdemo.getString("dob");
-      provider_no = rsdemo.getString("provider_no");
-
-              rslocal = null;
-       rslocal = apptMainBean.queryResults(provider_no, "search_provider_name");
-       while(rslocal.next()){
-       proFirst = rslocal.getString("first_name");
-       proLast = rslocal.getString("last_name");
-proName1 = proFirst + " " + proLast;
-}
-      provider_ohip_no = rsdemo.getString("provider_ohip_no");
-      provider_rma_no = rsdemo.getString("provider_rma_no");
-      diagnostic_code = rsdemo.getString("diagnostic_code");
-      service_code = rsdemo.getString("service_code");
-      billing_amount = rsdemo.getString("billing_amount");
-      billing_unit = rsdemo.getString("billing_unit");
-      billdate = rsdemo.getString("createdatetime");
-      billstatus = rsdemo.getString("status");
+      Provider p = providerDao.getProvider(provider_no);
+      if(p != null) {
+    	  proFirst = p.getFirstName();
+    	  proLast = p.getLastName();
+    	  proName1 = proFirst + " " + proLast;
+      }
+       
+      provider_ohip_no = b.getProviderOhipNo();
+      provider_rma_no = b.getProviderRmaNo();
+      diagnostic_code = b.getDiagnosticCode();
+      service_code = b.getServiceCode();
+      billing_amount = b.getBillingAmount();
+      billing_unit = b.getBillingUnit();
+      billdate = ConversionUtils.toDateString(b.getCreateDateTime());
+      billstatus = b.getStatus();
       if (colorCount == 0){
     	      colorCount = 1;
     	      color = "#FFFFFF";
@@ -250,32 +253,32 @@ proName1 = proFirst + " " + proLast;
 			<%}
   } else{
 
-  	//String[] billArray = (String[])providerArray.get(i);
-       ResultSet rsdemo = null;
-        rsdemo = apptMainBean.queryResults(providerview, "search_inrbilling_dt");
-        while(rsdemo.next()){
+	  for(BillingInr b:billingInrDao.findCurrentByProviderNo(providerview)) {
+      
+		     billinginr_no = b.getId().toString();
+		      demono = String.valueOf(b.getDemographicNo());
+		      demo_name = b.getDemographicName();
+		      demo_hin = b.getHin();
+		      demo_dob = b.getDob();
+		      provider_no = b.getProviderNo();
 
-        billinginr_no = rsdemo.getString("billinginr_no");
-        demono = rsdemo.getString("demographic_no");
-        demo_name = rsdemo.getString("demographic_name");
-        demo_hin = rsdemo.getString("hin");
-        demo_dob = rsdemo.getString("dob");
-        provider_no = rsdemo.getString("provider_no");
-                      rslocal = null;
-	       rslocal = apptMainBean.queryResults(provider_no, "search_provider_name");
-	       while(rslocal.next()){
-	       proFirst = rslocal.getString("first_name");
-	       proLast = rslocal.getString("last_name");
-	proName1 = proFirst + " " + proLast;
-}
-        provider_ohip_no = rsdemo.getString("provider_ohip_no");
-        provider_rma_no = rsdemo.getString("provider_rma_no");
-        diagnostic_code = rsdemo.getString("diagnostic_code");
-        service_code = rsdemo.getString("service_code");
-        billing_amount = rsdemo.getString("billing_amount");
-        billing_unit = rsdemo.getString("billing_unit");
-          billdate = rsdemo.getString("createdatetime");
-      billstatus = rsdemo.getString("status");
+		      Provider p = providerDao.getProvider(provider_no);
+		      if(p != null) {
+		    	  proFirst = p.getFirstName();
+		    	  proLast = p.getLastName();
+		    	  proName1 = proFirst + " " + proLast;
+		      }
+		       
+		      provider_ohip_no = b.getProviderOhipNo();
+		      provider_rma_no = b.getProviderRmaNo();
+		      diagnostic_code = b.getDiagnosticCode();
+		      service_code = b.getServiceCode();
+		      billing_amount = b.getBillingAmount();
+		      billing_unit = b.getBillingUnit();
+		      billdate = ConversionUtils.toDateString(b.getCreateDateTime());
+		      billstatus = b.getStatus();
+		      
+       
         if (colorCount == 0){
       	      colorCount = 1;
       	      color = "#FFFFFF";

@@ -17,15 +17,16 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%
-if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
-%>
 
 <%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.Provider"%>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbINR.jspf"%>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
+
 
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -37,12 +38,13 @@ String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + St
 
 String proFirst1="", proLast1="", proOHIP1="", proNo="";
 int Count = 0;
-ResultSet rslocal = apptMainBean.queryResults(request.getParameter("creator"), "search_provider_name");
-while(rslocal.next()){
-	proFirst1 = rslocal.getString("first_name");
-	proLast1 = rslocal.getString("last_name");
-	proOHIP1 = rslocal.getString("provider_no");
+Provider p = providerDao.getProvider(request.getParameter("creator"));
+if(p != null) {
+	proFirst1 = p.getFirstName();
+	proLast1 = p.getLastName();
+	proOHIP1 = p.getProviderNo();
 }
+
 %>
 <html>
 <head>
@@ -168,15 +170,14 @@ String proOHIP="";
 String specialty_code; 
 String billinggroup_no;
 
-//   ResultSet rslocal;
-rslocal = apptMainBean.queryResults("%", "search_provider_dt");
-while(rslocal.next()){
-	proFirst = rslocal.getString("first_name");
-	proLast = rslocal.getString("last_name");
-	proOHIP = rslocal.getString("ohip_no"); 
-	//  billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-	// specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-	specialty_code = rslocal.getString("provider_no"); 
+for(Provider prov: providerDao.getActiveProviders()){
+	if(prov.getOhipNo() == null || prov.getOhipNo().isEmpty())
+		continue;
+	
+	proFirst = prov.getFirstName();
+	proLast =prov.getLastName();
+	proOHIP = prov.getOhipNo();
+	specialty_code = prov.getProviderNo();
 %>
 					<option value="<%=proOHIP%>|<%=specialty_code%>"
 						<%=request.getParameter("creator").equals(specialty_code)?"selected":""%>><%=proLast%>,

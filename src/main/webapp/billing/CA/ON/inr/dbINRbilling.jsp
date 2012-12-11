@@ -18,7 +18,6 @@
 
 --%>
 <%
-if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.htm");
 String curUser_no,userfirstname,userlastname;
 curUser_no = (String) session.getAttribute("user");
 userfirstname = (String) session.getAttribute("userfirstname");
@@ -26,8 +25,6 @@ userlastname = (String) session.getAttribute("userlastname");
 %>
 <%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbINR.jspf"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillingInr" %>
 <%@ page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
@@ -63,7 +60,7 @@ bi.setDemographicNo(Integer.parseInt(request.getParameter("demoid").trim()));
 bi.setDemographicName(request.getParameter("demo_name"));
 bi.setHin(request.getParameter("demo_hin"));
 bi.setDob(request.getParameter("demo_dob"));
-bi.setProviderNo(Integer.parseInt(request.getParameter("provider_no")));
+bi.setProviderNo(request.getParameter("provider_no"));
 bi.setProviderOhipNo(request.getParameter("provider_ohip_no"));
 bi.setProviderRmaNo(request.getParameter("provider_rma_no"));
 bi.setCreator(request.getParameter("doccreator"));

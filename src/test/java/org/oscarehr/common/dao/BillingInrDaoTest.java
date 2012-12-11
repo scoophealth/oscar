@@ -32,7 +32,7 @@ import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class BillingInrDaoTest {
+public class BillingInrDaoTest extends DaoTestFixtures {
 
 	protected BillingInrDao dao = SpringUtils.getBean(BillingInrDao.class);
 
@@ -41,7 +41,7 @@ public class BillingInrDaoTest {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billinginr");
+		SchemaUtils.restoreTable("billinginr","demographic","lst_gender","demographic_merged","admission","health_safety","provider","program");
 	}
 
 	@Test
@@ -50,5 +50,10 @@ public class BillingInrDaoTest {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testSearch_inrbilling_dt_billno() {
+		assertNotNull(dao.search_inrbilling_dt_billno(1));
 	}
 }
