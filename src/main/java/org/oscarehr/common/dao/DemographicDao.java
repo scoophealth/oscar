@@ -376,6 +376,9 @@ public class DemographicDao extends HibernateDaoSupport {
 
 		//format must be yyyy-mm-dd
 		String[] params = dobStr.split("-");
+		if(params.length!=3) {
+			return null;
+		}
 		
 		if(params.length != 3)
 			return new ArrayList<Demographic>();
@@ -543,6 +546,20 @@ public class DemographicDao extends HibernateDaoSupport {
 		}finally {
 			this.releaseSession(session);
 		}
+		return list;
+	}
+    
+    public List<Demographic> findDemographicByChartNo(String chartNoStr, int limit, int offset) {
+
+		String queryString = "From Demographic d where d.ChartNo like :chartNo";
+
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(offset);
+		q.setMaxResults(limit);
+
+		q.setParameter("chartNo", chartNoStr.trim() + "%");
+		
+		List list = q.list();
 		return list;
 	}
 
