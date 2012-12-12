@@ -48,6 +48,7 @@ import oscar.util.ConversionUtils;
  * @author jay
  */
 @Repository
+@SuppressWarnings("unchecked")
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class BillingmasterDAO {
 	private static Logger log = MiscUtils.getLogger();
@@ -172,7 +173,7 @@ public class BillingmasterDAO {
 		return query.executeUpdate();
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public WCB getWcbByBillingNo(Integer billing_no) {
 		Query query =  entityManager.createQuery("FROM WCB w WHERE w.billing_no = :billingNo");
 		query.setParameter("billingNo", billing_no);
@@ -184,7 +185,7 @@ public class BillingmasterDAO {
 		return ws.get(0);
     }
 
-	@SuppressWarnings("unchecked")
+	
 	public List<Object[]> findByStatus(String status) {
 		Query query = entityManager.createQuery("FROM Billing b, Billingmaster bm " +
 				"WHERE b.id = bm.billingNo " +
@@ -193,7 +194,7 @@ public class BillingmasterDAO {
 		return query.getResultList();
     }
 
-	@SuppressWarnings("unchecked")
+	
     @NativeSql({"billingmaster", "billing"})
 	public List<Object[]> getBillingMasterByVariousFields(String statusType, String providerNo, String startDate, String endDate) {		
 		String providerQuery = "";
@@ -270,5 +271,31 @@ public class BillingmasterDAO {
 		
 		return results;
 	}
+
+    public List<Billingmaster> findByDemoNoCodeAndStatuses(Integer demoNo, String billingCode, List<String> statuses) {
+		Query query = entityManager.createQuery("FROM Billingmaster bm " +
+				"WHERE bm.demographicNo = :demoNo " +
+				"AND bm.billingCode = :billingCode " +
+				"AND bm.billingstatus NOT IN (:statuses)");
+        query.setParameter("demoNo", demoNo);
+        query.setParameter("billingCode", billingCode);
+        query.setParameter("statuses", statuses);
+        return query.getResultList();
+    }
+
+	public List<Billingmaster> findByDemoNoCodeStatusesAndYear(Integer demoNo, Date date, String billingCode) {
+		String sql = "FROM Billingmaster bm " +
+				"WHERE bm.demographicNo = :demoNo " +
+				"AND bm.billingCode = :billingCode " + 
+				"AND YEAR(bm.serviceDate) = YEAR(:date) " +
+				"AND bm.billingstatus != 'D'";
+
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("date", date);
+		query.setParameter("billingCode", billingCode);		
+		return query.getResultList();
+    }
+
 
 }
