@@ -43,7 +43,7 @@ public class ClientImageDAO extends HibernateDaoSupport {
 	/**
 	 * This is a simple cache for image data because the images are excessively large (relatively speaking). The Integer key is the demographic_no.
 	 */
-	private static final QueueCache<Integer, ClientImage> dataCache=new QueueCache<Integer, ClientImage>(4, 40, DateUtils.MILLIS_PER_HOUR);
+	private static final QueueCache<Integer, ClientImage> dataCache=new QueueCache<Integer, ClientImage>(4, 40, DateUtils.MILLIS_PER_HOUR, null);
 	
 	public void saveClientImage(ClientImage clientImage) {
 		ClientImage existing = getClientImage(clientImage.getDemographic_no());

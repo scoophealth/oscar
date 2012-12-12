@@ -43,9 +43,18 @@ import org.apache.log4j.Logger;
 
 public final class EncryptionUtils
 {
+	private static QueueCacheValueCloner<byte[]> byteArrayCloner = new QueueCacheValueCloner<byte[]>()
+	{
+		@Override
+		public byte[] cloneBean(byte[] original)
+		{
+			return(original.clone());
+		}
+	};
+
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final MessageDigest messageDigest = initMessageDigest();
-	private static final QueueCache<String, byte[]> sha1Cache = new QueueCache<String, byte[]>(4, 2048);
+	private static final QueueCache<String, byte[]> sha1Cache = new QueueCache<String, byte[]>(4, 2048, byteArrayCloner);
 	private static final int MAX_SHA_KEY_CACHE_SIZE = 2048;
 	private static final String MANGLED_SECRET_KEY_SESSION_KEY=EncryptionUtils.class.getName()+".MANGLED_SECRET_KEY";
 
