@@ -31,6 +31,7 @@
 <%@ page import="org.oscarehr.util.SessionConstants"%>
 <%@ page import="java.util.*,java.net.*, oscar.util.*"
 	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.OscarProperties" %>
 
 <caisi:isModuleLoad moduleName="caisi">
 <%
@@ -82,14 +83,33 @@
         int nowYear = now.get(Calendar.YEAR);
         int nowMonth = now.get(Calendar.MONTH)+1 ; //be care for the month +-1
         int nowDay = now.get(Calendar.DAY_OF_MONTH);
+        OscarProperties props = OscarProperties.getInstance();
         String caisiView = null;
         caisiView = request.getParameter("GoToCaisiViewFromOscarView");
+        boolean viewAll_bool = true;  // false, restore original schedule view on appointment screen
+        
+        if (props.getProperty("default_schedule_viewall", "").startsWith("false") )
+            viewAll_bool = false;
+            
         if(caisiView!=null && "true".equals(caisiView)) {
-        	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
-        	return;
+        	if (viewAll_bool){
+	        	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
+	        	return;
+        	}
+        	else{
+	        	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=0");
+	        	return;
+	        }
         }
-        response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
-        return;
+        if (viewAll_bool){
+	        response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
+	        return;
+	    }
+	    else{
+	    	response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=0");
+	        return;
+	    }
+	        
     }
 
     //associate each operation with an output JSP file - displaymode
