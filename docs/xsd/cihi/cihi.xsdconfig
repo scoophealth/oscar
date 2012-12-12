@@ -1,0 +1,11 @@
+<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config">
+
+  <xb:namespace uri="cds">
+    <xb:package>cdscihi</xb:package>
+  </xb:namespace>
+  
+  <xb:namespace uri="cds_dt">
+    <xb:package>cdsDtCihi</xb:package>
+  </xb:namespace>
+
+</xb:config>

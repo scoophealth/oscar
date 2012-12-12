@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 rel. 3 sp2 (http://www.altova.com) by Renato Zoratti (OntarioMD) -->
+<xs:schema xmlns="cds" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cdsd="cds_dt" targetNamespace="cds" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="cds_dt" schemaLocation="ontariomd_cihi_dt.xsd"/>
+	<xs:element name="CiHiCds">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ExtractInformation"/>
+				<xs:element ref="Provider"/>
+				<xs:element ref="PatientRecord" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ExtractInformation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="RunDate" type="cdsd:dateTime"/>
+				<xs:element name="ExtractType" type="cdsd:text15"/>
+				<xs:element name="OrganizationName" type="cdsd:text50"/>
+				<xs:element name="ContactLastName" type="cdsd:text50"/>
+				<xs:element name="ContactFirstName" type="cdsd:text50"/>
+				<xs:element name="ContactPhoneNumber" type="cdsd:text12"/>
+				<xs:element name="ContactEmail" type="cdsd:text50"/>
+				<xs:element name="ContactUserName" type="cdsd:text50"/>
+				<xs:element name="EMRVendorID" type="cdsd:text20"/>
+				<xs:element name="EMRVendorBusinessName" type="cdsd:text100"/>
+				<xs:element name="EMRVendorCommonName" type="cdsd:text50"/>
+				<xs:element name="EMRSoftwareName" type="cdsd:text50"/>
+				<xs:element name="EMRSoftwareCommonName" type="cdsd:text50"/>
+				<xs:element name="EMRSoftwareVersionNumber" type="cdsd:text50"/>
+				<xs:element name="EMRSoftwareVersionDate" type="cdsd:dateYYYYMMDD"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Provider">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="PrimaryPhysicianLastName" type="cdsd:text50"/>
+				<xs:element name="PrimaryPhysicianFirstName" type="cdsd:text50"/>
+				<xs:element name="PrimaryPhysicianCPSO" type="cdsd:text5"/>
+				<xs:element name="HealthcarePractitionerType" type="cdsd:healthcarePractitionerType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PatientRecord">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Demographics"/>
+				<xs:element ref="FamilyHistory" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ProblemList" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Procedure" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="RiskFactors" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="AllergiesAndAdverseReactions" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MedicationsAndTreatments" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Immunizations" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="LaboratoryResults" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Appointments" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="CareElements" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Demographics">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="HealthCard" type="cdsd:healthCard"/>
+				<xs:element name="DateOfBirth" type="cdsd:dateYYYYMMDD"/>
+				<xs:element name="Gender" type="cdsd:gender"/>
+				<xs:element name="PreferredSpokenLanguage" type="cdsd:spokenLanguageCode" minOccurs="0"/>
+				<xs:element name="PersonStatusCode">
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="PersonStatusAsEnum" type="cdsd:personStatus"/>
+							<xs:element name="PersonStatusAsPlainText">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="PersonStatusDate" type="cdsd:dateYYYYMMDD" minOccurs="0"/>
+				<xs:element name="EnrollmentDate" type="cdsd:dateYYYYMMDD" minOccurs="0"/>
+				<xs:element name="EnrollmentTerminationDate" type="cdsd:dateYYYYMMDD" minOccurs="0"/>
+				<xs:element name="PostalAddress" type="cdsd:postalZipCode" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FamilyHistory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="StartDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="AgeAtOnset" type="xs:nonNegativeInteger" minOccurs="0"/>
+				<xs:element name="ProblemDiagnosisProcedureDescription" type="cdsd:text250" minOccurs="0"/>
+				<xs:element name="DiagnosisProcedureCode" type="cdsd:standardCoding" minOccurs="0"/>
+				<xs:element name="Treatment" type="cdsd:text250" minOccurs="0"/>
+				<xs:element name="Relationship" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProblemList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ProblemDiagnosisDescription" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="250"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DiagnosisCode" type="cdsd:standardCoding" minOccurs="0"/>
+				<xs:element name="OnsetDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="ResolutionDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Procedure">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ProcedureInterventionDescription" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="250"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ProcedureCode" type="cdsd:standardCoding" minOccurs="0"/>
+				<xs:element name="ProcedureDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RiskFactors">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="RiskFactor" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="StartDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="EndDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AllergiesAndAdverseReactions">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="OffendingAgentDescription" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="PropertyOfOffendingAgent" type="cdsd:propertyOfOffendingAgent" minOccurs="0"/>
+				<xs:element name="StartDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="Severity" type="cdsd:adverseReactionSeverity" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="MedicationsAndTreatments">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="PrescriptionWrittenDate" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="DrugName" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="Strength" type="cdsd:drugMeasure" minOccurs="0"/>
+				<xs:element name="NumberOfRefills" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="100"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Dosage" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="DosageUnitOfMeasure" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="Form" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="Route" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="Frequency" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="PatientCompliance" type="cdsd:ynIndicatorAndBlank" minOccurs="0"/>
+				<xs:element name="DrugDescription" type="cdsd:text2000" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Immunizations">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ImmunizationName" type="cdsd:text120"/>
+				<xs:element name="LotNumber" type="cdsd:text120" minOccurs="0"/>
+				<xs:element name="Date" type="cdsd:dateFullOrPartial" minOccurs="0"/>
+				<xs:element name="RefusedFlag" type="cdsd:ynIndicator"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LaboratoryResults">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="TestNameReportedByLab" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LabTestCode" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Result" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Value" type="cdsd:text120" minOccurs="0"/>
+							<xs:element name="UnitOfMeasure" type="cdsd:text120" minOccurs="0"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ReferenceRange" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="LowLimit" type="cdsd:text1K" minOccurs="0"/>
+							<xs:element name="HighLimit" type="cdsd:text1K" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="CollectionDateTime" type="cdsd:dateFullOrDateTime"/>
+				<xs:element name="TestResultsInformationReportedByTheLab" type="cdsd:text32K" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Appointments">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="AppointmentDate" type="cdsd:dateFullOrPartial"/>
+				<xs:element name="AppointmentPurpose" type="cdsd:text250" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CareElements">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Weight" type="cdsd:weight" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="Height" type="cdsd:height" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="WaistCircumference" type="cdsd:waistCircumference" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="BloodPressure" type="cdsd:bloodPressure" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
