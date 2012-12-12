@@ -61,4 +61,9 @@ public class Hl7LinkDaoTest extends DaoTestFixtures {
 	public void testFindMagicLinks() {
 		assertNotNull(dao.findMagicLinks());
 	}
+	
+    @Test
+    public void testFindLinksAndRequestDates() {
+	    assertNotNull(dao.findLinksAndRequestDates(100));
+    }
 }

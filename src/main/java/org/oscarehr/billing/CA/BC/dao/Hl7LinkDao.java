@@ -58,4 +58,22 @@ public class Hl7LinkDao extends AbstractDao<Hl7Link>{
     	Query q = entityManager.createQuery(sql);
 		return q.getResultList();
     }
+    
+    public List<Object[]> findLinksAndRequestDates(Integer demoId) {
+    	String sql = "SELECT DISTINCT link.id, obr.requestedDateTime, obr.diagnosticServiceSectId " +
+				"FROM Hl7Link link, Hl7Obr obr " +
+				"WHERE link.demographicNo = :demoId " + 
+				"AND link.id = obr.id " +
+				"AND (" +
+				"	link.status = 'N' " +
+				"	OR link.status = 'A' " +
+				"	OR link.status = 'S'" +
+				") " +
+				"ORDER BY obr.requestedDateTime DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoId", demoId);
+		return query.getResultList();
+	
+    }
+
 }
