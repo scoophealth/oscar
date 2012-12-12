@@ -31,23 +31,22 @@
 <%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*,org.oscarehr.common.model.*"%>
 <%@page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*" %>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.springframework.web.context.support.WebApplicationContextUtils, oscar.entities.*" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-
-
-<%@ include file="dbBilling.jspf"%>
 
 <%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../../logout.htm");
+	BillingmasterDAO billingMasterDao =  SpringUtils.getBean(BillingmasterDAO.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
+<%
 
-
-
-
-
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
+  String curUser_no = (String) session.getAttribute("user");
   String UpdateDate = "";
   String DemoNo = "";
   String DemoName = "";
@@ -79,8 +78,7 @@
   String billRegion = OscarProperties.getInstance().getProperty("billRegion","BC");
   int rowCount = 0;
   int rowReCount = 0;
-  ResultSet rslocation = null;
-  ResultSet rsPatient = null;
+
   ////
   BillingFormData billform = new BillingFormData();
   BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
@@ -111,18 +109,17 @@
   String serviceLocation = allFields.getProperty("service_location");
 
 
-  WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-  BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
+  BillingmasterDAO billingmasterDAO = (BillingmasterDAO) SpringUtils.getBean("BillingmasterDAO");
   Billingmaster billingmaster = billingmasterDAO.getBillingMasterByBillingMasterNo(billNo);
   Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
-  BillingCodeData bcd =  new BillingCodeData();//(BillingCodeData) ctx.getBean("billingCodeData");
+  BillingCodeData bcd =  new BillingCodeData();
 
   //fixes bug where invoice number is null when
   //bill changed to Private
-String[] billNoRow =  oscar.util.SqlUtils.getRow("select billing_no from billingmaster where billingmaster_no = " + billNo);
-if(billNoRow != null && billNoRow.length > 0){
-  request.setAttribute("invoiceNo",billNoRow[0]);
-}
+  Billingmaster bm = billingMasterDao.getBillingmaster(Integer.parseInt(billNo));
+  if(bm != null) {
+	  request.setAttribute("invoiceNo",String.valueOf(bm.getBillingNo()));
+  }
 
 %>
 <html>
@@ -422,26 +419,25 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     visittype = bill.getVisitType();
 
  BillType = allFields.getProperty("billingstatus");
- rsPatient = null;
- rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
- while(rsPatient.next()){
-     DemoName = rsPatient.getString("last_name")+", "+rsPatient.getString("first_name");
-     DemoSex = rsPatient.getString("sex");
-     DemoAddress = rsPatient.getString("address");
-     DemoCity = rsPatient.getString("city");
-     DemoProvince = rsPatient.getString("province");
-     DemoPostal = rsPatient.getString("postal");
-     DemoDOB = MyDateFormat.getStandardDate(Integer.parseInt(rsPatient.getString("year_of_birth")),Integer.parseInt(rsPatient.getString("month_of_birth")),Integer.parseInt(rsPatient.getString("date_of_birth")));
-     hin = rsPatient.getString("hin") + rsPatient.getString("ver");
-     if (rsPatient.getString("family_doctor") == null){ r_doctor = "N/A"; r_doctor_ohip="000000";}else{
-        r_doctor=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd");
-        r_doctor_ohip=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip");
+ Demographic d = demographicDao.getDemographic(DemoNo);
+ if(d != null){
+     DemoName = d.getFormattedName();
+     DemoSex = d.getSex();
+     DemoAddress = d.getAddress();
+     DemoCity = d.getCity();
+     DemoProvince = d.getProvince();
+     DemoPostal = d.getPostal();
+     DemoDOB = MyDateFormat.getStandardDate(Integer.parseInt(d.getYearOfBirth()),Integer.parseInt(d.getMonthOfBirth()),Integer.parseInt(d.getDateOfBirth()));
+     hin = d.getHin() + d.getVer();
+     if (d.getFamilyDoctor() == null){ r_doctor = "N/A"; r_doctor_ohip="000000";}else{
+        r_doctor=SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rd")==null?"":SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rd");
+        r_doctor_ohip=SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rdohip")==null?"":SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rdohip");
      }
 
-     HCTYPE = rsPatient.getString("hc_type")==null?"":rsPatient.getString("hc_type");
+     HCTYPE = d.getHcType()==null?"":d.getHcType();
      if (DemoSex.equals("M")) HCSex = "1";
      if (DemoSex.equals("F")) HCSex = "2";
-     roster_status = rsPatient.getString("roster_status");
+     roster_status = d.getRosterStatus();
  }
 
 %>
@@ -559,20 +555,19 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
         Billing Physician#:
         <select style="font-size:80%;" name="providerNo">
             <option value="">--- Select Provider ---</option>
-            <% ResultSet rslocal = null;
+            <% 
                // Retrieving Provider
                String proFirst="", proLast="", proOHIP="", proNo="";
                int Count = 0;
-               rslocal = null;
-               rslocal = apptMainBean.queryResults("%", "search_provider_dt");
-               while(rslocal.next()){
-                    proFirst = rslocal.getString("first_name");
-                    proLast = rslocal.getString("last_name");
-                    proOHIP = rslocal.getString("provider_no");
+               for(Provider p:providerDao.getActiveProviders()) {
+            	 if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
+                    proFirst = p.getFirstName();
+                    proLast = p.getLastName();
+                    proOHIP = p.getProviderNo();
 
             %>
             <option value="<%=proOHIP%>" <%=Provider.equals(proOHIP)?"selected":""%>> <%=proOHIP%> | <%=proLast%>, <%=proFirst%></option>
-            <% }%>
+            <% } }%>
             <input type="hidden" name="xml_provider_no" value="<%=Provider%>">
     </td>
   </tr>

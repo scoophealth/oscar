@@ -21,7 +21,7 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
+package org.oscarehr.billing.CA.BC.dao;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -30,6 +30,7 @@ import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
@@ -38,13 +39,13 @@ import oscar.entities.Billingmaster;
 import oscar.entities.WCB;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 
-public class BillingmasterDaoTest extends DaoTestFixtures {
+public class BillingmasterDAOTest extends DaoTestFixtures {
 
-	protected BillingmasterDAO dao =  SpringUtils.getBean(BillingmasterDAO.class);
+	public BillingmasterDAO dao =  SpringUtils.getBean(BillingmasterDAO.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billingmaster", "wcb", "billing");
+		SchemaUtils.restoreTable("billingmaster", "wcb", "billing","teleplanC12","demographic");
 	}
 
 	@Test
@@ -98,6 +99,11 @@ public class BillingmasterDaoTest extends DaoTestFixtures {
 		dao.getBillingMasterByVariousFields("ST", "01", null, null);
 		dao.getBillingMasterByVariousFields("ST", "01", "01-01-2011", "01-01-2012");
 		
+	}
+	
+	@Test
+	public void testSelect_user_bill_report_wcb() {
+		assertNotNull(dao.select_user_bill_report_wcb(1));
 	}
 	
 }

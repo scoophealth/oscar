@@ -26,9 +26,6 @@
 
 <%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
 <%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>

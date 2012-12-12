@@ -22,13 +22,15 @@
     EMR System
 
 --%>
-<%
-  	if (session.getAttribute("user") == null){
-		response.sendRedirect("../../logout.jsp");
-	}
-%>
 
-<%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
+<html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR Providers</title>
@@ -63,21 +65,21 @@ function posttoText(index){
 	</tr>
 	<%
 	boolean color = false;
-	java.sql.ResultSet rs = DBHandler.GetSQL("SELECT first_name, last_name, ohip_no  FROM provider WHERE ohip_no<> '' ORDER BY first_name, last_name");
-	while (rs.next())
-	{
+	for(Provider p:providerDao.getActiveProviders()) {
+		if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
+	
 %>
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left"
 		valign="top">
 		<td class="SmallerText"><a href=#
-			onClick="posttoText('<%=oscar.Misc.getString(rs,"ohip_no")%>');"><%=oscar.Misc.getString(rs,"ohip_no")%></a>
+			onClick="posttoText('<%=p.getOhipNo()%>');"><%=p.getOhipNo()%></a>
 		</td>
-		<td class="SmallerText">Dr. <%=oscar.Misc.getString(rs,"first_name")%> <%=oscar.Misc.getString(rs,"last_name")%>
+		<td class="SmallerText">Dr. <%=p.getFirstName()%> <%=p.getLastName()%>
 		</td>
 	</tr>
 	<%
 		color = !(color);
-	}
+	} }
 %>
 	<tr bgcolor="#D4D4D4">
 		<td colspan="5">&nbsp</td>
