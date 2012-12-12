@@ -3,7 +3,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>util</artifactId>
 	<packaging>jar</packaging>
-	<version>2012.11.06</version>
+	<version>2012.12.12</version>
 	<name>util</name>
 	<url>http://www.oscarcanada.org</url>
 
