@@ -32,11 +32,11 @@ import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.OtherId;
 import org.oscarehr.util.SpringUtils;
 
-public class OtherIdDaoTest extends DaoTestFixtures {
+public class OtherIdDAOTest extends DaoTestFixtures {
 
 	protected OtherIdDAO dao = SpringUtils.getBean(OtherIdDAO.class);
 
-	public OtherIdDaoTest() {
+	public OtherIdDAOTest() {
 	}
 
 
