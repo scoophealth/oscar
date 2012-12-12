@@ -24,7 +24,10 @@
 package org.oscarehr.common.dao;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.Query;
 
@@ -302,5 +305,33 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter("sDate", sDate == null ? new Date(Long.MIN_VALUE) : sDate);
 		query.setParameter("eDate", eDate == null ? new Date(Long.MAX_VALUE) : eDate);
 		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findPatientAppointments(String providerNo, Date from, Date to) {
+        StringBuilder sql = new StringBuilder("FROM Demographic d, Appointment a, Provider p " +
+                "WHERE a.demographicNo = d.DemographicNo " +
+                "AND a.providerNo = p.ProviderNo ");
+
+        	Map<String, Object> params = new HashMap<String, Object>();
+        	if(providerNo != null && !providerNo.trim().equals("")){
+		       sql.append("and a.providerNo = :pNo ");
+		       params.put("pNo", providerNo);
+		   }
+        	
+		   if(from != null){
+		       sql.append("AND a.appointmentDate >= :from ");
+		       params.put("from", from);
+		   }if(to != null){
+		       sql.append("AND a.appointmentDate <= :to ");
+		       params.put("to", to);
+		   }
+		   sql.append("ORDER BY a.appointmentDate");
+		   
+		   Query query = entityManager.createQuery(sql.toString());
+		   for(Entry<String, Object> e : params.entrySet()) {
+			   query.setParameter(e.getKey(), e.getValue());
+		   }
+		   return query.getResultList();
 	}
 }
