@@ -23,39 +23,44 @@
     Ontario, Canada
 
 --%>
-<%@ page
-	import="java.sql.*, java.util.*, java.net.URLEncoder, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*, java.net.URLEncoder, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.*"%>
-<%@ page import="org.oscarehr.common.model.DemographicExt" %>
-<%@ page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.apache.commons.lang.StringUtils"%>
+
 <%@ page import="org.oscarehr.common.model.Admission" %>
 <%@ page import="org.oscarehr.common.dao.AdmissionDao" %>
 <%@ page import="org.oscarehr.common.dao.WaitingListDao" %>
+
+<%@ page import="org.oscarehr.common.model.DemographicExt" %>
+<%@ page import="org.oscarehr.common.dao.DemographicExtDao" %>
+
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.DemographicCust" %>
+<%@ page import="org.oscarehr.common.dao.DemographicCustDao" %>
+
+<%@ page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
+<%@ page import="org.oscarehr.PMmodule.model.Program" %>
+
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
-<%
+
+<% 
+	java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
+
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 	WaitingListDao waitingListDao = (WaitingListDao)SpringUtils.getBean("waitingListDao");
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.Demographic" %>
-<%@page import="org.oscarehr.common.dao.DemographicDao" %>
-<%@page import="org.oscarehr.common.model.DemographicCust" %>
-<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
-<%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
-<%@page import="org.oscarehr.PMmodule.model.Program" %>
-
-<%
-	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+
+	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
 %>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -73,8 +78,8 @@
     //-->
 </script>
 </head>
-<body onload="start()" bgproperties="fixed" topmargin="0" leftmargin="0"
-	rightmargin="0">
+
+<body onload="start()" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">
@@ -99,98 +104,94 @@
 
 <%
     String dem = null;
-
+	String year, month, day;
     String curUser_no = (String)session.getAttribute("user");
 
-  //if action is good, then give me the result
-	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
-	  //temp variables for test/set null dates
-	  DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[34];
+	DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[34];
 
-	  String year, month, day;
+	Demographic demographic = new Demographic();
+	demographic.setLastName(request.getParameter("last_name"));
+	demographic.setFirstName(request.getParameter("first_name"));
+	demographic.setAddress(request.getParameter("address"));
+	demographic.setCity(request.getParameter("city"));
+	demographic.setProvince(request.getParameter("province"));
+	demographic.setPostal(request.getParameter("postal"));
+	demographic.setPhone(request.getParameter("phone"));
+	demographic.setPhone2(request.getParameter("phone2"));
+	demographic.setEmail(request.getParameter("email"));
+	demographic.setMyOscarUserName(StringUtils.trimToNull(request.getParameter("myOscarUserName")));
+	demographic.setYearOfBirth(request.getParameter("year_of_birth"));
+	demographic.setMonthOfBirth(request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));
+	demographic.setDateOfBirth(request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));
+	demographic.setHin(request.getParameter("hin"));
+	demographic.setVer(request.getParameter("ver"));
+	demographic.setRosterStatus(request.getParameter("roster_status"));
+	demographic.setPatientStatus(request.getParameter("patient_status"));
+	demographic.setDateJoined(MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date")));
+	demographic.setChartNo(request.getParameter("chart_no"));
+	demographic.setProviderNo(request.getParameter("staff"));
+	demographic.setSex(request.getParameter("sex"));
 
-	  Demographic demographic = new Demographic();
-	  demographic.setLastName(request.getParameter("last_name"));
-	  demographic.setFirstName(request.getParameter("first_name"));
-	  demographic.setAddress(request.getParameter("address"));
-	  demographic.setCity(request.getParameter("city"));
-	  demographic.setProvince(request.getParameter("province"));
-	  demographic.setPostal(request.getParameter("postal"));
-	  demographic.setPhone(request.getParameter("phone"));
-	  demographic.setPhone2(request.getParameter("phone2"));
-	  demographic.setEmail(request.getParameter("email"));
-	  demographic.setMyOscarUserName(StringUtils.trimToNull(request.getParameter("myOscarUserName")));
-	  demographic.setYearOfBirth(request.getParameter("year_of_birth"));
-	  demographic.setMonthOfBirth(request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));
-	  demographic.setDateOfBirth(request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));
-	  demographic.setHin(request.getParameter("hin"));
-	  demographic.setVer(request.getParameter("ver"));
-	  demographic.setRosterStatus(request.getParameter("roster_status"));
-	  demographic.setPatientStatus(request.getParameter("patient_status"));
-	  demographic.setDateJoined(MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date")));
-	  demographic.setChartNo(request.getParameter("chart_no"));
-	  demographic.setProviderNo(request.getParameter("staff"));
-	  demographic.setSex(request.getParameter("sex"));
+	year = StringUtils.trimToNull(request.getParameter("end_date_year"));
+	month = StringUtils.trimToNull(request.getParameter("end_date_month"));
+	day = StringUtils.trimToNull(request.getParameter("end_date_date"));
+	if (year!=null && month!=null && day!=null) {
+	 		demographic.setEndDate(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
+	} else {
+		demographic.setEndDate(null);
+	}
+	
+	year = StringUtils.trimToNull(request.getParameter("eff_date_year"));
+	month = StringUtils.trimToNull(request.getParameter("eff_date_month"));
+	day = StringUtils.trimToNull(request.getParameter("eff_date_date"));
+	if (year!=null && month!=null && day!=null) {
+		demographic.setEffDate(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
+	} else {
+		demographic.setEffDate(null);
+	}
 
-	  year = StringUtils.trimToNull(request.getParameter("end_date_year"));
-	  month = StringUtils.trimToNull(request.getParameter("end_date_month"));
-	  day = StringUtils.trimToNull(request.getParameter("end_date_date"));
-		if (year!=null && month!=null && day!=null) {
-	  		demographic.setEndDate(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
-		} else {
-			demographic.setEndDate(null);
-		}
-
-	    year = StringUtils.trimToNull(request.getParameter("eff_date_year"));
-	    month = StringUtils.trimToNull(request.getParameter("eff_date_month"));
-	    day = StringUtils.trimToNull(request.getParameter("eff_date_date"));
-		if (year!=null && month!=null && day!=null) {
-			demographic.setEffDate(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
-		} else {
-			demographic.setEffDate(null);
-		}
-
-		demographic.setPcnIndicator(request.getParameter("pcn_indicator"));
-		demographic.setHcType(request.getParameter("hc_type"));
-
-	    year = StringUtils.trimToNull(request.getParameter("roster_date_year"));
-	    month = StringUtils.trimToNull(request.getParameter("roster_date_month"));
-	    day = StringUtils.trimToNull(request.getParameter("roster_date_date"));
-		if (year!=null && month!=null && day!=null) {
-			demographic.setRosterDate(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
-		} else {
-			demographic.setRosterDate(null);
-		}
-            
-            year = StringUtils.trimToNull(request.getParameter("hc_renew_date_year"));
-	    month = StringUtils.trimToNull(request.getParameter("hc_renew_date_month"));
-	    day = StringUtils.trimToNull(request.getParameter("hc_renew_date_date"));
-		if (year!=null && month!=null && day!=null) {
-			demographic.setHcRenewDate(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
-		} else {
-			demographic.setHcRenewDate(null);
-		}
-            
-		demographic.setFamilyDoctor("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
-		demographic.setCountryOfOrigin(request.getParameter("countryOfOrigin"));
-		demographic.setNewsletter(request.getParameter("newsletter"));
-		demographic.setSin(request.getParameter("sin"));
-		demographic.setTitle(request.getParameter("title"));
-		demographic.setOfficialLanguage(request.getParameter("official_lang"));
-		demographic.setSpokenLanguage(request.getParameter("spoken_lang"));
-		demographic.setLastUpdateUser(curUser_no);
-		demographic.setLastUpdateDate(new java.util.Date());
-		demographic.setPatientStatusDate(new java.util.Date());
-
-		List<Demographic> duplicateList = demographicDao.getDemographicWithLastFirstDOBExact(demographic.getLastName(),demographic.getFirstName(),
-				demographic.getYearOfBirth(),demographic.getMonthOfBirth(),demographic.getDateOfBirth());
-
-		if(duplicateList.size()>0) {
+	demographic.setPcnIndicator(request.getParameter("pcn_indicator"));
+	demographic.setHcType(request.getParameter("hc_type"));
+	
+	year = StringUtils.trimToNull(request.getParameter("roster_date_year"));
+	month = StringUtils.trimToNull(request.getParameter("roster_date_month"));
+	day = StringUtils.trimToNull(request.getParameter("roster_date_date"));
+	if (year!=null && month!=null && day!=null) {
+		demographic.setRosterDate(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
+	} else {
+		demographic.setRosterDate(null);
+	}
+	          
+	year = StringUtils.trimToNull(request.getParameter("hc_renew_date_year"));
+	month = StringUtils.trimToNull(request.getParameter("hc_renew_date_month"));
+	day = StringUtils.trimToNull(request.getParameter("hc_renew_date_date"));
+	if (year!=null && month!=null && day!=null) {
+		demographic.setHcRenewDate(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
+	} else {
+		demographic.setHcRenewDate(null);
+	}
+	         
+	demographic.setFamilyDoctor("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
+	demographic.setCountryOfOrigin(request.getParameter("countryOfOrigin"));
+	demographic.setNewsletter(request.getParameter("newsletter"));
+	demographic.setSin(request.getParameter("sin"));
+	demographic.setTitle(request.getParameter("title"));
+	demographic.setOfficialLanguage(request.getParameter("official_lang"));
+	demographic.setSpokenLanguage(request.getParameter("spoken_lang"));
+	demographic.setLastUpdateUser(curUser_no);
+	demographic.setLastUpdateDate(new java.util.Date());
+	demographic.setPatientStatusDate(new java.util.Date());
+	
+	List<Demographic> duplicateList = demographicDao.getDemographicWithLastFirstDOBExact(demographic.getLastName(),demographic.getFirstName(),
+			demographic.getYearOfBirth(),demographic.getMonthOfBirth(),demographic.getDateOfBirth());
+	
+	if(duplicateList.size()>0) {
 %>
-   ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord" /></font>***<br>
-	<br>
-   <a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
-   <% return; }
+		***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord" /></font>***<br><br>
+		<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
+<% 
+		return; 
+	}
 	
 	StringBuilder bufChart = null, bufName = null, bufNo = null, bufDoctorNo = null;
     // add checking hin duplicated record, if there is a HIN number
@@ -208,11 +209,14 @@
 		String paramNameHin =new String();
 		paramNameHin=request.getParameter("hin").trim();
 		List<Demographic> demographics = demographicDao.searchByHealthCard(paramNameHin);
-		if(demographics.size()>0){ %>
-	   ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN" /></font>***<br>
-<br>
-<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
-	<% return; }  }
+		if(demographics.size()>0){ 
+%>
+		***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN" /></font>***<br><br>
+		<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
+<% 
+		return; 
+		}  
+	}
     
     bufName = new StringBuilder(request.getParameter("last_name")+ ","+ request.getParameter("first_name") );
     bufNo = new StringBuilder( (apptMainBean.getString("demographic_no")) );
@@ -222,11 +226,11 @@
     demographicDao.save(demographic);
 
          //propagate demographic to caisi admission table
-        
-            //fetch programId associated with provider
+
+         //fetch programId associated with provider
             //if none(0) then check for OSCAR program; if available set it as default
-            oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
-            String progId = program.getProgram(request.getParameter("staff"));
+            oscar.oscarEncounter.data.EctProgram ectProgram = new oscar.oscarEncounter.data.EctProgram(request.getSession());
+            String progId = ectProgram.getProgram(request.getParameter("staff"));
             if( progId.equals("0") ) {
             	Program p = programDao.getProgramByName("OSCAR");
             	if(p != null) {
@@ -312,6 +316,7 @@
 		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip,param2[0]);
 
         //add to waiting list if the waiting_list parameter in the property file is set to true
+        
 
         WaitingList wL = WaitingList.getInstance();
         if(wL.getFound()){
@@ -319,17 +324,24 @@
             String[] paramWLPosition = new String[1];
             paramWLPosition[0] = request.getParameter("list_id");
             if(paramWLPosition[0].compareTo("")!=0){
-                ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
 
-                if(rsWL.next()){
+                List<Long> positionList = new ArrayList<Long>();
+                List<org.oscarehr.common.model.WaitingList> waitingListList = waitingListDao.findByWaitingListId(new Integer(1));
 
+                if(waitingListList != null) {
+                	
+	                for(org.oscarehr.common.model.WaitingList waitingList : waitingListList) {
+	                	positionList.add(waitingList.getPosition());
+	                }
+	                Long maxPosition = Collections.max(positionList);
+            	
                     String listId = request.getParameter("list_id");
                     if(listId != null && !listId.equals("") && !listId.equals("0")) {
 	                    org.oscarehr.common.model.WaitingList waitingList = new org.oscarehr.common.model.WaitingList();
 	                    waitingList.setListId(Integer.parseInt(request.getParameter("list_id")));
 	                    waitingList.setDemographicNo(demographic.getDemographicNo());
 	                    waitingList.setNote(request.getParameter("waiting_list_note"));
-	                    waitingList.setPosition(rsWL.getInt("position")+1);
+	                    waitingList.setPosition(maxPosition.longValue()+1);
 	                    waitingList.setOnListSince(MyDateFormat.getSysDate(request.getParameter("waiting_list_referral_date")));
 	                    waitingList.setIsHistory("N");
 	                    waitingListDao.persist(waitingList);
