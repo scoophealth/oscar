@@ -35,18 +35,18 @@ import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.util.SpringUtils;
 
-public class DxResearchDaoTest extends DaoTestFixtures {
+public class DxresearchDAOTest extends DaoTestFixtures {
 
 	protected DxresearchDAO dao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
 
-	public DxResearchDaoTest() {
+	public DxresearchDAOTest() {
 	}
 
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("dxresearch", "demographic","lst_gender","admission","demographic_merged",
 				"program","health_safety","provider","providersite","site","program_team",
-				"measurements", "measurementType", "measurementsExt");
+				"measurements", "measurementType", "measurementsExt", "quickList", "icd9","ichppccode");
 	}
 
 	@Test

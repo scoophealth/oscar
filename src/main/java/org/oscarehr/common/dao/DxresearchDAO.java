@@ -274,7 +274,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 	}
 
 	public boolean entryExists(int demographicNo, String codeType, String code) {
-		String hql = "select d from Dxresearch d where d.demographicNo=? and d.codingSystem=? and d.code=?";
+		String hql = "select d from Dxresearch d where d.demographicNo=? and d.codingSystem=? and d.dxresearchCode=?";
     	Query query = entityManager.createQuery(hql);
     	query.setParameter(1,demographicNo);
     	query.setParameter(2,codeType);
@@ -287,10 +287,10 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 	}
 
 	public void removeAllAssociationEntries() {
-		String hql = "DELETE from DxResearch dx WHERE dx.association=true";
-    	Query query = entityManager.createQuery(hql);
+		String hql = "DELETE from Dxresearch dx WHERE dx.association='1'";
+                Query query = entityManager.createQuery(hql);
 
-		query.executeUpdate();
+                query.executeUpdate();
 	}
 
     public List<Dxresearch> findByDemographicNoResearchCodeAndCodingSystem(Integer demographicNo, String dxresearchCode, String codingSystem) {
