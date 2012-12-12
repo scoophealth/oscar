@@ -66,6 +66,7 @@ public class BillingCorrectionAction extends DispatchAction{
     
     private BillingONPaymentDao bPaymentDao = (BillingONPaymentDao) SpringUtils.getBean("billingONPaymentDao");        
     private BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");     
+    private  BillingONExtDao billExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
         
     public ActionForward add3rdPartyPayment(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
         
@@ -169,8 +170,7 @@ public class BillingCorrectionAction extends DispatchAction{
         }
         
         //Update Bill To if changed.
-        if (request.getParameter("billTo") != null) {
-            BillingONExtDao billExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
+        if (request.getParameter("billTo") != null) {           
             BillingONExt billExt = billExtDao.getBillTo(bCh1);
             if (billExt != null) {
                 billExt.setValue(request.getParameter("billTo"));
@@ -190,6 +190,27 @@ public class BillingCorrectionAction extends DispatchAction{
             }            
         }
         
+        //Update Due Date if changed.
+	if (request.getParameter("invoiceDueDate") != null) {
+	           
+            BillingONExt billExt = billExtDao.getDueDate(bCh1);
+	           
+            if (billExt != null) {
+                billExt.setValue(request.getParameter("invoiceDueDate"));                
+                billExtDao.merge(billExt);
+            } else {
+                billExt = new BillingONExt();
+                billExt.setBillingNo(bCh1.getId());
+                billExt.setDateTime(new Date());
+                billExt.setDemographicNo(bCh1.getDemographicNo());
+                billExt.setKeyVal("dueDate");
+                billExt.setPaymentId(new Integer(0));
+                billExt.setStatus('1');
+                billExt.setValue(request.getParameter("invoiceDueDate"));
+	               
+                billExtDao.persist(billExt);
+            }            
+        }        
         
         if(request.getParameter("submit").equals("Submit&Correct Another")){
             return mapping.findForward("closeReload");
