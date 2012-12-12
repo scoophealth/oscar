@@ -23,6 +23,7 @@
 
 package oscar.oscarDemographic.pageUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,12 +31,15 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.dao.Icd9Dao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.ProviderData;
@@ -54,6 +58,8 @@ public class PatientExport {
 	private static PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean("preventionDao");
 	private static PreventionExtDao preventionExtDao = (PreventionExtDao)SpringUtils.getBean("preventionExtDao");
 	private static ProviderDataDao providerDataDao = (ProviderDataDao)SpringUtils.getBean("providerDataDao");
+	private static DxresearchDAO dxResearchDao = SpringUtils.getBean(DxresearchDAO.class);
+	private static Icd9Dao icd9Dao = (Icd9Dao)SpringUtils.getBean("icd9Dao");
 	
 	private Date currentDate = new Date();
 	private Integer demographicNo = null;
@@ -61,10 +67,12 @@ public class PatientExport {
 	private List<Drug> drugs = null;
 	private List<Allergy> allergies = null;
 	private List<Prevention> preventions = null;
+	private List<Dxresearch> problems = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
 	private boolean exImmunizations = false;
+	private boolean exProblemList = false;
 	
 	protected PatientExport() {
 	}
@@ -76,6 +84,14 @@ public class PatientExport {
 			this.allergies = allergyDao.findAllergies(demographicNo);
 			this.drugs = drugDao.findByDemographicId(demographicNo);
 			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+			List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
+			
+			problems = new ArrayList<Dxresearch>();
+			for(Dxresearch problem : tempProblems) {
+				if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
+					this.problems.add(problem);
+				}
+			}
 		}
 	    catch (Exception e) {
 	        log.error(e.getMessage(), e);
@@ -95,6 +111,10 @@ public class PatientExport {
 	
 	public void setExImmunizations(boolean rhs) {
 		this.exImmunizations = rhs;
+	}
+	
+	public void setExProblemList(boolean rhs) {
+		this.exProblemList = rhs;
 	}
 	
 	/*
@@ -166,6 +186,14 @@ public class PatientExport {
 		demographic.setHin(rhs);
 	}
 	
+	public String getProviderNo() {
+		return demographic.getProviderNo();
+	}
+	
+	public void setProviderNo(String rhs) {
+		demographic.setProviderNo(rhs);
+	}
+	
 	// Output get convenience functions
 	public String getBirthDate() {
 		return demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
@@ -186,7 +214,6 @@ public class PatientExport {
 	public boolean hasAllergies() {
 		return!(!exAllergiesAndAdverseReactions || allergies==null || allergies.isEmpty());
 	}
-	
 	
 	/*
 	 * Immunizations
@@ -228,6 +255,22 @@ public class PatientExport {
 		if(currentDate.after(rhs)) return false;
 		else return true;
 	}
+	
+	/*
+	 * Problem List
+	 */
+	public List<Dxresearch> getProblems() {
+		return problems;
+	}
+	
+	public boolean hasProblems() {
+		return!(!exProblemList || problems==null || problems.isEmpty());
+	}
+
+	// Function to allow access to ICD9 Description table data based on ICD9 code
+	public static String getICD9Description(String code) {
+		return icd9Dao.findByCode(code).getDescription();
+    }
 	
 	/*
 	 * Utility
