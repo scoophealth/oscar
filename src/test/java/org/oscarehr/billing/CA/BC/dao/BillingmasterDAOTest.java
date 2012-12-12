@@ -29,6 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -119,5 +120,15 @@ public class BillingmasterDAOTest extends DaoTestFixtures {
 	public void testSearch_teleplanbill() {
 		assertNotNull(dao.search_teleplanbill(1));
 	}
+
+    @Test
+    public void testFindByDemoNoCodeAndStatuses() {
+	    assertNotNull(dao.findByDemoNoCodeAndStatuses(100, "10", Arrays.asList(new String[] {"A"})));
+    }
+    
+    @Test
+    public void testCountByDemoNoCodeStatusesAndYear() {
+	    assertNotNull(dao.findByDemoNoCodeStatusesAndYear(100, new Date(), "CODE"));
+    }
 	
 }

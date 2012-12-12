@@ -43,13 +43,16 @@ public class ConversionUtils {
 	private static final Double ZERO_DOUBLE = new Double(0.0);
 	private static final String ZERO_STRING = "0";
 
+	private static final long MS_IN_DAY = 1000 * 60 * 60 * 24;
+
 	private ConversionUtils() {
 	}
 
 	public static List<Integer> toIntList(List<String> list) {
 		List<Integer> result = new ArrayList<Integer>();
-		for (String str : list)
+		for (String str : list) {
 			result.add(fromIntString(str));
+		}
 		return result;
 	}
 
@@ -64,7 +67,7 @@ public class ConversionUtils {
 	public static Date fromTimeString(String timeString) {
 		return fromDateString(timeString, DEFAULT_TIME_PATTERN);
 	}
-	
+
 	public static Date fromTimeStringNoSeconds(String timeString) {
 		return fromDateString(timeString, "HH:mm");
 	}
@@ -80,11 +83,11 @@ public class ConversionUtils {
 	public static Date fromDateString(String dateString) {
 		return fromDateString(dateString, DEFAULT_DATE_PATTERN);
 	}
-	
+
 	public static Date fromTimestampString(String dateString) {
 		return fromDateString(dateString, DEFAULT_TS_PATTERN);
 	}
-	
+
 	public static String toTimestampString(Date timestamp) {
 		return toDateString(timestamp, DEFAULT_TS_PATTERN);
 	}
@@ -111,7 +114,9 @@ public class ConversionUtils {
 	}
 
 	private static String toDateString(Date date, String formatPattern) {
-		if (date == null) return "";
+		if (date == null) {
+			return "";
+		}
 
 		SimpleDateFormat format = new SimpleDateFormat(formatPattern);
 		return format.format(date);
@@ -150,7 +155,9 @@ public class ConversionUtils {
 	 * 		Returns the parsed long
 	 */
 	public static Long fromLongString(String longString) {
-		if (longString == null || longString.trim().isEmpty()) return ZERO_LONG;
+		if (longString == null || longString.trim().isEmpty()) {
+			return ZERO_LONG;
+		}
 		return Long.parseLong(longString);
 	}
 
@@ -164,7 +171,9 @@ public class ConversionUtils {
 	 */
 	public static Integer fromIntString(Object obj) {
 		String intString = (obj == null) ? null : obj.toString();
-		if (intString == null || intString.trim().isEmpty()) return ZERO_INT;
+		if (intString == null || intString.trim().isEmpty()) {
+			return ZERO_INT;
+		}
 		return Integer.parseInt(intString);
 	}
 
@@ -177,7 +186,9 @@ public class ConversionUtils {
 	 * 		Returns the formatted string, or {@value #ZERO_STRING} for null paramter value.
 	 */
 	public static String toIntString(Integer integer) {
-		if (integer == null) return ZERO_STRING;
+		if (integer == null) {
+			return ZERO_STRING;
+		}
 		return integer.toString();
 	}
 
@@ -190,7 +201,9 @@ public class ConversionUtils {
 	 * 		Returns {@value #ZERO_STRING} for false or null instance or "1" otherwise.
 	 */
 	public static String toBoolString(Boolean b) {
-		if (b == null || b == Boolean.FALSE) return ZERO_STRING;
+		if (b == null || b == Boolean.FALSE) {
+			return ZERO_STRING;
+		}
 		return "1";
 	}
 
@@ -203,7 +216,9 @@ public class ConversionUtils {
 	 * 		Returns false for empty, null or {@value #ZERO_STRING} or true otherwise. 
 	 */
 	public static boolean fromBoolString(String str) {
-		if (str == null || str.trim().isEmpty() || ZERO_STRING.equals(str)) return false;
+		if (str == null || str.trim().isEmpty() || ZERO_STRING.equals(str)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -216,12 +231,13 @@ public class ConversionUtils {
 	 * 		Returns the parsed double
 	 */
 	public static Double fromDoubleString(String str) {
-		if (str == null || str.trim().isEmpty())
+		if (str == null || str.trim().isEmpty()) {
 			return ZERO_DOUBLE;
-		
-	    return Double.parseDouble(str);
-    }
-	
+		}
+
+		return Double.parseDouble(str);
+	}
+
 	/**
 	 * Formats the specified double as string 
 	 * 
@@ -231,9 +247,34 @@ public class ConversionUtils {
 	 * 		Returns the formatted string, or {@value #ZERO_STRING} for null value.
 	 */
 	public static String toDoubleString(Double d) {
-		if (d == null)
+		if (d == null) {
 			return ZERO_STRING;
+		}
 		return d.toString();
+	}
+
+	/**
+	 * Gets number of days since day 0 for the specified time stamp
+	 * 
+	 * @param timestamp
+	 * 		Time stamp to get day count for
+	 * @return
+	 * 		Returns the day count
+	 */
+	public static int toDays(Date timestamp) {
+		return toDays(timestamp.getTime());
+	}
+
+	/**
+	 * Gets number of days since day 0 for the specified time stamp
+	 * 
+	 * @param timestamp
+	 * 		Time stamp to get day count for
+	 * @return
+	 * 		Returns the day count
+	 */
+	public static int toDays(long timestamp) {
+		return (int) (timestamp / MS_IN_DAY);
 	}
 
 }
