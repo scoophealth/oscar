@@ -83,4 +83,17 @@ public class IchppccodeDao extends AbstractCodeSystemDao<Ichppccode>{
 
 		return find(codingSystem);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Ichppccode> search_research_code(String code, String code1, String code2, String desc, String desc1, String desc2) {
+		Query query = entityManager.createQuery("select i from Ichppccode i where i.id like ? or i.id like ? or i.id like ? or i.description like ? or i.description like ? or i.description like ?");
+		query.setParameter(1, code);
+		query.setParameter(2, code1);
+		query.setParameter(3, code2);
+		query.setParameter(4, desc);
+		query.setParameter(5, desc1);
+		query.setParameter(6, desc2);
+		
+		return query.getResultList();
+	}
 }
