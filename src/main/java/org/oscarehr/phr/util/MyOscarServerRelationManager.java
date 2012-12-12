@@ -46,7 +46,7 @@ public class MyOscarServerRelationManager {
 
 	private static final int MAX_OBJECTS_TO_CACHE = 1024;
 
-	private static QueueCache<String, List<RelationshipTransfer3>> relationDataCache = new QueueCache<String, List<RelationshipTransfer3>>(4, MAX_OBJECTS_TO_CACHE, DateUtils.MILLIS_PER_HOUR * 2);
+	private static QueueCache<String, List<RelationshipTransfer3>> relationDataCache = new QueueCache<String, List<RelationshipTransfer3>>(4, MAX_OBJECTS_TO_CACHE, DateUtils.MILLIS_PER_HOUR * 2, null);
 
 	private static List<RelationshipTransfer3> getRelationShipTransferFromServer(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId) {
 		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);

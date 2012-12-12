@@ -37,7 +37,7 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
 
     private static Logger log = MiscUtils.getLogger();
 
-	private static QueueCache<Long, List<ProgramAccess>> programAccessListByProgramIdCache=new QueueCache<Long, List<ProgramAccess>>(4, 100, DateUtils.MILLIS_PER_HOUR);
+	private static QueueCache<Long, List<ProgramAccess>> programAccessListByProgramIdCache=new QueueCache<Long, List<ProgramAccess>>(4, 100, DateUtils.MILLIS_PER_HOUR, null);
 
     @SuppressWarnings("unchecked")
     public List<ProgramAccess> getAccessListByProgramId(Long programId) {
