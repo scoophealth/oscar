@@ -239,5 +239,15 @@ public class BillingmasterDAO {
 		Query query = entityManager.createNativeQuery(p);
 		return query.getResultList();
     }
+	
+	public List<Billingmaster> select_user_bill_report_wcb(Integer billingMasterNo) {
+		Query q = entityManager.createNativeQuery("SELECT * FROM billingmaster LEFT JOIN teleplanC12 ON CAST(teleplanC12.t_officefolioclaimno As unsigned)=billingmaster.billingmaster_no, demographic, wcb WHERE billingmaster.demographic_no=demographic.demographic_no AND billingmaster.billing_no=wcb.billing_no AND billingmaster.billingmaster_no=?", Billingmaster.class);
+		q.setParameter(1, billingMasterNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Billingmaster> results = q.getResultList();
+		
+		return results;
+	}
 
 }

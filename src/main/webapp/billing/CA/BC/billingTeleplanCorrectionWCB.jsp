@@ -25,11 +25,6 @@
 --%>
 <%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-  	if (session.getAttribute("userrole") == null)
-	{
-	  response.sendRedirect("../logout.jsp");
-	  return;
-	}
   String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
@@ -37,15 +32,34 @@
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 <%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*"%>
-<%@page
-	import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*,java.sql.*"%>
+<%@page	import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*,java.sql.*"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
+<%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
+<%@ page import="oscar.entities.Billingmaster" %>
+<%@ page import="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" %>
 <%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
+	BillingmasterDAO billingMasterDao = SpringUtils.getBean(BillingmasterDAO.class);
+%>
+
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@include file="dbBilling.jspf"%>
+
+<%
+
   TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.queryResults(request.getParameter("billing_no"), "select_user_bill_report_wcb"));
   Properties codes = new MspErrorCodes();
   BillingFormData billform = new BillingFormData();
@@ -357,17 +371,17 @@ function popFeeItemList(form,field){
 						value="<%=form.getProviderNo()%>">
 						<%
                   String proFirst = "", proLast = "", proOHIP = "", proNo = "";
-                  ResultSet rspro = apptMainBean.queryResults("%", "search_provider_dt");
-                  while (rspro.next()) {
-                    proFirst = rspro.getString("first_name");
-                    proLast = rspro.getString("last_name");
-                    proOHIP = rspro.getString("provider_no");
+					for(Provider p:providerDao.getActiveProviders()) {
+                  		if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
+                    proFirst =p.getFirstName();
+                    proLast = p.getLastName();
+                    proOHIP = p.getProviderNo();
                 %>
 						<html:option value="<%=proOHIP%>"><%=proOHIP%>                    |
 <%=proLast%>                    ,
 <%=proFirst%>
 						</html:option>
-						<%}                %>
+						<%}    }            %>
 					</html:select></td>
 				</tr>
 				<tr>

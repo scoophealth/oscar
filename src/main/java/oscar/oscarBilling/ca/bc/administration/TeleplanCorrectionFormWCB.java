@@ -44,14 +44,6 @@ public class TeleplanCorrectionFormWCB
     private String adjType;
     private String adjAmount;
 
-
-
-
-
-        ;
-
-
-
     public  TeleplanCorrectionFormWCB( ) {
         super();
 
