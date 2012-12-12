@@ -76,7 +76,7 @@ Allergies and Intolerances - (Reaction List)
 					<templateId root="2.16.840.1.113883.3.1818.10.2.4.1"/>
 					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies and Adverse Reactions Doc"/>
 					<title>Allergies and Intolerances (Reaction List) [with entries]</title>
-					<text>Text text text</text>
+					<text>Allergies</text>
 #**##foreach ( $allergy in $patient.getAllergies() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.3"/>
@@ -160,7 +160,7 @@ Allergies and Intolerances - (Reaction List)
 					<templateId root="2.16.840.1.113883.3.1818.10.2.4"/>
 					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies and Adverse Reactions Doc"/>
 					<title>Allergies and Intolerances (Reaction List) [without entries]</title>
-					<text>Sorry, no allergies</text>
+					<text>No Allergy Entries</text>
 				</section>
 			</component>
 #end
@@ -175,7 +175,7 @@ Immunization List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.14.1"/>
 					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
 					<title>Immunizations List [with entries]</title>
-					<text>Text text text</text>
+					<text>Immunizations</text>
 #**##foreach( $immunization in $patient.getImmunizations() )
 					<entry typeCode="COMP" contextConductionInd="false">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
@@ -266,6 +266,7 @@ Immunization List
 												<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 												<code nullFlavor='NA'/>
 												<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
 													<given>$patient.getProviderFirstName($immunization.providerNo)</given>
 													<family>$patient.getProviderLastName($immunization.providerNo)</family>
 												</name>
@@ -297,7 +298,7 @@ Immunization List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.14"/>
 					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
 					<title>Immunizations List [without entries]</title>
-					<text>Sorry, no immunizations</text>
+					<text>No Immunization Entries</text>
 				</section>
 			</component>
 #end
@@ -352,7 +353,69 @@ Medications and Prescriptions - Medication List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
 					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [without entries]</title>
-					<text>Sorry, no medications</text>
+					<text>No Medication Entries</text>
+				</section>
+			</component>
+#end
+<!--			
+********************************************************
+Problems and Conditions - Problem List
+********************************************************
+-->
+#if ( $patient.hasProblems() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
+					<title>Problems and Conditions - Problem List [with entries]</title>
+					<text>Text text text</text>
+#**##foreach ( $problem in $patient.getProblems() )
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
+						<!-- Problem List Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$problem.id" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
+							<code nullFlavor='UNK'/>
+							<code code="$problem.getDxresearchCode()" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
+codeSystemName="ICD-9" displayName="${patient.getICD9Description("$problem.getDxresearchCode()")}"/>
+#*    *##if ( $problem.status == "A" )
+							<statusCode code="active"/>
+#*    *##else
+							<statusCode code="completed"/>
+#*    *##end
+							<effectiveTime xsi:type="IVL_TS">
+								<low value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
+							</effectiveTime>
+							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="${patient.getICD9Description("$problem.getDxresearchCode()")}">
+								<originalText>${patient.getICD9Description("$problem.getDxresearchCode()")}</originalText>
+							</value>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="$dateTool.format('yyyyMMdd', $problem.getUpdateDate())"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($patient.providerNo)</given>
+											<family>$patient.getProviderLastName($patient.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>								
+							</author>
+						</observation>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
+					<title>Problems and Conditions - Problem List [without entries]</title>
+					<text>No Problem Entries</text>
 				</section>
 			</component>
 #end
