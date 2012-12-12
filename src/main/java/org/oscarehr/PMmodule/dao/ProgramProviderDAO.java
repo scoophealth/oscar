@@ -39,7 +39,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
     private Logger log=MiscUtils.getLogger();
 
-	private static QueueCache<String, List<ProgramProvider>> programProviderByProviderProgramIdCache = new QueueCache<String, List<ProgramProvider>>(4, 100, DateUtils.MILLIS_PER_HOUR);
+	private static QueueCache<String, List<ProgramProvider>> programProviderByProviderProgramIdCache = new QueueCache<String, List<ProgramProvider>>(4, 100, DateUtils.MILLIS_PER_HOUR, null);
 
 	private static String makeCacheKey(String providerNo, Long programId)
 	{
