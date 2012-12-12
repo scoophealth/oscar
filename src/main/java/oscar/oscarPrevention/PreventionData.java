@@ -55,6 +55,7 @@ import oscar.oscarProvider.data.ProviderData;
 import oscar.util.UtilDateUtilities;
 
 public class PreventionData {
+	
 	private static Logger log = MiscUtils.getLogger();
 	private static PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private static PreventionExtDao preventionExtDao = (PreventionExtDao) SpringUtils.getBean("preventionExtDao");
@@ -327,7 +328,6 @@ public class PreventionData {
 			sex=dd.getSex();
 		}
 		
-		String sql = null;
 		oscar.oscarPrevention.Prevention p = new oscar.oscarPrevention.Prevention(sex, dob);
 
 		PreventionDao dao = SpringUtils.getBean(PreventionDao.class);
