@@ -1118,6 +1118,26 @@ public class Demographic implements Serializable {
         	return dm1.getRosterStatus().compareTo(dm2.getRosterStatus());
         }
     }; 
+	public static final Comparator<Demographic> ChartNoComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getChartNo().compareTo(dm2.getChartNo());
+        }
+    }; 
+	public static final Comparator<Demographic> ProviderNoComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getProviderNo().compareTo(dm2.getProviderNo());
+        }
+    }; 
+	public static final Comparator<Demographic> PatientStatusComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getPatientStatus().compareTo(dm2.getPatientStatus());
+        }
+    }; 
+	public static final Comparator<Demographic> PhoneComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getPhone().compareTo(dm2.getPhone());
+        }
+    }; 
 
 
 }
