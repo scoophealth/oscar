@@ -28,14 +28,25 @@ if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit
 String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
-<%@ page
-	import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ReportProvider" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.ReportProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Billing" %>
+<%@ page import="org.oscarehr.common.dao.BillingDao" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
+<%@ page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@ page import="org.oscarehr.common.model.Appointment" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%
+	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
 
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -122,11 +133,12 @@ String specialty_code;
 String billinggroup_no;
 int Count = 0;
 
-ResultSet rslocal = apptMainBean.queryResults("billingreport", "search_reportprovider");
-while(rslocal.next()){
-	proFirst = rslocal.getString("first_name");
-	proLast = rslocal.getString("last_name");
-	proOHIP = rslocal.getString("provider_no"); 
+for(Object[] res:reportProviderDao.search_reportprovider("billingreport")) {
+	ReportProvider rp = (ReportProvider)res[0];
+	Provider p = (Provider)res[1];
+	proFirst = p.getFirstName();
+	proLast = p.getLastName();
+	proOHIP = p.getProviderNo();
 %>
 			<option value="<%=proOHIP%>"
 				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,

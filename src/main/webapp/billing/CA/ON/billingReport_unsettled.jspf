@@ -30,17 +30,14 @@
    String dateEnd = request.getParameter("xml_appointment_date");
    if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
    if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // set to any really early date to start search from beginning
- ResultSet rs=null ;
-  String[] param =new String[3];
-  param[0] = request.getParameter("providerview");
- param[1] = dateBegin;
-  param[2] = dateEnd;
-  rs = apptMainBean.queryResults(param, "search_unsettled_history_daterange");
+
+  
+  List<Billing> bs = billingDao.search_unsettled_history_daterange(request.getParameter("providerview"),ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
 
   boolean bodd=false;
    nItems=0;
   String apptDoctorNo="", apptNo="", demoNo = "", demoName="", userno="", apptDate="", apptTime="", reason="",  note="";
-  if(rs==null) {
+  if(bs==null) {
     out.println("failed!!!"); 
   } else {
   %>
@@ -57,18 +54,18 @@
 			face="Arial, Helvetica, sans-serif">ACCOUNT</font></b></TH>
 	</tr>
 	<%
-    while (rs.next()) {
+    for (Billing b:bs) {
      
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-      apptDoctorNo = rs.getString("apptProvider_no");
-      apptNo = rs.getString("appointment_no");
-      demoNo = rs.getString("demographic_no");
-      demoName = rs.getString("demographic_name");
-      userno=rs.getString("provider_no");
-      apptDate = rs.getString("billing_date");
-      apptTime = rs.getString("billing_time");
-      reason = rs.getString("status");
+      apptDoctorNo =b.getApptProviderNo();
+      apptNo =String.valueOf(b.getAppointmentNo());
+      demoNo = String.valueOf(b.getDemographicNo());
+      demoName = b.getDemographicName();
+      userno=b.getProviderNo();
+      apptDate = ConversionUtils.toDateString( b.getBillingDate());
+      apptTime =  ConversionUtils.toTimeString( b.getBillingTime());
+      reason = b.getStatus();
       
       if (apptDoctorNo.compareTo("none") == 0){
       note = "No Appt / INR";
@@ -94,8 +91,8 @@
 			face="Arial, Helvetica, sans-serif"><%=note%></font></b></TD>
 		<TD align="center" width="10%"><b> <font size="2"
 			face="Arial, Helvetica, sans-serif"><a href=#
-			onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")'
-			title="<%=reason%>"> <%=rs.getString("billing_no")%></a></font></b></TD>
+			onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=b.getId()%>&dboperation=search_bill&hotclick=0")'
+			title="<%=reason%>"> <%=b.getId()%></a></font></b></TD>
 	</tr>
 	<%  rowCount = rowCount + 1;
     }

@@ -307,7 +307,8 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return query.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
+
+    @SuppressWarnings("unchecked")
     public List<Object[]> findPatientAppointments(String providerNo, Date from, Date to) {
         StringBuilder sql = new StringBuilder("FROM Demographic d, Appointment a, Provider p " +
                 "WHERE a.demographicNo = d.DemographicNo " +
@@ -333,5 +334,15 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 			   query.setParameter(e.getKey(), e.getValue());
 		   }
 		   return query.getResultList();
+        }
+
+	public List<Appointment> search_unbill_history_daterange(String providerNo, Date startDate, Date endDate) {
+		String sql = "select a from Appointment a where a.providerNo=? and a.appointmentDate >=? and a.appointmentDate<=? and (a.status='P' or a.status='H' or a.status='PV' or a.status='PS') and a.demographicNo <> 0 order by a.appointmentDate desc, a.startTime desc";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, providerNo);
+		query.setParameter(2, startDate);
+		query.setParameter(3, endDate);
+		
+		return query.getResultList();
 	}
 }

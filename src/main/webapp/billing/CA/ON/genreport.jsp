@@ -17,23 +17,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
-
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
+
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillActivity" %>
 <%@ page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 <%
 	BillActivityDao billActivityDao = SpringUtils.getBean(BillActivityDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
+
 <%
 boolean bHybridBilling = false;
 Vector vecGrpBillingPro = new Vector();
@@ -58,25 +56,22 @@ String billinggroup_no;
 String eFlag = "1";
 
 if (provider.compareTo("all") == 0 ){
-	ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_ohip_dt");
-	while(rslocal.next()){
-	    if(bHybridBilling && vecGrpBillingPro.contains(rslocal.getString("provider_no"))) continue;
+	for(Provider p:providerDao.getActiveProviders()) {
+		if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
+			
+	    if(bHybridBilling && vecGrpBillingPro.contains(p.getProviderNo())) continue;
 
-		proOHIP = rslocal.getString("ohip_no");
-		billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-		specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+		proOHIP = p.getOhipNo();
+		billinggroup_no= SxmlMisc.getXmlContent(p.getComments(),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+		specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
 		batchCount = "0";
 		int fileCount = 0;
-		String[] param2 =new String[3];
-		param2[0]=request.getParameter("monthCode");
-		param2[1]=proOHIP;
-		param2[2]=curYear+"/01/01";
-		ResultSet rslocal2 = apptMainBean.queryResults(param2, "search_billactivity_monthCodeshort");
-		while(rslocal2.next()){
-			batchCount = rslocal2.getString("batchcount");
-		}
 
+		for(BillActivity ba:billActivityDao.findCurrentByMonthCodeAndGroupNo(request.getParameter("monthCode"),proOHIP, ConversionUtils.fromDateString(curYear+"-01-01"))) {
+			batchCount = String.valueOf(ba.getBatchCount());
+		}
+		
 		fileCount = Integer.parseInt(batchCount) + 1;
 		batchCount = String.valueOf(fileCount);
 
@@ -131,26 +126,23 @@ if (provider.compareTo("all") == 0 ){
 		extract.writeFile(filecontext);
 		extract.writeHtml(htmlcontext);
 	}
-
+	}
 }else {
-	ResultSet rslocal = apptMainBean.queryResults(request.getParameter("provider").substring(0,6), "search_provider_ohip_dt");
-	while(rslocal.next()){
-	    if(bHybridBilling && vecGrpBillingPro.contains(rslocal.getString("provider_no"))) continue;
+	Provider p = providerDao.getProvider(request.getParameter("provider").substring(0,6));
+	if(p != null) {
+		if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
+			
+	    if(!(bHybridBilling && vecGrpBillingPro.contains(p.getProviderNo()))) {
 
-	    proOHIP = rslocal.getString("ohip_no");
-		billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-		specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+	    proOHIP = p.getOhipNo();
+		billinggroup_no= SxmlMisc.getXmlContent(p.getComments(),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+		specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
 		batchCount = "0";
 		int fileCount = 0;
 
-		String[] param2 =new String[3];
-		param2[0]=request.getParameter("monthCode");
-		param2[1]=proOHIP;
-		param2[2]=curYear+"/01/01";
-		ResultSet rslocal2 = apptMainBean.queryResults(param2, "search_billactivity_monthCodeshort");
-		while(rslocal2.next()){
-			batchCount = rslocal2.getString("batchcount");
+		for(BillActivity ba:billActivityDao.findCurrentByMonthCodeAndGroupNo(request.getParameter("monthCode"),proOHIP, ConversionUtils.fromDateString(curYear+"-01-01"))) {
+			batchCount = String.valueOf(ba.getBatchCount());
 		}
 
 		fileCount = Integer.parseInt(batchCount) + 1;
@@ -207,6 +199,8 @@ if (provider.compareTo("all") == 0 ){
 		String htmlcontext = extract.getHtmlCode();
 		extract.writeFile(filecontext);
 		extract.writeHtml(htmlcontext);
+	}
+	}
 	}
 }
 
