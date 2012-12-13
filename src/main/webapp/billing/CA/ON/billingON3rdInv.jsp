@@ -245,20 +245,24 @@
                 <th>Dx</th>
                 <th>Amount</th>
             </tr>
-            <%             
+            <%
             BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
             
             for(BillingONItem billItem : billingItems) { 	
                 BillingService bs = null;
+                String serviceDesc = "N/A";
                 if (billItem.getServiceCode().startsWith("_"))
                     bs = billingServiceDao.searchPrivateBillingCode(billItem.getServiceCode(),billItem.getServiceDate());
                 else
                     bs = billingServiceDao.searchBillingCode(billItem.getServiceCode(),"ON",billItem.getServiceDate());
-                   
+                 
+                if (bs != null) {
+                    serviceDesc = bs.getDescription();
+                }    
              %>
             <tr align="center">
                 <td><%=billItem.getId() %></td>
-                <td><%=bs.getDescription()%></td>
+                <td><%=serviceDesc%></td>
                 <td><%=billItem.getServiceCode()%></td>
                 <td><%=billItem.getServiceCount()%></td>
                 <td><%=billItem.getDx()%></td>
