@@ -119,7 +119,6 @@ public class MatchingManager {
 		VacancyDisplayBO out=waitlistDao.getDisplayVacancy(vacancyID);
 		out.criteriaSummary=crits.getSummary();
 		out.vacancyID=vacancyID;
-		
 		return out;
 	}
 	
@@ -170,7 +169,9 @@ public class MatchingManager {
 			c.rgn_start = cr.getRangeStartValue();
 			c.rgn_end = cr.getRangeEndValue();
 			c.weight = cr.getMatchScoreWeight();
-			criterias.put(c.type.id,c);
+
+			if(c.type!=null)
+				criterias.put(c.type.id,c);
 		}
 		
 		for(Criteria cr: criteriaDao.getCriteriasByVacancyId(vacancyID)) {
@@ -181,7 +182,8 @@ public class MatchingManager {
 			c.rgn_start = cr.getRangeStartValue();
 			c.rgn_end = cr.getRangeEndValue();
 			c.weight = cr.getMatchScoreWeight();
-			criterias.put(c.type.id,c);
+			if(c.type!=null)
+				criterias.put(c.type.id,c);
 		}
 		
 		// Load multi-value options, but only if non of the other criteria was set
