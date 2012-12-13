@@ -24,7 +24,6 @@
 package org.oscarehr.PMmodule.service.impl;
 
 import java.io.StringReader;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -67,12 +66,9 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 		for(OscarForm form:allForms) {
 			//String name = form.getDescription().toLowerCase().replaceAll(" ","_");
 			String name = form.getDescription();
-			try {
-				if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
-					results.add(form);
-				}
-			} catch(SQLException e) {
-				log.error("Error", e);
+			
+			if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
+				results.add(form);
 			}
 			
 		}
@@ -126,12 +122,9 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 		
 		for(OscarFormInstance form:forms) {
 			String name = form.getDescription();
-			try {
-				if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
-					results.add(form);
-				}
-			} catch(SQLException e) {
-				log.error("Error", e);
+			
+			if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
+				results.add(form);
 			}
 		}
 		return results;
