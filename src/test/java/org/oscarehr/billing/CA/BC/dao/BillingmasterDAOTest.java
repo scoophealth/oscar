@@ -23,10 +23,12 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +39,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.Billingmaster;
 import oscar.entities.WCB;
+import oscar.oscarBilling.ca.bc.administration.TeleplanCorrectionFormWCB;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 
 public class BillingmasterDAOTest extends DaoTestFixtures {
@@ -102,8 +105,19 @@ public class BillingmasterDAOTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testSelect_user_bill_report_wcb() {
-		assertNotNull(dao.select_user_bill_report_wcb(1));
+	public void testSelect_user_bill_report_wcb2() throws Exception {
+		assertEquals(SchemaUtils.loadFileIntoMySQL(System.getProperty("basedir") + "/src/test/resources/select_user_bill_report_wcb_data.sql"),0);
+		
+		List<Object[]> results = dao.select_user_bill_report_wcb(1);
+		assertNotNull(results);
+		TeleplanCorrectionFormWCB f = new TeleplanCorrectionFormWCB(results);
+		assertNotNull(f);
+		
+	}
+	
+	@Test
+	public void testSearch_teleplanbill() {
+		assertNotNull(dao.search_teleplanbill(1));
 	}
 	
 }

@@ -31,17 +31,13 @@
    String dateEnd = StringUtils.trimToNull(request.getParameter("xml_appointment_date"));
    if (dateEnd==null) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
    if (dateBegin==null) dateBegin="1950-01-01"; // set to any really early time, effectively search everything. 
- ResultSet rs=null ;
-  String[] param =new String[3];
-  param[0] = request.getParameter("providerview");
- param[1] = dateBegin;
-  param[2] = dateEnd;
-  rs = apptMainBean.queryResults(param, "search_bill_history_daterange");
+
+  List<Billing> bs = billingDao.search_bill_history_daterange(request.getParameter("providerview"),ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
 
   boolean bodd=false;
    nItems=0;
   String apptDoctorNo="", apptNo="", demoNo = "", demoName="", userno="", apptDate="", apptTime="", reason="",  note="";
-  if(rs==null) {
+  if(bs.size() == 0) {
     out.println("failed!!!"); 
   } else {
   %>
@@ -58,18 +54,18 @@
 			face="Arial, Helvetica, sans-serif">ACCOUNT</font></b></TH>
 	</tr>
 	<%
-    while (rs.next()) {
+    for (Billing b:bs) {
      
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-      apptDoctorNo = apptMainBean.getString(rs,"apptProvider_no");
-      apptNo = apptMainBean.getString(rs,"appointment_no");
-      demoNo = apptMainBean.getString(rs,"demographic_no");
-      demoName = apptMainBean.getString(rs,"demographic_name");
-      userno=apptMainBean.getString(rs,"provider_no");
-      apptDate = apptMainBean.getString(rs,"billing_date");
-      apptTime = apptMainBean.getString(rs,"billing_time");
-      reason = apptMainBean.getString(rs,"status");
+      apptDoctorNo =b.getApptProviderNo();
+      apptNo = String.valueOf(b.getAppointmentNo());
+      demoNo = String.valueOf(b.getDemographicNo());
+      demoName = b.getDemographicName();
+      userno=b.getProviderNo();
+      apptDate = ConversionUtils.toDateString(b.getBillingDate());
+      apptTime = ConversionUtils.toTimeString(b.getBillingTime()); 
+      reason =b.getStatus();
       
       if (apptDoctorNo.compareTo("none") == 0){
       note = "No Appt / INR";
@@ -100,8 +96,8 @@
 		<TD align="center" width="10%"><b> <font size="2"
 			face="Arial, Helvetica, sans-serif"><a
 			href="javascript: function myFunction() {return false; }"
-			onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&dboperation=search_bill&hotclick=0")'
-			title="<%=reason%>"> <%=apptMainBean.getString(rs,"billing_no")%></a></font></b></TD>
+			onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=b.getId()%>&dboperation=search_bill&hotclick=0")'
+			title="<%=reason%>"> <%=b.getId()%></a></font></b></TD>
 	</tr>
 	<%  rowCount = rowCount + 1;
     }

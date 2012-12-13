@@ -1,8 +1,3 @@
-
-<%      
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-%>
 <!--  
 /*
  * 
@@ -30,38 +25,37 @@
 -->
 <% 
  
+List<Billing> bs = billingMasterDao.search_teleplanbill(Integer.parseInt(billNo));
+		 
 
- ResultSet rslocation = null;
- rslocation = apptMainBean.queryResults(billNo, "search_teleplanbill");
- while(rslocation.next()){ 
-    DemoNo = rslocation.getString("demographic_no");
-    DemoName = rslocation.getString("demographic_name");
-    UpdateDate = rslocation.getString("update_date");
-    BillDate = rslocation.getString("billing_date");
-    BillType = rslocation.getString("status");
-    Provider = rslocation.getString("provider_no");
-    visitdate = rslocation.getString("visitdate");
-    visittype = rslocation.getString("visittype");
+ for(Billing b:bs){ 
+    DemoNo = String.valueOf(b.getDemographicNo());
+    DemoName = b.getDemographicName();
+    UpdateDate = ConversionUtils.toDateString(b.getUpdateDate());
+    BillDate = ConversionUtils.toDateString(b.getBillingDate());
+    BillType = b.getStatus();
+    Provider = b.getProviderNo();
+    visitdate =ConversionUtils.toDateString( b.getVisitDate());
+    visittype = b.getVisitType();
  }
 
- ResultSet rsPatient = null;
- rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
- while(rsPatient.next()){
-     DemoSex = rsPatient.getString("sex");
-     DemoAddress = rsPatient.getString("address");
-     DemoCity = rsPatient.getString("city");
-     DemoProvince = rsPatient.getString("province");
-     DemoPostal = rsPatient.getString("postal");
-     DemoDOB = MyDateFormat.getStandardDate(Integer.parseInt(rsPatient.getString("year_of_birth")),Integer.parseInt(rsPatient.getString("month_of_birth")),Integer.parseInt(rsPatient.getString("date_of_birth")));
-     hin = rsPatient.getString("hin") + rsPatient.getString("ver");
-     if (rsPatient.getString("family_doctor") == null){ r_doctor = "N/A"; r_doctor_ohip="000000";}else{
-        r_doctor=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd");
-        r_doctor_ohip=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip");
+Demographic d =  demographicDao.getDemographic(DemoNo);
+ if(d != null){
+     DemoSex = d.getSex();
+     DemoAddress = d.getAddress();
+     DemoCity =d.getCity();
+     DemoProvince = d.getProvince();
+     DemoPostal = d.getPostal();
+     DemoDOB = MyDateFormat.getStandardDate(Integer.parseInt(d.getYearOfBirth()),Integer.parseInt(d.getMonthOfBirth()),Integer.parseInt(d.getDateOfBirth()));
+     hin = d.getHin() + d.getVer();
+     if (d.getFamilyDoctor() == null){ r_doctor = "N/A"; r_doctor_ohip="000000";}else{
+        r_doctor=SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rd")==null?"":SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rd");
+        r_doctor_ohip=SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rdohip")==null?"":SxmlMisc.getXmlContent(d.getFamilyDoctor(),"rdohip");
      }
-     HCTYPE = rsPatient.getString("hc_type")==null?"ON":rsPatient.getString("hc_type");
+     HCTYPE = d.getHcType()==null?"ON":d.getHcType();
      if (DemoSex.equals("M")) HCSex = "1";
      if (DemoSex.equals("F")) HCSex = "2";
-     roster_status = rsPatient.getString("roster_status");
+     roster_status = d.getRosterStatus();
  }
    
  %>

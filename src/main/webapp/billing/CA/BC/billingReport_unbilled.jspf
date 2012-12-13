@@ -30,17 +30,13 @@
    String dateEnd = request.getParameter("xml_appointment_date");
    if (dateEnd.compareTo("") == 0) dateEnd = oscar.MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
    if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // set to any early time to start search from beginning
- ResultSet rs=null ;
-  String[] param =new String[3];
-  param[0] = request.getParameter("providerview");
- param[1] = dateBegin;
-  param[2] = dateEnd;
-  rs = apptMainBean.queryResults(param, "search_unbill_history_daterange");
+
+   	List<Appointment> bs = appointmentDao.search_unbill_history_daterange(request.getParameter("providerview"),ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
 
   boolean bodd=false;
    nItems=0;
   String apptStatus="", apptNo="", demoNo = "", demoName="", userno="", apptDate="", apptTime="", reason="";
-  if(rs==null) {
+  if(bs==null) {
     out.println("failed!!!"); 
   } else {
   %>
@@ -57,18 +53,18 @@
 			face="Arial, Helvetica, sans-serif">COMMENTS</font></b></TH>
 	</tr>
 	<%
-    while (rs.next()) {
+    for (Appointment a:bs) {
      
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-      apptNo = apptMainBean.getString(rs,"appointment_no");
-      demoNo = apptMainBean.getString(rs,"demographic_no");
-      demoName = apptMainBean.getString(rs,"name");
-      userno=apptMainBean.getString(rs,"provider_no");
-      apptDate = apptMainBean.getString(rs,"appointment_date");
-      apptTime = apptMainBean.getString(rs,"start_time");
-      reason = apptMainBean.getString(rs,"reason");
-      apptStatus = apptMainBean.getString(rs,"status");
+		apptNo = a.getId().toString();
+		demoNo = String.valueOf(a.getDemographicNo());
+		demoName = a.getName();
+		userno=a.getProviderNo();
+		apptDate = ConversionUtils.toDateString(a.getAppointmentDate());
+		apptTime =  ConversionUtils.toDateString(a.getStartTime());
+		reason = a.getReason();
+     	apptStatus = a.getStatus();
 %>
 	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
 		<TD align="center" width="20%"><b><font size="2"

@@ -23,16 +23,19 @@
     Ontario, Canada
 
 --%>
-<%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-%>
+
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.billing.CA.BC.dao.TeleplanS21Dao" %>
+<%@page import="org.oscarehr.billing.CA.BC.model.TeleplanS21" %>
+
+<%
+	TeleplanS21Dao teleplanS21Dao = SpringUtils.getBean(TeleplanS21Dao.class);
+%>
+
 <jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" />
 
-<%@ include file="dbBilling.jspf" %>
 
 <%
   GregorianCalendar now=new GregorianCalendar();
@@ -120,21 +123,18 @@
      </tr>
 
   <%
-    ResultSet rsdemo;
-    rsdemo = null;
-    String[] param5 =new String[1];
-    param5[0] = "D";
-    rsdemo = apptMainBean.queryResults(param5, "search_all_tahd");
-    while (rsdemo.next()) {
-        raNo  = rsdemo.getString("s21_id");
-        paymentdate = rsdemo.getString("t_payment");
-        payable = rsdemo.getString("t_payeename");
-        amtbilled= rsdemo.getString("t_amtbilled");
-		payeeNo= rsdemo.getString("t_payeeno");
-        amtpaid = rsdemo.getString("t_amtpaid");
-        balancefwd = rsdemo.getString("t_balancefwd");
-        chequeamt= rsdemo.getString("t_cheque");
-        newbalance = rsdemo.getString("t_newbalance");
+    
+    for(TeleplanS21 result : teleplanS21Dao.search_all_tahd("D")) {
+    
+        raNo  = result.getId().toString();
+        paymentdate = result.getPayment();
+        payable = result.getPayeeName();
+        amtbilled= result.getAmountBilled();
+		payeeNo= result.getPayeeNo();
+        amtpaid = result.getAmountPaid();
+        balancefwd = result.getBalanceForward();
+        chequeamt= result.getCheque();
+        newbalance = result.getNewBalance();
    %>
 
      <tr>
@@ -151,7 +151,7 @@
            <a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a> 
            ( <a href="createBillingReportAction.do?docFormat=pdf&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo=" target="_blank">PDF</a>|<a href="createBillingReportAction.do?docFormat=csv&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo=" target="_blank">CSV</a>)
         </td>
-        <td ><%=rsdemo.getString("status")%></td>
+        <td ><%=result.getStatus()%></td>
      </tr>
      <tr>
         <td colspan="10" bgcolor="#EBF4F5">&nbsp;</td>

@@ -60,4 +60,12 @@ public class TeleplanC12Dao extends AbstractDao<TeleplanC12> {
 		return entityManager.createQuery(sql).getResultList();	    
     }
 	
+	@SuppressWarnings("unchecked")
+	public List<TeleplanC12> select_c12_record(String status, String claimNo) { 
+		Query query = createQuery("t", "t.status = :status and t.officeFolioClaimNo = :claimNo");
+		query.setParameter("claimNo", claimNo);
+		query.setParameter("status", status);
+		return query.getResultList();
+    }
+	
 }
