@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -33,6 +34,7 @@ import org.oscarehr.common.model.ScheduleTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class ScheduleTemplateDao extends AbstractDao<ScheduleTemplate> {
 	
 	public ScheduleTemplateDao() {
@@ -42,10 +44,27 @@ public class ScheduleTemplateDao extends AbstractDao<ScheduleTemplate> {
 	public List<ScheduleTemplate> findBySummary(String summary) {
 		Query query = entityManager.createQuery("SELECT e FROM ScheduleTemplate e WHERE e.summary=? ");
 		query.setParameter(1, summary);
-		
-		@SuppressWarnings("unchecked")
+
         List<ScheduleTemplate> results = query.getResultList();
 		return results;
-	} 
+	}
+
+	public List<Object[]> findSchedules(Date date_from, Date date_to, String provider_no) {
+	    String sql = "FROM ScheduleTemplate st, ScheduleDate sd " +
+        		"WHERE st.id.name = sd.hour " +
+        		"AND sd.date >= :date_from " + 
+        		"AND sd.date <= :date_to " +
+        		"AND sd.providerNo = :provider_no " +
+        		"AND sd.status = 'A' " +
+        		"AND (" +
+        		"	st.id.providerNo = sd.providerNo " +
+        		"	OR st.id.providerNo = 'Public' " +
+        		") ORDER BY sd.date";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("date_from", date_from);
+		query.setParameter("date_to", date_to);
+		query.setParameter("provider_no", provider_no);
+		return query.getResultList();
+    }
 	
 }
