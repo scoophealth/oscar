@@ -39,6 +39,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 	public OscarAppointmentDao() {
@@ -55,7 +56,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter(3, appt.getEndTime());
 		query.setParameter(4, appt.getProviderNo());
 
-		@SuppressWarnings("unchecked")
+		
 		List<Facility> results = query.getResultList();
 
 		if (!results.isEmpty()) return true;
@@ -68,7 +69,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -89,7 +90,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = " + demographicNo + " ORDER BY a.id";
 		Query query = entityManager.createQuery(sql);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -101,7 +102,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, startTime);
 		query.setParameter(2, endTime);
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -115,7 +116,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter(2, endTime);
 		query.setParameter(3, providerNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -126,7 +127,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, providerNo);
 		query.setParameter(2, date);
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -139,7 +140,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter(2, date);
 		query.setParameter(3, notThisStatus);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> results = query.getResultList();
 		return results;
 	}
@@ -150,7 +151,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter(1, providerNo);
 		query.setParameter(2, date);
 		query.setParameter(3, status);
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -161,7 +162,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, date);
 		query.setParameter(2, status);
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -186,7 +187,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter(9, creator);
 		query.setParameter(10, demographicNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -202,7 +203,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setFirstResult(startIndex);
 		query.setMaxResults(itemsToReturn);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
@@ -212,13 +213,13 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		String sql = "SELECT a FROM Appointment a";
 		Query query = entityManager.createQuery(sql);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
     public List<Appointment> findNonCancelledFutureAppointments(Integer demographicId) {
 		Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' " +
 				" AND appt.appointmentDate >= CURRENT_DATE ORDER BY appt.appointmentDate");
@@ -275,13 +276,13 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter(9, creator);
 		query.setParameter(10, demographicNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Appointment> rs = query.getResultList();
 
 		return rs;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
     public List<Appointment> findByProviderAndDate(String providerNo, Date appointmentDate) {
 		Query query = createQuery("a", "a.providerNo = :pNo and a.appointmentDate= :aDate");
 		query.setParameter("pNo", providerNo);
@@ -289,7 +290,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	    return query.getResultList();
     }
 
-	@SuppressWarnings("unchecked")
+	
 	public List<Object[]> findAppointments(Date sDate, Date eDate) {
 		String sql = "FROM Appointment a, Demographic d " +
 				"WHERE a.demographicNo = d.DemographicNo " +
@@ -307,8 +308,6 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return query.getResultList();
 	}
 	
-
-    @SuppressWarnings("unchecked")
     public List<Object[]> findPatientAppointments(String providerNo, Date from, Date to) {
         StringBuilder sql = new StringBuilder("FROM Demographic d, Appointment a, Provider p " +
                 "WHERE a.demographicNo = d.DemographicNo " +
@@ -345,4 +344,11 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		
 		return query.getResultList();
 	}
+    
+	public List<Appointment> findByDateAndProvider(Date date, String provider_no) {
+		Query query = createQuery("a", "a.providerNo = :provider_no and a.appointmentDate = :date order by a.startTime asc");
+		query.setParameter("provider_no", provider_no);
+		query.setParameter("date", date);
+		return query.getResultList();
+    }
 }
