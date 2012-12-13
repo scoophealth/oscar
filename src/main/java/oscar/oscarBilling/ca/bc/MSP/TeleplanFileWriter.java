@@ -26,15 +26,18 @@
 package oscar.oscarBilling.ca.bc.MSP;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.Misc;
 import oscar.entities.Billingmaster;
@@ -42,7 +45,6 @@ import oscar.entities.WCB;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.Teleplan.WCBTeleplanSubmission;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProviderData;
 
 /**
@@ -424,17 +426,14 @@ public class TeleplanFileWriter {
     
     //Date Range not implemented
     //This should be moved out of this class
-    private List getBilling(String providerInsNo,Date startDate, Date endDate) throws Exception{
-        ArrayList list = new ArrayList();      
-        
-        String query = "select * from billing where provider_ohip_no='"+ providerInsNo+"' and (status='O' or status='W') and billingtype != 'Pri' ";
-        log.debug("billing query "+query);
-        ResultSet rs = DBHandler.GetSQL(query);
-        while (rs.next()){
-            HashMap map = new HashMap();
-            map.put("billing_no",rs.getString("billing_no"));
-            map.put("demographic_name",rs.getString("demographic_name"));
-            map.put("billingtype",rs.getString("billingtype"));   
+    private List<Map<String, String>> getBilling(String providerInsNo,Date startDate, Date endDate) throws Exception{
+        ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();              
+        BillingDao dao = SpringUtils.getBean(BillingDao.class);
+        for(Billing b : dao.findByProviderStatusForTeleplanFileWriter(providerInsNo)) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("billing_no",b.getId().toString());
+            map.put("demographic_name",b.getDemographicName());
+            map.put("billingtype",b.getBillingtype());   
             list.add(map);
         }     
         return list;

@@ -36,6 +36,7 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.util.ConversionUtils;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class BillingDao extends AbstractDao<Billing> {
 
 	public BillingDao() {
@@ -47,7 +48,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		q.setParameter(1, billingNo);
 		q.setParameter(2, "D");
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Billing> results = q.getResultList();
 		
 		return results;
@@ -57,7 +58,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		Query q = entityManager.createQuery("select x from Billing x where x.billingtype=?");
 		q.setParameter(1, type);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Billing> results = q.getResultList();
 		
 		return results;
@@ -67,7 +68,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		Query q = entityManager.createQuery("select x from Billing x where x.appointmentNo=?");
 		q.setParameter(1, apptNo);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Billing> results = q.getResultList();
 		
 		return results;
@@ -77,13 +78,13 @@ public class BillingDao extends AbstractDao<Billing> {
 		Query query = entityManager.createQuery("SELECT b FROM  Billing b  where b.billingmasterNo in (:billingNumbers)");
 		query.setParameter("billingNumbers", ConversionUtils.toIntList(list));
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Billing> results = query.getResultList();
 		
 		return results;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
     public List<Object[]> findBillings(Integer demoNo, List<String> serviceCodes) {    	
 		Map<String, Object> params = new HashMap<String, Object>();
 		StringBuilder serviceCodeValues = new StringBuilder();
@@ -116,7 +117,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<Billing> findBillings(Integer demoNo, String statusType, String providerNo, Date startDate, Date endDate) {
 		String providerQuery = "", startDateQuery = "", endDateQuery = "", demoQuery = "";
 		
@@ -164,7 +165,7 @@ public class BillingDao extends AbstractDao<Billing> {
 	 * @return
 	 * 		Returns a list of pairs containing {@link Billingmaster} and {@link Billing} instances.
 	 */
-	@SuppressWarnings("unchecked")
+	
     public List<Object[]> findBillings(Integer billing_no) {
 		Query query = entityManager.createQuery("FROM " + Billingmaster.class.getSimpleName() + " b, Billing bi where bi.id = b.billingNo and b.billingNo = :bn");
 		query.setParameter("bn", billing_no);
@@ -179,7 +180,7 @@ public class BillingDao extends AbstractDao<Billing> {
      * @param dateRange
      * @return
      */
-    @SuppressWarnings("unchecked")
+    
 	public List<Billing> findByProviderStatusAndDates(String providerNo, List<String> statusList, DateRange dateRange) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		StringBuilder buf = new StringBuilder("FROM Billing b WHERE b.providerOhipNo = :pon");
@@ -211,13 +212,13 @@ public class BillingDao extends AbstractDao<Billing> {
 		return query.getResultList();
     }
 
-	@SuppressWarnings("unchecked")
+	
     public List<Billing> getMyMagicBillings() {
 		Query q = createQuery("b", "b.status <> 'B' AND b.billingtype IN ('ICBC', 'WCB', 'MSP')"); 
 		return q.getResultList();
     }
 	
-	@SuppressWarnings("unchecked")
+	
 	@NativeSql({"billing", "provider", "billingmaster"})
     public List<Object[]> findByManyThings(String statusType, String providerNo, String startDate, String endDate, String demoNo, boolean excludeWCB, boolean excludeMSP, boolean excludePrivate, boolean exludeICBC) {
 		String providerQuery = "";
@@ -296,7 +297,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<Object[]> findBillingsByStatus(String statusType) {
 		Query query = entityManager.createQuery("FROM Billing b, Billingmaster bm " +
 				"WHERE b.id = bm.billingNo " +
@@ -305,7 +306,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		return query.getResultList();
     }
 
-    @SuppressWarnings("unchecked")
+    
 	public List<Object[]> findOutstandingBills(String demographicNo, String billingType, List<String> statuses) {
 	    // TODO Auto-generated method stub
 		String q = "FROM Billingmaster bm, Billing b " +
@@ -321,7 +322,7 @@ public class BillingDao extends AbstractDao<Billing> {
 
     }
 
-	@SuppressWarnings("unchecked")
+	
 	public List<Object[]> findByBillingMasterNo(Integer billingmasterNo) {
 		Query query = entityManager.createQuery("FROM Billingmaster b, Billing b1 " + 
 				"WHERE b1.id = b.billingNo " + 
@@ -359,12 +360,12 @@ public class BillingDao extends AbstractDao<Billing> {
 		query.setParameter("sdate", sdate);
 		query.setParameter("edate", edate);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Integer> ids = query.getResultList();
 		return ids.size();
 	}
 
-    @SuppressWarnings("unchecked")
+    
     public List<Object[]> countBillingVisitsByCreator(String providerNo, Date dateBegin, Date dateEnd) {
         String sql = "SELECT b.visitType, COUNT(b) FROM Billing b "
                 + "WHERE b.status <> 'D' "
@@ -380,7 +381,7 @@ public class BillingDao extends AbstractDao<Billing> {
         return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<Object[]> countBillingVisitsByProvider(String providerNo, Date dateBegin, Date dateEnd) {
         String sql = "SELECT b.visitType, COUNT(b) FROM Billing b "
                 + "WHERE b.status <> 'D' "
@@ -402,7 +403,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		q.setParameter(2, appointmentNo);
 		q.setParameter(3, "D");
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Billing> results = q.getResultList();
 		
 		if(results.size()>0)
@@ -415,7 +416,7 @@ public class BillingDao extends AbstractDao<Billing> {
 		Query q = entityManager.createQuery("select x from Billing x where x.demographicNo=? order by x.updateDate desc, x.updateTime desc");
 		q.setParameter(1, demographicNo);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Billing> results = q.getResultList();
 		
 		if(results.size()>0)
@@ -430,11 +431,17 @@ public class BillingDao extends AbstractDao<Billing> {
 				+ "where p.ProviderNo=a.providerNo and d.DemographicNo= b.demographicNo and b.appointmentNo=a.id and b.status <> 'D' and b.id=?");
 		query.setParameter(1, billingNo);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Object[]> results = query.getResultList();
 		
 		return results;
 	}
+
+	public List<Billing> findByProviderStatusForTeleplanFileWriter(String hin) {
+		Query query = createQuery("bs", "bs.providerOhipNo = :hin and (bs.status = 'O' or bs.status = 'W') and bs.billingtype != 'Pri'");
+		query.setParameter("hin", hin);
+		return query.getResultList();
+    }
 	
 
 }
