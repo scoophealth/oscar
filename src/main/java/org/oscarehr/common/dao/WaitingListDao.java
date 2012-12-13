@@ -129,4 +129,12 @@ public class WaitingListDao extends AbstractDao<WaitingList> {
 		} 
 		return result;
     }
+	
+	@SuppressWarnings("unchecked")
+    public List<WaitingList> search_wlstatus(Integer demographicId) {
+		Query query = entityManager.createQuery("select wl from WaitingList wl where wl.demographicNo = :demoNo AND wl.isHistory = 'N' order BY wl.onListSince desc");
+		query.setParameter("demoNo", demographicId);
+
+	    return query.getResultList();
+    }
 }
