@@ -26,6 +26,7 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -45,22 +46,22 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
-	
-	protected SecObjPrivilegeDao dao = (SecObjPrivilegeDao)SpringUtils.getBean(SecObjPrivilegeDao.class);
-	
+
+	protected SecObjPrivilegeDao dao = (SecObjPrivilegeDao) SpringUtils.getBean(SecObjPrivilegeDao.class);
+
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("secObjPrivilege");		
+		SchemaUtils.restoreTable("secObjPrivilege", "secUserRole");
 	}
-	
+
 	@Test
 	public void testFindByRoleUserGroupAndObjectName() throws Exception {
-		
+
 		String objectName1 = "alphaName1";
 		String roleUserGroup1 = "sigmaGroup1";
 		String objectName2 = "alphaName2";
 		String roleUserGroup2 = "sigmaGroup2";
-		
+
 		SecObjPrivilege secObjPrivilege1 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege1);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey1 = new SecObjPrivilegePrimaryKey();
@@ -68,7 +69,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey1.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege1.setId(secObjPrivilegePrimaryKey1);
 		dao.persist(secObjPrivilege1);
-		
+
 		SecObjPrivilege secObjPrivilege2 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege2);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey2 = new SecObjPrivilegePrimaryKey();
@@ -76,7 +77,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey2.setRoleUserGroup(roleUserGroup2);
 		secObjPrivilege2.setId(secObjPrivilegePrimaryKey2);
 		dao.persist(secObjPrivilege2);
-		
+
 		SecObjPrivilege secObjPrivilege3 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege3);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey3 = new SecObjPrivilegePrimaryKey();
@@ -84,7 +85,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey3.setRoleUserGroup(roleUserGroup2);
 		secObjPrivilege3.setId(secObjPrivilegePrimaryKey3);
 		dao.persist(secObjPrivilege3);
-		
+
 		SecObjPrivilege secObjPrivilege4 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege4);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey4 = new SecObjPrivilegePrimaryKey();
@@ -92,18 +93,18 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey4.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege4.setId(secObjPrivilegePrimaryKey4);
 		dao.persist(secObjPrivilege4);
-		
+
 		List<SecObjPrivilege> expectedResult = new ArrayList<SecObjPrivilege>(Arrays.asList(secObjPrivilege1));
 		List<SecObjPrivilege> result = dao.findByRoleUserGroupAndObjectName(roleUserGroup1, objectName1);
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
@@ -113,14 +114,14 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testFindByObjectNames() throws Exception {
-		
+
 		String objectName1 = "alphaName1";
 		String objectName2 = "alphaName2";
 		String objectName3 = "alphaName3";
-		
+
 		String roleUserGroup1 = "sigmaGroup1";
 		String roleUserGroup2 = "sigmaGroup2";
-		
+
 		SecObjPrivilege secObjPrivilege1 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege1);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey1 = new SecObjPrivilegePrimaryKey();
@@ -128,7 +129,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey1.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege1.setId(secObjPrivilegePrimaryKey1);
 		dao.persist(secObjPrivilege1);
-		
+
 		SecObjPrivilege secObjPrivilege2 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege2);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey2 = new SecObjPrivilegePrimaryKey();
@@ -136,7 +137,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey2.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege2.setId(secObjPrivilegePrimaryKey2);
 		dao.persist(secObjPrivilege2);
-		
+
 		SecObjPrivilege secObjPrivilege3 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege3);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey3 = new SecObjPrivilegePrimaryKey();
@@ -144,20 +145,20 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey3.setRoleUserGroup(roleUserGroup2);
 		secObjPrivilege3.setId(secObjPrivilegePrimaryKey3);
 		dao.persist(secObjPrivilege3);
-		
+
 		Collection<String> objectNames = new ArrayList<String>(Arrays.asList(objectName1, objectName2));
-		
+
 		List<SecObjPrivilege> expectedResult = new ArrayList<SecObjPrivilege>(Arrays.asList(secObjPrivilege1, secObjPrivilege2));
 		List<SecObjPrivilege> result = dao.findByObjectNames(objectNames);
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
@@ -172,7 +173,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		String roleUserGroup1 = "sigmaGroup1";
 		String objectName2 = "alphaName2";
 		String roleUserGroup2 = "sigmaGroup2";
-		
+
 		SecObjPrivilege secObjPrivilege1 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege1);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey1 = new SecObjPrivilegePrimaryKey();
@@ -180,7 +181,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey1.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege1.setId(secObjPrivilegePrimaryKey1);
 		dao.persist(secObjPrivilege1);
-		
+
 		SecObjPrivilege secObjPrivilege2 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege2);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey2 = new SecObjPrivilegePrimaryKey();
@@ -188,7 +189,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey2.setRoleUserGroup(roleUserGroup2);
 		secObjPrivilege2.setId(secObjPrivilegePrimaryKey2);
 		dao.persist(secObjPrivilege2);
-		
+
 		SecObjPrivilege secObjPrivilege3 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege3);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey3 = new SecObjPrivilegePrimaryKey();
@@ -196,7 +197,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey3.setRoleUserGroup(roleUserGroup2);
 		secObjPrivilege3.setId(secObjPrivilegePrimaryKey3);
 		dao.persist(secObjPrivilege3);
-		
+
 		SecObjPrivilege secObjPrivilege4 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege4);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey4 = new SecObjPrivilegePrimaryKey();
@@ -204,18 +205,18 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey4.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege4.setId(secObjPrivilegePrimaryKey4);
 		dao.persist(secObjPrivilege4);
-		
+
 		List<SecObjPrivilege> expectedResult = new ArrayList<SecObjPrivilege>(Arrays.asList(secObjPrivilege1, secObjPrivilege4));
 		List<SecObjPrivilege> result = dao.findByRoleUserGroup(roleUserGroup1);
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
@@ -225,12 +226,12 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testFindByObjectName() throws Exception {
-		
+
 		String objectName1 = "alphaName1";
 		String roleUserGroup1 = "sigmaGroup1";
 		String objectName2 = "alphaName2";
 		String roleUserGroup2 = "sigmaGroup2";
-		
+
 		SecObjPrivilege secObjPrivilege1 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege1);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey1 = new SecObjPrivilegePrimaryKey();
@@ -238,7 +239,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey1.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege1.setId(secObjPrivilegePrimaryKey1);
 		dao.persist(secObjPrivilege1);
-		
+
 		SecObjPrivilege secObjPrivilege2 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege2);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey2 = new SecObjPrivilegePrimaryKey();
@@ -246,7 +247,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey2.setRoleUserGroup(roleUserGroup1);
 		secObjPrivilege2.setId(secObjPrivilegePrimaryKey2);
 		dao.persist(secObjPrivilege2);
-		
+
 		SecObjPrivilege secObjPrivilege3 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege3);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey3 = new SecObjPrivilegePrimaryKey();
@@ -254,7 +255,7 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey3.setRoleUserGroup(roleUserGroup2);
 		secObjPrivilege3.setId(secObjPrivilegePrimaryKey3);
 		dao.persist(secObjPrivilege3);
-		
+
 		SecObjPrivilege secObjPrivilege4 = new SecObjPrivilege();
 		EntityDataGenerator.generateTestDataForModelClass(secObjPrivilege4);
 		SecObjPrivilegePrimaryKey secObjPrivilegePrimaryKey4 = new SecObjPrivilegePrimaryKey();
@@ -262,22 +263,33 @@ public class SecObjPrivilegeDaoTest extends DaoTestFixtures {
 		secObjPrivilegePrimaryKey4.setRoleUserGroup(roleUserGroup2);
 		secObjPrivilege4.setId(secObjPrivilegePrimaryKey4);
 		dao.persist(secObjPrivilege4);
-		
+
 		List<SecObjPrivilege> expectedResult = new ArrayList<SecObjPrivilege>(Arrays.asList(secObjPrivilege1, secObjPrivilege3));
 		List<SecObjPrivilege> result = dao.findByObjectName(objectName1);
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
 		}
 		assertTrue(true);
 	}
+
+	@Test
+	public void testCountObjectsByName() {
+		dao.countObjectsByName("OBJ NAME");
+	}
+
+	@Test
+	public void testFindByFormNamePrivilegeAndProviderNo() {
+		assertNotNull(dao.findByFormNamePrivilegeAndProviderNo("frm", "priv", "prov"));
+	}
+
 }
