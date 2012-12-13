@@ -25,26 +25,23 @@
 --%>
 <% 
   
- ResultSet rs=null ;
-  ResultSet rs2=null ;
-  String[] param =new String[1];
+
   String[] param2 =new String[10];
   
  
-    
-  param[0] = "A";
-  rs = apptMainBean.queryResults(param, "search_billingservice_premium_dt");
+  List<CtlBillingServicePremium> cbsps = ctlBillingServicePremiumDao.findByStatus("A");
+		  
    int rCount = 0;     int rCount1 = 0;  int tCount = 0;  int tCount1 = 0; int tCount2 = 0; int tCount3 = 0;
   boolean bodd=false;
   
  
   String servicetype_name="";
-  if(rs==null) {
+  if(cbsps==null) {
    out.println("failed!!!"); 
   } else {
   %>
 <% 
-   while (rs.next()) {
+   for (CtlBillingServicePremium cbsp : cbsps) {
      
          rCount = rCount + 1;
    }
@@ -59,17 +56,16 @@
        service_code1[j] = "";
        service_desc1[j] = "";
   } 
-     rs = null;
-     rs = apptMainBean.queryResults(param, "search_ctlpremium");
- if(rs==null) {
+    List<Object[]> results = ctlBillingServicePremiumDao.search_ctlpremium("A");
+ if(results==null) {
    out.println("failed!!!"); 
   } else {
   %>
 <% 
-   while (rs.next()) {
+   for (Object[] result : results) {
  
-        service_code1[rCount1] = rs.getString("service_code");
-        service_desc1[rCount1] = rs.getString("service_desc");
+	   service_code1[rCount1] = (String)result[0];
+       service_desc1[rCount1] = (String)result[1];
        rCount1 = rCount1 +1;
    }
  } 

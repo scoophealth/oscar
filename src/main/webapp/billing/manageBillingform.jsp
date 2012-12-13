@@ -25,21 +25,28 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%      
-  if(session.getValue("user") == null)
-      response.sendRedirect("../logout.jsp");
-  String user_no; 
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
   String asstProvider_no = "";
    String color ="";
   String premiumFlag="";
 String service_form="", service_name="";
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.CtlBillingService" %>
+<%@ page import="org.oscarehr.common.dao.CtlBillingServiceDao" %>
+<%@ page import="org.oscarehr.common.model.CtlDiagCode" %>
+<%@ page import="org.oscarehr.common.dao.CtlDiagCodeDao" %>
+<%@ page import="org.oscarehr.common.model.CtlBillingServicePremium" %>
+<%@ page import="org.oscarehr.common.dao.CtlBillingServicePremiumDao" %>
+<%
+	CtlBillingServiceDao ctlBillingServiceDao = SpringUtils.getBean(CtlBillingServiceDao.class);
+	CtlDiagCodeDao ctlDiagCodeDao = SpringUtils.getBean(CtlDiagCodeDao.class);
+	CtlBillingServicePremiumDao ctlBillingServicePremiumDao = SpringUtils.getBean(CtlBillingServicePremiumDao.class);
+	
+%>
+
 <%
   String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
    String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
@@ -145,11 +152,12 @@ function onUnbilled(url) {
             String formID="";
             int Count = 0;  
         ResultSet rslocal;
-        rslocal = null;
- rslocal = apptMainBean.queryResults("%", "search_billingform");
- while(rslocal.next()){
- formDesc = rslocal.getString("servicetype_name");
- formID = rslocal.getString("servicetype"); 
+
+        List<CtlBillingService> cbss = ctlBillingServiceDao.findByServiceType("%");
+
+        for(CtlBillingService cbs:cbss){
+        	formDesc = cbs.getServiceTypeName();
+        	formID = cbs.getServiceType();
   
 %>
 			<option value="<%=formID%>"
