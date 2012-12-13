@@ -33,12 +33,10 @@
 
 		<%
 for (int i=1;i<4;i++){
- ResultSet rs=null ;
-  ResultSet rs2=null ;
-  String[] param =new String[2];
+ 
+
   String[] param2 =new String[10];
-  param[0] = "Group"+i;
- param[1] = request.getParameter("billingform");
+  
     String[] service_code = new String[20];
     String[] service_order = new String[20];
 
@@ -47,25 +45,27 @@ for (int i=1;i<4;i++){
   service_order[j] = "";
   }
 
-  rs = apptMainBean.queryResults(param, "search_ctlbillservice_detail");
+  List<CtlBillingService> results = ctlBillingServiceDao.findByServiceGroupAndServiceTypeId("Group"+i,request.getParameter("billingform"));
 int rCount = 0;
   boolean bodd=false;
 
 
   String servicetype_name="";
-  if(rs==null) {
+  if(results==null) {
    out.println("failed!!!");
   } else {
   %>
 		<%
-    while (rs.next()) {
+    for (CtlBillingService result:results) {
 
       bodd=bodd?false:true; //for the color of rows
-      service_name = rs.getString("servicetype_name");
-      if(rCount < 20){
-      service_code[rCount] = rs.getString("service_code");
-      service_order[rCount] = rs.getString("service_order");
-      servicetype_name = rs.getString("service_group_name");
+      
+      service_name = result.getServiceTypeName();
+      if(rCount < 20) {
+      service_code[rCount] = result.getServiceCode();
+       service_order[rCount] = String.valueOf(result.getServiceOrder());
+       servicetype_name = result.getServiceGroupName();
+       
       }
       rCount = rCount + 1;
    }
