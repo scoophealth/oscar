@@ -66,5 +66,21 @@ public class ScheduleTemplateDao extends AbstractDao<ScheduleTemplate> {
 		query.setParameter("provider_no", provider_no);
 		return query.getResultList();
     }
+
+	public List<Object[]> findSchedules(Date dateFrom, List<String> providerIds) {
+		String sql = "FROM ScheduleTemplate st, ScheduleDate sd " +
+				"WHERE st.id.name = sd.hour " +
+				"AND sd.date >= :dateFrom " +
+				"AND sd.providerNo in ( :providerIds ) " +
+				"AND sd.status = 'A' " +
+				"AND (" +
+				"	st.providerNo = sd.providerNo " +
+				"	OR st.providerNo = 'Public' " +
+				") ORDER BY sd.date";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("dateFrom", dateFrom);
+		query.setParameter("providerIds", providerIds);
+		return query.getResultList();
+    }
 	
 }
