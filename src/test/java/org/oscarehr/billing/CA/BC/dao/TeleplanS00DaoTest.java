@@ -44,7 +44,7 @@ public class TeleplanS00DaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("teleplanS00");
+		SchemaUtils.restoreTable("teleplanS00","provider");
 	}
 
 	@Test

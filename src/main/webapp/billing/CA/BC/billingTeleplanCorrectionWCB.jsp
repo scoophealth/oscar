@@ -47,20 +47,21 @@
 <%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
 <%@ page import="oscar.entities.Billingmaster" %>
 <%@ page import="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" %>
+<%@ page import="org.oscarehr.billing.CA.BC.model.TeleplanC12" %>
+<%@ page import="org.oscarehr.billing.CA.BC.dao.TeleplanC12Dao" %>
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
 	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
 	BillingmasterDAO billingMasterDao = SpringUtils.getBean(BillingmasterDAO.class);
+	TeleplanC12Dao teleplanC12Dao = SpringUtils.getBean(TeleplanC12Dao.class);
 %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@include file="dbBilling.jspf"%>
 
 <%
-
-  TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.queryResults(request.getParameter("billing_no"), "select_user_bill_report_wcb"));
+  List<Object[]> results = billingMasterDao.select_user_bill_report_wcb(Integer.parseInt(request.getParameter("billing_no")));
+  TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(results);
   Properties codes = new MspErrorCodes();
   BillingFormData billform = new BillingFormData();
   String billRegion = OscarProperties.getInstance().getProperty("billRegion","BC");
@@ -612,25 +613,39 @@ function popFeeItemList(form,field){
 					<ul>
 						<%
                   if ("" != request.getParameter("billing_no")) {
-                    java.sql.ResultSet rsCode = null;
+                   
                     String desc = null;
-                    java.sql.ResultSet rs = apptMainBean.queryResults(new String[] {"O", request.getParameter("billing_no")}, "select_c12_record");
-                    while (rs.next()) {
-                      String seqNum = apptMainBean.getString(rs,"t_dataseq");
-                      for (int i = 1; i < 8; i++) {
-                        desc = apptMainBean.getString(rs,"t_exp" + String.valueOf(i));
-                        String descfull = (String) codes.get(desc);
-                        if (null != desc || !desc.trim().equals("")) {
-                          //rsCode = apptMainBean.queryResults(new String[]{desc},"select_msp_code");
-                          if (descfull != null) {
-                %>
-						<li><%=seqNum+" "+desc+ " - " + descfull%></li>
-						<%
-                  }
-                  }
-                  }
-                  }
+                    for(TeleplanC12 result : teleplanC12Dao.select_c12_record("O", request.getParameter("billing_no"))) {
+                    
+                      String seqNum = result.getDataSeq();
+                      
+                      if(result.getExp1() != null &&  codes.get(result.getExp1())!=null  && !( (String)codes.get(result.getExp1()) ).trim().equals("")) {
+                    	  %><li><%=seqNum+" "+result.getExp1()+ " - " + codes.get(result.getExp1())%></li><%
                       }
+                      if(result.getExp2() != null &&  codes.get(result.getExp2())!=null  && !( (String)codes.get(result.getExp2()) ).trim().equals("")) {
+                    	  %><li><%=seqNum+" "+result.getExp2()+ " - " + codes.get(result.getExp2())%></li><%
+                      }
+                      if(result.getExp3() != null &&  codes.get(result.getExp3())!=null  && !( (String)codes.get(result.getExp3()) ).trim().equals("")) {
+                    	  %><li><%=seqNum+" "+result.getExp3()+ " - " + codes.get(result.getExp3())%></li><%
+                      }
+                      if(result.getExp4() != null &&  codes.get(result.getExp4())!=null  && !( (String)codes.get(result.getExp4()) ).trim().equals("")) {
+                    	  %><li><%=seqNum+" "+result.getExp4()+ " - " + codes.get(result.getExp4())%></li><%
+                      }
+                      if(result.getExp5() != null &&  codes.get(result.getExp5())!=null  && !( (String)codes.get(result.getExp5()) ).trim().equals("")) {
+                    	  %><li><%=seqNum+" "+result.getExp5()+ " - " + codes.get(result.getExp5())%></li><%
+                      }
+                      if(result.getExp6() != null &&  codes.get(result.getExp6())!=null  && !( (String)codes.get(result.getExp6()) ).trim().equals("")) {
+                    	  %><li><%=seqNum+" "+result.getExp6()+ " - " + codes.get(result.getExp6())%></li><%
+                      }
+                      if(result.getExp7() != null &&  codes.get(result.getExp7())!=null  && !( (String)codes.get(result.getExp7()) ).trim().equals("")) {
+                    	  %><li><%=seqNum+" "+result.getExp7()+ " - " + codes.get(result.getExp7())%></li><%
+                      }
+                     
+                      
+                      
+                  } //for results
+                  } //if billingNo
+                      
                 %>
 					</ul>
 					</td>

@@ -19,18 +19,18 @@
 --%>
 <%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.util.DateRange"%>
-<% 
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.bc.MSP.*, java.net.*"
-	errorPage="../../../errorpage.jsp"%>
+
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.bc.MSP.*, java.net.*, oscar.*" errorPage="../../../errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+
+
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
 
 <%
 String errorMsg = "";
@@ -55,11 +55,12 @@ if (dateBegin.compareTo("") == 0){
 	dateRange = new DateRange(ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
 }
 
-ResultSet rslocal = apptMainBean.queryResults(request.getParameter("provider"), "search_provider_ohip_dt");
-while(rslocal.next()){
-	proOHIP = rslocal.getString("ohip_no"); 
+for(Provider p:providerDao.getActiveProviders()) {
+	if(p.getOhipNo()!=null && !p.getOhipNo().isEmpty()) {
+			
+	proOHIP = p.getOhipNo();
    
-	billinggroup_no= rslocal.getString("billing_no"); //SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+	billinggroup_no= p.getBillingNo(); //SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
 
 	if (billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0 ){
 		//error msg here
@@ -79,8 +80,8 @@ while(rslocal.next()){
 	extract.dbQuery();
 
 	htmlValue += "<font color='red'>" + errorMsg + "</font>" + extract.getHtmlCode()+ "<hr/><br/><br/>";
-}
-rslocal.close();
+} }
+
 
 request.setAttribute("html",htmlValue);
 %>

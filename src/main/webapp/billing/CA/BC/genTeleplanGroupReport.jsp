@@ -23,21 +23,19 @@
     Ontario, Canada
 
 --%>
-<%
-  if(session.getAttribute("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.oscarBilling.ca.bc.MSP.*"%>
+
+<%@ page import="java.util.*, java.sql.*, oscar.oscarBilling.ca.bc.MSP.*,oscar.*"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillActivity" %>
 <%@ page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%
 	BillActivityDao billActivityDao = SpringUtils.getBean(BillActivityDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
 
 <% GregorianCalendar now=new GregorianCalendar();
@@ -55,21 +53,20 @@
       if (provider.compareTo("all") == 0 ){
          batchCount = "0";
          int fileCount = 0;
-         ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_ohip_dt");
-         while(rslocal.next()){
-            proOHIP = rslocal.getString("ohip_no");
-            billinggroup_no= rslocal.getString("billing_no");
-            specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+         for(Provider p : providerDao.getActiveProviders()) {
+        	 if(p.getOhipNo() == null || p.getOhipNo().isEmpty()) {
+        		 continue;
+        	 }
+         
+            proOHIP = p.getOhipNo();
+            billinggroup_no= p.getBillingNo();
+            specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
             if (bCount == 1) {
-               String[] param2 =new String[3];
-                        param2[0]=request.getParameter("monthCode");
-                        param2[1]=billinggroup_no;
-                        param2[2]=curYear+"/01/01";
-               ResultSet rslocal2;
-               rslocal2 = apptMainBean.queryResults(param2, "search_billactivity_group_monthCode");
-               while(rslocal2.next()){
-                  batchCount = rslocal2.getString("batchcount");
+              
+               List<BillActivity> bas = billActivityDao.findCurrentByMonthCodeAndGroupNo(request.getParameter("monthCode"),billinggroup_no,ConversionUtils.fromDateString(curYear+"-01-01"));
+               for(BillActivity ba:bas){
+                  batchCount = String.valueOf(ba.getBatchCount());
                }
                fileCount = Integer.parseInt(batchCount) + 1;
                batchCount = String.valueOf(fileCount);
@@ -134,25 +131,22 @@
       }else {
          batchCount = "0";
          int fileCount = 0;
-         ResultSet rslocal;
+        
          String providerBillingNo = request.getParameter("provider");
          providerBillingNo = providerBillingNo.substring(0, providerBillingNo.indexOf(",")).trim();
-         rslocal = apptMainBean.queryResults(providerBillingNo, "search_provider_ohip_dt");
-         while(rslocal.next()){
-            proOHIP = rslocal.getString("ohip_no");
-            billinggroup_no= rslocal.getString("billing_no");
-            specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+         
+         for(Provider p : providerDao.getBillableProvidersByOHIPNo(providerBillingNo)) {
+        
+            proOHIP = p.getOhipNo();
+            billinggroup_no= p.getBillingNo();
+            specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
             if (bCount == 1) {
-               String[] param2 =new String[3];
-                        param2[0]=request.getParameter("monthCode");
-                        param2[1]=billinggroup_no;
-                        param2[2]=curYear+"/01/01";
-               ResultSet rslocal2;
-               rslocal2 = apptMainBean.queryResults(param2, "search_billactivity_group_monthCode");
-               while(rslocal2.next()){
-                  batchCount = rslocal2.getString("batchcount");
-               }
+            	List<BillActivity> bas = billActivityDao.findCurrentByMonthCodeAndGroupNo(request.getParameter("monthCode"),billinggroup_no,ConversionUtils.fromDateString(curYear+"-01-01"));
+                for(BillActivity ba:bas){
+                   batchCount = String.valueOf(ba.getBatchCount());
+                }
+                
                fileCount = Integer.parseInt(batchCount) + 1;
                batchCount = String.valueOf(fileCount);
             }else{
