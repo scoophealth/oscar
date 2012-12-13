@@ -37,7 +37,7 @@ public class OscarMySQL5Dialect extends MySQL5Dialect {
 	public OscarMySQL5Dialect() {
 		super();
 		registerHibernateType(Types.LONGVARBINARY, Hibernate.BINARY.getName());
-		registerHibernateType(Types.LONGVARCHAR, Hibernate.CHARACTER.getName());
+		registerHibernateType(Types.LONGVARCHAR, Hibernate.TEXT.getName());		
 	}
 
 }
