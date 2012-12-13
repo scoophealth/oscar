@@ -268,7 +268,7 @@ request.getSession().setAttribute("EctSessionBean",bean);
 							<td><%=demoName%> Information</td>
 							<td>
 							<% if ( request.getParameter("isAttaching") == null ) { %> <input
-								type=button value=Preview onclick=PreviewPDF( '<%=currentURI%>') />
+								type=button value=Preview onclick="PreviewPDF( '<%=currentURI%>')" />
 							<% } %> &nbsp;</td>
 						</tr>
 
