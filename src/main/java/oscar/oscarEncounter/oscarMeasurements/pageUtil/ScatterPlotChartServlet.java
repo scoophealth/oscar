@@ -22,9 +22,7 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
-
 
 import java.awt.Color;
 import java.awt.Font;
@@ -33,9 +31,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.io.IOException;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -58,13 +54,19 @@ import org.jCharts.properties.PointChartProperties;
 import org.jCharts.properties.ScatterPlotProperties;
 import org.jCharts.properties.util.ChartFont;
 import org.jCharts.types.ChartType;
+import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.dao.ValidationsDao;
+import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.util.ConversionUtils;
 
-public class ScatterPlotChartServlet extends HttpServlet
-{
+public class ScatterPlotChartServlet extends HttpServlet {
 	//---all of my charts serviced by this Servlet will have the same properties.
 	protected LegendProperties legendProperties;
 	protected AxisProperties axisProperties;
@@ -73,84 +75,72 @@ public class ScatterPlotChartServlet extends HttpServlet
 	protected int width = 550;
 	protected int height = 360;
 
-
 	/**********************************************************************************************
 	 *
 	 **********************************************************************************************/
-	public void init()
-	{
+	public void init() {
 		this.legendProperties = new LegendProperties();
 		this.chartProperties = new ChartProperties();
-		this.axisProperties = new AxisProperties( true );
-		ChartFont axisScaleFont = new ChartFont( new Font( "Georgia Negreta cursiva", Font.PLAIN, 13 ), Color.black );
-		axisProperties.getXAxisProperties().setScaleChartFont( axisScaleFont );
-		axisProperties.getYAxisProperties().setScaleChartFont( axisScaleFont );
+		this.axisProperties = new AxisProperties(true);
+		ChartFont axisScaleFont = new ChartFont(new Font("Georgia Negreta cursiva", Font.PLAIN, 13), Color.black);
+		axisProperties.getXAxisProperties().setScaleChartFont(axisScaleFont);
+		axisProperties.getYAxisProperties().setScaleChartFont(axisScaleFont);
 
-		ChartFont axisTitleFont = new ChartFont( new Font( "Arial Narrow", Font.PLAIN, 14 ), Color.black );
-		axisProperties.getXAxisProperties().setTitleChartFont( axisTitleFont );
-		axisProperties.getYAxisProperties().setTitleChartFont( axisTitleFont );
+		ChartFont axisTitleFont = new ChartFont(new Font("Arial Narrow", Font.PLAIN, 14), Color.black);
+		axisProperties.getXAxisProperties().setTitleChartFont(axisTitleFont);
+		axisProperties.getYAxisProperties().setTitleChartFont(axisTitleFont);
 
-		ChartFont titleFont = new ChartFont( new Font( "Georgia Negreta cursiva", Font.PLAIN, 14 ), Color.black );
-		this.chartProperties.setTitleFont( titleFont );
+		ChartFont titleFont = new ChartFont(new Font("Georgia Negreta cursiva", Font.PLAIN, 14), Color.black);
+		this.chartProperties.setTitleFont(titleFont);
 	}
-
 
 	/******************************************************************************************
 	 *
 	 *
 	 ******************************************************************************************/
-	private ScatterPlotProperties createScatterPlotProperties()
-	{
-		Stroke[] strokes = new Stroke[]{LineChartProperties.DEFAULT_LINE_STROKE};
-		Shape[] shapes = new Shape[]{PointChartProperties.SHAPE_CIRCLE};
+	private ScatterPlotProperties createScatterPlotProperties() {
+		Stroke[] strokes = new Stroke[] { LineChartProperties.DEFAULT_LINE_STROKE };
+		Shape[] shapes = new Shape[] { PointChartProperties.SHAPE_CIRCLE };
 
-		return new ScatterPlotProperties( strokes, shapes );
-	}
-        
-        /******************************************************************************************
-	 *
-	 *
-	 ******************************************************************************************/
-	private LineChartProperties createLineChartProperties()
-	{
-		Stroke[] strokes= { LineChartProperties.DEFAULT_LINE_STROKE, LineChartProperties.DEFAULT_LINE_STROKE };
-		Shape[] shapes= { PointChartProperties.SHAPE_TRIANGLE, PointChartProperties.SHAPE_CIRCLE };
-
-		return new LineChartProperties( strokes, shapes );
+		return new ScatterPlotProperties(strokes, shapes);
 	}
 
+	/******************************************************************************************
+	*
+	*
+	******************************************************************************************/
+	private LineChartProperties createLineChartProperties() {
+		Stroke[] strokes = { LineChartProperties.DEFAULT_LINE_STROKE, LineChartProperties.DEFAULT_LINE_STROKE };
+		Shape[] shapes = { PointChartProperties.SHAPE_TRIANGLE, PointChartProperties.SHAPE_CIRCLE };
+
+		return new LineChartProperties(strokes, shapes);
+	}
 
 	/*****************************************************************************************
 	 * Generates dataset
 	 *
 	 * @return scatterPlotDataSeries
 	 ******************************************************************************************/
-	private ScatterPlotDataSeries createScatterPlotDataSeries(String demo, String type, String mInstrc)
-	{                
-                long[][] results = generateResult(demo, type, mInstrc);
-                String chartTitle = type + "-" + mInstrc;                
-                ScatterPlotDataSet scatterPlotDataSet = new ScatterPlotDataSet( this.createScatterPlotProperties() );
-                ScatterPlotDataSeries scatterPlotDataSeries = null;
-                
-                if (results!=null){
-                                        
-                    if (type.compareTo("BP")!=0){                        
-                        Point2D.Double[] points = new Point2D.Double[ results[0].length ];
-                        for( int x = 0; x < results[0].length; x++ )
-                        {                                
-                                points[ x ] = ScatterPlotDataSet.createPoint2DDouble();
-                                points[ x ].setLocation( results[0][x]-results[0][0], results[1][x] );
-                        }                    
-                       
-        
-                        scatterPlotDataSet.addDataPoints( points, Color.red, chartTitle );                    
-                        scatterPlotDataSeries = new ScatterPlotDataSeries( scatterPlotDataSet,
-                                                                           "Day (note: only the last data on the same observation date is plotted)",
-                                                                           "Test Results",
-                                                                            chartTitle);
-                    }
-                }
-                
+	private ScatterPlotDataSeries createScatterPlotDataSeries(String demo, String type, String mInstrc) {
+		long[][] results = generateResult(demo, type, mInstrc);
+		String chartTitle = type + "-" + mInstrc;
+		ScatterPlotDataSet scatterPlotDataSet = new ScatterPlotDataSet(this.createScatterPlotProperties());
+		ScatterPlotDataSeries scatterPlotDataSeries = null;
+
+		if (results != null) {
+
+			if (type.compareTo("BP") != 0) {
+				Point2D.Double[] points = new Point2D.Double[results[0].length];
+				for (int x = 0; x < results[0].length; x++) {
+					points[x] = ScatterPlotDataSet.createPoint2DDouble();
+					points[x].setLocation(results[0][x] - results[0][0], results[1][x]);
+				}
+
+				scatterPlotDataSet.addDataPoints(points, Color.red, chartTitle);
+				scatterPlotDataSeries = new ScatterPlotDataSeries(scatterPlotDataSet, "Day (note: only the last data on the same observation date is plotted)", "Test Results", chartTitle);
+			}
+		}
+
 		return scatterPlotDataSeries;
 	}
 
@@ -159,229 +149,163 @@ public class ScatterPlotChartServlet extends HttpServlet
 	 *
 	 * @return DataSeries
 	 ******************************************************************************************/
-	private DataSeries createBloodPressureDataSeries(String demo, String type, String mInstrc)
-	{
-                
-                long[][] results = generateResult(demo, type, mInstrc);
-                DataSeries dataSeries = null;           
-                String chartTitle = type + "-" + mInstrc;                
-                String xAxisTitle= "Tests (note: only the last data on the same observation date is plotted)";
-                String yAxisTitle= "Hgmm";
-                
-                if (results!=null){
-                                        
-                    if (type.compareTo("BP")==0){
-                        double[][] points = new double[2][results[1].length/2];
-                        String[] legendLabels= { "Systolic", "Diastolic"};
-                        Paint[] paints= {Color.red, Color.blue};
-                        LineChartProperties lineChartProperties = this.createLineChartProperties();                        
-                        int offset = results[1].length/2;                               
-                        String[] xAxisLabels= new String[offset];
-                        
-                        for( int x = 0; x < results[1].length/2; x++ )
-                        {                                
-                                MiscUtils.getLogger().debug("systolic" + x + " " + results[1][x]);
-                                points[0][x] = results[1][x];
-                                int testNum = x + 1;
-                                String xAxisLabel = "test" + testNum;
-                                xAxisLabels[x] = xAxisLabel;
-                                MiscUtils.getLogger().debug("xAxisLabel is " + xAxisLabels[x]);
-                        }                                           
-                        
-                        for( int x = 0; x < results[1].length/2; x++ )
-                        {                                                               
-                                MiscUtils.getLogger().debug("Diastolic" + x + results[1][x+offset]);
-                                points[1][x] = results[1][x+offset];                                                               
-                        }
-                        
-                        try{
-                            AxisChartDataSet acds = new AxisChartDataSet(points, legendLabels, paints,ChartType.LINE, lineChartProperties );
-                            dataSeries = new DataSeries( xAxisLabels, xAxisTitle, yAxisTitle, chartTitle );
-                            dataSeries.addIAxisPlotDataSet(acds);
-                            MiscUtils.getLogger().debug("the diastolic data has been added successfully");
-                        }
-                        catch(Exception e)
-                        {
-                                MiscUtils.getLogger().debug("debug", e);
-                        }                                                                        
-                        
-                    }
-                    
-                }               
-            return dataSeries;
+	private DataSeries createBloodPressureDataSeries(String demo, String type, String mInstrc) {
+
+		long[][] results = generateResult(demo, type, mInstrc);
+		DataSeries dataSeries = null;
+		String chartTitle = type + "-" + mInstrc;
+		String xAxisTitle = "Tests (note: only the last data on the same observation date is plotted)";
+		String yAxisTitle = "Hgmm";
+
+		if (results != null) {
+
+			if (type.compareTo("BP") == 0) {
+				double[][] points = new double[2][results[1].length / 2];
+				String[] legendLabels = { "Systolic", "Diastolic" };
+				Paint[] paints = { Color.red, Color.blue };
+				LineChartProperties lineChartProperties = this.createLineChartProperties();
+				int offset = results[1].length / 2;
+				String[] xAxisLabels = new String[offset];
+
+				for (int x = 0; x < results[1].length / 2; x++) {
+					MiscUtils.getLogger().debug("systolic" + x + " " + results[1][x]);
+					points[0][x] = results[1][x];
+					int testNum = x + 1;
+					String xAxisLabel = "test" + testNum;
+					xAxisLabels[x] = xAxisLabel;
+					MiscUtils.getLogger().debug("xAxisLabel is " + xAxisLabels[x]);
+				}
+
+				for (int x = 0; x < results[1].length / 2; x++) {
+					MiscUtils.getLogger().debug("Diastolic" + x + results[1][x + offset]);
+					points[1][x] = results[1][x + offset];
+				}
+
+				try {
+					AxisChartDataSet acds = new AxisChartDataSet(points, legendLabels, paints, ChartType.LINE, lineChartProperties);
+					dataSeries = new DataSeries(xAxisLabels, xAxisTitle, yAxisTitle, chartTitle);
+					dataSeries.addIAxisPlotDataSet(acds);
+					MiscUtils.getLogger().debug("the diastolic data has been added successfully");
+				} catch (Exception e) {
+					MiscUtils.getLogger().debug("debug", e);
+				}
+
+			}
+
+		}
+		return dataSeries;
 	}
 
-        /*****************************************************************************************
-	 * Generates generate result from the database
-	 *
-	 * @return DataSeries
-	 ******************************************************************************************/			                
-        private long[][] generateResult(String demo, String type, String mInstrc){
-            //plot only last data of the day?!
-                        
-            long[][] points = null;
-            
-            try{
-                if(isNumeric(type, mInstrc)){
-                    
-                    String sql = "SELECT DISTINCT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
-                                 + "' ORDER BY dateObserved";
-                    MiscUtils.getLogger().debug("SQL Statement: " + sql);
-                    ResultSet rs;
-                    rs = DBHandler.GetSQL(sql);                
-                    rs.last();
-                    int nbData = rs.getRow();
-                    rs.first();
-                    points = new long[2][nbData];
-                    
-                    for(int i=0; i<nbData; i++){ 
-                        sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                + "' AND dateObserved='"+oscar.Misc.getString(rs, "dateObserved") + "' ORDER BY dateEntered DESC limit 1";
-                        ResultSet rsData;
-                        rsData = DBHandler.GetSQL(sql);
-                        if(rsData.next()){
-                            Date dateObserved = rs.getDate("dateObserved");
-                            points[0][i] = dateObserved.getTime()/1000/60/60/24;                        
-                            points[1][i] = rsData.getLong("dataField");
-                            MiscUtils.getLogger().debug("Date: " + points[0][i] + " Value: " + points[1][i]);
-                        }
-                        rsData.close();
-                        rs.next();
-                    }
-                    rs.close();
-                }
-                else if (type.compareTo("BP")==0){
-                    
-                    String sql = "SELECT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
-                                 + "' GROUP BY dateObserved ORDER BY dateObserved";
-                    MiscUtils.getLogger().debug("SQL Statement: " + sql);
-                    ResultSet rs;
-                    rs = DBHandler.GetSQL(sql);                
-                    rs.last();                    
-                    int nbPatient = rs.getRow();
-                    rs.first();
-                    rs.previous();
-                    points = new long[2][nbPatient*2];                    
-                    
-                   
-                    MiscUtils.getLogger().debug("number of record: " + Integer.toString(nbPatient));
-                    for(int i=0; i<nbPatient; i++){
-                        if(rs.next()){                            
-                            sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                    + "' AND dateObserved='"+oscar.Misc.getString(rs, "dateObserved") + "' ORDER BY dateEntered DESC limit 1";
-                            MiscUtils.getLogger().debug("sql dateObserved: " + sql);
-                            ResultSet rsData;
-                            rsData = DBHandler.GetSQL(sql);
-                            if(rsData.next()){
-                                String bloodPressure = rsData.getString("dataField");
-                                MiscUtils.getLogger().debug("bloodPressure: " + bloodPressure);
-                                int slashIndex = bloodPressure.indexOf("/");            
-                                if (slashIndex >= 0){
-                                    String systolic = bloodPressure.substring(0, slashIndex);
-                                    Date dateObserved = rs.getDate("dateObserved");
-                                    points[0][i] = dateObserved.getTime()/1000/60/60/24;                                
-                                    points[1][i] = Long.parseLong(systolic);
-                                    MiscUtils.getLogger().debug("systolic: " + i + " " + systolic);
+	/*****************************************************************************************
+	* Generates generate result from the database
+	*
+	* @return DataSeries
+	******************************************************************************************/
+	private long[][] generateResult(String demo, String type, String mInstrc) {
+		//plot only last data of the day?!
 
-                                    String diastolic = bloodPressure.substring(slashIndex+1);
-                                    points[0][i+nbPatient] = dateObserved.getTime()/1000/60/60/24;
-                                    points[1][i+nbPatient] = Long.parseLong(diastolic);
-                                    MiscUtils.getLogger().debug("diastolic: " + points[1][i+nbPatient]);
-                                }                                                                          
-                            }
-                            rsData.close();
-                        }
-                    }
-                    /*for(int i=0; i<nbPatient; i++){ 
-                        MiscUtils.getLogger().debug("the result is: " + points[i]);
-                    }*/
-                    MiscUtils.getLogger().debug("Store blood pressure data to a new array successfully" );
-                    rs.close();
-                }
-                
-            }
-            catch(SQLException e)
-            {
-                MiscUtils.getLogger().error("Error", e);
-            }
-            
-            return points;
-        }
-        
-        private boolean isNumeric(String type, String mInstrc){
-            boolean isNumeric = false;
-            
-            try{
-                
-                String sql = "SELECT * FROM measurementType WHERE type='"+ type + "' AND measuringInstruction='" + mInstrc + "'";
-                MiscUtils.getLogger().debug("SQL Statement: " + sql);
-                ResultSet rs;
-                rs = DBHandler.GetSQL(sql);                
-                rs.next();
-                String validation = oscar.Misc.getString(rs, "validation");
-                rs.close();
-                
-                sql = "SELECT * FROM validations WHERE id='"+ validation + "'";
-                rs = DBHandler.GetSQL(sql);
-                rs.next();
-                if(rs.getInt("isNumeric")==1){
-                    isNumeric = true;
-                }
-                
-                rs.close();
+		long[][] points = null;
 
-            }
-            catch(SQLException e)
-            {
-                MiscUtils.getLogger().error("Error", e);
-            }
-            
-            return isNumeric;
-        }
+		MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+		if (isNumeric(type, mInstrc)) {
+			List<Object> dates = dao.findObservationDatesByDemographicNoTypeAndMeasuringInstruction(ConversionUtils.fromIntString(demo), type, mInstrc);
+			int nbData = dates.size();
+			points = new long[2][nbData];
+			for (int i = 0; i < nbData; i++) {
+				Measurement m = dao.findByDemographicNoTypeAndDate(ConversionUtils.fromIntString(demo), type, (java.util.Date) dates.get(i));
+
+				if (m != null) {
+					java.util.Date dateObserved = m.getDateObserved();
+					points[0][i] = dateObserved.getTime() / 1000 / 60 / 60 / 24;
+					points[1][i] = ConversionUtils.fromLongString(m.getDataField());
+					MiscUtils.getLogger().debug("Date: " + points[0][i] + " Value: " + points[1][i]);
+				}
+			}
+		} else if (type.compareTo("BP") == 0) {
+			List<Measurement> measurements = dao.findByDemographicNoTypeAndMeasuringInstruction(ConversionUtils.fromIntString(demo), type, mInstrc);
+			int nbPatient = measurements.size();
+			points = new long[2][nbPatient * 2];
+			for (int i = 0; i < nbPatient; i++) {
+				Measurement m = measurements.get(i);
+
+				Measurement mm = dao.findByDemographicNoTypeAndDate(ConversionUtils.fromIntString(demo), type, m.getDateObserved());
+				if (mm != null) {
+					String bloodPressure = mm.getDataField();
+					MiscUtils.getLogger().debug("bloodPressure: " + bloodPressure);
+					int slashIndex = bloodPressure.indexOf("/");
+					if (slashIndex >= 0) {
+						String systolic = bloodPressure.substring(0, slashIndex);
+						java.util.Date dateObserved = mm.getDateObserved();
+						points[0][i] = dateObserved.getTime() / 1000 / 60 / 60 / 24;
+						points[1][i] = Long.parseLong(systolic);
+						MiscUtils.getLogger().debug("systolic: " + i + " " + systolic);
+
+						String diastolic = bloodPressure.substring(slashIndex + 1);
+						points[0][i + nbPatient] = dateObserved.getTime() / 1000 / 60 / 60 / 24;
+						points[1][i + nbPatient] = Long.parseLong(diastolic);
+						MiscUtils.getLogger().debug("diastolic: " + points[1][i + nbPatient]);
+					}
+				}
+
+			}
+
+			MiscUtils.getLogger().debug("Store blood pressure data to a new array successfully");
+		}
+
+		return points;
+	}
+
+	private boolean isNumeric(String type, String mInstrc) {
+		MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+		List<MeasurementType> measurementTypes = dao.findByTypeAndMeasuringInstruction(type, mInstrc);
+
+		if (!measurementTypes.isEmpty()) {
+			String validation = measurementTypes.get(0).getValidation();
+
+			ValidationsDao valDao = SpringUtils.getBean(ValidationsDao.class);
+			Validations v = valDao.find(validation);
+			if (v != null) {
+				return v.isNumeric();
+			}
+		}
+
+		return false;
+	}
+
 	/**********************************************************************************************
 	 *
 	 **********************************************************************************************/
-	public void service( HttpServletRequest request, HttpServletResponse httpServletResponse ) throws ServletException, IOException
-	{		
-                String type = request.getParameter("type");
-                String mInstrc = request.getParameter("mInstrc");                
-                EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-                String demographicNo = null;
-                if ( bean != null){
-                    demographicNo = bean.getDemographicNo();                    
-                }
-                try
-		{			
-                        //addIAxisPlotDataSet(IAxisPlotDataSet 
-			DataAxisProperties xAxisProperties = new DataAxisProperties();	                        
-			DataAxisProperties yAxisProperties = new DataAxisProperties();						
-                        
+	public void service(HttpServletRequest request, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+		String type = request.getParameter("type");
+		String mInstrc = request.getParameter("mInstrc");
+		EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
+		String demographicNo = null;
+		if (bean != null) {
+			demographicNo = bean.getDemographicNo();
+		}
+		try {
+			//addIAxisPlotDataSet(IAxisPlotDataSet 
+			DataAxisProperties xAxisProperties = new DataAxisProperties();
+			DataAxisProperties yAxisProperties = new DataAxisProperties();
+
 			ChartProperties chartProperties = new ChartProperties();
 			LegendProperties legendProperties = new LegendProperties();
 
-                        if(type.compareTo("BP")==0){
-                            AxisProperties axisProperties = new AxisProperties( false );
-                            DataSeries dataSeries = this.createBloodPressureDataSeries(demographicNo, type, mInstrc);
-                            AxisChart axisChart = new AxisChart(dataSeries, chartProperties, axisProperties,legendProperties, 550, 360);
-                            ServletEncoderHelper.encodeJPEG13( axisChart, 1.0f, httpServletResponse );
-                        }
-                        else{ 
-                            AxisProperties axisProperties = new AxisProperties(xAxisProperties, yAxisProperties);
-                            ScatterPlotDataSeries scatterPlotDataSeries = this.createScatterPlotDataSeries(demographicNo, type, mInstrc);
-                            if(scatterPlotDataSeries!=null){                                
-                                ScatterPlotAxisChart scatterPlotAxisChart = new ScatterPlotAxisChart( scatterPlotDataSeries,
-                                                                                                         chartProperties,
-                                                                                                         axisProperties,
-                                                                                                         legendProperties,
-                                                                                                         500,
-                                                                                                         400 );
+			if (type.compareTo("BP") == 0) {
+				AxisProperties axisProperties = new AxisProperties(false);
+				DataSeries dataSeries = this.createBloodPressureDataSeries(demographicNo, type, mInstrc);
+				AxisChart axisChart = new AxisChart(dataSeries, chartProperties, axisProperties, legendProperties, 550, 360);
+				ServletEncoderHelper.encodeJPEG13(axisChart, 1.0f, httpServletResponse);
+			} else {
+				AxisProperties axisProperties = new AxisProperties(xAxisProperties, yAxisProperties);
+				ScatterPlotDataSeries scatterPlotDataSeries = this.createScatterPlotDataSeries(demographicNo, type, mInstrc);
+				if (scatterPlotDataSeries != null) {
+					ScatterPlotAxisChart scatterPlotAxisChart = new ScatterPlotAxisChart(scatterPlotDataSeries, chartProperties, axisProperties, legendProperties, 500, 400);
 
-                                ServletEncoderHelper.encodeJPEG13( scatterPlotAxisChart, 1.0f, httpServletResponse );
-                            }
-                        }
-		}
-		catch( Throwable t )
-		{			
+					ServletEncoderHelper.encodeJPEG13(scatterPlotAxisChart, 1.0f, httpServletResponse);
+				}
+			}
+		} catch (Throwable t) {
 			MiscUtils.getLogger().error("Error", t);
 		}
 
