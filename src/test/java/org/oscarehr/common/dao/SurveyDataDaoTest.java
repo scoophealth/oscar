@@ -67,6 +67,20 @@ public class SurveyDataDaoTest extends DaoTestFixtures {
 	public void testGetProcessCount() {		
 		assertNotNull(dao.getProcessCount("TEST"));
 	}
-	
-	
+
+    @Test
+    public void testFindByDemoAndPeriod() {
+	    assertNotNull(dao.findByDemoSurveyIdAndPeriod(100, "SRV", 100));
+    }
+
+    @Test
+    public void testCountStatuses() {
+	    assertNotNull(dao.countStatuses("SRV"));
+    }
+    
+    @Test
+    public void testCountAnswers() {
+	    assertNotNull(dao.countAnswers("SRV"));
+    }
+
 }
