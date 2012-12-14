@@ -47,7 +47,7 @@ public class Provider {
   private String status= "";
   private String comments= "";
   private String providerActivity= "";
-  private String fullName = "";
+
 
   /**
    * Class constructor with no arguments.
@@ -129,7 +129,7 @@ public class Provider {
   /**
    * Gets the providerType
    * @return String providerType
-   * @Deprecated no longer is use 2010-04-23, marked for future removal 
+   * @deprecated no longer is use 2010-04-23, marked for future removal 
    */
   public String getProviderType() {
     return (providerType != null ? providerType : "");

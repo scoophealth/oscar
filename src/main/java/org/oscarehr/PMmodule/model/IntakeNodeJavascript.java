@@ -27,7 +27,6 @@ import java.io.Serializable;
 
 public class IntakeNodeJavascript implements Serializable {
 
-	private int hashCode = Integer.MIN_VALUE;// primary key	
 	private Integer id;
 	private String questionId;
 	private String location;
