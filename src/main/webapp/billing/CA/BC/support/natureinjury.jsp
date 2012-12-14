@@ -26,12 +26,7 @@
 <%@page import="org.oscarehr.billing.CA.BC.model.WcbNoiCode"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.billing.CA.BC.dao.WcbNoiCodeDao"%>
-<%
-  	if (session.getAttribute("user") == null){
-		response.sendRedirect("../../logout.jsp");
-	}
-%>
-<%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR Nature of Injury</title>

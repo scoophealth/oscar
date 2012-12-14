@@ -23,13 +23,6 @@
 
 --%>
 
-<%
-  	if (session.getAttribute("user") == null){
-		response.sendRedirect("../../logout.jsp");
-	}
-%>
-
-<%@page import="oscar.oscarDB.DBHandler"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
 <%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>

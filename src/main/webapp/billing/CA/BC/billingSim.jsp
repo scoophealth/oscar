@@ -18,19 +18,20 @@
 
 --%>
 <% 
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+
 String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*"
-	errorPage="../../../errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*" errorPage="../../../errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 
+
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
 <%
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);
@@ -132,20 +133,21 @@ String proOHIP="";
 String specialty_code; 
 String billinggroup_no;
 int Count = 0;
-ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_dt");
-while(rslocal.next()){
-	proFirst = rslocal.getString("first_name");
-	proLast = rslocal.getString("last_name");
-	proOHIP = rslocal.getString("ohip_no"); 
-	billinggroup_no= rslocal.getString("billing_no"); //SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-	specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+
+for(Provider p : providerDao.getActiveProviders()){
+	if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
+	proFirst = p.getFirstName();
+	proLast = p.getLastName();
+	proOHIP = p.getOhipNo();
+	billinggroup_no= p.getBillingNo(); 
+	specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 %>
 			<option value="<%=proOHIP%>"
 				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,<%=proFirst%></option>
 
 			<% 
-}
-rslocal.close();
+} }
+
 %>
 
 		</select></td>
