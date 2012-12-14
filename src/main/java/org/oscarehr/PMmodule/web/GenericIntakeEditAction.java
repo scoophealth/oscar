@@ -61,6 +61,7 @@ import org.oscarehr.PMmodule.model.IntakeNodeJavascript;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
@@ -92,7 +93,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private static final String APPT = "appointment";
 	
 	private ClientImageDAO clientImageDAO = null;
-	private SurveyManager surveyManager;
+	private SurveyManager surveyManager = new SurveyManagerImpl();
 	private IMatchManager matchManager = new MatchManager();
 	
 	public void setOscarSurveyManager(SurveyManager mgr) {
