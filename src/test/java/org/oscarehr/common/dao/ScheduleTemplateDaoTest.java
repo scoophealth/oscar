@@ -25,6 +25,8 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -43,7 +45,7 @@ public class ScheduleTemplateDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("scheduletemplate");
+		SchemaUtils.restoreTable("scheduletemplate", "scheduledate");
 	}
 
 	@Test
@@ -55,4 +57,9 @@ public class ScheduleTemplateDaoTest extends DaoTestFixtures {
 
 		assertNotNull(entity.getId());
 	}
+
+    @Test
+    public void testFindSchedules() {
+	    assertNotNull(dao.findSchedules(new Date(), new Date(), "100"));
+    }
 }
