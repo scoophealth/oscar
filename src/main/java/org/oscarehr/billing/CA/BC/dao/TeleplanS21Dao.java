@@ -51,4 +51,15 @@ public class TeleplanS21Dao extends AbstractDao<TeleplanS21>{
 		
 		return results;
 	}
+	
+	public List<TeleplanS21> search_all_tahd(String excludeStatus) {
+		Query q = entityManager.createQuery("SELECT t from TeleplanS21 t WHERE t.status <> ? ORDER BY t.payment desc");
+		q.setParameter(1, excludeStatus);
+		
+		
+		@SuppressWarnings("unchecked")
+		List<TeleplanS21> results = q.getResultList();
+		
+		return results;
+	}
 }

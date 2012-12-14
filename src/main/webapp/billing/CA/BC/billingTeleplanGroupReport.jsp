@@ -24,18 +24,22 @@
 
 --%>
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.util.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.util.*,oscar.*" errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.billing.CA.model.BillActivity" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
 
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	BillActivityDao billActivityDao = SpringUtils.getBean(BillActivityDao.class);
+%>
 <%
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);
@@ -170,20 +174,18 @@ function showHideLayers() { //v3.0
              String specialty_code;
              String billinggroup_no;
              int Count = 0;
-             ResultSet rslocal;
-             rslocal = null;
-             rslocal = apptMainBean.queryResults("%", "search_provider_dt");
-             while(rslocal.next()){
-                proFirst = rslocal.getString("first_name");
-                proLast = rslocal.getString("last_name");
-                proOHIP = rslocal.getString("ohip_no");
-                billinggroup_no= rslocal.getString("billing_no");//SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-                specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+             for(Provider p : providerDao.getActiveProviders()) {
+            	 if(p.getOhipNo()!= null && !p.getOhipNo().isEmpty()) {
+                proFirst = p.getFirstName();
+                proLast = p.getLastName();
+                proOHIP = p.getOhipNo();
+                billinggroup_no= p.getBillingNo();//SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+                specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
            %>
 			<option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>"><%=proLast%>,<%=proFirst%></option>
 			<%
 
-             }
+             } }
 //
   %>
 		</select> </font></b></td>
@@ -192,20 +194,7 @@ function showHideLayers() { //v3.0
 		<td width="254"><font face="Arial, Helvetica, sans-serif"
 			size="2"> <!--   <select name="billcenter">
 
-        <%-- String centerCode="";
-           String centerDesc="";
 
-           int Count1 = 0;
-           ResultSet rsCenter;
-           rsCenter = null;
-           rsCenter = apptMainBean.queryResults("%", "search_bill_center");
-           while(rsCenter.next()){
-              centerCode = rsCenter.getString("billcenter_code");
-              centerDesc = rsCenter.getString("billcenter_desc");
-
-       %>
-            <option value="<%=centerCode%>" <%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
-        <% } --%>
  </select>--></td>
 		<td width="277"><font color="#003366"> <input
 			type="submit" name="Submit" value="Create Report"> <input
@@ -248,19 +237,16 @@ function showHideLayers() { //v3.0
 	String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
 	String strToday = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
 
-	String[] paramYear = new String[2];
-	paramYear[0] = thisyear+"/01/01";
-	paramYear[1] = thisyear+"/12/31 23:59:59";
 
-	rslocal = null;
-	rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
-	while(rslocal.next()){
-		pro_ohip = rslocal.getString("providerohipno");
-		pro_group = rslocal.getString("groupno");
-		updatedate = rslocal.getString("updatedatetime");
-		cr = rslocal.getString("claimrecord");
-		oFile = rslocal.getString("ohipfilename");
-		hFile = rslocal.getString("htmlfilename");
+	List<BillActivity> bas = billActivityDao.findCurrentByDateRange(ConversionUtils.fromDateString(thisyear+"-01-01 00:00:00"), ConversionUtils.fromDateString(thisyear+"-12-31 23:59:59"));
+	
+	for(BillActivity ba:bas){
+		pro_ohip = ba.getProviderOhipNo();
+		pro_group = ba.getGroupNo();
+		updatedate = ConversionUtils.toTimestampString(ba.getUpdateDateTime());
+		cr = ba.getClaimRecord();
+		oFile = ba.getOhipFilename();
+		hFile =ba.getHtmlFilename();
 %>
 
 	<tr

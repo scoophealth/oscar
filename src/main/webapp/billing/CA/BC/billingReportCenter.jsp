@@ -25,10 +25,7 @@
 --%>
 
 <%    
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
   int  nItems=0;
      String strLimit1="0";
     String strLimit2="5";
@@ -36,13 +33,16 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ReportProvider" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.ReportProviderDao" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%
+	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
+%>
+
 <%
 GregorianCalendar now=new GregorianCalendar(); 
   int curYear = now.get(Calendar.YEAR);
@@ -133,13 +133,13 @@ function refresh() {
            String specialty_code; 
 String billinggroup_no;
            int Count = 0;
-        ResultSet rslocal;
-        rslocal = null;
- rslocal = apptMainBean.queryResults("billingreport", "search_reportprovider");
- while(rslocal.next()){
- proFirst = rslocal.getString("first_name");
- proLast = rslocal.getString("last_name");
- proOHIP = rslocal.getString("provider_no"); 
+           for(Object[] result:reportProviderDao.search_reportprovider("billingreport")) {
+				ReportProvider rp = (ReportProvider)result[0];
+				Provider p = (Provider)result[1];
+				
+				 proFirst = p.getFirstName();
+				 proLast = p.getLastName();
+				 proOHIP = p.getProviderNo();
 
 %>
 			<option value="<%=proOHIP%>"
