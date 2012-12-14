@@ -97,4 +97,10 @@ public class LabTestResultsDao extends AbstractDao<LabTestResults> {
 		q.setParameter("lppii", lppii);
 		return q.getResultList();
     }
+
+	public List<LabTestResults> findByLabPatientPhysicialInfoId(Integer labid) {
+		Query query = createQuery("r", "r.labPatientPhysicianInfoId = :labid");
+		query.setParameter("labid", labid);
+		return query.getResultList();
+    }
 }

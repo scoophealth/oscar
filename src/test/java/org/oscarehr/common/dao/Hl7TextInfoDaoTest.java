@@ -26,6 +26,8 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -157,5 +159,10 @@ public class Hl7TextInfoDaoTest extends DaoTestFixtures {
 	public void testupdateResultStatusByLabId() {
 		dao.updateResultStatusByLabId("STS", 0);
 	}
+
+    @Test
+    public void test() {
+	    assertNotNull(dao.findDisciplines(100));
+    }
 
 }
