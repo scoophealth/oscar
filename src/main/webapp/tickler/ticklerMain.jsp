@@ -37,8 +37,7 @@
 <%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.*, org.caisi.model.Tickler, org.caisi.model.TicklerComment,org.caisi.dao.TicklerDAO,org.caisi.model.CustomFilter,org.oscarehr.util.SpringUtils, org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.ViewDao, org.oscarehr.common.model.View, org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.LocaleUtils" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
+
 <head>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
     <script>
@@ -92,7 +91,6 @@
 
 %>
 
-<%@ include file="dbTicker.jspf" %>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);

@@ -25,10 +25,7 @@
 --%>
 
 <%    
-if(session.getAttribute("user") == null)
-    response.sendRedirect("../logout.jsp");
-String user_no;
-user_no = (String) session.getAttribute("user");
+String user_no = (String) session.getAttribute("user");
 int  nItems=0;
 String strLimit1="0";
 String strLimit2="5";
@@ -62,9 +59,17 @@ else
 
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbTicker.jspf" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+%>
+
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -327,8 +332,11 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
           	String appNo = (String) session.getAttribute("cur_appointment_no");
           	String location = null;
           	if (appNo != null) {
-          		ResultSet rs = apptMainBean.queryResults(appNo, "get_appt_location");
-          		if(rs.next()) location=apptMainBean.getString(rs,1);
+          		Appointment a  = appointmentDao.find(Integer.parseInt(appNo));
+          		if(a != null) {
+          			location = a.getLocation();
+          		}
+          		
           	}
       %> 
       <script>
@@ -368,12 +376,12 @@ function changeSite(sel) {
             <%  String proFirst="";
                 String proLast="";
                 String proOHIP="";
-
-                ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_all");
-                while(rslocal.next()){
-                    proFirst = rslocal.getString("first_name");
-                    proLast = rslocal.getString("last_name");
-                    proOHIP = rslocal.getString("provider_no"); 
+				
+                for(Provider p : providerDao.getActiveProviders()) {
+               
+                    proFirst =p.getFirstName();
+                    proLast = p.getLastName();
+                    proOHIP = p.getProviderNo();
 
             %> 
             <option value="<%=proOHIP%>" <%=user_no.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
