@@ -127,27 +127,6 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
           rsdemo = null;
           rsdemo = apptMainBean.queryResults(param, "search_taS22");
           while (rsdemo.next()) {   
-            	 //   account = rsdemo.getString("t_officeno");
-            	    
-            	   // param0[0]=raNo;
-            	   // param0[1]=account;
-            	   //   demoLast = "";
-            	   // rsdemo3 =apptMainBean.queryResults(param0[1],"search_bill");
-            	   // while (rsdemo3.next()) {
-            	   // demoLast = rsdemo3.getString("demographic_name");
-            	   // }
-            	   // rsdemo2 = apptMainBean.queryResults(param0,"search_rabillno");
-            	    
-            	   // while (rsdemo2.next()) {   
-             	   //servicecode = rsdemo2.getString("service_code");
-             	   //servicedate = rsdemo2.getString("service_date");
-             	   //serviceno = rsdemo2.getString("service_count");
-      	           //explain = rsdemo2.getString("error_code");
-      	           //amountsubmit = rsdemo2.getString("amountclaim");
-      	           //amountpay = rsdemo2.getString("amountpay");
-                   //                        if (explain.compareTo("") == 0 || explain == null){
-		//		            	           explain = "**";
-      	         //  }      
       %>
 	<tr>
 

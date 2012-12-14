@@ -1,19 +1,20 @@
-<%
-  if (session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-%>
-<%@page
-	import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*"%>
+
+<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@include file="dbBilling.jspf"%>
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ReportProviderDao" %>
+<%@page import="org.oscarehr.common.model.ReportProvider" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+
 <%
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProvider.class);
+%>
+
+<%
+  String user_no = (String) session.getAttribute("user");
   int nItems = 0;
   String strLimit1 = "0";
   String strLimit2 = "5";
@@ -174,13 +175,13 @@ function clearField(field){
                     String specialty_code;
                     String billinggroup_no;
                     int Count = 0;
-                    ResultSet rslocal;
-                    rslocal = null;
-                    rslocal = apptMainBean.queryResults("billingreport", "search_reportprovider");
-                    while (rslocal.next()) {
-                      proFirst = rslocal.getString("first_name");
-                      proLast = rslocal.getString("last_name");
-                      proOHIP = rslocal.getString("ohip_no");
+                    for(Object[] result:reportProviderDao.search_reportprovider("billingreport")) {
+                    	ReportProvider rp = (ReportProvider)result[0];
+                    	Provider p = (Provider)result[1];
+                    	proFirst = p.getFirstName();
+                    	proLast = p.getLastName();
+                    	proOHIP = p.getOhipNo();
+                 
                 %>
 					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
 					</option>
@@ -200,13 +201,12 @@ function clearField(field){
                 String specialty_code;
                 String billinggroup_no;
                 int Count = 0;
-                ResultSet rslocal;
-                rslocal = null;
-                rslocal = apptMainBean.queryResults("billingreport", "search_reportprovider");
-                while (rslocal.next()) {
-                  proFirst = rslocal.getString("first_name");
-                  proLast = rslocal.getString("last_name");
-                  proOHIP = rslocal.getString("provider_no");
+                for(Object[] result:reportProviderDao.search_reportprovider("billingreport")) {
+                	ReportProvider rp = (ReportProvider)result[0];
+                	Provider p = (Provider)result[1];
+                	proFirst = p.getFirstName();
+                	proLast = p.getLastName();
+                	proOHIP = p.getOhipNo();
             %>
 					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
 					</option>
@@ -226,13 +226,12 @@ function clearField(field){
               String specialty_code;
               String billinggroup_no;
               int Count = 0;
-              ResultSet rslocal;
-              rslocal = null;
-              rslocal = apptMainBean.queryResults("billingreport", "search_reportprovider");
-              while (rslocal.next()) {
-                proFirst = rslocal.getString("first_name");
-                proLast = rslocal.getString("last_name");
-                proOHIP = rslocal.getString("provider_no");
+              for(Object[] result:reportProviderDao.search_reportprovider("billingreport")) {
+              	ReportProvider rp = (ReportProvider)result[0];
+              	Provider p = (Provider)result[1];
+              	proFirst = p.getFirstName();
+              	proLast = p.getLastName();
+              	proOHIP = p.getOhipNo();
             %>
 					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
 					</option>

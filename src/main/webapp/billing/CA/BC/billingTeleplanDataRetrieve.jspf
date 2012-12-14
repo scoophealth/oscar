@@ -31,7 +31,7 @@
 <% 
  
 
- rslocation = null;
+ ResultSet rslocation = null;
  rslocation = apptMainBean.queryResults(billNo, "search_teleplanbill");
  while(rslocation.next()){ 
     DemoNo = rslocation.getString("demographic_no");
@@ -44,7 +44,7 @@
     visittype = rslocation.getString("visittype");
  }
 
- rsPatient = null;
+ ResultSet rsPatient = null;
  rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
  while(rsPatient.next()){
      DemoSex = rsPatient.getString("sex");

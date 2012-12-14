@@ -28,8 +28,7 @@
   String curUser_no = (String) session.getAttribute("user");  
 %>
 <%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.BillingDao" %>
 <%@page import="org.oscarehr.common.model.Billing" %>

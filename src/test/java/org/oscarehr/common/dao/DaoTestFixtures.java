@@ -113,11 +113,11 @@ public abstract class DaoTestFixtures
 	@Test
 	public void doSimpleExceptionTest() {
 		String[] excludes = {"notify","notifyAll","remove","persist","merge","refresh","saveEntity","wait","equals",
-				"toString","hashCode","getClass","getModelClass","find","getCountAll","findAll","runNativeQuery","save"};
+				"toString","hashCode","getClass","getModelClass","find","getCountAll","findAll","runNativeQuery","save","removeAll"};
 		List<String> excludeList = Arrays.asList(excludes);
 		
 		String daoClassName = this.getClass().getName().replaceAll("Test$", "");
-		
+	
 		try {
 			Class clazz = Class.forName(daoClassName);
 			

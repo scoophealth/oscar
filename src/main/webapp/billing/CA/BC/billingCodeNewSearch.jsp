@@ -24,15 +24,17 @@
 
 --%>
 <%
-  if (session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
   String user_no = (String) session.getAttribute("user");
 %>
-<%@page
-	import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@include file="dbBilling.jspf"%>
+<%@page import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.BillingService" %>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao" %>
+
+
+<%
+	BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
+%>
 <%
   String search = "", search2 = "";
   search = request.getParameter("search");
@@ -78,13 +80,7 @@
     codeName2 = codeName2 + "%";
     desc2 = "%" + codeName2 + "%";
   }
-  String[] param = new String[6];
-  param[0] = codeName;
-  param[1] = codeName1;
-  param[2] = codeName2;
-  param[3] = desc;
-  param[4] = desc1;
-  param[5] = desc2;
+ 
 %>
 <html>
 <head>
@@ -127,8 +123,7 @@ function CodeAttach(File0,dx1,dx2,dx3) {
 		</b></td>
 	</tr>
 	<%
-    ResultSet rslocal = null;
-    ResultSet rslocal2 = null;
+  
     String color = "";
     int Count = 0;
     int intCount = 0;
@@ -140,11 +135,12 @@ function CodeAttach(File0,dx1,dx2,dx3) {
     String dx1 = "";
     String dx2 = "";
     String dx3 = "";
-    rslocal = apptMainBean.queryResults(param, search);
-    while (rslocal.next()) {
+    
+    for(BillingService bs : billingServiceDao.search_service_code(codeName, codeName1, codeName2, desc, desc1, desc2)) {
+    
       intCount = intCount + 1;
-      Dcode = rslocal.getString("service_code");
-      DcodeDesc = rslocal.getString("description");
+      Dcode = bs.getServiceCode();
+      DcodeDesc = bs.getDescription();
       if (Count == 0) {
         Count = 1;
         color = "#FFFFFF";

@@ -24,14 +24,7 @@
 
 --%>
 <%
-
-  if(session.getValue("user") == null)
-
-    response.sendRedirect("../../../logout.htm");
-
-  String curUser_no,userfirstname,userlastname;
-
-  curUser_no = (String) session.getAttribute("user");
+  String curUser_no = (String) session.getAttribute("user");
 
  String UpdateDate = "";
 
@@ -93,30 +86,28 @@
 
  int rowReCount = 0;
 
-  ResultSet rslocation = null;
-
- ResultSet rsPatient = null;
-
-
 
 %>
 
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
 <%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
 <%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
 <%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
 %>
 
 <%
@@ -413,7 +404,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 			name="xml_clinic_ref_code" value="<%=location%>"><select
 			style="font-size: 80%;" name="clinic_ref_code">
 			<option value="">--- Select Visit Location ---</option>
-			<%  rslocation = null;
+			<% 
 
 			List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
             for(ClinicLocation clinicLocation:clinicLocations) {
@@ -436,7 +427,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 			name="provider_no">
 			<option value="">--- Select Provider ---</option>
 
-			<% ResultSet rslocal = null;
+			<% 
 
 // Retrieving Provider
 
@@ -444,19 +435,15 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
  int Count = 0;
 
-  rslocal = null;
-
- rslocal = apptMainBean.queryResults("%", "search_provider_dt");
-
- while(rslocal.next()){
+ for(Provider p:providerDao.getActiveProviders()) {
+	if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {
 
 
+ proFirst = p.getFirstName();
 
- proFirst = rslocal.getString("first_name");
+ proLast = p.getLastName();
 
- proLast = rslocal.getString("last_name");
-
- proOHIP = rslocal.getString("provider_no");
+ proOHIP = p.getProviderNo();
 
 
 
@@ -466,7 +453,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 				<%=Provider.equals(proOHIP)?"selected":""%>><%=proOHIP%> |
 			<%=proLast%>, <%=proFirst%></option>
 
-			<% }
+			<% } }
 
 
 
@@ -571,25 +558,18 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
     String billingunit="";
 
-    ResultSet rsBillRec = null;
+    for(BillingDetail bd:billingDetailDao.findByBillingNo(Integer.parseInt(billNo))) {
+    	if(bd.getStatus().equals("D"))continue;
+   
+ serviceCode = bd.getServiceCode();
 
-     rsBillRec = null;
+ serviceDesc = bd.getServiceDesc();
 
- rsBillRec = apptMainBean.queryResults(billNo, "search_bill_record");
+ billAmount =bd.getBillingAmount();
 
- while(rsBillRec.next()){
+ diagCode = bd.getDiagnosticCode();
 
-
-
- serviceCode = rsBillRec.getString("service_code");
-
- serviceDesc = rsBillRec.getString("service_desc");
-
- billAmount = rsBillRec.getString("billing_amount");
-
- diagCode = rsBillRec.getString("diagnostic_code");
-
- billingunit = rsBillRec.getString("billingunit");
+ billingunit = bd.getBillingUnit();
 
  rowCount = rowCount + 1;
 
@@ -679,10 +659,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
  String diagDesc = "";
 
-   ResultSet rsDiagCode = null;
-
-     rsDiagCode = null;
-
+ 
  	List<DiagnosticCode> results = diagnosticCodeDao.searchCode(diagCode);
  	for(DiagnosticCode result:results) {
  		diagDesc = result.getDescription();
