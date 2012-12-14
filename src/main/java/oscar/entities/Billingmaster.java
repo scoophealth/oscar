@@ -30,9 +30,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
@@ -48,6 +50,22 @@ import oscar.util.UtilDateUtilities;
  */
 @Entity
 @Table(name = "billingmaster")
+@SqlResultSetMapping(name = "select_user_bill_report_wcb_mapping",
+	entities={
+		@EntityResult(entityClass=Billingmaster.class)
+		/*
+		@EntityResult(entityClass=Demographic.class)
+	,fields={
+			 @FieldResult(name="billingmasterNo", column = "billingmaster_no")
+		}
+		,
+		@EntityResult(entityClass=Wcb.class),
+		,
+		@EntityResult(entityClass=TeleplanC12.class),
+*/
+}
+)
+
 public class Billingmaster {
 
     /**

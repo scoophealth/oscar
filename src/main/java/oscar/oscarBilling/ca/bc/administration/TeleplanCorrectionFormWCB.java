@@ -25,6 +25,8 @@
 package oscar.oscarBilling.ca.bc.administration;
 
 import java.sql.ResultSet;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
@@ -32,6 +34,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.Misc;
 import oscar.MyDateFormat;
 import oscar.oscarDemographic.data.DemographicData;
+import oscar.util.ConversionUtils;
 
 public class TeleplanCorrectionFormWCB
         extends org.apache.struts.action.ActionForm {
@@ -119,6 +122,80 @@ public class TeleplanCorrectionFormWCB
             logger.error("Teleplan Correction Form WCB: (Constructor) " + ex.getMessage());
         }
     }
+   
+   public TeleplanCorrectionFormWCB(List<Object[]> results) {
+	      super();
+	     
+         if (results.size()>0) {
+        	 Object[] result = results.get(0);
+        	 
+            this.demographicNumber = String.valueOf(result[0]);
+            this.id = String.valueOf(result[1]);
+	        this.firstName = (String)result[2];
+	        this.lastName = (String)result[3];
+	        this.address = (String)result[4];
+	        this.city = (String)result[5];
+	        this.province = (String)result[6];
+	        this.postal = (String)result[7];
+	        this.hin = (String)result[8];
+	        this.monthOfBirth = (String)result[9];
+	        this.dayOfBirth = (String)result[10];
+	        this.yearOfBirth = (String)result[11];
+	        this.practitioner = (String)result[12];
+	        this.billingCode = (String)result[13];
+	        this.billingAmount = (String)result[14];
+	        this.billingUnit = String.valueOf(result[15]);
+	        
+	        this.date = (String)result[16];
+	        this.billingNo = String.valueOf(result[17]);
+	        this.dataSeqNo = (String)result[18];
+	        this.serviceLocation = String.valueOf(result[19]);
+	        this.w_icd9 = (String)result[20];
+	        w_reportype = String.valueOf(result[21]);
+	        w_mname = String.valueOf(result[22]);
+	        w_gender = String.valueOf(result[23]);
+	        w_doi =ConversionUtils.toDateString((Date)result[24]);
+	        w_area = String.valueOf(result[25]);
+	        w_phone =(String)result[26];
+	        w_empname = (String)result[27];
+	        w_emparea =  String.valueOf(result[28]);
+	        w_empphone = (String)result[29];
+	        w_wcbno = (String)result[30];
+	        w_opaddress = (String)result[31];
+	        
+	        w_opcity = (String)result[32];
+	        w_rphysician =  String.valueOf(result[33]);
+	        w_duration =  String.valueOf(result[34]);
+	        w_ftreatment = (String)result[35];
+	        w_problem = (String)result[36];
+	        w_servicedate = ConversionUtils.toDateString((Date)result[37]);
+	        w_diagnosis = (String)result[38];
+	        w_icd9 = (String)result[39];
+	        w_bp =(String)result[40];
+	        w_side =  String.valueOf(result[41]);
+	        w_noi = (String)result[42];
+	        w_work =  String.valueOf(result[43]);
+	        w_workdate = (String)result[44];
+	        w_clinicinfo = (String)result[45];
+	        w_capability = (String)result[46];
+	        w_capreason = (String)result[47];
+	        w_estimate =(String)result[48];
+	        w_rehab = (String)result[49];
+	        w_rehabtype = (String)result[50];
+	        w_estimatedate = (String)result[51];
+	        w_tofollow = (String)result[52];
+	        w_wcbadvisor =(String)result[53];
+	        w_feeitem = (String)result[54];
+	        w_extrafeeitem = (String)result[55];
+	        
+	        status = (String)result[56];
+	        
+	        formNeeded = String.valueOf(result[57]);
+	        providerNo =  String.valueOf(result[58]);
+	        w_payeeno =(String)result[59];
+	        w_pracno = (String)result[60];
+         }
+   }
 
     public String getServiceLocation() {
         return this.serviceLocation;

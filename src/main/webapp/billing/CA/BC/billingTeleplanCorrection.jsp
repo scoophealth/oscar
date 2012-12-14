@@ -91,8 +91,7 @@
 
 <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jspf"%>
+
 
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
@@ -103,11 +102,19 @@
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
 <%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="oscar.entities.Billingmaster" %>
+<%@ page import="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" %>
+<%@ page import="oscar.util.ConversionUtils" %>
+<%@ page import="org.oscarehr.common.model.Billing" %>
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
 	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	BillingmasterDAO billingMasterDao = SpringUtils.getBean(BillingmasterDAO.class);
 %>
 
 <%

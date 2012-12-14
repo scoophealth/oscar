@@ -70,4 +70,29 @@ public class TeleplanS00Dao extends AbstractDao<TeleplanS00> {
 		q.setParameter("s", "BG");
 		return q.getResultList();
     }
+	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> search_taprovider(Integer s21Id) {
+		Query q = entityManager.createQuery("select r.practitionerNo, p.LastName,p.FirstName from TeleplanS00 r, Provider p where p.OhipNo=r.practitionerNo and r.s21Id=? group by r.practitionerNo");
+		q.setParameter(1, s21Id);
+		return q.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TeleplanS00> search_taS00 (Integer s21Id, String type, String practitionerNo) {
+		Query q = entityManager.createQuery("select t from TeleplanS00 t where t.s21Id=? and t.s00Type<>? and t.practitionerNo like ? order by t.id");
+		q.setParameter(1, s21Id);
+		q.setParameter(2, type);
+		q.setParameter(3, practitionerNo);
+		return q.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TeleplanS00> search_taS01 (Integer s21Id, String type, String practitionerNo) {
+		Query q = entityManager.createQuery("select t from TeleplanS00 t where t.s21Id=? and t.s00Type<>? and t.practitionerNo like ? order by t.id");
+		q.setParameter(1, s21Id);
+		q.setParameter(2, type);
+		q.setParameter(3, practitionerNo);
+		return q.getResultList();
+	}
 }

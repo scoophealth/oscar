@@ -25,6 +25,10 @@
 
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.TeleplanS23;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -34,5 +38,14 @@ public class TeleplanS23Dao extends AbstractDao<TeleplanS23>{
 
 	public TeleplanS23Dao() {
 		super(TeleplanS23.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TeleplanS23> search_taS23 (Integer s21Id, String type, String aji) {
+		Query q = entityManager.createQuery("select t from TeleplanS23 t where t.s21Id=? and t.s23Type<>? and t.aji like ? order by t.id");
+		q.setParameter(1, s21Id);
+		q.setParameter(2, type);
+		q.setParameter(3, aji);
+		return q.getResultList();
 	}
 }

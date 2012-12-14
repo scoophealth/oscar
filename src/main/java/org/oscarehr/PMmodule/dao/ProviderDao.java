@@ -397,7 +397,7 @@ public class ProviderDao extends HibernateDaoSupport {
             }
 
             @SuppressWarnings("unchecked")
-            List<Provider> providers = this.getHibernateTemplate().find("from Provider p where ohip_no=? order by last_name, first_name", ohipNo);            
+            List<Provider> providers = this.getHibernateTemplate().find("from Provider p where ohip_no like ? order by last_name, first_name", ohipNo);            
             
             if(providers.size()>1) {
                 logger.warn("Found more than 1 provider with ohipNo="+ohipNo);

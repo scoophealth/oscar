@@ -23,13 +23,19 @@
     Ontario, Canada
 
 --%>
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
-<%@page import="org.oscarehr.util.MiscUtils"%><html>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+
+
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.billing.CA.BC.model.TeleplanS00" %>
+<%@ page import="org.oscarehr.billing.CA.BC.dao.TeleplanS00Dao" %>
+
+<%
+	TeleplanS00Dao teleplanS00Dao = SpringUtils.getBean(TeleplanS00Dao.class);
+%>
+
+<html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="billing.css">
@@ -116,61 +122,61 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
               
               String[] param0 = new String[2];
               
-              ResultSet rsdemo = apptMainBean.queryResults(param, "search_taByOfficeNo");
+              List<TeleplanS00> results = teleplanS00Dao.findByOfficeNumbers(Arrays.asList(new String[]{Misc.forwardZero(officeNo,7)}));
               int counter = 0;
-              while (rsdemo.next()) {   
+              for (TeleplanS00 result:results) {   
                   counter ++;
-                 account = rsdemo.getString("t_officeno");
+                 account = result.getOfficeNo();
                    
           %>
 	<tr>
 		<td width="5%" height="16"><a
-			href="javascript: popupPage(700,750,'adjustBill.jsp?billing_no=<%=rsdemo.getString("t_officeno")%>')"><%=rsdemo.getString("t_officeno")%></a>&nbsp;
+			href="javascript: popupPage(700,750,'adjustBill.jsp?billing_no=<%=result.getOfficeNo()%>')"><%=result.getOfficeNo()%></a>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=rsdemo.getString("t_practitionerno")%>&nbsp;
+		<td width="5%" height="16"><%=result.getPractitionerNo()%>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=rsdemo.getString("t_billfeeschedule")%>&nbsp;
+		<td width="5%" height="16"><%=result.getBillFeeSchedule()%>&nbsp;
 		</td>
-		<td height="16"><%=rsdemo.getString("t_payment")%>&nbsp;</td>
-		<td width="5%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_billamt"))%>&nbsp;
+		<td height="16"><%=result.getPayment()%>&nbsp;</td>
+		<td width="5%" height="16" align="right"><%=moneyFormat(result.getBillAmount())%>&nbsp;
 		</td>
-		<td width="5%" height="16" align=right><%=moneyFormat(rsdemo.getString("t_paidamt"))%></td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_exp1")%>&nbsp;
+		<td width="5%" height="16" align=right><%=moneyFormat(result.getPaidAmount())%></td>
+		<td width="2%" height="16"><%=result.getExp1()%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_exp2")%>&nbsp;
+		<td width="2%" height="16"><%=result.getExp2()%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_exp3")%>&nbsp;
+		<td width="2%" height="16"><%=result.getExp3()%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_ajc1")%>&nbsp;
+		<td width="2%" height="16"><%=result.getAjc1()%>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja1"))%>&nbsp;
+		<td width="5%" height="16"><%=moneyFormat(result.getAja1())%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_ajc2")%>&nbsp;
+		<td width="2%" height="16"><%=result.getAjc2()%>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja2"))%>&nbsp;
+		<td width="5%" height="16"><%=moneyFormat(result.getAja2())%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_ajc3")%>&nbsp;
+		<td width="2%" height="16"><%=result.getAjc3()%>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja3"))%>&nbsp;
+		<td width="5%" height="16"><%=moneyFormat(result.getAja3())%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_ajc4")%>&nbsp;
+		<td width="2%" height="16"><%=result.getAjc4()%>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja4"))%>&nbsp;
+		<td width="5%" height="16"><%=moneyFormat(result.getAja4())%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_ajc5")%>&nbsp;
+		<td width="2%" height="16"><%=result.getAjc5()%>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja5"))%>&nbsp;
+		<td width="5%" height="16"><%=moneyFormat(result.getAja5())%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_ajc6")%>&nbsp;
+		<td width="2%" height="16"><%=result.getAjc6()%>&nbsp;
 		</td>
-		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja6"))%>&nbsp;
+		<td width="5%" height="16"><%=moneyFormat(result.getAja6())%>&nbsp;
 		</td>
-		<td width="2%" height="16"><%=rsdemo.getString("t_ajc7")%>&nbsp;
+		<td width="2%" height="16"><%=result.getAjc7()%>&nbsp;
 		</td>
-		<!--<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja7"))%>&nbsp; </td>-->
-		<td width="5%" height="16"><%=rsdemo.getString("t_s00type")%>&nbsp;
+		<!--<td width="5%" height="16"><%=moneyFormat(result.getAja7())%>&nbsp; </td>-->
+		<td width="5%" height="16"><%=result.getS00Type()%>&nbsp;
 		</td>
-		<td width="5%" height="16" align=right><%=rsdemo.getString("t_linecode").compareTo("P")==0?"Paid as billed":rsdemo.getString("t_linecode").compareTo("R")==0?"Refusal":rsdemo.getString("t_linecode").compareTo("H")==0?"Recycle":""%></td>
+		<td width="5%" height="16" align=right><%=String.valueOf(result.getLineCode()).compareTo("P")==0?"Paid as billed":String.valueOf(result.getLineCode()).compareTo("R")==0?"Refusal":String.valueOf(result.getLineCode()).compareTo("H")==0?"Recycle":""%></td>
 	</tr>
 	<% }
        
