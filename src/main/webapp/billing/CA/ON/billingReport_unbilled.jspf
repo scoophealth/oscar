@@ -5,16 +5,13 @@ String dateEnd = request.getParameter("xml_appointment_date");
 if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
 if (dateBegin.compareTo("") == 0) dateBegin="2001-01-01";
 
-String[] param =new String[3];
-param[0] = request.getParameter("providerview");
-param[1] = dateBegin;
-param[2] = dateEnd;
-ResultSet rs = apptMainBean.queryResults(param, "search_unbill_history_daterange");
+List<Appointment> bs = appointmentDao.search_unbill_history_daterange(request.getParameter("providerview"),ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
+
 
 boolean bodd=false;
 nItems=0;
 String apptNo="", demoNo = "", demoName="", userno="", apptDate="", apptTime="", reason="";
-if(rs==null) {
+if(bs==null) {
 	out.println("failed!!!"); 
 } else {
 %>
@@ -31,16 +28,16 @@ if(rs==null) {
 			face="Arial, Helvetica, sans-serif">COMMENTS</font></b></TH>
 	</tr>
 	<%
-	while (rs.next()) {
+	for (Appointment a:bs) {
 		bodd=bodd?false:true; //for the color of rows
 		nItems++; //to calculate if it is the end of records
-		apptNo = rs.getString("appointment_no");
-		demoNo = rs.getString("demographic_no");
-		demoName = rs.getString("name");
-		userno=rs.getString("provider_no");
-		apptDate = rs.getString("appointment_date");
-		apptTime = rs.getString("start_time");
-		reason = rs.getString("reason");
+		apptNo = a.getId().toString();
+		demoNo = String.valueOf(a.getDemographicNo());
+		demoName = a.getName();
+		userno=a.getProviderNo();
+		apptDate = ConversionUtils.toDateString(a.getAppointmentDate());
+		apptTime =  ConversionUtils.toDateString(a.getStartTime());
+		reason = a.getReason();
 %>
 	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>" align="center">
 		<TD width="20%"><b><font size="2"

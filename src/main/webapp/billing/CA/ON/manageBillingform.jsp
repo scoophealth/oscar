@@ -18,7 +18,6 @@
 
 --%>
 <%      
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 String asstProvider_no = "";
 String color ="";
@@ -28,12 +27,23 @@ String service_form="", service_name="";
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.CtlBillingService" %>
+<%@ page import="org.oscarehr.common.dao.CtlBillingServiceDao" %>
+<%@ page import="org.oscarehr.common.model.CtlDiagCode" %>
+<%@ page import="org.oscarehr.common.dao.CtlDiagCodeDao" %>
+<%@ page import="org.oscarehr.common.model.CtlBillingServicePremium" %>
+<%@ page import="org.oscarehr.common.dao.CtlBillingServicePremiumDao" %>
+<%
+	CtlBillingServiceDao ctlBillingServiceDao = SpringUtils.getBean(CtlBillingServiceDao.class);
+	CtlDiagCodeDao ctlDiagCodeDao = SpringUtils.getBean(CtlDiagCodeDao.class);
+	CtlBillingServicePremiumDao ctlBillingServicePremiumDao = SpringUtils.getBean(CtlBillingServicePremiumDao.class);
+	
+%>
+
 
 <%
 String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
@@ -158,11 +168,11 @@ function manageBillType(id,oldtype,newtype) {
 String formDesc="";
 String formID="";
 int Count = 0;  
-ResultSet rslocal = apptMainBean.queryResults("%", "search_billingform");
+List<CtlBillingService> cbss = ctlBillingServiceDao.findByServiceType("%");
 
-while(rslocal.next()){
-	formDesc = rslocal.getString("servicetype_name");
-	formID = rslocal.getString("servicetype"); 
+for(CtlBillingService cbs:cbss){
+	formDesc = cbs.getServiceTypeName();
+	formID = cbs.getServiceType();
 %>
 			<option value="<%=formID%>"
 				<%=clinicview.equals(formID)?"selected":""%>><%=formDesc%></option>

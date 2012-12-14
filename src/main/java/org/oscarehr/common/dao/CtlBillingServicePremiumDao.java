@@ -48,4 +48,24 @@ public class CtlBillingServicePremiumDao extends AbstractDao<CtlBillingServicePr
 		
 		return results;
 	}
+	
+	public List<CtlBillingServicePremium> findByStatus(String status) {
+		Query q = entityManager.createQuery("select x from CtlBillingServicePremium x where x.status=?");
+		q.setParameter(1, status);
+		
+		@SuppressWarnings("unchecked")
+		List<CtlBillingServicePremium> results = q.getResultList();
+		
+		return results;
+	}
+	
+	public List<Object[]> search_ctlpremium(String status) {
+		Query q = entityManager.createQuery("select b.serviceCode, c.description from CtlBillingServicePremium b, BillingService c where b.serviceCode=c.serviceCode and b.status=?");
+		q.setParameter(1, status);
+		
+		@SuppressWarnings("unchecked")
+		List<Object[]> results = q.getResultList();
+		
+		return results;
+	}
 }

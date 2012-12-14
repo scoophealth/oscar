@@ -18,17 +18,16 @@
 
 --%>
 <% 
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Ichppccode" %>
+<%@ page import="org.oscarehr.common.dao.IchppccodeDao" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%
+	IchppccodeDao ichppccodeDao = SpringUtils.getBean(IchppccodeDao.class);
+%>
 <% String search = "",search2 = "";
  search = request.getParameter("search"); 
  if (search.compareTo("") == 0){
@@ -66,13 +65,6 @@ codeName2 = codeName2 + "%";
 desc2 = codeName2 + "%";
 }
 
- String[] param =new String[6];
- param[0] = codeName;
- param[1] = codeName1;
- param[2] = codeName2;
- param[3] = desc;
- param[4] = desc1;
- param[5] = desc2;
 
 %>
 <html>
@@ -125,12 +117,11 @@ function CodeAttach(File0) {
 // Retrieving Provider
 
 String Dcode="", DcodeDesc="";
- rslocal = null;
-  rslocal = apptMainBean.queryResults(param, search);
- while(rslocal.next()){
+
+for(Ichppccode i :ichppccodeDao.search_research_code(codeName, codeName1, codeName2, desc, desc1, desc2)) {
  intCount = intCount + 1;
- Dcode = rslocal.getString("ichppccode");
-  DcodeDesc = rslocal.getString("description");
+ Dcode = i.getId();
+  DcodeDesc = i.getDescription();
  if (Count == 0){
  Count = 1;
  color = "#FFFFFF";
