@@ -24,25 +24,27 @@
 
 --%>
 
-<%      
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.CtlBillingType" %>
+<%@ page import="org.oscarehr.common.dao.CtlBillingTypeDao" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
+<%
+	CtlBillingTypeDao ctlBillingTypeDao = SpringUtils.getBean(CtlBillingTypeDao.class);
+%>
+
 
 <%
 String type_id = "", type_name="", billtype="no";
 type_id = request.getParameter("type_id");
 type_name = request.getParameter("type_name");
 
-ResultSet rslocal = apptMainBean.queryResults(type_id, "search_ctlbilltype");
-if (rslocal.next()) billtype = rslocal.getString("billtype");
+for(CtlBillingType cbt:ctlBillingTypeDao.findByServiceType(type_id)) {
+	billtype = cbt.getBillType();
+}
+
 %>
 
 <table width=95%>

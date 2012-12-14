@@ -18,19 +18,11 @@
 
 --%>
 <%
-  if(session.getValue("user") == null) 
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
+  String curUser_no = (String) session.getAttribute("user");
 
 %>
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="../errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp"%>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

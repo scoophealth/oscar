@@ -18,6 +18,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -436,5 +437,51 @@ public class BillingDao extends AbstractDao<Billing> {
 		return results;
 	}
 	
+	
+	public List<Billing> search_bill_history_daterange(String providerNo, Date startBillingDate, Date endBillingDate ) {
+		Query q = entityManager.createQuery("select b from Billing b where b.providerNo=? and b.billingDate >=? and b.billingDate<=? and b.status<>'D' and b.status<>'S' and b.status<>'B' and b.demographicNo <> 0 order by b.billingDate desc, b.billingTime desc");
+		q.setParameter(1, providerNo);
+		q.setParameter(2, startBillingDate);
+		q.setParameter(3, endBillingDate);
+		
+		@SuppressWarnings("unchecked")
+		List<Billing> results = q.getResultList();
+		
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> search_billob(String providerNo, Date startDate, Date endDate) {
+		String[] serviceCodes = {"P006A","P011A","P009A","P020A","P022A","P028A","P023A","P007A","P008B","P018B","E502A","C989A","E409A","E410A","E411A","H001A"};
+		Query q = entityManager.createQuery("select distinct b.id,b.total,b.status,b.billingDate, b.demographicName from Billing b, BillingDetail bd "
+				+ "where bd.billingNo=b.id and b.status<>'D' and bd.serviceCode in (:serviceCodes) and b.providerNo like :providerNo " +
+				"and b.billingDate>=:startDate and b.billingDate<=:endDate");
+		q.setParameter("serviceCodes", Arrays.asList(serviceCodes));
+		q.setParameter("providerNo", providerNo);
+		q.setParameter("startDate", startDate);
+		q.setParameter("endDate", endDate);
+		return q.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> search_billflu(String creator, Date startDate, Date endDate) {
+		Query q = entityManager.createQuery("select distinct b.content, b.id,b.total,b.status,b.billingDate, b.demographicName From Billing b, BillingDetail bd "+
+				"where bd.billingNo=b.id and b.status<>'D' and( bd.serviceCode='G590A' or bd.serviceCode='G591A') and b.creator like :providerNo "+
+				"and b.billingDate>=:startDate and b.billingDate<=:endDate order by b.demographicName");
+		q.setParameter("providerNo", creator);
+		q.setParameter("startDate", startDate);
+		q.setParameter("endDate", endDate);
+		
+		return q.getResultList();
+	}
 
+	@SuppressWarnings("unchecked")
+	public List<Billing> search_unsettled_history_daterange(String providerNo, Date startDate, Date endDate) {
+		Query q = entityManager.createQuery("select b from Billing b where b.providerNo=:providerNo and b.billingDate >=:startDate and b.billingDate<=:endDate and (b.status='B') and b.demographicNo <> 0 order by b.billingDate desc, b.billingTime desc");
+		q.setParameter("providerNo", providerNo);
+		q.setParameter("startDate", startDate);
+		q.setParameter("endDate", endDate);
+		
+		return q.getResultList();
+	}
 }
