@@ -180,12 +180,12 @@ public final class DateUtils {
 	}
 	
 	/**
-	 * @Deprecated use formatDate() parseDate() instead
+	 * @deprecated use formatDate() parseDate() instead
 	 */
 	private static SimpleDateFormat sdf;
 
 	/**
-	 * @Deprecated use formatDate() parseDate() instead
+	 * @deprecated use formatDate() parseDate() instead
 	 */
 	private static String formatDate = "dd/MM/yyyy";
 
