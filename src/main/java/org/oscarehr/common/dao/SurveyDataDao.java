@@ -25,12 +25,17 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.SurveyData;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class SurveyDataDao extends AbstractDao<SurveyData>{
 
 	public SurveyDataDao() {
@@ -59,6 +64,30 @@ public class SurveyDataDao extends AbstractDao<SurveyData>{
 	    	return 0;
 	    }
 	    return ((Long)result).intValue();	    
+    }
+
+    public List<SurveyData> findByDemoSurveyIdAndPeriod(Integer demoNo, String surveyId, int cutoffInDays) {
+		Query query = createQuery("sd", "sd.surveyId = :surveyId AND sd.demographicNo = :demoNo AND sd.surveyDate >= :surveyDate");
+		query.setParameter("surveyId", surveyId);
+		query.setParameter("demoNo", demoNo);
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.roll(Calendar.DAY_OF_YEAR, cutoffInDays * (-1));
+		query.setParameter("surveyDate", calendar.getTime());
+		return query.getResultList();	    
+    }
+
+	public List<Object[]> countStatuses(String surveyId) {
+		String sql = "SELECT sd.status , COUNT(sd.status) FROM SurveyData sd WHERE sd.surveyId = :surveyId GROUP BY sd.status";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("surveyId", surveyId);
+		return query.getResultList();
+    }
+
+	public List<Object[]> countAnswers(String surveyId) {
+		String sql = "SELECT sd.answer, COUNT(sd.answer) FROM SurveyData sd WHERE sd.surveyId = :surveyId AND sd.status = 'A' GROUP BY sd.answer";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("surveyId", surveyId);
+		return query.getResultList();
     }
 	
 	
