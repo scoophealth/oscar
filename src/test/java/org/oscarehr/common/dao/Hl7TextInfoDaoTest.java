@@ -33,7 +33,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class Hl7TextInfoDaoTest extends DaoTestFixtures {
 
-	private Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
+	protected Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 
 	@Before
 	public void before() throws Exception {
