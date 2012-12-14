@@ -138,4 +138,9 @@ public class BillingDaoTest extends DaoTestFixtures {
 	public void testCountBillingVisitsByProvider() {
         assertNotNull(dao.countBillingVisitsByProvider("100", new Date(), new Date()));
 	}
+
+    @Test
+    public void testFindByProviderStatusForTeleplanFileWriter() {
+	    assertNotNull(dao.findByProviderStatusForTeleplanFileWriter("HIN"));
+    }
 }
