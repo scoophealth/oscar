@@ -30,8 +30,8 @@
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,org.caisi.model.*,org.caisi.dao.*,oscar.util.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"  %>
 
 
-<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbTicker.jspf" %>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+
 <%
 
 //GregorianCalendar now=new GregorianCalendar();
