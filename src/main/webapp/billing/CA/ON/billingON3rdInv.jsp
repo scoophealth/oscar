@@ -60,6 +60,7 @@
     String invoiceComment = "";
     String invoiceRefNum = "";
     String billingDateStr ="";
+    String dueDateStr = "";
     
     ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
     Clinic clinic = clinicDao.getClinic();              
@@ -112,10 +113,8 @@
                 buildBillTo.append(demo.getFirstName()).append(" ").append(demo.getLastName()).append("\n")
                         .append(demo.getAddress()).append("\n")
                         .append(demo.getCity()).append(",").append(demo.getProvince()).append("\n")
-                        .append(demo.getPostal()).append("\n\n")
-                        .append("Email:").append(demo.getEmail()).append("\n")
-                        .append("Tel:").append(demo.getPhone()).append("\n")
-                        .append("\n\n\nStudent ID:").append(demo.getChartNo());
+                        .append(demo.getPostal()).append("\n\n")                       
+                        .append("\n\n\n\n\nStudent ID:").append(demo.getChartNo());
                 billTo = buildBillTo.toString();
             }
             
@@ -134,7 +133,18 @@
 
             if (remitToBillExt != null)
                 remitTo = remitToBillExt.getValue();
-        }                 
+        }
+
+        if (props.hasProperty("invoice_due_date")) {
+            BillingONExt dueDateExt = billExtDao.getDueDate(bCh1);
+            if (dueDateExt != null) {
+                dueDateStr = dueDateExt.getValue();
+            } else {
+                Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0"));
+                Date serviceDate = bCh1.getBillingDate();
+                dueDateStr = DateUtils.sumDate(serviceDate, numDaysTilDue, request.getLocale());
+            }            
+        }                                 
     }
    
 %>
@@ -162,12 +172,8 @@
                 <td align="right" valign="top">
                     <font size="+2"><b>Invoice No. - <%=invoiceNoStr%></b></font><br />
 		<bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.printDate"/>:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %><br/>
-              <% if (props.hasProperty("invoice_due_date")) {
-                    Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0")); 
-                    Date serviceDate = null;
-                    serviceDate = bCh1.getBillingDate();
-               %>
-                <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=DateUtils.sumDate(serviceDate, numDaysTilDue, request.getLocale())%>
+              <% if (props.hasProperty("invoice_due_date")) {%>
+                <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=dueDateStr%>
               <% }%>
                 </td>               
             </tr>

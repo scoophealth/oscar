@@ -193,7 +193,29 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
             bExt = results.get(0);
         return bExt;
     }
-
+    
+    public BillingONExt getDueDate(BillingONCHeader1 bCh1) {
+	BillingONExt bExt = null;
+	       
+	String sql = "select bExt from BillingONExt bExt where billingNo=? and status=? and keyVal=?";
+	Query query = entityManager.createQuery(sql);
+	query.setParameter(1, bCh1.getId());
+	query.setParameter(2, '1');
+	query.setParameter(3, "dueDate");
+	         
+	List<BillingONExt> results = query.getResultList();
+	       
+	if (results.size() > 1) {
+            MiscUtils.getLogger().warn("More than one active dueDate result for invoice number: " + bCh1.getId());
+	}
+	       
+	if (!results.isEmpty()) {
+            bExt = results.get(0);
+	}
+	       
+        return bExt;
+    }    
+ 
     public List<BillingONExt> find(Integer billingNo, String key, Date start, Date end) {
 		Query q = createQuery("b", "b.billingNo = :bNo AND b.keyVal = :key AND b.dateTime >= :start AND b.dateTime <= :end");
 		q.setParameter("bNo", billingNo);
