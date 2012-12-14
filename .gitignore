@@ -8,3 +8,5 @@
 /bin
 /oscar.properties
 velocity.log
+oscar.iml
+.idea
