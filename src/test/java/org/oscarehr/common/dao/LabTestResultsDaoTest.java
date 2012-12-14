@@ -84,4 +84,9 @@ public class LabTestResultsDaoTest extends DaoTestFixtures {
 		assertNotNull(dao.findByAbnAndPhysicianId("ABN", 199));
 	}
 
+    @Test
+    public void testFindByLabPatientPhysicialInfoId() {
+	    assertNotNull(dao.findByLabPatientPhysicialInfoId(199));
+    }
+
 }
