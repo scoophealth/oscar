@@ -25,6 +25,13 @@
 --%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
@@ -35,65 +42,55 @@
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<% 
-  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
-  Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
-  // String curProvider_no = (String) session.getAttribute("user");
-  String curProvider_no = request.getParameter("provider_no");
-      
-  String strLimit1="0";
-  String strLimit2="10";
-  StringBuffer bufChart = null, bufName = null, bufNo = null, bufDoctorNo = null;
-  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
-  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-  boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
-%>
 
-<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.*"
-	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.*" errorPage="errorpage.jsp"%>
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
+<% 
+	if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
+	Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
+	
+	String curProvider_no = request.getParameter("provider_no");
+	    
+	String keyword = request.getParameter("keyword");
+	String searchMode = request.getParameter("search_mode");
+	
+	String strLimit1="0";
+	String strLimit2="10";
+	if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+	
+	int offset = Integer.parseInt(strLimit1);
+	int limit = Integer.parseInt(strLimit2);
+	boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
+
+	List<Demographic> demoList = null;  
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+%>
 
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message
-	key="demographic.demographicsearch2apptresults.title" />
-(demographicsearch2apptresults)</title>
-<% if (isMobileOptimized) { %>
+<title><bean:message key="demographic.demographicsearch2apptresults.title" />(demographicsearch2apptresults)</title>
+
+<% 
+	if (isMobileOptimized) { 
+%>
    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
    <link rel="stylesheet" type="text/css" href="../mobile/searchdemographicstyle.css">
-<% } else { %>
+<% 
+	} else { 
+%>
    <link rel="stylesheet" type="text/css" href="../share/css/searchBox.css" />
    <link rel="stylesheet" type="text/css" media="all" href="../demographic/searchdemographicstyle.css"  />
-   <!-- Alternative display (removed borders) for IE 7 and below, since display:table properties are not understood -->
-   <!--[if lt IE 8]>
-   <style type="text/css">
-            body { min-width: 860px; }
-            .dob { width: 20%; }
-            #searchResults li div { border: none !important; float: left; }
-            #searchResults li { min-height: 1px; }
-            div.demoId { clear: both; vertical-align: middle; }
-        </style>
-    <![endif]-->
-    <!-- Min-width doesn't work properly in IE6, so we simulate it using JavaScript.
-    It's important to set a min-width since many elements will be floating, and
-    resizing may cause elements to collapse in strange ways
-    -->
-    <!--[if lt IE 7]>
-        <style type="text/css">#searchResults li { height: 1px; }</style>
-<script language="JavaScript">
-            window.onresize = function() { setMinWidth(860); }
-        </script>
-    <![endif]-->
-<% } %>
+<% 
+	} 
+%>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script language="JavaScript">
 function setfocus() {
@@ -141,37 +138,33 @@ function searchAll() {
 }
 
 
-</SCRIPT>
+</script>
 </head>
-<body bgcolor="white" bgproperties="fixed" onLoad="setfocus()"
-	topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
+<body bgcolor="white" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
 <div id="demographicSearch" class="searchBox">
-	<form method="post" name="titlesearch"
-		action="../demographic/demographiccontrol.jsp"
-		onSubmit="return checkTypeIn()"><%--@ include file="zdemographictitlesearch.htm"--%>
+	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
+	<%--@ include file="zdemographictitlesearch.htm"--%>
     <div class="header deep">
-        <div class="title"><bean:message
-            key="demographic.demographicsearch2apptresults.findPatient" /></div>  
+        <div class="title"><bean:message key="demographic.demographicsearch2apptresults.findPatient" /></div>  
     </div>
     <ul>
         <li>
-            <div class="label"><bean:message
-                 key="demographic.zdemographicfulltitlesearch.msgBy" />:
+            <div class="label"><bean:message key="demographic.zdemographicfulltitlesearch.msgBy" />:
             </div>
             <select class="wideInput" name="search_mode">
                 <option value="search_name" <%=request.getParameter("search_mode").equals("search_name")?"selected":""%>>
-		<bean:message key="demographic.demographicsearch2apptresults.optName" />
-		</option>
-		<option value="search_phone" <%=request.getParameter("search_mode").equals("search_phone")?"selected":""%>>
+					<bean:message key="demographic.demographicsearch2apptresults.optName" />
+				</option>
+				<option value="search_phone" <%=request.getParameter("search_mode").equals("search_phone")?"selected":""%>>
                     <bean:message key="demographic.demographicsearch2apptresults.optPhone" />
                 </option>
-		<option value="search_dob" <%=request.getParameter("search_mode").equals("search_dob")?"selected":""%>>
+				<option value="search_dob" <%=request.getParameter("search_mode").equals("search_dob")?"selected":""%>>
                     <bean:message key="demographic.demographicsearch2apptresults.optDOB" />
                 </option>
                 <option value="search_address" <%=request.getParameter("search_mode").equals("search_address")?"selected":""%>>
                     <bean:message key="demographic.demographicsearch2apptresults.optAddress" />
                 </option>
-		<option value="search_hin" <%=request.getParameter("search_mode").equals("search_hin")?"selected":""%>>
+				<option value="search_hin" <%=request.getParameter("search_mode").equals("search_hin")?"selected":""%>>
                     <bean:message key="demographic.demographicsearch2apptresults.optHIN" />
                 </option>
                 <option value="search_chart_no" <%=request.getParameter("search_mode").equals("search_chart_no")?"selected":""%>>
@@ -180,9 +173,7 @@ function searchAll() {
             </select>
         </li>
         <li>
-            <div class="label"><bean:message
-                 key="demographic.zdemographicfulltitlesearch.msgInput" />:
-            </div>
+            <div class="label"><bean:message key="demographic.zdemographicfulltitlesearch.msgInput" />:</div>
             <input type="text" class="wideInput" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17" MAXLENGTH="100"/>
         </li>
         <li>
@@ -215,56 +206,50 @@ function searchAll() {
 		<input type="hidden" name="creator" value="<%=request.getParameter("creator")%>">
 		<input type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
 		        
-	<%
-  String temp=null;
+<%
+	String temp=null;
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("search_mode") ||temp.equals("chart_no")  ||temp.equals("ptstatus") ||temp.equals("submit") || temp.equals("includeIntegratedResults")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
   }
-	%>
-            <a href="#" onclick="showHideItem('demographicSearch');" id="cancelButton" class="leftButton top">
-                <bean:message key="global.btnCancel" />
-            </a>
-            <input type="SUBMIT" class="rightButton blueButton top" name="displaymode"
-                value='<bean:message key="global.search"/>' size="17"
-                title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>&nbsp;&nbsp;
-            <INPUT TYPE="button" id="inactiveButton"
-                onclick="searchInactive();"
-                TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
-                VALUE="<bean:message key="demographic.search.Inactive"/>">
-            <INPUT TYPE="button" id="allButton"
-                onclick="searchAll();"
-                TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
-                VALUE="<bean:message key="demographic.search.All"/>">
-                <%
-                LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-				if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
-                <input type="checkbox" name="includeIntegratedResults" value="true"   <%="true".equals(request.getParameter("includeIntegratedResults"))?"checked":""%>/> <span style="font-size:small"><bean:message key="demographic.search.msgInclIntegratedResults"/></span>
-                <%}%>
-        </li>
-        
-        <% if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
+%>
+       <a href="#" onclick="showHideItem('demographicSearch');" id="cancelButton" class="leftButton top"><bean:message key="global.btnCancel" /></a>
+       <input type="SUBMIT" class="rightButton blueButton top" name="displaymode"
+           value='<bean:message key="global.search"/>' size="17"
+           title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>&nbsp;&nbsp;
+       <INPUT TYPE="button" id="inactiveButton"
+           onclick="searchInactive();"
+           TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
+           VALUE="<bean:message key="demographic.search.Inactive"/>">
+       <INPUT TYPE="button" id="allButton"
+           onclick="searchAll();"
+           TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
+           VALUE="<bean:message key="demographic.search.All"/>">
+<%
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	if (loggedInInfo.currentFacility.isIntegratorEnabled()){
+%>
+    	<input type="checkbox" name="includeIntegratedResults" value="true"   <%="true".equals(request.getParameter("includeIntegratedResults"))?"checked":""%>/> <span style="font-size:small"><bean:message key="demographic.search.msgInclIntegratedResults"/></span>
+<%	} %>
+   </li>
+<% if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
         <li>
         	<jsp:include page="../admin/IntegratorStatus.jspf"></jsp:include>
         </li>
-        
-        <%}%>
-        
+<%	} %>
     </ul>
 	</form>
 </div>
 
 <div id="searchResults">
     <div class="header deep">
-        <div class="title"><bean:message
-            key="demographic.demographicsearch2apptresults.patientsRecord" />
+        <div class="title"><bean:message key="demographic.demographicsearch2apptresults.patientsRecord" />
         </div>
     </div>
 <table width="95%" border="0">
 	<tr>
-		<td align="left"><bean:message
-			key="demographic.demographicsearch2apptresults.msgKeywords" /> <%=request.getParameter("keyword")%></td>
+		<td align="left"><bean:message key="demographic.demographicsearch2apptresults.msgKeywords" /> <%=request.getParameter("keyword")%></td>
 	</tr>
 </table>
 
@@ -317,36 +302,61 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
             <div class="dob"><bean:message key="demographic.demographicsearch2apptresults.DOB" /></div>
             <div class="doctor"><bean:message key="demographic.demographicsearch2apptresults.doctor" /></div>
 		</li>
-	<%
-	  	int rowCounter=0;
-	%>
-	<%@ include file="../demographic/zzdemographicsearchresult.jspf"%>
-	<%
-		rowCounter++;
-	  String bgColor = rowCounter%2==0?"#EEEEFF":"white";
+
+
+
+<%
+	int rowCounter=0;
+	String bgColor = rowCounter%2==0?"#EEEEFF":"white";
+
+	if (searchMode == null || searchMode.isEmpty())
+		searchMode = "search_name";
+	
+	if(searchMode.equals("search_name")) {
+		demoList = demographicDao.searchDemographicByName(keyword, limit, offset);
+	}
+	else if(searchMode.equals("search_phone")) {
+		demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset);
+	}
+	else if(searchMode.equals("search_dob")) {
+		demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset);
+	}
+	else if(searchMode.equals("search_address")) {
+		demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset);
+	}
+	else if(searchMode.equals("search_hin")) {
+		demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset);
+	}
+	else if(searchMode.equals("search_chart_no")) {
+		demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset);
+	}
+
+	if(demoList == null) {
+	    //out.println("failed!!!");
+	} 
+	else {
+		Collections.sort(demoList, Demographic.LastNameComparator);
+	
+		for(Demographic demo : demoList) {
+			rowCounter++;
+			bgColor = rowCounter%2==0?"#EEEEFF":"white";
 %>
    <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
-		onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>','')">
-		<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
-		<div class="demoId"><input type="submit" class="mbttn" name="demographic_no"
-			value="<%=apptMainBean.getString(rs,"demographic_no")%>"
-			onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>','')">
-                </div>
-		<div class="lastName"><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></div>
-		<div class="firstName"><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></div>
-		<div class="age"><%=age%></div>
-		<div class="rosterStatus"><%=apptMainBean.getString(rs,"roster_status")==null||apptMainBean.getString(rs,"roster_status").equals("")?"&nbsp;":apptMainBean.getString(rs,"roster_status")%></div>
-		<div class="sex"><%=apptMainBean.getString(rs,"sex")%></div>
-		<div class="dob"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></div>
-        <div class="doctor">
-            <%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))==null?"":providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))%>
+		onClick="document.forms[0].demographic_no.value=<%=demo.getDemographicNo()%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=demo.getDemographicNo()%>','<%=URLEncoder.encode(demo.getLastName())%>','<%=URLEncoder.encode(demo.getFirstName())%>','<%=URLEncoder.encode(demo.getChartNo())%>','<%=request.getParameter("messageId")%>','<%=demo.getProviderNo()%>','')">
+
+		<div class="demoId"><input type="submit" class="mbttn" name="demographic_no" value="<%=demo.getDemographicNo()%>"
+			onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=demo.getDemographicNo()%>','<%=URLEncoder.encode(demo.getLastName())%>','<%=URLEncoder.encode(demo.getFirstName())%>','<%=URLEncoder.encode(demo.getChartNo())%>','<%=request.getParameter("messageId")%>','<%=demo.getProviderNo()%>','')">
+        </div>
+		<div class="lastName"><%=Misc.toUpperLowerCase(demo.getLastName())%></div>
+		<div class="firstName"><%=Misc.toUpperLowerCase(demo.getFirstName())%></div>
+		<div class="age"><%=demo.getAge()%></div>
+		<div class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></div>
+		<div class="sex"><%=demo.getSex()%></div>
+		<div class="dob"><%=demo.getYearOfBirth() + "-" + demo.getMonthOfBirth() + "-" + demo.getDateOfBirth()%></div>
+        <div class="doctor"><%=providerBean.getProperty(demo.getProviderNo())==null?"":providerBean.getProperty(demo.getProviderNo())%>
         </div>
 	</li>
-	<%
-      bufName = new StringBuffer( (apptMainBean.getString(rs,"last_name")+ ","+ apptMainBean.getString(rs,"first_name")) );
-      bufNo = new StringBuffer( (apptMainBean.getString(rs,"demographic_no")) );
-      bufChart = new StringBuffer(apptMainBean.getString(rs,"chart_no"));
-      bufDoctorNo = new StringBuffer( apptMainBean.getString(rs,"provider_no") ); 
+<%
     }
   }
 
@@ -355,93 +365,69 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
   if (integratorSearchResults!=null) {
 	  for (MatchingDemographicTransferScore matchingDemographicTransferScore : integratorSearchResults) {
 		  rowCounter++;
-		  String bgColor = rowCounter%2==0?"#EEEEFF":"white";
+		  bgColor = rowCounter%2==0?"#EEEEFF":"white";
 		  DemographicTransfer demographicTransfer=matchingDemographicTransferScore.getDemographicTransfer();
-		%>
+%>
 		   <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
-			   onClick="document.forms[0].demographic_no.value=<%=demographicTransfer.getCaisiDemographicId()%>;addName('<%=demographicTransfer.getCaisiDemographicId()%>','<%=URLEncoder.encode(demographicTransfer.getLastName())%>','<%=URLEncoder.encode(demographicTransfer.getFirstName())%>','','<%=request.getParameter("messageId")%>','<%=demographicTransfer.getCaisiProviderId()%>','<%=demographicTransfer.getIntegratorFacilityId()%>')"
-		   >
-				<div class="demoId">
-					<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
-                </div>
-				<div class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></div>
-				<div class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></div>
-				<%
-					String ageString="";
-					String bdayString="";
-				
-					if (demographicTransfer.getBirthDate()!=null) {
-						Integer ageX=DateUtils.getAge(demographicTransfer.getBirthDate(), new GregorianCalendar());
-						ageString=ageX.toString();
-						
-						bdayString=DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate());
-					}
-				%>
-				<div class="age"><%=ageString%></div>
-				<div class="rosterStatus"></div>
-				<div class="sex"><%=demographicTransfer.getGender()%></div>
-				<div class="dob"><%=bdayString%></div>
-		        <div class="doctor">
-		        	<% 
-		        		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
-		        		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
-		        		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
-		        		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
-		        		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
-		        		
-		        		String providerName="";
-		        		
-		        		if (cachedProvider!=null)
-		        		{
-		        			providerName=cachedProvider.getLastName()+", "+cachedProvider.getFirstName();
-		        		}
-		        	%>
-		            <%=providerName%>
-		        </div>
-			</li>
-		<%	  
-	  }
-  }
-  
-  
+			   onClick="document.forms[0].demographic_no.value=<%=demographicTransfer.getCaisiDemographicId()%>;addName('<%=demographicTransfer.getCaisiDemographicId()%>','<%=URLEncoder.encode(demographicTransfer.getLastName())%>','<%=URLEncoder.encode(demographicTransfer.getFirstName())%>','','<%=request.getParameter("messageId")%>','<%=demographicTransfer.getCaisiProviderId()%>','<%=demographicTransfer.getIntegratorFacilityId()%>')">
+			<div class="demoId">
+				<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
+            </div>
+			<div class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></div>
+			<div class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></div>
+<%
+		String ageString="";
+		String bdayString="";
+	
+		if (demographicTransfer.getBirthDate()!=null) {
+			Integer ageX=DateUtils.getAge(demographicTransfer.getBirthDate(), new GregorianCalendar());
+			ageString=ageX.toString();
+			
+			bdayString=DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate());
+		}
+%>
+			<div class="age"><%=ageString%></div>
+			<div class="rosterStatus"></div>
+			<div class="sex"><%=demographicTransfer.getGender()%></div>
+			<div class="dob"><%=bdayString%></div>
+	        <div class="doctor">
+<% 
+   		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
+   		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
+   		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
+   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+   		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
+   		
+   		String providerName="";
+   		
+   		if (cachedProvider!=null)
+   		{
+   			providerName=cachedProvider.getLastName()+", "+cachedProvider.getFirstName();
+   		}
+%>
+        	<%=providerName%>
+			</div>
+		</li>
+<%	  
+		}
+ 	}
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode")||temp.equals("submit") ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
   }
   
-	%>
+%>
 	</form>
 
 </ul>
 <%
-  int nLastPage=0,nNextPage=0;
-  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
-  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
-%> <%	
-  if(nItems==1 && nLastPage<=0 && !caisi) { //if there is only one search result, it should be added to the appoint page directly.
-%> <script language="JavaScript">
-<!--
-  document.addform.action="<%=request.getParameter("originalpage")%>?name=<%=URLEncoder.encode(bufName.toString())%>&chart_no=<%=URLEncoder.encode(bufChart.toString())%>&bFirstDisp=false&demographic_no=<%=bufNo.toString()%>&messageID=<%=request.getParameter("messageId")%>&doctor_no=<%=bufDoctorNo.toString()%>";
-  document.addform.submit();  
-//-->
-</SCRIPT> <%
-  } else if (nItems==1 && nLastPage<=0 && caisi) {
-	  //caisi version
-%> <script language="JavaScript">
-<!--
-
-	fullname='<%=bufName.toString()%>';
-	demographic_no='<%=bufNo.toString()%>';
-	if(opener.document.ticklerForm.elements['tickler.demographic_webName']!=null)
-	   opener.document.ticklerForm.elements['tickler.demographic_webName'].value=fullname;
-	if(opener.document.ticklerForm.elements['tickler.demographic_no']!=null)   
-  	   opener.document.ticklerForm.elements['tickler.demographic_no'].value=demographic_no;
-	self.close();
-//-->
-</SCRIPT> <%
-  }
-  if(nItems==0 && nLastPage<=0) {	 
+	int nLastPage=0,nNextPage=0;
+	nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
+	nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
+%> 
+<%
+	if(rowCounter==0 && nLastPage<=0) {	 
 	  	     
       	java.util.HashMap<String, String> params = new java.util.HashMap<String, String>();
       	params.put("originalPage", request.getParameter("originalPage"));
@@ -466,68 +452,62 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
   		params.put("creator", request.getParameter("creator"));
   		params.put("remarks", request.getParameter("remarks"));
   		
-  		
   		pageContext.setAttribute("apptParamsName", params);
-
 %> 
 	<caisi:isModuleLoad moduleName="caisi" reverse="true">
 	<bean:message key="demographic.search.noResultsWereFound" />
     <div class="createNew">
-	 <a href="../demographic/demographicaddarecordhtm.jsp?fromAppt=1&originalPage=<%=request.getParameter("originalPage")%>&search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>&notes=<%=request.getParameter("notes")%>&appointment_date=<%=request.getParameter("appointment_date")%>&year=<%=request.getParameter("year")%>&month=<%=request.getParameter("month")%>&day=<%=request.getParameter("day")%>&start_time=<%=request.getParameter("start_time")%>&end_time=<%=request.getParameter("end_time")%>&duration=<%=request.getParameter("duration")%>&bFirstDisp=false&provider_no=<%=request.getParameter("provider_no")%>&notes=<%=request.getParameter("notes")%>&reason=<%=request.getParameter("reason")%>&location=<%=request.getParameter("location")%>&resources=<%=request.getParameter("resources")%>&type=<%=request.getParameter("type")%>&style=<%=request.getParameter("style")%>&billing=<%=request.getParameter("billing")%>&status=<%=request.getParameter("status")%>&createdatetime=<%=request.getParameter("createdatetime")%>&creator=<%=request.getParameter("creator")%>&remarks=<%=request.getParameter("remarks")%>">
-
-	<bean:message key="demographic.search.btnCreateNew" />
-	</a>
+		<a href="../demographic/demographicaddarecordhtm.jsp?fromAppt=1&originalPage=<%=request.getParameter("originalPage")%>&search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>&notes=<%=request.getParameter("notes")%>&appointment_date=<%=request.getParameter("appointment_date")%>&year=<%=request.getParameter("year")%>&month=<%=request.getParameter("month")%>&day=<%=request.getParameter("day")%>&start_time=<%=request.getParameter("start_time")%>&end_time=<%=request.getParameter("end_time")%>&duration=<%=request.getParameter("duration")%>&bFirstDisp=false&provider_no=<%=request.getParameter("provider_no")%>&notes=<%=request.getParameter("notes")%>&reason=<%=request.getParameter("reason")%>&location=<%=request.getParameter("location")%>&resources=<%=request.getParameter("resources")%>&type=<%=request.getParameter("type")%>&style=<%=request.getParameter("style")%>&billing=<%=request.getParameter("billing")%>&status=<%=request.getParameter("status")%>&createdatetime=<%=request.getParameter("createdatetime")%>&creator=<%=request.getParameter("creator")%>&remarks=<%=request.getParameter("remarks")%>">
+		<bean:message key="demographic.search.btnCreateNew" /></a>
     </div>    
     </caisi:isModuleLoad> 
     
  	<caisi:isModuleLoad moduleName="caisi" reverse="false">
-  	<html:link action="/PMmodule/GenericIntake/Edit.do?method=create&type=quick&fromAppt=1" name="apptParamsName">
-   	<bean:message key="demographic.search.btnCreateNew" /> 
-   	</html:link>
+  		<html:link action="/PMmodule/GenericIntake/Edit.do?method=create&type=quick&fromAppt=1" name="apptParamsName">
+   		<bean:message key="demographic.search.btnCreateNew" /></html:link>
 	</caisi:isModuleLoad> 
 
 <%
-   }
-%> <script language="JavaScript">
-<!--
-function last() {
-  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
-  //document.nextform.submit();  
-}
-function next() {
-  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
-  //document.nextform.submit();  
-}
-//-->
-</SCRIPT>
-<a href="#" onclick="showHideItem('demographicSearch');" id="searchPopUpButton" class="rightButton top">Search</a>
-<div class="bottomBar">
-<form method="post" name="nextform"
-	action="../demographic/demographiccontrol.jsp">
+	}
+%> 
+<script language="JavaScript">
+	<!--
+	function last() {
+	  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
+	  //document.nextform.submit();  
+	}
+	function next() {
+	  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
+	  //document.nextform.submit();  
+	}
+	//-->
+	</script>
+	<a href="#" onclick="showHideItem('demographicSearch');" id="searchPopUpButton" class="rightButton top">Search</a>
+	<div class="bottomBar">
+	<form method="post" name="nextform" action="../demographic/demographiccontrol.jsp">
 <%
-  if(nLastPage>=0) {
-%> <input type="submit" id="prevPageButton" name="submit"
+	if(nLastPage>=0) {
+%> 
+	<input type="submit" id="prevPageButton" name="submit"
 	value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"
-	onClick="last()"> <%
-  }
-//  if(nItems==Integer.parseInt(strLimit2)) {
-  if(nItems<iRow) {
-%> <input type="submit" id="nextPageButton" name="submit"
-	value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"
-	onClick="next()"> <%
-}
-%> <%
+	onClick="last()"> 
+<%
+	}
+
+	if(rowCounter==limit) {
+%> 
+	<input type="submit" id="nextPageButton" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>" onClick="next()"> 
+<%
+	}
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("submit")  ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-  }
-	%>
+	}
+%>
 
 </form>
 </div>
-<%--
-Please select by clicking on the demographic no button.</center> --%>
 </div>
 </body>
 </html>
