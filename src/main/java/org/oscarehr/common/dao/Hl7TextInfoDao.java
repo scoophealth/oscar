@@ -358,4 +358,12 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 	    Query query = entityManager.createNativeQuery(sql);
 	    return query.getResultList();
     }
+
+	public List<Object> findDisciplines(Integer labid) {
+	    String sql = "SELECT DISTINCT i.discipline FROM " + modelClass.getName() + " i WHERE i.discipline <> '' AND i.labNumber = :labid";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("labid", labid);
+		return query.getResultList();
+		
+    }
 }

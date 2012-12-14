@@ -560,20 +560,20 @@ public class Hl7textResultsData {
 		for (Object[] i : dao.findLabAndDocsViaMagic(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, isPaged, page, pageSize, mixLabsAndDocs, isAbnormal, searchProvider, patientSearch)) {
 
 			String label = String.valueOf(i[0]);
-			String lab_no = String.valueOf(i[0]);
-			String sex = String.valueOf(i[0]);
-			String health_no = String.valueOf(i[0]);
-			String result_status = String.valueOf(i[0]);
-			String obr_date = String.valueOf(i[0]);
-			String priority = String.valueOf(i[0]);
-			String requesting_client = String.valueOf(i[0]);
-			String discipline = String.valueOf(i[0]);
-			String last_name = String.valueOf(i[0]);
-			String first_name = String.valueOf(i[0]);
-			String report_status = String.valueOf(i[0]);
-			String accessionNum = String.valueOf(i[0]);
-			String final_result_count = String.valueOf(i[0]);
-			String routingStatus = String.valueOf(i[0]);
+			String lab_no = String.valueOf(i[1]);
+			String sex = String.valueOf(i[2]);
+			String health_no = String.valueOf(i[3]);
+			String result_status = String.valueOf(i[4]);
+			String obr_date = String.valueOf(i[5]);
+			String priority = String.valueOf(i[6]);
+			String requesting_client = String.valueOf(i[7]);
+			String discipline = String.valueOf(i[8]);
+			String last_name = String.valueOf(i[9]);
+			String first_name = String.valueOf(i[10]);
+			String report_status = String.valueOf(i[11]);
+			String accessionNum = String.valueOf(i[12]);
+			String final_result_count = String.valueOf(i[13]);
+			String routingStatus = String.valueOf(i[14]);
 
 			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
 			lbData.labType = LabResultData.HL7TEXT;
