@@ -175,7 +175,7 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     	CaseManagementIssueDAO cmiDao =(CaseManagementIssueDAO)SpringUtils.getBean("CaseManagementIssueDAO");
     	CaseManagementManager cmMgr = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
     	IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
-    	DxresearchDAO dxrDao = (DxresearchDAO)SpringUtils.getBean("dxresearchDao");
+    	DxresearchDAO dxrDao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
 
     	//clear existing entries
     	dxrDao.removeAllAssociationEntries();
