@@ -811,7 +811,6 @@ div.demographicWrapper {
 
                                 String resident="", nurse="", alert="", notes="", midwife="";
                                 ResultSet rs = null;
-
                                 DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demographic_no));
                                 if(demographicCust != null) {
                                 	resident = demographicCust.getResident();
@@ -942,7 +941,7 @@ if(wLReadonly.equals("")){
 <%}%>
 				</td>
 			</tr>
-<% if (!vLocale.getCountry().equals("BR")) { %>
+<% if (!"BR".equals(vLocale.getCountry())) { %>
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
@@ -1001,7 +1000,7 @@ if(wLReadonly.equals("")){
 					onClick="popupPage(700,960,'../oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=demographic.getDemographicNo()%>&proNo=<%=demographic.getProviderNo()%>')"><bean:message
 					key="demographic.demographiceditdemographic.btnConsultation" /></a></td>
 			</tr>
-<% if (!vLocale.getCountry().equals("BR")) { %>
+<% if (!"BR".equals(vLocale.getCountry())) { %>
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
@@ -1211,7 +1210,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                     <!-- A list used in the mobile version for users to pick which information they'd like to see -->
                     <div id="mobileDetailSections" style="display:<%=(isMobileOptimized)?"block":"none"%>;">
                         <ul class="wideList">
-                            <% if (!alert.equals("")) { %>
+                            <% if (!"".equals(alert)) { %>
                             <li><a style="color:brown" onClick="showHideMobileSections(new Array('alert'))"><bean:message
                                 key="demographic.demographiceditdemographic.formAlert" /></a></li>
                             <% } %>
@@ -1250,7 +1249,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                             String dboperation = "search_detail";
                             String head = dmDAO.getHead(demographic_no);
                             ArrayList records = dmDAO.getTail(head);
-                            if (vLocale.getCountry().equals("BR"))
+                            if ("BR".equals(vLocale.getCountry()))
                                 dboperation = "search_detail_ptbr";
 
                             %><b><span class="rec"><bean:message key="demographic.demographiceditdemographic.msgRecord"/> ( <%if (head.equals(demographic_no)){
@@ -1315,7 +1314,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                 </security:oscarSec> </span> <!-- security code block -->
                                 <input type="hidden"
                                     name="dboperation" value="update_record"> <%
-                                  if (vLocale.getCountry().equals("BR")) { %>
+                            if ("BR".equals(vLocale.getCountry())){%>
                                 <input type="hidden" name="dboperation2"
                                     value="update_record_ptbr">
                                   <%}%>
@@ -1507,9 +1506,9 @@ String PatStat = demographic.getPatientStatus();
 String Dead = "DE";
 String Inactive = "IN";
 
-if ( PatStat.equals(Dead) ) {%>
+if ( Dead.equals(PatStat) ) {%>
 							<b style="color: #FF0000;"><%=demographic.getPatientStatus()%></b>
-							<%} else if (PatStat.equals(Inactive) ){%>
+							<%} else if (Inactive.equals(PatStat) ){%>
 							<b style="color: #0000FF;"><%=demographic.getPatientStatus()%></b>
 							<%} else {%>
                                                             <%=demographic.getPatientStatus()%>
@@ -2086,7 +2085,7 @@ if ( PatStat.equals(Dead) ) {%>
                                   out.print(oscarProps.getProperty("demographicLabelProvince"));
                               	 } %> : </b></td>
 								<td align="left">
-								<% if (vLocale.getCountry().equals("BR")) { %>  <% } else { %>
+								<% if ("BR".equals(vLocale.getCountry())) { %>  <% } else { %>
 								<% String province = demographic.getProvince(); %> <select
 									name="province" style="width: 200px" <%=getDisabled("province")%>>
 									<option value="OT"
@@ -2388,7 +2387,7 @@ if ( PatStat.equals(Dead) ) {%>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formHCType" />:</b></td>
 								<td align="left">
-								<% if(vLocale.getCountry().equals("BR")) { %> <% String hctype = demographic.getHcType()==null?"":demographic.getHcType(); %>
+								<% if("BR".equals(vLocale.getCountry())) { %> <% String hctype = demographic.getHcType()==null?"":demographic.getHcType(); %>
 								<input type="text" name="hc_type" value="<%=hctype%>"> <% } else {%>
 								<% String hctype = demographic.getHcType()==null?"":demographic.getHcType(); %>
 								<select name="hc_type" style="width: 200px" <%=getDisabled("hc_type")%>>
@@ -2622,7 +2621,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<select id="roster_status" name="roster_status" style="width: 120" <%=getDisabled("roster_status")%> onchange="checkRosterStatus2()">
 									<option value=""></option>
 									<option value="RO"
-										<%=rosterStatus.equals("RO")?" selected":""%>>
+										<%="RO".equals(rosterStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optRostered"/></option>
 									<option value="NR"
 										<%=rosterStatus.equals("NR")?" selected":""%>>
@@ -2716,34 +2715,35 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									key="demographic.demographiceditdemographic.formPatientStatus" />:</b>
 								<b> </b></td>
 								<td align="left">
-								<% if (vLocale.getCountry().equals("BR")) { %> <%String pacStatus = demographic.getPatientStatus();
+								<% if ("BR".equals(vLocale.getCountry())) { %> <%String pacStatus = demographic.getPatientStatus();
                                   if (pacStatus == null) {
                                      pacStatus = "";
                                   }
                                   %> <input type="hidden" name="initial_patientstatus" value="<%=pacStatus%>">
                                   	 <input type="text" name="patient_status" value="<%=pacStatus%>"> <% } else {
-                                String patientStatus = demographic.getPatientStatus(); %>
+                                String patientStatus = demographic.getPatientStatus();
+                                 if(patientStatus==null) patientStatus="";%>
                                 <input type="hidden" name="initial_patientstatus" value="<%=patientStatus%>">
 								<select name="patient_status" style="width: 120" <%=getDisabled("patient_status")%>>
 									<option value="AC"
-										<%=patientStatus.equals("AC")?" selected":""%>>
+										<%="AC".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optActive"/></option>
 									<option value="IN"
-										<%=patientStatus.equals("IN")?" selected":""%>>
+										<%="IN".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optInActive"/></option>
 									<option value="DE"
-										<%=patientStatus.equals("DE")?" selected":""%>>
+										<%="DE".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optDeceased"/></option>
 									<option value="MO"
-										<%=patientStatus.equals("MO")?" selected":""%>>
+										<%="MO".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optMoved"/></option>
 									<option value="FI"
-										<%=patientStatus.equals("FI")?" selected":""%>>
+										<%="FI".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optFired"/></option>
 									<% ResultSet rsstatus = apptMainBean.queryResults("search_ptstatus");
                                      while (rsstatus.next()) { %>
 									<option
-										<%=patientStatus.equals(rsstatus.getString("patient_status"))?" selected":""%>><%=rsstatus.getString("patient_status")%></option>
+										<%=rsstatus.getString("patient_status").equals(patientStatus)?" selected":""%>><%=rsstatus.getString("patient_status")%></option>
 									<% }
                                   rsstatus.close();
                                    // end while %>
@@ -2812,7 +2812,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 rsWLStatus.close();
                                %> <input type="hidden" name="wlId"
 											value="<%=wlId%>"> <select name="list_id">
-											<%if(wLReadonly.equals("")){%>
+											<%if("".equals(wLReadonly)){%>
 											<option value="0"><bean:message key="demographic.demographiceditdemographic.optSelectWaitList"/></option>
 											<%}else{%>
 											<option value="0">
@@ -3010,7 +3010,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 							<tr>
 								<td width="30%" valign="top"><input type="hidden"
 									name="dboperation" value="update_record"> <%
-                                  if (vLocale.getCountry().equals("BR")) { %>
+                                  if ("BR".equals(vLocale.getCountry())) { %>
 								<input type="hidden" name="dboperation2"
 									value="update_record_ptbr">
                                                                         <%}%>
