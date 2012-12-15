@@ -933,7 +933,7 @@ public class DemographicDao extends HibernateDaoSupport {
 				bean.setProgramDomain(new ArrayList<ProgramProvider>());
 			}
 
-			DetachedCriteria subq = DetachedCriteria.forClass(Admission.class).setProjection(Property.forName("ClientId"));
+			DetachedCriteria subq = DetachedCriteria.forClass(Admission.class).setProjection(Property.forName("clientId"));
 
 			StringBuilder programIds = new StringBuilder();
 			for (int x = 0; x < bean.getProgramDomain().size(); x++) {
@@ -959,16 +959,16 @@ public class DemographicDao extends HibernateDaoSupport {
 			}
 
 			if (pIdi.length > 0) {
-				subq.add(Restrictions.in("ProgramId", pIdi));
+				subq.add(Restrictions.in("programId", pIdi));
 			}
 
 			if (bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
 				Date dt = MyDateFormat.getSysDate(bean.getDateFrom().trim());
-				subq.add(Restrictions.ge("AdmissionDate", dt));
+				subq.add(Restrictions.ge("admissionDate", dt));
 			}
 			if (bean.getDateTo() != null && bean.getDateTo().length() > 0) {
 				Date dt1 = MyDateFormat.getSysDate(bean.getDateTo().trim());
-				subq.add(Restrictions.le("AdmissionDate", dt1));
+				subq.add(Restrictions.le("admissionDate", dt1));
 			}
 
 			criteria.add(Property.forName("DemographicNo").in(subq));
