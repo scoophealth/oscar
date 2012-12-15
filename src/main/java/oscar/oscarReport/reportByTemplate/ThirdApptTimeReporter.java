@@ -24,13 +24,24 @@
 
 package oscar.oscarReport.reportByTemplate;
 
-import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.collections.comparators.ReverseComparator;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.dao.ScheduleTemplateDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.ScheduleDate;
+import org.oscarehr.common.model.ScheduleTemplate;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 /**
  *
@@ -44,6 +55,7 @@ public class ThirdApptTimeReporter implements Reporter{
     public ThirdApptTimeReporter() {
     }
     
+    @SuppressWarnings("unchecked")
     public boolean generateReport( HttpServletRequest request ) {
         String templateId = request.getParameter("templateId");
         ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
@@ -72,25 +84,24 @@ public class ThirdApptTimeReporter implements Reporter{
             return false;
         }
 
-        StringBuilder providerList = new StringBuilder();
-        for( int idx = 0; idx < providers.length; ++idx ) {
-            providerList.append("'" + providers[idx] + "'");
-            if( idx < providers.length - 1) {
-                providerList.append(",");
-            }
-        }
+//        StringBuilder providerList = new StringBuilder();
+//        for( int idx = 0; idx < providers.length; ++idx ) {
+//            providerList.append("'" + providers[idx] + "'");
+//            if( idx < providers.length - 1) {
+//                providerList.append(",");
+//            }
+//        }
 
         
-        String scheduleSQL = "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate >= '" + date_from + "' and  scheduledate.provider_no in (" + providerList.toString() + ") and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate";
-        String apptSQL = "";//select start_time, end_time from appointment where provider_no = '" + provider_no + "' and status not like '%C%' and appointment_date = '";
-        String schedDate = "";
-        ResultSet rs = null;
-        ResultSet rs2 = null;
+//        String scheduleSQL = "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate >= '" + date_from + "' and  scheduledate.provider_no in (" + providerList.toString() + ") and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate";
+//        String apptSQL = "";//select start_time, end_time from appointment where provider_no = '" + provider_no + "' and status not like '%C%' and appointment_date = '";
+//        String schedDate = "";
+
         int unbooked = 0;
 
+        Date schedDate = null;
+        
         try {
-            
-            rs = DBHandler.GetSQL(scheduleSQL);
             int duration;
             String timecodes, code;
             String tmpApptSQL;           
@@ -103,50 +114,62 @@ public class ThirdApptTimeReporter implements Reporter{
             int third = 3;
             int numAppts = 0;
             boolean codeMatch;
-            while(rs.next() && numAppts < third) {
-                timecodes = rs.getString("timecode"); 
-
+            
+            ScheduleTemplateDao dao = SpringUtils.getBean(ScheduleTemplateDao.class);
+            OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
+            List<Object[]> res = dao.findSchedules(ConversionUtils.fromDateString(date_from), Arrays.asList(providers));
+            int i = 0;
+            
+            while(i < res.size() && numAppts < third) {
+            	ScheduleTemplate st = (ScheduleTemplate) res.get(i)[0]; 
+            	ScheduleDate sd  = (ScheduleDate) res.get(i)[1];
+            	
+            	schedDate = sd.getDate();
+            	
+                timecodes = st.getTimecode();
                 duration = dayMins/timecodes.length();
 
-                schedDate = rs.getString("sdate");
-                tmpApptSQL = "select start_time, end_time from appointment where provider_no = '" + rs.getString("provider_no") + "' and status not like '%C%' and appointment_date = '" + schedDate + "' order by start_time asc";
-
-                rs2 = DBHandler.GetSQL(tmpApptSQL);
+                List<Appointment> appts = apptDao.findByProviderAndDayandNotStatus(st.getId().getProviderNo(), sd.getDate(), "C");
+                Collections.sort(appts, new ReverseComparator(new BeanComparator("startTime")));
+                
                 codePos = 0;
                 latestApptHour = latestApptMin = 0;
                 unbooked = 0;
+                int apptIndex = 0;
                 for(int iTotalMin = 0; iTotalMin < dayMins; iTotalMin+=duration) {
                     code = timecodes.substring(codePos,codePos+1);
                     ++codePos;
                     iHours = iTotalMin/60;
                     iMins = iTotalMin % 60;
-                    while( rs2.next() ) {
-                        apptTime = rs2.getString("start_time");
+                    
+                    while(apptIndex < appts.size()) {
+                    	Appointment appt = appts.get(apptIndex);
+                        apptTime = ConversionUtils.toTimeString(appt.getStartTime()); 
                         apptHour_s = Integer.parseInt(apptTime.substring(0,2));
                         apptMin_s = Integer.parseInt(apptTime.substring(3,5));
 
                         if( iHours == apptHour_s && iMins == apptMin_s ) {
-                            apptTime = rs2.getString("end_time");
+                        	apptTime = ConversionUtils.toTimeString(appt.getEndTime()); 
                             apptHour_e = Integer.parseInt(apptTime.substring(0,2));
                             apptMin_e = Integer.parseInt(apptTime.substring(3,5));
                             
                             if( apptHour_e > latestApptHour || (apptHour_e == latestApptHour && apptMin_e > latestApptMin) ) {
                                 latestApptHour = apptHour_e;
                                 latestApptMin = apptMin_e;
-                            }                    
+                            }
+                            apptIndex++;
                         }
                         else {
-                            rs2.previous();                            
+                            apptIndex--;                            
                             break;
-                        }
-                        
+                        }                        
                     }
 
                     codeMatch = false;
-                    for( int schedIdx = 0; schedIdx < schedSymbols.length; ++schedIdx ) {
-                        
+                    for( int schedIdx = 0; schedIdx < schedSymbols.length; ++schedIdx ) {                        
                         if( code.equals(schedSymbols[schedIdx]) ) {                        
                             codeMatch = true;
+                            
                             MiscUtils.getLogger().debug("codeMatched " + codeMatch);
                             if( iHours > latestApptHour || (iHours == latestApptHour && iMins > latestApptMin)) {
                                 unbooked += duration;
@@ -175,22 +198,18 @@ public class ThirdApptTimeReporter implements Reporter{
                 
             } //end while
             
-            
-            String calcDaysSQL = "select datediff('" + schedDate + "','" + date_from + "')";
-            if( numAppts == third ) {
-                rs = DBHandler.GetSQL(calcDaysSQL);
-                if( rs.next() ) {
-                    numDays = rs.getInt(1);
-                }
-            }
-            
+        	if (schedDate != null) {
+        		// TODO refactor to use ConversionUtils when commit makes it thorugh
+        		long msInDay = 1000 * 60 * 60 * 24;
+        		numDays = (int) (Math.abs(schedDate.getTime() - ConversionUtils.fromDateString(date_from).getTime()) / msInDay);
+        	}
         }catch(Exception e) {
             MiscUtils.getLogger().error("Error", e);
             
         }
-        rsHtml = makeHTML(numDays,date_from, schedDate);
-        csv = makeCSV(numDays,date_from, schedDate);
-        String sql = scheduleSQL + ";\n " + apptSQL;
+        rsHtml = makeHTML(numDays,date_from, ConversionUtils.toDateString(schedDate));
+        csv = makeCSV(numDays,date_from, ConversionUtils.toDateString(schedDate));
+        String sql = " -- MIGRATED TO JPA -- ";
         request.setAttribute("reportobject", curReport);
         request.setAttribute("resultsethtml", rsHtml);
         request.setAttribute("csv", csv);
