@@ -117,6 +117,9 @@ function doProfessionalSearch(id) {
 	if(type == '<%=DemographicContact.TYPE_CONTACT%>') {
 		search_procontact('procontact_'+id+'.contactName','procontact_'+id+'.contactId');
 	}
+	if(type == '<%=DemographicContact.TYPE_PROFESSIONALSPECIALIST%>') {
+		search_professionalSpecialist('procontact_'+id+'.contactName','procontact_'+id+'.contactId');
+	}
 }
 
 function updTklrList() {
@@ -178,6 +181,21 @@ function search_procontact(nameEl, valueEl) {
 		popup.focus();
 		}
 }
+
+function search_professionalSpecialist(nameEl, valueEl) {
+    var url = 'professionalSpecialistSearch.jsp?form=contactForm&elementName='+nameEl+'&elementId='+valueEl;
+    var popup = window.open(url,'demographic_search');
+    demo_no_orig = document.contactForm.elements[valueEl].value;
+    //check_demo_no = setInterval("if (demo_no_orig != document.contactForm.elements[valueEl].value) updTklrList()",100);
+
+		if (popup != null) {
+		if (popup.opener == null) {
+				popup.opener = self;
+		}
+		popup.focus();
+		}
+}
+
 
 function setSelect(id,type,name,val) {
 	jQuery("select[name='"+type+"_"+id+"."+name+"']").each(function() {

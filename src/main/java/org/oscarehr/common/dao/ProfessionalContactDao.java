@@ -32,7 +32,6 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.common.model.ProfessionalContact;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -61,7 +60,7 @@ public class ProfessionalContactDao extends AbstractDao<ProfessionalContact> {
 			paramList.add(keyword+"%");
 		}			
 		String sql = "SELECT c from ProfessionalContact c where " + where.toString() + " order by " + orderBy;
-		MiscUtils.getLogger().info(sql);
+		
 		Query query = entityManager.createQuery(sql);
 		for(int x=0;x<paramList.size();x++) {
 			query.setParameter(x+1,paramList.get(x));
