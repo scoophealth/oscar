@@ -68,6 +68,7 @@
 		            <select name="procontact_<%=id%>.type" id="procontact_<%=id%>.type">
 		            	<option value="<%=DemographicContact.TYPE_PROVIDER%>">Internal</option>
 		            	<option value="<%=DemographicContact.TYPE_CONTACT%>">External</option>
+		            	<option value="<%=DemographicContact.TYPE_PROFESSIONALSPECIALIST%>"">Professional Specialist</option>
 					</select>
 				
 	            	&nbsp;
