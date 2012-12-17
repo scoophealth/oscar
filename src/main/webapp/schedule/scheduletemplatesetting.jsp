@@ -27,9 +27,7 @@
 <%
   
 %>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
-	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp"%>
 <%@page import="org.oscarehr.common.model.Provider" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
@@ -37,15 +35,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="scheduleMainBeanConn.jspf"%>
-<%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
-    String curProvider_no = (String) session.getAttribute("user");
 
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+<%
+    String curProvider_no = (String) session.getAttribute("user");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 
 <%  

@@ -26,13 +26,20 @@
 
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
-<%@ page import="java.sql.*"%>
+<%@ page import="java.sql.*, java.util.*"%>
 <%@ page errorPage="/common/error.jsp"%>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ScheduleTemplateDao" %>
+<%@page import="org.oscarehr.common.model.ScheduleTemplate" %>
+<%@page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
+<%@page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
+<%
+	ScheduleTemplateDao scheduleTemplateDao = SpringUtils.getBean(ScheduleTemplateDao.class);
+    ScheduleTemplateCodeDao scheduleTemplateCodeDao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
+%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+
 <jsp:useBean id="templateBean" class="oscar.ScheduleTemplateBean"
 	scope="page" />
 <jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable"
@@ -45,40 +52,37 @@
     int depth=providerPreference.getEveryMin();
     
     String provider = request.getParameter("providerid");
-    String[] param =new String[2];
-    param[0]=provider;
-    param[1]=request.getParameter("name");
-
-    ResultSet rs = scheduleMainBean.queryResults(param, "search_scheduletemplatesingle");
+    
+    List<ScheduleTemplate> sts = scheduleTemplateDao.findByProviderNoAndName(provider, request.getParameter("name"));
+   
 
    String bgcolordef = "#486ebd" ;
 
      //First search for template where provider_no == provider and name is set
-     if(rs.next()) {
-       dateTimeCodeBean.put(scheduleMainBean.getString(rs,"provider_no"), scheduleMainBean.getString(rs,"timecode"));
+     if(sts.size()>0) {
+       dateTimeCodeBean.put(sts.get(0).getId().getProviderNo(), sts.get(0).getTimecode());
      }
      else {
        //no luck there, so we try for public template with same name
-       rs.close();
-       param[0] = "Public";
-       rs = scheduleMainBean.queryResults(param, "search_scheduletemplatesingle");
-       if(rs.next()) {
-            provider = scheduleMainBean.getString(rs,"provider_no");
-            dateTimeCodeBean.put(provider, scheduleMainBean.getString(rs,"timecode"));
+       sts = scheduleTemplateDao.findByProviderNoAndName("Public", request.getParameter("name"));
+      
+       if(sts.size()>0) {
+            provider = sts.get(0).getId().getProviderNo();
+            dateTimeCodeBean.put(provider, sts.get(0).getTimecode());
        }
      }
    
-     rs.close();
-     Object[] rst = scheduleMainBean.queryResultsCaisi("search_scheduletemplatecode");
-     rs = (ResultSet)rst[0];
-	 
-   while (rs.next()) {        
-     dateTimeCodeBean.put("description"+scheduleMainBean.getString(rs,"code"), scheduleMainBean.getString(rs,"description"));
-     dateTimeCodeBean.put("duration"+scheduleMainBean.getString(rs,"code"), scheduleMainBean.getString(rs,"duration"));
-     dateTimeCodeBean.put("color"+scheduleMainBean.getString(rs,"code"), (scheduleMainBean.getString(rs,"color")==null || scheduleMainBean.getString(rs,"color").equals(""))?bgcolordef:scheduleMainBean.getString(rs,"color") );
-     dateTimeCodeBean.put("confirm" + scheduleMainBean.getString(rs,"code"), scheduleMainBean.getString(rs,"confirm"));
+     List<ScheduleTemplateCode> stcs = scheduleTemplateCodeDao.findAll();
+     Collections.sort(stcs,ScheduleTemplateCode.CodeComparator);
+    
+     
+   for (ScheduleTemplateCode stc: stcs) {        
+     dateTimeCodeBean.put("description"+stc.getCode(), stc.getDescription());
+     dateTimeCodeBean.put("duration"+stc.getCode(), stc.getDuration());
+     dateTimeCodeBean.put("color"+stc.getCode(), (stc.getColor()==null || stc.getColor().equals(""))?bgcolordef:stc.getColor() );
+     dateTimeCodeBean.put("confirm" + stc.getCode(), stc.getConfirm());
    }
-   ((Statement)rst[1]).close();
+   
           
 %>
 

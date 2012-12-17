@@ -24,41 +24,22 @@
 
 --%>
 
-<%--
-/*
- * $RCSfile: scheduledatepopup.jsp,v $ *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * (your name here) 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
-*/
---%>
 <%!  boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%!  String [] bgColors; %>
 
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
-	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ScheduleTemplateDao" %>
+<%@page import="org.oscarehr.common.model.ScheduleTemplate" %>
+<%
+	ScheduleTemplateDao scheduleTemplateDao = SpringUtils.getBean(ScheduleTemplateDao.class);
+%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"
-	scope="session" />
+
+
+<jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" />
 <%
   String year = request.getParameter("year");
   String month = MyDateFormat.getDigitalXX(Integer.parseInt(request.getParameter("month")));
@@ -69,7 +50,6 @@
   if (aHScheduleDate!=null) {
     available = aHScheduleDate.available.compareTo("1")==0?"checked":""  ;
     strHour = aHScheduleDate.hour;
-    //strHour = "value='"+ aHScheduleDate.hour +"'";
     strReason = aHScheduleDate.reason ;
     strCreator= aHScheduleDate.creator;
   }
@@ -135,21 +115,18 @@ function upCaseCtrl(ctrl) {
 				<td><!--input type="text" name="hour1" <%=strHour%> --> <select
 					name="hour">
 					<%
-   ResultSet rsdemo = null;
-   String param = "Public";
-   rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
-   while (rsdemo.next()) { 
+					
+					for(ScheduleTemplate st: scheduleTemplateDao.findByProviderNo("Public")) {
+						
 	%>
-					<option value="<%=rsdemo.getString("name")%>"
-						<%=strHour.equals(rsdemo.getString("name"))?"selected":""%>><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
-					<%
-   }
-   param = request.getParameter("provider_no");
-   rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
-   while (rsdemo.next()) {
+					<option value="<%=st.getId().getName()%>"
+						<%=strHour.equals(st.getId().getName())?"selected":""%>><%=st.getId().getName()+" |"+st.getSummary()%></option>
+					<% }
+					for(ScheduleTemplate st: scheduleTemplateDao.findByProviderNo( request.getParameter("provider_no"))) {
+  
 	%>
-					<option value="<%=rsdemo.getString("name")%>"
-						<%=rsdemo.getString("name").equals(strHour)?"selected":""%>><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
+					<option value="<%=st.getId().getName()%>"
+						<%=st.getId().getName().equals(strHour)?"selected":""%>><%=st.getId().getName()+" |"+st.getSummary()%></option>
 					<% }	%>
 				</select></td>
 			</tr>

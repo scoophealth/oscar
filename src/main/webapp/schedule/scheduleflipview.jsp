@@ -26,6 +26,27 @@
 
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.MyGroup" %>
+<%@page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.ScheduleTemplate" %>
+<%@page import="org.oscarehr.common.model.ScheduleDate" %>
+<%@page import="org.oscarehr.common.dao.ScheduleTemplateDao" %>
+<%@page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
+<%@page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+    OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+    ScheduleTemplateDao scheduleTemplateDao = SpringUtils.getBean(ScheduleTemplateDao.class);
+    ScheduleTemplateCodeDao scheduleTemplateCodeDao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
+%>
+
 <%!
 //multisite starts =====================
 private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();	
@@ -61,22 +82,10 @@ sites = siteDao.getAllSites();
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="flipviewMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+
 <jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable"
 	scope="page" />
-
-<% 
-  String [][] dbQueries=new String[][] { 
-    {"search_timecode", "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.provider_no=? and scheduledate.sdate>=? and scheduledate.sdate<=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"}, 
-    {"search_appt", "select * from appointment where provider_no=? and appointment_date>=? and appointment_date<=? order by appointment_date, start_time, end_time"}, 
-    {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? order by first_name"}, 
-    {"search_timecodesingle", "select * from scheduletemplatecode order by code"}, 
-    {"searchmyteamprovider", "select provider_no, last_name, first_name from provider where provider_no=? or team=(select team from provider where provider_no=?) order by first_name"}, 
- };
-  String[][] responseTargets=new String[][] {  };
-  flipviewMainBean.doConfigure(dbQueries,responseTargets);
-%>
+	
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
@@ -130,18 +139,7 @@ function t(s1,s2,s3,s4,s5,s6) {
 %>
 <body bgcolor="#999FFF" text="#000000" topmargin="0" leftmargin="0"
 	rightmargin="0">
-<%--
-  ResultSet rsdemo = flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
-  while (rsdemo.next()) { 
-    if(rsdemo.getString("provider_no").equals(curProvider_no) ) {
---%>
-<%--=rsdemo.getString("first_name")+" "+rsdemo.getString("last_name")--%>
-<%--  } else { --%>
-<!--a href=# onClick="changePro(<%--=rsdemo.getString("provider_no")--%>)" -->
-<!--font color='silver'-->
-<%--=rsdemo.getString("first_name")+" "+rsdemo.getString("last_name")--%>
-<!--/font></a-->
-<%-- }  } --%>
+
 
 <div style="colur: #FF0000; text-decoration: none"><a
 	href="javascript:history.go(-1)"
@@ -157,16 +155,23 @@ function t(s1,s2,s3,s4,s5,s6) {
 			border='0'><img src="../images/previous.gif"></a> <select
 			name="provider_no" onChange="selectprovider(this)">
 			<%
-  ResultSet rsdemo = bMultisites
-  						? flipviewMainBean.queryResults(new String[]{curProvider_no, curProvider_no}, "searchmyteamprovider")
-  						: flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
-  while (rsdemo.next()) { 
-%>
-			<option value="<%=rsdemo.getString("provider_no")%>"
-				<%=rsdemo.getString("provider_no").equals(curProvider_no)?"selected":""%>>
-			<%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
-			<%
-  }
+			
+			 
+			if(bMultisites) {
+				Provider p = providerDao.getProvider(curProvider_no);
+				if(p != null) {
+					%>
+					<option value="<%=p.getProviderNo()%>" <%=p.getProviderNo().equals(curProvider_no)?"selected":""%>><%=Misc.getShortStr( p.getFormattedName(),"",12)%></option>
+					<%
+				}
+			} else {
+				List<MyGroup> mgs = myGroupDao.getGroupByGroupNo(mygroupno);
+				for(MyGroup mg:mgs) {
+					%>
+					<option value="<%=mg.getId().getProviderNo()%>" <%=mg.getId().getProviderNo().equals(curProvider_no)?"selected":""%>><%=Misc.getShortStr(mg.getLastName() + "," + mg.getFirstName(),"",12)%></option>
+					<%
+				}
+			}
 %>
 		</select><a
 			href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=nextMonth.get(Calendar.YEAR)+"-"+(nextMonth.get(Calendar.MONTH)+1)+"-"+nextMonth.get(Calendar.DATE)%>"
@@ -180,7 +185,7 @@ function t(s1,s2,s3,s4,s5,s6) {
 		<% } %>
 	</tr>
 	<% 
-  cal.add(cal.DATE, 31);
+  cal.add(Calendar.DATE, 31);
   int starttime = 0, endtime = 0;
   StringBuffer hourmin = null;
   int hour = 0, min = 0;
@@ -190,18 +195,19 @@ function t(s1,s2,s3,s4,s5,s6) {
   param[0]= curProvider_no;
   param[1]= startDate;
   param[2]= cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE);
-  rsdemo = flipviewMainBean.queryResults(param, "search_appt");
-  while (rsdemo.next()) { 
-  	starttime = Integer.parseInt(rsdemo.getString("start_time").substring(0,2) )*60 + Integer.parseInt(rsdemo.getString("start_time").substring(3,5) );
-  	endtime = Integer.parseInt(rsdemo.getString("end_time").substring(0,2) )*60 + Integer.parseInt(rsdemo.getString("end_time").substring(3,5) );
+  
+  for(Appointment a: appointmentDao.search_appt(ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)), curProvider_no)) {
+ 
+  	starttime = Integer.parseInt(ConversionUtils.toTimeString(a.getStartTime()).substring(0,2) )*60 + Integer.parseInt(ConversionUtils.toTimeString(a.getStartTime()).substring(3,5) );
+  	endtime = Integer.parseInt(ConversionUtils.toTimeString(a.getEndTime()).substring(0,2) )*60 + Integer.parseInt(ConversionUtils.toTimeString(a.getEndTime()).substring(3,5) );
         
     for(int k=nStartTime*60; k<(nEndTime+1)*60; k+=nStep) {
 	    if(starttime>k) continue;
 	    else {
-	      if(endtime>k && !rsdemo.getString("status").equals("C")) {
+	      if(endtime>k && !a.getStatus().equals("C")) {
 	        hour = k/60;
 	        min = k%60;
-          	hourmin = new StringBuffer(rsdemo.getString("appointment_date")+ (hour<10?"0":"") +hour + (min<10?":0":":") +min +":00");
+          	hourmin = new StringBuffer(ConversionUtils.toDateString(a.getAppointmentDate())+ (hour<10?"0":"") +hour + (min<10?":0":":") +min +":00");
 		
 	        if(DateTimeCodeBean.get(hourmin.toString() ) == null) {
             		//DateTimeCodeBean.put(hourmin.toString(), "-");
@@ -221,25 +227,28 @@ function t(s1,s2,s3,s4,s5,s6) {
   
   //store timecode for every available day
   String bgcolordef = "#FFFFE0" ;
-  rsdemo = flipviewMainBean.queryResults(param, "search_timecode");
-  while (rsdemo.next()) { 
-    DateTimeCodeBean.put(rsdemo.getString("sdate"), rsdemo.getString("timecode"));
+  for(Object[] result : scheduleTemplateDao.findSchedules(ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)),curProvider_no)) {
+	  ScheduleTemplate st = (ScheduleTemplate)result[0];
+	  ScheduleDate sd = (ScheduleDate)result[1];
+    DateTimeCodeBean.put(ConversionUtils.toDateString(sd.getDate()), st.getTimecode());
   }
   
   //color for template code
-  rsdemo = flipviewMainBean.queryResults("search_timecodesingle");
-  while (rsdemo.next()) { 
+  List<ScheduleTemplateCode> stcs = scheduleTemplateCodeDao.findAll();
+  Collections.sort(stcs,ScheduleTemplateCode.CodeComparator);
+		  
+  for (ScheduleTemplateCode stc : stcs) { 
     //DateTimeCodeBean.put("description"+rsdemo.getString("code"), rsdemo.getString("description"));
-    DateTimeCodeBean.put("duration"+rsdemo.getString("code"), rsdemo.getString("duration"));
-    DateTimeCodeBean.put("color"+rsdemo.getString("code"), (rsdemo.getString("color")==null || rsdemo.getString("color").equals(""))?bgcolordef:rsdemo.getString("color") );
-    DateTimeCodeBean.put("bookinglimit" + rsdemo.getString("code"), rsdemo.getString("bookinglimit"));
+    DateTimeCodeBean.put("duration"+stc.getCode(), stc.getDuration());
+    DateTimeCodeBean.put("color"+stc.getCode(), (stc.getColor()==null || stc.getColor().equals(""))?bgcolordef:stc.getColor() );
+    DateTimeCodeBean.put("bookinglimit" + stc.getCode(), stc.getBookinglimit());
   } 
 
   DateTimeCodeBean.put("color-", "silver");
   DateTimeCodeBean.put("color|", "gold");
   DateTimeCodeBean.put("color||", "red");
 
-  cal.add(cal.DATE, -31);
+  cal.add(Calendar.DATE, -31);
   StringBuffer temp = null;
   String strTempDate = null;
 
@@ -252,10 +261,10 @@ function t(s1,s2,s3,s4,s5,s6) {
 
     /* This calendar will set the end_time of a appointment */
     Calendar appointmentTime = Calendar.getInstance();
-    appointmentTime.set(appointmentTime.HOUR_OF_DAY, nStartTime);
-    appointmentTime.set(appointmentTime.MINUTE, 0);
+    appointmentTime.set(Calendar.HOUR_OF_DAY, nStartTime);
+    appointmentTime.set(Calendar.MINUTE, 0);
     /* this -1 is explained below */
-    appointmentTime.add(appointmentTime.MINUTE, -1);
+    appointmentTime.add(Calendar.MINUTE, -1);
 %>
 	<tr align="center" bgcolor="<%=bgcolor%>">
 <% if (bMultisites) out.print("<td align='right'>"+getSiteHTML(strTempDate, curProvider_no, sites)+"</td>"); %>			
@@ -272,7 +281,7 @@ function t(s1,s2,s3,s4,s5,s6) {
 	/* This appoint will finish one minute before the next appointment
 	   To do this minute before, set -1 outside this loop
 	 */
-	appointmentTime.add(appointmentTime.MINUTE, nStep);
+	appointmentTime.add(Calendar.MINUTE, nStep);
     if(DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))!=null ) {
 	  int nLen = 24*60 / ((String) DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))).length();
 	  int ratio = (hour*60+min)/nLen;
@@ -312,14 +321,14 @@ function t(s1,s2,s3,s4,s5,s6) {
 		<td
 			<%=DateTimeCodeBean.get("color"+temp.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+temp.toString()) ):""%>
                             title="<%=hour+":"+(min<10?"0":"")+min%>"><table style="display:inline; font-size:x-small;"><tr><td rowspan="2" style="vertical-align:middle;"><a href=#
-			onClick="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(appointmentTime.HOUR_OF_DAY)%>:<%=appointmentTime.get(appointmentTime.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;">
+			onClick="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(Calendar.HOUR_OF_DAY)%>:<%=appointmentTime.get(Calendar.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;">
                     <%=temp.toString()%></a></td><td title="<bean:message key="schedule.scheduleflipview.msgbookings"/>" style="vertical-align:top; font-size: x-small;"><%=strNumOfAppts%></td></tr><tr><td style="vertical-align:bottom; font-size: x-small;" title="<bean:message key="schedule.scheduleflipview.msgbookinglimit"/>"><%=bookinglimit%></td></tr></table></td>
 		<%
   }
 %>
 	</tr>
 	<%
-    cal.add(cal.DATE, 1);
+    cal.add(Calendar.DATE, 1);
   }
 %>
 

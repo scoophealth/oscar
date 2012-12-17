@@ -28,16 +28,18 @@
   
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
 %>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"
-	scope="session" />
-<%  if(!scheduleMainBean.getBDoConfigure()) { %>
-<%@ include file="scheduleMainBeanConn.jspf"%>
-<% } %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.RSchedule" %>
+<%@page import="org.oscarehr.common.dao.RScheduleDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
+
+<%
+	RScheduleDao rScheduleDao = SpringUtils.getBean(RScheduleDao.class);
+%>
+
+<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
+
 
 <% scheduleRscheduleBean.clear(); %>
 
@@ -184,16 +186,12 @@ function addDataString1() {
   int month = now.get(Calendar.MONTH)+1;
   int day = now.get(Calendar.DATE);
   String today = now.get(Calendar.YEAR)+"-"+MyDateFormat.getDigitalXX((now.get(Calendar.MONTH)+1))+"-"+MyDateFormat.getDigitalXX(now.get(Calendar.DATE));
-  String[] param1 =new String[3];
-  param1[0]=request.getParameter("provider_no");
-  param1[1]="1";
-  param1[2]=request.getParameter("sdate")!=null?request.getParameter("sdate"):today;
-  ResultSet rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_current");
-   
-  while (rsgroup.next()) { 
-    scheduleRscheduleBean.setRscheduleBean(rsgroup.getString("provider_no"),rsgroup.getString("sdate"),rsgroup.getString("edate"), rsgroup.getString("available"),rsgroup.getString("day_of_week"), rsgroup.getString("day_of_month"), rsgroup.getString("avail_hour"), rsgroup.getString("creator"));
-    break;
-  }
+  
+
+  RSchedule r = rScheduleDao.search_rschedule_current(request.getParameter("provider_no"), "1", ConversionUtils.fromDateString(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+  if(r != null) {
+  	scheduleRscheduleBean.setRscheduleBean(r.getProviderNo(),ConversionUtils.toDateString(r.getsDate()),ConversionUtils.toDateString(r.geteDate()),r.getAvailable(),r.getDayOfWeek(), null, r.getAvailHour(), r.getCreator());
+  } 
 
   String syear = "",smonth="",sday="",eyear="",emonth="",eday="";
   String[] param2 =new String[7];
@@ -245,13 +243,13 @@ function addDataString1() {
 						<%=request.getParameter("sdate")!=null?(today.equals(request.getParameter("sdate"))?"selected":""):""%>>Current
 					R Schedule</option>
 					<%
-  param1[2]=today; //query for the future date
-  rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_future");
- 	while (rsgroup.next()) { 
+ 
+  for(RSchedule rs: rScheduleDao.search_rschedule_future(request.getParameter("provider_no"),"1",ConversionUtils.fromDateString(today))) {
+  
 %>
-					<option value="<%=rsgroup.getString("sdate")%>"
-						<%=request.getParameter("sdate")!=null?(rsgroup.getString("sdate").equals(request.getParameter("sdate"))?"selected":""):""%>>
-					<%=rsgroup.getString("sdate")+" ~ "+rsgroup.getString("edate")%></option>
+					<option value="<%=ConversionUtils.toDateString(rs.getsDate())%>"
+						<%=request.getParameter("sdate")!=null?(ConversionUtils.toDateString(rs.getsDate()).equals(request.getParameter("sdate"))?"selected":""):""%>>
+					<%=ConversionUtils.toDateString(rs.getsDate())+" ~ "+ConversionUtils.toDateString(rs.geteDate())%></option>
 					<%
  	}
 %>

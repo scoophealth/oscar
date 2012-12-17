@@ -34,4 +34,5 @@ public class ScheduleHolidayDao extends AbstractDao<ScheduleHoliday>{
 	public ScheduleHolidayDao() {
 		super(ScheduleHoliday.class);
 	}
+	
 }

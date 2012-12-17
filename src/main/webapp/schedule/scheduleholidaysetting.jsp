@@ -55,7 +55,7 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable" scope="session" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.ScheduleHoliday" %>
@@ -117,9 +117,10 @@
 if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp").compareTo("1")==0) {
   //create scheduleHolidayBean record
   scheduleHolidayBean.clear();
-  ResultSet rsgroup = scheduleMainBean.queryResults("%","search_scheduleholiday");
-  while (rsgroup.next()) {
-    scheduleHolidayBean.put(rsgroup.getString("sdate"), new HScheduleHoliday(rsgroup.getString("holiday_name") ));
+  
+  for(ScheduleHoliday sh : scheduleHolidayDao.findAll()) {
+  
+    scheduleHolidayBean.put(oscar.util.ConversionUtils.toDateString(sh.getId()), new HScheduleHoliday(sh.getHolidayName() ));
   }
 }
 

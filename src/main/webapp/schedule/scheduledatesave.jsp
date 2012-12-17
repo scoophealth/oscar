@@ -34,7 +34,7 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"	scope="session" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>

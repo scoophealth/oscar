@@ -32,7 +32,7 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <jsp:useBean id="dataBean" class="java.util.Properties" scope="page" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
@@ -126,11 +126,13 @@ function checkInput() {
 				</td>
 				<td><select name="code">
 					<%
-	ResultSet rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
-	while (rsdemo.next())
+					List<ScheduleTemplateCode> stcs = scheduleTemplateCodeDao.findAll();
+					Collections.sort(stcs,ScheduleTemplateCode.CodeComparator);
+	
+					for (ScheduleTemplateCode stc:stcs)
 	{
 %>
-					<option value="<%=rsdemo.getString("code")%>"><%=rsdemo.getString("code")+" |"+rsdemo.getString("description")%></option>
+					<option value="<%=stc.getCode()%>"><%=stc.getCode()+" |"+stc.getDescription()%></option>
 					<%
 	}
 %>
@@ -153,15 +155,15 @@ function checkInput() {
 	boolean bEdit = request.getParameter("dboperation")!=null&&request.getParameter("dboperation").equals(" Edit ");
 	if (bEdit)
 	{
-     	rsdemo = scheduleMainBean.queryResults(request.getParameter("code"), "search_scheduletemplatecodesingle");
-		while (rsdemo.next())
-		{
-			dataBean.setProperty("code", rsdemo.getString("code") );
-			dataBean.setProperty("description", rsdemo.getString("description") );
-			dataBean.setProperty("duration", rsdemo.getString("duration")==null?"":rsdemo.getString("duration") );
-			dataBean.setProperty("color", rsdemo.getString("color")==null?"":rsdemo.getString("color") );
-			dataBean.setProperty("confirm", rsdemo.getString("confirm")==null?"No":rsdemo.getString("confirm") );
-                        dataBean.setProperty("bookinglimit", rsdemo.getString("bookinglimit"));
+		ScheduleTemplateCode stc = scheduleTemplateCodeDao.findByCode(request.getParameter("code"));
+     	if(stc != null) {
+		
+			dataBean.setProperty("code", String.valueOf(stc.getCode()) );
+			dataBean.setProperty("description", stc.getDescription() );
+			dataBean.setProperty("duration", stc.getDuration()==null?"":stc.getDuration() );
+			dataBean.setProperty("color", stc.getColor()==null?"":stc.getColor() );
+			dataBean.setProperty("confirm", stc.getConfirm()==null?"No":stc.getConfirm() );
+                        dataBean.setProperty("bookinglimit", String.valueOf(stc.getBookinglimit()));
 		}
 	}
 %>
