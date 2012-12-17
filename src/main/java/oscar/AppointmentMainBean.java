@@ -30,21 +30,11 @@ import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.oscarehr.common.dao.PropertyDao;
-import org.oscarehr.common.dao.SecurityDao;
-import org.oscarehr.common.model.Property;
-import org.oscarehr.common.model.Security;
-import org.oscarehr.util.SpringUtils;
-
-import oscar.login.DBHelp;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 import oscar.util.UtilDict;
 
 public class AppointmentMainBean {
-
-	private SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
-	private PropertyDao propertyDao = SpringUtils.getBean(PropertyDao.class);
 	
   private DBPreparedHandler dbPH=null;
   private UtilDict toFile=null;
@@ -91,31 +81,6 @@ public class AppointmentMainBean {
   public String whereTo(String displaymode) {
   	targetType=requestUtilDict.getDef(displaymode,"");
   	return toFile.getDef(targetType,"");
-  }
-
-  public boolean isPINEncrypted() throws Exception{
-	  ResultSet rs =null;
-  	  rs = DBHelp.searchDBRecord("select value from property where name='IS_PIN_ENCRYPTED'");
-  	  if(rs.next()==false) return true;
-  	  return rs.getInt(1)>0;
-  }
-
-  public void encryptPIN() throws Exception{
-	  for(Property p : propertyDao.findByName("IS_PIN_ENCRYPTED")) {
-		  p.setValue("1");
-		  propertyDao.merge(p);
-	  }
-	  
-	  ResultSet rs =null;
-  	  rs = DBHelp.searchDBRecord("select SECURITY_NO, PIN from SECURITY");
-  	  while(rs.next()){
-  		  Security s = securityDao.find(rs.getInt("SECURITY_NO"));
-  		  if(s != null) {
-  			  s.setPin(Misc.encryptPIN(rs.getString("PIN")));
-  			  securityDao.merge(s);
-  		  }
-  	  }
-  	  rs.close();
   }
 
   public ResultSet queryResults(String[] aKeyword, String dboperation) throws Exception{

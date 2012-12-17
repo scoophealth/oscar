@@ -34,15 +34,14 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
 <%@ page import="org.oscarehr.common.dao.SecurityDao" %>
-
+<%@ page import="org.oscarehr.common.model.UserProperty" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
 
 <%
 	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 %>
 	
-	
-	
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html:html locale="true">
 <head>
@@ -133,7 +132,15 @@
 	<tr>
 		<td align="left"><i><bean:message key="admin.search.keywords" /></i>:
 		<%=request.getParameter("keyword")%> &nbsp; <%
- 	if(apptMainBean.isPINEncrypted()==false){
+		boolean enc=false;
+		UserProperty prop = userPropertyDao.getProp("IS_PIN_ENCRYPTED");
+		if(prop == null) {
+			enc=true;
+		}else {
+			int i = Integer.parseInt(prop.getValue());
+			enc = i>0;
+		}
+ 	if(!enc){
  %> <input type="button" name="encryptPIN" value="Encrypt PIN"
 			onclick="encryptPIN()"> <%
  	}
