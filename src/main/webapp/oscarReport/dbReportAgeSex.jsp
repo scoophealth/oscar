@@ -25,14 +25,16 @@
 --%>
 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
-
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbReport.jspf"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.ReportAgeSex" %>
 <%@ page import="org.oscarehr.common.dao.ReportAgeSexDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 <%
 	ReportAgeSexDao reportAgeSexDao = SpringUtils.getBean(ReportAgeSexDao.class);
+    DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -46,21 +48,20 @@ GregorianCalendar now=new GregorianCalendar();
   String demo_no="", demo_sex="", provider_no="", roster="", patient_status="", date_joined="";
   String demographic_dob="1800";
 
-   ResultSet rsdemo2 = null;
 	int count1 = 0;
-	int param4 = Integer.parseInt(demographic_dob);
+	
  	String[] param =new String[8];
-	rsdemo2 = apptMainBean.queryResults(param4, "search_demographic_all");
-	while (rsdemo2.next()) {
-      demo_no = rsdemo2.getString("demographic_no");
-      demo_sex = rsdemo2.getString("sex");
-      roster = rsdemo2.getString("roster_status");
-      patient_status = rsdemo2.getString("patient_status");
-      provider_no = rsdemo2.getString("provider_no");
-      date_joined = rsdemo2.getString("date_joined");
-      dob_yy = Integer.parseInt(rsdemo2.getString("year_of_birth"));
-      dob_mm = Integer.parseInt(rsdemo2.getString("month_of_birth"));
-      dob_dd = Integer.parseInt(rsdemo2.getString("date_of_birth"));
+ 	for(Demographic d: demographicDao.getDemographicWithGreaterThanYearOfBirth(Integer.parseInt(demographic_dob))) {
+ 	
+      demo_no = d.getDemographicNo().toString();
+      demo_sex = d.getSex();
+      roster = d.getRosterStatus();
+      patient_status = d.getPatientStatus();
+      provider_no = d.getProviderNo();
+      date_joined =ConversionUtils.toDateString(d.getDateJoined());
+      dob_yy = Integer.parseInt(d.getYearOfBirth());
+      dob_mm = Integer.parseInt(d.getMonthOfBirth());
+      dob_dd = Integer.parseInt(d.getDateOfBirth());
       if(dob_yy!=0) age=MyDateFormat.getAge(dob_yy,dob_mm,dob_dd);
 
 

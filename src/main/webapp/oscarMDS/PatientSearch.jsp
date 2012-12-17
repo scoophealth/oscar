@@ -43,8 +43,6 @@
 %>
 
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <html>

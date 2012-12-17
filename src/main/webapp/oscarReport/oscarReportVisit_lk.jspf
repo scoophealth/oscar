@@ -30,22 +30,7 @@ String cTotal="0",hTotal="0",oTotal="0", mNum="", fNum="";
    String dateEnd = request.getParameter("xml_appointment_date");
    if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
    if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // set to any early date to start search from beginning
-ResultSet rs;
-ResultSet rs2;
-String[] param = new String[3];
 
-param[0] = clinicview; 
-param[1] = dateBegin;
-param[2] = dateEnd ;
-
-String[] param2 = new String[6];
-
-param2[0] = "1972";
-param2[1] = "1982";
-param2[2] = "1983";
-param2[3] = "1994";
-param2[4] = dateBegin;
-param2[5] = dateEnd ;
 
 String[] param3 = new String[7];
 
@@ -56,25 +41,20 @@ param3[3] = "1983";
 param3[4] = "1994";
 param3[5] = dateBegin;
 param3[6] = dateEnd ;
-rs = null;
-String newBilling = "";
-if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
-    newBilling = "_new";  //I've added the coresponding queries to dbReport.jsp with the suffix _new /count
+
+for(Integer i: billingOnCHeaderDao.count_larrykain_clinic(clinicview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
+	cTotal = String.valueOf(i);
 }
-rs = apptMainBean.queryResults(param, "count_larrykain_clinic"+newBilling);
-while(rs.next()){
-cTotal = apptMainBean.getString(rs,"n");
+
+
+for(Integer i: billingOnCHeaderDao.count_larrykain_hospital("1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
+	hTotal = String.valueOf(i);
 }
-rs = null;
-rs = apptMainBean.queryResults(param2, "count_larrykain_hospital"+newBilling);
-while(rs.next()){
-hTotal = apptMainBean.getString(rs,"n");
+
+for(Integer i: billingOnCHeaderDao.count_larrykain_other(clinicview,"1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
+	oTotal = String.valueOf(i);
 }
-rs = null;
-rs = apptMainBean.queryResults(param3, "count_larrykain_other"+newBilling);
-while(rs.next()){
-oTotal = apptMainBean.getString(rs,"n");
-}
+
 
  
     BigDecimal ccTotal = new BigDecimal(Integer.parseInt(cTotal)).setScale(0, BigDecimal.ROUND_HALF_UP);
