@@ -24,8 +24,6 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,8 +35,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.BillHistory;
+import oscar.entities.Billingmaster;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
-import oscar.oscarDB.DBHandler;
 import oscar.util.ConversionUtils;
 import oscar.util.SqlUtils;
 
@@ -172,18 +170,14 @@ public class BillingHistoryDAO {
 	 * @param stat String - The status of the billingMaster records that will be archived
 	 */
 	public void createBillingHistoryArchiveByBillNo(String billingNo) {
+		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
+		Billingmaster b = dao.getBillingmaster(billingNo);
 
-		ResultSet rs = null;
-		String qry = "SELECT billingmaster_no FROM billingmaster b WHERE b.billing_no = " + billingNo;
-		try {
-
-			rs = DBHandler.GetSQL(qry);
-			while (rs.next()) {
-				String billMasterNo = rs.getString(1);
-				this.createBillingHistoryArchive(billMasterNo);
-			}
-		} catch (SQLException ex) {
-			MiscUtils.getLogger().error("Error", ex);
+		if (b != null) {
+			String billMasterNo = "" + b.getBillingmasterNo();
+			this.createBillingHistoryArchive(billMasterNo);
+		} else {
+			MiscUtils.getLogger().warn("Unable to find billingmaster for " + billingNo);
 		}
 	}
 
