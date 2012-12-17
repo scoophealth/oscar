@@ -24,10 +24,7 @@
 
 --%>
 <%    
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
   int  nItems=0;
      String strLimit1="0";
     String strLimit2="5"; 
@@ -50,12 +47,25 @@ if( request.getParameter("updateParent") != null )
 else
     updateParent = "false";    
 %>
-<%@ page
-	import="java.util.*, java.sql.*,java.text.*, oscar.*, java.net.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbTicker.jspf"%>
+<%@ page import="java.util.*, java.sql.*,java.text.*, oscar.*, java.net.*"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.caisi.dao.TicklerDAO" %>
+<%@page import="org.caisi.model.Tickler" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+%>
+
 
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -389,31 +399,34 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
   
   if (dateEnd.compareTo("") == 0) dateEnd = "8888-12-31";
   if (dateBegin.compareTo("") == 0) dateBegin="1900-01-01";
-  ResultSet rs=null ;
-  String[] param =new String[4];
   boolean bodd=false;
-  param[0] = ticklerview;
- 
-  param[1] = dateBegin;
-  param[2] = dateEnd;
-  param[3] = request.getParameter("demoview")==null?"": request.getParameter("demoview");
-  rs = apptMainBean.queryResults(param, "search_tickler_bydemo");
-  while (rs.next()) {
+
+  List<Tickler> ticklers = ticklerDao.search_tickler_bydemo(request.getParameter("demoview")==null?"": request.getParameter("demoview"),ticklerview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
+  for (Tickler t:ticklers) {
+	 Demographic d = demographicDao.getDemographic(t.getDemographic_no());
+	 Provider p = null;
+	 Provider assignedP = null;
+	 
+	 if(d != null && d.getProviderNo().length()>0)
+		 p = providerDao.getProvider(d.getProviderNo());
+	 if(t.getTask_assigned_to().length()>0)
+		 assignedP = providerDao.getProvider(t.getTask_assigned_to());
+	 
      nItems = nItems +1;
      bodd=bodd?false:true;
-     if (apptMainBean.getString(rs,"provider_last")==null || apptMainBean.getString(rs,"provider_first")==null){
+     if (p == null){
         provider = "";
      }
      else{
-        provider = apptMainBean.getString(rs,"provider_last") + "," + apptMainBean.getString(rs,"provider_first");
+        provider = p.getFormattedName();
      }
-     if (apptMainBean.getString(rs,"assignedLast")==null || apptMainBean.getString(rs,"assignedFirst")==null){
+     if (assignedP == null){
         taskAssignedTo = "";
      }
      else{
-        taskAssignedTo = apptMainBean.getString(rs,"assignedLast") + ", " + apptMainBean.getString(rs,"assignedFirst");
+        taskAssignedTo = assignedP.getFormattedName();
      }
-     java.util.Date grantdate =  rs.getDate("service_date");  
+     java.util.Date grantdate =  t.getService_date();
      java.util.Date toDate = new java.util.Date(); 
      long millisDifference = toDate.getTime() - grantdate.getTime(); 
      long daysDifference = millisDifference / (1000 * 60 * 60 * 24); 
@@ -423,14 +436,14 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 			<tr>
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><input
 					type="checkbox" name="checkbox"
-					value="<%=apptMainBean.getString(rs,"tickler_no")%>"></TD>
+					value="<%=t.getTickler_no()%>"></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a
 					href=#
-					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
+					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=t.getDemographic_no()%>&displaymode=edit&dboperation=search_detail')"><%=d.getLastName()%>,<%=d.getFirstName()%></a></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=provider%></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
 				<%
-		java.util.Date service_date = rs.getDate("service_date");
+		java.util.Date service_date = t.getService_date();
 		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		String service_date_str = dateFormat2.format(service_date);
 		out.print(service_date_str);
@@ -438,16 +451,16 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 				</TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
 				<%
-		service_date = rs.getDate("update_date");
+		service_date = t.getUpdate_date();
 		dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		service_date_str = dateFormat2.format(service_date);
 		out.print(service_date_str);
 	%>
 				</TD>
-				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=apptMainBean.getString(rs,"priority")%></TD>
+				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=t.getPriority()%></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssignedTo%></TD>
-				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=apptMainBean.getString(rs,"status").equals("A")?"Active":apptMainBean.getString(rs,"status").equals("C")?"Completed":apptMainBean.getString(rs,"status").equals("D")?"Deleted":apptMainBean.getString(rs,"status")%></TD>
-				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=apptMainBean.getString(rs,"message")%></TD>
+				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=String.valueOf(t.getStatus()).equals("A")?"Active":String.valueOf(t.getStatus()).equals("C")?"Completed":String.valueOf(t.getStatus()).equals("D")?"Deleted":String.valueOf(t.getStatus())%></TD>
+				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=t.getMessage()%></TD>
 			</tr>
 			<%
 }else {
@@ -455,13 +468,13 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 			<tr>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><input
 					type="checkbox" name="checkbox"
-					value="<%=apptMainBean.getString(rs,"tickler_no")%>"></TD>
+					value="<%=t.getTickler_no()%>"></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=#
-					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
+					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=t.getDemographic_no()%>&displaymode=edit&dboperation=search_detail')"><%=d.getLastName()%>,<%=d.getFirstName()%></a></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
 				<%
-		java.util.Date service_date = rs.getDate("service_date");
+		java.util.Date service_date = t.getService_date();
 		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		String service_date_str = dateFormat2.format(service_date);
 		out.print(service_date_str);
@@ -469,16 +482,16 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 				</TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
 				<%
-		service_date = rs.getDate("update_date");
+		service_date = t.getUpdate_date();
 		dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		service_date_str = dateFormat2.format(service_date);
 		out.print(service_date_str);
 	%>
 				</TD>
-				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"priority")%></TD>
+				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=t.getPriority()%></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssignedTo%></TD>
-				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"status").equals("A")?"Active":apptMainBean.getString(rs,"status").equals("C")?"Completed":apptMainBean.getString(rs,"status").equals("D")?"Deleted":apptMainBean.getString(rs,"status")%></TD>
-				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"message")%></TD>
+				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=String.valueOf(t.getStatus()).equals("A")?"Active":String.valueOf(t.getStatus()).equals("C")?"Completed":String.valueOf(t.getStatus()).equals("D")?"Deleted":String.valueOf(t.getStatus())%></TD>
+				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=t.getMessage()%></TD>
 			</tr>
 			<%
 }
