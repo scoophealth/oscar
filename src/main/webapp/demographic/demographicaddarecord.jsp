@@ -47,8 +47,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-
 <% 
 	java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
 
@@ -219,9 +217,9 @@
 	}
     
     bufName = new StringBuilder(request.getParameter("last_name")+ ","+ request.getParameter("first_name") );
-    bufNo = new StringBuilder( (apptMainBean.getString("demographic_no")) );
-    bufChart = new StringBuilder(apptMainBean.getString("chart_no"));
-    bufDoctorNo = new StringBuilder( apptMainBean.getString("provider_no") );
+    bufNo = new StringBuilder( (StringUtils.trimToEmpty("demographic_no")) );
+    bufChart = new StringBuilder(StringUtils.trimToEmpty("chart_no"));
+    bufDoctorNo = new StringBuilder( StringUtils.trimToEmpty("provider_no") );
 
     demographicDao.save(demographic);
 
