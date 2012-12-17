@@ -31,6 +31,12 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
+<%@page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
+<%@page import="org.oscarehr.common.dao.WaitingListDao" %>
+
+<%@page import="org.oscarehr.common.dao.WaitingListNameDao" %>
+<%@page import="org.oscarehr.common.model.WaitingListName" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
@@ -44,6 +50,9 @@
     List<CountryCode> countryList = ccDAO.getAllCountryCodes();
 
     DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+    ScheduleTemplateCodeDao scheduleTemplateCodeDao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
+    WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
+    WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_demographic"
 	rights="r" reverse="<%=true%>">
@@ -72,12 +81,18 @@
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	List<Provider> providers = providerDao.getActiveProviders();
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
@@ -810,7 +825,7 @@ div.demographicWrapper {
                                 String rdohip="", rd="", fd="", family_doc = "";
 
                                 String resident="", nurse="", alert="", notes="", midwife="";
-                                ResultSet rs = null;
+                                
                                 DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demographic_no));
                                 if(demographicCust != null) {
                                 	resident = demographicCust.getResident();
@@ -821,16 +836,13 @@ div.demographicWrapper {
                                 	notes = notes==null?"":notes;
                                 }
 
-                                DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
                                 Demographic demographic=demographicDao.getDemographic(demographic_no);
 
                                 String dateString = curYear+"-"+curMonth+"-"+curDay;
                                 int age=0, dob_year=0, dob_month=0, dob_date=0;
                                 String birthYear="0000", birthMonth="00", birthDate="00";
 
-                                int param = Integer.parseInt(demographic_no);
-                                rs = apptMainBean.queryResults(param, "search_detail");
-                                rs.next();
+                                
 
                                 if(demographic==null) {
                                         out.println("failed!!!");
@@ -1319,7 +1331,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                     value="update_record_ptbr">
                                   <%}%>
                                 <br><input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
-                                    onclick="window.open('demographicExport.jsp?demographicNo=<%=apptMainBean.getString(rs,"demographic_no")%>');">
+                                    onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
                                 </td>
                                 <td width="30%" align='center' valign="top">
                                 <% if (OscarProperties.getInstance().getBooleanProperty("workflow_enhance", "true")) { %>
@@ -1339,19 +1351,19 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                 
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFEnvelope"/>"
-                                    onclick="window.location='../report/GenerateEnvelopes.do?demos=<%=apptMainBean.getString(rs,"demographic_no")%>'">
+                                    onclick="window.location='../report/GenerateEnvelopes.do?demos=<%=demographic.getDemographicNo()%>'">
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>"
-                                    onclick="window.location='printDemoLabelAction.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
+                                    onclick="window.location='printDemoLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFAddressLabel"/>"
-                                    onclick="window.location='printDemoAddressLabelAction.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
+                                    onclick="window.location='printDemoAddressLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFChartLabel"/>"
-                                    onclick="window.location='printDemoChartLabelAction.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
+                                    onclick="window.location='printDemoChartLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
                                 <input type="button" name="Button" size="110"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>"
-                                    onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
+                                    onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=demographic.getDemographicNo()%>'">
                                 </td>
                                                         </tr>
                         </table>
@@ -1408,7 +1420,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 							</li>
 						<% } %>
 						
-						<% String aboriginal = apptMainBean.getString(demoExt.get("aboriginal"));
+						<% String aboriginal = StringUtils.trimToEmpty(demoExt.get("aboriginal"));
 						   if (aboriginal!=null && aboriginal.length()>0) { %>
                                                <li><span class="label"><bean:message key="demographic.demographiceditdemographic.aboriginal"/>:</span>
                                                    <span class="info"><%=aboriginal%></span>
@@ -1526,7 +1538,7 @@ if ( Dead.equals(PatStat) ) {%>
 <% } %>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.cytolNum" />:</span>
-                                                        <span class="info"><%=apptMainBean.getString(demoExt.get("cytolNum"))%></span></li>
+                                                        <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("cytolNum"))%></span></li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formDateJoined1" />:</span>
 							<span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getDateJoined())%></span>
@@ -1569,15 +1581,15 @@ if ( Dead.equals(PatStat) ) {%>
 						<ul>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formPhoneH" />:</span>
-                                                        <span class="info"><%=demographic.getPhone()%> <%=apptMainBean.getString(demoExt.get("hPhoneExt"))%></span>
+                                                        <span class="info"><%=demographic.getPhone()%> <%=StringUtils.trimToEmpty(demoExt.get("hPhoneExt"))%></span>
 							</li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formPhoneW" />:</span>
-                                                        <span class="info"><%=demographic.getPhone2()%> <%=apptMainBean.getString(demoExt.get("wPhoneExt"))%></span>
+                                                        <span class="info"><%=demographic.getPhone2()%> <%=StringUtils.trimToEmpty(demoExt.get("wPhoneExt"))%></span>
 							</li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formPhoneC" />:</span>
-                                                        <span class="info"><%=apptMainBean.getString(demoExt.get("demo_cell"))%></span></li>
+                                                        <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%></span></li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formAddr" />:</span>
                                                         <span class="info"><%=demographic.getAddress()%></span>
@@ -1660,18 +1672,17 @@ if ( Dead.equals(PatStat) ) {%>
 						
 				// build templateMap, which maps template codes to their associated duration
 				Map<String, String> templateMap = new HashMap<String, String>();
-				String templateSql = "select code, duration from scheduletemplatecode where bookinglimit > 0 and duration != ''";
-				ResultSet templateResult = dbObj.searchDBRecord(templateSql);
-				while (templateResult.next()) { 
-					templateMap.put(apptMainBean.getString(templateResult,"code"), apptMainBean.getString(templateResult,"duration"));
+				for(ScheduleTemplateCode stc : scheduleTemplateCodeDao.findTemplateCodes()) {
+					templateMap.put(String.valueOf(stc.getCode()),stc.getDuration());
 				}
+				
 
 				// build list of providers associated with this patient 
 				Map<String, Map<String, Map<String,String>>> provMap = new HashMap<String, Map<String, Map<String,String>>>();
-				if (rs!=null) {
+				if (demographic != null) {
 					provMap.put("doctor", new HashMap<String, Map<String,String>>());
 					provMap.get("doctor").put("prov_no", new HashMap<String, String>());
-					provMap.get("doctor").get("prov_no").put("no", apptMainBean.getString(rs,"provider_no"));
+					provMap.get("doctor").get("prov_no").put("no", demographic.getProviderNo());
 				}
 				if (StringUtils.isNotEmpty(providerBean.getProperty(resident,""))) {
 					provMap.put("prov1", new HashMap<String, Map<String,String>>());
@@ -1708,26 +1719,26 @@ if ( Dead.equals(PatStat) ) {%>
 						
 						// get timecode string template associated with this day, number of minutes each slot represents
 						String timecodeSql = "select timecode from scheduletemplate, (select hour from (select provider_no, hour, status from scheduledate where sdate='"+qCurDate+"') as df where status = 'A' and provider_no='"+thisProvNo+"') as hf where scheduletemplate.name=hf.hour and (scheduletemplate.provider_no='"+thisProvNo+"' or scheduletemplate.provider_no='Public')";
-						// String timecodeSql = "select scheduletemplate.timecode from scheduledate left join scheduletemplate on (scheduletemplate.name=scheduledate.hour) where  scheduledate.sdate='"+qCurDate+"' and scheduledate.provider_no='"+thisProvNo+"' and scheduledate.status = 'A' and (scheduletemplate.provider_no='"+thisProvNo+"' or scheduletemplate.provider_no='Public');";
-		                                ResultSet timecodeResult = dbObj.searchDBRecord(timecodeSql);
+						ResultSet timecodeResult = dbObj.searchDBRecord(timecodeSql);
 
 						// if theres a template on this day, continue
-                                		if (timecodeResult.next()) {
+                        if (timecodeResult.next()) {
 
-						String timecode = apptMainBean.getString(timecodeResult,"timecode");
-                  	             		int timecodeInterval = 1440/timecode.length();
+                       	String timecode = StringUtils.trimToEmpty(timecodeResult.getString("timecode"));
+                       	
+                  	    int timecodeInterval = 1440/timecode.length();
 
 						// build schedArr, which has 1s where template slots are
-                                		int[] schedArr = new int[timecode.length()];
-                                		String schedChar;
-                                		for (int i=0; i<timecode.length(); i++) {
-                                        		schedChar = ""+timecode.charAt(i);
-                                        		if (!schedChar.equals("_")) {
-													if (templateMap.get(""+timecode.charAt(i)) != null) {
-					                                                			schedArr[i] = 1;
-													}
-                                        		}
-                                		}
+                   		int[] schedArr = new int[timecode.length()];
+                   		String schedChar;
+                   		for (int i=0; i<timecode.length(); i++) {
+                           		schedChar = ""+timecode.charAt(i);
+                           		if (!schedChar.equals("_")) {
+									if (templateMap.get(""+timecode.charAt(i)) != null) {
+                                     	schedArr[i] = 1;
+									}
+                           		}
+                   		}
 
 						// get list of appointments on this day
 						String apptListSql = "select start_time, end_time from appointment where appointment_date='"+qCurDate+"' and provider_no='"+thisProvNo+"' and status != 'N' and status != 'C'";
@@ -1736,8 +1747,8 @@ if ( Dead.equals(PatStat) ) {%>
 
 						// put 0s in schedArr where appointments are
 						while(apptListResult.next()) {
-							start_index = timeStrToMins(apptMainBean.getString(apptListResult,"start_time"))/timecodeInterval;
-							end_index = timeStrToMins(apptMainBean.getString(apptListResult,"end_time"))/timecodeInterval;
+							start_index = timeStrToMins(StringUtils.trimToEmpty(timecodeResult.getString("start_time")))/timecodeInterval;
+							end_index = timeStrToMins(StringUtils.trimToEmpty(timecodeResult.getString("end_time")))/timecodeInterval;
 							
 							// very late appts may push us past the time range we care about 
 							// trying to invalidate these times will lead to a ArrayIndexOutOfBoundsException
@@ -1784,7 +1795,7 @@ if ( Dead.equals(PatStat) ) {%>
 									startTimeStr = String.format("%02d",startHour)+":"+String.format("%02d",startMin);
 									endTimeStr = String.format("%02d",startHour)+":"+String.format("%02d",startMin+timecodeInterval-1);
 
-									provMap.get(thisProv).get(sortDateStr+","+qApptWkDay+" "+qApptMonth+"-"+qApptDay).put(startTimeStr+","+timecodeChar, "../appointment/addappointment.jsp?demographic_no="+apptMainBean.getString(rs,"demographic_no")+"&name="+URLEncoder.encode(apptMainBean.getString(rs,"last_name")+","+apptMainBean.getString(rs,"first_name"))+"&provider_no="+thisProvNo+"&bFirstDisp=true&year="+qApptYear+"&month="+qApptMonth+"&day="+qApptDay+"&start_time="+startTimeStr+"&end_time="+endTimeStr+"&duration="+templateDuration+"&search=true");
+									provMap.get(thisProv).get(sortDateStr+","+qApptWkDay+" "+qApptMonth+"-"+qApptDay).put(startTimeStr+","+timecodeChar, "../appointment/addappointment.jsp?demographic_no="+demographic.getDemographicNo()+"&name="+URLEncoder.encode(demographic.getLastName()+","+demographic.getFirstName())+"&provider_no="+thisProvNo+"&bFirstDisp=true&year="+qApptYear+"&month="+qApptMonth+"&day="+qApptDay+"&start_time="+startTimeStr+"&end_time="+endTimeStr+"&duration="+templateDuration+"&search=true");
 								}
 							}
 						}
@@ -1800,12 +1811,12 @@ if ( Dead.equals(PatStat) ) {%>
 					} 
 				}
 			%>
-                            <% if (apptMainBean.getString(rs,"provider_no")!=null) { %>
+                            <% if (demographic.getProviderNo()!=null) { %>
                             <li>
                             <% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
                             <bean:message
                                 key="demographic.demographiceditdemographic.formDoctor" />
-                            <% } %>: <b><%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"),"")%></b>
+                            <% } %>: <b><%=providerBean.getProperty(demographic.getProviderNo(),"")%></b>
                         <% // ===== quick appointment booking for doctor =====
                         if (provMap.get("doctor") != null) {
 				%><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%
@@ -1987,7 +1998,7 @@ if ( Dead.equals(PatStat) ) {%>
 						%>
 						<div class="demographicSection" id="special">
 						<h3>&nbsp;Special</h3>
-						<% 	for(int k=0; k<propDemoExt.length; k++) {%> <%=propDemoExt[k]+": <b>" + apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_'))) +"</b>"%>
+						<% 	for(int k=0; k<propDemoExt.length; k++) {%> <%=propDemoExt[k]+": <b>" + StringUtils.trimToEmpty(demoExt.get(propDemoExt[k].replace(' ', '_'))) +"</b>"%>
 						&nbsp;<%=((k+1)%4==0&&(k+1)<propDemoExt.length)?"<br>":"" %> <% 	} %>
 						</div>
 						<% } %>
@@ -2187,9 +2198,9 @@ if ( Dead.equals(PatStat) ) {%>
 									style="display: inline; width: auto;"
 									value="<%=demographic.getPhone()%>"> <bean:message key="demographic.demographiceditdemographic.msgExt"/>:<input
 									type="text" name="hPhoneExt" <%=getDisabled("hPhoneExt")%>
-									value="<%=apptMainBean.getString(demoExt.get("hPhoneExt"))%>"
+									value="<%=StringUtils.trimToEmpty(demoExt.get("hPhoneExt"))%>"
 									size="4" /> <input type="hidden" name="hPhoneExtOrig"
-									value="<%=apptMainBean.getString(demoExt.get("hPhoneExt"))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get("hPhoneExt"))%>" />
 								</td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formPhoneW" />:</b></td>
@@ -2198,10 +2209,10 @@ if ( Dead.equals(PatStat) ) {%>
 									style="display: inline; width: auto;"
 									value="<%=demographic.getPhone2()%>"> <bean:message key="demographic.demographiceditdemographic.msgExt"/>:<input
 									type="text" name="wPhoneExt" <%=getDisabled("wPhoneExt")%>
-									value="<%=apptMainBean.getString(demoExt.get("wPhoneExt"))%>"
+									value="<%=StringUtils.trimToEmpty(demoExt.get("wPhoneExt"))%>"
 									style="display: inline" size="4" /> <input type="hidden"
 									name="wPhoneExtOrig"
-									value="<%=apptMainBean.getString(demoExt.get("wPhoneExt"))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get("wPhoneExt"))%>" />
 								</td>
 							</tr>
 							<tr valign="top">
@@ -2210,9 +2221,9 @@ if ( Dead.equals(PatStat) ) {%>
 								<td align="left">
 								<input type="text" name="demo_cell" onblur="formatPhoneNum();"
 									style="display: inline; width: auto;" <%=getDisabled("demo_cell")%>
-									value="<%=apptMainBean.getString(demoExt.get("demo_cell"))%>">
+									value="<%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%>">
 								<input type="hidden" name="demo_cellOrig"
-									value="<%=apptMainBean.getString(demoExt.get("demo_cell"))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%>" />
 								</td>
 								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>: </b></td>
 								<td align="left"><select name="countryOfOrigin" <%=getDisabled("countryOfOrigin")%>>
@@ -2238,7 +2249,7 @@ if ( Dead.equals(PatStat) ) {%>
 						
 								</select>
 								<input type="hidden" name="demo_aboriginalOrig"
-									value="<%=apptMainBean.getString(demoExt.get("aboriginal"))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get("aboriginal"))%>" />
 								</td>
 								<td align="right"><b>&nbsp;</b></td>
 								<td align="left">&nbsp;</td>
@@ -2477,9 +2488,9 @@ if ( Dead.equals(PatStat) ) {%>
 									key="demographic.demographiceditdemographic.cytolNum" />:</b></td>
 								<td><input type="text" name="cytolNum" <%=getDisabled("cytolNum")%>
 									style="display: inline; width: auto;"
-									value="<%=apptMainBean.getString(demoExt.get("cytolNum"))%>">
+									value="<%=StringUtils.trimToEmpty(demoExt.get("cytolNum"))%>">
 								<input type="hidden" name="cytolNumOrig"
-									value="<%=apptMainBean.getString(demoExt.get("cytolNum"))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get("cytolNum"))%>" />
 								</td>
 							</tr>
 							<tr valign="top">
@@ -2492,12 +2503,12 @@ if ( Dead.equals(PatStat) ) {%>
 									style="width: 200px">
 									<option value=""></option>
 									<%
-                          ResultSet rsdemo = apptMainBean.queryResults("search_provider_doc");
-                          while (rsdemo.next()) {
+							for(Provider p : providers) {
+                         
                         %>
-									<option value="<%=rsdemo.getString("provider_no")%>"
-										<%=rsdemo.getString("provider_no").equals(demographic.getProviderNo())?"selected":""%>>
-									<%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+									<option value="<%=p.getProviderNo()%>"
+										<%=p.getProviderNo().equals(demographic.getProviderNo())?"selected":""%>>
+									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
 									<% } %>
 								</select></td>
 								<td align="right" nowrap><b><bean:message
@@ -2506,13 +2517,13 @@ if ( Dead.equals(PatStat) ) {%>
 									style="width: 200px">
 									<option value=""></option>
 									<%
-                          rsdemo.close();
-                          rsdemo=apptMainBean.queryResults("search_provider_doc");
-                          while (rsdemo.next()) {
+                         
+                         
+									for(Provider p : providers) {
                         %>
-									<option value="<%=rsdemo.getString("provider_no")%>"
-										<%=rsdemo.getString("provider_no").equals(resident)?"selected":""%>>
-									<%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+									<option value="<%=p.getProviderNo()%>"
+										<%=p.getProviderNo().equals(resident)?"selected":""%>>
+									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
 									<% } %>
 								</select></td>
 							</tr>
@@ -2523,13 +2534,11 @@ if ( Dead.equals(PatStat) ) {%>
 									style="width: 200px">
 									<option value=""></option>
 									<%
-                          rsdemo.close();
-                          rsdemo=apptMainBean.queryResults("search_provider_doc");
-                          while (rsdemo.next()) {
+									for(Provider p : providers) {
                         %>
-									<option value="<%=rsdemo.getString("provider_no")%>"
-										<%=rsdemo.getString("provider_no").equals(midwife)?"selected":""%>>
-									<%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+									<option value="<%=p.getProviderNo()%>"
+										<%=p.getProviderNo().equals(midwife)?"selected":""%>>
+									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
 									<% } %>
 								</select></td>
 								<td align="right"><b><bean:message
@@ -2537,13 +2546,11 @@ if ( Dead.equals(PatStat) ) {%>
 								<td align="left"><select name="nurse" style="width: 200px" <%=getDisabled("nurse")%>>
 									<option value=""></option>
 									<%
-                          rsdemo.close();
-                          rsdemo = apptMainBean.queryResults("search_provider_doc");
-                          while (rsdemo.next()) {
+									for(Provider p : providers) {
                         %>
-									<option value="<%=rsdemo.getString("provider_no")%>"
-										<%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%>>
-									<%=Misc.getShortStr( (apptMainBean.getString(rsdemo,"last_name")+","+apptMainBean.getString(rsdemo,"first_name")),"",nStrShowLen)%></option>
+									<option value="<%=p.getProviderNo()%>"
+										<%=p.getProviderNo().equals(nurse)?"selected":""%>>
+									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
 									<% } %>
 								</select></td>
 							</tr>
@@ -2576,7 +2583,7 @@ if ( Dead.equals(PatStat) ) {%>
 										<%=prop.getProperty("referral_no").equals(rdohip)?"selected":""%>>
 									<%=Misc.getShortStr( (prop.getProperty("last_name")+","+prop.getProperty("first_name")),"",nStrShowLen)%></option>
 									<% }
- 	                      	rsdemo.close();
+ 	                      	
  	                       %>
                                   </select> <script type="text/javascript" language="Javascript">
 <!--
@@ -2632,12 +2639,13 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<option value="FS"
 										<%=rosterStatus.equals("FS")?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optFeeService"/></option>
-									<% ResultSet rsstatus1 = apptMainBean.queryResults("search_rsstatus");
-                                     while (rsstatus1.next()) { %>
+									<% 
+									for(String status: demographicDao.getRosterStatuses()) {
+									%>
 									<option
-										<%=rosterStatus.equals(rsstatus1.getString("roster_status"))?" selected":""%>><%=rsstatus1.getString("roster_status")%></option>
+										<%=rosterStatus.equals(status)?" selected":""%>><%=status%></option>
 									<% }
-                                     rsstatus1.close();
+                                    
                                    // end while %>
 								</select> <input type="button" onClick="newStatus1();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
 								</td>
@@ -2740,12 +2748,13 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<option value="FI"
 										<%="FI".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optFired"/></option>
-									<% ResultSet rsstatus = apptMainBean.queryResults("search_ptstatus");
-                                     while (rsstatus.next()) { %>
+									<%
+									for(String status : demographicDao.search_ptstatus()) {
+                                     %>
 									<option
-										<%=rsstatus.getString("patient_status").equals(patientStatus)?" selected":""%>><%=rsstatus.getString("patient_status")%></option>
+										<%=status.equals(patientStatus)?" selected":""%>><%=status%></option>
 									<% }
-                                  rsstatus.close();
+                                 
                                    // end while %>
 								</select> <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
 								<% } // end if...then...else
@@ -2797,19 +2806,22 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 										<bean:message key="demographic.demographiceditdemographic.msgWaitList"/>:</b></td>
 										<td align="left" width="31%">
 										<%
-                                ResultSet rsWLStatus = apptMainBean.queryResults(demographic_no,"search_wlstatus");
+										
+										List<org.oscarehr.common.model.WaitingList> wls = waitingListDao.search_wlstatus(Integer.parseInt(demographic_no));
+									
  	                        String wlId="", listID="", wlnote="";
  	                        String wlReferralDate="";
-                                if (rsWLStatus.next()){
-                                    wlId = rsWLStatus.getString("id");
-                                    listID = rsWLStatus.getString("listID");
-                                    wlnote = rsWLStatus.getString("note");
-                                    wlReferralDate = rsWLStatus.getString("onListSince");
+                                if (wls.size()>0){
+                                	org.oscarehr.common.model.WaitingList wl = wls.get(0);
+                                    wlId = wl.getId().toString();
+                                    listID =String.valueOf(wl.getListId());
+                                    wlnote =wl.getNote();
+                                    wlReferralDate =oscar.util.ConversionUtils.toDateString(wl.getOnListSince());
                                     if(wlReferralDate != null  &&  wlReferralDate.length()>10){
                                         wlReferralDate = wlReferralDate.substring(0, 11);
                                     }
                                 }
-                                rsWLStatus.close();
+                               
                                %> <input type="hidden" name="wlId"
 											value="<%=wlId%>"> <select name="list_id">
 											<%if("".equals(wLReadonly)){%>
@@ -2819,15 +2831,16 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 											<bean:message key="demographic.demographiceditdemographic.optCreateWaitList"/></option>
 											<%} %>
 											<%
-                                      ResultSet rsWL = apptMainBean.queryResults("search_waiting_list");
-                                      while (rsWL.next()) {
+											
+									List<WaitingListName> wlns = waitingListNameDao.findCurrentByGroup(((org.oscarehr.common.model.ProviderPreference)session.getAttribute(org.oscarehr.util.SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo());
+                                     for(WaitingListName wln:wlns) {
                                     %>
-											<option value="<%=rsWL.getString("ID")%>"
-												<%=rsWL.getString("ID").equals(listID)?" selected":""%>>
-											<%=rsWL.getString("name")%></option>
+											<option value="<%=wln.getId()%>"
+												<%=wln.getId().toString().equals(listID)?" selected":""%>>
+											<%=wln.getName()%></option>
 											<%
                                       }
-                                      rsWL.close();
+                                     
                                     %>
 										</select></td>
 										<td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.msgWaitListNote"/>: </b></td>
@@ -2916,16 +2929,16 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left">
 								<% if(bExtForm) {
                                   	if(propDemoExtForm[k].indexOf("<select")>=0) {
-                                		out.println(propDemoExtForm[k].replaceAll("value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" , "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" + " selected") );
+                                		out.println(propDemoExtForm[k].replaceAll("value=\""+StringUtils.trimToEmpty(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" , "value=\""+StringUtils.trimToEmpty(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" + " selected") );
                                   	} else {
-                              			out.println(propDemoExtForm[k].replaceAll("value=\"\"", "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" ) );
+                              			out.println(propDemoExtForm[k].replaceAll("value=\"\"", "value=\""+StringUtils.trimToEmpty(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" ) );
                                   	}
                               	 } else { %> <input type="text"
 									name="<%=propDemoExt[k].replace(' ', '_')%>"
-									value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
 								<% }  %> <input type="hidden"
 									name="<%=propDemoExt[k].replace(' ', '_')%>Orig"
-									value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
 								</td>
 								<% if((k+1)<propDemoExt.length) { %>
 								<td align="right" nowrap><b>
@@ -2933,16 +2946,16 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left">
 								<% if(bExtForm) {
                                   	if(propDemoExtForm[k+1].indexOf("<select")>=0) {
-                                		out.println(propDemoExtForm[k+1].replaceAll("value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" , "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" + " selected") );
+                                		out.println(propDemoExtForm[k+1].replaceAll("value=\""+StringUtils.trimToEmpty(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" , "value=\""+StringUtils.trimToEmpty(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" + " selected") );
                                   	} else {
-                              			out.println(propDemoExtForm[k+1].replaceAll("value=\"\"", "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" ) );
+                              			out.println(propDemoExtForm[k+1].replaceAll("value=\"\"", "value=\""+StringUtils.trimToEmpty(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" ) );
                                   	}
                               	 } else { %> <input type="text"
 									name="<%=propDemoExt[k+1].replace(' ', '_')%>"
-									value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
 								<% }  %> <input type="hidden"
 									name="<%=propDemoExt[k+1].replace(' ', '_')%>Orig"
-									value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
 								</td>
 								<% } else {%>
 								<td>&nbsp;</td>
@@ -2958,7 +2971,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 <td nowrap colspan="4">
 <b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
 <input type="hidden" name="rxInteractionWarningLevelOrig"
-									value="<%=apptMainBean.getString(demoExt.get("rxInteractionWarningLevel"))%>" />
+									value="<%=StringUtils.trimToEmpty(demoExt.get("rxInteractionWarningLevel"))%>" />
 					<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">
 						<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
 						<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
@@ -2973,7 +2986,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				       	String primaryEMR = demoExt.get("primaryEMR");
 				       	if(primaryEMR==null) primaryEMR="0";
 				    %>
-					<input type="hidden" name="primaryEMROrig" value="<%=apptMainBean.getString(demoExt.get("primaryEMR"))%>" />
+					<input type="hidden" name="primaryEMROrig" value="<%=StringUtils.trimToEmpty(demoExt.get("primaryEMR"))%>" />
 					<select id="primaryEMR" name="primaryEMR">
 						<option value="0" <%=(primaryEMR.equals("0")?"selected=\"selected\"":"") %>>No</option>
 						<option value="1" <%=(primaryEMR.equals("1")?"selected=\"selected\"":"") %>>Yes</option>

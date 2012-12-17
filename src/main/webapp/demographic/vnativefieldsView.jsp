@@ -27,7 +27,8 @@
 <%@page import="java.util.*"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@page import="org.apache.commons.lang.StringUtils" %>
+
 <%
 String demographic_no = request.getParameter("demo");
 DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
@@ -64,11 +65,11 @@ Hashtable h2 = new Hashtable();
     h2.put("13","Other");
     h2.put("14","Off-Reserve");
 %>
-<li>Area: <b><%=getArea(h2,apptMainBean.getString(demoExt.get("area")))%></b>
-Status #: <b><%=apptMainBean.getString(demoExt.get("statusNum"))%></b>
-Ethinicity: <b><%=getEth(h,apptMainBean.getString(demoExt.get("ethnicity")) )%></b>
+<li>Area: <b><%=getArea(h2,StringUtils.trimToEmpty(demoExt.get("area")))%></b>
+Status #: <b><%=StringUtils.trimToEmpty(demoExt.get("statusNum"))%></b>
+Ethinicity: <b><%=getEth(h,StringUtils.trimToEmpty(demoExt.get("ethnicity")) )%></b>
 </li>
-<li>First Nations Community: <b><%=apptMainBean.getString(demoExt.get("fNationCom"))%></b></li>
+<li>First Nations Community: <b><%=StringUtils.trimToEmpty(demoExt.get("fNationCom"))%></b></li>
 
 <%!
 

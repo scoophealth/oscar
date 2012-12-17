@@ -59,5 +59,15 @@ public class ScheduleTemplateCodeDao extends AbstractDao<ScheduleTemplateCode> {
 		}
 		return null;
 	}
+	
+	//"select code, duration from scheduletemplatecode where bookinglimit > 0 and duration != ''"
+	public List<ScheduleTemplateCode> findTemplateCodes() {
+		Query query = entityManager.createQuery("select s from ScheduleTemplateCode s where s.bookinglimit > 0 and s.duration <>''");
+		
+		@SuppressWarnings("unchecked")
+		List<ScheduleTemplateCode> results = query.getResultList();
+		
+		return results;
+	}
 
 }

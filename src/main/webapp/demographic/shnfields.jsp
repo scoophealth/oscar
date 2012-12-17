@@ -27,7 +27,9 @@
 <%@page import="java.util.*"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@page import="org.apache.commons.lang.StringUtils" %>
+
+
 <%
 String demographic_no = request.getParameter("demo");
 DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
@@ -37,7 +39,7 @@ Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(Integer.parse
 <tr>
 	<td align="right"><b>Consent:</b></td>
 	<td align="left" colspan="3">
-	<% String given_consent = apptMainBean.getString(demoExt.get("given_consent")); %>
+	<% String given_consent = StringUtils.trimToEmpty(demoExt.get("given_consent")); %>
 	<select name="given_consent">
 		<option value="-1" <%=getSel(given_consent,"-1")%>>Not Asked</option>
 		<option value="1" <%=getSel(given_consent,"1")%>>Has Given
@@ -45,7 +47,7 @@ Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(Integer.parse
 		<option value="2" <%=getSel(given_consent,"2")%>>Has Refused
 		Consent</option>
 	</select> <input type="hidden" name="ethnicityOrig"
-		value="<%=apptMainBean.getString(demoExt.get("given_consent"))%>">
+		value="<%=StringUtils.trimToEmpty(demoExt.get("given_consent"))%>">
 	</td>
 
 </tr>
