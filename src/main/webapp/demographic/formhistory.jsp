@@ -25,31 +25,23 @@
 --%>
 
 <%
-  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp"%>
-<jsp:useBean id="formHistBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.RecycleBin" %>
 <%@ page import="org.oscarehr.common.dao.RecycleBinDao" %>
 <%@ page import="org.oscarehr.common.model.Form" %>
 <%@ page import="org.oscarehr.common.dao.FormDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%
 	RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
 	FormDao formDao = SpringUtils.getBean(FormDao.class);
 %>
-<%
-  String [][] dbQueries=new String[][] {
-    {"search_form", "select * from form where demographic_no = ? order by form_date desc, form_time desc, form_no desc"},
-    {"search_formdetail", "select * from form where form_no=?"},
-   };
-   formHistBean.doConfigure(dbQueries);
-%>
+
 
 <% //delete the selected records
   if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Delete") ) {
-    ResultSet rs = null;
     int ii = Integer.parseInt(request.getParameter("formnum"));
     String[] param =new String[4];
     String content=null, keyword=null, datetime=null;
@@ -61,12 +53,12 @@
         continue;
       }
 
-      rs = formHistBean.queryResults(request.getParameter("form_no"+i), "search_formdetail");
-      while (rs.next()) {
-        keyword = formHistBean.getString(rs,"form_name")+formHistBean.getString(rs,"form_date");
-        content = "<form_no>"+formHistBean.getString(rs,"form_no")+"</form_no>"+ "<demographic_no>"+formHistBean.getString(rs,"demographic_no")+"</demographic_no>"+ "<provider_no>"+formHistBean.getString(rs,"provider_no")+"</provider_no>";
-        content += "<form_date>"+formHistBean.getString(rs,"form_date")+"</form_date>"+ "<form_time>"+formHistBean.getString(rs,"form_time")+"</form_time>"+ "<form_name>"+formHistBean.getString(rs,"form_name")+"</form_name>";
-        content += "<content>"+formHistBean.getString(rs,"content")+"</content>" ;
+      Form f = formDao.find(Integer.parseInt(request.getParameter("form_no"+i)));
+      if(f != null) {
+        keyword = f.getFormName()+ConversionUtils.toDateString(f.getFormDate());
+        content = "<form_no>"+f.getId()+"</form_no>"+ "<demographic_no>"+f.getDemographicNo()+"</demographic_no>"+ "<provider_no>"+f.getProviderNo()+"</provider_no>";
+        content += "<form_date>"+ConversionUtils.toDateString(f.getFormDate())+"</form_date>"+ "<form_time>"+ConversionUtils.toTimeString(f.getFormTime())+"</form_time>"+ "<form_name>"+f.getFormName()+"</form_name>";
+        content += "<content>"+f.getContent()+"</content>" ;
       }
 
 	    param[0]=user_no;
@@ -123,18 +115,18 @@
 	<tr>
 		<td bgcolor="#FFFFFF" align="center">
 		<%
-   ResultSet rsdemo = null;
-   rsdemo = formHistBean.queryResults(request.getParameter("demographic_no"), "search_form");
+  
    int i=0;
-   while (rsdemo.next()) {
+   for(Form f : formDao.findByDemographicNo(Integer.parseInt(request.getParameter("demographic_no")))) {
+  
      i++;
-%> &nbsp;<%=rsdemo.getString("form_date")%> <%=rsdemo.getString("form_time")%>
+%> &nbsp;<%=ConversionUtils.toDateString(f.getFormDate())%> <%=ConversionUtils.toTimeString(f.getFormTime())%>
 
 		<input type="checkbox" name="<%="form_no"+i%>"
-			value="<%=rsdemo.getString("form_no")%>"> <font color="blue">
+			value="<%=f.getId()%>"> <font color="blue">
 		<a href=#
-			onClick="popupPage(600,800,'../provider/providercontrol.jsp?form_no=<%=rsdemo.getString("form_no")%>&dboperation=search_form&displaymodevariable=form<%=rsdemo.getString("form_name")%>.jsp&displaymode=vary&bNewForm=0')">
-		<%=rsdemo.getString("form_name")%></a></font> by <%=rsdemo.getString("provider_no")%><br>
+			onClick="popupPage(600,800,'../provider/providercontrol.jsp?form_no=<%=f.getId()%>&dboperation=search_form&displaymodevariable=form<%=f.getFormName()%>.jsp&displaymode=vary&bNewForm=0')">
+		<%=f.getFormName()%></a></font> by <%=f.getProviderNo()%><br>
 		<%
    }
 %>

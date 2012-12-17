@@ -72,4 +72,15 @@ public class DemographicCustDao extends AbstractDao<DemographicCust> {
         List<DemographicCust> results = query.getResultList();
         return results;
     }
+    
+    public List<DemographicCust> findByResident(String resident) {
+    	String sql = "select x from DemographicCust x where x.resident like ?";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,resident);
+    	
+        @SuppressWarnings("unchecked")
+        List<DemographicCust> results = query.getResultList();
+        return results;
+    }
+
 }

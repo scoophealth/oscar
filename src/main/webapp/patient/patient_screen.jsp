@@ -28,25 +28,24 @@
   if(session.getValue("patient") == null)    response.sendRedirect("../logout.jsp");
   String demographic_no = (String) session.getAttribute("demo_no");
 %>
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="ptsLoginBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="../appointment/errorpage.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="oscar.util.ConversionUtils" %>
 
 <%
-  String [][] dbQueries=new String[][] { 
-    {"search_demographic", "select * from demographic where demographic_no = ?"},  
-  };
-  String[][] responseTargets=new String[][] {  };
-  ptsLoginBean.doConfigure(dbQueries,responseTargets);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+%>	
 
+<%
+ 
   int age=0, dob_year=0, dob_month=0, dob_date=0;
-  ResultSet rsdemo = ptsLoginBean.queryResults(demographic_no, "search_demographic"); 
-  while (rsdemo.next()) { 
-      dob_year = Integer.parseInt(rsdemo.getString("year_of_birth"));
-      dob_month = Integer.parseInt(rsdemo.getString("month_of_birth"));
-      dob_date = Integer.parseInt(rsdemo.getString("date_of_birth"));
+  Demographic d = demographicDao.getDemographic(demographic_no);
+  if (d != null) { 
+      dob_year = Integer.parseInt(d.getYearOfBirth());
+      dob_month = Integer.parseInt(d.getMonthOfBirth());
+      dob_date = Integer.parseInt(d.getDateOfBirth());
       if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 
 %>
@@ -60,7 +59,7 @@
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Hello
-		<%=rsdemo.getString("first_name")%> <%=rsdemo.getString("last_name")%>
+		<%=d.getFirstName()%> <%=d.getLastName()%>
 		</font></th>
 	</tr>
 </table>
@@ -97,34 +96,34 @@
 	<tr>
 		<td align="right"><b>Last Name: </b></td>
 		<td align="left"><input type="text" name="last_name"
-			value="<%=rsdemo.getString("last_name")%>"></td>
+			value="<%=d.getLastName()%>"></td>
 		<td align="right"><b>First Name: </b></td>
 		<td align="left"><input type="text" name="first_name"
-			value="<%=rsdemo.getString("first_name")%>"></td>
+			value="<%=d.getFirstName()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>Address: </b></td>
 		<td align="left"><input type="text" name="address"
-			value="<%=rsdemo.getString("address")%>"></td>
+			value="<%=d.getAddress()%>"></td>
 		<td align="right"><b>City: </b></td>
 		<td align="left"><input type="text" name="city"
-			value="<%=rsdemo.getString("city")%>"></td>
+			value="<%=d.getCity()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>Province: </b></td>
 		<td align="left"><input type="text" name="province"
-			value="<%=rsdemo.getString("province")%>"></td>
+			value="<%=d.getProvince()%>"></td>
 		<td align="right"><b>Postal: </b></td>
 		<td align="left"><input type="text" name="postal"
-			value="<%=rsdemo.getString("postal")%>"></td>
+			value="<%=d.getPostal()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>Phone(H): </b></td>
 		<td align="left"><input type="text" name="phone"
-			value="<%=rsdemo.getString("phone")%>"></td>
+			value="<%=d.getPhone()%>"></td>
 		<td align="right"><b>Phone(O):</b></td>
 		<td align="left"><input type="text" name="phone2"
-			value="<%=rsdemo.getString("phone2")%>"></td>
+			value="<%=d.getPhone2()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b>:</b>
@@ -133,15 +132,15 @@
 		<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td><input type="text" name="year_of_birth"
-					value="<%=rsdemo.getString("year_of_birth")%>" size="4"
+					value="<%=d.getYearOfBirth()%>" size="4"
 					maxlength="4"></td>
 				<td>-</td>
 				<td><input type="text" name="month_of_birth"
-					value="<%=rsdemo.getString("month_of_birth")%>" size="2"
+					value="<%=d.getMonthOfBirth()%>" size="2"
 					maxlength="2"></td>
 				<td>-</td>
 				<td><input type="text" name="date_of_birth"
-					value="<%=rsdemo.getString("date_of_birth")%>" size="2"
+					value="<%=d.getDateOfBirth()%>" size="2"
 					maxlength="2"></td>
 			</tr>
 		</table>
@@ -153,18 +152,18 @@
 	<tr valign="top">
 		<td align="right"><b>HIN: </b></td>
 		<td align="left"><input type="text" name="hin"
-			value="<%=rsdemo.getString("hin")%>"></td>
+			value="<%=d.getHin()%>"></td>
 		<td align="right"><b>Ver.</b></td>
 		<td align="left"><input type="text" name="ver"
-			value="<%=rsdemo.getString("ver")%>"></td>
+			value="<%=d.getVer()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>Roster Status: </b></td>
 		<td align="left"><input type="text" name="roster_status"
-			value="<%=rsdemo.getString("roster_status")%>"></td>
+			value="<%=d.getRosterStatus()%>"></td>
 		<td align="right" nowrap><b>Patient Status:</b> <b> </b></td>
 		<td align="left"><input type="text" name="patient_status"
-			value="<%=rsdemo.getString("patient_status")%>"></td>
+			value="<%=d.getPatientStatus()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>Date Joined: </b></td>
@@ -173,32 +172,32 @@
 			<tr>
 				<td><input type="text" name="date_joined_year" size="4"
 					maxlength="4"
-					value="<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("date_joined"))%>">
+					value="<%=MyDateFormat.getYearFromStandardDate(ConversionUtils.toDateString(d.getDateJoined()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="date_joined_month" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("date_joined"))%>">
+					value="<%=MyDateFormat.getMonthFromStandardDate(ConversionUtils.toDateString(d.getDateJoined()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="date_joined_date" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("date_joined"))%>">
+					value="<%=MyDateFormat.getDayFromStandardDate(ConversionUtils.toDateString(d.getDateJoined()))%>">
 				</td>
 			</tr>
 		</table>
 		</td>
 		<td align="right"><b>HC Type:</b></td>
 		<td align="left"><input type="text" name="hc_type"
-			value="<%=rsdemo.getString("hc_type")%>"></td>
+			value="<%=d.getHcType()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>MC Doctor: </b></td>
 		<td align="left"><input type="text" name="provider_no"
-			value="<%=rsdemo.getString("provider_no")%>"></td>
+			value="<%=d.getProviderNo()%>"></td>
 		<td align="right"><b>Family Doctor: </b></td>
 		<td align="left"><input type="text" name="family_doctor"
-			value="<%=rsdemo.getString("family_doctor")%>"></td>
+			value="<%=d.getFamilyDoctor()%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>End Date: </b></td>
@@ -207,17 +206,17 @@
 			<tr>
 				<td><input type="text" name="end_date_year" size="4"
 					maxlength="4"
-					value="<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("end_date"))%>">
+					value="<%=MyDateFormat.getYearFromStandardDate(ConversionUtils.toDateString(d.getEndDate()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="end_date_month" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("end_date"))%>">
+					value="<%=MyDateFormat.getMonthFromStandardDate(ConversionUtils.toDateString(d.getEndDate()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="end_date_date" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("end_date"))%>">
+					value="<%=MyDateFormat.getDayFromStandardDate(ConversionUtils.toDateString(d.getEndDate()))%>">
 				</td>
 			</tr>
 		</table>
@@ -228,17 +227,17 @@
 			<tr>
 				<td><input type="text" name="eff_date_year" size="4"
 					maxlength="4"
-					value="<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("eff_date"))%>">
+					value="<%=MyDateFormat.getYearFromStandardDate(ConversionUtils.toDateString(d.getEffDate()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="eff_date_month" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("eff_date"))%>">
+					value="<%=MyDateFormat.getMonthFromStandardDate(ConversionUtils.toDateString(d.getEffDate()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="eff_date_date" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("eff_date"))%>">
+					value="<%=MyDateFormat.getDayFromStandardDate(ConversionUtils.toDateString(d.getEffDate()))%>">
 				</td>
 			</tr>
 		</table>
@@ -247,10 +246,10 @@
 	<tr valign="top">
 		<td align="right" nowrap><b>PCN Indicator: </b></td>
 		<td align="left"><input type="text" name="pcn_indicator"
-			value="<%=rsdemo.getString("pcn_indicator")%>"></td>
+			value="<%=d.getPcnIndicator()%>"></td>
 		<td align="right"><b>Your PIN No.:</b></td>
 		<td align="left"><input type="text" name="chart_no"
-			value="<%=rsdemo.getString("chart_no")%>"></td>
+			value="<%=d.getChartNo()%>"></td>
 	<tr valign="top">
 		<td align="right" nowrap><b>HC Renew Date: </b></td>
 		<td align="left">
@@ -258,24 +257,24 @@
 			<tr>
 				<td><input type="text" name="hc_renew_date_year" size="4"
 					maxlength="4"
-					value="<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("hc_renew_date"))%>">
+					value="<%=MyDateFormat.getYearFromStandardDate(ConversionUtils.toDateString(d.getHcRenewDate()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="hc_renew_date_month" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("hc_renew_date"))%>">
+					value="<%=MyDateFormat.getMonthFromStandardDate(ConversionUtils.toDateString(d.getHcRenewDate()))%>">
 				</td>
 				<td>-</td>
 				<td><input type="text" name="hc_renew_date_date" size="2"
 					maxlength="2"
-					value="<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("hc_renew_date"))%>">
+					value="<%=MyDateFormat.getDayFromStandardDate(ConversionUtils.toDateString(d.getHcRenewDate()))%>">
 				</td>
 			</tr>
 		</table>
 		</td>
 		<td align="right"><b>Sex: </b></td>
 		<td align="left"><input type="text" name="sex"
-			value="<%=rsdemo.getString("sex")%>"></td>
+			value="<%=d.getSex()%>"></td>
 	<tr>
 		<td colspan="4">&nbsp;</td>
 	</tr>
