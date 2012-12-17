@@ -58,4 +58,14 @@ public class DocumentDao extends AbstractDao<Document> {
 		return query.getResultList();
 	    
     }
+    
+    public List<Document> findActiveByDocumentNo(Integer demoId) {
+		String sql = "SELECT d FROM Document d where d.documentNo = ?";
+				
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demoId);
+		return query.getResultList();
+		
+	    
+    }
 }
