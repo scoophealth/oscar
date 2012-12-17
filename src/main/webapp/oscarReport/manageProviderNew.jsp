@@ -24,12 +24,21 @@
 
 --%>
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@ page import="org.oscarehr.common.model.MyGroup" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.ReportProviderDao" %>
+<%@ page import="org.oscarehr.common.model.ReportProvider" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbReport.jspf"%>
+<%
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+    ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+   	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
+%>
+
 <%    
  
 GregorianCalendar now=new GregorianCalendar();
@@ -82,63 +91,32 @@ function refresh() {
 		// nodeId | parentNodeId | nodeName | nodeUrl
 
 <% 
-
-    ResultSet rsdemo = null;
-  boolean bodd=true;	
-	    ResultSet rsdemo2 = null;
-	        ResultSet rsdemo3 = null;
-	    int count1 = 0;
-ycount=1; 
-		 String param4 = "%";
- 				String[] param =new String[3];
-		 	          	    	
-		 	          	    	   
-		 	          	 
-		 	          
-		 	          	    rsdemo = apptMainBean.queryResults(param4, "search_mygroup");
-		 	             while (rsdemo.next()) { 
-	xcount = ycount;
- 
+	boolean bodd=true;	
+	int count1 = 0;
+	ycount=1; 
+	for(String myGroup: myGroupDao.getGroups()) {
+		xcount = ycount;
 %>
-Tree[<%=ycount-1%>]  = "<%=ycount%>|0|<%=rsdemo.getString("mygroup_no")%>  |#";
+Tree[<%=ycount-1%>]  = "<%=ycount%>|0|<%=myGroup%>  |#";
 <%	 	             
-ycount = ycount + 1; 
+		ycount = ycount + 1; 
 			               
-		 	             
-		 	             
-				     		 	          	    rsdemo2 = apptMainBean.queryResults(rsdemo.getString("mygroup_no"), "search_mygroup_provider");
-		 	             while (rsdemo2.next()) { 
-		 	             param[0] = rsdemo2.getString("provider_no");
-		 	             param[1] = rsdemo2.getString("mygroup_no");
-		 	             param[2] = action;
-		 	             status = "";
-		 	             rsdemo3 = apptMainBean.queryResults(param, "search_reportprovider_check");
-		 	                    while (rsdemo3.next()) {
-		 	                    status = rsdemo3.getString("status");
-		 	                    }
-		 	   
-		 	             
-		 	             
+		for(MyGroup mg: myGroupDao.getGroupByGroupNo(myGroup)) {
+			Provider p = providerDao.getProvider(mg.getId().getProviderNo());
+			status = "";      
+			for(ReportProvider rp:reportProviderDao.findByProviderNoTeamAndAction(p.getProviderNo(), mg.getId().getMyGroupNo(), action)) {
+				status = rp.getStatus();
+			}
 %>
 
-
-
-
-Tree[<%=ycount-1%>]  = "<%=ycount%>|<%=xcount%>|<%=rsdemo2.getString("last_name")%>, <%=rsdemo2.getString("first_name")%>|#";  
-
-
+Tree[<%=ycount-1%>]  = "<%=ycount%>|<%=xcount%>|<%=p.getLastName()%>, <%=p.getFirstName()%>|#";  
 <%
-count1 = count1 + 1;
-ycount = ycount + 1;
-		 	          }
-             
-             
-
+			count1 = count1 + 1;
+			ycount = ycount + 1;
+		}
 }
  	    
 %>
-
-		
 		
 		//-->
 	</script>

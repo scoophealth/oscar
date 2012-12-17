@@ -24,10 +24,7 @@
 
 --%>
 <%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
   int  nItems=0;
   String strLimit1="0";
   String strLimit2="5";
@@ -35,20 +32,25 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ include file="../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbReport.jspf"%>
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%@page import="org.oscarehr.common.dao.ReportProviderDao" %>
+<%@page import="org.oscarehr.common.model.ReportProvider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao" %>
+<%@page import="org.oscarehr.common.model.BillingONCHeader1" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	BillingONCHeader1Dao billingOnCHeaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 %>
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -149,11 +151,13 @@ function refresh() {
 			<% String proFirst="";
             String proLast="";
             String proOHIP="";
-            ResultSet rslocal = apptMainBean.queryResults("visitreport", "search_reportprovider");
-            while(rslocal.next()){
-                proFirst = rslocal.getString("first_name");
-                proLast = rslocal.getString("last_name");
-                proOHIP = rslocal.getString("provider_no"); %>
+            for(ReportProvider rps : reportProviderDao.findByAction("visitreport")) {
+            	Provider p = providerDao.getProvider(rps.getProviderNo());
+          
+                proFirst = p.getFirstName();
+                proLast = p.getLastName();
+                proOHIP = p.getProviderNo();
+               %>
 			<option value="<%=proOHIP%>"><%=proLast%>, <%=proFirst%></option>
 			<% } %>
 		</select></td>
@@ -188,11 +192,7 @@ function refresh() {
 <% } else {
        if (reportAction.compareTo("lk") == 0) { %>
 <%@ include file="oscarReportVisit_lk.jspf"%>
-<%     } else {
-           if (reportAction.compareTo("vr") == 0) { %>
-<%@ include file="oscarReportVisit_vr.jspf"%>
-<%         }
-       }
+<%     }
    }
 %>
 
