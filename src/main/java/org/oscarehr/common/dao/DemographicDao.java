@@ -1267,6 +1267,27 @@ public class DemographicDao extends HibernateDaoSupport {
 	public List<Integer> getActiveDemographicIds() {
 		return this.getHibernateTemplate().find("select d.DemographicNo from Demographic d where d.PatientStatus=?", new Object[] { "AC" });
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Demographic> getDemographicWithGreaterThanYearOfBirth(int yearOfBirth) {
+		return this.getHibernateTemplate().find("from Demographic d where d.YearOfBirth > ?", new Object[] { String.valueOf(yearOfBirth) });
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Demographic> search_catchment(String rosterStatus, int offset, int limit) {
+		String sql = "from Demographic d where d.RosterStatus=:status and (d.Postal not like 'L0R%' and d.Postal not like 'L3M%' and d.Postal not like 'L8E%' and d.Postal not like 'L9A%' and d.Postal not like 'L8G%' and d.Postal not like 'L9B%' and d.Postal not like 'L8H%' and d.Postal not like 'L9C%' and d.Postal not like 'L8J%' and d.Postal not like 'L9G%' and d.Postal not like 'L8K%' and d.Postal not like 'L9H%' and d.Postal not like 'L8L%' and d.Postal not like 'L9K%' and d.Postal not like 'L8M%' and d.Postal not like 'L8N%' and d.Postal not like 'N0A%' and d.Postal not like 'L8P%' and d.Postal not like 'N3W%' and d.Postal not like 'L8R%' and d.Postal not like 'L8S%' and d.Postal not like 'L8T%' and d.Postal not like 'L8V%' and d.Postal not like 'L8W%' and d.Postal not like 'K8R%' and d.Postal not like 'L0R%' and d.Postal not like 'L5P%' and d.Postal not like 'L8A%' and d.Postal not like 'L8B%' and d.Postal not like 'L8C%' and d.Postal not like 'L8L%' and d.Postal not like 'L9L%' and d.Postal not like 'L9N%' and d.Postal not like 'L9S%' and d.Postal not like 'M9C%' and d.Postal not like 'N0B%1L0' and d.Postal not like 'L7L%' and d.Postal not like 'L7M%' and d.Postal not like 'L7N%' and d.Postal not like 'L7P%' and d.Postal not like 'L7R%' and d.Postal not like 'L7S%' and d.Postal not like 'L7T%' )";
+		Session s = getSession();
+		
+		try {
+			Query q = s.createQuery(sql);
+			q.setParameter("status", rosterStatus);
+			q.setMaxResults(limit);
+			q.setFirstResult(offset);
+			return q.list();
+		} finally {
+			this.releaseSession(s);
+		}
+	}
 
 	@SuppressWarnings("unchecked")
     public List<Demographic> findByCriterion(DemographicCriterion c) {

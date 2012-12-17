@@ -24,12 +24,20 @@
 
 --%>
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@ page import="org.oscarehr.common.model.MyGroup" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.ReportProviderDao" %>
+<%@ page import="org.oscarehr.common.model.ReportProvider" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbReport.jspf"%>
+<%
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+    ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+   	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
+%>
 <%    
  
 GregorianCalendar now=new GregorianCalendar();
@@ -111,56 +119,36 @@ function refresh() {
 	</tr>
 
 	<% 
-
-    ResultSet rsdemo = null;
-  boolean bodd=true;	
-	    ResultSet rsdemo2 = null;
-	        ResultSet rsdemo3 = null;
+		boolean bodd=true;	
 	    int count1 = 0;
-		 String param4 = "%";
- 				String[] param =new String[3];
-		 	          	    	
 		 	          	    	   
-		 	          	 
-		 	          
-		 	          	    rsdemo = apptMainBean.queryResults(param4, "search_mygroup");
-		 	             while (rsdemo.next()) { 
-		 	             
-		 	                   bodd=bodd?false:true; //for the color of rows
-		 	             
-		 	             
-				     		 	          	    rsdemo2 = apptMainBean.queryResults(rsdemo.getString("mygroup_no"), "search_mygroup_provider");
-		 	             while (rsdemo2.next()) { 
-		 	             param[0] = rsdemo2.getString("provider_no");
-		 	             param[1] = rsdemo2.getString("mygroup_no");
-		 	             param[2] = action;
-		 	             status = "";
-		 	             rsdemo3 = apptMainBean.queryResults(param, "search_reportprovider_check");
-		 	                    while (rsdemo3.next()) {
-		 	                    status = rsdemo3.getString("status");
-		 	                    }
-		 	   
-		 	             
-		 	             
+	for(String myGroup: myGroupDao.getGroups()) {
+		bodd=bodd?false:true; //for the color of rows
+		
+		
+		for(MyGroup mg: myGroupDao.getGroupByGroupNo(myGroup)) {
+			Provider p = providerDao.getProvider(mg.getId().getProviderNo());
+			status = "";
+			for(ReportProvider rp:reportProviderDao.findByProviderNoTeamAndAction(p.getProviderNo(), mg.getId().getMyGroupNo(), action)) {
+				status = rp.getStatus();
+			}
+           
 %>
 
 	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-		<td width="40%"><%=rsdemo2.getString("mygroup_no")%></td>
-		<td width="50%" align="left"><%=rsdemo2.getString("last_name")%>,
-		<%=rsdemo2.getString("first_name")%>
+		<td width="40%"><%=mg.getId().getMyGroupNo()%></td>
+		<td width="50%" align="left"><%=p.getLastName()%>,
+		<%=p.getFirstName()%>
 	</tr>
 	<td width="10%" align="left"><input type="checkbox"
 		name="provider<%=count1%>"
-		value="<%=rsdemo2.getString("provider_no")%>|<%=rsdemo2.getString("mygroup_no")%>"
+		value="<%=p.getProviderNo()%>|<%=mg.getId().getMyGroupNo()%>"
 		<%=status.equals("A")?"checked":""%>></td>
 	</tr>
 
 	<%
-count1 = count1 + 1;
-
-		 	          }
-             
-             
+	count1 = count1 + 1;
+	}
 
 }
  	    

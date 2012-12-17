@@ -366,7 +366,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     
     @SuppressWarnings("unchecked")
     public List<Map<String,Object>> getInvoicesMeta(Integer demographicNo) {
-    	String sql = "select new map(h1.id as id, h1.billingDate as billing_date, h1.billingTime as billing_time, h1.providerNo as provider_no) from BillingONCHeader1 h1 where " +
+    	String sql = "select new map(h1.id as id, h1.billingDate as billingDate, h1.billingTime as billing_time, h1.providerNo as provider_no) from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
         Query q = entityManager.createQuery(sql);
         
@@ -482,5 +482,45 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         q.setParameter("dateBegin", dateBegin);
         q.setParameter("dateEnd", dateEnd);
         return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Integer> count_larrykain_clinic(String facilityNum, Date startDate, Date endDate) {
+    	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType = '00' and b.faciltyNum = ? and b.status <> 'D' and b.billingDate >=? and b.billingDate <=?");
+    	
+    	 q.setParameter(1, facilityNum);
+         q.setParameter(2, startDate);
+         q.setParameter(3, endDate);
+    	
+         return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Integer> count_larrykain_hospital(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, Date startDate, Date endDate) {
+    	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType<>'00' and (b.faciltyNum=? or b.faciltyNum=? or b.faciltyNum=? or b.faciltyNum=?) and status<>'D' and b.billingDate >=? and b.billingDate <=?");
+    	
+    	 q.setParameter(1, facilityNum1);
+    	 q.setParameter(2, facilityNum2);
+    	 q.setParameter(3, facilityNum3);
+    	 q.setParameter(4, facilityNum4);
+         q.setParameter(5, startDate);
+         q.setParameter(6, endDate);
+    	
+         return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Integer> count_larrykain_other(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, String facilityNum5, Date startDate, Date endDate) {
+    	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType<>'00' and status<>'D' and  (b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>?) and b.billingDate >=? and b.billingDate<=?");
+    	
+    	 q.setParameter(1, facilityNum1);
+    	 q.setParameter(2, facilityNum2);
+    	 q.setParameter(3, facilityNum3);
+    	 q.setParameter(4, facilityNum4);
+    	 q.setParameter(5, facilityNum5);
+         q.setParameter(6, startDate);
+         q.setParameter(7, endDate);
+    	
+         return q.getResultList();
     }
 }
