@@ -1410,6 +1410,8 @@ INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,emai
 INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus,userDefined) VALUES (10014,1,'Other','Other','','','','','','','community','',99999,0,0,0,0,'active',1);
 INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus,exclusiveView,defaultServiceRestrictionDays,userDefined) VALUES (10015,1,'Outside on Street','Outside on Street','','','','','','','community','',99999,0,0,0,0,'active','no',30,1);
 update `program` set enableEncounterTime=0, enableEncounterTransportationTime=0 where id >= 10001 AND id <=10015;
+update program set defaultServiceRestrictionDays = 0 where defaultServiceRestrictionDays is null;
+
 
 update program set enableEncounterTime=0;
 update program set enableEncounterTransportationTime=0;
