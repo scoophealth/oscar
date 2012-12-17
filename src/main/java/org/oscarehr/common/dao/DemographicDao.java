@@ -60,15 +60,14 @@ import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.integration.hl7.generators.HL7A04Generator;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import oscar.OscarProperties;
 import oscar.MyDateFormat;
+import oscar.OscarProperties;
 import oscar.util.SqlUtils;
-
-import org.oscarehr.integration.hl7.generators.HL7A04Generator;
 
 /**
  */
@@ -987,6 +986,11 @@ public static List<Integer> getDemographicIdsAlteredSinceTime(Date value) {
 	@SuppressWarnings("unchecked")
 	public List<Demographic> getDemographicsByHealthNum(String hin) {
 		return this.getHibernateTemplate().find("from Demographic d where d.Hin=?", new Object[] { hin });
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getActiveDemographicIds() {
+		return this.getHibernateTemplate().find("select d.DemographicNo from Demographic d where d.PatientStatus=?", new Object[] { "AC" });
 	}
 }
 

@@ -157,7 +157,16 @@ public class InfirmAction extends BaseAction
 		}else{
 			dt=new Date();
 		}
-
+		
+		//lets not load the demographic beans when in appointment view..no point
+		org.oscarehr.PMmodule.model.Program p = this.getProgramManager().getProgram(programId);
+		if(p != null) {
+			String exclusiveView = p.getExclusiveView();
+			
+			if(exclusiveView != null && exclusiveView.equals("appointment"))
+				return null;
+		}
+		
 		//release memory
 		//List memo=(List) se.getAttribute("infirmaryView_demographicBeans");
 		//if (memo!=null) memo.clear();
