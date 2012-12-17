@@ -322,5 +322,11 @@ public class TicklerDAO extends HibernateDaoSupport {
 	    return getHibernateTemplate().findByNamedParam("from Tickler t where t.demographic_no = :dn AND t.task_assigned_to = :ta and t.message = :m",
 	    		new String[] {"dn", "ta", "m"}, new Object[] {demographic, task_assigned_to, message});
     }
+	
+	
+	@SuppressWarnings("unchecked")
+    public List<Tickler> search_tickler_bydemo(String demographic_no, String status, Date beginDate, Date endDate) {
+		return this.getHibernateTemplate().find("SELECT t FROM Tickler t WHERE t.demographic_no like ? and t.status = ? and t.service_date >= ? and t.service_date <= ? order by t.service_date desc", new Object[]{demographic_no,status,beginDate, endDate});
+    }
 
 }
