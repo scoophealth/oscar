@@ -82,4 +82,15 @@ public class WaitingListNameDao extends AbstractDao<WaitingListName> {
         return results;
     }
     
+	 public List<WaitingListName> findCurrentByGroup(String group) {
+	    	
+	    	String sql = "select x from WaitingListName x where x.groupNo = ? and x.isHistory='N' order by x.name";
+	    	Query query = entityManager.createQuery(sql);
+	    	query.setParameter(1,group);
+
+	        @SuppressWarnings("unchecked")
+	        List<WaitingListName> results = query.getResultList();
+	        return results;
+	    }
+    
 }

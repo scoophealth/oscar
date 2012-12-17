@@ -633,6 +633,12 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<String> search_ptstatus() {
+		List<String> results = getHibernateTemplate().find("SELECT DISTINCT d.PatientStatus FROM Demographic d where d.PatientStatus is not null and d.PatientStatus <> '' and d.PatientStatus <> 'AC' and d.PatientStatus <> 'IN' and d.PatientStatus <> 'DE' and d.PatientStatus <> 'MO' and d.PatientStatus <> 'FI' order by d.PatientStatus");
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<String> getAllProviderNumbers() {
 		List<String> results = getHibernateTemplate().find("SELECT DISTINCT d.ProviderNo FROM Demographic d order by d.ProviderNo");
 		return results;

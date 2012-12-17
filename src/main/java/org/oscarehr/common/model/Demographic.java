@@ -471,6 +471,12 @@ public class Demographic implements Serializable {
 	public Date getDateJoined() {
 		return dateJoined;
 	}
+	
+	public String getFormattedDateJoined() {
+		Date d = getDateJoined();
+		if (d != null) return (DateFormatUtils.ISO_DATE_FORMAT.format(d));
+		else return ("");
+	}
 
 	/**
 	 * Set the value related to the column: date_joined
@@ -608,6 +614,12 @@ public class Demographic implements Serializable {
 	 */
 	public Date getEndDate() {
 		return endDate;
+	}
+	
+	public String getFormattedEndDate() {
+		Date d = getEndDate();
+		if (d != null) return (DateFormatUtils.ISO_DATE_FORMAT.format(d));
+		else return ("");
 	}
 
 	/**
