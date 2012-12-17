@@ -25,10 +25,7 @@
 --%>
 
 <%
-  if(session.getValue("user") == null)
-     response.sendRedirect("../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
   int  nItems=0;
   String strLimit1="0";
   String strLimit2="5";
@@ -36,19 +33,22 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbReport.jspf"%>
+
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.common.dao.ReportAgeSexDao" %>
+<%@page import="org.oscarehr.common.model.ReportAgeSex" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	ReportAgeSexDao reportAgeSexDao = SpringUtils.getBean(ReportAgeSexDao.class);
 %>
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -161,14 +161,13 @@ function refresh() {
                String specialty_code;
                String billinggroup_no;
                int Count = 0;
-               ResultSet rslocal = null;
-               rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
-               while(rslocal.next()){
-                  proFirst = rslocal.getString("first_name");
-                  proLast = rslocal.getString("last_name");
-                  proOHIP = rslocal.getString("provider_no");
-                  billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-                  specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+               for(Provider p: providerDao.getActiveProviders()) {
+               
+                  proFirst =p.getFirstName();
+                  proLast = p.getLastName();
+                  proOHIP = p.getProviderNo();
+                  billinggroup_no= SxmlMisc.getXmlContent(p.getComments(),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+                  specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
           %>
 			<option value="<%=proOHIP%>"
 				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,<%=proFirst%></option>
@@ -220,30 +219,19 @@ function refresh() {
       if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
       if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // set to any early date to start search from beginning
 
-      ResultSet rs;
-      ResultSet rs2;
-      String[] param = new String[7];
-      String queryName = "count_reportagesex";
       if (reportAction.compareTo("NR") == 0) {
-         queryName = "count_reportagesex_noroster";
+    	  Total = String.valueOf(reportAgeSexDao.count_reportagesex_noroster("RO", "%", providerview, 0, 200, ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString( dateEnd)));
       }
-      if (reportAction.compareTo("RO") == 0 || reportAction.compareTo("NR") == 0) {
-         param[0] = "RO";
-      } else {
-         param[0] = "%";
+      
+      else if (reportAction.compareTo("RO") == 0) {
+    	  Total = String.valueOf(reportAgeSexDao.count_reportagesex("RO", "%", providerview, 0, 200, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd)));
       }
-
-      param[1] = "%";
-      param[2] = providerview;
-      param[3] = "0";
-      param[4] = "200";
-      param[5] = dateBegin;
-      param[6] = dateEnd ;
-      rs = null;
-      rs = apptMainBean.queryResults(param, queryName);
-      while(rs.next()){
-         Total = apptMainBean.getString(rs,"n");
+      
+      else {
+    	  Total =  String.valueOf(reportAgeSexDao.count_reportagesex("%", "%", providerview, 0, 200, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd))) ;
       }
+      
+  
 
       BigDecimal percent = new BigDecimal(100).setScale(2, BigDecimal.ROUND_HALF_UP);
       BigDecimal mdNum = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -423,29 +411,33 @@ function refresh() {
 
 
      for (int i=0;i<20; i++){
-        param[1] = "M%";
-        param[2] = providerview;
-        param[3] = AgeMatrix[i][0];
-        param[4] = AgeMatrix[i][1];
-        //param[5] = dateBegin;
-        //param[6] = dateEnd ;
-        rs = null;
-        rs = apptMainBean.queryResults(param, queryName);
-        while(rs.next()){
-           mNum = apptMainBean.getString(rs,"n");
-        }
+    	 
+         if (reportAction.compareTo("NR") == 0) {
+        	 mNum = String.valueOf(reportAgeSexDao.count_reportagesex_noroster("RO", "M%", providerview, Integer.parseInt(AgeMatrix[i][0]),  Integer.parseInt(AgeMatrix[i][1]), ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString( dateEnd)));
+         }
+         
+         else if (reportAction.compareTo("RO") == 0) {
+        	 mNum = String.valueOf(reportAgeSexDao.count_reportagesex("RO", "M%", providerview,  Integer.parseInt(AgeMatrix[i][0]),  Integer.parseInt(AgeMatrix[i][1]), ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd)));
+         }
+         
+         else {
+        	 mNum =  String.valueOf(reportAgeSexDao.count_reportagesex("%", "M%", providerview,  Integer.parseInt(AgeMatrix[i][0]),  Integer.parseInt(AgeMatrix[i][1]), ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd))) ;
+         }
+         
+         
+         if (reportAction.compareTo("NR") == 0) {
+        	 fNum = String.valueOf(reportAgeSexDao.count_reportagesex_noroster("RO", "F%", providerview, Integer.parseInt(AgeMatrix[i][0]),  Integer.parseInt(AgeMatrix[i][1]), ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString( dateEnd)));
+         }
+         
+         else if (reportAction.compareTo("RO") == 0) {
+        	 fNum = String.valueOf(reportAgeSexDao.count_reportagesex("RO", "F%", providerview,  Integer.parseInt(AgeMatrix[i][0]),  Integer.parseInt(AgeMatrix[i][1]), ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd)));
+         }
+         
+         else {
+        	 fNum =  String.valueOf(reportAgeSexDao.count_reportagesex("%", "F%", providerview,  Integer.parseInt(AgeMatrix[i][0]),  Integer.parseInt(AgeMatrix[i][1]), ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd))) ;
+         }
+         
 
-        param[1] = "F%";
-        //param[2] = providerview;
-        //param[3] = AgeMatrix[i][0];
-        //param[4] = AgeMatrix[i][1];
-        //param[5] = dateBegin;
-        //param[6] = dateEnd ;
-        rs2 = null;
-        rs2 = apptMainBean.queryResults(param, queryName);
-        while(rs2.next()){
-           fNum = rs2.getString("n");
-        }
         if (Total ==null || Total.compareTo("") == 0 || Total.compareTo("0") ==0){Total = "9999";}
         if (mNum ==null || mNum.compareTo("") == 0 || mNum.compareTo("0") ==0){mNum="0";}
         mdNum = new BigDecimal(Double.parseDouble(mNum)).setScale(2, BigDecimal.ROUND_HALF_UP);

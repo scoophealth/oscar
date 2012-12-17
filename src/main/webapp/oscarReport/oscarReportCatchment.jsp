@@ -24,10 +24,7 @@
 
 --%>
 <%      
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no; 
-  user_no = (String) session.getAttribute("user");
+  String user_no = (String) session.getAttribute("user");
   int  nItems=0;  
      String strLimit1="0"; 
     String strLimit2="50";
@@ -36,14 +33,14 @@
   boolean bodd = true;
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbReport.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+%>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -51,10 +48,9 @@ GregorianCalendar now=new GregorianCalendar();
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   String clinic="";
   String clinicview = oscarVariables.getProperty("clinic_view");
-   ResultSet rslocal2;
-          rslocal2 = null;
-    int[] itemp1 = new int[2];
-    itemp1[0] = Integer.parseInt(strLimit1);
+   
+  int[] itemp1 = new int[2];
+  itemp1[0] = Integer.parseInt(strLimit1);
   itemp1[1] = Integer.parseInt(strLimit2);
   
   
@@ -153,41 +149,39 @@ function refresh() {
 		</td>
 	</tr>
 	<%
-  String[] param = new String[1];
-  param[0] = "RO";
-  rslocal2 = apptMainBean.queryResults(param, itemp1, "search_catchment");
-     while(rslocal2.next()){  
+  
+     for(Demographic d: demographicDao.search_catchment("RO", Integer.parseInt(strLimit1),Integer.parseInt(strLimit2))){  
     bodd=bodd?false:true; //for the color of rows 
     nItems++; 
 %>
 	<tr bgcolor="<%=bodd?"#EEEEEE":"white"%>">
 		<td>
 		<div align="left"><font size="2"
-			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"> <%=rslocal2.getString("last_name")%>,<%=rslocal2.getString("first_name")%></font></div>
+			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"> <%=d.getLastName()%>,<%=d.getFirstName()%></font></div>
 		</td>
 		<td>
 		<div align="center"><font size="2"
-			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("sex")%></font></div>
+			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=d.getSex()%></font></div>
 		</td>
 		<td>
 		<div align="center"><font size="2"
-			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("date_of_birth")%>-<%=rslocal2.getString("month_of_birth")%>-<%=rslocal2.getString("year_of_birth")%></font></div>
+			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=d.getDateOfBirth()%>-<%=d.getMonthOfBirth()%>-<%=d.getYearOfBirth()%></font></div>
 		</td>
 		<td>
 		<div align="center"><font size="2"
-			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("city")%></font></div>
+			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=d.getCity()%></font></div>
 		</td>
 		<td>
 		<div align="center"><font size="2"
-			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("province")%></font></div>
+			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=d.getProvince()%></font></div>
 		</td>
 		<td>
 		<div align="center"><font size="2"
-			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("postal")%></font></div>
+			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=d.getPostal()%></font></div>
 		</td>
 		<td>
 		<div align="center"><font size="2"
-			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("patient_status")%></font></div>
+			face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=d.getPatientStatus()%></font></div>
 		</td>
 	</tr>
 	<%  }
