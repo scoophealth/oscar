@@ -24,14 +24,15 @@
 
 --%>
 <%@page import="org.oscarehr.common.model.DemographicStudyPK"%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.DemographicStudy" %>
 <%@page import="org.oscarehr.common.dao.DemographicStudyDao" %>
-
+<%@page import="org.oscarehr.common.model.Study" %>
+<%@page import="org.oscarehr.common.dao.StudyDao" %>
 <%
 	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
+    StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
 %>
 <%
     //this is a quick independent page to let you add studying patient.
@@ -43,15 +44,8 @@
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
 %>
 
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
-	scope="page" />
 
-<%
-    String [][] dbQueries=new String[][] {
-        {"search_study", "select s.* from study s order by s.study_no" },
-	};
-    studyBean.doConfigure(dbQueries);
-%>
+
 
 <%
     if (request.getParameter("submit")!=null && request.getParameter("submit").equals("Update")) {
@@ -114,25 +108,24 @@ function setfocus() {
 		<TH width="15%">Description</TH>
 	</tr>
 	<%
-    ResultSet rsdemo = null ;
-    ResultSet rs = null ;
+    
     int nItems=0;
     int ectsize=0;
     String datetime =null;
     String bgcolor = null;
 
-    rsdemo = studyBean.queryResults("search_study");
-    while (rsdemo.next()) {
+    for(Study s : studyDao.findAll()) {
+    
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
-        DemographicStudy ds = demographicStudyDao.findByDemographicNoAndStudyNo(Integer.parseInt(demographic_no),rsdemo.getInt("s.study_no"));
+        DemographicStudy ds = demographicStudyDao.findByDemographicNoAndStudyNo(Integer.parseInt(demographic_no),s.getId());
 %>
 	<tr bgcolor="<%=bgcolor%>">
 		<td align='center'><input type="checkbox" name="study_no"
-			value="<%=rsdemo.getString("s.study_no")%>"
+			value="<%=s.getId()%>"
 			<%=demographic_no.equals(ds!=null?ds.getId().getDemographicNo().toString():"0") ? "checked" : "" %>></td>
-		<td><%=studyBean.getString(rsdemo,"study_name")%></td>
-		<td align="center"><%=studyBean.getString(rsdemo,"description")%></td>
+		<td><%=s.getStudyName()%></td>
+		<td align="center"><%=s.getDescription()%></td>
 	</tr>
 	<%
   }

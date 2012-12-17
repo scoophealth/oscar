@@ -30,31 +30,22 @@
   String user_no = (String) session.getAttribute("user");
   String demographic_no = (String) session.getAttribute("demo_no");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
-	errorPage="../errorpage.jsp"%>
-<jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="../errorpage.jsp"%>
+
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
 
 <%@ include file="../admin/dbconnection.jsp"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
 <%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%@page import="org.oscarehr.common.dao.FormDao" %>
+<%@page import="org.oscarehr.common.model.Form" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
 <%
 	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
-%>
-
-
-<%
-  String [][] dbQueries=new String[][] {
-{"search_form", "select * from form where form_no=? "}, //new?delete
-{"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"}, //new?delete
-{"search_demograph", "select *  from demographic where demographic_no=?"},
-{"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"},
-  };
-  String[][] responseTargets=new String[][] {
-  };
-  formMainBean.doConfigure(dbQueries,responseTargets);
+	FormDao formDao = SpringUtils.getBean(FormDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 %>
 
 <html>
@@ -68,7 +59,7 @@
 <%
   //if bNewForm is false (0), then it should be able to display xml data.
   boolean bNew = true, bNewList = true; //bNew=if using the old xml_form data, bNewList=if it is from history
-  ResultSet rsdemo = null;
+  
   String content="", demoname=null,address=null,dob=null,homephone=null,workphone=null,allergies="",medications="";
   String birthAttendants="", newbornCare="",riskFactors="",finalEDB="",g="",t="",p="",a="",l="",prepregwt="";
   int age=0;
@@ -76,22 +67,21 @@
 
   if(!bNew ) { //not new form
     bNewList = false;
-    rsdemo = formMainBean.queryResults(request.getParameter("form_no"), "search_form");
-    while (rsdemo.next()) {
-      content = rsdemo.getString("content");
+  	Form f = formDao.find(Integer.parseInt(request.getParameter("form_no")));
+   
+    if (f != null) {
+      content =f.getContent();
 %>
 <!--xml id="xml_list"><encounter><%--=content--%></encounter></xml-->
 <%
     }
   } else {
-    String[] param2 =new String[2];
-    param2[0]=demographic_no;
-    param2[1]="ar1%" ; //form_name;
-    rsdemo = formMainBean.queryResults(param2, "search_form_no");
-    //rsdemo = formMainBean.queryResults(demographic_no, "search_form_ar1");
-    while (rsdemo.next()) {
+    
+    Form f = formDao.search_form_no(Integer.parseInt(demographic_no),"ar1%");
+   
+    if (f != null) {
       bNew = false;
-      content = rsdemo.getString("content");
+      content = f.getContent();
 %>
 <!--xml id="xml_list">
     <encounter>
@@ -102,14 +92,15 @@
     }
 
     //rsdemo = null;
-    rsdemo = formMainBean.queryResults(demographic_no, "search_demograph"); //dboperation=search_demograph
-    while (rsdemo.next()) {
-      demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
-      address=rsdemo.getString("address") +",  "+ rsdemo.getString("city") +",  "+ rsdemo.getString("province") +"  "+ rsdemo.getString("postal");
-      dob=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth");
-      homephone=rsdemo.getString("phone");
-      workphone=rsdemo.getString("phone2");
-      age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
+    Demographic d = demographicDao.getDemographic(demographic_no);
+    
+    if (d != null) {
+      demoname=d.getFormattedName();
+      address=d.getAddress() +",  "+ d.getCity() +",  "+ d.getProvince() +"  "+d.getPostal();
+      dob=d.getYearOfBirth()+"/"+d.getMonthOfBirth()+"/"+d.getDateOfBirth();
+      homephone=d.getPhone();
+      workphone=d.getPhone2();
+      age=MyDateFormat.getAge(Integer.parseInt(d.getYearOfBirth()),Integer.parseInt(d.getMonthOfBirth()),Integer.parseInt(d.getDateOfBirth()));
     }
     DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(demographic_no));
     if(da != null) {
@@ -118,28 +109,27 @@
     }
 
 	//find the latest version of g,t,p,a,l etc.
-    String[] param1 =new String[2];
-    param1[0]=demographic_no;
-    param1[1]="ar%"; //!!! other forms can't have the name of 'ar' chars.
-    rsdemo = formMainBean.queryResults(param1, "compare_form");
-    if (rsdemo.next()) {
-      birthAttendants = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_ba>","</xml_ba>");
+   
+    f = formDao.search_form_no(Integer.parseInt(demographic_no), "ar%");
+    
+    if (f != null) {
+      birthAttendants = SxmlMisc.getXmlContent(f.getContent(),"<xml_ba>","</xml_ba>");
 	  birthAttendants = birthAttendants==null?"":birthAttendants;
-      newbornCare = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_nc>","</xml_nc>");
+      newbornCare = SxmlMisc.getXmlContent(f.getContent(),"<xml_nc>","</xml_nc>");
 	  newbornCare = newbornCare==null?"":newbornCare;
-      riskFactors = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_rfi>","</xml_rfi>");
+      riskFactors = SxmlMisc.getXmlContent(f.getContent(),"<xml_rfi>","</xml_rfi>");
 	  riskFactors = riskFactors==null?"":riskFactors;
-      finalEDB = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_fedb>","</xml_fedb>");
+      finalEDB = SxmlMisc.getXmlContent(f.getContent(),"<xml_fedb>","</xml_fedb>");
 	  finalEDB = finalEDB==null?"":finalEDB;
-      g = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_gra>","</xml_gra>");
+      g = SxmlMisc.getXmlContent(f.getContent(),"<xml_gra>","</xml_gra>");
 	  g = g==null?"":g;
-      t = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_term>","</xml_term>");
+      t = SxmlMisc.getXmlContent(f.getContent(),"<xml_term>","</xml_term>");
 	  t = t==null?"":t;
-      p = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_prem>","</xml_prem>");
+      p = SxmlMisc.getXmlContent(f.getContent(),"<xml_prem>","</xml_prem>");
 	  p = p==null?"":p;
-      l = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_liv>","</xml_liv>");
+      l = SxmlMisc.getXmlContent(f.getContent(),"<xml_liv>","</xml_liv>");
 	  l = l==null?"":l;
-      prepregwt = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_ppw>","</xml_ppw>");
+      prepregwt = SxmlMisc.getXmlContent(f.getContent(),"<xml_ppw>","</xml_ppw>");
 	  prepregwt = prepregwt==null?"":prepregwt;
     }
   }
