@@ -37,7 +37,6 @@
 		<property name="demographicManager" ref="demographicManagerT" />
 		<property name="providerManager" ref="providerManager" />
 		<property name="preparedTicklerManager" ref="preparedTicklerManagerT" />
-		<property name="chartManager" ref="chartManagerT" />
 		<property name="programManager" ref="programManager" />
 	</bean>
 	<bean name="/CustomFilter" class="org.caisi.tickler.web.CustomFilterAction" singleton="false">

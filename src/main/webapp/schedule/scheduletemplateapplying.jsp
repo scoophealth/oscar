@@ -26,7 +26,7 @@
 <%@ page
 	import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*, org.apache.struts.util.*"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"	scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -37,9 +37,12 @@
 <%@ page import="org.oscarehr.common.dao.ScheduleDateDao" %>
 <%@ page import="org.oscarehr.common.model.RSchedule" %>
 <%@ page import="org.oscarehr.common.dao.RScheduleDao" %>
+<%@ page import="org.oscarehr.common.model.ScheduleTemplate" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleTemplateDao" %>
 <%
 	ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
 	RScheduleDao rScheduleDao = (RScheduleDao)SpringUtils.getBean("rScheduleDao");
+	ScheduleTemplateDao scheduleTemplateDao = SpringUtils.getBean(ScheduleTemplateDao.class);
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
@@ -54,11 +57,6 @@
 
     boolean isSiteAccessPrivacy=false;
 %>
-
-<%  if(!scheduleMainBean.getBDoConfigure()) { %>
-<%@ include file="scheduleMainBeanConn.jspf"%>
-<% } %>
-
 
 
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=CurRoleName%>" rights="r" reverse="false">
@@ -123,14 +121,17 @@
   String lastYear = (Integer.parseInt(today.substring(0,today.indexOf('-'))) - 2) + today.substring(today.indexOf('-'));
 
   if(request.getParameter("delete")!= null && request.getParameter("delete").equals("1") ) { //delete rschedule
-    String[] param =new String[2];
+	
+	String[] param =new String[2];
 	String edate = null;
     param[0]=request.getParameter("provider_no");
     param[1]=request.getParameter("sdate")!=null?request.getParameter("sdate"):today;
-    ResultSet rsgroup = scheduleMainBean.queryResults(param,"search_rschedule_current1");
-    while (rsgroup.next()) {
-      param[1]= rsgroup.getString("sdate");
-      edate= rsgroup.getString("edate");
+    RSchedule rs1 = rScheduleDao.search_rschedule_current1(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+    
+    
+    if (rs1 != null) {
+      param[1]= ConversionUtils.toDateString(rs1.getsDate());
+      edate= ConversionUtils.toDateString(rs1.geteDate());
     }
 
     List<RSchedule> rsl = rScheduleDao.findByProviderAvailableAndDate(request.getParameter("provider_no"),"1",MyDateFormat.getSysDate(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
@@ -399,18 +400,19 @@ function addDataString1() {
   param1[0]=request.getParameter("provider_no");
   //param1[1]="1";
   param1[1]=request.getParameter("sdate")!=null?request.getParameter("sdate"):today;
-  ResultSet rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_current1");
-
-  if (rsgroup.next()) {
-    scheduleRscheduleBean.setRscheduleBean(rsgroup.getString("provider_no"),rsgroup.getString("sdate"),rsgroup.getString("edate"), rsgroup.getString("available"),rsgroup.getString("day_of_week"), rsgroup.getString("avail_hourB"), rsgroup.getString("avail_hour"), rsgroup.getString("creator"));
-    if(rsgroup.getString("available").equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
+  
+  RSchedule rs1 = rScheduleDao.search_rschedule_current1(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+  
+  if (rs1 != null) {
+    scheduleRscheduleBean.setRscheduleBean(rs1.getProviderNo(),ConversionUtils.toDateString(rs1.getsDate()),ConversionUtils.toDateString(rs1.geteDate()), rs1.getAvailable(),rs1.getDayOfWeek(),rs1.getAvailHourB(), rs1.getAvailHour(), rs1.getCreator());
+    if(rs1.getAvailable().equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
     //break;
   } else {
-      rsgroup = null;
-      rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_current2");
-      if (rsgroup.next()) {
-        scheduleRscheduleBean.setRscheduleBean(rsgroup.getString("provider_no"),rsgroup.getString("sdate"),rsgroup.getString("edate"), rsgroup.getString("available"),rsgroup.getString("day_of_week"), rsgroup.getString("avail_hourB"), rsgroup.getString("avail_hour"), rsgroup.getString("creator"));
-        if(rsgroup.getString("available").equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
+      rs1 = rScheduleDao.search_rschedule_current2(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+      
+      if (rs1 != null) {
+        scheduleRscheduleBean.setRscheduleBean(rs1.getProviderNo(),ConversionUtils.toDateString(rs1.getsDate()),ConversionUtils.toDateString(rs1.geteDate()), rs1.getAvailable(),rs1.getDayOfWeek(),rs1.getAvailHourB(), rs1.getAvailHour(), rs1.getCreator());
+        if(rs1.getAvailable().equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
         //break;
 	  }
   }
@@ -515,13 +517,14 @@ function addDataString1() {
 				<td bgcolor="#CCFFCC" nowrap align="right"><select
 					name="select" onChange="selectrschedule(this)">
 					<%
-  param1[1]=lastYear; //today - query for the future date
-  rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_future1");
- 	while (rsgroup.next()) {
+ 
+  List<RSchedule> rss = rScheduleDao.search_rschedule_future1(request.getParameter("provider_no"),ConversionUtils.fromDateString(lastYear));
+ 
+ 	for (RSchedule rs:rss) {
 %>
-					<option value="<%=rsgroup.getString("sdate")%>"
-						<%=request.getParameter("sdate")!=null?(rsgroup.getString("sdate").equals(request.getParameter("sdate"))?"selected":""):(rsgroup.getString("sdate").equals(scheduleRscheduleBean.sdate)?"selected":"")%>>
-					<%=rsgroup.getString("sdate")+" ~ "+rsgroup.getString("edate")%></option>
+					<option value="<%=ConversionUtils.toDateString(rs.getsDate())%>"
+						<%=request.getParameter("sdate")!=null?(ConversionUtils.toDateString(rs.getsDate()).equals(request.getParameter("sdate"))?"selected":""):(ConversionUtils.toDateString(rs.getsDate()).equals(scheduleRscheduleBean.sdate)?"selected":"")%>>
+					<%=ConversionUtils.toDateString(rs.getsDate())+" ~ "+ConversionUtils.toDateString(rs.geteDate())%></option>
 					<%
  	}
         MessageResources msg = MessageResourcesFactory.createFactory().createResources("oscarResources");
@@ -836,19 +839,18 @@ function tranbuttonb7_click() {
 						<td><select size=<%=bOrigAlt||bAlternate?22:11%>
 							onclick="displayTemplate(this)" name="mytemplate">
 							<%
-   ResultSet rsdemo = null;
-   String param = "Public";
-   rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
-   while (rsdemo.next()) {
+							
+							for(ScheduleTemplate st: scheduleTemplateDao.findByProviderNo("Public")) {
+   
 	%>
-							<option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
+							<option value="<%=st.getId().getName()%>"><%=st.getId().getName()+" |"+st.getSummary()%></option>
 							<%
    }
-   param =request.getParameter("provider_no");
-   rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
-   while (rsdemo.next()) {
+							
+							for(ScheduleTemplate st: scheduleTemplateDao.findByProviderNo(request.getParameter("provider_no"))) {
+							
 	%>
-							<option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
+							<option value="<%=st.getId().getName()%>"><%=st.getId().getName()+" |"+st.getSummary()%></option>
 							<% }	%>
 						</select></td>
 					</tr>

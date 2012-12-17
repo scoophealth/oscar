@@ -71,4 +71,14 @@ public class ScheduleDateDao extends AbstractDao<ScheduleDate>{
         List<ScheduleDate> results = query.getResultList();
 		return results;
 	}
+	
+
+	public List<ScheduleDate> search_scheduledate_c(String providerNo) {
+		Query query = entityManager.createQuery("select s from ScheduleDate s where s.priority='c' and s.status = 'A' and s.providerNo=?");
+		query.setParameter(1, providerNo);
+		
+		@SuppressWarnings("unchecked")
+        List<ScheduleDate> results = query.getResultList();
+		return results;
+	}
 }

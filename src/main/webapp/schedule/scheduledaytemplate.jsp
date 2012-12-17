@@ -30,7 +30,7 @@
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="session" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
@@ -106,11 +106,12 @@ function checkInput() {
 				<td><input type="text" name="templatename" value="Delete">
 				<select name="delcode">
 					<%
-   ResultSet rsdemo = null;
-   rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
-   while (rsdemo.next()) {
+					List<ScheduleTemplateCode> stcs = scheduleTemplateCodeDao.findAll();
+					Collections.sort(stcs,ScheduleTemplateCode.CodeComparator);
+					for(ScheduleTemplateCode stc: stcs) {
+  
 	%>
-					<option value="<%=rsdemo.getString("code")%>"><%=rsdemo.getString("code")+" |"+rsdemo.getString("description")%></option>
+					<option value="<%=String.valueOf(stc.getCode())%>"><%=String.valueOf(stc.getCode())+" |"+stc.getDescription()%></option>
 					<%
      }
 	%>
