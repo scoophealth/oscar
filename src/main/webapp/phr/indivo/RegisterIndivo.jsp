@@ -125,12 +125,18 @@ if (wPhoneExt != null)
         </script>
     </head>
     <body>
-        <phr:IfNotPHRAuthenticated>
-            <jsp:include page="../AuthInclude.jsp">
-                <jsp:param name="forwardto" value="<%=\"/phr/indivo/RegisterIndivo.jsp?demographicNo=\" + demographicNo%>"/>
-                <jsp:param name="pathtophr" value="<%=request.getContextPath() + \"/phr\"%>"/>
-            </jsp:include>
-        </phr:IfNotPHRAuthenticated>
+	    <%
+	    	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+	    	if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn())
+	    	{
+	    		%>
+		            <jsp:include page="../AuthInclude.jsp">
+		                <jsp:param name="forwardto" value="<%=\"/phr/indivo/RegisterIndivo.jsp?demographicNo=\" + demographicNo%>"/>
+		                <jsp:param name="pathtophr" value="<%=request.getContextPath() + \"/phr\"%>"/>
+		            </jsp:include>
+		        <%
+	    	}
+		%>
         <html-el:form action="/phr/UserManagement" styleId="registrationForm" method="POST">
                 <html-el:hidden property="method" value="registerUser"/>
                 <html-el:hidden property="demographicNo" value="<%=demographicNo%>"/>
@@ -209,7 +215,6 @@ if (wPhoneExt != null)
                     		</tr>
                 	<%
                 		TreeMap<String, Provider> myOscarProviders=RegistrationHelper.getMyOscarProviders();
-                		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
                 		
                 		for (Map.Entry<String, Provider> entry : myOscarProviders.entrySet())
                 		{
@@ -252,10 +257,15 @@ if (wPhoneExt != null)
        <script type="text/javascript" language="JavaScript">
            enableSubmit();
        </script>
-       <phr:IfNotPHRAuthenticated>
-           <script type="text/javascript" language="JavaScript">
-               disableForm();
-           </script>
-       </phr:IfNotPHRAuthenticated>
+	    <%
+	    	if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn())
+	    	{
+	    		%>
+		           <script type="text/javascript" language="JavaScript">
+		               disableForm();
+		           </script>
+		        <%
+	    	}
+		%>
     </body>
 </html>
