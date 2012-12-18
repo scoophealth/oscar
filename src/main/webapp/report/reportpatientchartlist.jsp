@@ -46,7 +46,6 @@
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <% 
   String [][] dbQueries=new String[][] { 
-//{"search_patient", "select provider_no, last_name, first_name, chart_no from demographic where provider_no = ? order by "+orderby }, 
 {"search_patient", "select d.provider_no,c.cust1,c.cust2, d.last_name, d.first_name, d.chart_no from demographic d LEFT JOIN demographiccust c ON d.demographic_no = c.demographic_no where (d.provider_no = ? or c.cust1=? or c.cust2=? ) and (d.patient_status like 'AC' or d.patient_status like 'UHIP') order by "+orderby }, 
   };
   String[][] responseTargets=new String[][] {  };
@@ -57,10 +56,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;

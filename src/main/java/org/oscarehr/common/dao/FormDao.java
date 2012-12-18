@@ -58,4 +58,11 @@ public class FormDao extends AbstractDao<Form>{
 		return this.getSingleResultOrNull(q);
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Form> findAllGroupByDemographicNo() {
+		Query q = entityManager.createQuery("select f from Form f group by f.demographicNo");
+		
+		return q.getResultList();	
+	}
 }

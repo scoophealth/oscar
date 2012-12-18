@@ -39,15 +39,6 @@ public class StudyDao extends AbstractDao<Study>{
 		super(Study.class);
 	}
 	
-	public List<Study> findAll() {
-		Query query = entityManager.createQuery("select s from Study s");
-		
-		@SuppressWarnings("unchecked")
-        List<Study> results = query.getResultList();
-		
-		return results;
-	}
-	
 	public Study findByName(String studyName) {
 		Query query = entityManager.createQuery("select s from Study s where s.studyName = ?1");
 		query.setParameter(1, studyName);
@@ -55,5 +46,15 @@ public class StudyDao extends AbstractDao<Study>{
 		Study study = this.getSingleResultOrNull(query);
 		
 		return study;
+	}
+	
+	public List<Study> findByCurrent1(Integer current1) {
+		Query query = entityManager.createQuery("select s from Study s where s.current1 = ?1");
+		query.setParameter(1, current1);
+		
+		@SuppressWarnings("unchecked")
+		List<Study> results = query.getResultList();
+		
+		return results;
 	}
 }
