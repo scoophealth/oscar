@@ -25,7 +25,6 @@
 --%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%
-  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
   String str = null;
 %>
@@ -42,24 +41,22 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.WaitingListName" %>
+<%@page import="org.oscarehr.common.dao.WaitingListNameDao" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
 %>
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
-<jsp:useBean id="addDemoBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
 <%@ include file="../admin/dbconnection.jsp"%>
 <%
-	String [][] dbQueries=new String[][] {
-    {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
-    {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
-    {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
-    {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() +"' and is_history='N'  order by name"}
-  };
-  String[][] responseTargets=new String[][] {  };
-  addDemoBean.doConfigure(dbQueries,responseTargets);
-
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   OscarProperties props = OscarProperties.getInstance();
@@ -75,9 +72,9 @@
   OscarProperties oscarProps = OscarProperties.getInstance();
 
   ProvinceNames pNames = ProvinceNames.getInstance();
-  String prov= ((String ) props.getProperty("billregion","")).trim().toUpperCase();
+  String prov= (props.getProperty("billregion","")).trim().toUpperCase();
 
-  String billingCentre = ((String ) props.getProperty("billcenter","")).trim().toUpperCase();
+  String billingCentre = (props.getProperty("billcenter","")).trim().toUpperCase();
   String defaultCity = prov.equals("ON")&&billingCentre.equals("N") ? "Toronto":"";
 
   WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -1008,14 +1005,14 @@ function autoFillHin(){
       <td id="demoDoctorCell" align="left" >
         <select name="staff">
           <%
-  ResultSet rsdemo = addDemoBean.queryResults("search_provider");
-  while (rsdemo.next()) {
-     String docProviderNo = rsdemo.getString("provider_no");
+ for(Provider p: providerDao.getActiveProviders()) {
+ 
+     String docProviderNo = p.getProviderNo();
 %>
-					<option id="doc<%=docProviderNo%>" value="<%=docProviderNo%>"><%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+					<option id="doc<%=docProviderNo%>" value="<%=docProviderNo%>"><%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
 					<%
   }
-  rsdemo.close();
+ 
 %>
 					<option value=""></option>
 				</select></td>
@@ -1024,13 +1021,12 @@ function autoFillHin(){
 				<td id="nurseCell" ><select name="cust1">
 					<option value=""></option>
 					<%
-  rsdemo=addDemoBean.queryResults("search_provider");
-  while (rsdemo.next()) {
+					for(Provider p: providerDao.getActiveProviders()) {
 %>
-					<option value="<%=rsdemo.getString("provider_no")%>"><%=Misc.getShortStr( (Misc.getString(rsdemo,"last_name")+","+Misc.getString(rsdemo,"first_name")),"",12)%></option>
+					<option value="<%=p.getProviderNo()%>"><%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
 					<%
   }
-  rsdemo.close();
+ 
 %>
 				</select></td>
 			</tr>
@@ -1040,14 +1036,13 @@ function autoFillHin(){
 				<td id="midwifeCell"><select name="cust4">
 					<option value=""></option>
 					<%
-  rsdemo=addDemoBean.queryResults("search_provider");
-  while (rsdemo.next()) {
+					for(Provider p: providerDao.getActiveProviders()) {
 %>
-					<option value="<%=Misc.getString(rsdemo,"provider_no")%>">
-					<%=Misc.getShortStr( (Misc.getString(rsdemo,"last_name")+","+Misc.getString(rsdemo,"first_name")),"",12)%></option>
+					<option value="<%=p.getProviderNo()%>">
+					<%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
 					<%
   }
-  rsdemo.close();
+ 
 %>
 				</select></td>
 				<td id="residentLbl" align="right"><b><bean:message
@@ -1055,14 +1050,13 @@ function autoFillHin(){
 				<td id="residentCell" align="left"><select name="cust2">
 					<option value=""></option>
 					<%
-  rsdemo=addDemoBean.queryResults("search_provider");
-  while (rsdemo.next()) {
+					for(Provider p: providerDao.getActiveProviders()) {
 %>
-					<option value="<%=Misc.getString(rsdemo,"provider_no")%>">
-					<%=Misc.getShortStr( (Misc.getString(rsdemo,"last_name")+","+Misc.getString(rsdemo,"first_name")),"",12)%></option>
+					<option value="<%=p.getProviderNo()%>">
+					<%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
 					<%
   }
-  rsdemo.close();
+ 
 %>
 				</select></td>
 			</tr>
@@ -1131,9 +1125,9 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					<option value="NR"><bean:message key="demographic.demographicaddrecordhtm.NR-notrostered" /></option>
 					<option value="TE"><bean:message key="demographic.demographicaddrecordhtm.TE-terminated" /></option>
 					<option value="FS"><bean:message key="demographic.demographicaddrecordhtm.FS-feeforservice" /></option>
-					<% ResultSet rsstatus1 = addDemoBean.queryResults("search_rsstatus");
-             while (rsstatus1.next()) { %>
-					<option value="<%=rsstatus1.getString("roster_status")%>"><%=rsstatus1.getString("roster_status")%></option>
+					<% 
+					for(String status : demographicDao.getRosterStatuses()) {%>
+					<option value="<%=status%>"><%=status%></option>
 					<% } // end while %>
 				</select> <input type="button" onClick="newStatus1();" value="<bean:message
 					key="demographic.demographicaddrecordhtm.AddNewRosterStatus"/> " /></td>
@@ -1157,9 +1151,9 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					<option value="DE"><bean:message key="demographic.demographicaddrecordhtm.DE-Deceased" /></option>
 					<option value="MO"><bean:message key="demographic.demographicaddrecordhtm.MO-Moved" /></option>
 					<option value="FI"><bean:message key="demographic.demographicaddrecordhtm.FI-Fired" /></option>
-					<% ResultSet rsstatus = addDemoBean.queryResults("search_ptstatus");
-             while (rsstatus.next()) { %>
-					<option value="<%=rsstatus.getString("patient_status")%>"><%=rsstatus.getString("patient_status")%></option>
+					<% 
+					for(String status : demographicDao.search_ptstatus()) { %>
+					<option value="<%=status%>"><%=status%></option>
 					<% } // end while %>
 				</select> <input type="button" onClick="newStatus();" value="<bean:message
 					key="demographic.demographicaddrecordhtm.AddNewPatient"/> ">
@@ -1219,10 +1213,10 @@ document.forms[1].r_doctor_ohip.value = refNo;
 							</option>
 							<%} %>
 							<%
-                                       ResultSet rsWL = addDemoBean.queryResults("search_waiting_list");
-                                       while (rsWL.next()) {
+							for(WaitingListName wln : waitingListNameDao.findCurrentByGroup(((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo())) {
+                                    
                                     %>
-							<option value="<%=rsWL.getString("ID")%>"><%=rsWL.getString("name")%></option>
+							<option value="<%=wln.getId()%>"><%=wln.getName()%></option>
 							<%
                                        }
                                      %>

@@ -22,11 +22,9 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean" scope="page" /><%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp" %>
 <%--RJ 07/07/2006 --%>
-<%
-  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
-  
+<%  
   String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
   
   String sError = "";

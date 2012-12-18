@@ -28,18 +28,13 @@
 
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="baseurlBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
 <%
 	UserPropertyDAO propertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 %>
-<%
-  String [][] dbQueries=new String[][] {};
-  String[][] responseTargets=new String[][] {  };
-  baseurlBean.doConfigure(dbQueries,responseTargets);
-%>
+
 <%
   if(request.getParameter("submit_form")!=null && request.getParameter("submit_form").equals(" Save ") ) {
 

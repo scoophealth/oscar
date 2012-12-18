@@ -25,9 +25,7 @@
 --%>
 
 <%
-  if (session.getAttribute("user") == null) {
-    response.sendRedirect("../logout.jsp");
-  }
+
 
   String demographic_no = request.getParameter("demographic_no") != null
                           ? request.getParameter("demographic_no")
@@ -42,8 +40,13 @@
                                                               java.sql.*,
                                                               oscar.*,
                                                               oscar.util.*"%>
-<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>           
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>     
+<%
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+%>                                                  
+
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
 <!--jsp:useBean id="risks" class="oscar.decision.DesAnnualReviewPlannerRisk" scope="page" /-->
 <jsp:useBean id="risks"
@@ -57,13 +60,7 @@
 <%
 	DesAnnualReviewPlanDao desAnnualReviewPlanDao = SpringUtils.getBean(DesAnnualReviewPlanDao.class);
 %>
-<%
-  String[][] dbQueries = new String[][]{
-		{"search_demographic", "select sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?"},
-  };
 
-  plannerBean.doConfigure(dbQueries);
-%>
 <html><head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ANNUAL HEALTH REVIEW PLANNER</title>
@@ -145,15 +142,13 @@
         }
       }
       //find the age and sex of the patient from demographic table
-      ResultSet rsdemo = plannerBean.queryResults(demographic_no, "search_demographic");
-
+	  Demographic d = demographicDao.getDemographic(demographic_no);
       int    age = 0;
       String sex = null;
 
-      while (rsdemo.next()) {
-        age = UtilDateUtilities.calcAge(rsdemo.getString("year_of_birth"), rsdemo.getString("month_of_birth"),
-                rsdemo.getString("date_of_birth"));
-        sex = rsdemo.getString("sex");
+      if (d != null) {
+        age = UtilDateUtilities.calcAge(d.getYearOfBirth(),d.getMonthOfBirth(),d.getDateOfBirth());
+        sex =d.getSex();
       }
 
       if (age >= 65 && age <= 85) {

@@ -46,27 +46,22 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
 <% // table demographiccust: cust1 = nurse   cust2 = resident   cust4 = midwife
 
   String [][] dbQueries = new String[1][1];
   String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
 
-  if (strDbType.trim().equalsIgnoreCase("mysql")) {;
+  if (strDbType.trim().equalsIgnoreCase("mysql")) {
   		dbQueries=new String[][] {
 		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
-		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
 		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
-		  };
-  }else if (strDbType.trim().equalsIgnoreCase("postgresql"))  {
-  		dbQueries=new String[][] {
-		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
-		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
-		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
-		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
 		  };
   }
   String[][] responseTargets=new String[][] {  };
@@ -102,11 +97,9 @@ function setregexp2() {
 </script>
 
 <%
-  ResultSet rsgroup =null;
-  rsgroup = updatedpBean.queryResults("search_provider");
- 	while (rsgroup.next()) {
- 	  namevector.add(rsgroup.getString("provider_no"));
- 	  namevector.add(rsgroup.getString("last_name")+", "+rsgroup.getString("first_name"));
+ 	for(Provider p : providerDao.getActiveProviders()) {
+ 	  namevector.add(p.getProviderNo());
+ 	  namevector.add(p);
  	}
 %>
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -121,7 +114,7 @@ function setregexp2() {
     String [] param1 = new String[2] ;
     param1[0] = request.getParameter("oldcust2") ;
     param1[1] = request.getParameter("regexp") ;
-    rsgroup = updatedpBean.queryResults(param1, "select_demoname");
+    ResultSet rsgroup = updatedpBean.queryResults(param1, "select_demoname");
     while (rsgroup.next()) {
         novector.add(rsgroup.getString("demographic_no"));
     }
@@ -164,7 +157,7 @@ function setregexp2() {
     String [] param1 = new String[2] ;
     param1[0] = request.getParameter("oldcust1") ;
     param1[1] = request.getParameter("regexp") ;
-    rsgroup = updatedpBean.queryResults(param1, "select_demoname1");
+    ResultSet rsgroup = updatedpBean.queryResults(param1, "select_demoname1");
 
     while (rsgroup.next()) {
  	    novector.add(rsgroup.getString("demographic_no"));
@@ -210,7 +203,7 @@ function setregexp2() {
     String [] param1 = new String[2] ;
     param1[0] = request.getParameter("oldcust4") ;
     param1[1] = request.getParameter("regexp") ;
-    rsgroup = updatedpBean.queryResults(param1, "select_demoname2");
+    ResultSet rsgroup = updatedpBean.queryResults(param1, "select_demoname2");
 
     while (rsgroup.next()) {
  	    novector.add(rsgroup.getString("demographic_no"));
