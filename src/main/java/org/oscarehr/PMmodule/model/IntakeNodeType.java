@@ -118,6 +118,7 @@ public class IntakeNodeType implements Serializable {
 	}
 
     protected void initialize() {
+    	//empty function?
     }
 
     /**
