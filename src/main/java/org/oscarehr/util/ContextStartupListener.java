@@ -92,7 +92,7 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 	
 
 	private void createOscarProgramIfNecessary() {
-		ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+		ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 		SecroleDao secRoleDao = (SecroleDao)SpringUtils.getBean("secroleDao");
 		ProgramProviderDAO programProviderDao = (ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 		
