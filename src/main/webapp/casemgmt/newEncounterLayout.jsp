@@ -660,8 +660,8 @@ function init() {
         <c:param name="providerNo" value="${providerNo}" />
         <c:param name="all" value="true" />
     </c:url>
-    var issueAutoCompleterCPP = new Ajax.Autocompleter("issueAutocompleteCPP", "issueAutocompleteListCPP", "<c:out value="${issueURLCPP}" />", {minChars: 3, indicator: 'busy2', afterUpdateElement: addIssue2CPP, onShow: autoCompleteShowMenuCPP, onHide: autoCompleteHideMenuCPP});
-
+    var issueAutoCompleterCPP = new Ajax.Autocompleter("issueAutocompleteCPP", "issueAutocompleteListCPP", "<c:out value="${issueURLCPP}" />", {minChars: 3, indicator: 'busy2', afterUpdateElement: addIssue2CPP, onShow: autoCompleteShowMenuCPP, onHide: autoCompleteHideMenuCPP});    
+    
     <nested:notEmpty name="DateError">
         alert("<nested:write name="DateError"/>");
     </nested:notEmpty>
@@ -673,10 +673,12 @@ function doscroll(){
 	x=x+99999
 	window.scrollTo(0,x);
 	}
+	
+	window.onbeforeunload = onClosing;
 
 </script>
   </head>
-  <body id="body" style="margin:0px;" onunload="onClosing()">
+  <body id="body" style="margin:0px;">
 
           <div id="header">
               <tiles:insert attribute="header" />

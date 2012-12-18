@@ -38,6 +38,7 @@
    	var defaultDiv;
    	var changeIssueFunc;
    	var addIssueFunc;
+   	var needToReleaseLock = true;
 
        var X       = 10;
     var small   = 60;
@@ -101,6 +102,7 @@
 
         var okToClose = false;
         function onClosing() {
+        	
             for( var idx = 0; idx < measurementWindows.length; ++idx ) {
                 if( !measurementWindows[idx].closed )
                     measurementWindows[idx].parentChanged = true;
@@ -143,7 +145,20 @@
                         }
                    }
             } //end if save needed
-
+			else if( needToReleaseLock ) {								
+				//release lock on note
+				var url = ctx + "/CaseManagementEntry.do";
+				var nId = document.forms['caseManagementEntryForm'].noteId.value;
+				var params = "method=releaseNoteLock&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&noteId=" + nId;
+				new Ajax.Request (
+					url,
+					{
+						method: 'post',
+						postBody: params,
+						asynchronous: false						
+					}
+				);				
+			}
         }
 
         var numMenus = 3;
@@ -1255,6 +1270,23 @@ function resetView(frm, error, e) {
     Element.observe(parent, 'click', unlockNote);
 }
 
+function removeLock(id) {
+	var regEx = /\d+/;
+    var nId = regEx.exec(id);
+	var url = ctx + "/CaseManagementEntry.do";
+	params = "method=releaseNoteLock&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&noteId=" + nId;
+	
+	new Ajax.Request(
+		url,
+		{
+			method: 'post',
+			postBody: params,
+			asynchronous: true
+		}
+	);	
+}
+
+
 var updatedNoteId = -1;  //used to store id of ajax saved note used below
 var selectBoxes = new Object();
 var unsavedNoteWarning;
@@ -1297,6 +1329,9 @@ function changeToView(id) {
                 return false;
         }
    }
+
+	//remove lock from note
+	removeLock(id);
 
 
     //cancel updating of issues
@@ -1771,6 +1806,29 @@ function unlockNote(e) {
     Element.stopObserving(txt, 'click', unlockNote);
 }
 
+function NoteisLocked(nId) {
+
+	var noteIsLocked = "";
+	var url = ctx + "/CaseManagementEntry.do";
+	params = "method=isNoteEdited&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&noteId=" + nId;
+	
+	new Ajax.Request(
+		url,
+		{
+			method: 'post',
+			postBody: params,
+			evalScripts: true,
+			asynchronous: false,
+			onSuccess: function(request) {										
+					var json = request.responseText.evalJSON();								
+					noteIsLocked = json.isNoteEdited;
+			}
+		}
+	);	
+	
+	return noteIsLocked;
+}
+
 var sigCache = "";
 //place Note text in textarea for editing and add save, sign etc buttons for this note
 function editNote(e) {
@@ -1787,6 +1845,38 @@ function editNote(e) {
     var txt = "n" + nId;
     var xpandId = "xpImg" + nId;
     var sig = "sig" + nId;
+    
+    var noteLockStatus = NoteisLocked(nId);
+    if(noteLockStatus == "user") {
+    	var viewEditedNote = confirm("You have started to edit this note in another window.\nDo you wish to continue?");
+    	if( viewEditedNote ) {    	
+    		var parent = $(caseNote).parentNode.id;
+    		var oldNoteId = parent.substr(1);	
+    		tmpSaveNeeded = true;
+    		var params = "method=releaseNoteLock&demographicNo=" + demographicNo + "&providerNo=" + providerNo  + "&noteId=" + oldNoteId + "&force=true";
+    		jQuery.ajax({
+				type: "POST",
+				url:  ctx + "/CaseManagementEntry.do",
+				data: params
+			});
+    		    		
+    		params = "method=updateNoteLock&demographicNo=" + demographicNo;
+			jQuery.ajax({
+				type: "POST",
+				url:  ctx + "/CaseManagementEntry.do",
+				data: params
+			});
+    	}  
+    	else {
+    		Event.stop(e);
+    		return false;
+    	}
+    }
+    else if( noteLockStatus == "other" ) {
+    	Event.stop(e);
+    	alert("This note is being edited by another user.  Try again later");
+    	return false;
+    }
 
     if( $(xpandId) != null ) {
         xpandView(e);
@@ -1865,6 +1955,11 @@ function editNote(e) {
         setCaretPosition($(caseNote),$(caseNote).value.length);
         $(caseNote).focus();
         origCaseNote = $F(caseNote);
+        
+        //If we're editing a note started in another window force save on exit
+        if( tmpSaveNeeded ) {
+        	origCaseNote += ".";
+        }
     }
     else {
         fetchNote(nId);
@@ -2397,6 +2492,9 @@ function savePage(method, chain) {
 
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     tmpSaveNeeded = false;
+    if( method == "saveAndExit" ) {
+    	needToReleaseLock = false;
+    }
 
     caseMgtEntryfrm.submit();
 
@@ -2496,7 +2594,7 @@ function changeDiagnosisUnresolved(issueId) {
     var closeWithoutSaveMsg;
     function closeEnc(e) {
         Event.stop(e);
-        if( origCaseNote != $F(caseNote)  || origObservationDate != $("observationDate").value) {
+        if( !lostNoteLock && (origCaseNote != $F(caseNote)  || origObservationDate != $("observationDate").value)) {
             if( confirm(closeWithoutSaveMsg) ) {
                 var frm = document.forms["caseManagementEntryForm"];
                 tmpSaveNeeded = false;
@@ -2744,6 +2842,7 @@ function deleteAutoSave() {
 }
 var month=new Array(12);
 var msgDraftSaved;
+var lostNoteLock = false;
 function autoSave(async) {
 
     var url = ctx + "/CaseManagementEntry.do";
@@ -2768,28 +2867,41 @@ function autoSave(async) {
                                                 if( $("autosaveTime") == null )
                                                     new Insertion.Bottom(sig, "<div id='autosaveTime' class='sig' style='text-align:center; margin:0px;'><\/div>");
                                                     */
+                                                    
+                                                
+                                                
                                                 var d = new Date();
                                                 var min = d.getMinutes();
                                                 min = min < 10 ? "0" + min : min;
 
                                                 var fmtDate = "<i>" + msgDraftSaved + " " + d.getDate() + "-" + month[d.getMonth()]  + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
                                                 $("autosaveTime").update(fmtDate);
+                                                
 
-                                           }
+                                           },
+                                 onFailure: function(req) {
+                                 	if( req.status == 403 ) {
+                                                	lostNoteLock = true;
+                                                	var msg = "<i>Autosave cancelled due to note being edited in another window</i>";
+                                                	$("autosaveTime").update(msg);
+                                    }
+                                 
+                                 }
                             }
                      );
 
-
-
 }
 
+
 function backup() {
+	
+    //if(origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) {
+        autoSave(true);        
+    //}
 
-    if(origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) {
-        autoSave(true);
+	if( !lostNoteLock ) {
+    	setTimer();
     }
-
-    setTimer();
 }
 
 var autoSaveTimer;
@@ -2829,6 +2941,17 @@ function showIssueHistory(demoNo, issueIds) {
 var caseNote = "";  //contains id of note text area; system permits only 1 text area at a time to be created
 var numChars = 0;
 function monitorCaseNote(e) {
+	
+	//if we have lost the lock on the note alert the user
+	if( lostNoteLock ) {
+		var openAgain = confirm("You have saved/edited this note in another window\nPlease reopen the Chart if you wish to continue editing this note" +
+			"\n Do you wish to reopen the chart now?");
+			
+	    if( openAgain ) {
+	    	window.location.reload(true);
+	    }
+	}
+
     var MAXCHARS = 78;
     var MINCHARS = -10;
     var newChars = $(caseNote).value.length - numChars;

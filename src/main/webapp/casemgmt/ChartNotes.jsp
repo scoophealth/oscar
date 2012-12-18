@@ -116,14 +116,14 @@ try
     oscar.OscarProperties props = oscar.OscarProperties.getInstance();
     String requireIssue = props.getProperty("caisi.require_issue","true");
     if(requireIssue != null && requireIssue.equals("false")) {
-    %>
+    //require issue is false%>
     	requireIssue = false;
     <% } %>
 
 <%
     String requireObsDate = props.getProperty("caisi.require_observation_date","true");
     if(requireObsDate != null && requireObsDate.equals("false")) {
-    %>
+    //do not need observation date%>
     	requireObsDate = false;
     <% } %>
 
@@ -141,6 +141,10 @@ try
     	notesScrollCheckInterval = setInterval('notesIncrementAndLoadMore()', 2000);
     });
 
+    <% if( request.getAttribute("NoteLockError") != null ) { %>
+		alert("<%=request.getAttribute("NoteLockError")%>");
+	<%}%>
+	
 </script>
 
  <html:form action="/CaseManagementView" method="post">
