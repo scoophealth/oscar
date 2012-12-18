@@ -32,8 +32,7 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+
 <jsp:useBean id="checklist" class="oscar.OBChecklist_99_12" scope="page" />
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
 
@@ -41,21 +40,17 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
 <%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%@page import="org.oscarehr.common.dao.FormDao" %>
+<%@page import="org.oscarehr.common.model.Form" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
 <%
 	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+	FormDao formDao = SpringUtils.getBean(FormDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 %>
 
-<%
-  String [][] dbQueries=new String[][] {
-{"search_form", "select * from form where form_no=? "}, //new?delete
-{"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"}, //new?delete
-{"search_demograph", "select *  from demographic where demographic_no=?"},
-{"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"},
-  };
-  String[][] responseTargets=new String[][] {
-  };
-  formMainBean.doConfigure(dbQueries,responseTargets);
-%>
+
 
 <html>
 <head>
@@ -69,7 +64,7 @@
 <%
   //if bNewForm is false (0), then it should be able to display xml data.
   boolean bNew = true, bNewList = true; //bNew=if using the old form data, bNewList=if using dynamic list data
-  ResultSet rsdemo = null;
+  
   String[] param2 =new String[2];
   String content="", demoname=null,address=null,dob=null,homephone=null,workphone=null,allergies="",medications="";
   String birthAttendants="", newbornCare="",riskFactors="",finalEDB="",g="",t="",p="",a="",l="",prepregwt="";
@@ -78,9 +73,9 @@
 
   if(!bNew ) { //not new form
     bNewList = false;
-    rsdemo = formMainBean.queryResults(request.getParameter("form_no"), "search_form");
-    while (rsdemo.next()) {
-      content = rsdemo.getString("content");
+  	Form f = formDao.find(Integer.parseInt(request.getParameter("form_no")));
+    if (f != null) {
+      content = f.getContent();
 %>
 <!--xml id="xml_list"><encounter><%--=content--%></encounter></xml-->
 <%
@@ -88,11 +83,10 @@
   } else {
 
 	//get the data from the latest version of artenatal record 1 or 2
-    param2[0]=demographic_no;
-    param2[1]="ar%";
-    rsdemo = formMainBean.queryResults(param2, "compare_form");
-    while (rsdemo.next()) {
-      content = rsdemo.getString("content");
+    
+    Form f = formDao.search_form_no(Integer.parseInt(demographic_no), "ar%");
+    if (f != null) {
+      content = f.getContent();
       birthAttendants = SxmlMisc.getXmlContent(content, "<xml_ba>","</xml_ba>");
 	  birthAttendants = birthAttendants==null?"":birthAttendants;
       newbornCare = SxmlMisc.getXmlContent(content, "<xml_nc>","</xml_nc>");
@@ -118,24 +112,22 @@
 	  prepregwt = prepregwt==null?"":prepregwt;
 	}
 
-    param2[0]=demographic_no;
-    param2[1]="ar2%";  //form_name;
-    rsdemo = formMainBean.queryResults(param2, "compare_form");
-    while (rsdemo.next()) {
+    f = formDao.search_form_no(Integer.parseInt(demographic_no), "ar2%");
+    if (f != null) {
       bNew = false;
-      content = rsdemo.getString("content");
+      content = f.getContent();
 %>
 <!--xml id="xml_list"> <encounter> <%--=content--%> </encounter> </xml-->
 <%
     }
-    rsdemo = formMainBean.queryResults(demographic_no, "search_demograph"); //dboperation=search_demograph
-    while (rsdemo.next()) {
-      demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
-      address=rsdemo.getString("address") +",  "+ rsdemo.getString("city") +",  "+ rsdemo.getString("province") +"  "+ rsdemo.getString("postal");
-      dob=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth");
-      homephone=rsdemo.getString("phone");
-      workphone=rsdemo.getString("phone2");
-      age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
+    Demographic d = demographicDao.getDemographic(demographic_no);
+    if (d != null) {
+      demoname=d.getFormattedName();
+      address=d.getAddress() +",  "+ d.getCity() +",  "+d.getProvince() +"  "+ d.getPostal();
+      dob=d.getYearOfBirth()+"/"+d.getMonthOfBirth()+"/"+d.getDateOfBirth();
+      homephone=d.getPhone();
+      workphone=d.getPhone2();
+      age=MyDateFormat.getAge(Integer.parseInt(d.getYearOfBirth()),Integer.parseInt(d.getMonthOfBirth()),Integer.parseInt(d.getDateOfBirth()));
     }
     DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(demographic_no));
     if(da != null) {
@@ -1393,13 +1385,13 @@ Properties savedar1risk = new Properties();
 if(finalEDB==null || finalEDB=="") out.println("************No EDB, no check list!**************");
 else {
    savedar1risk.setProperty("finalEDB", finalEDB);
-    param2[0] = demographic_no;
-    param2[1] = "ar1%";  //form_name;
-    rsdemo = formMainBean.queryResults(param2, "compare_form");
+    
+    Form f = formDao.search_form_no(Integer.parseInt(demographic_no), "ar1%");
+   
     String temp = "";
 	StringBuffer tt;
-    while (rsdemo.next()) {
-      temp = rsdemo.getString("content");
+    if (f != null) {
+      temp =f.getContent();
       Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarrisks_99_12.xml");
       for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
         tt = new StringBuffer().append(e.nextElement());
