@@ -61,6 +61,7 @@
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%>
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
+<%@page import="org.oscarehr.common.model.CasemgmtNoteLock"%>
 
 <%
 String ctx = request.getContextPath();
@@ -115,6 +116,9 @@ if (request.getParameter("caseManagementEntryForm") == null)
 
 Integer offset = Integer.parseInt(request.getParameter("offset"));
 int maxId = 0;
+
+//We determine the lock status of the note
+CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demographicNo);
 %>
 
 <c:if test="${not empty notesToDisplay}">
@@ -124,10 +128,10 @@ int maxId = 0;
 		//Notes list will contain all notes including most recently saved
 		//we need to skip this one when displaying
 
-		//if we're editing a note, display it
-		//else check for last unsigned note and use it if present
+		//if we're editing a note, check to see if it is locked
+		//
 		if (cform.getCaseNote().getId() != null)
-		{
+		{		    
 			savedId = cform.getCaseNote().getId();
 		}
 
@@ -362,7 +366,7 @@ int maxId = 0;
  						</script>
  						<% } %>						
 						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=globalNoteId%>, event)" style='float: right; margin-right: 5px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png'>
-						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=note.getNote() %></textarea>
+						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=cform.getCaseNote_note()%></textarea>
 						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=globalNoteId%>"><%@ include file="noteIssueList.jsp"%></div>
 
 						<c:if test="${sessionScope.passwordEnabled=='true'}">
@@ -774,12 +778,47 @@ int maxId = 0;
 	%>	
 	
 <script type="text/javascript">
-	maxNcId = <%=maxId%>;
+	maxNcId = <%=maxId%>;		
 </script>
 
 
 <% if (request.getAttribute("moreNotes") == null) { %>
 <script type="text/javascript">	
+	caseNote = "caseNote_note" + "<%=savedId%>";
+	//save initial note to determine whether save is necessary
+	origCaseNote = $F(caseNote);
+<%
+
+	if( casemgmtNoteLock.isLocked() ) {
+    //note is locked so display message
+%>
+		alert("Another user is currently editing this note.  Please try again later.");
+<%
+	}
+	else if( casemgmtNoteLock.isLockedBySameUser() && !casemgmtNoteLock.getSessionId().equals(request.getRequestedSessionId()) ) {
+    	//note is locked by same user so offer to unlock note and view locked note in progress    	    
+%>
+		var viewEditedNote = confirm("You have started to edit this note in another window at <%=casemgmtNoteLock.getIpAddress()%>.\nDo you wish to continue?");
+		if( viewEditedNote ) {	
+			doscroll();
+			var params = "method=updateNoteLock&demographicNo=" + demographicNo;
+			jQuery.ajax({
+				type: "POST",
+				url:  "<%=ctx%>/CaseManagementEntry.do",
+				data: params,
+				success: function() {
+					//force save when exiting chart in case we loaded edited note in other chart
+					origCaseNote += ".";
+					tmpSaveNeeded = true;
+				}
+			});
+		}
+		else {
+			window.close();
+		}
+<%
+	}
+%>
 
 	jQuery(document).ready(function() {
 		<%
@@ -807,12 +846,9 @@ int maxId = 0;
 	});
 
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
-
-
-    caseNote = "caseNote_note" + "<%=savedId%>";
+    
     //are we editing existing note?  if not init newNoteIdx as we are dealing with a new note
-   //save initial note to determine whether save is necessary
-   origCaseNote = $F(caseNote);
+   
    <%if (!bean.oscarMsg.equals(""))
 			{%>
         $(caseNote).value +="\n\n<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(bean.oscarMsg)%>";
