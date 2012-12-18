@@ -548,6 +548,24 @@ public class JdbcBillingRAImpl {
             return billing_no;
         }
 
+	public String getRAClaimNo4BillingNo(String billingNo) {
+		String claim_no = "";
+		String sql = "select distinct claim_no from radetail where billing_no = '" + billingNo + "'";
+		
+		ResultSet rs = dbObj.searchDBRecord(sql);
+		try {
+			if( rs.next() ) {
+				claim_no = rs.getString("claim_no");
+			}
+			
+		}
+		catch (SQLException e) {
+			_logger.error("getRABillingNo4ClaimNo(sql = " + sql + ")");
+		}
+		
+		return claim_no;
+	}
+
 	public List getRABillingNo4Code(String id, String codes) {
 		List ret = new Vector();
 		String sql = "select distinct billing_no from radetail where raheader_no=" + id + " and service_code in ( "

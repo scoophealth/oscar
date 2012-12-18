@@ -557,6 +557,7 @@ if(statusType.equals("_")) { %>
              <th>Code Error</th>
              <th>Status</th>
              <th>Filename</th>
+             <th>OHIP Claim Id</th>
           </tr>
 	<% //
         ArrayList<String> aLProviders;
@@ -583,9 +584,13 @@ if(statusType.equals("_")) { %>
     boolean nC = false;
 	String invoiceNo = "";
 	
-
+	JdbcBillingRAImpl raObj = new JdbcBillingRAImpl();
 	for(int i=0; i<lPat.size(); i++) {
 		BillingErrorRepData bObj = (BillingErrorRepData) lPat.get(i);
+		
+		// get ohip claim number
+		String claimNo = raObj.getRAClaimNo4BillingNo( bObj.getBilling_no() );
+		
 		String color = "";
 		if(!invoiceNo.equals(bObj.getBilling_no())) {
 			invoiceNo = bObj.getBilling_no(); 
@@ -615,6 +620,9 @@ if(statusType.equals("_")) { %>
     			value="Y" <%="N".equals(bObj.getStatus())? "":"checked" %> onclick="startRequest('<%=bObj.getId() %>');" />
     			</td>
     			<td id="<%=bObj.getId() %>"><%=bObj.getReport_name() %></td>
+    			<td>
+					<a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingONCorrection.jsp?claim_no=<%=claimNo%>','BillCorrection<%=claimNo%>');return false;"><%=claimNo%></a>
+    			</td>
     		</tr>
 <% }}} else { %>
     <!--  div class="tableListing"-->
@@ -634,6 +642,7 @@ if(statusType.equals("_")) { %>
              <th>TYPE</th>
              <th>ACCOUNT</th>
              <th>MESSAGES</th>
+             <th>OHIP Claim Id</td>
 		<% if (bMultisites) {%>
 			 <th>SITE</th>             
         <% }%>     
@@ -643,6 +652,8 @@ if(statusType.equals("_")) { %>
        <% //
        String invoiceNo = ""; 
        boolean nC = false;
+
+		JdbcBillingRAImpl raObj = new JdbcBillingRAImpl();
 
        for (int i = 0 ; i < bList.size(); i++) { 
     	   BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) bList.get(i);
@@ -706,6 +717,9 @@ if(statusType.equals("_")) { %>
                else {
                    settleDate = settleDate.substring(0, settleDate.indexOf(" "));
                }
+               
+           // get ohip claim number
+			String claimNo = raObj.getRAClaimNo4BillingNo( ch1Obj.getId() );
 	      
        %>       
           <tr <%=color %>> 
@@ -733,6 +747,9 @@ if(statusType.equals("_")) { %>
                  <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');return false;">Edit</a>
                  <%=errorCode%>
              </td><!--MESSAGES-->
+             <td>
+				 <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingONCorrection.jsp?claim_no=<%=claimNo%>','BillCorrection<%=claimNo%>');return false;"><%=claimNo%></a>
+             </td>
              <% if (bMultisites) {%>
 				 <td "<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : "bgcolor='" + siteBgColor.get(ch1Obj.getClinic()) + "'")%>">
 				 	<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : siteShortName.get(ch1Obj.getClinic()))%>
@@ -756,6 +773,7 @@ if(statusType.equals("_")) { %>
              <td>&nbsp;</td><!--DX3-->
              <td>&nbsp;</td><!--ACCOUNT-->
              <td>&nbsp;</td><!--MESSAGES-->
+             <td>$nbsp;</td>
              <% if (bMultisites) {%>
 				 <td>&nbsp;</td><!--SITE-->          
         	<% }%>    
