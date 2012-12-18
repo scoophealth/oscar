@@ -20,10 +20,16 @@
         <Quatro Group Software Systems inc.>  <OSCAR Team>
 
 --%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@page import="org.oscarehr.common.model.Security" %>
+
 <%
-   apptMainBean.encryptPIN();
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	for(Security security:securityDao.findAll()) {
+		security.setPin(oscar.Misc.encryptPIN(security.getPin()));
+		
+	}
 %>
 <script type="text/javascript">
 window.opener.close();

@@ -26,12 +26,15 @@
 
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DocumentDao" %>
+<%@page import="org.oscarehr.common.model.Document" %>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@include file="dbDMS.jspf"%>
+<%
+	DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
+%>
+
 <%
   String filename = "", filetype = "", doc_no = "";
   String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
@@ -84,11 +87,10 @@
          outs.close();
         }
   } else {
-    ResultSet rslocal2 = null;
-    rslocal2 = apptMainBean.queryResults(doc_no, "search_document_content");
-    while (rslocal2.next()) {
-      out.print(rslocal2.getString("docxml"));
-    }
+	for(Document d: documentDao.findActiveByDocumentNo(Integer.parseInt(doc_no))) {
+		out.print(d.getDocxml());
+	}
+    
   }
   } else {
 %>

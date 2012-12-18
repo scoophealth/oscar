@@ -30,27 +30,20 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
 	errorPage="../errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
 <%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.common.dao.EncounterDao" %>
+<%@page import="org.oscarehr.common.model.Encounter" %>
 <%
 	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	EncounterDao encounterDao = SpringUtils.getBean(EncounterDao.class);
 %>
 
-<%
-  String [][] dbQueries=new String[][] {
-    {"search_detail", "select * from demographic where demographic_no=?"},
-    {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
-   };
-
-   //associate each operation with an output JSP file -- displaymode
-   String[][] responseTargets=new String[][] {
-     {"Add Record" , "demographicaddarecord.jsp"},
-   };
-   apptMainBean.doConfigure(dbQueries,responseTargets);
-%>
 
 <html>
 <head>
@@ -72,19 +65,19 @@
 			</tr>
 		</table>
 		<%
-   ResultSet rsdemo = null;
    String demoname=null,dob=null,gender=null,hin=null,roster=null;
    int dob_year = 0, dob_month = 0, dob_date = 0;
-   rsdemo = apptMainBean.queryResults(demographic_no, "search_detail"); //dboperation=search_demograph
-   while (rsdemo.next()) {
-     demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
-     dob_year = Integer.parseInt(rsdemo.getString("year_of_birth"));
-     dob_month = Integer.parseInt(rsdemo.getString("month_of_birth"));
-     dob_date = Integer.parseInt(rsdemo.getString("date_of_birth"));
+   Demographic d = demographicDao.getDemographic(demographic_no);
+
+   if (d != null) {
+     demoname=d.getFormattedName();
+     dob_year = Integer.parseInt(d.getYearOfBirth());
+     dob_month = Integer.parseInt(d.getMonthOfBirth());
+     dob_date = Integer.parseInt(d.getDateOfBirth());
      dob=dob_year+"-"+dob_month+"-"+dob_date;
-     gender=rsdemo.getString("sex");
-     hin=rsdemo.getString("hin");
-     roster=rsdemo.getString("roster_status");
+     gender=d.getSex();
+     hin=d.getHin();
+     roster=d.getRosterStatus();
    }
 
 	GregorianCalendar now=new GregorianCalendar();
@@ -95,7 +88,7 @@
   String xml_Problem_List="",xml_Medication="",xml_Alert="",xml_Family_Social_History="",strTemp="";
   if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 
-   rsdemo = null;
+
    DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(demographic_no));
    if(da != null) {
 
@@ -147,13 +140,11 @@
 			<tr>
 				<td bgcolor="#FFFFFF">
 				<%
-   rsdemo = null;
-   rsdemo = apptMainBean.queryResults(demographic_no, "search_encounter");
-
-   while (rsdemo.next()) {
-%> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font
+   for(Encounter e: encounterDao.findByDemographicNo(Integer.parseInt(demographic_no))) {
+	
+%> &nbsp;<%=e.getEncounterDate()%> <%=e.getEncounterTime()%><font
 					color="blue"> <%
-     String historysubject = rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject");
+     String historysubject = e.getSubject()==null?"No Subject":e.getSubject().equals("")?"No Subject":e.getSubject();
      StringTokenizer st=new StringTokenizer(historysubject,":");
      String strForm="", strTemplateURL="";
      while (st.hasMoreTokens()) {
@@ -164,12 +155,12 @@
      if(strForm.toLowerCase().compareTo("form")==0 && st.hasMoreTokens()) {
        strTemplateURL = "template" + (new String(st.nextToken())).trim().toLowerCase()+".jsp";
 %> <a href=#
-					onClick="popupPage(600,800,'../provider/providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject")%>
+					onClick="popupPage(600,800,'../provider/providercontrol.jsp?encounter_no=<%=e.getId()%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=e.getSubject()==null?"No Subject":e.getSubject().equals("")?"No Subject":e.getSubject()%>
 				</a></font><br>
 				<%
      } else if(strForm.compareTo("")!=0) {
 %> <a href=#
-					onClick="popupPage(400,600,'../provider/providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject")%>
+					onClick="popupPage(400,600,'../provider/providercontrol.jsp?encounter_no=<%=e.getId()%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=e.getSubject()==null?"No Subject":e.getSubject().equals("")?"No Subject":e.getSubject()%>
 				</a></font><br>
 				<%
      }
