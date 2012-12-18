@@ -63,24 +63,6 @@ public class Agency implements Serializable {
 		// do nothing
 	}
 
-	/**
-	 * Constructor for primary key
-	 */
-	public Agency(Long id) {
-		this.setId(id);
-	}
-
-	/**
-	 * Constructor for required fields
-	 */
-	public Agency(Long id, Integer intakeQuick, String intakeQuickState, String intakeIndepthState) {
-
-		this.setId(id);
-		this.setIntakeQuick(intakeQuick);
-		this.setIntakeQuickState(intakeQuickState);
-		this.setIntakeIndepthState(intakeIndepthState);
-	}
-
 	public boolean areHousingProgramsVisible(String intakeType) {
 		boolean visible = false;
 
