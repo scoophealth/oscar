@@ -27,23 +27,21 @@
 
 
 <%@ page contentType="text/xml"%>
-<%@ page
-	import="java.util.*, java.sql.*, javax.xml.parsers.*, org.w3c.dom.*, oscar.util.*,java.io.*,org.xml.sax.InputSource"
-	errorPage="../../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, javax.xml.parsers.*, org.w3c.dom.*, oscar.util.*,java.io.*,org.xml.sax.InputSource" errorPage="../../appointment/errorpage.jsp"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+%>
 
-<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+
+<jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
+
 <%--database command part  --%>
 <%@ include file="../../admin/dbconnection.jsp"%>
-<%
-  String [][] dbQueries=new String[][] {
-    {"search_demographic", "select * from demographic where demographic_no=? "},
-    {"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"},
-    {"search_echart", "select ongoingConcerns from eChart where demographicNo=? order by timeStamp desc limit 1"},
-  };
-  studyBean.doConfigure(dbQueries);
-%>
+
 <%
     String demoNo = request.getParameter("demographic_no");
     Properties demo = new Properties();
@@ -60,16 +58,16 @@
     	}
 
 	//take data from demographic
-    ResultSet rsdemo = studyBean.queryResults(demoNo, "search_demographic");
-    while (rsdemo.next()) {
-        demo.setProperty("demographic.first_name", rsdemo.getString("first_name"));
-        demo.setProperty("demographic.last_name", rsdemo.getString("last_name"));
-        demo.setProperty("demographic.sex", rsdemo.getString("sex"));
-        demo.setProperty("demographic.phone", rsdemo.getString("phone"));
-        demo.setProperty("demographic.hin", rsdemo.getString("hin"));
+    Demographic d = demographicDao.getDemographic(demoNo);
+    if (d != null) {
+        demo.setProperty("demographic.first_name", d.getFirstName());
+        demo.setProperty("demographic.last_name", d.getLastName());
+        demo.setProperty("demographic.sex", d.getSex());
+        demo.setProperty("demographic.phone", d.getPhone());
+        demo.setProperty("demographic.hin",d.getHin());
 
-        demo.setProperty("demographic.postal", rsdemo.getString("postal")!=null?rsdemo.getString("postal").replaceAll(" ", ""):"");
-        demo.setProperty("demographic.dob", rsdemo.getString("year_of_birth") +"-"+ (rsdemo.getString("month_of_birth").length()<2?("0"+rsdemo.getString("month_of_birth")):rsdemo.getString("month_of_birth")) +"-"+ (rsdemo.getString("date_of_birth").length()<2?("0"+rsdemo.getString("date_of_birth")):rsdemo.getString("date_of_birth")) );
+        demo.setProperty("demographic.postal", d.getPostal()!=null?d.getPostal().replaceAll(" ", ""):"");
+        demo.setProperty("demographic.dob", d.getYearOfBirth() +"-"+ (d.getMonthOfBirth().length()<2?("0"+d.getMonthOfBirth()):d.getMonthOfBirth()) +"-"+ (d.getDateOfBirth().length()<2?("0"+d.getDateOfBirth()):d.getDateOfBirth()) );
 	}
 
 	//xml part

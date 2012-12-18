@@ -17,12 +17,23 @@
 	scope="page" />
 <jsp:useBean id="providerNameBean" class="java.util.Properties"
 	scope="page" />
+
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+
+<%
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
+
+
 <%
   String [][] dbQueries=new String[][] {
 {"select_maxformar_id", "select max(ID) from formONAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no"  },
 {"select_formar", "select ID, demographic_no, c_finalEDB, concat(c_lastname,\",\",c_firstname) as c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formONAR where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  },
-{"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
-{"select_patientStatus", "select patient_status, provider_no from demographic where demographic_no = ?"  },
   };
   reportMainBean.doConfigure(dbQueries);
 %>
@@ -90,10 +101,8 @@
 	<tfoot></tfoot>
 	<tbody>
 		<%
-        ResultSet rs=null ;
-        rs = reportMainBean.queryResults("search_provider");
-        while (rs.next()) {
-        providerNameBean.setProperty(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
+        for(Provider p: providerDao.getActiveProviders()) {
+        providerNameBean.setProperty(p.getProviderNo(), new String(p.getFormattedName() ));
         }
         Properties arMaxId = new Properties();
         String[] paramI =new String[2];
@@ -106,7 +115,7 @@
         cal.set(Integer.parseInt(endDate.substring(0,4)), Integer.parseInt(endDate.substring(5,endDate.lastIndexOf('-'))) , Integer.parseInt(endDate.substring(endDate.lastIndexOf('-')+1)) );
         cal.add(Calendar.YEAR, 1);
         paramI[1]=sdf.format(cal.getTime()); //;
-        rs = reportMainBean.queryResults(paramI, "select_maxformar_id");
+       ResultSet rs = reportMainBean.queryResults(paramI, "select_maxformar_id");
         while (rs.next()) {
         arMaxId.setProperty(""+rs.getInt("max(ID)"), "1");
         }
@@ -128,10 +137,10 @@
         
         String providerNo = "0";
         // filter the "IN" patient from the list
-        ResultSet rs1=reportMainBean.queryResults(reportMainBean.getString(rs,"demographic_no"), "select_patientStatus");
-        if (rs1.next()) {
-            if(rs1.getString("patient_status").equals("IN")) continue;
-            providerNo = rs1.getString("provider_no");
+        Demographic d = demographicDao.getDemographic(reportMainBean.getString(rs,"demographic_no"));
+        if (d != null) {
+            if(d.getPatientStatus().equals("IN")) continue;
+            providerNo =d.getProviderNo();
         }
         
         bodd=bodd?false:true; //for the color of rows

@@ -33,16 +33,16 @@
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
 %>
 
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
-<% 
-    String [][] dbQueries=new String[][] { 
-        {"search_study", "select s.* from study s order by ? " }, 
-        {"search_demostudy", "select d.demographic_no, s.* from demographicstudy d left join study s on d.study_no=s.study_no where d.demographic_no=? and s.current1=1 order by d.study_no" }, 
-	};
-    studyBean.doConfigure(dbQueries);
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.StudyDao" %>
+<%@page import="org.oscarehr.common.model.Study" %>
+<%@page import="org.oscarehr.common.dao.DemographicStudyDao" %>
+<%@page import="org.oscarehr.common.model.DemographicStudy" %>
+<%
+	StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
+	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
 %>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -82,25 +82,27 @@ function setfocus() {
 		<TH width="50%">Description</TH>
 	</tr>
 	<%
-    ResultSet rs = null ;
     int nItems=0;
     int ectsize=0;
     String datetime =null;
     String bgcolor = null;
   
-    rs = studyBean.queryResults(new String[]{request.getParameter("demographic_no")}, "search_demostudy");
-    while (rs.next()) { 
+    for(Study s:studyDao.findByCurrent1(1)) {
+    	DemographicStudy ds = demographicStudyDao.findByDemographicNoAndStudyNo(Integer.parseInt(request.getParameter("demographic_no")),s.getId());
+    	if(ds != null) {
+    		
+ 
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
 %>
 	<tr bgcolor="<%=bgcolor%>">
-		<td align="center"><%=studyBean.getString(rs,"s.study_no")%></td>
+		<td align="center"><%=s.getId()%></td>
 		<td><a
-			href="<%=studyBean.getString(rs,"s.study_link")%>?demographic_no=<%=request.getParameter("demographic_no")%>&study_no=<%=studyBean.getString(rs,"s.study_no")%>"><%=studyBean.getString(rs,"s.study_name")%></a></td>
-		<td><%=studyBean.getString(rs,"s.description")%></td>
+			href="<%=s.getStudyLink()%>?demographic_no=<%=request.getParameter("demographic_no")%>&study_no=<%=s.getId()%>"><%=s.getStudyName()%></a></td>
+		<td><%=s.getDescription()%></td>
 	</tr>
 	<%
-	}
+	}}
 %>
 	<tr>
 		<td>&nbsp;</td>

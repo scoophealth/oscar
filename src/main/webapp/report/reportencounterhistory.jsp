@@ -27,19 +27,20 @@
 <%
   
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
-	errorPage="../errorpage.jsp"%>
-<jsp:useBean id="encPrintBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="../errorpage.jsp"%>
 
-<% 
-  String [][] dbQueries=new String[][] { 
-    {"search_encountersingle", "select * from encounter where encounter_no = ?"},
-    {"search_demograph", "select * from demographic where demographic_no=?"},
-  };
-  String[][] responseTargets=new String[][] {  };
-  encPrintBean.doConfigure(dbQueries,responseTargets);
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.EncounterDao" %>
+<%@ page import="org.oscarehr.common.model.Encounter" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="oscar.util.ConversionUtils" %>
+
+<%
+	EncounterDao encounterDao = SpringUtils.getBean(EncounterDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 %>
+
 
 <html>
 <head>
@@ -69,7 +70,6 @@
 		</TABLE>
 
 		<%
- ResultSet rsdemo = null;
  boolean firstEnc = true;
  String encounter_date=null,encounter_time=null,subject=null,content=null,provider_no=null;
  int ii = Integer.parseInt(request.getParameter("encounternum"));  
@@ -77,39 +77,40 @@
    if(request.getParameter("encounter_no"+i)==null) {
    continue;
    }
-   rsdemo = encPrintBean.queryResults(request.getParameter("encounter_no"+i), "search_encountersingle"); 
-
-   if (rsdemo.next()) { 
-     encounter_date=rsdemo.getString("encounter_date");
-     encounter_time=rsdemo.getString("encounter_time");
-     provider_no=rsdemo.getString("provider_no");
-     subject=rsdemo.getString("subject");
-     content= rsdemo.getString("content");
+   Encounter e = encounterDao.find(Integer.parseInt(request.getParameter("encounter_no"+i)));
+ 
+   if (e != null) { 
+     encounter_date=ConversionUtils.toDateString(e.getEncounterDate());
+     encounter_time=ConversionUtils.toTimeString(e.getEncounterTime());
+     provider_no=e.getProviderNo();
+     subject=e.getSubject();
+     content= e.getContent();
    }
 %> <xml id="xml_list<%=i%>"> <encounter> <%=content%>
 		</encounter> </xml> <% if(firstEnc) { firstEnc = false;
-     rsdemo = encPrintBean.queryResults(request.getParameter("demographic_no"), "search_demograph"); 
-     while(rsdemo.next()) {
+	 Demographic d = demographicDao.getDemographic(request.getParameter("demographic_no"));
+    
+     if(d != null) {
 %>
 		<table width="100%" border="1">
 			<tr>
-				<td width="65%"><b>Name: </b><%=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name")%></td>
-				<td><b>Phone: </b><%=rsdemo.getString("phone")%></td>
+				<td width="65%"><b>Name: </b><%=d.getFormattedName()%></td>
+				<td><b>Phone: </b><%=d.getPhone()%></td>
 			</tr>
 			<tr>
-				<td colspan='2'><b>Address: </b><%=rsdemo.getString("address") +",  "+ rsdemo.getString("city") +",  "+ rsdemo.getString("province") +"  "+ rsdemo.getString("postal")%></td>
+				<td colspan='2'><b>Address: </b><%=d.getAddress() +",  "+ d.getCity() +",  "+ d.getProvince() +"  "+ d.getPostal()%></td>
 			</tr>
 			<tr>
-				<td width="50%"><b>DOB</b>(yyyy/mm/dd): <%=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth")%></td>
-				<td><b>Age: </b><%=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")))%>
-				<%=rsdemo.getString("sex")%></td>
+				<td width="50%"><b>DOB</b>(yyyy/mm/dd): <%=d.getYearOfBirth()+"/"+d.getMonthOfBirth()+"/"+d.getDateOfBirth()%></td>
+				<td><b>Age: </b><%=MyDateFormat.getAge(Integer.parseInt(d.getYearOfBirth()),Integer.parseInt(d.getMonthOfBirth()),Integer.parseInt(d.getDateOfBirth()))%>
+				<%=d.getSex()%></td>
 			</tr>
 			<tr>
-				<td width="50%"><b>PCN Roster Status: </b><%=rsdemo.getString("pcn_indicator")%></td>
-				<td><b>HIN: </b><%=rsdemo.getString("hin")%> <%=rsdemo.getString("ver")%></td>
+				<td width="50%"><b>PCN Roster Status: </b><%=d.getPcnIndicator()%></td>
+				<td><b>HIN: </b><%=d.getHin()%> <%=d.getVer()%></td>
 			</tr>
 			<tr>
-				<td colspan='2'><b>Family Doctor: </b><%=rsdemo.getString("family_doctor")%></td>
+				<td colspan='2'><b>Family Doctor: </b><%=d.getFamilyDoctor()%></td>
 			</tr>
 		</table>
 		<%   }
