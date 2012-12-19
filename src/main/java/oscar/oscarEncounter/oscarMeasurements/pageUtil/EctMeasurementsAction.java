@@ -137,10 +137,10 @@ public class EctMeasurementsAction extends Action {
                 String comments, dateObserved, validation;
 
                 String regExp = null;
-                double dMax = 0;
-                double dMin = 0;
-                int iMax = 0;
-                int iMin = 0;
+                Double dMax = new Double(0);
+                Double dMin = new Double(0);
+                Integer iMax = 0;
+                Integer iMin = 0;
 
                 List<Validations> vs = null;
                 String regCharExp;
@@ -161,8 +161,8 @@ public class EctMeasurementsAction extends Action {
 
 
                     regExp = null;
-                    dMax = 0;
-                    dMin = 0;
+                    dMax = new Double(0);
+                    dMin = new Double(0);
                     iMax = 0;
                     iMin = 0;
 
@@ -178,6 +178,18 @@ public class EctMeasurementsAction extends Action {
                         regExp = v.getRegularExp();
                     }
 
+                    if(dMax == null) {
+                    	dMax = new Double(0);
+                    }
+                    if(dMin == null) {
+                    	dMin = new Double(0);
+                    }
+                    if(iMax == null) {
+                    	iMax =0;
+                    }
+                    if(iMin == null) {
+                    	iMin=0;
+                    }
                     if(!ectValidation.isInRange(dMax, dMin, inputValue)){
                         errors.add(inputValueName, new ActionMessage("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
                         saveErrors(request, errors);
