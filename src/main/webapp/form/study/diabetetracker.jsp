@@ -34,17 +34,24 @@
 <%@page import="org.oscarehr.common.dao.AllergyDao"%>
 <%@page import="org.oscarehr.common.model.Allergy"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.dao.EChartDao"%>
+<%@page import="org.oscarehr.common.model.EChart"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 
-<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+   	EChartDao eChartDao = SpringUtils.getBean(EChartDao.class);
+%>
+
+<jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
 <%--database command part  --%>
 <%@ include file="../../admin/dbconnection.jsp"%>
 <%
   String [][] dbQueries=new String[][] {
-    {"search_demographic", "select * from demographic where demographic_no=? "},
     {"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"},
-    {"search_echart", "select ongoingConcerns from eChart where demographicNo=? order by timeStamp desc limit 1"},
   };
   studyBean.doConfigure(dbQueries);
 %>
@@ -66,19 +73,19 @@
     }
 
 	//take data from demographic
-    ResultSet rsdemo = studyBean.queryResults(demoNo, "search_demographic");
-    while (rsdemo.next()) {
-        demo.setProperty("demographic.first_name", rsdemo.getString("first_name"));
-        demo.setProperty("demographic.last_name", rsdemo.getString("last_name"));
-        demo.setProperty("demographic.sex", rsdemo.getString("sex"));
-        demo.setProperty("demographic.phone", rsdemo.getString("phone"));
-        demo.setProperty("demographic.hin", rsdemo.getString("hin"));
+   Demographic d = demographicDao.getDemographic(demoNo);
+    if (d != null) {
+        demo.setProperty("demographic.first_name", d.getFirstName());
+        demo.setProperty("demographic.last_name", d.getLastName());
+        demo.setProperty("demographic.sex", d.getSex());
+        demo.setProperty("demographic.phone", d.getPhone());
+        demo.setProperty("demographic.hin", d.getHin());
 
-        demo.setProperty("demographic.postal", rsdemo.getString("postal")!=null?rsdemo.getString("postal").replaceAll(" ", ""):"");
+        demo.setProperty("demographic.postal", d.getPostal()!=null?d.getPostal().replaceAll(" ", ""):"");
 	}
 
     //take data from form
-    rsdemo = studyBean.queryResults(demoNo, "search_formtype2diabete");
+    ResultSet rsdemo = studyBean.queryResults(demoNo, "search_formtype2diabete");
     while (rsdemo.next()) {
         form.setProperty("formType2Diabetes.birthDate", rsdemo.getString("birthDate"));
 		//get the column number
@@ -109,9 +116,10 @@
 
     //take data from eChart
 	String health_condition_name = null;
-    rsdemo = studyBean.queryResults(demoNo, "search_echart");
-    while (rsdemo.next()) {
-        health_condition_name = rsdemo.getString("ongoingConcerns");
+    EChart eChart = eChartDao.getLatestChart(Integer.parseInt(demoNo));
+    
+    if (eChart != null) {
+        health_condition_name = eChart.getOngoingConcerns();
 	}
 	if (health_condition_name != null) {
         StringTokenizer st = new StringTokenizer(health_condition_name, "\n");

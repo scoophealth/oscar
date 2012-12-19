@@ -39,18 +39,21 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="../errorpage.jsp"%>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.ReportTemp" %>
 <%@ page import="org.oscarehr.common.dao.ReportTempDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Form" %>
+<%@ page import="org.oscarehr.common.dao.FormDao" %>
 <%
 	ReportTempDao reportTempDao = SpringUtils.getBean(ReportTempDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	FormDao formDao = SpringUtils.getBean(FormDao.class);
 %>
-<%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="reportMainBeanConn.jspf"%>
-<% } %>
+>
 
 <html>
 <head>
@@ -101,35 +104,32 @@ function setfocus() {
    int curMonth = (now.get(Calendar.MONTH)+1);
    int curDay = now.get(Calendar.DAY_OF_MONTH);
    int age=0;
-   ResultSet rs=null ;
-   rs = reportMainBean.queryResults("search_provider");
-   while (rs.next()) {
-      providerNameBean.setDef(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
+   for(Provider p : providerDao.getActiveProviders()) {
+      providerNameBean.setDef(p.getProviderNo(), new String(p.getFormattedName() ));
    }
 
    List<ReportTemp> temps = reportTempDao.findAll();
    for(ReportTemp temp:temps) {
 		reportTempDao.remove(temp.getId());
    }
-	rs = reportMainBean.queryResults("search_form_demo");
-
-   while (rs.next()) {
-	   String[] param1 =new String[2];
-	     param1[0]=reportMainBean.getString(rs,"demographic_no");
-	     param1[1]="ar%";
-	   ResultSet rsdemo = reportMainBean.queryResults(param1, "search_form_aredb");
-      while (rsdemo.next()) {
-	      int []itemp = new int[] {Integer.parseInt(rsdemo.getString("demographic_no"))};
+   
+   for(Form f:formDao.findAllGroupByDemographicNo()) {
+	
+	 
+	  Form f1 = formDao.search_form_no(f.getDemographicNo(),"ar%");
+	 
+      if (f1 != null) {
+	      int []itemp = new int[] {f1.getDemographicNo()};
 	      String[] param2 =new String[5];
-  	        param2[0]=rsdemo.getString("content")!=null?(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_fedb")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_fedb"):"0001-01-01"):"0001-01-01";
-	        param2[1]=rsdemo.getString("content")!=null?(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_name")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_name"):""):"";
-	        param2[2]=rsdemo.getString("provider_no");
-	        param2[3]="<age>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age"):"") + "</age>" +  "<gravida>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra"):"") + "</gravida>" +   "<term>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term"):"") + "</term>" +   "<phone>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp"):"") + "</phone>";
+  	        param2[0]=f1.getContent()!=null?(SxmlMisc.getXmlContent(f1.getContent(),"xml_fedb")!=null?SxmlMisc.getXmlContent(f1.getContent(),"xml_fedb"):"0001-01-01"):"0001-01-01";
+	        param2[1]=f1.getContent()!=null?(SxmlMisc.getXmlContent(f1.getContent(),"xml_name")!=null?SxmlMisc.getXmlContent(f1.getContent(),"xml_name"):""):"";
+	        param2[2]=f1.getProviderNo();
+	        param2[3]="<age>"+(SxmlMisc.getXmlContent(f1.getContent(),"xml_age")!=null?SxmlMisc.getXmlContent(f1.getContent(),"xml_age"):"") + "</age>" +  "<gravida>"+(SxmlMisc.getXmlContent(f1.getContent(),"xml_gra")!=null?SxmlMisc.getXmlContent(f1.getContent(),"xml_gra"):"") + "</gravida>" +   "<term>"+(SxmlMisc.getXmlContent(f1.getContent(),"xml_term")!=null?SxmlMisc.getXmlContent(f1.getContent(),"xml_term"):"") + "</term>" +   "<phone>"+(SxmlMisc.getXmlContent(f1.getContent(),"xml_hp")!=null?SxmlMisc.getXmlContent(f1.getContent(),"xml_hp"):"") + "</phone>";
 	        param2[4]=curUser_no;
 
 	 	    ReportTemp temp = new ReportTemp();
 	 	    temp.setId(new org.oscarehr.common.model.ReportTempPK());
-	 	    temp.getId().setDemographicNo(Integer.parseInt(rsdemo.getString("demographic_no")));
+	 	    temp.getId().setDemographicNo(f1.getDemographicNo());
 	 	    temp.getId().setEdb(MyDateFormat.getSysDate(param2[0]));
 	 	    temp.setDemoName(param2[1]);
 	 	    temp.setProviderNo(param2[2]);
@@ -139,37 +139,30 @@ function setfocus() {
 	   }
    }
 
-	String[] param =new String[4];
-	  param[1]=startDate; //"0001-01-01";
-	  param[0]=endDate; //"0001-01-01";
-	  param[2]=curUser_no;
-	  //param[3]="edb";
-   int[] itemp1 = new int[2];
-     itemp1[0] = Integer.parseInt(strLimit1);
-     itemp1[1] = Integer.parseInt(strLimit2);
-	rs = reportMainBean.queryResults(param, itemp1, "search_reporttemp"); //unlock the table
-   boolean bodd=false;
-   int nItems=0;
-
-   while (rs.next()) {
+	
+     boolean bodd=false;
+     int nItems=0;
+     
+   for(ReportTemp rt :reportTempDao.findGreateThanEdb(oscar.util.ConversionUtils.fromDateString(startDate),  Integer.parseInt(strLimit1), Integer.parseInt(strLimit2))) {
+ 
       bodd=bodd?false:true; //for the color of rows
       nItems++;
 %>
 	<tr bgcolor="<%=bodd?"ivory":"white"%>">
 		<td align="center"><%=nItems%></td>
-		<td align="center" nowrap><%=reportMainBean.getString(rs,"edb").replace('-','/')%></td>
-		<td><%=reportMainBean.getString(rs,"demo_name")%></td>
-		<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
-		<td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"age")%></td>
-		<td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"gravida")%></td>
-		<td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"term")%></td>
-		<td nowrap><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"phone")%></td>
-		<td><%=providerNameBean.getShortDef(reportMainBean.getString(rs,"provider_no"), "", 11)%></td>
+		<td align="center" nowrap><%=oscar.util.ConversionUtils.toDateString(rt.getId().getEdb()).replace('-','/')%></td>
+		<td><%=rt.getDemoName()%></td>
+		<!--td align="center" ><%=rt.getId().getDemographicNo()%> </td-->
+		<td><%=SxmlMisc.getXmlContent(rt.getAddress(),"age")%></td>
+		<td><%=SxmlMisc.getXmlContent(rt.getAddress(),"gravida")%></td>
+		<td><%=SxmlMisc.getXmlContent(rt.getAddress(),"term")%></td>
+		<td nowrap><%=SxmlMisc.getXmlContent(rt.getAddress(),"phone")%></td>
+		<td><%=providerNameBean.getShortDef(rt.getProviderNo(), "", 11)%></td>
 	</tr>
 	<%
   }
 
-  if(reportMainBean.getBDoConfigure()) reportMainBean.setBDoConfigure();
+ 
 %>
 
 </table>

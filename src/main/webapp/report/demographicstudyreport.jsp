@@ -35,19 +35,23 @@
 %>
 
 <%@ page import="java.sql.*" errorPage="../errorpage.jsp"%>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.StudyDao" %>
+<%@ page import="org.oscarehr.common.model.Study" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.common.dao.DemographicStudyDao" %>
+<%@ page import="org.oscarehr.common.model.DemographicStudy" %>
+<%
+	StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
+%>
+
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <jsp:useBean id="studyBean" class="java.util.Properties" scope="page" />
 
-<% 
-	String [][] dbQueries=new String[][] { 
-		{"search_study", "select study_no, study_name, description from study where current1 = ?"}, 
-		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name , d.first_name, d.provider_no, d.email from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by d.last_name"}, 
-	};
-	reportMainBean.doConfigure(dbQueries);
-%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -92,28 +96,26 @@
 		<TH><bean:message key="report.demographicstudyreport.msgProvider" /></TH>
 	</tr>
 	<%
-	ResultSet rs=null ;
-	rs = reportMainBean.queryResults("1", "search_study");
-	while (rs.next()) { 
-		studyBean.setProperty(reportMainBean.getString(rs,"study_no"), reportMainBean.getString(rs,"study_name") );
-		studyBean.setProperty(reportMainBean.getString(rs,"study_no") + reportMainBean.getString(rs,"study_name"), reportMainBean.getString(rs,"description") );
+	for(Study s : studyDao.findByCurrent1(1)) {
+		studyBean.setProperty(s.getId().toString(), s.getStudyName() );
+		studyBean.setProperty(s.getId().toString() + s.getStudyName(), s.getDescription() );
 	}
     
 	//int[] itemp1 = new int[2];  //itemp1[0] = Integer.parseInt(strLimit1);
 
 	int nItems=0;
-	rs = reportMainBean.queryResults("search_demostudy");
-	while (rs.next()) {
+	for(DemographicStudy ds : demographicStudyDao.findAll()) {
+		Demographic d = demographicDao.getDemographicById(ds.getId().getDemographicNo());
 		nItems++; 
 %>
 	<tr bgcolor="<%=(nItems%2 == 0)?weakcolor:"white"%>">
 		<td nowrap><a
-			href="../demographic/demographiccontrol.jsp?demographic_no=<%=reportMainBean.getString(rs,"s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=reportMainBean.getString(rs,"last_name")%></a></td>
-		<td><%=reportMainBean.getString(rs,"d.first_name")%></td>
+			href="../demographic/demographiccontrol.jsp?demographic_no=<%=d.getDemographicNo()%>&displaymode=edit&dboperation=search_detail"><%=d.getLastName()%></a></td>
+		<td><%=d.getFirstName()%></td>
 		<td
-			title='<%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")+studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")), "")%>'><%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no"), "")%></td>
-		<td><%=reportMainBean.getString(rs,"d.email")%></td>
-		<td><%=providerBean.getProperty(reportMainBean.getString(rs,"d.provider_no"), "")%></td>
+			title='<%=studyBean.getProperty(ds.getId().getStudyNo().toString()+studyBean.getProperty(ds.getId().getStudyNo().toString()), "")%>'><%=studyBean.getProperty(ds.getId().getStudyNo().toString(), "")%></td>
+		<td><%=d.getEmail()%></td>
+		<td><%=providerBean.getProperty(d.getProviderNo(), "")%></td>
 	</tr>
 	<%
 	}
