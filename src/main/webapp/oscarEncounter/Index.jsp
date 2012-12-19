@@ -857,20 +857,14 @@ function removeSaveFeedback()  {
 			</tr>
 			<tr>
 				<td>
-				<%if (vLocale.getCountry().equals("BR")) {%> <a
-					href="javascript: function myFunction() {return false; }"
-					onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
-					title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message
-					key="global.master" /></a> <%}else{%> <a
+				<a
 					href="javascript: function myFunction() {return false; }"
 					onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')"
 					title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message
-					key="global.master" /></a> <%}%><br>
+					key="global.master" /></a>
+				<br>
 				<%
-                if (vLocale.getCountry().equals("BR")) { %> <a href=#
-					onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>");return false;'
-					title="<bean:message key="global.billing"/>"><bean:message
-					key="global.billing" /></a> <% } else {%> <% if(bean.status.indexOf('B')==-1) { %>
+               if(bean.status.indexOf('B')==-1) { %>
 				<a href=#
 					onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(province)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1&status=t");return false;'
 					title="<bean:message key="global.billing"/>"><bean:message
@@ -878,11 +872,11 @@ function removeSaveFeedback()  {
 				<a href=#
 					onClick='onUnbilled("../billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?status=<%=bean.status%>&appointment_no=<%=bean.appointmentNo%>");return false;'
 					title="<bean:message key="global.unbil"/>">-<bean:message
-					key="global.billing" /></a> <% } %> <% } %> <br>
-				<%  if (!vLocale.getCountry().equals("BR")) { %> <a href=#
+					key="global.billing" /></a> <% } %> <br>
+				<a href=#
 					onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
 					key="global.prescriptions" /></a><br>
-				<% } %> <a href=#
+				<a href=#
 					onClick="popupOscarCon(700,960,'<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message
 					key="global.consultations" /></a><br>
 
