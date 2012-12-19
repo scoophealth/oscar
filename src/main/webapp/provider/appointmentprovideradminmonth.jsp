@@ -26,6 +26,13 @@
 
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+<%@ page import="org.oscarehr.common.model.UserProperty" %>
+<%
+	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+%>
+
 <%!
 //multisite starts =====================
 private	List<Site> sites; 
@@ -197,12 +204,13 @@ if (bMultisites) {
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-  String prov=  oscarVariables.getProperty("billregion","").trim().toUpperCase();
-  String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
-  List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
-  for (Map url : resultList) {
- 	  resourcebaseurl = (String) url.get("value");
-  }
+	String prov=  oscarVariables.getProperty("billregion","").trim().toUpperCase();
+	String resourcebaseurl =  oscarVariables.getProperty("resource_base_url");
+	
+	UserProperty rbu = userPropertyDao.getProp("resource_baseurl");
+	if(rbu != null) {
+		resourcebaseurl = rbu.getValue();
+	}
 
 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR); //curYear should be the real now date
@@ -248,6 +256,7 @@ if (bMultisites) {
   strMonth=month>9?(""+month):("0"+month);
   strDay=day>9?(""+day):("0"+day);
 
+  List<Map<String, Object>> resultList = null;
   //initial holiday bean
   if(scheduleHolidayBean.isEmpty() ) {
     resultList = oscarSuperManager.find("providerDao", "search_scheduleholiday", new String[] {(year-1)+"-"+month+"-01"});

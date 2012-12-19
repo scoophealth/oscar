@@ -56,9 +56,16 @@ public class DemographicStudyDao extends AbstractDao<DemographicStudy>{
 	}
 	
 	@SuppressWarnings("unchecked")
+
 	public List<DemographicStudy> findByStudyNo(int studyNo) {
 		Query query = entityManager.createQuery("select x from DemographicStudy x where x.id.studyNo=?");
 		query.setParameter(1, studyNo);
+		return query.getResultList();
+	}
+
+	public List<DemographicStudy> findByDemographicNo(int demographicNo) {
+		Query query = entityManager.createQuery("select x from DemographicStudy x where x.id.demographicNo=?");
+		query.setParameter(1, demographicNo);
 		return query.getResultList();
 	}
 

@@ -18,6 +18,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -202,6 +203,15 @@ public class SiteDao extends AbstractDao<Site> {
 
 
 		return groupList;
+	}
+	
+	public Long site_searchmygroupcount(String myGroupNo, String siteName) {
+		Query query = entityManager.createNativeQuery("select count(provider_no) from mygroup where mygroup_no=:groupno  and provider_no in (select ps.provider_no from providersite ps inner join site s on ps.site_id = s.site_id where s.name = :sitename)");
+		query.setParameter("groupno", myGroupNo);
+		query.setParameter("sitename", siteName);
+
+		Long result = ((BigInteger)query.getSingleResult()).longValue();
+		return result;
 	}
 
 	public String getSiteNameByAppointmentNo(String appointmentNo) {
