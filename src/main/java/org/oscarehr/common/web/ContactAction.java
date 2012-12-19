@@ -41,10 +41,12 @@ import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalContactDao;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -57,7 +59,7 @@ public class ContactAction extends DispatchAction {
 	static DemographicContactDao demographicContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
 	static DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-
+	static ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
 	@Override
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return manage(mapping,form,request,response);
@@ -85,6 +87,9 @@ public class ContactAction extends DispatchAction {
 			}
 			if(dc.getType() == (DemographicContact.TYPE_CONTACT)) {
 				dc.setContactName(contactDao.find(Integer.parseInt(dc.getContactId())).getFormattedName());
+			}
+			if(dc.getType() == (DemographicContact.TYPE_PROFESSIONALSPECIALIST)) {
+				dc.setContactName(professionalSpecialistDao.find(Integer.parseInt(dc.getContactId())).getFormattedName());
 			}
 		}
 		request.setAttribute("procontacts", pdcs);
@@ -350,6 +355,11 @@ public class ContactAction extends DispatchAction {
 		List<ProfessionalContact> contacts = proContactDao.search(searchMode, orderBy, keyword);
 		return contacts;
 	}
+	
+	public static List<ProfessionalSpecialist> searchProfessionalSpecialists(String keyword) {
+		List<ProfessionalSpecialist> contacts = professionalSpecialistDao.search(keyword);
+		return contacts;
+	}
 
 	public static List<DemographicContact> fillContactNames(List<DemographicContact> contacts) {
 		for(DemographicContact c:contacts) {
@@ -361,6 +371,9 @@ public class ContactAction extends DispatchAction {
 			}
 			if(c.getType() == DemographicContact.TYPE_CONTACT) {
 				c.setContactName(contactDao.find(Integer.parseInt(c.getContactId())).getFormattedName());
+			}
+			if(c.getType() == DemographicContact.TYPE_PROFESSIONALSPECIALIST) {
+				c.setContactName(professionalSpecialistDao.find(Integer.parseInt(c.getContactId())).getFormattedName());
 			}
 		}
 

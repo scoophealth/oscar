@@ -23,11 +23,13 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -127,5 +129,35 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 	public boolean hasRemoteCapableProfessionalSpecialists()
 	{
 		return(findByEDataUrlNotNull().size()>0);
+	}
+	
+	public List<ProfessionalSpecialist> search(String keyword) {
+		StringBuilder where = new StringBuilder();
+		List<String> paramList = new ArrayList<String>();
+		
+		String searchMode = "search_name";
+		String orderBy = "c.lastName,c.firstName";
+	    
+		if(searchMode.equals("search_name")) {
+			String[] temp = keyword.split("\\,\\p{Space}*");
+			if(temp.length>1) {
+		      where.append("c.lastName like ?1 and c.firstName like ?2");
+		      paramList.add(temp[0]+"%");
+		      paramList.add(temp[1]+"%");
+		    } else {
+		      where.append("c.lastName like ?1");
+		      paramList.add(temp[0]+"%");
+		    }
+		}		
+		String sql = "SELECT c from ProfessionalSpecialist c where " + where.toString() + " order by " + orderBy;
+		MiscUtils.getLogger().info(sql);
+		Query query = entityManager.createQuery(sql);
+		for(int x=0;x<paramList.size();x++) {
+			query.setParameter(x+1,paramList.get(x));
+		}		
+		
+		@SuppressWarnings("unchecked")
+		List<ProfessionalSpecialist> contacts = query.getResultList();
+		return contacts;
 	}
 }

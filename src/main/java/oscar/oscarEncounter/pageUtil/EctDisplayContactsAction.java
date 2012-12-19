@@ -31,8 +31,10 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -46,6 +48,7 @@ public class EctDisplayContactsAction extends EctDisplayAction {
     DemographicContactDao demographicContactDao = SpringUtils.getBean(DemographicContactDao.class);
     ContactDao contactDao = SpringUtils.getBean(ContactDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
 	
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
@@ -54,7 +57,7 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		    String winName = "contact" + bean.demographicNo;
 		    String pathview, pathedit;
 
-		    pathview = request.getContextPath() + "/demographic/procontactSearch.jsp";
+		    pathview = request.getContextPath() + "/demographic/professionalSpecialistSearch.jsp?keyword=&submit=Search";
 		    pathedit = request.getContextPath() + "/demographic/Contact.do?method=manage&demographic_no=" + bean.demographicNo;
 
 
@@ -64,7 +67,7 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 
 		    //set right hand heading link
 		    winName = "AddContact" + bean.demographicNo;
-		    url = "popupPage(800,800,'" + winName + "','" + pathedit + "'); return false;";
+		    url = "popupPage(800,1000,'" + winName + "','" + pathedit + "'); return false;";
 		    Dao.setRightURL(url);
 		    Dao.setRightHeadingID(cmd);
 
@@ -86,11 +89,16 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		    		name = c.getLastName() + "," + c.getFirstName();
 		    		specialty = c.getSpecialty();
 		    		workPhone = c.getWorkPhone();
-		    	} else  {
+		    	} else if(contact.getType() == DemographicContact.TYPE_PROVIDER) {
 		    		Provider p = providerDao.getProvider(contact.getContactId());
 		    		name = p.getFormattedName();
 		    		specialty = p.getSpecialty();
 		    		workPhone = p.getWorkPhone();
+		    	} else if(contact.getType() == DemographicContact.TYPE_PROFESSIONALSPECIALIST) {
+		    		ProfessionalSpecialist p = professionalSpecialistDao.find(Integer.parseInt(contact.getContactId()));
+		    		name = p.getFormattedName();
+		    		specialty = p.getSpecialtyType()!=null?p.getSpecialtyType():"";
+		    		workPhone = p.getPhoneNumber();
 		    	}
 		    	//contactDao.find(Integer.parseInt(contact.getContactId()));
 		    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
@@ -105,13 +113,15 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		        //item.setDate(contact.getUpdateDate());
 		        int hash = Math.abs(winName.hashCode());
 		        if(contact.getType() == DemographicContact.TYPE_CONTACT) {
-		        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/demographic/Contact.do?method=editProContact&pcontact.id="+ contact.getId() +"'); return false;";
-		        } else {
+		        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/demographic/Contact.do?method=editProContact&pcontact.id="+ contact.getContactId() +"'); return false;";
+		        } else if (contact.getType() == DemographicContact.TYPE_CONTACT){
 		        	String roles =(String) request.getSession().getAttribute("userrole");
 		        	if(roles.indexOf("admin") != -1)
 		        		url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/admin/providerupdateprovider.jsp?keyword="+ contact.getContactId() +"'); return false;";
 		        	else
 		        		url = "alert('Cannot Edit');return false;";
+		        } else if(contact.getType() == DemographicContact.TYPE_PROFESSIONALSPECIALIST) {
+		        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/EditSpecialists.do?specId="+ contact.getContactId() +"'); return false;";
 		        }
 		        item.setURL(url);
 		        Dao.addItem(item);

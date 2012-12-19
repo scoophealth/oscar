@@ -101,10 +101,16 @@
 		<form-bean name="EctImmunizationSetDisplayForm" type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmunizationSetDisplayForm" />
 		<form-bean name="EctIncomingConsultationForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctIncomingConsultationForm" />
 		<form-bean name="EctConAddSpecialistForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm" />
+		<form-bean name="EctConAddInstitutionForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddInstitutionForm" />
+		<form-bean name="EctConAddDepartmentForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddDepartmentForm" />		
 		<form-bean name="EctConAddServiceForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddServiceForm" />
 		<form-bean name="EctConShowAllServicesForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConShowAllServicesForm" />
+		<form-bean name="EctConShowAllInstitutionsForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConShowAllInstitutionsForm" />
 		<form-bean name="EctConDisplayServiceForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceForm" />
+		<form-bean name="EctConDisplayInstitutionForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayInstitutionForm" />		
 		<form-bean name="EctConEditSpecialistsForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEditSpecialistsForm" />
+		<form-bean name="EctConEditInstitutionsForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEditInstitutionsForm" />
+		<form-bean name="EctConEditDepartmentsForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEditDepartmentsForm" />
 		<form-bean name="EctConDeleteServicesForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDeleteServicesForm" />
 		<form-bean name="EctImmPassThruForm" type="oscar.oscarEncounter.immunization.pageUtil.EctImmPassThruForm" />
 		<form-bean name="EctImmCreateImmunizationSetInitForm" type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmCreateImmunizationSetInitForm" />
@@ -1061,18 +1067,41 @@
 		<action input="/oscarConsultationRequest/config/ShowAllServices.jsp" name="EctConShowAllServicesForm" path="/oscarEncounter/ShowAllServices" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConShowAllServicesAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/DisplayService.jsp" />
 		</action>
+		<action input="/oscarConsultationRequest/config/ShowAllInstitutions.jsp" name="EctConShowAllInstitutionsForm" path="/oscarEncounter/ShowAllInstitutions" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConShowAllInstitutionsAction">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/DisplayInstitution.jsp" />
+		</action>
+		
 		<action input="/oscarEncounter/oscarConsultationRequest/config/AddSpecialist.jsp" name="EctConAddSpecialistForm" path="/oscarEncounter/AddSpecialist" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistAction"
 			validate="true"
 		>
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddSpecialist.jsp" />
 			<forward name="edited" path="/oscarEncounter/oscarConsultationRequest/config/EditSpecialists.jsp" />
 		</action>
+		<action input="/oscarEncounter/oscarConsultationRequest/config/AddInstitution.jsp" name="EctConAddInstitutionForm" path="/oscarEncounter/AddInstitution" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddInstitutionAction" validate="true">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddInstitution.jsp" />
+			<forward name="edited" path="/oscarEncounter/oscarConsultationRequest/config/EditInstitutions.jsp" />
+		</action>
+		<action input="/oscarEncounter/oscarConsultationRequest/config/AddDepartment.jsp" name="EctConAddDepartmentForm" path="/oscarEncounter/AddDepartment" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddDepartmentAction" validate="true">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddDepartment.jsp" />
+			<forward name="edited" path="/oscarEncounter/oscarConsultationRequest/config/EditDepartments.jsp" />
+		</action>
 		<action input="/oscarConsultationRequest/config/DisplayService.jsp" name="EctConDisplayServiceForm" path="/oscarEncounter/UpdateServiceSpecialists" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp" />
+		</action>
+		<action input="/oscarConsultationRequest/config/DisplayInstitution.jsp" name="EctConDisplayInstitutionForm" path="/oscarEncounter/UpdateInstitutionDepartment" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayInstitutionAction">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/ShowAllInstitutions.jsp" />
 		</action>
 		<action input="/oscarConsultationRequest/config/EditSpecialists.jsp" name="EctConEditSpecialistsForm" path="/oscarEncounter/EditSpecialists" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEditSpecialistsAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddSpecialist.jsp" />
 			<forward name="delete" path="/oscarEncounter/oscarConsultationRequest/config/EditSpecialists.jsp" />
+		</action>
+		<action input="/oscarConsultationRequest/config/EditInstitutions.jsp" name="EctConEditInstitutionsForm" path="/oscarEncounter/EditInstitutions" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEditInstitutionsAction">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddInstitution.jsp" />
+			<forward name="delete" path="/oscarEncounter/oscarConsultationRequest/config/EditInstitutions.jsp" />
+		</action>
+		<action input="/oscarConsultationRequest/config/EditDepartments.jsp" name="EctConEditDepartmentsForm" path="/oscarEncounter/EditDepartments" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEditDepartmentsAction">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddDepartment.jsp" />
+			<forward name="delete" path="/oscarEncounter/oscarConsultationRequest/config/EditDepartments.jsp" />
 		</action>
 		<action input="/DeleteServices.jsp" name="EctConDeleteServicesForm" path="/oscarEncounter/DelService" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDeleteServicesAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/DeleteServices.jsp" />
