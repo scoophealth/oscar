@@ -38,10 +38,10 @@ public class AbstractCodeSystemDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testGetDaoName_Valid() {
-		String codeSystem = "Icd9";
+		String codeSystem = "icd9";
 		assertEquals("icd9Dao", getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codeSystem)));
 		
-		codeSystem = "Ichppccode";
+		codeSystem = "ichppccode";
 		assertEquals("ichppccodeDao", getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codeSystem)));
 		
 		codeSystem = "SnomedCore";
