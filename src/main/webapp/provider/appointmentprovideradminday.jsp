@@ -29,11 +29,45 @@
 <%@page import="org.oscarehr.common.model.Provider,org.oscarehr.common.model.BillingONCHeader1"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
-<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.common.model.UserProperty" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
 <%@ page import="org.oscarehr.common.dao.MyGroupAccessRestrictionDao" %>
 <%@ page import="org.oscarehr.common.model.MyGroupAccessRestriction" %>
+<%@ page import="org.caisi.model.Tickler" %>
+<%@ page import="org.caisi.dao.TicklerDAO" %>
+<%@ page import="org.oscarehr.common.dao.DemographicStudyDao" %>
+<%@ page import="org.oscarehr.common.model.DemographicStudy" %>
+<%@ page import="org.oscarehr.common.dao.StudyDao" %>
+<%@ page import="org.oscarehr.common.model.Study" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+<%@ page import="org.oscarehr.common.model.UserProperty" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.SiteDao" %>
+<%@ page import="org.oscarehr.common.model.Site" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@ page import="org.oscarehr.common.model.MyGroup" %>
+
+<!-- add by caisi -->
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
+
 <%
-	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
+	StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
+	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+%>
+
+<%
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     boolean isSiteAccessPrivacy=false;
@@ -64,7 +98,6 @@ private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();
 
 <%
 if (bMultisites) {
-	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 	sites = siteDao.getAllActiveSites();
 	selectedSite = (String)session.getAttribute("site_selected");
 
@@ -98,14 +131,7 @@ if (bMultisites) {
 //multisite ends =======================
 %>
 
-<!-- add by caisi -->
-<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
-<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
+
 
 <!-- add by caisi end<style>* {border:1px solid black;}</style> -->
 
@@ -246,10 +272,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     		caisiBillingPreferenceNotDelete = String.valueOf(pp.getDefaultDoNotDeleteBilling());
     	}
 
-    	//List<Map> prefBillingList = oscarSuperManager.find("providerDao", "search_pref_defaultbill", new Object[] {curUser_no});
-        //if (prefBillingList.size() > 0) {
-       //     caisiBillingPreferenceNotDelete = String.valueOf(prefBillingList.get(0).get("defaultDoNotDeleteBilling"));
-    	//}
     }
 
 	//Disable schedule view associated with the program
@@ -280,11 +302,11 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
     String resourcebaseurl =  oscarVariables.getProperty("resource_base_url");
 
-    List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new Object[] {"resource_baseurl"});
-    for (Map url : resultList) {
-            resourcebaseurl = (String)url.get("value");
+    UserProperty rbu = userPropertyDao.getProp("resource_baseurl");
+    if(rbu != null) {
+    	resourcebaseurl = rbu.getValue();
     }
-
+    
 
     boolean isWeekView = false;
     String provNum = request.getParameter("provider_no");
@@ -334,8 +356,6 @@ String strYear=""+year;
 String strMonth=month>9?(""+month):("0"+month);
 String strDay=day>9?(""+day):("0"+day);
    
-UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
-DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
 Calendar apptDate = Calendar.getInstance();
 apptDate.set(year, month-1 , day);
@@ -778,10 +798,9 @@ String [] curProvider_no;
 String [] curProviderName;
 //initial provider bean for all the application
 if(providerBean.isEmpty()) {
-   resultList = oscarSuperManager.find("providerDao", "searchallprovider", new Object[] {});
-   for (Map provider : resultList) {
-      providerBean.setProperty(String.valueOf(provider.get("provider_no")), provider.get("last_name")+","+provider.get("first_name"));
-   }
+	for(Provider p : providerDao.getActiveProviders()) {
+		 providerBean.setProperty(p.getProviderNo(),p.getFormattedName());
+	}
  }
 
 String viewall = request.getParameter("viewall");
@@ -789,6 +808,8 @@ if( viewall == null ) {
     viewall = "0";
 }
 String _scheduleDate = strYear+"-"+strMonth+"-"+strDay;
+
+List<Map<String,Object>> resultList = null;
 
 if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointed provider view
      numProvider=1;
@@ -799,14 +820,12 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
 } else {
 	if(view==0) { //multiple views
 	   if (selectedSite!=null) {
-		   	resultList = oscarSuperManager.find("providerDao", "site_searchmygroupcount", new Object[] {mygroupno,selectedSite});
+		   numProvider = siteDao.site_searchmygroupcount(mygroupno, selectedSite).intValue();
 	   }
 	   else {
-			resultList = oscarSuperManager.find("providerDao", "searchmygroupcount", new Object[] {mygroupno});
+		   numProvider = myGroupDao.getGroupByGroupNo(mygroupno).size();
 	   }
-	   for (Map count : resultList) {
-	        numProvider = ((Long)(count.get(count.keySet().toArray()[0]))).intValue();
-	   }
+	  
        String [] param3 = new String [2];
        param3[0] = mygroupno;
        param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
@@ -874,7 +893,7 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
 //set timecode bean
 String bgcolordef = "#486ebd" ;
 String [] param3 = new String[2];
-param3[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
+param3[0] = strDate;
 for(nProvider=0;nProvider<numProvider;nProvider++) {
      param3[1] = curProvider_no[nProvider];
      resultList = oscarSuperManager.find("providerDao", "search_appttimecode", param3);
@@ -1118,7 +1137,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <%
 if (caseload) {
 %>
-<%@ include file="caseload.jsp" %>
+<%@ include file="caseload.jspf" %>
 <%
 } else {
 %>
@@ -1259,14 +1278,13 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 		}
 	}
 
-	resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
-	for (Map provider : resultList) {
-		boolean skip = checkRestriction(restrictions,(String)provider.get("provider_no"));
+	for(Provider p : providerDao.getActiveProviders()) {
+		boolean skip = checkRestriction(restrictions,p.getProviderNo());
 
-		if (!skip && (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(provider.get("provider_no")))) {
+		if (!skip && (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(p.getProviderNo()))) {
 %>
-  <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
-		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+  <option value="<%=p.getProviderNo()%>" <%=mygroupno.equals(p.getProviderNo())?"selected":""%>>
+		<%=p.getFormattedName()%></option>
 <%
 		}
 	}
@@ -1549,34 +1567,36 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   paramTickler[1]=MyDateFormat.getSysDate(strDate); //year+"-"+month+"-"+day;//e.g."2001-02-02";
                   tickler_no = "";
                   tickler_note="";
-                      List<Map<String,Object>> ticklerList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
-                          for (Map tickler : ticklerList) {
-                                tickler_no = String.valueOf(tickler.get("tickler_no"));
-                                tickler_note = tickler.get("message")==null?tickler_note:tickler_note + "\n" + tickler.get("message");
+                  
+                 
+                  for(Tickler t: ticklerDao.search_tickler(String.valueOf(demographic_no),MyDateFormat.getSysDate(strDate))) {
+                	  tickler_no = t.getTickler_no().toString();
+                      tickler_note = t.getMessage()==null?tickler_note:tickler_note + "\n" + t.getMessage();
                   }
-
-                          ver = "";
+                     
+                  ver = "";
                   roster = "";
-                      List<Map<String,Object>> demoList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {demographic_no});
-                  for (Map demo : demoList) {
-                    ver = (String)demo.get("ver");
-                    roster = (String)demo.get("roster_status");
+                  Demographic demographic = demographicDao.getDemographicById(demographic_no);
+                  if(demographic != null) {
+                   
+                    ver = demographic.getVer();
+                    roster = demographic.getRosterStatus();
 
                     int intMob = 0;
                     int intDob = 0;
 
-                    mob = String.valueOf(demo.get("month_of_birth"));
+                    mob = String.valueOf(demographic.getMonthOfBirth());
                     if(mob.length()>0 && !mob.equals("null"))
                     	intMob = Integer.parseInt(mob);
 
-                    dob = String.valueOf(demo.get("date_of_birth"));
+                    dob = String.valueOf(demographic.getDateOfBirth());
                     if(dob.length()>0 && !dob.equals("null"))
                     	intDob = Integer.parseInt(dob);
 
 
                     demBday = mob + "-" + dob;
 
-                    if (roster == null ) { //|| !(roster.equalsIgnoreCase("FS") || roster.equalsIgnoreCase("NR") || roster.equalsIgnoreCase("PL"))) {
+                    if (roster == null ) { 
                         roster = "";
                     }
                   }
@@ -1585,28 +1605,28 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 				  studyDescription = new StringBuffer("");
 
 				  int numStudy = 0;
-                      List<Map<String,Object>> studyList = oscarSuperManager.find("providerDao", "search_studycount", new Object[] {demographic_no});
-                          for (Map study : studyList) {
-                                  numStudy = ((Long)(study.get(study.keySet().toArray()[0]))).intValue();
-                          }
-				  if (numStudy == 1) {
-                              studyList = oscarSuperManager.find("providerDao", "search_study", new Object[] {demographic_no});
-                                  for (Map study : studyList) {
-                          study_no = new StringBuffer(String.valueOf(study.get("study_no")));
-                          study_link = new StringBuffer(String.valueOf(study.get("study_link")));
-                          studyDescription = new StringBuffer(String.valueOf(study.get("description")));
-                      }
-				  } else if (numStudy > 1) {
-                      study_no = new StringBuffer("0");
-                      study_link = new StringBuffer("formstudy.jsp");
-				      studyDescription = new StringBuffer("Form Studies");
+				  
+				  for(DemographicStudy ds:demographicStudyDao.findByDemographicNo(demographic_no)) {
+					  Study study = studyDao.find(ds.getId().getStudyNo());
+					  if(study != null && study.getCurrent1() == 1) {
+						  numStudy++;
+						  if(numStudy == 1) {
+							  study_no = new StringBuffer(String.valueOf(study.getId()));
+	                          study_link = new StringBuffer(String.valueOf(study.getStudyLink()));
+	                          studyDescription = new StringBuffer(String.valueOf(study.getDescription()));
+						  } else {
+							  study_no = new StringBuffer("0");
+		                      study_link = new StringBuffer("formstudy.jsp");
+						      studyDescription = new StringBuffer("Form Studies");
+						  }
+					  }
 				  }
-
-                          String reason = String.valueOf(appointment.get("reason")).trim();
+				  
+                  String reason = String.valueOf(appointment.get("reason")).trim();
                   String notes = String.valueOf(appointment.get("notes")).trim();
                   String status = String.valueOf(appointment.get("status")).trim();
-          	  String sitename = String.valueOf(appointment.get("location")).trim();
-          	  String urgency = (String)appointment.get("urgency");
+          	      String sitename = String.valueOf(appointment.get("location")).trim();
+          	      String urgency = (String)appointment.get("urgency");
 
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
@@ -1753,9 +1773,7 @@ start_time += iSm + ":00";
 <!-- billing code block -->
 <% if (!isWeekView) { %>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
-             <% if(status.indexOf('B')==-1) { 
-                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
-             %>  
+             <% if(status.indexOf('B')==-1) { %>
               <a href=# onClick='popupPage(755,1200, "../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=appointment.get("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=start_time%>&bNewForm=1");return false;' title="<bean:message key="global.billingtag"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>
             
 <% } else {%>

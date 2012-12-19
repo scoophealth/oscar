@@ -76,7 +76,6 @@ clH = ["Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", 
 					<select id='caseloadProv' onChange='search("search");'>
 						<option value='all'>All Providers</option>
 		<%
-		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 		List<Provider> providerList = providerDao.getProviders();
 		for (Provider provider : providerList) {
 		%>

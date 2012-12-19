@@ -3380,13 +3380,13 @@
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:hourmin = new StringBuffer(dateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) dateTimeCodeBean.get(curProvider_no[nProvider])).substring(ratio,ratio+1):" " );</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:studyDescription = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:studyDescription = new StringBuffer("Form Studies");</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:studyDescription = new StringBuffer(String.valueOf(study.get("description")));</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:studyDescription = new StringBuffer(String.valueOf(study.getDescription()));</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_link = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_link = new StringBuffer("formstudy.jsp");</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_link = new StringBuffer(String.valueOf(study.get("study_link")));</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_link = new StringBuffer(String.valueOf(study.getStudyLink()));</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_no = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_no = new StringBuffer("0");</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_no = new StringBuffer(String.valueOf(study.get("study_no")));</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:study_no = new StringBuffer(String.valueOf(study.getId()));</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:} else { hourmin = new StringBuffer(); }</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminmonth.jsp:&lt;jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminmonth.jsp:StringBuffer bgcolor = new StringBuffer();</ViolationValue>

@@ -62,15 +62,13 @@ int demographic_no = (new Integer(de.getValue())).intValue();
 String demographic_name=de.getLabel();
 
 %><c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}"><%
-paramTickler[0]=String.valueOf(demographic_no);
-paramTickler[1]=MyDateFormat.getSysDate(strDate); //year+"-"+month+"-"+day;//e.g."2001-02-02";
-List<Map<String,Object>> ticklerResultList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
 tickler_no = "";
 tickler_note="";
-for (Map tickler : ticklerResultList) {
-    tickler_no = String.valueOf(tickler.get("tickler_no"));
-    tickler_note = tickler.get("message")==null?tickler_note:tickler_note + "\n" + tickler.get("message");
+for(Tickler t: ticklerDao.search_tickler(String.valueOf(demographic_no),MyDateFormat.getSysDate(strDate))) {
+	tickler_no = t.getTickler_no().toString();
+    tickler_note = t.getMessage()==null?tickler_note:tickler_note + "\n" + t.getMessage();
 }
+
 %></c:if><%
 
 ver = "";

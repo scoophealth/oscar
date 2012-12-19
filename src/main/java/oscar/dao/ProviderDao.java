@@ -44,11 +44,7 @@ public class ProviderDao extends OscarSuperDao {
 	}
 
 	private String [][] dbQueries = new String[][] {
-			{"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
-			{"search_studycount","select count(ds.study_no) from demographicstudy ds, study s where ds.demographic_no=? and ds.study_no=s.study_no and s.current1='1'"},
-			{"search_study","select s.* from demographicstudy d, study s where demographic_no=? and d.study_no = s.study_no limit 1 "},
 			{"searchappointmentday", "select * from appointment where provider_no=? and appointment_date=? and program_id=? order by start_time, status desc "},
-			{"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
 			{"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
 
 			{"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
@@ -76,7 +72,6 @@ public class ProviderDao extends OscarSuperDao {
 
 			{"searchloginteam", "select provider_no, last_name, first_name from provider where (provider_no=? || team=(select team from provider where provider_no=?)) and status='1' order by last_name"},
 			{"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
-			{"searchallprovider", "select * from provider where status='1' order by last_name"},
 			{"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" },
 			{"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? and status = 'A' order by sdate" },
 			{"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? and status = 'A' order by sdate" },
@@ -86,8 +81,7 @@ public class ProviderDao extends OscarSuperDao {
 
 			{"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"},
 			{"search_timecode", "select * from scheduletemplatecode order by code"},
-			{"search_resource_baseurl", "select * from property where name = ?"},
-
+			
 			{"search_numgrpscheduledate", "select count(scheduledate.provider_no) from mygroup, scheduledate where mygroup_no = ? and scheduledate.sdate=? and mygroup.provider_no=scheduledate.provider_no and scheduledate.available = '1'  and scheduledate.status = 'A'"},
 
 			{"search_pref_defaultbill", "select default_servicetype,defaultDoNotDeleteBilling from preference where provider_no = ?"},
