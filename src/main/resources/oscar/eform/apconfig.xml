@@ -142,7 +142,7 @@
     <databaseap>
         <ap-name>NameAddress</ap-name>
         <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${last_name}, ${first_name}\n${address}\n${city},${postal},${province}</ap-output>
+        <ap-output>${last_name}, ${first_name}\n${address}\n${city},${province} ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hin</ap-name>
@@ -339,33 +339,34 @@
                 WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
         <ap-output>${work_phone}</ap-output>
     </databaseap>
-    <databaseap>
-        <ap-name>referral_name</ap-name>
-        <ap-sql>SELECT billingreferral.last_name, billingreferral.first_name FROM billingreferral, demographic
-                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0
-                AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-        <ap-output>${last_name}, ${first_name}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>referral_address</ap-name>
-        <ap-sql>SELECT CONCAT(billingreferral.address1,', ',billingreferral.address2,', ',billingreferral.city,', ',billingreferral.province,', ',billingreferral.country,', ',billingreferral.postal) AS raddress
-                FROM billingreferral, demographic
-                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-        <ap-output>${raddress}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>referral_phone</ap-name>
-        <ap-sql>SELECT billingreferral.phone FROM billingreferral, demographic
-                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-        <ap-output>${phone}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>referral_fax</ap-name>
-        <ap-sql>SELECT billingreferral.fax FROM billingreferral, demographic
-                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-        <ap-output>${fax}</ap-output>
-    </databaseap>
-    <databaseap>
+	<databaseap>
+		<ap-name>referral_name</ap-name>
+		<ap-sql>SELECT professionalSpecialists.lName, professionalSpecialists.fName FROM professionalSpecialists, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0
+                AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${last_name}, ${first_name}</ap-output>
+	</databaseap>
+
+	<databaseap>
+		<ap-name>referral_address</ap-name>
+		<ap-sql>SELECT professionalSpecialists.address AS raddress
+                FROM professionalSpecialists, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${raddress}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>referral_phone</ap-name>
+		<ap-sql>SELECT professionalSpecialists.phone FROM professionalSpecialists, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${phone}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>referral_fax</ap-name>
+		<ap-sql>SELECT professionalSpecialists.fax FROM professionalSpecialists, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${fax}</ap-output>
+	</databaseap>
+	<databaseap>
 		<ap-name>referral_no</ap-name>
 		<ap-sql>SELECT billingreferral.referral_no
 				FROM billingreferral, demographic
@@ -526,7 +527,7 @@
        </ap-sql>
         <ap-output>${prevention_date}</ap-output>
     </databaseap>
-
+ 
     <databaseap>
         <ap-name>mammogram_immunization_date</ap-name>
         <ap-sql>select prevention_date from preventions p where p.prevention_type = 'MAM' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date asc limit 1
