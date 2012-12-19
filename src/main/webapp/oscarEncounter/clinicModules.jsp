@@ -46,25 +46,7 @@
 
 <h3>&nbsp;<bean:message key="oscarEncounter.Index.clinicalModules" /></h3>
 <ul id="ModuleList">
-	<%-- <li>               
-                        <%
-                            winName = "Master" + bean.demographicNo;
-                            if (vLocale.getCountry().equals("BR")) {                            
-                        %>
-                            <a class="links" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="javascript: function myFunction() {return false; }" onClick="popupPage(700,1000,'<%=winName%>','../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
-                            title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
-                        <%}else{%>
-                            <a class="links" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="javascript: function myFunction() {return false; }" onClick="popupPage(700,1000,'<%=winName%>','../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')"
-                            title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
-                        <%}%>
-                    </li>
-                     <li>
-                        <%
-                           winName = "Consultations" + bean.demographicNo;
-                        %>
-                        <a class="links" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href=# onClick="popupPage(700,960,'<%=winName%>','<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a>
-                    </li>
-                    --%>
+
 	<li><oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
 		<%
                                winName = "Prevention" + bean.demographicNo;

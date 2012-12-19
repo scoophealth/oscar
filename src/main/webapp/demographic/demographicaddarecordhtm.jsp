@@ -462,12 +462,8 @@ function autoFillHin(){
    		 <tr bgcolor="#CCCCFF">
 				<td colspan="4">
 				<div align="center"><input type="hidden" name="dboperation"
-					value="add_record"> <%
-          if (vLocale.getCountry().equals("BR")) { %> <input
-					type="hidden" name="dboperation2" value="add_record_ptbr">
-				<%}%> <%--
-						          <input type="submit" name="displaymode" value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>" onclick="document.forms['adddemographic'].displaymode.value='Add Record'; document.forms['adddemographic'].submit();">
-						--%> <input type="hidden" name="displaymode" value="Add Record">
+					value="add_record">
+          <input type="hidden" name="displaymode" value="Add Record">
 				<input type="submit" name="submit"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>">
 				<input type="button" name="Button"
@@ -548,97 +544,28 @@ function autoFillHin(){
             </select>
         </td>
     </tr>
-    <%
-    if (vLocale.getCountry().equals("BR")) { %>
-			<tr>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formRG" />:</b></td>
-				<td align="left"><input type="text" name="rg"
-					onBlur="upCaseCtrl(this)"></td>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formCPF" />:</b></td>
-				<td align="left"><input type="text" name="cpf"
-					onBlur="upCaseCtrl(this)"></td>
-			</tr>
-			<tr>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formMaritalState" />:</b></td>
-				<td align="left"><select name="marital_state">
-					<option value="-">-</option>
-					<option value="S"><bean:message
-						key="demographic.demographicaddrecordhtm.formMaritalState.optSingle" /></option>
-					<option value="M"><bean:message
-						key="demographic.demographicaddrecordhtm.formMaritalState.optMarried" /></option>
-					<option value="R"><bean:message
-						key="demographic.demographicaddrecordhtm.formMaritalState.optSeparated" /></option>
-					<option value="D"><bean:message
-						key="demographic.demographicaddrecordhtm.formMaritalState.optDivorced" /></option>
-					<option value="W"><bean:message
-						key="demographic.demographicaddrecordhtm.formMaritalState.optWidower" /></option>
-				</select></td>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formBirthCertificate" />:</b>
-				</td>
-				<td align="left"><input type="text" name="birth_certificate"
-					onBlur="upCaseCtrl(this)"></td>
-			</tr>
-			<tr>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formMarriageCertificate" />:</b></td>
-				<td align="left"><input type="text" name="marriage_certificate"
-					onBlur="upCaseCtrl(this)"></td>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formPartnerName" />:</b></td>
-				<td align="left"><input type="text" name="partner_name"
-					onBlur="upCaseCtrl(this)"></td>
-			</tr>
-			<tr>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formFatherName" />:</b></td>
-				<td align="left"><input type="text" name="father_name"
-					onBlur="upCaseCtrl(this)"></td>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formMotherName" />:</b></td>
-				<td align="left"><input type="text" name="mother_name"
-					onBlur="upCaseCtrl(this)"></td>
-			</tr>
-			<%}%>
+
 			<tr valign="top">
 				<td id="addrLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formAddress" />: </b></td>
 				<td id="addressCell" align="left"><input id="address" type="text" name="address" size=40 />
-				<% if (vLocale.getCountry().equals("BR")) { %> <b><bean:message
-					key="demographic.demographicaddrecordhtm.formAddressNo" />:</b> <input
-					id="address_no" type="text" name="address_no" size="6"> <%}%>
+
 				</td>
 				<td id="cityLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formCity" />: </b></td>
 				<td id="cityCell" align="left"><input type="text" id="city" name="city"
 					value="<%=defaultCity %>" /></td>
 			</tr>
-			<% if (vLocale.getCountry().equals("BR")) { %>
+			
 			<tr valign="top">
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formComplementaryAddress" />:
-				</b></td>
-				<td align="left"><input type="text"
-					name="complementary_address" onBlur="upCaseCtrl(this)"></td>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formDistrict" />: </b></td>
-				<td align="left"><input type="text" name="district"
-					onBlur="upCaseCtrl(this)"></td>
-			</tr>
-			<%}%>
-			<tr valign="top">
-				<td id="provLbl" align="right"><b> <% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>
+				<td id="provLbl" align="right"><b> 
+				<% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>
 				<bean:message key="demographic.demographicaddrecordhtm.formprovince" />
 				<% } else {
-          out.print(oscarProps.getProperty("demographicLabelProvince"));
-      	 } %> : </b></td>
+          			out.print(oscarProps.getProperty("demographicLabelProvince"));
+      	 		} %> : </b></td>
 				<td id="provCell" align="left">
-				<% if (vLocale.getCountry().equals("BR")) { %> <input type="text"
-					name="province" value="<%=props.getProperty("billregion", "ON")%>">
-				<% } else { %> <select id="province" name="province">
+				<select id="province" name="province">
 					<option value="OT"
 						<%=defaultProvince.equals("")||defaultProvince.equals("OT")?" selected":""%>>Other</option>
 					<%-- <option value="">None Selected</option> --%>
@@ -720,7 +647,7 @@ function autoFillHin(){
 					<option value="US-WV" <%=defaultProvince.equals("US-WV")?" selected":""%>>US-WV-West Virginia</option>
 					<option value="US-WY" <%=defaultProvince.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
 					<% } %>
-				</select> <% } %>
+				</select>
 				</td>
 				<td id="postalLbl" align="right"><b> <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
 				<bean:message key="demographic.demographicaddrecordhtm.formPostal" />
@@ -881,8 +808,7 @@ function autoFillHin(){
 				<td id="hcTypeLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formHCType" />: </b></td>
 				<td id="hcType">
-				<% if(vLocale.getCountry().equals("BR")) { %> <input type="text"
-					name="hc_type" value=""> <% } else { %>
+				
 				<select name="hc_type" id="hc_type">
 					<option value="OT"
 						<%=HCType.equals("")||HCType.equals("OT")?" selected":""%>>Other</option>
@@ -964,7 +890,7 @@ function autoFillHin(){
 		<option value="US-WY" <%=HCType.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
           <% } %>
           </select>
-        <% }%>
+       
       </td>
       <td id="renewDateLbl" align="right"><b>*<bean:message key="demographic.demographiceditdemographic.formHCRenewDate" />:</b></td>
       <td id="renewDate" align="left"> <input type="text" id="hc_renew_date_year" name="hc_renew_date_year" size="4" maxlength="4" value="">
@@ -1143,9 +1069,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
                             <td id="ptStatusLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPatientStatus" />:</b></td>
 				<td id="ptStatusCell" align="left">
-				<% if (vLocale.getCountry().equals("BR")) { %> <input type="text"
-					name="patient_status" value="AC" onBlur="upCaseCtrl(this)">
-				<% } else { %> <select id="patient_status" name="patient_status" style="width: 160">
+				<select id="patient_status" name="patient_status" style="width: 160">
 					<option value="AC"><bean:message key="demographic.demographicaddrecordhtm.AC-Active" /></option>
 					<option value="IN"><bean:message key="demographic.demographicaddrecordhtm.IN-InActive" /></option>
 					<option value="DE"><bean:message key="demographic.demographicaddrecordhtm.DE-Deceased" /></option>
@@ -1157,7 +1081,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					<% } // end while %>
 				</select> <input type="button" onClick="newStatus();" value="<bean:message
 					key="demographic.demographicaddrecordhtm.AddNewPatient"/> ">
-				<% } // end if...then...else %>
+				
 				</td>
 				<td id="chartNoLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formChartNo" />:</b></td>
@@ -1175,16 +1099,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 
 
 			<%
-    if (vLocale.getCountry().equals("BR")) { %>
-			<tr valign="top">
-				<td align="right"><b>&nbsp;</b></td>
-				<td align="left">&nbsp;</td>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formChartAddress" />:</b></td>
-				<td align="left"><input type="text" name="chart_address"
-					value=""></td>
-			</tr>
- <% }
+
    if (props.isPropertyActive("meditech_id")) { %>
                          <tr valign="top">
                              <td align="right"><b>Meditech ID:</b></td>
@@ -1304,12 +1219,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 			<tr bgcolor="#CCCCFF">
 				<td colspan="4">
 				<div align="center"><input type="hidden" name="dboperation"
-					value="add_record"> <%
-          if (vLocale.getCountry().equals("BR")) { %> <input
-					type="hidden" name="dboperation2" value="add_record_ptbr">
-				<%}%> <%--
-          <input type="submit" name="displaymode" value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>" onclick="document.forms['adddemographic'].displaymode.value='Add Record'; document.forms['adddemographic'].submit();">
---%> <input type="hidden" name="displaymode" value="Add Record">
+					value="add_record"> <input type="hidden" name="displaymode" value="Add Record">
 				<input type="submit" id="btnAddRecord" name="submit"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>">
 				<input type="button" id="btnSwipeCard" name="Button"
