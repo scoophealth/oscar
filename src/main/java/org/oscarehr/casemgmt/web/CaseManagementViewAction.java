@@ -1993,7 +1993,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				EChartNoteEntry e = new EChartNoteEntry();
 				e.setId(h1.get("id"));
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				e.setDate(sdf.parse(h1.get("billing_date") + " " + h1.get("billing_time")));
+				e.setDate(sdf.parse(h1.get("billingDate") + " " + h1.get("billing_time")));
 				e.setProviderNo((String)h1.get("provider_no"));
 				//e.setProgramId(Integer.parseInt((String)note[3]));
 				//e.setRoleId(Integer.parseInt((String)note[4]));
