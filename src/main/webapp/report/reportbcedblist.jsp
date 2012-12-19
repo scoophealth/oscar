@@ -17,12 +17,17 @@ if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDat
 	scope="page" />
 <jsp:useBean id="providerNameBean" class="java.util.Properties"
 	scope="page" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
 
 <% 
 String [][] dbQueries=new String[][] { 
 //{"select_bcformar", "select distinct(demographic_no) from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, 
 {"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_dateOfBirth, pg1_langPref, c_phn, pg1_gravida, pg1_term, c_phone, c_phyMid, ar2_doula, ar2_doulaNo, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
-{"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
 };
 reportMainBean.doConfigure(dbQueries);
 %>
@@ -82,10 +87,8 @@ reportMainBean.doConfigure(dbQueries);
 		<TH align="center"><b>Doula#</b></TH>
 	</tr>
 	<%
-  ResultSet rs=null ;
-  rs = reportMainBean.queryResults("search_provider");
-  while (rs.next()) { 
-    providerNameBean.setProperty(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
+	for(Provider p : providerDao.getActiveProviders()) {
+    providerNameBean.setProperty(p.getProviderNo(), new String( p.getFormattedName()));
   }
   
   Properties demoProp = new Properties();
@@ -103,7 +106,7 @@ reportMainBean.doConfigure(dbQueries);
   itemp1[0] = Integer.parseInt(strLimit2);
   boolean bodd=false;
   int nItems=0;
-  rs = reportMainBean.queryResults(param,itemp1, "select_bcformar");
+  ResultSet rs = reportMainBean.queryResults(param,itemp1, "select_bcformar");
   while (rs.next()) {
     if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
     else demoProp.setProperty(reportMainBean.getString(rs,"demographic_no"), "1");

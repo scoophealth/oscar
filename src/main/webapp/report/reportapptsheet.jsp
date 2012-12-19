@@ -112,7 +112,7 @@ function setfocus() {
 <% 
   GregorianCalendar now=new GregorianCalendar();
   String createtime = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) +" "+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) ;
-  now.add(now.DATE, 1);
+  now.add(Calendar.DATE, 1);
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);

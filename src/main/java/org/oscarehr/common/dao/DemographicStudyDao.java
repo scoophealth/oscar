@@ -26,6 +26,8 @@
 package org.oscarehr.common.dao;
 
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.DemographicStudy;
@@ -51,6 +53,13 @@ public class DemographicStudyDao extends AbstractDao<DemographicStudy>{
 		pk.setStudyNo(studyNo);
 
 		return find(pk);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<DemographicStudy> findByStudyNo(int studyNo) {
+		Query query = entityManager.createQuery("select x from DemographicStudy x where x.id.studyNo=?");
+		query.setParameter(1, studyNo);
+		return query.getResultList();
 	}
 
 }

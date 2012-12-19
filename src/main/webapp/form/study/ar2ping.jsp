@@ -1,13 +1,8 @@
-<%
-if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
-%>
-
-
 <%@ page import="java.lang.reflect.*, java.sql.*"%>
 
-<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
 <%@ page import="java.util.*,oscar.ping.xml.*"%>
 <%@ page import="org.chip.ping.xml.*"%>
