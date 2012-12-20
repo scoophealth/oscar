@@ -458,15 +458,11 @@ function refreshTabAlerts(id) {
 			
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 			<li>
-			<%if (vLocale.getCountry().equals("BR")) { %> <a HREF="#"
-				ONCLICK="popupOscarRx(550,687,'../oscar/billing/consultaFaturamentoMedico/init.do');return false;"
-				TITLE='<bean:message key="global.genBillReport"/>'
-				onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message
-				key="global.billing" /></a> <% } else {%> <a HREF="#"
+			<a HREF="#"
 				ONCLICK="popupOscarRx(550,687,'../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;"
 				TITLE='<bean:message key="global.genBillReport"/>'
 				onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message
-				key="global.billing" /></a> <% } %>
+				key="global.billing" /></a>
 			</li>
 			</security:oscarSec>
 			

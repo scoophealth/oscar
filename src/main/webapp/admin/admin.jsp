@@ -556,16 +556,11 @@ div.logoutBox {
 			<%
 				session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/");
 			%>
-			<%
-				if (!country.equals("BR"))
-							{
-			%>
+			
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarReport/RptByExample.do"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnQueryByExample" /></a></li>
-			<%
-				}
-			%>
+			
 			<li><a href="#"
 				onclick='popup(600,900,&quot;<html:rewrite page="/oscarReport/reportByTemplate/homePage.jsp"/>&quot;, "reportbytemplate")'><bean:message key="admin.admin.rptbyTemplate"/></a></li>
 			<li><a href="#"
@@ -575,10 +570,7 @@ div.logoutBox {
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportVisitControl.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnVisitReport" /></a></li>
 			<%-- This links doesnt make sense on Brazil. Hide then --%>
-			<%
-				if (!country.equals("BR"))
-							{
-			%>
+			
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportCatchment.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnPCNCatchmentReport" /></a></li>
@@ -588,17 +580,7 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(600,1000,&quot;<html:rewrite page="/oscarReport/obec.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnOvernightChecking" /></a></li>
-			<%
-				}
-							else
-							{
-			%>
-			<li><a href="#"
-				onclick='popupPage(600,750,&quot;<html:rewrite page="/report/reportactivepatientlist.jsp"/>&quot;)'><bean:message
-				key="report.reportindex.btnActivePList" /></a></li>
-			<%
-				}
-			%>
+
 			<li><a href="#"
 				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarSurveillance/ReportSurveillance.jsp"/>&quot;)"><bean:message
 				key="admin.admin.report.SurveillanceReport" /></a></li>
@@ -632,11 +614,7 @@ div.logoutBox {
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>">
-		<%-- This links doesnt make sense on Brazil. Hide then --%>
-		<%
-			if (!country.equals("BR"))
-						{
-		%>
+
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.oscarBackup" /></h3>
 		<ul>
@@ -645,9 +623,7 @@ div.logoutBox {
 				key="admin.admin.btnAdminBackupDownload" /></a></li>
 		</ul>
 		</div>
-		<%
-			}
-		%>
+		
 	</security:oscarSec>
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>">
@@ -755,10 +731,7 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/providertemplate.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnInsertTemplate" /></a></li>
-			<%
-				if (!country.equals("BR"))
-							{
-			%>
+	
 			<li><a href="#"
 				onclick='popupPage(550,810,&quot;<html:rewrite page="/admin/demographicstudy.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnStudy" /></a></li>
@@ -775,7 +748,7 @@ div.logoutBox {
 			category</a>) </span></li>
 			<%
 				}
-							}
+							
 			%>
 			<oscar:oscarPropertiesCheck property="OLD_LAB_UPLOAD" value="yes"
 				defaultVal="false">

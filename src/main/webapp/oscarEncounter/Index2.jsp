@@ -1188,11 +1188,7 @@ function grabEnterGetTemplate(event){
 					NOWRAP>
 				<%
                             String winName = "Master" + bean.demographicNo;
-                            String url;
-                            if (vLocale.getCountry().equals("BR"))
-                                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail_ptbr";
-                            else
-                                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
+                            String url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
                         %> <a href="#"
 					style="font-size: 11px; text-decoration: none"
 					onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;"

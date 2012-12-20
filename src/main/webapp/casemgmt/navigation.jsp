@@ -186,34 +186,28 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <!-- master -->
 <caisirole:SecurityAccess accessName="master file" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-    <nested:equal name="casemgmt_VlCountry" value="BR">
-        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr');return false;">Master</a></td></tr>
-    </nested:equal>
-    <nested:notEqual name="casemgmt_VlCountry" value="BR">
+    
         <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;">Master</a></td></tr>
-    </nested:notEqual>
+
 </caisirole:SecurityAccess>
 
 <caisirole:SecurityAccess accessName="billing" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <!-- billing -->
-    <nested:equal name="casemgmt_VlCountry" value="BR">
-        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>');return false;">Billing</a></td></tr>
-    </nested:equal>
-    <nested:notEqual name="casemgmt_VlCountry" value="BR">
+
         <% if(bean.status.indexOf('B')==-1) { %>
         <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/billing.do?billRegion=<%=java.net.URLEncoder.encode(province)%>&billForm=<%=java.net.URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=java.net.URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=Hour+":"+Min%>&demographic_name=<%=java.net.URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&bNewForm=1&status=t');return false;">Billing</a></td></tr>
         <%}else{ %>
         <tr><td><a href="javascript:void(0)" onClick="onUnbilled('<%=bsurl%>/billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>');return false;">Billing</a></td></tr>
         <%} %>
-    </nested:notEqual>
+    
 </caisirole:SecurityAccess>
 
 <caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
 
     <!-- prescription -->
-    <nested:notEqual name="casemgmt_VlCountry" value="BR">
+   
         <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">Prescriptions</a></td></tr>
-    </nested:notEqual>
+ 
 </caisirole:SecurityAccess>
 
 <!-- allergies -->
