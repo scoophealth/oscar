@@ -17,25 +17,33 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.oscarehr.common.model.Provider" %>
-<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
-<%@ page import="org.oscarehr.billing.CA.model.BillActivity" %>
-<%@ page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
 <%@ page import="oscar.util.ConversionUtils" %>
 <%@ page import="oscar.login.DBHelp"%>
 <%@ page import="java.util.*,java.sql.*,oscar.*,oscar.util.*,java.net.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+
+<%@ page import="org.oscarehr.billing.CA.model.BillActivity" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
+
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%@ include file="../../../admin/dbconnection.jsp"%>
 
 
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	BillActivityDao billActivityDao = SpringUtils.getBean(BillActivityDao.class);
-%>
-<%
+	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+
 	String curProvider_no = (String) session.getAttribute("user");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
@@ -43,34 +51,27 @@
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
 %>
-<security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
-<% isTeamBillingOnly=true; %>
-</security:oscarSec>
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
-</security:oscarSec>
-<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isTeamAccessPrivacy=true; %>
-</security:oscarSec>
 
+<security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false"><% isTeamBillingOnly=true; %></security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"><%isSiteAccessPrivacy=true; %></security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"><%isTeamAccessPrivacy=true; %></security:oscarSec>
 
 <% 
+List<ProviderData> pdList = null;
 HashMap<String,String> providerMap = new HashMap<String,String>();
+
 //multisites function
 if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-	String sqlStr = "select provider_no from provider ";
+
 	if (isSiteAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
-		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
+		pdList = providerDataDao.findByProviderSite(curProvider_no);
+	
 	if (isTeamAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
-				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
-	DBHelp dbObj = new DBHelp();
-	ResultSet rs = dbObj.searchDBRecord(sqlStr);
-	while (rs.next()) {
-		providerMap.put(rs.getString("provider_no"),"true");
+		pdList = providerDataDao.findByProviderTeam(curProvider_no);
+
+	for(ProviderData providerData : pdList) {
+		providerMap.put(providerData.getId(), "true");
 	}
-	rs.close();
 }
 %>
 
@@ -164,25 +165,15 @@ obj.visibility=v; }
 </script>
 
 <!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-<!-- main calendar program -->
+<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-<!-- language for the calendar -->
-<script type="text/javascript"
-	src="../../../share/calendar/lang/calendar-en.js"></script>
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript"
-	src="../../../share/calendar/calendar-setup.js"></script>	
+<script type="text/javascript" src="../../../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>	
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0"
-	leftmargin="0" rightmargin="0">
-<div id="Layer1"
-	style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
-<div id="Layer2"
-	style="position: absolute; left: 45px; top: 61px; width: 129px; height: 123px; z-index: 2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
+<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<div id="Layer1" style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
+<div id="Layer2" style="position: absolute; left: 45px; top: 61px; width: 129px; height: 123px; z-index: 2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr bgcolor="#DDDDEE">
 		<td align='CENTER'><font size="2"> <strong>Last 5
