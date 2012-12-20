@@ -29,7 +29,7 @@ import org.oscarehr.common.model.AbstractCodeSystemModel;
 
 public abstract class AbstractCodeSystemDao<T extends AbstractCodeSystemModel<?>> extends AbstractDao<T> {
 
-	public static enum codingSystem {Icd9,Ichppccode,SnomedCore}
+	public static enum codingSystem {icd9,ichppccode,SnomedCore}
 	
 	/**
 	 * Gets the name of the DAO for the specified code system
@@ -40,9 +40,9 @@ public abstract class AbstractCodeSystemDao<T extends AbstractCodeSystemModel<?>
 	 * 		Return the name of the DAO bean.
 	 */
 	public static String getDaoName(codingSystem codeSystem) {
-		if (codeSystem == codingSystem.Icd9) return "icd9Dao";
+		if (codeSystem == codingSystem.icd9) return "icd9Dao";
 
-		if (codeSystem == codingSystem.Ichppccode) return "ichppccodeDao";
+		if (codeSystem == codingSystem.ichppccode) return "ichppccodeDao";
 
 		if (codeSystem == codingSystem.SnomedCore) return "snomedCoreDao";
 
