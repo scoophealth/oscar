@@ -23,24 +23,23 @@
     Ontario, Canada
 
 --%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"
-	errorPage="../../errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*" errorPage="../../errorpage.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Study" %>
+<%@page import="org.oscarehr.common.dao.StudyDao" %>
+<%@page import="org.oscarehr.common.model.DemographicStudy" %>
+<%@page import="org.oscarehr.common.dao.DemographicStudyDao" %>
+<%
+	StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
+    DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudy.class);
+%>
+
 <%
     //this is a quick independent page to let you select study.
     
     String demographic_no = request.getParameter("demographic_no")!=null ? request.getParameter("demographic_no") : "0";
     String curUser_no = (String) session.getAttribute("user");
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
-%>
-
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.dao.StudyDao" %>
-<%@page import="org.oscarehr.common.model.Study" %>
-<%@page import="org.oscarehr.common.dao.DemographicStudyDao" %>
-<%@page import="org.oscarehr.common.model.DemographicStudy" %>
-<%
-	StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
-	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
 %>
 
 <html>
@@ -82,16 +81,16 @@ function setfocus() {
 		<TH width="50%">Description</TH>
 	</tr>
 	<%
+
     int nItems=0;
     int ectsize=0;
     String datetime =null;
     String bgcolor = null;
   
-    for(Study s:studyDao.findByCurrent1(1)) {
-    	DemographicStudy ds = demographicStudyDao.findByDemographicNoAndStudyNo(Integer.parseInt(request.getParameter("demographic_no")),s.getId());
-    	if(ds != null) {
+    for(DemographicStudy ds : demographicStudyDao.findByDemographicNo(Integer.parseInt(request.getParameter("demographic_no")))) {
+    	Study s = studyDao.find(ds.getId().getStudyNo());
+    	if(s.getCurrent1() == 1) {
     		
- 
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
 %>
@@ -102,7 +101,7 @@ function setfocus() {
 		<td><%=s.getDescription()%></td>
 	</tr>
 	<%
-	}}
+	} }
 %>
 	<tr>
 		<td>&nbsp;</td>
