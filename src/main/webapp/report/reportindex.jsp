@@ -279,7 +279,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 			onClick="ogo()"></td>
 		<td></td>
 	</tr>
-	<% if (!country.equals("BR")) {  %>
+	
 	<tr>
 		<td width="2"><%=j%>
 		<%j++;%>
@@ -293,7 +293,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<td></td>
 		<td></td>
 	</tr>
-	<% }%>
+	
 	<tr>
 		<td width="2"><%=j%>
 		<%j++;%>
@@ -643,10 +643,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<td></td>
 		<td></td>
 	</tr>
-	<%
-       // If country = Brazil, do not show the following links:
-       if (!country.equals("BR")) {
-    %>
+
 	<tr>
 		<td width="2"><%=j%>
 		<%j++;%>
@@ -713,7 +710,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<td></td>
 		<td></td>
 	</tr>
-	<% } // end - if country %>
+	
 	<tr>
 		<td width="2"><%=j%>
 		<%j++;%>
