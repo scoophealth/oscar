@@ -369,14 +369,20 @@ public class BillingCorrectionAction extends DispatchAction{
                     BillingServiceDao bServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
                     BillingService bService = bServiceDao.searchBillingCode(serviceCodeId, "ON", serviceDate);
                     
-                    if (bService.getTerminationDate().before(serviceDate)) {
-                        fee = "defunct";
-                    } else { 
-                        fee = bService.getValue();      
-                        BigDecimal feeAmt = new BigDecimal(fee);
-                        feeAmt = feeAmt.multiply(unitAmt).setScale(2, BigDecimal.ROUND_HALF_UP);
-                        fee = feeAmt.toPlainString();
-                    }                                                           
+                    if( bService == null ) {
+                    	bService = bServiceDao.searchPrivateBillingCode(serviceCodeId, serviceDate);
+                    }
+                    if( bService != null ) {
+                    	                    
+                    	if (bService.getTerminationDate().before(serviceDate)) {
+                    		fee = "defunct";
+                    	} else { 
+                    		fee = bService.getValue();      
+                    		BigDecimal feeAmt = new BigDecimal(fee);
+                    		feeAmt = feeAmt.multiply(unitAmt).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    		fee = feeAmt.toPlainString();
+                    	}
+                    }
                 }
                                                     
                 BillingONItem bItem = new BillingONItem();
