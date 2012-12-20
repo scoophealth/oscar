@@ -46,7 +46,8 @@ public class DxresearchDAOTest extends DaoTestFixtures {
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("dxresearch", "demographic","lst_gender","admission","demographic_merged",
 				"program","health_safety","provider","providersite","site","program_team",
-				"measurements", "measurementType", "measurementsExt", "quickList", "icd9","ichppccode");
+				"measurements", "measurementType", "measurementsExt", "quickList", "icd9","ichppccode",
+				"billing", "billingdetail");
 	}
 
 	@Test
