@@ -39,9 +39,7 @@
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="updatedpBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<jsp:useBean id="namevector" class="java.util.Vector" scope="page" />
+
 <jsp:useBean id="novector" class="java.util.Vector" scope="page" />
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
@@ -51,22 +49,10 @@
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	
+	List<String> names = new ArrayList<String>();
 %>
-<% // table demographiccust: cust1 = nurse   cust2 = resident   cust4 = midwife
 
-  String [][] dbQueries = new String[1][1];
-  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-
-  if (strDbType.trim().equalsIgnoreCase("mysql")) {
-  		dbQueries=new String[][] {
-		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
-		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
-		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
-		  };
-  }
-  String[][] responseTargets=new String[][] {  };
-  updatedpBean.doConfigure(dbQueries,responseTargets);
-%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
@@ -98,8 +84,8 @@ function setregexp2() {
 
 <%
  	for(Provider p : providerDao.getActiveProviders()) {
- 	  namevector.add(p.getProviderNo());
- 	  namevector.add(p);
+ 	  names.add(p.getProviderNo());
+ 	  names.add(p.getFormattedName());
  	}
 %>
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -111,12 +97,10 @@ function setregexp2() {
 </table>
 <%
   if(request.getParameter("update")!=null && request.getParameter("update").equals(" Go ") ) {
-    String [] param1 = new String[2] ;
-    param1[0] = request.getParameter("oldcust2") ;
-    param1[1] = request.getParameter("regexp") ;
-    ResultSet rsgroup = updatedpBean.queryResults(param1, "select_demoname");
-    while (rsgroup.next()) {
-        novector.add(rsgroup.getString("demographic_no"));
+   
+    Integer demoNo = demographicCustDao.select_demoname(request.getParameter("oldcust2"), request.getParameter("regexp"));
+    if (demoNo != null) {
+        novector.add(demoNo.toString());
     }
     int nosize = novector.size();
     int rowsAffected = 0;
@@ -134,9 +118,7 @@ function setregexp2() {
  	  }
       }
       String instrdemo = sbtemp.toString();
-      dbQueries[0][1] = dbQueries[0][1] + "("+ instrdemo +")" ;
-      updatedpBean.doConfigure(dbQueries,responseTargets);
-
+     
       List<Integer> demoList= new ArrayList<Integer>();
       for(int x=2;x<param.length;x++) {
     	  demoList.add(Integer.parseInt(param[x]));
@@ -154,14 +136,12 @@ function setregexp2() {
 <%}
 
   if(request.getParameter("update")!=null && request.getParameter("update").equals(" Submit ") ) {
-    String [] param1 = new String[2] ;
-    param1[0] = request.getParameter("oldcust1") ;
-    param1[1] = request.getParameter("regexp") ;
-    ResultSet rsgroup = updatedpBean.queryResults(param1, "select_demoname1");
+	  Integer demoNo = demographicCustDao.select_demoname1(request.getParameter("oldcust1"), request.getParameter("regexp"));
+	    if (demoNo != null) {
+	    	 novector.add(demoNo.toString());
+	    }
 
-    while (rsgroup.next()) {
- 	    novector.add(rsgroup.getString("demographic_no"));
-    }
+  
     int nosize = novector.size();
     int rowsAffected = 0;
 
@@ -179,9 +159,7 @@ function setregexp2() {
               param[i+2] = (String) novector.get(i);
  	  }
       }
-      String instrdemo = sbtemp.toString();
-      dbQueries[1][1] += "("+ instrdemo +")" ;
-      updatedpBean.doConfigure(dbQueries,responseTargets);
+     
 
       List<Integer> demoList= new ArrayList<Integer>();
       for(int x=2;x<param.length;x++) {
@@ -200,14 +178,11 @@ function setregexp2() {
 <%}
 
   if(request.getParameter("update")!=null && request.getParameter("update").equals("UpdateMidwife") ) {
-    String [] param1 = new String[2] ;
-    param1[0] = request.getParameter("oldcust4") ;
-    param1[1] = request.getParameter("regexp") ;
-    ResultSet rsgroup = updatedpBean.queryResults(param1, "select_demoname2");
+	  Integer demoNo = demographicCustDao.select_demoname2(request.getParameter("oldcust4"), request.getParameter("regexp"));
+	    if (demoNo != null) {
+	    	 novector.add(demoNo.toString());
+	    }
 
-    while (rsgroup.next()) {
- 	    novector.add(rsgroup.getString("demographic_no"));
-    }
     int nosize = novector.size();
     int rowsAffected = 0;
 
@@ -226,9 +201,7 @@ function setregexp2() {
  	  }
       }
       String instrdemo = sbtemp.toString();
-      dbQueries[2][1] += "("+ instrdemo +")" ;
-      updatedpBean.doConfigure(dbQueries,responseTargets);
-
+     
       List<Integer> demoList= new ArrayList<Integer>();
       for(int x=2;x<param.length;x++) {
     	  demoList.add(Integer.parseInt(param[x]));
@@ -261,18 +234,18 @@ function setregexp2() {
 		<td><bean:message key="admin.updatedemographicprovider.formUse" />
 		<select name="newcust2">
 			<%
- 	 for(int i=0; i<namevector.size(); i=i+2) {
+ 	 for(int i=0; i<names.size(); i=i+2) {
 %>
-			<option value="<%=namevector.get(i)%>"><%=namevector.get(i+1)%></option>
+			<option value="<%=names.get(i)%>"><%=names.get(i+1)%></option>
 			<%
  	 }
 %>
 		</select> <bean:message key="admin.updatedemographicprovider.formReplace" /> <select
 			name="oldcust2">
 			<%
- 	 for(int i=0; i<namevector.size(); i=i+2) {
+ 	 for(int i=0; i<names.size(); i=i+2) {
 %>
-			<option value="<%=namevector.get(i)%>"><%=namevector.get(i+1)%></option>
+			<option value="<%=names.get(i)%>"><%=names.get(i+1)%></option>
 			<%
  	 }
 %>
@@ -323,18 +296,18 @@ function setregexp2() {
 		<td><bean:message key="admin.updatedemographicprovider.formUse" />
 		<select name="newcust1">
 			<%
- 	 for(int i=0; i<namevector.size(); i=i+2) {
+ 	 for(int i=0; i<names.size(); i=i+2) {
 %>
-			<option value="<%=namevector.get(i)%>"><%=namevector.get(i+1)%></option>
+			<option value="<%=names.get(i)%>"><%=names.get(i+1)%></option>
 			<%
  	 }
 %>
 		</select> <bean:message key="admin.updatedemographicprovider.formReplace" /> <select
 			name="oldcust1">
 			<%
- 	 for(int i=0; i<namevector.size(); i=i+2) {
+ 	 for(int i=0; i<names.size(); i=i+2) {
 %>
-			<option value="<%=namevector.get(i)%>"><%=namevector.get(i+1)%></option>
+			<option value="<%=names.get(i)%>"><%=names.get(i+1)%></option>
 			<%
  	 }
 %>
@@ -383,18 +356,18 @@ function setregexp2() {
 		<td><bean:message key="admin.updatedemographicprovider.formUse" />
 		<select name="newcust4">
 			<%
- 	 for(int i=0; i<namevector.size(); i=i+2) {
+ 	 for(int i=0; i<names.size(); i=i+2) {
 %>
-			<option value="<%=namevector.get(i)%>"><%=namevector.get(i+1)%></option>
+			<option value="<%=names.get(i)%>"><%=names.get(i+1)%></option>
 			<%
  	 }
 %>
 		</select> <bean:message key="admin.updatedemographicprovider.formReplace" /> <select
 			name="oldcust4">
 			<%
- 	 for(int i=0; i<namevector.size(); i=i+2) {
+ 	 for(int i=0; i<names.size(); i=i+2) {
 %>
-			<option value="<%=namevector.get(i)%>"><%=namevector.get(i+1)%></option>
+			<option value="<%=names.get(i)%>"><%=names.get(i+1)%></option>
 			<%
  	 }
 %>

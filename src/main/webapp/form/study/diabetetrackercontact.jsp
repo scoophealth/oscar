@@ -29,13 +29,15 @@
 <%@ page contentType="text/xml"%>
 <%@ page import="java.util.*, java.sql.*, javax.xml.parsers.*, org.w3c.dom.*, oscar.util.*,java.io.*,org.xml.sax.InputSource" errorPage="../../appointment/errorpage.jsp"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.dao.DemographicDao" %>
-<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.Demographic"%>
+<%@ page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@ page import="org.oscarehr.common.model.EChart"%>
+<%@ page import="org.oscarehr.common.dao.EChartDao"%>
 <%
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+    EChartDao eChartDao = SpringUtils.getBean(EChartDao.class);
 %>
-
 
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
 
@@ -64,10 +66,10 @@
         demo.setProperty("demographic.last_name", d.getLastName());
         demo.setProperty("demographic.sex", d.getSex());
         demo.setProperty("demographic.phone", d.getPhone());
-        demo.setProperty("demographic.hin",d.getHin());
+        demo.setProperty("demographic.hin", d.getHin());
 
         demo.setProperty("demographic.postal", d.getPostal()!=null?d.getPostal().replaceAll(" ", ""):"");
-        demo.setProperty("demographic.dob", d.getYearOfBirth() +"-"+ (d.getMonthOfBirth().length()<2?("0"+d.getMonthOfBirth()):d.getMonthOfBirth()) +"-"+ (d.getDateOfBirth().length()<2?("0"+d.getDateOfBirth()):d.getDateOfBirth()) );
+        demo.setProperty("demographic.dob",d.getYearOfBirth() +"-"+ (d.getMonthOfBirth().length()<2?("0"+d.getMonthOfBirth()):d.getDateOfBirth()) +"-"+ (d.getDateOfBirth().length()<2?("0"+d.getDateOfBirth()):d.getDateOfBirth()) );
 	}
 
 	//xml part

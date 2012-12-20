@@ -9,30 +9,26 @@
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 %>
 
+<%@ page contentType="text/xml"%>
+<%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"%>
+
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
-<%@ page
-	import="java.util.*,oscar.ping.xml.*,oscar.ping.xml.impl.*,javax.xml.bind.*"%>
+<%@ page import="java.util.*,oscar.ping.xml.*,oscar.ping.xml.impl.*,javax.xml.bind.*"%>
 <%@ page import="org.chip.ping.client.*"%>
 <%@ page import="org.chip.ping.xml.*"%>
 <%@ page import="org.chip.ping.xml.talk.*"%>
 <%@ page import="org.chip.ping.xml.cddm.*"%>
 <%@ page import="org.chip.ping.xml.record.*"%>
 <%@ page import="org.chip.ping.xml.record.impl.*"%>
-<%@ page
-	import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
+<%@ page import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
 <%@ page import="oscar.OscarPingTalk"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 
 <%@ include file="../../admin/dbconnection.jsp"%>
-<% 
-String [][] dbQueries=new String[][] { 
-	{"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"}, 
-};
-studyBean.doConfigure(dbQueries);
-%>
+
 <%
 String actorTicket = null;
 String actor = "clinic@citizenhealth.ca";
@@ -74,17 +70,17 @@ if(connected){
 	//take data from demographic
     Demographic d = demographicDao.getDemographic(demoNo);
     if (d != null) { 
-        demo.setProperty("demographic.first_name", d.getFirstName());
-        demo.setProperty("demographic.last_name",d.getLastName());
+        demo.setProperty("demographic.first_name",d.getFirstName());
+        demo.setProperty("demographic.last_name", d.getLastName());
         demo.setProperty("demographic.sex", d.getSex());
         demo.setProperty("demographic.phone", d.getPhone());
         demo.setProperty("demographic.hin", d.getHin());
 
-        demo.setProperty("demographic.postal",d.getPostal()!=null?d.getPostal().replaceAll(" ", ""):"");
+        demo.setProperty("demographic.postal", d.getPostal()!=null?d.getPostal().replaceAll(" ", ""):"");
 	}
 
     //take data from form
-    ResultSet rsdemo = studyBean.queryResults(demoNo, "search_formtype2diabete");
+    ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo +" order by formEdited desc, ID desc limit 0,1");
     while (rsdemo.next()) { 
         form.setProperty("formType2Diabetes.birthDate", rsdemo.getString("birthDate"));
 		//get the column number

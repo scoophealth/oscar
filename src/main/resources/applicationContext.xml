@@ -115,8 +115,7 @@
 	<!-- Dao classes that implement OscarSuperDao -->
 	<bean id="appointmentSuperDao" class="oscar.dao.AppointmentDao" autowire="byName" />
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
-	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
-
+	
 
 	<bean id="eChartDao" class="org.oscarehr.common.dao.EChartDao" autowire="byName" />
 	<bean id="encounterWindowDao" class="org.oscarehr.common.dao.EncounterWindowDao" autowire="byName" />

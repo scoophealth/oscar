@@ -33,7 +33,6 @@
 
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" %>
-<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
 <jsp:useBean id="checklist" class="oscar.decision.DesAntenatalPlannerChecklist_99_12" scope="page" />
@@ -45,13 +44,6 @@
 	DesapriskDao desapriskDao = SpringUtils.getBean(DesapriskDao.class);
 %>
 
-<%
-String [][] dbQueries=new String[][] {
-{"search_formarrisk", "select * from formAR where ID = ?" },
-{"search_formonarrisk", "select * from formONAR where ID = ?" },
-};
-plannerBean.doConfigure(dbQueries);
-%>
 
 <html>
 <head>
@@ -96,21 +88,15 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     return;
   }
 
-  //initial prop bean with "0"
-  //for(int i=0;i<riskdataname.length;i++) {
-	//  riskDataBean.setProperty(riskdataname[i][0],"0");
-  //}
+  
   //get the risk data from formAR1
   String finalEDB = null, wt=null, ht=null;
 
   ResultSet rsdemo = null ;
   if(!form_no.equals("0")) {
-      //if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
-          rsdemo = plannerBean.queryResults(form_no, "search_formonarrisk");
-      //} else {
-     //         rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");
-     // }
-
+	  //we don't have forms converted at this time
+	  rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formONAR where ID = " + form_no);
+     
       ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
       while (rsdemo.next()) {
           finalEDB = rsdemo.getString("c_finalEDB");
