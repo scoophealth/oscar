@@ -1950,14 +1950,14 @@ if ( Dead.equals(PatStat) ) {%>
                                                     </span>
 							</li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formNurse" />:</span><span class="info"><%=providerBean.getProperty(resident,"")%></span>
+                                                            key="demographic.demographiceditdemographic.formNurse" />:</span><span class="info"><%=providerBean.getProperty(nurse,"")%></span>
 							</li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formMidwife" />:</span><span class="info"><%=providerBean.getProperty(midwife,"")%></span>
 							</li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formResident" />:</span>
-                                                        <span class="info"><%=providerBean.getProperty(nurse,"")%></span></li>
+                                                        <span class="info"><%=providerBean.getProperty(resident,"")%></span></li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formRefDoc" />:</span><span class="info"><%=rd%></span>
 							</li>
@@ -2503,7 +2503,7 @@ if ( Dead.equals(PatStat) ) {%>
 								</select></td>
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.formNurse" />: </b></td>
-								<td align="left"><select name="resident" <%=getDisabled("resident")%>
+								<td align="left"><select name="nurse" <%=getDisabled("nurse")%>
 									style="width: 200px">
 									<option value=""></option>
 									<%
@@ -2512,7 +2512,7 @@ if ( Dead.equals(PatStat) ) {%>
 									for(Provider p : providers) {
                         %>
 									<option value="<%=p.getProviderNo()%>"
-										<%=p.getProviderNo().equals(resident)?"selected":""%>>
+										<%=p.getProviderNo().equals(nurse)?"selected":""%>>
 									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
 									<% } %>
 								</select></td>
@@ -2533,13 +2533,13 @@ if ( Dead.equals(PatStat) ) {%>
 								</select></td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formResident" />:</b></td>
-								<td align="left"><select name="nurse" style="width: 200px" <%=getDisabled("nurse")%>>
+								<td align="left"><select name="nurse" style="width: 200px" <%=getDisabled("resident")%>>
 									<option value=""></option>
 									<%
 									for(Provider p : providers) {
                         %>
 									<option value="<%=p.getProviderNo()%>"
-										<%=p.getProviderNo().equals(nurse)?"selected":""%>>
+										<%=p.getProviderNo().equals(resident)?"selected":""%>>
 									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
 									<% } %>
 								</select></td>

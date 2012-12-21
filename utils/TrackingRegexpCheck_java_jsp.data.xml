@@ -1341,7 +1341,13 @@
         <ViolationValue>/src/main/webapp/common/webAppContextAndSuperMgr.jsp:&lt;%-- This code makes new business logic facade OscarSuperManager bean accessible from jsp layer --%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/common/webAppContextAndSuperMgr.jsp:&lt;%@ page import="oscar.service.OscarSuperManager"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/common/webAppContextAndSuperMgr.jsp:OscarSuperManager oscarSuperManager = (OscarSuperManager)webApplicationContext.getBean("oscarSuperManager");</ViolationValue>
+        <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplanner.jsp:rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formONAR where ID = " + form_no);</ViolationValue>
+        <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplannerprint.jsp:rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formAR where ID = " + form_no);</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[34];</ViolationValue>
+        <ViolationValue>/src/main/webapp/form/study/ar2ping.jsp:ResultSet rsdemo = DBHandler.GetSQL("select * from formAR where demographic_no= "+demoNo+" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
+        <ViolationValue>/src/main/webapp/form/study/diabetetracker.jsp:ResultSet rsdemo = DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+ demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
+        <ViolationValue>/src/main/webapp/form/study/dm2ping.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
+        <ViolationValue>/src/main/webapp/form/study/dmdata.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo+" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/demo_select.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:ResultSet rs = DBHandler.GetSQL("select m.* from hl7_pid p, hl7_message m where p.pid_id=" + pid + " and p.message_id=m.message_id");</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_signed.replaceAll("@pid", pid));</ViolationValue>
@@ -2865,7 +2871,6 @@
         <ViolationValue>/src/main/webapp/admin/securityupdate.jsp:StringBuffer sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/unLock.jsp:Vector vec = cl.findLockList();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/unLock.jsp:if(vec == null) vec = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/updatedemographicprovider.jsp:&lt;jsp:useBean id="namevector" class="java.util.Vector" scope="page" /&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/updatedemographicprovider.jsp:&lt;jsp:useBean id="novector" class="java.util.Vector" scope="page" /&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/updatedemographicprovider.jsp:StringBuffer sbtemp = new StringBuffer("?") ;</ViolationValue>
         <ViolationValue>/src/main/webapp/appointment/appointmentgrouprecords.jsp:StringBuffer strbuf = null;</ViolationValue>
