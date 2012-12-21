@@ -455,7 +455,7 @@ function isRowShown(rowid){
 	else
 		return true;
 }
-function checkAll(formId){
+function checkAllLabs(formId){
 	var val = document.getElementsByName("checkA")[0].checked;
 	var labs = document.getElementsByName("flaggedLabs");
 	for (i =0; i < labs.length; i++){
