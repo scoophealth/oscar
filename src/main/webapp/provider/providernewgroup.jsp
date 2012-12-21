@@ -25,7 +25,6 @@
 --%>
 
 <%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -33,8 +32,11 @@
 <%@ page import="org.oscarehr.common.model.MyGroup" %>
 <%@ page import="org.oscarehr.common.model.MyGroupPrimaryKey" %>
 <%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
 <%
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+    ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
 <html:html locale="true">
 <head>
@@ -104,21 +106,20 @@ function checkForm() {
 			</tr>
 <%
    int i=0;
-   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
-   for (Map provider : resultList) {
+   for(Provider p : providerDao.getActiveProviders()) {
      i++;
 %>
 			<tr BGCOLOR="#C4D9E7">
-				<td><font face="arial"> &nbsp;<%=provider.get("last_name")%>,
-				<%=provider.get("first_name")%></font></td>
+				<td><font face="arial"> &nbsp;<%=p.getLastName()%>,
+				<%=p.getFirstName()%></font></td>
 				<td ALIGN="center"><font face="arial"> </font> <input
 					type="checkbox" name="data<%=i%>" value="<%=i%>"> <input
 					type="hidden" name="provider_no<%=i%>"
-					value="<%=provider.get("provider_no")%>"> <INPUT
+					value="<%=p.getProviderNo()%>"> <INPUT
 					TYPE="hidden" NAME="last_name<%=i%>"
-					VALUE='<%=provider.get("last_name")%>'> <INPUT
+					VALUE='<%=p.getLastName()%>'> <INPUT
 					TYPE="hidden" NAME="first_name<%=i%>"
-					VALUE='<%=provider.get("first_name")%>'></td>
+					VALUE='<%=p.getFirstName()%>'></td>
 			</tr>
 <%
    }

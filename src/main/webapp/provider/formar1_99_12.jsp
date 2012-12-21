@@ -29,14 +29,19 @@
   String user_no = (String) session.getAttribute("user");
   String resource_baseurl = "http://resource.oscarmcmaster.org/oscarResource/";
 %>
-<%@ page import="java.util.*, java.sql.*, java.net.URLEncoder, oscar.*"
-	errorPage="errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ page import="java.util.*, java.sql.*, java.net.URLEncoder, oscar.*" errorPage="errorpage.jsp"%>
+
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
 <%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%@page import="org.oscarehr.common.dao.FormDao" %>
+<%@page import="org.oscarehr.common.model.Form" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
 <%
 	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+	FormDao formDao = SpringUtils.getBean(FormDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 %>
 
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
@@ -162,34 +167,34 @@ function onSubmitForm() {
 
   if(!bNew ) { //not new form
     bNewList = false;
-    List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
-    for (Map form : resultList) {
-      content = (String)form.get("content");
-%> <xml id="xml_list"><encounter><%=content%></encounter></xml> <%
+    Form f = formDao.find(Integer.parseInt(request.getParameter("form_no")));
+    if(f != null) {
+    	content = f.getContent();
+    	%> <xml id="xml_list"><encounter><%=content%></encounter></xml> <%
     }
+   
   } else {
-    String[] param2 =new String[2];
-    param2[0]=request.getParameter("demographic_no");
-    param2[1]="ar1%" ; //form_name;
-    List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
-    for (Map form : resultList) {
+    Form f =  formDao.search_form_no(Integer.parseInt(request.getParameter("demographic_no")), "ar1%");
+    
+    if (f != null) {
       bNew = false;
       if(request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("1")==0)  // for new form
         bNew = true;
-      content = (String)form.get("content");
+      content = f.getContent();
 %> <xml id="xml_list"> <encounter> <%=content%> </encounter> </xml> <%
     }
 
-    resultList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {request.getParameter("demographic_no")});
-    for (Map demo : resultList) {
-      demoname=demo.get("last_name")+", "+demo.get("first_name");
-      address=demo.get("address") +",  "+demo.get("city") +",  "+ demo.get("province") +"  "+ demo.get("postal");
-      dob=demo.get("year_of_birth")+"/"+demo.get("month_of_birth")+"/"+demo.get("date_of_birth");
-      homephone=(String)demo.get("phone");
-      workphone=(String)demo.get("phone2");
-      familydoc=SxmlMisc.getXmlContent((String)demo.get("family_doctor"),"family_doc");
+    Demographic d = demographicDao.getDemographic(request.getParameter("demographic_no"));
+    
+    if(d != null) {
+      demoname=d.getFormattedName();
+      address=d.getAddress() +",  "+d.getCity() +",  "+ d.getProvince() +"  "+ d.getPostal();
+      dob=d.getYearOfBirth()+"/"+d.getMonthOfBirth()+"/"+d.getDateOfBirth();
+      homephone=d.getPhone();
+      workphone=d.getPhone2();
+      familydoc=SxmlMisc.getXmlContent(d.getFamilyDoctor(),"family_doc");
       familydoc = familydoc !=null ? familydoc : "" ;
-      age=MyDateFormat.getAge(Integer.parseInt((String)demo.get("year_of_birth")),Integer.parseInt((String)demo.get("month_of_birth")),Integer.parseInt((String)demo.get("date_of_birth")));
+      age=MyDateFormat.getAge(Integer.parseInt(d.getYearOfBirth()),Integer.parseInt(d.getMonthOfBirth()),Integer.parseInt(d.getDateOfBirth()));
     }
 
     DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(request.getParameter("demographic_no")));
@@ -200,12 +205,11 @@ function onSubmitForm() {
 
 
     //find the latest version of g,t,p,a,l etc.
-    String[] param1 =new String[2];
-    param1[0]=request.getParameter("demographic_no");
-    param1[1]="ar%"; //!!! other forms can't have the name of 'ar' chars.
-    resultList = oscarSuperManager.find("providerDao", "compare_form", param1);
-    for (Map form : resultList) if (!bNew) {
-      content = (String)form.get("content");
+    
+    f = formDao.search_form_no(Integer.parseInt(request.getParameter("demographic_no")), "ar%");
+    
+    if (f!=null) if (!bNew) {
+      content = f.getContent();
       birthAttendants = SxmlMisc.getXmlContent(content,"<xml_ba>","</xml_ba>");
 	  birthAttendants = birthAttendants==null?"":birthAttendants;
       newbornCare = SxmlMisc.getXmlContent(content,"<xml_nc>","</xml_nc>");

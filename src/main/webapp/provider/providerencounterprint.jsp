@@ -24,9 +24,16 @@
 
 --%>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
-	errorPage="errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="errorpage.jsp"%>
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.EncounterDao" %>
+<%@page import="org.oscarehr.common.model.Encounter" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%
+	EncounterDao encounterDao = SpringUtils.getBean(EncounterDao.class);	
+%>
+
 
 <html>
 <head>
@@ -57,14 +64,14 @@
 		</TABLE>
 
 <%
-   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_encountersingle", new Object[] {request.getParameter("encounter_no")});
+	Encounter enc = encounterDao.find(Integer.parseInt(request.getParameter("encounter_no")));
    String encounter_date=null,encounter_time=null,subject=null,content=null,provider_no=null;
-   for (Map enc : resultList) {
-     encounter_date=String.valueOf(enc.get("encounter_date"));
-     encounter_time=String.valueOf(enc.get("encounter_time"));
-     provider_no=(String)enc.get("provider_no");
-     subject=(String)enc.get("subject");
-     content=(String)enc.get("content");
+   if (enc != null) {
+     encounter_date=ConversionUtils.toDateString(enc.getEncounterDate());
+     encounter_time=ConversionUtils.toTimeString(enc.getEncounterTime());
+     provider_no=enc.getProviderNo();
+     subject=enc.getSubject();
+     content=enc.getContent();
    }
 %> <xml id="xml_list"> <encounter> <%=content%> </encounter> </xml>
 		<table width="100%" border="1" datasrc='#xml_list'>
