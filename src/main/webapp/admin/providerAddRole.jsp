@@ -23,26 +23,9 @@
     Ontario, Canada
 
 --%>
-<!--
-/*
- *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- */
--->
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%@ page errorPage="../errorpage.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
@@ -53,18 +36,14 @@
 <%@ page import="org.oscarehr.common.model.SecRole" %>
 <%@ page import="org.oscarehr.common.dao.SecRoleDao" %>
 <%@ page import="org.oscarehr.PMmodule.utility.RoleCache" %>
+
 <%
 	SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
+
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	String curUser_no = (String)session.getAttribute("user");
 %>
-<%
-if(session.getAttribute("user") == null )
-	response.sendRedirect("../logout.jsp");
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-String curUser_no = (String)session.getAttribute("user");
-%>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>"> <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
 <%
@@ -74,7 +53,7 @@ String curUser_no = (String)session.getAttribute("user");
   String role_name = request.getParameter("role_name");
   String action = "search"; // add/edit
   Properties	prop  = new Properties();
-  DBHelp dbObj = new DBHelp();
+
   if (request.getParameter("submit") != null && request.getParameter("submit").equals("Save")) {
     // check the input data
 
@@ -137,16 +116,17 @@ String curUser_no = (String)session.getAttribute("user");
 	}
   }
 %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Add/Edit Role</title>
-<script type="text/javascript" language="JavaScript">
 
+<script type="text/javascript" language="JavaScript">
       <!--
 		function setfocus() {
 		  this.focus();
@@ -213,7 +193,7 @@ String curUser_no = (String)session.getAttribute("user");
 	    }
 //-->
 
-      </script>
+</script>
 </head>
 <body bgcolor="ivory" onLoad="setfocus()" style="margin: 0px">
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
