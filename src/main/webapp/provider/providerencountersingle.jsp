@@ -24,8 +24,17 @@
 
 --%>
 
-<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.EncounterTemplateDao" %>
+<%@page import="org.oscarehr.common.model.EncounterTemplate" %>
+
+<%
+	EncounterTemplateDao encounterTemplateDao = SpringUtils.getBean(EncounterTemplateDao.class);
+%>
+
+
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
@@ -93,10 +102,12 @@ function start(){
 </table>
 <%
   if(request.getParameter("template")!=null && !(request.getParameter("template").equals(".")) ) {
-	 resultList = oscarSuperManager.find("providerDao", "search_template", new Object[] {request.getParameter("template")});
-	 for (Map t: resultList) {
-       out.println((String)t.get("encountertemplate_displayvalue"));
+	  
+     for(EncounterTemplate template : encounterTemplateDao.findByName(request.getParameter("template"))) {
+    	 out.println(template.getEncounterTemplateValue());
      }
+     
+	
   } else {
      out.println("<table datasrc='#xml_list' border='0'><tr><td><font color='blue'>Content:</font></td></tr><tr><td><div datafld='xml_content'></td></tr></table>");
   }
