@@ -28,12 +28,13 @@
  */
 package oscar.appt;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
+import org.apache.commons.beanutils.BeanComparator;
+import org.oscarehr.common.dao.AppointmentStatusDao;
+import org.oscarehr.common.model.AppointmentStatus;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * Class ApptStatusData : set appt status and get the icon name and link
@@ -166,81 +167,96 @@ public final class ApptStatusData {
         return temp;
     }
 
+    @SuppressWarnings("unchecked")
     private String getStr(String kind) {
         String rstr = null;
         String strOtherIcon = "";
         String strStatus = "";
-
-        BillingONDataHelp dbObj = new BillingONDataHelp();
-
-        String sql = "select * from appointment_status where active='1' order by id asc";
-        ResultSet rs = dbObj.searchDBRecord(sql);
+        
+        AppointmentStatusDao dao = SpringUtils.getBean(AppointmentStatusDao.class);
+        List<AppointmentStatus> apptStatuses = dao.findActive();
+        Collections.sort(apptStatuses, new BeanComparator("id"));
         
         if (apptStatus.length()>=2){
             strOtherIcon = apptStatus.substring(1,2);
             strStatus = apptStatus.substring(0,1);
         }
-        else
+        else {
             strStatus = apptStatus;
+        }
             
 
-        try {
-            while (rs.next()) {
-                if (kind.equals("nextstatus")) {
-                    if (strStatus.equals("C")){
-                        rs.first();
-                        rstr = rs.getString("status");
-                        if (strOtherIcon.length()==1)
-                            return rstr + strOtherIcon;
-                        else
-                            return rstr;
-                    }
-                    if (strStatus.equals("B")){
-                        return "";
-                    }
-                    if (strStatus.equals(rs.getString("status"))){
-                        rs.next();
-                        while (Integer.parseInt(rs.getString("active"))==0)
-                            rs.next();
-                        rstr = rs.getString("status");
-                        if (strOtherIcon.length()==1)
-                            return rstr + strOtherIcon;
-                        else
-                            return rstr;
-                    }
-                         
-                }
-
-                if (kind.equals("desc")) {
-                    if (strStatus.equals(rs.getString("status"))){
-                        rstr = rs.getString("description");
-                        if (strOtherIcon.length()==1)
-                            return rstr + "/" + (strOtherIcon.equals("S")?"Signed":"Verified") ;
-                        else   
-                            return rstr;
-                    }
+    
+        int i = 0;
+        while(i < apptStatuses.size()) {
+        	AppointmentStatus s = apptStatuses.get(i); 
+        	
+            if (kind.equals("nextstatus")) {
+                if (strStatus.equals("C")){
+                    i = 0;
+                    s = apptStatuses.get(i);
+                    
+                    rstr = s.getStatus();
+                    if (strOtherIcon.length()==1)
+                        return rstr + strOtherIcon;
+                    else
+                        return rstr;
                 }
                 
-                if (kind.equals("icon")) {
-                    if (strStatus.equals(rs.getString("status"))){
-                        rstr = rs.getString("icon");
-                        if (strOtherIcon.length()==1)
-                            return strOtherIcon + rstr;
-                        else
-                            return rstr;
-                    }
+                if (strStatus.equals("B")){
+                    return "";
                 }
-
-                if (kind.equals("color")) {
-                    if (strStatus.equals(rs.getString("status"))){
-                        rstr = rs.getString("color");
+                
+                if (strStatus.equals(s.getStatus())){
+                    i++;
+                    s = apptStatuses.get(i);
+                    
+                    while (s.getActive() == 0 && i < apptStatuses.size()) {
+                    	i++;
+                    	s = apptStatuses.get(i);
+                    }
+                    
+                    rstr = s.getStatus();
+                    
+                    if (strOtherIcon.length()==1) {
+                        return rstr + strOtherIcon;
+                    } else {
                         return rstr;
                     }
                 }
+                     
             }
-        } catch (SQLException e) {
-             MiscUtils.getLogger().error("Error", e);
+
+            if (kind.equals("desc")) {
+                if (strStatus.equals(s.getStatus())){
+                    rstr = s.getDescription();
+                    if (strOtherIcon.length()==1)
+                        return rstr + "/" + (strOtherIcon.equals("S")?"Signed":"Verified") ;
+                    else   
+                        return rstr;
+                }
+            }
+            
+            if (kind.equals("icon")) {
+                if (strStatus.equals(s.getStatus())){
+                    rstr = s.getIcon();
+                    if (strOtherIcon.length()==1)
+                        return strOtherIcon + rstr;
+                    else
+                        return rstr;
+                }
+            }
+
+            if (kind.equals("color")) {
+                if (strStatus.equals(s.getStatus())){
+                    rstr = s.getColor();
+                    return rstr;
+                }
+            }
+            
+            i++;
         }
+        
 
         return rstr;
     }

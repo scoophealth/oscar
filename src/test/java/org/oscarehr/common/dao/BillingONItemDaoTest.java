@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,41 +21,29 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
-/*
- * Created on Mar 14, 2004
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
-package oscar.oscarBilling.ca.on.data;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
-
 /**
- * @author Yi Li
- * 
- * @deprecated Use appropriate DAO class instead.
+ * @author Shazib
  */
-@Deprecated
-public class BillingONDataHelp {
+package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertNotNull;
 
-	public synchronized ResultSet searchDBRecord(String sql) {
-		ResultSet ret = null;
-		
-		try {
-			
-			ret = DBHandler.GetSQL(sql);
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return ret;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
+
+public class BillingONItemDaoTest extends DaoTestFixtures {
+
+	protected BillingONItemDao dao = SpringUtils.getBean(BillingONItemDao.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("billing_on_item");
+	}
+
+	@Test
+	public void testFindByCh1Id() {
+		assertNotNull(dao.findByCh1Id(100));
 	}
 }

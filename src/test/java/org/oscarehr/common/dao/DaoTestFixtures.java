@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -112,9 +113,7 @@ public abstract class DaoTestFixtures
 	
 	@Test
 	public void doSimpleExceptionTest() {
-		String[] excludes = {"notify","notifyAll","remove","persist","merge","refresh","saveEntity","wait","equals",
-				"toString","hashCode","getClass","getModelClass","find","getCountAll","findAll","runNativeQuery","save","removeAll"};
-		List<String> excludeList = Arrays.asList(excludes);
+		List<String> excludeList = getSimpleExceptionTestExcludes();
 		
 		String daoClassName = this.getClass().getName().replaceAll("Test$", "");
 	
@@ -203,5 +202,19 @@ public abstract class DaoTestFixtures
 			MiscUtils.getLogger().error("error",e);
 		}
 	}
+
+	/**
+	 * Gets list of all methods that should be ignored for simple exception test on the DAO. 
+	 * 
+	 * @return
+	 * 		Returns a list of methods to be skipped during exception testing.
+	 */
+	protected List<String> getSimpleExceptionTestExcludes() {
+	    String[] excludes = {"notify","notifyAll","remove","persist","merge","refresh","saveEntity","wait","equals",
+				"toString","hashCode","getClass","getModelClass","find","getCountAll","findAll","runNativeQuery","save","removeAll"};
+		List<String> excludeList = new ArrayList<String>();
+		excludeList.addAll(Arrays.asList(excludes));
+	    return excludeList;
+    }
 
 }

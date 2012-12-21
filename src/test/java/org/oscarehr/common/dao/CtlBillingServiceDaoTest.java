@@ -58,4 +58,24 @@ public class CtlBillingServiceDaoTest extends DaoTestFixtures {
 		services = dao.findByServiceGroupAndServiceType("Group1", "MFP");
 		assertFalse(services.isEmpty());
 	}
+
+    @Test
+    public void testFindUniqueServiceTypesByCode() {
+	    assertNotNull(dao.findUniqueServiceTypesByCode("CODE"));
+    }
+    
+    @Test
+    public void testFindServiceTypes() {
+	    assertNotNull(dao.findServiceTypes());
+    }
+    
+    @Test
+    public void testFindServiceCodesByType() {
+	    assertNotNull(dao.findServiceCodesByType("SRV_TY"));
+    }
+
+    @Test
+    public void testFindServiceTypesByStatus() {
+	    assertNotNull(dao.findServiceTypesByStatus("A"));
+    }
 }

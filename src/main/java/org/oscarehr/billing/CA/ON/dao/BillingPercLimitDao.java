@@ -35,6 +35,7 @@ import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class BillingPercLimitDao extends AbstractDao<BillingPercLimit>{
 
 	public BillingPercLimitDao() {
@@ -47,7 +48,6 @@ public class BillingPercLimitDao extends AbstractDao<BillingPercLimit>{
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,serviceCode);
 
-        @SuppressWarnings("unchecked")
         List<BillingPercLimit> results = query.getResultList();
         return results;
     }
@@ -60,5 +60,18 @@ public class BillingPercLimitDao extends AbstractDao<BillingPercLimit>{
 
         BillingPercLimit results = this.getSingleResultOrNull(query);
         return results;
+    }
+
+
+	public List<BillingPercLimit> findByServiceCodeAndLatestDate(String serviceCode, Date date) {
+	    String sql = "FROM BillingPercLimit b WHERE b.service_code = :serviceCode " +
+	    		"AND b.effective_date = (" +
+	    		"	SELECT MAX(b2.effective_date) FROM BillingPercLimit b2 " +
+	    		"	WHERE b2.effective_date <= :date and b2.service_code = :serviceCode" +
+	    		")";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("serviceCode", serviceCode);
+		query.setParameter("date", date);
+		return query.getResultList();
     }
 }

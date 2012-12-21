@@ -77,17 +77,15 @@ response.setHeader("Cache-Control", "max-stale=0"); // HTTP 1.1
 
 boolean bSearch = true;
 String[] billType = request.getParameterValues("billType");
-String strBillType = "";
+String[] strBillType = new String[] {""};
 if (billType == null || billType.length == 0) { // no boxes checked
 	bSearch = false;
-	strBillType = "'HCP','WCB','RMB','NOT','PAT','OCF','ODS','CPP','STD','IFH',";
-} else { //at least on box checked
-	for(int i=0; i<billType.length; i++) {
-		strBillType += "'" + billType[i] + "'" + ",";
-	}
+	strBillType = new String[] {"HCP","WCB","RMB","NOT","PAT","OCF","ODS","CPP","STD","IFH"};
+} else { 
+	// at least on box checked
+	strBillType = billType;
 }
 
-strBillType = strBillType.endsWith(",")? strBillType.substring(0,strBillType.length()-1): strBillType;
 String statusType = request.getParameter("statusType");
 String providerNo = request.getParameter("providerview");
 String startDate  = request.getParameter("xml_vdate"); 
@@ -129,9 +127,7 @@ if((serviceCode == null || billingForm == null) && dx.length()<2 && visitType.le
 	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new Vector();
 }
 
-
 RAData raData = new RAData();
-
 
 BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP); 
 BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -415,16 +411,20 @@ function checkAll(group) {
     <form name="serviceform" method="get" action="billingONStatus.jsp">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="myYellow">   
     <tr><td width="30%" class="myIvory">
-        <input type="checkbox" name="billType" value="HCP" <%=strBillType.indexOf("HCP")>=0?"checked":""%>><span class="smallFont">Bill OHIP</span></input>
-        <input type="checkbox" name="billType" value="RMB" <%=strBillType.indexOf("RMB")>=0?"checked":""%>><span class="smallFont">RMB</span></input>
-        <input type="checkbox" name="billType" value="WCB" <%=strBillType.indexOf("WCB")>=0?"checked":""%>><span class="smallFont">WCB</span></input>
-        <input type="checkbox" name="billType" value="NOT" <%=strBillType.indexOf("NOT")>=0?"checked":""%>><span class="smallFont">Not Bill</span></input>
-        <input type="checkbox" name="billType" value="PAT" <%=strBillType.indexOf("PAT")>=0?"checked":""%>><span class="smallFont">Bill Patient</span></input><br>
-        <input type="checkbox" name="billType" value="OCF" <%=strBillType.indexOf("OCF")>=0?"checked":""%>><span class="smallFont">OCF</span></input>
-        <input type="checkbox" name="billType" value="ODS" <%=strBillType.indexOf("ODS")>=0?"checked":""%>><span class="smallFont">ODSP</span></input>
-        <input type="checkbox" name="billType" value="CPP" <%=strBillType.indexOf("CPP")>=0?"checked":""%>><span class="smallFont">CPP</span></input>
-        <input type="checkbox" name="billType" value="STD" <%=strBillType.indexOf("STD")>=0?"checked":""%>><span class="smallFont">STD/LTD</span></input>
-        <input type="checkbox" name="billType" value="IFH" <%=strBillType.indexOf("IFH")>=0?"checked":""%>><span class="smallFont">IFH</span></input>
+    	<%
+    		String tmpStrBillType = Arrays.toString(strBillType);
+    	%>
+    
+        <input type="checkbox" name="billType" value="HCP" <%=tmpStrBillType.indexOf("HCP")>=0?"checked":""%>><span class="smallFont">Bill OHIP</span></input>
+        <input type="checkbox" name="billType" value="RMB" <%=tmpStrBillType.indexOf("RMB")>=0?"checked":""%>><span class="smallFont">RMB</span></input>
+        <input type="checkbox" name="billType" value="WCB" <%=tmpStrBillType.indexOf("WCB")>=0?"checked":""%>><span class="smallFont">WCB</span></input>
+        <input type="checkbox" name="billType" value="NOT" <%=tmpStrBillType.indexOf("NOT")>=0?"checked":""%>><span class="smallFont">Not Bill</span></input>
+        <input type="checkbox" name="billType" value="PAT" <%=tmpStrBillType.indexOf("PAT")>=0?"checked":""%>><span class="smallFont">Bill Patient</span></input><br>
+        <input type="checkbox" name="billType" value="OCF" <%=tmpStrBillType.indexOf("OCF")>=0?"checked":""%>><span class="smallFont">OCF</span></input>
+        <input type="checkbox" name="billType" value="ODS" <%=tmpStrBillType.indexOf("ODS")>=0?"checked":""%>><span class="smallFont">ODSP</span></input>
+        <input type="checkbox" name="billType" value="CPP" <%=tmpStrBillType.indexOf("CPP")>=0?"checked":""%>><span class="smallFont">CPP</span></input>
+        <input type="checkbox" name="billType" value="STD" <%=tmpStrBillType.indexOf("STD")>=0?"checked":""%>><span class="smallFont">STD/LTD</span></input>
+        <input type="checkbox" name="billType" value="IFH" <%=tmpStrBillType.indexOf("IFH")>=0?"checked":""%>><span class="smallFont">IFH</span></input>
         <input type="checkbox" name="billTypeAll" value="ALL" checked onclick="changeStatus();"><span class="smallFont">ALL</span></input>
     </td>
     <td align="center" class="myYellow">

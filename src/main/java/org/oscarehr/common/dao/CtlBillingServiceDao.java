@@ -32,6 +32,7 @@ import org.oscarehr.common.model.CtlBillingService;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
 
 	public static final String DEFAULT_STATUS = "A";
@@ -52,7 +53,7 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
 		Query query = entityManager.createQuery("SELECT DISTINCT b.serviceType, b.serviceTypeName FROM CtlBillingService b WHERE b.status = :serviceStatus");
 		query.setParameter("serviceStatus", serviceStatus);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Object[]> results = query.getResultList();
 		return results;
 	}
@@ -71,7 +72,7 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
             Query query = entityManager.createQuery("select b from CtlBillingService b where b.status='A' and b.serviceType like ?");
             query.setParameter(1, serviceTypeId);
             
-            @SuppressWarnings("unchecked")
+            
             List<CtlBillingService> results = query.getResultList();
             
             return results;
@@ -82,7 +83,7 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
             query.setParameter(1, serviceGroup);
             query.setParameter(2, serviceTypeId);
             
-            @SuppressWarnings("unchecked")
+            
             List<CtlBillingService> results = query.getResultList();
             
             return results;
@@ -92,7 +93,7 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
             Query query = entityManager.createQuery("select b from CtlBillingService b where b.serviceType like ?");
             query.setParameter(1, serviceTypeId);
             
-            @SuppressWarnings("unchecked")
+            
             List<CtlBillingService> results = query.getResultList();
             
             return results;
@@ -101,7 +102,7 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
 		/**
 		 * Gets all service type names and service types from the {@link CtlBillingService} instances.
 		 */
-		@SuppressWarnings("unchecked")
+		
         public List<Object[]> getAllServiceTypes() {
 			Query query = entityManager.createQuery("SELECT bs.serviceTypeName, bs.serviceType FROM " + modelClass.getSimpleName() + " bs GROUP BY bs.serviceType, bs.serviceTypeName"); 
 	        return query.getResultList();
@@ -127,7 +128,7 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
 		 * @return
 		 * 		Returns all persistent services found
 		 */
-		@SuppressWarnings("unchecked")
+		
         public List<CtlBillingService> findByServiceGroupAndServiceType(String serviceGroup, String serviceType) {
 			StringBuilder buf = new StringBuilder("FROM " + modelClass.getSimpleName() + " bs WHERE bs.serviceGroup = :serviceGroup");
 			boolean isServiceTypeSpecified = serviceType != null; 
@@ -138,5 +139,42 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
 			if (isServiceTypeSpecified)
 				query.setParameter("serviceType", serviceType);
 	        return query.getResultList();
+        }
+		
+		
+		public List<Object[]> findUniqueServiceTypesByCode(String serviceCode) {
+			String sql = "SELECT DISTINCT s.serviceTypeName, s.serviceType from CtlBillingService s " +
+					"WHERE s.status='A' " +
+					"AND s.serviceCode = :serviceCode";
+			Query query = entityManager.createQuery(sql);
+			query.setParameter("serviceCode", serviceCode);
+			return query.getResultList();
+		}
+
+		public List<Object[]> findServiceTypes() {
+			String sql = "SELECT DISTINCT s.serviceType, s.serviceTypeName FROM CtlBillingService s " +
+	    			"WHERE s.status != 'D' " +
+	    			"AND s.serviceType IS NOT NULL " +
+	    			"AND LENGTH(TRIM(s.serviceType)) > 0";
+			Query query = entityManager.createQuery(sql);
+			return query.getResultList();
+        }
+		
+		public List<Object[]> findServiceTypesByStatus(String status) {
+			String sql = "SELECT DISTINCT s.serviceTypeName, s.serviceType " +
+					"FROM CtlBillingService s " +
+					"WHERE s.status = :status";
+			Query query = entityManager.createQuery(sql);
+			query.setParameter("status", status);
+			return query.getResultList();
+		}
+
+		public List<Object> findServiceCodesByType(String serviceType) {
+	        String sql = "SELECT DISTINCT bs.serviceCode FROM CtlBillingService bs " +
+	        		"WHERE bs.status <> 'D' " +
+	        		"AND bs.serviceType = :serviceType";
+			Query query = entityManager.createQuery(sql);
+			query.setParameter("serviceType", serviceType);
+			return query.getResultList();
         }
 }

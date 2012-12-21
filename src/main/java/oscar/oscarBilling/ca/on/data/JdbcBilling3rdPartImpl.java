@@ -40,8 +40,6 @@ public class JdbcBilling3rdPartImpl {
 	public static final String ACTIVE = "1";
 	public static final String INACTIVE = "0";
 
-	BillingONDataHelp dbObj = new BillingONDataHelp();
-	
 	private Billing3rdPartyAddressDao dao = SpringUtils.getBean(Billing3rdPartyAddressDao.class);
 	private BillingONExtDao extDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
 	

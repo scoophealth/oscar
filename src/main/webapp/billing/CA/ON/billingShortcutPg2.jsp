@@ -17,6 +17,14 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.billing.CA.ON.model.BillingPercLimit"%>
+<%@page import="org.oscarehr.billing.CA.ON.dao.BillingPercLimitDao"%>
+<%@page import="org.oscarehr.common.model.BillingService"%>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../../../logout.jsp");
@@ -35,7 +43,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page errorPage="errorpage.jsp" import="java.util.*,java.math.*,java.net.*,java.sql.*, oscar.util.*, oscar.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
@@ -75,61 +83,67 @@
   String content = "";
   String total = "";
 
-  BillingONDataHelp dbObj             = new BillingONDataHelp();
+  
   String            msg               = "<tr><td colspan='2'>Calculation</td></tr>";
   String            action            = "edit";
   Properties        propHist          = null;
   Vector            vecHist           = new Vector();
   // get provider's detail
   String proOHIPNO="", proRMA="";
-  String sql = "select * from provider where provider_no='" + request.getParameter("xml_provider") + "'";
-  ResultSet rs = dbObj.searchDBRecord(sql);
-  while (rs.next()) {
-	proOHIPNO = rs.getString("ohip_no");
-	proRMA = rs.getString("rma_no");
+  
+  ProviderDao prDao = SpringUtils.getBean(ProviderDao.class);
+  Provider pr = prDao.getProvider(request.getParameter("xml_provider"));
+  if (pr != null) {
+	proOHIPNO = pr.getOhipNo();
+	proRMA = pr.getRmaNo();
   }
-  if(request.getParameter("xml_provider")!=null) providerview = request.getParameter("xml_provider");
+  
+  if(request.getParameter("xml_provider")!=null) {
+	  providerview = request.getParameter("xml_provider");
+  }
+  
   // get patient's detail
   String errorFlag = "";
   String warningMsg = "", errorMsg = "";
   String r_doctor="", r_doctor_ohip="" ;
   String demoFirst="", demoLast="", demoHIN="", demoDOB="", demoDOBYY="", demoDOBMM="", demoDOBDD="", demoHCTYPE="";
-  sql = "select * from demographic where demographic_no=" + demo_no;
-  rs = dbObj.searchDBRecord(sql);
-  while (rs.next()) {
-    assgProvider_no = rs.getString("provider_no");
-	demoFirst = rs.getString("first_name");
-	demoLast = rs.getString("last_name");
-	demoHIN = rs.getString("hin") + rs.getString("ver");
-	demoSex = rs.getString("sex");
+  
+  DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
+  Demographic demo = demoDao.getDemographic(demo_no);
+  if (demo != null) {
+    assgProvider_no = demo.getProviderNo();
+	demoFirst = demo.getFirstName();
+	demoLast = demo.getLastName();
+	demoHIN = demo.getHin() + demo.getVer();
+	demoSex = demo.getSex();
 	if (demoSex.compareTo("M")==0) demoSex ="1";
 	if (demoSex.compareTo("F")==0) demoSex ="2";
 
-	demoHCTYPE = rs.getString("hc_type")==null?"":rs.getString("hc_type");
+	demoHCTYPE = demo.getHcType()==null?"":demo.getHcType();
 	if (demoHCTYPE.compareTo("") == 0 || demoHCTYPE == null || demoHCTYPE.length() <2) {
 		demoHCTYPE="ON";
 	}else{
 		demoHCTYPE=demoHCTYPE.substring(0,2).toUpperCase();
 	}
-	demoDOBYY = rs.getString("year_of_birth");
-	demoDOBMM = rs.getString("month_of_birth");
-	demoDOBDD = rs.getString("date_of_birth");
+	demoDOBYY = demo.getYearOfBirth();
+	demoDOBMM = demo.getMonthOfBirth();
+	demoDOBDD = demo.getDateOfBirth();
 
-	if (rs.getString("family_doctor") == null){
+	if (demo.getFamilyDoctor() == null) {
 		r_doctor = "N/A"; r_doctor_ohip="000000";
 	}else{
-		r_doctor=SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rd")==null ? "" : SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rd");
-		r_doctor_ohip=SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rdohip")==null ? "" : SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rdohip");
+		r_doctor=SxmlMisc.getXmlContent(demo.getFamilyDoctor(),"rd")==null ? "" : SxmlMisc.getXmlContent(demo.getFamilyDoctor(), "rd");
+		r_doctor_ohip=SxmlMisc.getXmlContent(demo.getFamilyDoctor(),"rdohip")==null ? "" : SxmlMisc.getXmlContent(demo.getFamilyDoctor(), "rdohip");
 	}
 
 	demoDOBMM = demoDOBMM.length() == 1 ? ("0" + demoDOBMM) : demoDOBMM;
 	demoDOBDD = demoDOBDD.length() == 1 ? ("0" + demoDOBDD) : demoDOBDD;
 	demoDOB = demoDOBYY + demoDOBMM + demoDOBDD;
 
-	if (rs.getString("hin") == null ) {
+	if (demo.getHin() == null ) {
 		errorFlag = "1";
 		errorMsg = errorMsg + "<br><font color='red'>Error: The patient does not have a valid HIN. </font><br>";
-	} else if (rs.getString("hin").equals("")) {
+	} else if (demo.getHin().equals("")) {
 		warningMsg += "<br><font color='orange'>Warning: The patient does not have a valid HIN. </font><br>";
 	}
 	if (r_doctor_ohip != null && r_doctor_ohip.length()>0 && r_doctor_ohip.length() != 6) {
@@ -179,15 +193,12 @@
     for( int idx = 0; idx < tempDate.length; ++idx ) {
     }
 	for(int i=0; i<recordCount; i++) {
-		sql = "select service_code, description, value, percentage from billingservice where service_code='"
-			+ billrec[i] + "' and billingservice_date in (select max(b.billingservice_date) from billingservice b where b.service_code='" + billrec[i] + "' and b.billingservice_date <= '" + request.getParameter("billDate") + "')";
-		rs = dbObj.searchDBRecord(sql);
-		while (rs.next()) {
-			billrecdesc[i] = rs.getString("description");
-			//otherdbcode2 = rs.getString("service_code");
-			pricerec[i] = rs.getString("value")==null?"":rs.getString("value");
-			percrec[i] = rs.getString("percentage");
-			//otherperc2 = rs.getString("percentage");
+		BillingServiceDao bsDao = SpringUtils.getBean(BillingServiceDao.class);
+		
+		for(BillingService bs : bsDao.findByServiceCodeAndLatestDate(billrec[i], ConversionUtils.fromDateString(request.getParameter("billDate")))) {
+			billrecdesc[i] = bs.getDescription();
+			pricerec[i] = bs.getValue() == null ? "" : bs.getValue();
+			percrec[i] = bs.getPercentage();
 
 			if( (!"".equals(pricerec[i]) && Double.parseDouble(pricerec[i])>0.) || ( "".equals(percrec[i])) ) {
 				vecServiceCode.add( billrec[i] );
@@ -242,19 +253,16 @@
             aLimits[idx1] = false;
         }
 
-        int codeIdx = 0;
+    int codeIdx = 0;
 	for(int idx2 = 0; idx2 < size; ++idx2) {
 		//TODO: only one perc code allowed, otherwise error msg
-		sql = "select min, max from billingperclimit where service_code='"
-			+ vecServiceCodePerc.get(codeIdx) + "'";
-		rs = dbObj.searchDBRecord(sql);
-		while (rs.next()) {
-			//bLimit = true;
-                        aLimits[idx2] = true;
-			aMinFee[idx2] = rs.getString("min");
-			aMaxFee[idx2] = rs.getString("max");
+		BillingPercLimitDao bplDao = SpringUtils.getBean(BillingPercLimitDao.class);
+		for(BillingPercLimit bpl : bplDao.findByServiceCode("" + vecServiceCodePerc.get(codeIdx))) {
+			aLimits[idx2] = true;
+			aMinFee[idx2] = bpl.getMin();
+			aMaxFee[idx2] = bpl.getMax();
 		}
-                codeIdx += 4;
+        codeIdx += 4;
 	}
 
     // calculate total

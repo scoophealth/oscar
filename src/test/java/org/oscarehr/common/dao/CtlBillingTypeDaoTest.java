@@ -50,4 +50,5 @@ public class CtlBillingTypeDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+
 }

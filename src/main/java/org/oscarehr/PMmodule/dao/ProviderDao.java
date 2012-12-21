@@ -48,6 +48,7 @@ import oscar.OscarProperties;
 
 import com.quatro.model.security.SecProvider;
 
+@SuppressWarnings("unchecked")
 public class ProviderDao extends HibernateDaoSupport {
 	
 	public static final String PR_TYPE_DOCTOR = "doctor";
@@ -101,7 +102,7 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
 
 	public List<Provider> getProviders() {
-		@SuppressWarnings("unchecked")
+		
 		List<Provider> rs = getHibernateTemplate().find(
 				"FROM  Provider p ORDER BY p.LastName");
 
@@ -181,7 +182,7 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
 
 	public List<Provider> getActiveProviders() {
-		@SuppressWarnings("unchecked")
+		
 		List<Provider> rs = getHibernateTemplate().find(
 				"FROM  Provider p where p.Status='1' ORDER BY p.LastName");
 
@@ -191,7 +192,15 @@ public class ProviderDao extends HibernateDaoSupport {
 		return rs;
 	}
 
-	@SuppressWarnings("unchecked")
+	public List<Provider> getDoctorsWithOhip(){
+		return getHibernateTemplate().find(
+				"FROM Provider p " + 
+					"WHERE p.ProviderType = 'doctor' " +
+					"AND p.Status = '1' " +
+					"AND p.OhipNo IS NOT NULL " +
+				   	"ORDER BY p.LastName, p.FirstName");
+	}
+	
     public List<Provider> getBillableProviders() {
 		List<Provider> rs = getHibernateTemplate().find("FROM Provider p where p.OhipNo != '' and p.Status = '1' order by p.LastName");
 		return rs;
@@ -204,14 +213,14 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
 
 	public List<Provider> getProviders(boolean active) {
-		@SuppressWarnings("unchecked")
+		
 		List<Provider> rs = getHibernateTemplate().find(
 				"FROM  Provider p where p.Status='"+(active?1:0)+'\'');
 		return rs;
 	}
 
     public List<Provider> getActiveProviders(String providerNo, Integer shelterId) {
-    	//@SuppressWarnings("unchecked")
+    	//
     	String sql;
     	if (shelterId == null || shelterId.intValue() == 0)
     		sql = "FROM  Provider p where p.Status='1'" +
@@ -239,7 +248,7 @@ public class ProviderDao extends HibernateDaoSupport {
 		return rs;
 	}
 
-    @SuppressWarnings("unchecked")
+    
 	public List<Provider> search(String name) {
 		boolean isOracle = OscarProperties.getInstance().getDbType().equals(
 				"oracle");
@@ -270,7 +279,7 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
 
 	public List<Provider> getProvidersByType(String type) {
-		@SuppressWarnings("unchecked")
+		
 		List<Provider> results = this.getHibernateTemplate().find(
 				"from Provider p where p.ProviderType = ?", type);
 
@@ -283,7 +292,7 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
 	
 	public List<Provider> getProvidersByTypePattern(String typePattern) {
-		@SuppressWarnings("unchecked")
+		
 		List<Provider> results = this.getHibernateTemplate().find(
 				"from Provider p where p.ProviderType like ?", typePattern);
 		return results;
@@ -334,7 +343,7 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<Integer> getFacilityIds(String provider_no) {
 		Session session = getSession();
 		try {
@@ -346,7 +355,7 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<String> getProviderIds(int facilityId) {
 		Session session = getSession();
 		try {
@@ -384,14 +393,14 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
 
 	public List<String> getUniqueTeams() {
-		@SuppressWarnings("unchecked")
+		
 		List<String> providerList = getHibernateTemplate().find("select distinct p.Team From Provider p");
 
 		return providerList;
 	}
         
         public List<Provider> getBillableProvidersOnTeam(Provider p) {                        
-            @SuppressWarnings("unchecked")
+            
             List<Provider> providers = this.getHibernateTemplate().find("from Provider p where status='1' and ohip_no!='' and p.team=? order by last_name, first_name", p.getTeam());            
             
             return providers;
@@ -402,7 +411,7 @@ public class ProviderDao extends HibernateDaoSupport {
 		throw new IllegalArgumentException();
             }
 
-            @SuppressWarnings("unchecked")
+            
             List<Provider> providers = this.getHibernateTemplate().find("from Provider p where ohip_no like ? order by last_name, first_name", ohipNo);            
             
             if(providers.size()>1) {
@@ -420,7 +429,7 @@ public class ProviderDao extends HibernateDaoSupport {
          * @return
          * 		Returns the all found providers 
          */
-        @SuppressWarnings("unchecked")
+        
         public List<Provider> getProvidersWithNonEmptyOhip() {
         	return getHibernateTemplate().find("FROM Provider WHERE ohip_no != '' order by last_name, first_name");
         }
@@ -440,7 +449,7 @@ public class ProviderDao extends HibernateDaoSupport {
         }
 		
 		@NativeSql({"provider", "providersite"})
-		@SuppressWarnings("unchecked")
+		
         public List<String> getActiveTeamsViaSites(String providerNo) {
 			Session session = getSession();
 			try {
@@ -453,11 +462,20 @@ public class ProviderDao extends HibernateDaoSupport {
 			}
         }
 
-		@SuppressWarnings("unchecked")
+		
         public List<Provider> getProviderByPatientId(Integer patientId) {
 	        String hql = "SELECT p FROM Provider p, Demographic d "
 	    				+ "WHERE d.ProviderNo = p.ProviderNo " 
 	        			+ "AND d.DemographicNo = ?";
         	return this.getHibernateTemplate().find(hql, patientId);
         }
+		
+		public List<Provider> getDoctorsWithNonEmptyCredentials() {
+			String sql = "FROM Provider p WHERE p.ProviderType = 'doctor' " +
+					"AND p.Status='1' " +
+					"AND p.OhipNo IS NOT NULL " +
+					"AND p.OhipNo != '' " +
+					"ORDER BY p.LastName, p.FirstName";
+			return getHibernateTemplate().find(sql);
+		}
 }

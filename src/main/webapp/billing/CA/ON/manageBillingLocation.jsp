@@ -29,7 +29,6 @@ String service_form="", service_name="";
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
 
 <%@page import="org.oscarehr.util.SpringUtils" %>

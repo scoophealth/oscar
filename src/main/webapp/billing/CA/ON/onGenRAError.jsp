@@ -123,7 +123,7 @@ if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){
 		</tr>
 
 		<%//	
-	aL = obj.getRAErrorReport(raNo, proNo, "'I2'");
+	aL = obj.getRAErrorReport(raNo, proNo, new String[] {"I2"});
 	for(int i=0; i<aL.size(); i++) {
 		Properties prop = (Properties) aL.get(i);
 		account = prop.getProperty("account", "");

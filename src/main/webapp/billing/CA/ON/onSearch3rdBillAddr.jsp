@@ -17,16 +17,16 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.common.dao.Billing3rdPartyAddressDao"%>
+<%@page import="oscar.oscarBilling.data.BillingONDataHelp"%>
+<%@page import="org.oscarehr.billing.CA.ON.model.Billing3rdPartyAddress"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%//
 			if (session.getAttribute("user") == null) {
 				response.sendRedirect("../logout.jsp");
 			}
-			String strLimit1 = "0";
-			String strLimit2 = "20";
-			if (request.getParameter("limit1") != null)
-				strLimit1 = request.getParameter("limit1");
-			if (request.getParameter("limit2") != null)
-				strLimit2 = request.getParameter("limit2");
+			String strLimit1 = request.getParameter("limit1");
+			String strLimit2 = request.getParameter("limit2");
 
 			int nItems = 0;
 			Vector vec = new Vector();
@@ -34,49 +34,32 @@
 			String param = request.getParameter("param") == null ? "" : request.getParameter("param");
 			String param2 = request.getParameter("param2") == null ? "" : request.getParameter("param2");
 			String keyword = request.getParameter("keyword");
-
+			
 			if (request.getParameter("submit") != null
 					&& (request.getParameter("submit").equals("Search")
 							|| request.getParameter("submit").equals("Next Page") || request.getParameter("submit")
 							.equals("Last Page"))) {
-				BillingONDataHelp dbObj = new BillingONDataHelp();
-				String search_mode = request.getParameter("search_mode") == null ? "search_name" : request
-						.getParameter("search_mode");
-				String orderBy = request.getParameter("orderby") == null ? "company_name" : request
-						.getParameter("orderby");
-				String where = "";
-				if ("search_name".equals(search_mode)) {
-					String[] temp = keyword.split("\\,\\p{Space}*");
-					if (temp.length > 1) {
-						where = "company_name like '" + StringEscapeUtils.escapeSql(temp[0]) + "%' and company_name like '"
-								+ StringEscapeUtils.escapeSql(temp[1]) + "%'";
-					} else {
-						where = "company_name like '" + StringEscapeUtils.escapeSql(temp[0]) + "%'";
-					}
-				} else {
-					where = search_mode + " like '" + StringEscapeUtils.escapeSql(keyword) + "%'";
-				}
-				String sql = "select * from billing_on_3rdPartyAddress where " + where + " order by " + orderBy + " limit "
-						+ strLimit1 + "," + strLimit2;
-				ResultSet rs = dbObj.searchDBRecord(sql);
-				while (rs.next()) {
+				String searchModeParam = request.getParameter("search_mode"); 
+				String orderByParam = request.getParameter("orderby");
+				
+				Billing3rdPartyAddressDao dao = SpringUtils.getBean(Billing3rdPartyAddressDao.class);
+				for(Billing3rdPartyAddress ba : dao.findAddresses(searchModeParam, orderByParam, keyword, strLimit1, strLimit2)) {
 					prop = new Properties();
-					prop.setProperty("id", rs.getString("id"));
-					prop.setProperty("attention", rs.getString("attention"));
-					prop.setProperty("company_name", rs.getString("company_name"));
-					prop.setProperty("address", rs.getString("address"));
-					prop.setProperty("city", rs.getString("city"));
-					prop.setProperty("province", rs.getString("province"));
-					prop.setProperty("postcode", rs.getString("postcode"));
-					prop.setProperty("telephone", rs.getString("telephone"));
-					prop.setProperty("fax", rs.getString("fax"));
+					prop.setProperty("id", "" + ba.getId());
+					prop.setProperty("attention", ba.getAttention());
+					prop.setProperty("company_name", ba.getCompanyName());
+					prop.setProperty("address", ba.getAddress());
+					prop.setProperty("city", ba.getCity());
+					prop.setProperty("province", ba.getProvince());
+					prop.setProperty("postcode", ba.getPostalCode());
+					prop.setProperty("telephone", ba.getTelephone());
+					prop.setProperty("fax", ba.getFax());
 					vec.add(prop);
 				}
 			}
 %>
 <%@ page errorPage="../../../appointment/errorpage.jsp"
 	import="java.util.*,java.sql.*,java.net.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.commons.lang.WordUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

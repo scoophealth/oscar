@@ -33,6 +33,7 @@ import org.oscarehr.common.model.CtlBillingServicePremium;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class CtlBillingServicePremiumDao extends AbstractDao<CtlBillingServicePremium>{
 
 	public CtlBillingServicePremiumDao() {
@@ -43,7 +44,7 @@ public class CtlBillingServicePremiumDao extends AbstractDao<CtlBillingServicePr
 		Query q = entityManager.createQuery("select x from CtlBillingServicePremium x where x.serviceCode=?");
 		q.setParameter(1, serviceCode);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<CtlBillingServicePremium> results = q.getResultList();
 		
 		return results;
@@ -53,7 +54,7 @@ public class CtlBillingServicePremiumDao extends AbstractDao<CtlBillingServicePr
 		Query q = entityManager.createQuery("select x from CtlBillingServicePremium x where x.status=?");
 		q.setParameter(1, status);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<CtlBillingServicePremium> results = q.getResultList();
 		
 		return results;
@@ -63,9 +64,14 @@ public class CtlBillingServicePremiumDao extends AbstractDao<CtlBillingServicePr
 		Query q = entityManager.createQuery("select b.serviceCode, c.description from CtlBillingServicePremium b, BillingService c where b.serviceCode=c.serviceCode and b.status=?");
 		q.setParameter(1, status);
 		
-		@SuppressWarnings("unchecked")
 		List<Object[]> results = q.getResultList();
 		
 		return results;
+	}
+	
+	public List<CtlBillingServicePremium> findByServceCodes(List<String> serviceCodes) {
+		Query query = createQuery("p", "p.serviceCode in (:serviceCodes)");
+		query.setParameter("serviceCodes", serviceCodes);
+		return query.getResultList();
 	}
 }

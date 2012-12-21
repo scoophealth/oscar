@@ -39,7 +39,6 @@ import org.oscarehr.util.SpringUtils;
 public class JdbcBillingCorrection {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingCorrection.class);
 	
-	BillingONDataHelp dbObj = new BillingONDataHelp();
 	JdbcBillingLog dbLog = new JdbcBillingLog();
 	
 	private BillingONCHeader1Dao billingHeaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);

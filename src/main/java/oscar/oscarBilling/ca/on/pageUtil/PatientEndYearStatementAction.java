@@ -20,7 +20,6 @@ package oscar.oscarBilling.ca.on.pageUtil;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,24 +38,27 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.utility.Utility;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.dao.BillingONItemDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
-import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
 
 /**
  *
  * @author Eugene Katyukhin
  */
 public class PatientEndYearStatementAction extends OscarAction {
+	
 	private static final Logger _logger = Logger.getLogger(BillingStatusPrep.class);
 	private static final String RES_SUCCESS = "success";
 	private static final String RES_FAILURE = "failure";
-   // private static final String;
       
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 	   
@@ -104,74 +106,58 @@ public class PatientEndYearStatementAction extends OscarAction {
 			   summary.setAddress(demographic.getAddress()+" "+demographic.getCity()+" "+demographic.getProvince());
 			   summary.setPhone(demographic.getPhone()+" "+demographic.getPhone2());
 			   request.setAttribute("summary", summary);
-			   BillingONDataHelp dbObj = new BillingONDataHelp();
-			   //testing data: 18812 2010-05-01 2010-05-02
-			   String sql = "SELECT bch.id,bch.billing_date,bch.total,bch.paid,bch.demographic_name,d.address,d.hin,d.phone,d.phone2 " + 
-			   " FROM billing_on_cheader1 bch JOIN demographic d ON bch.demographic_no=d.demographic_no " + 
-			   " WHERE bch.demographic_no='" + demographic.getDemographicNo() + "' AND bch.pay_program='PAT' ";
-			   if(fromDate != null) sql += " AND bch.billing_date >= '" + df.format(fromDate);
-			   if(toDate != null) sql += "' AND bch.billing_date <= '" + df.format(toDate) + "'";
-			   sql += " ORDER BY bch.id";
-			   ResultSet rs = dbObj.searchDBRecord(sql);
-			   if(rs == null) {
-				   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.billing.ca.on.database", "SQL error"));
-				   saveErrors(request,errors);
-				   _logger.error("Database error on query "+sql);
-				   return mapping.findForward(RES_FAILURE);  
-			   }
+			   
 			   double totalInvoiced = 0;
 			   double totalPaid = 0;
 			   int invoiceCount = 0;
+			   
+			   BillingONCHeader1Dao hDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+			   BillingONItemDao iDao = SpringUtils.getBean(BillingONItemDao.class);
 			   try {
-				   if(rs.next()) {
+				   for(Object[] o : hDao.findBillingsAndDemographicsByDemoIdAndDates(demographic.getDemographicNo(), "PAT", fromDate, toDate)) {
+					   BillingONCHeader1 bch = (BillingONCHeader1) o[0];
+					   Demographic d = (Demographic) o[1];
+						
 					   result = new ArrayList<PatientEndYearStatementInvoiceBean>();
-					   do {
-						   String paid = Utility.toCurrency(rs.getString("paid"));
-						   String invoiced = Utility.toCurrency(rs.getString("total"));
-						   PatientEndYearStatementInvoiceBean bean = 
-							   new PatientEndYearStatementInvoiceBean(rs.getInt("id"),
-									   rs.getDate("billing_date"), invoiced, paid );
-						   String sql2 = "SELECT bi.service_code,bi.fee FROM billing_on_item bi WHERE ch1_id="+rs.getInt("id")+" ORDER BY bi.service_code";
-						   ResultSet rs2 = dbObj.searchDBRecord(sql2);
-						   List<PatientEndYearStatementServiceBean> services = null;
-						   if(rs2 == null) {
-							   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.billing.ca.on.database", "SQL error"));
-							   saveErrors(request,errors);
-							   _logger.error("Database error on query "+sql2);
-							   return mapping.findForward(RES_FAILURE);  
+					   
+					   String paid = Utility.toCurrency(bch.getPaid());
+					   String invoiced = Utility.toCurrency(bch.getTotal());
+					   PatientEndYearStatementInvoiceBean bean = new PatientEndYearStatementInvoiceBean(bch.getId(), bch.getBillingDate(), invoiced, paid );
+					   
+					   List<PatientEndYearStatementServiceBean> services = null;
+					   try {
+						   services = new ArrayList<PatientEndYearStatementServiceBean>();
+						   for(BillingONItem bi : iDao.findByCh1Id(bch.getId())) {
+							   String fee = Utility.toCurrency(bi.getFee());
+							   PatientEndYearStatementServiceBean serviceBean = 
+								   new PatientEndYearStatementServiceBean(bi.getServiceCode(),fee );
+							   services.add(serviceBean);
 						   }
-						   try {
-							   if(rs2.next()) {
-								   services = new ArrayList<PatientEndYearStatementServiceBean>();
-								   do {
-									   String fee = Utility.toCurrency(rs2.getString("fee"));
-									   PatientEndYearStatementServiceBean serviceBean = 
-										   new PatientEndYearStatementServiceBean(rs2.getString("service_code"),fee );
-									   services.add(serviceBean);
-								   } while (rs2.next());
-							   }
-						   } catch (SQLException e) {
-							   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.billing.ca.on.database", "SQL error"));
-							   saveErrors(request,errors);
-							   _logger.error("Database error on query "+sql2,e);
-							   return mapping.findForward(RES_FAILURE);
-						   }
-						   bean.setServices(services);
-						   result.add(bean);
-						   totalInvoiced += Double.parseDouble(invoiced);
-						   totalPaid += Double.parseDouble(paid);
-						   invoiceCount += 1;
-						   request.setAttribute("result", result);
-					   } while (rs.next());
+					   } catch (Exception e) {
+						   _logger.error("error",e);
+						   
+						   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.billing.ca.on.database", "SQL error"));
+						   saveErrors(request,errors);
+						   return mapping.findForward(RES_FAILURE);
+					   }
+					   
+					   bean.setServices(services);
+					   result.add(bean);
+					   totalInvoiced += Double.parseDouble(invoiced);
+					   totalPaid += Double.parseDouble(paid);
+					   invoiceCount += 1;
+					   request.setAttribute("result", result);
 				   }
+				   
 				   summary.setInvoiced(Utility.toCurrency(totalInvoiced));
 				   summary.setPaid(Utility.toCurrency(totalPaid));
 				   summary.setCount(Integer.toString(invoiceCount));
 				   request.getSession().setAttribute("summary", summary);
-			   } catch (SQLException e) {
+			   } catch (Exception e) {
+				   _logger.error("error", e);
+				   
 				   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.billing.ca.on.database", "SQL error"));
 				   saveErrors(request,errors);
-				   _logger.error("Database error on query "+sql,e);
 				   return mapping.findForward(RES_FAILURE);
 			   }
 
@@ -179,7 +165,8 @@ public class PatientEndYearStatementAction extends OscarAction {
 			   summary = (PatientEndYearStatementBean) request.getSession().getAttribute("summary");
 			   OscarDocumentCreator osc = new OscarDocumentCreator();
 			   String docFmt = "pdf";
-			   HashMap reportParams = new HashMap<String,Object>();
+			   
+			   HashMap<String,Object> reportParams = new HashMap<String,Object>();
 			   reportParams.put("patientId", summary.getPatientNo());
 			   reportParams.put("patientName", summary.getPatientName());
 			   reportParams.put("hin", summary.getHin());
@@ -211,7 +198,9 @@ public class PatientEndYearStatementAction extends OscarAction {
 				   _logger.error("Can't get db connection",ex);
 				   return mapping.findForward(RES_FAILURE);		   				
 			   }
-			   if(dbConn != null) osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream, dbConn);
+			   if(dbConn != null) {
+				   osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream, dbConn);
+			   }
 			   return null;	   
 		   } 
 	   } else if (request.getParameter("demosearch") != null) {
