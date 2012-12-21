@@ -32,6 +32,8 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.AbstractModel;
 import org.springframework.transaction.annotation.Transactional;
 
+import oscar.util.ParamAppender;
+
 @Transactional
 public abstract class AbstractDao<T extends AbstractModel<?>> {
 	protected Class<T> modelClass;
@@ -86,7 +88,6 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName());
 		return query.getResultList();
 	}
-
 
 	/** Removes an entity based on the ID
 	 * 
@@ -143,7 +144,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	}
 
 	protected String getBaseQuery(String alias) {
-		return getBaseQuery(alias).toString();
+		return getBaseQueryBuf(null, alias).toString();
 	}
 
 	/**
@@ -175,7 +176,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	protected Query createQuery(String alias, String whereClause) {
 		return createQuery(null, alias, whereClause);
 	}
-		
+
 	/**
 	 * Creates a query with the specified entity alias and where clause
 	 * 
@@ -261,7 +262,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		else persist(entity);
 		return entity;
 	}
-	
+
 	/**
 	 * Runs native SQL query.
 	 * 
@@ -270,10 +271,36 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 * @return
 	 * 		Returns list containing query results.
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-    public List<Object[]> runNativeQuery(String sql) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Object[]> runNativeQuery(String sql) {
 		Query query = entityManager.createNativeQuery(sql);
 		List resultList = query.getResultList();
 		return resultList;
+	}
+
+	/**
+	 * Gets parameter appender with default base query set 
+	 * 
+	 * @return
+	 * 		Returns new appender
+	 * 
+	 * @see #getBaseQuery()
+	 */
+	protected ParamAppender getAppender() {
+		return new ParamAppender(getBaseQuery());
+	}
+
+	/**
+	 * Gets parameter appender with default base query set 
+	 * 
+	 * @param alias
+	 * 		Alias to be used in the query
+	 * @return
+	 * 		Returns new appender
+	 * 
+	 * @see #getBaseQuery(String)
+	 */
+	protected ParamAppender getAppender(String alias) {
+		return new ParamAppender(getBaseQuery(alias));
 	}
 }

@@ -34,6 +34,7 @@ import org.oscarehr.common.model.RSchedule;
 import org.springframework.stereotype.Repository;
 
 @Repository(value="rScheduleDao")
+@SuppressWarnings("unchecked")
 public class RScheduleDao extends AbstractDao<RSchedule>{
 
 	public RScheduleDao() {
@@ -46,11 +47,9 @@ public class RScheduleDao extends AbstractDao<RSchedule>{
 		query.setParameter(2, available);
 		query.setParameter(3, sdate);
 
-		@SuppressWarnings("unchecked")
         List<RSchedule> results = query.getResultList();
 		return results;
 	}
-	
 	
 	public Long search_rschedule_overlaps(String providerNo, Date d1, Date d2, Date d3, Date d4, Date d5, Date d6, Date d7, Date d8, Date d9, Date d10, Date d11, Date d12,Date d13,Date d14) {
 		Query query = entityManager.createQuery("select count(r.id) from RSchedule r where r.providerNo=? and ((r.sDate <? and r.eDate >=?) or (? < r.sDate and r.sDate < ?) or (? < r.eDate and r.eDate <= ?) or ( ? < r.sDate and r.eDate <= ?) or (r.sDate = ? and r.sDate = ?) or (r.eDate = ? and r.eDate <= ?) or (r.sDate = ? and r.eDate != ?)) and r.status = 'A'");
@@ -132,9 +131,14 @@ public class RScheduleDao extends AbstractDao<RSchedule>{
 		query.setParameter(1, providerNo);
 		query.setParameter(2, sdate);
 
-		@SuppressWarnings("unchecked")
         List<RSchedule> results = query.getResultList();
 		return results;
 	}
-	
+
+	public List<RSchedule> findByProviderNoAndDates(String providerNo, Date apptDate) {
+		Query query = createQuery("r", "r.providerNo = :providerNo AND r.sDate <= :apptDate AND r.eDate >= :apptDate");
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("apptDate", apptDate);
+		return query.getResultList();
+    }
 }

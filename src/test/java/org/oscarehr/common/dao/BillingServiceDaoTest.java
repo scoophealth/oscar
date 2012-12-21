@@ -48,18 +48,18 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingServiceDaoTest extends DaoTestFixtures {
 
-	protected BillingServiceDao dao = (BillingServiceDao)SpringUtils.getBean(BillingServiceDao.class);
+	protected BillingServiceDao dao = (BillingServiceDao) SpringUtils.getBean(BillingServiceDao.class);
 	protected DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 	Logger logger = MiscUtils.getLogger();
 
 	@Before
 	public void setUp() throws Exception {
-		SchemaUtils.restoreTable("billingservice", "billingperclimit", "ctl_billingservice","wcb", "billing");
+		SchemaUtils.restoreTable("billingservice", "billingperclimit", "ctl_billingservice", "wcb", "billing");
 	}
-	
+
 	@Test
-	public void getBillingCodeAttrTest() /*throws Exception*/ {
-		
+	public void getBillingCodeAttrTest() /*throws Exception*/{
+
 		dao.getBillingCodeAttr("A001A");
 	}
 
@@ -172,11 +172,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService6);
 
 		List<BillingService> resultList = dao.findBillingCodesByCode(serviceCode, region);
-		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(
-				billingService1,
-				billingService6,
-				billingService5
-				));
+		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(billingService1, billingService6, billingService5));
 
 		// fail if list sizes aren't the same
 		if (resultList.size() != expectedList.size()) {
@@ -185,7 +181,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		}
 
 		for (int i = 0; i < expectedList.size(); i++) {
-			if (!expectedList.get(i).equals(resultList.get(i))){
+			if (!expectedList.get(i).equals(resultList.get(i))) {
 				logger.warn("Items not sorted by Billing Service Date.");
 				fail("Items not sorted by Billing Service Date.");
 			}
@@ -217,11 +213,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService4);
 
 		List<BillingService> resultList = dao.findByServiceCode(serviceCode);
-		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(
-				billingService2,
-				billingService3,
-				billingService1
-				));
+		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(billingService2, billingService3, billingService1));
 
 		// fail if list sizes aren't the same
 		if (resultList.size() != expectedList.size()) {
@@ -230,7 +222,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		}
 
 		for (int i = 0; i < expectedList.size(); i++) {
-			if (!expectedList.get(i).equals(resultList.get(i))){
+			if (!expectedList.get(i).equals(resultList.get(i))) {
 				logger.warn("Items not sorted by Billing Service Date.");
 				fail("Items not sorted by Billing Service Date Descending.");
 			}
@@ -271,9 +263,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService6);
 
 		List<BillingService> resultList = dao.findBillingCodesByCode(serviceCode, region, order);
-		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(
-				billingService2
-				));
+		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(billingService2));
 
 		// fail if list sizes aren't the same
 		if (resultList.size() != expectedList.size()) {
@@ -281,7 +271,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		}
 
 		for (int i = 0; i < expectedList.size(); i++) {
-			if (!expectedList.get(i).equals(resultList.get(i))){
+			if (!expectedList.get(i).equals(resultList.get(i))) {
 				logger.warn("Items not sorted by Billing Service Date.");
 				fail("Items not sorted by Billing Service Date Descending.");
 			}
@@ -323,10 +313,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService6);
 
 		List<BillingService> resultList = dao.findBillingCodesByCode(serviceCode, region, date, order);
-		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(
-				billingService5,
-				billingService6
-				));
+		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(billingService5, billingService6));
 
 		// fail if list sizes aren't the same
 		if (resultList.size() != expectedList.size()) {
@@ -334,7 +321,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		}
 
 		for (int i = 0; i < expectedList.size(); i++) {
-			if (!expectedList.get(i).equals(resultList.get(i))){
+			if (!expectedList.get(i).equals(resultList.get(i))) {
 				logger.warn("Items not sorted by Billing Service Date.");
 				fail("Items not sorted by Billing Service Date Descending.");
 			}
@@ -364,10 +351,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService2);
 
 		List<BillingService> resultList = dao.findBillingCodesByCode(serviceCode, region, date, order);
-		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(
-				billingService1,
-				billingService2
-				));
+		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(billingService1, billingService2));
 
 		// fail if list sizes aren't the same
 		if (resultList.size() != expectedList.size()) {
@@ -375,7 +359,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		}
 
 		for (int i = 0; i < expectedList.size(); i++) {
-			if (!expectedList.get(i).equals(resultList.get(i))){
+			if (!expectedList.get(i).equals(resultList.get(i))) {
 				logger.warn("Items not sorted by Billing Service Date.");
 				fail("Items not sorted by Billing Service Date Descending.");
 			}
@@ -452,10 +436,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService5);
 
 		List<BillingService> resultList = dao.search(searchString, region, date);
-		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(
-				billingService1,
-				billingService2
-				));
+		List<BillingService> expectedList = new ArrayList<BillingService>(Arrays.asList(billingService1, billingService2));
 
 		// fail if list sizes aren't the same
 		if (resultList.size() != expectedList.size()) {
@@ -463,7 +444,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		}
 
 		for (int i = 0; i < expectedList.size(); i++) {
-			if (!expectedList.get(i).equals(resultList.get(i))){
+			if (!expectedList.get(i).equals(resultList.get(i))) {
 				logger.warn("Items not sorted by Billing Service Date.");
 				fail("Items not sorted by Billing Service Date Descending.");
 			}
@@ -558,63 +539,63 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertNull(result);
 	}
 
-//	@Test @Ignore
-//	/**
-//	 * Test ignored because expected result is not actual result.
-//	 * Test will fail as is.
-//	 * @throws Exception
-//	 */
-//	public void testSearchPrivateBillingCode() throws Exception {
-//		String searchString = "protected01";
-//		Date date = new Date(dfm.parse("20091231").getTime());
-//
-//		// Valid input.
-//		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
-//		billingService1.setRegion(null);
-//		// Valid input.
-//		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
-//		billingService2.setRegion(null);
-//		// Region not null.
-//		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
-//
-//		dao.persist(billingService1);
-//		dao.persist(billingService2);
-//		dao.persist(billingService3);
-//
-//		BillingService result = dao.searchPrivateBillingCode(searchString, date);
-//		BillingService expectedResult = billingService2;
-//
-//		assertEquals(expectedResult, result);
-//	}
+	//	@Test @Ignore
+	//	/**
+	//	 * Test ignored because expected result is not actual result.
+	//	 * Test will fail as is.
+	//	 * @throws Exception
+	//	 */
+	//	public void testSearchPrivateBillingCode() throws Exception {
+	//		String searchString = "protected01";
+	//		Date date = new Date(dfm.parse("20091231").getTime());
+	//
+	//		// Valid input.
+	//		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
+	//		billingService1.setRegion(null);
+	//		// Valid input.
+	//		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
+	//		billingService2.setRegion(null);
+	//		// Region not null.
+	//		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
+	//
+	//		dao.persist(billingService1);
+	//		dao.persist(billingService2);
+	//		dao.persist(billingService3);
+	//
+	//		BillingService result = dao.searchPrivateBillingCode(searchString, date);
+	//		BillingService expectedResult = billingService2;
+	//
+	//		assertEquals(expectedResult, result);
+	//	}
 
-//	@Test @Ignore
-//	/**
-//	 * Test ignored because expected result is not actual result.
-//	 * Test will fail as is.
-//	 * @throws Exception
-//	 */
-//	public void testSearchPrivateBillingCode_WithUnderscore() throws Exception {
-//		String searchString = "_protected01";
-//		Date date = new Date(dfm.parse("20091231").getTime());
-//
-//		// Valid input.
-//		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
-//		billingService1.setRegion(null);
-//		// Valid input.
-//		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
-//		billingService2.setRegion(null);
-//		// Region not null.
-//		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
-//
-//		dao.persist(billingService1);
-//		dao.persist(billingService2);
-//		dao.persist(billingService3);
-//
-//		BillingService result = dao.searchPrivateBillingCode(searchString, date);
-//		BillingService expectedResult = billingService2;
-//
-//		assertEquals(expectedResult, result);
-//	}
+	//	@Test @Ignore
+	//	/**
+	//	 * Test ignored because expected result is not actual result.
+	//	 * Test will fail as is.
+	//	 * @throws Exception
+	//	 */
+	//	public void testSearchPrivateBillingCode_WithUnderscore() throws Exception {
+	//		String searchString = "_protected01";
+	//		Date date = new Date(dfm.parse("20091231").getTime());
+	//
+	//		// Valid input.
+	//		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
+	//		billingService1.setRegion(null);
+	//		// Valid input.
+	//		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
+	//		billingService2.setRegion(null);
+	//		// Region not null.
+	//		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
+	//
+	//		dao.persist(billingService1);
+	//		dao.persist(billingService2);
+	//		dao.persist(billingService3);
+	//
+	//		BillingService result = dao.searchPrivateBillingCode(searchString, date);
+	//		BillingService expectedResult = billingService2;
+	//
+	//		assertEquals(expectedResult, result);
+	//	}
 
 	@Test
 	public void testSearchPrivateBillingCode_EmptySet() throws Exception {
@@ -641,7 +622,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertEquals(value, billingService1.getValue());
 	}
 
-	@Test 
+	@Test
 	public void testEditBillingCode() throws Exception {
 		String value = "value1";
 		int codeID = 1;
@@ -653,31 +634,31 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertEquals(value, billingService1.getValue());
 	}
 
-//	@Test @Ignore
-//	/**
-//	 * Ignored because the InsertBillingCode() method does not
-//	 * populate all columns in the BillingService table with data.
-//	 * Some columns cannot be null.
-//	 * @throws Exception
-//	 */
-//	public void testInsertBillingCode() throws Exception {
-//		String code = "service001";
-//		String date = "20090101";
-//		String description = "New description";
-//		String termDate = "20091231";
-//		String region = "ON";
-//		boolean pass = dao.insertBillingCode(code, date, description, termDate, region);
-//		assertTrue(pass);
-//		BillingService billingService1 = dao.find(1);
-//		if (!billingService1.getServiceCode().equals(code) &&
-//				billingService1.getDescription().equals(description) &&
-//				billingService1.getTerminationDate() == new Date(dfm.parse(termDate).getTime()) &&
-//				billingService1.getBillingserviceDate() == new Date(dfm.parse(date).getTime()) &&
-//				billingService1.getRegion().equals(region)) {
-//			fail("Insert Billing Code did not properly persist data.");
-//		}
-//		assertTrue(true);
-//	}
+	//	@Test @Ignore
+	//	/**
+	//	 * Ignored because the InsertBillingCode() method does not
+	//	 * populate all columns in the BillingService table with data.
+	//	 * Some columns cannot be null.
+	//	 * @throws Exception
+	//	 */
+	//	public void testInsertBillingCode() throws Exception {
+	//		String code = "service001";
+	//		String date = "20090101";
+	//		String description = "New description";
+	//		String termDate = "20091231";
+	//		String region = "ON";
+	//		boolean pass = dao.insertBillingCode(code, date, description, termDate, region);
+	//		assertTrue(pass);
+	//		BillingService billingService1 = dao.find(1);
+	//		if (!billingService1.getServiceCode().equals(code) &&
+	//				billingService1.getDescription().equals(description) &&
+	//				billingService1.getTerminationDate() == new Date(dfm.parse(termDate).getTime()) &&
+	//				billingService1.getBillingserviceDate() == new Date(dfm.parse(date).getTime()) &&
+	//				billingService1.getRegion().equals(region)) {
+	//			fail("Insert Billing Code did not properly persist data.");
+	//		}
+	//		assertTrue(true);
+	//	}
 
 	@Test
 	public void testGetLatestServiceDate() throws Exception {
@@ -725,7 +706,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService2);
 		dao.persist(billingService3);
 
-		Object[] expectedResult = {"value2", true};
+		Object[] expectedResult = { "value2", true };
 		Object[] result = dao.getUnitPrice(serviceCode, sdf.parse(referralDate));
 
 		// fail if list sizes aren't the same
@@ -741,16 +722,16 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertTrue(true);
 	}
 
-//	@Test @Ignore
-//	/**
-//	 * working on a way to parse log file for exception
-//	 */
-//	public void testGetUnitPrice_ParseException() {
-//		String serviceCode = "service001";
-//		String referralDate = "notadate";
-//		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
-//		// test incomplete
-//	}
+	//	@Test @Ignore
+	//	/**
+	//	 * working on a way to parse log file for exception
+	//	 */
+	//	public void testGetUnitPrice_ParseException() {
+	//		String serviceCode = "service001";
+	//		String referralDate = "notadate";
+	//		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
+	//		// test incomplete
+	//	}
 
 	@Test
 	public void testGetUnitPrice_EmptySet() throws Exception {
@@ -777,19 +758,19 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		String expectedResult = "40";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String result = dao.getUnitPercentage(serviceCode, sdf.parse(referralDate));
-		assertEquals(expectedResult,result);
+		assertEquals(expectedResult, result);
 	}
 
-//	@Test @Ignore
-//	/**
-//	 * working on a way to parse log file for exception
-//	 */
-//	public void testGetUnitPercentage_ParseException() {
-//		String serviceCode = "service001";
-//		String referralDate = "notadate";
-//		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
-//		// test incomplete
-//	}
+	//	@Test @Ignore
+	//	/**
+	//	 * working on a way to parse log file for exception
+	//	 */
+	//	public void testGetUnitPercentage_ParseException() {
+	//		String serviceCode = "service001";
+	//		String referralDate = "notadate";
+	//		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
+	//		// test incomplete
+	//	}
 
 	@Test
 	public void testGetUnitPercentage_EmptySet() throws Exception {
@@ -819,10 +800,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		dao.persist(billingService3);
 
 		List<BillingService> result = dao.findBillingCodesByFontStyle(displayStyle);
-		List<BillingService> expectedResult = new ArrayList<BillingService>(Arrays.asList(
-				billingService1,
-				billingService3
-				));
+		List<BillingService> expectedResult = new ArrayList<BillingService>(Arrays.asList(billingService1, billingService3));
 
 		// fail if list sizes aren't the same
 		if (result.size() != expectedResult.size()) {
@@ -830,7 +808,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		}
 
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items not sorted by Billing Service Date.");
 				fail("Items not sorted by Billing Service Date Descending.");
 			}
@@ -888,8 +866,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 	 * @return BillingService
 	 * @throws Exception
 	 */
-	public BillingService createBillingServiceWithDesc(String code, String region, String date, String description) 
-			throws Exception {
+	public BillingService createBillingServiceWithDesc(String code, String region, String date, String description) throws Exception {
 		BillingService billingService = new BillingService();
 		EntityDataGenerator.generateTestDataForModelClass(billingService);
 		billingService.setServiceCode(code);
@@ -906,28 +883,38 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		billingServices = dao.findByRegionGroupAndType("REG", "GRP", "TYP");
 		assertNotNull(billingServices);
 	}
-	
+
 	@Test
 	public void testFindByServiceCodeOrDescription() {
 		List<BillingService> bss = dao.findByServiceCodeOrDescription("VOTGVNO");
 		assertNotNull(bss);
 	}
-	
+
 	@Test
 	public void testFindMostRecentByServiceCode() {
 		List<BillingService> bss = dao.findMostRecentByServiceCode("VOTGVNO");
 		assertNotNull(bss);
 	}
-	
+
 	@Test
 	public void testFindByServiceCodeAndDate() {
 		List<BillingService> bss = dao.findByServiceCodeAndDate("PRSHA", new Date());
 		assertNotNull(bss);
 	}
-	
+
 	@Test
 	public void testFindGsts() {
 		List<BillingService> bss = dao.findGst("CODE", new Date());
 		assertNotNull(bss);
+	}
+
+	@Test
+	public void testFindByServiceCodeAndLatestDate() {
+		assertNotNull(dao.findByServiceCodeAndLatestDate("CDO", new Date()));
+	}
+
+	@Test
+	public void testFindBillingCodesByCodeAndTerminationDate() {
+		assertNotNull(dao.findBillingCodesByCodeAndTerminationDate("CDE", new Date()));
 	}
 }

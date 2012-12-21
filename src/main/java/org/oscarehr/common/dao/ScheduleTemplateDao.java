@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.ScheduleTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -98,6 +99,15 @@ public class ScheduleTemplateDao extends AbstractDao<ScheduleTemplate> {
 		
         List<ScheduleTemplate> results = query.getResultList();
 		return results;
+	}
+	
+	@NativeSql({"scheduletemplate", "scheduledate"})
+	public List<Object> findTimeCodeByProviderNo(String providerNo, Date date) {
+		String sql = "select timecode from scheduletemplate, (select hour from (select provider_no, hour, status from scheduledate where sdate = :date) as df where status = 'A' and provider_no= :providerNo) as hf where scheduletemplate.name=hf.hour and (scheduletemplate.provider_no= :providerNo or scheduletemplate.provider_no='Public')";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("date", date);
+		query.setParameter("providerNo", providerNo);
+		return query.getResultList();
 	}
 
 }

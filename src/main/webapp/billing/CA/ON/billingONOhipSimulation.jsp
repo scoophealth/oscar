@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.util.DateRange"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ page import="java.math.*, java.util.*, oscar.util.*"%>
@@ -83,7 +84,7 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 	String htmlValue="";
 	
 	if (bMultisites) {
-		String dateRange = "";
+		DateRange dateRange = null;
 		String proOHIP=""; 
 		String specialty_code; 
 		String billinggroup_no;
@@ -91,9 +92,9 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 		String dateEnd = request.getParameter("xml_appointment_date");
 		if (dateEnd.compareTo("") == 0) dateEnd = request.getParameter("curDate");
 		if (dateBegin.compareTo("") == 0){
-			dateRange = " and billing_date <= '" + dateEnd + "'";
-		}else{
-			dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
+			dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
+		} else {
+			dateRange = new DateRange(ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
 		}
 		proObj = (new JdbcBillingPageUtil()).getProviderObj(pro);
 		
@@ -136,7 +137,7 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 		//bhObj.setBatch_date(rs.getString("batch_date"));
 		
 		dbObj.setBatchHeaderObj(bhObj);	
-		dbObj.createSiteBillingFileStr("0", "(status='O' or status='W' or status='I')");
+		dbObj.createSiteBillingFileStr("0", new String[] {"O", "W", "I" });
 		htmlValue = "<font color='red'>" + errorMsg + "</font>" + dbObj.getHtmlValue();
 	}
 	else {
@@ -170,16 +171,15 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 			String proOHIP=""; 
 			String specialty_code; 
 			String billinggroup_no;
-			String dateRange = "";
-			
+			DateRange dateRange = null;
 			
 			String dateBegin = request.getParameter("xml_vdate");
 			String dateEnd = request.getParameter("xml_appointment_date");
 			if (dateEnd.compareTo("") == 0) dateEnd = request.getParameter("curDate");
 			if (dateBegin.compareTo("") == 0){
-				dateRange = " and billing_date <= '" + dateEnd + "'";
-			}else{
-				dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
+				dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
+			} else {
+				dateRange = new DateRange(ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
 			}
 			
 			proOHIP = proObj.getOhipNo(); 
@@ -209,7 +209,7 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 			dbObj.setBatchHeaderObj(bhObj);
 			dbObj.errorMsg += errorMsg;
 			
-			dbObj.createBillingFileStr("0", "(status='O' or status='W' or status='I')", true, null, summaryView);
+			dbObj.createBillingFileStr("0", new String[] { "O", "W", "I" }, true, null, summaryView);
 			if (dbObj.getRecordCount() > 0) {
 				recordCount += dbObj.getRecordCount();	
 				bigTotal = bigTotal.add(dbObj.getBigTotal());

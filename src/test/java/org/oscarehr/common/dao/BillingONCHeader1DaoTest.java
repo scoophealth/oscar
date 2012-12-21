@@ -23,15 +23,17 @@
  */
 package org.oscarehr.common.dao;
 
-import java.util.Date;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.Arrays;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.common.model.BillingONCHeader1;
-
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.util.DateRange;
 import org.oscarehr.util.SpringUtils;
 
 public class BillingONCHeader1DaoTest extends DaoTestFixtures {
@@ -65,4 +67,38 @@ public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 	public void testCountBillingVisitsByProvider() {
         assertNotNull(dao.countBillingVisitsByProvider("100", new Date(), new Date()));
 	}
+
+    @Test
+    public void testFindBillingsByManyThings() {
+	    assertNotNull(dao.findBillingsByManyThings("STAT", null, null, null, null));
+	    assertNotNull(dao.findBillingsByManyThings("STAT", null, null, null, 100));
+	    assertNotNull(dao.findBillingsByManyThings("STAT", null , null, new Date(), 100));
+	    assertNotNull(dao.findBillingsByManyThings("STAT", null , new Date(), new Date(), 100));
+	    assertNotNull(dao.findBillingsByManyThings("STAT", "PROV" , new Date(), new Date(), 100));
+    }
+
+    @Test
+    public void testFindByProviderStatusAndDateRange() {
+    	Date date = new Date(0);
+	    assertNotNull(dao.findByProviderStatusAndDateRange("100", Arrays.asList(new String[] {"A"}), new DateRange(date, new Date())));
+	    assertNotNull(dao.findByProviderStatusAndDateRange("100", Arrays.asList(new String[] {"A"}), new DateRange(null, null)));
+	    assertNotNull(dao.findByProviderStatusAndDateRange("100", Arrays.asList(new String[] {"A"}), new DateRange(null, new Date())));
+	    assertNotNull(dao.findByProviderStatusAndDateRange("100", Arrays.asList(new String[] {"A"}), new DateRange(new Date(), null)));
+    }
+    
+    @Test
+    public void testFindBillingsAndDemographicsById() {
+	    assertNotNull(dao.findBillingsAndDemographicsById(100));
+    }
+
+    @Test
+    public void testFindByMagic() {
+	    assertNotNull(dao.findByMagic(Arrays.asList(new String[] {"PP"}), "STS_TY", "PROV_NO", new Date(), new Date(), 100));
+    }
+    
+    @Test
+    public void testFindByMagic2() {
+	    assertNotNull(dao.findByMagic2(Arrays.asList(new String[] {"PP"}), "STS_TY", "PROV_NO", 
+	    		new Date(), new Date(), 100, Arrays.asList(new String[] {"SVN_CODE"}), "DX", "VIS_TYPE"));
+    }
 }

@@ -39,6 +39,7 @@ import org.springframework.stereotype.Repository;
 import oscar.util.DateUtils;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class RaDetailDao extends AbstractDao<RaDetail> {
 
 	public RaDetailDao() {
@@ -50,7 +51,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 
 		query.setParameter("billingNo", billingNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<RaDetail> results = query.getResultList();
 
 		return results;
@@ -62,7 +63,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 
 		query.setParameter("raHeaderNo", raHeaderNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<RaDetail> results = query.getResultList();
 
 		return results;
@@ -80,7 +81,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		query.setParameter("raHeaderNo", raHeaderNo);
 		query.setParameter("providerOhipNo", providerOhipNo);
 		query.setParameter("codes", tmp);
-		@SuppressWarnings("unchecked")
+		
 		List<Integer> results = query.getResultList();
 
 		return results;
@@ -94,7 +95,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		String endDateStr = DateUtils.format("yyyyMMdd", endDate, locale);
 		query.setParameter(2, endDateStr);
 
-		@SuppressWarnings("unchecked")
+		
 		List<RaDetail> results = query.getResultList();
 
 		return results;
@@ -108,7 +109,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		query.setParameter(2, endDateStr);
 		query.setParameter(3, p.getOhipNo());
 
-		@SuppressWarnings("unchecked")
+		
 		List<RaDetail> results = query.getResultList();
 
 		return results;
@@ -119,7 +120,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		Query query = entityManager.createQuery("SELECT rad from RaDetail rad where rad.claimNo = ?");
 		query.setParameter(1, claimNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<RaDetail> raDetails = query.getResultList();
 
 		return raDetails;
@@ -133,7 +134,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		 query.setParameter("error2", error2);
 		 query.setParameter("ohip", providerOhipNo);
 
-         @SuppressWarnings("unchecked")
+         
          List<RaDetail> results = query.getResultList();
 
          return results;
@@ -148,7 +149,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		query.setParameter("error2", error2);
 		query.setParameter("ohip", providerOhipNo);
 
-        @SuppressWarnings("unchecked")
+        
         List<Integer> results = query.getResultList();
 
         return results;
@@ -162,7 +163,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
    	   	query.setParameter("raHeaderNo", raHeaderNo);
 		query.setParameter("serviceCodes", Arrays.asList(arServiceCodes));
 		
-		@SuppressWarnings("unchecked")
+		
         List<Integer> results = query.getResultList();
 
         return results;
@@ -176,7 +177,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
    	   	query.setParameter("raHeaderNo", raHeaderNo);
 		query.setParameter("serviceCodes", Arrays.asList(arServiceCodes));
 		
-		@SuppressWarnings("unchecked")
+		
         List<Integer> results = query.getResultList();
 
         return results;
@@ -187,7 +188,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
    	   	
    	   	query.setParameter("raHeaderNo", raHeaderNo);
 		
-		@SuppressWarnings("unchecked")
+		
         List<Object[]> results = query.getResultList();
 
         return results;
@@ -199,7 +200,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
    		query.setParameter("raHeaderNo", raHeaderNo);
 		query.setParameter("ohip", providerOhipNo);
 		
-		@SuppressWarnings("unchecked")
+		
         List<RaDetail> results = query.getResultList();
 
 		return results;
@@ -214,7 +215,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		query.setParameter("serviceCodes", Arrays.asList(arServiceCodes));
 		query.setParameter("ohip", providerOhipNo);
 		
-		@SuppressWarnings("unchecked")
+		
         List<Integer> results = query.getResultList();
 
         return results;
@@ -226,13 +227,13 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 		Query query = entityManager.createQuery("SELECT errorCode from RaDetail rad where rad.billingNo = (:billingNo) and rad.errorCode!='' and rad.raHeaderNo=(select max(rad2.raHeaderNo) from RaDetail rad2 where rad2.billingNo=(:billingNo))");
 		query.setParameter("billingNo", billingNo);
 
-		@SuppressWarnings("unchecked")
+		
 		List<String> errors = query.getResultList();
 
 		return errors;
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<RaDetail> findByBillingNoServiceDateAndProviderNo(Integer billingNo, String serviceDate, String providerNo) {
 		Query query = createQuery("r", "r.id = :billingNo AND r.serviceDate = :serviceDate and r.providerOhipNo = :providerNo");
 		query.setParameter("billingNo", billingNo);
@@ -242,11 +243,44 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<RaDetail> findByBillingNoAndErrorCode(Integer billingNo, String errorCode) {
 		Query query = createQuery("r", "r.id = :billingNo AND r.errorCode = :errorCode");
 		query.setParameter("billingNo", billingNo);
 		query.setParameter("errorCode", errorCode);
+		return query.getResultList();
+    }
+
+	public List<RaDetail> findByIdOhipAndErrorCode(Integer raHeaderNo, String providerOhipNo, List<String> codes) {
+	    Query query = createQuery("r", "r.raHeaderNo = :raHeaderNo " +
+				"AND r.providerOhipNo = :providerOhipNo " +
+				"AND r.errorCode <> '' " +
+				"AND r.errorCode NOT IN (:codes)");
+		
+		query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("providerOhipNo", providerOhipNo);
+		query.setParameter("codes", codes);
+		return query.getResultList();
+	    
+    }
+
+	public List<RaDetail> findByHeaderAndBillingNos(Integer raHeaderNo, Integer billingNo) {
+		Query query = createQuery("r", "r.raHeaderNo = :raHeaderNo AND r.billingNo = :billingNo");
+		query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("billingNo", billingNo);
+		return query.getResultList();
+    }
+
+	public List<RaDetail> findByRaHeaderNoAndServiceCodes(Integer raHeaderNo, List<String> serviceCodes) {
+		Query query = createQuery("r", "r.raHeaderNo = :raHeaderNo AND r.serviceCode in (:serviceCodes)");
+		query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("serviceCodes", serviceCodes);
+		return query.getResultList();
+    }
+
+	public List<RaDetail> findByRaHeaderNoAndProviderOhipNo(Integer raHeaderNo, String providerOhipNo) {
+		Query query = createQuery("r", "r.raHeaderNo = :raHeaderNo AND r.providerOhipNo = :providerOhipNo");
+		query.setParameter("raHeaderNo", raHeaderNo);
+		query.setParameter("providerOhipNo", providerOhipNo);
 		return query.getResultList();
     }
 }

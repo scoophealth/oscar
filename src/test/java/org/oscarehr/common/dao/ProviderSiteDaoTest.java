@@ -96,4 +96,9 @@ public class ProviderSiteDaoTest extends DaoTestFixtures {
 		}
 		assertTrue(true);
 	}
+
+    @Test
+    public void testFindActiveProvidersWithSites() {
+	    assertNotNull(dao.findActiveProvidersWithSites("100"));
+    }
 }

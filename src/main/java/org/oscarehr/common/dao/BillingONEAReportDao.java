@@ -32,11 +32,11 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.BillingONEAReport;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author mweston4
- */
+import oscar.oscarBilling.ca.on.data.BillingProviderData;
+import oscar.util.ParamAppender;
+
 @Repository
+@SuppressWarnings("unchecked")
 public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
     
     public BillingONEAReportDao() {
@@ -50,10 +50,8 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
         query.setParameter("groupNo", groupNo);
         query.setParameter("specialty", specialty);
         query.setParameter("processDate", processDate);
-
-        @SuppressWarnings("unchecked")
-        List<BillingONEAReport> results = query.getResultList();
         
+        List<BillingONEAReport> results = query.getResultList();       
         return results;
     }
     
@@ -63,7 +61,7 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
     	Query query = entityManager.createQuery(sql);
         query.setParameter("billingNo", billingNo);
 
-        @SuppressWarnings("unchecked")
+        
         List<BillingONEAReport> results = query.getResultList();
         
         return results;
@@ -75,7 +73,7 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
         Query query = entityManager.createQuery("select eaRpt from BillingONEAReport eaRpt where eaRpt.billingNo = (:billingNo) order by processDate desc");
         query.setParameter("billingNo", billingNo);
 
-        @SuppressWarnings("unchecked")
+        
         List<BillingONEAReport> eaReports = query.getResultList();
         
         for (BillingONEAReport eaReport : eaReports) {
@@ -93,6 +91,55 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
         }
 		
         return errors;
+    }
+
+	public List<BillingONEAReport> findByMagic(String ohipNo, String billingGroupNo, String specialtyCode, Date fromDate, Date toDate, String reportName) {
+		ParamAppender appender = getAppender("b");
+		appender.and("b.providerOHIPNo = :ohipNo", "ohipNo", ohipNo);
+		appender.and("b.groupNo = :billingGroupNo", "billingGroupNo", billingGroupNo);
+		appender.and("b.specialty = :specialtyCode", "specialtyCode", specialtyCode);
+		appender.and("b.codeDate >= :fromDate", "fromDate", fromDate);
+		appender.and("b.codeDate <= :toDate", "toDate", toDate);
+		appender.and("b.reportName = :reportName", "reportName", reportName);
+		appender.addOrder("b.codeDate");
+		
+		Query query = entityManager.createQuery(appender.toString());
+		appender.setParams(query);
+		return query.getResultList();
+    }
+
+	public List<BillingONEAReport> findByMagic(List<BillingProviderData> list, Date fromDate, Date toDate, String reportName) {
+		ParamAppender appender = getAppender("b");
+		
+		boolean hasProviderData = !list.isEmpty();
+		if (hasProviderData) {
+			appender.startWhereSubclause();
+		}
+		
+		for (int i = 0; i < list.size(); i++) {
+			BillingProviderData d  = list.get(i);
+			ParamAppender pa = new ParamAppender();
+			pa.and("b.providerOHIPNo = :ohipNo" + i, "ohipNo" + i, d.getOhipNo());
+			pa.and("b.groupNo = :billingGroupNo" + i, "billingGroupNo" + i, d.getBillingGroupNo());
+			pa.and("b.specialty = :specialtyCode" + i, "specialtyCode" + i, d.getSpecialtyCode());
+						
+			appender.or("(" + pa.getWhereClause() + ")");		
+			appender.mergeParams(pa);
+		}
+		
+		if (hasProviderData) {
+			appender.endWhereSubclause();
+		}
+		
+		appender.and("b.codeDate >= :fromDate", "fromDate", fromDate);
+		appender.and("b.codeDate <= :toDate", "toDate", toDate);
+		appender.and("b.reportName = :reportName", "reportName", reportName);
+		appender.addOrder("b.codeDate");
+
+		Query query = entityManager.createQuery(appender.toString());
+		appender.setParams(query);
+		return query.getResultList();
+
     }
     
 }

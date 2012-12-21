@@ -26,11 +26,14 @@ package org.oscarehr.common.dao;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.Query;
 
@@ -45,18 +48,21 @@ import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.DateRange;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
+import oscar.util.ParamAppender;
 /**
 *
 * @author Eugene Katyukhin
 */
 
 @Repository
+@SuppressWarnings("unchecked")
 public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     
     @Autowired
@@ -288,11 +294,11 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         Query q = entityManager.createQuery(sql);
         q.setParameter("code", serviceCode);
         q.setParameter("demo", demographicNo);
-        List billingClaims = q.getResultList();
+        List<BillingONItem> billingClaims = q.getResultList();
         int numDays = -1;
 
         if( billingClaims.size() > 0 ) {
-            BillingONItem i = (BillingONItem)billingClaims.get(0);
+            BillingONItem i = billingClaims.get(0);
             Calendar billdate = Calendar.getInstance();
             billdate.setTime(i.getServiceDate());
 
@@ -311,11 +317,11 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         Query q = entityManager.createQuery(sql);
         q.setParameter("code", serviceCode);
         q.setParameter("demo", demographic_no);
-        List billingClaims = q.getResultList();
+        List<BillingONItem> billingClaims = q.getResultList();
         int numDays = -1;
 
         if( billingClaims.size() > 0 ) {
-            BillingONItem i = (BillingONItem)billingClaims.get(0);
+            BillingONItem i = billingClaims.get(0);
             Calendar billDate = Calendar.getInstance();
             billDate.setTime(i.getServiceDate());
           
@@ -328,7 +334,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return numDays;
     }    
     
-    @SuppressWarnings("unchecked")
+    
     public List<BillingONCHeader1> getInvoices(Integer demographicNo, Integer limit) {
     	String sql = "select h1 from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
@@ -340,7 +346,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<BillingONCHeader1> getInvoices(Integer demographicNo) {
     	String sql = "select h1 from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
@@ -351,7 +357,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<BillingONCHeader1> getInvoicesByIds(List<Integer> ids) {
     	if(ids.isEmpty()) 
             return new ArrayList<BillingONCHeader1>();
@@ -364,7 +370,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<Map<String,Object>> getInvoicesMeta(Integer demographicNo) {
     	String sql = "select new map(h1.id as id, h1.billingDate as billingDate, h1.billingTime as billing_time, h1.providerNo as provider_no) from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
@@ -392,7 +398,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         
        BillingONItem b = null;
         
-        @SuppressWarnings("unchecked")
+        
         List<BillingONItem> results = q.getResultList();
         if (!results.isEmpty()) {
             if (results.size() > 1) {
@@ -410,7 +416,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
          query.setParameter(2, start);
          query.setParameter(3, end);
          
-        @SuppressWarnings("unchecked")
+        
         List<BillingONCHeader1> results = query.getResultList();
         
         return results;
@@ -422,7 +428,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
          query.setParameter(1, start);
          query.setParameter(2, end);
          
-        @SuppressWarnings("unchecked")
+        
         List<BillingONCHeader1> results = query.getResultList();
         
         return results;
@@ -442,7 +448,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return result;
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<BillingONCHeader1> findByAppointmentNo(Integer appointmentNo) {
     	String sql = "select h1 from BillingONCHeader1 h1 where h1.appointmentNo=?";
         Query q = entityManager.createQuery(sql);
@@ -452,7 +458,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return q.getResultList();
     }
 
-    @SuppressWarnings("unchecked")
+    
     public List<Object[]> countBillingVisitsByProvider(String providerNo, Date dateBegin, Date dateEnd) {
         String sql = "SELECT b.visitType, count(b) FROM BillingONCHeader1 b "
                 + "WHERE b.status <> 'D' "
@@ -468,7 +474,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<Object[]> countBillingVisitsByCreator(String providerNo, Date dateBegin, Date dateEnd) {
         String sql = "SELECT b.visitType, count(b) FROM BillingONCHeader1 b "
                 + "WHERE b.status <> 'D' "
@@ -484,7 +490,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<Integer> count_larrykain_clinic(String facilityNum, Date startDate, Date endDate) {
     	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType = '00' and b.faciltyNum = ? and b.status <> 'D' and b.billingDate >=? and b.billingDate <=?");
     	
@@ -495,7 +501,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
          return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<Integer> count_larrykain_hospital(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, Date startDate, Date endDate) {
     	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType<>'00' and (b.faciltyNum=? or b.faciltyNum=? or b.faciltyNum=? or b.faciltyNum=?) and status<>'D' and b.billingDate >=? and b.billingDate <=?");
     	
@@ -509,7 +515,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
          return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
+    
     public List<Integer> count_larrykain_other(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, String facilityNum5, Date startDate, Date endDate) {
     	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType<>'00' and status<>'D' and  (b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>?) and b.billingDate >=? and b.billingDate<=?");
     	
@@ -523,4 +529,145 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     	
          return q.getResultList();
     }
+
+	public List<BillingONCHeader1> findBillingsByManyThings(String status, String providerNo, Date startDate, Date endDate, Integer demoNo) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		StringBuilder buf = getBaseQueryBuf(null, "b").append("WHERE b.status = :status ");
+		params.put("status", status);
+		
+		if (providerNo != null) {
+			buf.append("AND b.providerNo = :providerNo ");
+			params.put("providerNo", providerNo);
+		}
+		
+		if (startDate != null) {
+			buf.append("AND b.billingDate >= :startDate ");
+			params.put("startDate", startDate);
+		}
+
+		if (endDate != null) {
+			buf.append("AND b.billingDate <= :endDate ");
+			params.put("endDate", endDate);
+		}
+		
+		if (demoNo != null ) {
+			buf.append("AND b.demographicNo = :demoNo ");
+			params.put("demoNo", demoNo);
+		}
+		
+		Query query = entityManager.createQuery(buf.toString());
+		for(Entry<String, Object> e : params.entrySet()) {
+			query.setParameter(e.getKey(), e.getValue());			
+		}
+		return query.getResultList();
+    }
+
+	public List<BillingONCHeader1> findByProviderStatusAndDateRange(String providerNo, List<String> statuses, DateRange dateRange) {
+		String dateRangeSubquery = "";
+		if (dateRange.getTo() != null && dateRange.getFrom() != null ) {
+			dateRangeSubquery = " AND h.billingDate > :dateBegin AND h.billingDate <= :dateEnd ";
+		} else if (dateRange.getTo() != null) {
+			dateRangeSubquery = " AND h.billingDate <= :dateEnd ";
+		}
+				
+		Query query = createQuery("h", "h.providerNo = :providerNo AND h.status IN (:statuses) "
+				+ dateRangeSubquery + " AND h.payProgram IN (:programs) ORDER BY h.billingDate, h.billingTime");
+		
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("statuses", statuses);
+		query.setParameter("programs", Arrays.asList(new String[] {"HCP", "WCB", "RMB"}));
+		
+		if (dateRange.getTo() != null && dateRange.getFrom() != null ) {
+			query.setParameter("dateBegin", dateRange.getFrom());
+			query.setParameter("dateEnd", dateRange.getTo());
+		} else if (dateRange.getTo() != null) {
+			query.setParameter("dateEnd", dateRange.getTo());
+		}
+		
+		return query.getResultList();
+    }
+
+	public List<Object[]> findBillingsAndDemographicsById(Integer id) {
+	    String sql = "FROM BillingONCHeader1 b, Demographic d WHERE b.id = :id AND b.demographicNo = d.DemographicNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("id", id);
+		return query.getResultList();
+    }
+
+	public List<BillingONCHeader1> findByMagic(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo) {
+		ParamAppender app = getAppender("h");
+		app.and("h.payProgram in (:payPrograms)", "payPrograms", payPrograms);
+		app.and("h.status = :status", "status", statusType);
+		app.and("h.providerNo = :providerNo", "providerNo", providerNo);
+		app.and("h.billingDate >= :startDate", "startDate", startDate);
+		app.and("h.billingDate <= :endDate", "endDate", endDate);
+		app.and("h.demographicNo = :demographicNo", "demographicNo", demoNo);
+        app.addOrder("h.billingDate, h.billingTime");
+        
+		Query query = entityManager.createQuery(app.toString());
+		app.setParams(query);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findByMagic2(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, List<String> serviceCodes, String dx, String visitType) {
+		ParamAppender app = new ParamAppender("FROM BillingONCHeader1 ch1, BillingONItem bi");
+		app.and("ch1.id = bi.ch1Id");
+		app.and("bi.status != 'D'");
+		
+		app.and("ch1.payProgram in (:payPrograms)", "payPrograms", payPrograms);
+		app.and("ch1.status = :status", "status", statusType);
+		app.and("ch1.providerNo = :providerNo", "providerNo", providerNo);
+		app.and("ch1.billingDate >= :startDate", "startDate", startDate);
+		app.and("ch1.billingDate <= :endDate", "endDate", endDate);
+		app.and("ch1.demographicNo = :demographicNo", "demographicNo", demoNo);
+		app.and("bi.dx = :dx", "dx", dx);
+		app.and("ch1.visitType = :visitType", "visitType", visitType);
+        app.and("bi.serviceCode in (:serviceCodes)", "serviceCodes", serviceCodes);
+        app.addOrder("ch1.billingDate, ch1.billingTime");
+        
+		Query query = entityManager.createQuery(app.toString());
+		app.setParams(query);
+		return query.getResultList();
+    }
+
+	public List<BillingONCHeader1> findByDemoNo(Integer demoNo, int iOffSet, int pageSize) {
+		String sql = "FROM BillingONCHeader1 b WHERE b.demographicNo = :demoNo " + 
+				"AND b.status != 'D' " +
+				"ORDER BY b.billingDate DESC, b.billingTime DESC, b.id DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setFirstResult(iOffSet);
+		query.setMaxResults(pageSize);
+		return query.getResultList();
+    }
+
+	public List<BillingONCHeader1> findByDemoNoAndDates(Integer demoNo, DateRange dateRange, int iOffSet, int pageSize) {
+		String sql = "FROM BillingONCHeader1 b WHERE b.demographicNo = :demoNo " + 
+	            "AND b.billingDate >= :dateStart " +
+	            "AND b.billingDate <= :dateEnd " + 
+				"AND b.status != 'D' " +
+				"ORDER BY b.billingDate DESC, b.billingTime DESC, b.id DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("dateStart", dateRange.getFrom());
+		query.setParameter("dateEnd", dateRange.getTo());
+		query.setFirstResult(iOffSet);
+		query.setMaxResults(pageSize);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findBillingsAndDemographicsByDemoIdAndDates(Integer demoNo, String payProgram, Date fromDate, Date toDate) {
+		ParamAppender app = new ParamAppender("FROM BillingONCHeader1 bch, Demographic d");
+		app.and("bch.demographicNo = d.DemographicNo");
+		app.and("bch.demographicNo = :demoNo", "demoNo", demoNo);
+		app.and("bch.payProgram = :payProgram", "payProgram", payProgram);
+		app.and("bch.billingDate >= :fromDate", "fromDate", fromDate);
+		app.and("bch.billingDate <= :toDate", "toDate", toDate);
+		app.addOrder("bch.id");
+
+		Query query = entityManager.createQuery(app.toString());
+		app.setParams(query);
+		return query.getResultList();
+    }    
+    
 }

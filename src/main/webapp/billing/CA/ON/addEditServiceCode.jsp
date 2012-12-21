@@ -25,7 +25,6 @@
 <%@ page errorPage="../../../appointment/errorpage.jsp"
 	import="java.util.*,java.sql.*,oscar.*,java.text.*, java.lang.*,java.net.*"%>
 
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.CSSStylesDAO, org.oscarehr.common.model.CssStyle, java.util.List"%>
 <%@ page import="org.oscarehr.common.model.BillingService" %>
@@ -44,7 +43,7 @@
   //BillingServiceCode serviceCodeObj = new BillingServiceCode();
   Properties	prop  = new Properties();
   LinkedHashMap codes = new LinkedHashMap();
-  BillingONDataHelp dbObj = new BillingONDataHelp();
+  
   List<CssStyle> styles = new ArrayList<CssStyle>();
   if (request.getParameter("submitFrm") != null && (request.getParameter("submitFrm").equals("Save") || request.getParameter("submitFrm").equalsIgnoreCase("Add Service Code"))) {
     // check the input data

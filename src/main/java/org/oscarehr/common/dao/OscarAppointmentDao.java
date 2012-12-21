@@ -23,6 +23,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -134,6 +135,17 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return rs;
 	}
 
+	public List<Appointment> findByProviderAndDayandNotStatuses(String providerNo, Date date, String[] notThisStatus) {
+		String sql = "SELECT a FROM Appointment a WHERE a.providerNo=?1 and a.appointmentDate = ?2 and a.status NOT IN ( ?3 )";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, providerNo);
+		query.setParameter(2, date);
+		query.setParameter(3, Arrays.asList(notThisStatus));
+
+		List<Appointment> results = query.getResultList();
+		return results;
+	}
+	
 	public List<Appointment> findByProviderAndDayandNotStatus(String providerNo, Date date, String notThisStatus) {
 		String sql = "SELECT a FROM Appointment a WHERE a.providerNo=?1 and a.appointmentDate = ?2 and a.status != ?3";
 		Query query = entityManager.createQuery(sql);
@@ -484,14 +496,34 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
     }
     
     public List<Appointment> search_group_day_appt(String myGroup, Integer demographicNo, Date appointmentDate) {
-    	String sql = "select a  from Appointment a, MyGroup m where m.id.providerNo=a.providerNo and a.status <> 'C' and m.id.myGroupNo=? and  a.demographicNo=? and  a.appointmentDate=?";
+    	String sql = "select a  from Appointment a, MyGroup m " +
+    			"where m.id.providerNo = a.providerNo " +
+    			"and a.status <> 'C' " +
+    			"and m.id.myGroupNo = ? " +
+    			"and a.demographicNo = ? " +
+    			"and a.appointmentDate = ?";
     	
     	
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1, myGroup);
-         query.setParameter(2, demographicNo);
-         query.setParameter(3, appointmentDate);
-         
-         return query.getResultList();
+        query.setParameter(2, demographicNo);
+        query.setParameter(3, appointmentDate);
+        
+        return query.getResultList();
     }
+
+
+	public Appointment findByDate(Date appointmentDate) {
+		Query query = createQuery("a", "a.appointmentDate < :appointmentDate ORDER BY a.appointmentDate DESC");
+		query.setMaxResults(1);
+		query.setParameter("appointmentDate", appointmentDate);
+		return getSingleResultOrNull(query);
+    }
+	
+	public List<Object[]> findAppointmentAndProviderByAppointmentNo(Integer apptNo) {
+		String sql = "FROM Appointment a, Provider p WHERE a.providerNo = p.ProviderNo AND a.id = :apptNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("apptNo", apptNo);
+		return query.getResultList();
+	}
 }

@@ -46,202 +46,212 @@ public class RaHeaderDaoTest extends DaoTestFixtures {
 
 	protected RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
-	
+
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("raheader");
+		SchemaUtils.restoreTable("raheader", "radetail", "provider", "providersite", "demographic", "provider_facility", "Facility");
 	}
 
 	@Test
 	public void testCreate() throws Exception {
 		RaHeader ql = new RaHeader();
-		 EntityDataGenerator.generateTestDataForModelClass(ql);
-		 dao.persist(ql);
-		 assertNotNull(ql.getId());
+		EntityDataGenerator.generateTestDataForModelClass(ql);
+		dao.persist(ql);
+		assertNotNull(ql.getId());
 	}
-	
-	@Test 
+
+	@Test
 	public void testFindCurrentByFilenamePaymentDate() throws Exception {
-		
+
 		String filename1 = "alpha";
 		String filename2 = "bravo";
-		
+
 		String status1 = "A";
 		String status2 = "D";
-		
+
 		RaHeader raHeader1 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader1);
 		raHeader1.setFilename(filename1);
 		raHeader1.setStatus(status1);
 		raHeader1.setPaymentDate("20110101");
 		dao.persist(raHeader1);
-		
+
 		RaHeader raHeader2 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader2);
 		raHeader2.setFilename(filename1);
 		raHeader2.setStatus(status2);
 		raHeader2.setPaymentDate("20080101");
 		dao.persist(raHeader2);
-		
+
 		RaHeader raHeader3 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader3);
 		raHeader3.setFilename(filename1);
 		raHeader3.setStatus(status1);
 		raHeader3.setPaymentDate("20050101");
 		dao.persist(raHeader3);
-		
+
 		RaHeader raHeader4 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader4);
 		raHeader4.setFilename(filename1);
 		raHeader4.setStatus(status1);
 		raHeader4.setPaymentDate("20110101");
 		dao.persist(raHeader4);
-		
+
 		RaHeader raHeader5 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader5);
 		raHeader5.setFilename(filename2);
 		raHeader5.setStatus(status1);
 		raHeader5.setPaymentDate("20110101");
 		dao.persist(raHeader5);
-		
+
 		List<RaHeader> expectedResult = new ArrayList<RaHeader>(Arrays.asList(raHeader1, raHeader4));
 		List<RaHeader> result = dao.findCurrentByFilenamePaymentDate(filename1, "20110101");
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
 		}
 		assertTrue(true);
 	}
-	
+
 	@Test
 	public void testFindByFilenamePaymentDate() throws Exception {
-		
+
 		String filename1 = "alpha";
 		String filename2 = "bravo";
-		
+
 		RaHeader raHeader1 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader1);
 		raHeader1.setFilename(filename1);
 		raHeader1.setPaymentDate("20110101");
 		dao.persist(raHeader1);
-		
+
 		RaHeader raHeader2 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader2);
 		raHeader2.setFilename(filename1);
 		raHeader2.setPaymentDate("20080101");
 		dao.persist(raHeader2);
-		
+
 		RaHeader raHeader3 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader3);
 		raHeader3.setFilename(filename1);
 		raHeader3.setPaymentDate("20050101");
 		dao.persist(raHeader3);
-		
+
 		RaHeader raHeader4 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader4);
 		raHeader4.setFilename(filename1);
 		raHeader4.setPaymentDate("20110101");
 		dao.persist(raHeader4);
-		
+
 		RaHeader raHeader5 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader5);
 		raHeader5.setFilename(filename2);
 		raHeader5.setPaymentDate("20110101");
 		dao.persist(raHeader5);
-		
+
 		List<RaHeader> expectedResult = new ArrayList<RaHeader>(Arrays.asList(raHeader1, raHeader4));
 		List<RaHeader> result = dao.findByFilenamePaymentDate(filename1, "20110101");
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
 		}
 		assertTrue(true);
 	}
-	
+
 	@Test
 	public void testFindAllExcludeStatus() throws Exception {
-		
+
 		String status1 = "A";
 		String status2 = "B";
-		
+
 		String paymentDate1 = "20110510";
 		String paymentDate2 = "20091004";
 		String paymentDate3 = "20080729";
 		String paymentDate4 = "20041108";
-		
+
 		String readDate1 = "20140510";
 		String readDate2 = "20131004";
 		String readDate3 = "20120729";
 		String readDate4 = "20101108";
-		
+
 		RaHeader raHeader1 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader1);
 		raHeader1.setStatus(status1);
 		raHeader1.setPaymentDate(paymentDate1);
 		raHeader1.setReadDate(readDate1);
 		dao.persist(raHeader1);
-		
+
 		RaHeader raHeader2 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader2);
 		raHeader2.setStatus(status2);
 		raHeader2.setPaymentDate(paymentDate2);
 		raHeader2.setReadDate(readDate2);
 		dao.persist(raHeader2);
-		
+
 		RaHeader raHeader3 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader3);
 		raHeader3.setStatus(status1);
 		raHeader3.setPaymentDate(paymentDate3);
 		raHeader3.setReadDate(readDate3);
 		dao.persist(raHeader3);
-		
+
 		RaHeader raHeader4 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader4);
 		raHeader4.setStatus(status2);
 		raHeader4.setPaymentDate(paymentDate4);
 		raHeader4.setReadDate(readDate4);
 		dao.persist(raHeader4);
-		
+
 		RaHeader raHeader5 = new RaHeader();
 		EntityDataGenerator.generateTestDataForModelClass(raHeader5);
 		raHeader5.setStatus(status1);
 		raHeader5.setPaymentDate(paymentDate1);
 		raHeader5.setReadDate(readDate1);
 		dao.persist(raHeader5);
-		
+
 		List<RaHeader> expectedResult = new ArrayList<RaHeader>(Arrays.asList(raHeader2, raHeader4));
 		List<RaHeader> result = dao.findAllExcludeStatus(status1);
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
 		}
-		assertTrue(true);	
-	}	
+		assertTrue(true);
+	}
+
+	@Test
+	public void testFindByHeaderDetailsAndProviderMagic() {
+		assertNotNull(dao.findByHeaderDetailsAndProviderMagic("STS", "100"));
+	}
+
+    @Test
+    public void testFindByStatusAndProviderMagic() {
+	    assertNotNull(dao.findByStatusAndProviderMagic("STS", "100"));
+    }
 }
