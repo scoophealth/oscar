@@ -82,6 +82,7 @@ import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 import cdsdiabetes.CareElementsDocument.CareElements;
@@ -703,7 +704,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
     			}
 	    	}
-	    	String timestamp = (String)labRoutingInfo.get("timestamp");
+	    	String timestamp = ConversionUtils.toTimestampString((java.sql.Timestamp)labRoutingInfo.get("timestamp"));
     		if (StringUtils.filled(timestamp)) {
     			labResults.addNewDateTimeResultReviewed().setFullDate(Util.calDate(timestamp));
     		}
@@ -777,7 +778,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             	} else {//amount & unit not separated, probably e.g. 50mg / 2tablet
             		if (strength.length>1 && strength[1].equals("/")) {
             			if (strength.length>2) {
-            				String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
+            				//String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
             				String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
 
                     		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2]));
