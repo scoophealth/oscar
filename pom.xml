@@ -335,11 +335,6 @@
 			<artifactId>indivo-model-phr-jackson</artifactId>
 			<version>3.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.oscarehr.myoscar_server</groupId>
-			<artifactId>myoscar_server_client_stubs</artifactId>
-			<version>2012.09-SNAPSHOT</version>
-		</dependency>
 
 		<!-- jcharts -->
 		<dependency>
