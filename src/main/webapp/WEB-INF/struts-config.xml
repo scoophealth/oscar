@@ -1914,6 +1914,7 @@
 		<action path="/PMmodule/ClientSearch2" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientSearchForm2" scope="request">
 			<forward name="form" path="page.pmm.client.searchform" />
 			<forward name="search" path="page.pmm.client.searchresults" />
+            <forward name="attachSearch" path="/casemgmt/attachClient.jsp" />
 		</action>
 		<action path="/PMmodule/ClientManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientManagerForm" scope="session">
 			<forward name="edit" path="page.pmm.client" />

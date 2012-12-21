@@ -39,20 +39,26 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.MessageTransfer3;
 import org.oscarehr.myoscar_server.ws.MinimalPersonTransfer;
 import org.oscarehr.phr.web.MyOscarMessagesHelper;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import org.oscarehr.util.SpringUtils;
 import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EctIncomingEncounterAction extends Action {
     
   private static Logger log = MiscUtils.getLogger();
+    private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
     
   public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
@@ -89,6 +95,16 @@ public class EctIncomingEncounterAction extends Action {
                     bean.setUpEncounterPage();                    
                     request.getSession().setAttribute("EctSessionBean",bean);                    
             } else {
+                if("yes".equals(request.getParameter("PEAttach"))){
+                    String selectClientmo = request.getParameter("selectId");
+                    //save
+                    String lastId = request.getParameter("noteId");
+
+                    CaseManagementNote note = caseManagementNoteDao.getNote(Long.parseLong(lastId));
+                    note.setId(null);
+                    note.setDemographic_no(selectClientmo);
+                    caseManagementNoteDao.saveNote(note);
+                }
                 bean = new EctSessionBean();
                 bean.currentDate = UtilDateUtilities.StringToDate(request.getParameter("curDate"));
                 
@@ -103,6 +119,8 @@ public class EctIncomingEncounterAction extends Action {
                 bean.demographicNo=request.getParameter("demographicNo");
                 bean.appointmentNo=request.getParameter("appointmentNo");
                 bean.curProviderNo=request.getParameter("curProviderNo");
+                Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+                if(bean.curProviderNo==null||bean.curProviderNo.trim().length()==0)bean.curProviderNo=provider.getProviderNo();
                 bean.reason=request.getParameter("reason");
                 bean.encType=request.getParameter("encType");
                 bean.userName=request.getParameter("userName");

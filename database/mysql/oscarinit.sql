@@ -9413,6 +9413,7 @@ create table Facility (
         ocanServiceOrgNumber int(10) not null,
         enableOcanForms tinyint(1) not null,
 	enableAnonymous tinyint(1) unsigned NOT NULL,
+	enablePhoneEncounter tinyint(1) unsigned NOT NULL,
 	enableGroupNotes tinyint(1) unsigned NOT NULL,
 	lastUpdated datetime not null,
 	enableEncounterTime tinyint(1) not null,

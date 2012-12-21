@@ -64,6 +64,16 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean enableEncounterTime = false;
 	private boolean enableEncounterTransportationTime = false;
 	private int rxInteractionWarningLevel = 0;
+
+    public boolean isEnablePhoneEncounter() {
+        return enablePhoneEncounter;
+    }
+
+    public void setEnablePhoneEncounter(boolean enablePhoneEncounter) {
+        this.enablePhoneEncounter = enablePhoneEncounter;
+    }
+
+    private boolean enablePhoneEncounter = false;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();

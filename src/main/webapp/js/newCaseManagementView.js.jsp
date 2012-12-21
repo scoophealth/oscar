@@ -3293,11 +3293,284 @@ function autoCompleteShowMenuCPP(element, update) {
 		 	var url='groupNoteSelect.jsp?programId='+programId + '&demographicNo='+demographicNo;
 	    	popupPage(600,700,'group',url);
 
-	}	
-	
+	}
+
+
+  	function assign(programId,demographicNo) {
+        if( origCaseNote != $F(caseNote)  || origObservationDate != $("observationDate").value) {
+    var sumaryId = "sumary";
+    var sumary;
+    var saving = false;
+            var parent = $(caseNote).parentNode.id;
+            var nId = parent.substr(1);
+            var tmp = $(caseNote).value;
+            var sig = 'sig' + nId;
+            //assignNoteAjax('save','list',programId,demographicNo);
+                   	// Prevent saving of note if the current note isn't properly assigned to a program and role. (note_program_ui_enabled = true)
+                        if ((typeof jQuery("form[name='caseManagementEntryForm'] input[name='_note_program_no']").val() != "undefined") &&
+                    			(typeof jQuery("form[name='caseManagementEntryForm'] input[name='_note_role_id']").val() != "undefined")) {
+                    		if (jQuery("form[name='caseManagementEntryForm'] input[name='_note_program_no']").val().trim().length == 0 ||
+                    				jQuery("form[name='caseManagementEntryForm'] input[name='_note_role_id']").val().trim().length == 0) {
+                    			// For weird cases where the role id or program number is missing.
+                    			_missingRoleProgramIdError();
+                    			return false;
+                    		} else if (jQuery("form[name='caseManagementEntryForm'] input[name='_note_program_no']").val() == "-2" ||
+                    				jQuery("form[name='caseManagementEntryForm'] input[name='_note_role_id']").val() == "-2") {
+                    			// For the case where you're trying to save a note with no available programs or roles
+                    			_noVisibleProgramsError();
+                    			return false;
+                    		}
+                    	}
+            saving = true;
+            ajaxSaveNote(sig,nId,tmp);
+                //cancel updating of issues
+                //IE destroys innerHTML of sig div when calling ajax update
+                //so we have to restore it here if the ajax call is aborted
+                //this is buggy don't use
+                /*if( ajaxRequest != undefined  && callInProgress(ajaxRequest.transport) ) {
+                    ajaxRequest.transport.abort();
+                    var siblings = $(caseNote).siblings();
+                    var pos;
+
+                    for( var idx = 0; idx < siblings.length; ++idx ) {
+                        if( (pos = siblings[idx].id.indexOf("sig")) != -1 ) {
+                            nId = siblings[idx].id.substr(pos+3);
+                            sumaryId += nId;
+                            if( $(sumaryId) == null ) {
+                                siblings[idx].innerHTML = sigCache;
+                            }
+                            break;
+                        }
+                    }
+                } */
+
+                //clear auto save
+                clearTimeout(autoSaveTimer);
+                deleteAutoSave();
+
+                if( $("notePasswd") != null ) {
+                    Element.remove("notePasswd");
+                }
+
+                Element.stopObserving(caseNote, 'keyup', monitorCaseNote);
+                Element.stopObserving(caseNote, 'click', getActiveText);
+
+                Element.remove(caseNote);
+
+                //remove observation date input text box but preserve date if there is one
+                if( !saving && $("observationDate") != null ) {
+                    var observationDate = $("observationDate").value;
+
+            		new Insertion.After("observationDate", " <span id='obs" + nId + "'>" + observationDate + "</span>");
+                    Element.remove("observationDate");
+                    Element.remove("observationDate_cal");
+
+                    var observationId = "observation" + nId;
+
+                    var html = $(observationId).innerHTML;
+
+                    html = html.substr(0,html.indexOf(":")+1) + " <span id='obs" + nId + "'>" + observationDate + "<\/span>" + html.substr(html.indexOf(":")+1);
+
+                    $(observationId).update(html);
+
+                }
+
+                if( $("autosaveTime") != null )
+                    Element.remove("autosaveTime");
+
+                if( $("noteIssues") != null )
+                    Element.remove("noteIssues");
+
+            	if( $("noteIssues-resolved") != null )
+            		Element.remove("noteIssues-resolved");
+
+            	if( $("noteIssues-unresolved") != null )
+            		Element.remove("noteIssues-unresolved");
+
+                var selectEnc = "encTypeSelect" + nId;
+
+                if( $(selectEnc) != null ) {
+                    var encTypeId = "encType" + nId;
+                    var content = $F(selectEnc);
+                    var encType;
+                    if( content.length > 0 )
+                        encType = "&quot;" + content + "&quot;";
+                    else
+                        encType = "";
+                    Element.remove(selectEnc);
+                    $(encTypeId).update(encType);
+
+                }
+                //we can stop listening for add issue here
+                Element.stopObserving('asgnIssues', 'click', addIssueFunc);
+                if( tmp.length == 0 )
+                    tmp = "&nbsp;";
+
+                tmp = tmp.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                tmp = tmp.replace(/\n/g,"<br>");
+
+                if( !saving ) {
+                    if( largeNote(tmp) ) {
+                        var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px; ' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
+                        new Insertion.Before(sig, btmImg);
+                    }
+
+                    //$(txt).style.fontSize = normalFont;
+
+                    //if we're not restoring a new note display print img
+                    //if( nId.substr(0,1) != "0" ) {
+                    //    img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
+                    //     new Insertion.Top(parent, img);
+                   // }
+
+                    var printImg = "print" + nId;
+                    var img = "<img title='Minimize' id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
+                    var printimg = "<img title='Print' id='" + printImg + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
+                    var input = "<div id='txt" + nId + "'>" + tmp + "<\/div>";
+
+                    var func;
+                    var editWarn = "editWarn" + nId;
+                    if( $F(editWarn) == "true" ) {
+                        func = "noPrivs(event);";
+                    }
+                    else {
+                        func = "editNote(event);";
+                    }
+
+                    var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>" + editLabel + "</a>";
+                    var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>" + editLabel + "</a>";
+                    var editId = "edit" + nId;
+
+                    var attribName = "anno" + (new Date().getTime());
+                    var attribAnchor = "<input id='anno" + nId + "' height='10px;' width='10px' type='image' src='" + ctx + "/oscarEncounter/graphics/annotation.png' title='" + annotationLabel + "' style='float: right; margin-right: 5px; margin-bottom: 3px;'" +
+                    	"onclick=\"window.open('" + ctx + "/annotation/annotation.jsp?atbname=" + attribName + "&table_id=" + nId + "&display=EChartNote&demo=" + demographicNo + "','anwin','width=400,height=500');$('annotation_attribname').value='" + attribName + "'; return false;\">";
+
+                    new Insertion.Top(parent, editAnchor);
+                    new Insertion.After(editId, input);
+
+
+                     if( nId.substr(0,1) != "0" ) {
+                        Element.remove(printImg);
+                        new Insertion.Before(editId, printimg);
+                        new Insertion.After(editId, attribAnchor);
+                        new Insertion.Top(parent, img);
+                    }
+
+                    new Insertion.Top(parent, img);
+
+                    $(parent).style.height = "auto";
+
+                }
+            }//else{
+  			var noteId = document.forms["caseManagementEntryForm"].noteId.value;
+		 	var url='../PMmodule/ClientSearch2.do?programId='+programId + '&noteId='+noteId+'&method=attachForm&demographicNo='+demographicNo;
+	    	popupPage(600,700,'group',url);
+            //}
+	}
+
 	function setIssueCheckbox(val) {
 		jQuery("input[name='issues']").each(function(){
 			if(jQuery(this).val() == val)
 				jQuery(this).attr("checked","checked");
 		});
 	}
+
+function assignNoteAjax(method, chain,programId,demographicNo) {
+
+	var noteStr;
+	noteStr = $F(caseNote);
+    /*
+    if( noteStr.replace(/^\s+|\s+$/g,"").length == 0 ) {
+        alert("Please enter a note before saving");
+        return false;
+    }
+    */
+
+    if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
+        alert(pastObservationDateError);
+        return false;
+    }
+
+    if( caisiEnabled ) {
+        if( requireIssue && !issueIsAssigned() ) {
+            alert(assignIssueError);
+            return false;
+        }
+/* the observationDate could be the default one as today.
+        if( requireObsDate && $("observationDate").value.length == 0 ) {
+            alert(assignObservationDateError);
+            return false;
+        }
+*/
+        if($("encTypeSelect0") != null && $("encTypeSelect0").options[$("encTypeSelect0").selectedIndex].value.length == 0 ) {
+        	alert(assignEncTypeError);
+        	return false;
+        }
+ 		if(document.getElementById("hourOfEncTransportationTime") != null) {
+	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
+	        isNaN(document.getElementById("minuteOfEncTransportationTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncTransportationTime").value) &&
+			parseInt(document.getElementById("minuteOfEncTransportationTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}
+		}
+		if(document.getElementById("hourOfEncounterTime") != null) {
+			if(isNaN(document.getElementById("hourOfEncounterTime").value) ||
+			isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncounterTime").value) &&
+			parseInt(document.getElementById("minuteOfEncounterTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}
+		}
+    }
+    document.forms["caseManagementEntryForm"].method.value = method;
+    document.forms["caseManagementEntryForm"].ajax.value = false;
+    document.forms["caseManagementEntryForm"].chain.value = chain;
+    document.forms["caseManagementEntryForm"].includeIssue.value = "off";
+
+    var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
+    tmpSaveNeeded = false;
+
+	var params = Form.serialize(caseMgtEntryfrm);
+    params += "&ajaxview=ajaxView&fullChart=" + fullChart;
+
+    var url = ctx + "/CaseManagementEntry.do";
+
+    $("notCPP").update("Loading...");
+
+	var objAjax = new Ajax.Request (
+                            url,
+                            {
+                                method: 'post',
+                                postBody: params,
+                                evalScripts: true,
+                                onSuccess: function(request) {
+                                                $("notCPP").update(request.responseText);
+												$("notCPP").style.height = "50%";
+												if( fullChart == "true" ) {
+													$("quickChart").innerHTML = quickChartMsg;
+													$("quickChart").onclick = function() {return viewFullChart(false);}
+												}
+												else {
+													$("quickChart").innerHTML = fullChartMsg;
+													$("quickChart").onclick = function() {return viewFullChart(true);}
+												}
+                                           },
+                                onFailure: function(request) {
+                                                $("notCPP").update("Error: " + request.status + request.responseText);
+                                            }
+                            }
+
+                      );
+
+}
+
+
