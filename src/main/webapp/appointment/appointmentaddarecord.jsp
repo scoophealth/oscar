@@ -24,11 +24,12 @@
 
 --%>
 <%@ page
-	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager, java.text.SimpleDateFormat, org.caisi.model.Tickler, org.caisi.service.TicklerManager,org.oscarehr.util.SpringUtils"
+	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager, java.text.SimpleDateFormat, org.caisi.model.Tickler, org.caisi.service.TicklerManager,org.oscarehr.util.SpringUtils"
 	errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic,oscar.appt.AppointmentMailer, org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.common.dao.WaitingListDao" %>
 <%@page import="oscar.util.ConversionUtils" %>
 <%@ page import="org.oscarehr.event.EventService"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -49,6 +50,8 @@
 <%
 
 OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
+
 
 String[] param = new String[19];
 param[0]=request.getParameter("provider_no");
@@ -127,18 +130,12 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
              //email patient appointment record
             if (request.getParameter("emailPt")!= null) {
                 try{
-                    String[] param3 = new String[7];
-                    param3[0]=param[0]; //provider_no
-                    param3[1]=param[1]; //appointment_date
-                    param3[2]=param[2]; //start_time
-                    param3[3]=param[3]; //end_time
-                    param3[4]=param[13]; //createdatetime
-                    param3[5]=param[14]; //creator
-                    param3[6]=param[16]; //demographic_no
-
-		    List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param3);
-                    if (resultList.size()>0) {
-			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
+                   
+                   Appointment aa =  appointmentDao.search_appt_no(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("appointment_date")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")),
+                    			ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), ConversionUtils.fromTimestampString(request.getParameter("createdatetime")), request.getParameter("creator"), Integer.parseInt(param[16]));
+		   
+                    if (aa != null) {
+						Integer apptNo = aa.getId();
                         DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
                         Demographic demographic = demoDao.getDemographic(param[16]);
 
@@ -161,22 +158,24 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 		if (strMWL != null && strMWL.equalsIgnoreCase("yes")){
 			;
 		} else {
-			WaitingList wL = WaitingList.getInstance();
+			oscar.oscarWaitingList.WaitingList wL = oscar.oscarWaitingList.WaitingList.getInstance();
 			if (wL.getFound()) {
-				List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_waitinglist", new Object [] {request.getParameter("demographic_no")});
-				if (resultList.size() > 0) {
-					Map wlEntry = resultList.get(0);
+				List<Object[]> wl = waitingListDao.findByDemographic(Integer.parseInt(request.getParameter("demographic_no")));
+				if(wl.size() > 0) {
+					org.oscarehr.common.model.WaitingListName wln = (org.oscarehr.common.model.WaitingListName)wl.get(0)[0];
+					org.oscarehr.common.model.WaitingList wl1 = (org.oscarehr.common.model.WaitingList)wl.get(0)[1];
+					
 %>
 <form name="updateWLFrm"
 	action="../oscarWaitingList/RemoveFromWaitingList.jsp"><input
 	type="hidden" name="listId"
-	value="<%=wlEntry.get("listID")%>" /><input
+	value="<%=wl1.getListId()%>" /><input
 	type="hidden" name="demographicNo"
 	value="<%=request.getParameter("demographic_no")%>" /><script
 	LANGUAGE="JavaScript">
-		var removeList = confirm("Click OK to remove patient from the waiting list: <%=wlEntry.get("name")%>");
+		var removeList = confirm("Click OK to remove patient from the waiting list: <%=wln.getName()%>");
 		if (removeList) {
-			document.forms[0].action = "../oscarWaitingList/RemoveFromWaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listID=<%=wlEntry.get("listID")%>";
+			document.forms[0].action = "../oscarWaitingList/RemoveFromWaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listID=<%=wl1.getListId()%>";
 			document.forms[0].submit();
 		}
 </script></form>
@@ -194,18 +193,13 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 </script>
 
 <%
-		String[] param2 = new String[7];
-		param2[0]=param[0]; //provider_no
-		param2[1]=param[1]; //appointment_date
-		param2[2]=param[2]; //start_time
-		param2[3]=param[3]; //end_time
-		param2[4]=param[13]; //createdatetime
-		param2[5]=param[14]; //creator
-		param2[6]=param[16]; //demographic_no
+		 Appointment aa =  appointmentDao.search_appt_no(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("appointment_date")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")),
+     			ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), ConversionUtils.fromTimestampString(request.getParameter("createdatetime")), request.getParameter("creator"), Integer.parseInt(param[16]));
 
-		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
-		if (resultList.size()>0) {
-			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
+		
+		
+		if (aa != null) {
+			Integer apptNo = aa.getId();
 			String mcNumber = request.getParameter("appt_mc_number");
 			OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
 			

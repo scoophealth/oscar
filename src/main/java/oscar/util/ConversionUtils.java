@@ -71,6 +71,10 @@ public class ConversionUtils {
 	public static Date fromTimeStringNoSeconds(String timeString) {
 		return fromDateString(timeString, "HH:mm");
 	}
+	
+	public static String toTimeStringNoSeconds(Date timeString) {
+		return toDateString(timeString, "HH:mm");
+	}
 
 	/**
 	 * Converts the provided date representing time into a date object. Time must match the {@link #DEFAULT_DATE_PATTERN}.

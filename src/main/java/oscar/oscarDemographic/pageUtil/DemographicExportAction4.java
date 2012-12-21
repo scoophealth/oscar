@@ -60,11 +60,14 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -76,7 +79,6 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
 import oscar.OscarProperties;
-import oscar.appt.ApptData;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -95,7 +97,7 @@ import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
-import oscar.service.OscarSuperManager;
+import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 import cds.AlertsAndSpecialNeedsDocument.AlertsAndSpecialNeeds;
@@ -1439,26 +1441,28 @@ public class DemographicExportAction4 extends Action {
 
 			if (exAppointments) {
 				// APPOINTMENTS
-				OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-				List<Object> appts = oscarSuperManager.populate("appointmentDao", "export_appt", new String[] {demoNo});
-				ApptData ap = null;
-				for (int j=0; j<appts.size(); j++) {
-					ap = (ApptData)appts.get(j);
+				OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+				List<Object[]> results = appointmentDao.export_appt(Integer.parseInt(demoNo));
+				Appointment ap = null;
+				for (int j=0; j<results.size(); j++) {
+					ap = (Appointment)results.get(j)[0];
+					Provider p = (Provider)results.get(j)[1];
+					
 					Appointments aptm = patientRec.addNewAppointments();
 					cdsDt.DateFullOrPartial apDate = aptm.addNewAppointmentDate();
-					apDate.setFullDate(Util.calDate(ap.getAppointment_date()));
-					if (ap.getAppointment_date()==null) {
+					apDate.setFullDate(Util.calDate(ap.getAppointmentDate()));
+					if (ap.getAppointmentDate()==null) {
 						exportError.add("Error! No Appointment Date ("+j+") for Patient "+demoNo);
 					}
 
-					String startTime = ap.getStart_time();
-					aptm.setAppointmentTime(Util.calDate(ap.getStart_time()));
+					String startTime = ConversionUtils.toTimeString(ap.getStartTime());
+					aptm.setAppointmentTime(Util.calDate(ap.getStartTime()));
 					addOneEntry(APPOINTMENT);
 					if (UtilDateUtilities.StringToDate(startTime,"HH:mm:ss")==null) {
 						exportError.add("Error! No Appointment Time ("+(j+1)+") for Patient "+demoNo);
 					}
 
-					long dLong = (ap.getDateEndTime().getTime()-ap.getDateStartTime().getTime())/60000+1;
+					long dLong = (ap.getEndTime().getTime()-ap.getStartTime().getTime())/60000+1;
 					BigInteger duration = BigInteger.valueOf(dLong); //duration in minutes
 					aptm.setDuration(duration);
 
@@ -1480,11 +1484,11 @@ public class DemographicExportAction4 extends Action {
 					if (StringUtils.filled(ap.getReason())) {
 						aptm.setAppointmentPurpose(ap.getReason());
 					}
-					if (StringUtils.filled(ap.getProviderFirstName()) || StringUtils.filled(ap.getProviderLastName())) {
+					if (StringUtils.filled(p.getFirstName()) || StringUtils.filled(p.getLastName())) {
 						Appointments.Provider prov = aptm.addNewProvider();
 
-						if (StringUtils.noNull(ap.getOhipNo()).length()<=6) prov.setOHIPPhysicianId(ap.getOhipNo());
-						Util.writeNameSimple(prov.addNewName(), ap.getProviderFirstName(), ap.getProviderLastName());
+						if (StringUtils.noNull(p.getOhipNo()).length()<=6) prov.setOHIPPhysicianId(p.getOhipNo());
+						Util.writeNameSimple(prov.addNewName(), p.getFirstName(), p.getLastName());
 					}
 					if (StringUtils.filled(ap.getNotes())) {
 						aptm.setAppointmentNotes(ap.getNotes());

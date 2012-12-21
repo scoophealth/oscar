@@ -39,12 +39,19 @@
 <%@ page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
-<%@page import="oscar.service.OscarSuperManager"%><html:html locale="true">
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.Appointment"%>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao"%>
+<%
+	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+%>
+
+<html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -94,8 +101,8 @@ if(bMultisites) {
 	String appt_no=(String)session.getAttribute("cur_appointment_no");
 	String location = null;
 	if (appt_no!=null) {
-		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search", new Object[] {appt_no});
-		if (resultList!=null) location = (String) resultList.get(0).get("location");
+		Appointment result = appointmentDao.find(Integer.parseInt(appt_no));
+		if (result!=null) location = result.getLocation();
 	}
 
     oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
