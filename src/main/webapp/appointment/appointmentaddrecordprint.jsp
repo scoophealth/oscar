@@ -47,33 +47,14 @@
 	</tr>
 </table>
 <%
-	String[] param = new String[19];
-	param[0]=request.getParameter("provider_no");
-	param[1]=request.getParameter("appointment_date");
-	param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-	param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-	param[4]=request.getParameter("keyword");
-	param[5]=request.getParameter("notes");
-	param[6]=request.getParameter("reason");
-	param[7]=request.getParameter("location");
-	param[8]=request.getParameter("resources");
-	param[9]=request.getParameter("type");
-	param[10]=request.getParameter("style");
-	param[11]=request.getParameter("billing");
-	param[12]=request.getParameter("status");
-	param[13]=request.getParameter("createdatetime");
-	param[14]=request.getParameter("creator");
-	param[15]=request.getParameter("remarks");
-	param[17]=(String)request.getSession().getAttribute("programId_oscarView");
+	int demographicNo = 0;
 	org.oscarehr.common.model.Demographic demo = null;
-    if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
-        param[16] = request.getParameter("demographic_no");
-        DemographicData demData = new DemographicData();
-        demo = demData.getDemographic(param[16]);
-    } else {
-        param[16] = "0";
-    }
-    param[18]=request.getParameter("urgency");
+
+	if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
+    	demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
+    	DemographicData demData = new DemographicData();
+        demo = demData.getDemographic(request.getParameter("demographic_no"));
+	}
 
 	Appointment a = new Appointment();
 	a.setProviderNo(request.getParameter("provider_no"));
@@ -121,27 +102,21 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 
 <script LANGUAGE="JavaScript">
 	self.opener.refresh();
-	popupPage(350,750,'../report/reportdaysheet.jsp?dsmode=new&provider_no=<%=param[0]%>&sdate=<%=param[1]%>') ;
+	popupPage(350,750,'../report/reportdaysheet.jsp?dsmode=new&provider_no=<%=request.getParameter("provider_no")%>&sdate=<%=ConversionUtils.fromDateString(request.getParameter("appointment_date"))%>') ;
 	self.close();
 </script>
 <%
-		String[] param2 = new String[7];
-		param2[0]=param[0]; //provider_no
-		param2[1]=param[1]; //appointment_date
-		param2[2]=param[2]; //start_time
-		param2[3]=param[3]; //end_time
-		param2[4]=param[13]; //createdatetime
-		param2[5]=param[14]; //creator
-		param2[6]=param[16]; //demographic_no
 
-		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
-		if (resultList.size()>0) {
-			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
+		Appointment appt1 = appointmentDao.search_appt_no(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("appointment_date")), 
+				ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), 
+				ConversionUtils.fromDateString(request.getParameter("createdatetime")), request.getParameter("creator"), demographicNo);
+		if (appt1 != null) {
+			Integer apptNo = appt1.getId();
 			String mcNumber = request.getParameter("appt_mc_number");
 			OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
 			
 			EventService eventService = SpringUtils.getBean(EventService.class); //Add Appointment and print preview
-			eventService.appointmentCreated(this,apptNo.toString(), param[0]);
+			eventService.appointmentCreated(this,apptNo.toString(), request.getParameter("provider_no"));
 			
 		}
 	} else {
