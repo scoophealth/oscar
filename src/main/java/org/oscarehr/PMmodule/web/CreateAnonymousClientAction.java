@@ -70,6 +70,29 @@ public class CreateAnonymousClientAction {
 		
 		return d;
 	}
+
+    public static Demographic generatePEClient(int programId){
+        logger.info("Create PE temporary Client!");
+        ClientManager clientManager = (ClientManager)SpringUtils.getBean("clientManager");
+        AdmissionManager admissionManager = (AdmissionManager)SpringUtils.getBean("admissionManager");
+        ProgramManager programManager = (ProgramManager)SpringUtils.getBean("programManager");
+        //create and save client record.
+        Demographic d = createDemographic();
+        d.setFirstName("phone encounter");
+        d.setYearOfBirth("1900");
+        clientManager.saveClient(d);
+
+        //admit client to program
+        Program externalProgram = programManager.getProgram(programId);
+        try {
+            admissionManager.processAdmission(d.getDemographicNo(), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), externalProgram, "anonymous discharge", "anonymous admission");
+        }catch(Exception e) {
+            logger.error("Error", e);
+            return d;
+        }
+
+        return d;
+    }
 	
 	public static Demographic createDemographic() {
 		Demographic d = new Demographic();

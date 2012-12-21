@@ -45,7 +45,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class OcanStaffFormDaoTest extends DaoTestFixtures {
 
-	private OcanStaffFormDao dao = (OcanStaffFormDao)SpringUtils.getBean(OcanStaffFormDao.class);
+	protected OcanStaffFormDao dao = (OcanStaffFormDao)SpringUtils.getBean(OcanStaffFormDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	@Before

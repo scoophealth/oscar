@@ -40,6 +40,9 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 
 import com.quatro.service.LookupManager;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.util.SpringUtils;
 
 public class ClientSearchAction2 extends BaseAction {
 	
@@ -47,6 +50,8 @@ public class ClientSearchAction2 extends BaseAction {
     private ClientManager clientManager;
     private LogManager logManager;
     private ProgramManager programManager;
+
+    private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return form(mapping,form,request,response);
@@ -71,6 +76,40 @@ public class ClientSearchAction2 extends BaseAction {
 		
 		return mapping.findForward("form");
 	}
+
+    public ActionForward attachForm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        if(clientManager.isOutsideOfDomainEnabled()){
+            request.getSession().setAttribute("outsideOfDomainEnabled","true");
+        }else{
+            request.getSession().setAttribute("outsideOfDomainEnabled","false");
+        }
+
+        List<Program> allBedPrograms = new ArrayList<Program>();
+        Program[] allBedProgramsInArr = programManager.getBedPrograms();
+
+        String noteId = request.getParameter("noteId");
+        if(noteId==null||noteId.trim().length()==0||noteId.trim().equalsIgnoreCase("null")||noteId.trim().substring(0,1).equalsIgnoreCase("0")){
+            String demographicNo = request.getParameter("demographicNo");
+            if(demographicNo==null||demographicNo.trim().length()==0){
+            }else{
+                List<CaseManagementNote> notes = caseManagementNoteDao.getNotesByDemographic(demographicNo);
+                if(notes!=null&&notes.size()>0) noteId = notes.get(notes.size()-1).getId()+"";
+            }
+        }
+        if(noteId==null||noteId.trim().length()==0){}else{
+            request.getSession().setAttribute("noteId",noteId);
+            request.setAttribute("noteId",noteId);
+        }
+
+        for(int i=0; i < allBedProgramsInArr.length; i++){
+            allBedPrograms.add(allBedProgramsInArr[i]);
+        }
+        request.setAttribute("allBedPrograms", allBedPrograms);
+
+        request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
+
+        return mapping.findForward("attachSearch");
+    }
 	
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
@@ -97,6 +136,33 @@ public class ClientSearchAction2 extends BaseAction {
 				
 		return mapping.findForward("form");
 	}
+
+    public ActionForward attachSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+
+        DynaActionForm searchForm = (DynaActionForm)form;
+        ClientSearchFormBean formBean = (ClientSearchFormBean)searchForm.get("criteria");
+
+        List<Program> allBedPrograms = new ArrayList<Program>();
+        Program[] allBedProgramsInArr = programManager.getBedPrograms();
+
+        for(int i=0; i < allBedProgramsInArr.length; i++){
+            allBedPrograms.add(allBedProgramsInArr[i]);
+        }
+        request.setAttribute("allBedPrograms", allBedPrograms);
+
+        formBean.setProgramDomain((List)request.getSession().getAttribute("program_domain"));
+
+		/* do the search */
+        request.setAttribute("clients",clientManager.search(formBean));
+
+        if(formBean.isSearchOutsideDomain()) {
+            logManager.log("read","out of domain client search","",request);
+        }
+        request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
+
+        return mapping.findForward("attachSearch");
+    }
+
 
     public void setLookupManager(LookupManager lookupManager) {
     	this.lookupManager = lookupManager;
