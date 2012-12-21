@@ -381,6 +381,9 @@ public class AddEditDocumentAction extends DispatchAction {
 				errors.put("uploaderror", "dms.error.uploadError");
 				throw new FileNotFoundException();
 			}
+			if(fm.getReviewDoc()) {
+				newDoc.setReviewDateTime(UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT));
+			}
 			EDocUtil.editDocumentSQL(newDoc, fm.getReviewDoc());
 
 			if (fm.getFunction() != null && fm.getFunction().equals("demographic")) {
