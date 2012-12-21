@@ -146,7 +146,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		StringBuilder buf = new StringBuilder("SELECT DISTINCT c, d " +
 				"FROM org.oscarehr.document.model.Document d, org.oscarehr.document.model.CtlDocument c " +
 				"WHERE c.id.documentNo = d.id AND c.id.module = :module");
-		params.put("module", module);
+		params.put("module",module);
 		
 		boolean isShowingAllDocuments = docType == null || docType.equals("all") || docType.length() == 0; 
 		
@@ -162,7 +162,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 				buf.append(" AND c.moduleId = :moduleId AND d.m_public = 0");
 				params.put("moduleId", ConversionUtils.fromIntString(moduleid));
 			} else {
-				buf.append(" AND c.module_id = :moduleId AND d.m_public = 0 AND d.doctype = :doctype");
+				buf.append(" AND c.moduleId = :moduleId AND d.m_public = 0 AND d.doctype = :doctype");
 				params.put("doctype", docType);
 				params.put("moduleId", ConversionUtils.fromIntString(moduleid));
 			}
