@@ -91,7 +91,7 @@ public class BillingDiskCreatePrep {
 		String ohipNo = propProOHIP.getProperty(providerNo);
 		// set up obj
 		String groupNo = "";
-		String temp[] = getCurSoloMonthCodeBatchNum(ohipNo);
+		String temp[] = getCurSoloMonthCodeBatchNum(providerNo);
 		BillingDiskNameData diskName = new BillingDiskNameData();
 		diskName.setMonthCode(temp[0]);
 		diskName.setBatchcount(temp[1]);
