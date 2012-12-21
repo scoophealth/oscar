@@ -28,8 +28,6 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +55,6 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
-import oscar.service.OscarSuperManager;
 
 public class BillingSaveBillingAction extends Action {
 
@@ -95,15 +92,13 @@ public class BillingSaveBillingAction extends Action {
         }
 
         ////////////
-        OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
         if (bean.getApptNo() != null && !bean.getApptNo().trim().equals("0") &&  !bean.getApptNo().trim().equals("")){
             String apptStatus = "";
-            List<Map<String, Object>> resultList  = oscarSuperManager.find("appointmentDao", "search", new Object[]{bean.getApptNo()});
-            if (resultList.size() < 1) {
+            Appointment result = appointmentDao.find(Integer.parseInt(bean.getApptNo()));
+           if (result == null) {
                 log.error("LLLOOK: APPT ERROR - APPT ("+bean.getApptNo()+") NOT FOUND - FOR demo:" + bean.getPatientName() +" date " + curDate);
             } else {
-                Map m_status = resultList.get(0);
-                apptStatus = (String)m_status.get("status");
+                apptStatus = result.getStatus();
             }
             String billStatus = as.billStatus(apptStatus);
             ///Update Appointment information

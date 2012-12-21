@@ -32,6 +32,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.MyGroup;
 import org.oscarehr.common.model.MyGroupPrimaryKey;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 /**
@@ -110,4 +111,15 @@ public class MyGroupDao extends AbstractDao<MyGroup> {
              billingForm = dList.get(0);
          return billingForm;
      }
+     
+     public List<Provider> search_groupprovider (String groupNo){
+
+         Query query = entityManager.createQuery("SELECT p  FROM MyGroup g, Provider p WHERE g.id.myGroupNo=? and p.ProviderNo = g.id.providerNo order by p.LastName");
+         query.setParameter(1, groupNo);
+
+         @SuppressWarnings("unchecked")
+         List<Provider> dList = query.getResultList();
+
+         return dList;
+      }
 }

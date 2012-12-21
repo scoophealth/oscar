@@ -28,14 +28,19 @@
 <%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@page import="org.oscarehr.common.model.MyGroup" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.common.dao.ScheduleDateDao" %>
+<%@page import="org.oscarehr.common.model.ScheduleDate" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+	ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
 %>
 <%
-	if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
-
 	String curProvider_no = request.getParameter("provider_no");
 	ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
 	String mygroupno = providerPreference.getMyGroupNo();
@@ -47,7 +52,6 @@
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
   if (request.getParameter("groupappt") != null) {
@@ -124,9 +128,17 @@
 			param2[5]=param[14]; //creator
 			param2[6]=param[16]; //demographic_no
 
-			List<Map<String,Object>> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
-			if (apptList.size()>0) {
-				Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
+			int demographicNo = 0;
+			if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
+				demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
+     	    } 
+			
+			Appointment appt = appointmentDao.search_appt_no(request.getParameter("provider_no"+datano), ConversionUtils.fromDateString(request.getParameter("appointment_date")), 
+					ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), 
+					ConversionUtils.fromTimestampString(createdDateTime), userName, demographicNo);
+			
+			if (appt != null) {
+				Integer apptNo = appt.getId();
 				String mcNumber = request.getParameter("appt_mc_number");
 				OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
 			}
@@ -233,19 +245,21 @@
 				appointmentDao.persist(a);
 				rowsAffected=1;
 		    	
-				if (rowsAffected==1) {
-					String[] paramu2 = new String[7];
-					paramu2[0]=paramu[0]; //provider_no
-					paramu2[1]=paramu[1]; //appointment_date
-					paramu2[2]=paramu[2]; //start_time
-					paramu2[3]=paramu[3]; //end_time
-					paramu2[4]=paramu[13]; //createdatetime
-					paramu2[5]=paramu[14]; //creator
-					paramu2[6]=paramu[16]; //demographic_no
+				if (rowsAffected==1) {				
+					
+					int demographicNo=0;
+					if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
+						demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
+		     	    }
+					
+					
+					Appointment appt = appointmentDao.search_appt_no(request.getParameter("provider_no"+datano), ConversionUtils.fromDateString(request.getParameter("appointment_date")), 
+							ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), 
+							ConversionUtils.fromTimestampString(createdDateTime), userName, demographicNo);
+					
 
-					List<Map<String,Object>> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", paramu2);
-					if (apptList.size()>0) {
-						Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
+					if (appt != null) {
+						Integer apptNo = appt.getId();
 						String mcNumber = request.getParameter("appt_mc_number");
 						OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
 					}
@@ -392,65 +406,58 @@ function onSub() {
 	String eName = request.getParameter("keyword");
 
 	if (bEdit) {
-		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao",
-				"search", new Object [] {request.getParameter("appointment_no")});
-		if (resultList.size() > 0) {
-			Map appt = resultList.get(0);
-			eApptDate = String.valueOf(appt.get("appointment_date"));
-	        eStartTime = String.valueOf(appt.get("start_time"));
-			eEndTime = String.valueOf(appt.get("end_time"));
-			eName = String.valueOf(appt.get("name"));
+		Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+		if(appt != null) {
+			eApptDate = ConversionUtils.toDateString(appt.getAppointmentDate());
+	        eStartTime = ConversionUtils.toTimeStringNoSeconds(appt.getStartTime());
+			eEndTime = ConversionUtils.toTimeStringNoSeconds(appt.getEndTime());
+			eName = appt.getName();
 		}
 	}
 
-    String [] param0 = new String[5];
-    param0[0] = eApptDate;
-    param0[1] = eStartTime ;
-    param0[2] = param0[1] ;
-    param0[3] = param0[1] ;
-    param0[4] = eEndTime ;
     String temp = "";
 	String appt = "";
 	String dotStr = "";
 	boolean bOne = false;
 	boolean bTwo = false;
 
-	List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_otherappt", param0);
-
-	for (Map other : resultList) {
+	List<Appointment> otherAppts = appointmentDao.search_otherappt(ConversionUtils.fromDateString(eApptDate), ConversionUtils.fromTimeStringNoSeconds(eStartTime), ConversionUtils.fromTimeStringNoSeconds(eEndTime), 
+			 ConversionUtils.fromTimeStringNoSeconds(eStartTime),  ConversionUtils.fromTimeStringNoSeconds(eStartTime));
+	
+	for (Appointment other : otherAppts) {
         bOne = false;
 	    bTwo = false;
 
-        if (eStartTime.equals(String.valueOf(other.get("start_time"))) && eEndTime.equals(String.valueOf(other.get("end_time"))) &&
-			eName.equals(other.get("name"))) {
-			if (other.get("demographic_no") != null && !other.get("demographic_no").equals(0)  ) {
+        if (eStartTime.equals(String.valueOf(ConversionUtils.toTimeStringNoSeconds(other.getStartTime()))) && eEndTime.equals(String.valueOf(ConversionUtils.toTimeStringNoSeconds(other.getEndTime()))) &&
+			eName.equals(other.getName())) {
+			if (other.getDemographicNo() != 0  ) {
 	            bOne = true;
 			} else {
                 bTwo = true;
 			}
 		}
-		if (other.get("demographic_no") != null && !other.get("demographic_no").equals(0)) dotStr = "";
+		if (other.getDemographicNo() != 0) dotStr = "";
 		else dotStr = ".";
 
-        if (bOne)    otherAppt.setProperty(other.get("provider_no")+"one", "checked");
-        if (bTwo)    otherAppt.setProperty(other.get("provider_no")+"two", "checked");
+        if (bOne)    otherAppt.setProperty(other.getProviderNo()+"one", "checked");
+        if (bTwo)    otherAppt.setProperty(other.getProviderNo()+"two", "checked");
         if (bOne || bTwo) {
-			otherAppt.setProperty(other.get("provider_no")+"apptno", String.valueOf(other.get("appointment_no")));
-			appt += "<b>" + String.valueOf(other.get("start_time")).substring(0,5) + "-" + String.valueOf(other.get("end_time")).substring(0,5) + "|"
-				 + dotStr + other.get("name") + "</b>|" ; //+	rsdemo.getString("reason") + "<br>";
+			otherAppt.setProperty(other.getProviderNo()+"apptno", String.valueOf(other.getId()));
+			appt += "<b>" + String.valueOf(ConversionUtils.toTimeStringNoSeconds(other.getStartTime())).substring(0,5) + "-" + String.valueOf(ConversionUtils.toTimeStringNoSeconds(other.getEndTime())).substring(0,5) + "|"
+				 + dotStr + other.getName() + "</b>|" ; //+	rsdemo.getString("reason") + "<br>";
 		} else {
-			appt += String.valueOf(other.get("start_time")).substring(0,5) + "-" + String.valueOf(other.get("end_time")).substring(0,5) + "|"
-				 + dotStr + other.get("name") + "|" ; //+	rsdemo.getString("reason") + "<br>";
+			appt += String.valueOf(ConversionUtils.toTimeStringNoSeconds(other.getStartTime())).substring(0,5) + "-" + String.valueOf(ConversionUtils.toTimeStringNoSeconds(other.getEndTime())).substring(0,5) + "|"
+				 + dotStr + other.getName() + "|" ; //+	rsdemo.getString("reason") + "<br>";
 		}
 
-		if (!String.valueOf(other.get("provider_no")).equals(temp))  { //new provider record
-            otherAppt.setProperty(other.get("provider_no")+"appt", appt);
-			temp = String.valueOf(other.get("provider_no"));
+		if (!String.valueOf(other.getProviderNo()).equals(temp))  { //new provider record
+            otherAppt.setProperty(other.getProviderNo()+"appt", appt);
+			temp = String.valueOf(other.getProviderNo());
 			appt = "";
 		} else {
-		    if (otherAppt.getProperty(other.get("provider_no")+"appt") != null)
-				appt = otherAppt.getProperty(other.get("provider_no") +"appt")+ "<br>" + appt;
-            otherAppt.setProperty(other.get("provider_no")+"appt", appt);
+		    if (otherAppt.getProperty(other.getProviderNo()+"appt") != null)
+				appt = otherAppt.getProperty(other.getProviderNo() +"appt")+ "<br>" + appt;
+            otherAppt.setProperty(other.getProviderNo()+"appt", appt);
     	    appt = "";
 		}
     }
@@ -483,52 +490,50 @@ function onSub() {
 			key="appointment.appointmentgrouprecords.msgExistedAppointment" /></th>
 	</tr>
 	<%
-    String [] param1 = new String[2];
-    param1[0] = request.getParameter("appointment_date");
 
     int i=0;
 	boolean bDefProvider = false;
 	boolean bAvailProvider = false;
 	boolean bLooperCon = false;
-	resultList = oscarSuperManager.find("appointmentDao", "search_groupprovider", new Object[] {mygroupno});
-
+	
+	List<Provider> gps = myGroupDao.search_groupprovider(mygroupno);
 	for (int j = 0; j < 2; j++) {
-	  for (Map provider : resultList) {
+	  for (Provider provider : gps) {
         i++;
 
-		param1[1] = String.valueOf(provider.get("provider_no"));
-		List<Map<String,Object>> providerTest = oscarSuperManager.find("appointmentDao", "search_scheduledate_single", param1);
-
-		bAvailProvider = providerTest.size() > 0 ? true : false;
+		
+		ScheduleDate sd = scheduleDateDao.findByProviderNoAndDate(provider.getProviderNo(), ConversionUtils.fromDateString(request.getParameter("appointment_date")));
+		
+		bAvailProvider = (sd != null) ? true : false;
 		if(bAvailProvider == bLooperCon) continue;
 
-        bDefProvider = curProvider_no.equals(String.valueOf(provider.get("provider_no"))) ? true : false;
+        bDefProvider = curProvider_no.equals(provider.getProviderNo()) ? true : false;
 %>
 	<tr
 		BGCOLOR="<%=bDefProvider?deepcolor:(bAvailProvider?weakcolor:"#e0e0e0")%>">
-		<td align='right'>&nbsp;<%=provider.get("last_name")%>, <%=provider.get("first_name")%></td>
+		<td align='right'>&nbsp;<%=provider.getFormattedName()%></td>
 		<td align='center'>&nbsp; <input type="checkbox" name="one<%=i%>"
 			value="<%=i%>"
-			<%=bEdit ? (otherAppt.getProperty(provider.get("provider_no")+"one")
-		!= null ? otherAppt.getProperty(provider.get("provider_no")+"one") : "") : (bDefProvider? "checked":"")%>
+			<%=bEdit ? (otherAppt.getProperty(provider.getProviderNo()+"one")
+		!= null ? otherAppt.getProperty(provider.getProviderNo()+"one") : "") : (bDefProvider? "checked":"")%>
 			onclick="onCheck(this)"> <input type="hidden"
 			name="provider_no<%=i%>"
-			value="<%=provider.get("provider_no")%>"> <INPUT
+			value="<%=provider.getProviderNo()%>"> <INPUT
 			TYPE="hidden" NAME="last_name<%=i%>"
-			VALUE='<%=provider.get("last_name")%>'> <INPUT
+			VALUE='<%=provider.getLastName()%>'> <INPUT
 			TYPE="hidden" NAME="first_name<%=i%>"
-			VALUE='<%=provider.get("first_name")%>'> <%    if (otherAppt.getProperty(provider.get("provider_no")+"apptno") != null) {%>
+			VALUE='<%=provider.getFirstName()%>'> <%    if (otherAppt.getProperty(provider.getProviderNo()+"apptno") != null) {%>
 		<input type="hidden" name="appointment_no<%=i%>"
-			value="<%=otherAppt.getProperty(provider.get("provider_no")+"apptno")%>">
+			value="<%=otherAppt.getProperty(provider.getProviderNo()+"apptno")%>">
 		<%    }    %>
 		</td>
 		<td align='center'>&nbsp; <input type="checkbox" name="two<%=i%>"
 			value="<%=i%>"
-			<%=bEdit ? (otherAppt.getProperty(provider.get("provider_no")+"two")
-		!= null ? otherAppt.getProperty(provider.get("provider_no")+"two") : "") : ""%>
+			<%=bEdit ? (otherAppt.getProperty(provider.getProviderNo()+"two")
+		!= null ? otherAppt.getProperty(provider.getProviderNo()+"two") : "") : ""%>
 			onclick="onCheck(this)"></td>
-		<td nowrap><%=otherAppt.getProperty(provider.get("provider_no")+"appt")
-		!= null ? otherAppt.getProperty(provider.get("provider_no")+"appt") : ""%>
+		<td nowrap><%=otherAppt.getProperty(provider.getProviderNo()+"appt")
+		!= null ? otherAppt.getProperty(provider.getProviderNo()+"appt") : ""%>
 		<%--
     // <input type="text" name="orig<%=i%>" value="<%=bDefProvider? request.getParameter("reason"):""%>" style="width:100%">
 --%> &nbsp;</td>

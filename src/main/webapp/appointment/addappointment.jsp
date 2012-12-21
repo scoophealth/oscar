@@ -62,6 +62,9 @@
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="org.oscarehr.common.model.EncounterForm" %>
 <%@ page import="org.oscarehr.common.dao.EncounterFormDao" %>
+<%@ page import="org.oscarehr.common.model.Appointment" %>
+<%@ page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -74,6 +77,7 @@
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	EncounterFormDao encounterFormDao = SpringUtils.getBean(EncounterFormDao.class);
+	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 %>
 
 <%
@@ -349,20 +353,13 @@ function pasteAppt(multipleSameDayGroupAppt) {
   GregorianCalendar caltime =new GregorianCalendar( );
   caltime.setTime(apptDate);
   caltime.add(GregorianCalendar.MINUTE, Integer.parseInt(duration)-1 );
-  
-  String [] param = new String[9] ;
-  param[0] = dateString2;
-  param[1] = curProvider_no;
-  param[2] = request.getParameter("start_time");
-  param[3] = caltime.get(Calendar.HOUR_OF_DAY) +":"+ caltime.get(Calendar.MINUTE);
-  param[4] = param[2];
-  param[5] = param[3];
-  param[6] = param[2];
-  param[7] = param[3];
-  param[8] = (String)request.getSession().getAttribute("programId_oscarView");
 
-  List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt", param);
-  long apptnum = resultList.size() > 0 ? (Long)resultList.get(0).get("n") : 0;
+  java.util.Date startTime = ConversionUtils.fromDateString(request.getParameter("start_time"));
+  java.util.Date endTime = ConversionUtils.fromTimeString(caltime.get(Calendar.HOUR_OF_DAY) +":"+ caltime.get(Calendar.MINUTE));
+  
+  List<Appointment> appts = appointmentDao.search_appt(apptDate, curProvider_no, startTime, endTime, startTime, endTime, startTime, endTime, Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
+  
+  long apptnum = appts.size() > 0 ? new Long(appts.size()) : 0;
   
   OscarProperties props = OscarProperties.getInstance();
   
@@ -523,35 +520,15 @@ function pasteAppt(multipleSameDayGroupAppt) {
           .deep { background-color: <%= deepcolor %>; }
           .weak { background-color: <%= weakcolor %>; }
       </style>
-      <!-- Must change styles for browsers that do not understand display:table properties -->
-      <!--[if lt IE 8]>
-        <style type="text/css">
-            body { min-width: 750px; }
-            .row { clear: both; }
-            li.deep { background-color: <%= weakcolor %>; }
-            .label, .space { float:left; width: 100px !important; }
-            .panel li div { border:none; }
-            .input, .space { text-align: right; float:left; }
-            .panel { background-color: #EEEEFF; }
-        </style>
-    <![endif]-->
-    <!-- Min-width doesn't work properly in IE6, so we simulate it using JavaScript.
-    It's important to set a min-width since many elements will be floating, and
-    resizing may cause elements to collapse in strange ways
-    -->
-    <!--[if lt IE 7]>
-        <script language="JavaScript">
-            window.onresize = function() { setMinWidth(860); }
-        </script>
-    <![endif]-->
+  
 <%
   }
-  resultList = oscarSuperManager.find("appointmentDao", "search_appt_name", param);
   boolean bDnb = false;
-  for (Map apt : resultList) {
-    String apptName = (String) apt.get("name");
-    if (apptName.equalsIgnoreCase(DONOTBOOK)) bDnb = true;
+  for(Appointment a : appts) {
+	  String apptName = a.getName();
+	  if (apptName.equalsIgnoreCase(DONOTBOOK)) bDnb = true;
   }
+ 
 
   // select provider lastname & firstname
   String pLastname = "";
@@ -596,13 +573,10 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
         if (!bFirstDisp && (demographicNo != null) && (!demographicNo.equals(""))) {
 
-            String [] sqlParam = new String[3] ;
-            sqlParam[0] = myGroupNo; //schedule group
-            sqlParam[1] = demographicNo;
-            sqlParam[2] = dateString2;
-
-            resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
-            long numSameDayGroupAppts = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+        	
+        	appts = appointmentDao.search_group_day_appt(myGroupNo, Integer.parseInt(demographicNo), apptDate);
+            
+            long numSameDayGroupAppts = appts.size() > 0 ? new Long(appts.size()) : 0;
             bMultipleSameDayGroupAppt = (numSameDayGroupAppts > 0);
         }
 
@@ -991,9 +965,8 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     sqlParam[0] = myGroupNo; //schedule group
                     sqlParam[1] = apptObj.getDemographic_no();
                     sqlParam[2] = dateString2;
-
-                    resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
-                    numSameDayGroupApptsPaste = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+					appts = appointmentDao.search_group_day_appt(myGroupNo, Integer.parseInt(apptObj.getDemographic_no()), apptDate);
+                    numSameDayGroupApptsPaste = appts.size() > 0 ? new Long(appts.size()) : 0;
                 }
           %>
           <input type="button" id="pasteButton" value="Paste" onclick="pasteAppt(<%=(numSameDayGroupApptsPaste > 0)%>);">
@@ -1109,19 +1082,23 @@ function pasteAppt(multipleSameDayGroupAppt) {
             param2[0] = demoNo;
             Calendar cal2 = Calendar.getInstance();
             param2[1] = new java.sql.Date(cal2.getTime().getTime());
+            java.util.Date start = cal2.getTime();
             cal2.add(Calendar.YEAR, 1);
+            java.util.Date end = cal2.getTime();
             param2[2] = new java.sql.Date(cal2.getTime().getTime());
-    		resultList = oscarSuperManager.find("appointmentDao", "search_appt_future", param2);
-
-    		for (Map appt : resultList) {
+            
+            for(Object[] result : appointmentDao.search_appt_future(Integer.parseInt(demoNo), start, end)) {
+            	Appointment a = (Appointment)result[0];
+            	p = (Provider)result[1];
+           
                 iRow ++;
                 if (iRow > iPageSize) break;
     %>
 	<tr bgcolor="#eeeeff">
-		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.get("appointment_date")%></td>
-		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.get("start_time")%></td>
-		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.get("last_name") + ",&nbsp;" + appt.get("first_name")%></td>
-		<td style="background-color: #CCFFCC;"><%=appt.get("status")==null?"":(appt.get("status").equals("N")?"No Show":(appt.get("status").equals("C")?"Cancelled":"") )%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=ConversionUtils.toDateString(a.getAppointmentDate())%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=ConversionUtils.toTimeString(a.getStartTime())%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=p.getFormattedName()%></td>
+		<td style="background-color: #CCFFCC;"><%=a.getStatus()==null?"":(a.getStatus().equals("N")?"No Show":(a.getStatus().equals("C")?"Cancelled":"") )%></td>
 	</tr>
 	<%
             }
@@ -1129,18 +1106,18 @@ function pasteAppt(multipleSameDayGroupAppt) {
             iRow=0;
             cal2 = Calendar.getInstance();
             cal2.add(Calendar.YEAR, -1);
-            param2[2] = new java.sql.Date(cal2.getTime().getTime());
-    		resultList = oscarSuperManager.find("appointmentDao", "search_appt_past", param2);
-
-    		for (Map appt : resultList) {
+            
+            for(Object[] result : appointmentDao.search_appt_past(Integer.parseInt(demoNo), start, cal2.getTime())) {
+            	Appointment a = (Appointment)result[0];
+            	p = (Provider)result[1];
                 iRow ++;
                 if (iRow > iPageSize) break;
     %>
 	<tr bgcolor="#eeeeff">
-		<td style="padding-right: 25px"><%=appt.get("appointment_date")%></td>
-		<td style="padding-right: 25px"><%=appt.get("start_time")%></td>
-		<td style="padding-right: 25px"><%=appt.get("last_name") + ",&nbsp;" + appt.get("first_name")%></td>
-		<td><%=appt.get("status")==null?"":(appt.get("status").equals("N")?"No Show":(appt.get("status").equals("C")?"Cancelled":"") )%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=ConversionUtils.toDateString(a.getAppointmentDate())%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=ConversionUtils.toTimeString(a.getStartTime())%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=p.getFormattedName()%></td>
+		<td style="background-color: #CCFFCC;"><%=a.getStatus()==null?"":(a.getStatus().equals("N")?"No Show":(a.getStatus().equals("C")?"Cancelled":"") )%></td>
 	</tr>
 	<%
             }

@@ -113,7 +113,6 @@
 	<bean id="inboxResultsDao" class="org.oscarehr.common.dao.InboxResultsDao" autowire="byName" />
 
 	<!-- Dao classes that implement OscarSuperDao -->
-	<bean id="appointmentSuperDao" class="oscar.dao.AppointmentDao" autowire="byName" />
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
 	
 

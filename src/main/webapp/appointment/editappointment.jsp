@@ -26,8 +26,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
 <%
-  if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
-
   String curProvider_no = request.getParameter("provider_no");
   String appointment_no = request.getParameter("appointment_no");
   String curUser_no = (String) session.getAttribute("user");
@@ -39,8 +37,8 @@
   boolean bFirstDisp = true; //this is the first time to display the window
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp = (request.getParameter("bFirstDisp")).equals("true");
 %>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-<%@page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"%>
+
+<%@page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, oscar.util.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
 <%@ page import="org.oscarehr.common.model.AppointmentStatus"%>
 <%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"%>
@@ -55,10 +53,16 @@
 <%@ page import="org.oscarehr.common.dao.EncounterFormDao" %>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 	EncounterFormDao encounterFormDao = SpringUtils.getBean(EncounterFormDao.class);
-        ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+    ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
+    DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+    OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+    SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
 %>
 <%
   ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
@@ -71,7 +75,7 @@
 
   Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 
-  DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+ 
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
@@ -85,27 +89,6 @@
         .deep { background-color: <%= deepcolor %>; }
         .weak { background-color: <%= weakcolor %>; }
     </style>
-    <!-- Must change styles for browsers that do not understand display:table properties -->
-    <!--[if lt IE 8]>
-        <style type="text/css">
-            body { min-width: 760px; }
-            .row { clear: both; }
-            li.deep { background-color: <%= weakcolor %>; }
-            .label, .space { float:left; width: 100px !important; }
-            .panel li div { border:none; }
-            .input, .space { text-align: right; float:left; }
-            .panel { background-color: #EEEEFF; }
-        </style>
-    <![endif]-->
-    <!-- Min-width doesn't work properly in IE6, so we simulate it using JavaScript.
-    It's important to set a min-width since many elements will be floating, and
-    resizing may otherwise cause elements to collapse in strange ways
-    -->
-    <!--[if lt IE 7]>
-        <script language="JavaScript">
-            window.onresize = function() { setMinWidth(860); }
-        </script>
-    <![endif]-->
 <% } %>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="appointment.editappointment.title" /></title>
@@ -339,27 +322,26 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     </div>
 
 <%
-	Map appt = null;
+	Appointment appt = null;
 	String demono="", chartno="", phone="", rosterstatus="", alert="", doctorNo="";
 	String strApptDate = bFirstDisp?"":request.getParameter("appointment_date") ;
 
 
 	if (bFirstDisp) {
-		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao",
-				request.getParameter("dboperation"), new Object [] {appointment_no});
-		if (resultList.size() == 0) {
+		appt = appointmentDao.find(Integer.parseInt(appointment_no));
+		
+
+		if (appt == null) {
 %>
 <bean:message key="appointment.editappointment.msgNoSuchAppointment" />
 <%
 			return;
-		} else {
-			appt = resultList.get(0);
 		}
 	}
 
 
-	if (bFirstDisp && appt.get("demographic_no")!=null) {
-		demono = String.valueOf(appt.get("demographic_no"));
+	if (bFirstDisp) {
+		demono = String.valueOf(appt.getDemographicNo());
 	} else if (request.getParameter("demographic_no")!=null && !request.getParameter("demographic_no").equals("")) {
 		demono = request.getParameter("demographic_no");
 	}
@@ -392,8 +374,9 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
                 sqlParam[1] = demono;
                 sqlParam[2] = strApptDate;
 
-                List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
-                long numSameDayGroupAppts = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+               List<Appointment> aa = appointmentDao.search_group_day_appt(myGroupNo,Integer.parseInt(demono),ConversionUtils.fromDateString(strApptDate));
+                
+                long numSameDayGroupAppts = aa.size() > 0 ? new Long(aa.size()) : 0;
                 bMultipleSameDayGroupAppt = (numSameDayGroupAppts > 0);
             }
 
@@ -422,7 +405,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     //Else how did we get here?
     if( bFirstDisp ) {
         DemographicData dd = new DemographicData();
-        org.oscarehr.common.model.Demographic demo = dd.getDemographic(String.valueOf(appt.get("demographic_no")));
+        org.oscarehr.common.model.Demographic demo = dd.getDemographic(String.valueOf(appt.getDemographicNo()));
         doctorNo = demo!=null ? (demo.getProviderNo()) : "";
     } else if (!request.getParameter("doctor_no").equals("")) {
         doctorNo = request.getParameter("doctor_no");
@@ -437,7 +420,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
 		<INPUT TYPE="TEXT"
 					NAME="appointment_date"
-					VALUE="<%=bFirstDisp?appt.get("appointment_date"):strApptDate%>"
+					VALUE="<%=bFirstDisp?ConversionUtils.toDateString(appt.getAppointmentDate()):strApptDate%>"
                     WIDTH="25" HEIGHT="20" border="0">
             </div>
             <div class="space">&nbsp;</div>
@@ -447,8 +430,8 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
               String statusCode = request.getParameter("status");
 			  String importedStatus = null;
               if (bFirstDisp){
-                  statusCode = (String) appt.get("status");
-                  importedStatus = (String) appt.get("imported_status");
+                  statusCode =appt.getStatus();
+                  importedStatus = appt.getImportedStatus();
               }
 
 
@@ -481,7 +464,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
                 <INPUT TYPE="TEXT"
 					NAME="start_time"
-					VALUE="<%=bFirstDisp?String.valueOf(appt.get("start_time")).substring(0,5):request.getParameter("start_time")%>"
+					VALUE="<%=bFirstDisp?ConversionUtils.toTimeStringNoSeconds(appt.getStartTime()):request.getParameter("start_time")%>"
                     WIDTH="25">
             </div>
             <div class="space">&nbsp;</div>
@@ -491,13 +474,13 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
                         // multisites start ==================
                 boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
-            SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+            
             List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
             // multisites end ==================
 
             boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 
-            String loc = bFirstDisp?((String)appt.get("location")):request.getParameter("location");
+            String loc = bFirstDisp?(appt.getLocation()):request.getParameter("location");
             String colo = bMultisites
                                         ? ApptUtil.getColorFromLocation(sites, loc)
                                         : bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
@@ -512,7 +495,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="type"
-					VALUE="<%=bFirstDisp?appt.get("type"):request.getParameter("type")%>"
+					VALUE="<%=bFirstDisp?appt.getType():request.getParameter("type")%>"
                     WIDTH="25">
             </div>
         </li>
@@ -523,8 +506,13 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
   int everyMin = 1;
   StringBuilder nameSb = new StringBuilder();
   if(bFirstDisp) {
-    int endtime = (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(3,5) ) ) ;
-    int starttime = (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(3,5) ) ) ;
+	  Calendar startCal = Calendar.getInstance();
+	  startCal.setTime(appt.getStartTime());
+	  Calendar endCal = Calendar.getInstance();
+	  endCal.setTime(appt.getEndTime());
+	  
+    int endtime = (endCal.get(Calendar.HOUR_OF_DAY) )*60 + (endCal.get(Calendar.MINUTE)) ;
+    int starttime = (startCal.get(Calendar.HOUR_OF_DAY) )*60 + (startCal.get(Calendar.MINUTE)) ;
     everyMin = endtime - starttime +1;
 
     if (!demono.equals("0") && !demono.equals("") && (demographicDao != null)) {
@@ -534,11 +522,11 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
               .append(demo.getFirstName());
     }
     else {
-        nameSb.append(appt.get("name"));
+        nameSb.append(appt.getName());
     }
   }
 %> <INPUT TYPE="hidden" NAME="end_time"
-					VALUE="<%=bFirstDisp?String.valueOf(appt.get("end_time")).substring(0,5):request.getParameter("end_time")%>"
+					VALUE="<%=bFirstDisp?ConversionUtils.toTimeStringNoSeconds(appt.getEndTime()):request.getParameter("end_time")%>"
 					WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">
 				<%--              <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">--%>
 				<INPUT TYPE="TEXT" NAME="duration"
@@ -598,7 +586,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
                 <input type="TEXT"
 					name="demographic_no" onFocus="onBlockFieldFocus(this)" readonly
-					value="<%=bFirstDisp?( ((Integer)appt.get("demographic_no"))==0?"":(""+appt.get("demographic_no")) ):request.getParameter("demographic_no")%>"
+					value="<%=bFirstDisp?( (appt.getDemographicNo())==0?"":(""+appt.getDemographicNo()) ):request.getParameter("demographic_no")%>"
                     width="25">
             </div>
         </li>
@@ -606,13 +594,13 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="label"><bean:message key="Appointment.formReason" />:</div>
             <div class="input">
 				<textarea name="reason" tabindex="2" rows="2" wrap="virtual"
-					cols="18"><%=bFirstDisp?appt.get("reason"):request.getParameter("reason")%></textarea>
+					cols="18"><%=bFirstDisp?appt.getReason():request.getParameter("reason")%></textarea>
             </div>
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formNotes" />:</div>
             <div class="input">
 				<textarea name="notes" tabindex="3" rows="2" wrap="virtual"
-					cols="18"><%=bFirstDisp?appt.get("notes"):request.getParameter("notes")%></textarea>
+					cols="18"><%=bFirstDisp?appt.getNotes():request.getParameter("notes")%></textarea>
             </div>
         </li>
 			<% if (pros.isPropertyActive("mc_number")) {
@@ -656,7 +644,7 @@ if (bMultisites) { %>
 	// multisites end ==================
 %>
             <INPUT TYPE="TEXT" NAME="location" tabindex="4"
-					VALUE="<%=bFirstDisp?appt.get("location"):request.getParameter("location")%>"
+					VALUE="<%=bFirstDisp?appt.getLocation():request.getParameter("location")%>"
 					WIDTH="25">
 <% } %>
             </div>
@@ -665,31 +653,31 @@ if (bMultisites) { %>
             <div class="input">
                 <input type="TEXT"
 					name="resources" tabindex="5"
-					value="<%=bFirstDisp?appt.get("resources"):request.getParameter("resources")%>"
+					value="<%=bFirstDisp?appt.getResources():request.getParameter("resources")%>"
                     width="25">
             </div>
         </li>
         <li class="weak row">
             <div class="label"><bean:message key="Appointment.formLastCreator" />:</div>
             <div class="input">
-<% String lastCreatorNo = bFirstDisp?((String)appt.get("creator")):request.getParameter("user_id"); %>
+<% String lastCreatorNo = bFirstDisp?(appt.getCreator()):request.getParameter("user_id"); %>
                 <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
             </div>
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formLastTime" />:</div>
             <div class="input">
 				<%
-                 origDate =  bFirstDisp ? String.valueOf(appt.get("createdatetime")) : request.getParameter("createDate");
-                 String lastDateTime = bFirstDisp?String.valueOf(appt.get("updatedatetime")):request.getParameter("updatedatetime");
-                 if (lastDateTime == null){ lastDateTime = bFirstDisp?String.valueOf(appt.get("createdatetime")):request.getParameter("createdatetime"); }
+                 origDate =  bFirstDisp ? ConversionUtils.toTimestampString(appt.getCreateDateTime()) : request.getParameter("createDate");
+                 String lastDateTime = bFirstDisp?ConversionUtils.toTimestampString(appt.getUpdateDateTime()):request.getParameter("updatedatetime");
+                 if (lastDateTime == null){ lastDateTime = bFirstDisp?ConversionUtils.toTimestampString(appt.getCreateDateTime()):request.getParameter("createdatetime"); }
 
 				GregorianCalendar now=new GregorianCalendar();
 				String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
 					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
 
                  String remarks = "";
-                 if (bFirstDisp && appt.get("remarks")!=null) {
-                     remarks = (String) appt.get("remarks");
+                 if (bFirstDisp && appt.getRemarks()!=null) {
+                     remarks = appt.getRemarks();
                  }
 
 %>
@@ -716,7 +704,7 @@ if (bMultisites) { %>
             	<%
            			String urgencyChecked=new String();
             		if(bFirstDisp) {
-            			if(appt.get("urgency") != null && appt.get("urgency").equals("critical")) {
+            			if(appt.getUrgency() != null && appt.getUrgency().equals("critical")) {
             				urgencyChecked=" checked=\"checked\" ";
             			}
             		} else {
@@ -803,13 +791,10 @@ if (bMultisites) { %>
                             long numSameDayGroupApptsPaste = 0;
 
                             if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
-                                String [] sqlParam = new String[3] ;
-                                sqlParam[0] = myGroupNo; //schedule group
-                                sqlParam[1] = apptObj.getDemographic_no();
-                                sqlParam[2] = (String) appt.get("appointment_date").toString();
-
-                                List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
-                                numSameDayGroupApptsPaste = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+                                
+                                List<Appointment> aa = appointmentDao.search_group_day_appt(myGroupNo,Integer.parseInt(demono),appt.getAppointmentDate());
+                                
+                                numSameDayGroupApptsPaste = aa.size() > 0 ? new Long(aa.size()): 0;
                             }
                   %><a href=#
 			onclick="pasteAppt(<%=(numSameDayGroupApptsPaste > 0)%>);">Paste</a>
@@ -877,7 +862,7 @@ Currently this is only used in the mobile version -->
     <%
         // Format date to be more readable
         java.text.SimpleDateFormat inform = new java.text.SimpleDateFormat ("yyyy-MM-dd");
-        String strDate = bFirstDisp ? appt.get("appointment_date").toString() : request.getParameter("appointment_date");
+        String strDate = bFirstDisp ? ConversionUtils.toDateString(appt.getAppointmentDate()) : request.getParameter("appointment_date");
         java.util.Date d = inform.parse(strDate);
         String formatDate = "";
         try { // attempt to change string format
@@ -899,7 +884,7 @@ Currently this is only used in the mobile version -->
         <ul>
             <li class="mainInfo"><a href="#" onclick="demographicdetail(550,700)">
                 <%
-                    String apptName = (bFirstDisp ? appt.get("name") : request.getParameter("name")).toString();
+                    String apptName = (bFirstDisp ? appt.getName() : request.getParameter("name")).toString();
                     //If a comma exists, need to split name into first and last to prevent overflow
                     int comma = apptName.indexOf(",");
                     if (comma != -1)
@@ -930,25 +915,25 @@ Currently this is only used in the mobile version -->
                 </div>
             </li>
             <li><div class="label"><bean:message key="appointment.editappointment.msgTime" />: </div>
-                <div class="info">From <%=bFirstDisp ? String.valueOf(appt.get("start_time")).substring(0, 5) : request.getParameter("start_time")%>
-                to <%=bFirstDisp ? String.valueOf(appt.get("end_time")).substring(0, 5) : request.getParameter("end_time")%></div>
+                <div class="info">From <%=bFirstDisp ? ConversionUtils.toTimeStringNoSeconds(appt.getStartTime()) : request.getParameter("start_time")%>
+                to <%=bFirstDisp ? ConversionUtils.toTimeStringNoSeconds(appt.getEndTime()) : request.getParameter("end_time")%></div>
             </li>
             <li><div class="label"><bean:message key="Appointment.formType" />: </div>
-                <div class="info"><%=bFirstDisp ? appt.get("type") : request.getParameter("type")%></div>
+                <div class="info"><%=bFirstDisp ? appt.getType() : request.getParameter("type")%></div>
             </li>
             <li><div class="label"><bean:message key="Appointment.formReason" />: </div>
-                <div class="info"><%=bFirstDisp ? appt.get("reason") : request.getParameter("reason")%></div>
+                <div class="info"><%=bFirstDisp ? appt.getReason() : request.getParameter("reason")%></div>
             </li>
             <li><div class="label"><bean:message key="Appointment.formLocation" />: </div>
-                <div class="info"><%=bFirstDisp ? appt.get("location") : request.getParameter("location")%></div>
+                <div class="info"><%=bFirstDisp ? appt.getLocation() : request.getParameter("location")%></div>
             </li>
             <li><div class="label"><bean:message key="Appointment.formResources" />: </div>
-                <div class="info"><%=bFirstDisp ? appt.get("resources") : request.getParameter("resources")%></div>
+                <div class="info"><%=bFirstDisp ? appt.getResources() : request.getParameter("resources")%></div>
             </li>
             <li>&nbsp;</li>
             <li class="notes">
                 <div class="label"><bean:message key="Appointment.formNotes" />: </div>
-                <div class="info"><%=bFirstDisp ? appt.get("notes") : request.getParameter("notes")%></div>
+                <div class="info"><%=bFirstDisp ? appt.getNotes() : request.getParameter("notes")%></div>
             </li>
         </ul>
     </div>
