@@ -51,8 +51,15 @@
 	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-
-<%!
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Security" %>
+<%@page import="org.oscarehr.common.dao.SecurityDao" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	
 	OscarProperties op = OscarProperties.getInstance();
 %>
 
@@ -212,18 +219,25 @@
 <%
 	List<Map<String,Object>> resultList ;
     if (isSiteAccessPrivacy) {
-    	Object[] param =new Object[1];
-    	param[0] = curProvider_no;
-    	resultList = oscarSuperManager.find("adminDao", "site_provider_search_providerno", param);
+    	for(Provider p : providerDao.getProviders()) {
+    		List<Security> s = securityDao.findByProviderNo(p.getProviderNo());
+    		if(s.size() > 0) {
+    			%>
+    			<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></option>    			
+    			<%
+    		}
+    	}
+    	
+  
+    		
     }
     else {
-    	resultList = oscarSuperManager.find("adminDao", "provider_security_search_providerno", new Object[] {});
+    	for(Provider p : providerDao.getProviders()) {
+    		%>
+			<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></option>    	
+			<%
+    	}
     }
-	for (Map provider : resultList) {
-%>
-			<option value="<%=provider.get("provider_no")%>" class="providerSecurity<%=provider.get("security_exists")%>"><%=provider.get("last_name")+", "+provider.get("first_name")%></option>
-<%
-	}
 %>
 		</select></td>
 	</tr>

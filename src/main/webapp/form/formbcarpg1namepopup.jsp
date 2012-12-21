@@ -1,29 +1,22 @@
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String curUser_no = (String) session.getAttribute("user");
 String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
-
-String strLimit1="0";
-String strLimit2="100";  
-String orderBy = request.getParameter("orderby")!=null ? request.getParameter("orderby") : "first_name" ;
-if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
-if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 
 String fieldName = request.getParameter("fieldname")!=null ? request.getParameter("fieldname") : "pg1_priCare" ;
 %>
 
 <%@ page import="java.sql.*" errorPage="../errorpage.jsp"%>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<jsp:useBean id="providerNameBean" class="java.util.Properties"
-	scope="page" />
 
-<% 
-String [][] dbQueries=new String[][] { 
-	{"search_provider", "select provider_no, last_name, first_name from provider where ohip_no!=\"\" or rma_no!=\"\" or billing_no!=\"\" or hso_no!=\"\" order by " + orderBy }, 
-};
-reportMainBean.doConfigure(dbQueries);
+<jsp:useBean id="providerNameBean" class="java.util.Properties" scope="page" />
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
+
+
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -74,13 +67,13 @@ function typeInData(v) {
   int nItems=0;
   String bgColor = "white";
   String lastName = null, firstName = null;
-  ResultSet rs = reportMainBean.queryResults("search_provider");
-  while (rs.next()) { 
-    providerNameBean.setProperty(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
+  for(Provider p : providerDao.getBillableProvidersInBC()) {
+ 
+    providerNameBean.setProperty(p.getProviderNo(), p.getFormattedName());
     nItems++; 
     bgColor = nItems%2==0?weakcolor:"white";
-    lastName = reportMainBean.getString(rs,"last_name")!=null?reportMainBean.getString(rs,"last_name") : "" ;
-    firstName = reportMainBean.getString(rs,"first_name")!=null?reportMainBean.getString(rs,"first_name") : "" ;
+    lastName = p.getLastName()!=null?p.getLastName() : "" ;
+    firstName = p.getFirstName()!=null?p.getFirstName() : "" ;
 %>
 	<tr bgcolor="<%=bgColor%>"
 		onMouseOver="this.style.backgroundColor='pink';"
@@ -95,21 +88,7 @@ function typeInData(v) {
 
 </table>
 <br>
-<%
-  int nLastPage=0,nNextPage=0;
-  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
-  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
-  if(nLastPage>=0) {
-%> <a
-	href="formbcarpg1namepopup.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
-	key="report.reportnewdblist.msgLastPage" /></a> | <%
-  }
-  if(nItems==Integer.parseInt(strLimit2)) {
-%> <a
-	href="formbcarpg1namepopup.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
-<bean:message key="report.reportnewdblist.msgNextPage" /></a> <%
-}
-%>
+
 
 </body>
 </html:html>

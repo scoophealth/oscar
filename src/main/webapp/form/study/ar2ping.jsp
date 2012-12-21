@@ -1,8 +1,8 @@
+<%@page import="oscar.oscarDB.DBHandler"%>
 <%@ page import="java.lang.reflect.*, java.sql.*"%>
-
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
+
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
 <%@ page import="java.util.*,oscar.ping.xml.*"%>
 <%@ page import="org.chip.ping.xml.*"%>
@@ -15,12 +15,7 @@
 <%
 	DesapriskDao desapriskDao = SpringUtils.getBean(DesapriskDao.class);
 %>
-<%
-String [][] dbQueries=new String[][] {
-    {"search_formar", "select * from formAR where demographic_no= ? order by formEdited desc, ID desc limit 0,1"},
-};
-studyBean.doConfigure(dbQueries);
-%>
+
 <%
 out.println("Please wait ...<br>");
 out.flush();
@@ -62,7 +57,7 @@ Object obj = null ;
 
 //take data from form
 String demoNo = request.getParameter("demographic_no");
-ResultSet rsdemo = studyBean.queryResults(demoNo, "search_formar");
+ResultSet rsdemo = DBHandler.GetSQL("select * from formAR where demographic_no= "+demoNo+" order by formEdited desc, ID desc limit 0,1");
 ResultSetMetaData md = rsdemo.getMetaData();
 if (rsdemo.next()) {
 	for(int i = 1; i <= md.getColumnCount(); i++)  {

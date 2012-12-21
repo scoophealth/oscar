@@ -33,8 +33,7 @@
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*"
 	errorPage="../../appointment/errorpage.jsp"%>
-<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="risks"
 	class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
@@ -46,12 +45,6 @@
 <%@page import="org.oscarehr.common.dao.DesapriskDao" %>
 <%
 	DesapriskDao desapriskDao = SpringUtils.getBean(DesapriskDao.class);
-%>
-<%
-String [][] dbQueries=new String[][] {
-{"search_formarrisk", "select * from formAR where ID = ?" },
-};
-plannerBean.doConfigure(dbQueries);
 %>
 
 <html>
@@ -72,7 +65,8 @@ plannerBean.doConfigure(dbQueries);
 
   ResultSet rsdemo = null ;
   if(!form_no.equals("0")) {
-	  rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");
+	  rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formAR where ID = " + form_no);
+	 
       ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
       while (rsdemo.next()) {
           finalEDB = rsdemo.getString("c_finalEDB");
