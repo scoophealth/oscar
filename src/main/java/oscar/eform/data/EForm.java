@@ -560,8 +560,9 @@ public class EForm extends EFormBase {
             //nextSport: \n, \r, >, ' '
 		int end = nextIndex(text, "\n", "\r", pointer);
 		if (end < 0) end = text.length();
-		int index = text.substring(pointer, end).indexOf('=') + pointer;
+		int index = text.substring(pointer, end).indexOf('=');
 		if (index >= 0) {
+			index = pointer + index;
                     //deal with cases of quoted values with spaces ("xx xx" / 'xx xx')
 			if (text.charAt(index + 1) == '"') {
 				int close = text.substring(index + 2, end).indexOf("\"") + (index + 2);
