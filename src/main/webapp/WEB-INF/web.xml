@@ -321,7 +321,15 @@
 		<url-pattern>/EFormViewForPdfGenerationServlet</url-pattern>
 	</servlet-mapping>
 
-
+	<servlet>
+		<servlet-name>ProxyEformNotification</servlet-name>
+		<servlet-class>org.oscarehr.PMmodule.notification.EmailTriggerServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ProxyEformNotification</servlet-name>
+		<url-pattern>/ProxyEformNotification</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>EFormSignatureViewForPdfGenerationServlet</servlet-name>

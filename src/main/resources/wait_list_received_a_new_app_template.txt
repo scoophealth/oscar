@@ -1,0 +1,12 @@
+The Waitlist has received a new online application.
+
+To view the current list of applications click on the following link:
+
+https://${app_ctx_path}/PMmodule/ProgramManager.do
+
+To view the intake form of the applicant being referred to in this notification click on the following link:
+
+https://${app_ctx_path}/eform/efmshowform_data.jsp?fid=${fid}
+
+thank you!
+

@@ -68,7 +68,8 @@ public class LoginFilter implements Filter {
 		"/ws/",
 		"/EFormViewForPdfGenerationServlet",
 		"/EFormSignatureViewForPdfGenerationServlet",
-		"/EFormImageViewForPdfGenerationServlet"
+		"/EFormImageViewForPdfGenerationServlet",
+		"/ProxyEformNotification"
 	};
 	
 	private static final String[] EXEMPT_URLS_FOR_REQUEST_TIMEOUT = {
@@ -89,7 +90,8 @@ public class LoginFilter implements Filter {
 		"/oscar/js",
 		"/oscar/provider/tabAlertsRefresh.jsp",
 		"/oscar/SystemMessage.do",
-		"/oscar/FacilityMessage.do"	
+		"/oscar/FacilityMessage.do",
+		"/ProxyEformNotification"
 	};
 	
 	private static final String[] EXEMPT_URLS_FOR_REQUEST_TIMEOUT_REDIRECT = {
