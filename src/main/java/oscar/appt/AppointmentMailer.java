@@ -32,10 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Time;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.internet.AddressException;
@@ -53,7 +50,6 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
-import oscar.dao.AppointmentDao;
 import oscar.service.MessageMailer;
 /**
  *
@@ -174,20 +170,19 @@ public class AppointmentMailer implements MessageMailer{
                  
             Date today = new Date();
 
-            AppointmentDao apptDao = (AppointmentDao) SpringUtils.getBean("appointmentSuperDao");
-            List<Map<String, Object>> resultList  = apptDao.executeSelectQuery("search", new Object[]{this.apptNo});
-
+            Appointment a = dao.find(this.apptNo);
+           
             ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
             Clinic clinic = clinicDao.getClinic();
             
-            if (resultList.size() < 1) {
+            if (a == null) {
               logger.error("Appointment ("+this.apptNo+") not found for demographic no (" + this.demographic.getDemographicNo() +") on Date: " + today);
             } else {
-                Map mAppt = resultList.get(0);        
+               
                 String msgText = msgTextTemplate.toString();
                 msgText = msgText.replaceAll("<today>", DateUtils.getDate());
-                msgText = msgText.replaceAll("<appointment_date>", ((Date)mAppt.get("appointment_date")).toString());
-                msgText = msgText.replaceAll("<appointment_time>", ((Time)mAppt.get("start_time")).toString());
+                msgText = msgText.replaceAll("<appointment_date>", a.getAppointmentDate().toString());
+                msgText = msgText.replaceAll("<appointment_time>", a.getStartTime().toString());
                 msgText = msgText.replaceAll("<first_name>", this.demographic.getFirstName());
                 msgText = msgText.replaceAll("<last_name>", this.demographic.getLastName());
                 
@@ -195,7 +190,7 @@ public class AppointmentMailer implements MessageMailer{
                 msgText = msgText.replaceAll("<clinic_addressLine>", clinic.getClinicAddress());
                 msgText = msgText.replaceAll("<clinic_phone>", clinic.getClinicPhone());
                  
-                msgText = msgText.replaceAll("<appt_reason>", (String)mAppt.get("reason"));
+                msgText = msgText.replaceAll("<appt_reason>", a.getReason());
                 
                 this.message.setText(msgText);
             }

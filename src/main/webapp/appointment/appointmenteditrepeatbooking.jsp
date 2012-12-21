@@ -32,7 +32,7 @@
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
 <%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
@@ -129,19 +129,18 @@
         int rowsAffected=0, datano=0;
 
         Object[] paramE = new Object[10];
-        List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search", new Object [] {request.getParameter("appointment_no")});
-        if (resultList.size() > 0) {
-                Map appt = resultList.get(0);
-                paramE[0]=String.valueOf(appt.get("appointment_date")); //request.getParameter("appointment_date"); // param[3] - appointment_date
-                paramE[1]=appt.get("provider_no"); //request.getParameter("provider_no");
-                paramE[2]=appt.get("start_time"); //MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-                paramE[3]=appt.get("end_time"); //MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-                paramE[4]=appt.get("name"); //request.getParameter("keyword");
-                paramE[5]=appt.get("notes"); //request.getParameter("notes");
-                paramE[6]=appt.get("reason"); //request.getParameter("reason");
-                paramE[7]=appt.get("createdatetime"); //request.getParameter("createdatetime");
-                paramE[8]=appt.get("creator"); //request.getParameter("creator");
-                paramE[9]=appt.get("demographic_no"); //request.getParameter("creator");
+        Appointment aa = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+        if (aa != null) {
+                paramE[0]=ConversionUtils.toDateString(aa.getAppointmentDate());
+                paramE[1]=aa.getProviderNo();
+                paramE[2]=ConversionUtils.toTimeStringNoSeconds(aa.getStartTime());
+                paramE[3]=ConversionUtils.toTimeStringNoSeconds(aa.getEndTime());
+                paramE[4]=aa.getName();
+                paramE[5]=aa.getNotes();
+                paramE[6]=aa.getReason();
+                paramE[7]=ConversionUtils.toTimestampString(aa.getCreateDateTime());
+                paramE[8]=aa.getCreator();
+                paramE[9]=String.valueOf(aa.getDemographicNo());
 
         }
 
@@ -158,8 +157,8 @@
 				Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
 			    appointmentArchiveDao.archiveAppointment(appt);
 			    
-			    List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[3]), (String)param[4], (java.sql.Time)param[5], (java.sql.Time)param[6],
-						(String)param[7], (String)param[8], (String)param[9], (java.sql.Timestamp)param[10], (String)param[11], (Integer)param[12]);
+			    List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[3]), (String)param[4], ConversionUtils.fromTimeStringNoSeconds((String)param[5]), ConversionUtils.fromTimeStringNoSeconds((String)param[6]),
+						(String)param[7], (String)param[8], (String)param[9], ConversionUtils.fromTimestampString((String)param[10]), (String)param[11], Integer.parseInt((String)param[12]));
 			    
             	for(Appointment a:appts) {
             		a.setStatus("C");
@@ -186,8 +185,8 @@
 			// repeat doing
 			while (true) {
 
-				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[0]), (String)param[1], (java.sql.Time)param[2], (java.sql.Time)param[3],
-						(String)param[4], (String)param[5], (String)param[6], (java.sql.Timestamp)param[7], (String)param[8], (Integer)param[9]);
+				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[0]), (String)param[1], ConversionUtils.fromTimeStringNoSeconds((String)param[2]), ConversionUtils.fromTimeStringNoSeconds((String)param[3]),
+						(String)param[4], (String)param[5], (String)param[6],  ConversionUtils.fromTimestampString((String)param[7]), (String)param[8], Integer.parseInt((String)param[9]));
 				for(Appointment appt:appts) {
 					appointmentArchiveDao.archiveAppointment(appt);
 					appointmentDao.remove(appt.getId());
@@ -205,23 +204,24 @@
 
 		if (request.getParameter("groupappt").equals("Group Update")) {
 			Object[] param = new Object[21];
-                        param[0]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-                        param[1]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-                        param[2]=request.getParameter("keyword");
-                        param[3]=request.getParameter("demographic_no");
-                        param[4]=request.getParameter("notes");
-                        param[5]=request.getParameter("reason");
-                        param[6]=request.getParameter("location");
-                        param[7]=request.getParameter("resources");
-                        param[8]=createdDateTime;
-                        param[9]=userName;
-                        param[10]=request.getParameter("urgency");
- 	        for(int k=0; k<paramE.length; k++) param[k+11] = paramE[k];
+            param[0]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+            param[1]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+            param[2]=request.getParameter("keyword");
+            param[3]=request.getParameter("demographic_no");
+            param[4]=request.getParameter("notes");
+            param[5]=request.getParameter("reason");
+            param[6]=request.getParameter("location");
+            param[7]=request.getParameter("resources");
+            param[8]=createdDateTime;
+            param[9]=userName;
+            param[10]=request.getParameter("urgency");
+ 	        for(int k=0; k<paramE.length; k++) 
+ 	        	param[k+11] = paramE[k];
 
 			// repeat doing
 			while (true) {
-				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)paramE[0]), (String)paramE[1], (java.sql.Time)paramE[2],(java.sql.Time) paramE[3],
-						(String)paramE[4], (String)paramE[5], (String)paramE[6], (java.sql.Timestamp)paramE[7], (String)paramE[8], (Integer)paramE[9]);
+				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)paramE[0]), (String)paramE[1], ConversionUtils.fromTimeStringNoSeconds((String)paramE[2]), ConversionUtils.fromTimeStringNoSeconds((String)paramE[3]),
+						(String)paramE[4], (String)paramE[5], (String)paramE[6],  ConversionUtils.fromTimestampString((String)paramE[7]), (String)paramE[8], Integer.parseInt((String)paramE[9]));
 				for(Appointment appt:appts) {
 					appointmentArchiveDao.archiveAppointment(appt);
 					appt.setStartTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"))));

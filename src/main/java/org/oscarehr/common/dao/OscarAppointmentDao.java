@@ -366,4 +366,132 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 		return rs;
 	}
+	
+	//search_appt_name
+	public List<Appointment> search_appt(Date date, String providerNo, Date startTime1, Date startTime2, Date endTime1, Date endTime2, Date startTime3, Date endTime3, Integer programId) {
+		String sql = "select a from Appointment a where a.appointmentDate = ? and a.providerNo = ? and a.status <>'C' and ((a.startTime >= ? and a.startTime<= ?) or (a.endTime>= ? and a.endTime<= ?) or (a.startTime <= ? and a.endTime>= ?) ) and program_id=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, date);
+		query.setParameter(2, providerNo);
+		query.setParameter(3, startTime1);
+		query.setParameter(4, startTime2);
+		query.setParameter(5, endTime1);
+		query.setParameter(6, endTime2);
+		query.setParameter(7, startTime3);
+		query.setParameter(8, endTime3);
+		query.setParameter(9, programId);
+		
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+	
+    public List<Object[]> search_appt_future(Integer demographicNo, Date from, Date to) {
+        StringBuilder sql = new StringBuilder("FROM Appointment a, Provider p " +
+                "WHERE a.providerNo = p.ProviderNo and " +
+                "a.demographicNo = ? and " +
+                "a.appointmentDate >= ? and " +
+                "a.appointmentDate < ?  " +
+                "order by a.appointmentDate desc, a.startTime desc");
+        
+        Query query = entityManager.createQuery(sql.toString());
+        query.setParameter(1, demographicNo);
+        query.setParameter(2, from);
+        query.setParameter(3, to);
+        
+
+        return query.getResultList();
+    }
+    
+    public List<Object[]> search_appt_past(Integer demographicNo, Date from, Date to) {
+        StringBuilder sql = new StringBuilder("FROM Appointment a, Provider p " +
+                "WHERE a.providerNo = p.ProviderNo and " +
+                "a.demographicNo = ? and " +
+                "a.appointmentDate < ? and " +
+                "a.appointmentDate > ?  " +
+                "order by a.appointmentDate desc, a.startTime desc");
+        
+        Query query = entityManager.createQuery(sql.toString());
+        query.setParameter(1, demographicNo);
+        query.setParameter(2, from);
+        query.setParameter(3, to);
+        
+
+        return query.getResultList();
+    }
+    
+    public Appointment search_appt_no(String providerNo, Date appointmentDate, Date startTime, Date endTime, Date createDateTime, String creator, Integer demographicNo) {
+    	String sql = "select a from Appointment a where a.providerNo=? and a.appointmentDate=? and a.startTime=? and "+
+    				"a.endTime=? and a.createDateTime=? and a.creator=? and a.demographicNo=? order by a.id desc";
+    	Query query = entityManager.createQuery(sql.toString());
+        query.setParameter(1, providerNo);
+        query.setParameter(2, appointmentDate);
+        query.setParameter(3, startTime);
+        query.setParameter(4, endTime);
+        query.setParameter(5, createDateTime);
+        query.setParameter(6, creator);
+        query.setParameter(7, demographicNo);
+        query.setMaxResults(1);
+        
+        return this.getSingleResultOrNull(query);
+    }
+    
+    public List<Object[]> search_appt_data1(String providerNo, Date appointmentDate, Date startTime, Date endTime, Date createDateTime, String creator, Integer demographicNo) {
+    	String sql = "from Provider prov, Appointment app " +
+    			"where app.providerNo = prov.id and " +
+    			"app.providerNo=? and " +
+    			"app.appointmentDate=? and " + 
+    			"app.startTime=? and "  +
+    			"app.endTime=? and " +
+    			"app.createDateTime=? and " + 
+    			"app.creator=? and " +
+    			"app.demographicNo=? " +
+    			"order by app.id desc";
+    	Query query = entityManager.createQuery(sql);
+    	query.setMaxResults(1);
+    	query.setParameter(1, providerNo);
+    	 
+         query.setParameter(2, appointmentDate);
+         query.setParameter(3, startTime);
+         query.setParameter(4, endTime);
+         query.setParameter(5, createDateTime);
+         query.setParameter(6, creator);
+         query.setParameter(7, demographicNo);
+         
+         return query.getResultList();
+    }
+    
+    public List<Object[]> export_appt(Integer demographicNo) {
+    	String sql="from Appointment app, Provider prov where app.id = prov.id and app.demographicNo = ?";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, demographicNo);
+         
+        return query.getResultList();
+    }
+    
+    public List<Appointment> search_otherappt(Date appointmentDate, Date startTime1, Date endTime1, Date startTime2, Date startTime3) {
+    	String sql = "from Appointment a where a.appointmentDate=? and ((a.startTime <= ? and a.endTime >= ?) or (a.startTime > ? and a.startTime < ?) ) order by a.providerNo, a.startTime";
+    	
+    	
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, appointmentDate);
+         query.setParameter(2, startTime1);
+         query.setParameter(3, endTime1);
+         query.setParameter(4, startTime2);
+         query.setParameter(5, startTime3);
+          
+         return query.getResultList();
+    }
+    
+    public List<Appointment> search_group_day_appt(String myGroup, Integer demographicNo, Date appointmentDate) {
+    	String sql = "select a  from Appointment a, MyGroup m where m.id.providerNo=a.providerNo and a.status <> 'C' and m.id.myGroupNo=? and  a.demographicNo=? and  a.appointmentDate=?";
+    	
+    	
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, myGroup);
+         query.setParameter(2, demographicNo);
+         query.setParameter(3, appointmentDate);
+         
+         return query.getResultList();
+    }
 }
