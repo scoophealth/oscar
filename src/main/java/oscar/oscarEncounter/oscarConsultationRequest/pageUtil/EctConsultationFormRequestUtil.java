@@ -313,6 +313,8 @@ public class EctConsultationFormRequestUtil {
 	}
 
 	public String getProviderTeam(String id) {
+		if(id == null || id.length()==0)
+			return "";
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		Provider p = dao.getProvider(id);
 		if (p != null) {
@@ -322,6 +324,9 @@ public class EctConsultationFormRequestUtil {
 	}
 
 	public String getProviderName(String id) {
+		if(id == null || id.length()==0)
+			return "";
+		
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		Provider p = dao.getProvider(id);
 		if (p != null) {
