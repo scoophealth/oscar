@@ -31,7 +31,6 @@ import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.AccountWs;
-import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.myoscar_server.ws.RelationshipTransfer3;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
@@ -90,27 +89,18 @@ public class MyOscarServerRelationManager {
 	}
 
 	/**
-	 * @deprecated 2012-09-12, need to update to use createRelationship2 as soon as possible.
-	 * @return True if relation was created
+	 * adds a patientProvider relationship for the logged in provider and passed in patient.
 	 */
-	public static boolean addPatientRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo, String demoNo) throws Exception {
-		boolean relationCreated = false;
+	public static void addPatientProviderRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo, String demoNo) throws Exception {
 		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
 
 		org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo);
-		String myOscarUserName = demo.getMyOscarUserName();
-		Long myOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, myOscarUserName);
-		boolean patientRelationshipExists = MyOscarServerRelationManager.hasPatientRelationship(myOscarLoggedInInfo, myOscarUserId);
+		
+		String patientMyOscarUserName = demo.getMyOscarUserName();
+		Long patientMyOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, patientMyOscarUserName);
 
-		if (!patientRelationshipExists) {
-	        Long relatedPersonId=AccountManager.getUserId(myOscarLoggedInInfo, myOscarUserName);	        
-			accountWs.createRelationship(myOscarLoggedInInfo.getLoggedInPersonId(), relatedPersonId, Relation.PATIENT);
-			relationCreated = true;
-			relationDataCache.remove(getCacheKey(myOscarLoggedInInfo, myOscarUserId));
-		} else {
-			logger.error("Patient Relation was not added already exists");
-		}
-		return relationCreated;
+		accountWs.createRelationship2(patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), false, true, "PatientPrimaryCareProvider");
+		relationDataCache.remove(getCacheKey(myOscarLoggedInInfo, patientMyOscarUserId));		
 	}
 
 }
