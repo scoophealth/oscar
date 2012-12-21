@@ -106,5 +106,20 @@ public class SecurityDao  extends AbstractDao<Security> {
     	Query query = entityManager.createQuery(sql);
     	return query.getResultList();
     }
+    
+    public List<Security> findByProviderSite(String providerNo) {
+    	
+    	String queryStr = "select * from security s inner join providersite p on s.provider_no = p.provider_no " +
+    						"where p.site_id in(select site_id from providersite where provider_no=?)";
+    	
+        Query query = entityManager.createNativeQuery(queryStr, modelClass);
+        query.setParameter(1, providerNo);
+
+    	@SuppressWarnings("unchecked")
+        List<Security> secList = query.getResultList();
+    	
+    	return secList;
+    }
+
 	
 }
