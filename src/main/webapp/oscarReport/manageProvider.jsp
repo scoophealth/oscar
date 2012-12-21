@@ -129,8 +129,12 @@ function refresh() {
 		for(MyGroup mg: myGroupDao.getGroupByGroupNo(myGroup)) {
 			Provider p = providerDao.getProvider(mg.getId().getProviderNo());
 			status = "";
-			for(ReportProvider rp:reportProviderDao.findByProviderNoTeamAndAction(p.getProviderNo(), mg.getId().getMyGroupNo(), action)) {
-				status = rp.getStatus();
+			if (p != null) {
+				for(ReportProvider rp:reportProviderDao.findByProviderNoTeamAndAction(p.getProviderNo(), mg.getId().getMyGroupNo(), action)) {
+					status = rp.getStatus();
+				}
+			} else {
+				continue;
 			}
            
 %>
