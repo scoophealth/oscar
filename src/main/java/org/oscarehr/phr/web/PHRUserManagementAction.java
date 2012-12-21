@@ -71,6 +71,7 @@ import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.phr.util.MyOscarServerRelationManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
@@ -230,8 +231,6 @@ public class PHRUserManagementAction extends DispatchAction {
                 log.debug("Found template at /oscar/form/prop/" + template);
             }
 
-            // retrieve the total number of pages
-            int n = reader.getNumberOfPages();
             // retrieve the size of the first page
             Rectangle pSize = reader.getPageSize(1);
             float width = pSize.getWidth();
@@ -586,20 +585,26 @@ public class PHRUserManagementAction extends DispatchAction {
         return mapping.findForward("msgIndex");
     }
 
-    public ActionForward addPatientRelationship(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward addPatientRelationship(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) {
     	if (log.isDebugEnabled()){
     		WebUtils.dumpParameters(request);
     	}
+    	
     	String demoNo = request.getParameter("demoNo");
     	String myOscarUserName = request.getParameter("myOscarUserName");
 
-    	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-    	boolean patientRelationshipCreated = MyOscarServerRelationManager.addPatientRelationship(myOscarLoggedInInfo,  demoNo );
-    	log.debug("Patient Added: "+patientRelationshipCreated);
-		request.setAttribute("myOscarUserName",myOscarUserName);
-		request.setAttribute("demoNo",demoNo);
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		try {
+			MyOscarServerRelationManager.addPatientProviderRelationship(myOscarLoggedInInfo, demoNo);
+			log.debug("Patient Provider relationship added or confirmed. providerNo=" + LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo() + ", patientDemoraphicNo=" + demoNo);
+			request.setAttribute("myOscarUserName", myOscarUserName);
+			request.setAttribute("demoNo", demoNo);
+		} catch (Exception e) {
+			log.error("Unexpected error", e);
+		}
+
 		return mapping.findForward("relationfragment");
-    	
-    }
+
+	}
 
 }
