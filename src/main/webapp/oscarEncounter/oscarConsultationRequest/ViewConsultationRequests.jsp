@@ -24,73 +24,75 @@
 
 --%>
 
+<%@ page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
+<%@ page import="oscar.login.DBHelp"%>
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+
+<%@ page import="org.oscarehr.common.model.Site"%>
+<%@ page import="org.oscarehr.common.dao.SiteDao"%>
+
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%@page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
-<%@ page import="oscar.login.DBHelp"%>
-<%@ page import="java.sql.ResultSet"%>
-<%@page import="org.oscarehr.common.dao.SiteDao"%>
-<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
-<%@page import="org.oscarehr.common.model.Site"%>
 
 <%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
     boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
     List<String> mgrSite = new ArrayList<String>();
+    
+	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+
 %>
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
-</security:oscarSec>
-<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isTeamAccessPrivacy=true; %>
-</security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isSiteAccessPrivacy=true; %></security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isTeamAccessPrivacy=true; %></security:oscarSec>
 
 <% 
+List<ProviderData> pdList = null;
 HashMap<String,String> providerMap = new HashMap<String,String>();
+
 //multisites function
 if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-	String sqlStr = "select provider_no from provider ";
+
 	if (isSiteAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
-		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
+		pdList = providerDataDao.findByProviderSite(curProvider_no);
+	
 	if (isTeamAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
-				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
-	DBHelp dbObj = new DBHelp();
-	ResultSet rs = dbObj.searchDBRecord(sqlStr);
-	while (rs.next()) {
-		providerMap.put(rs.getString("provider_no"),"true");
+		pdList = providerDataDao.findByProviderTeam(curProvider_no);
+
+	for(ProviderData providerData : pdList) {
+		providerMap.put(providerData.getId(), "true");
 	}
-	rs.close();
 }
 %>
 
 <%
-	//multi-site office , save all bgcolor to Hashmap
-	HashMap<String,String> siteBgColor = new HashMap<String,String>();
-	HashMap<String,String> siteShortName = new HashMap<String,String>();
-	if (bMultisites) {
-    	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-    	
-    	List<Site> sites = siteDao.getAllSites();
-    	for (Site st : sites) {
-    		siteBgColor.put(st.getName(),st.getBgColor());
-    		siteShortName.put(st.getName(),st.getShortName());
-    	}
-    	List<Site> providerSites = siteDao.getActiveSitesByProviderNo(curProvider_no);
-    	for (Site st : providerSites) {
-    		mgrSite.add(st.getName());
-    	}
-	}
+//multi-site office , save all bgcolor to Hashmap
+HashMap<String,String> siteBgColor = new HashMap<String,String>();
+HashMap<String,String> siteShortName = new HashMap<String,String>();
+if (bMultisites) {
+   	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+   	
+   	List<Site> sites = siteDao.getAllSites();
+   	for (Site st : sites) {
+   		siteBgColor.put(st.getName(),st.getBgColor());
+   		siteShortName.put(st.getName(),st.getShortName());
+   	}
+   	List<Site> providerSites = siteDao.getActiveSitesByProviderNo(curProvider_no);
+   	for (Site st : providerSites) {
+   		mgrSite.add(st.getName());
+   	}
+}
 %>
 
 <html:html locale="true">
@@ -318,8 +320,8 @@ function setOrder(val){
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus"/>
                                    </a>
                                 </th>
-				 <th align="left" class="VCRheads" width="10%">
-					<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgUrgency"/>
+				 				<th align="left" class="VCRheads" width="10%">
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgUrgency"/>
                                 </th>
                                 <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('2'); return false;">
@@ -451,14 +453,14 @@ function setOrder(val){
                                     <% }else if(status.equals("4")) { %>
                                     <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgDONE"/>    
                                     <% } %>
-				</td>
+								</td>
                                 <td class="stat<%=status%>">
 			            <% if (urgency.equals("1")){ %>
-					<div style="color:red;"> Urgent </div>
+								<div style="color:red;"> Urgent </div>
                                     <% }else if(urgency.equals("2")) { %>
-					Non-Urgent
+										Non-Urgent
                                     <% }else if(urgency.equals("3")) { %>
-					Return
+										Return
                                     <% } %>
 
 
