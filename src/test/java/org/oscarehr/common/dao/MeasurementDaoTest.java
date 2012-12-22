@@ -209,4 +209,15 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 	public void testFindByValue() {
 		assertNotNull(dao.findByValue("ZPA", "ZPA"));
 	}
+
+    @Test
+    public void testFindObservationDatesByDemographicNoTypeAndMeasuringInstruction() {
+	    assertNotNull(dao.findObservationDatesByDemographicNoTypeAndMeasuringInstruction(100, "TYPE", "INSTR"));
+    }
+
+    @Test
+    public void testFindByDemographicNoTypeAndDate() {
+	    dao.findByDemographicNoTypeAndDate(100, "TUY", new Date());
+	    
+    }
 }

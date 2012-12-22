@@ -38,6 +38,7 @@ import org.oscarehr.common.model.Measurement;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class MeasurementDao extends AbstractDao<Measurement> {
 
 	public MeasurementDao() {
@@ -53,7 +54,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(1, demographicId);
 		query.setParameter(2, updatedAfterThisDate);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return (results);
@@ -71,7 +72,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(5, measurement.getDateObserved());
 		query.setParameter(6, measurement.getType());
 
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return results;
@@ -84,7 +85,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(1, demographicId);
 		query.setParameter(2, type);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return results;
@@ -96,7 +97,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicNo);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return results;
@@ -109,7 +110,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(1, demographicNo);
 		query.setParameter(2, type);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return results;
@@ -131,7 +132,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, appointmentNo);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return results;
@@ -144,7 +145,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(1, appointmentNo);
 		query.setParameter(2, type);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return results;
@@ -167,7 +168,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(2, startDate);
 		query.setParameter(3, endDate);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return (results);
@@ -178,7 +179,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
 
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		return (results);
@@ -190,7 +191,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	 * @param criteria
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<Measurement> find(SearchCriteria criteria) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		StringBuilder buf = new StringBuilder();
@@ -319,7 +320,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	 * @return
 	 * 		Returns the measurements found
 	 */
-	@SuppressWarnings("unchecked")
+	
     public List<Measurement> findByIdTypeAndInstruction(Integer demographicId, String type, String instructions) {
 		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " m WHERE m.demographicId = :demographicNo " + "AND m.type = :type " + "AND m.measuringInstruction = :measuringInstruction ORDER BY m.createDate DESC");
 		query.setParameter("demographicNo", demographicId);
@@ -342,7 +343,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter("types", lst);
 		
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> results = query.getResultList();
 
 		for (Measurement m : results) {
@@ -361,7 +362,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(3, startDate);
 		query.setParameter(4, endDate);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Measurement> rs = query.getResultList();
 		for (Measurement m : rs) {
 			results.put(m.getAppointmentNo(), true);
@@ -376,7 +377,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(1, demographicNo);
 		query.setParameter(2, d);
 		
-		@SuppressWarnings("unchecked")
+		
     	List<Measurement> rs = query.getResultList();
 		
     	HashMap<String,Measurement> map = new HashMap<String,Measurement>();
@@ -401,7 +402,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter("demographicNo",demographicNo);
 		query.setParameter("types", lst);
 		
-		@SuppressWarnings("unchecked")
+		
 		List<Date> results = query.getResultList();
 
 		return results;
@@ -417,7 +418,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	 * @return
 	 * 		Returns a list of tuples containing record data, observation date, lab no, abnormal value.
 	 */
-	@SuppressWarnings("unchecked")
+	
     public List<Object[]> findMeasurementsByDemographicIdAndLocationCode(Integer demoNo, String loincCode) {
 		String sql = "SELECT m.dataField, m.dateObserved, e1.val, e3.val " +
 				"FROM Measurement m, MeasurementsExt e1, MeasurementsExt e2, MeasurementsExt e3, MeasurementMap mm " +
@@ -437,7 +438,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return query.getResultList();	    
     }
     
-	@SuppressWarnings("unchecked")
+	
     public List<Object[]> findMeasurementsWithIdentifiersByDemographicIdAndLocationCode(Integer demoNo, String loincCode) {
 		String sql = "SELECT m.dataField, m.dateObserved, e1.val, e3.val, e4.val " + 
 				"FROM Measurement m, MeasurementsExt e1, MeasurementsExt e2, MeasurementsExt e3, MeasurementsExt e4, MeasurementMap mm " +
@@ -461,7 +462,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	    
     }
 
-	@SuppressWarnings("unchecked")
+	
     public List<Object> findLabNumbers(Integer demoNo, String identCode) {
 		String sql = "SELECT DISTINCT e2.val FROM Measurement m, MeasurementsExt e1, MeasurementsExt e2 " +
 				"WHERE m.id = e1.measurementId " +
@@ -483,7 +484,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return getSingleResultOrNull(query);
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<Object[]> findMeasurementsAndTypes(Integer demoNo) {
 		 String sql ="FROM Measurement m, MeasurementType mt " +
 		 		"WHERE m.demographicId = :demoNo " +
@@ -495,7 +496,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		 return query.getResultList();
     }
 
-    @SuppressWarnings("unchecked")
+    
 	public List<Object[]> findMeasurementsAndProviders(Integer measurementId) {
 		String sql = "FROM Measurement m, MeasurementType mt, Provider p "
 				+ "WHERE m.providerNo = p.ProviderNo "
@@ -506,7 +507,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	    return query.getResultList();
     }
 	
-	@SuppressWarnings("unchecked")
+	
 	public List<Object[]> findMeasurementsAndProvidersByType(String type, Integer demographicNo) {
 		  String sql = "FROM Measurement m, Provider p, MeasurementType mt " +
 		  		"WHERE m.providerNo = p.ProviderNo " +
@@ -535,7 +536,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter("demoNo", demographicNo);
 		query.setMaxResults(1);
 		
-		@SuppressWarnings("unchecked")
+		
         List<Object[]> result = query.getResultList();
 		if (result.isEmpty()) {
 			return null;
@@ -543,7 +544,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return result.get(0);
     }
 
-	@SuppressWarnings("unchecked")
+	
     public List<Measurement> findByValue(String key, String value){
 		Query q = entityManager.createQuery("SELECT m FROM Measurement m, MeasurementsExt e " +
 				"WHERE m.id = e.measurementId " +
@@ -553,5 +554,45 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		q.setParameter("val", value);
 		return q.getResultList();
 	}
+
+	
+    public List<Object> findObservationDatesByDemographicNoTypeAndMeasuringInstruction(Integer demo, String type, String mInstrc) {
+        String sql = "SELECT DISTINCT m.dateObserved FROM Measurement m " +
+        		"WHERE m.demographicId = :demo " +
+        		"AND m.type = :type " +
+        		"AND m.measuringInstruction = :mInstrc " + 
+                "ORDER BY m.dateObserved";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demo", demo);
+		query.setParameter("type", type);
+		query.setParameter("mInstrc", mInstrc);
+		return query.getResultList();
+    }
+    
+    public List<Measurement> findByDemographicNoTypeAndMeasuringInstruction(Integer demo, String type, String mInstrc) {
+        String sql = "SELECT m.dateObserved FROM Measurement m " +
+        		"WHERE m.demographicId = :demo " +
+        		"AND m.type = :type " +
+        		"AND m.measuringInstruction = :mInstrc " + 
+                "ORDER BY m.dateObserved";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demo", demo);
+		query.setParameter("type", type);
+		query.setParameter("mInstrc", mInstrc);
+		return query.getResultList();
+    }
+
+	public Measurement findByDemographicNoTypeAndDate(Integer demo, String type, java.util.Date date) {
+	    String sql =  "FROM Measurement m WHERE m.demographicId = :demo " +
+	    		"AND m.type = :type " + 
+                "AND m.dateObserved = :date " +
+                "ORDER BY m.createDate DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setMaxResults(1);
+		query.setParameter("demo", demo);
+		query.setParameter("type", type);
+		query.setParameter("date", date);
+		return getSingleResultOrNull(query);
+    }
 	
 }
