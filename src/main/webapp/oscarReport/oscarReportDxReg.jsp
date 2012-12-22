@@ -24,10 +24,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-            if (session.getAttribute("userrole") == null) {
-                response.sendRedirect("../logout.jsp");
-            }
-            String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
 objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
@@ -40,6 +37,16 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 <%@page import="java.util.*, java.sql.*"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@page import="org.oscarehr.common.model.MyGroup" %>
+
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+%>
 
 <html:html locale="true">
     <head>
@@ -234,12 +241,10 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                             <security:oscarSec roleName="<%=roleName$%>"
                                                objectName="_team_schedule_only" rights="r" reverse="false">
                                 <%
-                                        String provider_no = curUser_no;
-                                        List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
-                                        for (Map provider : resultList) {
+                                       for(Provider p : providerDao.getActiveProviders()) {
                                 %>
-                                <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
-                                    <%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+                                <option value="<%=p.getProviderNo()%>" <%=mygroupno.equals(p.getProviderNo())?"selected":""%>>
+                                    <%=p.getFormattedName()%></option>
                                     <%
                                             }
                                     %>
@@ -248,19 +253,18 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                             <security:oscarSec roleName="<%=roleName$%>"
                                                objectName="_team_schedule_only" rights="r" reverse="true">
                                 <%
-                                        List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
-                                        for (Map group : resultList) {
+                                		for(MyGroup g : myGroupDao.searchmygroupno() ){
+                                      
                                 %>
-                                <option value="<%="_grp_"+group.get("mygroup_no")%>"
-                                        <%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
+                                <option value="<%="_grp_"+g.getId().getMyGroupNo()%>"
+                                        <%=mygroupno.equals(g.getId().getMyGroupNo())?"selected":""%>><%=g.getId().getMyGroupNo()%></option>
                                 <%
                                         }
 
-                                        resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
-                                        for (Map provider : resultList) {
+                                        for(Provider p: providerDao.getActiveProviders()) {
                                 %>
-                                <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
-                                    <%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+                                <option value="<%=p.getProviderNo()%>" <%=mygroupno.equals(p.getProviderNo())?"selected":""%>>
+                                    <%=p.getFormattedName()%></option>
                                     <%
                                             }
                                     %>

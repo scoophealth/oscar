@@ -24,9 +24,7 @@
 
 --%>
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String provider_name = (String) session.getAttribute("userlastname")+", "+(String) session.getAttribute("userfirstname");
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
+ String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
   LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
   String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
 
@@ -44,14 +42,21 @@
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@ page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%>
 <%@page import="org.oscarehr.common.model.EForm"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="org.oscarehr.common.model.EncounterForm"%><html:html locale="true">
+<%@page import="org.oscarehr.common.model.EncounterForm"%>
+<%@page import="org.oscarehr.common.dao.CtlBillingServiceDao" %>
+<%@page import="org.oscarehr.common.model.CtlBillingService" %>
+<%
+	CtlBillingServiceDao ctlBillingServiceDao = SpringUtils.getBean(CtlBillingServiceDao.class);
+%>
+
+<html:html locale="true">
 
 <head>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
@@ -535,19 +540,18 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 <%
 	if (providerPreference!=null) {
 		String def = providerPreference.getDefaultServiceType();
-		List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
-		for (Map bill : resultList) {
+		for(Object[] result : ctlBillingServiceDao.getUniqueServiceTypes("A")) {
+
 %>
-				<option value="<%=bill.get("servicetype")%>"
-					<%=bill.get("servicetype").equals(def)?"selected":""%>>
-					<%=bill.get("servicetype_name")%></option>
+				<option value="<%=(String)result[0]%>"
+					<%=((String)result[0]).equals(def)?"selected":""%>>
+					<%=(String)result[1]%></option>
 <%
 		}
 	} else {
-		List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
-		for (Map bill : resultList) {
+		for(Object[] result : ctlBillingServiceDao.getUniqueServiceTypes("A")) {
 %>
-		<option value="<%=bill.get("servicetype")%>"><%=bill.get("servicetype_name")%></option>
+		<option value="<%=(String)result[0]%>"><%=(String)result[1]%></option>
 <%
 		}
 	}

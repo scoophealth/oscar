@@ -46,7 +46,8 @@
 <%@ page import="org.oscarehr.common.model.Site" %>
 <%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
 <%@ page import="org.oscarehr.common.model.MyGroup" %>
-
+<%@ page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
+<%@ page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -65,6 +66,7 @@
 	SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	ScheduleTemplateCodeDao scheduleTemplateCodeDao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
 %>
 
 <%
@@ -902,12 +904,12 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
      }
 }
 
-   resultList = oscarSuperManager.find("providerDao", "search_timecode", new Object[] {});
-   for (Map appt : resultList) {
-     dateTimeCodeBean.put("description"+appt.get("code"), appt.get("description"));
-     dateTimeCodeBean.put("duration"+appt.get("code"), appt.get("duration"));
-     dateTimeCodeBean.put("color"+appt.get("code"), (appt.get("color")==null || "".equals(appt.get("color")))?bgcolordef:appt.get("color"));
-     dateTimeCodeBean.put("confirm" + appt.get("code"), appt.get("confirm"));
+	for(ScheduleTemplateCode stc : scheduleTemplateCodeDao.findAll()) {
+   
+     dateTimeCodeBean.put("description"+stc.getCode(), stc.getDescription());
+     dateTimeCodeBean.put("duration"+stc.getCode(), stc.getDuration());
+     dateTimeCodeBean.put("color"+stc.getCode(), (stc.getColor()==null || "".equals(stc.getColor()))?bgcolordef:stc.getColor());
+     dateTimeCodeBean.put("confirm" + stc.getCode(), stc.getConfirm());
    }
 
 java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
@@ -1256,14 +1258,13 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_team_schedule_only" rights="r" reverse="false">
 <%
 	String provider_no = curUser_no;
-	resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
-	for (Map provider : resultList) {
-		boolean skip = checkRestriction(restrictions,(String)provider.get("provider_no"));
+	for(Provider p : providerDao.getActiveProviders()) {
+		boolean skip = checkRestriction(restrictions,p.getProviderNo());
 		if(!skip) {
 
 %>
-<option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
-		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+<option value="<%=p.getProviderNo()%>" <%=mygroupno.equals(p.getProviderNo())?"selected":""%>>
+		<%=p.getFormattedName()%></option>
 <%
 	} }
 %>
@@ -1272,14 +1273,14 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_team_schedule_only" rights="r" reverse="true">
 <%
 	request.getSession().setAttribute("archiveView","false");
-	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
-	for (Map group : resultList) {
-		boolean skip = checkRestriction(restrictions,(String)group.get("mygroup_no"));
+	for(MyGroup g : myGroupDao.searchmygroupno()) {
+	
+		boolean skip = checkRestriction(restrictions,g.getId().getMyGroupNo());
 
-		if (!skip && (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(group.get("mygroup_no")))) {
+		if (!skip && (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(g.getId().getMyGroupNo()))) {
 %>
-  <option value="<%="_grp_"+group.get("mygroup_no")%>"
-		<%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
+  <option value="<%="_grp_"+g.getId().getMyGroupNo()%>"
+		<%=mygroupno.equals(g.getId().getMyGroupNo())?"selected":""%>><%=g.getId().getMyGroupNo()%></option>
 <%
 		}
 	}
@@ -1414,12 +1415,12 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
        dateTimeCodeBean.put(String.valueOf(provider.get("provider_no")), String.valueOf(provider.get("timecode")));
      }
 
-     resultList = oscarSuperManager.find("providerDao", "search_timecode", new Object[] {});
-     for (Map appt : resultList) {
-       dateTimeCodeBean.put("description"+appt.get("code"), appt.get("description"));
-       dateTimeCodeBean.put("duration"+appt.get("code"), appt.get("duration"));
-       dateTimeCodeBean.put("color"+appt.get("code"), (appt.get("color")==null || "".equals(appt.get("color")))?bgcolordef:appt.get("color"));
-       dateTimeCodeBean.put("confirm" + appt.get("code"), appt.get("confirm"));
+     for(ScheduleTemplateCode stc : scheduleTemplateCodeDao.findAll()) {
+     
+       dateTimeCodeBean.put("description"+stc.getCode(), stc.getDescription());
+       dateTimeCodeBean.put("duration"+stc.getCode(), stc.getDuration());
+       dateTimeCodeBean.put("color"+stc.getCode(), (stc.getColor()==null || "".equals(stc.getColor()))?bgcolordef:stc.getColor());
+       dateTimeCodeBean.put("confirm" + stc.getCode(), stc.getConfirm());
      }
 
         // move the calendar forward one day
