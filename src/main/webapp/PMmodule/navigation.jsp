@@ -143,42 +143,9 @@
 
 </script>
 
-<!--
-	 <div id="navcolumn">
-     <table border="0" cellspacing="0" cellpadding="4">
-         <tr>
-            <td align="left">
-                <table border="0" cellpadding="0" cellspacing="2">
-                    <tr>
-                        <td nowrap="nowrap" width="120">
-                            <div align="center">
-                                <img src="<html:rewrite page="/images/caisi_1.jpg" />" alt="Caisi" id="caisilogo"
-                                     border="0"/>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td nowrap="nowrap" width="120">
-                            <div align="center">
-                                <%
-                                    ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-                                %>
-                                <span style="font-weight:bold"></span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
--->
 <div id="projecttools" class="toolgroup">
 <div class="label"><strong>Navigator</strong></div>
-<div class="body"><!-- <div>
-        <span><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></span>
-    </div>
--->
+<div class="body">
 <div><span>Client Management</span> <security:oscarSec
 	roleName="<%=roleName$%>" objectName="_pmm.clientSearch" rights="r">
 	<div><html:link action="/PMmodule/ClientSearch2.do">Search Client</html:link>
@@ -228,10 +195,7 @@
                 %>
 		</div>
 	</security:oscarSec>
-</c:if> <!--    <div>
-        <span><a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a></span>
-    </div>
--->
+</c:if> 
 
 <div>
 	
@@ -304,22 +268,7 @@
 
 	<div><a HREF="#" ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin
 	Page</a></div>
-	<!--
-                   	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-                   	<div>
-                   		<html:link action="/Lookup/LookupTableList.do">Lookup Field Editor</html:link>
-                  	</div>
-                    </caisi:isModuleLoad>
---></div>
-</security:oscarSec> <!--
-         <security:oscarSec roleName="<%=roleName$%>"
-                               objectName="_pmm.caisiRoles"
-                               rights="r">
-        <div><div>
-            <span><a href="javascript.void(0);"
-                     onclick="window.open('<html:rewrite action="/CaisiRole.do"/>','caisi_role','width=500,height=500');return false;">Caisi
-                Roles</a></span>
-        </div></div>
-		</security:oscarSec>
---></div>
+	</div>
+</security:oscarSec> 
+</div>
 </div>

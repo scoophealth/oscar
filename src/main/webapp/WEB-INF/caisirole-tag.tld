@@ -8,21 +8,6 @@
 	<uri>http://www.caisi.ca</uri>
 	<info>Caisi Role Tags Library</info>
 	<tag>
-		<name>SecurLevel</name>
-		<tagclass>org.oscarehr.casemgmt.common.SecurLevel</tagclass>
-		<bodycontent>jsp</bodycontent>
-		<attribute>
-			<name>greaterEqual</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>providerNo</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
 		<name>SecurityAccess</name>
 		<tagclass>org.oscarehr.casemgmt.common.SecurityAccess</tagclass>
 		<bodycontent>jsp</bodycontent>

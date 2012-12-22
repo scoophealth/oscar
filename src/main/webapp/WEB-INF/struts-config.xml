@@ -594,9 +594,6 @@
 			<forward name="list" path="/caisicore/issueAdminList.jsp" />
 			<forward name="edit" path="/caisicore/issueAdminForm.jsp" />
 		</action>
-		<action path="/CaisiRole" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" name="inputForm">
-			<forward name="edit" path="/caisicore/CaisiRoleForm.jsp" />
-		</action>
 		<action path="/infirm" type="org.caisi.core.web.InfirmAction" name="inputForm" scope="request" parameter="action"></action>
 		<!-- Login -->
 		<action input="/login.jsp" name="loginForm" path="/login" scope="request" type="oscar.login.LoginAction" validate="true">
