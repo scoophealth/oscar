@@ -51,8 +51,8 @@
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Demographic Extention</title>
-<!--I18n-->
+<title><bean:message key="demographic.demographiceditdemographic.msgAddRelation" />  </title>
+<!--I18n--> 
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css" />
 
@@ -75,7 +75,7 @@ function newWindow(file,window) {
 <!--  -->
 <table class="MainTable" id="scrollNumber1">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">Add Relation</td>
+		<td class="MainTableTopRowLeftColumn"><bean:message key="demographic.demographiceditdemographic.msgAddRelation" /></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
@@ -91,9 +91,14 @@ function newWindow(file,window) {
 		</td>
 	</tr>
 	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp; <a
-			href="<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=creatorDemo%>">Back
-		to PMM </a></td>
+		<td class="MainTableLeftColumn" valign="top">&nbsp; 
+		<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){ %>
+		
+			<a href="<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=creatorDemo%>">Back to PMM </a>
+		
+		<%} %>
+		
+		</td>
 		<td valign="top" class="MainTableRightColumn">
 
 		<form id="ADDAPPT" method="post"
