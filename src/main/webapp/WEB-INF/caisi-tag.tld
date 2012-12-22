@@ -36,12 +36,6 @@
     <info>Oscar Tag</info>
 </tag>
 <tag>
-    <name>CaisiRoleLink</name>
-    <tagclass>org.oscarehr.PMmodule.common.CaisiRoleLinkTag</tagclass>
-    <bodycontent>empty</bodycontent>
-    <info>Caisi Role link Tag</info>
-</tag>
-<tag>
     <name>OscarDemographicLink</name>
     <tagclass>org.oscarehr.PMmodule.common.OscarDemographicLinkTag</tagclass>
     <bodycontent>empty</bodycontent>

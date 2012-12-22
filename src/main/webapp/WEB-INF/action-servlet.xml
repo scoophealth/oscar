@@ -51,7 +51,6 @@
 	<bean name="/SystemMessage" class="org.caisi.core.web.SystemMessageAction" singleton="false" autowire="byName" />
 	<bean name="/FacilityMessage" class="org.caisi.core.web.FacilityMessageAction" singleton="false" autowire="byName" />
 	<bean name="/issueAdmin" class="org.caisi.core.web.IssueAdminAction" singleton="false" autowire="byName" />
-	<bean name="/CaisiRole" class="org.caisi.core.web.RoleAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ClientSearch2" class="org.oscarehr.PMmodule.web.ClientSearchAction2" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false" autowire="byName">
 		<property name="caseManagementManager" ref="caseManagementManager" />

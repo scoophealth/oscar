@@ -325,17 +325,9 @@ div.logoutBox {
 				<bean:message key="admin.admin.systemMessage" />
 			</html:link></li>
 			<li><html:link action="/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></html:link></li>
-			<!--
-			<li><html:link action="/Lookup/LookupTableList.do"> <bean:message key="admin.admin.LookupFieldEditor" /></html:link></li>
-			-->
 			<li><html:link action="/issueAdmin.do?method=list">
 				<bean:message key="admin.admin.issueEditor" />
 			</html:link></li>
-			<!--
-			<li><html:link action="/CaisiRole.do">
-				<bean:message key="admin.admin.caisiRole" />
-			</html:link></li>
-			-->
 			<li><html:link action="/SurveyManager.do">
 				<bean:message key="admin.admin.surveyManager" />
 			</html:link></li>
@@ -367,12 +359,6 @@ div.logoutBox {
 				objectName="_admin.issueEditor" rights="r">
 				<li><html:link action="/issueAdmin.do?method=list">
 					<bean:message key="admin.admin.issueEditor" />
-				</html:link></li>
-			</security:oscarSec>
-			<security:oscarSec roleName="<%=roleName$%>"
-				objectName="_admin.caisiRoles" rights="r">
-				<li><html:link action="/CaisiRole.do">
-					<bean:message key="admin.admin.caisiRole" />
 				</html:link></li>
 			</security:oscarSec>
 			<security:oscarSec roleName="<%=roleName$%>"
