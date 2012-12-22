@@ -29,8 +29,19 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleHolidayDao" %>
+<%@ page import="org.oscarehr.common.model.ScheduleHoliday" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@ page import="org.oscarehr.common.model.MyGroup" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@page import="oscar.util.ConversionUtils" %>
+
 <%
 	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+    ScheduleHolidayDao scheduleHolidayDao = SpringUtils.getBean(ScheduleHolidayDao.class);
+    MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+    ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
 
 <%!
@@ -66,7 +77,6 @@ private String getSiteHTML(String reason, List<Site> sites) {
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
-  if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
   String curUser_no, curProvider_no,userfirstname,userlastname,mygroupno,n_t_w_w="";
   curProvider_no = (String) session.getAttribute("user");
   String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -259,10 +269,9 @@ if (bMultisites) {
   List<Map<String, Object>> resultList = null;
   //initial holiday bean
   if(scheduleHolidayBean.isEmpty() ) {
-    resultList = oscarSuperManager.find("providerDao", "search_scheduleholiday", new String[] {(year-1)+"-"+month+"-01"});
-    for (Map holiday : resultList) {
-      scheduleHolidayBean.put(String.valueOf(holiday.get("sdate")), new HScheduleHoliday(String.valueOf(holiday.get("holiday_name"))));
-    }
+	 for(ScheduleHoliday sd: scheduleHolidayDao.findAfterDate(ConversionUtils.fromDateString((year-1)+"-"+month+"-01"))) {
+		 scheduleHolidayBean.put(ConversionUtils.toDateString(sd.getId()), new HScheduleHoliday(sd.getHolidayName()));
+	 } 
   }
   //declare display schedule string
   StringBuffer bgcolor = new StringBuffer();
@@ -275,10 +284,10 @@ if (bMultisites) {
   //initial myGrp bean
   if(providerview.startsWith("_grp_",0)) {
 	String curGrp = providerview.substring(5);
-	resultList = oscarSuperManager.find("providerDao", "searchmygroupprovider", new Object[] {curGrp});
-	for (Map provider : resultList) {
-		myGrpBean.setProperty(String.valueOf(provider.get("provider_no")), curGrp);
+	for(MyGroup g:myGroupDao.getGroupByGroupNo(curGrp)) {
+		myGrpBean.setProperty(g.getId().getProviderNo(), curGrp);	
 	}
+	
   }
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);   
 %>
@@ -642,12 +651,12 @@ function refreshTabAlerts(id) {
 <%
 	isTeamOnly=true;
 	String provider_no = curUser_no;
-	resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
-	for (Map provider : resultList) {
-		providerNameBean.setDef(String.valueOf(provider.get("provider_no")), provider.get("last_name")+","+provider.get("first_name"));		
+	for(Provider p : providerDao.getActiveProviders()) {
+	
+		providerNameBean.setDef(p.getProviderNo(), p.getLastName()+","+p.getFirstName());		
 %>
-					<option value="<%=provider.get("provider_no")%>"
-						<%=providerview.equals(provider.get("provider_no"))?"selected":""%>><%=providerNameBean.getShortDef(String.valueOf(provider.get("provider_no")), "", NameMaxLen)%></option>
+					<option value="<%=p.getProviderNo()%>"
+						<%=providerview.equals(p.getProviderNo())?"selected":""%>><%=providerNameBean.getShortDef(p.getProviderNo(), "", NameMaxLen)%></option>
 <%
 	}
 %>
@@ -656,24 +665,23 @@ function refreshTabAlerts(id) {
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_team_schedule_only" rights="r" reverse="true">				
 <%
-	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
-	for (Map group : resultList) {
-		if (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(group.get("mygroup_no"))) {  		
+	for(MyGroup g : myGroupDao.searchmygroupno()) {
+	
+		if (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(g.getId().getMyGroupNo())) {  		
 %>
-					<option value="<%="_grp_"+group.get("mygroup_no")%>"
-						<%=(providerview.indexOf("_grp_") != -1 && mygroupno.equals(group.get("mygroup_no")))?"selected":""%>><bean:message
-						key="provider.appointmentprovideradminmonth.formGRP" />: <%=group.get("mygroup_no")%></option>
+					<option value="<%="_grp_"+g.getId().getMyGroupNo()%>"
+						<%=(providerview.indexOf("_grp_") != -1 && mygroupno.equals(g.getId().getMyGroupNo()))?"selected":""%>><bean:message
+						key="provider.appointmentprovideradminmonth.formGRP" />: <%=g.getId().getMyGroupNo()%></option>
 <%
 		}
 	}
 
-	resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
-	for (Map provider : resultList) {
-		if (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(provider.get("provider_no"))) { 
-		providerNameBean.setDef(String.valueOf(provider.get("provider_no")), provider.get("last_name")+","+provider.get("first_name"));
+	for(Provider p : providerDao.getActiveProviders()) {
+		if (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(p.getProviderNo())) { 
+		providerNameBean.setDef(p.getProviderNo(), p.getLastName()+","+p.getFirstName());
 %>
-					<option value="<%=provider.get("provider_no")%>"
-						<%=providerview.equals(provider.get("provider_no"))?"selected":""%>><%=providerNameBean.getShortDef(String.valueOf(provider.get("provider_no")), "", NameMaxLen)%></option>
+					<option value="<%=p.getProviderNo()%>"
+						<%=providerview.equals(p.getProviderNo())?"selected":""%>><%=providerNameBean.getShortDef(p.getProviderNo(), "", NameMaxLen)%></option>
 <%
 		}
 	}
