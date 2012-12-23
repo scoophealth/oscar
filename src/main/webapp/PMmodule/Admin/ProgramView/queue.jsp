@@ -216,7 +216,7 @@ String reason ="";
 			title="<bean:message key="global.encounter"/>"> <bean:message
 			key="provider.appointmentProviderAdminDay.btnE" /></a>&nbsp;&nbsp;
 		<a href=#
-			onClick="popupPage(710,1024,'../PMmodule/remoteReferal.do?appointment=<%=demographic_no%>&fdid=<%=curform.get("fdid")%>','0'); return false;"
+			onClick="popupPage(710,1024,'<%=request.getContextPath()%>/eform/efmshowform_data.jsp?demographicNo=<%=demographic_no%>&fdid=<%=curform.get("fdid")%>','0'); return false;"
 			title="<bean:message key="global.remoteReferral"/>"> <bean:message
 			key="provider.appointmentProviderAdminDay.btnI"/></a>
 		
