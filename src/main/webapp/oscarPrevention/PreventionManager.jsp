@@ -49,7 +49,7 @@
 <html:html locale="true">
 <head>
 
-<title>oscarPrevention - <bean:message key="admin.admin.preventionNotification.title" /></title>
+<title><bean:message key="oscarprevention.index.oscarpreventiontitre" /> - <bean:message key="admin.admin.preventionNotification.title" /></title>
 
 <script type="text/javascript">
 <!--

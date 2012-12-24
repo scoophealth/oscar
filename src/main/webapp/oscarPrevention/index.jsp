@@ -97,7 +97,7 @@
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>oscarPrevention</title>
+<title><bean:message key="oscarprevention.index.oscarpreventiontitre" /></title>
 <!--I18n-->
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css" />
@@ -421,7 +421,7 @@ text-align:left;
 <%=WebUtils.popErrorAndInfoMessagesAsHtml(session)%>
 <table class="MainTable" id="scrollNumber1">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">oscarPrevention</td>
+		<td class="MainTableTopRowLeftColumn"><bean:message key="oscarprevention.index.oscarpreventiontitre" /></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
