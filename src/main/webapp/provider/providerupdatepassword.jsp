@@ -38,7 +38,6 @@
 <%@ page import="org.oscarehr.common.model.Security" %>
 <%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
 	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);

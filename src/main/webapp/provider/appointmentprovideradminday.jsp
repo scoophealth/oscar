@@ -197,12 +197,11 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 <jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
 <jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
 <% Properties oscarVariables = OscarProperties.getInstance(); %>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <!-- Struts for i18n -->
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<% PreventionManager prevMgr = (PreventionManager)webApplicationContext.getBean("preventionMgr");%>
+<% PreventionManager prevMgr = (PreventionManager)SpringUtils.getBean("preventionMgr");%>
 <%!
 /**
 Checks if the schedule day is patients birthday
@@ -387,8 +386,6 @@ if (apptDate.before(minDate)) {
     allowWeek = "No";
 }
 %>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="oscar.util.*"%>
 <%@page import="oscar.oscarDB.*"%>
 
@@ -1342,9 +1339,6 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 </logic:notEqual>
 
 <logic:equal name="infirmaryView_isOscar" value="false">
-<%
-	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-%>
 &nbsp;&nbsp;&nbsp;&nbsp;
 </logic:equal>
 

@@ -160,7 +160,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 <% 
 if (bMultisites) {
-	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 	sites = siteDao.getAllActiveSites(); 
 	
 	String requestSite = request.getParameter("site") ;
@@ -217,7 +217,6 @@ if (bMultisites) {
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
 <jsp:useBean id="myGrpBean" class="java.util.Properties" scope="page" />
 
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
 	String prov=  oscarVariables.getProperty("billregion","").trim().toUpperCase();

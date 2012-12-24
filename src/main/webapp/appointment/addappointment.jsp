@@ -46,7 +46,6 @@
 
   String duration = request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin) ;
 %>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*, oscar.appt.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
 <%@ page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
@@ -745,7 +744,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <%
 				    // multisites start ==================
 				    boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-				    SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+				    SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 				    List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
 				    // multisites end ==================
 

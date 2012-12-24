@@ -28,7 +28,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
 <%@ page import="org.oscarehr.common.dao.SecurityDao" %>

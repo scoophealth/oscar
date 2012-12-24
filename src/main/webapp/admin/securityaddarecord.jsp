@@ -50,7 +50,6 @@
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.Provider" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>

@@ -30,7 +30,6 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%@ page import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>

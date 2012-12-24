@@ -28,7 +28,6 @@
 <%@ page import="org.oscarehr.event.EventService, org.oscarehr.util.SpringUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>

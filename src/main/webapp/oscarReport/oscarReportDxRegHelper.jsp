@@ -21,10 +21,10 @@
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.dao.Icd9Dao"%>
 <%@page import="org.oscarehr.common.model.Icd9"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%
 
-            Icd9Dao icd9dao = (Icd9Dao) webApplicationContext.getBean("Icd9DAO");
+            Icd9Dao icd9dao = (Icd9Dao) SpringUtils.getBean("Icd9DAO");
 
 
             String query = request.getParameter("q");
