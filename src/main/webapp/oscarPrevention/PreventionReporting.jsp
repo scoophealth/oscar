@@ -53,7 +53,7 @@
 
 <head>
 <html:base/>
-<title>oscarPrevention</title><!-- i18n -->
+<title><bean:message key="oscarprevention.index.oscarpreventiontitre" /></title><!-- i18n -->
 
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
@@ -348,7 +348,7 @@ table.ele thead {
     <table  class="MainTable" id="scrollNumber1" >
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn" width="100" >
-               oscarPrevention
+               <bean:message key="oscarprevention.index.oscarpreventiontitre" />
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
