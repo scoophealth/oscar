@@ -259,22 +259,22 @@
 		<servlet-class>oscar.DocumentUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-	<servlet>
-		<servlet-name>FileUpload</servlet-name>
-		<servlet-class>FileUpload</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>FileUpload2</servlet-name>
-		<servlet-class>FileUpload2</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>Uploader</servlet-name>
-		<servlet-class>Uploader</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>newUploader</servlet-name>
-		<servlet-class>oscar.newOscarLab.Uploader</servlet-class>
-	</servlet>
+	<!--<servlet>-->
+		<!--<servlet-name>FileUpload</servlet-name>-->
+		<!--<servlet-class>FileUpload</servlet-class>-->
+	<!--</servlet>-->
+	<!--<servlet>-->
+		<!--<servlet-name>FileUpload2</servlet-name>-->
+		<!--<servlet-class>FileUpload2</servlet-class>-->
+	<!--</servlet>-->
+	<!--<servlet>-->
+		<!--<servlet-name>Uploader</servlet-name>-->
+		<!--<servlet-class>Uploader</servlet-class>-->
+	<!--</servlet>-->
+	<!--<servlet>-->
+		<!--<servlet-name>newUploader</servlet-name>-->
+		<!--<servlet-class>oscar.newOscarLab.Uploader</servlet-class>-->
+	<!--</servlet>-->
 	<servlet>
 		<servlet-name>HsfoQuartzSchedulerServlet</servlet-name>
 		<servlet-class>oscar.form.study.hsfo2.pageUtil.HsfoQuartzServlet</servlet-class>
@@ -284,10 +284,10 @@
 		<servlet-name>PatientListByAppointment</servlet-name>
 		<servlet-class>oscar.oscarReport.data.PatientListByAppt</servlet-class>
 	</servlet>
-	<servlet>
-		<servlet-name>RxCloneService</servlet-name>
-		<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class>
-	</servlet>
+	<!--<servlet>-->
+		<!--<servlet-name>RxCloneService</servlet-name>-->
+		<!--<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class>-->
+	<!--</servlet>-->
 	<servlet>
 		<servlet-name>ImageRenderingServlet</servlet-name>
 		<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class>
@@ -301,15 +301,15 @@
 		<servlet-class>org.oscarehr.web.eform.EformViewForPdfGenerationServlet</servlet-class>
 	</servlet>
 
-	<servlet>
-		<servlet-name>LabViewForPdfGenerationServlet</servlet-name>
-		<servlet-class>oscar.oscarLab.ca.all.pageUtil.LabViewForPdfGenerationServlet</servlet-class>
-	</servlet>
+	<!--<servlet>-->
+		<!--<servlet-name>LabViewForPdfGenerationServlet</servlet-name>-->
+		<!--<servlet-class>oscar.oscarLab.ca.all.pageUtil.LabViewForPdfGenerationServlet</servlet-class>-->
+	<!--</servlet>-->
 
-	<servlet-mapping>
-		<servlet-name>LabViewForPdfGenerationServlet</servlet-name>
-		<url-pattern>/LabViewForPdfGenerationServlet</url-pattern>
-	</servlet-mapping>
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>LabViewForPdfGenerationServlet</servlet-name>-->
+		<!--<url-pattern>/LabViewForPdfGenerationServlet</url-pattern>-->
+	<!--</servlet-mapping>-->
 
 	<servlet>
 		<servlet-name>EFormViewForPdfGenerationServlet</servlet-name>
@@ -419,26 +419,26 @@
 		<servlet-name>PatientListByAppointment</servlet-name>
 		<url-pattern>/patientlistbyappt</url-pattern>
 	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>FileUpload</servlet-name>
-		<url-pattern>/FileUpload</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>FileUpload2</servlet-name>
-		<url-pattern>/FileUpload2</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Uploader</servlet-name>
-		<url-pattern>/Uploader</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>newUploader</servlet-name>
-		<url-pattern>/newUploader</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>RxCloneService</servlet-name>
-		<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern>
-	</servlet-mapping>
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>FileUpload</servlet-name>-->
+		<!--<url-pattern>/FileUpload</url-pattern>-->
+	<!--</servlet-mapping>-->
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>FileUpload2</servlet-name>-->
+		<!--<url-pattern>/FileUpload2</url-pattern>-->
+	<!--</servlet-mapping>-->
+	<!--&lt;!&ndash;<servlet-mapping>&ndash;&gt;-->
+		<!--&lt;!&ndash;<servlet-name>Uploader</servlet-name>&ndash;&gt;-->
+		<!--&lt;!&ndash;<url-pattern>/Uploader</url-pattern>&ndash;&gt;-->
+	<!--</servlet-mapping>-->
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>newUploader</servlet-name>-->
+		<!--<url-pattern>/newUploader</url-pattern>-->
+	<!--</servlet-mapping>-->
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>RxCloneService</servlet-name>-->
+		<!--<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern>-->
+	<!--</servlet-mapping>-->
 	<servlet-mapping>
 		<servlet-name>ImageRenderingServlet</servlet-name>
 		<url-pattern>/imageRenderingServlet</url-pattern>
