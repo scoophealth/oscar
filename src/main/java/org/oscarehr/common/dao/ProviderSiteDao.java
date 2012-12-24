@@ -62,5 +62,15 @@ public class ProviderSiteDao extends AbstractDao<ProviderSite>{
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("pNo", provider_no);
 		return query.getResultList();
+	}
+
+	public List<String> findByProviderNoBySiteName(String siteName) {
+	    	String sql = "select x.id.providerNo from ProviderSite x, Site s where x.id.siteId=s.siteId and s.name=?";
+    		Query query = entityManager.createQuery(sql);
+   	 	query.setParameter(1,siteName);
+
+       		@SuppressWarnings("unchecked")
+       	 	List<String> results = query.getResultList();
+        	return results;
     }
 }

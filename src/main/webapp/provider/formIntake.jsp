@@ -15,8 +15,13 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+
+
 <%
 	MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 %>
 
 <%@page import="oscar.OscarProperties" %>
@@ -411,13 +416,14 @@ if (selfSubmit) {
 }
 
 // no submit
-String demographicQuery = "intake_demographic";
 String[] demographicParam = new String[1];
 demographicParam[0] = demographic_no;
-List<Map<String, Object>> demographicResult = oscarSuperManager.find("providerDao", demographicQuery, demographicParam);
-String demographicName = demographicResult.get(0).get("last_name").toString() + ", " + demographicResult.get(0).get("first_name").toString();
-java.util.Date demographicDOB = new GregorianCalendar(Integer.parseInt(demographicResult.get(0).get("year_of_birth").toString()), Integer.parseInt(demographicResult.get(0).get("month_of_birth").toString())-1, Integer.parseInt(demographicResult.get(0).get("date_of_birth").toString())).getTime();
-String demographicBirthYear = demographicResult.get(0).get("year_of_birth").toString();
+
+
+Demographic demographic = demographicDao.getDemographic(demographic_no);
+String demographicName = demographic.getFormattedName();
+java.util.Date demographicDOB = new GregorianCalendar(Integer.parseInt(demographic.getYearOfBirth()), Integer.parseInt(demographic.getMonthOfBirth())-1, Integer.parseInt(demographic.getDateOfBirth())).getTime();
+String demographicBirthYear = demographic.getYearOfBirth();
 
 String remindersQuery = "intake_reminders";
 List<Map<String, Object>> remindersResult = oscarSuperManager.find("providerDao", remindersQuery, demographicParam);
