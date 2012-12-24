@@ -53,7 +53,6 @@
 <%@ page errorPage="../errorpage.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
-<%@ page import="oscar.oscarBilling.data.BillingONDataHelp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%

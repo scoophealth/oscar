@@ -27,6 +27,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -45,6 +47,8 @@ public class DemographicDaoTest extends DaoTestFixtures {
 				"health_safety", "provider", "providersite", "site", "program_team","log", "Facility");
 	}
 
+	
+	
 	@Test
 	public void testCreate() throws Exception {
 		Demographic entity = new Demographic();
@@ -248,4 +252,21 @@ public class DemographicDaoTest extends DaoTestFixtures {
 	public void testGetAllProviderNumers() {
 		assertNotNull(dao.getAllProviderNumbers());
 	}
+
+    @Test
+    public void testFindByField() {
+    	assertNotNull(dao.findByField("DemographicNo", "", "DemographicNo", 0));
+    	
+    	for(String s : new String[] {"LastName", "FirstName", "ChartNo", "Sex", "YearOfBirth", "PatientStatus"}) {    		
+    		assertNotNull(dao.findByField(s, "BLAH", "DemographicNo", 0));
+    	}
+    	
+    }
+
+	@Override
+    protected List<String> getSimpleExceptionTestExcludes() {
+		List<String> result = super.getSimpleExceptionTestExcludes();
+		result.add("findByField");
+	    return result;
+    }
 }

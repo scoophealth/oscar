@@ -164,8 +164,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:List aL = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:Vector ret = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/ResultSetBuilder.java:private Map attribs = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/ResultSetBuilder.java:private Map names = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoChartLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:h = new Hashtable();</ViolationValue>
@@ -1105,11 +1103,9 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:rs = DBHandler.GetSQL(p);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:rs = DBHandler.GetSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingONDataHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/ArchiveDeletedRecords.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_DATE)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_INT)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING)){</ViolationValue>
@@ -1167,8 +1163,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sqlValidation);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/MeasurementGraphAction2.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rsData = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctViewAttachmentAction.java:rs = DBHandler.GetSQL("SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "</ViolationValue>
@@ -1325,7 +1319,6 @@
         <ViolationValue>/src/main/webapp/form/study/diabetetracker.jsp:ResultSet rsdemo = DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+ demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/dm2ping.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/dmdata.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo+" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/demo_select.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:ResultSet rs = DBHandler.GetSQL("select m.* from hl7_pid p, hl7_message m where p.pid_id=" + pid + " and p.message_id=m.message_id");</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_signed.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_doc_notes.replaceAll("@pid", pid));</ViolationValue>
@@ -1336,7 +1329,6 @@
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
