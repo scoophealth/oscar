@@ -478,4 +478,11 @@ public class ProviderDao extends HibernateDaoSupport {
 					"ORDER BY p.LastName, p.FirstName";
 			return getHibernateTemplate().find(sql);
 		}
+		public List<String> getProvidersInTeam(String teamName) {
+			@SuppressWarnings("unchecked")
+			List<String> providerList = getHibernateTemplate().find("select distinct p.ProviderNo from Provider p  where p.Team = ?",new Object[]{teamName});
+			
+			return providerList;
+		}
+		
 }

@@ -59,7 +59,7 @@ public class ProviderDao extends OscarSuperDao {
 			{"searchloginteam", "select provider_no, last_name, first_name from provider where (provider_no=? || team=(select team from provider where provider_no=?)) and status='1' order by last_name"},
 			{"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
 			{"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" },
-			{"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? and status = 'A' order by sdate" },
+			{"search_scheduledate_datep",   "select * from scheduledate where sdate between ? and ? and status = 'A' order by sdate" },
 			{"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? and status = 'A' order by sdate" },
 			{"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=? and status = 'A'" },
             {"search_signed_confidentiality", "select signed_confidentiality from provider where provider_no = ?"},
