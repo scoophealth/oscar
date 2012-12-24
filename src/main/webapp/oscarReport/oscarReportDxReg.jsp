@@ -35,7 +35,6 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 <%@page import="org.oscarehr.common.model.Dxresearch"%>
 <%@page import="oscar.oscarResearch.oscarDxResearch.util.*"%>
 <%@page import="java.util.*, java.sql.*"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>

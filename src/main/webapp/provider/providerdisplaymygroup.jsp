@@ -29,7 +29,6 @@
 %>
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.model.MyGroup"%>
 <%@ page import="org.oscarehr.common.dao.MyGroupDao"%>

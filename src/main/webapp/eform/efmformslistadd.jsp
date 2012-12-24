@@ -38,11 +38,11 @@
 %>  
 
 <%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
-<%@include file="/common/webAppContextAndSuperMgr.jsp" %>
 <%
 String user = (String) session.getAttribute("user");
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -56,7 +56,7 @@ else if (orderByRequest.equals("form_date")) orderBy = EFormUtil.DATE;
 
 String groupView = request.getParameter("group_view");
 if (groupView == null) {
-    UserPropertyDAO userPropDAO = (UserPropertyDAO)webApplicationContext.getBean("UserPropertyDAO");
+    UserPropertyDAO userPropDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
     UserProperty usrProp = userPropDAO.getProp(user, UserProperty.EFORM_FAVOURITE_GROUP);
     if( usrProp != null ) {
         groupView = usrProp.getValue();
