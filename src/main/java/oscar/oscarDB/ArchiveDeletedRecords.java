@@ -25,11 +25,12 @@
 
 package oscar.oscarDB;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.oscarehr.common.dao.TableModificationDao;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.common.model.TableModification;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -66,27 +67,21 @@ public class ArchiveDeletedRecords {
     public ArchiveDeletedRecords() {
     }
     
-    private String getStringXmlFromResultSet(ResultSet rs) throws Exception{
-       ResultSetBuilder builder = new ResultSetBuilder(rs);
+    private String getStringXmlFromResultSet(ProviderLabRoutingModel record) throws Exception{
+       ResultSetBuilder builder = new ResultSetBuilder(record);
        Document doc = builder.build();
        XMLOutputter xml = new XMLOutputter();
        String xmlStr = xml.outputString(doc); 
        return xmlStr;     
     }
     
-    /**
-     * @deprecated Use JPA for any new persistence operations
-     */
-    @Deprecated
-    public int recordRowsToBeDeleted(String sql,String provNo,String table){
+    public int recordRowsToBeDeleted(List<ProviderLabRoutingModel> records, String provNo,String table){
         try {
-               
-            ResultSet rs = DBHandler.GetSQL(sql);            
-            if ( rs.next()){
-               String xmlStr = getStringXmlFromResultSet(rs);
-               addRowsToModifiedTable(null,provNo,ArchiveDeletedRecords.DELETE,table,null,xmlStr);
+            for(ProviderLabRoutingModel record : records) {
+            	String xmlStr = getStringXmlFromResultSet(record);
+                addRowsToModifiedTable(null,provNo,ArchiveDeletedRecords.DELETE, table, null, xmlStr);
             }
-            rs.close();
+            
         }
         catch(Exception e) {
             MiscUtils.getLogger().error("Error", e);

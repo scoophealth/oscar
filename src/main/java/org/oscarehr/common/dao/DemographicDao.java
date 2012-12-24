@@ -1288,6 +1288,37 @@ public class DemographicDao extends HibernateDaoSupport {
 			this.releaseSession(s);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Demographic> findByField(String fieldName, Object fieldValue, String orderBy, int offset) {
+		boolean isFieldValueEmpty = fieldValue == null || fieldValue.equals("");
+		
+		String sql = "FROM Demographic d WHERE d." + fieldName + " LIKE :fieldValue";
+		if (isFieldValueEmpty) {
+			sql = "FROM Demographic d";
+		}
+		
+		if (orderBy != null && !orderBy.isEmpty()) {
+			sql = sql + " ORDER BY d." + orderBy; 
+		}
+		
+		Session s = getSession();
+		try {
+			Query q = s.createQuery(sql);
+			if (!isFieldValueEmpty) {
+				q.setParameter("fieldValue", fieldValue);
+			}
+			
+			q.setMaxResults(10);
+			
+			if (offset > 0) {
+				q.setFirstResult(offset);
+			}
+			return q.list();
+		} finally {
+			this.releaseSession(s);
+		}
+	}
 
 	@SuppressWarnings("unchecked")
     public List<Demographic> findByCriterion(DemographicCriterion c) {

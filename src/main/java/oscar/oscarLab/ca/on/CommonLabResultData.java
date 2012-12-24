@@ -337,7 +337,7 @@ public class CommonLabResultData {
 
 			ResultSet rs = db.queryResults(sql);
 			boolean empty = true;
-			while (rs.next()) { //
+			while (rs.next()) {
 				empty = false;
 				String id = oscar.Misc.getString(rs, "id");
 				if (!oscar.Misc.getString(rs, "status").equals("A")) {
@@ -360,9 +360,10 @@ public class CommonLabResultData {
 			}
 
 			if (!"0".equals(providerNo)) {
-				String recordsToDeleteSql = "select * from providerLabRouting where provider_no='0' and lab_no='" + labNo + "' and lab_type = '" + labType + "'";
+				ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+				List<ProviderLabRoutingModel> modelRecords = dao.findByLabNoAndLabTypeAndProviderNo(labNo, labType, providerNo);
 				ArchiveDeletedRecords adr = new ArchiveDeletedRecords();
-				adr.recordRowsToBeDeleted(recordsToDeleteSql, "" + providerNo, "providerLabRouting");
+				adr.recordRowsToBeDeleted(modelRecords, "" + providerNo, "providerLabRouting");
 				
 				for(ProviderLabRoutingModel plr : providerLabRoutingDao.findByLabNoAndLabTypeAndProviderNo(labNo, labType, "0")) {
 					providerLabRoutingDao.remove(plr.getId());

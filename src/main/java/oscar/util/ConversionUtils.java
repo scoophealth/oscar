@@ -162,7 +162,11 @@ public class ConversionUtils {
 		if (longString == null || longString.trim().isEmpty()) {
 			return ZERO_LONG;
 		}
-		return Long.parseLong(longString);
+		try {
+			return Long.parseLong(longString);
+		} catch (Exception e) {
+			return 0L;
+		}
 	}
 
 	/**
@@ -178,7 +182,11 @@ public class ConversionUtils {
 		if (intString == null || intString.trim().isEmpty()) {
 			return ZERO_INT;
 		}
-		return Integer.parseInt(intString);
+		try {
+			return Integer.parseInt(intString);
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 
 	/**
@@ -239,7 +247,11 @@ public class ConversionUtils {
 			return ZERO_DOUBLE;
 		}
 
-		return Double.parseDouble(str);
+		try {
+			return Double.parseDouble(str);			
+		} catch (Exception e) {
+			return 0.0;
+		}
 	}
 
 	/**

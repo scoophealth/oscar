@@ -33,12 +33,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.persistence.Column;
 
 public class Textualizer {
 
-	public Map<String, String> toMap(Object object) throws Exception {
+	public SortedMap<String, String> toMap(Object object) throws Exception {
 		return toMap(object, new ToTemplate());
 	}
 
@@ -85,8 +87,8 @@ public class Textualizer {
 		return object;
 	}
 
-	public Map<String, String> toMap(Object object, ToTemplate template) throws Exception {
-		Map<String, String> result = new HashMap<String, String>();
+	public SortedMap<String, String> toMap(Object object, ToTemplate template) throws Exception {
+		SortedMap<String, String> result = new TreeMap<String, String>();
 
 		Class<?> objectClass = object.getClass();
 		BeanInfo beanInfo = Introspector.getBeanInfo(objectClass);
