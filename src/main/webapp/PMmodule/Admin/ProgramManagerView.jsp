@@ -177,7 +177,7 @@
 	</table>
 	</div>
 	<jsp:include page="/common/messages.jsp" />
-	<% if (selectedSubtab != null && !selectedTab.equals(selectedSubtab)) { %>
+	<% if (selectedSubtab != null && !selectedSubtab.trim().equals("") && !selectedTab.equals(selectedSubtab)) { %>
 		<jsp:include
 			page='<%="/PMmodule/Admin/ProgramView/" + selectedSubtab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
 	<% } else { %>
