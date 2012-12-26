@@ -31,7 +31,11 @@ public enum CaseloadCategory {
 	HDL("HDL", "cl_search_measurement", "dataField"),
 	TCHD("TCHD", "cl_search_measurement", "dataField"),
 	EGFR("EGFR", "cl_search_measurement", "dataField"),
-	EYEE("EYEE", "cl_search_measurement", "dataField");	
+	EYEE("EYEE", "cl_search_measurement", "dataField"),
+	LastEncounterDate("LastEncounterDate", "cl_search_lastencdate", "update_date"),
+	LastEncounterType("LastEncounterType", "cl_search_lastenctype", "encounter_type"),
+	CashAdmissionDate("[CASH]AdmissionDate", "cl_search_cashaddate", "referral_date"),
+	Access1AdmissionDate("[ACCESS1]AdmissionDate", "cl_search_access1addate", "referral_date");
 	
 	/** The label for this category. */
 	private String label;

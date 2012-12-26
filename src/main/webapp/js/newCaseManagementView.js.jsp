@@ -2128,7 +2128,7 @@ function validDate() {
     date.setHours(timeArr[0]);
     date.setMinutes(timeArr[1]);
 
-    var today = new Date(strToday);
+    var today = new Date();
     today.setHours(23);
     today.setMinutes(59);
 
