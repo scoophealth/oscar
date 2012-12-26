@@ -13,6 +13,7 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.Provider" %>
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
 
@@ -52,10 +53,15 @@
 #rightSearch { float:right; }
 </style>
 <%
-String[] clH = new String[] {"Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR", "LDL", "HDL", "TCHD", "EGFR", "EYEE"};
+String[] clH = new String[] {"Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt"
+		, "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR"
+		, "LDL", "HDL", "TCHD", "EGFR", "EYEE", "LastEncounterDate", "LastEncounterType", "[CASH]AdmissionDate"
+		, "[ACCESS1]AdmissionDate"};
 %>
 <script type="text/javascript">
-clH = ["Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR", "LDL", "HDL", "TCHD", "EGFR", "EYEE"];
+clH = ["Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", "Lab", "Doc", "Tickler"
+       , "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR", "LDL", "HDL", "TCHD", "EGFR", "EYEE", "LastEncounterDate"
+       , "LastEncounterType", "[CASH]AdmissionDate", "[ACCESS1]AdmissionDate"];
 </script>
 <table border="1" cellpadding="0" cellspacing="0" width="100%" id="caseloadTable">
 <tr><td colspan='<%=clH.length%>'>
@@ -113,11 +119,28 @@ clH = ["Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", 
 <tr id='loadingHeader' class='caseloadRow'><td style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'><img src='../images/DMSLoader.gif' /> Loading results...</td></tr>
 <tr id='totalResults2' class='caseloadRow'><td style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'> <span id="rows2"></span>/<span id="totalRows2"></span> results retrieved </td></tr>
 <tr class='caseloadRow' id='caseloadHeader'>
+
+<%
+String caseloadroleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+String[] objIds = new String[] {"Demographic", "_caseload.DisplayMode", "_caseload.Age", "_caseload.Sex"
+		, "_caseload.LastAppt", "_caseload.NextAppt", "_caseload.ApptsLYTD", "_caseload.Lab", "_caseload.Doc"
+		, "_caseload.Tickler", "_caseload.Msg", "_caseload.BMI", "_caseload.BP", "_caseload.WT"
+		, "_caseload.SMK", "_caseload.A1C", "_caseload.ACR", "_caseload.SCR", "_caseload.LDL"
+		, "_caseload.HDL", "_caseload.TCHD", "_caseload.EGFR", "_caseload.EYEE", "_caseload.LastEncounterDate"
+		, "_caseload.LastEncounterType", "_caseload.CashAdmissionDate", "_caseload.Access1AdmissionDate"};
+%>
+
 <% for (int i=0; i < clH.length; i++) { %>
 	<% if (i == 0) { %>
-	<td class='selectedCategory' bgcolor='#c0c0c0'><b onclick='changeCategory("<%=i%>")'><%=clH[i]%> &Delta;</b></td>
-	<% } else { %>
-	<td bgcolor='#c0c0c0' <%=(i==1) ? "style='width:307px'" : "" %>><b onclick='changeCategory("<%=i%>")'><%=clH[i]%></b></td>
+	<td class='selectedCategory' bgcolor='#c0c0c0' onclick='changeCategory("<%=i%>")'><b><%=clH[i]%> &Delta;</b></td>
+	<% } else if (i == 1) { %>
+	<security:oscarSec roleName="<%=caseloadroleName$%>" objectName="<%=objIds[i]%>" rights="r" reverse="<%=false%>" >
+		<td bgcolor='#c0c0c0' <%="style='width:307px'"%>><b><%=clH[i]%></b></td>
+	</security:oscarSec>
+	<% } else{ %>
+	<security:oscarSec roleName="<%=caseloadroleName$%>" objectName="<%=objIds[i]%>" rights="r" reverse="<%=false%>" >
+		<td bgcolor='#c0c0c0' onclick='changeCategory("<%=i%>")'><b><%=clH[i]%></b></td>
+	</security:oscarSec>
 	<% } %>
 <% } %>
 <tr id='loadingFooter' class='caseloadRow'><td colspan='<%=clH.length%>' style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'><img src='../images/DMSLoader.gif' /> Loading results...</td></tr>
@@ -200,20 +223,55 @@ function generateQuery(method) {
     return query;
 }
 
+function getHeadersElement(headers,realIdx){
+	// iteration in headers
+	if (headers == undefined || headers == null || headers.length==0){
+		return null;
+	}
+	var heading = clH[realIdx];
+	if (heading == undefined || heading.length == 0){
+		return null;
+	}
+	var headElement = null;
+	for (i=0;i<headers.length;i++){
+		var headElement = headers.get(i);
+		if (headElement == undefined || headElement == null){
+			continue;
+		}
+		var headstr = headElement.innerHTML.substring("<b>".length, "<b>".length + heading.length);
+		if (headstr == heading)
+		{
+			break;
+		}
+	}
+	return headElement;
+}
+
 function changeCategory(cat) {
+	if (1==cat){  // don't sort on the colunmn "Display Mode"
+		return;
+	}
 	var headers = jQuery("#caseloadHeader").children();
+	var oldCat = jQuery(getHeadersElement(headers, category));
+	if (oldCat == null){
+		return;
+	}
 	if (cat == category) {
 		sortAsc = !sortAsc;
-		headers.get(category).innerHTML = "<b onclick='changeCategory(\""+category+"\")'>"+clH[category] + " " + getSortDir() + "</b>";
+//		headers.get(category).innerHTML = "<b onclick='changeCategory(\""+category+"\")'>"+clH[category] + " " + getSortDir() + "</b>";
+		oldCat.attr(onclick,"changeCategory(\"" + category+ "\")");
+		oldCat.html("<b>" + clH[category] + " " + getSortDir() + "</b>");
 	}
 	else {
-		var oldCat = jQuery(headers.get(category));
-		var newCat = jQuery(headers.get(cat));
+//		var oldCat = jQuery(headers.get(category));
+//		var newCat = jQuery(headers.get(cat));
+		var newCat = jQuery(getHeadersElement(headers,cat));
 		sortAsc = true;
 		oldCat.removeClass("selectedCategory");
 		newCat.addClass("selectedCategory");
-		oldCat.html("<b onclick='changeCategory(\""+category+"\")'>"+clH[category]+"</b>");
-		newCat.html("<b onclick='changeCategory(\""+cat+"\")'>" + clH[cat] + " " + getSortDir() + "</b>");
+		oldCat.attr(onclick,"changeCategory(\"" + category+ "\")");
+		oldCat.html("<b>"+clH[category]+"</b>");
+		newCat.html("<b>" + clH[cat] + " " + getSortDir() + "</b>");
 		category = cat;
 	}
 	search(searchMethod);

@@ -60,8 +60,13 @@ public class CaseloadDao {
 		caseloadSortQueries.put("cl_search_new_labs", "select demographic_no, count(1) as count from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='HL7' and status='N' and provider_no='%s' group by demographic_no");
 		caseloadSortQueries.put("cl_search_new_docs", "select demographic_no, count(1) as count from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='DOC' and status='N' and provider_no='%s' group by demographic_no");
 		caseloadSortQueries.put("cl_search_new_ticklers", "select demographic_no, count(1) as count from tickler where status='A' group by demographic_no");
-		caseloadSortQueries.put("cl_search_new_msgs", "select demographic_no, count(1) as count from msgDemoMap left join messagelisttbl on message = messageID where status='new' group by demographic_no");
+		caseloadSortQueries.put("cl_search_new_msgs", "select demographic_no, count(1) as count from msgDemoMap left join messagelisttbl on message = messageID where status='new' group by demographic_no");		
 		caseloadSortQueries.put("cl_search_measurement", "SELECT m.demographicNo as demographic_no, dataField FROM measurements m JOIN (SELECT demographicNo as demographic_no, max(dateObserved) max_date FROM measurements WHERE type='%s' GROUP BY demographic_no) m2 ON m.demographicNo = m2.demographic_no AND m.dateObserved = m2.max_date WHERE type='%s'");
+		
+		caseloadSortQueries.put("cl_search_lastencdate", "select demographic_no, update_date FROM casemgmt_note AS c WHERE NOT EXISTS (SELECT * FROM casemgmt_note WHERE update_date > c.update_date)");
+		caseloadSortQueries.put("cl_search_lastenctype", "select demographic_no, encounter_type from casemgmt_note AS c where NOT EXISTS (SELECT * FROM casemgmt_note WHERE update_date > c.update_date)");
+		caseloadSortQueries.put("cl_search_cashaddate", "select client_id as demographic_no, referral_date from client_referral where program_id in (select id from program where name = '%s')");
+		caseloadSortQueries.put("cl_search_access1addate", "select client_id as demographic_no, referral_date from client_referral where program_id in (select id from program where name = '%s')");
 	}
 
 	private static HashMap<String, String> caseloadDemoQueries;
@@ -69,7 +74,7 @@ public class CaseloadDao {
 	private static void initializeDemoQueries() {
 		caseloadDemoQueries = new HashMap<String, String>();
 		caseloadDemoQueries.put("search_rsstatus", "select distinct roster_status from demographic where roster_status not in ('', 'RO', 'NR', 'TE', 'FS')");
-		caseloadDemoQueries.put("cl_demographic_query", "select last_name, first_name, sex, month_of_birth, date_of_birth, CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic where demographic_no=?");
+		caseloadDemoQueries.put("cl_demographic_query", "select last_name, first_name, sex, CAST(month_of_birth AS UNSIGNED INTEGER), CAST(date_of_birth AS UNSIGNED INTEGER), CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic where demographic_no=?");
 		caseloadDemoQueries.put("cl_demographic_query_roster", "select last_name, first_name, sex, month_of_birth, date_of_birth, CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic where demographic_no=? AND roster_status=?");
 		caseloadDemoQueries.put("cl_last_appt", "select max(appointment_date) from appointment where addtime(appointment_date, start_time) < now() and demographic_no=?");
 		caseloadDemoQueries.put("cl_next_appt", "select min(appointment_date) from appointment where addtime(appointment_date, start_time) > now() and demographic_no=?");
@@ -79,6 +84,11 @@ public class CaseloadDao {
 		caseloadDemoQueries.put("cl_new_ticklers", "select count(*) from tickler where status='A' and demographic_no=?");
 		caseloadDemoQueries.put("cl_new_msgs", "select count(*) from msgDemoMap left join messagelisttbl on message = messageID where demographic_no=? and status='new'");
 		caseloadDemoQueries.put("cl_measurement", "select dataField from measurements where type=? and demographicNo=? order by dateObserved desc limit 1");
+		
+		caseloadDemoQueries.put("LastEncounterDate", "select max(update_date) from casemgmt_note where update_date < now() and demographic_no=?");
+		caseloadDemoQueries.put("LastEncounterType", "SELECT encounter_type FROM casemgmt_note AS c WHERE demographic_no=? AND NOT EXISTS (SELECT * FROM casemgmt_note WHERE update_date > c.update_date)");
+		caseloadDemoQueries.put("CashAdmissionDate", "SELECT MAX(referral_date) FROM client_referral WHERE client_id=? AND program_id IN (SELECT id FROM program WHERE name=?)");
+		caseloadDemoQueries.put("Access1AdmissionDate", "SELECT MAX(referral_date) FROM client_referral WHERE client_id=? AND program_id IN (SELECT id FROM program WHERE name=?)");
 
 		initializeDemoQueryColumns();
 	}
@@ -98,6 +108,11 @@ public class CaseloadDao {
 		caseloadDemoQueryColumns.put("cl_new_ticklers", new String[] { "count(*)" } );
 		caseloadDemoQueryColumns.put("cl_new_msgs", new String[] { "count(*)" } );
 		caseloadDemoQueryColumns.put("cl_measurement", new String[] { "dataField" } );
+		
+		caseloadDemoQueryColumns.put("LastEncounterDate", new String[] { "update_date" } );
+		caseloadDemoQueryColumns.put("LastEncounterType", new String[] { "encounter_type" } );
+		caseloadDemoQueryColumns.put("CashAdmissionDate", new String[] { "referral_date" } );
+		caseloadDemoQueryColumns.put("Access1AdmissionDate", new String[] { "referral_date" } );
 	}
 
 	@SuppressWarnings("unchecked")
