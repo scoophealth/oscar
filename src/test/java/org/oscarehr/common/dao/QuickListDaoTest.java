@@ -42,7 +42,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class QuickListDaoTest extends DaoTestFixtures {
 
-	protected QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
+	// TODO Make it protected when test ignores are merged in
+	private QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
 
 	public QuickListDaoTest() {
 	}

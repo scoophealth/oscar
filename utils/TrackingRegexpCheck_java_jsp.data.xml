@@ -401,14 +401,13 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:Vector vecValue = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:Vector vecVarValue = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/printLabDaySheetAction.java:HashMap parameters = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:Vector dxCodeSearchBeanVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:public Vector getDxCodeSearchBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:public List&lt;dxCodeSearchBean&gt; getDxCodeSearchBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:Vector dxQuickListBeanVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:public Collection getDxQuickListBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:public Collection getDxQuickListBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector dxQuickListItemsVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector v = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;dxResearchBean&gt; getDxResearchBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;dxResearchBean&gt; getDxResearchBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/pageUtil/dxResearchForm.java:/*    private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/pageUtil/dxResearchLoadQuickListItemsForm.java:/*    private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/pageUtil/dxResearchUpdateQuickListForm.java:/*    private final Map values = new HashMap();</ViolationValue>
@@ -1167,8 +1166,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sqlValidation);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/MeasurementGraphAction2.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rsData = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctViewAttachmentAction.java:rs = DBHandler.GetSQL("SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "</ViolationValue>
@@ -1283,12 +1280,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java:rs = DBHandler.GetSQL(cohortSQL);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java:rs2 = DBHandler.GetSQL(apptSQLwDemo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/reportByTemplate/SQLReporter.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeHandler.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/service/OscarSuperManager.java:"Dao with specified name has not been injected into OscarSuperManager: " + daoName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/service/OscarSuperManager.java:public class OscarSuperManager {</ViolationValue>
@@ -1336,7 +1327,6 @@
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
@@ -2483,35 +2473,34 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:private Vector getQueryValue(Vector vecValue, Vector vecDateFormat, HttpServletRequest request) throws Exception {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:private Vector[] getValueParam(HttpServletRequest request)  {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:public String getQueryWhere(Vector vecVarValue) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:Vector dxCodeSearchBeanVector = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:List&lt;dxCodeSearchBean&gt; dxCodeSearchBeanVector = new ArrayList&lt;dxCodeSearchBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:dxCodeSearchBeanVector.add(bean);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:public Vector getDxCodeSearchBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:public List&lt;dxCodeSearchBean&gt; getDxCodeSearchBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:return dxCodeSearchBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:Vector dxQuickListBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:dxQuickListBeanVector.add(bean);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:public Collection getDxQuickListBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:public Collection getDxQuickListBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:return dxQuickListBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector dxQuickListItemsVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector v = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:dxQuickListItemsVector.add(bean);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:for ( int j = 0; j &lt; dxQuickListItemsVector.size();j++){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:for (int j = 0; j &lt; dxQuickListItemsVector.size(); j++) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:return dxQuickListItemsVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector&lt;String&gt; v = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector&lt;dxResearchBean&gt; dxResearchBeanVector = new Vector&lt;dxResearchBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:dxResearchBean dx = dxResearchBeanVector.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:dxResearchBeanVector.add(bean);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:for (int i = 0; i &lt; dxResearchBeanVector.size(); i++){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:for (int i = 0; i &lt; dxResearchBeanVector.size(); i++) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;String&gt; getActiveCodeList(){ //TODO: NEED TO CHECK STATUS</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;String&gt; getActiveCodeListWithCodingSystem(){ //TODO: NEED TO CHECK STATUS</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;dxResearchBean&gt; getDxResearchBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;String&gt; getActiveCodeList() { //TODO: NEED TO CHECK STATUS</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;String&gt; getActiveCodeListWithCodingSystem() { //TODO: NEED TO CHECK STATUS</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;dxResearchBean&gt; getDxResearchBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:return dxResearchBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java://Vector vec = drugRef.list_drugs(searchStr,hashtable);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = (Hashtable) comps.get(i);</ViolationValue>

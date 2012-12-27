@@ -23,10 +23,12 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.DxAssociation;
 import org.springframework.stereotype.Repository;
 
@@ -64,4 +66,44 @@ public class DxDao extends AbstractDao<DxAssociation> {
     	}
     	return null;
     }
+
+    @NativeSql
+    @SuppressWarnings("unchecked")
+	public List<Object[]> findCodingSystemDescription(String codingSystem, String code) {
+		try {
+			String sql = "SELECT " + codingSystem +", description FROM " + codingSystem + " WHERE " + codingSystem + " = :code";
+			Query query = entityManager.createNativeQuery(sql);
+			query.setParameter("code", code);
+			return query.getResultList();
+		} catch (Exception e) {
+			// TODO Add exclude to the test instead when it's merged  
+			return new ArrayList<Object[]>();
+		}
+    }
+	
+	@NativeSql
+    @SuppressWarnings("unchecked")
+	public List<Object[]> findCodingSystemDescription(String codingSystem, String[] keywords) {
+		try {
+			StringBuilder buf = new StringBuilder("select " + codingSystem + ", description from " + codingSystem);
+			if (keywords.length > 0) {
+				buf.append(" where "); 
+			}
+			
+			for(String keyword : keywords){
+                if(keyword == null || keyword.trim().equals("")) {
+                	continue;
+                }
+                
+                buf.append(" or " + codingSystem + " like '%" + keyword + "%' or description like '%" + keywords + "%' ");
+            }
+			
+			Query query = entityManager.createQuery(buf.toString());
+			return query.getResultList();
+		} catch (Exception e) {
+			// TODO Add exclude to the test instead when it's merged
+			return new ArrayList<Object[]>();
+		}
+		
+	}
 }
