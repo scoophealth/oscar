@@ -22,146 +22,135 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
 import oscar.oscarClinic.ClinicData;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 public class EctProviderData {
-    public class Provider {
-        String providerNo;
-        String surname;
-        String firstName;
-        String clinicName;
-        String clinicAddress;
-        String clinicCity;
-        String clinicPostal;
-        String clinicPhone;
-        String clinicFax;
-        String indivoId;
-        String indivoPasswd;
+	public class Provider {
+		String providerNo;
+		String surname;
+		String firstName;
+		String clinicName;
+		String clinicAddress;
+		String clinicCity;
+		String clinicPostal;
+		String clinicPhone;
+		String clinicFax;
+		String indivoId;
+		String indivoPasswd;
 
-        public String getProviderNo() {
-            return providerNo;
-        }
+		public String getProviderNo() {
+			return providerNo;
+		}
 
-        public String getSurname()        {
-            return surname;
-        }
+		public String getSurname() {
+			return surname;
+		}
 
-        public String getFirstName()        {
-            return firstName;
-        }
+		public String getFirstName() {
+			return firstName;
+		}
 
-        public String getClinicName()        {
-            return clinicName;
-        }
+		public String getClinicName() {
+			return clinicName;
+		}
 
-        public String getClinicAddress()        {
-            return clinicAddress;
-        }
+		public String getClinicAddress() {
+			return clinicAddress;
+		}
 
-        public String getClinicCity()        {
-            return clinicCity;
-        }
+		public String getClinicCity() {
+			return clinicCity;
+		}
 
-        public String getClinicPostal()        {
-            return clinicPostal;
-        }
+		public String getClinicPostal() {
+			return clinicPostal;
+		}
 
-        public String getClinicPhone()        {
-            return clinicPhone;
-        }
+		public String getClinicPhone() {
+			return clinicPhone;
+		}
 
-        public String getClinicFax()        {
-            return clinicFax;
-        }
-        
-        public String getIndivoId() {
-            return indivoId;
-        }
-        
-        public String getIndivoPasswd() {
-            return indivoPasswd;
-        }
+		public String getClinicFax() {
+			return clinicFax;
+		}
 
-        public Provider(String providerNo, String surname, String firstName, String clinicName, String clinicAddress, String clinicCity, 
-                String clinicPostal, String clinicPhone, String clinicFax)        {
-            this.providerNo = providerNo;
-            this.surname = surname;
-            this.firstName = firstName;
-            this.clinicName = clinicName;
-            this.clinicAddress = clinicAddress;
-            this.clinicCity = clinicCity;
-            this.clinicPostal = clinicPostal;
-            this.clinicPhone = clinicPhone;
-            this.clinicFax = clinicFax;
-        }
-        
-        public Provider(String providerNo, String surname, String firstName, String clinicName, String clinicAddress, String clinicCity, 
-                String clinicPostal, String clinicPhone, String clinicFax, String indivoId, String indivoPasswd)        {
-            this.providerNo = providerNo;
-            this.surname = surname;
-            this.firstName = firstName;
-            this.clinicName = clinicName;
-            this.clinicAddress = clinicAddress;
-            this.clinicCity = clinicCity;
-            this.clinicPostal = clinicPostal;
-            this.clinicPhone = clinicPhone;
-            this.clinicFax = clinicFax;
-            this.indivoId = indivoId;
-            this.indivoPasswd = indivoPasswd;
-        }
-    }
+		public String getIndivoId() {
+			return indivoId;
+		}
 
-    public Provider getProvider(String providerNo)    {
-        Provider provider = null;
-        try        {
-            
-            String sql = "SELECT * FROM provider WHERE provider_no = '" +providerNo+ "'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if(rs.next()) {
-                String surname = oscar.Misc.getString(rs, "last_name");
-                String firstName = oscar.Misc.getString(rs, "first_name");
-                String comments = oscar.Misc.getString(rs, "comments");                                           
-                String selfLearningPasswd = SxmlMisc.getXmlContent(comments,"xml_p_slppassword");
-                
-                if(firstName.indexOf("Dr.") < 0)
-                    firstName = "Dr. "+firstName;
-                
-                ClinicData clinic = new ClinicData();
-                clinic.refreshClinicData();
-                String clinicName = clinic.getClinicName(); 
-                String clinicAddress = clinic.getClinicAddress();
-                String clinicCity = clinic.getClinicCity();
-                String clinicPostal = clinic.getClinicPostal();
-                String clinicPhone = clinic.getClinicPhone();
-                String clinicFax = clinic.getClinicFax();
-                
-                String myOscarLoginId = ProviderMyOscarIdData.getMyOscarId(providerNo);
-                
-                provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax, myOscarLoginId, selfLearningPasswd);
-            }
-            rs.close();
-        }  catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return provider;
-    }
-    
+		public String getIndivoPasswd() {
+			return indivoPasswd;
+		}
+
+		public Provider(String providerNo, String surname, String firstName, String clinicName, String clinicAddress, String clinicCity, String clinicPostal, String clinicPhone, String clinicFax) {
+			this.providerNo = providerNo;
+			this.surname = surname;
+			this.firstName = firstName;
+			this.clinicName = clinicName;
+			this.clinicAddress = clinicAddress;
+			this.clinicCity = clinicCity;
+			this.clinicPostal = clinicPostal;
+			this.clinicPhone = clinicPhone;
+			this.clinicFax = clinicFax;
+		}
+
+		public Provider(String providerNo, String surname, String firstName, String clinicName, String clinicAddress, String clinicCity, String clinicPostal, String clinicPhone, String clinicFax, String indivoId, String indivoPasswd) {
+			this.providerNo = providerNo;
+			this.surname = surname;
+			this.firstName = firstName;
+			this.clinicName = clinicName;
+			this.clinicAddress = clinicAddress;
+			this.clinicCity = clinicCity;
+			this.clinicPostal = clinicPostal;
+			this.clinicPhone = clinicPhone;
+			this.clinicFax = clinicFax;
+			this.indivoId = indivoId;
+			this.indivoPasswd = indivoPasswd;
+		}
+	}
+
+	public Provider getProvider(String providerNo) {
+		Provider provider = null;
+		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+		org.oscarehr.common.model.Provider p = dao.getProvider(providerNo);
+		if (p != null) {
+			String surname = p.getLastName();
+			String firstName = p.getFirstName();
+			String comments = p.getComments();
+			String selfLearningPasswd = SxmlMisc.getXmlContent(comments, "xml_p_slppassword");
+
+			if (firstName.indexOf("Dr.") < 0) {
+				firstName = "Dr. " + firstName;
+			}
+
+			ClinicData clinic = new ClinicData();
+			clinic.refreshClinicData();
+			String clinicName = clinic.getClinicName();
+			String clinicAddress = clinic.getClinicAddress();
+			String clinicCity = clinic.getClinicCity();
+			String clinicPostal = clinic.getClinicPostal();
+			String clinicPhone = clinic.getClinicPhone();
+			String clinicFax = clinic.getClinicFax();
+
+			String myOscarLoginId = ProviderMyOscarIdData.getMyOscarId(providerNo);
+
+			provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax, myOscarLoginId, selfLearningPasswd);
+		}
+
+		return provider;
+	}
+
 	@Override
-    public String toString()
-	{
-		return(ReflectionToStringBuilder.toString(this));
+	public String toString() {
+		return (ReflectionToStringBuilder.toString(this));
 	}
 
 }
