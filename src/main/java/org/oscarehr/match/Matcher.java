@@ -126,6 +126,9 @@ public class Matcher {
 	private int getMatchPercentage(ClientData clientData,
 			VacancyData vacancyData) {
 		int paramCntPercentage = vacancyData.getVacancyData().size() * 100;
+		if (paramCntPercentage == 0){
+			return 0;
+		}
 		int paramMatch = 0;
 		for (Entry<String, String> paramEntry : clientData.getClientData()
 				.entrySet()) {
