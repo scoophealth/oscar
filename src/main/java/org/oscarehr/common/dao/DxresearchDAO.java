@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DxRegistedPTInfo;
 import org.oscarehr.common.model.Dxresearch;
@@ -333,7 +334,6 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 		query.setParameter("sdate", sdate);
 		query.setParameter("edate", edate);
 		
-		@SuppressWarnings("unchecked")
 		List<Integer> ids = query.getResultList();
 		return ids.size();
 	}
@@ -358,9 +358,17 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 		query.setParameter("sdate", sdate);
 		query.setParameter("edate", edate);
 		
-		@SuppressWarnings("unchecked")
 		List<Integer> ids = query.getResultList();
 		return ids.size();
+    }
+
+    @NativeSql
+    public List<Object[]> findResearchAndCodingSystemByDemographicAndCondingSystem(String codingSystem, String demographicNo) {
+	    String sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c " +
+                "where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='"+ demographicNo +"' and d.coding_system = '"+codingSystem+"'"
+               +" order by d.start_date desc, d.update_date desc";
+		Query query = entityManager.createQuery(sql);
+		return query.getResultList();
     }
 
 }

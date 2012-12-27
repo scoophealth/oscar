@@ -22,163 +22,136 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarResearch.oscarDxResearch.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 import org.oscarehr.common.dao.AbstractCodeSystemDao;
+import org.oscarehr.common.dao.QuickListDao;
 import org.oscarehr.common.dao.QuickListUserDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.QuickListUser;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
 
 public class dxQuickListItemsHandler {
-	
+
 	private QuickListUserDao dao = SpringUtils.getBean(QuickListUserDao.class);
 
+	Vector dxQuickListItemsVector = new Vector();
 
-    Vector dxQuickListItemsVector = new Vector();
+	public dxQuickListItemsHandler(String quickListName, String providerNo) {
+		init(quickListName, providerNo);
+	}
 
-    public dxQuickListItemsHandler(String quickListName, String providerNo) {
-        init(quickListName, providerNo);
-    }
+	public dxQuickListItemsHandler(String quickListName) {
+		init(quickListName);
+	}
 
-    public dxQuickListItemsHandler(String quickListName) {
-        init(quickListName);
-    }
+	public boolean init(String quickListName, String providerNo) {
+		int ListNameLen = 10;
 
-    public boolean init(String quickListName, String providerNo) {
-        int ListNameLen = 10;
-        boolean verdict = true;
-        try {
-            ResultSet rs;
+		dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+		String[] codingSystems = codingSys.getCodingSystems();
+		String codingSystem;
+		String name;
 
+		if (quickListName.length() > ListNameLen) name = quickListName.substring(0, ListNameLen);
+		else name = quickListName;
 
-            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-            String[] codingSystems = codingSys.getCodingSystems();
-            String codingSystem;
-            String name;
+		List<QuickListUser> results = dao.findByNameAndProviderNo(name, providerNo);
+		if (!results.isEmpty()) {
+			for (QuickListUser result : results) {
+				result.setLastUsed(new Date());
+				dao.merge(result);
+			}
+		} else {
+			QuickListUser q = new QuickListUser();
+			q.setQuickListName(name);
+			q.setProviderNo(providerNo);
+			q.setLastUsed(new Date());
+			dao.persist(q);
+		}
 
-            if( quickListName.length() > ListNameLen )
-                name = quickListName.substring(0,ListNameLen);
-            else
-                name = quickListName;
+		QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
+		for (int idx = 0; idx < codingSystems.length; ++idx) {
+			codingSystem = codingSystems[idx];
 
-            List<QuickListUser> results = dao.findByNameAndProviderNo(name, providerNo);
-            if(!results.isEmpty()) {
-	            for(QuickListUser result:results) {
-	            	result.setLastUsed(new Date());
-	            	dao.merge(result);
-	            }
-	        } else {
-	        	QuickListUser q = new QuickListUser();
-	        	q.setQuickListName(name);
-	        	q.setProviderNo(providerNo);
-	        	q.setLastUsed(new Date());
-	        	dao.persist(q);
-	        }
-            
+			for (Object[] o : dao.findResearchCodeAndCodingSystemDescriptionByCodingSystem(codingSystem, quickListName)) {
+				String dxResearchCode = String.valueOf(o[0]);
+				String description = String.valueOf(o[1]);
+				dxCodeSearchBean bean = new dxCodeSearchBean(description, dxResearchCode);
+				bean.setType(codingSystem);
+				dxQuickListItemsVector.add(bean);
+			}
 
-            for( int idx = 0; idx < codingSystems.length; ++idx )
-            {
-                codingSystem = codingSystems[idx];
-                String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
+		}
+		return true;
+	}
 
-                rs = DBHandler.GetSQL(sql);
-                while(rs.next()){
-                    dxCodeSearchBean bean = new dxCodeSearchBean(oscar.Misc.getString(rs, "description"),
-                                                             oscar.Misc.getString(rs, "dxResearchCode"));
-                    bean.setType(codingSystem);
-                    dxQuickListItemsVector.add(bean);
-                }
-                rs.close();
-            }
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	public boolean init(String quickListName) {
 
-    public boolean init(String quickListName) {
+		dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+		String[] codingSystems = codingSys.getCodingSystems();
+		String codingSystem;
+		String sql;
 
-        boolean verdict = true;
-        try {
+		for (int idx = 0; idx < codingSystems.length; ++idx) {
+			codingSystem = codingSystems[idx];
 
-            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-            String[] codingSystems = codingSys.getCodingSystems();
-            String codingSystem;
-            String sql;
+			QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
+			for (Object[] o : dao.findResearchCodeAndCodingSystemDescriptionByCodingSystem(codingSystem, quickListName)) {
+				String dxResearchCode = String.valueOf(o[0]);
+				String description = String.valueOf(o[1]);
 
-            for( int idx = 0; idx < codingSystems.length; ++idx ) {
-                codingSystem = codingSystems[idx];
-                sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
+				dxCodeSearchBean bean = new dxCodeSearchBean(description, dxResearchCode);
+				bean.setType(codingSystem);
+				dxQuickListItemsVector.add(bean);
+			}
+		}
 
-                ResultSet rs = DBHandler.GetSQL(sql);
-                while(rs.next()){
-                    dxCodeSearchBean bean = new dxCodeSearchBean(oscar.Misc.getString(rs, "description"),
-                                                             oscar.Misc.getString(rs, "dxResearchCode"));
-                    bean.setType(codingSystem);
-                    dxQuickListItemsVector.add(bean);
-                }
-                rs.close();
-            }
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+		return true;
+	}
 
-    public Collection<dxCodeSearchBean> getDxQuickListItemsVector(){
-        return dxQuickListItemsVector;
-    }
+	public Collection<dxCodeSearchBean> getDxQuickListItemsVector() {
+		return dxQuickListItemsVector;
+	}
 
-    public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList){
-        Vector v = new Vector();
+	public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList) {
+		Vector v = new Vector();
 
-        for ( int j = 0; j < dxQuickListItemsVector.size();j++){
-            dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
-            if(!dxList.contains(dxCod)){
-                v.add(dxCod);
-            }
-        }
-        return v;
-    }
+		for (int j = 0; j < dxQuickListItemsVector.size(); j++) {
+			dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
+			if (!dxList.contains(dxCod)) {
+				v.add(dxCod);
+			}
+		}
+		return v;
+	}
 
-    public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList){
-        Vector v = new Vector();
-        for ( int j = 0; j < dxQuickListItemsVector.size();j++){
-            dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
-            if(dxList.contains(dxCod.getDxSearchCode())){
-                v.add(dxCod);
-            }
-        }
-        return v;
-    }
+	public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList) {
+		Vector v = new Vector();
+		for (int j = 0; j < dxQuickListItemsVector.size(); j++) {
+			dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
+			if (dxList.contains(dxCod.getDxSearchCode())) {
+				v.add(dxCod);
+			}
+		}
+		return v;
+	}
 
-
-    public static void updatePatientCodeDesc( String type, String code, String desc ){
-    	String daoName = AbstractCodeSystemDao.getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(type));
+	public static void updatePatientCodeDesc(String type, String code, String desc) {
+		String daoName = AbstractCodeSystemDao.getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(type));
 		@SuppressWarnings("unchecked")
 		AbstractCodeSystemDao<AbstractCodeSystemModel<?>> csDao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(daoName);
 
-		
 		AbstractCodeSystemModel<?> codingSystemEntity = csDao.findByCode(code);
 		codingSystemEntity.setDescription(desc);
 		csDao.merge(codingSystemEntity);
-    }
+	}
 
 }
