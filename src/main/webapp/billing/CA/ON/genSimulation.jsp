@@ -18,6 +18,9 @@
 
 --%>
 
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="java.util.Date"%>
+<%@page import="org.oscarehr.util.DateRange"%>
 <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
@@ -42,18 +45,17 @@ String proOHIP="";
 String specialty_code; 
 String billinggroup_no;
    
-String dateRange = "";
+DateRange dateRange = null;
 String htmlValue="";
 
 
-String dateBegin = request.getParameter("xml_vdate");
-String dateEnd = request.getParameter("xml_appointment_date");
-if (dateEnd.compareTo("") == 0) dateEnd = request.getParameter("curDate");
-if (dateBegin.compareTo("") == 0){
-	dateRange = " and billing_date <= '" + dateEnd + "'";
-}else{
-	dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
+Date dateBegin = ConversionUtils.fromDateString(request.getParameter("xml_vdate"));
+Date dateEnd = ConversionUtils.fromDateString(request.getParameter("xml_appointment_date"));
+if (dateEnd == null) {
+	dateEnd = ConversionUtils.fromDateString(request.getParameter("curDate"));
 }
+
+dateRange = new DateRange(dateBegin, dateEnd);
 
 for(Provider p:providerDao.getActiveProviders()) {
 	if(p.getOhipNo() != null && !p.getOhipNo().isEmpty()) {

@@ -17,6 +17,11 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -132,6 +137,10 @@ boolean dupServiceCode = false;
         }
         ///////--------
 
+    String warningMsg = "";
+	String errorFlag = "";
+	String errorMsg = "";
+        
 	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],vecServiceParam[2],billReferalDate);
 	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem,billReferalDate);  //LINE CAUSING ERROR
 
@@ -157,76 +166,75 @@ boolean dupServiceCode = false;
 			String content = "";
 			String total = "";
 
-			BillingONDataHelp dbObj = new BillingONDataHelp();
 			String msg = "<tr><td colspan='2'>Calculation</td></tr>";
 			String action = "edit";
 			Properties propHist = null;
 			Vector vecHist = new Vector();
 			// get provider's detail
 			String proOHIPNO = "", proRMA = "";
-			String sql = "select * from provider where provider_no='" + request.getParameter("xml_provider") + "'";
-			ResultSet rs = dbObj.searchDBRecord(sql);
-			while (rs.next()) {
-				proOHIPNO = rs.getString("ohip_no");
-				proRMA = rs.getString("rma_no");
+			
+			ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+			Provider ppp = providerDao.getProvider(request.getParameter("xml_provider"));
+			if (ppp != null) {
+				proOHIPNO = ppp.getOhipNo(); 
+				proRMA = ppp.getRmaNo();
 			}
 			if (request.getParameter("xml_provider") != null)
 				providerview = request.getParameter("xml_provider");
 			// get patient's detail
-			String errorFlag = "";
-			String warningMsg = "", errorMsg = "";
 			String r_doctor = "", r_doctor_ohip = "";
 			String demoFirst = "", demoLast = "", demoHIN = "", demoVer = "", demoDOB = "", demoDOBYY = "", demoDOBMM = "", demoDOBDD = "", demoHCTYPE = "";
 			String strPatientAddr = "";
-			sql = "select * from demographic where demographic_no=" + demo_no;
-			rs = dbObj.searchDBRecord(sql);
-			while (rs.next()) {
-				strPatientAddr = rs.getString("first_name") + " " + rs.getString("last_name") + "\n"
-				+ rs.getString("address") + "\n"
-				+ rs.getString("city") + ", " + rs.getString("province") + "\n"
-				+ rs.getString("postal") + "\n"
-				+ "Tel: " + rs.getString("phone") ;
+			
+			DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
+			Demographic demo = demoDao.getDemographic(demo_no);
+			if (demo != null) {
+				strPatientAddr = demo.getFirstName() + " " + demo.getLastName() + "\n"
+				+ demo.getAddress() + "\n"
+				+ demo.getCity() + ", " + demo.getProvince() + "\n"
+				+ demo.getPostal() + "\n"
+				+ "Tel: " + demo.getPhone();
 
-				assgProvider_no = rs.getString("provider_no");
-				demoFirst = rs.getString("first_name");
-				demoLast = rs.getString("last_name");
-				demoHIN = rs.getString("hin");
-				demoVer = rs.getString("ver");
-				demoSex = rs.getString("sex");
+				assgProvider_no = demo.getProviderNo();
+				demoFirst = demo.getFirstName();
+				demoLast = demo.getLastName();
+				demoHIN = demo.getHin();
+				demoVer = demo.getVer();
+				demoSex = demo.getSex();
 				if (demoSex.compareTo("M") == 0)
 					demoSex = "1";
 				if (demoSex.compareTo("F") == 0)
 					demoSex = "2";
 
-				demoHCTYPE = rs.getString("hc_type") == null ? "" : rs.getString("hc_type");
+				demoHCTYPE = demo.getHcType() == null ? "" : demo.getHcType();
 				if (demoHCTYPE.compareTo("") == 0 || demoHCTYPE == null || demoHCTYPE.length() < 2) {
 					demoHCTYPE = "ON";
 				} else {
 					demoHCTYPE = demoHCTYPE.substring(0, 2).toUpperCase();
 				}
-				demoDOBYY = rs.getString("year_of_birth");
-				demoDOBMM = rs.getString("month_of_birth");
-				demoDOBDD = rs.getString("date_of_birth");
+				demoDOBYY = demo.getYearOfBirth();
+				demoDOBMM = demo.getMonthOfBirth();
+				demoDOBDD = demo.getDateOfBirth();
 
-				if (rs.getString("family_doctor") == null) {
+				if (demo.getFamilyDoctor() == null) {
 					r_doctor = "N/A";
 					r_doctor_ohip = "000000";
 				} else {
-					r_doctor = SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rd") == null ? "" : SxmlMisc
-							.getXmlContent(rs.getString("family_doctor"), "rd");
-					r_doctor_ohip = SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rdohip") == null ? ""
-							: SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rdohip");
+					r_doctor = SxmlMisc.getXmlContent(demo.getFamilyDoctor(), "rd") == null ? "" : SxmlMisc
+							.getXmlContent(demo.getFamilyDoctor(), "rd");
+					r_doctor_ohip = SxmlMisc.getXmlContent(demo.getFamilyDoctor(), "rdohip") == null ? ""
+							: SxmlMisc.getXmlContent(demo.getFamilyDoctor(), "rdohip");
 				}
 
 				demoDOBMM = demoDOBMM.length() == 1 ? ("0" + demoDOBMM) : demoDOBMM;
 				demoDOBDD = demoDOBDD.length() == 1 ? ("0" + demoDOBDD) : demoDOBDD;
 				demoDOB = demoDOBYY + demoDOBMM + demoDOBDD;
 
-				if (rs.getString("hin") == null) {
+				if (demo.getHin() == null) {
 					errorFlag = "1";
 					errorMsg = errorMsg
 							+ "<br><div class='myError'>Error: The patient does not have a valid HIN. </div><br>";
-				} else if (rs.getString("hin").equals("")) {
+				} else if (demo.getHin().equals("")) {
 					warningMsg += "<br><div class='myError'>Warning: The patient does not have a valid HIN. </div><br>";
 				}
 				if (r_doctor_ohip != null && r_doctor_ohip.length() > 0 && r_doctor_ohip.length() != 6) {
@@ -549,10 +557,13 @@ window.onload=function(){
 	serviceCodeValue = request.getParameter("serviceCode" + i);
 
 	if (!serviceCodeValue.equals("")) {
-	    sql = "select distinct(service_code) from billingservice where  service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "' and termination_date > '" + billReferalDate + "'";
-            rs = dbObj.searchDBRecord(sql);
-	    if (!rs.next()) {
-		codeValid = false;
+		BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class); 
+		
+		List<Object> svcCodes = billingServiceDao.findBillingCodesByCodeAndTerminationDate(serviceCodeValue.trim().replaceAll("_","\\_"),
+				ConversionUtils.fromDateString(billReferalDate));
+	    
+	    if (svcCodes.isEmpty()) {
+			codeValid = false;
 		%>
 		<tr class="myErrorText"><td align=center>
 		    &nbsp;<br>

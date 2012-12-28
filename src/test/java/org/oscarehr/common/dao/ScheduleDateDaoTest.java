@@ -222,4 +222,9 @@ public class ScheduleDateDaoTest extends DaoTestFixtures {
 		}
 		assertTrue(true);
 	}
+
+    @Test
+    public void testFindByProviderStartDateAndPriority() {
+	    assertNotNull(dao.findByProviderStartDateAndPriority("100", new Date(), "PRI"));
+    }
 }

@@ -38,7 +38,7 @@ public class BillingRAPrep {
 		return ret;
 	}
 
-	public List getRAErrorReport(String raNo, String providerOhipNo, String notErrorCode) {
+	public List getRAErrorReport(String raNo, String providerOhipNo, String[] notErrorCode) {
 		List ret = dbObj.getRAErrorReport(raNo, providerOhipNo, notErrorCode);
 		return ret;
 	}

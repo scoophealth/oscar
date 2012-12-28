@@ -18,6 +18,8 @@
 
 --%>
 
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="org.oscarehr.util.DateRange"%>
 <%@ page import="java.math.*,java.util.*,java.sql.*,oscar.*,oscar.oscarBilling.ca.on.OHIP.*,java.net.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.ProviderBillCenter"%>
@@ -26,20 +28,20 @@
 <%//
 			String provider = request.getParameter("provider");
 			String mohOffice = request.getParameter("billcenter");
-			String BILLING_STATUS = "(status='O' or status='W' or status='I')";
+			String[] BILLING_STATUS = new String[] {"O", "W", "I"};
 			int diskId = 0;
             int headerId = 0;
             ProviderBillCenter oriBillCenter = new ProviderBillCenter();
 
-            String dateRange = "";
+            DateRange dateRange = null;
         	String dateBegin = request.getParameter("xml_vdate");
         	String dateEnd = request.getParameter("xml_appointment_date");
         	if (dateEnd.compareTo("") == 0)
         		dateEnd = request.getParameter("curDate");
         	if (dateBegin.compareTo("") == 0) {
-        		dateRange = " and billing_date <= '" + dateEnd + "'";
+        		dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
         	} else {
-        		dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
+        		dateRange = new DateRange(ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
         	}
         	
             String useProviderMOH = request.getParameter("useProviderMOH");

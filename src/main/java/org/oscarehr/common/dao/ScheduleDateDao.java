@@ -34,6 +34,7 @@ import org.oscarehr.common.model.ScheduleDate;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class ScheduleDateDao extends AbstractDao<ScheduleDate>{
 
 	public ScheduleDateDao() {
@@ -56,7 +57,7 @@ public class ScheduleDateDao extends AbstractDao<ScheduleDate>{
 		query.setParameter(3, date);
 		query.setParameter(4, date2);
 
-		@SuppressWarnings("unchecked")
+		
         List<ScheduleDate> results = query.getResultList();
 		return results;
 	}
@@ -67,11 +68,10 @@ public class ScheduleDateDao extends AbstractDao<ScheduleDate>{
 		query.setParameter(2, date);
 		query.setParameter(3, date2);
 
-		@SuppressWarnings("unchecked")
+		
         List<ScheduleDate> results = query.getResultList();
 		return results;
 	}
-	
 
 	public List<ScheduleDate> search_scheduledate_c(String providerNo) {
 		Query query = entityManager.createQuery("select s from ScheduleDate s where s.priority='c' and s.status = 'A' and s.providerNo=?");
@@ -81,4 +81,12 @@ public class ScheduleDateDao extends AbstractDao<ScheduleDate>{
         List<ScheduleDate> results = query.getResultList();
 		return results;
 	}
+
+	public List<ScheduleDate> findByProviderStartDateAndPriority(String providerNo, Date apptDate, String priority) {
+		Query query = createQuery("sd", "sd.date = :apptDate AND sd.providerNo = :providerNo AND sd.priority = :priority");
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("apptDate", apptDate);
+		query.setParameter("priority", priority);
+		return query.getResultList();
+    }
 }

@@ -25,6 +25,8 @@ package org.oscarehr.billing.CA.ON.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
@@ -52,4 +54,9 @@ public class BillingPercLimitDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+
+    @Test
+    public void testFindByServiceCodeAndLatestDate() {
+	    assertNotNull(dao.findByServiceCodeAndLatestDate("CD", new Date()));
+    }
 }

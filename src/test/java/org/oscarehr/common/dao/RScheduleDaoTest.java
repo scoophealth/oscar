@@ -119,4 +119,9 @@ public class RScheduleDaoTest extends DaoTestFixtures {
 		}
 		assertTrue(true);
 	}
+
+    @Test
+    public void testFindByProviderNoAndDates() {
+	    assertNotNull(dao.findByProviderNoAndDates("100", new Date()));
+    }
 }

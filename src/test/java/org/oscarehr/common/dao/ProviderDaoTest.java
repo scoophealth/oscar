@@ -83,4 +83,9 @@ public class ProviderDaoTest extends DaoTestFixtures {
 	public void testGetFacilityIds () {
 		assertNotNull(dao.getFacilityIds("999998"));
 	}
+
+    @Test
+    public void testDetDoctorsWithNonEmptyCredentials() {
+	    assertNotNull(dao.getDoctorsWithNonEmptyCredentials());
+    }
 }

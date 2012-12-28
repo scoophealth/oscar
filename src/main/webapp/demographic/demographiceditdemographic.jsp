@@ -25,6 +25,7 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
+<%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
@@ -1658,7 +1659,7 @@ if ( Dead.equals(PatStat) ) {%>
 				// database access object, data objects for looking things up
 				
 				
-				oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
+				
 				String[] twoLetterDate = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
 						
 				// build templateMap, which maps template codes to their associated duration
@@ -1706,16 +1707,17 @@ if ( Dead.equals(PatStat) ) {%>
 						int qApptMonth = (qApptCal.get(Calendar.MONTH)+1);
 						int qApptDay = qApptCal.get(Calendar.DAY_OF_MONTH);
 						String qApptWkDay = twoLetterDate[qApptCal.get(Calendar.DAY_OF_WEEK)];
-                                		String qCurDate = qApptYear+"-"+qApptMonth+"-"+qApptDay;
+                        String qCurDate = qApptYear+"-"+qApptMonth+"-"+qApptDay;
 						
 						// get timecode string template associated with this day, number of minutes each slot represents
-						String timecodeSql = "select timecode from scheduletemplate, (select hour from (select provider_no, hour, status from scheduledate where sdate='"+qCurDate+"') as df where status = 'A' and provider_no='"+thisProvNo+"') as hf where scheduletemplate.name=hf.hour and (scheduletemplate.provider_no='"+thisProvNo+"' or scheduletemplate.provider_no='Public')";
-						ResultSet timecodeResult = dbObj.searchDBRecord(timecodeSql);
+						ScheduleTemplateDao dao = SpringUtils.getBean(ScheduleTemplateDao.class); 
+						List<Object> timecodeResult = dao.findTimeCodeByProviderNo(thisProvNo, 
+								ConversionUtils.fromDateString(qCurDate));
 
 						// if theres a template on this day, continue
-                        if (timecodeResult.next()) {
+                        if (!timecodeResult.isEmpty()) {
 
-                       	String timecode = StringUtils.trimToEmpty(timecodeResult.getString("timecode"));
+                       	String timecode = StringUtils.trimToEmpty(String.valueOf(timecodeResult.get(0)));
                        	
                   	    int timecodeInterval = 1440/timecode.length();
 
@@ -1732,14 +1734,12 @@ if ( Dead.equals(PatStat) ) {%>
                    		}
 
 						// get list of appointments on this day
-						String apptListSql = "select start_time, end_time from appointment where appointment_date='"+qCurDate+"' and provider_no='"+thisProvNo+"' and status != 'N' and status != 'C'";
-						ResultSet apptListResult = dbObj.searchDBRecord(apptListSql);
 						int start_index, end_index;
-
+						OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
 						// put 0s in schedArr where appointments are
-						while(apptListResult.next()) {
-							start_index = timeStrToMins(StringUtils.trimToEmpty(timecodeResult.getString("start_time")))/timecodeInterval;
-							end_index = timeStrToMins(StringUtils.trimToEmpty(timecodeResult.getString("end_time")))/timecodeInterval;
+						for(Appointment appt : apptDao.findByProviderAndDayandNotStatuses(thisProvNo, ConversionUtils.fromDateString(qCurDate), new String[] {"N", "C"})) {
+							start_index = timeStrToMins(StringUtils.trimToEmpty(ConversionUtils.toTimeString(appt.getStartTime())))/timecodeInterval;
+							end_index = timeStrToMins(StringUtils.trimToEmpty(ConversionUtils.toTimeString(appt.getEndTime())))/timecodeInterval;
 							
 							// very late appts may push us past the time range we care about 
 							// trying to invalidate these times will lead to a ArrayIndexOutOfBoundsException

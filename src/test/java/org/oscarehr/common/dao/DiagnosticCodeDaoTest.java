@@ -83,4 +83,9 @@ public class DiagnosticCodeDaoTest extends DaoTestFixtures {
 		List<DiagnosticCode> codes = dao.findByRegionAndType("REG", "TYPE");
 		assertNotNull(codes);
 	}
+
+    @Test
+    public void testFindDiagnosictsAndCtlDiagCodesByServiceType() {
+	    assertNotNull(dao.findDiagnosictsAndCtlDiagCodesByServiceType("TYPE"));
+    }
 }

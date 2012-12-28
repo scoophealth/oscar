@@ -18,433 +18,327 @@
 
 package oscar.oscarBilling.ca.on.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.billing.CA.ON.dao.BillingPercLimitDao;
+import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.dao.BillingONExtDao;
+import org.oscarehr.common.dao.BillingONItemDao;
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.CtlBillingServiceDao;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONExt;
+import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.BillingService;
+import org.oscarehr.util.DateRange;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBPreparedHandler;
-import oscar.oscarDB.DBPreparedHandlerParam;
+import oscar.util.ConversionUtils;
 
 public class JdbcBillingReviewImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingReviewImpl.class);
-	BillingONDataHelp dbObj = new BillingONDataHelp();
 
 	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
-		String sql = "select value, termination_date from billingservice where service_code='" + val + "' and billingservice_date = (select max(billingservice_date) from billingservice where billingservice_date <= '" + billReferalDate + "' and service_code = '" + val + "')";
-
-		// _logger.info("getCodeFee(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
+		BillingServiceDao dao = SpringUtils.getBean(BillingServiceDao.class);
 
 		try {
-			 if(rs.next()) {
-				retval = rs.getString("value");
-			
+			for (BillingService bs : dao.findByServiceCodeAndLatestDate(val, ConversionUtils.fromDateString(billReferalDate))) {
+				retval = bs.getValue();
 
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                Date serviceDate = df.parse(billReferalDate);
-                String tDate = rs.getString("termination_date");
-                Date termDate = df.parse(tDate);
-                if( termDate.before(serviceDate) ) {
-                    retval = "defunct";
-                }
-             }
-			rs.close();
-		} catch (SQLException e) {
-			_logger.error("getCodeFee(sql = " + sql + ")");
-            MiscUtils.getLogger().error("Error", e);
-		} catch(ParseException e ) {
-            _logger.error("Parse service date error");
-            MiscUtils.getLogger().error("Error", e);
-        }
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				Date serviceDate = df.parse(billReferalDate);
+				if (bs.getTerminationDate().before(serviceDate)) {
+					retval = "defunct";
+				}
+			}
 
+		} catch (Exception e) {
+			_logger.error("error", e);
+		}
 
 		return retval;
 	}
 
 	public String getPercFee(String val, String billReferalDate) {
 		String retval = null;
-		String sql = "select percentage from billingservice where service_code='" + val + "' and billingservice_date = (select max(billingservice_date) from billingservice where billingservice_date <= '" + billReferalDate + "' and service_code = '" + val + "')";
-
-		// _logger.info("getCodeFee(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
-
+		BillingServiceDao dao = SpringUtils.getBean(BillingServiceDao.class);
 		try {
-			while (rs.next()) {
-				retval = rs.getString("percentage");
+			for (BillingService bs : dao.findByServiceCodeAndLatestDate(val, ConversionUtils.fromDateString(billReferalDate))) {
+				retval = bs.getPercentage();
 			}
-			rs.close();
-		} catch (SQLException e) {
-			_logger.error("getPercFee(sql = " + sql + ")");
+		} catch (Exception e) {
+			_logger.error("error", e);
 		}
-
 		return retval;
 	}
 
 	public String[] getPercMinMaxFee(String val, String billReferalDate) {
 		String[] retval = { "", "" };
-		String sql = "select b.min, b.max from billingperclimit b where b.service_code='" + val + "' and  b.effective_date = (select max(b2.effective_date) from billingperclimit b2 where b2.effective_date <= '" + billReferalDate + "' and b2.service_code = '" + val + "')";
 
-		// _logger.info("getCodeFee(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
-
+		BillingPercLimitDao dao = SpringUtils.getBean(BillingPercLimitDao.class);
 		try {
-			while (rs.next()) {
-				retval[0] = rs.getString("min");
-				retval[1] = rs.getString("max");
+			for (BillingPercLimit b : dao.findByServiceCodeAndLatestDate(val, ConversionUtils.fromDateString(billReferalDate))) {
+				retval[0] = b.getMin();
+				retval[1] = b.getMax();
 			}
-			rs.close();
-		} catch (SQLException e) {
-			_logger.error("getPercMinMaxFee(sql = " + sql + ")");
+		} catch (Exception e) {
+			_logger.error("error", e);
 		}
-
 		return retval;
 	}
 
 	// invoice report
-	public List getBill(String billType, String statusType, String providerNo, String startDate, String endDate,
-			String demoNo) {
-		List retval = new Vector();
-		BillingClaimHeader1Data ch1Obj = null;
-		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType;
-		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
-		String sql = "select id,pay_program,billing_on_cheader1.demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp1,total,paid,clinic" + " from billing_on_cheader1 " +
-                                "where " + temp
-				+ " order by billing_date, billing_time";
-
-		_logger.info("getBill(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
-
+	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo) {
+		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
+		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+		BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
 		try {
-			while (rs.next()) {
-				ch1Obj = new BillingClaimHeader1Data();
-				ch1Obj.setId("" + rs.getInt("id"));
-				ch1Obj.setDemographic_no("" + rs.getInt("demographic_no"));
-				ch1Obj.setDemographic_name(rs.getString("demographic_name"));
-				ch1Obj.setBilling_date(rs.getString("billing_date"));
-				ch1Obj.setBilling_time(rs.getString("billing_time"));
-				ch1Obj.setStatus(rs.getString("status"));
-				ch1Obj.setProviderNo(rs.getString("provider_no"));
-				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
-				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
-				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
-				ch1Obj.setTotal(rs.getString("total"));
-				ch1Obj.setPay_program(rs.getString("pay_program"));
-				ch1Obj.setPaid(rs.getString("paid"));
-
-                                sql = "select value from billing_on_ext where key_val = 'payDate' and billing_no = " + rs.getInt("id");
-                                ResultSet rs2 = dbObj.searchDBRecord(sql);
-                                if( rs2.next() ) {
-                                    ch1Obj.setSettle_date(rs2.getString("value"));
-                                }
-                                rs2.close();
-				
-				ch1Obj.setClinic(rs.getString("clinic"));
-				
+			for (BillingONCHeader1 h : dao.findByMagic(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo))) {
+				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
+				ch1Obj.setId("" + h.getId());
+				ch1Obj.setDemographic_no("" + h.getDemographicNo());
+				ch1Obj.setDemographic_name(h.getDemographicName());
+				ch1Obj.setBilling_date(ConversionUtils.toDateString(h.getBillingDate()));
+				ch1Obj.setBilling_time(ConversionUtils.toDateString(h.getBillingTime()));
+				ch1Obj.setStatus(h.getStatus());
+				ch1Obj.setProviderNo(h.getProviderNo());
+				ch1Obj.setProvider_ohip_no(h.getProviderOhipNo());
+				ch1Obj.setApptProvider_no(h.getApptProviderNo());
+				ch1Obj.setUpdate_datetime(ConversionUtils.toDateString(h.getTimestamp()));
+				ch1Obj.setTotal(h.getTotal());
+				ch1Obj.setPay_program(h.getPayProgram());
+				ch1Obj.setPaid(h.getPaid());
+				ch1Obj.setClinic(h.getClinic());
+				for (BillingONExt b : extDao.findByBillingNoAndKey(h.getId(), "payDate")) {
+					ch1Obj.setSettle_date(b.getValue());
+				}
 				retval.add(ch1Obj);
 			}
-			rs.close();
-		} catch (SQLException e) {
-			_logger.error("getBill(sql = " + sql + ")");
+		} catch (Exception e) {
+			_logger.error("error", e);
 		}
 		return retval;
 	}
 
 	//invoice report
-	public List getBill(String billType, String statusType, String providerNo, String startDate, String endDate,
-			String demoNo, String serviceCodes, String dx, String visitType) {
-		List retval = new Vector();
-		BillingClaimHeader1Data ch1Obj = null;
-		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " "
-			+ billType + " " + visitType + " " + serviceCodes;
-		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
+	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType) {
+		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
 
-		String sql = "SELECT ch1.id,pay_program,demographic_no,demographic_name,billing_date,billing_time," +
-				"ch1.status,provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid,clinic," +
-				"bi.fee, bi.service_code, bi.dx " +
-				"FROM billing_on_cheader1 ch1 LEFT JOIN billing_on_item bi ON ch1.id=bi.ch1_id " +
-				"WHERE " + temp + serviceCodes + " and bi.status!='D' " +
-				" ORDER BY billing_date, billing_time";
+		try {
+			String prevId = null;
+			String prevPaid = null;
 
-		_logger.info("getBill(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
+			BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+			for (Object[] o : dao.findByMagic2(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo), serviceCodes, dx, visitType)) {
+				BillingONCHeader1 ch1 = (BillingONCHeader1) o[0];
+				BillingONItem bi = (BillingONItem) o[1];
 
-		if(rs != null) {
-			try {
-				String prevId = null;
-                String prevPaid = null;
-
-				while (rs.next()) {
-
-					boolean bSameBillCh1 = false;
-					ch1Obj = new BillingClaimHeader1Data();
-					ch1Obj.setId("" + rs.getInt("id"));
-					ch1Obj.setDemographic_no("" + rs.getInt("demographic_no"));
-					ch1Obj.setDemographic_name(rs.getString("demographic_name"));
-					ch1Obj.setBilling_date(rs.getString("billing_date"));
-					ch1Obj.setBilling_time(rs.getString("billing_time"));
-					ch1Obj.setStatus(rs.getString("status"));
-					ch1Obj.setProviderNo(rs.getString("provider_no"));
-					ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
-					ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
-					ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
-
-					ch1Obj.setClinic(rs.getString("clinic"));
-
-					// ch1Obj.setTotal(rs.getString("total"));
-					ch1Obj.setPay_program(rs.getString("pay_program"));
-					/*
-					if (!bSameBillCh1)
-						ch1Obj.setPaid(rs.getString("paid"));
-					else
-						ch1Obj.setPaid("0.00");
-					*/
-					if (!(ch1Obj.getId().equals(prevId) && rs.getString("paid").equals(prevPaid))) {
-	                        ch1Obj.setPaid(rs.getString("paid"));
-	                } else
-	                        ch1Obj.setPaid("0.00");
-
-					ch1Obj.setTotal(rs.getString("fee"));
-					ch1Obj.setRec_id(rs.getString("dx"));
-					ch1Obj.setTransc_id(rs.getString("service_code"));
-
-					retval.add(ch1Obj);
-					//bSameBillCh1 = true;
-					prevId = ch1Obj.getId();
-	                prevPaid = rs.getString("paid");
-
+				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
+				ch1Obj.setId("" + ch1.getId());
+				ch1Obj.setDemographic_no("" + ch1.getDemographicNo());
+				ch1Obj.setDemographic_name(ch1.getDemographicName());
+				ch1Obj.setBilling_date(ConversionUtils.toDateString(ch1.getBillingDate()));
+				ch1Obj.setBilling_time(ConversionUtils.toTimeString(ch1.getBillingTime()));
+				ch1Obj.setStatus(ch1.getStatus());
+				ch1Obj.setProviderNo(ch1.getProviderNo());
+				ch1Obj.setProvider_ohip_no(ch1.getProviderOhipNo());
+				ch1Obj.setApptProvider_no(ch1.getApptProviderNo());
+				ch1Obj.setUpdate_datetime(ConversionUtils.toTimestampString(ch1.getTimestamp()));
+				ch1Obj.setClinic(ch1.getClinic());
+				ch1Obj.setPay_program(ch1.getPayProgram());
+				if (!(ch1Obj.getId().equals(prevId) && ch1.getPaid().equals(prevPaid))) {
+					ch1Obj.setPaid(ch1.getPaid());
+				} else {
+					ch1Obj.setPaid("0.00");
 				}
-				
-				rs.close();
-			} catch (SQLException e) {
-				_logger.error("getBill(sql = " + sql + ")");
+				ch1Obj.setTotal(bi.getFee());
+				ch1Obj.setRec_id(bi.getDx());
+				ch1Obj.setTransc_id(bi.getServiceCode());
+
+				retval.add(ch1Obj);
+				prevId = ch1Obj.getId();
+				prevPaid = ch1.getPaid();
+
 			}
+		} catch (Exception e) {
+			_logger.error("error", e);
 		}
+
 		return retval;
 	}
 
 	// billing page
-	public List getBillingHist(String demoNo, int iPageSize, int iOffSet, DBPreparedHandlerParam[] pDateRange) throws Exception{
-		List retval = new Vector();
-		int iRow=0;
-		
-		BillingClaimHeader1Data ch1Obj = null;
-		
-		DBPreparedHandler dbPH=new DBPreparedHandler();
+	public List<Object> getBillingHist(String demoNo, int iPageSize, int iOffSet, DateRange dateRange) throws Exception {
+		List<Object> retval = new ArrayList<Object>();
+		int iRow = 0;
 
-		String sql;
-		ResultSet rs;
-		if(pDateRange==null){
-		  sql = "select * from billing_on_cheader1 where demographic_no=" + demoNo + 
-				" and status!='D' order by billing_date desc, billing_time desc, id desc ";// + strLimit;
-	      rs = dbPH.queryResults_paged(sql, iOffSet);
+		BillingClaimHeader1Data ch1Obj = null;
+
+		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+		BillingONItemDao itemDao = SpringUtils.getBean(BillingONItemDao.class);
+
+		List<BillingONCHeader1> hs = null;
+		if (dateRange == null) {
+			hs = dao.findByDemoNo(ConversionUtils.fromIntString(demoNo), iOffSet, iPageSize);
+		} else {
+			hs = dao.findByDemoNoAndDates(ConversionUtils.fromIntString(demoNo), dateRange, iOffSet, iPageSize);
 		}
-		else{
-	      sql = "select * from billing_on_cheader1 where demographic_no=" + demoNo + 
-	            "  and billing_date>=? and billing_date <=?" + 
-				" and status!='D' order by billing_date desc, billing_time desc, id desc ";// + strLimit;
-	      rs = dbPH.queryResults_paged(sql, pDateRange, iOffSet);
-		}	
-		// _logger.error("getBillingHist(sql = " + sql + ")");
 
 		try {
-			while (rs.next()) {
+			for (BillingONCHeader1 h : hs) {
 				iRow++;
-		        if(iRow>iPageSize) break;
+				if (iRow > iPageSize) {
+					break;
+				}
 				ch1Obj = new BillingClaimHeader1Data();
-				ch1Obj.setId("" + rs.getInt("id"));
-				ch1Obj.setBilling_date(rs.getString("billing_date"));
-				ch1Obj.setBilling_time(rs.getString("billing_time"));
-				ch1Obj.setStatus(rs.getString("status"));
-				ch1Obj.setProviderNo(rs.getString("provider_no"));
-				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
-				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
-				
-				ch1Obj.setClinic(rs.getString("clinic"));
-				ch1Obj.setAppointment_no(rs.getString("appointment_no"));
-				ch1Obj.setPay_program(rs.getString("pay_program"));
-				ch1Obj.setVisittype(rs.getString("visittype"));
-				ch1Obj.setAdmission_date(rs.getString("admission_date"));
-				ch1Obj.setFacilty_num(rs.getString("facilty_num"));
-				ch1Obj.setTotal(rs.getString("total"));
+				ch1Obj.setId("" + h.getId());
+				ch1Obj.setBilling_date(ConversionUtils.toDateString(h.getBillingDate()));
+				ch1Obj.setBilling_time(ConversionUtils.toDateString(h.getBillingTime()));
+				ch1Obj.setStatus(h.getStatus());
+				ch1Obj.setProviderNo(h.getProviderNo());
+				ch1Obj.setApptProvider_no(h.getApptProviderNo());
+				ch1Obj.setUpdate_datetime(ConversionUtils.toDateString(h.getTimestamp()));
+
+				ch1Obj.setClinic(h.getClinic());
+				ch1Obj.setAppointment_no("" + h.getAppointmentNo());
+				ch1Obj.setPay_program(h.getPayProgram());
+				ch1Obj.setVisittype(h.getVisitType());
+				ch1Obj.setAdmission_date(ConversionUtils.toDateString(h.getAdmissionDate()));
+				ch1Obj.setFacilty_num(h.getFaciltyNum());
+				ch1Obj.setTotal(h.getTotal());
+
 				retval.add(ch1Obj);
 
-				sql = "select * from billing_on_item where ch1_id=" + ch1Obj.getId() + " and status!='D'";
-
-				// _logger.info("getBillingHist(sql = " + sql + ")");
-
-				ResultSet rs2 = dbObj.searchDBRecord(sql);
 				String dx = "";
 				String strService = "";
 				String strServiceDate = "";
-				while (rs2.next()) {
-					strService += rs2.getString("service_code") + " x " + rs2.getString("ser_num") + ", ";
-					dx = rs2.getString("dx");
-					strServiceDate = rs2.getString("service_date");
+				for (BillingONItem i : itemDao.findByCh1IdAndStatusNotEqual(h.getId(), "D")) {
+					strService += i.getServiceCode() + " x " + i.getServiceCount() + ", ";
+					dx = i.getDx();
+					strServiceDate = ConversionUtils.toDateString(i.getServiceDate());
 				}
-				rs2.close();
+
 				BillingItemData itObj = new BillingItemData();
 				itObj.setService_code(strService);
 				itObj.setDx(dx);
 				itObj.setService_date(strServiceDate);
 				retval.add(itObj);
 			}
-			rs.close();
-		} catch (SQLException e) {
-			_logger.error("getBillingHist(sql = " + sql + ")");
+		} catch (Exception e) {
+			_logger.error("error", e);
 		}
 
 		return retval;
 	}
 
-        public List<LabelValueBean> listBillingForms() {
-		List<LabelValueBean> res = null;
-		try {
-	        String sql = "select distinct servicetype, servicetype_name from ctl_billingservice" +
-    			" where status!='D' and servicetype is not null AND LENGTH(TRIM(servicetype))>0";
-			_logger.trace("billing forms list: "+sql);
-			ResultSet rs = dbObj.searchDBRecord(sql);
-	        if(rs!=null && rs.next()) {
-	        	res = new ArrayList<LabelValueBean>();
-		        do {
-		            String servicetype     = rs.getString("servicetype");
-		            String servicetypename = rs.getString("servicetype_name");
-		            res.add(new LabelValueBean(servicetypename,servicetype));
-		        } while (rs.next());
+	public List<LabelValueBean> listBillingForms() {
+		List<LabelValueBean> res = new ArrayList<LabelValueBean>();
 
-	        }
-		} catch (SQLException ex) {
+		CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
+		try {
+			for (Object[] o : dao.findServiceTypes()) {
+				String servicetype = String.valueOf(o[0]);
+				String servicetypeName = String.valueOf(o[1]);
+				res.add(new LabelValueBean(servicetypeName, servicetype));
+			}
+		} catch (Exception ex) {
 			_logger.error("Error getting billing forms list", ex);
 		}
 		return res;
 	}
 
-       public List<String> mergeServiceCodes(String serviceCodes, String billingForm) {
+	public List<String> mergeServiceCodes(String serviceCodes, String billingForm) {
 		List<String> serviceCodeList = null;
-
-		if(serviceCodes != null && serviceCodes.length() > 0) {
+		if (serviceCodes != null && serviceCodes.length() > 0) {
 			String[] serviceArray = serviceCodes.split(",");
 			serviceCodeList = new ArrayList<String>();
-			for(int i=0;i < serviceArray.length; i++) {
-				serviceCodeList.add("bi.service_code like '%" + serviceArray[i].trim() +"%'");
+			for (int i = 0; i < serviceArray.length; i++) {
+				serviceCodeList.add(serviceArray[i].trim());
 			}
 		}
-
-		if(billingForm != null && billingForm.length() > 0) {
-			String sql = "select distinct service_code from ctl_billingservice " +
-    			" where status!='D' and servicetype='" + billingForm +"'";
-			_logger.trace("billing forms list: "+sql);
-			try {
-				ResultSet rs = dbObj.searchDBRecord(sql);
-		        if(rs != null && rs.next()) {
-			        if(serviceCodeList == null) serviceCodeList = new ArrayList<String>();
-		        	do {
-			            String serviceCode     = rs.getString("service_code");
-			            serviceCodeList.add("bi.service_code='"+serviceCode+"'");
-		        	} while (rs.next());
-		        }
-			} catch (SQLException ex) {
-				_logger.error("Error getting billing forms list", ex);
+		if (billingForm != null && billingForm.length() > 0) {
+			CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
+			
+			for(Object code : dao.findServiceCodesByType(billingForm)) {
+				serviceCodeList.add(String.valueOf(code));
 			}
 		}
-
 		return serviceCodeList;
 	}
-       
-    // billing edit page
-       public List getBillingByApptNo(String apptNo) throws Exception{
-               List retval = new Vector();
-               int iRow=0;
 
-               BillingClaimHeader1Data ch1Obj = null;
+	// billing edit page
+	public List<Object> getBillingByApptNo(String apptNo) throws Exception {
+		List<Object> retval = new ArrayList<Object>();
+		
+		BillingClaimHeader1Data ch1Obj = null;
 
-               DBPreparedHandler dbPH=new DBPreparedHandler();
+		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1.class);
+		BillingONItemDao itemDao = SpringUtils.getBean(BillingONItemDao.class);
+		
+		try {
+			for(BillingONCHeader1 h : dao.findByAppointmentNo(ConversionUtils.fromIntString(apptNo))) {
+				ch1Obj = new BillingClaimHeader1Data();
+				ch1Obj.setId("" + h.getId());
+				ch1Obj.setBilling_date(ConversionUtils.toDateString(h.getBillingDate()));
+				ch1Obj.setBilling_time(ConversionUtils.toTimeString(h.getBillingTime()));
+				ch1Obj.setStatus(h.getStatus());
+				ch1Obj.setProviderNo(h.getProviderNo());
+				ch1Obj.setAppointment_no("" + h.getAppointmentNo());
+				ch1Obj.setApptProvider_no(h.getApptProviderNo());
+				ch1Obj.setAsstProvider_no(h.getAsstProviderNo());
+				ch1Obj.setMan_review(h.getManReview());
+				ch1Obj.setUpdate_datetime(ConversionUtils.toTimestampString(h.getTimestamp()));
+				ch1Obj.setClinic(h.getClinic());
+				ch1Obj.setPay_program(h.getPayProgram());
+				ch1Obj.setVisittype(h.getVisitType());
+				ch1Obj.setAdmission_date(ConversionUtils.toDateString(h.getAdmissionDate()));
+				ch1Obj.setFacilty_num(h.getFaciltyNum());
+				ch1Obj.setHin(h.getHin());
+				ch1Obj.setVer(h.getVer());
+				ch1Obj.setProvince(h.getProvince());
+				ch1Obj.setDob(h.getDob());
+				ch1Obj.setDemographic_name(h.getDemographicName());
+				ch1Obj.setDemographic_no("" + h.getDemographicNo());
+				ch1Obj.setTotal(h.getTotal());
+				retval.add(ch1Obj);
+				
+				String dx = null;
+				String dx1 = null;
+				String dx2 = null;
+				String strService = null;
+				String strServiceDate = null;
 
-               String sql;
-               ResultSet rs;
-               sql = "select * from billing_on_cheader1 where status!='D' and appointment_no=?" ;
-           rs = dbPH.queryResults(sql, apptNo);
-               try {
-                       while (rs.next()) {
+				for(BillingONItem i : itemDao.findByCh1Id(h.getId())) {
+					strService += i.getServiceCode() + " x " + i.getServiceCount() + ", ";
+					dx = i.getDx();
+					strServiceDate = ConversionUtils.toDateString(i.getServiceDate());
+					dx1 = i.getDx1();
+					dx2 = i.getDx2();
+				}
+				
+				BillingItemData itObj = new BillingItemData();
+				itObj.setService_code(strService);
+				itObj.setDx(dx);
+				itObj.setDx1(dx1);
+				itObj.setDx2(dx2);
+				itObj.setService_date(strServiceDate);
+				retval.add(itObj);
 
-                               ch1Obj = new BillingClaimHeader1Data();
-                               ch1Obj.setId("" + rs.getInt("id"));
-                               ch1Obj.setBilling_date(rs.getString("billing_date"));
-                               ch1Obj.setBilling_time(rs.getString("billing_time"));
-                               ch1Obj.setStatus(rs.getString("status"));
-                               ch1Obj.setProviderNo(rs.getString("provider_no"));
-                               ch1Obj.setAppointment_no(rs.getString("appointment_no"));
-                               ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
-                               ch1Obj.setAsstProvider_no(rs.getString("asstProvider_no"));
-                               ch1Obj.setMan_review(rs.getString("man_review"));
+			}
+		} catch (Exception e) {
+			_logger.error("error", e);
+		}
 
-                               ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
+		return retval;
+	}
 
-                               ch1Obj.setClinic(rs.getString("clinic"));
-
-                               ch1Obj.setPay_program(rs.getString("pay_program"));
-                               ch1Obj.setVisittype(rs.getString("visittype"));
-                               ch1Obj.setAdmission_date(rs.getString("admission_date"));
-                               ch1Obj.setFacilty_num(rs.getString("facilty_num"));
-                               ch1Obj.setHin(rs.getString("hin"));
-                               ch1Obj.setVer(rs.getString("ver"));
-                               ch1Obj.setProvince(rs.getString("province"));
-                               ch1Obj.setDob(rs.getString("dob"));
-                               ch1Obj.setDemographic_name(rs.getString("demographic_name"));
-                               ch1Obj.setDemographic_no(rs.getString("demographic_no"));
-
-                               ch1Obj.setTotal(rs.getString("total"));
-                               retval.add(ch1Obj);
-
-                               sql = "select * from billing_on_item where ch1_id=" + ch1Obj.getId() + " and status!='D'";
-
-                               // _logger.info("getBillingHist(sql = " + sql + ")");
-
-                               ResultSet rs2 = dbObj.searchDBRecord(sql);
-                               String dx = null;
-                               String dx1 = null;
-                               String dx2 = null;
-                               String strService = null;
-                               String strServiceDate = null;
-
-                               while (rs2.next()) {
-                                       strService += rs2.getString("service_code") + " x " + rs2.getString("ser_num") + ", ";
-                                       dx = rs2.getString("dx");
-                                       strServiceDate = rs2.getString("service_date");
-                                       dx1 = rs2.getString("dx1");
-                                       dx2 = rs2.getString("dx2");
-                               }
-                               rs2.close();
-                               BillingItemData itObj = new BillingItemData();
-                               itObj.setService_code(strService);
-                               itObj.setDx(dx);
-                               itObj.setDx1(dx1);
-                               itObj.setDx2(dx2);
-                               itObj.setService_date(strServiceDate);                                                        
-                               retval.add(itObj);
-
-                       }
-                       rs.close();
-               } catch (SQLException e) {
-                       _logger.error("getBillingHist(sql = " + sql + ")");
-               }
-
-               return retval;
-       }
-
-
-
-  
-       
 }

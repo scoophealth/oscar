@@ -32,6 +32,7 @@ import org.oscarehr.common.model.BillingONItem;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class BillingONItemDao extends AbstractDao<BillingONItem>{
 
 	
@@ -44,7 +45,7 @@ public class BillingONItemDao extends AbstractDao<BillingONItem>{
         Query q = entityManager.createQuery(queryStr);
         q.setParameter(1, ch1_id);
         
-        @SuppressWarnings("unchecked")
+        
         List<BillingONItem> rs = q.getResultList();
 
         return rs;
@@ -56,7 +57,7 @@ public class BillingONItemDao extends AbstractDao<BillingONItem>{
         q.setParameter(1, ch1_id);
         q.setParameter(2, "D");
         
-        @SuppressWarnings("unchecked")
+        
         List<BillingONItem> rs = q.getResultList();
 
         return rs;
@@ -67,9 +68,20 @@ public class BillingONItemDao extends AbstractDao<BillingONItem>{
         Query q = entityManager.createQuery(queryStr);
         q.setParameter(1, demographic_no);
         
-        @SuppressWarnings("unchecked")
         List<BillingONCHeader1> rs = q.getResultList();
 
         return rs;
+    }
+
+	public List<BillingONItem> findByCh1Id(Integer id) {
+	    Query query = createQuery("bi", "bi.ch1Id = :ch1Id AND bi.status <> 'D' AND bi.status <> 'S'");
+		query.setParameter("ch1Id", id);
+		return query.getResultList();
+    }
+
+	public List<BillingONItem> findByCh1IdAndStatusNotEqual(Integer chId, String string) {
+		Query query = createQuery("i", "i.ch1Id= :chId AND i.status != 'D'");
+		query.setParameter("chId", chId);
+		return query.getResultList();
     }
 }

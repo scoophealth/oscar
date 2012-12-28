@@ -17,6 +17,8 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="org.oscarehr.util.DateRange"%>
 <%if (session.getAttribute("user") == null)
 				response.sendRedirect("../../../logout.jsp");
 %>
@@ -69,17 +71,10 @@
 				objFile.readInBillingNo();
 				objFile.renameFile();
 				// 
-				String dateRange = "";
-				dateRange = " and billing_date <= '" + dateEnd + "'";
-				//if (dateBegin.compareTo("") == 0){
-				//	dateRange = " and billing_date <= '" + dateEnd + "'";
-				//}else{
-				//	dateRange = " and billing_date >'" + dateBegin + "' and billing_date <='" + dateEnd + "'";
-				//}
+				DateRange dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
 				objFile.setDateRange(dateRange);
-				//
 				
-				objFile.createBillingFileStr("" + headerId, "(status='B')", false, mohOffice, false, false);
+				objFile.createBillingFileStr("" + headerId, new String[] {"B"}, false, mohOffice, false, false);
 				objFile.writeFile(objFile.getValue());
 				objFile.writeHtml(objFile.getHtmlCode());
 				// update the diskname 
@@ -114,17 +109,9 @@
 						objFile.setHtmlFilename(htmlFilename);
 						objFile.readInBillingNo();
 						
-						// 
-						String dateRange = "";
-						dateRange = " and billing_date <= '" + dateEnd + "'";
-						//if (dateBegin.compareTo("") == 0){
-						//	dateRange = " and billing_date <= '" + dateEnd + "'";
-						//}else{
-						//	dateRange = " and billing_date >'" + dateBegin + "' and billing_date <='" + dateEnd + "'";
-						//}
+						DateRange dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
 						objFile.setDateRange(dateRange);
-						//
-						objFile.createBillingFileStr("" + headerId, "(status='B')", false, mohOffice, false, false);						
+						objFile.createBillingFileStr("" + headerId, new String[] {"B"}, false, mohOffice, false, false);						
 						value += objFile.getValue() + "\n";
 						objFile.writeHtml(objFile.getHtmlCode());
 						objFile.updateDisknameSum(Integer.parseInt(diskId));

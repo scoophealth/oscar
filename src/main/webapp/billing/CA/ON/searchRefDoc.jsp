@@ -65,7 +65,7 @@
 	if (request.getParameter("submit") != null && (request.getParameter("submit").equals("Search")
 		|| request.getParameter("submit").equals("Next Page") || request.getParameter("submit").equals("Last Page")) ) {
 
-	  BillingONDataHelp dbObj = new BillingONDataHelp();
+	  
 	  String search_mode = request.getParameter("search_mode")==null?"search_name":request.getParameter("search_mode");
 	  String orderBy = request.getParameter("orderby")==null?"last_name,first_name":request.getParameter("orderby");
 	  String where = "";
@@ -104,7 +104,7 @@
 	}
 %>
 <%@ page import="java.util.*, java.sql.*, java.net.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.commons.lang.WordUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
