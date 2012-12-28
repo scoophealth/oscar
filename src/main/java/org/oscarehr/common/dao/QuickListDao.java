@@ -25,10 +25,12 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.QuickList;
 import org.springframework.stereotype.Repository;
 
@@ -46,5 +48,40 @@ public class QuickListDao extends AbstractDao<QuickList>{
 	    query.setParameter("rc", researchCode);
 	    query.setParameter("cs", codingSystem);
 	    return query.getResultList();
+    }
+
+	public QuickList findLast() {
+		Query query = createQuery("ql", "ORDER BY ql.quickListName");
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
+    }
+
+	@SuppressWarnings("unchecked")
+	public List<QuickList> findByCodingSystem(String codingSystem) {
+		String csQuery = "";
+        if ( codingSystem != null ){
+        	csQuery = " where ql.codingSystem = :cs";
+        }
+		Query query = createQuery("ql", csQuery + " GROUP BY ql.quickListName");
+		if (codingSystem != null) {
+			query.setParameter("cs", codingSystem);
+		}
+		return query.getResultList();
+    }
+
+	@NativeSql
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findResearchCodeAndCodingSystemDescriptionByCodingSystem(String codingSystem, String quickListName) {
+		try {
+        	String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem
+					+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem
+					+" = q.dxResearchCode order by c.description";
+			Query query = entityManager.createNativeQuery(sql);
+			return query.getResultList();
+		} catch (Exception e) {
+			// TODO replace when test ingores are merged
+			return new ArrayList<Object[]>();
+		}
+		
     }
 }

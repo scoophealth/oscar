@@ -22,121 +22,78 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarResearch.oscarDxResearch.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.QuickListDao;
+import org.oscarehr.common.model.QuickList;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 
 public class dxQuickListBeanHandler {
-    
-    Vector dxQuickListBeanVector = new Vector();
-    String lastUsedQuickList = "default";
-     
-    public dxQuickListBeanHandler(String providerNo) {
-        init(providerNo);
-    } 
-    
-    public dxQuickListBeanHandler(String providerNo,String codingSystem) {
-        init(providerNo,codingSystem);
-    } 
-    
-    public dxQuickListBeanHandler() {
-        init();
-    }
-    
-    public boolean init(String providerNo){
-        return init(providerNo,null);
-    }
-    
-    public boolean init(String providerNo,String codingSystem) {
-        
-        String codSys = "";
-        if ( codingSystem != null ){
-            codSys = " where codingSystem = '"+codingSystem+"' ";
-        } 
-        
-        boolean verdict = true;
-        try {
-          
-            ResultSet rs;
-            String quickListName;
-           
-           
-            
-            String lastUsed = "";
-            String sql;
-            
-            lastUsed = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
-            if( lastUsed == null ) {
-                sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName LIMIT 1";
-                rs = DBHandler.GetSQL(sql);
-                if(rs.next()) 
-                    lastUsed = oscar.Misc.getString(rs, "quickListName");                                           
 
-                rs.close();
-            }
+	Vector dxQuickListBeanVector = new Vector();
+	String lastUsedQuickList = "default";
 
-            sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";            
-            rs = DBHandler.GetSQL(sql);
-            while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(oscar.Misc.getString(rs, "quickListName"),
-                                                           oscar.Misc.getString(rs, "createdByProvider"));
-                quickListName = oscar.Misc.getString(rs, "quickListName");
-                                    
-                if(lastUsed.equals(quickListName)){
+	public dxQuickListBeanHandler(String providerNo) {
+		init(providerNo);
+	}
 
-                    bean.setLastUsed("Selected");
-                    lastUsedQuickList = oscar.Misc.getString(rs, "quickListName");
-                }                
-                dxQuickListBeanVector.add(bean);
-            }
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	public dxQuickListBeanHandler(String providerNo, String codingSystem) {
+		init(providerNo, codingSystem);
+	}
 
-    public boolean init() {
-        
-        boolean verdict = true;
-        try {
-            
-            ResultSet rs;
-            
-            
-           
-            String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName"; 
+	public dxQuickListBeanHandler() {
+		init();
+	}
 
-            rs = DBHandler.GetSQL(sql);
-            while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(oscar.Misc.getString(rs, "quickListName"));                              
-                dxQuickListBeanVector.add(bean);
-            }
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
-    
-    public Collection getDxQuickListBeanVector(){
-        return dxQuickListBeanVector;
-    }
-    
-    public String getLastUsedQuickList(){
-        return lastUsedQuickList;
-    }
+	public boolean init(String providerNo) {
+		return init(providerNo, null);
+	}
+
+	public boolean init(String providerNo, String codingSystem) {
+		String quickListName;
+		String lastUsed = "";
+
+		QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
+		lastUsed = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
+		if (lastUsed == null) {
+			QuickList ql = dao.findLast();
+			if (ql != null) {
+				lastUsed = ql.getQuickListName();
+			}
+		}
+
+		for (QuickList ql : dao.findByCodingSystem(codingSystem)) {
+			dxQuickListBean bean = new dxQuickListBean(ql.getQuickListName(), ql.getCreatedByProvider());
+			quickListName = ql.getQuickListName();
+
+			if (lastUsed.equals(quickListName)) {
+				bean.setLastUsed("Selected");
+				lastUsedQuickList = ql.getQuickListName();
+			}
+			dxQuickListBeanVector.add(bean);
+		}
+		return true;
+	}
+
+	public boolean init() {
+		QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
+		for (QuickList ql : dao.findAll()) {
+			dxQuickListBean bean = new dxQuickListBean(ql.getQuickListName());
+			dxQuickListBeanVector.add(bean);
+		}
+		return true;
+	}
+
+	public Collection getDxQuickListBeanVector() {
+		return dxQuickListBeanVector;
+	}
+
+	public String getLastUsedQuickList() {
+		return lastUsedQuickList;
+	}
 }
