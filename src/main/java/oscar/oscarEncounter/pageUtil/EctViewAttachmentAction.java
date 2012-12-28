@@ -22,12 +22,9 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,61 +34,34 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.OscarCommLocationsDao;
+import org.oscarehr.util.SpringUtils;
 
 public final class EctViewAttachmentAction extends Action {
 
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		EctViewAttachmentForm frm = (EctViewAttachmentForm) form;
+		String mesId = frm.getMesId();
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+		OscarCommLocationsDao dao = SpringUtils.getBean(OscarCommLocationsDao.class);
+		for (Object[] o : dao.findFormLocationByMesssageId(mesId)) {
+			String thesubject = String.valueOf(o[0]);
+			String theime = String.valueOf(o[1]);
+			String thedate = String.valueOf(o[2]);
+			String attachment = String.valueOf(o[3]);
+			String themessage = String.valueOf(o[4]);
+			String sentBy = String.valueOf(o[5]);
+			String remoteName = null;
 
-
-    EctViewAttachmentForm frm = (EctViewAttachmentForm) form;
-
-    String mesId = frm.getMesId();
-    String thedate = null;
-    String theime = null;
-    String themessage = null;
-    String thesubject = null;
-    String attachment = null;
-    String remoteName = null;
-    String sentBy     = null;
-
-
-    MiscUtils.getLogger().debug("mess id = "+mesId);
-
-    try{
-       
-       ResultSet rs;
-
-
-       rs = DBHandler.GetSQL("SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "
-                     +"FROM messagetbl m, oscarcommlocations ocl where m.sentByLocation = ocl.locationId and "
-                     +" messageid = '"+mesId+"'");
-       if(rs.next()){
-          remoteName = oscar.Misc.getString(rs, "locationDesc");
-          themessage = oscar.Misc.getString(rs, "themessage");
-          theime     = oscar.Misc.getString(rs, "theime");
-          thedate    = oscar.Misc.getString(rs, "thedate");
-          attachment = oscar.Misc.getString(rs, "attachment");
-          thesubject = oscar.Misc.getString(rs, "thesubject");
-          sentBy     = oscar.Misc.getString(rs, "sentBy");
-       }
-       rs.close();
-    }catch(SQLException e){MiscUtils.getLogger().debug("CrAsH"); MiscUtils.getLogger().error("Error", e);}
-
-    request.setAttribute("remoteName",remoteName);
-    request.setAttribute("themessage",themessage);
-    request.setAttribute("theime",theime);
-    request.setAttribute("thedate",thedate);
-    request.setAttribute("attachment",attachment);
-    request.setAttribute("thesubject",thesubject);
-    request.setAttribute("sentBy",sentBy);
-    return (mapping.findForward("success"));
-    }
+			request.setAttribute("remoteName", remoteName);
+			request.setAttribute("themessage", themessage);
+			request.setAttribute("theime", theime);
+			request.setAttribute("thedate", thedate);
+			request.setAttribute("attachment", attachment);
+			request.setAttribute("thesubject", thesubject);
+			request.setAttribute("sentBy", sentBy);
+		}
+		
+		return mapping.findForward("success");
+	}
 }

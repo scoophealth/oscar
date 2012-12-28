@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 /*
  * EctWindowSizes.java
  *
@@ -31,44 +30,40 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.EncounterWindowDao;
+import org.oscarehr.common.model.EncounterWindow;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
  * @author  root
  */
 public class EctWindowSizes {
-    
-    /** Creates a new instance of EctWindowSizes */
-    public EctWindowSizes() {
-    }
-    
-    public static Properties getWindowSizes(String provNo) {
-        Properties props = new Properties();        
-        
-        try {
 
-            
-            String sql = "select * from encounterWindow where provider_no='"+provNo+"'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            
-            rs.next(); // we WANT this to throw an exception if there is no corresponding row in the DB
-            
-            props.setProperty("rowOneSize", oscar.Misc.getString(rs, "rowOneSize"));
-            props.setProperty("rowTwoSize", oscar.Misc.getString(rs, "rowTwoSize"));
-            props.setProperty("rowThreeSize", oscar.Misc.getString(rs, "rowThreeSize"));
-            props.setProperty("presBoxSize", oscar.Misc.getString(rs, "presBoxSize"));                                       
-            rs.close();
-        } catch (Exception e) {
-            //MiscUtils.getLogger().error("Error", e);
-            props.setProperty("rowOneSize", "60");
-            props.setProperty("rowTwoSize", "60");
-            props.setProperty("rowThreeSize", "378");
-            props.setProperty("presBoxSize", "30");
-        }        
-        return props;
-    }
+	/** Creates a new instance of EctWindowSizes */
+	public EctWindowSizes() {
+	}
+
+	public static Properties getWindowSizes(String provNo) {
+		Properties props = new Properties();
+		
+		EncounterWindowDao dao = SpringUtils.getBean(EncounterWindowDao.class);
+		EncounterWindow ectWindow = dao.findByProvider(provNo);
+		
+		if (ectWindow == null) {
+			props.setProperty("rowOneSize", "60");
+			props.setProperty("rowTwoSize", "60");
+			props.setProperty("rowThreeSize", "378");
+			props.setProperty("presBoxSize", "30");
+		} else {
+			props.setProperty("rowOneSize", "" + ectWindow.getRowOneSize());
+			props.setProperty("rowTwoSize", "" + ectWindow.getRowTwoSize());
+			props.setProperty("rowThreeSize", "" + ectWindow.getRowThreeSize());
+			props.setProperty("presBoxSize", "" + ectWindow.getPresBoxSize());
+		}
+
+		return props;
+	}
 }

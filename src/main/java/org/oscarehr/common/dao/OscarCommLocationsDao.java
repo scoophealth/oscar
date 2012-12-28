@@ -56,7 +56,14 @@ public class OscarCommLocationsDao extends AbstractDao<OscarCommLocations>{
 		String sql = "select ocl.locationDesc, mess.thesubject from messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '" + messId + "' ";
 		Query query = entityManager.createNativeQuery(sql);
 		return query.getResultList();
-		
-	    
     }
+	
+	@NativeSql({"messagetbl", "oscarcommlocations"})
+	public List<Object[]> findAttachmentsByMessageId(String messageId) {
+		String sql = "SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "
+		        +"FROM messagetbl m, oscarcommlocations ocl where m.sentByLocation = ocl.locationId and "
+		        +" messageid = '"+messageId+"'";
+		Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+	}
 }
