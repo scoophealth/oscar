@@ -22,89 +22,80 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarResearch.oscarDxResearch.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
 
 public class dxResearchBeanHandler {
 
-    Vector<dxResearchBean> dxResearchBeanVector = new Vector<dxResearchBean>();
+	Vector<dxResearchBean> dxResearchBeanVector = new Vector<dxResearchBean>();
 
-    public dxResearchBeanHandler(String demographicNo) {
-        init(demographicNo);
-    }
+	public dxResearchBeanHandler(String demographicNo) {
+		init(demographicNo);
+	}
 
-    public boolean init(String demographicNo) {
+	public boolean init(String demographicNo) {
 
-        boolean verdict = true;
-        try {
+		boolean verdict = true;
+		try {
 
+			dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+			String[] codingSystems = codingSys.getCodingSystems();
 
-            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-            String[] codingSystems = codingSys.getCodingSystems();
+			DxresearchDAO dao = SpringUtils.getBean(DxresearchDAO.class);
+			for (int idx = 0; idx < codingSystems.length; ++idx) {
+				String codingSystem = codingSystems[idx];
 
-            String sql;
-            ResultSet rs;
-            for( int idx = 0; idx < codingSystems.length; ++idx ) {
-                String codingSystem = codingSystems[idx];
-                sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c " +
-                         "where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='"+ demographicNo +"' and d.coding_system = '"+codingSystem+"'"
-                        +" order by d.start_date desc, d.update_date desc";
-                for(rs = DBHandler.GetSQL(sql); rs.next(); )
-                {
-                    dxResearchBean bean = new dxResearchBean(   oscar.Misc.getString(rs, "description"),
-                                                            oscar.Misc.getString(rs, "dxresearch_no"),
-                                                            oscar.Misc.getString(rs, codingSystem),
-                                                            oscar.Misc.getString(rs, "update_date"),
-                                                            oscar.Misc.getString(rs, "start_date"),
-                                                            oscar.Misc.getString(rs, "status"),
-                                                            codingSystem);
-                    dxResearchBeanVector.add(bean);
+				for (Object[] o : dao.findResearchAndCodingSystemByDemographicAndCondingSystem(codingSystem, demographicNo)) {
+					String start_date = String.valueOf(o[0]);
+					String update_date = String.valueOf(o[1]);
+					String description = String.valueOf(o[2]);
+					String cds = String.valueOf(o[3]);
+					String dxresearch_no = String.valueOf(o[4]);
+					String status = String.valueOf(o[5]);
 
-                }
-                rs.close();
-            }
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+					dxResearchBean bean = new dxResearchBean(description, dxresearch_no, cds, update_date, start_date, status, codingSystem);
+					dxResearchBeanVector.add(bean);
 
-    public Vector<dxResearchBean> getDxResearchBeanVector(){
-        return dxResearchBeanVector;
-    }
+				}
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			verdict = false;
+		}
+		return verdict;
+	}
 
-    public Vector<String> getActiveCodeList(){ //TODO: NEED TO CHECK STATUS
-        Vector<String> v = new Vector<String>();
-        for (int i = 0; i < dxResearchBeanVector.size(); i++){
-            dxResearchBean dx = dxResearchBeanVector.get(i);
-            if( !v.contains(dx.getDxSearchCode())){
-               v.add(dx.getDxSearchCode());
-            }
-        }
-        return v;
-    }
+	public Vector<dxResearchBean> getDxResearchBeanVector() {
+		return dxResearchBeanVector;
+	}
 
+	public Vector<String> getActiveCodeList() { //TODO: NEED TO CHECK STATUS
+		Vector<String> v = new Vector<String>();
+		for (int i = 0; i < dxResearchBeanVector.size(); i++) {
+			dxResearchBean dx = dxResearchBeanVector.get(i);
+			if (!v.contains(dx.getDxSearchCode())) {
+				v.add(dx.getDxSearchCode());
+			}
+		}
+		return v;
+	}
 
-    public Vector<String> getActiveCodeListWithCodingSystem(){ //TODO: NEED TO CHECK STATUS
-        Vector<String> v = new Vector<String>();
-        for (int i = 0; i < dxResearchBeanVector.size(); i++){
-            dxResearchBean dx = dxResearchBeanVector.get(i);
-            if( !v.contains(dx.getDxSearchCode())){
-               v.add(dx.getType()+":"+dx.getDxSearchCode());
-            }
-        }
-        return v;
-    }
+	public Vector<String> getActiveCodeListWithCodingSystem() { //TODO: NEED TO CHECK STATUS
+		Vector<String> v = new Vector<String>();
+		for (int i = 0; i < dxResearchBeanVector.size(); i++) {
+			dxResearchBean dx = dxResearchBeanVector.get(i);
+			if (!v.contains(dx.getDxSearchCode())) {
+				v.add(dx.getType() + ":" + dx.getDxSearchCode());
+			}
+		}
+		return v;
+	}
 
 }
