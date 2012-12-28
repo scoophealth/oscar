@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.OscarCommLocations;
 import org.springframework.stereotype.Repository;
 
@@ -49,4 +50,13 @@ public class OscarCommLocationsDao extends AbstractDao<OscarCommLocations>{
 		return results;
 		
 	}
+
+	@NativeSql({"messagetbl", "oscarcommlocations"})
+	public List<Object[]> findFormLocationByMesssageId(String messId) {
+		String sql = "select ocl.locationDesc, mess.thesubject from messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '" + messId + "' ";
+		Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+		
+	    
+    }
 }
