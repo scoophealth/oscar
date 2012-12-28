@@ -217,10 +217,8 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:public Collection&lt;EctMeasurementsDataBean&gt; getMeasurementsDataVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:Vector measuringInstructionVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public Vector getMeasuringInstructionVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:Vector styleSheetNameVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:public Collection getStyleSheetNameVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:Vector typeDisplayNameVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection getTypeDisplayNameVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:public Collection&lt;EctStyleSheetBean&gt; getStyleSheetNameVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection&lt;EctTypeDisplayNameBean&gt; getTypeDisplayNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:Vector validationsVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:public Collection getValidationsVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:byId = new Hashtable();</ViolationValue>
@@ -1155,9 +1153,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:ResultSet rs1 = DBHandler.GetSQL("select nextval('formtype2diabetes_numeric_se')");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:for(rsGr = DBHandler.GetSQL(sqlGr); rsGr.next();){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sqlValidation);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
@@ -1934,14 +1929,14 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public void setMeasuringInstructionVector(Vector measuringInstructionVector){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:return measuringInstructionVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:this.measuringInstructionVector=measuringInstructionVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:Vector styleSheetNameVector = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:Vector&lt;EctStyleSheetBean&gt; styleSheetNameVector = new Vector&lt;EctStyleSheetBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:public Collection getStyleSheetNameVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:public Collection&lt;EctStyleSheetBean&gt; getStyleSheetNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:return styleSheetNameVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:styleSheetNameVector.add(location);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:Vector typeDisplayNameVector = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:Vector&lt;EctTypeDisplayNameBean&gt; typeDisplayNameVector = new Vector&lt;EctTypeDisplayNameBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection getTypeDisplayNameVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection&lt;EctTypeDisplayNameBean&gt; getTypeDisplayNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:return typeDisplayNameVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:typeDisplayNameVector.add(typeDisplayName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:Vector validationsVector = new Vector();</ViolationValue>

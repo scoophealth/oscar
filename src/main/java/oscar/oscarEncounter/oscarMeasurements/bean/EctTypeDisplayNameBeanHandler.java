@@ -22,106 +22,72 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.MeasurementGroupDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.util.SpringUtils;
 
 public class EctTypeDisplayNameBeanHandler {
-    
-    Vector typeDisplayNameVector = new Vector();
- 
-    public EctTypeDisplayNameBeanHandler() {
-        init();
-    }
-    
-    public EctTypeDisplayNameBeanHandler(String groupName, boolean excludeGroupName) {
-        initGroupTypes(groupName, excludeGroupName);
-    }
-    
-    public boolean init() {
-        
-        boolean verdict = true;
-        try {
-            
-            String sql = "SELECT DISTINCT typeDisplayName FROM measurementType";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-                EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(oscar.Misc.getString(rs, "typeDisplayName"));
-                typeDisplayNameVector.add(typeDisplayName);
-            }
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	Vector<EctTypeDisplayNameBean> typeDisplayNameVector = new Vector<EctTypeDisplayNameBean>();
 
-    public boolean initGroupTypes(String groupName, boolean excludeGroupName) {
-        
-        boolean verdict = true;
-        try {
-            
-            String sql = null;
-            if (excludeGroupName){
-                sql = "SELECT DISTINCT typeDisplayName FROM measurementType";  
-                MiscUtils.getLogger().debug("Sql Statement: " + sql);
-                ResultSet rs;
-                String sqlGr = "SELECT DISTINCT typeDisplayName FROM measurementGroup WHERE name='" +groupName+ "'";  
-                MiscUtils.getLogger().debug("Sql Statement: " + sqlGr);
-                ResultSet rsGr;
-                
-                for(rs = DBHandler.GetSQL(sql); rs.next(); )
-                {
-                    boolean foundInGroup = false;
-                    for(rsGr = DBHandler.GetSQL(sqlGr); rsGr.next();){                        
-                        if(oscar.Misc.getString(rs, "typeDisplayName").compareTo(rsGr.getString("typeDisplayName"))==0){
-                            foundInGroup = true;
-                            break;
-                        }
-                        else{
-                            foundInGroup = false;
-                        }                                                
-                    }
-                    if (!foundInGroup){
-                        EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(oscar.Misc.getString(rs, "typeDisplayName"));
-                        typeDisplayNameVector.add(typeDisplayName);
-                    }
-                }
-                rs.close();
-            }
-            else{
-                sql = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName +"'";
-                MiscUtils.getLogger().debug("Sql Statement: " + sql);
-                ResultSet rs;
-                for(rs = DBHandler.GetSQL(sql); rs.next(); )
-                {
-                    EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(oscar.Misc.getString(rs, "typeDisplayName"));
-                    typeDisplayNameVector.add(typeDisplayName);
-                }
-                rs.close();
-            }
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
-    
-    public Collection getTypeDisplayNameVector(){
-        return typeDisplayNameVector;
-    }
+	public EctTypeDisplayNameBeanHandler() {
+		init();
+	}
+
+	public EctTypeDisplayNameBeanHandler(String groupName, boolean excludeGroupName) {
+		initGroupTypes(groupName, excludeGroupName);
+	}
+
+	public boolean init() {
+		MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+		for (Object name : dao.findUniqueTypeDisplayNames()) {
+			EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(String.valueOf(name));
+			typeDisplayNameVector.add(typeDisplayName);
+		}
+		return true;
+	}
+
+	public boolean initGroupTypes(String groupName, boolean excludeGroupName) {
+		MeasurementTypeDao tDao = SpringUtils.getBean(MeasurementTypeDao.class);
+		MeasurementGroupDao gDao = SpringUtils.getBean(MeasurementGroupDao.class);
+
+		if (excludeGroupName) {
+			for (Object tdnMt : tDao.findUniqueTypeDisplayNames()) {
+				boolean foundInGroup = false;
+				String typeDisplayNameFromMeasurementType = String.valueOf(tdnMt);
+
+				for (Object tdnMg : gDao.findUniqueTypeDisplayNamesByGroupName(groupName)) {
+					String typeDisplayNameFromMeasurmentGroup = String.valueOf(tdnMg);
+
+					if (typeDisplayNameFromMeasurementType.equals(typeDisplayNameFromMeasurmentGroup)) {
+						foundInGroup = true;
+						break;
+					} else {
+						foundInGroup = false;
+					}
+				}
+
+				if (!foundInGroup) {
+					EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(typeDisplayNameFromMeasurementType);
+					typeDisplayNameVector.add(typeDisplayName);
+				}
+			}
+		} else {
+			for (Object tdnMg : gDao.findUniqueTypeDisplayNamesByGroupName(groupName)) {
+				EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(String.valueOf(tdnMg));
+				typeDisplayNameVector.add(typeDisplayName);
+			}
+		}
+
+		return true;
+	}
+
+	public Collection<EctTypeDisplayNameBean> getTypeDisplayNameVector() {
+		return typeDisplayNameVector;
+	}
 }
