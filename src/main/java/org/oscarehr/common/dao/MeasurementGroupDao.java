@@ -33,6 +33,7 @@ import org.oscarehr.common.model.MeasurementGroup;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 
 	public MeasurementGroupDao() {
@@ -46,7 +47,7 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 		query.setParameter(1, name);
 		query.setParameter(2, typeDisplayName);
 
-		@SuppressWarnings("unchecked")
+		
 		List<MeasurementGroup> results = query.getResultList();
 
 		return (results);
@@ -58,7 +59,7 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, typeDisplayName);
 
-		@SuppressWarnings("unchecked")
+		
 		List<MeasurementGroup> results = query.getResultList();
 
 		return (results);
@@ -69,10 +70,16 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, name);
-		
-		@SuppressWarnings("unchecked")
+
 		List<MeasurementGroup> results = query.getResultList();
 
 		return (results);
 	}
+
+	public List<Object> findUniqueTypeDisplayNamesByGroupName(String groupName) {
+		String sql = "SELECT DISTINCT mg.typeDisplayName FROM MeasurementGroup mg WHERE mg.name = :groupName";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("groupName", groupName);
+		return query.getResultList();
+    }
 }

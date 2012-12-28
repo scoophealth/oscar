@@ -31,6 +31,7 @@ import org.oscarehr.common.model.MeasurementType;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 
 	public MeasurementTypeDao() {
@@ -42,7 +43,7 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 
 		Query query = entityManager.createQuery(sqlCommand);
 
-		@SuppressWarnings("unchecked")
+		
 		List<MeasurementType> results = query.getResultList();
 
 		return (results);
@@ -54,7 +55,7 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, type);
 
-		@SuppressWarnings("unchecked")
+		
 		List<MeasurementType> results = query.getResultList();
 
 		return (results);
@@ -67,7 +68,7 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 		query.setParameter(1, measuringInstruction);
 		query.setParameter(2, typeDisplayName);
 
-		@SuppressWarnings("unchecked")
+		
 		List<MeasurementType> results = query.getResultList();
 
 		return (results);
@@ -79,7 +80,6 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, typeDisplayName);
 
-		@SuppressWarnings("unchecked")
 		List<MeasurementType> results = query.getResultList();
 
 		return (results);
@@ -92,9 +92,14 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 		query.setParameter(1, type);
 		query.setParameter(2, measuringInstruction);
 
-		@SuppressWarnings("unchecked")
 		List<MeasurementType> results = query.getResultList();
 
 		return (results);
 	}
+
+	public List<Object> findUniqueTypeDisplayNames() {
+	    String sql = "SELECT DISTINCT m.typeDisplayName FROM MeasurementType m";
+		Query query = entityManager.createQuery(sql);
+		return query.getResultList();
+    }
 }
