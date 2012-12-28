@@ -22,84 +22,57 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.OscarCommLocationsDao;
+import org.oscarehr.common.dao.RemoteAttachmentsDao;
+import org.oscarehr.common.model.RemoteAttachments;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
-public class EctRemoteAttachments
-{
+public class EctRemoteAttachments {
 
-    public EctRemoteAttachments()
-    {
-        demoNo = null;
-        messageIds = null;
-        savedBys = null;
-        dates = null;
-    }
+	String demoNo;
+	public ArrayList<String> messageIds;
+	public ArrayList<String> savedBys;
+	public ArrayList<String> dates;
+	
+	public EctRemoteAttachments() {
+		demoNo = null;
+		messageIds = null;
+		savedBys = null;
+		dates = null;
+	}
 
-    public void estMessageIds(String demo)
-    {
-        demoNo = demo;
-        messageIds = new ArrayList<String>();
-        savedBys = new ArrayList<String>();
-        dates = new ArrayList<String>();
-        try
-        {
+	public void estMessageIds(String demo) {
+		demoNo = demo;
+		messageIds = new ArrayList<String>();
+		savedBys = new ArrayList<String>();
+		dates = new ArrayList<String>();
 
-            ResultSet rs;
-            String sql ="Select * from remoteAttachments where demographic_no = '"+demoNo+"' order by date";
-            MiscUtils.getLogger().debug("sql message "+sql);
-            rs = DBHandler.GetSQL(sql);
-            //for(rs = DBHandler.GetSQL(String.valueOf(String.valueOf((new StringBuilder("SELECT * FROM remoteAttachments WHERE demographic_no = '")).append(demoNo).append("' order by date ")))); rs.next(); dates.add(oscar.Misc.getString(rs,"date")))
-            while(rs.next())
-	    {
-		dates.add(oscar.Misc.getString(rs, "date"));
-                messageIds.add(oscar.Misc.getString(rs, "messageid"));
-                savedBys.add(oscar.Misc.getString(rs, "savedBy"));
-            }
+		RemoteAttachmentsDao dao = SpringUtils.getBean(RemoteAttachmentsDao.class);
+		for (RemoteAttachments ra : dao.findByDemoNo(ConversionUtils.fromIntString(demoNo))) {
+			dates.add(ConversionUtils.toDateString(ra.getDate()));
+			messageIds.add("" + ra.getMessageId());
+			savedBys.add(ra.getSavedBy());
+		}
+	}
 
-            rs.close();
-        }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().debug("CrAsH");
-        }
-    }
+	public ArrayList<String> getFromLocation(String messId) {
+		ArrayList<String> retval = new ArrayList<String>();
 
-    public ArrayList<String> getFromLocation(String messId)
-    {
-        ArrayList<String> retval = new ArrayList<String>();
-        try
-        {
+		OscarCommLocationsDao dao = SpringUtils.getBean(OscarCommLocationsDao.class);
+		for (Object[] o : dao.findFormLocationByMesssageId(messId)) {
+			String locationDesc = String.valueOf(o[0]);
+			String thesubject = String.valueOf(o[1]);
 
-            ResultSet rs;
-            String sql = "select ocl.locationDesc, mess.thesubject from messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '"+messId+"' ";
-	    MiscUtils.getLogger().debug("sql ="+sql);
-	    rs = DBHandler.GetSQL(sql);
-//            for(rs = DBHandler.GetSQL(String.valueOf(String.valueOf((new StringBuilder("SELECT ocl.locationDesc, mess.thesubject FROM messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '")).append(messId).append("'"))));
-             while ( rs.next()){
-                 retval.add(oscar.Misc.getString(rs, "thesubject"));
-                 retval.add(oscar.Misc.getString(rs, "locationDesc"));
- 	     }
-            rs.close();
-        }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().debug("CrAsH");
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return retval;
-    }
-
-    String demoNo;
-    public ArrayList<String> messageIds;
-    public ArrayList<String> savedBys;
-    public ArrayList<String> dates;
+			retval.add(thesubject);
+			retval.add(locationDesc);
+		}
+		
+		return retval;
+	}
 }
