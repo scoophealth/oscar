@@ -35,9 +35,6 @@ public class JdbcBillingCodeImpl {
 	private static final Logger _logger = MiscUtils.getLogger();
 	private BillingServiceDao dao = (BillingServiceDao)SpringUtils.getBean(BillingServiceDao.class);
 	
-	
-	BillingONDataHelp dbObj = new BillingONDataHelp();
-
 	public List getBillingCodeAttr(String serviceCode) {
 		List ret = new Vector();
 		List<BillingService> bs = dao.getBillingCodeAttr(serviceCode);

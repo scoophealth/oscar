@@ -89,7 +89,7 @@ billingDao.persist(b);
 
 int nBillNo = 0;
 int nBillDetailNo = 0;
-BillingONDataHelp billObj = new BillingONDataHelp();
+
 
 nBillNo =b.getId();
 

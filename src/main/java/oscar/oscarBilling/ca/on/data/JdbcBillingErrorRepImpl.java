@@ -18,136 +18,76 @@
 
 package oscar.oscarBilling.ca.on.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.BillingONEAReportDao;
 import org.oscarehr.common.model.BillingONEAReport;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
 
 public class JdbcBillingErrorRepImpl {
-	private static final Logger _logger = MiscUtils.getLogger();
-	private BillingONEAReportDao billingONEARReportDao = (BillingONEAReportDao)SpringUtils.getBean(BillingONEAReportDao.class);
 	
+	private BillingONEAReportDao billingONEARReportDao = (BillingONEAReportDao) SpringUtils.getBean(BillingONEAReportDao.class);
 	
-	BillingONDataHelp dbObj = new BillingONDataHelp();
 	JdbcBillingLog dbLog = new JdbcBillingLog();
 
-	public List getErrorRecords(BillingProviderData val, String fromDate, String toDate, String filename) {
-		List retval = new Vector();
-		BillingErrorRepData obj = null;
-		String sqlFilename = "".equals(filename) ? "" : (" and report_name='" + filename + "' ");
-		String sql = "select * from billing_on_eareport where providerohip_no='" + val.getOhipNo() + "' and group_no='"
-				+ val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "' and code_date>='"
-				+ fromDate + "' and code_date<='" + toDate + "'" + sqlFilename + " order by code_date";
-
-		// _logger.info("getErrorRecords(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
-
-		try {
-			while (rs.next()) {
-				obj = new BillingErrorRepData();
-				obj.setId("" + rs.getInt("id"));
-				obj.setBilling_no("" + rs.getInt("billing_no"));
-				obj.setProviderohip_no(rs.getString("providerohip_no"));
-				obj.setGroup_no(rs.getString("group_no"));
-				obj.setSpecialty(rs.getString("specialty"));
-				obj.setProcess_date(rs.getString("process_date"));
-				obj.setHin(rs.getString("hin"));
-				obj.setVer(rs.getString("ver"));
-				obj.setDob(rs.getString("dob"));
-				obj.setRef_no(rs.getString("ref_no"));
-				obj.setFacility(rs.getString("facility"));
-				obj.setAdmitted_date(rs.getString("admitted_date"));
-				obj.setClaim_error(rs.getString("claim_error"));
-				obj.setCode(rs.getString("code"));
-				obj.setFee(rs.getString("fee"));
-				obj.setUnit(rs.getString("unit"));
-				obj.setCode_date(rs.getString("code_date"));
-				obj.setDx(rs.getString("dx"));
-				obj.setExp(rs.getString("exp"));
-				obj.setCode_error(rs.getString("code_error"));
-				obj.setReport_name(rs.getString("report_name"));
-				obj.setStatus(rs.getString("status"));
-				obj.setComment(rs.getString("comment"));
-				retval.add(obj);
-			}
-		} catch (SQLException e) {
-			_logger.error("getErrorRecords(sql = " + sql + ")");
+	public List<BillingErrorRepData> getErrorRecords(BillingProviderData val, String fromDate, String toDate, String filename) {
+		List<BillingErrorRepData> retval = new ArrayList<BillingErrorRepData>();
+		BillingONEAReportDao dao = SpringUtils.getBean(BillingONEAReportDao.class);
+		for (BillingONEAReport r : dao.findByMagic(val.getOhipNo(), val.getBillingGroupNo(), val.getSpecialtyCode(), ConversionUtils.fromDateString(fromDate), ConversionUtils.fromDateString(toDate), filename)) {
+			toReportData(retval, r);
 		}
-
 		return retval;
 	}
 
-        
-	public List getErrorRecords(List<BillingProviderData> list, String fromDate, String toDate, String filename) {
-		List retval = new Vector();
-		if(list == null) return retval;
-		
+	private void toReportData(List<BillingErrorRepData> retval, BillingONEAReport r) {
+	    BillingErrorRepData obj = null;
+	    obj = new BillingErrorRepData();
+	    obj.setId("" + r.getId());
+	    obj.setBilling_no("" + r.getBillingNo());
+	    obj.setProviderohip_no(r.getProviderOHIPNo());
+	    obj.setGroup_no(r.getGroupNo());
+	    obj.setSpecialty(r.getSpecialty());
+	    obj.setProcess_date(ConversionUtils.toDateString(r.getProcessDate()));
+	    obj.setHin(r.getHin());
+	    obj.setVer(r.getVersion());
+	    obj.setDob(ConversionUtils.toDateString(r.getDob()));
+	    obj.setRef_no(r.getRefNo());
+	    obj.setFacility(r.getFacility());
+	    obj.setAdmitted_date(ConversionUtils.toDateString(r.getAdmittedDate()));
+	    obj.setClaim_error(r.getClaimError());
+	    obj.setCode(r.getCode());
+	    obj.setFee(r.getFee());
+	    obj.setUnit(r.getUnit());
+	    obj.setCode_date(ConversionUtils.toDateString(r.getCodeDate()));
+	    obj.setDx(r.getDx());
+	    obj.setExp(r.getExp());
+	    obj.setCode_error(r.getCodeError());
+	    obj.setReport_name(r.getReportName());
+	    obj.setStatus("" + r.getStatus());
+	    obj.setComment(r.getComment());
+	    retval.add(obj);
+    }
 
-		BillingErrorRepData obj = null;
-		
-		String sql = "select * from billing_on_eareport";
-		for(int i = 0; i < list.size() ; i++) {
-			BillingProviderData val = list.get(i);
-			
-			if(i == 0) 
-				sql += " where ((providerohip_no='" + val.getOhipNo() + "' and group_no='" + val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
-			else 
-				sql+= " or (providerohip_no='" + val.getOhipNo() + "' and group_no='" + val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
+	public List<BillingErrorRepData> getErrorRecords(List<BillingProviderData> list, String fromDate, String toDate, String filename) {
+		List<BillingErrorRepData> retval = new ArrayList<BillingErrorRepData>();
+		if (list == null) {
+			return retval;
 		}
 		
-		String sqlFilename = "".equals(filename) ? "" : (" and report_name='" + filename + "' ");
-		sql += ")";
-		sql += "and code_date>='" + fromDate + "' and code_date<='" + toDate + "'" + sqlFilename + " order by code_date";
-
-		
-		ResultSet rs = dbObj.searchDBRecord(sql);
-
-		try {
-			while (rs.next()) {
-				obj = new BillingErrorRepData();
-				obj.setId("" + rs.getInt("id"));
-				obj.setBilling_no("" + rs.getInt("billing_no"));
-				obj.setProviderohip_no(rs.getString("providerohip_no"));
-				obj.setGroup_no(rs.getString("group_no"));
-				obj.setSpecialty(rs.getString("specialty"));
-				obj.setProcess_date(rs.getString("process_date"));
-				obj.setHin(rs.getString("hin"));
-				obj.setVer(rs.getString("ver"));
-				obj.setDob(rs.getString("dob"));
-				obj.setRef_no(rs.getString("ref_no"));
-				obj.setFacility(rs.getString("facility"));
-				obj.setAdmitted_date(rs.getString("admitted_date"));
-				obj.setClaim_error(rs.getString("claim_error"));
-				obj.setCode(rs.getString("code"));
-				obj.setFee(rs.getString("fee"));
-				obj.setUnit(rs.getString("unit"));
-				obj.setCode_date(rs.getString("code_date"));
-				obj.setDx(rs.getString("dx"));
-				obj.setExp(rs.getString("exp"));
-				obj.setCode_error(rs.getString("code_error"));
-				obj.setReport_name(rs.getString("report_name"));
-				obj.setStatus(rs.getString("status"));
-				obj.setComment(rs.getString("comment"));
-				retval.add(obj);
-			}
-		} catch (SQLException e) {
-			_logger.error("getErrorRecords(sql = " + sql + ")");
+		BillingONEAReportDao dao = SpringUtils.getBean(BillingONEAReportDao.class);
+		for(BillingONEAReport r : dao.findByMagic(list, ConversionUtils.fromDateString(fromDate), ConversionUtils.fromDateString(toDate), filename)) {
+			toReportData(retval, r);
 		}
 
 		return retval;
 	}
 
 	public boolean deleteErrorReport(BillingErrorRepData val) {
-		List<BillingONEAReport>  bs = billingONEARReportDao.findByProviderOhipNoAndGroupNoAndSpecialtyAndProcessDate(val.getProviderohip_no(),val.getGroup_no(),val.getSpecialty(),ConversionUtils.fromDateString(val.getProcess_date()));
-		for(BillingONEAReport b:bs) {
+		List<BillingONEAReport> bs = billingONEARReportDao.findByProviderOhipNoAndGroupNoAndSpecialtyAndProcessDate(val.getProviderohip_no(), val.getGroup_no(), val.getSpecialty(), ConversionUtils.fromDateString(val.getProcess_date()));
+		for (BillingONEAReport b : bs) {
 			billingONEARReportDao.remove(b.getId());
 		}
 		return true;
@@ -177,21 +117,20 @@ public class JdbcBillingErrorRepImpl {
 		b.setReportName(val.report_name);
 		b.setStatus(val.status.toCharArray()[0]);
 		b.setComment(val.comment);
-	
+
 		billingONEARReportDao.persist(b);
-		
+
 		return b.getId();
-		
+
 	}
-	
+
 	public boolean updateErrorReportStatus(String id, String val) {
 		BillingONEAReport b = billingONEARReportDao.find(Integer.valueOf(id));
-		if(b != null) {
+		if (b != null) {
 			b.setStatus(val.toCharArray()[0]);
 			billingONEARReportDao.merge(b);
 		}
 		return true;
 	}
-
 
 }

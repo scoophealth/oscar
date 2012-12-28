@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.util.DateRange"%>
 <%
   if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.htm");
@@ -32,9 +33,7 @@
   calendar.add(Calendar.DATE, Integer.parseInt(strDay)*(-1));
   String strStartDay = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.DATE);;
 
-  DBPreparedHandlerParam[] pDateRange= new DBPreparedHandlerParam[2];
-  pDateRange[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(strStartDay));
-  pDateRange[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(strToday));
+  DateRange pDateRange= new DateRange(MyDateFormat.getSysDate(strStartDay), MyDateFormat.getSysDate(strToday));
   
   String serviceCode = request.getParameter("serviceCode")!=null? request.getParameter("serviceCode") : "";
 %>
@@ -98,7 +97,7 @@ function upCaseCtrl(ctrl) {
 	<% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 String limit = "";
-//List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), limit, dateRange);
+
 List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), 10000000, 0, pDateRange);
 int nItems=0;
 for(int i=0; i<aL.size(); i=i+2) {

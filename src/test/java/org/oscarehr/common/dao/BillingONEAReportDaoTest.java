@@ -23,7 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -40,6 +40,8 @@ import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.BillingONEAReport;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.oscarBilling.ca.on.data.BillingProviderData;
 
 public class BillingONEAReportDaoTest extends DaoTestFixtures {
 
@@ -180,4 +182,18 @@ public class BillingONEAReportDaoTest extends DaoTestFixtures {
 		report.setBillingNo(billNumber);
 		return report;
 	}
+	
+    @Test
+    public void testFindByMagic() throws Exception {
+	    assertNotNull(dao.findByMagic("OHIP", "BGNO", "SPEC CODE", new Date(), new Date(), "REPORT"));
+	    
+	    List<BillingProviderData> data = new ArrayList<BillingProviderData>();
+	    BillingProviderData d = new BillingProviderData();
+	    EntityDataGenerator.generateTestDataForModelClass(d);
+	    data.add(d);
+	    d = new BillingProviderData();
+	    EntityDataGenerator.generateTestDataForModelClass(d);
+	    data.add(d);
+	    assertNotNull(dao.findByMagic(data, new Date(), new Date(), "REPORT"));
+    }
 }

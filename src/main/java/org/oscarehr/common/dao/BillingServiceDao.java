@@ -347,4 +347,50 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		
 		return query.getResultList();
 	}
+
+	public List<BillingService> findByServiceCodeAndLatestDate(String serviceCode, Date date) {
+		String sql = 
+				"FROM BillingService bs WHERE bs.serviceCode = :serviceCode " +
+				"AND bs.billingserviceDate = (" +
+				"	SELECT MAX(bss.billingserviceDate) FROM BillingService bss " +
+				"	WHERE bss.billingserviceDate <= :date " +
+				"	AND bss.serviceCode = :serviceCode" +
+				")";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("serviceCode", serviceCode);
+		query.setParameter("date", date);
+		return query.getResultList();
+    }
+	
+	public List<Object[]> findBillingServiceAndCtlBillingServiceByMagic(String serviceType, String serviceGroup, Date billReferenceDate) {
+		String  sql = "FROM BillingService b, CtlBillingService c " +
+				"WHERE c.serviceCode = b.serviceCode " +
+				"AND c.status='A' " +
+				"AND c.serviceType = :serviceType " +
+                "AND c.serviceGroup = :serviceGroup " +
+                "AND b.billingserviceDate in (" +
+                "	SELECT MAX(b2.billingserviceDate) FROM BillingService b2 " +
+                "	WHERE b2.billingserviceDate <= :billReferenceDate " +
+                "	AND b2.serviceCode = b.serviceCode " +
+                ") " +
+                "AND b.billingserviceNo = (" +
+                "	SELECT MAX(b3.billingserviceNo) FROM BillingService b3 " +
+                "	WHERE b3.billingserviceDate = b.billingserviceDate " +
+                "	AND b3.serviceCode = b.serviceCode" +
+                ") ORDER BY c.serviceOrder";
+		
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("serviceType", serviceType);
+		query.setParameter("serviceGroup", serviceGroup);
+		query.setParameter("billReferenceDate", billReferenceDate);
+		return query.getResultList();
+	}
+	
+	public List<Object> findBillingCodesByCodeAndTerminationDate(String serviceCode, Date terminationDate) {
+		String sql = "SELECT DISTINCT(bs.serviceCode) FROM BillingService bs WHERE bs.serviceCode = :serviceCode AND bs.terminationDate > :terminationDate";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("serviceCode", serviceCode);
+		query.setParameter("terminationDate", terminationDate);
+		return query.getResultList();
+	}
 }

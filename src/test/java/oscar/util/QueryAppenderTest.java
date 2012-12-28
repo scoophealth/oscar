@@ -21,40 +21,33 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.billing.CA.dao;
+package oscar.util;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.billing.CA.model.BillingDetail;
-import org.oscarehr.common.dao.DaoTestFixtures;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
-import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.util.SpringUtils;
 
-public class BillingDetailDaoTest extends DaoTestFixtures {
-
-	public BillingDetailDao dao = SpringUtils.getBean(BillingDetailDao.class);
-
-	public BillingDetailDaoTest() {
-	}
-
-	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("billingdetail");
-	}
+public class QueryAppenderTest {
 
 	@Test
-	public void testCreate() throws Exception {
-		BillingDetail entity = new BillingDetail();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
+	public void testAppender() {
+		QueryAppender q = new QueryAppender();
+		assertEquals(q.toString(), "");
 
-	@Test
-	public void testFindByBillingNoAndStatus() {
-		assertNotNull(dao.findByBillingNoAndStatus(100, "STS"));
+		q.setBaseQuery("[base query]");
+		assertEquals(q.toString(), "[base query]");
+
+		q.addWhere("[where clause]");
+		assertEquals(q.toString(), "[base query] WHERE [where clause]");
+
+		q.and("[all clause]");
+		assertEquals(q.toString(), "[base query] WHERE [where clause] AND [all clause]");
+
+		q.or("[another where clause]");
+		assertEquals(q.toString(), "[base query] WHERE [where clause] AND [all clause] OR [another where clause]");
+
+		q.addOrder("[order clause]");
+		assertEquals(q.toString(), "[base query] WHERE [where clause] AND [all clause] OR [another where clause] ORDER BY [order clause]");
+
 	}
 }

@@ -491,4 +491,18 @@ public class BillingDao extends AbstractDao<Billing> {
 		
 		return q.getResultList();
 	}
+	
+	public List<Billing> findActiveBillingsByDemoNo(Integer demoNo, int limit) {
+		String sql = "FROM Billing b " +
+				"WHERE b.demographicNo = :demoNo " +
+				"AND b.status <> 'D' " +
+				"ORDER BY b.billingDate DESC, b.id DESC";
+		
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		if (limit > 0) {
+			query.setMaxResults(limit);
+		}
+		return query.getResultList();
+	}
 }

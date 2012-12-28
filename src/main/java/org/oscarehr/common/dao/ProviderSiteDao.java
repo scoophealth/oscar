@@ -29,10 +29,12 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderSite;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class ProviderSiteDao extends AbstractDao<ProviderSite>{
 
 	public ProviderSiteDao() {
@@ -44,8 +46,21 @@ public class ProviderSiteDao extends AbstractDao<ProviderSite>{
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,providerNo);
 
-        @SuppressWarnings("unchecked")
         List<ProviderSite> results = query.getResultList();
         return results;
+    }
+	
+	public List<Provider> findActiveProvidersWithSites(String provider_no) { 
+		String sql = "FROM Provider p where p.Status = '1' AND p.OhipNo != '' " +
+						"AND EXISTS( " +
+						"	FROM ProviderSite s WHERE p.ProviderNo = s.id.providerNo " +
+						"	AND s.id.siteId IN ( " +
+						"		SELECT ss.id.siteId FROM ProviderSite ss WHERE ss.id.providerNo = :pNo " +
+						"	)" +
+						")" +
+						"ORDER BY p.LastName, p.FirstName";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("pNo", provider_no);
+		return query.getResultList();
     }
 }

@@ -18,14 +18,11 @@
 
 package oscar.oscarBilling.ca.on.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -33,7 +30,6 @@ import org.oscarehr.billing.CA.ON.dao.BillingONFavouriteDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONFilenameDao;
 import org.oscarehr.billing.CA.ON.model.BillingONFavourite;
 import org.oscarehr.billing.CA.ON.model.BillingONFilename;
-import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.dao.ClinicLocationDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -55,8 +51,7 @@ import oscar.SxmlMisc;
 public class JdbcBillingPageUtil {
 	
 	private static final Logger _logger = MiscUtils.getLogger();
-	private BillingONDataHelp dbObj = new BillingONDataHelp();
-	private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	
 	private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 	private ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	private ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
@@ -67,10 +62,8 @@ public class JdbcBillingPageUtil {
 	private BillingONFilenameDao billingONFilenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
 	private ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 
-	
-	
-	public List getCurTeamProviderStr(String provider_no) {
-		List retval = new Vector();
+	public List<String> getCurTeamProviderStr(String provider_no) {
+		List<String> retval = new ArrayList<String>();
 		String proid = "";
 		String proFirst = "";
 		String proLast = "";
@@ -92,8 +85,8 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List getCurSiteProviderStr(String provider_no) {
-		List retval = new Vector();
+	public List<String> getCurSiteProviderStr(String provider_no) {
+		List<String> retval = new ArrayList<String>();
 		
 		List<ProviderSite> sites = providerSiteDao.findByProviderNo(provider_no);
 		List<Integer> siteIds =  new ArrayList<Integer>();
@@ -101,38 +94,36 @@ public class JdbcBillingPageUtil {
 			siteIds.add(site.getId().getSiteId());
 		}
 		
-		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider p "
-				+ "where status='1' and ohip_no!='' " +
-						"and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no="+provider_no+"))" +
-						" order by last_name, first_name";
+		ProviderSiteDao dao = SpringUtils.getBean(ProviderSiteDao.class);
+		
 		String proid = "";
 		String proFirst = "";
 		String proLast = "";
 		String proOHIP = "";
 		String specialty_code;
 		String billinggroup_no;
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
+		
 		try {
-			while (rslocal.next()) {
-				proid = rslocal.getString("provider_no");
-				proLast = rslocal.getString("last_name");
-				proFirst = rslocal.getString("first_name");
-				proOHIP = rslocal.getString("ohip_no");
-				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-						"0000");
-				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
+			for(Provider p : dao.findActiveProvidersWithSites(provider_no)) {
+				proid = p.getProviderNo();
+				proLast = p.getLastName();
+				proFirst = p.getFirstName();
+				proOHIP = p.getOhipNo();
+				billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no", "0000");
+				specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code", "00");
+				
 				retval.add(proid + "|" + proLast + "|" + proFirst + "|" + proOHIP + "|" + billinggroup_no + "|"
 						+ specialty_code);
 			}
-		} catch (SQLException e) {
-			_logger.error("getCurProviderStr(sql = " + sql + ")");
+		} catch (Exception e) {
+			_logger.error("error", e);
 		}
 
 		return retval;
 	}
 
-	public List getCurProviderStr() {
-		List retval = new Vector();
+	public List<String> getCurProviderStr() {
+		List<String> retval = new ArrayList<String>();
 		
 		List<Provider> ps = providerDao.getBillableProviders();
 		String proid = "";
@@ -253,8 +244,8 @@ public class JdbcBillingPageUtil {
 		return res;
 	}
 
-	public List getProvider(String diskId) {
-		List retval = new Vector();
+	public List<BillingProviderData> getProvider(String diskId) {
+		List<BillingProviderData> retval = new ArrayList<BillingProviderData>();
 		String providerNo = null;
 		
 		List<BillingONFilename> fs = billingONFilenameDao.findByDiskId(Integer.parseInt(diskId));
@@ -281,8 +272,8 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List getCurSoloProvider() {
-		List retval = new Vector();
+	public List<BillingProviderData> getCurSoloProvider() {
+		List<BillingProviderData> retval = new ArrayList<BillingProviderData>();
 		String specialty_code;
 		String billinggroup_no;
 		
@@ -305,8 +296,8 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List getCurGrpProvider() {
-		List retval = new Vector();
+	public List<BillingProviderData> getCurGrpProvider() {
+		List<BillingProviderData> retval = new ArrayList<BillingProviderData>();
 		String specialty_code;
 		String billinggroup_no;
 		
@@ -352,11 +343,11 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List getPatientCurBillingDemographic(String demoNo) {
-		List retval = null;
+	public List<String> getPatientCurBillingDemographic(String demoNo) {
+		List<String> retval = null;
 		Demographic d = demographicDao.getDemographic(demoNo);
 		if(d != null) {
-			retval = new Vector();
+			retval = new ArrayList<String>();
 			retval.add(d.getLastName());
 			retval.add(d.getFirstName());
 			retval.add(d.getYearOfBirth()+d.getMonthOfBirth()+d.getDateOfBirth());
@@ -381,11 +372,11 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List getPatientCurBillingDemo(String demoNo) {
-		List retval = null;
+	public List<String> getPatientCurBillingDemo(String demoNo) {
+		List<String> retval = null;
 		Demographic d = demographicDao.getDemographic(demoNo);
 		if(d != null) {
-			retval = new Vector();
+			retval = new ArrayList<String>();
 			retval.add(d.getLastName());
 			retval.add(d.getFirstName());
 			retval.add(d.getYearOfBirth()+d.getMonthOfBirth()+d.getDateOfBirth());
@@ -400,8 +391,8 @@ public class JdbcBillingPageUtil {
 	}
 
 	// name : code|dx|
-	public List getBillingFavouriteList() {
-		List retval = new Vector();
+	public List<String> getBillingFavouriteList() {
+		List<String> retval = new ArrayList<String>();
 		List<BillingONFavourite> bs = billingONFavouriteDao.findCurrent();
 		Collections.sort(bs, BillingONFavourite.NAME_COMPARATOR);
 		for(BillingONFavourite b:bs) {
@@ -411,8 +402,8 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List getBillingFavouriteOne(String name) {
-		List retval = new Vector();
+	public List<String> getBillingFavouriteOne(String name) {
+		List<String> retval = new ArrayList<String>();
 		List<BillingONFavourite> bs = billingONFavouriteDao.findByName(name);
 		for(BillingONFavourite b:bs) {
 			if(b.getDeleted() == 1)
@@ -456,8 +447,8 @@ public class JdbcBillingPageUtil {
 		return true;
 	}
 
-	public List getPaymentType() {
-		List retval = new Vector();
+	public List<String> getPaymentType() {
+		List<String> retval = new ArrayList<String>();
 		List<BillingPaymentType> bs = billingPaymentTypeDao.findAll();
 		for(BillingPaymentType b:bs) {
 			retval.add("" + b.getId());
@@ -467,8 +458,8 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List getFacilty_num() {
-		List retval = new Vector();
+	public List<String> getFacilty_num() {
+		List<String> retval = new ArrayList<String>();
 		List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
 		for(ClinicLocation clinicLocation:clinicLocations) {
 			retval.add(clinicLocation.getClinicLocationNo());
