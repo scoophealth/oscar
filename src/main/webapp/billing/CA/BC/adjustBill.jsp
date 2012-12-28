@@ -861,7 +861,7 @@ if(billService != null){
             </td>
             <td class="bCellData">Insurer Code</td><!--OIN-INSURER-C0DE-->
             <td class="bCellData">
-                <select name="insurerCode2" >
+                <select name="insurerCode" >
                     <option value="" <%=allFields.getProperty("oin_insurer_code").equals("0")?"selected":""%>>None</option>
                     <option value="IN" <%=allFields.getProperty("oin_insurer_code").equals("IN")?"selected":""%>>Institutional Claim</option>
                     <option value="PP" <%=allFields.getProperty("oin_insurer_code").equals("PP")?"selected":""%>>Pay Patient</option>
