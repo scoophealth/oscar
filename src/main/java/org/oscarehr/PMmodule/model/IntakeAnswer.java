@@ -136,6 +136,7 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 	}
 
     protected void initialize() {
+    	//empty function?
     }
 
     /**
