@@ -49,7 +49,9 @@ public class FunctionalUserType  implements Serializable {
 
 
 	/* [CONSTRUCTOR MARKER END] */
-    protected void initialize () {}
+    protected void initialize () {
+    	//no code in here right now    						
+    }
 
     /**
 	 * Return the unique identifier of this class
