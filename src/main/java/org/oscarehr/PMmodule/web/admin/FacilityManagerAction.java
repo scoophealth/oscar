@@ -223,6 +223,7 @@ public class FacilityManagerAction extends BaseAction {
 			facility.setEnableDigitalSignatures(WebUtils.isChecked(request, "facility.enableDigitalSignatures"));
 
 			facility.setEnableAnonymous(WebUtils.isChecked(request, "facility.enableAnonymous"));
+            facility.setEnablePhoneEncounter(WebUtils.isChecked(request, "facility.enablePhoneEncounter"));
 			facility.setEnableGroupNotes(WebUtils.isChecked(request, "facility.enableGroupNotes"));
 			facility.setEnableOcanForms(WebUtils.isChecked(request, "facility.enableOcanForms"));
 			facility.setEnableEncounterTime(WebUtils.isChecked(request, "facility.enableEncounterTime"));
