@@ -38,10 +38,10 @@ import java.lang.annotation.Target;
 public @interface NativeSql {
 	
 	/**
-	 * Defines list of tables used in this statement
+	 * Defines list of tables used in this statement.
 	 * 
 	 * @return
-	 * 		Returns the list of all tables names used in this native SQL
+	 * 		Returns the list of all tables names used in this native SQL.
 	 */
 	String[] value() default "";
 }
