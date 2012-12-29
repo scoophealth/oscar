@@ -1157,7 +1157,12 @@ if (caseload) {
 %>
 &nbsp;&nbsp;(<a href="#" onclick="popupPage(710, 1024,'<html:rewrite page="/PMmodule/createAnonymousClient.jsp"/>?programId=<%=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)%>');return false;">New Anon Client</a>)
 <% } %>
+<%
+	boolean epe = LoggedInInfo.loggedInInfo.get().currentFacility.isEnablePhoneEncounter();
+	if(epe) {
+%>
 &nbsp;&nbsp;(<a href="#" onclick="popupPage(710, 1024,'<html:rewrite page="/PMmodule/createPEClient.jsp"/>?programId=<%=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)%>');return false;">Phone Encounter</a>)
+<% } %>
 </td>
 
 <td class="title" ALIGN="center"  BGCOLOR="ivory" width="33%">
