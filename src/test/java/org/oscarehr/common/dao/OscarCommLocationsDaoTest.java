@@ -39,7 +39,7 @@ public class OscarCommLocationsDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("oscarcommlocations");
+		SchemaUtils.restoreTable("oscarcommlocations", "messagetbl");
 	}
 
 	@Test

@@ -22,16 +22,26 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
+
+import java.util.List;
+
+import javax.persistence.Query;
 
 import org.oscarehr.common.model.RemoteAttachments;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RemoteAttachmentsDao extends AbstractDao<RemoteAttachments>{
+@SuppressWarnings("unchecked")
+public class RemoteAttachmentsDao extends AbstractDao<RemoteAttachments> {
 
 	public RemoteAttachmentsDao() {
 		super(RemoteAttachments.class);
+	}
+
+	public List<RemoteAttachments> findByDemoNo(Integer demoNo) {
+		Query query = createQuery("ra", "ra.demographicNo = :demoNo ORDER BY ra.date");
+		query.setParameter("demoNo", demoNo);
+		return query.getResultList();
 	}
 }
