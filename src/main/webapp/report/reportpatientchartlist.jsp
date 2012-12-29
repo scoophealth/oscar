@@ -24,76 +24,77 @@
 
 --%>
 
-<%
-  
-  String curUser_no = (String) session.getAttribute("user");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("last_name") ;
-%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<%@ page import="oscar.login.DBHelp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"	errorPage="../appointment/errorpage.jsp"%>
+
 <%@ page import="org.oscarehr.util.SpringUtils"%>
+
 <%@ page import="org.oscarehr.common.model.MyGroup"%>
 <%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
 
-<%
-	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
-%>
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
 
-<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<% 
-  String [][] dbQueries=new String[][] { 
-{"search_patient", "select d.provider_no,c.cust1,c.cust2, d.last_name, d.first_name, d.chart_no from demographic d LEFT JOIN demographiccust c ON d.demographic_no = c.demographic_no where (d.provider_no = ? or c.cust1=? or c.cust2=? ) and (d.patient_status like 'AC' or d.patient_status like 'UHIP') order by "+orderby }, 
-  };
-  String[][] responseTargets=new String[][] {  };
-  patientBean.doConfigure(dbQueries,responseTargets);
-%>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
+<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
+<jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
 <%
-    String curProvider_no = (String) session.getAttribute("user");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
-    boolean isSiteAccessPrivacy=false;
-    boolean isTeamAccessPrivacy=false; 
+	
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+	
+	String curProvider_no = (String) session.getAttribute("user");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("last_name") ;
+	   
+	String [][] dbQueries=new String[][] { 
+		{"search_patient", "select d.provider_no,c.cust1,c.cust2, d.last_name, d.first_name, d.chart_no from demographic d LEFT JOIN demographiccust c ON d.demographic_no = c.demographic_no where (d.provider_no = ? or c.cust1=? or c.cust2=? ) and (d.patient_status like 'AC' or d.patient_status like 'UHIP') order by "+orderby }, 
+	};
+	 
+	String[][] responseTargets=new String[][] {  };
+	patientBean.doConfigure(dbQueries,responseTargets);
+	
+	boolean isSiteAccessPrivacy=false;
+	boolean isTeamAccessPrivacy=false; 
 %>
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
-</security:oscarSec>
-<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isTeamAccessPrivacy=true; %>
-</security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isSiteAccessPrivacy=true; %></security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isTeamAccessPrivacy=true; %></security:oscarSec>
+
 <% 
+//List<Demographic> demoList = demographicDao.findDemographicByProviderCust(curProvider_no);
+
+List<ProviderData> pdList = null;
 HashMap<String,String> providerMap = new HashMap<String,String>();
+
 //multisites function
 if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-	String sqlStr = "select provider_no from provider ";
+
 	if (isSiteAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
-		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
+		pdList = providerDataDao.findByProviderSite(curProvider_no);
+	
 	if (isTeamAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
-				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
-	DBHelp dbObj = new DBHelp();
-	ResultSet rs = dbObj.searchDBRecord(sqlStr);
-	while (rs.next()) {
-		providerMap.put(rs.getString("provider_no"),"true");
+		pdList = providerDataDao.findByProviderTeam(curProvider_no);
+
+	for(ProviderData providerData : pdList) {
+		providerMap.put(providerData.getId(), "true");
 	}
-	rs.close();
 }
 %>
 
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="report.reportpatientchartlist.title" />
-</title>
+<title><bean:message key="report.reportpatientchartlist.title" /></title>
 <link rel="stylesheet" href="../web.css">
+
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -101,12 +102,11 @@ function setfocus() {
   //document.titlesearch.keyword.select();
 }
 
-
-  
-
 //-->
 </SCRIPT>
 </head>
+
+
 <% 
   String provider_no = request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"175" ;
   ResultSet rsdemo = null ;
@@ -123,8 +123,7 @@ function setfocus() {
     }
   }
 %>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
-	leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#CCCCFF">
@@ -135,6 +134,7 @@ function setfocus() {
                 </th>
 	</tr>
 </table>
+
 <%
   boolean bFistL = true; //first line in a table for TH
   String strTemp = "";
@@ -145,7 +145,8 @@ function setfocus() {
     param[0]=bGroup?((String) myGroupBean.get(i)):provider_no;
     param[1]=param[0];
     param[2]=param[0];
-	  rsdemo = patientBean.queryResults(param, "search_patient");
+	
+    rsdemo = patientBean.queryResults(param, "search_patient");
     while (rsdemo.next()) { 
     	
         //multisites. skip record if not belong to same site/team
