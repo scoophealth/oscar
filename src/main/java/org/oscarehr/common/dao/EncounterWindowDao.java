@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.EncounterWindow;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +34,12 @@ public class EncounterWindowDao extends AbstractDao<EncounterWindow>{
 	public EncounterWindowDao() {
 		super(EncounterWindow.class);
 	}
+
+	public EncounterWindow findByProvider(String providerNo) {
+		Query query = createQuery("ew", "ew.providerNo = :providerNo");
+		query.setParameter("providerNo", providerNo);
+		return getSingleResultOrNull(query);
+    }
 	
 	
 }
