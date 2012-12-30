@@ -173,6 +173,10 @@
 			<td><html:checkbox property="facility.enableAnonymous" /></td>
 		</tr>
 		<tr class="b">
+			<td width="20%">Enable Phone Encounter Clients:</td>
+			<td><html:checkbox property="facility.enablePhoneEncounter" /></td>
+		</tr>
+		<tr class="b">
 			<td width="20%">Enable Group Notes:</td>
 			<td><html:checkbox property="facility.enableGroupNotes" /></td>
 		</tr>
