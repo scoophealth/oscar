@@ -129,7 +129,7 @@ String curUser_no = (String) session.getAttribute("user");
 					<thead>
 						<tr>
                             <th align="left" valign="bottom" class="cell" nowrap>
-                                <input type="checkbox" onclick="checkAll('lab_form');" name="checkA"/>
+                                <input type="checkbox" onclick="checkAllLabs('lab_form');" name="checkA"/>
                                 <bean:message key="oscarMDS.index.msgHealthNumber"/>
                             </th>
                             <th align="left" valign="bottom" class="cell">
