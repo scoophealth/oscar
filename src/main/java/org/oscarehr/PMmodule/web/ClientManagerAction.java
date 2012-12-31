@@ -402,6 +402,7 @@ public class ClientManagerAction extends BaseAction {
 		int programId = p.getId();
 		// if it's local
 		if (programId != 0) {
+            p = programManager.getProgram(programId);
 			referral.setClientId((long) clientId);
 			referral.setProgramId((long) programId);
 			referral.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
@@ -410,6 +411,11 @@ public class ClientManagerAction extends BaseAction {
 
 			referral.setReferralDate(new Date());
 			referral.setProgramType(p.getType());
+            referral.setSelectVacancy(p.getVacancyName());
+            ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
+            if (tabBean.getTab().equals("Refer")) {
+                referral.setSelectVacancy("none");
+            }
 
 			referToLocalAgencyProgram(request, clientForm, referral, p);
 		}
@@ -1719,9 +1725,10 @@ public class ClientManagerAction extends BaseAction {
 			}
 			//Added for refer to Vacancy
 			if(tabBean.getTab().equals("Refer to vacancy")){
-				Program criteria = (Program) clientForm.get("program");
+//				Program criteria = (Program) clientForm.get("program");
 				
-				List<Program> programs = programManager.search(criteria);
+//				List<Program> programs = programManager.search(criteria);
+				List<Program> programs = programManager.getPrograms(facilityId);
 				List<VacancyDisplayBO> vacancyDisplayBOs = matchingManager.listNoOfVacanciesForWaitListProgram();
 				
 				for(int i=0;i<programs.size();i++){

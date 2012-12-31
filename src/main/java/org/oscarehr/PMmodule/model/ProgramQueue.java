@@ -56,6 +56,16 @@ public class ProgramQueue implements Serializable {
     private String presentProblems;
     private Long headClientId = null;
 
+    public String getVacancyName() {
+        return _vacancyName;
+    }
+
+    public void setVacancyName(String _vacancyName) {
+        this._vacancyName = _vacancyName;
+    }
+
+    private String _vacancyName;
+
 
     // constructors
     public ProgramQueue () {
