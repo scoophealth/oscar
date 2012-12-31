@@ -24,89 +24,79 @@
 
 --%>
 
-<%
-  
-  String curUser_no = (String) session.getAttribute("user");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date") ;
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
-%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<%@ page import="oscar.login.DBHelp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
+
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
+
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
-<%@ page import="org.oscarehr.util.SpringUtils"%>
-<%@ page import="org.oscarehr.common.model.MyGroup"%>
-<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
 
 <%
+  
+	String curProvider_no = (String) session.getAttribute("user");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date") ;
+	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
+	
 	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
-%>
+	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
 
-<% 
-  String [][] dbQueries=new String[][] { 
-{"search_noshowappt", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, d.last_name, d.first_name from appointment a, demographic d where (a.status = 'N' or a.status = 'NS') and a.provider_no = ? and a.appointment_date >= ? and a.appointment_date<= ? and a.demographic_no=d.demographic_no  order by "+orderby }, 
-  };
-  String[][] responseTargets=new String[][] {  };
-  patientBean.doConfigure(dbQueries,responseTargets);
-%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
-    String curProvider_no = (String) session.getAttribute("user");
 
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
+	String [][] dbQueries=new String[][] { 
+		{"search_noshowappt", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, d.last_name, d.first_name from appointment a, demographic d where (a.status = 'N' or a.status = 'NS') and a.provider_no = ? and a.appointment_date >= ? and a.appointment_date<= ? and a.demographic_no=d.demographic_no  order by "+orderby }, 
+	};
+  
+	String[][] responseTargets=new String[][] {  };
+	patientBean.doConfigure(dbQueries,responseTargets);
+
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
 %>
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
-</security:oscarSec>
-<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isTeamAccessPrivacy=true; %>
-</security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isSiteAccessPrivacy=true; %></security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isTeamAccessPrivacy=true; %></security:oscarSec>
 
 <% 
-HashMap<String,String> providerMap = new HashMap<String,String>();
-//multisites function
-if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-	String sqlStr = "select provider_no from provider ";
-	if (isSiteAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
-		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
-	if (isTeamAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
-				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
-	DBHelp dbObj = new DBHelp();
-	ResultSet rs = dbObj.searchDBRecord(sqlStr);
-	while (rs.next()) {
-		providerMap.put(rs.getString("provider_no"),"true");
+	List<ProviderData> pdList = null;
+	HashMap<String,String> providerMap = new HashMap<String,String>();
+	
+	//multisites function
+	if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
+	
+		if (isSiteAccessPrivacy) 
+			pdList = providerDataDao.findByProviderSite(curProvider_no);
+		
+		if (isTeamAccessPrivacy) 
+			pdList = providerDataDao.findByProviderTeam(curProvider_no);
+	
+		for(ProviderData providerData : pdList) {
+			providerMap.put(providerData.getId(), "true");
+		}
 	}
-	rs.close();
-}
 %>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="report.reportnoshowapptlist.title" />
-</title>
+<title><bean:message key="report.reportnoshowapptlist.title" /></title>
 <link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-  //document.titlesearch.keyword.select();
-}
-
-
-  
+	function setfocus() {
+	  this.focus();
+	  //document.titlesearch.keyword.select();
+	}
 
 //-->
 </SCRIPT>
@@ -135,8 +125,7 @@ function setfocus() {
     }
   }
 %>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
-	leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor=<%=deepcolor%>>
@@ -149,6 +138,7 @@ function setfocus() {
 			onClick="window.close()"></th>
 	</tr>
 </table>
+
 <%
   boolean bFistL = true; //first line in a table for TH
   String strTemp = "";
@@ -175,6 +165,7 @@ function setfocus() {
 	      bFistL = false;
         bodd = false ;
 %>
+
 <table width="480" border="0" cellspacing="1" cellpadding="0">
 	<tr>
 		<td><%=providerBean.getProperty(rsdemo.getString("provider_no")) %>
@@ -182,8 +173,7 @@ function setfocus() {
 		<td align="right"></td>
 	</tr>
 </table>
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1"
-	cellpadding="0">
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0">
 	<tr bgcolor=<%=deepcolor%> align="center">
 		<TH width="20%"><b><a
 			href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=appointment_date"><bean:message
@@ -200,12 +190,12 @@ function setfocus() {
 		<TH width="30%"><b><bean:message
 			key="report.reportapptsheet.msgComments" /></b></TH>
 	</tr>
-	<%
+<%
     }
 %>
 	<tr bgcolor="<%=bodd?weakcolor:"white"%>">
 		<td align="center"><a href=#
-			onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("appointment_no")%>&provider_no=<%=curUser_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("appointment_date"))%>&start_time=<%=rsdemo.getString("start_time")%>&demographic_no=');return false;">
+			onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("appointment_no")%>&provider_no=<%=curProvider_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("appointment_date"))%>&start_time=<%=rsdemo.getString("start_time")%>&demographic_no=');return false;">
 		<%=rsdemo.getString("appointment_date")%></a></td>
 		<td align="center"><%=rsdemo.getString("start_time")%></td>
 		<td align="center"><%=rsdemo.getString("end_time")%></td>
