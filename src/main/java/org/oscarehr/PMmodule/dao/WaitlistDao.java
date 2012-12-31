@@ -156,8 +156,8 @@ public class WaitlistDao {
 	 
 	public List<VacancyDisplayBO> listDisplayVacanciesForAllWaitListPrograms() {
 		List<VacancyDisplayBO> bos = new ArrayList<VacancyDisplayBO>();
-		String queryString = "SELECT v.id, t.NAME, v.dateCreated FROM vacancy v JOIN vacancy_template t ON " + 
-				"v.templateId=t.TEMPLATE_ID WHERE  v.status=?1 order by v.id asc";
+		String queryString = "SELECT v.id, t.NAME as tname, v.dateCreated, p.name as pname, v.vacancyName, v.wlProgramId FROM vacancy v JOIN vacancy_template t ON " +
+				"v.templateId=t.TEMPLATE_ID  JOIN program p ON v.wlProgramId=p.id WHERE  v.status=?1 order by v.id asc";
 		
 		Query query = entityManager.createNativeQuery(queryString);
 		query.setParameter(1, "active");
@@ -169,6 +169,9 @@ public class WaitlistDao {
 			bo.setVacancyID((Integer)cols[0]);
 			bo.setVacancyTemplateName((String)cols[1]);
 			bo.setCreated((Date)cols[2]);
+            bo.setProgramName((String)cols[3]);
+            bo.setVacancyName((String)cols[4]);
+            bo.setProgramId((Integer)cols[5]);
 			bos.add(bo);
         }
 		
@@ -177,8 +180,8 @@ public class WaitlistDao {
 
 	public List<VacancyDisplayBO> getDisplayVacanciesForAgencyProgram(int programID) {
 		List<VacancyDisplayBO> bos = new ArrayList<VacancyDisplayBO>();
-		String queryString = "SELECT v.id, t.NAME, v.dateCreated FROM vacancy v JOIN vacancy_template t ON" + 
-			" v.templateId=t.TEMPLATE_ID WHERE t.PROGRAM_ID=?1 and v.status=?2";
+		String queryString = "SELECT v.id, t.NAME as tname, v.dateCreated, p.name as pname, v.vacancyName, v.wlProgramId  FROM vacancy v JOIN vacancy_template t ON" +
+			" v.templateId=t.TEMPLATE_ID JOIN program p ON v.wlProgramId=p.id WHERE t.PROGRAM_ID=?1 and v.status=?2";
 		
 		Query query = entityManager.createNativeQuery(queryString);
 		query.setParameter(1, programID);
@@ -191,6 +194,9 @@ public class WaitlistDao {
 			bo.setVacancyID((Integer)cols[0]);
 			bo.setVacancyTemplateName((String)cols[1]);
 			bo.setCreated((Date)cols[2]);
+            bo.setProgramName((String)cols[3]);
+            bo.setVacancyName((String)cols[4]);
+            bo.setProgramId((Integer)cols[5]);
 			bos.add(bo);
         }
 		
@@ -200,7 +206,7 @@ public class WaitlistDao {
 	public VacancyDisplayBO getDisplayVacancy(int vacancyID) {
 		VacancyDisplayBO bo = new VacancyDisplayBO();
 		String queryString = "SELECT v.vacancyName, t.NAME, " +
-				"v.dateCreated FROM vacancy v JOIN vacancy_template t ON v.templateId=t.TEMPLATE_ID WHERE v.id=?1";
+				"v.dateCreated, p.name, v.vacancyName  FROM vacancy v JOIN vacancy_template t ON v.templateId=t.TEMPLATE_ID JOIN program p ON v.wlProgramId=p.id  WHERE v.id=?1";
 		
 		Query query = entityManager.createNativeQuery(queryString);
 		query.setParameter(1, vacancyID);
@@ -213,6 +219,8 @@ public class WaitlistDao {
 			bo.setVacancyName((String)cols[0]);
 			bo.setVacancyTemplateName((String)cols[1]);
 			bo.setCreated((Date)cols[2]);
+            bo.setProgramName((String)cols[3]);
+            bo.setVacancyName((String)cols[4]);
 		}
 		loadStats(bo);
 		return bo;

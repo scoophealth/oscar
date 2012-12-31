@@ -34,6 +34,16 @@ public class VacancyDisplayBO {
 	String criteriaSummary=null;
 	boolean active=true;
 
+    public String getProgramName() {
+        return programName;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
+    String programName;
+
 	int pendingCount=0;
 	int rejectedCount=0;
 	int acceptedCount=0;

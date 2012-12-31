@@ -230,6 +230,8 @@ String reason ="";
 		title="Referral Date" />
 	<display:column property="providerFormattedName" sortable="true"
 		title="Referring Provider" />
+	<display:column property="vacancyName" sortable="true"
+		title="Vacancy Name" />
 	<display:column property="notes" sortable="true"
 		title="Reason for referral" />
 	<display:column property="presentProblems" sortable="true"
@@ -353,6 +355,8 @@ String reason ="";
 		</display:column>
 		<display:column property="providerName" sortable="true"
 			title="Referring Provider" />
+	<display:column property="vacancyName" sortable="true"
+		title="Vacancy Name" />
 		<display:column property="referral.reasonForReferral" sortable="true"
 			title="Reason for referral" />
 		<display:column property="referral.presentingProblem" sortable="true"

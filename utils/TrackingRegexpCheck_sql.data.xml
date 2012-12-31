@@ -1368,6 +1368,7 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`room_type_id` int(10) unsigned NOT NULL default '1',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`seatonNotToured` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`section_id` bigint(20) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`select_vacancy` varchar(255) NOT NULL default 'none',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`shortcut` tinyint(1) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`signatureDate` varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`signature` bigint(20) default NULL,</ViolationValue>
@@ -11458,6 +11459,7 @@
         <ViolationValue>/database/mysql/updates/update-2012-07-10.sql:alter table formONAREnhanced add  sent_to_born tinyint(1) default 0;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2012-11-03.sql:alter table formONAREnhanced change provider_no provider_no varchar(10) default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2012-11-05.sql:alter table admission change clientstatus_id clientstatus_id bigint(20) default NULL;</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2012-12-31.sql:alter table client_referral add `select_vacancy` varchar(255) NOT NULL default 'none';</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:A1C double(2, 2) default null,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:ABPM bool NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:Ace_RxDecToday enum('Same', 'Increase', 'Decrease', 'Stop', 'Start', 'InClassSwitch', 'null') default null,</ViolationValue>
