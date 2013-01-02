@@ -32,6 +32,7 @@ import org.oscarehr.common.model.LabPatientPhysicianInfo;
 import org.oscarehr.common.model.LabTestResults;
 import org.oscarehr.common.model.MdsMSH;
 import org.oscarehr.common.model.MdsOBX;
+import org.oscarehr.common.model.MdsZRG;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.springframework.stereotype.Repository;
 
@@ -294,6 +295,21 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
         query.setParameter("reqId", reqId);
         query.setParameter("docType", docType);
         return query.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Object[]> findResultsByDemographicAndLabType(Integer demographicNo, String labType) {
+    	String sql = 
+                "FROM " +
+                "PatientLabRouting p, " + MdsMSH.class.getSimpleName() + " msh, " + MdsZRG.class.getSimpleName() + " zrg " +
+                "WHERE p.labNo = msh.id "+
+                "AND p.labNo = zrg.id " +
+                "AND p.labType = :labType " +
+                "AND p.demographicNo = :demographicNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("labType", labType);
+		query.setParameter("demographicNo", demographicNo);
+		return query.getResultList();
     }
     
 }

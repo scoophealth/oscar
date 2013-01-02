@@ -36,7 +36,9 @@ public class PatientLabRoutingDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("patientLabRouting", "labTestResults", "labPatientPhysicianInfo", "mdsOBX", "mdsMSH", "hl7_msh", "hl7_pid", "hl7_obr", "hl7_obx", "hl7_orc", "consultdocs");
+		SchemaUtils.restoreTable("patientLabRouting", "labTestResults", "labPatientPhysicianInfo", "mdsOBX", "mdsMSH", "hl7_msh", 
+				"hl7_pid", "hl7_obr", "hl7_obx", "hl7_orc", "consultdocs", "mdsZRG", "mdsMSH",
+				"mdsPID","mdsPV1","mdsZFR","mdsOBR");
 	}
 
 	@Test
@@ -79,7 +81,5 @@ public class PatientLabRoutingDaoTest extends DaoTestFixtures {
 	public void testFindRoutingsAndConsultDocsByRequestId() {
 		assertNotNull(dao.findRoutingsAndConsultDocsByRequestId(100, "L"));
 	}
-
-	
 	
 }

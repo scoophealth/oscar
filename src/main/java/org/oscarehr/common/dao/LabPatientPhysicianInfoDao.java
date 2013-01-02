@@ -80,4 +80,16 @@ public class LabPatientPhysicianInfoDao extends AbstractDao<LabPatientPhysicianI
 		q.setParameter("demoNo", demographicNo);
 	    return q.getResultList();
     }
+	
+	public List<Object[]> findLabServiceDatesByLabId(Integer labId) {
+        String sql = "SELECT DISTINCT lpp.id, lpp.serviceDate, lpp2.serviceDate " +
+        		"FROM LabPatientPhysicianInfo lpp, LabPatientPhysicianInfo lpp2, LabReportInformation tr " +
+        		"WHERE lpp.accessionNum = lpp2.accessionNum " +
+        		"AND lpp2.id = :labId " +
+        		"AND tr.id = lpp.labReportInfoId " +
+        		"ORDER BY tr.printDate, tr.printTime";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("labId", labId);
+		return query.getResultList();
+	}
 }

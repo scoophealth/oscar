@@ -113,22 +113,19 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
 		
 		boolean hasProviderData = !list.isEmpty();
 		if (hasProviderData) {
-			appender.startWhereSubclause();
-		}
-		
-		for (int i = 0; i < list.size(); i++) {
-			BillingProviderData d  = list.get(i);
-			ParamAppender pa = new ParamAppender();
-			pa.and("b.providerOHIPNo = :ohipNo" + i, "ohipNo" + i, d.getOhipNo());
-			pa.and("b.groupNo = :billingGroupNo" + i, "billingGroupNo" + i, d.getBillingGroupNo());
-			pa.and("b.specialty = :specialtyCode" + i, "specialtyCode" + i, d.getSpecialtyCode());
-						
-			appender.or("(" + pa.getWhereClause() + ")");		
-			appender.mergeParams(pa);
-		}
-		
-		if (hasProviderData) {
-			appender.endWhereSubclause();
+			ParamAppender providerSubclauseAppender = new ParamAppender();
+			for (int i = 0; i < list.size(); i++) {
+				ParamAppender providerAppender = new ParamAppender();
+				
+				BillingProviderData d  = list.get(i);
+				ParamAppender pa = new ParamAppender();
+				pa.and("b.providerOHIPNo = :ohipNo" + i, "ohipNo" + i, d.getOhipNo());
+				pa.and("b.groupNo = :billingGroupNo" + i, "billingGroupNo" + i, d.getBillingGroupNo());
+				pa.and("b.specialty = :specialtyCode" + i, "specialtyCode" + i, d.getSpecialtyCode());
+				
+				providerSubclauseAppender.or(providerAppender);
+			}
+			appender.and(providerSubclauseAppender);
 		}
 		
 		appender.and("b.codeDate >= :fromDate", "fromDate", fromDate);

@@ -49,7 +49,8 @@ public class MdsZRG extends AbstractModel<Integer>{
 	private String reportGroupVersion;
 
 	private String reportFlags;
-
+	
+	@Column(name="reportGroupDesc")
 	private String reportGroupsDesc;
 
 	private String MDSIndex;
