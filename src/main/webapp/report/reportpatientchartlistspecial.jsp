@@ -25,7 +25,6 @@
 --%>
 
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
-<%@ page import="oscar.login.DBHelp"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 
 <%@ page import="org.oscarehr.common.model.MyGroup"%>
