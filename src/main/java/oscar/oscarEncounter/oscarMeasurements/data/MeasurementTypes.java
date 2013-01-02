@@ -22,120 +22,75 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.oscarMeasurements.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.dao.ValidationsDao;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
+import oscar.util.ConversionUtils;
 
 /**
  * @deprecated use MeasurementTypeDao instead (2012-01-23)
  */
 public class MeasurementTypes {
-    private static Logger log = MiscUtils.getLogger();
-    static MeasurementTypes measurementTypes = new MeasurementTypes();
-    boolean loaded = false;
-    Hashtable byId = null;
-    Hashtable byType = null;
-    
-    /** Creates a new instance of MeasurementTypes */
-    private MeasurementTypes() {
-    }
-   
-    public EctMeasurementTypesBean getByType(String type){
-       while(loaded == false){         
-          try {
-            wait();
-          } catch (InterruptedException e) {
-        	  MiscUtils.getLogger().error("This doesn't look good, when does wait really ever get interrupted practice...", e);
-          }
-       }
-       return (EctMeasurementTypesBean) byType.get(type);     
-    }
-    
-    public EctMeasurementTypesBean getById(String type){
-       while(loaded == false){         
-          try {
-            wait();
-          } catch (InterruptedException e) {
-        	  MiscUtils.getLogger().error("This doesn't look good, when does wait really ever get interrupted in practice...", e);
-          }
-       }
-       return (EctMeasurementTypesBean) byId.get(type);     
-    }
-    
-    static public MeasurementTypes getInstance(){
-       if (!measurementTypes.loaded) {
-         measurementTypes.loadMeasurementTypes();
-       }
-       return measurementTypes;
-    }
 
-    public void reInit(){
-        log.debug("Reloading measurement types");
-        loaded = false;
-        measurementTypes.loadMeasurementTypes();
-    }
-    
-    private synchronized void loadMeasurementTypes() {
-        log.debug("LOADING GETS CALLED");
-        if (!loaded){
-            log.debug("LOADING RUNS");
-            byId = new Hashtable();
-            byType = new Hashtable();
+	private static Logger log = MiscUtils.getLogger();
 
-            try {
-               
-               String sql = "SELECT * FROM measurementType";   
+	private static MeasurementTypes measurementTypes;
 
-               ResultSet rs = DBHandler.GetSQL(sql);        
-               while(rs.next()){                
-                  //log.debug("validation "+oscar.Misc.getString(rs,("validation"));  
-                  EctMeasurementTypesBean ret = null;
-                  ret = new EctMeasurementTypesBean(rs.getInt("id"), oscar.Misc.getString(rs, "type"), 
-                                                     oscar.Misc.getString(rs, "typeDisplayName"), 
-                                                     oscar.Misc.getString(rs, "typeDescription"), 
-                                                     oscar.Misc.getString(rs, "measuringInstruction"),  
-                                                     oscar.Misc.getString(rs, "validation")); 
-                  ret.setValidationName(getValidation(oscar.Misc.getString(rs, "validation")));
-                  byId.put(""+rs.getInt("id"),ret);
-                  byType.put(oscar.Misc.getString(rs, "type"),ret);
+	private Map<String, EctMeasurementTypesBean> byId = new HashMap<String, EctMeasurementTypesBean>();
+	private Map<String, EctMeasurementTypesBean> byType = new HashMap<String, EctMeasurementTypesBean>();
 
+	/** Creates a new instance of MeasurementTypes */
+	private MeasurementTypes() {
+	}
 
-                }
-                rs.close();            
-                loaded = true;
-                notifyAll();
-            }
-            catch(SQLException e) {
-                log.debug(e.getMessage());
-            }
-        }
-            //return ret;
-    }
-    
-    private String getValidation(String val){
-        String validation = null;
-        try {
-            
-            String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
-            ResultSet rs = DBHandler.GetSQL(sqlValidation);
-            if (rs.next()){ 
-                validation = oscar.Misc.getString(rs, "name");
-                //log.debug("setting validation to "+validation);
-            }
-            rs.close();
-        }catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return validation;
-    }
-     
+	public EctMeasurementTypesBean getByType(String type) {
+		return byType.get(type);
+	}
+
+	public EctMeasurementTypesBean getById(String type) {
+		return byId.get(type);
+	}
+
+	public static synchronized MeasurementTypes getInstance() {
+		if (measurementTypes == null) {
+			measurementTypes = new MeasurementTypes();
+			measurementTypes.reInit();
+		}
+		return measurementTypes;
+	}
+
+	public synchronized void reInit() {
+		byId.clear();
+		byType.clear();
+
+		try {
+			MeasurementTypeDao mtDao = SpringUtils.getBean(MeasurementTypeDao.class);
+			ValidationsDao vDao = SpringUtils.getBean(ValidationsDao.class);
+
+			for (MeasurementType t : mtDao.findAll()) {
+				EctMeasurementTypesBean ret = new EctMeasurementTypesBean(t.getId(), t.getType(), t.getTypeDisplayName(), t.getTypeDescription(), t.getMeasuringInstruction(), t.getValidation());
+
+				Validations v = vDao.find(ConversionUtils.fromIntString(t.getValidation()));
+				if (v != null) {
+					ret.setValidationName(v.getName());
+				}
+				byId.put(t.getId().toString(), ret);
+				byType.put(t.getType(), ret);
+
+			}
+		} catch (Exception e) {
+			log.debug(e.getMessage());
+		}
+	}
 }
