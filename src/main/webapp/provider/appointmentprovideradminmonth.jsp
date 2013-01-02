@@ -430,6 +430,9 @@ function refreshTabAlerts(id) {
 
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<tr>
+	<td align="center" >
+		<img src="<%=request.getContextPath()%>/images/oscar_small.png" border="0">
+	</td>
 		<td>
 		<ul id="navlist">
 			<li><a
