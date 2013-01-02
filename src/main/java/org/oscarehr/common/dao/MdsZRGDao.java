@@ -25,13 +25,37 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.MdsZRG;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class MdsZRGDao extends AbstractDao<MdsZRG>{
 
 	public MdsZRGDao() {
 		super(MdsZRG.class);
 	}
+
+    public List<Object[]> findById(Integer id) {
+		String sql = "SELECT zrg.reportGroupDesc, zrg.reportGroupId, count(zrg.reportGroupID), zrg.reportGroupHeading, zrg.reportSequence " +
+				"FROM MdsZRG zrg where zrg.id = :id group by zrg.reportGroupDesc, zrg.reportGroupID " +
+				"ORDER BY zrg.reportSequence";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("id", id);
+		return query.getResultList();
+    }
+
+	public List<Object> findReportGroupHeadingsById(Integer id, String reportGroupId) {
+		String sql = "SELECT zrg.reportGroupHeading FROM MdsZRG zrg where zrg.id = :id " +
+				"AND zrg.reportGroupId = :reportGroupId " +
+				"ORDER BY zrg.reportSequence";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("id", id);
+		query.setParameter("reportGroupId", reportGroupId);
+		return query.getResultList();
+    }
 }

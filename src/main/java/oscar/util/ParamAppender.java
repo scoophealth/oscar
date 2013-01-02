@@ -76,6 +76,16 @@ public class ParamAppender extends QueryAppender {
 		return query;
 	}
 	
+	public void and(ParamAppender appender) {
+		super.and(appender);
+		mergeParams(appender);
+	}
+	
+	public void or(ParamAppender appender) {
+		super.or(appender);
+		mergeParams(appender);
+	}
+	
 	/**
 	 * Adds all parameters from the specified appended to this appender
 	 * 
