@@ -971,7 +971,7 @@ body {
                                         </tr>
                                         <tr><!--move this left-->
                                             <td>
-                                                <table border="0" width="700px">
+                                                <table border="0" style="width:100%">
                                                     <tr>
                                                         <td>
                                                             <table width="100%" cellspacing="0" cellpadding="0" class="legend">
