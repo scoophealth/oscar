@@ -247,7 +247,7 @@ public final class EDocUtil  {
 			doc.setPublic1(Integer.parseInt(newDocument.getDocPublic()));
 			if(doReview) {
 				doc.setReviewer(newDocument.getReviewerId());
-				doc.setReviewdatetime(newDocument.getReviewDateTimeDate());
+				doc.setReviewdatetime(ConversionUtils.fromDateString(newDocument.getReviewDateTime(),"yyyy/MM/dd HH:mm:ss"));
 			} else {
 				doc.setReviewer(null);
 				doc.setReviewdatetime(null);
