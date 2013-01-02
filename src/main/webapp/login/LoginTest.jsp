@@ -30,10 +30,13 @@
 <%@page import="java.util.List, java.util.Map, java.util.Date, java.util.Calendar, java.util.GregorianCalendar, java.io.*,java.text.SimpleDateFormat" %>
 <%@page import="org.oscarehr.util.SpringUtils,org.oscarehr.common.dao.PropertyDao,org.oscarehr.common.model.Property" %>
 <%@page import="org.oscarehr.common.service.AcceptableUseAgreementManager" %>
+<%@page import="org.oscarehr.util.SpringUtils,org.oscarehr.PMmodule.dao.ProviderDao,org.oscarehr.common.model.Provider" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-        <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
         <%
            /*
            -If the user has an agreement proceed with login
@@ -41,10 +44,12 @@
            -If reading fails proceed with login
            
            */
-            List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_signed_confidentiality",
-            new Object[] {session.getAttribute("user")});
-            Map map = resultList.get(0);
-            Date signdate = (Date)map.get("signed_confidentiality");
+            Provider provider = providerDao.getProvider((String)session.getAttribute("user"));
+        	Date signdate = null;
+        	if(provider != null) {
+        		signdate = provider.getSignedConfidentiality();
+        	}
+           
 
             Date cutoff = AcceptableUseAgreementManager.getAgreementCutoffDate();
             //out.write("cutoff "+cutoff+" "+signdate.after(cutoff)+" signdate "+signdate);

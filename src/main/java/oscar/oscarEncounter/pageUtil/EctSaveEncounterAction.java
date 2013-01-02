@@ -52,7 +52,6 @@ import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarSurveillance.SurveillanceMaster;
-import oscar.service.OscarSuperManager;
 import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
@@ -234,8 +233,7 @@ public class EctSaveEncounterAction extends Action {
             if (sessionbean.status != null && !sessionbean.status.equals("")) {
               oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
               as.setApptStatus(sessionbean.status);
-              OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-
+              
               if (httpservletrequest.getParameter("btnPressed").equals(
                   "Sign,Save and Exit")) {
             	  Appointment appt = appointmentDao.find(Integer.parseInt(sessionbean.appointmentNo));
@@ -276,7 +274,6 @@ public class EctSaveEncounterAction extends Action {
    
     String forward = null;
 
-    //billRegion=BC&billForm=GP&hotclick=&appointment_no=0&demographic_name=TEST%2CBILLING&demographic_no=10419&providerview=1&user_no=999998&apptProvider_no=none&appointment_date=2006-3-30&start_time=0:00&bNewForm=1&status=t')
     if (httpservletrequest.getParameter("btnPressed").equals(
         "Sign,Save and Bill")) {
 
