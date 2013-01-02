@@ -262,9 +262,6 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/parsers/HHSEmrDownloadHandler.java:obrGroups = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/parsers/MDSHandler.java:obrGroups = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetLabTest.java:public ArrayList labResults = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable mnemonics = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable notes = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:notes.put(oscar.Misc.getString(rs, "associatedOBX"), new ArrayList());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportReassignAction.java://Hashtable htable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportReassignAction.java:ArrayList listFlaggedLabs = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/SendMostResponProvAction.java:ArrayList listFlaggedLabs = new ArrayList();</ViolationValue>
@@ -1141,9 +1138,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPatientData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPeriMenopausalRecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPeriMenopausalRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRemoteAttachments.java://            for(rs = DBHandler.GetSQL(String.valueOf(String.valueOf((new StringBuilder("SELECT ocl.locationDesc, mess.thesubject FROM messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '")).append(messId).append("'"))));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRemoteAttachments.java://for(rs = DBHandler.GetSQL(String.valueOf(String.valueOf((new StringBuilder("SELECT * FROM remoteAttachments WHERE demographic_no = '")).append(demoNo).append("' order by date ")))); rs.next(); dates.add(oscar.Misc.getString(rs,"date")))</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRemoteAttachments.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java:ResultSet rsDB = DBHandler.GetSQL(sqlDB);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java:ResultSet rsPage = DBHandler.GetSQL(sqlPage, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java:rs = DBHandler.GetSQL("select sex from demographic where demographic_no = "+demo);</ViolationValue>
@@ -1157,20 +1151,12 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sqlValidation);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctViewAttachmentAction.java:rs = DBHandler.GetSQL("SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctWindowSizes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathNetInfo.java:ResultSet rsLab = DBHandler.GetSQL(select_not_signed);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:ResultSet rs = DBHandler.GetSQL(attachQuery);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSResultsData.java:ResultSet rs = DBHandler.GetSQL(attachQuery);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSResultsData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSResultsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:rs2 = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:rs=DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/ProviderData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/pageUtil/MsgMessengerAdminAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1313,7 +1299,6 @@
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_pid_information.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_providers_with_reports);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
@@ -1344,10 +1329,7 @@
         <ViolationValue>/src/main/webapp/report/reportonbilledphcpv2.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledvisitprovider.jsp:&lt;%@page import="oscar.oscarDB.DBPreparedHandler"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledvisitprovider.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportpatientchartlist.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportpatientchartlist.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/system/dbcpMonitor.jsp:ResultSet rsProcessList = DBHandler.GetSQL("show processlist");</ViolationValue>
     </ViolationSet>
     <ViolationSet>
@@ -2106,8 +2088,8 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findUniqueLabsForPatientMDS(String demographic) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findValuesByLoinc(String demographicNo, String loincCode) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findValuesForDemographic(String demographicNo) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable mnemonics = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable notes = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable&lt;Integer, ArrayList&lt;String&gt;&gt; notes = new Hashtable&lt;Integer, ArrayList&lt;String&gt;&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable&lt;String, Mnemonics&gt; mnemonics = new Hashtable&lt;String, Mnemonics&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportReassignAction.java://Hashtable htable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:groupMemberVector = new java.util.Vector();</ViolationValue>

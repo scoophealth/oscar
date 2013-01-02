@@ -22,35 +22,35 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMDS.data;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 public class GroupedReports {
 
-    GroupedReports(String oBR, String hL7TimeStamp, String qString) {
-        associatedOBR = oBR;
-        queryString = qString;
-        try{
-            GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
+	public String associatedOBR;
+	public ArrayList<Results> resultsArray;
+	public String timeStamp;
+	public List<String> codes;
 
-            // boneheaded calendar numbers months from 0
-            cal.set(Integer.parseInt(hL7TimeStamp.substring(0,4)), Integer.parseInt(hL7TimeStamp.substring(4,6))-1, Integer.parseInt(hL7TimeStamp.substring(6,8)),
-                    Integer.parseInt(hL7TimeStamp.substring(8,10)), Integer.parseInt(hL7TimeStamp.substring(10,12)), Integer.parseInt(hL7TimeStamp.substring(12,14)));
+	GroupedReports(String oBR, String hL7TimeStamp, List<String> codes) {
+		associatedOBR = oBR;
+		this.codes = codes;
+		try {
+			GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
 
-            timeStamp = dateFormat.format(cal.getTime());
-        }catch(Exception e){
-            timeStamp = "";
-        }
-    }
+			// boneheaded calendar numbers months from 0
+			cal.set(Integer.parseInt(hL7TimeStamp.substring(0, 4)), Integer.parseInt(hL7TimeStamp.substring(4, 6)) - 1, Integer.parseInt(hL7TimeStamp.substring(6, 8)), Integer.parseInt(hL7TimeStamp.substring(8, 10)), Integer.parseInt(hL7TimeStamp.substring(10, 12)), Integer.parseInt(hL7TimeStamp.substring(12, 14)));
 
-    public String associatedOBR;
-    public ArrayList<Results> resultsArray;
-    public String timeStamp;
-    public String queryString;
+			timeStamp = dateFormat.format(cal.getTime());
+		} catch (Exception e) {
+			timeStamp = "";
+		}
+	}
+
 }

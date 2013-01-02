@@ -48,6 +48,33 @@ public class QueryAppenderTest {
 
 		q.addOrder("[order clause]");
 		assertEquals(q.toString(), "[base query] WHERE [where clause] AND [all clause] OR [another where clause] ORDER BY [order clause]");
+	}
+	
+	@Test
+	public void testSubclauses() {
+		QueryAppender q = new QueryAppender();
+		q.setBaseQuery("[base query]");
+		
+		QueryAppender qq = new QueryAppender();
+		qq.and("[subclause1]");
+		qq.and("[subclause2]");
+		qq.and("[subclause3]");
+		
+		q.and(qq);
+		q.or("[clause3]");
+		assertEquals("[base query] WHERE ([subclause1] AND [subclause2] AND [subclause3]) OR [clause3]", q.toString());
+		
+		q = new QueryAppender();
+		q.setBaseQuery("[base query]");
 
+		q.or("[clause1]");
+		
+		qq = new QueryAppender();
+		qq.and("[subclause1]");
+		qq.and("[subclause2]");
+		qq.and("[subclause3]");
+		q.and(qq);
+		
+		assertEquals("[base query] WHERE [clause1] AND ([subclause1] AND [subclause2] AND [subclause3])", q.toString());
 	}
 }
