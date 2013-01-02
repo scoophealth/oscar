@@ -58,13 +58,12 @@ function searchOutOfDomain() {
 <div class="searchBox">
 <div class="RowTop header">
     <div class="title">
-        <bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />
+        <bean:message key="demographic.search.msgSearchPatient" />
     </div>
 </div>
 <ul>
     <li>
-        <div class="label"><bean:message
-            key="demographic.zdemographicfulltitlesearch.msgBy" />:
+        <div class="label">
         </div>
 	<% String searchMode = request.getParameter("search_mode");
          String keyWord = request.getParameter("keyword");
@@ -97,8 +96,7 @@ function searchOutOfDomain() {
          </select>
     </li>
     <li>
-        <div class="label"><bean:message
-            key="demographic.zdemographicfulltitlesearch.msgInput" />:
+        <div class="label">
         </div>
         <input class="wideInput" type="text" NAME="keyword" VALUE="<%=keyWord%>" SIZE="17" MAXLENGTH="100">
     </li>

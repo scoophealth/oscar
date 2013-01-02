@@ -92,24 +92,13 @@
    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
    <link rel="stylesheet" type="text/css" href="../mobile/searchdemographicstyle.css">
 <% } else { %>
-   <link rel="stylesheet" type="text/css" href="../share/css/searchBox.css" />
-   <style type="text/css">
-       body {
-            font-family: Verdana, helvetica, sans-serif;
-            font-size: 14px; margin: 0px; padding: 0px;
-       }
-       .searchBox .title { display: none; /* We don't want to display the title in the included jsp file ' */ }
-   </style>
+ <link rel="stylesheet" type="text/css" media="all" href="../demographic/searchdemographicstyle.css"  />
+ <link rel="stylesheet" type="text/css" href="../share/css/searchBox.css" />
+
 <% } %>
 </head>
 <body onload="setfocus()">
 <div id="demographicSearch">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor="#CCCCFF">
-		<th NOWRAP><font face="Helvetica"><bean:message
-			key="demographic.search.msgSearchPatient" /></font></th>
-	</tr>
-</table>
 </div>
     <!-- Search Box -->
     <%@ include file="zdemographicfulltitlesearch.jsp"%>
