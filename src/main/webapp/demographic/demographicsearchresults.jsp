@@ -161,43 +161,35 @@
 </head>
 	
 
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
 
 <div id="demographicSearch">
     <a href="#" onclick="showHideItem('demographicSearch');" id="cancelButton" class="leftButton top"> <bean:message key="global.btnCancel" /> </a>
 	<%@ include file="zdemographicfulltitlesearch.jsp"%>
 </div>
 
-<center>
+
 <div id="searchResults">
-    <a href="#" onclick="showHideItem('demographicSearch');" id="searchPopUpButton" class="rightButton top">Search</a>
-    <div class="header deep">
-        <div class="title">
-            <% if (isMobileOptimized) { %> <bean:message key="demographic.demographicsearch2apptresults.findPatient" />
-            <% } else { %>  <bean:message key="demographic.demographicsearchresults.msgSearchPatient" />
-            <% } %>
-        </div>
-    </div>
-<table width="95%" border="0">
-	<tr>
-		<td align="left"><i><bean:message key="demographic.demographicsearchresults.msgSearchKeys" /></i> : <%=request.getParameter("keyword")%></td>
-	</tr>
-</table>
-    <ul bgcolor="#ffffff">
+<a href="#" onclick="showHideItem('demographicSearch');" id="searchPopUpButton" class="rightButton top">Search</a>
+<br>
+<i><bean:message key="demographic.demographicsearchresults.msgSearchKeys" /></i> : <%=request.getParameter("keyword")%>
+
+    <ul>
         <li class="tableHeadings deep">
+        
 		<% if ( fromMessenger ) {%>
-		<! -- leave blank -->
+		<!-- leave blank -->
 		<%} else {%>
                 <div class="demoIdSearch">
                     <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnDemoNo" /></a>
                 </div>
-		<div class="links">&nbsp;<!-- b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">Links<sup>*</sup></a></b --></div>
+		<div class="links"><bean:message key="demographic.demographicsearchresults.module" /> <!-- b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">Links<sup>*</sup></a></b --></div>
 
 		<%}%>
 		<div class="name"><a
                     href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>"><bean:message
-                    key="demographic.demographicsearchresults.btnDemoName"/><sup>1</sup></a>
+                    key="demographic.demographicsearchresults.btnDemoName"/></a>
                 </div>
 		<div class="chartNo"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit%>"><bean:message
@@ -209,21 +201,19 @@
                 </div>
 		<div class="dob"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=dob&limit1=0&limit2=<%=strLimit%>"><bean:message
-			key="demographic.demographicsearchresults.btnDOB" /></a>
+			key="demographic.demographicsearchresults.btnDOB" /> <span class="dateFormat"><bean:message key="demographic.demographicsearchresults.btnDOBFormat" /></span></a>
                 </div>
 		<div class="doctor"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=provider_no&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnDoctor" /></a>
                 </div>
                 <div class="rosterStatus"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>"><font
-			size='-1'><bean:message
-                        key="demographic.demographicsearchresults.btnRosSta" /></font></a>
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>"><bean:message
+                        key="demographic.demographicsearchresults.btnRosSta" /></a>
                 </div>
 		<div class="patientStatus"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=patient_status&limit1=0&limit2=<%=strLimit%>"><font
-			size='-1'><bean:message
-                        key="demographic.demographicsearchresults.btnPatSta" /></font></a>
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=patient_status&limit1=0&limit2=<%=strLimit%>"><bean:message
+                        key="demographic.demographicsearchresults.btnPatSta" /></a>
                 </div>
                 <div class="phone"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=phone&limit1=0&limit2=<%=strLimit%>"><bean:message
@@ -300,31 +290,31 @@
 
 		for(Demographic demo : demoList) {
 
-			toggleLine = !toggleLine;
-			nItems++; //to calculate if it is the end of records
+
+			
+			String dem_no = demo.getDemographicNo().toString();
+			String head = dmDAO.getHead(dem_no);
+
+			if (head != null && !head.equals(dem_no)) {
+				//skip non head records
+				continue;
+			}
 
 %>
-	<li style="background-color: <%=toggleLine?"white":"#EEEEFF"%>">
+	<li class="<%=toggleLine?"even":"odd"%>">
 	<div class="demoIdSearch">
 
 	<%
-		String dem_no = demo.getDemographicNo().toString();
-		String head = dmDAO.getHead(dem_no);
-
-		if (head != null && !head.equals(dem_no)) {
-			//skip non head records
-			continue;
-		}
 
 		if (fromMessenger) {
 	%>
-		<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName())%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=demo.getDemographicNo()%></a>
+		<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName())%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=demo.getDemographicNo()%></a></div>
 	<%	
 		}
 		else { 
 	%>
 		<a title="Master Demo File" href="#" onclick="popup(600,900,'demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail')"><%=dem_no%></a></div>
-
+	
 		<!-- Rights -->
 		<div class="links"><security:oscarSec roleName="<%=roleName$%>"
 			objectName="_eChart" rights="r">
@@ -355,15 +345,13 @@
 		<div class="phone"><%=demo.getPhone()==null||demo.getPhone().equals("")?"&nbsp;":(demo.getPhone().length()==10?(demo.getPhone().substring(0,3)+"-"+demo.getPhone().substring(3)):demo.getPhone())%></div>
 	</li>
 	<%
+		
+	toggleLine = !toggleLine;
+	nItems++; //to calculate if it is the end of records
 		}
 	}
 %>
 </ul>
-<div id="legend">
-<sup>*</sup><bean:message key="demographic.demographicsearchresults.msgSortDemographic"/>  <br>
-<sup>1</sup><bean:message key="demographic.demographicsearchresults.msgSortsLastName"/>   <br>
-<br>
-</div>
 <%
   int nLastPage=0,nNextPage=0;
   nNextPage=Integer.parseInt(strLimit)+Integer.parseInt(strOffset);
@@ -381,12 +369,15 @@
 <%
 }
 %>
+<br> 
+<div class="createNew">
+<a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=keyWord%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
+<bean:message key="demographic.search.btnCreateNew" />
+</a>
 
-<div class="createNew"><a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=keyWord%>"><b><font size="+1"><bean:message
-	key="demographic.search.btnCreateNew" /></font></b></a>
-<br>
 </div>
-<p><bean:message key="demographic.demographicsearchresults.msgClick" /></p>
-</center>
+
+</div>
+
 </body>
 </html:html>

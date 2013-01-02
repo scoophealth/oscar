@@ -48,6 +48,7 @@ form {
     color:black;
     font-weight: bold;
     background-color: #CCCCFF;
+    height:20px;
 }
 
 .searchBox .label {
