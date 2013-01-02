@@ -89,6 +89,9 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 <table class="topnav" id="firstTable">
 	<tr>
+	<td align="center" >
+		<img src="<%=request.getContextPath()%>/images/oscar_small.png" border="0">
+	</td>
 		<td valign="bottom">
 			<ul id="navlist">
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_day" rights="r">
