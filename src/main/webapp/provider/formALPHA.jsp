@@ -25,12 +25,22 @@
 --%>
 
 <%
-  if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
   String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*"
-	errorPage="errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp"%>
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%@page import="org.oscarehr.common.dao.FormDao" %>
+<%@page import="org.oscarehr.common.model.Form" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+	FormDao formDao = SpringUtils.getBean(FormDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+%>
 
 <html>
 <head>
@@ -88,9 +98,9 @@ function onSubmitForm() {
 
   if( !bNew ) {
     String content="";
-    List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
-    for (Map form : resultList) {
-        content = (String)form.get("content");
+    Form f = formDao.find(Integer.parseInt(request.getParameter("form_no")));
+    if(f != null) {
+        content = f.getContent();
 %>
 <xml id="xml_list">
 <encounter>

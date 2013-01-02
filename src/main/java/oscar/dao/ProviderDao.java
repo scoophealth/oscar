@@ -52,24 +52,10 @@ public class ProviderDao extends OscarSuperDao {
             {"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=? where provider_no=? "},
             
             {"search_demograph", "select *  from demographic where demographic_no=?"},
-            {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
-            {"search_encounter_no", "select * from encounter where demographic_no = ? and encounter_date=? and encounter_time=? and provider_no=? order by encounter_no desc limit 1"},
             {"search_encountersingle", "select * from encounter where encounter_no = ?"},
-            {"search_previousenc", "select * from encounter where demographic_no = ? and provider_no=? order by encounter_date desc, encounter_time desc limit 1"},
-
-			{"search_encounterform", "select * from encounterform where form_name like ? order by form_name"},
+            
 			{"search_form", "select * from form where form_no=? "}, //new?delete
-			{"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1"}, //new?delete
-			{"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1"},
-			{"search_template", "select * from encountertemplate where encountertemplate_name like ? order by encountertemplate_name"},
-
-			{"search_prescribe", "select * from prescribe where prescribe_no= ?"},
-			{"search_prescribe_no", "select prescribe_no from prescribe where demographic_no=?  order by prescribe_date desc, prescribe_time desc limit 1"},
-
-			{"search_templatename", "select encountertemplate_name from encountertemplate order by encountertemplate_name"},
-			{"search_encounterformname", "select form_name from encounterform order by form_name"},
-			{"search_provider_slp", "select comments from provider where provider_no=?"},
-
+			
 			{"searchloginteam", "select provider_no, last_name, first_name from provider where (provider_no=? || team=(select team from provider where provider_no=?)) and status='1' order by last_name"},
 			{"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
 			{"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" },

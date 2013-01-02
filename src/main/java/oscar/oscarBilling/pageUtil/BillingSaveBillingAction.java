@@ -27,9 +27,7 @@ package oscar.oscarBilling.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +50,6 @@ import oscar.entities.Billingmaster;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem;
-import oscar.service.OscarSuperManager;
 import oscar.util.ConversionUtils;
 
 public class BillingSaveBillingAction extends Action {
@@ -80,14 +77,7 @@ public class BillingSaveBillingAction extends Action {
     //  bsd.storeBilling(bean);
     oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
     String billStatus = as.billStatus(bean.getApptStatus());
-
-    java.sql.ResultSet rs;
-    GregorianCalendar now = new GregorianCalendar();
-    int curYear = now.get(Calendar.YEAR);
-    int curMonth = (now.get(Calendar.MONTH) + 1);
-    int curDay = now.get(Calendar.DAY_OF_MONTH);
-    String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) +
-        "-" + String.valueOf(curDay);
+    
     String billingid = "";
     String dataCenterId = OscarProperties.getInstance().getProperty(
         "dataCenterId");
@@ -95,7 +85,6 @@ public class BillingSaveBillingAction extends Action {
     //change appointment status
     MiscUtils.getLogger().debug("appointment_no: " + bean.getApptNo());
     MiscUtils.getLogger().debug("BillStatus:" + billStatus);
-    OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
     Appointment appt = appointmentDao.find(Integer.parseInt(bean.getApptNo()));
     appointmentArchiveDao.archiveAppointment(appt);
     if(appt != null) {
@@ -124,9 +113,7 @@ public class BillingSaveBillingAction extends Action {
     billingdao.persist(b);
 
     billingid = b.getId().toString();
-    
-    String sql = "";
-    
+        
     ArrayList<BillingItem> billItem = bean.getBillItem();
     for (int i = 0; i < billItem.size(); i++) {
       if (bean.getBillingType().compareTo("MSP") == 0) {
