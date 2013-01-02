@@ -17,14 +17,14 @@
  *
  * This software was written for the
  * Department of Family Medicine
- * McMaster Unviersity
+ * McMaster University
  * Hamilton
  * Ontario, Canada
  */
 
 body {
     font-family: Verdana, helvetica, sans-serif;
-    font-size: 100%;
+    font-size: 14px;
     margin: 0px;
     padding: 0px;
     padding-top:17px; /* push everything down, since the element with class title is at top */
@@ -56,30 +56,20 @@ a:visited {
 }
 
 a:hover {
-	COLOR: red;
+	color:#000;
 	TEXT-DECORATION: underline;
 }
 
-.deep { background-color: #CCCCFF; }
+.deep { background-color: #B7B18D; }
 .weak { background-color: #EEEEFF; }
 
 .title {
-    text-align:center;
+    text-align:left;
     font-weight: bold;
-    height:17px;
+    height:12px
 }
 
-li.tableHeadings {
-    height: 35px;
-    border-bottom: 1px solid #c0c0c0;
-}
-
-li#searchlist {
-    height:20px;
-    border-bottom: 1px solid #c0c0c0;
-}
-
-#demographicSearch .header, #cancelButton, #backButton, #searchPopUpButton {
+#cancelButton, #backButton, #searchPopUpButton {
     display:none;
 }
 
@@ -100,35 +90,44 @@ li#searchlist {
     display: table-row;
 }
 
+#searchResults li:hover {
+    display: table-row;
+    
+}
+
 #searchResults li div {
-    border: 1px solid white;
-    text-align:center;
+
+	border-right: 1px solid #BDBDBD;	
+	border-bottom: 1px solid #BDBDBD;
+	padding-left:2px;
+	padding-right:2px;
+
+    text-align:left;
     vertical-align:middle;
     display: table-cell;
-    padding: 0px;
+   
     margin:0px;
 }
+
+.odd{background-color:#fff;}
+.even{background-color:#EEEEFF;}
+
+.odd:hover {background-color:#FACC2E;}
+.even:hover {background-color:#FACC2E;}
+
 #searchResults {
     clear:both;
 }
 
 #searchResults li.tableHeadings {
     font-weight:bold;
-    vertical-align:middle;
-    border-top: 2px solid white;
+
 }
 
 .demoId {
     border-left: 1px solid #c0c0c0;
 }
-#searchResults li div.name, #searchResults li div.links { text-align: left; }
-#searchResults li.tableHeadings div.name { text-align: center; }
 
-.name, .doctor, .lastName { width:20%; }
-.firstName { width: 15%; }
-.age { width:5%; }
-.sex { width:2%; }
-.phone, .chartNo { width: 10%; }
-.dob { width: 10%; }
-.demoIdSearch, .demoId, .links { width:10%; }
-.rosterStatus, .patientStatus { width: 3%; }
+.createNew{font-size:16px;font-weight:bold;text-align:right;}
+
+.dateFormat{font-size:12px;font-weight:normal;}
