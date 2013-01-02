@@ -37,36 +37,38 @@
 
 <%
     long startTimeToGetP = System.currentTimeMillis();
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
 
     String temp = "diab2";//"physFunction";  //
-            if (request.getParameter("flowsheet") != null) {
-                temp = request.getParameter("flowsheet");
-            }
-            String flowsheet = temp;
-            String demographic = request.getParameter("demographic");
-            MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
-            Hashtable<String, String> flowsheetNames = templateConfig.getFlowsheetDisplayNames();
+    if (request.getParameter("flowsheet") != null) {
+        temp = request.getParameter("flowsheet");
+    }
+    String flowsheet = temp;
+    String demographic = request.getParameter("demographic");
+    MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
+    Hashtable<String, String> flowsheetNames = templateConfig.getFlowsheetDisplayNames();
 
-            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-            FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
-            List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),Integer.parseInt(demographic));
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+    FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
+    List<FlowSheetCustomization> custList = null;
+    if(demographic == null || demographic.isEmpty()) {
+    	custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"));
+    } else {
+    	custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),Integer.parseInt(demographic));
+    }
+    Enumeration en = flowsheetNames.keys();
 
-            Enumeration en = flowsheetNames.keys();
+    EctMeasurementTypesBeanHandler hd = new EctMeasurementTypesBeanHandler();
+    Vector<EctMeasurementTypesBean> vec = hd.getMeasurementTypeVector();
+    String demographicStr = "";
+    if (demographic != null){
+        demographicStr = "&demographic="+demographic;
+    }
 
-            EctMeasurementTypesBeanHandler hd = new EctMeasurementTypesBeanHandler();
-            Vector<EctMeasurementTypesBean> vec = hd.getMeasurementTypeVector();
-            String demographicStr = "";
-            if (demographic != null){
-                demographicStr = "&demographic="+demographic;
-            }
-
-               XMLOutputter outp = new XMLOutputter();
-            outp.setFormat(Format.getPrettyFormat());
+    XMLOutputter outp = new XMLOutputter();
+    outp.setFormat(Format.getPrettyFormat());
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -74,7 +76,7 @@
 <html:html locale="true">
 
 <head>
-<title><%=flowsheet%> - <oscar:nameage demographicNo="<%=demographic%>"/></title><!--I18n-->
+<title><%=flowsheet%> </title><!--I18n-->
 <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../../../share/javascript/prototype.js"></script>

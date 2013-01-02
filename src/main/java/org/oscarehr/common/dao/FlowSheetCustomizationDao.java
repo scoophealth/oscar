@@ -44,12 +44,22 @@ public class FlowSheetCustomizationDao extends AbstractDao<FlowSheetCustomizatio
     }
 
     public List<FlowSheetCustomization> getFlowSheetCustomizations(String flowsheet,String provider,Integer demographic){
-    	Query query = entityManager.createQuery("SELECT fd FROM FlowSheetDrug fd WHERE fd.flowsheet=? and fd.archived=0 and ( ( fd.providerNo = ?  and fd.demographicNo = 0) or (fd.providerNo =? and fd.demographicNo = ?  ) )");
+    	Query query = entityManager.createQuery("SELECT fd FROM FlowSheetCustomization fd WHERE fd.flowsheet=? and fd.archived=0 and ( ( fd.providerNo = ?  and fd.demographicNo = 0) or (fd.providerNo =? and fd.demographicNo = ?  ) )");
     	query.setParameter(1, flowsheet);
     	query.setParameter(2, provider);
     	query.setParameter(3, provider);
-    	query.setParameter(4, demographic);
+    	query.setParameter(4, String.valueOf(demographic));
 
+        @SuppressWarnings("unchecked")
+        List<FlowSheetCustomization> list = query.getResultList();
+        return list;
+    }
+    
+    public List<FlowSheetCustomization> getFlowSheetCustomizations(String flowsheet,String provider){
+    	Query query = entityManager.createQuery("SELECT fd FROM FlowSheetCustomization fd WHERE fd.flowsheet=? and fd.archived=0 and fd.providerNo = ?  and fd.demographicNo = 0");
+    	query.setParameter(1, flowsheet);
+    	query.setParameter(2, provider);
+    	
         @SuppressWarnings("unchecked")
         List<FlowSheetCustomization> list = query.getResultList();
         return list;
