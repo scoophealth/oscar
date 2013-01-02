@@ -23,15 +23,18 @@
     Ontario, Canada
 
 --%>
-<%
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.login.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@ page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@ page import="org.oscarehr.common.model.Appointment" %>
 
-    String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
-    String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
-    int count = 0;	
-%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.login.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
+
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -41,25 +44,28 @@
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
-<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
-<%@page import="org.oscarehr.common.model.Appointment" %>
-<%@ page import="org.oscarehr.common.model.MyGroup"%>
-<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
-<%@page import="org.oscarehr.util.SpringUtils" %>
 <%
+
+	String curProvider_no = (String) session.getAttribute("user");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
+    
+    java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
+    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+
+    SimpleDateFormat dayFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
+    int count = 0;	
+
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-	SimpleDateFormat dayFormatter = new SimpleDateFormat("yyyy-MM-dd");
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
-%>
-<%
-    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-    String [][] dbQueries;
+	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
 
- 
+
+	String [][] dbQueries;
     dbQueries=new String[][] {
 
 	 {"search_daysheetall",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.start_time>=? and a.end_time<? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby },
@@ -70,42 +76,30 @@
    
 
     daySheetBean.doConfigure(dbQueries);
-%>
-
-<%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
-    String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
 %>
 
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
-</security:oscarSec>
-<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isTeamAccessPrivacy =true;%>
-</security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isSiteAccessPrivacy=true; %></security:oscarSec>
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isTeamAccessPrivacy =true;%></security:oscarSec>
+
 <%
+List<ProviderData> pdList = null;
 HashMap<String,String> providerMap = new HashMap<String,String>();
+
 //multisites function
 if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-	String sqlStr = "select provider_no from provider ";
-	if (isSiteAccessPrivacy)
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no "
-		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
-	if (isTeamAccessPrivacy)
-		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
-				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
-	DBHelp dbObj = new DBHelp();
-	ResultSet rs = dbObj.searchDBRecord(sqlStr);
-	while (rs.next()) {
-		providerMap.put(rs.getString("provider_no"),"true");
+
+	if (isSiteAccessPrivacy) 
+		pdList = providerDataDao.findByProviderSite(curProvider_no);
+	
+	if (isTeamAccessPrivacy) 
+		pdList = providerDataDao.findByProviderTeam(curProvider_no);
+
+	for(ProviderData providerData : pdList) {
+		providerMap.put(providerData.getId(), "true");
 	}
-	rs.close();
 }
 %>
 <html:html locale="true">
@@ -113,16 +107,10 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="report.reportdaysheet.title" /></title>
 <link rel="stylesheet" href="../web.css">
-<style>
-td {
-	font-size: 16px;
-}
-</style>
+<style> td {font-size: 16px;}</style>
+
 <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
 <script language="JavaScript">
-<!--
-
-//-->
 
 function hideOnSource(){
 	var selfBooked = document.getElementById('onlySelfBooked');
@@ -161,14 +149,12 @@ function hideOnSource(){
         }
     }
 %>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
-	leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="<%=deepColor%>">
 		<th><bean:message key="report.reportdaysheet.msgMainLabel" />
-		
-		<input type="checkbox" onclick="hideOnSource();" id="onlySelfBooked"/><bean:message key="report.reportdaysheet.msgSelfBookedCheck"/>
+			<input type="checkbox" onclick="hideOnSource();" id="onlySelfBooked"/><bean:message key="report.reportdaysheet.msgSelfBookedCheck"/>
 		</th>
 		<th width="10%" nowrap><%=createtime%> <input type="button"
 			name="Button"
@@ -330,11 +316,6 @@ count++;
       <td align="center">&nbsp;<%=rsdemo.getString("roster_status")==null?"":rsdemo.getString("roster_status")%>&nbsp;</td>
 <% } else {
 		String dob = rsdemo.getString("dob");
-		//String sql = "select year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no=" + rsdemo.getString("demographic_no");
-		//ResultSet rs = dbObj.searchDBRecord(sql);
-		//if (rs.next()) {
-		//	dob = dbObj.getString(rs,"year_of_birth") + "/" + dbObj.getString(rs,"month_of_birth")+ "/" + dbObj.getString(rs,"date_of_birth");
-		//}
 %>
 		<td align="center">&nbsp;<%=dob==null?"":dob%></td>
 		<% }%>
