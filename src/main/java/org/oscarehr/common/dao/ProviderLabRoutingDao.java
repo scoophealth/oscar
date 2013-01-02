@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.springframework.stereotype.Repository;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
+@SuppressWarnings("unchecked")
 public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> {
 
 	@PersistenceContext
@@ -31,7 +33,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		super(ProviderLabRoutingModel.class);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	private List<ProviderLabRoutingModel> getProviderLabRoutings(Integer labNo, String labType, String providerNo, String status) {
 		Query q = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType=? and x.providerNo=? and x.status=?");
 		q.setParameter(1, labNo != null ? labNo : "%");
@@ -42,7 +44,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		return q.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<ProviderLabRoutingModel> findByLabNoAndLabTypeAndProviderNo(int labNo, String labType, String providerNo) {
 		Query q = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType=? and x.providerNo=?");
 		q.setParameter(1, labNo);
@@ -99,7 +101,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	 * @return
 	 * 		Returns an array of objects containing {@link Provider}, {@link ProviderLabRoutingModel} pairs.
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<Object[]> getProviderLabRoutings(Integer labNo, String labType) {
 		Query query = entityManager.createQuery("FROM " + Provider.class.getSimpleName() + " p, ProviderLabRoutingModel r WHERE p.id = r.providerNo AND r.labNo = :labNo AND r.labType = :labType");
 		query.setParameter("labNo", labNo);
@@ -107,7 +109,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	
     public List<ProviderLabRoutingModel> findByStatusANDLabNoType(Integer labNo, String labType, String status) {
 	    Query query = createQuery("r", "r.labNo = :labNo and r.labType = :labType and r.status = :status");
 	    query.setParameter("labNo", labNo);
@@ -116,7 +118,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	    return query.getResultList();
     }
 
-	@SuppressWarnings("unchecked")
+	
     public List<ProviderLabRoutingModel> findByProviderNo(String providerNo, String status) {
 	    Query query = createQuery("p", "p.providerNo = :pNo AND p.status = :sts");
 	    query.setParameter("pNo", providerNo);
@@ -124,7 +126,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	    return query.getResultList();
     }
 
-	@SuppressWarnings("unchecked")
+	
 	public List<ProviderLabRoutingModel> findByLabNoTypeAndStatus(int labId, String labType, String status) {
 		Query query = createQuery("p", "p.labNo = :lNo AND p.status = :sts AND p.labType = :lType");
 		query.setParameter("lNo", labId);
@@ -132,4 +134,61 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		query.setParameter("lType", labType);
 		return query.getResultList();
     }
+
+	@NativeSql({"providerLabRouting", "mdsMSH","mdsPID","mdsPV1","mdsZFR","mdsOBR","mdsZRG"})
+	public List<Object[]> findMdsResultResultDataByManyThings(String status, String providerNo, String patientLastName, String patientFirstName, String patientHealthNumber) {
+        // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+        // for the provider number if unable to find correct provider
+		String sql;
+        sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
+                "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+                "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+                "FROM " +
+                "providerLabRouting "+
+                "LEFT JOIN mdsMSH on providerLabRouting.lab_no = mdsMSH.segmentID "+
+                "LEFT JOIN mdsPID on providerLabRouting.lab_no = mdsPID.segmentID "+
+                "LEFT JOIN mdsPV1 on providerLabRouting.lab_no = mdsPV1.segmentID "+
+                "LEFT JOIN mdsZFR on providerLabRouting.lab_no = mdsZFR.segmentID "+
+                "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+
+                "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
+                "WHERE " +
+                "providerLabRouting.lab_type = 'MDS' " +
+                "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"' " +
+                "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
+        Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+	    
+    }
+	
+	@NativeSql({"providerLabRouting", "mdsMSH","mdsPID","mdsPV1","mdsZFR","mdsOBR","mdsZRG"})
+	public List<Object[]> findMdsResultResultDataByDemoId(String demographicNo) {
+		String sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, mdsPID.patientName, mdsPID.healthNumber, " +
+                "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+                "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+                "FROM patientLabRouting "+
+                "LEFT JOIN mdsMSH on patientLabRouting.lab_no = mdsMSH.segmentID "+
+                "LEFT JOIN mdsPID on patientLabRouting.lab_no = mdsPID.segmentID "+
+                "LEFT JOIN mdsPV1 on patientLabRouting.lab_no = mdsPV1.segmentID "+
+                "LEFT JOIN mdsZFR on patientLabRouting.lab_no = mdsZFR.segmentID "+
+                "LEFT JOIN mdsOBR on patientLabRouting.lab_no = mdsOBR.segmentID "+
+                "LEFT JOIN mdsZRG on patientLabRouting.lab_no = mdsZRG.segmentID "+
+                "WHERE " +
+                "patientLabRouting.lab_type = 'MDS' " +
+                "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
+		Query query = entityManager.createNativeQuery(sql);		
+		return query.getResultList();
+    }
+	
+
+	public List<Object[]> findProviderAndLabRoutingByIdAndLabType(Integer id, String labType) {
+		String sql = "FROM Provider provider, ProviderLabRoutingModel providerLabRouting " +
+				"WHERE provider.ProviderNo = providerLabRouting.providerNo " +
+				"AND providerLabRouting.labNo = :id " +
+				"AND providerLabRouting.labType = :labType";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("id", id);
+		query.setParameter("labType", labType);
+		return query.getResultList();
+	}
+	
 }

@@ -96,19 +96,35 @@ public class QueryAppender {
 	}
 	
 	/**
-	 * Starts a where sub-clause by appending an open bracket to the where clause.
+	 * Combines current where clause with the specified sub-clause using the
+	 * logical AND operator
+	 * 
+	 * @param appender
+	 * 		Appender to combine
 	 */
-	public void startWhereSubclause() {
-		getWhereBuffer().append("(");
+	public void and(QueryAppender appender) {
+		String clause = appender.getWhereClause();
+		if (clause.isEmpty()) {
+			return;
+		}
+		and("(" + clause + ")");
 	}
 	
 	/**
-	 * Ends where sub-clause by appending an open bracket to the where clause.
+	 * Combines current where clause with the specified sub-clause using the
+	 * logical OR operator
+	 * 
+	 * @param appender
+	 * 		Appender to combine
 	 */
-	public void endWhereSubclause() {
-		getWhereBuffer().append(")");
+	public void or(QueryAppender appender) {
+		String clause = appender.getWhereClause();
+		if (clause.isEmpty()) {
+			return;
+		}
+		or("(" + clause + ")");
 	}
-
+	
 	/**
 	 * Adds the specified sub-clause to the current where clause. This method
 	 * doesn't insert the proper operator. Use this method only when it's

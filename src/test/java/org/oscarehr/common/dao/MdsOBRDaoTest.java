@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,28 +21,30 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.dao;
 
-import javax.persistence.Query;
+import static org.junit.Assert.*;
 
-import org.oscarehr.common.model.MdsZMC;
-import org.springframework.stereotype.Repository;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-@Repository
-public class MdsZMCDao extends AbstractDao<MdsZMC>{
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
 
-	public MdsZMCDao() {
-		super(MdsZMC.class);
+public class MdsOBRDaoTest extends DaoTestFixtures {
+
+	protected MdsOBRDao dao = SpringUtils.getBean(MdsOBRDao.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("mdsOBR", "mdsOBX");
 	}
 
-	public MdsZMC findByIdAndSetId(Integer id, String setId) {
-	    String sql = "FROM MdsZMC zmc WHERE zmc.id = :id " +
-	    		"AND zmc.setId like :setId";
-		Query query = entityManager.createQuery(sql);
-		query.setParameter("id", id);
-		query.setParameter("setId", setId);
-		return getSingleResultOrNull(query);
-    }
+	@Test
+	public void testFindByIdAndResultCodes() {
+		assertNotNull(dao.findByIdAndResultCodes(10, new ArrayList<String>()));
+		assertNotNull(dao.findByIdAndResultCodes(10, Arrays.asList(new String[] { "10", "20", "30" })));
+	}
 }
