@@ -25,7 +25,6 @@
 --%>
 
 <%@ page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
-<%@ page import="oscar.login.DBHelp"%>
 <%@ page import="java.sql.ResultSet"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
