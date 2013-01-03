@@ -8,8 +8,15 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarRx.util.*, oscar.util.*" errorPage="errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
+
+
+<%@page import="oscar.OscarProperties" %>
+
+
 <%!
 public boolean isNumeric (String s) {
 	try{
@@ -21,6 +28,8 @@ public boolean isNumeric (String s) {
 }
 %>
 <%
+OscarProperties props = OscarProperties.getInstance();
+String project = "/"+props.getProperty("project_home", "oscar");
 String curUser_no = (String) session.getAttribute("user");
 String demographic_no = ""+Integer.parseInt(request.getParameter("demographic_no"));
 boolean selfSubmit = (request.getParameter("selfsubmit") != null) ? request.getParameter("selfsubmit").equals("1") : false;
@@ -385,13 +394,13 @@ String dxCodeList = "";
 dxCodeParam[1] = "250";
 List<Map<String, Object>> dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
 if (!dxCodeResult.isEmpty()) {
-	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=diab2\"); return false;'>Diabetic Flowsheet</a><br />";
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \""+project+"/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=diab2\"); return false;'>Diabetic Flowsheet</a><br />";
 }
 
 dxCodeParam[1] = "401";
 dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
 if (!dxCodeResult.isEmpty()) {
-	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=hyptension\"); return false;'>Hypertension Flowsheet</a><br />";
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \""+project+"/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=hyptension\"); return false;'>Hypertension Flowsheet</a><br />";
 }
 
 boolean showInr = false;
@@ -405,13 +414,13 @@ dxCodeParam[1] = "V5861";
 dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
 showInr = showInr || !dxCodeResult.isEmpty();
 if (showInr) {
-	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=inrFlow\"); return false;'>INR Flowsheet</a><br />";
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \""+project+"/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=inrFlow\"); return false;'>INR Flowsheet</a><br />";
 }
 
 dxCodeParam[1] = "042";
 dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
 if (!dxCodeResult.isEmpty()) {
-	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=hiv\"); return false;'>HIV Flowsheet</a><br />";
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\",  \""+project+"/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=hiv\"); return false;'>HIV Flowsheet</a><br />";
 }
 
 String msmtQuery = "intake_get_measurement";
@@ -736,19 +745,19 @@ function calcPYHX() {
 <table>
 <tr><th colspan="8"><%=demographicName%></th></tr>
 <tr>
-	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders:</a></td>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '<%=project%>/CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders:</a></td>
 	<td colspan="7"><%=remindersList%></td>
 </tr><tr>
-	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarRx/choosePatient.do?providerNo=999998&demographicNo=<%=demographic_no%>&pharmaList=true'); return false;">Pharmacy:</a></td>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/choosePatient.do?providerNo=999998&demographicNo=<%=demographic_no%>&pharmaList=true'); return false;">Pharmacy:</a></td>
 	<td colspan="7"><%=pharmacyName%></td>
 </tr><tr>
-	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies:</a></td>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies:</a></td>
 	<td colspan="7"><%=allergiesList%></td>
 </tr><tr>
-	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications:</a></td>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications:</a></td>
 	<td colspan="7"><%=medicationsList%></td>
 </tr><tr>
-	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarPrevention/index.jsp?demographic_no=<%=demographic_no%>'); return false;">Preventions:</a></td>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarPrevention/index.jsp?demographic_no=<%=demographic_no%>'); return false;">Preventions:</a></td>
 	<td colspan="7"><%=preventionsList%></td>
 </tr><tr>
 	<td class="rowheader">Other:</td>
