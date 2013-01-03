@@ -128,9 +128,6 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 LabResultData lbData = new LabResultData(LabResultData.DOCUMENT);
                 lbData.labType = LabResultData.DOCUMENT;
                 lbData.segmentID = d.getDocumentNo().toString();
-                //ocument_no | doctype | docdesc  | docxml | docfilename              | doccreator | program_id | updatedatetime      | status | contenttype | public1 | observationdate |
-
-
 
 
                 if (demographicNo == null && !providerNo.equals("0")) {
@@ -145,11 +142,9 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
 
                 //BAD!!!! CODING APROACHING
-                //DBHandler dbh = new DBHandler();
-                //String sqlcd = "select * from ctl_document cd, demographic d where cd.module = 'demographic' and cd.module_id != '-1' and cd.module_id = d.demographic_no and cd.document_no = '"+lbData.segmentID+"'";
                 DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
                 Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
-                //ResultSet rscd= dbh.GetSQL(sqlcd);
+
                 lbData.isMatchedToPatient = false;
                 if(demo!=null){
                      lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
@@ -161,13 +156,13 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 if(lbData.getPatientName().equalsIgnoreCase("Not, Assigned"))
                     lbData.setLabPatientId("-1");
                 logger.debug("DOCU<ENT "+lbData.isMatchedToPatient());
-                lbData.accessionNumber = "";//oscar.Misc.getString(rs,"accessionNum");
+                lbData.accessionNumber = "";
 
-                lbData.resultStatus = "N";//;oscar.Misc.getString(rs,"result_status");
+                lbData.resultStatus = "N";
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
 
-                lbData.dateTime = d.getObservationdate().toString();//oscar.Misc.getString(rs,"observationdate");
+                lbData.dateTime = d.getObservationdate().toString();
                 lbData.setDateObj(d.getObservationdate());
 
                 //priority
@@ -186,8 +181,8 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                     lbData.priority = "----";
                 }
 
-                lbData.requestingClient = "";//oscar.Misc.getString(rs,"requesting_client");
-                lbData.reportStatus =  "F";//oscar.Misc.getString(rs,"report_status");
+                lbData.requestingClient = "";
+                lbData.reportStatus =  "F";
 
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
@@ -201,11 +196,10 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                     lbData.discipline = null;
                 }
 
-                lbData.finalResultsCount = 0;//rs.getInt("final_result_count");
+                lbData.finalResultsCount = 0;
                 labResults.add(lbData);
             }
-            //rs.close();
-            //db.CloseConn();
+
         }catch(Exception e){
             logger.error("exception in DOCPopulate:", e);
         }
@@ -236,7 +230,7 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 LabResultData lbData = new LabResultData(LabResultData.DOCUMENT);
                 lbData.labType = LabResultData.DOCUMENT;
                 lbData.segmentID = d.getDocumentNo().toString();
-                //ocument_no | doctype | docdesc  | docxml | docfilename              | doccreator | program_id | updatedatetime      | status | contenttype | public1 | observationdate |
+
                 if (demographicNo == null && !providerNo.equals("0")) {
                     lbData.acknowledgedStatus = Character.toString(d.getStatus());
                 } else {
@@ -247,7 +241,7 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
                 DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
                 Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
-                //ResultSet rscd= dbh.GetSQL(sqlcd);
+
                 lbData.isMatchedToPatient = false;
                 if(demo!=null){
                      lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
@@ -260,11 +254,11 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                     lbData.setLabPatientId("-1");
                 logger.debug("DOCUMENT "+lbData.isMatchedToPatient());
 
-                lbData.resultStatus = "N";//;oscar.Misc.getString(rs,"result_status");
+                lbData.resultStatus = "N";
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
 
-                lbData.dateTime = d.getObservationdate().toString();//oscar.Misc.getString(rs,"observationdate");
+                lbData.dateTime = d.getObservationdate().toString();
                 lbData.setDateObj(d.getObservationdate());
 
                 //priority
@@ -283,7 +277,7 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                     lbData.priority = "----";
                 }
 
-                lbData.reportStatus =  "F";//oscar.Misc.getString(rs,"report_status");
+                lbData.reportStatus =  "F";
 
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
@@ -294,11 +288,10 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
                 lbData.discipline = StringUtils.trimToNull(d.getDoctype());
 
-                lbData.finalResultsCount = 0;//rs.getInt("final_result_count");
+                lbData.finalResultsCount = 0;
                 labResults.add(lbData);
             }
-            //rs.close();
-            //db.CloseConn();
+
         }catch(Exception e){
             logger.error("exception in DOCPopulate:", e);
         }
@@ -316,7 +309,7 @@ public class DocumentResultsDao extends AbstractDao<Document>{
         ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
-            //
+
             if ( demographicNo == null) {
                 sql="select d from Document d, ProviderInboxItem p where d.documentNo=p.labNo and p.status like '%"+status+"%' and (p.providerNo like '"+
                         (providerNo.equals("")?"%":providerNo)+"'"+" or p.providerNo='"+CommonLabResultData.NOT_ASSIGNED_PROVIDER_NO+"' ) "+
@@ -333,9 +326,6 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 LabResultData lbData = new LabResultData(LabResultData.DOCUMENT);
                 lbData.labType = LabResultData.DOCUMENT;
                 lbData.segmentID = d.getDocumentNo().toString();
-                //ocument_no | doctype | docdesc  | docxml | docfilename              | doccreator | program_id | updatedatetime      | status | contenttype | public1 | observationdate |
-
-
 
 
                 if (demographicNo == null && !providerNo.equals("0")) {
@@ -350,11 +340,9 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
 
                 //BAD!!!! CODING APROACHING
-                //DBHandler dbh = new DBHandler();
-                //String sqlcd = "select * from ctl_document cd, demographic d where cd.module = 'demographic' and cd.module_id != '-1' and cd.module_id = d.demographic_no and cd.document_no = '"+lbData.segmentID+"'";
                 DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
                 Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
-                //ResultSet rscd= dbh.GetSQL(sqlcd);
+
                 lbData.isMatchedToPatient = false;
                 if(demo!=null){
                      lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
@@ -366,13 +354,13 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 if(lbData.getPatientName().equalsIgnoreCase("Not, Assigned"))
                     lbData.setLabPatientId("-1");
                 logger.debug("DOCU<ENT "+lbData.isMatchedToPatient());
-                lbData.accessionNumber = "";//oscar.Misc.getString(rs,"accessionNum");
+                lbData.accessionNumber = "";
 
-                lbData.resultStatus = "N";//;oscar.Misc.getString(rs,"result_status");
+                lbData.resultStatus = "N";
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
 
-                lbData.dateTime = d.getObservationdate().toString();//oscar.Misc.getString(rs,"observationdate");
+                lbData.dateTime = d.getObservationdate().toString();
                 lbData.setDateObj(d.getObservationdate());
 
                 //priority
@@ -391,8 +379,8 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                     lbData.priority = "----";
                 }
 
-                lbData.requestingClient = "";//oscar.Misc.getString(rs,"requesting_client");
-                lbData.reportStatus =  "F";//oscar.Misc.getString(rs,"report_status");
+                lbData.requestingClient = "";
+                lbData.reportStatus =  "F";
 
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
@@ -406,11 +394,10 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                     lbData.discipline = null;
                 }
 
-                lbData.finalResultsCount = 0;//rs.getInt("final_result_count");
+                lbData.finalResultsCount = 0;
                 labResults.add(lbData);
             }
-            //rs.close();
-            //db.CloseConn();
+
         }catch(Exception e){
             logger.error("exception in DOCPopulate:", e);
         }
