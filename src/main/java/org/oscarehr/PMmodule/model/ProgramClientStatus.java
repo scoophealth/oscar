@@ -53,7 +53,7 @@ public class ProgramClientStatus implements Serializable {
 
     /**
      * Return the unique identifier of this class
-     * @hibernate.id
+     * 
      *  generator-class="native"
      *  column="clientstatus_id"
      */

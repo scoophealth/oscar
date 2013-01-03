@@ -179,7 +179,7 @@ public class RoomBed implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 */
     public RoomBedPK getId () {
         return id;

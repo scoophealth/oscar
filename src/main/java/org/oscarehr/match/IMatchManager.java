@@ -40,8 +40,8 @@ public interface IMatchManager {
 	 * Processes the passed event with received entity
 	 * @param <E>
 	 * @param entity
-	 * @param e
-	 * @return
+	 * @param event
+	 * @return the result
 	 */
 	public <E> String processEvent(E entity, Event event) throws MatchManagerException;
 }

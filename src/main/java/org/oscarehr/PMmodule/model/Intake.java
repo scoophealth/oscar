@@ -298,7 +298,7 @@ public class Intake implements Serializable {
     /**
 	 * Return the unique identifier of this class
      *
-     * @hibernate.id generator-class="native" column="intake_id"
+     *  generator-class="native" column="intake_id"
      */
     public Integer getId() {
         return id;

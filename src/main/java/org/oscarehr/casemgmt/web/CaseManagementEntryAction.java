@@ -3134,7 +3134,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	 * @param request
 	 * @param demono
 	 * @param providerNo
-	 * @return
 	 */
 	public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
 		HttpSession session = request.getSession();

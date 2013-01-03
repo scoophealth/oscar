@@ -116,9 +116,6 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 		return bedDemographic;
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#getBedDemographicByDemographic(java.lang.Integer)
-	 */
 	public BedDemographic getBedDemographicByDemographic(Integer demographicNo, Integer facilityId) {
 		if (demographicNo == null) {
 			handleException(new IllegalArgumentException("demographicNo must not be null"));

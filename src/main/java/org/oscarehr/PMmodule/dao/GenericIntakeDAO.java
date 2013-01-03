@@ -70,9 +70,6 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 			new Object[] { after });
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getLatestIntake(IntakeNode, java.lang.Integer, Integer)
-	 */
 	public Intake getLatestIntakeByFacility(IntakeNode node, Integer clientId, Integer programId, Integer facilityId) {
 		if (node == null || clientId == null) {
 			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
@@ -116,9 +113,6 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return facilityIds;
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntakes(org.oscarehr.PMmodule.model.IntakeNode, java.lang.Integer, Integer)
-	 */
 	public List<Intake> getIntakes(IntakeNode node, Integer clientId, Integer programId, Integer facilityId) {
 		if (node == null || clientId == null) {
 			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
@@ -328,9 +322,6 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intakeIds;
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getReportStatistics(java.util.List, java.util.List)
-	 */
 	public SortedMap<Integer, SortedMap<String, ReportStatistic>> getReportStatistics(Hashtable<Integer,Integer> answerIds, Set<Integer> intakeIds) {
 		if (intakeIds == null || answerIds == null) {
 			throw new IllegalArgumentException("Parameters intakeIds, answerIds must be non-null");

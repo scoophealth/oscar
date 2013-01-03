@@ -1139,6 +1139,7 @@
 							<head>To Do:</head>
 						</tag>
 					</tags>
+					<quiet>true</quiet>
 				</configuration>
 				<executions>
 					<execution>

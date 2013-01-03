@@ -59,11 +59,6 @@ public class SecUserRole implements Serializable {
 
     protected void initialize () {}
 
-    /**
-     * @hibernate.property
-     *  column=role_name
-     * not-null=true
-     */
     public String getRoleName () {
         return this._roleName;
     }
@@ -77,11 +72,6 @@ public class SecUserRole implements Serializable {
         this.hashCode = Integer.MIN_VALUE;
     }
 
-    /**
-     * @hibernate.property
-     *  column=activeyn
-     * not-null=true
-     */
     public boolean getActive () {
         return this._active;
     }
@@ -95,11 +85,6 @@ public class SecUserRole implements Serializable {
         this.hashCode = Integer.MIN_VALUE;
     }
 
-    /**
-     * @hibernate.property
-     *  column=provider_no
-     * not-null=true
-     */
     public String getProviderNo () {
         return this._providerNo;
     }

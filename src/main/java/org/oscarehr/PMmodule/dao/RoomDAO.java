@@ -170,7 +170,6 @@ public class RoomDAO extends HibernateDaoSupport {
 	/**
 	 * Get room types
 	 *
-	 * @return
 	 */
     @SuppressWarnings("unchecked")
     public RoomType[] getRoomTypes() {

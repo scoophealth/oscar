@@ -237,7 +237,7 @@ public class BedDemographic implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 */
     public BedDemographicPK getId () {
         return id;

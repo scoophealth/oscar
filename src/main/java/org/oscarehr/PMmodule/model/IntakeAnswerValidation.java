@@ -69,7 +69,7 @@ public class IntakeAnswerValidation implements Serializable {
     /**
      * Return the unique identifier of this class
      *
-     * @hibernate.id generator-class="native" column="intake_answer_validation_id"
+     *  generator-class="native" column="intake_answer_validation_id"
      */
     public Integer getId() {
         return id;

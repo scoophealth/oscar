@@ -42,7 +42,7 @@ public class BedDAO extends HibernateDaoSupport {
     /**
      * Check for the existence of a bed with this ID.
      * @param bedId
-     * @return
+     * @return boolean
      */
     public boolean bedExists(Integer bedId) {
 
@@ -144,7 +144,7 @@ public class BedDAO extends HibernateDaoSupport {
     /**
      * Delete bed
      *
-     * @param bedId
+     * @param bed
      *            
      * @throws BedReservedException
      *             bed is inactive and reserved

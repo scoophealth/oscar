@@ -58,7 +58,7 @@ public class DefaultRoleAccess  implements Serializable {
 
     /**
      * Return the unique identifier of this class
-     * @hibernate.id
+     * 
      *  generator-class="native"
      *  column="id"
      */
@@ -106,7 +106,7 @@ public class DefaultRoleAccess  implements Serializable {
     }
 
     /**
-     * @hibernate.property
+     * 
      *  column=role_id
      */
     public com.quatro.model.security.Secrole getCaisi_role () {
@@ -122,7 +122,7 @@ public class DefaultRoleAccess  implements Serializable {
     }
 
     /**
-     * @hibernate.property
+     * 
      *  column=access_id
      */
     public AccessType getAccess_type () {

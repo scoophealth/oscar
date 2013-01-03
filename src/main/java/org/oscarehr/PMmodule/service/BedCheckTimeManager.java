@@ -29,7 +29,6 @@ public interface BedCheckTimeManager {
 
 	/**
 	 * @param programId
-	 * @return
 	 */
 	public BedCheckTime[] getBedCheckTimesByProgram(Integer programId);
 

@@ -69,7 +69,7 @@ public class Log implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 *  generator-class="native"
 *  column="id"
 */

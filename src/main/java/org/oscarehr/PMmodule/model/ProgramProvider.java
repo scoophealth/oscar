@@ -85,7 +85,7 @@ public class ProgramProvider implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 *  generator-class="native"
 *  column="id"
 */
@@ -148,7 +148,7 @@ public class ProgramProvider implements Serializable {
     }
 
     /**
-     * @hibernate.property
+     * 
 *  column=role_id
      */
     public Secrole getRole () {
@@ -164,7 +164,7 @@ public class ProgramProvider implements Serializable {
     }
 
     /**
-     * @hibernate.property
+     * 
 *  column=provider_no
      */
     public Provider getProvider () {
