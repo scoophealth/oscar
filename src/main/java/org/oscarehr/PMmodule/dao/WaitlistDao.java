@@ -72,8 +72,16 @@ public class WaitlistDao {
 			out.setClientName((String)cols[1]);
 			out.setClientName(out.getClientName() + " " + (String)cols[2]);
 			
-			out.setDaysInWaitList(((Long)cols[3]).intValue());
-			out.setDaysSinceLastContact(((Long)cols[4]).intValue());
+			if (cols[3] instanceof BigInteger){ // to avoid java.lang.ClassCastException exception
+				out.setDaysInWaitList(((BigInteger)cols[3]).intValue());
+			} else {
+				out.setDaysInWaitList(((Long)cols[3]).intValue());
+			}
+			if (cols[4] instanceof BigInteger){
+				out.setDaysSinceLastContact(((BigInteger)cols[4]).intValue());
+			} else {
+				out.setDaysSinceLastContact(((Long)cols[4]).intValue());
+			}
 			out.setFormDataID((Integer)cols[5]);
 			out.setPercentageMatch((Double)cols[6]);
 			list.add(out);
