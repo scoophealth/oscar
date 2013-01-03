@@ -149,9 +149,7 @@
 	<bean name="/ClientImage" class="org.oscarehr.casemgmt.web.ClientImageAction" singleton="false">
 		<property name="clientImageManager" ref="ClientImageManager" />
 	</bean>
-	<bean name="/OnCallQuestionnaire" class="org.oscarehr.casemgmt.web.OnCallQuestionnaireAction" singleton="false">
-		<property name="onCallManager" ref="onCallManager" />
-	</bean>
+	
 	<bean name="/ArchiveView" class="org.oscarehr.casemgmt.web.ArchiveViewAction" singleton="false">
 		<property name="programManager" ref="programManager" />
 	</bean>
