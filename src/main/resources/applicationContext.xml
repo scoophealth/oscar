@@ -62,7 +62,6 @@
 	<bean id="secroleDao" class="com.quatro.dao.security.SecroleDao" autowire="byName"/>
 	<bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.RoleProgramAccessDAO" autowire="byName" />
 	<bean id="clientImageDAO" class="org.oscarehr.casemgmt.dao.ClientImageDAO" autowire="byName" />
-	<bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO" autowire="byName" />
 	<bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.TicklerDAO" autowire="byName" />
 	<bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.SurveyDAO" autowire="byName" />
 	<bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.ProgramProviderDAO" autowire="byName" />
@@ -205,7 +204,6 @@
 		
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />
 		<property name="rolesManager" ref="rolesManager" />
-		<property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO" />
 		<property name="admissionManager" ref="admissionManager" />
 		<property name="enabled" value="${casemgmt.note.password.enabled}" />
 		<property name="programManager" ref="programManager" />

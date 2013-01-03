@@ -66,7 +66,6 @@ import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
@@ -84,7 +83,6 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
-import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
@@ -95,7 +93,9 @@ import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProviderDefaultProgramDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.PartialDate;
@@ -214,8 +214,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		String url = "";
 		if ("casemgmt".equals(request.getAttribute("from"))) {
-			String ss = (String) session.getAttribute("casemgmt_VlCountry");
-
+			
 			String province = OscarProperties.getInstance().getProperty("billregion", "").trim().toUpperCase();
 
 			String strBeanName = "casemgmt_oscar_bean" + demono;
@@ -317,10 +316,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		// get the last temp note?
 		else if (tmpsavenote != null && !forceNote.equals("true")) {
 			logger.debug("tempsavenote is NOT NULL");
-			if (tmpsavenote.getNote_id() > 0) {
+			if (tmpsavenote.getNoteId() > 0) {
 				session.setAttribute("newNote", "false");
-				request.setAttribute("noteId", String.valueOf(tmpsavenote.getNote_id()));
-				note = caseManagementMgr.getNote(String.valueOf(tmpsavenote.getNote_id()));
+				request.setAttribute("noteId", String.valueOf(tmpsavenote.getNoteId()));
+				note = caseManagementMgr.getNote(String.valueOf(tmpsavenote.getNoteId()));
 				logger.debug("Restoring " + String.valueOf(note.getId()));
 			} else {
 				session.setAttribute("newNote", "true");
@@ -3195,25 +3194,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			map = new HashMap<Long, Boolean>();
 		}
 		return map;
-	}
-
-	private List manageLockedNotes(List notes, boolean removeLockedNotes, Map unlockedNotesMap) {
-		List<CaseManagementNote> notesNoLocked = new ArrayList<CaseManagementNote>();
-		for (Iterator iter = notes.iterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
-			if (note.isLocked()) {
-				if (unlockedNotesMap.get(note.getId()) != null) {
-					note.setLocked(false);
-				}
-			}
-			if (removeLockedNotes && !note.isLocked()) {
-				notesNoLocked.add(note);
-			}
-		}
-		if (removeLockedNotes) {
-			return notesNoLocked;
-		}
-		return notes;
 	}
 
 	/*
