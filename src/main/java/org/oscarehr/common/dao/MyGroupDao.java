@@ -122,4 +122,36 @@ public class MyGroupDao extends AbstractDao<MyGroup> {
 
          return dList;
       }
+     
+     public List<MyGroup> search_mygroup(String groupNo) {
+         Query query = entityManager.createQuery("SELECT g FROM MyGroup g WHERE g.id.myGroupNo like ? group by g.id.myGroupNo order by g.id.myGroupNo");
+         query.setParameter(1, groupNo);
+         
+         @SuppressWarnings("unchecked")
+         List<MyGroup> dList = query.getResultList();
+
+         return dList;
+     }
+     
+ 
+     public List<MyGroup> searchmygroupno() {
+         Query query = entityManager.createQuery("SELECT g FROM MyGroup g group by g.id.myGroupNo order by g.id.myGroupNo");
+         
+         @SuppressWarnings("unchecked")
+         List<MyGroup> dList = query.getResultList();
+
+         return dList;
+     }
+     
+     public List<MyGroup> search_providersgroup(String lastName, String firstName) {
+         Query query = entityManager.createQuery("SELECT g FROM MyGroup g where g.lastName like ? and g.firstName like ? order by g.lastName, g.firstName, g.id.myGroupNo");
+         query.setParameter(1, lastName);
+         query.setParameter(2, firstName);
+         
+         @SuppressWarnings("unchecked")
+         List<MyGroup> dList = query.getResultList();
+
+         return dList;
+     }
+     
 }
