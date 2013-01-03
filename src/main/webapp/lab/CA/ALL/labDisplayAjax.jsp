@@ -573,8 +573,8 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                             </td>
                                             <td>
                                                 <div class="FieldData" nowrap="nowrap">
-                                                    <%= ( handler.getOrderStatus().equals("F") ? "Final" : handler.getOrderStatus().equals("C") ? "Corrected" : "Partial") %>
-                                                </div>
+                                                    <%= ( handler.getOrderStatus().equals("F") ? "Final" : handler.getOrderStatus().equals("C") ? "Corrected" : handler.getOrderStatus().equals("X") ? "DELETED": handler.getOrderStatus()) %>
+										</div>
                                             </td>
                                         </tr>
                                         <tr>
