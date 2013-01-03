@@ -60,9 +60,9 @@ public class QuickListDao extends AbstractDao<QuickList>{
 	public List<QuickList> findByCodingSystem(String codingSystem) {
 		String csQuery = "";
         if ( codingSystem != null ){
-        	csQuery = " where ql.codingSystem = :cs";
+        	csQuery = " WHERE ql.codingSystem = :cs";
         }
-		Query query = createQuery("ql", csQuery + " GROUP BY ql.quickListName");
+		Query query = entityManager.createQuery("select ql from QuickList ql " + csQuery + " GROUP BY ql.quickListName");
 		if (codingSystem != null) {
 			query.setParameter("cs", codingSystem);
 		}
@@ -79,7 +79,7 @@ public class QuickListDao extends AbstractDao<QuickList>{
 			Query query = entityManager.createNativeQuery(sql);
 			return query.getResultList();
 		} catch (Exception e) {
-			// TODO replace when test ingores are merged
+			// TODO replace when test ignores are merged
 			return new ArrayList<Object[]>();
 		}
 		
