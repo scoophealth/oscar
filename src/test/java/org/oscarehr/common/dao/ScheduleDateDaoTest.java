@@ -54,7 +54,7 @@ public class ScheduleDateDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("scheduledate");
+		SchemaUtils.restoreTable("scheduledate","mygroup","scheduletemplate");
 	}
 
        @Test
