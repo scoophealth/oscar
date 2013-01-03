@@ -526,4 +526,17 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter("apptNo", apptNo);
 		return query.getResultList();
 	}
+    
+    public List<Appointment> searchappointmentday(String providerNo, Date appointmentDate, Integer programId) {
+    	String sql = "select a  from Appointment a where a.providerNo = ? and a.appointmentDate=? and a.programId = ? order by a.startTime, a.status DESC";
+    	
+    	
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, providerNo);
+        query.setParameter(2, appointmentDate);
+        query.setParameter(3, programId);
+        
+        return query.getResultList();
+    }
+    
 }

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
@@ -36,12 +37,17 @@
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
 <%@page import="oscar.util.ConversionUtils" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleDateDao" %>
+<%@ page import="org.oscarehr.common.model.ScheduleDate" %>
+<%@ page import="org.oscarehr.common.dao.ProviderSiteDao" %>
 
 <%
 	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
     ScheduleHolidayDao scheduleHolidayDao = SpringUtils.getBean(ScheduleHolidayDao.class);
     MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
     ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
+    ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 %>
 
 <%!
@@ -727,33 +733,40 @@ function refreshTabAlerts(id) {
 
    		
 
+   	List<ScheduleDate> sds = null;
    	if (isTeamOnly && (providerview.equals("all") || providerview.startsWith("_grp_"))) {
    		// only display providers that has the same team field value.
    	   	
    	   	param[0] = year+"-"+month+"-"+"1";
         param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
-        resultList = oscarSuperManager.find("providerDao", "search_scheduledate_teamp", new String[]{param[0], param[1], curUser_no, curUser_no });   		
+        
+        List<String> ps = providerDao.getProvidersInTeam(providerDao.getProvider(curUser_no).getTeam());
+        ps.add(curUser_no);
+        sds = scheduleDateDao.search_scheduledate_teamp(ConversionUtils.fromDateString(year+"-"+month+"-"+"01"),ConversionUtils.fromDateString(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"01"),"A",ps);   
    		
    	} else
     if(providerview.equals("all") || providerview.startsWith("_grp_",0)) {
 	      param[0] = year+"-"+month+"-"+"1";
 	      param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
 		  if (selectedSite == null) {  
-		      resultList = oscarSuperManager.find("providerDao", "search_scheduledate_datep", param);
+		      sds = scheduleDateDao.search_scheduledate_datep(ConversionUtils.fromDateString(year+"-"+month+"-"+"01"),ConversionUtils.fromDateString(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"01"),"A");
 	    	}
 	    	else	{
-	    	  resultList = oscarSuperManager.find("providerDao", "site_search_scheduledate_datep", new String[]{param[0], param[1], selectedSite});	
+	    	  List<String> ps = providerSiteDao.findByProviderNoBySiteName(selectedSite);
+	    	  sds = scheduleDateDao.search_scheduledate_teamp(ConversionUtils.fromDateString(year+"-"+month+"-"+"01"),ConversionUtils.fromDateString(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"01"),"A",ps);   
+	     		
 	      }
     } else {
       String[] param1 = new String[3];
       param1[0] = year+"-"+month+"-"+"1";
       param1[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
       param1[2] = providerview;
-      resultList = oscarSuperManager.find("providerDao", "search_scheduledate_singlep", param1);
+      sds = scheduleDateDao.search_scheduledate_teamp(ConversionUtils.fromDateString(year+"-"+month+"-"+"01"),ConversionUtils.fromDateString(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"01"),"A",Arrays.asList(new String[]{providerview}));   
+   	
     }
 
-              Iterator<Map<String,Object>> it = resultList.iterator();
-              Map date = null;
+              Iterator<ScheduleDate> it = sds.iterator();
+              ScheduleDate date = null;
               for (int i=0; i<dateGrid.length; i++) {
                 out.println("</tr>");
                 for (int j=0; j<7; j++) {
@@ -777,25 +790,25 @@ function refreshTabAlerts(id) {
   while (bFistEntry?it.hasNext():true) { 
     date = bFistEntry?it.next():date;
     String _scheduleDate = year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j]);    
-    if(!String.valueOf(date.get("sdate")).equals(_scheduleDate) ) {
+    if(!ConversionUtils.toDateString(date.getDate()).equals(_scheduleDate) ) {
       bFistEntry = false;
       break;
     } else {
       bFistEntry = true;
-      if(String.valueOf(date.get("available")).equals("0")) continue;
+      if(String.valueOf(date.getAvailable()).equals("0")) continue;
     }
-    if(isTeamOnly || !providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
+    if(isTeamOnly || !providerview.startsWith("_grp_",0) || myGrpBean.containsKey(date.getProviderNo()) ) {
     	%>
-    <br><span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span
-						class='datephour'><%=date.get("hour") %></span>
+    <br><span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(date.getProviderNo(),"",NameMaxLen )%></span><span
+						class='datephour'><%=date.getHour() %></span>
 	<%
-    	if (bMultisites && CurrentSiteMap.get(date.get("reason")) != null && ( selectedSite == null || "NONE".equals(date.get("reason")) || selectedSite.equals(date.get("reason")))) {
+    	if (bMultisites && CurrentSiteMap.get(date.getReason()) != null && ( selectedSite == null || "NONE".equals(date.getReason()) || selectedSite.equals(date.getReason()))) {
 %> 
-<% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
+<% if (bMultisites) { out.print(getSiteHTML(date.getReason(), sites)); } %>
 					
 <% if (!bMultisites) { %>	
 					
-						<span class='datepreason'><%=date.get("reason") %></span>
+						<span class='datepreason'><%=date.getReason() %></span>
 <% } %>
 <%  } } } %>
 					</a></font></td>
