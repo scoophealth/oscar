@@ -23,14 +23,38 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.Hl7Orc;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class Hl7OrcDao extends AbstractDao<Hl7Orc>{
 
 	public Hl7OrcDao() {
 		super(Hl7Orc.class);
 	}
+	
+    public List<Object[]> findFillerAndStatusChageByMessageId(Integer messageId) {
+		String sql = "SELECT orc.fillerOrderNumber, MAX(obr.resultsReportStatusChange) " +
+				"FROM Hl7Orc orc, Hl7Pid pid, Hl7Obr obr " +
+				"WHERE obr.pidId = pid.id " +
+				"AND orc.pidId = pid.id " +
+				"AND pid.messageId = :messageId " +
+				"GROUP BY pid.messageId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("messageId", messageId);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findOrcAndPidByMessageId(Integer messageId) {
+		String sql = "FROM Hl7Orc orc, Hl7Pid pid WHERE orc.pidId = pid.id AND pid.messageId = :messageId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("messageId", messageId);
+		return query.getResultList();
+    }
 }
