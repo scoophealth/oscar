@@ -52,18 +52,18 @@
 <%
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
-    String dboperation = "search_provider";
+    
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%
 		isSiteAccessPrivacy=true;
-		dboperation = "site_search_provider";
+		
 	%>
 </security:oscarSec>
 <security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%
 		isTeamAccessPrivacy=true; 
-		dboperation = "team_search_provider";
+		
 	%>
 </security:oscarSec>
 
@@ -79,13 +79,9 @@
 <!--
 function setfocus() {
   this.focus();
-  //document.schedule.keyword.focus();
-  //document.schedule.keyword.select();
 }
+
 function selectprovider(s) {
-  //for a small clinic
-	//self.location.href = "scheduletemplatesetting1.jsp?provider_no="+s.options[s.selectedIndex].value+"&provider_name="+urlencode(s.options[s.selectedIndex].text);
-	//for a large clinic&hospital
 	self.location.href = "scheduletemplateapplying.jsp?provider_no="+s.options[s.selectedIndex].value+"&provider_name="+urlencode(s.options[s.selectedIndex].text);
 }
 function urlencode(str) {

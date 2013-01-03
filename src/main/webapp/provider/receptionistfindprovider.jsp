@@ -30,16 +30,22 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%
-  if(session.getValue("user") == null ) response.sendRedirect("../logout.jsp");
   String providername = request.getParameter("providername")!=null?request.getParameter("providername"):"";
   String year = request.getParameter("pyear")!=null?request.getParameter("pyear"):"2002";
   String month = request.getParameter("pmonth")!=null?request.getParameter("pmonth"):"5";
   String day = request.getParameter("pday")!=null?request.getParameter("pday"):"8";
 %>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@page import="org.oscarehr.common.model.MyGroup" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
 
 <%
   String curUser_no = (String) session.getAttribute("user");
@@ -84,8 +90,7 @@
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message
-	key="receptionist.receptionistfindprovider.title" /></title>
+<title><bean:message key="receptionist.receptionistfindprovider.title" /></title>
 <link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 
@@ -162,12 +167,34 @@ function selectProviderCustom(p,pn) {
   
   int nItems = 0;
   String sp =null, spnl =null, spnf =null;
-  List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", dboperation, param);
-  for (Map provider : resultList) {
-    bColor = bColor?false:true ;
-    sp = String.valueOf(provider.get(field1));
-    spnl = String.valueOf(provider.get("last_name"));
-    spnf = String.valueOf(provider.get("first_name"));
+  
+  Collection results = null;
+  if(bGrpSearch) {
+	  results = myGroupDao.search_providersgroup(param[0],param[1]);
+  } else {
+	  results = providerDao.getProviderLikeFirstLastName(param[1],param[0]);
+  }
+  
+  Iterator iter = results.iterator();
+  
+  while(iter.hasNext()) {
+	  Object o = iter.next();
+	  Provider p = null;
+	  MyGroup g = null;
+	  if(bGrpSearch) {
+		  g = (MyGroup)o;
+		  sp = String.valueOf(g.getId().getMyGroupNo());
+		    spnl = String.valueOf(p.getLastName());
+		    spnf = String.valueOf(p.getFirstName());
+	  }
+	  else {
+		  p = (Provider)o;
+		  sp = String.valueOf(p.getProviderNo());
+		    spnl = String.valueOf(p.getLastName());
+		    spnf = String.valueOf(p.getFirstName());
+	  }
+     bColor = bColor?false:true ;
+   
 %>
 	<tr bgcolor="<%=bColor?bgcolordef:"white"%>">
 		<td>
@@ -193,9 +220,9 @@ function selectProviderCustom(p,pn) {
   
   //find a group name only if there is no ',' in the search word 
   if(providername.indexOf(',') == -1 ) {
-	resultList = oscarSuperManager.find("providerDao", "search_mygroup", new Object[] {providername+"%"});
-	for (Map group : resultList) {
-      sp = String.valueOf(group.get("mygroup_no"));
+	for(MyGroup mg:myGroupDao.search_mygroup(providername+"%")) {
+	
+      sp = String.valueOf(mg.getId().getMyGroupNo());
 %>
 	<tr bgcolor="#CCCCFF">
 		<td colspan='3'>
