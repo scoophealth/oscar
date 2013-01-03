@@ -43,7 +43,6 @@ import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RatePageManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.utility.Utility;
@@ -128,10 +127,6 @@ public abstract class BaseAction extends DispatchAction {
 
 	public ProviderManager getProviderManager() {
 		return (ProviderManager) getAppContext().getBean("providerManager");
-	}
-
-	public RatePageManager getRateManager() {
-		return (RatePageManager) getAppContext().getBean("ratePageManager");
 	}
 
 	protected String getProviderNo(HttpServletRequest request) {
