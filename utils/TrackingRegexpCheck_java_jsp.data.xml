@@ -221,8 +221,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection&lt;EctTypeDisplayNameBean&gt; getTypeDisplayNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:Vector validationsVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:public Collection getValidationsVector() {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:byId = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:byType = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementGroupForm.java:/*    private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctEditMeasurementGroupForm.java:/*    private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctMeasurementsForm.java:public final Map values = new HashMap();</ViolationValue>
@@ -304,12 +302,9 @@
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FollowupManagement.java:Hashtable measure = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java:Collection&lt;EctMeasurementsDataBean&gt; followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PapReport.java:Collection followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector doctorNameVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector providerNameVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector thisGroupProviderVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection getDoctorNameVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection getProviderNameVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection getThisGroupProviderVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection&lt;ProviderNameBean&gt; getDoctorNameVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection&lt;ProviderNameBean&gt; getProviderNameVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection&lt;ProviderNameBean&gt; getThisGroupProviderVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java:Hashtable&lt;String,Object&gt; denominatorHash = null; //new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java:Hashtable&lt;String,Object&gt; numeratorHash = null; // new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java:List&lt;Denominator&gt; denominatorList = null ;// new ArrayList();</ViolationValue>
@@ -1097,8 +1092,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:rs = DBHandler.GetSQL(p);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:rs = DBHandler.GetSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_DATE)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_INT)){</ViolationValue>
@@ -1111,8 +1104,6 @@
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java:public DBPreparedHandlerParam(Timestamp dateValue){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java:public DBPreparedHandlerParam(int intValue){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java:public final class DBPreparedHandlerParam {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java:OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctARRecord.java:ResultSet resultset = DBHandler.GetSQL(s);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctARRecord.java:ResultSet resultset = DBHandler.GetSQL(sqlDB);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctARRecord.java:ResultSet resultset1 = DBHandler.GetSQL(s1);</ViolationValue>
@@ -1147,17 +1138,12 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:ResultSet rs1 = DBHandler.GetSQL("select nextval('formtype2diabetes_numeric_se')");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sqlValidation);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathNetInfo.java:ResultSet rsLab = DBHandler.GetSQL(select_not_signed);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:ResultSet rs = DBHandler.GetSQL(attachQuery);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMDS/data/ProviderData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/pageUtil/MsgMessengerAdminAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
@@ -1176,7 +1162,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageByPositionAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/tld/MsgNewMessagesTag.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLDenominator.java:ResultSet rs = DBHandler.GetSQL(exeSql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLNumerator.java:ResultSet rs = DBHandler.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:DBPreparedHandler accessDB = null;</ViolationValue>
@@ -1279,7 +1264,6 @@
         <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/onSearch3rdBillAddr.jsp:oscar.oscarDB.DBPreparedHandler dbObj = new oscar.oscarDB.DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/billing/CA/ON/billingONMRI.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONNewReport.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/common/webAppContextAndSuperMgr.jsp:&lt;%-- This code makes new business logic facade OscarSuperManager bean accessible from jsp layer --%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/common/webAppContextAndSuperMgr.jsp:&lt;%@ page import="oscar.service.OscarSuperManager"%&gt;</ViolationValue>
@@ -1299,11 +1283,9 @@
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_pid_information.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_providers_with_reports);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportapptsheet.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit.jsp:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit.jsp:params[0] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(sdate));</ViolationValue>
@@ -1320,16 +1302,12 @@
         <ViolationValue>/src/main/webapp/report/reportbilledvisit3.jsp:DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[2];</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit3.jsp:params[0] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(sdate));</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit3.jsp:params[1] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(edate));</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportdaysheet.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportnoshowapptlist.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportnoshowapptlist.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledphcp.jsp:&lt;%@page import="oscar.oscarDB.DBPreparedHandler"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledphcp.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledphcpv2.jsp:&lt;%@page import="oscar.oscarDB.DBPreparedHandler"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledphcpv2.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledvisitprovider.jsp:&lt;%@page import="oscar.oscarDB.DBPreparedHandler"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportonbilledvisitprovider.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/system/dbcpMonitor.jsp:ResultSet rsProcessList = DBHandler.GetSQL("show processlist");</ViolationValue>
     </ViolationSet>
     <ViolationSet>
@@ -1937,11 +1915,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementMapConfig.java:public ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; getUnmappedMeasurements(String type) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementMapConfig.java:public Hashtable&lt;String, Hashtable&lt;String,String&gt;&gt; getMappedCodesFromLoincCodesHash(String loincCode) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementMapConfig.java:public List&lt;Hashtable&lt;String,String&gt;&gt; getMappedCodesFromLoincCodes(String loincCode) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:Hashtable byId = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:Hashtable byType = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:byId = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:byType = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSelectMeasurementGroupAction.java:Collection allStyleSheets = sshd.getStyleSheetNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasurementGroupAction.java:Collection allTypeDisplayName = hd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasurementGroupAction.java:Collection existingTypeDisplayName = hd.getTypeDisplayNameVector();</ViolationValue>
@@ -2258,16 +2231,16 @@
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PapReport.java:public Hashtable runReport(ArrayList list,Date asofDate){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PreventionReport.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PreventionReport.java:public Hashtable runReport(ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector doctorNameVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector providerNameVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector thisGroupProviderVector = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector&lt;ProviderNameBean&gt; doctorNameVector = new Vector&lt;ProviderNameBean&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector&lt;ProviderNameBean&gt; providerNameVector = new Vector&lt;ProviderNameBean&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector&lt;ProviderNameBean&gt; thisGroupProviderVector = new Vector&lt;ProviderNameBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:doctorNameVector.add(pNameBean);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:providerNameVector.add(pNameBean);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection getDoctorNameVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection getProviderNameVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection getThisGroupProviderVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public void setThisGroupProviderVector(String groupNo){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection&lt;ProviderNameBean&gt; getDoctorNameVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection&lt;ProviderNameBean&gt; getProviderNameVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public Collection&lt;ProviderNameBean&gt; getThisGroupProviderVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:public void setThisGroupProviderVector(String groupNo) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:return doctorNameVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:return providerNameVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:return thisGroupProviderVector;</ViolationValue>
