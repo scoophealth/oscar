@@ -2336,10 +2336,6 @@
 		<action path="/Provider/showPersonal" type="org.oscarehr.provider.web.DisplayPersonalInfoAppointmentAction" parameter="method" validate="false" scope="request">
 		</action>
 
-		<action parameter="method" path="/PMmodule/Admin/MigrateCaisiRoles" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
-			<forward name="success" path="/PMmodule/Admin/migrateCaisiRoles.jsp" redirect="true" />
-		</action>
-
 		<action path="/admin/faxStatus" scope="request" parameter="method" validate="false" type="oscar.util.FaxStatusAction">
 			<forward name="success" path="/admin/faxStatus.jsp" />
 		</action>

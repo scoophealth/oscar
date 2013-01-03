@@ -42,7 +42,6 @@
 <%@page import="oscar.dms.EDocUtil"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.caisi.model.Role"%>
 <%@page import="org.oscarehr.casemgmt.common.Colour"%>
 <%@page import="oscar.dms.EDoc"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>

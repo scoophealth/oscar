@@ -30,10 +30,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
-import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -55,7 +53,6 @@ public class PopulationReportUIBean {
 
 	private static Logger logger=MiscUtils.getLogger();
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	private RoleDAO roleDAO = (RoleDAO) SpringUtils.getBean("roleDAO");
 	private IssueGroupDao issueGroupDao = (IssueGroupDao) SpringUtils.getBean("issueGroupDao");
 	private PopulationReportDao populationReportDao = (PopulationReportDao) SpringUtils.getBean("populationReportDao");
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
@@ -105,11 +102,11 @@ public class PopulationReportUIBean {
 		return (programDao.getAllActivePrograms());
 	}
 
-	private List<Role> allRoles = null;
+	private List<SecRole> allRoles = null;
 
-	public List<Role> getRoles() {
+	public List<SecRole> getRoles() {
 
-		if (allRoles == null) allRoles = roleDAO.getRoles();
+		if (allRoles == null) allRoles = secRoleDao.findAll();
 		return (allRoles);
 	}
 
@@ -119,7 +116,7 @@ public class PopulationReportUIBean {
 		
 		RoleDataGrid roleDataGrid = new RoleDataGrid();
 
-		for (Role role : getRoles()) {
+		for (SecRole role : getRoles()) {
 			roleDataGrid.put(role, getEncounterTypeDataGrid(role));
 		}
 
@@ -157,7 +154,7 @@ public class PopulationReportUIBean {
 		return (providerDataGrid);
 	}
 
-	private EncounterTypeDataGrid getEncounterTypeDataGrid(Role role) {
+	private EncounterTypeDataGrid getEncounterTypeDataGrid(SecRole role) {
 
 		Integer roleId=null;
 		if (role!=null) roleId=role.getId().intValue();

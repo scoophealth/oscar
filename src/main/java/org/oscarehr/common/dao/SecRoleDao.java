@@ -52,6 +52,21 @@ public class SecRoleDao extends AbstractDao<SecRole> {
 
 		return(results);
 	}
+    
+    public List<String> findAllNames()
+ 	{
+ 		StringBuilder sb=new StringBuilder();
+ 		sb.append("select x.name from SecRole x");
+
+ 		sb.append(" order by x.name");
+
+ 		Query query = entityManager.createQuery(sb.toString());
+
+ 		@SuppressWarnings("unchecked")
+ 		List<String> results = query.getResultList();
+
+ 		return(results);
+ 	}
 
     public SecRole findByName(String name) {
     	Query q = entityManager.createQuery("select x from SecRole x where x.name=?");

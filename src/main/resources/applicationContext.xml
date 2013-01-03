@@ -62,7 +62,6 @@
 	<bean id="secroleDao" class="com.quatro.dao.security.SecroleDao" autowire="byName"/>
 	<bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.RoleProgramAccessDAO" autowire="byName" />
 	<bean id="clientImageDAO" class="org.oscarehr.casemgmt.dao.ClientImageDAO" autowire="byName" />
-	<bean id="roleDAO" class="org.oscarehr.PMmodule.dao.RoleDAO" autowire="byName" />
 	<bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO" autowire="byName" />
 	<bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.TicklerDAO" autowire="byName" />
 	<bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.SurveyDAO" autowire="byName" />
@@ -216,11 +215,6 @@
 		<property name="eChartDao" ref="eChartDao"/>
 		<property name="encounterWindowDao" ref="encounterWindowDao"/>
 	</bean>
-	<!--
-	<bean id="roleManager" class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">
-		<property name="roleDAO" ref="roleDAO" />
-	</bean>
-	-->
 	<bean id="ticklerManager" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName">
 
 	</bean>
