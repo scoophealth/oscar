@@ -156,19 +156,5 @@ public class BillingSessionBean implements java.io.Serializable {
     public String 	getApptStatus()		    {		        return this.apptStatus;		    }
     public void 	setApptStatus(String RHS)		    { 		        this.apptStatus = RHS;    }
 
-    // public void estUserName(){
-    //     try{
-    //
-    //             java.sql.ResultSet rs;
-    //             String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
-    //             rs = DBHandler.GetSQL(sql);
-    //             if (rs.next()){
-    //                userName =  rs.getString("first_name")+" "+rs.getString("last_name");
-    //             }
-    //             rs.close();
-    //     }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
-    // }
-
-
 
 }
