@@ -23,6 +23,7 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -80,6 +81,47 @@ public class Hl7PidDao extends AbstractDao<Hl7Pid>{
     			"AND hl7_pid.messageId = hl7_message.id";
     	Query query = entityManager.createQuery(sql);
 		query.setParameter("pid", pid);
+	return query.getResultList();
+	}
+
+	public Date findObservationDateByMessageId(Integer messageId) {
+	    String sql = "SELECT MAX(obr.resultsReportStatusChange) " +
+	    		"FROM Hl7Pid pid, Hl7Obr obr " +
+	    		"WHERE obr.pidId = pid.id " +
+	    		"AND pid.messageId = :messageId";
+		Query query = entityManager.createQuery(sql);
+		query.setMaxResults(1);
+		query.setParameter("messageId", messageId);
+		List<Object> resultList = query.getResultList();
+		if (resultList.isEmpty()) {
+			return null;
+		} else {
+			return (Date) resultList.get(0);
+		}
+    }
+
+	public List<Object[]> findByObservationResultStatusAndMessageId(String observationResultStatus, Integer messageId) {
+	    String sql = "FROM Hl7Pid pid, Hl7Obr obr, Hl7Obx obx " +
+	    		"WHERE obx.observationResultStatus like :observationResultStatus " +
+	    		"AND obx.obrId = obr.id " +
+	    		"AND obr.pidId = pid.id " +
+	    		"AND pid.messageId = :messageId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("observationResultStatus", observationResultStatus);
+		query.setParameter("messageId", messageId);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findByFillerOrderNumber(String fillerOrderNumber) {
+	    String sql = "SELECT DISTINCT pid.messageId, MAX(obr.resultsReportStatusChange) " +
+	    		"FROM Hl7Pid pid, Hl7Orc orc, Hl7Obr obr " +
+	    		"WHERE orc.fillerOrderNumber like :fillerOrderNumber " +
+	    		"AND orc.pidId = pid.id " +
+	    		"AND obr.pidId = pid.id " +
+	    		"GROUP BY pid.messageId " +
+	    		"ORDER BY obr.resultsReportStatusChange";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("fillerOrderNumber", fillerOrderNumber);
 		return query.getResultList();
     }
 }
