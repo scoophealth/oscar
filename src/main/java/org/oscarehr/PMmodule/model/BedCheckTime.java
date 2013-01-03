@@ -88,7 +88,7 @@ public class BedCheckTime implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 *  generator-class="native"
 *  column="bed_check_time_id"
 */

@@ -105,9 +105,6 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		return roomDemographicList;
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.RoomDemographicManager#getRoomDemographicByDemographic(java.lang.Integer)
-	 */
 	public RoomDemographic getRoomDemographicByDemographic(Integer demographicNo, Integer facilityId) {
 		if (demographicNo == null) {
 			handleException(new IllegalArgumentException("demographicNo must not be null"));

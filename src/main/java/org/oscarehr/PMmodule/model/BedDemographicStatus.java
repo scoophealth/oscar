@@ -78,7 +78,7 @@ public class BedDemographicStatus implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 *  generator-class="native"
 *  column="bed_demographic_status_id"
 */

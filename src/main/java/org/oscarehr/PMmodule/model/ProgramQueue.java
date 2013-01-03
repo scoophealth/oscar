@@ -108,7 +108,7 @@ public class ProgramQueue implements Serializable {
 
     /**
      * Return the unique identifier of this class
-     * @hibernate.id
+     * 
      *  generator-class="native"
      *  column="queue_id"
      */

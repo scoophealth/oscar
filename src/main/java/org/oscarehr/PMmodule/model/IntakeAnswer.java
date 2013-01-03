@@ -142,7 +142,7 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
     /**
 	 * Return the unique identifier of this class
      *
-     * @hibernate.id generator-class="native" column="intake_answer_id"
+     *  generator-class="native" column="intake_answer_id"
      */
     public Integer getId() {
         return id;

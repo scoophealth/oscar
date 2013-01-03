@@ -117,7 +117,6 @@ public class DocumentDAO extends HibernateDaoSupport {
 	 * Finds all documents for the specified demographic id
 	 * 
 	 * @param demoNo
-	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public List<org.oscarehr.document.model.Document> findByDemographicId(String demoNo) {

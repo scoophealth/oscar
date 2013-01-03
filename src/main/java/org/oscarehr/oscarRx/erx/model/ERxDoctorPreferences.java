@@ -260,7 +260,7 @@ public class ERxDoctorPreferences {
      * Changes the value of the unique doctor number, associated with the
      * doctor, provided by the External Prescriber.
      * 
-     * @param providerId
+     * @param providerID
      *            The new providerId.
      */
     public void setProviderId(String providerID) {

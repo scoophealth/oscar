@@ -2277,7 +2277,7 @@ public class ERxPrescription {
 	/**
 	 * Generate a Prescription given a SOAP node.
 	 * 
-	 * @param nodeToParse
+	 * @param toParse
 	 *            The SOAP node containing a prescription.
 	 */
 	public ERxPrescription(Node toParse) throws DOMException {
@@ -2502,12 +2502,9 @@ public class ERxPrescription {
 	 *            interpretation.
 	 * @param refills
 	 *            The number of repeats.
-	 * @param refillsDurationRefills
+	 * @param refillsDuration
 	 *            can be specified as a duration, which defines how long the
 	 *            refill is expected to last.
-	 * @param refillsDurationTimeUnit
-	 *            This field combines with
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.refills}.
 	 * @param sigManual
 	 *            Contains the prescription's sig (i.e.: instructions on how to
 	 *            take the drug) if manually entered by the physician.

@@ -52,9 +52,7 @@ public class CaseManagementTmpSave implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
-*  generator-class="native"
-*  column="id"
+	*  column="id"
 */
     public Long getId () {
         return _id;

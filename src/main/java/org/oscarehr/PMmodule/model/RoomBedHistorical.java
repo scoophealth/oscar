@@ -68,7 +68,7 @@ public class RoomBedHistorical implements Serializable {
 
     /**
      * Return the unique identifier of this class
-     * @hibernate.id
+     * 
      */
     public RoomBedHistoricalPK getId () {
         return id;

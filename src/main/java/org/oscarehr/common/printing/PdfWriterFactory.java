@@ -50,9 +50,8 @@ public class PdfWriterFactory {
 	 * 
 	 * @param document
 	 * @param stream
-	 * @param footer
-	 * @param fontSize
-	 * @return
+	 * @param settings
+	 * @return PdfWriter
 	 */
 	public static PdfWriter newInstance(Document document, OutputStream stream, FontSettings settings) {
 		PdfWriter result;

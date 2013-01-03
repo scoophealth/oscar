@@ -1049,11 +1049,6 @@ public class CaseManagementManager {
 	}
 
 
-	/**
-	 * @param issues Unfiltered Set of issues
-	 * @param providerNo provider reading issues
-	 * @param programId program provider is logged into
-	 */
 	public List<CaseManagementNote> filterNotes(Collection<CaseManagementNote> notes, String programId) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
@@ -1133,11 +1128,6 @@ public class CaseManagementManager {
 		return filteredNotes;
 	}
 
-	/**
-	 * @param issues Unfiltered Set of issues
-	 * @param providerNo provider reading issues
-	 * @param programId program provider is logged into
-	 */
 	public List<EChartNoteEntry> filterNotes1(Collection<EChartNoteEntry> notes, String programId) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
@@ -1321,7 +1311,6 @@ public class CaseManagementManager {
 	 * @param providerNo
 	 * @param programId
 	 * @param search
-	 * @return
 	 */
 	public List<Issue> searchIssues(String providerNo, String programId, String search) {
 		// Get Role - if no ProgramProvider record found, show no issues.

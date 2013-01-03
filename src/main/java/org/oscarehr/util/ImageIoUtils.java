@@ -71,9 +71,6 @@ public class ImageIoUtils
 	
 	/**
 	 * This method will strip exif data
-	 * @param quality is only applicable for compression algorithms like jpg and should be 0-100
-	 * @param shrinkOnly if true it will only shrink the image, never enlarge it
-	 * @throws IOException 
 	 */
 	public static void scaleJpgSmallerProportionally(InputStream inputStream, OutputStream outputStream, int maxWidth, int maxHeight, float quality) throws IOException
 	{
@@ -121,7 +118,6 @@ public class ImageIoUtils
 
 	/**
 	 * You better remember to dispose of this image writer...
-	 * @return
 	 */
 	public static ImageWriter getJpgImageWriter()
 	{
