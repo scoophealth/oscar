@@ -22,111 +22,105 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMDS.data;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import org.apache.commons.beanutils.BeanComparator;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 public class ProviderData {
 
-    public ProviderData(String refDoctor, String conDoctor, String admDoctor) {
-        referringDoctor = beautifyProviderName(refDoctor);
-        consultingDoctor = beautifyProviderName(conDoctor);
-        admittingDoctor = beautifyProviderName(admDoctor);
-    }
+	public ProviderData(String refDoctor, String conDoctor, String admDoctor) {
+		referringDoctor = beautifyProviderName(refDoctor);
+		consultingDoctor = beautifyProviderName(conDoctor);
+		admittingDoctor = beautifyProviderName(admDoctor);
+	}
 
-    public String referringDoctor;
-    public String consultingDoctor;
-    public String admittingDoctor;
+	public String referringDoctor;
+	public String consultingDoctor;
+	public String admittingDoctor;
 
-    public static String beautifyProviderName(String name) {
-        String[] subStrings;
+	public static String beautifyProviderName(String name) {
+		String[] subStrings;
 
-        if (name.length() > 0) {
-            try {
-                subStrings = name.split("\\^");
-                if ( subStrings.length >= 18 ) {
-                    return subStrings[5] + " " + subStrings[1] +", " + subStrings[17] + " "+ subStrings[13];
-                } else if (subStrings.length >= 14) {
-                    return subStrings[5] + " " + subStrings[1] +", " + subStrings[13];
-                } else if ( subStrings.length >= 6 ) {
-                    return subStrings[5] + " " + subStrings[1];
-                } else {
-                    return subStrings[1];
-                }
-            } catch (Exception e) {
-                MiscUtils.getLogger().debug("Error in ProviderData: "+e.toString());
-                return name.replace('^', ' ');
-            }
-        } else {
-            return "";
-        }
+		if (name.length() > 0) {
+			try {
+				subStrings = name.split("\\^");
+				if (subStrings.length >= 18) {
+					return subStrings[5] + " " + subStrings[1] + ", " + subStrings[17] + " " + subStrings[13];
+				} else if (subStrings.length >= 14) {
+					return subStrings[5] + " " + subStrings[1] + ", " + subStrings[13];
+				} else if (subStrings.length >= 6) {
+					return subStrings[5] + " " + subStrings[1];
+				} else {
+					return subStrings[1];
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().debug("Error in ProviderData: " + e.toString());
+				return name.replace('^', ' ');
+			}
+		} else {
+			return "";
+		}
 
-    }
+	}
 
-    public static ArrayList<ArrayList<String>> getProviderList () {
-        try {
+	@SuppressWarnings("unchecked")
+	public static ArrayList<ArrayList<String>> getProviderList() {
+		try {
+			ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+			ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+			List<Provider> providers = dao.getProvidersByType(ProviderDao.PR_TYPE_DOCTOR);
+			Collections.sort(providers, new BeanComparator("formattedName"));
+			for (Provider p : providers) {
+				ArrayList<String> provider = new ArrayList<String>();
+				provider.add(p.getProviderNo());
+				provider.add(p.getFirstName());
+				provider.add(p.getLastName());
+				result.add(provider);
+			}
+			return result;
+		} catch (Exception e) {
+			MiscUtils.getLogger().debug("exception in ProviderData:" + e);
+			return null;
+		}
+	}
 
-            ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+	@SuppressWarnings("unchecked")
+	public static ArrayList<ArrayList<String>> getProviderListWithLabNo() {
+		try {
+			ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
-            String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor' order by last_name , first_name";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while ( rs.next() ) {
-                ArrayList<String> provider = new ArrayList<String>();
-                provider.add(oscar.Misc.getString(rs, "provider_no"));
-                provider.add(oscar.Misc.getString(rs, "first_name"));
-                provider.add(oscar.Misc.getString(rs, "last_name"));
-                result.add(provider);
-            }
-            return result;
-        }catch(Exception e){
-            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
-            return null;
-        }
-    }
+			ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+			List<Provider> providers = dao.getProvidersByTypeWithNonEmptyOhipNo(ProviderDao.PR_TYPE_DOCTOR);
+			Collections.sort(providers, new BeanComparator("formattedName"));
+			for (Provider p : providers) {
+				ArrayList<String> provider = new ArrayList<String>();
+				provider.add(p.getProviderNo());
+				provider.add(p.getFirstName());
+				provider.add(p.getLastName());
+				result.add(provider);
+			}
+			return result;
+		} catch (Exception e) {
+			MiscUtils.getLogger().debug("exception in ProviderData:" + e);
+			return null;
+		}
+	}
 
+	public static String getProviderName(String providerNo) {
+		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+		Provider p = dao.getProvider(providerNo);
+		if (p == null) {
+			return "";
+		}
 
-    public static ArrayList<ArrayList<String>> getProviderListWithLabNo () {
-        try {
-
-            ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-
-            String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor'  and ohip_no != '' order by last_name , first_name";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while ( rs.next() ) {
-                ArrayList<String> provider = new ArrayList<String>();
-                provider.add(oscar.Misc.getString(rs, "provider_no"));
-                provider.add(oscar.Misc.getString(rs, "first_name"));
-                provider.add(oscar.Misc.getString(rs, "last_name"));
-                result.add(provider);
-            }
-            return result;
-        }catch(Exception e){
-            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
-            return null;
-        }
-    }
-
-    public static String getProviderName(String providerNo) {
-           try {
-
-
-
-            String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if ( rs.next() ) {
-                return ( oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name") );
-            } else {
-                return "";
-            }
-        }catch(Exception e){
-            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
-            return null;
-        }
-    }
+		return p.getFullName();
+	}
 }

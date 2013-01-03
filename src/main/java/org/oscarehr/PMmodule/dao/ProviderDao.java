@@ -278,6 +278,13 @@ public class ProviderDao extends HibernateDaoSupport {
 		return results;
 	}
 
+	public List<Provider> getProvidersByTypeWithNonEmptyOhipNo(String type) {
+		List<Provider> results = this.getHibernateTemplate().find(
+				"from Provider p where p.ProviderType = ? and p.OhipNo <> ''", type);
+		return results;
+	}
+
+	
 	public List<Provider> getProvidersByType(String type) {
 		
 		List<Provider> results = this.getHibernateTemplate().find(
