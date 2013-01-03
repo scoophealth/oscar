@@ -42,8 +42,22 @@
 	function do_referral() {
 		var form = document.clientManagerForm;
 		form.method.value='refer';
-		var programId = document.getElementById('selectVacancy');
-		document.clientManagerForm.elements['program.id'].value=programId.value;		
+		var program = document.getElementsByName('selectVacancy');
+		var programId;
+		var i;
+		var checked = false;
+        for(i=0;i<program.length;i++){
+            if(program[i].checked){
+               programId = program[i].value;
+               checked = true;
+               break;
+            }
+        }
+        if(!checked){
+            alert("you must at least choose one program");
+            return;
+        }
+		document.clientManagerForm.elements['program.id'].value=programId;
 		form.submit();
 	}
 </script>
@@ -106,7 +120,7 @@
 	<html:hidden property="program.id" />
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	<display:column sortable="false" title="Select">
-		<input type="radio" name="head" id="selectVacancy" checked ="true" value="<c:out value="${program.id}" />">
+		<input type="radio"  name="selectVacancy"  value="<c:out value="${program.id}" />">
 	</display:column>
 	<display:column sortable="true" title="Program Name">
 			<a href="<html:rewrite action="/PMmodule/ProgramManagerView.do"/>?id=<c:out value="${program.id}" />">
@@ -114,7 +128,7 @@
 			</a>		
 	</display:column>	
 	<display:column property="noOfVacancy" sortable="false" title="Vacancy"></display:column>
-	<display:column sortable="true" title="Vacancy">
+	<display:column sortable="true" title="VacancyName">
 			<a href="">
 				<c:out value="${program.vacancyName}" />
 			</a>

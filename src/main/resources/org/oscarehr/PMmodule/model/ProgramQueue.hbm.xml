@@ -44,6 +44,8 @@
 			not-null="false" type="string" />
 		<property name="ProgramName" type="string"
 			formula="(select p.name from program p where p.id = program_id)" />
+        <property name="VacancyName" type="string"
+                  formula="(select p.select_vacancy from client_referral p where p.referral_id = referral_id)" />
 		<property name="ProviderLastName" type="string"
 			formula="(select p.last_name from provider p where p.provider_no = provider_no)" />
 		<property name="ProviderFirstName" type="string"
