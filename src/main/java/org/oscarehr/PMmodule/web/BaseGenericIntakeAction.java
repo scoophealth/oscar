@@ -24,8 +24,10 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.Date;
-import org.apache.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
@@ -38,7 +40,6 @@ import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
@@ -104,8 +105,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
     protected ProviderManager providerManager;
 
     protected ProgramQueueManager programQueueManager;
-
-    protected RoleManager roleManager;
 
     protected RoomManager roomManager;
 	
@@ -226,10 +225,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 
     public void setProviderManager(ProviderManager mgr) {
     	this.providerManager = mgr;
-    }
-
-    public void setRoleManager(RoleManager mgr) {
-    	this.roleManager = mgr;
     }
 
     public void setRoomManager(RoomManager roomManager) {

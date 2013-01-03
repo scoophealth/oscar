@@ -257,5 +257,4 @@
 		<property name="siteDao" ref="siteDao" />
 	</bean>
         
-	<bean name="/PMmodule/Admin/MigrateCaisiRoles" class="org.oscarehr.PMmodule.web.admin.MigrateCaisiRolesAction" singleton="false" autowire="byName" />
 </beans>

@@ -30,12 +30,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO.EncounterCounts;
+import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -44,7 +44,7 @@ public class ProviderServiceReportUIBean {
 	private static Logger logger = MiscUtils.getLogger();
 
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	private RoleDAO roleDao = (RoleDAO) SpringUtils.getBean("roleDAO");
+	private SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
 
 	private Date startDate = null;
 	private Date endDate = null;
@@ -73,8 +73,8 @@ public class ProviderServiceReportUIBean {
 		MiscUtils.setToBeginningOfMonth(endCal);
 
 		List<Program> activePrograms = programDao.getAllActivePrograms();
-		Role doctorRole = null;
-		for (Role role : roleDao.getRoles()) if ("doctor".equals(role.getName())) doctorRole = role;
+		SecRole doctorRole = null;
+		for (SecRole role : secRoleDao.findAll()) if ("doctor".equals(role.getName())) doctorRole = role;
 		if (doctorRole == null) 
 		{
 			logger.error("Error, no caisi role named 'doctor' found in database.");
@@ -95,7 +95,7 @@ public class ProviderServiceReportUIBean {
 		return (results);
 	}
 
-	private Collection<? extends DataRow> getEntireAgencyNumbers(Calendar startCal, Calendar endCal, Role doctorRole) {
+	private Collection<? extends DataRow> getEntireAgencyNumbers(Calendar startCal, Calendar endCal, SecRole doctorRole) {
 		ArrayList<DataRow> results = new ArrayList<DataRow>();
 
 		Calendar tempStart = (Calendar) startCal.clone();
@@ -127,7 +127,7 @@ public class ProviderServiceReportUIBean {
 		return(results);
 	}
 
-	private ArrayList<DataRow> getProgramNumbers(Calendar startCal, Calendar endCal, Role doctorRole, Program program) {
+	private ArrayList<DataRow> getProgramNumbers(Calendar startCal, Calendar endCal, SecRole doctorRole, Program program) {
 		ArrayList<DataRow> results = new ArrayList<DataRow>();
 
 		Calendar tempStart = (Calendar) startCal.clone();

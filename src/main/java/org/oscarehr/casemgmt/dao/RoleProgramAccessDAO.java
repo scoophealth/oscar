@@ -31,12 +31,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class RoleProgramAccessDAO extends HibernateDaoSupport {
 
     @SuppressWarnings("unchecked")
-    public List<String> getAllRoleName() {
-        String q = "select rl.name from Role rl";
-        return getHibernateTemplate().find(q);
-    }
-
-    @SuppressWarnings("unchecked")
     public List<DefaultRoleAccess> getDefaultAccessRightByRole(Long roleId) {
         String q = "from DefaultRoleAccess da where da.caisi_role.id=?";
         return getHibernateTemplate().find(q, roleId);

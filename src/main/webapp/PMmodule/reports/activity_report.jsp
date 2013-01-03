@@ -88,7 +88,7 @@ The total unique clients column is a unique count so if a client had 10 encounte
 		<td class="genericTableHeader">Total unique clients</td>
 	</tr>
 	<%
-		for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
+		for (Map.Entry<SecRole, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
 		{
 			boolean hasPrintedRole = false;
 			for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())

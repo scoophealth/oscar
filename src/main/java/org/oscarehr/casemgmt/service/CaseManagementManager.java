@@ -85,6 +85,7 @@ import org.oscarehr.common.dao.HashAuditDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.dao.ProviderExtDao;
+import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
@@ -136,6 +137,7 @@ public class CaseManagementManager {
 	private DxresearchDAO dxresearchDAO;
 	private ProgramProviderDAO programProviderDao;
 	private ProgramAccessDAO programAccessDAO;
+	private SecRoleDao secRoleDao;
 
 	private boolean enabled;
 
@@ -351,7 +353,7 @@ public class CaseManagementManager {
 
 	/* filter the issues by caisi role */
 	private List<CaseManagementIssue> filterIssueList(List<CaseManagementIssue> allIssue, List accessRight) {
-		List<String> role = roleProgramAccessDAO.getAllRoleName();
+		List<String> role = secRoleDao.findAllNames();
 		List<CaseManagementIssue> filteredIssue = new ArrayList<CaseManagementIssue>();
 
 		for (int i = 0; i < role.size(); i++) {
@@ -647,7 +649,7 @@ public class CaseManagementManager {
 	public List<Issue> getIssueInfoBySearch(String providerNo, String search, List accessRight) {
 		List<Issue> issList = issueDAO.findIssueBySearch(search);
 		// filter the issue list by role
-		List<String> role = roleProgramAccessDAO.getAllRoleName();
+		List<String> role = secRoleDao.findAllNames();
 		List<Issue> filteredIssue = new ArrayList<Issue>();
 
 		for (int i = 0; i < role.size(); i++) {
@@ -774,7 +776,7 @@ public class CaseManagementManager {
 	/* get the filtered Notes by caisi role */
 	public List<CaseManagementIssue> getFilteredNotes(String providerNo, String demographic_no) {
 		List<CaseManagementNote> allNotes = caseManagementNoteDAO.getNotesByDemographic(demographic_no);
-		List<String> role = roleProgramAccessDAO.getAllRoleName();
+		List<String> role = secRoleDao.findAllNames();
 		List<CaseManagementIssue> filteredNotes = new ArrayList<CaseManagementIssue>();
 		Iterator<CaseManagementNote> itr = allNotes.iterator();
 		boolean added = false;
@@ -830,7 +832,7 @@ public class CaseManagementManager {
 
 	public boolean greaterEqualLevel(int level, String providerNo) {
 		if (level < 1 || level > 4) return false;
-		List pcrList = roleProgramAccessDAO.getAllRoleName();
+		List pcrList = secRoleDao.findAllNames();
 		if (pcrList.size() == 0) return false;
 		Iterator itr = pcrList.iterator();
 		while (itr.hasNext()) {
@@ -1629,6 +1631,11 @@ public class CaseManagementManager {
 	public void setDxresearchDAO(DxresearchDAO dao) {
 		this.dxresearchDAO = dao;
 	}
+	
+	public void setSecRoleDao(SecRoleDao secRoleDao) {
+		this.secRoleDao = secRoleDao;
+	}
+	
 
 	public void saveToDx(String demographicNo, String code, String codingSystem, boolean association) {
 		if (codingSystem == null) {

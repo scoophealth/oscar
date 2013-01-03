@@ -139,7 +139,7 @@
 			populationReportUIBean.setEndDate(tempEndCalendar.getTime());
 			PopulationReportDataObjects.RoleDataGrid roleDataGrid = populationReportUIBean.getRoleDataGrid();
 
-			for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
+			for (Map.Entry<SecRole, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
 			{
 				for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())
 				{
