@@ -367,7 +367,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 	    String sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c " +
                 "where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='"+ demographicNo +"' and d.coding_system = '"+codingSystem+"'"
                +" order by d.start_date desc, d.update_date desc";
-		Query query = entityManager.createQuery(sql);
+		Query query = entityManager.createNativeQuery(sql);
 		return query.getResultList();
     }
 
