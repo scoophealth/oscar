@@ -79,7 +79,6 @@
 	<bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.ProgramSignatureDao" autowire="byName" />
 	<bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName" />
 	<bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName" />
-	<bean id="HashAuditDAO" class="org.oscarehr.casemgmt.dao.HashAuditDAO" autowire="byName" />
 	<bean id="programClientRestrictionDAO" class="org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO" autowire="byName" />
 	<bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
 	<bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
@@ -205,7 +204,7 @@
 		<property name="providerDAO" ref="providerDao" />
 		<property name="demographicDao" ref="demographicDao" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
-		<property name="hashAuditDAO" ref="HashAuditDAO" />
+		
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />
 		<property name="rolesManager" ref="rolesManager" />
 		<property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO" />

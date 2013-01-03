@@ -64,7 +64,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
-import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -74,16 +73,15 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
-import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.ProviderExt;
-import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.dao.EncounterWindowDao;
+import org.oscarehr.common.dao.HashAuditDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.dao.ProviderExtDao;
@@ -94,6 +92,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.EncounterWindow;
+import org.oscarehr.common.model.HashAudit;
 import org.oscarehr.common.model.MessageTbl;
 import org.oscarehr.common.model.MsgDemoMap;
 import org.oscarehr.common.model.Provider;
@@ -132,7 +131,7 @@ public class CaseManagementManager {
 	private RolesManager roleManager;
 	private CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
 	private AdmissionManager admissionManager;
-	private HashAuditDAO hashAuditDAO;
+	private HashAuditDao hashAuditDao;
 	private UserPropertyDAO userPropertyDAO;
 	private DxresearchDAO dxresearchDAO;
 	private ProgramProviderDAO programProviderDao;
@@ -239,11 +238,11 @@ public class CaseManagementManager {
 
 		// if note is signed we hash it and save hash
 		if (note.isSigned()) {
-			HashAuditImpl hashAudit = new HashAuditImpl();
-			hashAudit.setType(BaseHashAudit.NOTE);
-			hashAudit.setId(note.getId());
+			HashAudit hashAudit = new HashAudit();
+			hashAudit.setType(HashAudit.NOTE);
+			hashAudit.setId2(note.getId().toString());
 			hashAudit.makeHash(note.getNote().getBytes());
-			hashAuditDAO.saveHash(hashAudit);
+			hashAuditDao.persist(hashAudit);
 		}
 
 		OscarProperties properties = OscarProperties.getInstance();
@@ -1561,6 +1560,10 @@ public class CaseManagementManager {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	public void setHashAuditDao(HashAuditDao dao) {
+		this.hashAuditDao = dao;
+	}
 
 	public void setCaseManagementNoteDAO(CaseManagementNoteDAO dao) {
 		this.caseManagementNoteDAO = dao;
@@ -1628,10 +1631,6 @@ public class CaseManagementManager {
 
 	public void setAdmissionManager(AdmissionManager mgr) {
 		this.admissionManager = mgr;
-	}
-
-	public void setHashAuditDAO(HashAuditDAO dao) {
-		this.hashAuditDAO = dao;
 	}
 
 	public void setUserPropertyDAO(UserPropertyDAO dao) {
