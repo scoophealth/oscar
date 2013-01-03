@@ -1269,6 +1269,11 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Integer> getDemographicIds() {
+		return this.getHibernateTemplate().find("select d.DemographicNo from Demographic d");
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Demographic> getDemographicWithGreaterThanYearOfBirth(int yearOfBirth) {
 		return this.getHibernateTemplate().find("from Demographic d where d.YearOfBirth > ?", new Object[] { String.valueOf(yearOfBirth) });
 	}
