@@ -110,6 +110,8 @@ public class ProgramManagerViewAction extends BaseAction {
         // find the program id
         String programId = request.getParameter("id");
 
+        request.getSession().setAttribute("case_program_id",programId);
+
         if(request.getParameter("newVacancy")!=null && "true".equals(request.getParameter("newVacancy")))
 			request.setAttribute("vacancyOrTemplateId", "");
 		else
