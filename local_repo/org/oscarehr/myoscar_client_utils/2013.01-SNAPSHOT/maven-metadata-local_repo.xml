@@ -2,11 +2,11 @@
 <metadata>
   <groupId>org.oscarehr</groupId>
   <artifactId>myoscar_client_utils</artifactId>
-  <version>2012.12-SNAPSHOT</version>
+  <version>2013.01-SNAPSHOT</version>
   <versioning>
     <snapshot>
       <localCopy>true</localCopy>
     </snapshot>
-    <lastUpdated>20121219005223</lastUpdated>
+    <lastUpdated>20130104050954</lastUpdated>
   </versioning>
 </metadata>
