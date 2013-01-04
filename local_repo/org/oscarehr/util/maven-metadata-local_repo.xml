@@ -2,11 +2,11 @@
 <metadata>
   <groupId>org.oscarehr</groupId>
   <artifactId>util</artifactId>
-  <version>2012.12.12</version>
+  <version>2013.01.04</version>
   <versioning>
     <versions>
-      <version>2012.12.12</version>
+      <version>2013.01.04</version>
     </versions>
-    <lastUpdated>20121212015307</lastUpdated>
+    <lastUpdated>20130104053721</lastUpdated>
   </versioning>
 </metadata>
