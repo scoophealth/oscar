@@ -39,7 +39,6 @@
 	<bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName" />
 	<bean id="agencyDao" class="org.oscarehr.PMmodule.dao.AgencyDao" autowire="byName" />
 	<!-- bean id="admissionDao" class="org.oscarehr.common.dao.AdmissionDao" autowire="byName" /-->
-	<bean id="jointAdmissionDAO" class="org.oscarehr.PMmodule.dao.JointAdmissionDAO" autowire="byName" />
 	<bean id="bedDemographicDao" class="org.oscarehr.PMmodule.dao.BedDemographicDao" autowire="byName" />
 	<bean id="roomDemographicDao" class="org.oscarehr.PMmodule.dao.RoomDemographicDao" autowire="byName" />
 	<bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
@@ -232,7 +231,6 @@
 	<bean id="clientManager" class="org.oscarehr.PMmodule.service.ClientManager" autowire="byName">
 		<property name="demographicDao" ref="demographicDao" />
 		<property name="clientReferralDAO" ref="clientReferralDAO" />
-		<property name="jointAdmissionDAO" ref="jointAdmissionDAO" />
 		<property name="programQueueManager" ref="programQueueManager" />
 		<property name="admissionManager" ref="admissionManager" />
 		<property name="clientRestrictionManager" ref="clientRestrictionManager" />

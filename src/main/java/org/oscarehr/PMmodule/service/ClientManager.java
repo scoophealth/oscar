@@ -28,20 +28,20 @@ import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
-import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.JointAdmissionDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.JointAdmission;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +51,7 @@ public class ClientManager {
     private DemographicDao dao;
     private DemographicExtDao demographicExtDao;
     private ClientReferralDAO referralDAO;
-    private JointAdmissionDAO jointAdmissionDAO;
+    private JointAdmissionDao jointAdmissionDao;
     private ProgramQueueManager queueManager;
     private AdmissionManager admissionManager;
     private ClientRestrictionManager clientRestrictionManager;
@@ -138,31 +138,31 @@ public class ClientManager {
             throw new IllegalArgumentException();
         }
 
-        jointAdmissionDAO.saveJointAdmission(admission);
+        jointAdmissionDao.persist(admission);
     }
 
-    public List<JointAdmission> getDependents(Long clientId) {
-        return jointAdmissionDAO.getSpouseAndDependents(clientId);
+    public List<JointAdmission> getDependents(Integer clientId) {
+        return jointAdmissionDao.getSpouseAndDependents(clientId);
     }
 
-    public List<Long> getDependentsList(Long clientId) {
-        List<Long> list = new ArrayList<Long>();
-        List<JointAdmission> jadms = jointAdmissionDAO.getSpouseAndDependents(clientId);
+    public List<Integer> getDependentsList(Integer clientId) {
+        List<Integer> list = new ArrayList<Integer>();
+        List<JointAdmission> jadms = jointAdmissionDao.getSpouseAndDependents(clientId);
         for (JointAdmission jadm : jadms) {
             list.add(jadm.getClientId());
         }
         return list;
     }
 
-    public JointAdmission getJointAdmission(Long clientId) {
-        return jointAdmissionDAO.getJointAdmission(clientId);
+    public JointAdmission getJointAdmission(Integer clientId) {
+        return jointAdmissionDao.getJointAdmission(clientId);
     }
 
     public boolean isClientDependentOfFamily(Integer clientId){
 
 		JointAdmission clientsJadm = null;
 		if(clientId != null){
-			clientsJadm = getJointAdmission(Long.valueOf(clientId.toString()));
+			clientsJadm = getJointAdmission(Integer.valueOf(clientId.toString()));
 		}
 		if (clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
 			return true;
@@ -173,19 +173,19 @@ public class ClientManager {
 
     public boolean isClientFamilyHead(Integer clientId){
 
-		List<JointAdmission> dependentList = getDependents(Long.valueOf(clientId.toString()));
+		List<JointAdmission> dependentList = getDependents(Integer.valueOf(clientId.toString()));
 		if(dependentList != null  &&  dependentList.size() > 0){
 			return true;
 		}
 		return false;
     }
 
-    public void removeJointAdmission(Long clientId, String providerNo) {
-        jointAdmissionDAO.removeJointAdmission(clientId, providerNo);
+    public void removeJointAdmission(Integer clientId, String providerNo) {
+        jointAdmissionDao.removeJointAdmission(clientId, providerNo);
     }
 
     public void removeJointAdmission(JointAdmission admission) {
-        jointAdmissionDAO.removeJointAdmission(admission);
+        jointAdmissionDao.removeJointAdmission(admission);
     }
 
     public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException, ServiceRestrictionException {
@@ -222,9 +222,9 @@ public class ClientManager {
         }
 
         saveClientReferral(referral);
-        List<JointAdmission> dependents = getDependents(referral.getClientId());
+        List<JointAdmission> dependents = getDependents(new Long(referral.getClientId()).intValue());
         for (JointAdmission jadm : dependents) {
-            referral.setClientId(jadm.getClientId());
+            referral.setClientId(new Long(jadm.getClientId()));
             saveClientReferral(referral);
         }
 
@@ -262,13 +262,9 @@ public class ClientManager {
     	demographicExtDao.removeDemographicExt(demographicNo, key);
     }
 
-    public void setJointAdmissionDAO(JointAdmissionDAO jointAdmissionDAO) {
-        this.jointAdmissionDAO = jointAdmissionDAO;
+    public void setJointAdmissionDao(JointAdmissionDao jointAdmissionDao) {
+        this.jointAdmissionDao = jointAdmissionDao;
     }
-
-    // public JointAdmission getJointAdmission(Long demoLong) {
-    // return jointAdmissionDAO.getJointAdmission(demoLong);
-    // }
 
     @Required
     public void setDemographicDao(DemographicDao dao) {

@@ -49,7 +49,7 @@ import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
-import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -285,7 +285,7 @@ public class ProgramManagerViewAction extends BaseAction {
 	    		if(clientManager != null  &&  bedClientIds != null  &&  bedClientIds.length > 0){
 	    			isFamilyDependents = new Boolean[beds.length];
 	    			for(int i=0; i < bedClientIds.length; i++){
-	    				clientsJadm = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
+	    				clientsJadm = clientManager.getJointAdmission(Integer.valueOf(bedClientIds[i].toString()));
 	    				
 	    	    		if(clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
 	    	    			isFamilyDependents[i] = new Boolean(true);
@@ -356,7 +356,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		Program fullProgram = programManager.getProgram(String.valueOf(programId));
 		String dischargeNotes = request.getParameter("admission.dischargeNotes");
 		String admissionNotes = request.getParameter("admission.admissionNotes");
-		List<Long> dependents = clientManager.getDependentsList(new Long(clientId));
+		List<Integer> dependents = clientManager.getDependentsList(new Integer(clientId));
 
 		try {
 			admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), dependents);
@@ -576,14 +576,14 @@ public class ProgramManagerViewAction extends BaseAction {
 		String clientId = request.getParameter("clientId");
 		String rejectionReason = request.getParameter("radioRejectionReason");
 
-		List<Long> dependents = clientManager.getDependentsList(new Long(clientId));
+		List<Integer> dependents = clientManager.getDependentsList(new Integer(clientId));
 
 		logger.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
 
 		programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
 
 		if (dependents != null) {
-			for (Long l : dependents) {
+			for (Integer l : dependents) {
 				logger.debug("rejecting from queue: program_id=" + programId + ",clientId=" + l.intValue());
 				programQueueManager.rejectQueue(programId, l.toString(), notes, rejectionReason);
 			}
@@ -669,7 +669,7 @@ public class ProgramManagerViewAction extends BaseAction {
 
 						if (isClientFamilyHead) {
 							familyList.clear();
-							List<JointAdmission> dependentList = clientManager.getDependents(Long.valueOf(clientId.toString()));
+							List<JointAdmission> dependentList = clientManager.getDependents(Integer.valueOf(clientId.toString()));
 							familyList.add(clientId);
 							for (int j = 0; dependentList != null && j < dependentList.size(); j++) {
 								familyList.add(Integer.valueOf(dependentList.get(j).getClientId().toString()));
@@ -747,7 +747,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		 */
 		ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
 		ActionMessages messages = new ActionMessages();
-		Bed[] reservedBeds = formBean.getReservedBeds();
+		//Bed[] reservedBeds = formBean.getReservedBeds();
 		Bed bed1 = null;
 		Bed bed2 = null;
 		Integer client1 = null;

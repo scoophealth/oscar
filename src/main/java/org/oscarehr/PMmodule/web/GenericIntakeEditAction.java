@@ -58,7 +58,7 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeJavascript;
-import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
@@ -155,7 +155,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		
 		if( fromAppt!=null && "1".equals(fromAppt)) {
 			
-	        String originalPage2 = request.getParameter("originalPage");
+	      //  String originalPage2 = request.getParameter("originalPage");
 	        String provider_no2 = request.getParameter("provider_no");
 	        String bFirstDisp2 = request.getParameter("bFirstDisp");
 	        String year2 = request.getParameter("year");
@@ -197,7 +197,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			String strNodeId = getParameter(request,"nodeId");
 			if(strNodeId != null)
 				nodeId = Integer.valueOf(strNodeId);
-		} catch(NumberFormatException e) {}
+		} catch(NumberFormatException e) {
+			MiscUtils.getLogger().warn("error",e);
+		}
 		
 		
 		Intake intake = null;
@@ -277,7 +279,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			String strNodeId = getParameter(request,"nodeId");
 			if(strNodeId != null)
 				nodeId = Integer.valueOf(strNodeId);
-		} catch(NumberFormatException e) {}
+		} catch(NumberFormatException e) {
+			MiscUtils.getLogger().warn("error",e);
+		}
 		
 		
 		Intake intake = null;
@@ -591,8 +595,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				else if( "appointment".equals(saveWhich)) {
 					ActionForward forward = mapping.findForward(APPT);
 					StringBuilder path = new StringBuilder(forward.getPath());
-					String fromAppt = request.getParameter("fromAppt");
-			        String originalPage2 = request.getParameter("originalPage");
+					//String fromAppt = request.getParameter("fromAppt");
+			        //String originalPage2 = request.getParameter("originalPage");
 			        String provider_no2 = request.getParameter("provider_no");
 			        String bFirstDisp2 = request.getParameter("bFirstDisp");
 			        String year2 = request.getParameter("year");
@@ -659,7 +663,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		
 		String fromAppt = request.getParameter("fromAppt");
-		
+		/*
         String originalPage2 = request.getParameter("originalPage");
         String provider_no2 = request.getParameter("provider_no");
         String bFirstDisp2 = request.getParameter("bFirstDisp");
@@ -669,7 +673,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         String start_time2 = request.getParameter("start_time");
         String end_time2 = request.getParameter("end_time");
         String duration2 = request.getParameter("duration");
-        
+        */
 		if(fromAppt!=null && fromAppt.equals("1")) {
 			return save_all(mapping, form, request, response, "appointment");
 		} else {
@@ -934,8 +938,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		Integer[] dependentIds = null;
 
 		if (clientManager != null && clientId != null) {
-			dependentList = clientManager.getDependents(Long.valueOf(clientId));
-			clientsJadm = clientManager.getJointAdmission(Long.valueOf(clientId));
+			dependentList = clientManager.getDependents(Integer.valueOf(clientId));
+			clientsJadm = clientManager.getJointAdmission(Integer.valueOf(clientId));
 		}
 		if (clientsJadm != null && clientsJadm.getHeadClientId() != null) {
 			isFamilyDependent = true;
