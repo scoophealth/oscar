@@ -32,16 +32,26 @@ import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class Hl7ObrDao extends AbstractDao<Hl7Obr>{
+@SuppressWarnings("unchecked")
+public class Hl7ObrDao extends AbstractDao<Hl7Obr> {
 
 	public Hl7ObrDao() {
 		super(Hl7Obr.class);
 	}
 
-	@SuppressWarnings("unchecked")
-    public List<Hl7Obr> findByPid(int id) {
+	public List<Hl7Obr> findByPid(int id) {
 		Query query = createQuery("h", "h.pidId = :id");
 		query.setParameter("id", id);
 		return query.getResultList();
-    }
+	}
+
+	public List<Object[]> findLabResultsByPid(Integer pid) {
+		String sql = "FROM Hl7Obr hl7_obr, Hl7Obx hl7_obx " +
+				"WHERE hl7_obr.id = hl7_obx.obrId " +
+				"AND hl7_obr.pidId = :pid " +
+				"ORDER BY hl7_obr.diagnosticServiceSectId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("pid", pid);
+		return query.getResultList();
+	}
 }

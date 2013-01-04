@@ -23,7 +23,11 @@
     Ontario, Canada
 
 --%>
-<%@page import="java.sql.ResultSet" %>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.billing.CA.BC.model.Hl7Obx"%>
+<%@page import="org.oscarehr.billing.CA.BC.model.Hl7Obr"%>
+<%@page import="org.oscarehr.billing.CA.BC.dao.Hl7ObrDao"%>
+<%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.billing.CA.BC.dao.Hl7PidDao" %>
 <%@page import="org.oscarehr.billing.CA.BC.model.Hl7Pid" %>
@@ -33,14 +37,6 @@
 <%@page import="org.oscarehr.billing.CA.BC.model.Hl7Message" %>
 
 <%
-	String select_pid_information = "SELECT patient_name, external_id, date_of_birth, patient_address, sex, home_number  FROM hl7_pid WHERE hl7_pid.pid_id='@pid'",
-		select_header_information = "SELECT DISTINCT filler_order_number, requested_date_time, observation_date_time, ordering_provider, result_copies_to FROM hl7_OBR WHERE pid_id = '@pid'",
-		select_lab_results = "SELECT hl7_obr.filler_order_number, hl7_obr.universal_service_id, hl7_obr.ordering_provider, hl7_obr.results_report_status_change, hl7_obr.diagnostic_service_sect_id, hl7_obr.result_status, hl7_obr.result_copies_to, hl7_obr.note as obrnote, hl7_obx.set_id, hl7_obx.observation_identifier, hl7_obx.observation_results, hl7_obx.units, hl7_obx.reference_range, hl7_obx.abnormal_flags, hl7_obx.observation_result_status, hl7_obx.note as obxnote FROM hl7_obr left join hl7_obx on hl7_obr.obr_id=hl7_obx.obr_id WHERE hl7_obr.pid_id='@pid' ORDER BY hl7_obr.diagnostic_service_sect_id",
-		select_signed = "SELECT hl7_pid.pid_id, hl7_link.status, hl7_link.provider_no, hl7_link.signed_on, provider.last_name, provider.first_name FROM hl7_pid left join hl7_link on hl7_pid.pid_id=hl7_link.pid_id left join provider on provider.provider_no=hl7_link.provider_no WHERE hl7_pid.pid_id='@pid';",
-		update_lab_report_signed = "UPDATE hl7_link SET hl7_link.status='S', hl7_link.provider_no='@provider_no', hl7_link.signed_on=NOW() WHERE hl7_link.pid_id='@pid';",
-		update_lab_report_viewed = "UPDATE hl7_link SET hl7_link.status='A' WHERE hl7_link.pid_id='@pid' AND hl7_link.status!='S';",
-		select_doc_notes = "SELECT hl7_message.notes FROM hl7_pid, hl7_message WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;",
-		update_doc_notes = "UPDATE hl7_pid, hl7_message SET hl7_message.notes='@notes' WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;";
 	String pid = request.getParameter("pid"),
 	sign = request.getParameter("cmd_sign"),
 	save = request.getParameter("cmd_save");
@@ -50,9 +46,9 @@
 	Hl7LinkDao linkDao = SpringUtils.getBean(Hl7LinkDao.class);
 	
 	if(null != save){
-		ResultSet rs = DBHandler.GetSQL("select m.* from hl7_pid p, hl7_message m where p.pid_id=" + pid + " and p.message_id=m.message_id");
-		while(rs.next()) {
-			int msgId = rs.getInt("message_id");
+		for(Object[] o : pidDao.findDocNotes(ConversionUtils.fromIntString(pid))) {
+			Hl7Message hl7Message = (Hl7Message) o[1];
+			int msgId = hl7Message.getId();
 			Hl7Message h = messageDao.find(msgId);
 			if(h != null) {
 				h.setNotes(request.getParameter("notes"));
@@ -80,46 +76,49 @@
 		}
 		
 	}
-	java.sql.ResultSet rs = DBHandler.GetSQL(select_signed.replaceAll("@pid", pid));
-	if(rs.next()){
-		boolean signed = (oscar.Misc.getString(rs,"status")!=null && oscar.Misc.getString(rs,"status").equalsIgnoreCase("S"));
-%>
-
-<%@page import="oscar.oscarDB.DBHandler"%><html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>OSCAR PathNET - View Lab Report</title>
-<link rel="stylesheet" href="../../../share/css/oscar.css">
-<script language="JavaScript">
-window.opener.location.reload();
-function Sign(check){
-	check.form.submit();
-}
-</script>
-</head>
-<body>
-<form name="signForm" action="report.jsp" method="post">
-<table width="100%" class="DarkBG">
-	<tr>
-		<td height="40" width="25"></td>
-		<td width="50%" align="left"><font color="#4D4D4D"><b><font
-			size="4">oscar<font size="3">PathNET - View Lab Report</font></font></b></font>
-		</td>
-		<td align="right" class="Text" nowrap><%=(signed? ((oscar.Misc.getString(rs,"last_name")!=null)? "<b>Signed Off By: </b>" +  oscar.Misc.getString(rs,"last_name") + ", " + oscar.Misc.getString(rs,"first_name") : "<b>Signed Off By Provider No.:</b> " + oscar.Misc.getString(rs,"provider_no")) + " on " + oscar.Misc.getString(rs,"signed_on") : "" )%>
-		<input type="checkbox" name="cmd_sign" onclick="Sign(this);"
-			value="<%=pid%>" <%=(signed? "checked disabled" : "")%> /><input
-			type="hidden" name="pid" value="<%=pid%>" />Sign</td>
-	</tr>
-</table>
-<%
+	
+	for(Object[] o : pidDao.findSigned(ConversionUtils.fromIntString(pid))) {
+		Hl7Pid hl7_pid = (Hl7Pid) o[0];
+		Hl7Link hl7_link = (Hl7Link) o[1];
+		Provider provider = (Provider) o[2];
+		
+		boolean signed = (hl7_link.getStatus() != null && hl7_link.getStatus().equalsIgnoreCase("S"));
+		%>
+		
+		<html>
+		<head>
+		<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+		<title>OSCAR PathNET - View Lab Report</title>
+		<link rel="stylesheet" href="../../../share/css/oscar.css">
+		<script language="JavaScript">
+		window.opener.location.reload();
+		function Sign(check) {
+			check.form.submit();
+		}
+		</script>
+		</head>
+		<body>
+		<form name="signForm" action="report.jsp" method="post">
+		<table width="100%" class="DarkBG">
+			<tr>
+				<td height="40" width="25"></td>
+				<td width="50%" align="left"><font color="#4D4D4D"><b><font
+					size="4">oscar<font size="3">PathNET - View Lab Report</font></font></b></font>
+				</td>
+				<td align="right" class="Text" nowrap><%=(signed? ( provider.getLastName() != null ? "<b>Signed Off By: </b>" +  provider.getFormattedName() : "<b>Signed Off By Provider No.:</b> " + provider.getProviderNo()) + " on " + hl7_link.getSignedOn() : "" )%>
+				<input type="checkbox" name="cmd_sign" onclick="Sign(this);"
+					value="<%=pid%>" <%=(signed? "checked disabled" : "")%> /><input
+					type="hidden" name="pid" value="<%=pid%>" />Sign</td>
+			</tr>
+		</table>
+		<%
 	}
-	rs.close();
-	rs = DBHandler.GetSQL(select_pid_information.replaceAll("@pid", pid));
-	if(rs.next()){
+	
+	Hl7Pid hl7pid = pidDao.find(ConversionUtils.fromIntString(pid));
+	if(hl7pid != null ){
 		int age = 0;
-		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-d HH:mm:ss");
 		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar();
-		calendar.setTime(format.parse(oscar.Misc.getString(rs,"date_of_birth")));
+		calendar.setTime(hl7pid.getDateOfBirth());
 		age = oscar.MyDateFormat.getAge(calendar.get(java.util.GregorianCalendar.YEAR), calendar.get(java.util.GregorianCalendar.MONTH), calendar.get(java.util.GregorianCalendar.DATE));
 %>
 <table width="100%">
@@ -129,13 +128,13 @@ function Sign(check){
 	</tr>
 	<tr>
 		<td class="Text" width="100px">Patient:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"patient_name")%></td>
+		<td class="Text"><%=hl7pid.getPatientName()%></td>
 		<td class="Text" align="right">DOB:</td>
-		<td class="Text" width="100px"><%=oscar.Misc.getString(rs,"date_of_birth").substring(0, oscar.Misc.getString(rs,"date_of_birth").indexOf(" "))%></td>
+		<td class="Text" width="100px"><%= ConversionUtils.toDateString(hl7pid.getDateOfBirth())%></td>
 	</tr>
 	<tr>
 		<td class="Text">PHN:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"external_id")%></td>
+		<td class="Text"><%=hl7pid.getExternalId()%></td>
 		<td class="Text" align="right">Age:</td>
 		<td class="Text"><%=age%></td>
 	</tr>
@@ -143,115 +142,118 @@ function Sign(check){
 		<td class="Text"></td>
 		<td class="Text"></td>
 		<td class="Text" align="right">Sex:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"sex")%></td>
+		<td class="Text"><%=hl7pid.getSex()%></td>
 	</tr>
 	<tr>
 		<td class="Text">Address:</td>
-		<td class="Text" colspan="3"><%=oscar.Misc.getString(rs,"patient_address").replaceAll("\\\\\\.br\\\\", " ")%></td>
+		<td class="Text" colspan="3"><%=hl7pid.getPatientAddress().replaceAll("\\\\\\.br\\\\", " ")%></td>
 	</tr>
 	<tr>
 		<td class="Text">Phone:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"home_number")%></td>
+		<td class="Text"><%=hl7pid.getHomeNumber()%></td>
 		<td class="Text"></td>
 		<td class="Text"></td>
 	</tr>
 	<%
 	}
-	rs.close();
-	rs = DBHandler.GetSQL(select_header_information.replaceAll("@pid", pid));
-	if(rs.next()){
+	
+	Hl7ObrDao obrDao = SpringUtils.getBean(Hl7ObrDao.class);
+	for(Hl7Obr hl7obr : obrDao.findByPid(ConversionUtils.fromIntString(pid))) {
 %>
 	<tr>
 		<td colspan="4">&nbsp;</td>
 	</tr>
 	<tr>
 		<td class="Text">Lab:</td>
-		<td class="Text" colspan="3"><%=oscar.Misc.getString(rs,"filler_order_number").substring(0, oscar.Misc.getString(rs,"filler_order_number").indexOf("-", 3))%></td>
+		<td class="Text" colspan="3"><%=hl7obr.getFillerOrderNumber().substring(0, hl7obr.getFillerOrderNumber().indexOf("-", 3))%></td>
 	</tr>
 	<tr>
 		<td class="Text">Ordered By:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"ordering_provider").replaceAll("~", ",<br/>")%></td>
+		<td class="Text"><%=hl7obr.getOrderingProvider().replaceAll("~", ",<br/>")%></td>
 		<td class="Text">Requested On:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"requested_date_time")%></td>
+		<td class="Text"><%=hl7obr.getRequestedDateTime()%></td>
 	</tr>
 	<tr>
 		<td class="Text">Copies To:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"result_copies_to").replaceAll("~", ",<br/>")%></td>
+		<td class="Text"><%=hl7obr.getResultCopiesTo().replaceAll("~", ",<br/>")%></td>
 		<td class="Text">Observed On:</td>
-		<td class="Text"><%=oscar.Misc.getString(rs,"observation_date_time")%></td>
+		<td class="Text"><%=hl7obr.getOberservationDateTime()%></td>
 	</tr>
 	<%
 	}
-	rs.close();
+	
 %>
 </table>
 <table cellspacing="0" cellpadding="0" width="100%">
 	<%
-	rs = DBHandler.GetSQL(select_lab_results.replaceAll("@pid", pid));
 	boolean other = true;
 	String section = "";
-	while(rs.next()){
-		if(oscar.Misc.getString(rs,"set_id") == null || rs.getInt("set_id") == 1){
-			if(!section.equalsIgnoreCase(oscar.Misc.getString(rs,"diagnostic_service_sect_id"))){
-				section = oscar.Misc.getString(rs,"diagnostic_service_sect_id");
-%>
-	<tr>
-		<td colspan="7">&nbsp;</td>
-	</tr>
-	<tr>
-		<td class="Section" colspan="7"><%=((oscar.Misc.getString(rs,"diagnostic_service_sect_id")!=null)? oscar.Misc.getString(rs,"diagnostic_service_sect_id") : "Other")%></td>
-	</tr>
-	<%
+	for(Object[] o : obrDao.findLabResultsByPid(ConversionUtils.fromIntString(pid))) {
+		Hl7Obr hl7_obr = (Hl7Obr) o[0];
+		Hl7Obx hl7_obx = (Hl7Obx) o[1];
+		
+		if(hl7_obx.getSetId() == null || ConversionUtils.fromIntString(hl7_obx.getSetId()) == 1) {
+			if(!section.equalsIgnoreCase(hl7_obr.getDiagnosticServiceSectId())){
+				section = hl7_obr.getDiagnosticServiceSectId();
+			    %>
+				<tr>
+					<td colspan="7">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="Section" colspan="7"><%=((hl7_obr.getDiagnosticServiceSectId() != null) ? hl7_obr.getDiagnosticServiceSectId() : "Other")%></td>
+				</tr>
+				<%
 			}
-%>
-	<tr>
-		<td colspan="7">&nbsp;</td>
-	</tr>
-	<tr>
-		<td class="Text" colspan="3"><b>Service Id:</b><%=oscar.Misc.getString(rs,"universal_service_id").substring(oscar.Misc.getString(rs,"universal_service_id").indexOf(" "))%></td>
-		<td class="Text" nowrap><b>Last Modified:</b><%=oscar.Misc.getString(rs,"results_report_status_change")%></td>
-		<td class="Text" nowrap colspan="3"><b>Result Status:</b><%=(oscar.Misc.getString(rs,"result_status").equalsIgnoreCase("f")? "Final" : "Pending")%></td>
-	</tr>
-	<tr>
-		<td class="Text" valign="top">Note:</td>
-		<td class="Text" colspan="6"><%=oscar.Misc.getString(rs,"obrnote").replaceAll("\\\\\\.br\\\\", " ")%>&nbsp;</td>
-	</tr>
-	<%
+			%>
+			<tr>
+				<td colspan="7">&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="Text" colspan="3"><b>Service Id:</b><%=hl7_obr.getUniversalServiceId().substring(hl7_obr.getUniversalServiceId().indexOf(" "))%></td>
+				<td class="Text" nowrap><b>Last Modified:</b><%= hl7_obr.getResultsReportStatusChange()%></td>
+				<td class="Text" nowrap colspan="3"><b>Result Status:</b><%=(hl7_obr.getResultStatus().equalsIgnoreCase("f")? "Final" : "Pending")%></td>
+			</tr>
+			<tr>
+				<td class="Text" valign="top">Note:</td>
+				<td class="Text" colspan="6"><%=hl7_obx.getNote().replaceAll("\\\\\\.br\\\\", " ")%>&nbsp;</td>
+			</tr>
+			<%
 		}
-		if(oscar.Misc.getString(rs,"set_id") != null){
-			if(rs.getInt("set_id") == 1){
-			other = true;
-%>
-	<tr>
-		<td>&nbsp;</td>
-		<td style="width: 15%;" class="Header">Test</td>
-		<td style="width: 5%;" class="Header">Flags</td>
-		<td style="width: 55%;" class="Header">Results</td>
-		<td style="width: 8%;" class="Header">Range</td>
-		<td style="width: 8%;" class="Header">Units</td>
-		<td class="Header">Note</td>
-	</tr>
-	<%
+		
+		if(hl7_obx.getSetId() != null){
+			if("1".equals(hl7_obx.getSetId())) {
+				other = true;
+				%>
+				<tr>
+					<td>&nbsp;</td>
+					<td style="width: 15%;" class="Header">Test</td>
+					<td style="width: 5%;" class="Header">Flags</td>
+					<td style="width: 55%;" class="Header">Results</td>
+					<td style="width: 8%;" class="Header">Range</td>
+					<td style="width: 8%;" class="Header">Units</td>
+					<td class="Header">Note</td>
+				</tr>
+				<%
 			}
-%>
-	<tr>
-		<td>&nbsp;</td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=oscar.Misc.getString(rs,"observation_identifier").substring(oscar.Misc.getString(rs,"observation_identifier").indexOf(" "))%></td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><b><%=((oscar.Misc.getString(rs,"abnormal_flags").toUpperCase().equals("N"))? "&nbsp;" : oscar.Misc.check(oscar.Misc.getString(rs,"abnormal_flags"), "", "&nbsp;"))%></b></td>
-		<td class="Text" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((oscar.Misc.getString(rs,"abnormal_flags").toUpperCase().equals("N"))? oscar.Misc.getString(rs,"observation_results") : "<b>" + oscar.Misc.getString(rs,"observation_results") + "</b>").replaceAll("\\\\\\.br\\\\", " ")%></td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=oscar.Misc.getString(rs,"reference_range")%></td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=oscar.Misc.getString(rs,"units")%></td>
-		<td class="Text" nowrap
-			title="<%=oscar.Misc.getString(rs,"obxnote").replaceAll("\\\\\\.br\\\\", " ")%>"
-			class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((oscar.Misc.getString(rs,"obxnote").length() < 20)? oscar.Misc.getString(rs,"obxnote") : oscar.Misc.getString(rs,"obxnote").substring(0, 20)).replaceAll("\\\\\\.br\\\\", " ")%></td>
-	</tr>
-	<%
+			%>
+			<tr>
+				<td>&nbsp;</td>
+				<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=hl7_obx.getObservationIdentifier().substring(hl7_obx.getObservationIdentifier().indexOf(" "))%></td>
+				<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><b><%=((hl7_obx.getAbnormalFlags().toUpperCase().equals("N"))? "&nbsp;" : oscar.Misc.check(hl7_obx.getAbnormalFlags(), "", "&nbsp;"))%></b></td>
+				<td class="Text" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((hl7_obx.getAbnormalFlags().toUpperCase().equals("N"))? hl7_obx.getObservationResults() : "<b>" + hl7_obx.getObservationResults() + "</b>").replaceAll("\\\\\\.br\\\\", " ")%></td>
+				<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=hl7_obx.getReferenceRange()%></td>
+				<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=hl7_obx.getUnits()%></td>
+				<td class="Text" nowrap
+					title="<%=hl7_obx.getNote().replaceAll("\\\\\\.br\\\\", " ")%>"
+					class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((hl7_obx.getNote().length() < 20)? hl7_obx.getNote() : hl7_obx.getNote().substring(0, 20)).replaceAll("\\\\\\.br\\\\", " ")%></td>
+			</tr>
+			<%
 		}
 		other = !other;
 	}
-	rs.close();
-	rs = DBHandler.GetSQL(select_doc_notes.replaceAll("@pid", pid));
-	if(rs.next()){
+	
+	for(Object[] o : pidDao.findDocNotes(ConversionUtils.fromIntString(pid))) {
+		Hl7Message hl7_message = (Hl7Message) o[1];
 %>
 	<tr>
 		<td colspan="7"><br>
@@ -259,7 +261,7 @@ function Sign(check){
 	</tr>
 	<tr>
 		<td colspan="7"><textarea name="notes" rows="7"
-			style="width: 100%;"><%=oscar.Misc.check(oscar.Misc.getString(rs,"notes"), "")%></textarea></td>
+			style="width: 100%;"><%=oscar.Misc.check(hl7_message.getNotes(), "")%></textarea></td>
 	</tr>
 	<tr class="LightBG">
 		<td colspan="7" align="right"><input type="submit"
@@ -268,7 +270,6 @@ function Sign(check){
 </table>
 <%
 	}
-	rs.close();
 %>
 </form>
 </body>
