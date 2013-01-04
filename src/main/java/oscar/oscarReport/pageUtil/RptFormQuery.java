@@ -33,25 +33,18 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-import org.oscarehr.util.MiscUtils;
-
-import oscar.login.DBHelp;
 import oscar.oscarReport.data.RptReportCreator;
 
 /**
  * @author yilee18
  */
 public class RptFormQuery {
-    private static Logger logger = MiscUtils.getLogger();
 
     static String CHECK_BOX = "filter_";
     static String VALUE = "value_";
     static String DATE_FORMAT = "dateFormat_";
     static String VARNAME_FORMAT = "startDate\\d|endDate\\d";
-    DBHelp dbObj = new DBHelp();
 
-    // sql: select formBCAR.pg1_ethOrig as Ethnic Origin, ...
     public String getQueryStr(String reportId, HttpServletRequest request) throws Exception {
         String ret = "";
         RptReportCreator reportCreator = new RptReportCreator();
@@ -64,7 +57,6 @@ public class RptFormQuery {
         String tableName = reportCreator.getFromTableFirst(reportId);
         boolean bDemo = tableName.indexOf("demographic") >= 0 ? true : false;
         reportSql += tableName;
-        // logger.debug(reportId + "SQL: " + reportSql);
 
         // get value param string
         Vector vecValue = getValueParam(request)[0];
@@ -103,7 +95,6 @@ public class RptFormQuery {
         return reportSql;
     }
 
-    // vec[0] - value; vec[1] - dateformat
     private Vector[] getValueParam(HttpServletRequest request)  {
         Vector[] ret = new Vector[2];
         String serialNo = "";
@@ -120,7 +111,6 @@ public class RptFormQuery {
 
                 vecValue.add(request.getParameter(name));
                 vecDateFormat.add(request.getParameter(DATE_FORMAT + serialNo));
-                // logger.debug(" tempVal: " + name.substring(VALUE.length()) );
             }
         }
         ret[0] = vecValue;
@@ -144,9 +134,6 @@ public class RptFormQuery {
                     vecVarValue.add(request.getParameter((String) vecVar.get(j)));
                 }
             }
-            //bDemo = reportCreator.isIncludeDemo(tempVal) ? true : bDemo;
-            //logger.debug(i + tempVal + " tempVal: " + vecVarValue);
-            //logger.debug(i + tempVal + " tempVal: " + vecDateFormat);
             ret.add(RptReportCreator.getWhereValueClause(tempVal, vecVarValue));
         }
         return ret;
