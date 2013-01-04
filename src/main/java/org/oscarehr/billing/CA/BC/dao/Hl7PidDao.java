@@ -63,4 +63,23 @@ public class Hl7PidDao extends AbstractDao<Hl7Pid>{
 		query.setParameter("msgId", messageId);
 		return query.getResultList();
     }
+    
+    public List<Object[]> findSigned(Integer pid) {
+    	String sql = "FROM Hl7Pid hl7_pid, Hl7Link hl7_link, Provider provider " +
+    			"WHERE hl7_pid.id = hl7_link.id " +
+    			"AND provider.ProviderNo = hl7_link.providerNo " +
+    			"AND hl7_pid.id = :pid";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("pid", pid);
+		return query.getResultList();
+    }
+    
+    public List<Object[]> findDocNotes(Integer pid) {
+    	String sql = "FROM Hl7Pid hl7_pid, Hl7Message hl7_message " +
+    			"WHERE hl7_pid.id = :pid " +
+    			"AND hl7_pid.messageId = hl7_message.id";
+    	Query query = entityManager.createQuery(sql);
+		query.setParameter("pid", pid);
+		return query.getResultList();
+    }
 }
