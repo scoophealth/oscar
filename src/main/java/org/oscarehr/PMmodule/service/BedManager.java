@@ -37,7 +37,7 @@ import org.oscarehr.PMmodule.exception.DuplicateBedNameException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedType;
-import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.util.MiscUtils;
@@ -442,7 +442,7 @@ public class BedManager {
 	    		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
 	    		if(bd != null){
 	    			bedClientIds[i] = bd.getId().getDemographicNo();
-	    			clientsJadmFamily = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
+	    			clientsJadmFamily = clientManager.getJointAdmission(Integer.valueOf(bedClientIds[i].toString()));
 	    			isFamilyHead = clientManager.isClientFamilyHead(bedClientIds[i]);
 	    			if(clientsJadmFamily != null){
 	    				headRecord = Integer.valueOf(clientsJadmFamily.getHeadClientId().toString());

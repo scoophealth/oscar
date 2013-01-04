@@ -38,7 +38,7 @@ import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.AdmissionSearchBean;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
@@ -139,7 +139,7 @@ public class AdmissionManager {
 		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, false,null);
 	}
 
-        public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission,List<Long> dependents) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+        public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission,List<Integer> dependents) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, false,dependents);
 	}
         
@@ -151,7 +151,7 @@ public class AdmissionManager {
 		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, admissionDate, false,null);
 	}
 
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate, boolean overrideRestriction, List<Long> dependents) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate, boolean overrideRestriction, List<Integer> dependents) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		// see if there's room first
 		if (program.getNumOfMembers().intValue() >= program.getMaxAllowed().intValue()) {
 			throw new ProgramFullException();
@@ -255,7 +255,7 @@ public class AdmissionManager {
                 
                 //For the clients dependents
                 if (dependents != null){
-                   for(Long l : dependents){  
+                   for(Integer l : dependents){  
                       processAdmission(new Integer(l.intValue()), providerNo,program,dischargeNotes,admissionNotes,tempAdmission,newAdmission.getAdmissionDate(),true,null);
                    }
                 }
@@ -355,7 +355,7 @@ public class AdmissionManager {
         processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null, false, false);
     }    
     
-    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents, boolean fromTransfer, boolean automaticDischarge) throws AdmissionException {
+    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Integer> dependents, boolean fromTransfer, boolean automaticDischarge) throws AdmissionException {
 	
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
 	
@@ -395,7 +395,7 @@ public class AdmissionManager {
 		}
 		
         if (dependents != null){
-            for(Long l:dependents){
+            for(Integer l:dependents){
                 processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null, fromTransfer, automaticDischarge);
             }
         }
@@ -405,7 +405,7 @@ public class AdmissionManager {
             processDischargeToCommunity(communityProgramId,demographicNo,providerNo,notes,radioDischargeReason,null);
     }
         
-	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
+	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason,List<Integer> dependents) throws AdmissionException {
 		Admission currentBedAdmission = getCurrentBedProgramAdmission(demographicNo);
 
         Program program=programDao.getProgram(communityProgramId);
@@ -443,7 +443,7 @@ public class AdmissionManager {
 		saveAdmission(admission);
                 
                 if (dependents != null){
-                    for(Long l:dependents){
+                    for(Integer l:dependents){
                         processDischargeToCommunity(communityProgramId,new Integer(l.intValue()),providerNo, notes, radioDischargeReason,null);
                     }
                 }
