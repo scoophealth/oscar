@@ -127,12 +127,7 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
   	consultUtil.estTeams();
   }
   
-String protocol = "http";
-if (request.isSecure()){
-   protocol = "https";
-}
 
-String serverURL = protocol+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
 ArrayList tickerList = new ArrayList();
 %>
 
@@ -261,7 +256,7 @@ function setOrder(val){
                 <table>
                     <tr>
                         <td NOWRAP>
-                        <a href="javascript:popupOscarConsultationConfig(700,960,'<%=serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
+                        <a href="javascript:popupOscarConsultationConfig(700,960,'<%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
                             <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/>
                         </a>                                                
                         </td>
@@ -455,12 +450,12 @@ function setOrder(val){
 
                                 </td>
                                 <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
                                     <%=sendTo.equals("-1")?"N/A":sendTo%>
                                     </a>
                                 </td>
                                 <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
                                     <%=patient%>
                                     </a>
                                 </td>
@@ -468,13 +463,13 @@ function setOrder(val){
                                     <%=provide%>
                                 </td>
                                 <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
                                     <%=service%>
                                     </a>
 
                                 </td>
                                 <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
                                         <%=specialist%>
                                     </a>
 
@@ -490,7 +485,7 @@ function setOrder(val){
                                    <%}%>
                                 </td>
                                 <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
                                         <%=followUpDate%>
                                     </a>
 
