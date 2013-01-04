@@ -38,13 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("unchecked")
 public class FormsDao {
 
-	// private static final long serialVersionUID = 1L;
-
 	@PersistenceContext
 	protected EntityManager entityManager = null;
 
 	/**
 	 * Returns:
+	 * 
 	 * 	ID int
 	 * 	formCreated date
 	 *  patientName string
@@ -152,4 +151,10 @@ public class FormsDao {
 		return query.getResultList();
 	}
 	
+	@NativeSql
+	public List<Object[]> runNativeQuery(String string) {
+		Query query = entityManager.createNativeQuery(string);
+		return query.getResultList();
+    }
+
 }
