@@ -22,83 +22,62 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarProvider.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
-import oscar.oscarProvider.data.ProviderData;
+import org.apache.commons.beanutils.BeanComparator;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.MyGroupDao;
+import org.oscarehr.common.model.MyGroup;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 
 public class ProviderNameBeanHandler {
-    
-    Vector providerNameVector = new Vector();
-    Vector doctorNameVector = new Vector();
-    Vector thisGroupProviderVector = new Vector();
- 
-    public ProviderNameBeanHandler() {
-        init();
-    }
-    
-    public boolean init() {
-        
-        boolean verdict = true;
-        try {
-            
-            String sql = "SELECT DISTINCT provider_no, provider_type from provider ORDER BY last_name";
 
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-                ProviderData pData = new ProviderData(oscar.Misc.getString(rs, "provider_no"));
-                ProviderNameBean pNameBean = new ProviderNameBean(pData.getLast_name() + ", " + pData.getFirst_name(), oscar.Misc.getString(rs, "provider_no"));
-                providerNameVector.add(pNameBean);
-                if(oscar.Misc.getString(rs, "provider_type").equalsIgnoreCase("doctor")){
-                    doctorNameVector.add(pNameBean);
+	Vector<ProviderNameBean> providerNameVector = new Vector<ProviderNameBean>();
+	Vector<ProviderNameBean> doctorNameVector = new Vector<ProviderNameBean>();
+	Vector<ProviderNameBean> thisGroupProviderVector = new Vector<ProviderNameBean>();
 
-                }
-                    
-            }
+	public ProviderNameBeanHandler() {
+		init();
+	}
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	public boolean init() {
+		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+		for (Provider p : dao.getProviders()) {
+			ProviderNameBean pNameBean = new ProviderNameBean(p.getFormattedName(), p.getProviderNo());
+			providerNameVector.add(pNameBean);
+			if (p.getProviderType().equalsIgnoreCase("doctor")) {
+				doctorNameVector.add(pNameBean);
+			}
+		}
+		return true;
+	}
 
-    public Collection getProviderNameVector(){
-        return providerNameVector;
-    }
-    
-    public Collection getDoctorNameVector(){
-        return doctorNameVector;
-    }
-    
-    public void setThisGroupProviderVector(String groupNo){
-        try{
-            
-            String sql = "select provider_no, last_name, first_name from mygroup where mygroup_no='" + groupNo + "' order by first_name";
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {                
-                ProviderNameBean pNameBean = new ProviderNameBean(oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "provider_no"));
-                thisGroupProviderVector.add(pNameBean);
-            }
-        }
-         catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);         
-        }
-    }
-    
-    public Collection getThisGroupProviderVector(){
-        return thisGroupProviderVector;
-    }
+	public Collection<ProviderNameBean> getProviderNameVector() {
+		return providerNameVector;
+	}
+
+	public Collection<ProviderNameBean> getDoctorNameVector() {
+		return doctorNameVector;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setThisGroupProviderVector(String groupNo) {
+		MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+		List<MyGroup> groups = dao.getGroupByGroupNo(groupNo);
+		Collections.sort(groups, new BeanComparator("firstName"));
+		for (MyGroup g : groups) {
+			ProviderNameBean pNameBean = new ProviderNameBean(g.getLastName() + ", " + g.getFirstName(), g.getId().getProviderNo());
+			thisGroupProviderVector.add(pNameBean);
+		}
+	}
+
+	public Collection<ProviderNameBean> getThisGroupProviderVector() {
+		return thisGroupProviderVector;
+	}
 }

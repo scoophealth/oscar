@@ -278,6 +278,13 @@ public class ProviderDao extends HibernateDaoSupport {
 		return results;
 	}
 
+	public List<Provider> getProvidersByTypeWithNonEmptyOhipNo(String type) {
+		List<Provider> results = this.getHibernateTemplate().find(
+				"from Provider p where p.ProviderType = ? and p.OhipNo <> ''", type);
+		return results;
+	}
+
+	
 	public List<Provider> getProvidersByType(String type) {
 		
 		List<Provider> results = this.getHibernateTemplate().find(
@@ -478,11 +485,15 @@ public class ProviderDao extends HibernateDaoSupport {
 					"ORDER BY p.LastName, p.FirstName";
 			return getHibernateTemplate().find(sql);
 		}
+		
 		public List<String> getProvidersInTeam(String teamName) {
-			@SuppressWarnings("unchecked")
-			List<String> providerList = getHibernateTemplate().find("select distinct p.ProviderNo from Provider p  where p.Team = ?",new Object[]{teamName});
-			
+			List<String> providerList = getHibernateTemplate().find("select distinct p.ProviderNo from Provider p  where p.Team = ?",new Object[]{teamName});			
 			return providerList;
 		}
+
+		public List<Object[]> getDistinctProviders() {
+			List<Object[]> providerList = getHibernateTemplate().find("select distinct p.ProviderNo, p.ProviderType from Provider p ORDER BY p.LastName");
+			return providerList;
+        }
 		
 }
