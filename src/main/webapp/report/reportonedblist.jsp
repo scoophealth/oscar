@@ -1,5 +1,4 @@
 <%
-  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 
@@ -13,10 +12,9 @@
   if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDate");
 %>
 <%@ page import="java.util.*, java.sql.*" errorPage="../errorpage.jsp"%>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<jsp:useBean id="providerNameBean" class="java.util.Properties"
-	scope="page" />
+<%@ page import="org.oscarehr.common.dao.forms.FormsDao" %>
+
+<jsp:useBean id="providerNameBean" class="java.util.Properties" scope="page" />
 
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
@@ -27,16 +25,10 @@
 <%
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	FormsDao formsDao = SpringUtils.getBean(FormsDao.class);
 %>
 
 
-<%
-  String [][] dbQueries=new String[][] {
-{"select_maxformar_id", "select max(ID) from formONAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no"  },
-{"select_formar", "select ID, demographic_no, c_finalEDB, concat(c_lastname,\",\",c_firstname) as c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formONAR where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  },
-  };
-  reportMainBean.doConfigure(dbQueries);
-%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -102,7 +94,7 @@
 	<tbody>
 		<%
         for(Provider p: providerDao.getActiveProviders()) {
-        providerNameBean.setProperty(p.getProviderNo(), new String(p.getFormattedName() ));
+       	 providerNameBean.setProperty(p.getProviderNo(), new String(p.getFormattedName() ));
         }
         Properties arMaxId = new Properties();
         String[] paramI =new String[2];
@@ -114,11 +106,10 @@
         paramI[0]=sdf.format(cal.getTime()); 
         cal.set(Integer.parseInt(endDate.substring(0,4)), Integer.parseInt(endDate.substring(5,endDate.lastIndexOf('-'))) , Integer.parseInt(endDate.substring(endDate.lastIndexOf('-')+1)) );
         cal.add(Calendar.YEAR, 1);
-        paramI[1]=sdf.format(cal.getTime()); //;
-       ResultSet rs = reportMainBean.queryResults(paramI, "select_maxformar_id");
-        while (rs.next()) {
-        arMaxId.setProperty(""+rs.getInt("max(ID)"), "1");
-        }
+        paramI[1]=sdf.format(cal.getTime());
+        
+        arMaxId.setProperty(""+formsDao.select_maxformar_id(paramI[0],paramI[1]),"select_maxformar_id");
+      	
         Properties demoProp = new Properties();
         
         String[] param =new String[2];
@@ -129,15 +120,26 @@
         itemp1[0] = Integer.parseInt(strLimit2);
         boolean bodd=false;
         int nItems=0;
-        rs = reportMainBean.queryResults(param,itemp1, "select_formar");
-        while (rs.next()) {
-        if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
-        if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
-        else demoProp.setProperty(reportMainBean.getString(rs,"demographic_no"), "1");
+        
+        for(Object[] result : formsDao.select_formar(startDate,endDate,Integer.parseInt(strLimit2),Integer.parseInt(strLimit1))) {
+        	Integer id = (Integer)result[0];
+        	Integer demographicNo = (Integer)result[1];
+        	java.util.Date finalEdb1 = (java.util.Date)result[2];
+        	String finalEdb = oscar.util.ConversionUtils.toDateString(finalEdb1);
+        	String name= (String)result[3];
+        	String age= (String)result[4];
+        	String gravida= (String)result[5];
+        	String term= (String)result[6];
+        	String phone = (String)result[7];
+        	String prov = ((Integer)result[8]).toString();
+        	
+        if (!arMaxId.containsKey(""+id) ) continue;
+        if (demoProp.containsKey(demographicNo) ) continue;
+        else demoProp.setProperty(demographicNo.toString(), "1");
         
         String providerNo = "0";
         // filter the "IN" patient from the list
-        Demographic d = demographicDao.getDemographic(reportMainBean.getString(rs,"demographic_no"));
+        Demographic d = demographicDao.getDemographic(demographicNo.toString());
         if (d != null) {
             if(d.getPatientStatus().equals("IN")) continue;
             providerNo =d.getProviderNo();
@@ -148,15 +150,15 @@
         %>
 		<tr bgcolor="<%=bodd?weakcolor:"white"%>">
 			<td><%=nItems%></td>
-			<td align="center" nowrap><%=reportMainBean.getString(rs,"c_finalEDB")!=null?reportMainBean.getString(rs,"c_finalEDB").replace('-','/'):"----/--/--"%></td>
-			<td><%=reportMainBean.getString(rs,"c_pName")%></td>
-			<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
-			<td><%=reportMainBean.getString(rs,"pg1_age")%></td>
-			<td><%=reportMainBean.getString(rs,"c_gravida")%></td>
-			<td><%=reportMainBean.getString(rs,"c_term")%></td>
-			<td nowrap><%=reportMainBean.getString(rs,"pg1_homePhone")%></td>
+			<td align="center" nowrap><%=finalEdb!=null?finalEdb.replace('-','/'):"----/--/--"%></td>
+			<td><%=name%></td>
+			<!--td align="center" ><%=demographicNo%> </td-->
+			<td><%=age%></td>
+			<td><%=gravida%></td>
+			<td><%=term%></td>
+			<td nowrap><%=phone%></td>
 			<td><%=providerNameBean.getProperty(providerNo, "")%></td>
-			<td><%=providerNameBean.getProperty(reportMainBean.getString(rs,"provider_no"), "")%></td>
+			<td><%=providerNameBean.getProperty(prov, "")%></td>
 		</tr>
 		<%
         }

@@ -30,16 +30,14 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.casemgmt.model.OnCallQuestionnaire;
-import org.oscarehr.casemgmt.service.OnCallManager;
 import org.oscarehr.casemgmt.web.formbeans.OnCallQuestionnaireFormBean;
+import org.oscarehr.common.dao.OnCallQuestionnaireDao;
+import org.oscarehr.common.model.OnCallQuestionnaire;
+import org.oscarehr.util.SpringUtils;
 
 public class OnCallQuestionnaireAction extends DispatchAction {
-	private OnCallManager mgr;
-
-	public void setOnCallManager(OnCallManager mgr) {
-		this.mgr = mgr;
-	}
+	
+	private OnCallQuestionnaireDao dao = SpringUtils.getBean(OnCallQuestionnaireDao.class);
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return form(mapping,form,request,response);
@@ -58,13 +56,13 @@ public class OnCallQuestionnaireAction extends DispatchAction {
 		OnCallQuestionnaire bean = new OnCallQuestionnaire();
 		bean.setProviderNo(providerNo);
 		bean.setType(type);
-		bean.setCourse_action(f.getCourse_action());
-		bean.setDatetime(f.getDateObject());
-		bean.setNurse(f.getNurse());
-		bean.setPhysician_consult(f.getPhysician_consult());
-		bean.setType_health(f.getType_health());
+		bean.setCourseOfAction(f.getCourse_action());
+		bean.setCallTime(f.getDateObject());
+		bean.setNurseInvolved(f.getNurse());
+		bean.setPhysicialConsultationRequired(f.getPhysician_consult());
+		bean.setHealthType(f.getType_health());
 
-		mgr.save(bean);
+		dao.persist(bean);
 
 		return mapping.findForward("windowClose");
 	}
