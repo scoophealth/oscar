@@ -26,11 +26,7 @@
 <%
 
 %>
-<%@ page
-	import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%@ page import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*" errorPage="../appointment/errorpage.jsp"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@page import="org.oscarehr.common.model.Demographic" %>
@@ -38,13 +34,6 @@
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 %>
 
-<%
-  String [][] dbQueries=new String[][] {
-{"search_demographic", "select demographic_no, month_of_birth, date_of_birth from demographic order by demographic_no" },
-  };
-  String[][] responseTargets=new String[][] {  };
-  daySheetBean.doConfigure(dbQueries,responseTargets);
-%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -57,16 +46,16 @@ busy ... busy ... busy
 <%
 	ResultSet rsdemo = null ;
 	int rowsAffected = 0;
-	rsdemo = daySheetBean.queryResults("search_demographic");
-	while (rsdemo.next()) {
-		if (rsdemo.getString("month_of_birth")!=null && rsdemo.getString("month_of_birth").length() == 1) {
-			Demographic d = demographicDao.getDemographic(rsdemo.getString("demographic_no"));
+	List<Integer> ids = demographicDao.getDemographicIds();
+	
+	for (Integer id: ids) {
+		Demographic d = demographicDao.getDemographicById(id);
+		if (d.getMonthOfBirth()!=null && d.getMonthOfBirth().length() == 1) {
 			d.setMonthOfBirth("0"+rsdemo.getString("month_of_birth"));
 			demographicDao.save(d);
 		}
 
-		if (rsdemo.getString("date_of_birth")!=null && rsdemo.getString("date_of_birth").length() == 1) {
-			Demographic d = demographicDao.getDemographic(rsdemo.getString("demographic_no"));
+		if (d.getDateOfBirth()!=null && d.getDateOfBirth().length() == 1) {
 			d.setDateOfBirth("0"+rsdemo.getString("date_of_birth"));
 			demographicDao.save(d);
 		}

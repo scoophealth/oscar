@@ -25,7 +25,6 @@
 --%>
 
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String curUser_no = (String) session.getAttribute("user");
 String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 
@@ -39,25 +38,20 @@ if(request.getParameter("startDate")!=null) startDate = request.getParameter("st
 if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDate");
 %>
 <%@ page import="java.util.*, java.sql.*" errorPage="../errorpage.jsp"%>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<jsp:useBean id="providerNameBean" class="java.util.Properties"
-	scope="page" />
+
+<jsp:useBean id="providerNameBean" class="java.util.Properties" scope="page" />
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.forms.FormsDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
+
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	FormsDao formsDao = SpringUtils.getBean(FormsDao.class);
 %>
 
 
-<% 
-String [][] dbQueries=new String[][] { 
-//{"select_bcformar", "select distinct(demographic_no) from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, c_phyMid,
-{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_dateOfBirth, pg1_langPref, c_phn, pg1_gravida, pg1_term, c_phone,  pg2_doula, pg2_doulaNo, provider_no from formBCAR2007 where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
-};
-reportMainBean.doConfigure(dbQueries);
-%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -120,39 +114,44 @@ reportMainBean.doConfigure(dbQueries);
   
   Properties demoProp = new Properties();
     
-  String[] param =new String[2];
-  param[0]=startDate;  
-  param[1]=endDate;  
-  String[] paramb = new String[4];
-  paramb[0]=startDate;  
-  paramb[1]=endDate;  
-  paramb[2]=startDate;  
-  paramb[3]=endDate;  
-  int[] itemp1 = new int[2];
-  itemp1[1] = Integer.parseInt(strLimit1);
-  itemp1[0] = Integer.parseInt(strLimit2);
+
   boolean bodd=false;
   int nItems=0;
-  ResultSet rs = reportMainBean.queryResults(param,itemp1, "select_bcformar");
-  while (rs.next()) {
-    if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
-    else demoProp.setProperty(reportMainBean.getString(rs,"demographic_no"), "1");
+  
+  for(Object[] result : formsDao.selectBcFormAr(startDate, endDate, Integer.parseInt(strLimit1), Integer.parseInt(strLimit2))) {
+
+	 	String demographicNo = ((Integer)result[0]).toString();
+	 	String cEDD = ConversionUtils.toDateString((java.util.Date)result[1]);
+	 	String surname = (String)result[2];
+	 	String givenName  = (String)result[3];
+	 	String pg1_ageAtEDD = (String)result[4];
+	 	String dob = (String)result[5];
+	 	String langPref = (String)result[6];
+	 	String phn = (String)result[7];
+	 	String gravida = (String)result[8];
+	 	String term = (String)result[9];
+	 	String phone = (String)result[10];
+	 	String doula = (String)result[12];
+	 	String doulaNo = (String)result[13];
+	 	
+    if (demoProp.containsKey(demographicNo) ) continue;
+    else demoProp.setProperty(demographicNo, "1");
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
 %>
 	<tr bgcolor="<%=bodd?weakcolor:"white"%>">
-		<td align="center" nowrap><%=reportMainBean.getString(rs,"c_EDD")!=null?reportMainBean.getString(rs,"c_EDD").replace('-','/'):"----/--/--"%></td>
-		<td><%=reportMainBean.getString(rs,"c_surname") + ", " + reportMainBean.getString(rs,"c_givenName")%></td>
-		<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
-		<td><%=reportMainBean.getString(rs,"pg1_dateOfBirth")!=null?reportMainBean.getString(rs,"pg1_dateOfBirth"):""%></td>
-		<td><%=reportMainBean.getString(rs,"pg1_gravida")!=null?reportMainBean.getString(rs,"pg1_gravida"):""%></td>
-		<td><%=reportMainBean.getString(rs,"pg1_term")!=null?reportMainBean.getString(rs,"pg1_term"):""%></td>
-		<td nowrap><%=reportMainBean.getString(rs,"c_phone")%></td>
+		<td align="center" nowrap><%=cEDD!=null?cEDD.replace('-','/'):"----/--/--"%></td>
+		<td><%=surname + ", " + givenName%></td>
+		<!--td align="center" ><%=demographicNo%> </td-->
+		<td><%=dob!=null?dob:""%></td>
+		<td><%=gravida!=null?gravida:""%></td>
+		<td><%=term!=null?term:""%></td>
+		<td nowrap><%=phone%></td>
 		<!--td><%--=reportMainBean.getString(rs,"c_phyMid")--%><%--=providerNameBean.getProperty(reportMainBean.getString(rs,"provider_no"), "")--%></td-->
-		<td><%=reportMainBean.getString(rs,"pg1_langPref")%></td>
-		<td><%=reportMainBean.getString(rs,"c_phn")%></td>
-		<td><%=reportMainBean.getString(rs,"pg2_doula")%></td>
-		<td><%=reportMainBean.getString(rs,"pg2_doulaNo")%></td>
+		<td><%=langPref%></td>
+		<td><%=phn%></td>
+		<td><%=doula%></td>
+		<td><%=doulaNo%></td>
 	</tr>
 	<%
   }

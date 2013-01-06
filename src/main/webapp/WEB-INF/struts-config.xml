@@ -2066,7 +2066,7 @@
 		<action path="/ClientImage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="clientImageForm" input="/casemgmt/uploadimage.jsp">
 			<forward name="success" path="/casemgmt/uploadimage.jsp" />
 		</action>
-		<action path="/OnCallQuestionnaire" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementView.jsp" name="onCallQuestionnaireForm">
+		<action path="/OnCallQuestionnaire" type="org.oscarehr.casemgmt.web.OnCallQuestionnaireAction" parameter="method" scope="request" input="/casemgmt/CaseManagementView.jsp" name="onCallQuestionnaireForm">
 			<forward name="form" path="/casemgmt/OnCallQuestionnaireForm.jsp" />
 			<forward name="windowClose" path="/casemgmt/close.jsp" />
 		</action>
