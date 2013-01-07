@@ -210,13 +210,7 @@ public class Utility {
         	return null;
         }
     }
-    public static String getMergedClientQueryString(String tableAlias,String colName ){
-    	if(IsEmpty(colName)) return "";
-    	String sql=" or ";
-    	if(!IsEmpty(tableAlias))sql+=tableAlias+"."; 
-        sql+=colName +" in (select cm.clientId from ClientMerge cm where cm.deleted=false and cm.mergedToClientId=?)" ;    	
-    	return sql;    	
-    }
+
     public static String getUserOrgQueryString(String providerNo,Integer shelterId){
     	String progSQL="";
     	if (shelterId  == null || shelterId.intValue() == 0) {
