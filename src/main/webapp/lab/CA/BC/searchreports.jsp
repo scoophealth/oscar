@@ -24,36 +24,26 @@
 
 --%>
 
+<%@page import="java.util.List"%>
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="java.util.Date"%>
+<%@page import="org.oscarehr.billing.CA.BC.dao.Hl7LinkDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%
-    String start       = oscar.Misc.check(request.getParameter("start"), ""),
-           end         = oscar.Misc.check(request.getParameter("end"), ""),
-	        provider_no = oscar.Misc.check(request.getParameter("provider_no"), ""),
-           orderby     = oscar.Misc.check(request.getParameter("orderby"), "pid_id"),
-	        command     = oscar.Misc.check(request.getParameter("cmd_search"), ""),
-		select_providers_with_reports = "SELECT DISTINCT provider.provider_no, provider.last_name, provider.first_name FROM hl7_link, demographic, provider WHERE hl7_link.demographic_no=demographic.demographic_no AND demographic.provider_no=provider.provider_no AND demographic.provider_no is not null;",
-		select_reports_by_provider = "SELECT DISTINCT hl7_pid.pid_id, hl7_pid.patient_name, hl7_obr.ordering_provider, hl7_obr.result_copies_to, hl7_link.status, hl7_link.signed_on, provider.last_name, provider.first_name, hl7_message.date_time  FROM hl7_link, demographic, hl7_pid, hl7_obr, hl7_message left join provider on demographic.provider_no=provider.provider_no WHERE hl7_link.pid_id=hl7_obr.pid_id AND hl7_link.pid_id=hl7_pid.pid_id AND demographic.provider_no='@provider_no' AND hl7_message.message_id=hl7_pid.message_id AND demographic.demographic_no=hl7_link.demographic_no AND hl7_link.status!='P'",
-		select_reports_linked_to_providers ="SELECT DISTINCT hl7_pid.pid_id, hl7_pid.patient_name, hl7_obr.ordering_provider, hl7_obr.result_copies_to, hl7_link.status, hl7_link.signed_on, provider.last_name, provider.first_name, hl7_message.date_time  FROM hl7_link, demographic, hl7_pid, hl7_obr, hl7_message, provider WHERE demographic.provider_no=provider.provider_no AND hl7_link.pid_id=hl7_obr.pid_id AND hl7_link.pid_id=hl7_pid.pid_id AND hl7_message.message_id=hl7_pid.message_id AND demographic.demographic_no=hl7_link.demographic_no AND hl7_link.status!='P'",
-		select_unlinked_labs = "SELECT DISTINCT hl7_pid.pid_id, hl7_pid.patient_name, hl7_obr.ordering_provider, hl7_obr.result_copies_to, hl7_link.status, hl7_link.signed_on, hl7_message.date_time, '' as `last_name`, '' as `first_name` FROM hl7_pid left join hl7_link on hl7_link.pid_id=hl7_pid.pid_id left join hl7_obr on hl7_pid.pid_id=hl7_obr.pid_id left join hl7_message on hl7_message.message_id=hl7_pid.message_id WHERE hl7_link.status='P' OR hl7_link.status is null",
-		sqlWhere = (!start.equals("")? " AND hl7_message.date_time >= '" + start + " 00:00:00'" : "") + (!end.equals("")? " AND hl7_message.date_time <= '" + end + " 23:59:59'": ""),
-		sqlOrderBy = " ORDER BY @orderby";
-	String sql = null;
-	if(command!=""){
-		if(provider_no.equals("-ULL")){
-			sql = select_unlinked_labs;
-		}else if(provider_no.equals("-APL")){
-			sql = select_reports_linked_to_providers;
-		}else if(provider_no.equals("-UAP")){
-			sql = select_reports_by_provider;
-		}else{
-			sql = select_reports_by_provider;
-		}
-		sql += sqlWhere + sqlOrderBy;
-		sql = sql.replaceAll("@provider_no", provider_no.replaceAll("-UAP", "")).replaceAll("@orderby", orderby);
-	}
+	Hl7LinkDao dao = SpringUtils.getBean(Hl7LinkDao.class);
+
+    Date start       = ConversionUtils.fromDateString(oscar.Misc.check(request.getParameter("start"), ""));
+    Date end         = ConversionUtils.fromDateString(oscar.Misc.check(request.getParameter("end"), ""));
+    
+	String provider_no = oscar.Misc.check(request.getParameter("provider_no"), "");
+    String orderby     = oscar.Misc.check(request.getParameter("orderby"), "pid_id");
+	
+    String command     = oscar.Misc.check(request.getParameter("cmd_search"), "");
+		
 	String url = "searchreports.jsp?cmd_search=search&provider_no=" + provider_no;
 %>
-
-<%@page import="oscar.oscarDB.DBHandler"%><html>
+<html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR PathNET - Search Lab Reports</title>
@@ -100,11 +90,14 @@ function PopupLab(pid)
 			Patients</option>
 
 			<%
-	java.sql.ResultSet rs = DBHandler.GetSQL(select_providers_with_reports);
-	while(rs.next()){
-		out.println("<option value='" + oscar.Misc.getString(rs,"provider_no") + "'" + (oscar.Misc.getString(rs,"provider_no").equals(provider_no)? "selected" : "") + ">" + oscar.Misc.getString(rs,"last_name") + ", " + oscar.Misc.getString(rs,"first_name") + "</option>");
+	
+	for(Object[] o : dao.findReports(start, end, provider_no, orderby, command)) {
+		String providerNo = String.valueOf(o[0]);
+		String lastName = String.valueOf(o[1]);
+		String firstName = String.valueOf(o[2]);
+		
+		out.println("<option value='" + providerNo + "'" + (providerNo.equals(provider_no)? "selected" : "") + ">" + lastName + ", " + firstName + "</option>");
 	}
-	rs.close();
 %>
 		</select></td>
 		<td class="Text"><input name="start" value="<%=start%>" /></td>
@@ -132,21 +125,31 @@ function PopupLab(pid)
 			href="<%=url + "&orderby=date_time"%>">Date Received</a></td>
 	</tr>
 	<%
-	if(sql != null){
-		rs = DBHandler.GetSQL(sql);
+	if(command != null){
+		List<Object[]> reports = dao.findReports(start, end, provider_no, orderby, command);
+		
 		boolean other = true;
-		while(rs.next()){
+		for(Object[] o : reports) {
+			String pid_id = String.valueOf(o[0]);
+			String patient_name = String.valueOf(o[1]);
+			String ordering_provider = String.valueOf(o[2]);
+			String result_copies_to = String.valueOf(o[3]);
+			String status = String.valueOf(o[4]);
+			String signed_on = String.valueOf(o[5]);
+			String last_name = String.valueOf(o[6]);
+			String first_name = String.valueOf(o[7]);
+			String date_time = String.valueOf(o[8]);			
 %>
 	<tr class="<%=(other? "LightBG" : "WhiteBG")%>">
 		<td class="Text"><a href="searchreports.jsp"
-			onclick="PopupLab('<%=oscar.Misc.getString(rs,"pid_id")%>'); return false;"><%=oscar.Misc.getString(rs,"pid_id")%></a></td>
-		<td class="Text" nowrap><%=oscar.Misc.check(oscar.Misc.getString(rs,"patient_name"), "")%></td>
-		<td class="Text" nowrap><%=oscar.Misc.check(oscar.Misc.getString(rs,"ordering_provider"), "").replaceAll("~", ",<br/>")%></td>
-		<td class="Text"><%=oscar.Misc.check(oscar.Misc.getString(rs,"result_copies_to"), "").replaceAll("~", ",<br/>")%></td>
+			onclick="PopupLab('<%=pid_id%>'); return false;"><%=pid_id%></a></td>
+		<td class="Text" nowrap><%=oscar.Misc.check(patient_name, "")%></td>
+		<td class="Text" nowrap><%=oscar.Misc.check(ordering_provider, "").replaceAll("~", ",<br/>")%></td>
+		<td class="Text"><%=oscar.Misc.check(result_copies_to, "").replaceAll("~", ",<br/>")%></td>
 		<td class="Text" nowrap>
 		<%
-			if(oscar.Misc.getString(rs,"status") != null){
-				switch(oscar.Misc.getString(rs,"status").toCharArray()[0]){
+			if(status != null){
+				switch(status.toCharArray()[0]){
 					case 'S':
 						out.print("Signed");
 						break;
@@ -164,16 +167,15 @@ function PopupLab(pid)
 %>
 		</td>
 		<td class="Text" nowrap>
-		<%String signed = oscar.Misc.check(oscar.Misc.getString(rs,"signed_on"), "");
-									out.print( (signed.indexOf(" ")>-1)? signed.substring(0, signed.indexOf(" ")) : signed);%>
+		<%String signed = oscar.Misc.check(signed_on, "");
+			out.print( (signed.indexOf(" ")>-1)? signed.substring(0, signed.indexOf(" ")) : signed);%>
 		</td>
-		<td class="Text" nowrap><%=((oscar.Misc.getString(rs,"last_name") != null && !oscar.Misc.getString(rs,"last_name").equals(""))? oscar.Misc.check(oscar.Misc.getString(rs,"last_name"), "") + ", " + oscar.Misc.check(oscar.Misc.getString(rs,"first_name"), "") : "&nbsp;")%></td>
-		<td class="Text" nowrap><%=oscar.Misc.getString(rs,"date_time").substring(0, oscar.Misc.getString(rs,"date_time").indexOf(" "))%></td>
+		<td class="Text" nowrap><%=((last_name != null && !last_name.equals(""))? oscar.Misc.check(last_name, "") + ", " + oscar.Misc.check(first_name, "") : "&nbsp;")%></td>
+		<td class="Text" nowrap><%=date_time.substring(0, date_time.indexOf(" "))%></td>
 	</tr>
 	<%
 		other = !other;
 		}
-		rs.close();
 	}
 %>
 </table>
