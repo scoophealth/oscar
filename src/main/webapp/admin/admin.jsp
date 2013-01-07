@@ -63,6 +63,12 @@
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="admin"/>
+
 <script type="text/JavaScript">
 function onsub() {
 	if(document.searchprovider.keyword.value=="") {
