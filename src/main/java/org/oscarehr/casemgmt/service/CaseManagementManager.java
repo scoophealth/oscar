@@ -63,7 +63,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -72,10 +71,10 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
-import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.ProviderExt;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.CaseManagementTmpSaveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
@@ -89,6 +88,7 @@ import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
@@ -130,7 +130,7 @@ public class CaseManagementManager {
 	private ProviderExtDao providerExtDao;
 	private RoleProgramAccessDAO roleProgramAccessDAO;
 	private RolesManager roleManager;
-	private CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
+	private CaseManagementTmpSaveDao caseManagementTmpSaveDao;
 	private AdmissionManager admissionManager;
 	private HashAuditDao hashAuditDao;
 	private UserPropertyDAO userPropertyDAO;
@@ -1006,29 +1006,29 @@ public class CaseManagementManager {
 	public void tmpSave(String providerNo, String demographicNo, String programId, String noteId, String note) {
 		CaseManagementTmpSave tmp = new CaseManagementTmpSave();
 		tmp.setProviderNo(providerNo);
-		tmp.setDemographicNo(new Long(demographicNo).longValue());
-		tmp.setProgramId(new Long(programId).longValue());
+		tmp.setDemographicNo(new Integer(demographicNo).intValue());
+		tmp.setProgramId(new Integer(programId).intValue());
 		if (noteId == null || "".equals(noteId)) {
 			noteId = "0";
 		}
-		tmp.setNote_id(Long.parseLong(noteId));
+		tmp.setNoteId(Integer.parseInt(noteId));
 		tmp.setNote(note);
-		tmp.setUpdate_date(new Date());
-		caseManagementTmpSaveDAO.save(tmp);
+		tmp.setUpdateDate(new Date());
+		caseManagementTmpSaveDao.persist(tmp);
 	}
 
 	public void deleteTmpSave(String providerNo, String demographicNo, String programId) {
-		caseManagementTmpSaveDAO.delete(providerNo, new Long(demographicNo), new Long(programId));
+		caseManagementTmpSaveDao.remove(providerNo, new Integer(demographicNo), new Integer(programId));
 	}
 
 	public CaseManagementTmpSave restoreTmpSave(String providerNo, String demographicNo, String programId) {
-		CaseManagementTmpSave obj = caseManagementTmpSaveDAO.load(providerNo, new Long(demographicNo), new Long(programId));
+		CaseManagementTmpSave obj = caseManagementTmpSaveDao.find(providerNo, new Integer(demographicNo), new Integer(programId));
 		return obj;
 	}
 
 	// we want to load a temp saved note only if it's more recent than date
 	public CaseManagementTmpSave restoreTmpSave(String providerNo, String demographicNo, String programId, Date date) {
-		CaseManagementTmpSave obj = caseManagementTmpSaveDAO.load(providerNo, new Long(demographicNo), new Long(programId), date);
+		CaseManagementTmpSave obj = caseManagementTmpSaveDao.find(providerNo, new Integer(demographicNo), new Integer(programId), date);
 		return obj;
 	}
 
@@ -1608,8 +1608,8 @@ public class CaseManagementManager {
 		this.providerDAO = providerDAO;
 	}
 
-	public void setCaseManagementTmpSaveDAO(CaseManagementTmpSaveDAO dao) {
-		this.caseManagementTmpSaveDAO = dao;
+	public void setCaseManagementTmpSaveDao(CaseManagementTmpSaveDao dao) {
+		this.caseManagementTmpSaveDao = dao;
 	}
 
 	protected String removeFirstSpace(String withSpaces) {

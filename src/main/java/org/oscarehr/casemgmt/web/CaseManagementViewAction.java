@@ -63,7 +63,6 @@ import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -82,7 +81,6 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
-import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -90,10 +88,11 @@ import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.GroupNoteDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
@@ -123,8 +122,7 @@ import oscar.util.OscarRoleObjectPrivilege;
  */
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
-	private static final Integer QUICK_CHART = 20;
-	private static final Integer FULL_CHART = -1;
+	
 	private static final Integer MAX_INVOICES = 20;
 	private static Logger logger = MiscUtils.getLogger();
 	private CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
@@ -135,8 +133,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
 	private BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao");
-	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
-
+	
 	static {
 		//temporary..need something generic;
 		EyeformInit.init();
@@ -211,14 +208,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	public ActionForward viewNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// response.setCharacterEncoding("UTF-8");
-		long start = System.currentTimeMillis();
-		long beginning = start;
-		long current = 0;
+		
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
-		boolean useNewCaseMgmt = false;
-		String useNewCaseMgmtString = (String) request.getSession().getAttribute("newCaseManagement");
-		if (useNewCaseMgmtString != null) useNewCaseMgmt = Boolean.parseBoolean(useNewCaseMgmtString);
-
+		
 		logger.debug("Starting VIEW");
 		String tab = request.getParameter("tab");
 		if (tab == null) {
@@ -767,8 +759,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 * New CME
 	 */
 	private void viewCurrentIssuesTab_newCmeNotes(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 		int demographicId=Integer.parseInt(demoNo);
 
 		long startTime;
@@ -1096,6 +1086,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (false);
 	}
 
+	/*
+	 * This does absolutely nothing
+	 */
 	protected void addGroupIssues(ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
@@ -1107,6 +1100,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			for (GroupNoteLink link : links) {
 				int noteId = link.getNoteId();
 				List<CaseManagementIssue> issues = this.caseManagementMgr.getIssuesByNote(noteId);
+				logger.warn("we are doing nothing with this: " + issues);
 			}
 			/*
 			 * for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) { try { IssueDisplay issueDisplay=null;
@@ -1567,8 +1561,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("id")));
 		logger.info("loaded macro " + macro.getLabel());
 
-		StringBuilder sb = new StringBuilder();
-
+		
 
 		//follow up - need to add it, then force a reload
 		int followUpNo = macro.getFollowupNo();
@@ -1717,17 +1710,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 
 	public static String getNoteColour(NoteDisplay noteDisplay) {
-		// set all colours
+		// set all colors
 		String blackColour = "000000";
 		String documentColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().documents + ";";
-		String diseaseColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().disease + ";";
+		//String diseaseColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().disease + ";";
 		String eFormsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().eForms + ";";
 		String formsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().forms + ";";
-		String labsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().labs + ";";
-		String measurementsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().measurements + ";";
-		String messagesColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().messages + ";";
-		String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().prevention + ";";
-		String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().tickler + ";";
+		//String labsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().labs + ";";
+		//String measurementsColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().measurements + ";";
+		//String messagesColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().messages + ";";
+		//String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().prevention + ";";
+		//String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().tickler + ";";
 		String rxColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().rx + ";";
 		String invoiceColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().invoices + ";";
 
@@ -1864,7 +1857,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	public ActionForward viewNotesOpt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// response.setCharacterEncoding("UTF-8");
-		long start = System.currentTimeMillis();
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 
 		HttpSession se = request.getSession();
