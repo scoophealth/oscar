@@ -31,7 +31,7 @@ import java.io.Serializable;
  * Do not modify this class because it will be overwritten if the configuration file
  * related to this class is modified.
  *
- * @hibernate.class
+ * 
  *  table="ctl_document"
  */
 
@@ -78,7 +78,7 @@ public class CtlDocument implements Serializable {
 
 	/**
 	 * Return the unique identifier of this class
-	 * @hibernate.id
+	 * 
 	 */
 	public CtlDocumentPK getId() {
 		return id;

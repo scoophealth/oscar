@@ -71,7 +71,7 @@ public class DemographicExt extends AbstractModel<Integer> implements Serializab
 
     /**
      * Return the unique identifier of this class
-     * @hibernate.id
+     * 
      *  generator-class="native"
      *  column="id"
      */

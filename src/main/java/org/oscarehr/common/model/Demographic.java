@@ -251,7 +251,6 @@ public class Demographic implements Serializable {
 	/**
 	 * Return the unique identifier of this class
 	 *
-	 * @hibernate.id generator-class="native" column="demographic_no"
 	 */
 	public Integer getDemographicNo() {
 		return demographicNo;

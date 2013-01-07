@@ -132,7 +132,7 @@ public class Room implements Serializable {
     /**
      * Return the unique identifier of this class
      *
-     * @hibernate.id generator-class="native"
+     *  generator-class="native"
      * column="room_id"
      */
     public Integer getId() {

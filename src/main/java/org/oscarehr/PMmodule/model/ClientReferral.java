@@ -98,7 +98,7 @@ public class ClientReferral implements Serializable {
     /**
      * Return the unique identifier of this class
      * 
-     * @hibernate.id generator-class="native" column="referral_id"
+     *  generator-class="native" column="referral_id"
      */
     public Long getId() {
         return _id;

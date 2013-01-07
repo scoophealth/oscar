@@ -219,7 +219,7 @@ public class RoomDemographic implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 */
     public RoomDemographicPK getId () {
         return id;

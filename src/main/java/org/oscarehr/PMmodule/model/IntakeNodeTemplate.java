@@ -137,7 +137,7 @@ public class IntakeNodeTemplate implements Serializable {
     /**
 	 * Return the unique identifier of this class
      *
-     * @hibernate.id generator-class="native" column="intake_node_template_id"
+     *  generator-class="native" column="intake_node_template_id"
      */
     public Integer getId() {
         return id;

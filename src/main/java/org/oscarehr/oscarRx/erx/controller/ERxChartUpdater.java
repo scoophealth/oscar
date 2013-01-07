@@ -49,7 +49,6 @@ public class ERxChartUpdater {
 	 * Update a patient's chart in OSCAR by adding a new Prescription. Basically copied from {@link oscar.oscarRx.pageUtil.RxWriteScriptAction.createNewRx(ActionMapping, ActionForm, HttpServletRequest, HttpServletResponse)}
 	 * 
 	 * @param prescription The prescription to add
-	 * @see oscar.oscarRx.pageUtil.RxWriteScriptAction.createNewRx(ActionMapping, ActionForm, HttpServletRequest, HttpServletResponse)
 	 */
 	public static void updateChartWithPrescription(Drug prescription) throws IllegalArgumentException {
 		// A prescription session bean to perform the loading and saving

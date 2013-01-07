@@ -173,7 +173,6 @@ public final class ProviderPreferencesUIBean {
 	/**
 	 * Some day we'll fix this so preferences are created when providers are created, it was suppose to be that way
 	 * but something got missed somewhere.
-	 * @return
 	 */
 	public static ProviderPreference getLoggedInProviderPreference() {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();

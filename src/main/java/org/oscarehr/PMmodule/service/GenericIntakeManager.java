@@ -89,10 +89,6 @@ public class GenericIntakeManager {
 
 	// Copy
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyQuickIntake(java.lang.Integer,
-	 *      java.lang.String)
-	 */
 	public Intake copyQuickIntake(Integer clientId, String staffId,
 			Integer facilityId) {
 		// return copyIntake(getQuickIntakeNode(), clientId, null, staffId);
@@ -127,10 +123,6 @@ public class GenericIntakeManager {
 		return null;
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyIndepthIntake(java.lang.Integer,
-	 *      java.lang.String)
-	 */
 	public Intake copyIndepthIntake(Integer clientId, String staffId,
 			Integer facilityId) {
 		// return copyIntake(getIndepthIntakeNode(), clientId, null, staffId);
@@ -138,10 +130,6 @@ public class GenericIntakeManager {
 				staffId, facilityId);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyProgramIntake(java.lang.Integer,
-	 *      java.lang.Integer, java.lang.String)
-	 */
 	public Intake copyProgramIntake(Integer clientId, Integer programId,
 			String staffId, Integer facilityId) {
 		// return copyIntake(getProgramIntakeNode(programId), clientId,
@@ -152,16 +140,10 @@ public class GenericIntakeManager {
 
 	// Create
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#createQuickIntake(java.lang.String)
-	 */
 	public Intake createQuickIntake(String providerNo) {
 		return createIntake(getQuickIntakeNode(), null, null, providerNo);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#createIndepthIntake(java.lang.String)
-	 */
 	public Intake createIndepthIntake(String providerNo) {
 		return createIntake(getIndepthIntakeNode(), null, null, providerNo);
 	}
@@ -170,10 +152,6 @@ public class GenericIntakeManager {
 		return createIntake(node, null, null, providerNo);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#createProgramIntake(java.lang.Integer,
-	 *      java.lang.String)
-	 */
 	public Intake createProgramIntake(Integer programId, String providerNo) {
 		return createIntake(getProgramIntakeNode(programId), null, programId,
 				providerNo);
@@ -181,9 +159,6 @@ public class GenericIntakeManager {
 
 	// Get
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentQuickIntake(java.lang.Integer)
-	 */
 	public Intake getMostRecentQuickIntakeByFacility(Integer clientId,
 			Integer facilityId) {
 		IntakeNode regIntakeNode = getQuickIntakeNode();
@@ -221,19 +196,12 @@ public class GenericIntakeManager {
 				getIntakeNodeByIntakeId(intakeId), intakeId, null, facilityId);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentIndepthIntake(java.lang.Integer)
-	 */
 	public Intake getMostRecentIndepthIntake(Integer clientId,
 			Integer facilityId) {
 		return genericIntakeDAO.getLatestIntake(getIndepthIntakeNode(),
 				clientId, null, facilityId);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentProgramIntake(java.lang.Integer,
-	 *      java.lang.Integer)
-	 */
 	public Intake getMostRecentProgramIntake(Integer clientId,
 			Integer programId, Integer facilityId) {
 		return genericIntakeDAO.getLatestIntake(
@@ -241,9 +209,6 @@ public class GenericIntakeManager {
 				facilityId);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getQuickIntakes(java.lang.Integer)
-	 */
 	public List<Intake> getQuickIntakes(Integer clientId, Integer facilityId) {
 		return genericIntakeDAO.getIntakes(getQuickIntakeNode(), clientId,
 				null, facilityId);
@@ -262,17 +227,11 @@ public class GenericIntakeManager {
 		return genericIntakeDAO.getIntakeFacilityIds();
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getIndepthIntakes(java.lang.Integer)
-	 */
 	public List<Intake> getIndepthIntakes(Integer clientId, Integer facilityId) {
 		return genericIntakeDAO.getIntakes(getIndepthIntakeNode(), clientId,
 				null, facilityId);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getProgramIntakes(java.lang.Integer)
-	 */
 	public List<Intake> getProgramIntakes(Integer clientId, Integer facilityId) {
 		List<Intake> programIntakes = new ArrayList<Intake>();
 
@@ -285,17 +244,11 @@ public class GenericIntakeManager {
 		return programIntakes;
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getIndepthIntakes(java.lang.Integer)
-	 */
 	public List<Intake> getIntakesByType(Integer clientId, Integer facilityId, Integer formType) {
 		return genericIntakeDAO.getIntakesByType(formType, clientId,
 				null, facilityId);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getProgramsWithIntake(java.lang.Integer)
-	 */
 	public List<Program> getProgramsWithIntake(Integer clientId) {
 		List<Program> programsWithIntake = new ArrayList<Program>();
 

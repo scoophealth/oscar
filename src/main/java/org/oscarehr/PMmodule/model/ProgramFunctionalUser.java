@@ -58,7 +58,7 @@ public class ProgramFunctionalUser implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 *  generator-class="native"
 *  column="id"
 */
@@ -121,7 +121,7 @@ public class ProgramFunctionalUser implements Serializable {
     }
 
     /**
-     * @hibernate.property
+     * 
 *  column=user_type_id
      */
     public FunctionalUserType getUserType () {
@@ -137,7 +137,7 @@ public class ProgramFunctionalUser implements Serializable {
     }
 
     /**
-     * @hibernate.property
+     * 
 *  column=provider_no
      */
     public Provider getProvider () {

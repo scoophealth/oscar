@@ -93,7 +93,7 @@ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Se
     /**
 	 * Return the unique identifier of this class
      *
-     * @hibernate.id generator-class="native" column="intake_answer_element_id"
+     *  generator-class="native" column="intake_answer_element_id"
      */
     public Integer getId() {
         return id;

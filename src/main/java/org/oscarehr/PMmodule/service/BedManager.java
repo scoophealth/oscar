@@ -227,8 +227,6 @@ public class BedManager {
      *
      * @param facilityId
      *            facility identifier
-     * @param reserved
-     *            reserved flag
      * @return array of beds
      */
     public Bed[] getBedsByFacility(Integer facilityId) {
@@ -329,7 +327,7 @@ public class BedManager {
     /**
      * Get unreserved beds by roomId and clientBedId
      * @param roomId
-     * @param clientBedId
+     * @param reserved
      * @return array of beds
      */
     public Bed[] getReservedBedsByRoom(Integer roomId, boolean reserved) {
