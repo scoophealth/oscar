@@ -165,6 +165,12 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
 	src="../../../share/calendar/calendar-setup.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="editInvoice"/>
+
 <script language="JavaScript">
 <!--
 

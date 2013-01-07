@@ -107,6 +107,12 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="masterCreate"/>
+
 <title><bean:message
 	key="demographic.demographicaddrecordhtm.title" /></title>
 	

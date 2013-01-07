@@ -221,7 +221,12 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
        <script  type="text/javascript" charset="utf-8">
 
      	  jQuery.noConflict();
+		</script>
+		
+	
+	<oscar:customInterface section="labView"/>
 
+		<script>
 
         jQuery(function() {
       	  jQuery("#createLabel").click(function() {

@@ -43,6 +43,11 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
 <link href="colr.css" rel="stylesheet" type="text/css" />
 <script src="../mochikit_packed.js" type="text/javascript"></script>
 <script src="../colr.js" type="text/javascript"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="apptStatusEdit"/>
 </head>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <body>
