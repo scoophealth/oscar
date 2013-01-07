@@ -172,7 +172,7 @@ public class HelpTag extends TagSupport {
     }
 
     /**
-     * @param message the message to set
+     * @param key
      */
     public void setKey(String key) {
         this.key = key;

@@ -41,7 +41,6 @@ public class WaitListService {
 	/**
 	 * Lists out top matches for vacancy
 	 * @param q 
-	 * @return
 	 */
 	public List<MatchBO> listTopMatches(TopMatchesQuery q) {
 		return matchingManager.listTopMatches(q.getVacancyID(),q.getMaximum());
@@ -50,7 +49,7 @@ public class WaitListService {
 	/**
 	 * Returns display details for vacancy 
 	 * @param q 
-	 * @return
+	 * @return VacancyDisplayBO
 	 */
 	public VacancyDisplayBO getVacancy(VacancyQuery q) {
 		return matchingManager.getVacancyDisplay(q.getVacancyID());
@@ -59,7 +58,6 @@ public class WaitListService {
 	/**
 	 * Lists vacancies for specific agency program
 	 * @param p
-	 * @return
 	 */
 	public List<VacancyDisplayBO> listVacanciesForWaitListProgram(ProgramQuery p){
 		return matchingManager.listDisplayVacanciesForWaitListProgram(p.getProgramID());
@@ -72,7 +70,6 @@ public class WaitListService {
 	/**
 	 * Lists vacancies for specific agency program
 	 * @param p
-	 * @return
 	 */
 	public List<VacancyDisplayBO> listVacanciesForAgencyProgram(ProgramQuery p){
 		return matchingManager.listDisplayVacanciesForAgencyProgram(p.getProgramID());
@@ -81,7 +78,6 @@ public class WaitListService {
 	/**
 	 * Lists existing records of contact attempts in regards to vacancies
 	 * @param client
-	 * @return
 	 */
 	public List<ClientWLEntryBO> listActiveContactAttempts(ClientQuery client){
 		return matchingManager.listActiveContactAttempts(client.getClientID());

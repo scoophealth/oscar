@@ -89,7 +89,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	 * This method uses the internal ids and matches based on (in order) MRN, Temporary MRN, Health Card.
 	 *
 	 * @param internalIds
-	 * @return
+	 * @return Integer
 	 * @throws HL7Exception Usually for bad data, or missing internal id segment.
 	 */
 	protected Integer doKeyMatching(Map<String,PatientId> internalIds) throws HL7Exception {

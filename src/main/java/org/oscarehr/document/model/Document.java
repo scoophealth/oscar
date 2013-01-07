@@ -31,7 +31,7 @@ import java.io.Serializable;
  * Do not modify this class because it will be overwritten if the configuration file
  * related to this class is modified.
  *
- * @hibernate.class
+ * 
  *  table="document"
  */
 
@@ -184,7 +184,7 @@ public class Document implements Serializable {
 
 	/**
 	 * Return the unique identifier of this class
-	 * @hibernate.id
+	 * 
 	 *  generator-class="native"
 	 *  column="document_no"
 	 */

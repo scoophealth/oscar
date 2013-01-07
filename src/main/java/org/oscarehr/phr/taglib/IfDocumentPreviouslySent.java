@@ -72,9 +72,6 @@ public class IfDocumentPreviouslySent extends TagSupport {
         return documentOscarId;
     }
 
-    /**
-     * @param oscarId the oscarId to set
-     */
     public void setDocumentOscarId(String documentOscarId) {
         this.documentOscarId = documentOscarId;
     }

@@ -37,7 +37,6 @@ public interface IValidator {
 	
 	/**
 	 * Returns the list of validation errors.
-	 * @return
 	 */
 	public List<String> getErrorList();
 }

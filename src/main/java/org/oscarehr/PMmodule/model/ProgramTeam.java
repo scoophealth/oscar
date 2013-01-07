@@ -87,7 +87,7 @@ public class ProgramTeam implements Serializable {
 
     /**
 	 * Return the unique identifier of this class
-* @hibernate.id
+* 
 *  generator-class="native"
 *  column="team_id"
 */

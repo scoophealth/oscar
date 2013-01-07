@@ -117,7 +117,7 @@ public final class MyOscarLoggedInInfo implements Serializable, MyOscarServerCre
 
 	/**
 	 * This is duplicate of getServerBaseUrl() but is required because this one is static while the other implements an interface
-	 * @return
+	 * @return String
 	 */
 	public static String getMyOscarServerBaseUrl()
 	{
