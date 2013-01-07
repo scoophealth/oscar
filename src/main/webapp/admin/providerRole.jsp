@@ -23,7 +23,6 @@
     Ontario, Canada
 
 --%>
-<%-- Updated by Eugene Petruhin on 09 dec 2008 while fixing #2392669 --%>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ page errorPage="../errorpage.jsp" %>
@@ -45,30 +44,26 @@
 <%@ page import="com.quatro.dao.security.SecuserroleDao" %>
 <%@ page import="org.oscarehr.common.model.RecycleBin" %>
 <%@ page import="org.oscarehr.common.dao.RecycleBinDao" %>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao" %>
+
 <%
 	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 	SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
+	ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
+	
 	SecuserroleDao secUserRoleDao = (SecuserroleDao)SpringUtils.getBean("secuserroleDao");
 	RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
 	ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
-%>
-<%
-if(session.getAttribute("user") == null )
-	response.sendRedirect("../logout.jsp");
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-String curUser_no = (String)session.getAttribute("user");
-%>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
-</security:oscarSec>
 
-<%
-    boolean isSiteAccessPrivacy=false;
+	
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	String curUser_no = (String)session.getAttribute("user");
+
+	boolean isSiteAccessPrivacy=false;
 %>
 
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
-</security:oscarSec>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>" ><%response.sendRedirect("../logout.jsp");%></security:oscarSec>
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"><%isSiteAccessPrivacy=true; %></security:oscarSec>
 
 <%
 //check to see if new case management is request
@@ -84,10 +79,7 @@ if(!org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
 }
 
 String ip = request.getRemoteAddr();
-
 String msg = "";
-DBHelp dbObj = new DBHelp();
-
 String caisiProgram = null;
 
 //get caisi programid for oscar
@@ -103,19 +95,17 @@ Vector vecRoleName = new Vector();
 String	sql;
 String adminRoleName = "";
 
-
 String omit="";
 if (isSiteAccessPrivacy) {
 	omit = OscarProperties.getInstance().getProperty("multioffice.admin.role.name", "");
 }
+
 List<SecRole> secRoles = secRoleDao.findAllOrderByRole();
 for(SecRole secRole:secRoles) {
 	if(!secRole.getName().equals(omit)) {
 		vecRoleName.add(secRole.getName());
 	}
-
 }
-
 
 // update the role
 if (request.getParameter("buttonUpdate") != null && request.getParameter("buttonUpdate").length() > 0) {
@@ -277,56 +267,37 @@ if(temp.length>1) {
 	firstName = "%";
 }
 
+List<Object[]> providerList = null;
+providerList = providerDao.findProviderSecUserRoles(lastName, firstName);
 
-String query;
-
-if (isSiteAccessPrivacy){
-	//multisites: only select providers have same site with current user
-	query = "select u.id, u.role_name, p.provider_no, p.first_name, p.last_name from provider p LEFT JOIN secUserRole u ON ";
-	query += " p.provider_no=u.provider_no LEFT JOIN providersite ps ON p.provider_no = ps.provider_no ";
-	query += " where p.last_name like '" + lastName + "' and p.first_name like '" + firstName + "' and p.status='1' ";
-	query += " and not exists(select * from secUserRole scr where scr.provider_no =  p.provider_no and scr.role_name = '" + adminRoleName + "') " ;
-	query += " and ps.site_id in (select site_id from providersite where provider_no = " + curUser_no + ")  order by p.first_name, p.last_name, u.role_name";
-}
-else {
-	query = "select u.id, u.role_name, p.provider_no, p.first_name, p.last_name from provider p LEFT JOIN secUserRole u ON ";
-	query += " p.provider_no=u.provider_no where p.last_name like '" + lastName + "' and p.first_name like '" + firstName + "' and p.status='1' order by p.first_name, p.last_name, u.role_name";
-}
-
-ResultSet rs = DBHelp.searchDBRecord(query);
 Vector<Properties> vec = new Vector<Properties>();
-while (rs.next()) {
+for (Object[] providerSecUser : providerList) {
+	
+	String id = String.valueOf(providerSecUser[0]);
+	String role_name = String.valueOf(providerSecUser[1]);
+	String provider_no = String.valueOf(providerSecUser[2]);
+	String first_name = String.valueOf(providerSecUser[3]);
+	String last_name = String.valueOf(providerSecUser[4]);
+
 	Properties prop = new Properties();
-	prop.setProperty("provider_no", DBHelp.getString(rs,"provider_no")==null?"":DBHelp.getString(rs,"provider_no"));
-	prop.setProperty("first_name", DBHelp.getString(rs,"first_name"));
-	prop.setProperty("last_name", DBHelp.getString(rs,"last_name"));
-	prop.setProperty("role_id", DBHelp.getString(rs,"id")!=null?DBHelp.getString(rs,"id"):"");
-	prop.setProperty("role_name", DBHelp.getString(rs,"role_name")!=null?DBHelp.getString(rs,"role_name"):"");
+	prop.setProperty("provider_no", provider_no=="null"?"":provider_no);
+	prop.setProperty("first_name", first_name);
+	prop.setProperty("last_name", last_name);
+	prop.setProperty("role_id", id!="null"?id:"");
+	prop.setProperty("role_name", role_name!="null"?role_name:"");
 	vec.add(prop);
 }
 %>
         <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
           <tr bgcolor="mediumaquamarine">
-            <th colspan="5" align="left">
-              Provider-Role List
-            </th>
+            <th colspan="5" align="left">Provider-Role List</th>
           </tr>
           <tr bgcolor="silver">
-            <th width="10%" nowrap>
-              ID
-            </th>
-            <th width="20%" nowrap>
-              <b>First Name</b>
-            </th>
-            <th width="20%" nowrap>
-              <b>Last Name</b>
-            </th>
-            <th width="20%" nowrap>
-              Role
-            </th>
-            <th nowrap>
-              Action
-            </th>
+            <th width="10%" nowrap>ID</th>
+            <th width="20%" nowrap><b>First Name</b></th>
+            <th width="20%" nowrap><b>Last Name</b></th>
+            <th width="20%" nowrap>Role</th>
+            <th nowrap>Action</th>
           </tr>
 <%
         String[] colors = { "#ccCCFF", "#EEEEFF" };
@@ -336,17 +307,11 @@ while (rs.next()) {
 %>
       <form name="myform<%= providerNo %>" action="providerRole.jsp" method="POST">
             <tr bgcolor="<%=colors[i%2]%>">
-              <td>
-                <%= providerNo %>
-              </td>
-              <td>
-                <%= item.getProperty("first_name", "") %>
-              </td>
-              <td>
-                <%= item.getProperty("last_name", "") %>
-              </td>
+              <td><%= providerNo %></td>
+              <td><%= item.getProperty("first_name", "") %></td>
+              <td><%= item.getProperty("last_name", "") %></td>
               <td align="center">
-                  <select name="roleNew">
+              <select name="roleNew">
                       <option value="-" >-</option>
 <%
                     for (int j = 0; j < vecRoleName.size(); j++) {
@@ -357,7 +322,7 @@ while (rs.next()) {
 <%
                     }
 %>
-                  </select>
+            </select>
             </td>
             <td align="center">
               <input type="hidden" name="keyword" value="<%=keyword%>" />
