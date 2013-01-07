@@ -24,16 +24,24 @@
 
 package oscar.oscarReport.reportByTemplate;
 
-import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 /**
  *
@@ -53,14 +61,14 @@ public class DepressionContinuityReporter implements Reporter{
     public boolean generateReport( HttpServletRequest request ) {
         String templateId = request.getParameter("templateId");
         ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
-        String diag_date_from = request.getParameter("diag_date_from");
-        String diag_date_to = request.getParameter("diag_date_to");
-        String visit_date_from = request.getParameter("visit_date_from");
-        String visit_date_to = request.getParameter("visit_date_to");
+        Date diag_date_from = ConversionUtils.fromDateString(request.getParameter("diag_date_from"));
+        Date diag_date_to = ConversionUtils.fromDateString(request.getParameter("diag_date_to"));
+        Date visit_date_from = ConversionUtils.fromDateString(request.getParameter("visit_date_from"));
+        Date visit_date_to = ConversionUtils.fromDateString(request.getParameter("visit_date_to"));
         String strDxCodes = request.getParameter("dxCodes:list");
-        String[] dxCodes = null;
+        List<String> dxCodes = null;
         if( strDxCodes != null ) {
-            dxCodes = strDxCodes.split(",");
+            dxCodes = Arrays.asList(strDxCodes.split(","));
         }
         
         
@@ -71,49 +79,52 @@ public class DepressionContinuityReporter implements Reporter{
             return false;
         }
         
-        String cohortSQL = "select d.demographic_no, bi.service_date, bi.dx from demographic d, billing_on_cheader1 bc, billing_on_item bi where bc.demographic_no = d.demographic_no and bc.id = bi.ch1_id and bi.dx in (" + strDxCodes + ")" +
-                " and bi.service_date >= '" + diag_date_from + "' and bi.service_date <= '" + diag_date_to + "' group by d.demographic_no,bi.dx order by d.demographic_no, bi.service_date";
-    
-        String apptSQL = "select a.appointment_date, concat(pAppt.first_name, ' ', pAppt.last_name), concat(pFam.first_name, ' ', pFam.last_name), bi.service_code, drugs.BN, concat(pDrug.first_name,' ',pDrug.last_name), a.demographic_no, drugs.GN, drugs.customName from demographic d," +
-                    "appointment a left outer join drugs on drugs.demographic_no = a.demographic_no and drugs.rx_date = a.appointment_date and a.appointment_date >= '" + visit_date_from + "' and a.appointment_date <= '" + visit_date_to +
-                    "' and a.demographic_no in (?) left join provider pDrug on pDrug.provider_no = drugs.provider_no, billing_on_cheader1 bc, billing_on_item bi, provider pAppt, provider pFam where a.appointment_date >= '" + visit_date_from + "' and a.appointment_date <= '" + visit_date_to + "' and a.demographic_no = d.demographic_no" +
-                    " and a.provider_no = pAppt.provider_no and d.provider_no = pFam.provider_no and bc.appointment_no = a.appointment_no and bi.ch1_id = bc.id and a.demographic_no in (?) order by a.demographic_no, a.appointment_date";
-
-        ResultSet rs = null;        
+        BillingONCHeader1Dao bDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+        
+        String cohortSQL = " -- N/A -- Migrated to JPA ";
+        String apptSQL = " -- N/A -- Migrated to JPA ";
+                
         Boolean odd = new Boolean(true);
         try {
-            
-            rs = DBHandler.GetSQL(cohortSQL);
-
             rsHtml = this.makeHTMLHeader();
             csv = this.makeCSVHeader();
             StringBuilder html = new StringBuilder();
             StringBuilder csvTmp = new StringBuilder();
             String curDemo = null;
-            while(rs.next() ) {
+            for(Object[] o : bDao.findDemographicsAndBillingsByDxAndServiceDates(dxCodes, diag_date_from, diag_date_to)) {
+            	 // d.demographic_no, bi.service_date, bi.dx 
+            	Demographic d = (Demographic) o[0];
+            	BillingONCHeader1 bc = (BillingONCHeader1) o[1];
+            	BillingONItem bi = (BillingONItem) o[2];
+            	
+            	 String demographic_no = d.getDemographicNo().toString(); 
+            	 String service_date = ConversionUtils.toDateString(bi.getServiceDate());
+            	 String dx = bi.getDx();
+            	
                 if( curDemo == null ) {
-                    curDemo = rs.getString(1);
+                    curDemo = demographic_no;
                 }
 
-                if( curDemo.equalsIgnoreCase(rs.getString(1))) {
-                    html.append(this.addCodeEntry(rs, odd));
-                    csvTmp.append(this.csvCodeEntry(rs));
+                if( curDemo.equalsIgnoreCase(demographic_no)) {
+                    html.append(this.addCodeEntry(demographic_no, service_date, dx, odd));
+                    csvTmp.append(this.csvCodeEntry(demographic_no, service_date, dx));
                 }
 
-                if( !curDemo.equalsIgnoreCase(rs.getString(1))) {
+                if( !curDemo.equalsIgnoreCase(demographic_no)) {
                     demographics.put(curDemo, html);
                     csvMap.put(curDemo, csvTmp);
-                    html = this.addCodeEntry(rs, odd);
-                    csvTmp = new StringBuilder(this.csvCodeEntry(rs));
+                    html = this.addCodeEntry(demographic_no, service_date, dx, odd);
+                    csvTmp = new StringBuilder(this.csvCodeEntry(demographic_no, service_date, dx));
                 }
-                curDemo = rs.getString(1);
+                curDemo = demographic_no;
             }
+            
             if( curDemo != null ) {
                 demographics.put(curDemo, html);
                 csvMap.put(curDemo, csvTmp);
             }
 
-            this.addAppt(apptSQL, curDemo, odd);
+            this.addAppt(apptSQL, curDemo, diag_date_from, diag_date_to, odd);
 
             rsHtml.append("</table>");
         }catch(Exception e) {
@@ -129,7 +140,7 @@ public class DepressionContinuityReporter implements Reporter{
         return true;
     }
 
-    private StringBuilder addCodeEntry(ResultSet rs, Boolean odd) throws Exception {
+    private StringBuilder addCodeEntry(String demographic_no, String service_date, String dx, Boolean odd) throws Exception {
          StringBuilder html = new StringBuilder("<tr class=\"");
         if( odd ) {
             html.append("reportRow1\">");
@@ -138,7 +149,7 @@ public class DepressionContinuityReporter implements Reporter{
             html.append("reportRow2\">");
         }
         odd = !odd;
-        html.append("<td>" + rs.getString(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getString(3) + "</td>");
+        html.append("<td>" + demographic_no + "</td><td>" + service_date + "</td><td>" + dx + "</td>");
         html.append("<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
         html.append("<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
         html.append("</tr>");
@@ -146,13 +157,13 @@ public class DepressionContinuityReporter implements Reporter{
         return html;
     }
 
-    private String csvCodeEntry(ResultSet rs) throws Exception {
-        String csvCode =  rs.getString(1) + "," + rs.getString(2) + "," + rs.getString(3) + ", , , , , , \n";
+    private String csvCodeEntry(String demographic_no, String service_date, String dx) throws Exception {
+        String csvCode =  demographic_no + "," + service_date + "," + dx + ", , , , , , \n";
         return csvCode;
     }
 
-    private void addAppt(String apptSQL, String curDemo, Boolean odd) throws Exception {
-        ResultSet rs2 = null;
+    private void addAppt(String apptSQL, String curDemo, Date from, Date to, Boolean odd) throws Exception {
+    	OscarAppointmentDao dao = SpringUtils.getBean(OscarAppointmentDao.class);
 
         Set<String>setDemo = demographics.keySet();
         Iterator<String>iter = setDemo.iterator();
@@ -167,14 +178,24 @@ public class DepressionContinuityReporter implements Reporter{
         String apptSQLwDemo;
         apptSQLwDemo = apptSQL.replaceAll("\\?", demos.toString());
         MiscUtils.getLogger().debug(apptSQLwDemo);
-        rs2 = DBHandler.GetSQL(apptSQLwDemo);        
+           
         String rxName, rxPrescriber, tmpDemo = "";
-        while(rs2.next()) {
-            if( !tmpDemo.equals(rs2.getString(7))) {
-                MiscUtils.getLogger().debug(rs2.getString(7));
-                rsHtml.append(demographics.get(rs2.getString(7)));
-                csv.append(csvMap.get(rs2.getString(7)));
-                tmpDemo = rs2.getString(7);
+        for(Object[] o : dao.findAppointmentsByDemographicIds(setDemo, from, to)) {
+			
+			Date p1 = (Date) o[0]; 	// "a.appointment_date, " +
+			String p2 = (String) o[1]; //"concat(pAppt.first_name, ' ', pAppt.last_name), " +
+			String p3 = (String) o[2]; //"concat(pFam.first_name, ' ', pFam.last_name), " +
+			String p4 = (String) o[3]; // "bi.service_code, " +
+			String p5 = (String) o[4]; //"drugs.BN, " +
+			String p6 = (String) o[5]; //"concat(pDrug.first_name,' ',pDrug.last_name), " +
+			Integer p7 = (Integer) o[6]; //"a.demographic_no, " +
+			String p8 = (String) o[7]; //"drugs.GN, " +
+			String p9 = (String) o[8]; //"drugs.customName " +
+			
+            if( !tmpDemo.equals(p7)) {
+                rsHtml.append(demographics.get("" + p7));
+                csv.append(csvMap.get("" + p7));
+                tmpDemo = "" + p7;
             }
             rsHtml.append("<tr class=\"");
             if( odd ) {
@@ -184,28 +205,28 @@ public class DepressionContinuityReporter implements Reporter{
                 rsHtml.append("reportRow2\">");
             }
             odd = !odd;
-            rsHtml.append("<td>" + rs2.getString(7) + "</td><td>&nbsp;</td><td>&nbsp;</td>");
-            rsHtml.append("<td>" + rs2.getString(1) + "</td><td>" + rs2.getString(2) + "</td><td>" + rs2.getString(3) + "</td>");
+            rsHtml.append("<td>" + p7 + "</td><td>&nbsp;</td><td>&nbsp;</td>");
+            rsHtml.append("<td>" + p1 + "</td><td>" + p2 + "</td><td>" + p3 + "</td>");
 
-            rxName = rs2.getString(5);
+            rxName = p5;
             if( rxName == null || rxName.equalsIgnoreCase("null") ) {
-                rxName = rs2.getString(8);
+                rxName = p8;
                 if( rxName == null || rxName.equalsIgnoreCase("null") ) {
-                    rxName = rs2.getString(9);
+                    rxName = p9;
                 }
             }
             if( rxName == null ) {
                 rxName = "";
             }
 
-            rxPrescriber = rs2.getString(6) == null ? " " : rs2.getString(6);
+            rxPrescriber = p6 == null ? " " : p6;
 
-            rsHtml.append("<td>" + rs2.getString(4) + "</td><td>" + rxName  + "</td><td>" + rxPrescriber + "</td>");
+            rsHtml.append("<td>" + p4 + "</td><td>" + rxName  + "</td><td>" + rxPrescriber + "</td>");
             rsHtml.append("</tr>");
 
             csv.append(curDemo + ", , ");
-            csv.append("," + rs2.getString(1) + "," + rs2.getString(2) + "," + rs2.getString(3));                        
-            csv.append("," + rs2.getString(4) + "," + rxName + "," + rxPrescriber + "\n");
+            csv.append("," + p1 + "," + p2 + "," + p3);                        
+            csv.append("," + p4 + "," + rxName + "," + rxPrescriber + "\n");
 
         }
 
