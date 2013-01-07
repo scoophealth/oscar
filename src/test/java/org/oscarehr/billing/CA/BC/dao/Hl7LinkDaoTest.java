@@ -25,6 +25,9 @@ package org.oscarehr.billing.CA.BC.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.billing.CA.BC.model.Hl7Link;
@@ -40,7 +43,7 @@ public class Hl7LinkDaoTest extends DaoTestFixtures {
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("hl7_link", "hl7_pid", "hl7_link", "hl7_obr", "demographic", "lst_gender", "admission","demographic_merged",
-				"program", "health_safety","provider","providersite","site","program_team");
+				"hl7_message", "program", "health_safety","provider","providersite","site","program_team");
 	}
 
 	@Test
@@ -66,4 +69,19 @@ public class Hl7LinkDaoTest extends DaoTestFixtures {
     public void testFindLinksAndRequestDates() {
 	    assertNotNull(dao.findLinksAndRequestDates(100));
     }
+
+    @Test
+    public void testFindReports() {
+	    assertNotNull(dao.findReports(new Date(), new Date(), "-ULL", "patient_name", "CMD"));
+	    assertNotNull(dao.findReports(new Date(), new Date(), "-APL", "patient_name", "CMD"));
+	    assertNotNull(dao.findReports(new Date(), new Date(), "-UAP", "patient_name", "CMD"));
+    }
+    
+	@Override
+    protected List<String> getSimpleExceptionTestExcludes() {
+		List<String> result = super.getSimpleExceptionTestExcludes(); 
+		result.add("findReports");
+	    return result;
+    }
+    
 }

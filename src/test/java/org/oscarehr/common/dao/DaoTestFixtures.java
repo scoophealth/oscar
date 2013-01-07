@@ -144,8 +144,8 @@ public abstract class DaoTestFixtures
 					try {
 						m.invoke(daoObject, new Object[]{});
 					}catch(Exception e) {
-						fail(e.getMessage());
 						MiscUtils.getLogger().error("error",e);
+						fail(e.getMessage());
 					}
 				} else {
 					boolean invoke=true;
