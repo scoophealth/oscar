@@ -29,9 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.Facility;
@@ -537,6 +539,32 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
         query.setParameter(3, programId);
         
         return query.getResultList();
+    }
+
+	@NativeSql({"demographic", "appointment", "drugs", "provider"})
+    public List<Object[]> findAppointmentsByDemographicIds(Set<String> demoIds, Date from, Date to) {   	
+		String sql = "" +
+				"select " +
+				"a.appointment_date, " +
+				"concat(pAppt.first_name, ' ', pAppt.last_name), " +
+				"concat(pFam.first_name, ' ', pFam.last_name), " +
+				"bi.service_code, " +
+				"drugs.BN, " +
+				"concat(pDrug.first_name,' ',pDrug.last_name), " +
+				"a.demographic_no, " +
+				"drugs.GN, " +
+				"drugs.customName " +
+				"from demographic d," +
+				"appointment a left outer join drugs " +
+				"on drugs.demographic_no = a.demographic_no and drugs.rx_date = a.appointment_date and a.appointment_date >= :from and a.appointment_date <= :to and a.demographic_no in (:demoIds) " +
+				" left join provider pDrug on pDrug.provider_no = drugs.provider_no, billing_on_cheader1 bc, billing_on_item bi, provider pAppt, provider pFam where a.appointment_date >= :from and a.appointment_date <= :to and a.demographic_no = d.demographic_no" +
+				" and a.provider_no = pAppt.provider_no and d.provider_no = pFam.provider_no and bc.appointment_no = a.appointment_no and bi.ch1_id = bc.id and a.demographic_no in (:demoIds) order by a.demographic_no, a.appointment_date";
+		
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("demoIds", demoIds);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		return query.getResultList();
     }
     
 }
