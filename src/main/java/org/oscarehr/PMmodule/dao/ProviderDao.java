@@ -495,5 +495,4 @@ public class ProviderDao extends HibernateDaoSupport {
 			List<Object[]> providerList = getHibernateTemplate().find("select distinct p.ProviderNo, p.ProviderType from Provider p ORDER BY p.LastName");
 			return providerList;
         }
-		
 }
