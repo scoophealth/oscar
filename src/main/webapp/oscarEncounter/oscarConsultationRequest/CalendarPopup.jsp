@@ -55,9 +55,9 @@ function typeInDate(year1,month1,day1) {
   close();
 }
 function typeSrvDate(year1,month1,day1) {
-opener.EctConsultationFormRequestForm.appointmentYear.value=year1;
-opener.EctConsultationFormRequestForm.appointmentMonth.options.selectedIndex = (month1-1);
-opener.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (day1-1); close();
+opener.document.EctConsultationFormRequestForm.appointmentYear.value=year1;
+opener.document.EctConsultationFormRequestForm.appointmentMonth.options.selectedIndex = (month1-1);
+opener.document.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (day1-1); close();
 }
 //-->
 </script>
