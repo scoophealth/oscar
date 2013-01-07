@@ -33,6 +33,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -237,7 +239,12 @@ public final class EDocUtil extends SqlUtilBaseS {
 			doc.setPublic1(Integer.parseInt(newDocument.getDocPublic()));
 			if(doReview) {
 				doc.setReviewer(newDocument.getReviewerId());
-				doc.setReviewdatetime(newDocument.getReviewDateTimeDate());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				try {
+					doc.setReviewdatetime(sdf.parse(newDocument.getReviewDateTime()));
+				}catch(ParseException e) {
+					logger.warn("error parsing date",e);
+				}
 			} else {
 				doc.setReviewer(null);
 				doc.setReviewdatetime(null);
