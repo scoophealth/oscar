@@ -112,6 +112,11 @@
     <link rel="stylesheet" href="appointmentstyle.css" type="text/css">
 <% }%>
 <title><bean:message key="appointment.addappointment.title" /></title>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="addappt"/>
 <script type="text/javascript">
 
 <!--

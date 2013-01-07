@@ -35,6 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.appt.status.service.AppointmentStatusMgr;
+import oscar.appt.status.service.impl.AppointmentStatusMgrImpl;
 
 public class AppointmentStatusAction extends DispatchAction {
 
@@ -98,7 +99,7 @@ public class AppointmentStatusAction extends DispatchAction {
     }
 
     public AppointmentStatusMgr getApptStatusMgr() {
-        return (AppointmentStatusMgr) getApptContext().getBean("AppointmentStatusMgr");
+        return new AppointmentStatusMgrImpl();
     }
 
     private void populateAllStatus(HttpServletRequest request) {
