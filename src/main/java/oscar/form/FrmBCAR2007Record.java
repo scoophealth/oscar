@@ -25,58 +25,54 @@
 
 package oscar.form;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
 
-import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.model.Demographic;
 
 import oscar.SxmlMisc;
-import oscar.login.DBHelp;
-import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmBCAR2007Record extends FrmRecord {
     private String _dateFormat = "dd/MM/yyyy";
+
+    private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
     private DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
     public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
-        Properties props = new Properties();
+        
+    	Demographic demo = null;
+    	Properties props = new Properties();
 
         if (existingID <= 0) {
 
-            String sql = "SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, family_doctor FROM demographic WHERE demographic_no = "
-                    + demographicNo;
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs
-                        .getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
-                props
-                        .setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
-                                _dateFormat));
-                // props.setProperty("formEdited",
-                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
-                props.setProperty("c_surname", rs.getString("last_name"));
-                props.setProperty("c_givenName", rs.getString("first_name"));
-                props.setProperty("c_address", rs.getString("address"));
-                props.setProperty("c_city", rs.getString("city"));
-                props.setProperty("c_province", rs.getString("province"));
-                props.setProperty("c_postal", rs.getString("postal"));
-                props.setProperty("c_phn", rs.getString("hin"));
+            demo = demographicDao.getDemographicById(demographicNo);
+
+            if (demo != null) {
+                java.util.Date date = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
+                props.setProperty("demographic_no", demo.getDemographicNo().toString());
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
+
+                props.setProperty("c_surname", demo.getLastName());
+                props.setProperty("c_givenName", demo.getFirstName());
+                props.setProperty("c_address", demo.getAddress());
+                props.setProperty("c_city", demo.getCity());
+                props.setProperty("c_province", demo.getProvince());
+                props.setProperty("c_postal", demo.getPostal());
+                props.setProperty("c_phn", demo.getHin());
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
-                props.setProperty("c_phone", rs.getString("phone"));
-                props.setProperty("c_phoneAlt1", rs.getString("phone2"));
-                props.setProperty("pg1_formDate", UtilDateUtilities
-                        .DateToString(UtilDateUtilities.Today(), _dateFormat));
-                props.setProperty("pg2_formDate", UtilDateUtilities
-                        .DateToString(UtilDateUtilities.Today(), _dateFormat));
-                props.setProperty("pg3_formDate", UtilDateUtilities
-                        .DateToString(UtilDateUtilities.Today(), _dateFormat));
-                String rd = SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rd");
+                props.setProperty("c_phone", demo.getPhone());
+                props.setProperty("c_phoneAlt1", demo.getPhone2());
+                props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
+                props.setProperty("pg2_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
+                props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
+                
+                String rd = SxmlMisc.getXmlContent(demo.getFamilyDoctor(), "rd");
                 rd = rd != null ? rd : "";
                 props.setProperty("pg1_famPhy", rd);
 
@@ -85,28 +81,25 @@ public class FrmBCAR2007Record extends FrmRecord {
                 if ( cell != null ){
                     props.setProperty("c_phoneAlt2",cell );
                 }
-
             }
-            rs.close();
         } else {
             String sql = "SELECT * FROM formBCAR2007 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
             FrmRecordHelp frh = new FrmRecordHelp();
             frh.setDateFormat(_dateFormat);
             props = (frh).getFormRecord(sql);
 
-            sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
-                    + demographicNo;
-            ResultSet rs = DBHelp.searchDBRecord(sql);
-            if (rs.next()) {
-                props.setProperty("c_surname_cur", rs.getString("last_name"));
-                props.setProperty("c_givenName_cur", rs.getString("first_name"));
-                props.setProperty("c_address_cur", rs.getString("address"));
-                props.setProperty("c_city_cur", rs.getString("city"));
-                props.setProperty("c_province_cur", rs.getString("province"));
-                props.setProperty("c_postal_cur", rs.getString("postal"));
-                props.setProperty("c_phn_cur", rs.getString("hin"));
-                props.setProperty("c_phone_cur", rs.getString("phone"));
-                props.setProperty("c_phoneAlt1_cur", rs.getString("phone2"));
+            demo = demographicDao.getDemographicById(demographicNo);
+            
+            if (demo != null) {
+                props.setProperty("c_surname_cur", demo.getLastName());
+                props.setProperty("c_givenName_cur", demo.getFirstName());
+                props.setProperty("c_address_cur", demo.getAddress());
+                props.setProperty("c_city_cur", demo.getCity());
+                props.setProperty("c_province_cur", demo.getProvince());
+                props.setProperty("c_postal_cur", demo.getPostal());
+                props.setProperty("c_phn_cur", demo.getHin());
+                props.setProperty("c_phone_cur", demo.getPhone());
+                props.setProperty("c_phoneAlt1_cur", demo.getPhone2());
                 Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographicNo);
                 String cell = demoExt.get("demo_cell");
                 if ( cell != null ){
