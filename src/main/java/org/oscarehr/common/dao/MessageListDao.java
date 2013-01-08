@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
 
 import java.util.List;
@@ -33,17 +32,37 @@ import org.oscarehr.common.model.MessageList;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MessageListDao extends AbstractDao<MessageList>{
+@SuppressWarnings("unchecked")
+public class MessageListDao extends AbstractDao<MessageList> {
 
 	public MessageListDao() {
 		super(MessageList.class);
 	}
+	
+	public List<MessageList> findByProviderNoAndMessageNo(String providerNo, Long messageNo) {
+		Query query = createQuery("msg", "msg.providerNo = :pno AND msg.message = :msg");
+		query.setParameter("pno", providerNo);
+		query.setParameter("msg", messageNo);
+		return query.getResultList();
+	}
 
-	@SuppressWarnings("unchecked")
-    public List<MessageList> findByProviderNoAndMessageNo(String providerNo, Long messageNo) {
-	    Query query = createQuery("msg", "msg.providerNo = :pno AND msg.message = :msg");
-	    query.setParameter("pno", providerNo);
-	    query.setParameter("msg", messageNo);
-	    return query.getResultList();
+	public List<MessageList> findByProviderNoAndLocationNo(String providerNo, Integer remoteLocation) {
+		Query query = createQuery("ml", "ml.providerNo = :providerNo and ml.status not like 'del' and ml.remoteLocation = :remoteLocation order by ml.message");
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("remoteLocation", remoteLocation);
+		return query.getResultList();
+	}
+
+	public List<MessageList> findByMessage(Long messageNo) {
+	    Query query = createQuery("ml", "ml.message = :messageNo");
+		query.setParameter("messageNo", messageNo);
+		return query.getResultList();
+    }
+
+	public List<MessageList> findByProviderAndStatus(String providerNo, String status) {
+		Query query = createQuery("ml", "ml.providerNo = :providerNo and ml.status = :status");
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("status", status);
+		return query.getResultList();	    
     }
 }

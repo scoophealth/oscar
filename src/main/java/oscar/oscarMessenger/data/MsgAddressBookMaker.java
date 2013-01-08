@@ -26,7 +26,6 @@
 package oscar.oscarMessenger.data;
 
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.oscarehr.common.dao.GroupMembersDao;
@@ -48,8 +47,7 @@ public class MsgAddressBookMaker
 
 	
     // Update the local address book and return true if changed
-    public boolean updateAddressBook() throws SQLException
-    {
+    public boolean updateAddressBook() {
         Document doc = MsgCommxml.newDocument();
 
         Element addressBook = doc.createElement("addressBook");
@@ -72,8 +70,7 @@ public class MsgAddressBookMaker
     }
 
     // Recursive function to get the children in a group
-    private Element getChildren(Document doc, int groupId, String desc) throws SQLException
-    {
+    private Element getChildren(Document doc, int groupId, String desc) {
         Element group = doc.createElement("group");
         if(desc.length()>0)
         {

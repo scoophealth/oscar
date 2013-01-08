@@ -44,4 +44,11 @@ public class RemoteAttachmentsDao extends AbstractDao<RemoteAttachments> {
 		query.setParameter("demoNo", demoNo);
 		return query.getResultList();
 	}
+
+	public List<RemoteAttachments> findByDemoNoAndMessageId(Integer demographicNo, Integer messageId) {
+		Query query = createQuery("a", "a.demographicNo = :demographicNo and a.messageId = :messageId");
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("messageId", messageId);
+		return query.getResultList();
+	}
 }

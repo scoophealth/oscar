@@ -22,11 +22,9 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMessenger.pageUtil;
 
 /**
- *
  * @author ichan
  */
 import java.io.IOException;
@@ -39,69 +37,53 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.ProviderDataDao;
+import org.oscarehr.common.dao.forms.FormsDao;
+import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
-import oscar.oscarProvider.data.ProviderData;
 import oscar.util.ParameterActionForward;
 
 public class MsgViewMessageByPositionAction extends Action {
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        // Extract attributes we will need
-        String provNo = (String) request.getSession().getAttribute("user");
-        
-        if ( request.getSession().getAttribute("msgSessionBean") == null){
-           MsgSessionBean bean = new MsgSessionBean();
-           bean.setProviderNo(provNo);
-           ProviderData pd = new ProviderData();
-           bean.setUserName(ProviderData.getProviderName(provNo));
-           request.getSession().setAttribute("msgSessionBean", bean); 
-       } 
-        
-        
-        String orderBy = request.getParameter("orderBy")==null?"date":request.getParameter("orderBy");        
-        String messagePosition = request.getParameter("messagePosition");           
-        String demographic_no = request.getParameter("demographic_no");   
-        
-        MsgDisplayMessagesBean displayMsgBean = new MsgDisplayMessagesBean();
-        ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
-        
-        try{
-           
-           java.sql.ResultSet rs;
-           
-                //String sql = new String("select m.messageid from messagelisttbl ml, messagetbl m, msgDemoMap map"
-                //+" where map.demographic_no = '"+ demographic_no+"' and remoteLocation = '"+displayMsgBean.getCurrentLocationId()+"' "
-                //+" and m.messageid = map.messageID and ml.message=m.messageid order by "+ displayMsgBean.getOrderBy(orderBy) + " limit " + messagePosition +", 1");
-       
-                String sql = "select m.messageid  " +
-                             "from  messagetbl m, msgDemoMap map where map.demographic_no = '"+ demographic_no+"'  " +
-                             "and m.messageid = map.messageID  order by "+ displayMsgBean.getOrderBy(orderBy) + " limit " + messagePosition +", 1";
-        
-                
-                MiscUtils.getLogger().debug("this ="+sql);
-                rs = DBHandler.GetSQL(sql);
-                if (rs.next()) {                                                                   
-                    actionforward.addParameter("messageID", oscar.Misc.getString(rs, "messageid"));
-                    actionforward.addParameter("from", "encounter");     
-                    actionforward.addParameter("demographic_no", demographic_no);
-                    actionforward.addParameter("messagePostion", messagePosition);
-                }
-              
-         rs.close();
+		// Extract attributes we will need
+		String provNo = (String) request.getSession().getAttribute("user");
 
-        }
-        catch (java.sql.SQLException e){ 
-           MiscUtils.getLogger().error("Error", e); 
-        }
-                               
-        return actionforward;
-    }
+		if (request.getSession().getAttribute("msgSessionBean") == null) {
+			MsgSessionBean bean = new MsgSessionBean();
+			bean.setProviderNo(provNo);
+
+			ProviderDataDao dao = SpringUtils.getBean(ProviderDataDao.class);
+			ProviderData pd = dao.findByProviderNo(provNo);
+			if (pd != null) {
+				bean.setUserName(pd.getFirstName() + " " + pd.getLastName());
+			}
+			request.getSession().setAttribute("msgSessionBean", bean);
+		}
+
+		String orderBy = request.getParameter("orderBy") == null ? "date" : request.getParameter("orderBy");
+		String messagePosition = request.getParameter("messagePosition");
+		String demographic_no = request.getParameter("demographic_no");
+
+		MsgDisplayMessagesBean displayMsgBean = new MsgDisplayMessagesBean();
+		ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
+
+		String sql = "select m.messageid  " 
+				+ "from  messagetbl m, msgDemoMap map where map.demographic_no = '" + demographic_no + "'  " 
+				+ "and m.messageid = map.messageID  order by " + displayMsgBean.getOrderBy(orderBy) 
+				+ " limit " + messagePosition + ", 1";
+		FormsDao dao = SpringUtils.getBean(FormsDao.class);
+		for (Object[] o : dao.runNativeQuery(sql)) {
+			String messageId = String.valueOf(o[0]);
+			actionforward.addParameter("messageID", messageId);
+			actionforward.addParameter("from", "encounter");
+			actionforward.addParameter("demographic_no", demographic_no);
+			actionforward.addParameter("messagePostion", messagePosition);
+		}
+
+		return actionforward;
+	}
 
 }

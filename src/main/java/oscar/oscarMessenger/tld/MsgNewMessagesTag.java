@@ -22,67 +22,51 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMessenger.tld;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+public class MsgNewMessagesTag extends TagSupport {
+	
+    private static final long serialVersionUID = 1L;
+    
+	private String providerNo;
+	private int numNewMessages = 0;
 
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
 
+	public String getProviderNo() {
+		return this.providerNo;
+	}
 
-public class MsgNewMessagesTag extends TagSupport{
-  private String providerNo;
-  private int numNewMessages = 0;
+	public int doStartTag() throws JspException {
 
+		MessageListDao dao = SpringUtils.getBean(MessageListDao.class);
+		numNewMessages = dao.findByProviderAndStatus(providerNo, "new").size();
+		try {
+			JspWriter out = pageContext.getOut();
+			// change here what ever page you want
+			if (numNewMessages > 0) { //link to go to
+				out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"red\">msg</font>  ");
+			} else {
+				out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">msg</font>  ");
+			}
+		} catch (Exception p) {
+			MiscUtils.getLogger().error("Error", p);
+		}
+		return (SKIP_BODY);
+	}
 
-  public void setProviderNo(String providerNo){
-    this.providerNo = providerNo;
-  }//set
-
-  public String getProviderNo(){
-    return this.providerNo;
-  }//get
-
-
-
-
-  public int doStartTag() throws JspException {
-
-   try{
-      
-      java.sql.ResultSet rs;
-   //   String sdaf = new String("sdf");
-      String sql = new String("select count(*) from messagelisttbl where provider_no = '"+ providerNo +"' and status = 'new' ");
-      rs = DBHandler.GetSQL(sql);
-      while (rs.next()) {
-         numNewMessages = (rs.getInt(1));
-
-      }
-     rs.close();
-
-   }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-   try{
-      JspWriter out = pageContext.getOut();
-                                                   // change here what ever page you want
-      if ( numNewMessages > 0){                    //link to go to
-         out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"red\">msg</font>  ");
-      }
-      else{
-         out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">msg</font>  ");
-      }
-   } catch(Exception p){ MiscUtils.getLogger().error("Error", p);}
-  return(SKIP_BODY);
-  }//doStartTag
-
-  public int doEndTag() throws JspException {
-
-    return EVAL_PAGE;
-  }//doEndTag
-
+	public int doEndTag() throws JspException {
+		return EVAL_PAGE;
+	}
 
 }
