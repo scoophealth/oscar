@@ -67,7 +67,9 @@
 	            		             
 		            <select name="procontact_<%=id%>.type" id="procontact_<%=id%>.type">
 		            	<option value="<%=DemographicContact.TYPE_PROVIDER%>">Internal</option>
+		            	<%if(oscar.OscarProperties.getInstance().getProperty("NEW_CONTACTS_UI_EXTERNAL_CONTACT","true").equals("true")) { %>
 		            	<option value="<%=DemographicContact.TYPE_CONTACT%>">External</option>
+		            	<% } %>
 		            	<option value="<%=DemographicContact.TYPE_PROFESSIONALSPECIALIST%>"">Professional Specialist</option>
 					</select>
 				
