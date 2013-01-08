@@ -35,6 +35,8 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.SxmlMisc;
+
 public class RxProviderData {
 
 	private ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
@@ -55,25 +57,9 @@ public class RxProviderData {
     }
     
     public Provider convertProvider(org.oscarehr.common.model.Provider p) {
-    	String providerClinicPhone=null, surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null, clinicProvince=null, practitionerNo=null;
-
+    	String surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null, clinicProvince=null, practitionerNo=null;
+    	boolean useFullAddress=true;
         //Get Provider from database
-        
-        if(p != null) {
-        	surname = p.getLastName();
-        	firstName = p.getFirstName();
-        	practitionerNo = p.getPractitionerNo();
-        	if(firstName.indexOf("Dr.")<0) {
-                firstName = "Dr. " + firstName;
-            }
-        	providerClinicPhone = p.getWorkPhone();
-        }
-
-        UserProperty prop = userPropertyDao.getProp(p.getProviderNo(), "faxnumber");
-        if(prop != null) {
-        	clinicFax = prop.getValue();
-        }
-
 
         Clinic clinic = clinicDao.getClinic();
         if(clinic != null) {
@@ -83,18 +69,76 @@ public class RxProviderData {
         	clinicPostal = clinic.getClinicPostal();
         	clinicPhone = clinic.getClinicPhone();
         	clinicProvince = clinic.getClinicProvince();
-        	if( clinicFax == null )
-        		clinicFax = clinic.getClinicFax();
+        	clinicFax = clinic.getClinicFax();
+        }
+        
+        if(p != null) {
+        	surname = p.getLastName();
+        	firstName = p.getFirstName();
+        	practitionerNo = p.getPractitionerNo();
+        	if(firstName.indexOf("Dr.")<0) {
+                firstName = "Dr. " + firstName;
+            }
+        	
+        	if(p.getWorkPhone() != null && p.getWorkPhone().length()>0) {
+        		clinicPhone = p.getWorkPhone();
+        	}
+        	
+        	if(p.getComments() != null && p.getComments().length()>0) {
+        		String pFax = SxmlMisc.getXmlContent(p.getComments(), "xml_p_fax");
+        		if(pFax != null && pFax.length()>0) {
+        			clinicFax = pFax;
+        		}
+        	}
+        	
+        	if(p.getAddress() != null && p.getAddress().length()>0) {
+        		clinicAddress = p.getAddress();
+        		useFullAddress=false;
+        	}
         }
 
+        UserProperty prop = null;
+        
+        prop = userPropertyDao.getProp(p.getProviderNo(), "faxnumber");
+        if(prop != null && prop.getValue().length()>0) {
+        	clinicFax = prop.getValue();
+        }
+        
+        prop = userPropertyDao.getProp(p.getProviderNo(), "rxPhone");
+        if(prop != null && prop.getValue().length()>0) {
+        	clinicPhone = prop.getValue();
+        }
+        
+        prop = userPropertyDao.getProp(p.getProviderNo(), "rxAddress");
+        if(prop != null && prop.getValue().length()>0) {
+        	//we're going to override with the preference address
+        	clinicAddress = prop.getValue();
+        	clinicCity = readProperty(p.getProviderNo(),"rxCity");
+        	clinicProvince = readProperty(p.getProviderNo(),"rxProvince");
+        	clinicPostal = readProperty(p.getProviderNo(),"rxPostal");
+        	useFullAddress=true;
+        }
 
-        if((clinicPhone.length()>15) && (providerClinicPhone != null && !providerClinicPhone.equals(""))) clinicPhone = providerClinicPhone;
-
-        return new Provider(p.getProviderNo(), surname, firstName, clinicName, clinicAddress,
+       
+        Provider prov =  new Provider(p.getProviderNo(), surname, firstName, clinicName, clinicAddress,
                 clinicCity, clinicPostal, clinicPhone, clinicFax, clinicProvince, practitionerNo);
+        if(!useFullAddress)
+        	prov.fullAddress=false;
+        
+        return prov;
+    }
+    
+    private String readProperty(String providerNo, String key) {
+    	UserProperty prop = userPropertyDao.getProp(providerNo, key);
+        if(prop != null) {
+        	return prop.getValue();
+        }
+        return "";
     }
 
     public class Provider{
+    	boolean fullAddress=true;
+    	
         String providerNo;
         String surname;
         String firstName;
@@ -170,9 +214,16 @@ public class RxProviderData {
             return this.clinicProvince;
         }
 
-	public String getPractitionerNo() {
-	   return this.practitionerNo;
-	}
+		public String getPractitionerNo() {
+		   return this.practitionerNo;
+		}
+		
+		public String getFullAddress() {
+			if(fullAddress)
+				return (getClinicAddress() + "  " + getClinicCity() + "   " + getClinicProvince() + "  " + getClinicPostal()).trim();
+			else
+				return getClinicAddress().trim();
+		}
 
     }
 }
