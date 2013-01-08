@@ -881,7 +881,7 @@ for (Provider p : prList) {
 		%>
 	 providerData['<%=prov_no%>'] = new Object(); //{};
 
-	providerData['<%=prov_no%>'].address = "<%=(p.getClinicAddress() + "  " + p.getClinicCity() + "   " + p.getClinicProvince() + "  " + p.getClinicPostal()).trim() %>";
+	providerData['<%=prov_no%>'].address = "<%=p.getFullAddress() %>";
 	providerData['<%=prov_no%>'].phone = "<%=p.getClinicPhone().trim() %>";
 	providerData['<%=prov_no%>'].fax = "<%=p.getClinicFax().trim() %>";
 
