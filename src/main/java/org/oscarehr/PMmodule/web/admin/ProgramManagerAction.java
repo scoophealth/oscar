@@ -1425,6 +1425,49 @@ public class ProgramManagerAction extends BaseAction {
 
 		return edit(mapping, form, request, response);
 	}
+	
+	public ActionForward activeTmplStatus(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		String vacancyId = (String)programForm.get("vacancyOrTemplateId");
+		try {
+			int templateId = Integer.parseInt(vacancyId);
+			VacancyTemplate vacTmpl = vacancyTemplateDAO.getVacancyTemplate(templateId);
+			if (vacTmpl != null) {
+				vacTmpl.setActive(true);
+				try {
+					vacancyTemplateDAO.mergeVacancyTemplate(vacTmpl);
+				} catch (Exception e) {
+					logger.debug(e.toString());
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
+		
+		return edit(mapping, form, request, response);
+	}
+	
+	public ActionForward inactiveTmplStatus(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		String vacancyId = (String)programForm.get("vacancyOrTemplateId");
+		try {
+			int templateId = Integer.parseInt(vacancyId);
+			VacancyTemplate vacTmpl = vacancyTemplateDAO.getVacancyTemplate(templateId);
+			if (vacTmpl != null) {
+				vacTmpl.setActive(false);
+				try {
+					vacancyTemplateDAO.mergeVacancyTemplate(vacTmpl);
+				} catch (Exception e) {
+					logger.debug(e.toString());
+				}
+			}
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
+		
+		return edit(mapping, form, request, response);
+	}
+
 
 	private boolean isChanged(Program program1, Program program2) {
 		boolean changed = false;
