@@ -22,10 +22,11 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMessenger.pageUtil;
+
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,144 +37,67 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.model.MessageList;
 import org.oscarehr.common.model.MessageTbl;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarDB.DBHandler;
 
 public class MsgSendMessageAction extends Action {
 
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		// Extract attributes we will need
+		// Setup variables
+		ActionMessages errors = new ActionMessages();
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+		String message = ((MsgCreateMessageForm) form).getMessage();
+		String[] providers = ((MsgCreateMessageForm) form).getProvider();
+		String subject = ((MsgCreateMessageForm) form).getSubject();
+		subject.trim();
 
-            // Extract attributes we will need
-            
+		saveErrors(request, errors);
+		ActionForward actionForward = new ActionForward(mapping.getInput());
+		actionForward.setName(mapping.getInput());
 
-            // Setup variables
-            ActionMessages errors = new ActionMessages();
+		if (subject.length() == 0) {
+			subject = "none";
+		}
 
+		//By this far it should be safe that its a valid message
+		//create a string with all the providers it will be sent too
+		ProviderDao pDao = SpringUtils.getBean(ProviderDao.class);
+		List<Provider> ps = pDao.getProviders(providers);
+		StringBuilder sentToWho = new StringBuilder("Sent to : ");
+		for (Provider p : ps) {
+			sentToWho.append(" " + p.getFirstName() + " " + p.getLastName() + ". ");
+		}
 
-            //String surname = ((SearchPatientForm)form).getSurname();
-            String message = ((MsgCreateMessageForm)form).getMessage();
-            String[] providers = ((MsgCreateMessageForm)form).getProvider();
-            String subject = ((MsgCreateMessageForm)form).getSubject();
-            //message.trim();
-            subject.trim();
+		MsgSentMessageForm trial = new MsgSentMessageForm();
+		trial.setSample(sentToWho.toString());
 
-            if (message.length() == 0){
+		MessageTbl mt = new MessageTbl();
+		mt.setDate(new Date());
+		mt.setTime(new Date());
+		mt.setMessage(message);
+		mt.setSubject(subject);
+		mt.setSentBy("jay");
+		mt.setSentTo(sentToWho.toString());
 
-              //errors.add(ActionErrors.GLOBAL_ERROR,
-                //       new ActionError("error.message.missing"));
-                //errors.add(
-                //       new ActionError("error.message.missing"));
-            }
+		MessageTblDao dao = SpringUtils.getBean(MessageTblDao.class);
+		dao.persist(mt);
 
-            if (providers.length == 0){
+		MessageListDao mld = SpringUtils.getBean(MessageListDao.class);
 
-              //errors.add(ActionErrors.GLOBAL_ERROR,
-                //       new ActionError("error.provider.missing"));
-
-                      //               errors.add(ActionErrors.GLOBAL_ERROR,
-                      // new ActionError("index.heading"));
-            }
-
-            if (true)/*(!errors.empty())*/ {
-
-	      saveErrors(request, errors);
-            ActionForward actionForward = new ActionForward(mapping.getInput());
-
-
-
-            actionForward.setName(mapping.getInput());
-
-
-	    //return ( actionForward(mapping.getInput()));
-            //return (actionForward);
-
-	    }
-
-            if (subject.length() == 0)
-            subject = "none";
-            //By this far it should be safe that its a valid message
-
-            //create a string with all the providers it will be sent too
-
-            String sql = "select first_name, last_name from provider where ";
-            StringBuilder temp = new StringBuilder(sql);
-            StringBuilder sentToWho = new StringBuilder("Sent to : ");
-
-
-
-            for (int i =0 ; i < providers.length ; i++)
-            {
-              if (i == (providers.length -1)){
-                 temp.append(" provider_no = "+providers[i]);
-              }
-              else
-              {
-                temp.append(" provider_no = "+providers[i]+" or ");
-              }
-            }
-
-            sql = temp.toString();
-
-            try
-            {
-              
-              java.sql.ResultSet rs;
-
-              rs = DBHandler.GetSQL(sql);
-              while (rs.next()) {
-
-              sentToWho.append(" "+oscar.Misc.getString(rs, "first_name") +" " +oscar.Misc.getString(rs, "last_name")+". ");
-              //providerFirstName.add(oscar.Misc.getString(rs,"first_name"));
-              //providerLastName.add(oscar.Misc.getString(rs,"last_name"));
-              }
-        rs.close();
-
-      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-       MsgSentMessageForm  trial = new MsgSentMessageForm();
-        trial.setSample(sentToWho.toString());
-
-      //insert message into the messagetbl, get the message id back and insert it into the messagelisttbl
-      //insert all the provider ids that will get the message along with the message id plus a status of new
-
-     
-    	  MessageTbl mt =new MessageTbl();
-    	  mt.setDate(new Date());
-    	  mt.setTime(new Date());
-    	  mt.setMessage(message);
-    	  mt.setSubject(subject);
-    	  mt.setSentBy("jay");
-    	  mt.setSentTo(sentToWho.toString());
-    	  
-    	  MessageTblDao dao = SpringUtils.getBean(MessageTblDao.class);
-    	  dao.persist(mt);
-    	  
-    	  MessageListDao mld = SpringUtils.getBean(MessageListDao.class);
-    	  
-          for (int i =0 ; i < providers.length ; i++)
-          {
-
-        	  MessageList ml = new MessageList();
-        	  ml.setMessage(mt.getId());
-        	  ml.setProviderNo(providers[i]);
-        	  ml.setStatus("new");
-        	  mld.persist(ml);
-          }
-       
-
-            request.setAttribute("SentMessageProvs",sentToWho.toString());
-
-            return (mapping.findForward("success"));
-    }
+		for (int i = 0; i < providers.length; i++) {
+			MessageList ml = new MessageList();
+			ml.setMessage(mt.getId());
+			ml.setProviderNo(providers[i]);
+			ml.setStatus("new");
+			mld.persist(ml);
+		}
+		request.setAttribute("SentMessageProvs", sentToWho.toString());
+		return (mapping.findForward("success"));
+	}
 }
