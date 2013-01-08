@@ -76,4 +76,16 @@ public class DemographicContactDao extends AbstractDao<DemographicContact>{
 		List<DemographicContact> dContacts = query.getResultList();
 		return dContacts;
 	}
+	
+	public List<DemographicContact> findAllByContactIdAndCategoryAndType(int contactId, String category, int type) {
+		String sql = "select x from " + this.modelClass.getName() + " x where x.contactId = ? and x.category = ? and x.type = ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, new Integer(contactId).toString());
+		query.setParameter(2, category);
+		query.setParameter(3, type);
+		
+		@SuppressWarnings("unchecked")
+		List<DemographicContact> dContacts = query.getResultList();
+		return dContacts;
+	}
 }
