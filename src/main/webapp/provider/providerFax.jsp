@@ -27,7 +27,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="oscar.oscarProvider.data.*"%>
-
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@ page import="org.oscarehr.common.model.UserProperty"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
@@ -72,8 +74,12 @@
 		<td class="MainTableLeftColumn">&nbsp;</td>
 		<td class="MainTableRightColumn">
 		<%
-               ProviderFaxUpdater faxUpdater = new ProviderFaxUpdater(curUser_no);
-               String faxNum = faxUpdater.getFax();
+		UserPropertyDAO propertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		UserProperty prop = propertyDao.getProp(curUser_no,"faxnumber");			
+		String faxNum = "";
+        if(prop!=null) {
+        	faxNum = prop.getValue();
+        }
                
                if( request.getAttribute("status") == null )
                {
