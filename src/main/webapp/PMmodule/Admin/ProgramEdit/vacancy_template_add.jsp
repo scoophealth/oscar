@@ -68,11 +68,8 @@
 		document.programManagerForm.method.value='edit';
 		document.programManagerForm.submit();
 	}
-</script>
 
-<script>
-
-function changeVacancyTemplateType(selectBox, type) {
+	function changeVacancyTemplateType(selectBox, type) {
 		var selectBoxId = selectBox.id;
 		var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
 		var typeName = type.toLowerCase().replace(/ /g,"_");
@@ -91,8 +88,20 @@ function changeVacancyTemplateType(selectBox, type) {
 					  $("#block_"+typeName).append(data);					 
 					});	
 			}
+	}
+	
+	function template_status_change(template_id) {		
+		document.programManagerForm.elements['view.tab'].value='General';
+		document.programManagerForm.elements['view.subtab'].value='Vacancy Template Add';
+		document.programManagerForm.elements['vacancyOrTemplateId'].value=template_id;
+		if (document.getElementById("vacancy_tpl_status_ckbox").checked){
+			document.programManagerForm.method.value='activeTmplStatus';
+		} else {
+			document.programManagerForm.method.value='inactiveTmplStatus';
+		}
+		document.programManagerForm.submit();
+	}
 
-}
 </script>
 <div class="tabs" id="tabs">
 
@@ -111,9 +120,12 @@ function changeVacancyTemplateType(selectBox, type) {
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
-		<td width="30%" class="beright">Template is active:</td>
-		<td><input type="checkbox" value="on" <%=template.getActive()==true?"checked":"" %>
-			name="templateActive"></td>
+		<td width="30%" class="beright">Template is <%=template.getActive()==true?"active":"inactive" %>:</td>
+		<td><input id="vacancy_tpl_status_ckbox" type="checkbox" onchange="template_status_change(<%=template.getId()%>)" 
+		<%if(template.getActive()==true){%>
+		<%="checked"%>
+		<%}%>
+		name="templateActive"></td>
 	</tr>
 	<tr class="b">
 		<td class="beright">Template Name:</td>
