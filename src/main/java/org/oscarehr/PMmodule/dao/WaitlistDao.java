@@ -74,12 +74,13 @@ public class WaitlistDao {
 			
 			if (cols[3] instanceof BigInteger){ // to avoid java.lang.ClassCastException exception
 				out.setDaysInWaitList(((BigInteger)cols[3]).intValue());
-			} else {
+			} else if (cols[3] instanceof Long) {
 				out.setDaysInWaitList(((Long)cols[3]).intValue());
 			}
+			
 			if (cols[4] instanceof BigInteger){
 				out.setDaysSinceLastContact(((BigInteger)cols[4]).intValue());
-			} else {
+			} else if (cols[4] instanceof Long){
 				out.setDaysSinceLastContact(((Long)cols[4]).intValue());
 			}
 			out.setFormDataID((Integer)cols[5]);
