@@ -43,6 +43,10 @@ public class VacancyTemplateDao extends AbstractDao<VacancyTemplate> {
 		persist(obj);
 	}
 	
+	public void mergeVacancyTemplate(VacancyTemplate obj) {
+		merge(obj);
+	}
+	
 	public VacancyTemplate getVacancyTemplate(Integer templateId) {
 		return find(templateId);
 	}
