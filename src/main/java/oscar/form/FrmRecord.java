@@ -34,12 +34,11 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.SxmlMisc;
+import oscar.util.UtilDateUtilities;
+
 /**
  * 
- * @author Dennis Warren
- * @company OSCARprn
- * 
- * Rewritten June 2012
  *
  */
 public abstract class FrmRecord {
@@ -47,8 +46,11 @@ public abstract class FrmRecord {
 	protected Demographic demographic;
 	protected DemographicExt demographicExt;
 	protected Map<String, String> demographicExtMap;
-	private DemographicDao demographicDao;
-	private DemographicExtDao demographicExtDao;
+	
+	protected DemographicDao demographicDao;
+	protected DemographicExtDao demographicExtDao;
+	
+	protected String dateFormat;
 
 	public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException;
 
@@ -58,16 +60,11 @@ public abstract class FrmRecord {
 
 	public abstract String createActionURL(String where, String action, String demoId, String formId) throws SQLException;
 
-	/**
-	 * @throws SQLException
-	 */
+
 	public Properties getGraph(int demographicNo, int existingID) throws SQLException {
 		return new Properties();
 	}
 
-	/**
-	 * @throws SQLException
-	 */
 	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException {
 		return new Properties();
 	}
@@ -77,31 +74,74 @@ public abstract class FrmRecord {
 
 	
 	
-	public FrmRecord() {
-		// this DAO is used in every transaction - it should be ready to go.
+	public FrmRecord() {	
 		this.demographicDao = SpringUtils.getBean(DemographicDao.class);
 		this.demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	} 
 	
-	public FrmRecord(int demographicNo) {
-		// this DAO is used in every transaction - it should be ready to go.
-		this.demographicDao = SpringUtils.getBean(DemographicDao.class);
-		this.demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-		setDemographic(demographicNo);
-		setDemographicExt(demographicNo);		
-	} 
+	
+	protected void setDemoProperties(int demographicNo, Properties demoProps) {
+		
+		this.setDemographic(demographicNo);
+		
+        java.util.Date date = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
+        demoProps.setProperty("demographic_no", demographic.getDemographicNo().toString());
 
-       protected void setDemographic(int demographicNo) {
-	if(this.demographicDao != null) {
-		this.demographic = demographicDao.getClientByDemographicNo(demographicNo);
-		this.setDemographicExt(demographicNo);
+        demoProps.setProperty("c_surname", demographic.getLastName());
+        demoProps.setProperty("c_givenName", demographic.getFirstName());
+        demoProps.setProperty("c_address", demographic.getAddress());
+        demoProps.setProperty("c_city", demographic.getCity());
+        demoProps.setProperty("c_province", demographic.getProvince());
+        demoProps.setProperty("c_postal", demographic.getPostal());
+        demoProps.setProperty("c_phn", demographic.getHin());
+        demoProps.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, dateFormat));
+        demoProps.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
+        demoProps.setProperty("c_phone", demographic.getPhone());
+        demoProps.setProperty("c_phoneAlt1", demographic.getPhone2());
+        
+        String rd = SxmlMisc.getXmlContent(demographic.getFamilyDoctor(), "rd");
+        rd = rd != null ? rd : "";
+        demoProps.setProperty("pg1_famPhy", rd);
+
+        Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographicNo);
+        String cell = demoExt.get("demo_cell");
+        if ( cell != null ){
+        	demoProps.setProperty("c_phoneAlt2",cell );
+        }
 	}
-      }
+	
+	protected void setDemoCurProperties(int demographicNo, Properties demoProps) {
+		
+		this.setDemographic(demographicNo);
+
+		demoProps.setProperty("c_surname_cur", demographic.getLastName());
+		demoProps.setProperty("c_givenName_cur", demographic.getFirstName());
+		demoProps.setProperty("c_address_cur", demographic.getAddress());
+		demoProps.setProperty("c_city_cur", demographic.getCity());
+		demoProps.setProperty("c_province_cur", demographic.getProvince());
+		demoProps.setProperty("c_postal_cur", demographic.getPostal());
+		demoProps.setProperty("c_phn_cur", demographic.getHin());
+		demoProps.setProperty("c_phone_cur", demographic.getPhone());
+		demoProps.setProperty("c_phoneAlt1_cur", demographic.getPhone2());
+		
+        Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographicNo);
+        String cell = demoExt.get("demo_cell");
+        if ( cell != null ){
+        	demoProps.setProperty("c_phoneAlt2_cur",cell );
+        }
+	}
+	
+	protected void setDemographic(int demographicNo) {
+		if (this.demographicDao != null) {
+			this.demographic = demographicDao.getClientByDemographicNo(demographicNo);
+			this.setDemographicExt(demographicNo);
+		}
+	}
 
 	protected void setDemographicExt(int demographicNo) {
-		if(this.demographicExtDao != null) {
+		if (this.demographicExtDao != null) {
 			this.demographicExt = demographicExtDao.getDemographicExt(demographicNo);
 			this.demographicExtMap = demographicExtDao.getAllValuesForDemo(demographicNo);
 		}
-	} 
+	}
 }
