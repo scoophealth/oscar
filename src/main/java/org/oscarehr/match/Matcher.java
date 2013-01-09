@@ -50,6 +50,9 @@ public class Matcher {
 	public List<VacancyClientMatch> listClientMatchesForVacancy(int vacancyId) {
 		List<VacancyClientMatch> vacancyClientMatches = new ArrayList<VacancyClientMatch>();
 		VacancyData vacancyData = waitlistDao.loadVacancyData(vacancyId);
+		if (vacancyData.getVacancyData().size() == 0) {
+			return vacancyClientMatches;
+		}
 		List<ClientData> clientDatas = waitlistDao.getAllClientsData();
 		for (ClientData clientData : clientDatas) {
 			VacancyClientMatch vcMatch = match(clientData, vacancyData);
