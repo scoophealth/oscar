@@ -52,7 +52,8 @@
 		// form.elements['criteria.dateFrom'].value=''; 
 		// form.elements['criteria.dateTo'].value=''; 
 		// form.elements['criteria.bedProgramId'].selectedIndex = 0;
-		form.elements['criteria.active'].selectedIndex = 0;
+		// form.elements['criteria.active'].selectedIndex = 0;
+		form.elements['criteria.active'].value='';
 		form.elements['criteria.gender'].selectedIndex = 0;
 	}
 
