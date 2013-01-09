@@ -19,13 +19,13 @@ age_18	:	headCirc_18
 age_19	:	headCirc_19
 age_20	:	headCirc_20
 
-__origX		:	110
-__origY		:	468
-__nMaxPixX	:	384
-__nMaxPixY	:	380
+__origX		:	125
+__origY		:	368
+__nMaxPixX	:	392
+__nMaxPixY	:	262
 __fStartX	:	0
-__fEndX		:	36
-__fStartY	:	28
-__fEndY		:	54
+__fEndX		:	24
+__fStartY	:	28.4
+__fEndY		:	56.8
 
 __className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
