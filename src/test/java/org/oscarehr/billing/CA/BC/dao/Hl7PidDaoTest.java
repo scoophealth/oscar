@@ -39,7 +39,8 @@ public class Hl7PidDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("hl7_pid", "hl7_link", "hl7_msh");
+		SchemaUtils.restoreTable("hl7_pid", "hl7_link", "hl7_msh"
+				, "provider", "hl7_message");
 	}
 
 	@Test
