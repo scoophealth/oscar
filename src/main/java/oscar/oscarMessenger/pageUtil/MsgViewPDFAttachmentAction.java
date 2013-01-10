@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMessenger.pageUtil;
 
 import java.io.IOException;
@@ -35,39 +34,30 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.MessageTblDao;
+import org.oscarehr.common.model.MessageTbl;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class MsgViewPDFAttachmentAction extends Action {
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-    MsgViewPDFAttachmentForm frm = (MsgViewPDFAttachmentForm) form;
-    String attachId;
-    String pdfAtt = null;
+		MsgViewPDFAttachmentForm frm = (MsgViewPDFAttachmentForm) form;
+		String attachId;
+		String pdfAtt = null;
 
-    attachId = frm.getAttachId();
+		attachId = frm.getAttachId();
 
-    try{
-        
-        java.sql.ResultSet rs;
+		MessageTblDao dao = SpringUtils.getBean(MessageTblDao.class);
+		MessageTbl m = dao.find(ConversionUtils.fromIntString(attachId));
+		if (m != null) {
+			pdfAtt = new String(m.getPdfAttachment());
+		}
+		request.setAttribute("PDFAttachment", pdfAtt);
+		request.setAttribute("attId", attachId);
 
-        String sql = new String("select pdfattachment from messagetbl where messageid ="+attachId);
-        rs = DBHandler.GetSQL(sql);
-        while (rs.next()) {
-              pdfAtt = oscar.Misc.getString(rs, "pdfattachment");
-        }//while
-        rs.close();
-    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-    request.setAttribute("PDFAttachment", pdfAtt);
-    request.setAttribute("attId",attachId);
-
-    return (mapping.findForward("success"));
-    }
+		return (mapping.findForward("success"));
+	}
 }

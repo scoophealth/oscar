@@ -263,31 +263,14 @@
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportReassignAction.java://Hashtable htable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportReassignAction.java:ArrayList listFlaggedLabs = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/SendMostResponProvAction.java:ArrayList listFlaggedLabs = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:groupMemberVector = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:java.util.Vector vector = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:providerList = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:remoteLocationDesc      = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:remoteLocationDesc = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:remoteLocationId        = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:remoteLocationId = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:Hashtable orderTable = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:attach  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:date    = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:date  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:ime  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:java.util.Vector msg = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:messagePosition = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:messageid = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:sentby  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:sentby = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:status  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:subject  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:subject = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private void setUpVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerFirstName = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerLastName = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerNoVector = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public java.util.Vector getProviderNoVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private void setUpVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public Vector&lt;String&gt; getProviderNoVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:setUpVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgHandleMessagesAction.java:java.util.Vector vector = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:Hashtable demoMap = new Hashtable();</ViolationValue>
@@ -456,7 +439,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;String&gt; randNum = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Hashtable retHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector params = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector retVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Vector();</ViolationValue>
@@ -864,12 +846,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/GenericIntakeNodeDAO.java:public class GenericIntakeNodeDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/HealthSafetyDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/HealthSafetyDao.java:public class HealthSafetyDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/JointAdmissionDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/JointAdmissionDAO.java:public class JointAdmissionDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/LogDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/LogDAO.java:public class LogDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/MergeClientDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/MergeClientDao.java:public class MergeClientDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java:public class ProgramAccessDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramClientRestrictionDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -890,10 +868,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramTeamDAO.java:public class ProgramTeamDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProviderDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProviderDao.java:public class ProviderDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RatePageDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RatePageDao.java:public class RatePageDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoleDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoleDAO.java:public class RoleDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomBedDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomBedDAO.java:public class RoomBedDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -916,16 +890,10 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteExtDAO.java:public class CaseManagementNoteExtDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteLinkDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteLinkDAO.java:public class CaseManagementNoteLinkDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementTmpSaveDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementTmpSaveDAO.java:public class CaseManagementTmpSaveDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/ClientImageDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/ClientImageDAO.java:public class ClientImageDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/HashAuditDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/HashAuditDAO.java:public class HashAuditDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/IssueDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/IssueDAO.java:public class IssueDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/OnCallDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/OnCallDAO.java:public class OnCallDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/RoleProgramAccessDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/RoleProgramAccessDAO.java:public class RoleProgramAccessDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/TicklerDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -1091,8 +1059,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:ResultSet rsDemo = DBHandler.GetSQL("select phone,phone2 from demographic where demographic_no = " + b.demoNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:rs = DBHandler.GetSQL(p);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:rs = DBHandler.GetSQL(qry);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_DATE)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_INT)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING)){</ViolationValue>
@@ -1144,24 +1110,14 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/pageUtil/MsgMessengerAdminAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/docxfer/send/MsgGenerate.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:rs = DBHandler.GetSQL("select locationId from oscarcommlocations where current1 = '1'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgHandleMessagesAction.java:rs = DBHandler.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = '"+messageNo+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgHandleMessagesAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgProceedAction.java:rs = DBHandler.GetSQL(sel);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgSendMessageAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgSessionBean.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageByPositionAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/tld/MsgNewMessagesTag.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLDenominator.java:ResultSet rs = DBHandler.GetSQL(exeSql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLNumerator.java:ResultSet rs = DBHandler.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:DBPreparedHandler accessDB = null;</ViolationValue>
@@ -1169,7 +1125,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:DBPreparedHandler accessDB=null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:accessDB = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicQueryBuilder.java:rs = DBHandler.GetSQL(stringBuffer.toString());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:for (resultset = DBHandler.GetSQL(s); resultset.next(); arraylist</ViolationValue>
@@ -1232,13 +1187,9 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:rs = DBHelp.searchDBRecord(subQuery);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptRehabStudyAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptRehabStudyAction.java:ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptRehabStudyAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java:rs = DBHandler.GetSQL(cohortSQL);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java:rs2 = DBHandler.GetSQL(apptSQLwDemo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/reportByTemplate/SQLReporter.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/service/OscarSuperManager.java:"Dao with specified name has not been injected into OscarSuperManager: " + daoName);</ViolationValue>
@@ -1254,13 +1205,6 @@
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDateEX(eDate, 1));</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:params[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(sDate));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:ResultSet rs = DBHelp.searchDBRecord(query);</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("first_name", DBHelp.getString(rs,"first_name"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("last_name", DBHelp.getString(rs,"last_name"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("provider_no", DBHelp.getString(rs,"provider_no")==null?"":DBHelp.getString(rs,"provider_no"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("role_id", DBHelp.getString(rs,"id")!=null?DBHelp.getString(rs,"id"):"");</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("role_name", DBHelp.getString(rs,"role_name")!=null?DBHelp.getString(rs,"role_name"):"");</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/onSearch3rdBillAddr.jsp:oscar.oscarDB.DBPreparedHandler dbObj = new oscar.oscarDB.DBPreparedHandler();</ViolationValue>
@@ -1281,8 +1225,6 @@
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_header_information.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_lab_results.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_pid_information.replaceAll("@pid", pid));</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_providers_with_reports);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
@@ -2065,11 +2007,11 @@
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable&lt;String, Mnemonics&gt; mnemonics = new Hashtable&lt;String, Mnemonics&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportReassignAction.java://Hashtable htable = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:groupMemberVector = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:groupMemberVector.add(oscar.Misc.getString(rs, "provider_No"));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:java.util.Vector vector = membersInGroups(grpNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:public  java.util.Vector groupMemberVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:public java.util.Vector membersInGroups(String grpNo){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:groupMemberVector = new java.util.Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:groupMemberVector.add(g.getProviderNo());</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:java.util.Vector&lt;String&gt; vector = membersInGroups(grpNo);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:public java.util.Vector&lt;String&gt; groupMemberVector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:public java.util.Vector&lt;String&gt; membersInGroups(String grpNo) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:return groupMemberVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:* @return Vector the address book vector is returned.</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java://if ( ( binSearch &gt; 0 ) &amp;&amp; ( ( (String) locationVector.elementAt(binSearch) ).equals( (String) remoteLocationId.elementAt(remoId)  ) )){</ViolationValue>
@@ -2103,50 +2045,46 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:* calls getMessageIDS and getInfo which are used to fill the Vectors</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:* used to set the sentby Vector</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:* used to set the subject Vector of the messages</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:Hashtable orderTable = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:attach  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:date    = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:date  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:ime  = new java.util.Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:Hashtable&lt;String, String&gt; orderTable = new Hashtable&lt;String, String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:Vector&lt;MsgDisplayMessage&gt; msg = new Vector&lt;MsgDisplayMessage&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:attach = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:date = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:ime = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:java.util.Vector msg = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:messagePosition = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:messageid = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector attach;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector date;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector ime;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector messagePosition;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector messageid;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector sentby;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector status;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private java.util.Vector subject;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estDeletedInbox(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estDeletedInbox(String orderby){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estDemographicInbox(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estDemographicInbox(String orderby, String demographic_no){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estInbox(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estInbox(String orderby){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estInbox(String orderby,String moreMessages,int initialDisplay){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estSentItemsInbox(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector estSentItemsInbox(String orderby){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getAttach (){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getDate(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getDelMessageid(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getMessageid(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getSentMessageid(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getSentby (){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getStatus(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public java.util.Vector getSubject(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setDate(java.util.Vector date){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setMessageid(java.util.Vector messageid){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setSentby(java.util.Vector sentby){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setStatus(java.util.Vector status){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setSubject(java.util.Vector subject){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:sentby  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:sentby = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:status  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:subject  = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:subject = new java.util.Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:messagePosition = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:messageid = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; attach;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; date;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; ime;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; messagePosition;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; messageid;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; sentby;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; status;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; subject;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDeletedInbox() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDeletedInbox(String orderby) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDemographicInbox() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDemographicInbox(String orderby, String demographic_no) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estInbox(String orderby, String moreMessages, int initialDisplay) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estSentItemsInbox() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estSentItemsInbox(String orderby) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getAttach() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getDate() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getDelMessageid() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getMessageid() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getSentMessageid() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getSentby() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getStatus() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getSubject() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setDate(Vector&lt;String&gt; date) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setMessageid(Vector&lt;String&gt; messageid) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setSentby(Vector&lt;String&gt; sentby) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setStatus(Vector&lt;String&gt; status) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public void setSubject(Vector&lt;String&gt; subject) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:sentby = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:status = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:subject = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:* @param lName Vector,</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:* @param noVector</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:* @return Vector, With Strings of providers first names</ViolationValue>
@@ -2154,26 +2092,26 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:* @return Vector, With strings of provider No</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:* Used to set the Provider No Vector</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:* setUpVector to init them</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:if (providerNoVector == null){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private java.util.Vector providerFirstName;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private java.util.Vector providerLastName;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private java.util.Vector providerNoVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private void setUpVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerFirstName = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerLastName = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerNoVector = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerNoVector.add(oscar.Misc.getString(rs, "provider_no"));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public java.util.Vector getProviderFirstName(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public java.util.Vector getProviderLastName(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public java.util.Vector getProviderNoVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public void setProviderFirstName(java.util.Vector fName){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public void setProviderLastName(java.util.Vector lName){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public void setProviderNoVector(java.util.Vector noVector){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:if (providerNoVector == null) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private Vector&lt;String&gt; providerFirstName;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private Vector&lt;String&gt; providerLastName;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private Vector&lt;String&gt; providerNoVector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:private void setUpVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerFirstName = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerLastName = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerNoVector = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:providerNoVector.add(p.getProviderNo());</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public Vector&lt;String&gt; getProviderFirstName() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public Vector&lt;String&gt; getProviderLastName() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public Vector&lt;String&gt; getProviderNoVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public void setProviderFirstName(Vector&lt;String&gt; fName) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public void setProviderLastName(Vector&lt;String&gt; lName) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public void setProviderNoVector(Vector&lt;String&gt; noVector) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:return this.providerNoVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:setUpVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:this.providerNoVector = noVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:}//setUpDaVectorJaySTyle</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgHandleMessagesAction.java:java.util.Hashtable demoMap = msgDemoMap.getDemoMap( messageNo );</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgHandleMessagesAction.java:java.util.Hashtable demoMap = msgDemoMap.getDemoMap(messageNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgHandleMessagesAction.java:java.util.Vector vector = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageAction.java:Vector theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderBy,demographic_no);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageAction.java:import java.util.Vector;</ViolationValue>
@@ -2570,20 +2508,14 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RenalDosingFactory.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RenalDosingFactory.java:static Hashtable&lt;String,DosingRecomendation&gt; currentDosingInformation = new Hashtable&lt;String,DosingRecomendation&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:*@return Hashtable with values set from input for tags</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:/*public Hashtable get_drug(int pkey, boolean html){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:// Vector dosage;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java://Vector contraindications;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java://Vector indications;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java://Vector vec = (Vector) callWebservice("list_drugs",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java://Vector vec = (Vector) callWebserviceLite("get",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Enumeration e = ((Hashtable) obj).keys();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Hashtable h = (Hashtable) vec.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Hashtable retHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Hashtable returnVal = (Hashtable) vec.get(0);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:MiscUtils.getLogger().debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector params = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector retVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atc",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atc2text",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atcFromBrand",params);</ViolationValue>
@@ -2599,7 +2531,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("getRouteFromDrugCode",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("getStrengths",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("get_atcs_by_din",params);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("get_drug",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction_by_drugnames",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_drug_class",params);</ViolationValue>

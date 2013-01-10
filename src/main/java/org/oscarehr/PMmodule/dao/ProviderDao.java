@@ -111,6 +111,13 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 		return rs;
 	}
+	
+	public List<Provider> getProviders(String[] providers) {
+		List<Provider> rs = getHibernateTemplate().find(
+				"FROM Provider p WHERE p.providerNumber IN (?)", (Object[]) providers);
+		return rs;
+	}
+
 
     public List<Provider> getProviderFromFirstLastName(String firstname,String lastname){
             firstname=firstname.trim();

@@ -33,6 +33,7 @@ import org.oscarehr.common.model.MsgDemoMap;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class MessageTblDao extends AbstractDao<MessageTbl>{
 
 	public MessageTblDao() {
@@ -47,8 +48,20 @@ public class MessageTblDao extends AbstractDao<MessageTbl>{
     		ids.add(temp.getId().getMessageId());
     	}
     	query.setParameter("m", ids);
-        @SuppressWarnings("unchecked")
         List<MessageTbl> results = query.getResultList();
         return results;
 	}
+	
+	public List<MessageTbl> findByProviderAndSendBy(String providerNo, Integer sendBy) {
+		Query query = createQuery("m", "m.sentByNo = :providerNo and m.sentByLocation = :sendBy");
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("sendBy", sendBy);
+		return query.getResultList();
+	}
+
+	public List<MessageTbl> findByIds(List<Integer> ids) {
+		Query query = createQuery("m", "m.id in (:ids) order by m.date");
+		query.setParameter("ids", ids);
+		return query.getResultList();
+    }
 }
