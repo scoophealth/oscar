@@ -505,4 +505,22 @@ public class BillingDao extends AbstractDao<Billing> {
 		}
 		return query.getResultList();
 	}
+
+	public List<Billing> findBillingsByDemoNoServiceCodeAndDate(Integer demoNo, Date date, List<String> serviceCodes) {
+		String sql = "SELECT b FROM Billing b, BillingDetail bd " +
+				"WHERE bd.billingNo = b.id " +
+				"AND bd.status <> 'D' " +
+				"AND b.status <> 'D' " +
+				"AND bd.serviceCode IN (:serviceCodes) " +
+				"AND b.billingDate <= :date " +
+				"AND b.demographicNo = :demoNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("date", date);
+		query.setParameter("serviceCodes", serviceCodes);
+		return query.getResultList();
+
+    }
+
+
 }
