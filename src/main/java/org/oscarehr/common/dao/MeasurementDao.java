@@ -34,6 +34,7 @@ import java.util.Set;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Measurement;
 import org.springframework.stereotype.Repository;
 
@@ -593,6 +594,94 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter("type", type);
 		query.setParameter("date", date);
 		return getSingleResultOrNull(query);
+    }
+
+	public List<Measurement> findByDemoNoTypeDateAndMeasuringInstruction(Integer demoNo, Date from, Date to, String type, String instruction) {
+		Query query = createQuery("m", "m.dateObserved >= :from AND m.dateObserved <= :to AND m.type = :type " +
+				"AND m.measuringInstruction = :instruction AND m.demographicId = :demoNo");
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		query.setParameter("type", type);
+		query.setParameter("instruction", instruction);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findLastEntered(Date from, Date to, String measurementType, String mInstrc) {
+		Query query = createQuery("SELECT m.demographicId, max(m.createDate)", "m", 
+				"m.dateObserved >= :from AND m.dateObserved <= :to AND m.type = :measurementType AND m.measuringInstruction = :mInstrc group by m.demographicId");
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		query.setParameter("measurementType", measurementType);
+		query.setParameter("mInstrc", mInstrc);
+		return query.getResultList();
+    }
+
+	public List<Measurement> findByDemographicNoTypeAndDate(Integer demographicNo, Date createDate, String measurementType, String mInstrc) {
+		String sql = "FROM Measurement m " +
+				"WHERE m.createDate = :createDate " + 
+				"AND m.demographicId = :demographicNo " +
+				"AND m.type = :measurementType " +
+				"AND m.measuringInstruction = :mInstrc";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("createDate", createDate);
+		query.setParameter("measurementType", measurementType);
+		query.setParameter("mInstrc", mInstrc);
+		return query.getResultList();
+    }
+
+	@NativeSql("measurements")
+	public List<Object[]> findByDemoNoDateTypeMeasuringInstrAndDataField(Integer demographicNo, Date dateEntered, 
+			String measurementType, String mInstrc, String upper, String lower) {
+		String sql = "SELECT dataField FROM measurements " +
+				"WHERE dateEntered = :dateEntered " +
+				"AND demographicNo = :demographicNo " +
+				"AND type = :measurementType " +
+				"AND measuringInstruction = :mInstrc " +
+				"AND dataField < :upper " +
+				"AND dataField > :lower";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("dateEntered", dateEntered);
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("measurementType", measurementType);
+		query.setParameter("mInstrc", mInstrc);
+		query.setParameter("upper", upper);
+		query.setParameter("lower", lower);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findLastEntered(Date from, Date to, String measurementType) {
+		Query query = createQuery("SELECT m.demographicId, MAX(m.createDate)", "m", 
+				"m.dateObserved >= :from AND m.dateObserved <= :to AND m.type = :measurementType GROUP BY m.demographicId");
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		query.setParameter("measurementType", measurementType);
+		return query.getResultList();
+    }
+
+	public List<Measurement> findByDemoNoDateAndType(Integer demoNo, Date createDate, String type) {
+	    Query query = createQuery("m", "m.createDate = :createDate AND m.demographicId = :demoNo AND m.type = :type");
+		query.setParameter("createDate", createDate);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("type", type);
+		return query.getResultList();		
+    }
+
+	@NativeSql("measurements")
+	public List<Object[]> findByDemoNoDateTypeAndDataField(Integer demographicNo, Date dateEntered, String type, String upper, String lower) {
+		String sql = "SELECT dataField FROM measurements WHERE dateEntered = :dateEntered " +
+				"AND demographicNo = :demographicNo " + 
+				"AND type = :type " + 
+				"AND dataField < :upper " +
+				"AND dataField > :lower";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("dateEntered", dateEntered);
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("type", type);
+		query.setParameter("upper", upper);
+		query.setParameter("lower", lower);
+	    return query.getResultList();
     }
 	
 }
