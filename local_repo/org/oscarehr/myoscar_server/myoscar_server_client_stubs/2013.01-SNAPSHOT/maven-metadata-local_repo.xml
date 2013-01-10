@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-  <groupId>org.oscarehr</groupId>
-  <artifactId>myoscar_client_utils</artifactId>
+  <groupId>org.oscarehr.myoscar_server</groupId>
+  <artifactId>myoscar_server_client_stubs</artifactId>
   <version>2013.01-SNAPSHOT</version>
   <versioning>
     <snapshot>
       <localCopy>true</localCopy>
     </snapshot>
-    <lastUpdated>20130109230008</lastUpdated>
+    <lastUpdated>20130109031439</lastUpdated>
   </versioning>
 </metadata>
