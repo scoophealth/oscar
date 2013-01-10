@@ -1996,7 +1996,7 @@ $(document).ready(function(){
 %>
 &nbsp;&nbsp;&nbsp;
 			<b>View:</b> <a
-				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
+				href="javascript:void(0)" onclick="popupPage(960,700,'formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
 				</a>&nbsp;&nbsp;&nbsp;
 			<b>Edit:</b> <a
 				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>			
@@ -3485,7 +3485,7 @@ $(document).ready(function(){
 %>
 &nbsp;&nbsp;&nbsp;
 			<b>View:</b> <a
-				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
+				href="javascript:void(0)" onClick="popupPage(960,700,'formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
 			</a> 
 			&nbsp;&nbsp;&nbsp;
 			<b>Edit:</b> 
