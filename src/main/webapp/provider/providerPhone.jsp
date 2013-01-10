@@ -87,9 +87,17 @@
       
             %> <html:form action="/EditPhoneNum.do">
 
-			<bean:message key="provider.editRxPhone.msgEdit" />
-			<br>
-
+			
+			<span style="color:blue">By entering in a value, you will 
+			<ul>
+			<li>Override the phone # in prescriptions</li>
+			<li> When choosing your letterhead in consult requests, the clinic phone# and your provider record's work phone # will be overridden
+			</li>
+			</ul>
+			</span>
+            <br/>
+            
+            
 			<html:text property="faxNumber" value="<%=phoneNum%>" size="40" />
 			<br>
 

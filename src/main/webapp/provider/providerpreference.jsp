@@ -562,13 +562,13 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
   </tr>
 </security:oscarSec>
 	  <tr>
-          <td align="center"><a href=# onClick ="popupPage(230,860,'providerAddress.jsp');return false;"><bean:message key="provider.btnEditAddress"/></a></td>
+          <td align="center"><a href=# onClick ="popupPage(400,860,'providerAddress.jsp');return false;"><bean:message key="provider.btnEditAddress"/></a></td>
       </tr>
       <tr>
-          <td align="center"><a href=# onClick ="popupPage(230,860,'providerPhone.jsp');return false;"><bean:message key="provider.btnEditPhoneNumber"/></a></td>
+          <td align="center"><a href=# onClick ="popupPage(400,860,'providerPhone.jsp');return false;"><bean:message key="provider.btnEditPhoneNumber"/></a></td>
       </tr>
       <tr>
-          <td align="center"><a href=# onClick ="popupPage(230,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a></td>
+          <td align="center"><a href=# onClick ="popupPage(400,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a></td>
       </tr>
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a></td>
