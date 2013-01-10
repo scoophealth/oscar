@@ -19,13 +19,13 @@ length_18	:	weight_18
 length_19	:	weight_19
 length_20	:	weight_20
 
-__origX		:	110
-__origY		:	688
-__nMaxPixX	:	384
-__nMaxPixY	:	403
+__origX		:	125
+__origY		:	697
+__nMaxPixX	:	392
+__nMaxPixY	:	448
 __fStartX	:	45
-__fEndX		:	105
-__fStartY	:	0
-__fEndY		:	23
+__fEndX		:	110
+__fStartY	:	1.4
+__fEndY		:	24.6
 
 __className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart

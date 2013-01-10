@@ -19,13 +19,13 @@ age_18	:	length_18
 age_19	:	length_19
 age_20	:	length_20
 
-__origX		:	110
-__origY		:	511
-__nMaxPixX	:	384
-__nMaxPixY	:	421
+__origX		:	125
+__origY		:	541
+__nMaxPixX	:	391
+__nMaxPixY	:	438
 __fStartX	:	0
-__fEndX		:	36
-__fStartY	:	37
-__fEndY		:	107
+__fEndX		:	24
+__fStartY	:	17
+__fEndY		:	102
 
 __className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
