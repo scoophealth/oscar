@@ -30,7 +30,25 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
-<%@page import="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm"%><html:html locale="true">
+<%@page import="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm"%>
+<%@page import="java.util.List" %>
+<%@page import="java.util.Map" %>
+<%@page import="java.util.HashMap" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.InstitutionDao" %>
+<%@page import="org.oscarehr.common.model.Institution" %>
+<%@page import="org.oscarehr.common.dao.InstitutitionDepartmentDao" %>
+<%@page import="org.oscarehr.common.model.InstitutionDepartment" %>
+<%@page import="org.oscarehr.common.dao.DepartmentDao" %>
+<%@page import="org.oscarehr.common.model.Department" %>
+
+<%
+	InstitutionDao institutionDao = SpringUtils.getBean(InstitutionDao.class);
+    InstitutitionDepartmentDao idDao = SpringUtils.getBean(InstitutitionDepartmentDao.class);
+    DepartmentDao departmentDao = SpringUtils.getBean(DepartmentDao.class);
+%>
+
+<html:html locale="true">
 
 <%
   ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
@@ -45,9 +63,51 @@
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script src="<%= request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
 <title><%=transactionType%></title>
 <html:base />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+<script>
+function updateDepartments(i) {
+<%
+for(Institution i: institutionDao.findAll()) {
+	%> if(i == '<%=i.getId()%>') {
+		$('#department').empty();
+		$('#department').append($("<option></option>").attr("value", '0').text('Select Below'));
+	<%
+	for(InstitutionDepartment id : idDao.findByInstitutionId(i.getId())) {
+		
+		int deptId = id.getId().getDepartmentId();
+		Department d = departmentDao.find(deptId);
+		if(d != null) {
+		%>
+			$('#department').append($("<option></option>").attr("value", '<%=deptId%>').text('<%=d.getName()%>'));
+		<%
+	} }
+	%>}<%
+}
+%>
+}
+</script>
+
+<script>
+	$(document).ready(function(){
+		$('#institution').change(function(){
+			changeInstitution();
+		});	
+	});
+	
+	function changeInstitution() {
+		var id = $('#institution').val();
+		if(id == '0') {
+			$('#department').empty();
+			$('#department').append($("<option></option>").attr("value", '0').text('Select Below'));
+		} else {
+			updateDepartments(id);
+		}
+	}
+</script>
 </head>
 <script language="javascript">
 function BackToOscar() {
@@ -96,29 +156,41 @@ function BackToOscar() {
 				<td>
 
 				<html:form action="/oscarEncounter/AddSpecialist">
-					<table>
 						<%
-                           if (request.getAttribute("specId") != null ){
-                           EctConAddSpecialistForm thisForm;
-                           thisForm = (EctConAddSpecialistForm) request.getAttribute("EctConAddSpecialistForm");
-                           thisForm.setFirstName( (String) request.getAttribute("fName"));
-                           thisForm.setLastName( (String) request.getAttribute("lName"));
-                           thisForm.setProLetters( (String) request.getAttribute("proLetters"));
-                           thisForm.setAddress( (String) request.getAttribute("address"));
-                           thisForm.setPhone( (String) request.getAttribute("phone"));
-                           thisForm.setFax( (String) request.getAttribute("fax"));
-                           thisForm.setWebsite( (String) request.getAttribute("website"));
-                           thisForm.setEmail( (String) request.getAttribute("email"));
-                           thisForm.setSpecType( (String) request.getAttribute("specType"));
-                           thisForm.setSpecId( (String) request.getAttribute("specId"));
-                           thisForm.seteDataUrl( (String) request.getAttribute("eDataUrl"));
-                           thisForm.seteDataOscarKey( (String) request.getAttribute("eDataOscarKey"));
-                           thisForm.seteDataServiceKey( (String) request.getAttribute("eDataServiceKey"));
-                           thisForm.seteDataServiceName( (String) request.getAttribute("eDataServiceName"));
-                           thisForm.setAnnotation((String)request.getAttribute("annotation"));
-                           thisForm.setReferralNo((String)request.getAttribute("referralNo"));
-                           }
-                        %>
+						   if (request.getAttribute("specId") != null ){
+							   EctConAddSpecialistForm thisForm;
+							   thisForm = (EctConAddSpecialistForm) request.getAttribute("EctConAddSpecialistForm");
+							   thisForm.setFirstName( (String) request.getAttribute("fName"));
+							   thisForm.setLastName( (String) request.getAttribute("lName"));
+							   thisForm.setProLetters( (String) request.getAttribute("proLetters"));
+							   thisForm.setAddress( (String) request.getAttribute("address"));
+							   thisForm.setPhone( (String) request.getAttribute("phone"));
+							   thisForm.setFax( (String) request.getAttribute("fax"));
+							   thisForm.setWebsite( (String) request.getAttribute("website"));
+							   thisForm.setEmail( (String) request.getAttribute("email"));
+							   thisForm.setSpecType( (String) request.getAttribute("specType"));
+							   thisForm.setSpecId( (String) request.getAttribute("specId"));
+							   thisForm.seteDataUrl( (String) request.getAttribute("eDataUrl"));
+							   thisForm.seteDataOscarKey( (String) request.getAttribute("eDataOscarKey"));
+							   thisForm.seteDataServiceKey( (String) request.getAttribute("eDataServiceKey"));
+							   thisForm.seteDataServiceName( (String) request.getAttribute("eDataServiceName"));
+							   thisForm.setAnnotation((String)request.getAttribute("annotation"));
+							   thisForm.setReferralNo((String)request.getAttribute("referralNo"));
+							   thisForm.setInstitution((String)request.getAttribute("institution"));
+							   thisForm.setDepartment((String)request.getAttribute("department"));
+						   %>
+						   	<script>
+						   		$(document).ready(function(){
+						   		$('#institution').val('<%=request.getAttribute("institution")%>');
+						   		changeInstitution();
+						   		$('#department').val('<%=request.getAttribute("department")%>');
+						   		});
+						   	</script>
+						   <%
+						   }
+						%>				
+					<table>
+
 						<html:hidden name="EctConAddSpecialistForm" property="specId" />
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.firstName" /></td>
@@ -166,6 +238,25 @@ function BackToOscar() {
 										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInvalid" /></span><br />
 								<% } %>
 								<html:text name="EctConAddSpecialistForm" property="referralNo" maxlength="6" />
+							</td>
+						</tr>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.institution" /></td>
+							<td>
+								<html:select property="institution" styleId="institution">
+									<option value="0">Select Below</option>
+									<%for(Institution institution: institutionDao.findAll()) { %>
+									<option value="<%=institution.getId()%>"><%=institution.getName() %></option>
+									<%} %>
+								</html:select>
+								
+							</td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.department" /></td>
+							<td>
+							
+								<html:select property="department" styleId="department">
+									<option value="0">Select Below</option>
+								</html:select>
 							</td>
 						</tr>
 						<tr>

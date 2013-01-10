@@ -109,7 +109,7 @@ String name = (String) request.getAttribute("name");
 						<tr>
 							<td>
 							
-							<input type=checkbox name="specialists" value=<%=id%> <%=assoc!=null?"checked=\"checked\"":"" %>>
+							<input type=checkbox name="specialists" value=<%=i.getId()%> <%=assoc!=null?"checked=\"checked\"":"" %>>
 							
 							</td>
 							<td>
