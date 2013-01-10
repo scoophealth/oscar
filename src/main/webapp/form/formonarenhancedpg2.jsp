@@ -930,6 +930,18 @@ function onPrint2() {
             popup.opener = self;
         }
     }
+    // open a new popup window
+    function popupPage(vheight,vwidth,varpage) { 
+      var page = "" + varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+      var popup=window.open(page, "attachment", windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self; 
+        }
+      }
+    }
+
     function popPage(varpage,pageName) {
         windowprops = "height=700,width=960"+
             ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
@@ -2159,7 +2171,7 @@ $(document).ready(function(){
 %>
 &nbsp;&nbsp;&nbsp;
 			<b>View:</b> <a
-				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">
+				href="javascript:void(0);" onclick="popupPage(960,700,'formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">
 			AR1</a> &nbsp;&nbsp;&nbsp;
 			<b>Edit:</b> <a
 				href="javascript:void(0);" onclick="return onPageChange('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR1</a>
@@ -2627,7 +2639,7 @@ $(document).ready(function(){
 %>
 	&nbsp;&nbsp;&nbsp;
 			<font size="-1"><b>View:</b> <a
-				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">
+				href="javascript:void(0);" onclick="popupPage(960,700,'formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">
 			AR1</a> </font>
 			&nbsp;&nbsp;&nbsp;
 			<b>Edit:</b> <a
