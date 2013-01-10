@@ -171,7 +171,7 @@ public class BillingReProcessBillAction extends Action {
     }
 
     if (hcType.equals(billRegion)) { //if its bc go on
-      oinInsurerCode = "";
+      //oinInsurerCode = "";
       oinRegistrationNo = "";
       oinBirthdate = "";
       oinFirstName = "";
