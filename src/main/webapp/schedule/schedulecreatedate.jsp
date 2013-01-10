@@ -47,7 +47,7 @@ if (bMultisites) {
   String user_no = (String) session.getAttribute("user");
   String user_name = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
   boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
-  int yearLimit = Integer.parseInt(session.getAttribute("schedule_yearlimit") != null ? ((String)session.getAttribute("schedule_yearlimit")) : "2");
+  int yearLimit = Integer.parseInt(session.getAttribute("schedule_yearlimit") != null ? ((String)session.getAttribute("schedule_yearlimit")) : "10");
   boolean scheduleOverlaps = false;
 %>
 <%@ page
