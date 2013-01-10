@@ -44,14 +44,12 @@ public class E2EVelocityTemplate {
 	// Creates the velocity context
 	private void loadPatient(PatientExport record) {
 		context = VelocityUtils.createVelocityContextWithTools();
-		
 		context.put("patient", record);
-		//context.put("date", new DateTool());
 		
 		// Temporary Author/Custodian Hardcode
-		context.put("authorId", "hhippocrates");
+		context.put("authorId", "OSCAR EMR");
 		context.put("authorIdRoot", "DCCD2C68-389B-44C4-AD99-B8FB2DAD1493");
-		context.put("custodianId", "123");
+		context.put("custodianId", "OSCAR EMR");
 		context.put("custodianIdRoot", "7EEF0BCC-F03E-4742-A736-8BAC57180C5F");
 	}
 	

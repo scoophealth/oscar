@@ -46,11 +46,11 @@ CDA Header
 			<id extension="$authorId" root="$authorIdRoot"/>
 		</assignedAuthor>
 	</author>
-	
 	<!-- 
 	********************************************************
 	Custodian
-	******************************************************** -->
+	********************************************************
+	-->
 	<custodian typeCode="CST">
 		<assignedCustodian classCode="ASSIGNED">
 			<representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
@@ -299,6 +299,104 @@ Immunization List
 					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
 					<title>Immunizations List [without entries]</title>
 					<text>No Immunization Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Laboratory Results & Results
+********************************************************
+-->
+#if ( $patient.hasLabs() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
+					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Laboratory Report"/>
+					<title>Laboratory Results and Reports [with entries]</title>
+					<text>Labs</text>
+#**##foreach( $lab in $patient.getLabs() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<!-- Laboratory Observation -->
+						<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
+						<observation classCode="OBS" moodCode="RQO">
+							<id root="$lab.labNumber" extension="AN123"/>
+							<code nullFlavor='UNK'/>
+							<text>$lab.discipline</text>
+							<!-- Ordering Provider -->
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.getObrDate()))"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+## Not sure if this is the right author to use
+											<given>$patient.getProviderFirstName($patient.providerNo)</given>
+											<family>$patient.getProviderLastName($patient.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>							
+							</author>
+							<!-- Result Organizer -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.26"/>
+								<!-- Result Organizer -->
+								<organizer classCode="BATTERY" moodCode="EVN">
+									<id extension="$lab.id" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
+									<code nullFlavor='UNK'/>
+## ValueSet OID not yet available - using Business Name/Description for now - not sure on xsd validation
+#*    *##if ( $lab.reportStatus == "P" )
+									<statusCode code="preliminary"/>
+#*    *##elseif ( $lab.reportStatus == "C" )
+									<statusCode code="corrected"/>
+#*    *##else
+									<statusCode code="final"/>
+#*    *##end
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.25"/>
+										<!-- Result Component -->
+										<observation classCode="OBS" moodCode="EVN">
+											<id extension="$lab.accessionNumber" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
+											<code nullFlavor='UNK'/>
+											<text>$lab.discipline</text>
+#*    *##if ( $lab.reportStatus == "P" )
+											<statusCode code="preliminary"/>
+#*    *##elseif ( $lab.reportStatus == "C" )
+											<statusCode code="corrected"/>
+#*    *##else
+											<statusCode code="final"/>
+#*    *##end
+											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.getObrDate()))"/>
+											<value xsi:type="ST">$lab.finalResultCount</value>
+#*    *##if ( $lab.resultStatus == "A" )
+											<interpretationCode code="A"/>
+#*    *##else
+											<interpretationCode code="N"/>
+#*    *##end
+											<entryRelationship typeCode="COMP">
+												<procedure classCode="PROC" moodCode="EVN">
+													<!-- specimen collection date -->
+													<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.getObrDate()))"/>
+												</procedure>
+											</entryRelationship>
+										</observation>        										
+									</component>
+								</organizer>								
+							</entryRelationship>
+						</observation>						
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.16"/>
+					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Laboratory Report"/>
+					<title>Laboratory Results and Reports [without entries]</title>
+					<text>No Laboratory Report Entries</text>
 				</section>
 			</component>
 #end
