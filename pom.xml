@@ -747,7 +747,7 @@
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>util</artifactId>
-			<version>2013.01.04</version>
+			<version>2013.01.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.oscarehr.myoscar_server</groupId>
@@ -1014,7 +1014,7 @@
 					<dependency>
 						<groupId>org.oscarehr</groupId>
 						<artifactId>util</artifactId>
-						<version>2013.01.04</version>
+						<version>2013.01.10</version>
 					</dependency>
 				</dependencies>
 			</plugin>
