@@ -22,102 +22,103 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMessenger.pageUtil;
-import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarDB.DBHandler;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.commons.beanutils.BeanComparator;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 
 public class MsgDocListForm implements java.io.Serializable {
-  private java.util.Vector providerNoVector;
-  private java.util.Vector providerFirstName;
-  private java.util.Vector providerLastName;
 
-  /**
-   * If the vectors used to set up the checkbox list are no itialize this will call
-   * setUpVector to init them
-   * @return Vector, With strings of provider No
-   */
-  public java.util.Vector getProviderNoVector(){
-    if (providerNoVector == null){
-      setUpVector();
-    }
-    return this.providerNoVector;
-  }
+	private static final long serialVersionUID = 1L;
+	
+	private Vector<String> providerNoVector;
+	private Vector<String> providerFirstName;
+	private Vector<String> providerLastName;
 
-  /**
-   * If the vectors used to set up the checkbox list are no itialize this will call
-   * setUpVector to init them
-   * @return Vector, With Strings of providers first names
-   */
-  public java.util.Vector getProviderFirstName(){
-    if (providerFirstName == null){
-      setUpVector();
-    }
-    return this.providerFirstName;
-  }
+	/**
+	 * If the vectors used to set up the checkbox list are no itialize this will call
+	 * setUpVector to init them
+	 * @return Vector, With strings of provider No
+	 */
+	public Vector<String> getProviderNoVector() {
+		if (providerNoVector == null) {
+			setUpVector();
+		}
+		return this.providerNoVector;
+	}
 
-  /**
-   * If the vectors used to set up the checkbox list are no itialize this will call
-   * setUpVector to init them
-   * @return Vector, With Strings of providers last names
-   */
-  public java.util.Vector getProviderLastName(){
-    if (providerLastName == null){
-      setUpVector();
-    }
-    return this.providerLastName;
-  }
+	/**
+	 * If the vectors used to set up the checkbox list are no itialize this will call
+	 * setUpVector to init them
+	 * @return Vector, With Strings of providers first names
+	 */
+	public Vector<String> getProviderFirstName() {
+		if (providerFirstName == null) {
+			setUpVector();
+		}
+		return this.providerFirstName;
+	}
 
-  /**
-   * Used to set the Provider No Vector
-   * @param noVector
-   */
-  public void setProviderNoVector(java.util.Vector noVector){
-    this.providerNoVector = noVector;
-  }
+	/**
+	 * If the vectors used to set up the checkbox list are no itialize this will call
+	 * setUpVector to init them
+	 * @return Vector, With Strings of providers last names
+	 */
+	public Vector<String> getProviderLastName() {
+		if (providerLastName == null) {
+			setUpVector();
+		}
+		return this.providerLastName;
+	}
 
-  /**
-   * Used to set the Providers last name
-   * @param lName Vector,
-   */
-  public void setProviderLastName(java.util.Vector lName){
-    this.providerLastName = lName;
-  }
+	/**
+	 * Used to set the Provider No Vector
+	 * @param noVector
+	 */
+	public void setProviderNoVector(Vector<String> noVector) {
+		this.providerNoVector = noVector;
+	}
 
-  /**
-   * Used to set the Providers first name
-   * @param fName
-   */
-  public void setProviderFirstName(java.util.Vector fName){
-    this.providerFirstName = fName;
-  }
+	/**
+	 * Used to set the Providers last name
+	 * @param lName Vector,
+	 */
+	public void setProviderLastName(Vector<String> lName) {
+		this.providerLastName = lName;
+	}
 
+	/**
+	 * Used to set the Providers first name
+	 * @param fName
+	 */
+	public void setProviderFirstName(Vector<String> fName) {
+		this.providerFirstName = fName;
+	}
 
+	/**
+	 * Sets up three vectors used in for the CreateMessage.jsp page
+	 * They are used to init the checkboxes that can be checked to send messages
+	 */
+	@SuppressWarnings("unchecked")
+	private void setUpVector() {
+		providerNoVector = new Vector<String>();
+		providerLastName = new Vector<String>();
+		providerFirstName = new Vector<String>();
 
-  /**
-   * Sets up three vectors used in for the CreateMessage.jsp page
-   * They are used to init the checkboxes that can be checked to send messages
-   */
-  private void setUpVector(){
-      providerNoVector = new java.util.Vector();
-      providerLastName = new java.util.Vector();
-      providerFirstName = new java.util.Vector();
-      try{
-         
-         java.sql.ResultSet rs;
-         String sql = "select * from provider order by first_name asc";
-         rs = DBHandler.GetSQL(sql);
-         while (rs.next()) {
-            providerNoVector.add(oscar.Misc.getString(rs, "provider_no"));
-            providerFirstName.add(oscar.Misc.getString(rs, "first_name"));
-            providerLastName.add(oscar.Misc.getString(rs, "last_name"));
-         }
-
-       rs.close();
-
-      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-  }//setUpDaVectorJaySTyle
-
+		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+		List<Provider> ps = dao.getProviders();
+		Collections.sort(ps, new BeanComparator("firstName"));
+		for (Provider p : ps) {
+			providerNoVector.add(p.getProviderNo());
+			providerFirstName.add(p.getFirstName());
+			providerLastName.add(p.getLastName());
+		}
+	}
 
 }//DocListForm

@@ -22,9 +22,7 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMessenger.config.pageUtil;
-
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -41,98 +39,72 @@ import org.oscarehr.common.dao.GroupMembersDao;
 import org.oscarehr.common.dao.GroupsDao;
 import org.oscarehr.common.model.GroupMembers;
 import org.oscarehr.common.model.Groups;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgAddressBookMaker;
+import oscar.util.ConversionUtils;
 
 public class MsgMessengerAdminAction extends Action {
-	
+
 	private GroupsDao groupsDao = SpringUtils.getBean(GroupsDao.class);
-	private GroupMembersDao groupMembersDao = (GroupMembersDao)SpringUtils.getBean(GroupMembersDao.class);
+	private GroupMembersDao groupMembersDao = (GroupMembersDao) SpringUtils.getBean(GroupMembersDao.class);
 
-	
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
- public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+		String[] providers = ((MsgMessengerAdminForm) form).getProviders();
+		String grpNo = ((MsgMessengerAdminForm) form).getGrpNo();
+		String update = ((MsgMessengerAdminForm) form).getUpdate();
+		String delete = ((MsgMessengerAdminForm) form).getDelete();
 
-        String[] providers = ((MsgMessengerAdminForm)form).getProviders();
-        String grpNo = ((MsgMessengerAdminForm)form).getGrpNo();
-        String update = ((MsgMessengerAdminForm)form).getUpdate();
-        String delete = ((MsgMessengerAdminForm)form).getDelete();
+		String parent = new String();
 
-        String parent = new String();
-        
-        ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
+		ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources", request.getLocale());
 
-        if (update.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"))){
+		if (update.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"))) {
 
-        	for(GroupMembers g:groupMembersDao.findByGroupId(Integer.parseInt(grpNo))) {
-        		groupMembersDao.remove(g.getId());
-        	}
-        	
-           try{          
-              for (int i = 0; i < providers.length ; i++){
-            	  GroupMembers gm = new GroupMembers();
-            	  gm.setGroupId(Integer.parseInt(grpNo));
-            	  gm.setProviderNo(providers[i]);
-            	  groupMembersDao.persist(gm);
-            	  
-              }
-              
-              MsgAddressBookMaker addMake = new MsgAddressBookMaker();
-              boolean  res = addMake.updateAddressBook();
-           }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
+			for (GroupMembers g : groupMembersDao.findByGroupId(Integer.parseInt(grpNo))) {
+				groupMembersDao.remove(g.getId());
+			}
 
+			for (int i = 0; i < providers.length; i++) {
+				GroupMembers gm = new GroupMembers();
+				gm.setGroupId(Integer.parseInt(grpNo));
+				gm.setProviderNo(providers[i]);
+				groupMembersDao.persist(gm);
 
-         request.setAttribute("groupNo",grpNo);
-        }else if(delete.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnDeleteThisGroup"))){
+			}
 
-            try{
-                 
-                 java.sql.ResultSet rs;
+			MsgAddressBookMaker addMake = new MsgAddressBookMaker();
+			addMake.updateAddressBook();
+			request.setAttribute("groupNo", grpNo);
+		} else if (delete.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnDeleteThisGroup"))) {
+			GroupsDao dao = SpringUtils.getBean(GroupsDao.class);
+			Groups gg = dao.find(ConversionUtils.fromIntString(grpNo));
+			if (gg != null) {
+				parent = "" + gg.getParentId();
+			}
 
-                 String sql = new String("select parentID from groups_tbl where groupID = '"+grpNo+"'");
-                 rs = DBHandler.GetSQL(sql);
-                 if (rs.next()){
-                     parent =  oscar.Misc.getString(rs, "parentID");
-                 }
+			if (dao.findByParentId(ConversionUtils.fromIntString(parent)).size() > 1) {
+				request.setAttribute("groupNo", grpNo);
+				request.setAttribute("fail", "This Group has Children, you must delete the children groups first");
+				return (mapping.findForward("failure"));
+			}
 
+			for (GroupMembers g : groupMembersDao.findByGroupId(Integer.parseInt(grpNo))) {
+				groupMembersDao.remove(g.getId());
+			}
 
-                 sql = new String("select * from groups_tbl where parentID = '"+grpNo+"'");
-                 rs = DBHandler.GetSQL(sql);
+			Groups g = groupsDao.find(Integer.parseInt(grpNo));
+			if (g != null) {
+				groupsDao.remove(g.getId());
+			}
 
-                 if (rs.next()){
-                    request.setAttribute("groupNo",grpNo);
-                    request.setAttribute("fail","This Group has Children, you must delete the children groups first");
-                    return (mapping.findForward("failure"));
-                 }else{
-                	 for(GroupMembers g:groupMembersDao.findByGroupId(Integer.parseInt(grpNo))) {
-                 		groupMembersDao.remove(g.getId());
-                 	}
-                   
-                	 Groups g = groupsDao.find(Integer.parseInt(grpNo));
-                	 if(g != null) {
-                		 groupsDao.remove(g.getId());
-                	 }
+			MsgAddressBookMaker addMake = new MsgAddressBookMaker();
+			addMake.updateAddressBook();
+			request.setAttribute("groupNo", parent);
+		}
 
-                 }
-              rs.close();
-              MsgAddressBookMaker addMake = new MsgAddressBookMaker();
-              boolean res = addMake.updateAddressBook();
-           }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-         request.setAttribute("groupNo",parent);
-        }
-
-      return (mapping.findForward("success"));
- }
-
-
-
+		return (mapping.findForward("success"));
+	}
 
 }

@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarMessenger.pageUtil;
 
 import java.io.IOException;
@@ -35,39 +34,28 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.MessageTblDao;
+import org.oscarehr.common.model.MessageTbl;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class MsgViewAttachmentAction extends Action {
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		MsgViewAttachmentForm frm = (MsgViewAttachmentForm) form;
+		String attachId;
+		String att = null;
+		attachId = frm.getAttachId();
 
-    MsgViewAttachmentForm frm = (MsgViewAttachmentForm) form;
-    String attachId;
-    String att = null;
+		MessageTblDao dao = SpringUtils.getBean(MessageTblDao.class);
+		MessageTbl m = dao.find(ConversionUtils.fromIntString(attachId));
+		if (m != null) {
+			att = m.getAttachment();
+		}
+		request.setAttribute("Attachment", att);
+		request.setAttribute("attId", attachId);
 
-    attachId = frm.getAttachId();
-
-    try{
-        
-        java.sql.ResultSet rs;
-
-        String sql = new String("select attachment from messagetbl where messageid ="+attachId);
-        rs = DBHandler.GetSQL(sql);
-        while (rs.next()) {
-              att = oscar.Misc.getString(rs, "attachment");
-        }//while
-        rs.close();
-    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-    request.setAttribute("Attachment",att);
-    request.setAttribute("attId",attachId);
-
-    return (mapping.findForward("success"));
-    }
+		return (mapping.findForward("success"));
+	}
 }
