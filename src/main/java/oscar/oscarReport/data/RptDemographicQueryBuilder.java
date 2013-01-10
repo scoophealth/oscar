@@ -34,7 +34,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarPrevention.reports.PreventionReportUtil;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 import oscar.util.DateUtils;
-import oscar.util.Textualizer;
 import oscar.util.UtilDateUtilities;
 
 public class RptDemographicQueryBuilder {
@@ -347,9 +346,7 @@ public class RptDemographicQueryBuilder {
 			MiscUtils.getLogger().debug(stringBuffer.toString());
 
 			FormsDao dao = SpringUtils.getBean(FormsDao.class);
-			Textualizer.DefaultTemplate converter = new Textualizer.DefaultTemplate();
 			for (Object[] o : dao.runNativeQuery(stringBuffer.toString())) {
-
 				String demoNo = null;
 				java.util.ArrayList<String> tempArr = new java.util.ArrayList<String>();
 				for (int i = 0; i < select.length; i++) {

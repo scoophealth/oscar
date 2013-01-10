@@ -189,7 +189,7 @@ public abstract class DaoTestFixtures
 							m.invoke(daoObject, params);
 						}catch(Exception e) {
 							MiscUtils.getLogger().error("error on method " + m.getName(),e);
-							fail("error on method " + m.getName() + " with exception message " + e.getMessage());
+							fail("error on method " + m.getName() + "(" + Arrays.toString(m.getParameterTypes()) + ") with exception message " + e.getMessage());
 						}
 					} else {
 						MiscUtils.getLogger().info("skipping " + m.getName());

@@ -684,5 +684,25 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		query.setParameter("to", to);
 		return query.getResultList();
     }    
+	
+	public List<BillingONCHeader1> findBillingsByDemoNoCh1HeaderServiceCodeAndDate(Integer demoNo, List<String> serviceCodes, Date from, Date to) {
+		String sql = "SELECT b FROM BillingONCHeader1 b, BillingONItem bd " +
+				"WHERE b.demographicNo = :demoNo " +
+				"AND bd.ch1Id=b.id " +
+				"AND bd.serviceCode IN (:serviceCodes) " +
+				"AND b.billingDate >= :from " + 
+				"AND b.billing_date <= :to " + 
+				"AND bd.status <> 'D' " +
+				"AND b.status <> 'D' " +
+				"ORDER BY b.billingDate DESC";
+		
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("serviceCodes", serviceCodes);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		
+		return query.getResultList();
+    }
     
 }
