@@ -86,8 +86,15 @@
       
             %> <html:form action="/EditFaxNum.do">
 
-			<bean:message key="provider.editRxFax.msgEdit" />
-			<br>
+
+			<span style="color:blue">By entering in a value, you will 
+			<ul>
+			<li>Override the fax # in prescriptions</li>
+			<li> When choosing your letterhead in consult requests, the clinic fax # and your provider record's fax # will be overridden
+			</li>
+			</ul>
+			</span>
+            <br/>
 
 			<html:text property="faxNumber" value="<%=faxNum%>" size="40" />
 			<br>
