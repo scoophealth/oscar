@@ -172,10 +172,19 @@ br {
 	           if( request.getAttribute("status") == null )
 	           {
       
-            %> <html:form action="/EditAddress.do">
+            %> 
+            
+            <html:form action="/EditAddress.do">
 
-			<bean:message key="provider.editRxAddress.msgEdit" />
-			<br>
+			<span style="color:blue">By entering in values, you will 
+			<ul>
+			<li>Override the address in prescriptions</li>
+			<li> When choosing your letterhead in consult requests, the clinic address and your provider record's address will be overridden
+			</li>
+			</ul>
+			</span>
+            <br/>
+       
 			
 			<label for="address">Address</label>
 			<html:text property="address" value="<%=address %>" />
