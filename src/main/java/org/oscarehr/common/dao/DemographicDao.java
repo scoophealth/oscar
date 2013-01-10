@@ -1349,6 +1349,31 @@ public class DemographicDao extends HibernateDaoSupport {
 	    		"AND d.PatientStatus = ?", c.getAll(true));
     }
 	
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findDemographicsForFluReport(String providerNo) {
+		String sql = "select demographic_no, CONCAT(last_name,',',first_name) as demoname, phone, roster_status, patient_status, " +
+				"DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth), '-',(date_of_birth)),'%Y-%m-%d') as dob, " +
+				"(YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d')))-" +
+				"(RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) as age " +
+				"from demographic  where (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((year_of_birth),'-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d')))-" +
+				"(RIGHT(CURRENT_DATE,5)<" +
+				"RIGHT(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >= 65 " +
+				"and (patient_status = 'AC' or patient_status = 'UHIP') " +
+				"and (roster_status='RO' or roster_status='NR' or roster_status='FS' or roster_status='RF' or roster_status='PL')";
+		if (providerNo != null && !providerNo.equals("-1")) {
+			sql = sql + " and provider_no = '" + providerNo + "' ";
+		}
+		sql = sql + " order by last_name ";
+		
+		Session session = getSession();
+		try {		
+			SQLQuery sqlQuery = session.createSQLQuery(sql);
+			return sqlQuery.list();
+		} finally {
+			this.releaseSession(session);
+		}
+    }
+	
 	public static class DemographicCriterion {
 		
 		private String healthNumber;

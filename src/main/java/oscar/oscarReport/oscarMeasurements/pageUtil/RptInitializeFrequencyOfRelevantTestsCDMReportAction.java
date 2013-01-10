@@ -22,13 +22,11 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,243 +39,185 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.oscarReport.oscarMeasurements.data.RptMeasurementsData;
-
+import oscar.util.ConversionUtils;
 
 public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action {
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
- 
-        RptInitializeFrequencyOfRelevantTestsCDMReportForm frm = (RptInitializeFrequencyOfRelevantTestsCDMReportForm) form;                       
-        request.getSession().setAttribute("RptInitializeFrequencyOfRelevantTestsCDMReportForm", frm);
-        MessageResources mr = getResources(request);
-        ArrayList reportMsg = new ArrayList();
-        ArrayList headings = new ArrayList();
-        RptMeasurementsData mData = new RptMeasurementsData();
-        String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
-        String startDateA = frm.getStartDateA();
-        String endDateA = frm.getEndDateA();
-        int nbPatient = 0; 
-           
-        if(!validate(frm, request)){                    
-            return (new ActionForward(mapping.getInput()));
-        }
-        
-        
-        addHeading(headings, request);
-        if(patientSeenCheckbox!=null){
-            nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
-            String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
-            MiscUtils.getLogger().debug(msg);
-            reportMsg.add(msg);
-            reportMsg.add("");
-        }
-        getFrequenceOfTestPerformed(frm, reportMsg, request);
-        
-        String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
-        request.setAttribute("title", title);
-        //request.setAttribute("headings", headings);
-        request.setAttribute("messages", reportMsg);
-                
-               
-      
-        return mapping.findForward("success");
-    }
-    
-    /*****************************************************************************************
-     * add heading
-     *
-     * 
-     ******************************************************************************************/ 
-     private ArrayList addHeading(ArrayList headings, HttpServletRequest request){
-         MessageResources mr = getResources(request);
-         /*String hd = mr.getMessage("oscarReport.CDMReport.msgStartDate");
-         MiscUtils.getLogger().debug(hd);
-         headings.add(hd);
-         hd = mr.getMessage("oscarReport.CDMReport.msgEndDate");
-         MiscUtils.getLogger().debug(hd);
-         headings.add(hd);
-         hd = mr.getMessage("oscarReport.CDMReport.msgTest");
-         MiscUtils.getLogger().debug(hd);
-         headings.add(hd);
-         hd = mr.getMessage("oscarReport.CDMReport.msgMeasuringInstruction");
-         MiscUtils.getLogger().debug(hd);
-         headings.add(hd);*/
-         String hd = mr.getMessage("oscarReport.CDMReport.msgFrequency");
-         MiscUtils.getLogger().debug(hd);
-         headings.add(hd);
-         hd = mr.getMessage("oscarReport.CDMReport.msgPercentage");
-         MiscUtils.getLogger().debug(hd);
-         headings.add(hd);         
-         return headings;
-     }
-         
-     /*****************************************************************************************
-     * validate the input date
-     *
-     * @return boolean
-     ******************************************************************************************/ 
-    private boolean validate(RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, HttpServletRequest request){
-        EctValidation ectValidation = new EctValidation();                    
-        ActionMessages errors = new ActionMessages();        
-        String[] startDateD = frm.getStartDateD();
-        String[] endDateD = frm.getEndDateD();         
-        int[] exactly = frm.getExactly(); 
-        int[] moreThan = frm.getMoreThan();         
-        int[] lessThan = frm.getLessThan();
-        String[] frequencyCheckbox = frm.getFrequencyCheckbox();
-        boolean valid = true;
-        
-        if (frequencyCheckbox!=null){
-       
-            for(int i=0; i<frequencyCheckbox.length; i++){
-                int ctr = Integer.parseInt(frequencyCheckbox[i]);                
-                String startDate = startDateD[ctr];
-                String endDate = endDateD[ctr];                                    
-                String measurementType = (String) frm.getValue("measurementTypeD"+ctr);                                    
-                
-                if(!ectValidation.isDate(startDate)){                       
-                    errors.add(startDate, new ActionMessage("errors.invalidDate", measurementType));
-                    saveErrors(request, errors);
-                    valid = false;
-                }
-                if(!ectValidation.isDate(endDate)){                       
-                    errors.add(endDate, new ActionMessage("errors.invalidDate", measurementType));
-                    saveErrors(request, errors);
-                    valid = false;
-                }
-            }
-        }
-        return valid;
-    }   
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		RptInitializeFrequencyOfRelevantTestsCDMReportForm frm = (RptInitializeFrequencyOfRelevantTestsCDMReportForm) form;
+		request.getSession().setAttribute("RptInitializeFrequencyOfRelevantTestsCDMReportForm", frm);
+		MessageResources mr = getResources(request);
+		ArrayList<String> reportMsg = new ArrayList<String>();
+		ArrayList<String> headings = new ArrayList<String>();
+		RptMeasurementsData mData = new RptMeasurementsData();
+		String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
+		String startDateA = frm.getStartDateA();
+		String endDateA = frm.getEndDateA();
+		int nbPatient = 0;
 
-    
-     /*****************************************************************************************
-     * get the Frequence of Test Performed during aspecific time period
-     *
-     * @return ArrayList which contain the result in String format
-     ******************************************************************************************/      
-    private ArrayList getFrequenceOfTestPerformed(RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList percentageMsg, HttpServletRequest request){
-        String[] startDateD = frm.getStartDateD();
-        String[] endDateD = frm.getEndDateD();         
-        int[] exactly = frm.getExactly(); 
-        int[] moreThan = frm.getMoreThan();         
-        int[] lessThan = frm.getLessThan();
-        String[] frequencyCheckbox = frm.getFrequencyCheckbox();      
-        MessageResources mr = getResources(request);
-        RptMeasurementsData mData = new RptMeasurementsData();
-        
-        if (frequencyCheckbox!=null){
-            try{
-                
-                for(int i=0; i<frequencyCheckbox.length; i++){
-                    int ctr = Integer.parseInt(frequencyCheckbox[i]);                   
-                    String startDate = startDateD[ctr];
-                    String endDate = endDateD[ctr];                    
-                    int exact = exactly[ctr];
-                    int more = moreThan[ctr];
-                    int less = lessThan[ctr];
-                                        
-                    String measurementType = (String) frm.getValue("measurementTypeD"+ctr);                    
-                    String sNumMInstrc = (String) frm.getValue("mNbInstrcsD"+ctr);
-                    int iNumMInstrc = Integer.parseInt(sNumMInstrc);                    
-                    ArrayList patients = mData.getPatientsSeen(startDate, endDate);
-                    int nbPatients = patients.size();
-                    
-                    for(int j=0; j<iNumMInstrc; j++){
+		if (!validate(frm, request)) {
+			return (new ActionForward(mapping.getInput()));
+		}
 
-                        double exactPercentage = 0;
-                        double morePercentage = 0;
-                        double lessPercentage = 0;
-                        int nbExact =0;
-                        int nbMore =0;
-                        int nbLess =0;
-                        int nbTest =0;
-                        
-                        String mInstrc = (String) frm.getValue("mInstrcsCheckboxD"+ctr+j);
-                        if(mInstrc!=null){
-                            for(int k=0; k<nbPatients; k++){
-                                String patient = (String) patients.get(k);                            
+		addHeading(headings, request);
+		if (patientSeenCheckbox != null) {
+			nbPatient = mData.getNbPatientSeen(startDateA, endDateA);
+			String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA);
+			MiscUtils.getLogger().debug(msg);
+			reportMsg.add(msg);
+			reportMsg.add("");
+		}
+		getFrequenceOfTestPerformed(frm, reportMsg, request);
 
-                                String sql = "SELECT COUNT(demographicNo) AS nbTest FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
-                                             + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
-                                             + "' AND demographicNo=" + "'" + patient + "'";
-                                
-                                ResultSet rs = DBHandler.GetSQL(sql);  
-                                if (rs.next())
-                                    nbTest = rs.getInt("nbTest");                              
-                                rs.close();
-                                
-                                if(nbTest == exact){
-                                    nbExact++;
-                                }
-                                if(nbTest > more){
-                                    nbMore++;
-                                }
-                                if(nbTest < less){
-                                    nbLess++;
-                                }
+		String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
+		request.setAttribute("title", title);
+		request.setAttribute("messages", reportMsg);
+		return mapping.findForward("success");
+	}
 
-                                if(nbPatients!=0){
-                                    exactPercentage = Math.round( ((double) nbExact/ (double) nbPatients) * 100);
-                                    morePercentage = Math.round( ((double) nbMore/ (double) nbPatients) * 100);
-                                    lessPercentage = Math.round( ((double) nbLess/ (double) nbPatients) * 100);                                
-                                }
+	private ArrayList<String> addHeading(ArrayList<String> headings, HttpServletRequest request) {
+		MessageResources mr = getResources(request);
+		String hd = mr.getMessage("oscarReport.CDMReport.msgFrequency");
+		MiscUtils.getLogger().debug(hd);
+		headings.add(hd);
+		hd = mr.getMessage("oscarReport.CDMReport.msgPercentage");
+		MiscUtils.getLogger().debug(hd);
+		headings.add(hd);
+		return headings;
+	}
 
-                            }
-                        
-                            String[] param0 = {  startDate, 
-                                                endDate,
-                                                measurementType,
-                                                mInstrc,
-                                                Double.toString(nbExact) + "/" + Double.toString(nbPatients) +
-                                                " (" + Double.toString(exactPercentage) + "%)",
-                                                Integer.toString(exact)};
-                            String msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsExact", param0);                              
-                            MiscUtils.getLogger().debug(msg);
-                            percentageMsg.add(msg);
-                            String[] param1 = {   startDate, 
-                                                endDate,
-                                                measurementType,
-                                                mInstrc,
-                                                Double.toString(nbMore) + "/" + Double.toString(nbPatients) +
-                                                " (" + Double.toString(morePercentage) + "%)",
-                                                Integer.toString(more)};
-                            msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsMoreThan", param1); 
-                            MiscUtils.getLogger().debug(msg);
-                            percentageMsg.add(msg); 
-                            String[] param2 = {   startDate, 
-                                                endDate,
-                                                measurementType,
-                                                mInstrc,
-                                                Double.toString(nbLess) + "/" + Double.toString(nbPatients) +
-                                                " (" + Double.toString(lessPercentage) + "%)",
-                                                Integer.toString(less)};
-                            msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsLessThan", param2); 
-                            MiscUtils.getLogger().debug(msg);
-                            percentageMsg.add(msg); 
-                            percentageMsg.add("");
-                        }
-                    }                  
-                }
-            }
-            catch(SQLException e)
-            {
-                MiscUtils.getLogger().error("Error", e);
-            }
-        }
-        else{
-            MiscUtils.getLogger().debug("guideline checkbox is null");
-        }
-        return percentageMsg;
-    }
+	private boolean validate(RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, HttpServletRequest request) {
+		EctValidation ectValidation = new EctValidation();
+		ActionMessages errors = new ActionMessages();
+		String[] startDateD = frm.getStartDateD();
+		String[] endDateD = frm.getEndDateD();
+		String[] frequencyCheckbox = frm.getFrequencyCheckbox();
+		boolean valid = true;
 
+		if (frequencyCheckbox != null) {
+
+			for (int i = 0; i < frequencyCheckbox.length; i++) {
+				int ctr = Integer.parseInt(frequencyCheckbox[i]);
+				String startDate = startDateD[ctr];
+				String endDate = endDateD[ctr];
+				String measurementType = (String) frm.getValue("measurementTypeD" + ctr);
+
+				if (!ectValidation.isDate(startDate)) {
+					errors.add(startDate, new ActionMessage("errors.invalidDate", measurementType));
+					saveErrors(request, errors);
+					valid = false;
+				}
+				if (!ectValidation.isDate(endDate)) {
+					errors.add(endDate, new ActionMessage("errors.invalidDate", measurementType));
+					saveErrors(request, errors);
+					valid = false;
+				}
+			}
+		}
+		return valid;
+	}
+
+	/**
+	* Gets the frequency of tests performed during a time period
+	*
+	* @return 
+	* 	ArrayList which contain the result in String format
+	*/
+	private ArrayList<String> getFrequenceOfTestPerformed(RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList<String> percentageMsg, HttpServletRequest request) {
+		String[] startDateD = frm.getStartDateD();
+		String[] endDateD = frm.getEndDateD();
+		int[] exactly = frm.getExactly();
+		int[] moreThan = frm.getMoreThan();
+		int[] lessThan = frm.getLessThan();
+		String[] frequencyCheckbox = frm.getFrequencyCheckbox();
+		MessageResources mr = getResources(request);
+		RptMeasurementsData mData = new RptMeasurementsData();
+
+		if (frequencyCheckbox != null) {
+			try {
+
+				for (int i = 0; i < frequencyCheckbox.length; i++) {
+					int ctr = Integer.parseInt(frequencyCheckbox[i]);
+					String startDate = startDateD[ctr];
+					String endDate = endDateD[ctr];
+					int exact = exactly[ctr];
+					int more = moreThan[ctr];
+					int less = lessThan[ctr];
+
+					String measurementType = (String) frm.getValue("measurementTypeD" + ctr);
+					String sNumMInstrc = (String) frm.getValue("mNbInstrcsD" + ctr);
+					int iNumMInstrc = Integer.parseInt(sNumMInstrc);
+					ArrayList patients = mData.getPatientsSeen(startDate, endDate);
+					int nbPatients = patients.size();
+
+					for (int j = 0; j < iNumMInstrc; j++) {
+
+						double exactPercentage = 0;
+						double morePercentage = 0;
+						double lessPercentage = 0;
+						int nbExact = 0;
+						int nbMore = 0;
+						int nbLess = 0;
+						int nbTest = 0;
+
+						String mInstrc = (String) frm.getValue("mInstrcsCheckboxD" + ctr + j);
+						if (mInstrc != null) {
+							MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+							for (int k = 0; k < nbPatients; k++) {
+								String patient = (String) patients.get(k);
+
+								List<Measurement> ms = dao.findByDemoNoTypeDateAndMeasuringInstruction(ConversionUtils.fromIntString(patient), ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), measurementType, mInstrc);
+								nbTest = ms.size();
+
+								if (nbTest == exact) {
+									nbExact++;
+								}
+								if (nbTest > more) {
+									nbMore++;
+								}
+								if (nbTest < less) {
+									nbLess++;
+								}
+
+								if (nbPatients != 0) {
+									exactPercentage = Math.round(((double) nbExact / (double) nbPatients) * 100);
+									morePercentage = Math.round(((double) nbMore / (double) nbPatients) * 100);
+									lessPercentage = Math.round(((double) nbLess / (double) nbPatients) * 100);
+								}
+
+							}
+
+							String[] param0 = { startDate, endDate, measurementType, mInstrc, Double.toString(nbExact) + "/" + Double.toString(nbPatients) + " (" + Double.toString(exactPercentage) + "%)", Integer.toString(exact) };
+							String msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsExact", param0);
+							MiscUtils.getLogger().debug(msg);
+							percentageMsg.add(msg);
+							String[] param1 = { startDate, endDate, measurementType, mInstrc, Double.toString(nbMore) + "/" + Double.toString(nbPatients) + " (" + Double.toString(morePercentage) + "%)", Integer.toString(more) };
+							msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsMoreThan", param1);
+							MiscUtils.getLogger().debug(msg);
+							percentageMsg.add(msg);
+							String[] param2 = { startDate, endDate, measurementType, mInstrc, Double.toString(nbLess) + "/" + Double.toString(nbPatients) + " (" + Double.toString(lessPercentage) + "%)", Integer.toString(less) };
+							msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsLessThan", param2);
+							MiscUtils.getLogger().debug(msg);
+							percentageMsg.add(msg);
+							percentageMsg.add("");
+						}
+					}
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		} else {
+			MiscUtils.getLogger().debug("guideline checkbox is null");
+		}
+		return percentageMsg;
+	}
 
 }
