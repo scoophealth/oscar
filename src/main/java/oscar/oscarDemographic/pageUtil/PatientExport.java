@@ -23,6 +23,8 @@
 
 package oscar.oscarDemographic.pageUtil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +34,9 @@ import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Icd9Dao;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.dao.ProviderDataDao;
@@ -40,6 +44,8 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.ProviderData;
@@ -60,6 +66,8 @@ public class PatientExport {
 	private static ProviderDataDao providerDataDao = (ProviderDataDao)SpringUtils.getBean("providerDataDao");
 	private static DxresearchDAO dxResearchDao = SpringUtils.getBean(DxresearchDAO.class);
 	private static Icd9Dao icd9Dao = (Icd9Dao)SpringUtils.getBean("icd9Dao");
+	private static PatientLabRoutingDao patientLabRoutingDao = (PatientLabRoutingDao)SpringUtils.getBean("patientLabRoutingDao");
+	private static Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
 	
 	private Date currentDate = new Date();
 	private Integer demographicNo = null;
@@ -68,11 +76,13 @@ public class PatientExport {
 	private List<Allergy> allergies = null;
 	private List<Prevention> preventions = null;
 	private List<Dxresearch> problems = null;
+	private List<Hl7TextInfo> labs = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
 	private boolean exImmunizations = false;
 	private boolean exProblemList = false;
+	private boolean exLaboratoryResults = false;
 	
 	protected PatientExport() {
 	}
@@ -83,14 +93,20 @@ public class PatientExport {
 			this.demographic = demographicDao.getDemographic(demoNo);
 			this.allergies = allergyDao.findAllergies(demographicNo);
 			this.drugs = drugDao.findByDemographicId(demographicNo);
+			
 			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 			List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
-			
 			problems = new ArrayList<Dxresearch>();
 			for(Dxresearch problem : tempProblems) {
 				if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
 					this.problems.add(problem);
 				}
+			}
+			
+			List<PatientLabRouting> tempLabs = patientLabRoutingDao.findByDemographicAndLabType(demographicNo, "HL7");
+			labs = new ArrayList<Hl7TextInfo>();
+			for(PatientLabRouting routing : tempLabs) {
+				this.labs.add(hl7TextInfoDao.findLabId(routing.getLabNo()));
 			}
 		}
 	    catch (Exception e) {
@@ -115,6 +131,10 @@ public class PatientExport {
 	
 	public void setExProblemList(boolean rhs) {
 		this.exProblemList = rhs;
+	}
+	
+	public void setExLaboratoryResults(boolean rhs) {
+		this.exLaboratoryResults = rhs;
 	}
 	
 	/*
@@ -241,6 +261,17 @@ public class PatientExport {
     }
 	
 	/*
+	 * Laboratory Reports
+	 */
+	public List<Hl7TextInfo> getLabs() {
+		return labs;
+	}
+	
+	public boolean hasLabs() {
+		return!(!exLaboratoryResults || labs==null || labs.isEmpty());
+	}
+	
+	/*
 	 * Medications
 	 */
 	public List<Drug> getMedications() {
@@ -277,6 +308,17 @@ public class PatientExport {
 	 */
 	public Date getCurrentDate() {
 		return currentDate;
+	}
+	
+	public Date stringToDate(String rhs) {
+		Date date = new Date();
+		try {
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			date = formatter.parse(rhs);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return date;
 	}
 	
 	public String getProviderFirstName(String providerNo) {
