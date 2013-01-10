@@ -449,10 +449,12 @@ public class EFormUtil {
 		return null;
 	}
 
-	public static String getEFormIdByName(String name) {
-		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+	public static String getEFormIdByName(String name) {		
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);		
+		logger.debug("EFORM NAME '" + name + "'");
 		Integer maxId = dao.findMaxIdForActiveForm(name);
-		return maxId.toString();
+		
+		return (maxId == null ? null : maxId.toString());
 	}
 
 	private static void setFormStatus(String fid, boolean status) {

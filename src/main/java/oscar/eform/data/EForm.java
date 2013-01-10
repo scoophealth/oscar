@@ -432,7 +432,7 @@ public class EForm extends EFormBase {
 		if (module.equals("m")) {
 			log.debug("SWITCHING TO MEASUREMENTS");
 			Hashtable data = EctMeasurementsDataBeanHandler.getLast(this.demographicNo, type);
-			if (data != null) {
+			if (!data.isEmpty()) {
 				curAP = new DatabaseAP();
 				curAP.setApName(apName);
 				curAP.setApOutput((String) data.get(field));
