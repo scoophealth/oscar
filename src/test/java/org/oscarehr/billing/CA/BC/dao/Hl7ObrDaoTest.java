@@ -40,7 +40,7 @@ public class Hl7ObrDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("hl7_obr","hl7_obx");
+		SchemaUtils.restoreTable("hl7_obr", "hl7_pid", "hl7_link", "hl7_msh", "hl7_obx");
 	}
 
 	@Test
