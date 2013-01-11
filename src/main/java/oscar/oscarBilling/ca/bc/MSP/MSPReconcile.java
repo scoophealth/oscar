@@ -1775,7 +1775,8 @@ public class MSPReconcile {
 	public boolean patientHasOutstandingPrivateBill(String demographicNo) {
 		BillingDao dao = SpringUtils.getBean(BillingDao.class);
 		boolean ret = false;
-		for(Object[] o : dao.findOutstandingBills(demographicNo, MSPReconcile.BILLTYPE_PRI, Arrays.asList(new String[] {"S","D","A"}))) {
+		for(Object[] o : dao.findOutstandingBills(ConversionUtils.fromIntString(demographicNo), 
+				MSPReconcile.BILLTYPE_PRI, Arrays.asList(new String[] {"S","D","A"}))) {
 			Billingmaster bm = (Billingmaster) o[0];
 			String billingmaster_no = "" + bm.getBillingmasterNo();
 			double amount = Double.parseDouble(bm.getBillAmount());

@@ -307,22 +307,21 @@ public class BillingDao extends AbstractDao<Billing> {
 		return query.getResultList();
     }
 
-    
-	public List<Object[]> findOutstandingBills(String demographicNo, String billingType, List<String> statuses) {
-	    // TODO Auto-generated method stub
+	public List<Object[]> findOutstandingBills(Integer demographicNo, String billingType, List<String> statuses) {
 		String q = "FROM Billingmaster bm, Billing b " +
 				"WHERE bm.billingmasterNo = b.id " +
 				"AND b.demographicNo = :dNo " +
-				"AND bm.billingstatus NOT IN ( :statuses ) " +
+				(statuses.isEmpty() ? "" : "AND bm.billingstatus NOT IN ( :statuses ) ") +
 				"AND b.billingtype = :bType";
 		Query query = entityManager.createQuery(q);
-		query.setParameter("statuses", statuses);
+		if (!statuses.isEmpty()) {
+			query.setParameter("statuses", statuses);
+		}
 		query.setParameter("dNo", demographicNo);
 		query.setParameter("bType", billingType);
 		return query.getResultList();
 
     }
-
 	
 	public List<Object[]> findByBillingMasterNo(Integer billingmasterNo) {
 		Query query = entityManager.createQuery("FROM Billingmaster b, Billing b1 " + 
