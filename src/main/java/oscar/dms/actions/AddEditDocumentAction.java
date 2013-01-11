@@ -366,6 +366,7 @@ public class AddEditDocumentAction extends DispatchAction {
 				}
 			}
 			EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
+			newDoc.setSourceFacility(fm.getSourceFacility());
 			newDoc.setDocId(fm.getMode());
 			newDoc.setDocPublic(fm.getDocPublic());
 			newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
