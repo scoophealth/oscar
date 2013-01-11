@@ -56,4 +56,17 @@ public class Hl7ObxDao extends AbstractDao<Hl7Obx> {
 		return query.getResultList();
 	    
     }
+
+	public List<Object[]> findByMessageIdAndAbnormalFlags(Integer messageId, List<String> abnormalFlags) {
+		String sql = "FROM Hl7Pid pid, Hl7Obr obr, Hl7Obx obx " +
+				"WHERE obr.pidId = pid.id " +
+				"AND obx.obrId = obr.id " +
+				"AND obx.abnormalFlags IN (:abnormalFlags) " +
+				"AND pid.messageId = :messageId";
+	    
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("abnormalFlags", abnormalFlags);
+		query.setParameter("messageId", messageId);
+		return query.getResultList();
+    }
 }

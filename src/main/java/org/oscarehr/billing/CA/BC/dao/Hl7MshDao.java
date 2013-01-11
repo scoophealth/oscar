@@ -23,14 +23,60 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.Hl7Msh;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@SuppressWarnings("unchecked")
 public class Hl7MshDao extends AbstractDao<Hl7Msh>{
 
 	public Hl7MshDao() {
 		super(Hl7Msh.class);
 	}
+
+    public List<Object[]> findPathnetResultsDataByPatientNameHinStatusAndProvider(String patientName, String patientHealthNumber, String status, String providerNo, String labType) {
+        String sql = "SELECT msh, pid, orc, obr, providerLabRouting, MIN(obr.resultStatus) " +
+                "FROM Hl7Msh msh, Hl7Pid pid, Hl7Orc orc, Hl7Obr obr, ProviderLabRoutingModel providerLabRouting " +
+                "WHERE providerLabRouting.labNo = pid.messageId " +
+                "AND pid.messageId = msh.messageId " +
+                "AND pid.id = orc.pidId " +
+                "AND pid.id = obr.pidId  "+
+                "AND providerLabRouting.status like :status " +
+                "AND providerLabRouting.providerNo like :providerNo " +
+                "AND providerLabRouting.labType = :labType " +
+                "AND pid.patientName like :patientName " +
+                "AND pid.externalId like :patientHealthNumber " +
+                "GROUP BY pid.id";
+        
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("status", status);
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("labType", labType);
+		query.setParameter("patientName", patientName);
+		query.setParameter("patientHealthNumber", patientHealthNumber);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findPathnetResultsDeomgraphicNo(Integer demographicNo, String labType) {		
+	    String sql =  "SELECT msh, pid, orc, obr, patientLabRouting, MIN(obr.resultStatus) " +
+                "FROM Hl7Msh msh, Hl7Pid pid, Hl7Orc orc, Hl7Obr obr, PatientLabRouting patientLabRouting " +
+                "WHERE patientLabRouting.labNo = pid.id " +
+                "AND pid.id = orc.pidId " +
+                "AND pid.id = obr.pidId " +
+                "AND msh.messageId = pid.id "+
+                "AND patientLabRouting.labType = :labType " +
+                "AND patientLabRouting.demographicNo = :demographicNo " +
+                "GROUP BY pid.id";
+
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("labType", labType);
+		return query.getResultList();
+    }
+	
 }

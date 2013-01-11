@@ -33,7 +33,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @SuppressWarnings("unchecked")
-public class Hl7ObrDao extends AbstractDao<Hl7Obr> {
+public class Hl7ObrDao extends AbstractDao<Hl7Obr>{
 
 	public Hl7ObrDao() {
 		super(Hl7Obr.class);
@@ -54,4 +54,25 @@ public class Hl7ObrDao extends AbstractDao<Hl7Obr> {
 		query.setParameter("pid", pid);
 		return query.getResultList();
 	}
+	
+	public List<Object[]> findMinResultStatusByMessageId(Integer messageId) {
+	    String sql = "SELECT MIN(obr.resultStatus) FROM Hl7Pid pid, Hl7Obr obr, Hl7Obx obx " +
+	    		"WHERE obr.pidId = pid.id " +
+	    		"AND obx.obrId = obr.id " + 
+	    		"AND pid.messageId = :messageId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("messageId", messageId);
+		return query.getResultList();
+    }
+	
+	public List<Object[]> findByMessageId(Integer messageId) {
+	    String sql = "FROM Hl7Pid pid, Hl7Obr obr, Hl7Obx obx " +
+	    		"WHERE obr.pidId = pid.id " +
+	    		"AND obx.obrId = obr.id " + 
+	    		"AND pid.messageId = :messageId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("messageId", messageId);
+		return query.getResultList();
+    }
+
 }
