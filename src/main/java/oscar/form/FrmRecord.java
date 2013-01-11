@@ -50,6 +50,7 @@ public abstract class FrmRecord {
 	protected DemographicDao demographicDao;
 	protected DemographicExtDao demographicExtDao;
 	
+	protected java.util.Date date;
 	protected String dateFormat;
 
 	public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException;
@@ -84,7 +85,7 @@ public abstract class FrmRecord {
 		
 		this.setDemographic(demographicNo);
 		
-        java.util.Date date = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
+        date = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
         demoProps.setProperty("demographic_no", demographic.getDemographicNo().toString());
 
         demoProps.setProperty("c_surname", demographic.getLastName());
