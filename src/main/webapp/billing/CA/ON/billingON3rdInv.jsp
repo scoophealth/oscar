@@ -187,6 +187,11 @@
     }
 </script>
 <title>Billing Invoice</title>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="invoice"/>
 </head>
 <body>
     <form action="<%=request.getContextPath()%>/BillingInvoice.do"> 

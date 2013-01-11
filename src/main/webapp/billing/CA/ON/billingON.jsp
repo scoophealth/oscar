@@ -569,6 +569,9 @@
 <script type="text/javascript" language="JavaScript">
 <!--
 jQuery.noConflict();
+</script>
+<oscar:customInterface section="billing"/>
+<script>
 
 function gotoBillingOB() {
     if(self.location.href.lastIndexOf("?") > 0) {
