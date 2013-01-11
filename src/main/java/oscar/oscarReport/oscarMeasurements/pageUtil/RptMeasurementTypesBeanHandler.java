@@ -22,69 +22,62 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.oscarMeasurements.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.beanutils.BeanComparator;
+import org.oscarehr.common.dao.MeasurementGroupDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.model.MeasurementGroup;
+import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 public class RptMeasurementTypesBeanHandler {
-    
-    Vector measurementTypeVector = new Vector();
-    Vector measuringInstrcVector = new Vector();
-    Vector measuringInstrcBeanVector = new Vector();
-    Vector typeVector = new Vector();
 
-    public RptMeasurementTypesBeanHandler(String groupName) {
-        init(groupName);
-    }
+	Vector<RptMeasurementTypesBean> measurementTypeVector = new Vector<RptMeasurementTypesBean>();
+	Vector<RptMeasuringInstructionBeanHandler> measuringInstrcBeanVector = new Vector<RptMeasuringInstructionBeanHandler>();
 
-    public boolean init(String groupName) {
-        
-        boolean verdict = true;
-        try {
-            
-            String sql = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName + "'ORDER BY typeDisplayName";            
-            ResultSet rs;
- 
-            for(rs = DBHandler.GetSQL(sql); rs.next();){
-                String typeDisplayName  = rs.getString("typeDisplayName");
-                String sqlMT = "SELECT DISTINCT * FROM measurementType WHERE typeDisplayName = '" + typeDisplayName + "'ORDER BY typeDescription";
-                MiscUtils.getLogger().debug("SQL: " + sqlMT);
-                ResultSet rsMT = DBHandler.GetSQL(sqlMT);
-                if (rsMT.next()){
-                    RptMeasurementTypesBean measurementTypes = new RptMeasurementTypesBean(rsMT.getInt("id"), rsMT.getString("type"), 
-                                                                                       rsMT.getString("typeDisplayName"), 
-                                                                                       rsMT.getString("typeDescription"), 
-                                                                                       rsMT.getString("measuringInstruction"), 
-                                                                                       rsMT.getString("validation"));
-                MiscUtils.getLogger().debug(rsMT.getString("type"));
-                measurementTypeVector.add(measurementTypes);
+	public RptMeasurementTypesBeanHandler(String groupName) {
+		init(groupName);
+	}
 
-                RptMeasuringInstructionBeanHandler hd = new RptMeasuringInstructionBeanHandler(typeDisplayName);
-                measuringInstrcBeanVector.add(hd);  
-                }
-            }
-            
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	@SuppressWarnings("unchecked")
+	public boolean init(String groupName) {
+		boolean verdict = true;
+		try {
+			MeasurementGroupDao mgDao = SpringUtils.getBean(MeasurementGroupDao.class);
+			MeasurementTypeDao mtDao = SpringUtils.getBean(MeasurementTypeDao.class);
+			List<MeasurementGroup> groups = mgDao.findByName(groupName);
+			Collections.sort(groups, new BeanComparator("typeDisplayName"));
+			for (MeasurementGroup g : groups) {
+				String typeDisplayName = g.getTypeDisplayName();
 
-    public Vector getMeasurementTypeVector(){
-        return measurementTypeVector;
-    }
-    
-    public Vector getMeasuringInstrcBeanVector(){
-        return measuringInstrcBeanVector;
-    }
+				List<MeasurementType> mts = mtDao.findByTypeDisplayName(typeDisplayName);
+				Collections.sort(mts, new BeanComparator("typeDescription"));
+				for (MeasurementType mt : mts) {
+					RptMeasurementTypesBean measurementTypes = new RptMeasurementTypesBean(mt.getId(), mt.getType(), mt.getTypeDisplayName(), mt.getTypeDescription(), mt.getMeasuringInstruction(), mt.getValidation());
+					measurementTypeVector.add(measurementTypes);
+
+					RptMeasuringInstructionBeanHandler hd = new RptMeasuringInstructionBeanHandler(typeDisplayName);
+					measuringInstrcBeanVector.add(hd);
+				}
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			verdict = false;
+		}
+		return verdict;
+	}
+
+	public Vector<RptMeasurementTypesBean> getMeasurementTypeVector() {
+		return measurementTypeVector;
+	}
+
+	public Vector<RptMeasuringInstructionBeanHandler> getMeasuringInstrcBeanVector() {
+		return measuringInstrcBeanVector;
+	}
 }

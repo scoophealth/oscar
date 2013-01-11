@@ -311,5 +311,26 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 		query.setParameter("demographicNo", demographicNo);
 		return query.getResultList();
     }
+
+	public List<Object[]> findRoutingAndPhysicianInfoByTypeAndDemoNo(String labType, Integer demographicNo) {
+	    String sql = "FROM PatientLabRouting p , LabPatientPhysicianInfo l " +
+	    		"WHERE p.labType = :labType " +
+	    		"AND p.labNo = l.id " +
+	    		"AND p.demographicNo = :demographicNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("labType", labType);
+		query.setParameter("demographicNo", demographicNo);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findRoutingsAndMdsMshByDemoNo(Integer demographicNo) {
+	    String sql = "FROM PatientLabRouting p, MdsMSH m " +
+	    		"WHERE p.labType = 'MDS' " +
+	    		"AND p.labNo = m.id " +
+	    		"AND p.demographicNo = :demographicNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demographicNo", demographicNo);
+		return query.getResultList();
+    }
     
 }
