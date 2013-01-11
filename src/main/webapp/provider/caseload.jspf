@@ -13,6 +13,7 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.Provider" %>
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
@@ -80,21 +81,33 @@ clH = ["Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt", "Ap
 					<form>
 					<b>Provider: </b>
 					<select id='caseloadProv' onChange='search("search");'>
+					<%
+					OscarProperties props = OscarProperties.getInstance();
+					boolean bDefaultAllProviders = props.getBooleanProperty("CASELOAD_DEFAULT_ALL_PROVIDERS", "true");					
+					if (bDefaultAllProviders){
+					%>
+						<option value='all' selected>All Providers</option>
+					<%} else {%>
 						<option value='all'>All Providers</option>
+					<%} %>
 		<%
 		List<Provider> providerList = providerDao.getProviders();
 		for (Provider provider : providerList) {
+			if (caseloadProv.equals(provider.getProviderNo()) && !bDefaultAllProviders) {
 		%>
-						<option value='<%=provider.getProviderNo()%>' <%=caseloadProv.equals(provider.getProviderNo())?"selected":""%>><%=provider.getLastName()+", "+provider.getFirstName()%></option>
+ 				<option value='<%=provider.getProviderNo()%>' selected><%=provider.getLastName()+", "+provider.getFirstName()%></option>
+ 			<%} else {%>
+				<option value='<%=provider.getProviderNo()%>'><%=provider.getLastName()+", "+provider.getFirstName()%></option>
+			<%}%>
 		<% } %>
 					</select>
 					<b>Rostered: </b>
 					<select id='caseloadRoster' onChange='search("search");' style='width: 120'>
-						<option value=''></option>
-						<option value='RO' <%=caseloadRoster.equals("RO")?"selected":""%>><bean:message key='demographic.demographiceditdemographic.optRostered'/></option>
-						<option value='NR' <%=caseloadRoster.equals("NR")?"selected":""%>><bean:message key='demographic.demographiceditdemographic.optNotRostered'/></option>
-						<option value='TE' <%=caseloadRoster.equals("TE")?"selected":""%>><bean:message key='demographic.demographiceditdemographic.optTerminated'/></option>
-						<option value='FS' <%=caseloadRoster.equals("FS")?"selected":""%>><bean:message key='demographic.demographiceditdemographic.optFeeService'/></option>
+						<option value='' selected></option>
+						<option value='RO'><bean:message key='demographic.demographiceditdemographic.optRostered'/></option>
+						<option value='NR'><bean:message key='demographic.demographiceditdemographic.optNotRostered'/></option>
+						<option value='TE'><bean:message key='demographic.demographiceditdemographic.optTerminated'/></option>
+						<option value='FS'><bean:message key='demographic.demographiceditdemographic.optFeeService'/></option>
 		<%
 
 		DemographicDao caseloadDemographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
