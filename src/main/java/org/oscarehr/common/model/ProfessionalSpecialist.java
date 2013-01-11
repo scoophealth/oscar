@@ -82,6 +82,9 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
     private String referralNo;
 
+    private Integer institutionId = 0;
+    private Integer departmentId = 0;
+    
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
 
@@ -230,6 +233,24 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	public String getReferralNo() {
 	    return referralNo;
     }
+	
+	
+
+	public Integer getInstitutionId() {
+		return institutionId;
+	}
+
+	public void setInstitutionId(Integer institutionId) {
+		this.institutionId = institutionId;
+	}
+
+	public Integer getDepartmentId() {
+		return departmentId;
+	}
+
+	public void setDepartmentId(Integer departmentId) {
+		this.departmentId = departmentId;
+	}
 
 	public String getFormattedName() {
     	return getLastName() + "," + getFirstName();
