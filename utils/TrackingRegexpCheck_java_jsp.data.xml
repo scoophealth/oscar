@@ -310,10 +310,7 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptConsultReportData.java:demoList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicColumnNames.java:backhash = new java.util.Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicColumnNames.java:hstbl = new java.util.Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ArrayList arraylist = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:arraylist1 = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:demoList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:ArrayList a = new ArrayList ();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:ArrayList a = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:ArrayList arrayList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:Hashtable h = new Hashtable();</ViolationValue>
@@ -333,24 +330,16 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/data/RptMeasurementsData.java:ArrayList patients = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:public Collection getGroupNameVector() {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializeFrequencyOfRelevantTestsCDMReportAction.java:ArrayList headings = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializeFrequencyOfRelevantTestsCDMReportAction.java:ArrayList reportMsg = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializeFrequencyOfRelevantTestsCDMReportForm.java:private final Map values = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsInAbnormalRangeCDMReportAction.java:ArrayList reportMsg = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsInAbnormalRangeCDMReportForm.java:private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:ArrayList data = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:ArrayList mInstrc = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:ArrayList reportMsg = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:ArrayList testsDone = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportForm.java:private final Map values = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector measurementTypeVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector measuringInstrcBeanVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector measuringInstrcVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector typeVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector getMeasurementTypeVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector getMeasuringInstrcBeanVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:Vector measuringInstrcVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:public Vector getMeasuringInstrcVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector&lt;RptMeasurementTypesBean&gt; getMeasurementTypeVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector&lt;RptMeasuringInstructionBeanHandler&gt; getMeasuringInstrcBeanVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:public Vector&lt;RptMeasuringInstructionBean&gt; getMeasuringInstrcVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportAction.java:Vector mInstrcVector = hd.getMeasuringInstrcBeanVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportForm.java:private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSetupSelectCDMReportAction.java:Collection groups = hd.getGroupNameVector();</ViolationValue>
@@ -944,20 +933,6 @@
         <ViolationValue>/src/main/java/oscar/form/FrmAlphaRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmAnnualRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmAnnualV2Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:DBHelp db = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:DBHelp db = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:import oscar.login.DBHelp;</ViolationValue>
@@ -973,10 +948,6 @@
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:DBHelp db = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmCESDRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmCaregiverRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmConsultantRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1113,11 +1084,7 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/docxfer/send/MsgGenerate.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgSessionBean.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageByPositionAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLDenominator.java:ResultSet rs = DBHandler.GetSQL(exeSql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLNumerator.java:ResultSet rs = DBHandler.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:DBPreparedHandler accessDB = null;</ViolationValue>
@@ -1125,10 +1092,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:DBPreparedHandler accessDB=null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:accessDB = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s1);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s2);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:for (resultset = DBHandler.GetSQL(s); resultset.next(); arraylist</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:if ("".equals(DBHelp.getString(rs,"caption"))) {</ViolationValue>
@@ -1167,28 +1130,12 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ret.setProperty(DBHelp.getString(rs,"name"), DBHelp.getString(rs,"caption"));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/data/RptMeasurementsData.java:for(rs=DBHandler.GetSQL(sql); rs.next();){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/data/RptMeasurementsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializeFrequencyOfRelevantTestsCDMReportAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsInAbnormalRangeCDMReportAction.java:ResultSet rsData =  DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsInAbnormalRangeCDMReportAction.java:ResultSet rsData = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsInAbnormalRangeCDMReportAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:ResultSet rsData =  DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:ResultSet rsData = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:for(rs=DBHandler.GetSQL(sql);rs.next(); ){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptInitializePatientsMetGuidelineCDMReportAction.java:rsData = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:ResultSet rsMT = DBHandler.GetSQL(sqlMT);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next();){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord("select distinct demographic_no from formBCBirthSumMo");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord(subQuery);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:rs = DBHelp.searchDBRecord(subQuery);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptRehabStudyAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptRehabStudyAction.java:ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptRehabStudyAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/reportByTemplate/SQLReporter.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1219,12 +1166,6 @@
         <ViolationValue>/src/main/webapp/form/study/diabetetracker.jsp:ResultSet rsdemo = DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+ demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/dm2ping.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/dmdata.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo+" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:ResultSet rs = DBHandler.GetSQL("select m.* from hl7_pid p, hl7_message m where p.pid_id=" + pid + " and p.message_id=m.message_id");</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_signed.replaceAll("@pid", pid));</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_doc_notes.replaceAll("@pid", pid));</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_header_information.replaceAll("@pid", pid));</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_lab_results.replaceAll("@pid", pid));</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_pid_information.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
@@ -2300,21 +2241,19 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:groupNameVector.add(groupName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:public Collection getGroupNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:return groupNameVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector measurementTypeVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector measuringInstrcBeanVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector measuringInstrcVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector typeVector = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector&lt;RptMeasurementTypesBean&gt; measurementTypeVector = new Vector&lt;RptMeasurementTypesBean&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector&lt;RptMeasuringInstructionBeanHandler&gt; measuringInstrcBeanVector = new Vector&lt;RptMeasuringInstructionBeanHandler&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:measurementTypeVector.add(measurementTypes);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:measuringInstrcBeanVector.add(hd);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector getMeasurementTypeVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector getMeasuringInstrcBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector&lt;RptMeasurementTypesBean&gt; getMeasurementTypeVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:public Vector&lt;RptMeasuringInstructionBeanHandler&gt; getMeasuringInstrcBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:return measurementTypeVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:return measuringInstrcBeanVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:Vector measuringInstrcVector = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:Vector&lt;RptMeasuringInstructionBean&gt; measuringInstrcVector = new Vector&lt;RptMeasuringInstructionBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:measuringInstrcVector.add(measuringInstrc);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:public Vector getMeasuringInstrcVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:public Vector&lt;RptMeasuringInstructionBean&gt; getMeasuringInstrcVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasuringInstructionBeanHandler.java:return measuringInstrcVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportAction.java:RptMeasuringInstructionBeanHandler mInstrcs = (RptMeasuringInstructionBeanHandler) mInstrcVector.elementAt(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportAction.java:Vector mInstrcVector = hd.getMeasuringInstrcBeanVector();</ViolationValue>
