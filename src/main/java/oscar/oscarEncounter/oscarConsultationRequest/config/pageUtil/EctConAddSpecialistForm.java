@@ -50,6 +50,8 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String eDataServiceKey;
 	String eDataServiceName;
 	String annotation;
+	String institution;
+	String department;
 
 	private String referralNo;
 
@@ -262,4 +264,22 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	public String getReferralNo() {
 		return referralNo;
 	}
+
+	public String getInstitution() {
+		return institution;
+	}
+
+	public void setInstitution(String institution) {
+		this.institution = institution;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+	
+	
 }

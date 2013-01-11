@@ -86,6 +86,8 @@ public class EctConEditSpecialistsAction extends Action {
 		request.setAttribute("eDataServiceName", professionalSpecialist.geteDataServiceName());
 		request.setAttribute("annotation", professionalSpecialist.getAnnotation());
         request.setAttribute("referralNo", professionalSpecialist.getReferralNo());
+        request.setAttribute("institution", professionalSpecialist.getInstitutionId().toString());
+        request.setAttribute("department", professionalSpecialist.getDepartmentId().toString());
 
 		request.setAttribute("upd", new Integer(updater));
 		EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
