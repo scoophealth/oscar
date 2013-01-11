@@ -22,50 +22,32 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.oscarMeasurements.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.util.SpringUtils;
 
 public class RptMeasuringInstructionBeanHandler {
-    
-    Vector measuringInstrcVector = new Vector();
- 
-    public RptMeasuringInstructionBeanHandler(String measurementType) {
-        init(measurementType);
-    }
-        
-    public boolean init(String measurementType) {
-        
-        boolean verdict = true;
-        try {
-            
-            String sql = "SELECT measuringInstruction FROM measurementType WHERE typeDisplayName='" + measurementType + "'";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-                RptMeasuringInstructionBean measuringInstrc = new RptMeasuringInstructionBean(rs.getString("measuringInstruction"));
-                measuringInstrcVector.add(measuringInstrc);
-            }
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	Vector<RptMeasuringInstructionBean> measuringInstrcVector = new Vector<RptMeasuringInstructionBean>();
 
-    
-    public Vector getMeasuringInstrcVector(){
-        return measuringInstrcVector;
-    }
+	public RptMeasuringInstructionBeanHandler(String measurementType) {
+		init(measurementType);
+	}
+
+	public boolean init(String measurementType) {
+		MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+		for (MeasurementType mt : dao.findByTypeDisplayName(measurementType)) {
+			RptMeasuringInstructionBean measuringInstrc = new RptMeasuringInstructionBean(mt.getMeasuringInstruction());
+			measuringInstrcVector.add(measuringInstrc);
+		}
+		return true;
+	}
+
+	public Vector<RptMeasuringInstructionBean> getMeasuringInstrcVector() {
+		return measuringInstrcVector;
+	}
 }

@@ -683,5 +683,18 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter("lower", lower);
 	    return query.getResultList();
     }
+
+	public List<Object[]> findTypesAndMeasuringInstructionByDemographicId(Integer demoNo) {
+		Query query = createQuery("SELECT DISTINCT m.type, m.measuringInstruction", "m", "m.demographicId = :demoNo");
+		query.setParameter("demoNo", demoNo);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findByCreateDate(Date from, Date to) {
+		Query query = createQuery("SELECT DISTINCT m.demographicId", "m", "m.createDate >= :from AND m.createDate <= :to");
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		return query.getResultList();
+    }
 	
 }
