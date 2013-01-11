@@ -143,4 +143,10 @@ public class BillingDaoTest extends DaoTestFixtures {
     public void testFindByProviderStatusForTeleplanFileWriter() {
 	    assertNotNull(dao.findByProviderStatusForTeleplanFileWriter("HIN"));
     }
+
+    @Test
+    public void testFindOutstandingBills() {
+	    assertNotNull(dao.findOutstandingBills(10, "BT", new ArrayList<String>()));
+	    assertNotNull(dao.findOutstandingBills(10, "BT", Arrays.asList(new String[] {"S"})));
+    }
 }
