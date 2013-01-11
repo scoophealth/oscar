@@ -37,6 +37,7 @@
 <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
 <script src="../js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
 <script src="../js/jquery.ui.colorPicker.min.js" type="text/javascript"></script>
+<oscar:customInterface section="apptStatusEdit"/>
 </head>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <body>

@@ -92,7 +92,11 @@
 <% } %>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="appointment.editappointment.title" /></title>
-
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="editappt"/>
 <script language="javascript">
 <!-- // start javascript
 function toggleView() {

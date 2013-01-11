@@ -262,6 +262,11 @@ boolean dupServiceCode = false;
 <head>
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="billingReview"/>
 <script language="JavaScript">
         ctx = "<c:out value="${ctx}"/>";
     	demographicNo = "<c:out value="${demographicNo}"/>";

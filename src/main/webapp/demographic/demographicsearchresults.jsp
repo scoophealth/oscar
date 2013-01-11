@@ -78,6 +78,12 @@
 <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
 <title><bean:message key="demographic.demographicsearchresults.title" /></title>
 
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="demoSearch"/>
+
 <% if (isMobileOptimized) { %>
    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
    <link rel="stylesheet" type="text/css" href="../mobile/searchdemographicstyle.css">

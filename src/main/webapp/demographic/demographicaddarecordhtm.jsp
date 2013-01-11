@@ -109,7 +109,7 @@
    <script>
      jQuery.noConflict();
    </script>
-<oscar:customInterface section="adddemo"/>
+<oscar:customInterface section="masterCreate"/>
 
 <title><bean:message
 	key="demographic.demographicaddrecordhtm.title" /></title>
