@@ -37,9 +37,21 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unchecked")
 public class DocumentDao extends AbstractDao<Document> {
 
-	public enum Module {DEMOGRAPHIC}
+	public enum Module {
+		DEMOGRAPHIC;
+		
+		public String getName() {
+			return this.name().toLowerCase();
+		}
+	}
 	
-	public enum DocumentType {CONSULT}
+	public enum DocumentType {
+		CONSULT, LAB;
+	
+		public String getName() {
+			return this.name().toLowerCase();
+		}
+	}
 	
 	public DocumentDao() {
 		super(Document.class);
@@ -61,11 +73,22 @@ public class DocumentDao extends AbstractDao<Document> {
     
     public List<Document> findActiveByDocumentNo(Integer demoId) {
 		String sql = "SELECT d FROM Document d where d.documentNo = ?";
-				
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demoId);
 		return query.getResultList();
-		
-	    
     }
+    
+    public List<Object[]> findCtlDocsAndDocsByModuleDocTypeAndModuleId(Module module, DocumentType docType, Integer moduleId) {
+    	String sql = "FROM CtlDocument c, Document d " +
+    			"WHERE c.id.module = :module " +
+    			"AND c.id.documentNo = d.documentNo " +
+    			"AND d.docType = :docType " +
+    			"AND c.moduleId = :moduleId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("module", module.getName());
+		query.setParameter("docType", docType.getName());
+		query.setParameter("moduleId", moduleId);
+		return query.getResultList();
+    }
+    
 }
