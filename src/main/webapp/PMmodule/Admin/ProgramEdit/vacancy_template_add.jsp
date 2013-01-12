@@ -90,7 +90,10 @@
 			}
 	}
 	
-	function template_status_change(template_id) {		
+	function template_status_change(template_id) {
+		if (template_id==null){
+			return;
+		}
 		document.programManagerForm.elements['view.tab'].value='General';
 		document.programManagerForm.elements['view.subtab'].value='Vacancy Template Add';
 		document.programManagerForm.elements['vacancyOrTemplateId'].value=template_id;
@@ -120,9 +123,9 @@
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
-		<td width="30%" class="beright">Template is <%=template.getActive()==true?"active":"inactive" %>:</td>
+		<td width="30%" class="beright">Template is <%=(template.getId()==null || template.getActive()==true)?"active":"inactive" %>:</td>
 		<td><input id="vacancy_tpl_status_ckbox" type="checkbox" onchange="template_status_change(<%=template.getId()%>)" 
-		<%if(template.getActive()==true){%>
+		<%if(template.getId()==null || template.getActive()==true){%>
 		<%="checked"%>
 		<%}%>
 		name="templateActive"></td>
