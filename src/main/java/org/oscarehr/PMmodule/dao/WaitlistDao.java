@@ -30,12 +30,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.oscarehr.PMmodule.model.Vacancy;
+import org.oscarehr.PMmodule.service.VacancyTemplateManager;
 import org.oscarehr.PMmodule.wlmatch.CriteriaBO;
 import org.oscarehr.PMmodule.wlmatch.CriteriasBO;
 import org.oscarehr.PMmodule.wlmatch.MatchBO;
@@ -339,6 +342,9 @@ public class WaitlistDao {
 				clientData.setFormId(formId);
 				clientsDataList.put(demographicId, clientData);
 			}
+			if (paramName != null) {
+				paramName = paramName.toLowerCase();
+			}
 			clientData.getClientData().put(paramName, paramValue);
         }
 		return new ArrayList<ClientData>(clientsDataList.values());
@@ -354,7 +360,7 @@ public class WaitlistDao {
 		
 		@SuppressWarnings("unchecked")
 		List<Object[]> rows = query.getResultList();
-		if(rows.size()==0) return null;
+		if(rows.size()==0) return clientData;
 		Object[] cols = rows.get(0);
 		Integer demographicId = (Integer)cols[0];
 		Integer formId = (Integer)cols[1];
@@ -387,6 +393,9 @@ public class WaitlistDao {
 	
 	public VacancyData loadVacancyData(final int vacancyId) {
 		VacancyData vacancyData  = new VacancyData();
+		Vacancy vacancy = VacancyTemplateManager.getVacancyById(vacancyId);
+		vacancyData.setVacancy_id(vacancy.getId());
+		vacancyData.setProgram_id(vacancy.getWlProgramId());
 		Query query = entityManager.createNativeQuery(QUERY_VACANCY_DATA);
 		query.setParameter(1, vacancyId);
 		
@@ -394,20 +403,19 @@ public class WaitlistDao {
 		List<Object[]>results = query.getResultList();
 		for (Object[] cols : results) {
 			VacancyTemplateData vtData = new VacancyTemplateData();
-			int vId = (Integer)cols[0];
-			int programId = (Integer)cols[1];
 			String fieldName = (String)cols[2];
 			String fieldType = (String)cols[3];
 			String critValue = (String)cols[4];
 			String optionValue = (String)cols[5];
 			Integer rangeStart = (Integer)cols[6];
 			Integer rangeEnd = (Integer)cols[7];
-			vacancyData.setVacancy_id(vId);
-			vacancyData.setProgram_id(programId);
 			if (field_type_range.equals(fieldType)) {
 				vtData.setRange(true);
 				vtData.addRange(rangeStart, rangeEnd);
 			} else {
+				if (fieldName != null) {
+					fieldName = fieldName.toLowerCase(Locale.ENGLISH);
+				}
 				if (field_type_multiple.equals(fieldType)) {
 					vtData = vacancyData.getVacancyData().get(fieldName);
 					if (vtData == null) {
