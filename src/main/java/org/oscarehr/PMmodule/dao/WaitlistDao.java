@@ -258,7 +258,8 @@ public class WaitlistDao {
 
 	public Integer getProgramIdByVacancyId(int vacancyId) {
 		List<Integer> programIds = new ArrayList<Integer>();
-		String queryString = "SELECT t.PROGRAM_ID FROM vacancy v JOIN vacancy_template t ON " + "v.templateId=t.TEMPLATE_ID WHERE v.id=?1";
+		//String queryString = "SELECT t.PROGRAM_ID FROM vacancy v JOIN vacancy_template t ON " + "v.templateId=t.TEMPLATE_ID WHERE v.id=?1";
+		String queryString = "SELECT wlProgramId FROM vacancy where id=?1";
 		Query query = entityManager.createNativeQuery(queryString);
 		query.setParameter(1, vacancyId);
 		
