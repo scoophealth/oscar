@@ -41,7 +41,7 @@ public class VacancyDao extends AbstractDao<Vacancy> {
 
 	@SuppressWarnings("unchecked")
     public List<Vacancy> getVacanciesByWlProgramId(Integer wlProgramId) {
-		String sqlCommand = "select x from Vacancy x where x.wlProgramId=?1 ";
+		String sqlCommand = "select x from Vacancy x where x.wlProgramId=?1 order by x.name";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, wlProgramId);

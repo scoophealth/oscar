@@ -39,6 +39,65 @@
     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");	
 %>
 
+
+<script>
+
+var sortOrder = 'desc';
+
+$(document).ready(function(){
+$('#sortVacancies').click(function(e) {
+	  
+
+    var rows = $('#vacancyTable tbody  tr').get();
+    
+    
+    rows.sort(function(a, b) {
+    
+      var A = $(a).children('td').eq(0).text().toUpperCase();
+      var B = $(b).children('td').eq(0).text().toUpperCase();
+      
+      if(sortOrder == 'asc') {
+	      if(A < B) {
+	        return -1;
+	      }
+	      
+	      if(A > B) {
+	        return 1;
+	      }
+	      
+	      return 0;     
+      } else {
+    	  if(A < B) {
+  	        return 1;
+  	      }
+  	      
+  	      if(A > B) {
+  	        return -1;
+  	      }
+  	      
+  	      return 0; 
+      }
+    
+    
+    });
+    
+    $.each(rows, function(index, row) {
+ 		$('#vacancyTable').children('tbody').append(row);
+    });
+    
+    if(sortOrder == 'asc')
+    	sortOrder = 'desc';
+    else
+    	sortOrder = 'asc';
+    
+    e.preventDefault();
+    
+});
+
+    
+});
+</script>
+
 <div class="tabs" id="tabs">
 <input type="hidden" name="id" id="id" value="<%= currentProgramId%>" />
 <input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
@@ -49,29 +108,34 @@
 	</table>
 </div>
 
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr class="b">
-		<td width="50%" class="beright">Vacancy's Template Name</td>
-		<td width="25%">Vacancy Status</td>
-		<td width="25%">Vacancy Create Date</td>
-	</tr>
+<table id="vacancyTable" width="100%" border="1" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr class="b">
+			<td width="25%" style="text-align:center;font-weight:bold"><a href="javascript:void(0)" id="sortVacancies">Vacancy Name</a></td>
+			<td width="25%" class="beright" style="text-align:center;font-weight:bold">Vacancy's Template Name</td>
+			<td width="25%" style="text-align:center;font-weight:bold">Vacancy Status</td>
+			<td width="25%" style="text-align:center;font-weight:bold">Vacancy Create Date</td>
+		</tr>
+	</thead>
+	<tbody>
 <%	for(Vacancy v : vacancies) { 
 		VacancyTemplate vt = VacancyTemplateManager.getVacancyTemplateByTemplateId(v.getTemplateId());
 %>
-	<tr class="b">
-		<td class="beright">
-		<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
-		<td><%= v.getStatus() %></td>
-		<td><%=dateFormatter.format(v.getDateCreated()) %> </td>
-	</tr>
+		<tr class="b">
+			<td style="text-align:left;"><%=v.getName() %></td>
+			<td style="text-align:left;" class="beright">
+				<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
+			</td>
+			<td style="text-align:center;"><%= v.getStatus() %></td>
+			<td style="text-align:center;"><%=dateFormatter.format(v.getDateCreated()) %> </td>
+		</tr>
+	
 <% 	} %>
-	<tr class="b">
-		<td class="beright">		
-			<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '');return false;" href="javascript:void(0)">Create New Vacancy</a>
-		</td>		
-		<td></td>
-	</tr>
+	</tbody>
 </table>
+
+	<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '');return false;" href="javascript:void(0)">Create New Vacancy</a>
+	
 
 
 </form>
