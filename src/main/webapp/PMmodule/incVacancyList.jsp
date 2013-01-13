@@ -33,14 +33,43 @@
 <%@page import="javax.xml.datatype.DatatypeFactory"%>
 <%@page import="org.oscarehr.PMmodule.wlservice.MatchParam"%>
 <%@page import="org.oscarehr.PMmodule.wlservice.WaitListService"%>
+
+<%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+
 <%@ include file="/taglibs.jsp"%>
 <%
+	String role = (String)session.getAttribute("userrole");
+
+    		
 	WaitListService s = new WaitListService();
 	List<VacancyDisplayBO> listVac = s.listVacanciesForAllWaitListPrograms();
+   	List<VacancyDisplayBO> filteredListVac = new ArrayList<VacancyDisplayBO>();
+
+   	//We are filtering this list if you are an Agency Operator to only those in your program domain
+    if(role.indexOf("Waitlist Agency Operator") != -1) {		
+		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
+		List<Integer> pids = new ArrayList<Integer>();
+		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo())) {
+			pids.add(pp.getProgramId().intValue());
+		}
+		for(VacancyDisplayBO v: listVac) {
+			if(pids.contains(v.getProgramId().intValue()) ) {
+				filteredListVac.add(v);
+			}
+		}
+    }
+    
+    else if (role.indexOf("Waitlist Operator") != -1) {
+    	filteredListVac.addAll(listVac);
+    }
+    
 %>
 
 <% 
-request.setAttribute("listVac", listVac);
+request.setAttribute("listVac", filteredListVac);
 %>
 
 <display:table class="simple" id="vacancyList" name="requestScope.listVac" 
