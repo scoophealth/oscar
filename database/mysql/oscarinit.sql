@@ -9535,7 +9535,7 @@ CREATE TABLE `vacancy` (
   `dateClosed` timestamp NULL,
   `reasonClosed` varchar(255),
   `wlProgramId` int(11) NOT NULL,
-  `dateCreated` date NOT NULL,
+  `dateCreated` datetime NOT NULL,
   `emailNotificationAddressesCsv` varchar(255)
 );
 
