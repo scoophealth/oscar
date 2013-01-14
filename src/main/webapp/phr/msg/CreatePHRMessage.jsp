@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
@@ -198,6 +199,7 @@
 
                     <tr>
                         <td>
+                        	<%=WebUtils.popErrorMessagesAsHtml(session)%>
                             <table> 
                             	<%
                             		Long replyToMessageId=null;

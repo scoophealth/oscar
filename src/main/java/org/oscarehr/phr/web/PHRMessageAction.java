@@ -48,6 +48,7 @@ import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.Message2DataTransfer;
 import org.oscarehr.myoscar_server.ws.Message2RecipientPersonAttributesTransfer;
 import org.oscarehr.myoscar_server.ws.MessageTransfer3;
+import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRAction;
@@ -57,6 +58,7 @@ import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
@@ -224,9 +226,15 @@ public class PHRMessageAction extends DispatchAction {
 			}
 		}
 		
-		Long messageId = MessageManager.sendMessage(myOscarLoggedInInfo, newMessage);
+		Long messageId=null;
+		try {
+			 messageId= MessageManager.sendMessage(myOscarLoggedInInfo, newMessage);
+        } catch (NotAuthorisedException_Exception e) {
+	        WebUtils.addErrorMessage(request.getSession(), "This patient has not given you permissions to send them a message.");
+	        return mapping.findForward("create");
+        }
 
-		if(request.getParameter("andPasteToEchart")!= null && request.getParameter("andPasteToEchart").equals("yes")){
+		if(messageId!=null && request.getParameter("andPasteToEchart")!= null && request.getParameter("andPasteToEchart").equals("yes")){
 			ActionRedirect redirect = new ActionRedirect(mapping.findForward("echart"));
 			redirect.addParameter("myoscarmsg", messageId.toString());
 			redirect.addParameter("remyoscarmsg",replyToMessageId.toString());
@@ -234,7 +242,6 @@ public class PHRMessageAction extends DispatchAction {
 			redirect.addParameter("demographicNo",request.getParameter("demographicNo"));
 			return redirect;
 		}
-
 
 		return mapping.findForward("view");
 	}
@@ -250,7 +257,12 @@ public class PHRMessageAction extends DispatchAction {
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 		Long recipientMyOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
-		MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
+		try {
+	        MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
+        } catch (NotAuthorisedException_Exception e) {
+	        WebUtils.addErrorMessage(request.getSession(), "This patient has not given you permissions to send them a message.");
+	        return mapping.findForward("create");
+        }
 
 		return mapping.findForward("view");
 	}
