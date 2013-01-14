@@ -29,13 +29,14 @@
 <%@page import="org.oscarehr.PMmodule.model.Vacancy"%>
 <%@page import="org.oscarehr.PMmodule.service.VacancyTemplateManager"%>
 <%@page import="java.util.List"%>
+<%@page import="java.text.SimpleDateFormat" %>
 
 <%@ include file="/taglibs.jsp"%>
 
 <%	
 	String currentProgramId = (String) request.getAttribute("id");
 	List<Vacancy> vacancies = VacancyTemplateManager.getVacanciesByWlProgramId(Integer.valueOf(currentProgramId));
-		
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");	
 %>
 
 <div class="tabs" id="tabs">
@@ -61,7 +62,7 @@
 		<td class="beright">
 		<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
 		<td><%= v.getStatus() %></td>
-		<td><%=v.getDateCreated() %> </td>
+		<td><%=dateFormatter.format(v.getDateCreated()) %> </td>
 	</tr>
 <% 	} %>
 	
