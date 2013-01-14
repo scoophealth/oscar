@@ -110,14 +110,18 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
   Collection<Integer> eforms = providerPreference.getAppointmentScreenEForms();
   StringBuilder eformIds = new StringBuilder();
-  for( Integer eform : eforms ) {
-  	eformIds = eformIds.append("&eformId=" + eform);
+  if(eforms != null) {
+	  for( Integer eform : eforms ) {
+	  	eformIds = eformIds.append("&eformId=" + eform);
+	  }
   }
 
   Collection<String> forms = providerPreference.getAppointmentScreenForms();
   StringBuilder ectFormNames = new StringBuilder();
-  for( String formName : forms ) {
-  	ectFormNames = ectFormNames.append("&encounterFormName=" + formName);
+  if(forms != null) {
+	  for( String formName : forms ) {
+	  	ectFormNames = ectFormNames.append("&encounterFormName=" + formName);
+	  }
   }
   
   
