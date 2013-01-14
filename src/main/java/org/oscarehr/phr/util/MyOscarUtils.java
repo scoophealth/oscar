@@ -171,8 +171,8 @@ public final class MyOscarUtils {
 				providerPreference.setEncryptedMyOscarPassword(null);
 				providerPreferenceDao.merge(providerPreference);
 			}
-		} catch (Exception e) {
-			logger.error("Error attempting auto-myoscar login", e);
+		} catch (Throwable t) {
+			logger.error("Error attempting auto-myoscar login", t);
 		}
 	}
 }
