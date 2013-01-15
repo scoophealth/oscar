@@ -32,7 +32,10 @@
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.dao.MyGroupAccessRestrictionDao" %>
 <%@ page import="org.oscarehr.common.model.MyGroupAccessRestriction" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
 <%
+			
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
@@ -798,7 +801,11 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
      curProvider_no = new String [numProvider];
      curProviderName = new String [numProvider];
      curProvider_no[0]=mygroupno;
-     curProviderName[0]=providerBean.getProperty(mygroupno);
+     {
+    	 ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    	    
+     	curProviderName[0]=providerDao.getProvider(mygroupno).getFullName();
+     }
 } else {
 	if(view==0) { //multiple views
 	   if (selectedSite!=null) {
@@ -862,7 +869,12 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
      }
      for (Map provider : resultList) {
        curProvider_no[iTemp] = String.valueOf(provider.get("provider_no"));
-       curProviderName[iTemp] = provider.get("first_name")+" "+provider.get("last_name");
+       {
+      	 ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+      	    
+      	 curProviderName[iTemp]=providerDao.getProvider((String)provider.get("provider_no")).getFullName();
+       }
+       
        iTemp++;
      }
     }
