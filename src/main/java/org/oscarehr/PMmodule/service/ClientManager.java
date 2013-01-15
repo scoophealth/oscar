@@ -124,6 +124,7 @@ public class ClientManager {
             queue.setReferralId(referral.getId());
             queue.setTemporaryAdmission(referral.isTemporaryAdmission());
             queue.setPresentProblems(referral.getPresentProblems());
+            queue.setVacancyName(referral.getSelectVacancy());
 
             queueManager.saveProgramQueue(queue);
         }
