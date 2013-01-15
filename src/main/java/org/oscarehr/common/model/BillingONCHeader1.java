@@ -257,10 +257,11 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	}
 
 	public Date getAdmissionDate() throws ParseException  {
-            if (this.admissionDate != null)
+            if (this.admissionDate != null && !this.admissionDate.trim().isEmpty()) {
             	return DateUtils.parseDate(admissionDate,java.util.Locale.getDefault());
-            else
+            } else {
                 return null;
+            }
 	}
 
 	public void setAdmissionDate(Date admissionDate) {

@@ -39,8 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
-import org.oscarehr.util.MiscUtils;
-
 import oscar.OscarProperties;
 
 /**
@@ -131,11 +129,6 @@ public class PrivacyStatementAppendingFilter implements Filter {
     }
 	
 	private void printConfidentialityStatement(ServletResponse response, DelegatingServletResponse delegatingServletResponse) throws IOException {
-		if (response.isCommitted()) {
-			MiscUtils.getLogger().info("Response has been committed - returning without printing privacy statement");
-			// return;
-		}
-
 		if (delegatingServletResponse.isResponseOutputStreamObtained()) {
 			response.getOutputStream().write(getPrivacyStatement().getBytes());
 		} else if (delegatingServletResponse.isResponseWriterObtained()) {

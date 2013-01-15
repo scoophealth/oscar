@@ -702,4 +702,15 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 		return mostRecents;
 	}
+
+	public Long findMaxNoteId() {
+		String sql = "select max(c.id) from CaseManagementNote c";
+		@SuppressWarnings("unchecked")
+		List<Object> r = getHibernateTemplate().find(sql);
+		if (r.isEmpty()) {
+			return 0L;
+		}
+		return (Long) r.get(0);
+		
+    }
 }
