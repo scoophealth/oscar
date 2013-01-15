@@ -35,7 +35,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.billing.CA.dao.BillActivityDao;
 import org.oscarehr.billing.CA.model.BillActivity;
@@ -65,7 +64,7 @@ public class BillActivityDaoTest extends DaoTestFixtures {
 	 * Test throws errors with sql query (BillActivityDao.java, line 45)
 	 * @throws Exception
 	 */
-	@Ignore @Test
+	@Test
 	public void testFindCurrentByMonthCodeAndGroupNo() throws Exception {
 		String monthCode = "A";
 		String groupNo= "101";
@@ -153,7 +152,7 @@ public class BillActivityDaoTest extends DaoTestFixtures {
 	 * Test throws errors with sql query (BillActivityDao.java, line 57)
 	 * @throws Exception
 	 */
-	@Ignore @Test
+	@Test
 	public void testFindCurrentByDateRange() throws Exception {
 		String monthCode = "A";
 		String groupNo= "101";
@@ -193,7 +192,7 @@ public class BillActivityDaoTest extends DaoTestFixtures {
 		
 		List<BillActivity> result = dao.findCurrentByDateRange(startDate, endDate);
 		List<BillActivity> expectedResult = new ArrayList<BillActivity>(Arrays.asList(
-				billActivity2, billActivity1));
+				billActivity3,billActivity2, billActivity1));
 
 		if (result.size() != expectedResult.size()) {
 			fail("Array sizes do not match.");
