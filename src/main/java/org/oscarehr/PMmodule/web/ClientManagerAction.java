@@ -55,6 +55,7 @@ import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.VacancyDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
@@ -66,13 +67,13 @@ import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Intake;
-import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
@@ -112,6 +113,7 @@ import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteReferral;
@@ -154,6 +156,7 @@ public class ClientManagerAction extends BaseAction {
 	// private OcanClientFormDao ocanClientFormDao = (OcanClientFormDao)SpringUtils.getBean("ocanClientFormDao");
 	// private CdsClientFormDao cdsClientFormDao = (CdsClientFormDao)SpringUtils.getBean("cdsClientFormDao");
 	private RemoteReferralDao remoteReferralDao = (RemoteReferralDao) SpringUtils.getBean("remoteReferralDao");
+    private VacancyDao vacancyDao = (VacancyDao) SpringUtils.getBean(VacancyDao.class);
 	private MatchingManager matchingManager = new MatchingManager();
 
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
@@ -411,10 +414,27 @@ public class ClientManagerAction extends BaseAction {
 
 			referral.setReferralDate(new Date());
 			referral.setProgramType(p.getType());
-            referral.setSelectVacancy(p.getVacancyName());
             ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
-            if (tabBean.getTab().equals("Refer")) {
-                referral.setSelectVacancy("none");
+            if (tabBean.getTab().equals("Refer to vacancy")) {
+                p = getMatchVacancy(p);
+                referral.setSelectVacancy(p.getVacancyName());
+                referral.setVacancyId(p.getVacancyId());
+            }else{
+                String vacancyId = request.getParameter("vacancyId");
+                if(vacancyId==null||vacancyId.trim().length()==0){
+                    referral.setSelectVacancy("none");
+                }else{
+                    Vacancy v = null;
+                    try{
+                        v = vacancyDao.getVacancyById(Integer.parseInt(vacancyId.trim()));
+                    }catch (Exception e){
+                    	MiscUtils.getLogger().error("error",e);
+                    }
+                    if(v!=null){
+                        referral.setVacancyId(Integer.parseInt(vacancyId.trim()));
+                        referral.setSelectVacancy(v.getName());
+                    }
+                }
             }
 
 			referToLocalAgencyProgram(request, clientForm, referral, p);
@@ -1386,6 +1406,31 @@ public class ClientManagerAction extends BaseAction {
 
 		return false;
 	}
+
+    private Program getMatchVacancy(Program p){
+
+        List<VacancyDisplayBO> vacancyDisplayBOs = matchingManager.listNoOfVacanciesForWaitListProgram();
+
+        Program program = p;
+        for(int j=0;j<vacancyDisplayBOs.size();j++){
+            if(vacancyDisplayBOs.get(j).getProgramId().equals(program.getId())){
+                if(vacancyDisplayBOs.get(j).getNoOfVacancy() != 0){
+                    program.setNoOfVacancy(vacancyDisplayBOs.get(j).getNoOfVacancy());
+                    program.setVacancyName(vacancyDisplayBOs.get(j).getVacancyName());
+                    program.setDateCreated(vacancyDisplayBOs.get(j).getCreated().toString());
+                    int vacancyId = vacancyDisplayBOs.get(j).getVacancyID();
+                    List<MatchBO> matchList= matchingManager.getClientMatches(vacancyId);
+                    double percentageMatch = 0;
+                    for(int k=0;k<matchList.size();k++){
+                        percentageMatch = percentageMatch + matchList.get(k).getPercentageMatch();
+                    }
+                    program.setVacancyId(vacancyId);
+                    program.setMatches(percentageMatch);
+                }
+            }
+        }
+        return program;
+    }
 
 	private void setEditAttributes(ActionForm form, HttpServletRequest request, String demographicNo) {
 		DynaActionForm clientForm = (DynaActionForm) form;

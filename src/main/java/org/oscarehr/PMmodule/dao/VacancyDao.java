@@ -59,8 +59,20 @@ public class VacancyDao extends AbstractDao<Vacancy> {
 		
 		return query.getResultList();	
 	}
-	
-	@SuppressWarnings("unchecked")
+
+    public Vacancy getVacancyById(int vacancyId) {
+        String sqlCommand = "select x from Vacancy x where x.id=?1";
+
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, vacancyId);
+
+        List<Vacancy> l = query.getResultList();
+        if(l!=null&&!l.isEmpty())return l.get(0);
+        else return null;
+    }
+
+
+    @SuppressWarnings("unchecked")
     public List<Vacancy> findCurrent() {
 		String sqlCommand = "select x from Vacancy x where x.status=?1";
 

@@ -364,6 +364,7 @@ CREATE TABLE `client_referral` (
   `provider_no` varchar(6) NOT NULL,
   `notes` text default NULL,
   `select_vacancy` varchar(255), 
+  `vacancy_id` int(11),
   `program_id` bigint(20) NOT NULL default '0',
   `status` varchar(30) default NULL,
   `completion_notes` text default NULL,
