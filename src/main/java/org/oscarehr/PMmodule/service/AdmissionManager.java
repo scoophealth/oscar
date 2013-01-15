@@ -219,7 +219,7 @@ public class AdmissionManager {
 		Integer clientStatusId = dao.getLastClientStatusFromAdmissionByProgramIdAndClientId(Integer.valueOf(program.getId()),demographicNo);
 				
 		//check if the client status is valid/existed in program_clientStatus
-		if(programClientStatusDAO.getProgramClientStatus(clientStatusId.toString()) == null)
+		if(programClientStatusDAO.getProgramClientStatus(clientStatusId.toString()) == null|| clientStatusId==0)
 			clientStatusId = null;
 				
 		newAdmission.setClientStatusId(clientStatusId);					
