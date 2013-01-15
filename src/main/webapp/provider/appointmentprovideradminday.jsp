@@ -826,7 +826,8 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
      curProvider_no = new String [numProvider];
      curProviderName = new String [numProvider];
      curProvider_no[0]=mygroupno;
-     curProviderName[0]=providerBean.getProperty(mygroupno);
+     
+     curProviderName[0]=providerDao.getProvider(mygroupno).getFullName();
 } else {
 	if(view==0) { //multiple views
 	   if (selectedSite!=null) {
@@ -893,7 +894,8 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
     	 for(MyGroup result:results) {
     		 if(siteProviders.contains(result.getId().getProviderNo())) {
     			 curProvider_no[iTemp] = String.valueOf(result.getId().getProviderNo());
-        	     curProviderName[iTemp] = result.getFirstName()+" "+result.getLastName();
+    			 
+        	     curProviderName[iTemp] = providerDao.getProvider(curProvider_no[iTemp]).getFullName();
         	     iTemp++;
     		 }
     	 }
@@ -902,7 +904,8 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
     	 List<MyGroup> results = myGroupDao.getGroupByGroupNo(mygroupno);
     	 for(MyGroup result:results) {
     		 curProvider_no[iTemp] = String.valueOf(result.getId().getProviderNo());
-    	     curProviderName[iTemp] = result.getFirstName()+" "+result.getLastName();
+    		 curProviderName[iTemp] = providerDao.getProvider(curProvider_no[iTemp]).getFullName();
+    	    
     	     iTemp++;
     	 }
      }
