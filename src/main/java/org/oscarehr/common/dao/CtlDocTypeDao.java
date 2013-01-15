@@ -60,16 +60,14 @@ public class CtlDocTypeDao extends AbstractDao<CtlDocType>{
 		}
 		return this.findByStatusAndModule(result, module);
 	}
+	
 	public List<CtlDocType> findByStatusAndModule(List<String> status, String module){
-
 		Query query = entityManager.createQuery("select c from CtlDocType c where c.status in (?1) and c.module=?2");
 		query.setParameter(1, status);
 		query.setParameter(2, module);
 		@SuppressWarnings("unchecked")
 		List<CtlDocType> results = query.getResultList();
-
 		return results;
-
 	}
 
 	public List<CtlDocType> findByDocTypeAndModule(String docType, String module){
@@ -79,12 +77,9 @@ public class CtlDocTypeDao extends AbstractDao<CtlDocType>{
 		query.setParameter(2, module);
 		@SuppressWarnings("unchecked")
 		List<CtlDocType> results = query.getResultList();
-
 		return results;
 
 	}
-
-
 
 	public void addDocType(String docType, String module) {		
         CtlDocType d = new CtlDocType();
@@ -92,5 +87,14 @@ public class CtlDocTypeDao extends AbstractDao<CtlDocType>{
         d.setModule(module);
         d.setStatus("A");
         entityManager.persist(d);
+    }
+
+	public List<String> findModules() {
+		Query query = createQuery("SELECT DISTINCT d.module", "d", "");
+		List<String> result = new ArrayList<String>();
+		for(Object o : query.getResultList()) {
+			result.add(String.valueOf(o));
+		}
+		return result;
     }
 }

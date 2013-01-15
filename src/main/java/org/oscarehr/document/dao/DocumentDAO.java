@@ -139,9 +139,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	@SuppressWarnings("unchecked")
     public List<Object[]> findDocuments(String module, String moduleid, String docType, boolean includePublic, boolean includeDeleted, boolean includeActive, String sort) {
 		Map<String, Object> params = new HashMap<String, Object>();
-
-		// SELECT DISTINCT d.*d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime, d.appointment_no FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND c.module='demographic' AND c.module_id = 5
-		
+	
 		StringBuilder buf = new StringBuilder("SELECT DISTINCT c, d " +
 				"FROM org.oscarehr.document.model.Document d, org.oscarehr.document.model.CtlDocument c " +
 				"WHERE c.id.documentNo = d.id AND c.id.module = :module");
