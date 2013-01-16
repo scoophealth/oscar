@@ -36,10 +36,8 @@ package org.caisi.core.web.tld;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.ProviderDefaultProgramDao;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -50,8 +48,6 @@ public class programExclusiveViewTag extends TagSupport {
 
     private static final long serialVersionUID = 1L;
     
-	private static Logger logger = MiscUtils.getLogger();
-
 	/**
 	 * Creates a new instance of programExclusiveViewTag
 	 */

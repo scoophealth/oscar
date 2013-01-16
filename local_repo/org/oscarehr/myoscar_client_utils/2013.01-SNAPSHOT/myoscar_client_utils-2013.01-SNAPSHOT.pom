@@ -75,7 +75,7 @@
 				<configuration>
 					<groupIdsToRemove>
 						<param>org.oscarehr.myoscar_client_server_commons</param>
-						<param>org.oscarehr.myoscar_server</param>
+						<param>org.oscarehr.myoscar_server.myoscar_server_client_stubs</param>
 						<param>org.oscarehr.util</param>
 					</groupIdsToRemove>
 				</configuration>

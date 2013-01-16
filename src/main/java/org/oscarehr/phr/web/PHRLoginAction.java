@@ -39,7 +39,7 @@ import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
-import org.oscarehr.myoscar_server.ws.LoginResultTransfer2;
+import org.oscarehr.myoscar_server.ws.LoginResultTransfer3;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.EncryptionUtils;
@@ -77,7 +77,7 @@ public class PHRLoginAction extends DispatchAction
 		try
 		{
 			String myOscarUserName=MyOscarUtils.getMyOscarUserNameFromOscar(providerNo);
-			LoginResultTransfer2 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, myoscarPassword);
+			LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, myoscarPassword);
 
 			if (loginResultTransfer == null)
 			{

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerCredentials;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.PersonTransfer2;
+import org.oscarehr.myoscar_server.ws.PersonTransfer3;
 
 import oscar.OscarProperties;
 
@@ -50,7 +50,7 @@ public final class MyOscarLoggedInInfo implements Serializable, MyOscarServerCre
 		this.loggedInSessionId = loggedInSessionId;
 	}
 
-	public PersonTransfer2 getLoggedInPerson() throws NotAuthorisedException_Exception
+	public PersonTransfer3 getLoggedInPerson() throws NotAuthorisedException_Exception
 	{
 		return(AccountManager.getPerson(this, loggedInPersonId));
 	}

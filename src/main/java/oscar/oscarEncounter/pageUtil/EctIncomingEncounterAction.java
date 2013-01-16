@@ -46,7 +46,7 @@ import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.MessageTransfer3;
-import org.oscarehr.myoscar_server.ws.MinimalPersonTransfer;
+import org.oscarehr.myoscar_server.ws.MinimalPersonTransfer2;
 import org.oscarehr.phr.web.MyOscarMessagesHelper;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -141,14 +141,14 @@ public class EctIncomingEncounterAction extends Action {
 	                		dateStr = StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(messageTransferOrig.getSentDate(), request.getLocale()));
 	                		
 	                		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-	                		MinimalPersonTransfer minimalPersonTransfer=AccountManager.getMinimalPerson(myOscarLoggedInInfo, messageTransferOrig.getSenderPersonId());
+	                		MinimalPersonTransfer2 minimalPersonTransfer=AccountManager.getMinimalPerson(myOscarLoggedInInfo, messageTransferOrig.getSenderPersonId());
 	                		String originalMessageBody=MessageManager.getMessageBody(messageTransferOrig);
 	                		messageBeingRepliedTo = props.getString("myoscar.msg.From")+": "+StringEscapeUtils.escapeHtml(minimalPersonTransfer.getLastName()+", "+minimalPersonTransfer.getFirstName())+" ("+dateStr+")\n"+ originalMessageBody+"\n-------------\n"+props.getString("myoscar.msg.Reply")+":\n";
 	                	}else{
 	                		dateStr = StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(messageTransfer.getSentDate(), request.getLocale()));
 
 	                		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-	                		MinimalPersonTransfer minimalPersonTransfer=AccountManager.getMinimalPerson(myOscarLoggedInInfo, messageTransfer.getSenderPersonId());
+	                		MinimalPersonTransfer2 minimalPersonTransfer=AccountManager.getMinimalPerson(myOscarLoggedInInfo, messageTransfer.getSenderPersonId());
 	                		messageBeingRepliedTo = props.getString("myoscar.msg.From")+": "+StringEscapeUtils.escapeHtml(minimalPersonTransfer.getLastName()+", "+minimalPersonTransfer.getFirstName())+" ("+dateStr+")\n";
 	                	}
 

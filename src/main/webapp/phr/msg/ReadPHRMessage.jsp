@@ -27,7 +27,7 @@
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
-<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer2"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -50,7 +50,7 @@
 	
  	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 	Long senderPersonId=messageTransfer.getSenderPersonId();
-	MinimalPersonTransfer minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
+	MinimalPersonTransfer2 minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
 %>
 
 <html:html locale="true">
@@ -151,7 +151,7 @@ function gotoEchart3(demoNo) {
                                     	<%
                                     		for (Long recipientId : messageTransfer.getRecipientPeopleIds())
                                     		{
-                                    			MinimalPersonTransfer recipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
+                                    			MinimalPersonTransfer2 recipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
                                     			%>
 			                                    	<%=StringEscapeUtils.escapeHtml(recipient.getLastName()+", "+recipient.getFirstName()+" ("+recipient.getUserName()+"); ")%>
                                     			<%

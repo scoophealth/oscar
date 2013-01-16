@@ -41,7 +41,7 @@ public class CaseManagementNoteDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testFindAll() throws Exception {
+	public void testFindAll() {
 		assertNotNull(dao.findAll());
 	}
 }

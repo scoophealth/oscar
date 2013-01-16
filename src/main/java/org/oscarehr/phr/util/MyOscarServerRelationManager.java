@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.AccountWs;
-import org.oscarehr.myoscar_server.ws.RelationshipTransfer3;
+import org.oscarehr.myoscar_server.ws.RelationshipTransfer4;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -38,24 +38,24 @@ import org.oscarehr.util.MiscUtils;
 public class MyOscarServerRelationManager {
 	private static final Logger logger = MiscUtils.getLogger();
 
-	private static List<RelationshipTransfer3> getRelationShipTransferFromServer(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId) {
+	private static List<RelationshipTransfer4> getRelationShipTransferFromServer(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId) {
 		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
 		final int REASONABLE_RELATIONSHIP_LIMIT = 1024;
-		List<RelationshipTransfer3> relationList = accountWs.getRelationshipsByPersonId(targetMyOscarUserId, 0, REASONABLE_RELATIONSHIP_LIMIT);
+		List<RelationshipTransfer4> relationList = accountWs.getRelationshipsByPersonId2(targetMyOscarUserId, 0, REASONABLE_RELATIONSHIP_LIMIT);
 		if (relationList.size() >= REASONABLE_RELATIONSHIP_LIMIT) logger.error("Error, we hit a hard coded limit. targetMyOscarUserId=" + targetMyOscarUserId);
 		return relationList;
 	}
 
-	public static List<RelationshipTransfer3> getRelationData(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId){
-		List<RelationshipTransfer3> relationList = getRelationShipTransferFromServer(myOscarLoggedInInfo, targetMyOscarUserId);
+	public static List<RelationshipTransfer4> getRelationData(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId){
+		List<RelationshipTransfer4> relationList = getRelationShipTransferFromServer(myOscarLoggedInInfo, targetMyOscarUserId);
 		return relationList;
 	}
 
 	public static boolean hasPatientRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId) {
 
-		List<RelationshipTransfer3> relationList = getRelationData(myOscarLoggedInInfo, targetMyOscarUserId);
+		List<RelationshipTransfer4> relationList = getRelationData(myOscarLoggedInInfo, targetMyOscarUserId);
 		if (relationList != null) {
-			for (RelationshipTransfer3 rt : relationList) {
+			for (RelationshipTransfer4 rt : relationList) {
 				if (rt.getRelation().equals("PatientPrimaryCareProvider"))
 				{
 					if (rt.getPerson2().getPersonId().equals(myOscarLoggedInInfo.getLoggedInPersonId()) && rt.getPerson2VerificationDate()!=null) {

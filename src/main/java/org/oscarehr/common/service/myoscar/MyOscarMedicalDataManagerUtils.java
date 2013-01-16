@@ -97,7 +97,7 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(medicalDataTransfer);
 	}
 	
-	public static Long addMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception {
+	public static Long addMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
 		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 
 		Long resultId=medicalDataWs.addMedicalData4(medicalDataTransfer);
