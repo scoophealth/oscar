@@ -53,24 +53,25 @@
 </div>
 <%     
             for (int k = 0; k < list.size(); k++){
-                Hashtable hdata = (Hashtable) list.get(k);
+                HashMap hMap = (HashMap) list.get(k);
                 String labDisplayLink = "";
                 if ( labType.equals(LabResultData.MDS) ){
-                    labDisplayLink = "../oscarMDS/SegmentDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                    labDisplayLink = "../oscarMDS/SegmentDisplay.jsp?segmentID="+hMap.get("lab_no")+"&providerNo="+session.getValue("user");
                 }else if (labType.equals(LabResultData.CML)){ 
-                    labDisplayLink = "../lab/CA/ON/CMLDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                    labDisplayLink = "../lab/CA/ON/CMLDisplay.jsp?segmentID="+hMap.get("lab_no")+"&providerNo="+session.getValue("user");
                 }else if (labType.equals(LabResultData.HL7TEXT)){
-                    labDisplayLink = "../lab/CA/ALL/labDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                    labDisplayLink = "../lab/CA/ALL/labDisplay.jsp?segmentID="+hMap.get("lab_no")+"&providerNo="+session.getValue("user");
                 }else if (labType.equals(LabResultData.EXCELLERIS)) {
-                    labDisplayLink = "../lab/CA/BC/labDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                    labDisplayLink = "../lab/CA/BC/labDisplay.jsp?segmentID="+hMap.get("lab_no")+"&providerNo="+session.getValue("user");
                 }
+
             %>
 <div style="text-align: justify;"
-	title="fade=[on] header=[<%=hdata.get("result")%>] body=[<%=hdata.get("units")%> <%=hdata.get("range")%>]"
+	title="fade=[on] header=[<%=hMap.get("result")%>] body=[<%=hMap.get("units")%> <%=hMap.get("range")%>]"
 	class="preventionProcedure" id="preventionProcedure<%=""+k+""+ran%>"
 	onclick="javascript:popup(660,960,'<%= labDisplayLink %>','labReport')">
-<p <%=r(hdata.get("abn"))%>><%=hdata.get("result")%>
-&nbsp;&nbsp;&nbsp; <%=hdata.get("collDate")%></p>
+<p <%=r(hMap.get("abn"))%>><%=hMap.get("result")%>
+&nbsp;&nbsp;&nbsp; <%=hMap.get("collDate")%></p>
 </div>
 <%}%>
 </div>
@@ -104,19 +105,4 @@ String r(Object re){
         }
         return ret;
     }
-/*
-//first field is testName, 
-//second field is abn : abnormal or normal, A or N
-//third field is result
-//fourth field is units
-//fifth field is range
-//sixth field is date : collection Date 
- *
- *h.put("testName", testNam);
-               h.put("abn",abn);
-               h.put("result",result);
-               h.put("range",range);
-               h.put("units",units);
-               h.put("collDate",collDate); 
- */
 %>
