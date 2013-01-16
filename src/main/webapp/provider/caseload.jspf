@@ -8,6 +8,8 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.*, org.oscarehr.util.*"%>
 <%@ page import="java.util.*, java.sql.*, java.net.URLEncoder "%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -15,6 +17,7 @@
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 
 <%
 
@@ -29,6 +32,8 @@
 	int caseloadCurDay = caseloadCal.get(Calendar.DAY_OF_MONTH);
 
 	String caseloadCurUser_no = (String) session.getAttribute("user");
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	Integer facilityId = loggedInInfo.currentFacility.getId();
 
 %>
 <tr><td colspan="3">
@@ -53,6 +58,7 @@
 #leftSearch, #rightSearch { display: inline; }
 #rightSearch { float:right; }
 </style>
+<c:import url="/infirm.do?action=showProgram"/>
 <%
 String[] clH = new String[] {"Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt"
 		, "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR"
@@ -79,8 +85,15 @@ clH = ["Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt", "Ap
 				</div>
 				<div id="rightSearch">
 					<form>
+					<b>Program:</b>
+					<select id="program" onChange='search("search");'>
+						<option value="all" selected>All Programs</option>
+						<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
+							<option value="<%=pb.getValue()%>" ><%= pb.getLabel() %></option>
+						</logic:iterate>
+					</select>
 					<b>Provider: </b>
-					<select id='caseloadProv' onChange='search("search");'>
+					<select id='caseloadProv' onChange='change_program_lists();search("search");'>
 					<%
 					OscarProperties props = OscarProperties.getInstance();
 					boolean bDefaultAllProviders = props.getBooleanProperty("CASELOAD_DEFAULT_ALL_PROVIDERS", "true");					
@@ -225,6 +238,7 @@ function generateQuery(method) {
 		query += "&clDx=" + escape(document.getElementById("caseloadDx").value);
 		query += "&clProv=" + escape(document.getElementById("caseloadProv").value);
 	    query += "&clRo=" + escape(document.getElementById("caseloadRoster").value);
+	    query += "&clProg=" + escape(document.getElementById("program").value);
 	} else {
 		query += "&clProv=" + encodeURI("<%=caseloadCurUser_no%>");
 		query += "&clQ=" + encodeURI(document.getElementById("caseloadQ").value);
@@ -345,9 +359,31 @@ function draw(json) {
 	loading = false;
 }
 
+function change_program_lists(){
+	var url="<%=request.getContextPath()%>/infirm.do?action=getProgramList";
+	//var params = "{providerNo:'"+escape(document.getElementById("caseloadProv").value)+"',facilityId:'<%=facilityId %>'}"
+	var params="providerNo="+escape(document.getElementById("caseloadProv").value)+"&facilityId=<%=facilityId %>";
+	jQuery.ajax({
+		type: 'post',
+		data: params,
+		url: url,
+		async: false,
+		success: function(data){
+			jQuery("#program").empty();
+			jQuery("#program").html(data);
+			jQuery("#program").val("all");
+		},
+		error: function(data){
+			alert(data);
+		}
+	}
+	);
+}
+
 jQuery(document).ready(function(){
 	hideAllMessages();
 	jQuery(window).scroll(handleScroll);
+	change_program_lists();
 	search(searchMethod);
 });
 </script>

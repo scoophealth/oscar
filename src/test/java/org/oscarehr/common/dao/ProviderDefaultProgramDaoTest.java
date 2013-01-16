@@ -38,7 +38,7 @@ public class ProviderDefaultProgramDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("provider_default_program", "program", "admission", "program_queue", "Facility");
+		SchemaUtils.restoreTable("provider_default_program", "program", "admission", "program_queue", "Facility","program_provider");
 	}
 
 	@Test

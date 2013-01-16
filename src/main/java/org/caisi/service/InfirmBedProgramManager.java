@@ -113,6 +113,19 @@ public class InfirmBedProgramManager {
         }
         return pList;
     }
+    
+    public List<LabelValueBean> getProgramBeansByFacilityId(Integer facilityId) {
+    	if (facilityId <= 0) return new ArrayList<LabelValueBean>();
+    	Iterator<Program> iter = providerDefaultProgramDao.findProgramsByFacilityId(facilityId).iterator();
+    	ArrayList<LabelValueBean> pList = new ArrayList<LabelValueBean>();
+    	while (iter.hasNext()) {
+    		Program p = iter.next();
+    		if (p != null && p.getId() != null && p.getName() != null && p.getName().length() > 0) {
+    			pList.add(new LabelValueBean(p.getName(), p.getId().toString()));
+    		}
+    	}
+		return pList;
+    }
 
     public List getProgramForApptViewBeans(String providerNo, Integer facilityId) {
         if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList<LabelValueBean>();

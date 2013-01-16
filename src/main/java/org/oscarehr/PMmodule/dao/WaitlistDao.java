@@ -388,7 +388,7 @@ public class WaitlistDao {
 	private static final String field_type_multiple = "select_multiple";
 	private static final String field_type_range = "select_one_range";
 	private static final String field_type_one = "select_one";
-	private static final String field_type_number = "number";
+	//private static final String field_type_number = "number";
 	
 	
 	public VacancyData loadVacancyData(final int vacancyId) {
