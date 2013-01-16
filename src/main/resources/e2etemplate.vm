@@ -24,7 +24,11 @@ CDA Header
 	-->
 	<recordTarget typeCode="RCT" contextControlCode="OP">
 		<patientRole classCode="PAT">
+#*    *##if ( !$patient.hin )
+			<id extension="000000000" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#*    *##else
 			<id extension="$patient.hin" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#*    *##end
 			<patient>
 				<name>
 					<given>$patient.firstName</given>
@@ -177,7 +181,7 @@ Immunization List
 					<title>Immunizations List [with entries]</title>
 					<text>Immunizations</text>
 #**##foreach( $immunization in $patient.getImmunizations() )
-					<entry typeCode="COMP" contextConductionInd="false">
+					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
 						<!-- Immunization Observation -->
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
@@ -189,7 +193,9 @@ Immunization List
 #*    *##end
 							<statusCode code="active"/>
 							<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
+#*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "route")} != "" )
 							<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="${patient.getImmuExtValue("$immunization.getId()", "route")}"/>
+#*    *##end
 #*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "dose")} != "" )
 							<doseQuantity>${patient.getImmuExtValue("$immunization.getId()", "dose")}</doseQuantity>
 #*    *##end
@@ -219,8 +225,8 @@ Immunization List
 									</assignedPerson>
 								</assignedAuthor>
 							</author>
-							<!-- Location -->
 #*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "location")} != "" )
+							<!-- Location -->
 							<participant typeCode="LOC" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
 								<!-- Location Participation -->
@@ -231,8 +237,6 @@ Immunization List
 									</playingEntity>								
 								</participantRole>
 							</participant>
-#*    *##else
-							<participant nullFlavor='UNK'/>
 #*    *##end
 #*    *##if ( $immunizaton.getNextDate() )
 							<!-- Next Immunization Date -->
@@ -319,7 +323,7 @@ Laboratory Results & Results
 						<!-- Laboratory Observation -->
 						<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
 						<observation classCode="OBS" moodCode="RQO">
-							<id root="$lab.labNumber" extension="AN123"/>
+							<id root="TBD" extension="AN123"/>
 							<code nullFlavor='UNK'/>
 							<text>$lab.discipline</text>
 							<!-- Ordering Provider -->
@@ -415,7 +419,7 @@ Medications and Prescriptions - Medication List
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
-							<id extension="$med.id" root="OSCAR.local" />
+							<id extension="$med.id" root="2.16.840.1.113883.3.1818.10.10.3" />
 							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
 #*    *##if ( $patient.isActiveDrug($med.getEndDate()) )
 							<statusCode code="active"/>
@@ -473,7 +477,6 @@ Problems and Conditions - Problem List
 						<!-- Problem List Observation -->
 						<observation classCode="OBS" moodCode="EVN">
 							<id extension="$problem.id" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
-							<code nullFlavor='UNK'/>
 							<code code="$problem.getDxresearchCode()" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
 codeSystemName="ICD-9" displayName="${patient.getICD9Description("$problem.getDxresearchCode()")}"/>
 #*    *##if ( $problem.status == "A" )
