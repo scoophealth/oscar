@@ -762,14 +762,6 @@ public class PdfRecordPrinter {
     }
 
     public void printSpecsHistory(List<EyeformSpecsHistory> specsHistory) throws DocumentException {
-    	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-
- /*
-		if( getNewPage() )
-            getDocument().newPage();
-        else
-            setNewPage(true);
-*/
 
         Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);
 
@@ -806,14 +798,6 @@ public class PdfRecordPrinter {
     }
 
     public void printAllergies(List<Allergy> allergies) throws  DocumentException {
-    	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-
- /*
-		if( getNewPage() )
-            getDocument().newPage();
-        else
-            setNewPage(true);
- */
         Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);
 
 

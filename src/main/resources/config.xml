@@ -15,6 +15,8 @@
 		<account_manager_minimal_person_cache_time_ms>86400000</account_manager_minimal_person_cache_time_ms>
 		<account_manager_can_read_person_cache_size>5120</account_manager_can_read_person_cache_size>
 		<account_manager_can_read_person_cache_time_ms>86400000</account_manager_can_read_person_cache_time_ms>
+		<account_manager_organisation_cache_size>5120</account_manager_organisation_cache_size>
+		<account_manager_organisation_cache_time_ms>86400000</account_manager_organisation_cache_time_ms>
 		<medical_data_manager_data_cache_size>2048</medical_data_manager_data_cache_size>
 		<medical_data_manager_max_object_size_to_cache>5120</medical_data_manager_max_object_size_to_cache>
 		<medical_data_manager_cache_time_ms>3600000</medical_data_manager_cache_time_ms>

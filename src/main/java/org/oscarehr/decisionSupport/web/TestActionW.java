@@ -33,20 +33,17 @@ package org.oscarehr.decisionSupport.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.decisionSupport.service.DSService;
-import org.oscarehr.util.MiscUtils;
 
 /**
  *
  * @author apavel
  */
 public class TestActionW extends Action {
-     private static Logger log = MiscUtils.getLogger();
      private DSService dsService;
     
     public TestActionW() {

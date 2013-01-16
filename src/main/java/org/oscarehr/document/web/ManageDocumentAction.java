@@ -188,10 +188,6 @@ public class ManageDocumentAction extends DispatchAction {
 		}
 		
 		
-		
-		if (flagproviders != null) {
-			
-		}
 		if (ret != null && !ret.equals("")) {
 			// response.getOutputStream().print(ret);
 		}

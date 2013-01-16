@@ -156,7 +156,6 @@ public class CourseManagerAction extends DispatchAction {
 			logger.warn("no valid course id passed");
 			return null;
 		}
-		Program p = programDao.getProgram(id);
 
 		//p.get
 		ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
@@ -242,7 +241,6 @@ public class CourseManagerAction extends DispatchAction {
 		logger.warn("no valid course id passed");
 		return null;
 	}
-	Program p = programDao.getProgram(id);
 
 	//p.get
 	ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
@@ -279,7 +277,6 @@ public class CourseManagerAction extends DispatchAction {
 	}
 
 	public ActionForward saveCourseDetails(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-
 	{
 		logger.info("save course details");
 
@@ -287,7 +284,6 @@ public class CourseManagerAction extends DispatchAction {
 		String tmpCourseId = request.getParameter("courseId");
 		courseId = Integer.parseInt(tmpCourseId);
 
-		Map<String,String> dataMap = new HashMap<String,String>();
 		Map params = request.getParameterMap();
 		List<ProgramProvider> results = new ArrayList<ProgramProvider>();
 

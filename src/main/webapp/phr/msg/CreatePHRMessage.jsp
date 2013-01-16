@@ -25,7 +25,7 @@
 --%>
 
 <%@page import="org.oscarehr.util.WebUtils"%>
-<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer2"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
@@ -210,7 +210,7 @@
                             			
                             			replyToMessage=MessageManager.getMessage(myOscarLoggedInInfo, replyToMessageId);
                             			Long myOscarSenderUserId=replyToMessage.getSenderPersonId();
-                            			MinimalPersonTransfer senderMinimalPerson=AccountManager.getMinimalPerson(myOscarLoggedInInfo, myOscarSenderUserId);
+                            			MinimalPersonTransfer2 senderMinimalPerson=AccountManager.getMinimalPerson(myOscarLoggedInInfo, myOscarSenderUserId);
                             			myOscarUserName=senderMinimalPerson.getUserName();
                                 		demographic=MyOscarUtils.getDemographicByMyOscarUserName(senderMinimalPerson.getUserName());
                             		}
@@ -242,7 +242,7 @@
 			                                        		if (replyToMessage!=null)
 			                                        		{
 			                           							Long senderPersonId=replyToMessage.getSenderPersonId();
-			                           							MinimalPersonTransfer minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
+			                           							MinimalPersonTransfer2 minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
 			                           							String senderString=minimalPersonSender.getLastName()+", "+minimalPersonSender.getFirstName()+" ("+minimalPersonSender.getUserName()+")";
 
 			                           							%>
@@ -254,7 +254,7 @@
 			                                        				for (Long recipientId : replyToMessage.getRecipientPeopleIds())
 			                                        				{
 			                                        					if (myOscarLoggedInInfo.getLoggedInPersonId().equals(recipientId)) continue;
-					                           							MinimalPersonTransfer minimalPersonRecipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
+					                           							MinimalPersonTransfer2 minimalPersonRecipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
 					                           							String recipientString=minimalPersonRecipient.getLastName()+", "+minimalPersonRecipient.getFirstName()+" ("+minimalPersonRecipient.getUserName()+")";
 					                           							%>
 					                           								<br />

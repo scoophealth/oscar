@@ -58,8 +58,9 @@ import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.InvalidRelationshipException_Exception;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
+import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.PersonTransfer2;
+import org.oscarehr.myoscar_server.ws.PersonTransfer3;
 import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.myoscar_server.ws.Role;
 import org.oscarehr.phr.RegistrationHelper;
@@ -390,7 +391,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		}
 		ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
 		try {
-			PersonTransfer2 newAccount = sendUserRegistration(myOscarLoggedInInfo, ht);
+			PersonTransfer3 newAccount = sendUserRegistration(myOscarLoggedInInfo, ht);
 			//if all is well, add the "pin" in the demographic screen
 			String demographicNo = request.getParameter("demographicNo");
 
@@ -456,9 +457,9 @@ public class PHRUserManagementAction extends DispatchAction {
 	 * @return the myOscarUserId of the created user.
 	 * @throws Exception
 	 */
-	public PersonTransfer2 sendUserRegistration(MyOscarLoggedInInfo myOscarLoggedInInfo, HashMap<String, Object> phrRegistrationForm) throws Exception {
+	public PersonTransfer3 sendUserRegistration(MyOscarLoggedInInfo myOscarLoggedInInfo, HashMap<String, Object> phrRegistrationForm) throws Exception {
 
-		PersonTransfer2 newAccount = new PersonTransfer2();
+		PersonTransfer3 newAccount = new PersonTransfer3();
 		newAccount.setUserName((String) phrRegistrationForm.get("username"));
 		newAccount.setRole(Role.PATIENT.name());
 		newAccount.setFirstName((String) phrRegistrationForm.get("firstName"));
@@ -492,7 +493,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		return (newAccount);
 	}
 
-	private void addRelationships(HttpServletRequest request, PersonTransfer2 newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
+	private void addRelationships(HttpServletRequest request, PersonTransfer3 newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
 
 		if (log.isDebugEnabled()) {
 			WebUtils.dumpParameters(request);
@@ -516,7 +517,7 @@ public class PHRUserManagementAction extends DispatchAction {
 	/**
 	 * @deprecated 2012-09-12, the entire relationship infrastructure has changed, need to update this asap, compatability will only be retained for a short while. 
 	 */
-	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer2 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
+	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId = new Long(key.substring("enable_reverse_relation_".length()));
@@ -527,7 +528,7 @@ public class PHRUserManagementAction extends DispatchAction {
 	/**
 	 * @deprecated 2012-09-12, the entire relationship infrastructure has changed, need to update this asap, compatability will only be retained for a short while. 
 	 */
-	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer2 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
+	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId = new Long(key.substring("enable_primary_relation_".length()));

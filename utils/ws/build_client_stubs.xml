@@ -29,23 +29,15 @@
 			<arg value="${GENERATED_CLIENT_STUB_SOURCES}" />
 			<arg value="http://localhost:8080/oscar/ws/${serviceName}?wsdl" />
 		</java>
-		
-		<javac target="1.5" srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
+	</target>
+	
+	<target name="compile_client_stubs">
+		<javac target="1.6" srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
 			<classpath>
 				<fileset refid="lib_jars" />
 			</classpath>
 		</javac>
 
-		<jar destfile="${GENERATED_JAR}" basedir="${GENERATED_CLIENT_STUB_CLASSES}" />
-	</target>
-	
-	<target name="compile_client_stubs">
-		<javac srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
-			<classpath>
-				<fileset refid="lib_jars" />
-			</classpath>
-		</javac>
-		
 		<jar destfile="${GENERATED_JAR}" basedir="${GENERATED_CLIENT_STUB_CLASSES}" />
 	</target>
 </project>

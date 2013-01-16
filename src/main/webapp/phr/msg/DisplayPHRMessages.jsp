@@ -29,7 +29,7 @@
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
 <%@page import="org.oscarehr.myoscar_server.ws.Message2RecipientPersonAttributesTransfer"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
-<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer2"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="oscar.util.DateUtils"%>
@@ -477,13 +477,13 @@ request.setAttribute("pageMethod",pageMethod);
 						for (MessageTransfer3 message : messages)
 						{
 							Long senderPersonId=message.getSenderPersonId();
-							MinimalPersonTransfer minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
+							MinimalPersonTransfer2 minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
 							String senderString=minimalPersonSender.getLastName()+", "+minimalPersonSender.getFirstName()+" ("+minimalPersonSender.getUserName()+")";
 							
 							StringBuilder sb=new StringBuilder();
 		               		for (Long recipientId : message.getRecipientPeopleIds())
 		               		{
-		               			MinimalPersonTransfer recipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
+		               			MinimalPersonTransfer2 recipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
 		               			sb.append(recipient.getLastName()+", "+recipient.getFirstName()+" ("+recipient.getUserName()+"); ");
 		               		}
 							String recipientString=sb.toString();
@@ -534,7 +534,7 @@ request.setAttribute("pageMethod",pageMethod);
 		                                	if (recipientAttributes!=null)
 		                                	{
 			                                	Long recipientPersonId=recipientAttributes.getRecipientPersonId();
-			                                	MinimalPersonTransfer minimalPerson=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientPersonId);
+			                                	MinimalPersonTransfer2 minimalPerson=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientPersonId);
 			                                	demographic=MyOscarUtils.getDemographicByMyOscarUserName(minimalPerson.getUserName());
 			                                	if (demographic!=null)
 			                                	{
