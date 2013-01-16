@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.CaseloadDao;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -132,6 +133,7 @@ public class CaseloadContentAction extends DispatchAction {
 		String caseloadDx       = request.getParameter("clDx");
 		String caseloadProv     = request.getParameter("clProv");
 		String caseloadRoster   = request.getParameter("clRo");
+		String caseloadProgram	= request.getParameter("clProg");
 		boolean sortAscending   = "true".equals(request.getParameter("clSortAsc"));
 
 		Integer caseloadPage;
@@ -155,71 +157,155 @@ public class CaseloadContentAction extends DispatchAction {
 		String clSearchQuery;
 		String[] clSearchParams;
 		String[] clSortParams = null;
-
-		if ("all".equals(caseloadProv)) {
-			// all demographics
-
+		
+		if ("all".equals(caseloadProgram) && "all".equals(caseloadProv)){ // program and provider are all
+			
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			Integer facilityId = loggedInInfo.currentFacility.getId();
+			
 			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {
 				// filter on dx and roster status
-				clSearchQuery="search_alldemo_rodxfilter";
-				clSearchParams = new String[2];
+				clSearchQuery="search_allpg_alldemo_rodxfilter";
+				clSearchParams = new String[3];
 				clSearchParams[0] = caseloadDx;
 				clSearchParams[1] = caseloadRoster;
+				clSearchParams[2] = facilityId.toString();
 			} else if (!StringUtils.isNullOrEmpty(caseloadRoster)) {
 				// filter on dx and roster status
-				clSearchQuery="search_alldemo_rofilter";
-				clSearchParams = new String[1];
+				clSearchQuery="search_allpg_alldemo_rofilter";
+				clSearchParams = new String[2];
 				clSearchParams[0] = caseloadRoster;
+				clSearchParams[1] = facilityId.toString();
 			}
 			else if (!StringUtils.isNullOrEmpty(caseloadDx)) {
 				// filter on dx
-				clSearchQuery="search_alldemo_dxfilter";
-				clSearchParams = new String[1];
+				clSearchQuery="search_allpg_alldemo_dxfilter";
+				clSearchParams = new String[2];
 				clSearchParams[0] = caseloadDx;
+				clSearchParams[1] = facilityId.toString();
 			} else {
 				// no dx filter
-				clSearchQuery="search_alldemo_nofilter";
-				clSearchParams = new String[0];
+				clSearchQuery="search_allpg_alldemo_nofilter";
+				clSearchParams = new String[1];
+				clSearchParams[0] = facilityId.toString();
 			}
-		} else {
+		} else if ("all".equals(caseloadProgram)) { // program is all
 			// demographics from a specific provider
-
+			
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			Integer facilityId = loggedInInfo.currentFacility.getId();
+			
 			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {
 				// filter on dx
-				clSearchQuery="search_provdemo_rodxfilter";
-				clSearchParams = new String[6];
+				clSearchQuery="search_allpg_provdemo_rodxfilter";
+				clSearchParams = new String[7];
 				clSearchParams[0] = caseloadProv;
 				clSearchParams[1] = caseloadProv;
 				clSearchParams[2] = caseloadProv;
 				clSearchParams[3] = caseloadProv;
 				clSearchParams[4] = caseloadRoster;
 				clSearchParams[5] = caseloadDx;
+				clSearchParams[6] = facilityId.toString();
 			} else if (!StringUtils.isNullOrEmpty(caseloadRoster)) {
 				// no dx filter
-				clSearchQuery="search_provdemo_rofilter";
-				clSearchParams = new String[5];
+				clSearchQuery="search_allpg_provdemo_dxfilter";
+				clSearchParams = new String[6];
 				clSearchParams[0] = caseloadProv;
 				clSearchParams[1] = caseloadProv;
 				clSearchParams[2] = caseloadProv;
 				clSearchParams[3] = caseloadProv;
 				clSearchParams[4] = caseloadRoster;
+				clSearchParams[5] = facilityId.toString();
 			} else if (!StringUtils.isNullOrEmpty(caseloadDx)) {
 				// filter on dx
-				clSearchQuery="search_provdemo_dxfilter";
-				clSearchParams = new String[5];
+				clSearchQuery="search_allpg_provdemo_rofilter";
+				clSearchParams = new String[6];
 				clSearchParams[0] = caseloadProv;
 				clSearchParams[1] = caseloadProv;
 				clSearchParams[2] = caseloadProv;
 				clSearchParams[3] = caseloadProv;
 				clSearchParams[4] = caseloadDx;
+				clSearchParams[5] = facilityId.toString();
 			} else {
 				// no dx filter
-				clSearchQuery="search_provdemo_nofilter";
-				clSearchParams = new String[4];
+				clSearchQuery="search_allpg_provdemo_nofilter";
+				clSearchParams = new String[5];
 				clSearchParams[0] = caseloadProv;
 				clSearchParams[1] = caseloadProv;
 				clSearchParams[2] = caseloadProv;
 				clSearchParams[3] = caseloadProv;
+				clSearchParams[4] = facilityId.toString();
+		    }
+		} else if ("all".equals(caseloadProv)) { // provider is all
+			// all demographics
+			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {
+				// filter on dx and roster status
+				clSearchQuery="search_alldemo_rodxfilter";
+				clSearchParams = new String[3];
+				clSearchParams[0] = caseloadDx;
+				clSearchParams[1] = caseloadRoster;
+				clSearchParams[2] = caseloadProgram;
+			} else if (!StringUtils.isNullOrEmpty(caseloadRoster)) {
+				// filter on dx and roster status
+				clSearchQuery="search_alldemo_rofilter";
+				clSearchParams = new String[2];
+				clSearchParams[0] = caseloadRoster;
+				clSearchParams[1] = caseloadProgram;
+			}
+			else if (!StringUtils.isNullOrEmpty(caseloadDx)) {
+				// filter on dx
+				clSearchQuery="search_alldemo_dxfilter";
+				clSearchParams = new String[2];
+				clSearchParams[0] = caseloadDx;
+				clSearchParams[1] = caseloadProgram;
+			} else {
+				// no dx filter
+				clSearchQuery="search_alldemo_nofilter";
+				clSearchParams = new String[1];
+				clSearchParams[0] = caseloadProgram;
+			}
+		} else { // program and provider aren't all
+			// demographics from a specific provider
+			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {
+				// filter on dx
+				clSearchQuery="search_provdemo_rodxfilter";
+				clSearchParams = new String[7];
+				clSearchParams[0] = caseloadProv;
+				clSearchParams[1] = caseloadProv;
+				clSearchParams[2] = caseloadProv;
+				clSearchParams[3] = caseloadProv;
+				clSearchParams[4] = caseloadRoster;
+				clSearchParams[5] = caseloadDx;
+				clSearchParams[6] = caseloadProgram;
+			} else if (!StringUtils.isNullOrEmpty(caseloadRoster)) {
+				// no dx filter
+				clSearchQuery="search_provdemo_rofilter";
+				clSearchParams = new String[6];
+				clSearchParams[0] = caseloadProv;
+				clSearchParams[1] = caseloadProv;
+				clSearchParams[2] = caseloadProv;
+				clSearchParams[3] = caseloadProv;
+				clSearchParams[4] = caseloadRoster;
+				clSearchParams[5] = caseloadProgram;
+			} else if (!StringUtils.isNullOrEmpty(caseloadDx)) {
+				// filter on dx
+				clSearchQuery="search_provdemo_dxfilter";
+				clSearchParams = new String[6];
+				clSearchParams[0] = caseloadProv;
+				clSearchParams[1] = caseloadProv;
+				clSearchParams[2] = caseloadProv;
+				clSearchParams[3] = caseloadProv;
+				clSearchParams[4] = caseloadDx;
+				clSearchParams[5] = caseloadProgram;
+			} else {
+				// no dx filter
+				clSearchQuery="search_provdemo_nofilter";
+				clSearchParams = new String[5];
+				clSearchParams[0] = caseloadProv;
+				clSearchParams[1] = caseloadProv;
+				clSearchParams[2] = caseloadProv;
+				clSearchParams[3] = caseloadProv;
+				clSearchParams[4] = caseloadProgram;
 		    }
 		}
 

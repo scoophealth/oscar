@@ -31,6 +31,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.ProviderDefaultProgram;
+import org.oscarehr.myoscar.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -97,4 +98,20 @@ public class ProviderDefaultProgramDao extends AbstractDao<ProviderDefaultProgra
         return results;
 	    
     }
+	
+	public List<Program> findProgramsByFacilityId(Integer facilityId) {
+		String sql = "from Program p where p.id in (select distinct pg.id from Program pg ,ProgramProvider pp where pp.ProgramId=pg.id and pg.facilityId=?)";
+		Query query;
+		try {
+			query = entityManager.createQuery(sql);
+			query.setParameter(1, facilityId);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error(e.getMessage(),e);
+			return null;
+		}
+		
+		@SuppressWarnings("unchecked")
+        List<Program> results = query.getResultList();
+		return results;
+	}
 }

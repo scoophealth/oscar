@@ -22,6 +22,8 @@
  */
 package org.caisi.core.web;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -38,6 +40,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.myoscar.util.MiscUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 
@@ -270,6 +273,44 @@ public class InfirmAction extends BaseAction
 		if (providerNo==null) providerNo=(String) request.getSession().getAttribute("user");
 		Boolean onsig=getInfirmBedProgramManager().getProviderSig(providerNo);
 		request.getSession().setAttribute("signOnNote",onsig);
+		return null;
+	}
+	
+	public ActionForward getProgramList(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response){
+		String providerNo = request.getParameter("providerNo");
+		String facilityId = request.getParameter("facilityId");
+		
+		String outTxt = "<option value='all'>All Programs</option>";
+		PrintWriter out;
+        try {
+	        out = response.getWriter();
+        } catch (IOException e) {
+	        MiscUtils.getLogger().error(e.getMessage(),e);
+	        return null;
+        }
+		out.print(outTxt);
+		if (providerNo==null || facilityId==null || providerNo.isEmpty() || facilityId.isEmpty()) {
+			return null;
+		}
+		int facility_id = 1;
+		try {
+			facility_id = Integer.parseInt(facilityId);
+		} catch (NumberFormatException e) {
+			MiscUtils.getLogger().error(e.getMessage(),e);
+			return null;
+		}
+		InfirmBedProgramManager manager=getInfirmBedProgramManager();
+		List<LabelValueBean> programBeans = null;
+		if (providerNo.equalsIgnoreCase("all")) {
+			programBeans = manager.getProgramBeansByFacilityId(facility_id);
+		} else {
+			programBeans = manager.getProgramBeans(providerNo, facility_id);
+		}
+		for (LabelValueBean pb : programBeans) {
+			out.print(String.format("<option value='%s'>%s</option>", pb.getValue(), pb.getLabel()));
+		}
+		
 		return null;
 	}
 

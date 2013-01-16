@@ -99,6 +99,7 @@
 <%
 	String vacancyId = request.getParameter("vacancyId");
 %>
+
 <html:hidden property="program.id" />
 <html:hidden property="referral.remoteFacilityId" />
 <html:hidden property="referral.remoteProgramId" />
