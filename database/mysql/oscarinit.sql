@@ -9420,6 +9420,7 @@ create table Facility (
 	lastUpdated datetime not null,
 	enableEncounterTime tinyint(1) not null,
 	enableEncounterTransportationTime tinyint(1) not null,
+	registrationIntake int(8),
 	rxInteractionWarningLevel int(10) not null
 );
 

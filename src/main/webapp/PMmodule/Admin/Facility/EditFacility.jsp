@@ -181,6 +181,15 @@
 			<td><html:checkbox property="facility.enableGroupNotes" /></td>
 		</tr>
 		<tr class="b">
+            <td width="20%">Registration Intake</td>
+            <td>
+                <html:select property="facility.registrationIntake">
+                    <html:option value="-1">None</html:option>
+                    <html:optionsCollection property="registrationIntakeForms" label="formName" value="fid"/>
+                </html:select>
+            </td>
+		</tr>
+		<tr class="b">
 			<td width="20%">Enable Mandatory Encounter Time in Encounter:</td>
 			<td><html:checkbox property="facility.enableEncounterTime" /></td>
 		</tr>

@@ -44,7 +44,7 @@ public class EFormDaoTest extends DaoTestFixtures {
 
 	@BeforeClass
 	public static void initSchema() throws Exception {
-		SchemaUtils.restoreTable("eform");
+		SchemaUtils.restoreTable("eform","eform_groups");
 		
 		EForm eform = new EForm();
 		EntityDataGenerator.generateTestDataForModelClass(eform);

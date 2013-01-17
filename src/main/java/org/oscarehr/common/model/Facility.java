@@ -64,6 +64,15 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean enableEncounterTime = false;
 	private boolean enableEncounterTransportationTime = false;
 	private int rxInteractionWarningLevel = 0;
+    private Integer registrationIntake;
+
+    public Integer getRegistrationIntake() {
+        return registrationIntake;
+    }
+
+    public void setRegistrationIntake(Integer registrationIntake) {
+        this.registrationIntake = registrationIntake;
+    }
 
     public boolean isEnablePhoneEncounter() {
         return enablePhoneEncounter;

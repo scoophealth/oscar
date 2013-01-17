@@ -24,12 +24,25 @@
 package org.oscarehr.PMmodule.web.admin;
 
 import org.apache.struts.action.ActionForm;
+import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.Facility;
+
+import java.util.List;
 
 /**
  */
 public class FacilityManagerForm extends ActionForm {
     private Facility facility;
+
+    public List<EForm> getRegistrationIntakeForms() {
+        return registrationIntakeForms;
+    }
+
+    public void setRegistrationIntakeForms(List<EForm> registrationIntakeForms) {
+        this.registrationIntakeForms = registrationIntakeForms;
+    }
+
+    List<EForm> registrationIntakeForms;
 
     public Facility getFacility() {
         return facility;

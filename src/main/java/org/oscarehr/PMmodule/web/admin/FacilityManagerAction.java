@@ -44,12 +44,14 @@ import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.FacilityDischargedClients;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
 import com.quatro.service.LookupManager;
@@ -65,6 +67,7 @@ public class FacilityManagerAction extends BaseAction {
 	private LogManager logManager;
 
 	private FacilityDao facilityDao;
+    private EFormDao eFormDao = (EFormDao) SpringUtils.getBean("EFormDao");
 
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -77,6 +80,7 @@ public class FacilityManagerAction extends BaseAction {
 	private static final String BEAN_FACILITIES = "facilities";
 	private static final String BEAN_ASSOCIATED_PROGRAMS = "associatedPrograms";
 	private static final String BEAN_ASSOCIATED_CLIENTS = "associatedClients";
+    private static final String registrationIntakeName = "Registration Intake";
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping, form, request, response);
@@ -103,6 +107,7 @@ public class FacilityManagerAction extends BaseAction {
 
 		FacilityManagerForm facilityForm = (FacilityManagerForm) form;
 		facilityForm.setFacility(facility);
+        facilityForm.setRegistrationIntakeForms(eFormDao.getEfromInGroupByGroupName(registrationIntakeName));
 
 		List<FacilityDischargedClients> facilityClients = new ArrayList<FacilityDischargedClients>();
 
@@ -167,6 +172,7 @@ public class FacilityManagerAction extends BaseAction {
 
 		FacilityManagerForm managerForm = (FacilityManagerForm) form;
 		managerForm.setFacility(facility);
+        managerForm.setRegistrationIntakeForms(eFormDao.getEfromInGroupByGroupName(registrationIntakeName));
 
 		request.setAttribute("id", facility.getId());
 		request.setAttribute("orgId", facility.getOrgId());
@@ -228,6 +234,7 @@ public class FacilityManagerAction extends BaseAction {
 			facility.setEnableOcanForms(WebUtils.isChecked(request, "facility.enableOcanForms"));
 			facility.setEnableEncounterTime(WebUtils.isChecked(request, "facility.enableEncounterTime"));
 			facility.setEnableEncounterTransportationTime(WebUtils.isChecked(request, "facility.enableEncounterTransportationTime"));
+            if(facility.getRegistrationIntake()!=null&&facility.getRegistrationIntake()<0)facility.setRegistrationIntake(null);
 			
 			if (facility.getId() == null || facility.getId() == 0) facilityDao.persist(facility);
 			else facilityDao.merge(facility);

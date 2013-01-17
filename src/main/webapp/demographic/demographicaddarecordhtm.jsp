@@ -47,11 +47,14 @@
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@page import="org.oscarehr.common.model.WaitingListName" %>
 <%@page import="org.oscarehr.common.dao.WaitingListNameDao" %>
+<%@page import="org.oscarehr.common.dao.EFormDao" %>
+<%@page import="org.oscarehr.common.model.Facility" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
+	EFormDao eformDao = (EFormDao)SpringUtils.getBean("EFormDao");
 %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -1242,5 +1245,18 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
 </script>
+<%
+//    Integer fid = ((Facility)session.getAttribute("currentFacility")).getRegistrationIntake();
+    Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
+    if(facility!=null){
+        Integer fid = facility.getRegistrationIntake();
+        if(fid==null||fid<0){
+            List<EForm> eforms = eformDao.getEfromInGroupByGroupName("Registration Intake");
+            if(eforms!=null&&eforms.size()==1) fid=eforms.get(0).getId();
+        }
+    if(fid!=null&&fid>=0){
+%>
+<iframe src="../eform/efmshowform_data.jsp?fid=<%=fid%>" width="100%" height="100%"></iframe>
+<%}}%>
 </body>
 </html:html>
