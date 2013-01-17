@@ -68,7 +68,6 @@ String ctx = request.getContextPath();
 
 Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
 ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
-CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
 
 String pId = (String)session.getAttribute("case_program_id");
 Program program = null;
