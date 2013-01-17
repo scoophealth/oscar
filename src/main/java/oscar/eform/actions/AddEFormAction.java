@@ -46,7 +46,11 @@ import org.oscarehr.common.dao.DatabaseAPDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.match.IMatchManager;
+import org.oscarehr.match.MatchManager;
+import org.oscarehr.match.MatchManagerException;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -245,6 +249,16 @@ public class AddEFormAction extends Action {
 			}
 		}
 		
+		if (demographic_no != null) {
+			IMatchManager matchManager = new MatchManager();
+			DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+			Demographic client = demographicDao.getDemographic(demographic_no);
+			try {
+	            matchManager.<Demographic>processEvent(client, IMatchManager.Event.CLIENT_CREATED);
+            } catch (MatchManagerException e) {
+            	MiscUtils.getLogger().error("Error while processing MatchManager.processEvent(Client)",e);
+            }
+		}
 		
 
 		return(mapping.findForward("close"));

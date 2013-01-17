@@ -312,10 +312,9 @@ public class WaitlistDao {
 			+ "WHERE cr.referral_id IS NULL AND " + "demographic_no= xyz.dmb AND fdid=xyz.ffdid";
 
 		
-	private static final String QUERY_GET_CLIENT_DATA = "SELECT demographic_no, fdid, var_name, var_value "
-			+ "FROM eform_values LEFT JOIN client_referral cr ON cr.client_id=demographic_no, "
-			+ "(SELECT demographic_no AS dmb,MAX(fdid) AS ffdid FROM eform_values WHERE demographic_no=?1 "
-			+ "GROUP BY demographic_no) xyz WHERE cr.referral_id IS NULL AND demographic_no= ?2 AND fdid=xyz.ffdid";
+	private static final String QUERY_GET_CLIENT_DATA = "SELECT ef.demographic_no, ef.fdid, ef.var_name, ef.var_value "
+			+ "FROM eform_values ef LEFT JOIN client_referral cr ON cr.client_id=ef.demographic_no "
+			+ "WHERE demographic_no= ?1 AND not exists (select * from eform_values where ef.demographic_no=demographic_no and fdid>ef.fdid)";
 
 
 	
@@ -342,36 +341,97 @@ public class WaitlistDao {
 				clientData.setFormId(formId);
 				clientsDataList.put(demographicId, clientData);
 			}
+			
 			if (paramName != null) {
 				paramName = paramName.toLowerCase();
 			}
-			clientData.getClientData().put(paramName, paramValue);
+			if ("has-mental-illness-primary".equalsIgnoreCase(paramValue) && "no".equalsIgnoreCase(paramValue)) {
+				String[] paramsValues = intakeVarToCriteriaFiled(paramValue,paramValue);
+				if (paramsValues.length == 4) {
+					clientData.getClientData().put(paramsValues[0], paramsValues[1]);
+					clientData.getClientData().put(paramsValues[2], paramsValues[3]);
+				}
+			} else {
+				String[] paramVal = intakeVarToCriteriaFiled(paramValue,paramValue);
+				clientData.getClientData().put(paramVal[0], paramVal[1]); 
+			}
         }
 		return new ArrayList<ClientData>(clientsDataList.values());
 	}
 	
+	private String[] intakeVarToCriteriaFiled(String varName, String varValue) {
+		if ("age-years".equalsIgnoreCase(varName)) {
+			return new String[]{"age",varValue};
+		} else if ("gender".equalsIgnoreCase(varName)) {
+			return new String[]{"gender",varValue};
+		} else if ("preferred-language".equalsIgnoreCase(varName)) {
+			if ("eng".equalsIgnoreCase(varValue)) {
+				return new String[]{"language","English"};
+			} else if ("fre".equalsIgnoreCase(varValue)) {
+				return new String[]{"language","French"};
+			} else {
+				return new String[]{"language","Other"};
+			}
+		} else if ("location-preferences".equalsIgnoreCase(varName)){
+			return new String[]{"area",varValue};
+		} else if ("prepared-live-toronto".equalsIgnoreCase(varName)) {
+			if ("yes".equalsIgnoreCase(varValue)) {
+				return new String[]{"area", "Toronto"};
+			}
+		} else if ("bed_community_program_id".equalsIgnoreCase(varName)) {
+			if ("10013".equalsIgnoreCase(varValue)) { // out of street
+				return new String[]{"residence", "Homeless"};
+			} else if ("10014".equalsIgnoreCase(varValue)) { // out of street
+				return new String[]{"residence", "Transitional"};
+			} else {
+				return new String[]{"residence", "Housed"};
+			}
+		} else if ("has-mental-illness-primary".equalsIgnoreCase(varName)) {
+			if (!"no".equalsIgnoreCase(varValue) && !"unknown".equalsIgnoreCase(varValue)) {
+				return new String[]{"Serious and Persistent Mental Illness Diagnosis", varValue, "Serious and Persistent Mental Illness Diagnosis", "No Formal Diagnosis"};
+			} else if (!"no".equalsIgnoreCase(varValue)) {
+				return new String[]{"Serious and Persistent Mental Illness Diagnosis", "Formal Diagnosis", "Serious and Persistent Mental Illness Diagnosis", varValue};
+			}
+		} else if ("current-legal-involvements".equalsIgnoreCase(varName)) {
+			return new String[]{"Legal History", varValue};
+		}
+		return new String[]{varName, varValue};
+	}
 	
 	public ClientData getClientData(int clientId) {
 		ClientData clientData = new ClientData();
+		clientData.setClientId(clientId);
 		
 		Query query = entityManager.createNativeQuery(QUERY_GET_CLIENT_DATA);
 		query.setParameter(1, clientId);
-		query.setParameter(2, clientId);
 		
 		@SuppressWarnings("unchecked")
 		List<Object[]> rows = query.getResultList();
 		if(rows.size()==0) return clientData;
-		Object[] cols = rows.get(0);
-		Integer demographicId = (Integer)cols[0];
-		Integer formId = (Integer)cols[1];
-		String paramName = (String)cols[2];
-		String paramValue = (String)cols[3];
-		if(demographicId == null) {
-			demographicId = 0;
+		for (Object[] cols : rows) {
+			Integer demographicId = (Integer)cols[0];
+			Integer formId = (Integer)cols[1];
+			String paramName = (String)cols[2];
+			String paramValue = (String)cols[3];
+			if(demographicId == null) {
+				demographicId = 0;
+			}
+			clientData.setFormId(formId);
+			
+			if (paramName != null) {
+				paramName = paramName.toLowerCase();
+			}
+			if ("has-mental-illness-primary".equalsIgnoreCase(paramName) && "no".equalsIgnoreCase(paramValue)) {
+				String[] paramsValues = intakeVarToCriteriaFiled(paramName,paramValue);
+				if (paramsValues.length == 4) {
+					clientData.getClientData().put(paramsValues[0], paramsValues[1]);
+					clientData.getClientData().put(paramsValues[2], paramsValues[3]);
+				}
+			} else {
+				String[] paramVal = intakeVarToCriteriaFiled(paramName,paramValue);
+				clientData.getClientData().put(paramVal[0], paramVal[1]); 
+			}
 		}
-		clientData.setClientId(demographicId);
-		clientData.setFormId(formId);
-		clientData.getClientData().put(paramName, paramValue);
 		
 		return clientData;
 	}
@@ -412,22 +472,21 @@ public class WaitlistDao {
 			String optionValue = (String)cols[5];
 			Integer rangeStart = (Integer)cols[6];
 			Integer rangeEnd = (Integer)cols[7];
+			if (fieldName != null) {
+				fieldName = fieldName.toLowerCase(Locale.ENGLISH);
+			}
+			vtData.setParam(fieldName);
 			if (field_type_range.equals(fieldType)) {
 				vtData.setRange(true);
 				vtData.addRange(rangeStart, rangeEnd);
 			} else {
-				if (fieldName != null) {
-					fieldName = fieldName.toLowerCase(Locale.ENGLISH);
-				}
 				if (field_type_multiple.equals(fieldType)) {
 					vtData = vacancyData.getVacancyData().get(fieldName);
 					if (vtData == null) {
 						vtData = new VacancyTemplateData();
 					}
-					vtData.setParam(fieldName);
 				} else if (field_type_one.equals(fieldType)) {
 					vtData = new VacancyTemplateData();
-					vtData.setParam(fieldName);
 				} 
 				if (critValue != null) {
 					vtData.getValues().add(critValue);
