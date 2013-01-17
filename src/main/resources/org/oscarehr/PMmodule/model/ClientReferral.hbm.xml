@@ -31,6 +31,7 @@
 		<property column="provider_no" name="ProviderNo" />
 		<property column="facility_id" name="FacilityId" />
         <property column="select_vacancy" name="SelectVacancy" />
+        <property column="vacancy_id" name="VacancyId" />
 		<property column="notes" name="Notes" not-null="false" type="string" />
 		<property column="completion_notes" name="CompletionNotes"
 			not-null="false" type="string" />
