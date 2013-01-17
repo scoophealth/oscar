@@ -120,6 +120,15 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 			%>
 <script language="JavaScript" type="text/JavaScript">
 <!--
+function validateGroupReport() {
+	var e = document.getElementsByName('provider')[0];
+	var val = e.options[e.selectedIndex].value;
+	if(val == 'all') {
+		alert("This function will create the billing for the selected provider's group. No applicable to 'All Providers'");
+		return false;
+	}
+	return true;
+}
 
 var checkSubmitFlg = false;
 function checkSubmit() {
@@ -258,6 +267,7 @@ obj.visibility=v; }
 
 		</select></td>
 		<td><input type="submit" name="Submit" value="Create Report">
+		
 		<input type="hidden" name="monthCode" value="<%=monthCode%>">
 		<input type="hidden" name="verCode" value="V03"> <input
 			type="hidden" name="curUser" value="<%=curProvider_no%>"> <input
