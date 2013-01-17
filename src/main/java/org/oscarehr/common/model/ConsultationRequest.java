@@ -269,7 +269,10 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
     }
 
     public Integer getSpecialistId() {
-        return this.professionalSpecialist.getId();
+    	if(professionalSpecialist != null)
+    		return this.professionalSpecialist.getId();
+    	else
+    		return null;
     }
 
 	public String getSignatureImg() {
