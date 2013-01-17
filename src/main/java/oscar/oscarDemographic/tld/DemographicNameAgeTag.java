@@ -32,6 +32,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicNameAgeString;
+import oscar.util.ConversionUtils;
 
 public class DemographicNameAgeTag extends TagSupport {
 
@@ -46,19 +47,14 @@ public class DemographicNameAgeTag extends TagSupport {
         return demoNo;
     }
 
-    public int doStartTag() throws JspException    {   
-    	try {
-    		if(demoNo == null || demoNo.equals(""))
-    			return SKIP_BODY;
-    		Integer.valueOf(demoNo);
-    	} catch(NumberFormatException e) {
-    		return SKIP_BODY;
-    	}
-    	
-    	
-       DemographicNameAgeString demoNameAge = DemographicNameAgeString.getInstance();       
-       String nameage = demoNameAge.getNameAgeString(Integer.valueOf(demoNo));
-            
+    public int doStartTag() throws JspException    {       
+       DemographicNameAgeString demoNameAge = DemographicNameAgeString.getInstance();
+       Integer intDemoNo = ConversionUtils.fromIntString(demoNo);
+       if (intDemoNo == 0) {
+    	   MiscUtils.getLogger().error("Unable to parse demo no: " + demoNo);
+    	   return SKIP_BODY;
+       }
+       String nameage = demoNameAge.getNameAgeString(intDemoNo);            
        try{
           JspWriter out = super.pageContext.getOut();          
           out.print(nameage);                          
