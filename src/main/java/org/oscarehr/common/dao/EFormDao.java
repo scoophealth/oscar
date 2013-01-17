@@ -213,4 +213,18 @@ public class EFormDao extends AbstractDao<EForm> {
 	    query.setParameter("id", id);
 		return (Long) query.getSingleResult();
     }
+
+    /**
+     * get eform in group by group name
+     * @param groupName
+     * @return
+     */
+    public List<EForm> getEfromInGroupByGroupName(String groupName){
+        String queryString = "select e from EForm e where e.id in (select formId from EFormGroup eg  where eg.groupName =?1)";
+        Query query = entityManager.createQuery(queryString);
+        query.setParameter(1,groupName);
+        @SuppressWarnings("unchecked")
+        List<EForm> results = query.getResultList();
+        return (results);
+    }
 }
