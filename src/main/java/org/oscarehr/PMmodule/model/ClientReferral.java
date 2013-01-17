@@ -60,6 +60,16 @@ public class ClientReferral implements Serializable {
 
     //transient
     private String selectVacancy;
+
+    public Integer getVacancyId() {
+        return vacancyId;
+    }
+
+    public void setVacancyId(Integer vacancyId) {
+        this.vacancyId = vacancyId;
+    }
+
+    private Integer vacancyId;
     
     
     // constructors

@@ -100,6 +100,7 @@
 <html:hidden property="referral.remoteFacilityId" />
 <html:hidden property="referral.remoteProgramId" />
 <html:hidden property="program.name" />
+<html:hidden property="vacancyId"  value="<%=request.getParameter("vacancyId")%>"/>
 <br />
 <c:if test="${requestScope.do_refer != null}">
 	<table class="b" border="0" width="100%">
