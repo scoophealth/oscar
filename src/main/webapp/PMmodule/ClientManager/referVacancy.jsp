@@ -137,6 +137,7 @@
 			<td><html:textarea cols="50" rows="7"
 				property="referral.presentProblems" /></td>
 		</tr>
+			
 		<c:if test="${program.type eq 'Bed' }">
 			<!-- <c:if test="${requestScope.temporaryAdmission == true}"> -->
 			<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">

@@ -146,7 +146,13 @@ public class VacancyTemplateManager {
 		return vacancyDAO.find(id);
 	}
 	
-	
+	public static Vacancy getVacancyByName(String vacancyName) {
+		List<Vacancy> v = vacancyDAO.getVacanciesByName(vacancyName);
+		if(v.isEmpty()) 
+			return null;
+		else
+			return vacancyDAO.getVacanciesByName(vacancyName).get(0);
+	}
 	
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
