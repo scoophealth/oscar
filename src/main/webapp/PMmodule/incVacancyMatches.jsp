@@ -78,6 +78,7 @@
 	<br/>
 	<%
 		String vacancyId = request.getParameter("vacancyId");
+		
 		int i = 0;
     %>
     <table cellpadding="3" cellspacing="2">
@@ -127,7 +128,7 @@
 					Form</a>			
 			</td>
 			<td>				<a 
-				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?method=vacancy_refer_select_program&program.id=<bean:write name="vacancyClientMatchForm" property="programId"/>&vacancyId=<%=vacancyId %>&view.tab=Refer&id=<c:out value="${matchedCLient.clientID}" />">
+				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?method=vacancy_refer_select_program&program.id=<bean:write name="vacancyClientMatchForm" property="programId"/>&vacancyId=<%=vacancyId %>&vacancyName=<bean:write name="vacancyClientMatchForm" property="vacancy"/>&view.tab=Refer&id=<c:out value="${matchedCLient.clientID}" />">
 					Create Referral</a>
 			</td>
 			<td><c:out value="${matchedCLient.percentageMatch}"></c:out></td>
