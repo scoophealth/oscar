@@ -39,10 +39,9 @@ public class DocumentDaoTest extends DaoTestFixtures {
 	public DocumentDaoTest() {
 	}
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("document");
+		SchemaUtils.restoreTable("document", "ctl_document", "consultdocs");
 	}
 
 	@Test
@@ -51,7 +50,6 @@ public class DocumentDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDocumentNo(null);
 		dao.persist(entity);
-
 		assertNotNull(entity.getId());
 	}
 }

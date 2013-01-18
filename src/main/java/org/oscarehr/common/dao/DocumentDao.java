@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -91,4 +92,85 @@ public class DocumentDao extends AbstractDao<Document> {
 		return query.getResultList();
     }
     
+    public List<Object[]> findCtlDocsAndDocsByModuleAndModuleId(Module module, Integer moduleId) {
+		String sql = "FROM CtlDocument c, Document d " + 
+				"WHERE d.status = c.status " +
+				"AND d.status != 'D' " +
+				"AND c.id.documentNo = d.documentNo " +
+				"AND c.id.module = :module " +
+				"AND c.moduleId = :moduleId";
+		
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("module", module.getName());
+		query.setParameter("moduleId", moduleId);
+		return query.getResultList();
+    }
+    
+    public List<Object[]> findDocsAndConsultDocsByConsultIdAndDocType(Integer consultationId, String doctype) {
+    	String sql = "FROM Document d, ConsultDocs cd " +
+    			"WHERE d.documentNo = cd.documentNo " +
+    			"AND cd.requestId = :consultationId " +
+    			"AND cd.docType = :doctype " +
+    			"AND cd.deleted IS NULL";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("consultationId", consultationId);
+		query.setParameter("doctype", doctype);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findCtlDocsAndDocsByDocNo(Integer documentNo) {
+		String sql = "FROM Document d, CtlDocument c " + 
+				"WHERE c.id.documentNo = d.documentNo " +
+                "AND c.id.documentNo = :documentNo " +
+                "ORDER BY d.observationdate DESC, d.updatedatetime DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("documentNo", documentNo);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findCtlDocsAndDocsByModuleCreatorResponsibleAndDates(Module module, String doccreator, String responsible, Date from, Date to, boolean unmatchedDemographics) {
+		String sql = "FROM Document d, CtlDocument c " +
+				"WHERE c.documentNo = d.documentNo " +
+				"AND c.module= :module " +
+				"AND d.doccreator = :doccreator " +
+				"AND d.responsible = :responsible " +
+				"AND d.updatedatetime >= :from " +
+				"AND d.updatedatetime <= :to";
+		if (unmatchedDemographics) {
+			sql += " AND c.moduleId = -1 ";
+		}
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("module", module.getName());
+		query.setParameter("doccreator", doccreator);
+		query.setParameter("responsible", responsible);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		return query.getResultList();
+    }
+
+	public List<Object[]> findConstultDocsDocsAndProvidersByModule(Module module, Integer moduleId) {
+		String sql = "FROM Document d, Provider p, CtlDocument c " + 
+				"WHERE d.doccreator = p.ProviderNo " +
+				"AND d.documentNo = c.documentNo " + 
+				"AND c.module = :module " +
+				"AND c.moduleId = :moduleId";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("module", module.getName());
+		query.setParameter("moduleId", moduleId);
+		return query.getResultList();
+    }
+
+	public Long findMaxDocNo() {
+		String sql = "select max(d.documentNo) from Document d";
+		Query query = entityManager.createQuery(sql);
+		List<Object> o = query.getResultList();
+		if (o.isEmpty()) {
+			return 0L;
+		}
+		Object r = o.get(0);
+		if (r == null) {
+			return 0L;
+		}
+		return (Long) r; 
+    }
 }

@@ -76,7 +76,9 @@ public final class DateUtils {
 	 */
 	public static Date parseDate(String s, Locale locale) throws ParseException
 	{
-		if (s==null) return(null);
+		if (s==null || s.trim().isEmpty()) {
+			return null;
+		}
 		
 		SimpleDateFormat dateFormatter=null;
 		
