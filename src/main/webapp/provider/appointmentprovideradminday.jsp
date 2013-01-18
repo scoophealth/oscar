@@ -1666,8 +1666,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 					  }
 				  }
 				  
-                  String reason = String.valueOf(appointment.getReason()).trim();
-                  String notes = String.valueOf(appointment.getNotes()).trim();
+                  String reason = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(String.valueOf(appointment.getReason()).trim());
+                  String notes = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(String.valueOf(appointment.getNotes()).trim());
                   String status = String.valueOf(appointment.getStatus()).trim();
           	      String sitename = String.valueOf(appointment.getLocation()).trim();
           	      String urgency = appointment.getUrgency();
