@@ -397,9 +397,10 @@
 				propT.setProperty("servicePercentage", noNull(b.getPercentage()));
 				propT.setProperty("serviceType", c.getServiceType());
                 propT.setProperty("serviceTypeName", c.getServiceGroupName());
-                styleId = "" + b.getDisplayStyle();
-                if( styleId != null ) {
-                	cssStyle = cssStylesDao.find(new Integer(styleId));
+                styleId = null;
+                if(b != null && b.getDisplayStyle() != null) {
+                	styleId = "" + b.getDisplayStyle();
+                	cssStyle = cssStylesDao.find(b.getDisplayStyle());
                 	propT.setProperty("displaystyle", cssStyle.getStyle());
                 }
                 else {
@@ -436,10 +437,10 @@
 				propT.setProperty("servicePercentage", noNull(b.getPercentage()));
 				propT.setProperty("serviceType", c.getServiceType());
                 propT.setProperty("serviceTypeName", c.getServiceGroupName());
-                styleId = "" + b.getDisplayStyle();
-                
-                if( styleId != null ) {
-                	cssStyle = cssStylesDao.find(new Integer(styleId));
+                styleId = null;
+                if(b != null && b.getDisplayStyle() != null) {
+                	styleId = "" + b.getDisplayStyle();
+                	cssStyle = cssStylesDao.find(b.getDisplayStyle());
                 	propT.setProperty("displaystyle", cssStyle.getStyle());
                 }
                 else {
@@ -479,9 +480,10 @@
 				propT.setProperty("servicePercentage", noNull(b.getPercentage()));
 				propT.setProperty("serviceType", c.getServiceType());
                 propT.setProperty("serviceTypeName", c.getServiceGroupName());
-                styleId = "" + b.getDisplayStyle();
-                if( styleId != null ) {
-                	cssStyle = cssStylesDao.find(new Integer(styleId));
+                styleId = null;
+                if(b != null && b.getDisplayStyle() != null) {
+                	styleId = "" + b.getDisplayStyle();
+                	cssStyle = cssStylesDao.find(b.getDisplayStyle());
                 	propT.setProperty("displaystyle", cssStyle.getStyle());
                 }
                 else {

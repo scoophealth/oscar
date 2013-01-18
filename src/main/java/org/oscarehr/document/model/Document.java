@@ -70,7 +70,7 @@ public class Document implements Serializable {
 	private Integer numberOfPages; //
 	private String source;
 	private java.util.Date reviewdatetime;
-	private int appointmentNo;
+	private Integer appointmentNo = new Integer(0);
 	private String docClass;
 	private String docSubClass;
 	private String responsible;
@@ -165,13 +165,16 @@ public class Document implements Serializable {
 	public void setReviewdatetime(java.util.Date reviewdatetime) {
 		this.reviewdatetime = reviewdatetime;
 	}
-
+	
 	public int getAppointmentNo() {
+		if (appointmentNo == null) {
+			return 0;
+		}
 		return appointmentNo;
 	}
 
 	public void setAppointmentNo(int appointmentNo) {
-		this.appointmentNo = appointmentNo;
+		this.appointmentNo = new Integer(appointmentNo);
 	}
 
 	public String getSource() {
