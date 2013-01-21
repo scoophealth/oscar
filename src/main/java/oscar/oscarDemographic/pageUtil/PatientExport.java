@@ -92,7 +92,8 @@ public class PatientExport {
 			this.demographicNo = new Integer(demoNo);
 			this.demographic = demographicDao.getDemographic(demoNo);
 			this.allergies = allergyDao.findAllergies(demographicNo);
-			this.drugs = drugDao.findByDemographicId(demographicNo);
+			// Master to 12.1 compatibility fix - revisit before submitting
+			this.drugs = drugDao.findByDemographicId(demographicNo, null);
 			
 			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 			List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
@@ -103,6 +104,7 @@ public class PatientExport {
 				}
 			}
 			
+			// Master to 12.1 compatibility fix - added method to patientLabRoutingDao - revisit before submitting
 			List<PatientLabRouting> tempLabs = patientLabRoutingDao.findByDemographicAndLabType(demographicNo, "HL7");
 			labs = new ArrayList<Hl7TextInfo>();
 			for(PatientLabRouting routing : tempLabs) {
