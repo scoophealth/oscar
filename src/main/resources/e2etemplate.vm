@@ -184,21 +184,19 @@ Immunization List
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
 						<!-- Immunization Observation -->
-						<substanceAdministration classCode="SBADM" moodCode="EVN">
-							<id extension="BC20120211VAC-145999X" root="2.16.840.1.113883.3.1818.10.10.3"/>
 #*    *##if ( $immunization.isRefused() || $immunization.isIneligible() )
-							<code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" displayName="Immunization" negationInd="true"/>
+						<substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="true">
 #*    *##else
-							<code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" displayName="Immunization"/>
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
 #*    *##end
+							<id extension="BC20120211VAC-145999X" root="2.16.840.1.113883.3.1818.10.10.3"/>
+							<code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" displayName="Immunization"/>
 							<statusCode code="active"/>
 							<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
 #*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "route")} != "" )
 							<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="${patient.getImmuExtValue("$immunization.getId()", "route")}"/>
 #*    *##end
-#*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "dose")} != "" )
-							<doseQuantity>${patient.getImmuExtValue("$immunization.getId()", "dose")}</doseQuantity>
-#*    *##end
+							<doseQuantity nullFlavor="UNK"/>
 							<consumable typeCode="CSM">
 								<manufacturedProduct classCode="MANU">
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
@@ -434,13 +432,15 @@ Medications and Prescriptions - Medication List
 							<consumable typeCode="CSM">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 								<manufacturedProduct classCode="MANU">
-									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
 										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
 #*    *##if ( $med.atc )
 										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
 #*    *##end
 										<name>$med.brandName</name>
-									</manufacturedMaterial>
+										<e2e:desc nullFlavor="UNK"/>
+										<e2e:formCode nullFlavor="UNK"/>
+									</manufacturedLabeledDrug>
 								</manufacturedProduct>
 							</consumable>    
 							<!--end Medication Identification-->
