@@ -433,8 +433,6 @@ public class InboxResultsDao {
 				lbData.accessionNumber = "";
 				lbData.resultStatus = "N";
 
-				if (lbData.resultStatus.equals("A")) lbData.abn = true;
-
 				lbData.dateTime = getStringValue(r[obsDateLoc]);
 				lbData.setDateObj(DateUtils.parseDate(getStringValue(r[obsDateLoc]), new String[] {
 						"yyyy-MM-dd"
