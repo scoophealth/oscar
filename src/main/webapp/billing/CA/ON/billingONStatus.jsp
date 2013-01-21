@@ -113,8 +113,8 @@ if ( serviceCode == null || serviceCode.equals("")) serviceCode = "%";
 if ( billingForm == null ) { billingForm = "-" ; }
 
 List pList = isTeamBillingOnly
-		? (Vector)(new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
-		: (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
+		? (List)(new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
+		: (List)(new JdbcBillingPageUtil()).getCurProviderStr();
 
 BillingStatusPrep sObj = new BillingStatusPrep();
 List bList = null;
