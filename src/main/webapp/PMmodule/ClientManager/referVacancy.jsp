@@ -35,6 +35,10 @@
 <%@ page import="java.util.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
+<%
+String vacancyId = request.getParameter("vacancyId");
+%>
+
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%><script>
 	
@@ -47,7 +51,7 @@
 	
 	function do_cancel() {
 		var form = document.clientManagerForm;
-		form.action='./VacancyClientMatch.do?vacancyId=<%=request.getParameter("vacancyId")%>';
+		form.action='./VacancyClientMatch.do?vacancyId=<%=vacancyId%>';
 		form.submit();
 	}
 </script>
@@ -96,9 +100,6 @@
 </c:if>
 <br />
 <br />
-<%
-	String vacancyId = request.getParameter("vacancyId");
-%>
 
 <html:hidden property="program.id" />
 <html:hidden property="referral.remoteFacilityId" />

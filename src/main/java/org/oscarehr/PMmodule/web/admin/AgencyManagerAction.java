@@ -31,12 +31,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.LogManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 
-public class AgencyManagerAction extends BaseAction {
+public class AgencyManagerAction extends DispatchAction {
 
     private static final String FORWARD_EDIT = "edit";
     private static final String FORWARD_VIEW = "view";

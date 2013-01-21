@@ -34,32 +34,46 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.util.MiscUtils;
 
-public class GenericIntakeReportAction extends BaseGenericIntakeAction {
+public class GenericIntakeReportAction extends DispatchAction {
 
-	private static Logger LOG = MiscUtils.getLogger();
 	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	
+	 protected GenericIntakeManager genericIntakeManager;
+
+	// Parameters
+	protected static final String METHOD = "method";
+	protected static final String TYPE = "type";
+	protected static final String CLIENT_ID = "clientId";
+	protected static final String INTAKE_ID = "intakeId";
+    protected static final String CLIENT_EDIT_ID = "id";
+	protected static final String PROGRAM_ID = "programId";
+	protected static final String START_DATE = "startDate";
+	protected static final String END_DATE = "endDate";
+	protected static final String INCLUDE_PAST = "includePast";
+	
 
 	// Forwards
 	private static final String FORWARD_REPORT = "report";
 
 	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws SQLException {
 		
-		String intakeType = getType(request);
+		String intakeType = request.getParameter(TYPE);
 		Integer programId = getProgramId(request);
 		Date startDate = getStartDate(request);
 		Date endDate = getEndDate(request);
 		boolean includePast = new Boolean(getIncludePast(request));
 
-		String nodeId = getParameter(request,"nodeId");
+		String nodeId = request.getParameter("nodeId");
 		
 		
 		Map<String, SortedSet<ReportStatistic>> questionStatistics = genericIntakeManager.getQuestionStatistics(nodeId,intakeType, programId, startDate, endDate, includePast);
@@ -72,4 +86,35 @@ public class GenericIntakeReportAction extends BaseGenericIntakeAction {
 		return mapping.findForward(FORWARD_REPORT);
 	}
 
+	protected Integer getProgramId(HttpServletRequest request) {
+		Integer programId = null;
+		
+		String programIdParam = request.getParameter(PROGRAM_ID);
+		
+		if (programIdParam != null) {
+			try {
+				programId = Integer.valueOf(programIdParam);
+			} catch (NumberFormatException e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		}
+		
+		return programId;
+	}
+	
+	protected Date getStartDate(HttpServletRequest request) {
+		return DateTimeFormatUtils.getDateFromString(request.getParameter(START_DATE));
+	}
+
+	protected Date getEndDate(HttpServletRequest request) {
+		return DateTimeFormatUtils.getDateFromString(request.getParameter(END_DATE));
+	}
+
+	protected String getIncludePast(HttpServletRequest request) {
+		return request.getParameter(INCLUDE_PAST);
+	}
+	
+	public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
+    }
 }

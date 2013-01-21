@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -46,7 +47,6 @@ import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.StaffEditProgramContainer;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.SecRoleDao;
@@ -56,7 +56,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class StaffManagerAction extends BaseAction {
+public class StaffManagerAction extends DispatchAction {
 	private static Logger log = MiscUtils.getLogger();
 	
 	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);

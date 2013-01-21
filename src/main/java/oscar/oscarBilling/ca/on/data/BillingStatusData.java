@@ -74,7 +74,7 @@ public class BillingStatusData {
 				list.add(h);
 			}
 		} catch (Exception e) {
-			_logger.error(e);
+			_logger.error("Error",e);
 		}
 		return list;
 	}

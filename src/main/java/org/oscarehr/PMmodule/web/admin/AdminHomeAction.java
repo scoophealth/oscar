@@ -29,20 +29,96 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.PMmodule.web.BaseAction;
+import org.apache.struts.actions.DispatchAction;
+
+import oscar.OscarProperties;
 
 import com.quatro.common.KeyConstants;
 import com.quatro.model.security.NoAccessException;
+import com.quatro.service.security.SecurityManager;
 
-public class AdminHomeAction extends BaseAction {
+public class AdminHomeAction extends DispatchAction {
+	
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	try {
-    		super.setMenu(request,KeyConstants.MENU_ADMIN);
+    		setMenu(request,KeyConstants.MENU_ADMIN);
     		return mapping.findForward("admin");
     	}
     	catch(NoAccessException e)
     	{
     		return mapping.findForward("failure");
     	}
+	}
+    
+	private void setMenu(HttpServletRequest request,String currentMenu) throws NoAccessException {
+		/*
+		  isPageChangedFlag appeared?
+		*/
+		
+		if (request.getAttribute("pageChanged") == null) {
+			if(request.getParameter("pageChanged")!= null) request.setAttribute("pageChanged", request.getParameter("pageChanged"));
+		}
+		String lastMenu = (String) request.getSession().getAttribute("currMenu");
+		if (lastMenu == null) {
+			initMenu(request);
+		}
+		else
+		{
+			request.getSession().setAttribute(lastMenu, KeyConstants.ACCESS_VIEW);
+		}
+		// check home page access
+		if(!currentMenu.equals(KeyConstants.MENU_HOME))
+		{
+			if (request.getSession().getAttribute(currentMenu).equals(KeyConstants.ACCESS_NULL))
+			{
+				throw new NoAccessException();
+			}
+		}
+		String scrollPosition = request.getParameter("scrollPosition");
+		if(null != scrollPosition) {
+			request.setAttribute("scrPos", scrollPosition);
+		}
+		else
+		{
+			request.setAttribute("scrPos", "0");
+		}
+	}
+	
+	private void initMenu(HttpServletRequest request)
+	{
+		SecurityManager sec = (SecurityManager) request.getSession().getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		
+		if (sec==null) return;		
+		//Client Management
+		if (sec.GetAccess(KeyConstants.FUN_CLIENT, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_CLIENT, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_CLIENT, KeyConstants.ACCESS_NULL);
+	
+		//Program
+		if (sec.GetAccess(KeyConstants.FUN_PROGRAM, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_PROGRAM, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_PROGRAM, KeyConstants.ACCESS_NULL);
+
+		//Facility Management
+		if (sec.GetAccess(KeyConstants.FUN_FACILITY, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_FACILITY, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_FACILITY, KeyConstants.ACCESS_NULL);
+
+		//Report Runner
+		if (sec.GetAccess(KeyConstants.FUN_REPORTS, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_REPORT, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_REPORT, KeyConstants.ACCESS_NULL);
+
+		//System Admin
+		if (OscarProperties.getInstance().isAdminOptionOn() && sec.GetAccess("_admin", "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_ADMIN, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_ADMIN, KeyConstants.ACCESS_NULL);
+		request.getSession().setAttribute(KeyConstants.MENU_HOME, KeyConstants.ACCESS_VIEW);
+		request.getSession().setAttribute(KeyConstants.MENU_TASK, KeyConstants.ACCESS_VIEW);
 	}
 }
