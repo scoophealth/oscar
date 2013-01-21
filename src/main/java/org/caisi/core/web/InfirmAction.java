@@ -33,23 +33,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
-import org.oscarehr.common.model.Admission;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.myoscar.util.MiscUtils;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
-public class InfirmAction extends BaseAction
+public class InfirmAction extends DispatchAction
 {
-	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
-			.getLogger(InfirmAction.class);
+	private static final Logger logger = MiscUtils.getLogger();
+	private InfirmBedProgramManager bpm = (InfirmBedProgramManager) SpringUtils.getBean("infirmBedProgramManager");
+	private ProgramManager pm = (ProgramManager) SpringUtils.getBean("programManager");
+	private AdmissionManager mgr = (AdmissionManager) SpringUtils.getBean("admissionManager");
+	
 
 	public ActionForward showProgram(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -63,27 +70,11 @@ public class InfirmAction extends BaseAction
 		se.setAttribute("infirmaryView_initflag", "true");
 		String providerNo=(String) se.getAttribute("user");
 
-		//clear memory for programbean
-		//List memob=(List) se.getAttribute("infirmaryView_demographicBeans");
-		//if (memob!=null) memob.clear();
-
 		List programBean;
 
 		String archiveView = (String)request.getSession().getAttribute("archiveView");
-		/*
-		if(archiveView != null && archiveView.equals("true")){
 
-			ProgramManager manager = getProgramManager();
-			programBean = manager.getProgramBeans(providerNo);
-			se.setAttribute("infirmaryView_programBeans",programBean );
-		}
-		else {
-			InfirmBedProgramManager manager=getInfirmBedProgramManager();
-			programBean=manager.getProgramBeans(providerNo);
-			se.setAttribute("infirmaryView_programBeans",programBean );
-		}
-		*/
-		InfirmBedProgramManager manager=getInfirmBedProgramManager();
+		InfirmBedProgramManager manager=bpm;
 		Integer facilityId=null;
 
 		// facility filtering
@@ -93,15 +84,11 @@ public class InfirmAction extends BaseAction
         }
 
 		programBean=manager.getProgramBeans(providerNo, facilityId);
-		//programBean_oscarClinic = manager.getProgramForApptViewBeans(providerNo, facilityId);
-		//if(OscarProperties.getInstance().getBooleanProperty("oscarClinic", "true")) {
-		//	se.setAttribute("infirmaryView_programBeans",programBean_oscarClinic);
-		//} else {
-			se.setAttribute("infirmaryView_programBeans",programBean);
-		//}
+		se.setAttribute("infirmaryView_programBeans",programBean);
+		
 
 		//set default program
-		int defaultprogramId=getInfirmBedProgramManager().getDefaultProgramId(providerNo);
+		int defaultprogramId=bpm.getDefaultProgramId(providerNo);
 		boolean defaultInList=false;
 		for (int i=0;i<programBean.size();i++){
 			int id=new Integer(((LabelValueBean) programBean.get(i)).getValue()).intValue();
@@ -119,23 +106,21 @@ public class InfirmAction extends BaseAction
 		if (se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)!=null){
 			programId=Integer.valueOf((String)se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).intValue();
 		}
-		//if (programId!=defaultprogramId) getInfirmBedProgramManager().setDefaultProgramId(providerNo,programId);
-
+		
 		se.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,String.valueOf(programId));
 
-		//if()
 		if(programId != 0) {
 			se.setAttribute("case_program_id",String.valueOf(programId));
 		}
 
 		if(programId != 0) {
-			ProgramManager programManager = getProgramManager();
+			ProgramManager programManager = pm;
 			se.setAttribute("program_client_statuses",programManager.getProgramClientStatuses(new Integer(programId)));
 
 		}
 
 
-		String[] programInfo = getInfirmBedProgramManager().getProgramInformation(programId);
+		String[] programInfo = bpm.getProgramInformation(programId);
 		if(programInfo[0] != null) {
 			se.setAttribute("infirmaryView_programAddress",programInfo[0].replaceAll("\\n", "<br>"));
 		} else {
@@ -162,7 +147,7 @@ public class InfirmAction extends BaseAction
 		}
 		
 		//lets not load the demographic beans when in appointment view..no point
-		org.oscarehr.PMmodule.model.Program p = this.getProgramManager().getProgram(programId);
+		org.oscarehr.PMmodule.model.Program p = this.pm.getProgram(programId);
 		if(p != null) {
 			String exclusiveView = p.getExclusiveView();
 			
@@ -171,12 +156,10 @@ public class InfirmAction extends BaseAction
 		}
 		
 		//release memory
-		//List memo=(List) se.getAttribute("infirmaryView_demographicBeans");
-		//if (memo!=null) memo.clear();
-		List<LabelValueBean> demographicBeans = getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView);
+		
+		List<LabelValueBean> demographicBeans = bpm.getDemographicByBedProgramIdBeans(programId,dt,archiveView);
 		List<LabelValueBean> filteredDemographicBeans = new ArrayList<LabelValueBean>();
 		if( request.getParameter("infirmaryView_clientStatusId") != null) {
-			//int statusId = new Integer(request.getParameter("infirmaryView_clientStatusId")).intValue();
 			String statusId = request.getParameter("infirmaryView_clientStatusId");
 			if(statusId.equals("0")){
 				filteredDemographicBeans = demographicBeans;
@@ -190,9 +173,8 @@ public class InfirmAction extends BaseAction
 				String demographicNo = bean.getValue();
 				admission = null;
 				admissions = null;
-				//admission = getAdmissionManager().getAdmission(String.valueOf(programId), new Integer(demographicNo));
 				if(archiveView!=null && archiveView.equals("true")){
-					admissions = getAdmissionManager().getAdmissions_archiveView(String.valueOf(programId), new Integer(demographicNo));
+					admissions = mgr.getAdmissions_archiveView(String.valueOf(programId), new Integer(demographicNo));
 					for(Iterator<Admission> i1=admissions.iterator();i1.hasNext();) {
 						admission = i1.next();
 						csi = admission.getClientStatusId();
@@ -206,7 +188,7 @@ public class InfirmAction extends BaseAction
 
 				}
 				else {
-					admission = getAdmissionManager().getCurrentAdmission(String.valueOf(programId), new Integer(demographicNo));
+					admission = mgr.getCurrentAdmission(String.valueOf(programId), new Integer(demographicNo));
 					if (admission != null)
 					{
 						csi = admission.getClientStatusId();
@@ -225,11 +207,7 @@ public class InfirmAction extends BaseAction
 		}
 		se.setAttribute("infirmaryView_demographicBeans",filteredDemographicBeans);
 
-		/*java.util.Enumeration enu =  se.getAttributeNames();
-		while (enu.hasMoreElements())
-			logger.info(enu.nextElement());
-		*/
-//		response.sendRedirect(se.getAttribute("infirmaryView_OscarURL")+"?"+se.getAttribute("infirmaryView_OscarQue"));
+		
 		return null;
 	}
 
@@ -238,19 +216,10 @@ public class InfirmAction extends BaseAction
 		logger.debug("====> inside getSig action.");
 		String providerNo=request.getParameter("providerNo");
 		if (providerNo==null) providerNo=(String) request.getSession().getAttribute("user");
-		Boolean onsig=getInfirmBedProgramManager().getProviderSig(providerNo);
+		Boolean onsig=bpm.getProviderSig(providerNo);
 		request.getSession().setAttribute("signOnNote",onsig);
-		int pid = getInfirmBedProgramManager().getDefaultProgramId(providerNo);
+		int pid = bpm.getDefaultProgramId(providerNo);
 
-		/*Disable schedule view associated with the program. Make the default program id equal to "0".
-		String ppid1 = (String)request.getSession().getAttribute("programId_oscarView");
-		if(ppid1==null) {
-			request.getSession().setAttribute("programId_oscarView",String.valueOf(pid));
-		} else {
-			request.getSession().setAttribute("programId_oscarView", ppid1);
-			//getInfirmBedProgramManager().setDefaultProgramId(providerNo,Integer.valueOf(ppid).intValue());
-		}
-		*/
 		request.getSession().setAttribute("programId_oscarView","0");
 
 		String ppid = (String)request.getSession().getAttribute("case_program_id");
@@ -258,7 +227,7 @@ public class InfirmAction extends BaseAction
 			request.getSession().setAttribute("case_program_id",String.valueOf(pid));
 		} else {
 			request.getSession().setAttribute("case_program_id", ppid);
-			//getInfirmBedProgramManager().setDefaultProgramId(providerNo,Integer.valueOf(ppid).intValue());
+			
 		}
 
 		return null;
@@ -271,7 +240,7 @@ public class InfirmAction extends BaseAction
 		logger.debug("====> inside toggleSig action.");
 		String providerNo=request.getParameter("providerNo");
 		if (providerNo==null) providerNo=(String) request.getSession().getAttribute("user");
-		Boolean onsig=getInfirmBedProgramManager().getProviderSig(providerNo);
+		Boolean onsig=bpm.getProviderSig(providerNo);
 		request.getSession().setAttribute("signOnNote",onsig);
 		return null;
 	}
@@ -300,7 +269,7 @@ public class InfirmAction extends BaseAction
 			MiscUtils.getLogger().error(e.getMessage(),e);
 			return null;
 		}
-		InfirmBedProgramManager manager=getInfirmBedProgramManager();
+		InfirmBedProgramManager manager=bpm;
 		List<LabelValueBean> programBeans = null;
 		if (providerNo.equalsIgnoreCase("all")) {
 			programBeans = manager.getProgramBeansByFacilityId(facility_id);

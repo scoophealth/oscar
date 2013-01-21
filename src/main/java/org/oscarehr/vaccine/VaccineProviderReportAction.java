@@ -24,7 +24,6 @@
 package org.oscarehr.vaccine;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,15 +34,15 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
-public class VaccineProviderReportAction extends BaseAction {
+public class VaccineProviderReportAction extends DispatchAction {
 	private static Logger log = MiscUtils.getLogger();
 
 	private ClientManager clientManager;
@@ -113,10 +112,7 @@ public class VaccineProviderReportAction extends BaseAction {
 		String allergies = answerMap.get("Allergies");
 		request.setAttribute("allergies", allergies);
 		request.setAttribute("intakeMap", answerMap);
-		for (Entry<String, String> entry : quickIntake.getAnswerKeyValues().entrySet()) {
-		   String key = entry.getKey();
-		   String value = entry.getValue();
-		}
+		
 
 		return mapping.findForward("report");
 	}

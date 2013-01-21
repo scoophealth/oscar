@@ -406,7 +406,7 @@ public class ExtractBean implements Serializable {
             //}
             //dbExt.closeConnection();
         } catch (Exception e) {
-        	MiscUtils.getLogger().error(e);
+        	MiscUtils.getLogger().error("error",e);
         }
     }
 
@@ -493,6 +493,7 @@ public class ExtractBean implements Serializable {
     }
 
     public synchronized void setOscarHome(String oscarHOME) {
+    	//empty.potential problem here.
     }
 
     public synchronized void setProviderNo(String newProviderNo) {

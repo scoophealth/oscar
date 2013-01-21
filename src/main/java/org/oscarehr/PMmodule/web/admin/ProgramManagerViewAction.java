@@ -41,15 +41,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
-import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -65,18 +64,19 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.VacancyTemplateManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Required;
 
-public class ProgramManagerViewAction extends BaseAction {
+public class ProgramManagerViewAction extends DispatchAction {
 
 	private static Logger logger = MiscUtils.getLogger();
 	private ClientRestrictionManager clientRestrictionManager;
@@ -220,9 +220,8 @@ public class ProgramManagerViewAction extends BaseAction {
             // request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
             // clients should be active
             List<Admission> admissions = new ArrayList<Admission>();
-            List ads = admissionManager.getCurrentAdmissionsByProgramId(programId);
-            for (Object ad1 : ads) {
-                Admission admission = (Admission) ad1;
+            List<Admission> ads = admissionManager.getCurrentAdmissionsByProgramId(programId);
+            for (Admission admission : ads) {
                 Integer clientId = admission.getClientId();
                 if (clientId > 0) {
                     Demographic client = clientManager.getClientByDemographicNo(Integer.toString(clientId));
@@ -254,10 +253,9 @@ public class ProgramManagerViewAction extends BaseAction {
             }
 
             List<Program> batchAdmissionServicePrograms = new ArrayList<Program>();
-            List servicePrograms;
+            List<Program> servicePrograms;
             servicePrograms = programManager.getServicePrograms();
-            for (Object serviceProgram1 : servicePrograms) {
-                Program sp = (Program) serviceProgram1;
+            for (Program sp : servicePrograms) {
                 if (sp.isAllowBatchAdmission() && sp.isActive()) {
                     batchAdmissionServicePrograms.add(sp);
                 }
@@ -361,7 +359,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		List<Integer> dependents = clientManager.getDependentsList(new Integer(clientId));
 
 		try {
-			admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), dependents);
+			admissionManager.processAdmission(Integer.valueOf(clientId), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), dependents);
 			
 			//change vacancy status to filled after one patient is admitted to associated program in that vacancy.
 	    	Vacancy vacancy = VacancyTemplateManager.getVacancyByName(queue.getVacancyName());
@@ -399,7 +397,7 @@ public class ProgramManagerViewAction extends BaseAction {
 
 			request.setAttribute("id", programId);
 
-			request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on admission", "access", getProviderNo(request), clientId, programId));
+			request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on admission", "access", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), clientId, programId));
 
 			return mapping.findForward("service_restriction_error");
 		}
@@ -419,7 +417,7 @@ public class ProgramManagerViewAction extends BaseAction {
 
 		request.setAttribute("id", programId);
 
-		if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), clientId, programId)) {
+		if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), clientId, programId)) {
 			return view(mapping, form, request, response);
 		}
 
@@ -427,7 +425,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		Program fullProgram = programManager.getProgram(String.valueOf(programId));
 
 		try {
-			admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), true);
+			admissionManager.processAdmission(Integer.valueOf(clientId), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), true);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);
@@ -565,7 +563,7 @@ public class ProgramManagerViewAction extends BaseAction {
 					newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
 					newAdmission.setClientId(admission.getClientId());
 					newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
-					newAdmission.setProviderNo(getProviderNo(request));
+					newAdmission.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 //					newAdmission.setTeamId(0);
 
 					admissionManager.saveAdmission(newAdmission);
@@ -703,7 +701,7 @@ public class ProgramManagerViewAction extends BaseAction {
 								if (communityProgramId > 0) {
 									try {
 										// discharge to community program
-										admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged", "0");
+										admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "bed reservation ended - manually discharged", "0");
 									} catch (AdmissionException e) {
 
 										messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
@@ -723,7 +721,7 @@ public class ProgramManagerViewAction extends BaseAction {
 							if (communityProgramId > 0) {
 								try {
 									// discharge to community program
-									admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged", "0");
+									admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "bed reservation ended - manually discharged", "0");
 								} catch (AdmissionException e) {
 
 									messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
@@ -743,7 +741,6 @@ public class ProgramManagerViewAction extends BaseAction {
 		return view(mapping, form, request, response);
 	}
 
-	@SuppressWarnings("unchecked")
 	public ActionForward switch_beds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		/*
 		 * (1)Check whether both clients are from same program //??? probably not necessary ??? (1.1)If not, disallow bed switching

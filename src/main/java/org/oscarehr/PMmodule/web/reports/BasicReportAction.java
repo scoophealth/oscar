@@ -35,10 +35,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 
 /**
  * Will report some basic statistics out of the PMM
@@ -47,7 +47,7 @@ import org.oscarehr.PMmodule.web.BaseAction;
  * 2) # of bed programs
  * 3) # of service programs
  */
-public class BasicReportAction extends BaseAction {
+public class BasicReportAction extends DispatchAction {
 	
     private ProgramManager programManager;
     private ProviderManager providerManager;

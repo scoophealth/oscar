@@ -28,15 +28,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
+import org.apache.struts.actions.DispatchAction;
 
 import com.quatro.common.KeyConstants;
 import com.quatro.model.LookupTableDefValue;
 import com.quatro.model.security.NoAccessException;
 import com.quatro.service.LookupManager;
+import com.quatro.service.security.SecurityManager;
 import com.quatro.util.Utility;
 
-public class LookupListAction extends BaseAdminAction {
+public class LookupListAction extends DispatchAction {
     private LookupManager lookupManager=null;
      
 	public void setLookupManager(LookupManager lookupManager) {
@@ -51,13 +52,13 @@ public class LookupListAction extends BaseAdminAction {
         String tableId=request.getParameter("tableId");
 		if("PRP,SIT,LKT,QGV,RPG".indexOf(tableId)> 0) throw new NoAccessException();
 		if(tableId.equals("FUN"))
-			super.getAccess(request, KeyConstants.FUN_ADMIN_ROLE);
+			getAccess(request, KeyConstants.FUN_ADMIN_ROLE);
 		if(tableId.equals("ROL"))
-			super.getAccess(request,KeyConstants.FUN_ADMIN_USER);
+			getAccess(request,KeyConstants.FUN_ADMIN_USER);
 		if(tableId.equals("USR"))
-			super.getAccess(request, KeyConstants.FUN_PROGRAM_STAFF);
+			getAccess(request, KeyConstants.FUN_PROGRAM_STAFF);
 		if(tableId.equals("CLN"))
-			super.getAccess(request, KeyConstants.FUN_CLIENT);
+			getAccess(request, KeyConstants.FUN_CLIENT);
         String parentCode =request.getParameter("parentCode");
         request.setAttribute("parentCode",parentCode);
        
@@ -72,7 +73,7 @@ public class LookupListAction extends BaseAdminAction {
 	}
 	
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws NoAccessException{
-		super.getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP);
+		getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP);
 		LookupListForm qform = (LookupListForm) form;
         String tableId=request.getParameter("tableId");
         String parentCode =request.getParameter("parentCode");
@@ -81,11 +82,35 @@ public class LookupListAction extends BaseAdminAction {
 		 LookupTableDefValue tableDef = lookupManager.GetLookupTableDef(tableId);
 		qform.setLookups(lst);
 		qform.setTableDef(tableDef);
-//		qform.setOpenerFormName(request.getParameter("openerFormName"));
-//		qform.setOpenerCodeElementName(request.getParameter("openerCodeElementName"));
-//		qform.setOpenerDescElementName(request.getParameter("openerDescElementName"));
 		request.setAttribute("notoken", "Y");
 		return mapping.findForward("list");
+	}
+	
+	protected String getAccess(HttpServletRequest request,String functionName) throws NoAccessException
+	{
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String acc = sec.GetAccess(functionName, "");
+		if (acc.equals(KeyConstants.ACCESS_NONE)) throw new NoAccessException();
+		return acc;
+	}
+	protected String getAccess(HttpServletRequest request,String functionName, String rights) throws NoAccessException
+	{
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String acc = sec.GetAccess(functionName, "");
+		if (acc.compareTo(rights) < 0) throw new NoAccessException();
+		return acc;
+	}
+	public boolean isReadOnly(HttpServletRequest request,String funName) throws NoAccessException{
+		boolean readOnly =false;
+		
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String r = sec.GetAccess(funName, null); 
+		if (r.compareTo(KeyConstants.ACCESS_READ) < 0) throw new NoAccessException(); 
+		if (r.compareTo(KeyConstants.ACCESS_READ) == 0) readOnly=true;
+		return readOnly;
 	}
 	
 }

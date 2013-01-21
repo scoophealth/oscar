@@ -102,7 +102,6 @@ public class JdbcBillingCreateBillingFile {
 	private int patientCount = 0;
 	private String pCount = "";
 	private String providerNo;
-	private String query;
 	private String rCount = "";
 	private int recordCount = 0;
 	private String referral;
@@ -199,7 +198,7 @@ public class JdbcBillingCreateBillingFile {
 		hcFirst.replaceAll("\\W", "");
 		hcLast = hcLast.length() < 9 ? (hcLast + space(9 - hcLast.length())) : (hcLast.substring(0, 9));
 		hcFirst = hcFirst.length() < 5 ? (hcFirst + space(5 - hcFirst.length())) : (hcFirst.substring(0, 5));
-		checkHeader2();
+		
 		String header2 = "\n" + "HER" + str1Hin + hcLast + hcFirst + ch1Obj.getSex() + ch1Obj.getProvince() + space(47) + "\r";
 		if (header2.length() != 81) errorFatalMsg += "Header 2 length wrong! - " + ch1Obj.getId() + " length = " + header2.length() + "<br>";
 		return header2;
@@ -343,8 +342,6 @@ public class JdbcBillingCreateBillingFile {
 		errorMsg += errorPartMsg;
 	}
 
-	private void checkHeader2() {
-	}
 
 	private void checkItem() {
 		if (itemObj.getService_code().trim().length() != 5) errorPartMsg = "Item: Service Code wrong!<br>";
@@ -473,8 +470,7 @@ public class JdbcBillingCreateBillingFile {
 
 				// build billing detail
 				invCount = 0;
-				query = "select * from billing_on_item where ch1_id=" + ch1Obj.getId() + " and status!='D' and status!='S'";
-
+				
 				boolean hasSliCode = ch1Obj.getLocation().trim().length() == 3;
 				for (BillingONItem boi : itemDao.findByCh1Id(ConversionUtils.fromIntString(ch1Obj.getId()))) {
 					itemObj = new BillingItemData();
@@ -559,7 +555,7 @@ public class JdbcBillingCreateBillingFile {
 				updateBatchHeaderSum(bhObj.getId(), "" + healthcardCount, "" + patientCount, "" + recordCount);
 			}
 		} catch (Exception e) {
-			_logger.error(e);
+			_logger.error("Error",e);
 		}
 	}
 
@@ -601,7 +597,7 @@ public class JdbcBillingCreateBillingFile {
 				try {
 					ch1Obj.setAdmission_date(ConversionUtils.toDateString(b.getAdmissionDate()));
 				} catch (ParseException e) {
-					_logger.warn(e);
+					_logger.warn("parse admission date:" + e);
 				}
 				ch1Obj.setRef_lab_num(b.getRefLabNum());
 				ch1Obj.setMan_review(b.getManReview());
@@ -695,7 +691,7 @@ public class JdbcBillingCreateBillingFile {
 				updateBatchHeaderSum(bhObj.getId(), "" + healthcardCount, "" + patientCount, "" + recordCount);
 			}
 		} catch (Exception e) {
-			_logger.error(e);
+			_logger.error("Error",e);
 		}
 	}
 
@@ -760,7 +756,7 @@ public class JdbcBillingCreateBillingFile {
 
 	private void updateDemoData(BillingClaimHeader1Data chObj) {
 		// last_name,first_name,dob,hin,ver,hc_type,sex
-		List vecStr = (new JdbcBillingPageUtil()).getPatientCurBillingDemo(chObj.getDemographic_no());
+		List<String> vecStr = (new JdbcBillingPageUtil()).getPatientCurBillingDemo(chObj.getDemographic_no());
 
 		//Bonus Billing (Incentives)? Block out patient data : update with patient data
 		if (chObj.getStatus().equals("I")) {
@@ -772,11 +768,11 @@ public class JdbcBillingCreateBillingFile {
 			ch1Obj.setSex("");
 		} else {
 			ch1Obj.setDemographic_name(vecStr.get(0) + "," + vecStr.get(1));
-			ch1Obj.setDob((String) vecStr.get(2));
-			ch1Obj.setHin((String) vecStr.get(3));
-			ch1Obj.setVer((String) vecStr.get(4));
-			ch1Obj.setProvince((String) vecStr.get(5));
-			ch1Obj.setSex((String) vecStr.get(6));
+			ch1Obj.setDob( vecStr.get(2));
+			ch1Obj.setHin(vecStr.get(3));
+			ch1Obj.setVer( vecStr.get(4));
+			ch1Obj.setProvince(vecStr.get(5));
+			ch1Obj.setSex(vecStr.get(6));
 		}
 
 		if (!"ON".equals(ch1Obj.getProvince()) && !"".equals(ch1Obj.getProvince())) ch1Obj.setPay_program("RMB");

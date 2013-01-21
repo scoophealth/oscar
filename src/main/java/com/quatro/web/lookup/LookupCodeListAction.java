@@ -29,14 +29,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
+import org.apache.struts.actions.DispatchAction;
 
 import com.quatro.common.KeyConstants;
 import com.quatro.model.LookupTableDefValue;
 import com.quatro.model.security.NoAccessException;
 import com.quatro.service.LookupManager;
+import com.quatro.service.security.SecurityManager;
 
-public class LookupCodeListAction extends BaseAdminAction {
+public class LookupCodeListAction extends DispatchAction {
     private LookupManager lookupManager=null;
     
 	public void setLookupManager(LookupManager lookupManager) {
@@ -45,7 +46,7 @@ public class LookupCodeListAction extends BaseAdminAction {
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			super.getAccess(request, KeyConstants.FUN_ADMIN_LOOKUP);
+			getAccess(request, KeyConstants.FUN_ADMIN_LOOKUP);
 			return list(mapping,form,request,response);
 		}
 		catch(NoAccessException e)
@@ -64,5 +65,32 @@ public class LookupCodeListAction extends BaseAdminAction {
 		qform.set("codes",lst);
 		qform.set("tableDef", tableDef);
 		return mapping.findForward("list");
+	}
+	
+	protected String getAccess(HttpServletRequest request,String functionName) throws NoAccessException
+	{
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String acc = sec.GetAccess(functionName, "");
+		if (acc.equals(KeyConstants.ACCESS_NONE)) throw new NoAccessException();
+		return acc;
+	}
+	protected String getAccess(HttpServletRequest request,String functionName, String rights) throws NoAccessException
+	{
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String acc = sec.GetAccess(functionName, "");
+		if (acc.compareTo(rights) < 0) throw new NoAccessException();
+		return acc;
+	}
+	public boolean isReadOnly(HttpServletRequest request,String funName) throws NoAccessException{
+		boolean readOnly =false;
+		
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String r = sec.GetAccess(funName, null); 
+		if (r.compareTo(KeyConstants.ACCESS_READ) < 0) throw new NoAccessException(); 
+		if (r.compareTo(KeyConstants.ACCESS_READ) == 0) readOnly=true;
+		return readOnly;
 	}
 }
