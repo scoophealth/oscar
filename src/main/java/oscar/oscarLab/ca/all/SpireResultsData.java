@@ -111,7 +111,9 @@ public class SpireResultsData {
 				lbData.label = hl7.getLabel();
 
 				lbData.resultStatus = hl7.getResultStatus();
-				if (lbData.resultStatus.equals("A")) lbData.abn = true;
+				if (lbData.resultStatus != null && lbData.resultStatus.equals("A")) {
+					lbData.abn = true;
+				}
 
 				lbData.dateTime = hl7.getObrDate();
 
