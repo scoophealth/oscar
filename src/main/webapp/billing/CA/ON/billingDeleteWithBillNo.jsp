@@ -72,12 +72,13 @@
    	
   	billNo = request.getParameter("billNo_old");
   	billCode = request.getParameter("billStatus_old");  	
-  	if(billNo==null || billNo.equals("")) {
+  	if(billNo==null || billNo.equals("")  || billNo.equals("null")) {
   		for(Billing b:billingDao.findByAppointmentNo(Integer.parseInt(apptNo))) {
   		   billCode = b.getStatus();
   		   billNo = b.getId().toString();
   	   }
   	}
+  	
   	
    	if (billCode.substring(0,1).compareTo("B") == 0) {
    %>
@@ -95,16 +96,18 @@
   if(props.getProperty("isNewONbilling", "").equals("true")) {
 	  //search bill status
 	  BillingCorrectionPrep dbObj = new BillingCorrectionPrep();
-	  List billStatus = dbObj.getBillingNoStatusByBillNo(billNo);
-	  //delete the bill
-	  if(billStatus!=null && ((billStatus.size() == 0) || (billStatus.size()>1 && ((String)billStatus.get(billStatus.size()-1)).startsWith("B")))){
-		  out.println("Sorry, cannot delete billed items.");
-	  } else if(billStatus!=null) {
-                for( int idx = 0; idx < billStatus.size(); idx += 2) {
-                    if( !((String)billStatus.get(idx+1)).equals("D") ) {
-                        rowsAffected = dbObj.deleteBilling((String)billStatus.get(idx),"D", curUser_no)? 1 : 0;
-                    }
-                }
+	  if(billNo != null && !billNo.equals("null")) {
+		  List billStatus = dbObj.getBillingNoStatusByBillNo(billNo);
+		  //delete the bill
+		  if(billStatus!=null && ((billStatus.size() == 0) || (billStatus.size()>1 && ((String)billStatus.get(billStatus.size()-1)).startsWith("B")))){
+			  out.println("Sorry, cannot delete billed items.");
+		  } else if(billStatus!=null) {
+	                for( int idx = 0; idx < billStatus.size(); idx += 2) {
+	                    if( !((String)billStatus.get(idx+1)).equals("D") ) {
+	                        rowsAffected = dbObj.deleteBilling((String)billStatus.get(idx),"D", curUser_no)? 1 : 0;
+	                    }
+	                }
+		  }
 	  }
 	  
   } else {
