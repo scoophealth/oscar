@@ -402,6 +402,8 @@ public class ClientManagerAction extends BaseAction {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		Program p = (Program) clientForm.get("program");
+		String vacancyName = p.getVacancyName();
+		//Integer vacancyId = p.getVacancyId();
 		int programId = p.getId();
 		// if it's local
 		if (programId != 0) {
@@ -576,6 +578,8 @@ public class ClientManagerAction extends BaseAction {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		Program p = (Program) clientForm.get("program");
 		ClientReferral r = (ClientReferral) clientForm.get("referral");
+		r.setSelectVacancy(request.getParameter("vacancyName"));
+		clientForm.set("referral",r);
 		String id = request.getParameter("id");
 		setEditAttributes(form, request, id);
 
@@ -584,6 +588,8 @@ public class ClientManagerAction extends BaseAction {
 		if (programId != 0) {
 			Program program = programManager.getProgram(programId);
 			p.setName(program.getName());
+			p.setVacancyName(request.getParameter("vacancyName"));
+			p.setVacancyId(Integer.valueOf(request.getParameter("vacancyId")));
 			request.setAttribute("program", program);
 		}
 		// if it's a remote referal

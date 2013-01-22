@@ -152,8 +152,8 @@ public class AdmissionManager {
         
         public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, admissionDate, false,null);
-	}
-
+	}    
+    
 	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate, boolean overrideRestriction, List<Integer> dependents) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		// see if there's room first
 		if (program.getNumOfMembers().intValue() >= program.getMaxAllowed().intValue()) {
@@ -269,7 +269,8 @@ public class AdmissionManager {
                       processAdmission(new Integer(l.intValue()), providerNo,program,dischargeNotes,admissionNotes,tempAdmission,newAdmission.getAdmissionDate(),true,null);
                    }
                 }
-                
+            
+        //Once the patient is admitted to this program, the vacancy
 	}
 
 	public void processInitialAdmission(Integer demographicNo, String providerNo, Program program, String admissionNotes, Date admissionDate) throws ProgramFullException, AlreadyAdmittedException, ServiceRestrictionException {

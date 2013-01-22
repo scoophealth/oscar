@@ -50,6 +50,16 @@ public class VacancyDao extends AbstractDao<Vacancy> {
 	}
 	
 	@SuppressWarnings("unchecked")
+    public List<Vacancy> getVacanciesByName(String vacancyName) {
+		String sqlCommand = "select x from Vacancy x where x.name=?1 order by x.name";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, vacancyName);
+		
+		return query.getResultList();	
+	}
+	
+	@SuppressWarnings("unchecked")
     public List<Vacancy> findByStatusAndVacancyId(String status, int vacancyId) {
 		String sqlCommand = "select x from Vacancy x where x.status=?1 and x.id=?2";
 

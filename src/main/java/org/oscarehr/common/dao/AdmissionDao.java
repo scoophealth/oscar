@@ -549,7 +549,7 @@ private Logger log=MiscUtils.getLogger();
             throw new IllegalArgumentException();
         }
 
-        Query query = entityManager.createQuery("select a from Admission a where a.temporaryAdmission = true and a.admissionStatus='current' and a.clientId = ?");
+        Query query = entityManager.createQuery("select a from Admission a where a.temporaryAdmissionFlag = true and a.admissionStatus='current' and a.clientId = ?");
         query.setParameter(1, demographicNo);
         @SuppressWarnings("unchecked")
         List<Admission> results = query.getResultList();
