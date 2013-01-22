@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.util.ConversionUtils"%>
 <%
   
   String strLimit1="0";
@@ -111,7 +112,12 @@ function setfocus() {
   while (rs.next()) {
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
-    if(reportMainBean.getString(rs,"year_of_birth")!=null && reportMainBean.getString(rs,"month_of_birth")!=null && reportMainBean.getString(rs,"date_of_birth")!=null) age=MyDateFormat.getAge(Integer.parseInt(reportMainBean.getString(rs,"year_of_birth")),Integer.parseInt(reportMainBean.getString(rs,"month_of_birth")),Integer.parseInt(reportMainBean.getString(rs,"date_of_birth")));
+   	int yearOfBirthInt = ConversionUtils.fromIntString(reportMainBean.getString(rs,"year_of_birth"));
+   	int monthOfBirthInt = ConversionUtils.fromIntString(reportMainBean.getString(rs,"month_of_birth"));
+   	int dateOfBirthInt = ConversionUtils.fromIntString(reportMainBean.getString(rs,"date_of_birth"));
+    if(yearOfBirthInt != 0 && monthOfBirthInt != 0 && dateOfBirthInt != 0) {
+    	age=MyDateFormat.getAge(yearOfBirthInt, monthOfBirthInt, dateOfBirthInt);
+    }
 %>
 	<tr bgcolor="<%=bodd?"ivory":"white"%>">
 		<td nowrap><%=reportMainBean.getString(rs,"last_name")%></td>
