@@ -231,7 +231,7 @@ String reason ="";
 	<display:column property="providerFormattedName" sortable="true"
 		title="Referring Provider" />
 	<display:column property="vacancyName" sortable="true"
-		title="Vacancy Name" />
+		title="Vacancy Name" />		
 	<display:column property="notes" sortable="true"
 		title="Reason for referral" />
 	<display:column property="presentProblems" sortable="true"

@@ -394,6 +394,9 @@ public class WaitlistDao {
 	public VacancyData loadVacancyData(final int vacancyId) {
 		VacancyData vacancyData  = new VacancyData();
 		Vacancy vacancy = VacancyTemplateManager.getVacancyById(vacancyId);
+		if(vacancy == null) {
+			return null;
+		}
 		vacancyData.setVacancy_id(vacancy.getId());
 		vacancyData.setProgram_id(vacancy.getWlProgramId());
 		Query query = entityManager.createNativeQuery(QUERY_VACANCY_DATA);

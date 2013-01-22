@@ -54,6 +54,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
@@ -63,6 +64,7 @@ import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
+import org.oscarehr.PMmodule.service.VacancyTemplateManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
@@ -88,8 +90,8 @@ public class ProgramManagerViewAction extends BaseAction {
 	private LogManager logManager;
 	private ProgramManager programManager;
 	private ProgramManagerAction programManagerAction;
-	private ProgramQueueManager programQueueManager;
-
+	private ProgramQueueManager programQueueManager;	
+	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
 	}
@@ -360,6 +362,14 @@ public class ProgramManagerViewAction extends BaseAction {
 
 		try {
 			admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), dependents);
+			
+			//change vacancy status to filled after one patient is admitted to associated program in that vacancy.
+	    	Vacancy vacancy = VacancyTemplateManager.getVacancyByName(queue.getVacancyName());
+	    	if(vacancy!=null) {
+	    		vacancy.setStatus("Filled");	    	
+	    		VacancyTemplateManager.saveVacancy(vacancy);
+	    	}
+	    	
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);

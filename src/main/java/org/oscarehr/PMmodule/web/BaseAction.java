@@ -45,6 +45,7 @@ import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
+import org.oscarehr.PMmodule.service.VacancyTemplateManager;
 import org.oscarehr.PMmodule.utility.Utility;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.model.Provider;
@@ -90,6 +91,10 @@ public abstract class BaseAction extends DispatchAction {
 		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
 	}
 
+	public VacancyTemplateManager getVacancyTemplateManager() {
+		return (VacancyTemplateManager)getAppContext().getBean("vacancyTemplateManager");
+	}
+	
 	public CaseManagementManager getCaseManagementManager() {
 		return (CaseManagementManager)getAppContext().getBean("caseManagementManager");
 	}
