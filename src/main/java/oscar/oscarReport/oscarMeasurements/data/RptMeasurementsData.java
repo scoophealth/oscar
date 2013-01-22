@@ -46,15 +46,14 @@ public class RptMeasurementsData {
 	public int getNbPatientSeen(String startDateA, String endDateA) {
 		int nbPatient = 0;
 		MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
-		for (Object[] o : dao.findByCreateDate(ConversionUtils.fromDateString(startDateA), ConversionUtils.fromDateString(endDateA))) {
-			Integer i = (Integer) o[0];
-			nbPatient = i;
+		for (Object o : dao.findByCreateDate(ConversionUtils.fromDateString(startDateA), ConversionUtils.fromDateString(endDateA))) {
+			nbPatient = (Integer) o;
 		}
 		return nbPatient;
 	}
 
 	/**
-	 * get the number of patients during aspecific time period
+	 * get the number of patients during a specific time period
 	 *
 	 * @return 
 	 * 		ArrayList which contain the result in String format
