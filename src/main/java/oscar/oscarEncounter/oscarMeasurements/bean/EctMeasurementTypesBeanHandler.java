@@ -98,7 +98,7 @@ public class EctMeasurementTypesBeanHandler {
             
             Measurement ms = msDao.findLastEntered(ConversionUtils.fromIntString(demo), mt.getType());
             boolean hasPreviousData = false;
-            if(mt != null){
+            if(ms != null){
                 String providerNo = ms.getProviderNo();
                 
                 Provider provider = prDao.getProvider(providerNo);
