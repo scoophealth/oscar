@@ -250,7 +250,7 @@ function save() {
                     curDoc = (EDoc)privatedocs.get(idx);
              %>
 				<html:option styleClass="doc"
-					value="<%=docType[0]+curDoc.getDocId()%>"><%=StringUtils.maxLenString(curDoc.getDescription(),30,27,"...")%></html:option>
+					value="<%=docType[0]+curDoc.getDocId()%>"><%=curDoc.getDescription()%></html:option>
 				<%
                 }
                 CommonLabResultData labData = new CommonLabResultData();
@@ -291,7 +291,7 @@ function save() {
 
                     curDoc = (EDoc)privatedocs.get(idx);
              %>
-                    <html:option styleClass="doc" value="<%=docType[0]+curDoc.getDocId()%>"><%=StringUtils.maxLenString(curDoc.getDescription(),30,27,"...")%></html:option>
+                    <html:option styleClass="doc" value="<%=docType[0]+curDoc.getDocId()%>"><%=curDoc.getDescription()%></html:option>
              <%
                 }
 
