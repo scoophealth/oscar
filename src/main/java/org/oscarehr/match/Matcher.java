@@ -50,9 +50,6 @@ public class Matcher {
 	public List<VacancyClientMatch> listClientMatchesForVacancy(int vacancyId) {
 		List<VacancyClientMatch> vacancyClientMatches = new ArrayList<VacancyClientMatch>();
 		VacancyData vacancyData = waitlistDao.loadVacancyData(vacancyId);
-		if (vacancyData.getVacancyData().size() == 0) {
-			return vacancyClientMatches;
-		}
 		List<ClientData> clientDatas = waitlistDao.getAllClientsData();
 		for (ClientData clientData : clientDatas) {
 			VacancyClientMatch vcMatch = match(clientData, vacancyData);
@@ -129,7 +126,7 @@ public class Matcher {
 	private int getMatchPercentage(ClientData clientData,
 			VacancyData vacancyData) {
 		int paramCntPercentage = vacancyData.getVacancyData().size() * 100;
-		if (paramCntPercentage == 0){
+		if (paramCntPercentage == 0){ // indicates there's no template or criteria for the vacancy
 			return 0;
 		}
 		int paramMatch = 0;
