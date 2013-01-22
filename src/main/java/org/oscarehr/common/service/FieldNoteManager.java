@@ -268,6 +268,7 @@ public class FieldNoteManager {
 		if (property == null)
 		{
 			property = new Property();
+			property.setName("fieldNoteEform");
 		}
 		property.setValue(newList);
 		propertyDao.merge(property);
