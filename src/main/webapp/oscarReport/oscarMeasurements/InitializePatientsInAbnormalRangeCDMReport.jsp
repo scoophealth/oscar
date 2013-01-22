@@ -137,12 +137,12 @@ function unCheckAll(field){
 								type="text" name='startDateA'
 								value='<bean:write name="lastYear"/>' size="10"> <img
 								src="../img/calendar.gif" border="0"
-								onClick="window.open('../oscarReport/oscarMeasurements/oscarReportCalendarPopup.jsp?type=startDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
+								onClick="window.open('../../oscarReport/oscarReportCalendarPopup.jsp?type=startDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
 							</td>
 							<td width="120" class="fieldBox" bgcolor="#ddddff"><input
 								type="text" name='endDateA' value='<bean:write name="today"/>'
 								size="10"> <img src="../img/calendar.gif" border="0"
-								onClick="window.open('../oscarReport/oscarMeasurements/oscarReportCalendarPopup.jsp?type=endDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
+								onClick="window.open('../../oscarReport/oscarReportCalendarPopup.jsp?type=endDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
 							</td>
 							<td width="450" class="fieldBox" bgcolor="#ddddff"></td>
 						</tr>
@@ -202,12 +202,12 @@ function unCheckAll(field){
 									type="text" name="startDateC"
 									value='<bean:write name="lastYear"/>' size="10"> <img
 									src="../img/calendar.gif" border="0"
-									onClick="window.open('../oscarReport/oscarMeasurements/oscarReportCalendarPopup.jsp?type=<%="startDateC[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
+									onClick="window.open('../../oscarReport/oscarReportCalendarPopup.jsp?type=<%="startDateC[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
 								</td>
 								<td width="120" class="fieldBox" bgcolor="#ddddff"><input
 									type="text" name="endDateC" value='<bean:write name="today"/>'
 									size="10"> <img src="../img/calendar.gif" border="0"
-									onClick="window.open('../oscarReport/oscarMeasurements/oscarReportCalendarPopup.jsp?type=<%="endDateC[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
+									onClick="window.open('../../oscarReport/oscarReportCalendarPopup.jsp?type=<%="endDateC[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')" />
 								</td>
 								<input type="hidden"
 									name='<%="value(measurementTypeC"+ctr+")"%>'
