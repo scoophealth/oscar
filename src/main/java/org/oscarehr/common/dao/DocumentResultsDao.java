@@ -159,8 +159,6 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 lbData.accessionNumber = "";
 
                 lbData.resultStatus = "N";
-                if (lbData.resultStatus.equals("A"))
-                    lbData.abn = true;
 
                 lbData.dateTime = d.getObservationdate().toString();
                 lbData.setDateObj(d.getObservationdate());
@@ -255,9 +253,7 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 logger.debug("DOCUMENT "+lbData.isMatchedToPatient());
 
                 lbData.resultStatus = "N";
-                if (lbData.resultStatus.equals("A"))
-                    lbData.abn = true;
-
+                
                 lbData.dateTime = d.getObservationdate().toString();
                 lbData.setDateObj(d.getObservationdate());
 
@@ -357,8 +353,6 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 lbData.accessionNumber = "";
 
                 lbData.resultStatus = "N";
-                if (lbData.resultStatus.equals("A"))
-                    lbData.abn = true;
 
                 lbData.dateTime = d.getObservationdate().toString();
                 lbData.setDateObj(d.getObservationdate());

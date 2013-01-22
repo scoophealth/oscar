@@ -366,7 +366,9 @@ public class Hl7textResultsData {
 		lbData.sex = info.getSex();
 
 		lbData.resultStatus = info.getResultStatus();
-		if (lbData.resultStatus.equals("A")) lbData.abn = true;
+		if (lbData.resultStatus != null && lbData.resultStatus.equals("A")) {
+			lbData.abn = true;
+		}
 
 		lbData.dateTime = info.getObrDate();
 
@@ -481,7 +483,9 @@ public class Hl7textResultsData {
 			lbData.label = hl7.getLabel();
 
 			lbData.resultStatus = hl7.getResultStatus();
-			if (lbData.resultStatus.equals("A")) lbData.abn = true;
+			if (lbData.resultStatus != null && lbData.resultStatus.equals("A")) { 
+				lbData.abn = true;
+			}
 
 			lbData.dateTime = hl7.getObrDate();
 
@@ -592,7 +596,9 @@ public class Hl7textResultsData {
 			lbData.label = label;
 
 			lbData.resultStatus = result_status;
-			if (lbData.resultStatus != null && lbData.resultStatus.equals("A")) lbData.abn = true;
+			if (lbData.resultStatus != null && lbData.resultStatus.equals("A")) {
+				lbData.abn = true;
+			}
 
 			lbData.dateTime = obr_date;
 
