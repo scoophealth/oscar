@@ -1248,15 +1248,15 @@ Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d
 <%
 //    Integer fid = ((Facility)session.getAttribute("currentFacility")).getRegistrationIntake();
     Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
-    if(facility!=null){
-        Integer fid = facility.getRegistrationIntake();
-        if(fid==null||fid<0){
-            List<EForm> eforms = eformDao.getEfromInGroupByGroupName("Registration Intake");
-            if(eforms!=null&&eforms.size()==1) fid=eforms.get(0).getId();
-        }
+    Integer fid = null;
+    if(facility!=null) fid = facility.getRegistrationIntake();
+    if(fid==null||fid<0){
+        List<EForm> eforms = eformDao.getEfromInGroupByGroupName("Registration Intake");
+        if(eforms!=null&&eforms.size()==1) fid=eforms.get(0).getId();
+    }
     if(fid!=null&&fid>=0){
 %>
 <iframe src="../eform/efmshowform_data.jsp?fid=<%=fid%>" width="100%" height="100%"></iframe>
-<%}}%>
+<%}%>
 </body>
 </html:html>

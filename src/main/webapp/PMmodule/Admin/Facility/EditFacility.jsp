@@ -184,8 +184,8 @@
             <td width="20%">Registration Intake</td>
             <td>
                 <html:select property="facility.registrationIntake">
-                    <html:option value="-1">None</html:option>
-                    <html:optionsCollection property="registrationIntakeForms" label="formName" value="fid"/>
+                    <html:option value="-1">Null</html:option>
+                    <html:optionsCollection property="registrationIntakeForms" label="formName" value="id"/>
                 </html:select>
             </td>
 		</tr>
