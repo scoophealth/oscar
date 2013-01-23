@@ -23,6 +23,8 @@
 
 package org.oscarehr.util;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
@@ -49,6 +51,7 @@ public final class LoggedInInfo
 	public Provider loggedInProvider=null;
 	public String initiatingCode=null;
 	public Security loggedInSecurity=null;
+	public Locale locale=null;
 		
 	@Override
     public String toString()
