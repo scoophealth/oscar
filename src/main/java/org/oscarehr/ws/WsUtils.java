@@ -57,7 +57,7 @@ public final class WsUtils
 				if (security.getProviderNo() != null) {
 					x.loggedInProvider = providerDao.getProvider(security.getProviderNo());
 				}
-
+				
 				LoggedInInfo.loggedInInfo.set(x);
 				return(true);
 			}

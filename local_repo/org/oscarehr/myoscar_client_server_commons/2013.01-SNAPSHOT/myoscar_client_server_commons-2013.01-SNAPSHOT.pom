@@ -4,7 +4,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>myoscar_client_server_commons</artifactId>
 	<packaging>jar</packaging>
-	<version>2012.12-SNAPSHOT</version>
+	<version>2013.01-SNAPSHOT</version>
 	<name>myoscar_client_server_commons</name>
 	<url>http://www.oscarcanada.org</url>
 
@@ -164,11 +164,9 @@
 				<artifactId>maven-license-plugin</artifactId>
 				<version>1.10.b1</version>
 				<configuration>
-					<header>utils/headers/mcmaster.txt</header>
+					<header>utils/headers/mcmaster_2013.txt</header>
 					<validHeaders>
-						<!-- 
-						<validHeader>utils/headers/caisi.txt</validHeader>
-						 -->
+						<validHeader>utils/headers/mcmaster_2012.txt</validHeader>
 					</validHeaders>
 					<includes>
 						<include>src/main/java/**/*.java</include>

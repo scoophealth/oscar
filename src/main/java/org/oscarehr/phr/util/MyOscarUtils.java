@@ -164,7 +164,7 @@ public final class MyOscarUtils {
 			LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
 			
 			if (loginResultTransfer != null) {
-				myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId());
+				myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.locale);
 				MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
 			} else {
 				// login failed, remove myoscar saved password
