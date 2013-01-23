@@ -570,7 +570,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return query.getResultList();
     }
     
-    public List<Measurement> findByDemographicNoTypeAndMeasuringInstruction(Integer demo, String type, String mInstrc) {
+    public List<Date> findByDemographicNoTypeAndMeasuringInstruction(Integer demo, String type, String mInstrc) {
         String sql = "SELECT m.dateObserved FROM Measurement m " +
         		"WHERE m.demographicId = :demo " +
         		"AND m.type = :type " +
