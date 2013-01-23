@@ -31,6 +31,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -222,13 +223,13 @@ public class ScatterPlotChartServlet extends HttpServlet {
 				}
 			}
 		} else if (type.compareTo("BP") == 0) {
-			List<Measurement> measurements = dao.findByDemographicNoTypeAndMeasuringInstruction(ConversionUtils.fromIntString(demo), type, mInstrc);
+			List<Date> measurements = dao.findByDemographicNoTypeAndMeasuringInstruction(ConversionUtils.fromIntString(demo), type, mInstrc);
 			int nbPatient = measurements.size();
 			points = new long[2][nbPatient * 2];
 			for (int i = 0; i < nbPatient; i++) {
-				Measurement m = measurements.get(i);
+				//Measurement m = measurements.get(i);
 
-				Measurement mm = dao.findByDemographicNoTypeAndDate(ConversionUtils.fromIntString(demo), type, m.getDateObserved());
+				Measurement mm = dao.findByDemographicNoTypeAndDate(ConversionUtils.fromIntString(demo), type, measurements.get(i));
 				if (mm != null) {
 					String bloodPressure = mm.getDataField();
 					MiscUtils.getLogger().debug("bloodPressure: " + bloodPressure);
@@ -256,6 +257,7 @@ public class ScatterPlotChartServlet extends HttpServlet {
 	}
 
 	private boolean isNumeric(String type, String mInstrc) {
+		boolean result=false;
 		MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
 		List<MeasurementType> measurementTypes = dao.findByTypeAndMeasuringInstruction(type, mInstrc);
 
@@ -263,13 +265,13 @@ public class ScatterPlotChartServlet extends HttpServlet {
 			String validation = measurementTypes.get(0).getValidation();
 
 			ValidationsDao valDao = SpringUtils.getBean(ValidationsDao.class);
-			Validations v = valDao.find(validation);
-			if (v != null) {
-				return v.isNumeric();
+			Validations v = valDao.find(Integer.parseInt(validation));
+			if (v != null && v.isNumeric() != null && v.isNumeric()) {
+				result=true;
 			}
 		}
 
-		return false;
+		return result;
 	}
 
 	/**********************************************************************************************

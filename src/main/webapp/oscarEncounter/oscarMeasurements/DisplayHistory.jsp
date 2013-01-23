@@ -39,7 +39,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
-    String demo = (String) request.getAttribute("demographicNo");	
+    String demo = ((Integer) request.getAttribute("demographicNo")).toString();	
 %>
 
 <html:html locale="true">
