@@ -1427,24 +1427,24 @@
 			<forward name="eject" path="/index.jsp" />
 		</action>
 		<action path="/setProviderStaleDate" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/provider/setNoteStaleDate.jsp" name="setProviderNoteStaleDateForm">
-			<forward name="success" path="/provider/setNoteStaleDate.jsp" />
-			<forward name="gen" path="/provider/setGenProperty.jsp" />
-			<forward name="genRxPageSize" path="/provider/setGenRxPageSizeProperty.jsp" />
-			<forward name="genRxDefaultQuantity" path="/provider/setGenRxDefaultQuantityProperty.jsp" />
-			<forward name="genRxProfileView" path="/provider/setGenRxProfileViewProperty.jsp" />
-			<forward name="genRxUseRx3" path="/provider/setToUseRx3.jsp" />
-			<forward name="genDefaultDocQueue" path="/provider/setDocDefaultQueue.jsp" />
-		        <forward name="genShowPatientDOB" path="/provider/setShowPatientDOB.jsp"/>
-                        <forward name="genUseMyMeds" path="/provider/setToUseMyMeds.jsp"/>
-            <forward name="genCppSingleLine"     path="/provider/setCppSingleLine.jsp"/>
-            <forward name="genAckCommentLab"     path="/provider/setLabAckComment.jsp"/>
-            <forward name="genIntegrator" path="/admin/setIntegratorProperties.jsp" />
-            <forward name="genEncounterWindowSize"     path="/provider/setEncounterWindowSize.jsp"/>
-            <forward name="genQuickChartSize"     path="/provider/setQuickChartSize.jsp"/>
-            <forward name="genEDocBrowserInDocumentReport"     path="/provider/setEDocBrowserInDocumentReport.jsp"/>
-            <forward name="genEDocBrowserInMasterFile"     path="/provider/setEDocBrowserInMasterFile.jsp"/>
-            <forward name="genPatientNameLength"     path="/provider/setPatientNameLength.jsp"/>
-                 </action>
+			<forward name="success"							path="/provider/setNoteStaleDate.jsp" />
+			<forward name="gen"								path="/provider/setGenProperty.jsp" />
+			<forward name="genRxPageSize"					path="/provider/setGenRxPageSizeProperty.jsp" />
+			<forward name="genRxDefaultQuantity"			path="/provider/setGenRxDefaultQuantityProperty.jsp" />
+			<forward name="genRxProfileView"				path="/provider/setGenRxProfileViewProperty.jsp" />
+			<forward name="genRxUseRx3"						path="/provider/setToUseRx3.jsp" />
+			<forward name="genDefaultDocQueue"				path="/provider/setDocDefaultQueue.jsp" />
+		    <forward name="genShowPatientDOB"				path="/provider/setShowPatientDOB.jsp"/>
+            <forward name="genUseMyMeds"					path="/provider/setToUseMyMeds.jsp"/>
+            <forward name="genCppSingleLine"				path="/provider/setCppSingleLine.jsp"/>
+            <forward name="genAckCommentLab"				path="/provider/setLabAckComment.jsp"/>
+            <forward name="genIntegrator"					path="/admin/setIntegratorProperties.jsp" />
+            <forward name="genEncounterWindowSize"			path="/provider/setEncounterWindowSize.jsp"/>
+            <forward name="genQuickChartSize"				path="/provider/setQuickChartSize.jsp"/>
+            <forward name="genEDocBrowserInDocumentReport"	path="/provider/setEDocBrowserInDocumentReport.jsp"/>
+            <forward name="genEDocBrowserInMasterFile"		path="/provider/setEDocBrowserInMasterFile.jsp"/>
+            <forward name="genPatientNameLength" 			path="/provider/setPatientNameLength.jsp"/>
+        </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
 			<forward name="failure" path="/provider/providerIndivoIdSetter.jsp" />
