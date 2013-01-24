@@ -25,27 +25,18 @@ package org.oscarehr.phr.util;
 
 import java.util.List;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
-import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.RelationshipTransfer3;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.QueueCache;
-
-import oscar.oscarDemographic.data.DemographicData;
 
 /**
  * @deprecated 2012-11-22 use AccountManager instead, it should have all the account relationship calls needed.
  */
 public class MyOscarServerRelationManager {
 	private static final Logger logger = MiscUtils.getLogger();
-
-	private static final int MAX_OBJECTS_TO_CACHE = 1024;
-
-	private static QueueCache<String, List<RelationshipTransfer3>> relationDataCache = new QueueCache<String, List<RelationshipTransfer3>>(4, MAX_OBJECTS_TO_CACHE, DateUtils.MILLIS_PER_HOUR * 2, null);
 
 	private static List<RelationshipTransfer3> getRelationShipTransferFromServer(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId) {
 		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
@@ -55,20 +46,8 @@ public class MyOscarServerRelationManager {
 		return relationList;
 	}
 
-	private static String getCacheKey(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId) {
-		// this is to help ensure data in the cache isn't shared as permissions would be by passed if it were. 
-		return (""+myOscarLoggedInInfo.getLoggedInPersonId() + ':' + targetMyOscarUserId);
-	}
-
 	public static List<RelationshipTransfer3> getRelationData(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId){
-
-		String cacheKey = getCacheKey(myOscarLoggedInInfo, targetMyOscarUserId);
-		List<RelationshipTransfer3> relationList = relationDataCache.get(cacheKey);
-
-		if (relationList == null) {
-			relationList = getRelationShipTransferFromServer(myOscarLoggedInInfo, targetMyOscarUserId);
-			relationDataCache.put(cacheKey, relationList);
-		}
+		List<RelationshipTransfer3> relationList = getRelationShipTransferFromServer(myOscarLoggedInInfo, targetMyOscarUserId);
 		return relationList;
 	}
 
@@ -87,20 +66,4 @@ public class MyOscarServerRelationManager {
 		}
 		return false;
 	}
-
-	/**
-	 * adds a patientProvider relationship for the logged in provider and passed in patient.
-	 */
-	public static void addPatientProviderRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo, String demoNo) throws Exception {
-		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
-
-		org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo);
-		
-		String patientMyOscarUserName = demo.getMyOscarUserName();
-		Long patientMyOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, patientMyOscarUserName);
-
-		accountWs.createRelationship2(patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), false, true, "PatientPrimaryCareProvider");
-		relationDataCache.remove(getCacheKey(myOscarLoggedInInfo, patientMyOscarUserId));		
-	}
-
 }
