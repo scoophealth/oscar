@@ -38,13 +38,13 @@ public class BillingRAPrep {
 		return ret;
 	}
 
-	public List getRAErrorReport(String raNo, String providerOhipNo, String[] notErrorCode) {
-		List ret = dbObj.getRAErrorReport(raNo, providerOhipNo, notErrorCode);
+	public List<Properties> getRAErrorReport(String raNo, String providerOhipNo, String[] notErrorCode) {
+		List<Properties> ret = dbObj.getRAErrorReport(raNo, providerOhipNo, notErrorCode);
 		return ret;
 	}
 
-	public List getRABillingNo4Code(String raNo, String codes) {
-		List ret = dbObj.getRABillingNo4Code(raNo, codes);
+	public List<String> getRABillingNo4Code(String raNo, String codes) {
+		List<String> ret = dbObj.getRABillingNo4Code(raNo, codes);
 		return ret;
 	}
 
