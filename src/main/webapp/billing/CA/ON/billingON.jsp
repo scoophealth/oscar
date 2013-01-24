@@ -849,7 +849,7 @@ function showHideBox(layerName, iState) { // 1 visible, 0 hidden
 function onHistory() {
     var dd = document.forms[0].day.value;
     //alert(dd);
-    popupPage("800","640","billingONHistorySpec.jsp?demographic_no=<%=demo_no%>&demo_name=<%=demoname%>&orderby=appointment_date&day=" + dd);
+    popupPage("800","640","billingONHistorySpec.jsp?demographic_no=<%=demo_no%>&demo_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&orderby=appointment_date&day=" + dd);
 }
 
 function prepareBack() {
