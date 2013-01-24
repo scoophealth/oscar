@@ -686,7 +686,7 @@ if(statusType.equals("_")) { %>
 	       // 3rd party billing
 	       if(ch1Obj.getPay_program().matches("PAT|OCF|ODS|CPP|STD|IFH")) {
 	    	   amountPaid = ch1Obj.getPaid();
-	    	   amountPaid = (amountPaid==null||amountPaid.equals(""))? "0.00" : amountPaid;
+	    	   amountPaid = (amountPaid==null||amountPaid.equals("")||amountPaid.equals("null"))? "0.00" : amountPaid;
 	       }
 	       BigDecimal bTemp = (new BigDecimal(amountPaid.trim())).setScale(2,BigDecimal.ROUND_HALF_UP);
 	       paidTotal = paidTotal.add(bTemp);
