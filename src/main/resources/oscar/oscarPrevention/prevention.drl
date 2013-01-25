@@ -571,11 +571,11 @@
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
-        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &gt;= 25</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt;= 22</java:condition>        
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &lt;= 24</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt;= 32</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &lt;= 36</java:condition>        
         <java:condition>!prev.isPreventionNever("PAP")</java:condition>
         <java:condition>!prev.isNextDateSet("PAP")</java:condition>
         <java:condition>!prev.isInelligible("PAP")</java:condition>
@@ -589,10 +589,10 @@
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
-        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &gt;= 25</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt; 24</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt; 36</java:condition>        
         <java:condition>!prev.isPreventionNever("PAP")</java:condition>
         <java:condition>!prev.isNextDateSet("PAP")</java:condition>
         <java:condition>!prev.isInelligible("PAP")</java:condition>
@@ -606,7 +606,7 @@
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
-        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &gt;= 25</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>
         <java:condition>prev.getHowManyMonthsSinceLast("PAP") == -1</java:condition>
@@ -637,7 +637,7 @@
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
-        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &gt;= 25</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>             
         <java:condition>prev.getHowManyMonthsSinceLast("PAP") != -1</java:condition>
