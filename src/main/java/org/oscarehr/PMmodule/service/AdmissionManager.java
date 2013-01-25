@@ -245,9 +245,11 @@ public class AdmissionManager {
                 if(referral.getVacancyId()!=null){
                     //change vacancy's status
                     VacancyDao vacancyDao= SpringUtils.getBean(VacancyDao.class);
-                    Vacancy v = vacancyDao.find(referral.getId());
-                    v.setStatus("filled");
-                    vacancyDao.saveEntity(v);
+                    Vacancy v = vacancyDao.find(referral.getVacancyId());
+		    if(v!=null) {
+                    	v.setStatus("filled");
+                    	vacancyDao.saveEntity(v);
+		    }
                 }
 			}
 		}
