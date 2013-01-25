@@ -100,7 +100,10 @@
   // get provider's detail
   String proOHIPNO="", proRMA="";
   ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-  Provider prov = providerDao.getProvider(request.getParameter("xml_provider"));
+  Provider prov = null;
+  if(request.getParameter("xml_provider") != null) {
+  	prov = providerDao.getProvider(request.getParameter("xml_provider"));
+  }
   if (prov != null) {
 	proOHIPNO = prov.getOhipNo();
 	proRMA = prov.getRmaNo();
