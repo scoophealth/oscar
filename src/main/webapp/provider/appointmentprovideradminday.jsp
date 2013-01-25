@@ -271,7 +271,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
     //// THIS IS THE VALUE I HAVE BEEN LOOKING FOR!!!!!
 	boolean bDispTemplatePeriod = ( oscarVariables.getProperty("receptionist_alt_view") != null && oscarVariables.getProperty("receptionist_alt_view").equals("yes") ); // true - display as schedule template period, false - display as preference
-
+	
 %>
 <%
 
@@ -856,7 +856,9 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
           if(NameLength>0) {
              len=lenLimitedS= lenLimitedL = NameLength;
           }
-                   }
+     }
+      
+     
      curProvider_no = new String [numProvider];
      curProviderName = new String [numProvider];
 
@@ -907,6 +909,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
    }
 
 java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+
 %>
 
 
@@ -1509,7 +1512,10 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <%
         while (bFirstTimeRs?it.hasNext():true) { //if it's not the first time to parse the standard time, should pass it by
                   appointment = bFirstTimeRs?it.next():appointment;
-                  len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
+                  if(OscarProperties.getInstance().getProperty("APPT_ALWAYS_SHOW_LONG_NAME","false").equals("false")) {
+                	len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
+                  }
+                  
                   iS=Integer.parseInt(String.valueOf(appointment.get("start_time")).substring(0,2));
                   iSm=Integer.parseInt(String.valueOf(appointment.get("start_time")).substring(3,5));
                   iE=Integer.parseInt(String.valueOf(appointment.get("end_time")).substring(0,2));
@@ -1610,6 +1616,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   String status = String.valueOf(appointment.get("status")).trim();
           	  String sitename = String.valueOf(appointment.get("location")).trim();
           	  String urgency = (String)appointment.get("urgency");
+          	  String apptType = (String)appointment.get("type");
 
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
@@ -1718,7 +1725,7 @@ if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","fals
 <a class="apptLink" href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
 &nbsp; reason: <%=UtilMisc.htmlEscape(reason)%>
 &nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
-<% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
+<% if(len==lenLimitedL || view!=0 || numAvailProvider==1 || OscarProperties.getInstance().getProperty("APPT_ALWAYS_SHOW_LINKS", "false").equals("true") ) {%>
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
 <oscar:oscarPropertiesCheck property="eform_in_appointment" value="yes">
@@ -1833,23 +1840,49 @@ if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","fals
       <!--Inline display of reason -->
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"><span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span></oscar:oscarPropertiesCheck>
       <% } %>
-<% } %>
+      <% if(OscarProperties.getInstance().getProperty("APPT_MULTILINE", "false").equals("true")) { %>
+	      	<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<%if((apptType != null && apptType.length()>0) && (reason != null && reason.length()>0) ) { %>	
+			<%=UtilMisc.htmlEscape(apptType)%>&nbsp;|&nbsp;<%=UtilMisc.htmlEscape(reason)%>
+		<% } %>
+		<%if((apptType != null && apptType.length()>0) && (reason == null || reason.length() == 0) ) { %>	
+			<%=UtilMisc.htmlEscape(apptType)%>
+		<% } %>
+		<%if((apptType == null || apptType.length()==0) && (reason != null && reason.length() > 0) ) { %>	
+			<%=UtilMisc.htmlEscape(reason)%>
+		<% } %>
+	<% } %>
+<% } else {%>
+	<!-- no links -->
+	<% if(OscarProperties.getInstance().getProperty("APPT_MULTILINE", "false").equals("true")) { %>
+	<br/>&nbsp;
+	<% } %>
+	
+	<%}%>
+	
+
         		</font></td>
         <%
         			}
         			}
         			bFirstFirstR = false;
-          	}
+        			
+          	} 
+                  
             //out.println("<td width='1'>&nbsp;</td></tr>"); give a grid display
             out.println("<td class='noGrid' width='1'></td></tr>"); //no grid display
-          }
+          } 
+         
 				%>
 
           </table> <!-- end table for each provider schedule display -->
 <!-- caisi infirmary view extension add fffffffffff-->
 </logic:notEqual>
 <!-- caisi infirmary view extension add end fffffffffffffff-->
-
+	
+		
+		
          </td></tr>
           <tr><td class="infirmaryView" ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
 <!-- caisi infirmary view extension modify fffffffffffffffffff-->
