@@ -36,7 +36,6 @@ import oscar.oscarDemographic.data.DemographicNameAgeString;
 public class DemographicNameAgeTag extends TagSupport {
 
     public DemographicNameAgeTag()    {
-        numNewMessages = 0;
     }
 
     public void setDemographicNo(String demoNo1)    {
@@ -47,7 +46,16 @@ public class DemographicNameAgeTag extends TagSupport {
         return demoNo;
     }
 
-    public int doStartTag() throws JspException    {       
+    public int doStartTag() throws JspException    {   
+    	try {
+    		if(demoNo == null || demoNo.equals(""))
+    			return SKIP_BODY;
+    		Integer.valueOf(demoNo);
+    	} catch(NumberFormatException e) {
+    		return SKIP_BODY;
+    	}
+    	
+    	
        DemographicNameAgeString demoNameAge = DemographicNameAgeString.getInstance();       
        String nameage = demoNameAge.getNameAgeString(Integer.valueOf(demoNo));
             
@@ -64,5 +72,4 @@ public class DemographicNameAgeTag extends TagSupport {
     }
 
     private String demoNo;
-    private int numNewMessages;
 }
