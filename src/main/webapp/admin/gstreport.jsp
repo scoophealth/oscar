@@ -62,15 +62,15 @@ BigDecimal billed;
 BigDecimal gst = new BigDecimal(0);
 Vector list = gstReport.getGST(providerNo, startDate, endDate);
 
-List pList = new Vector();;
+List<String> pList = new ArrayList<String>();
 if (isTeamAccessPrivacy) {
-	pList= (Vector)(new JdbcBillingPageUtil()).getCurTeamProviderStr(curProvider_no);
+	pList=(new JdbcBillingPageUtil()).getCurTeamProviderStr(curProvider_no);
 }
 else if (isSiteAccessPrivacy) {
-	pList= (Vector)(new JdbcBillingPageUtil()).getCurSiteProviderStr(curProvider_no);
+	pList= (new JdbcBillingPageUtil()).getCurSiteProviderStr(curProvider_no);
 }
 else {
-	pList= (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
+	pList= (new JdbcBillingPageUtil()).getCurProviderStr();
 }
 %>
 <link rel="stylesheet" type="text/css" media="all"
