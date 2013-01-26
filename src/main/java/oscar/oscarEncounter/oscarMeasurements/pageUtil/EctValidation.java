@@ -78,8 +78,7 @@ public class EctValidation{
     public boolean matchRegExp(String regExp, String inputValue){
 
         boolean validation = true; 
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-        
+       
         MiscUtils.getLogger().debug("matchRegExp function is called.");
         
         if (!GenericValidator.isBlankOrNull(regExp) && !GenericValidator.isBlankOrNull(inputValue)){
@@ -95,12 +94,11 @@ public class EctValidation{
      }
     
      
-    public boolean isInRange(double dMax, double dMin, String inputValue){
+    public boolean isInRange(Double dMax, Double dMin, String inputValue){
 
         boolean validation = true;
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
-        if ((dMax!=0) || (dMin!=0)){
+        if ((dMax != null && dMax!=0) || (dMin != null && dMin!=0)){
             if(GenericValidator.isDouble(inputValue)){
                 double dValue = Double.parseDouble(inputValue);
                 
@@ -116,12 +114,11 @@ public class EctValidation{
     }
     
 
-    public boolean maxLength(int iMax, String inputValue){
+    public boolean maxLength(Integer iMax, String inputValue){
 
         boolean validation = true;
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-        
-        if (iMax!=0){            
+       
+        if (iMax != null && iMax!=0){            
             if(!GenericValidator.maxLength(inputValue, iMax)){                
                     validation=false;
                 }                       
@@ -129,12 +126,11 @@ public class EctValidation{
         return validation;
     }
 
-    public boolean minLength(int iMin, String inputValue){
+    public boolean minLength(Integer iMin, String inputValue){
 
         boolean validation = true;
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-        
-        if (iMin!=0){            
+       
+        if (iMin != null && iMin!=0){            
             if(!GenericValidator.minLength(inputValue, iMin)){                
                     validation=false;
                 }                       
@@ -145,7 +141,6 @@ public class EctValidation{
     public boolean isInteger(String inputValue){
 
         boolean validation = true;
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
         
         if(!GenericValidator.isInt(inputValue)){                                                 

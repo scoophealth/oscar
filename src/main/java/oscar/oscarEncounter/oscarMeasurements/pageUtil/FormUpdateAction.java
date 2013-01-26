@@ -168,10 +168,10 @@ public class FormUpdateAction extends Action {
 		String providerNo = (String) session.getAttribute("user");
 
 		String regExp = null;
-		double dMax = 0;
-		double dMin = 0;
-		int iMax = 0;
-		int iMin = 0;
+		Double dMax = 0.0;
+		Double dMin = 0.0;
+		Integer iMax = 0;
+		Integer iMin = 0;
 
 		List<Validations> vs = ectValidation.getValidationType(inputType, mInstructions);
 		ectValidation.getRegCharacterExp();
