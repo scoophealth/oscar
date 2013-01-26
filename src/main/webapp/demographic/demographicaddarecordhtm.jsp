@@ -548,6 +548,7 @@ function autoFillHin(){
 	<td id="titleCell" align="left">
 	    <select id="title" name="title" onchange="checkTitleSex(value);">
                 <option value=""><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
+                <option value="DR"><bean:message key="demographic.demographicaddrecordhtm.msgDr"/></option>
                 <option value="MS"><bean:message key="demographic.demographicaddrecordhtm.msgMs"/></option>
                 <option value="MISS"><bean:message key="demographic.demographicaddrecordhtm.msgMiss"/></option>
                 <option value="MRS"><bean:message key="demographic.demographicaddrecordhtm.msgMrs"/></option>
