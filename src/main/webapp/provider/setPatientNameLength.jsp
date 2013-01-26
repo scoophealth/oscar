@@ -45,6 +45,7 @@ if(session.getValue("user") == null)
 		<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 		<script src="<c:out value="${ctx}"/>/share/javascript/prototype.js"	type="text/javascript"></script>
 		<script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js"	type="text/javascript"></script>
+		<script src="<c:out value="${ctx}"/>/share/javascript/provider_form_validations.js"	type="text/javascript"></script>
 	</head>
 
 <body class="BodyStyle" vlink="#0000FF">
@@ -64,10 +65,13 @@ if(session.getValue("user") == null)
 		<%if( request.getAttribute("status") == null ){%>
 			<bean-el:message key="${providermsgEdit}" />
 
-            <html:form action="/setProviderStaleDate.do">
+            <html:form styleId="providerForm" action="/setProviderStaleDate.do">
 				<input type="hidden" name="method" value="<c:out value="${method}"/>">
-				<br/>
-				 <bean:message key="provider.patientNameLength.title"/> <html:text property="patientNameLength.value" size="5"/>
+				<p id="errorMessage" style="display: none; color: red;">
+				Invalid input.
+				</p>
+				<bean:message key="provider.patientNameLength.title"/> 
+				<html:text styleId="numericFormField" property="patientNameLength.value" size="5"/>
                 <br/>
                 <html:submit property="btnApply"/>
 			</html:form>
