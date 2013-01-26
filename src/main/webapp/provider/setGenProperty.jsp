@@ -55,6 +55,10 @@ if(session.getValue("user") == null)
 	type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js"
 	type="text/javascript"></script>
+<c:if test="${method eq 'saveConsultationRequestCuffOffDate'}">
+	<script src="<c:out value="${ctx}"/>/share/javascript/provider_form_validations.js"	
+		type="text/javascript"></script>
+</c:if>
 
 <!-- main calendar program -->
 <script type="text/javascript"
@@ -100,10 +104,18 @@ if(session.getValue("user") == null)
 		<td class="MainTableRightColumn">
 		<%if( request.getAttribute("status") == null ){%> <bean-el:message
 			key="${providermsgEdit}" /> <c:out value="${dateProperty.value}" /> <html:form
+			styleId="providerForm"
 			action="/setProviderStaleDate.do">
 			<input type="hidden" name="method" value="<c:out value="${method}"/>">
+			
+			<p id="errorMessage" style="display: none; color: red;">
+				Invalid input.
+			</p>
+			
 			<% if (request.getAttribute("dropOpts") == null) { %>
-			<html:text property="dateProperty.value" />
+			<html:text
+					styleId="numericFormField" 
+					property="dateProperty.value" />
                             <%if ( request.getAttribute("dateProperty2") != null ){%>
                                 <html:text property="dateProperty2.value" />
                             <%}%>
