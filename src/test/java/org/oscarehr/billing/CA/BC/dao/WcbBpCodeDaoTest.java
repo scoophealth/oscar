@@ -51,6 +51,7 @@ public class WcbBpCodeDaoTest extends DaoTestFixtures {
 	public void testCreate() throws Exception {
 		WcbBpCode entity = new WcbBpCode();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setCode("code");
 		
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < 10000; i++) {
