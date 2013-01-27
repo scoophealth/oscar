@@ -62,6 +62,20 @@
     	}
     	
     }
+    
+    function changeDischargeDate(admissionId) {
+    	var newDate = prompt('Please enter a new Discharge Date (yyyy-MM-dd HH:mm)');
+    	if(newDate != null && newDate.length>0) {
+    		$.ajax({url:'ClientManager/ClientManager.json?method=save_discharge_date&admissionId='+admissionId + '&date='+newDate,async:true,dataType:'json', success:function(data) {
+    			if(!data.success) {
+    				alert(data.error);
+    			} else {
+    				location.href='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=((Demographic)request.getAttribute("client")).getDemographicNo()%>&view.tab=History&method=edit';
+    			}
+    		}});	
+    	}
+    	
+    }
 </script>
 <%
 	try
@@ -153,7 +167,17 @@
 		</security:oscarSec>
 	</display:column>
 	<display:column property="facilityAdmission" title="Facility<br />Admission" />
-	<display:column property="dischargeDate" sortable="true" title="Discharge Date" />
+	<display:column sortable="true" title="Discharge Date">
+		<%if(admissionForDisplay.getDischargeDate() != null) { %>
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
+			<a href="javascript:void(0)" onclick="changeDischargeDate('<%=admissionForDisplay.getAdmissionId()%>');return false;"><%=admissionForDisplay.getDischargeDate() %></a>
+		</security:oscarSec>
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
+			<%=admissionForDisplay.getDischargeDate() %>
+		</security:oscarSec>
+		<% } %>
+	</display:column>
+	
 	<display:column property="facilityDischarge" title="Facility<br />Discharge" />
 	<display:column property="daysInProgram" sortable="true" title="Days in Program" />
 	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
