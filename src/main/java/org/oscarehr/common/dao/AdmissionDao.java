@@ -500,7 +500,7 @@ private Logger log=MiscUtils.getLogger();
             throw new IllegalArgumentException();
         }
 
-        Admission admission= entityManager.find(Admission.class, id);        
+        Admission admission= entityManager.find(Admission.class, id.intValue());        
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmission: id= " + id + ", found: " + (admission != null));

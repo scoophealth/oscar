@@ -48,6 +48,20 @@
         url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_referral&referralId="/>';
         window.open(url + referralId, 'referral', 'width=500,height=600');
     }
+    
+    function changeDate(admissionId) {
+    	var newDate = prompt('Please enter a new Admission Date (yyyy-MM-dd HH:mm)');
+    	if(newDate != null && newDate.length>0) {
+    		$.ajax({url:'ClientManager/ClientManager.json?method=save_admission_date&admissionId='+admissionId + '&date='+newDate,async:true,dataType:'json', success:function(data) {
+    			if(!data.success) {
+    				alert(data.error);
+    			} else {
+    				location.href='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=((Demographic)request.getAttribute("client")).getDemographicNo()%>&view.tab=History&method=edit';
+    			}
+    		}});	
+    	}
+    	
+    }
 </script>
 <%
 	try
@@ -130,7 +144,14 @@
     
     
 	<display:column property="programType" sortable="true" title="Program Type" />
-	<display:column property="admissionDate" sortable="true" title="Admission Date" />
+	<display:column sortable="true" title="Admission Date">
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
+			<a href="javascript:void(0)" onclick="changeDate('<%=admissionForDisplay.getAdmissionId()%>');return false;"><%=admissionForDisplay.getAdmissionDate() %></a>
+		</security:oscarSec>
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
+			<%=admissionForDisplay.getAdmissionDate() %>
+		</security:oscarSec>
+	</display:column>
 	<display:column property="facilityAdmission" title="Facility<br />Admission" />
 	<display:column property="dischargeDate" sortable="true" title="Discharge Date" />
 	<display:column property="facilityDischarge" title="Facility<br />Discharge" />
