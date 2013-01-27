@@ -56,6 +56,7 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.VacancyDao;
+import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
@@ -95,6 +96,7 @@ import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.PMmodule.wlmatch.MatchBO;
 import org.oscarehr.PMmodule.wlmatch.MatchingManager;
 import org.oscarehr.PMmodule.wlmatch.VacancyDisplayBO;
+import org.oscarehr.PMmodule.wlservice.WaitListService;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
@@ -159,6 +161,7 @@ public class ClientManagerAction extends BaseAction {
 	// private CdsClientFormDao cdsClientFormDao = (CdsClientFormDao)SpringUtils.getBean("cdsClientFormDao");
 	private RemoteReferralDao remoteReferralDao = (RemoteReferralDao) SpringUtils.getBean("remoteReferralDao");
     private VacancyDao vacancyDao = (VacancyDao) SpringUtils.getBean(VacancyDao.class);
+    private VacancyTemplateDao vacancyTemplateDao = (VacancyTemplateDao) SpringUtils.getBean(VacancyTemplateDao.class);
 	private MatchingManager matchingManager = new MatchingManager();
 
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
@@ -403,13 +406,13 @@ public class ClientManagerAction extends BaseAction {
 		int clientId = Integer.parseInt(request.getParameter("id"));
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
-		Program p = (Program) clientForm.get("program");
-		String vacancyName = p.getVacancyName();
-		//Integer vacancyId = p.getVacancyId();
-		int programId = p.getId();
+		Program p1 = (Program) clientForm.get("program");
+		
+		Integer selectVacancyId = p1.getVacancyId();
+		int programId = p1.getId();
 		// if it's local
 		if (programId != 0) {
-            p = programManager.getProgram(programId);
+            Program p = programManager.getProgram(programId);
 			referral.setClientId((long) clientId);
 			referral.setProgramId((long) programId);
 			referral.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
@@ -420,9 +423,12 @@ public class ClientManagerAction extends BaseAction {
 			referral.setProgramType(p.getType());
             ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
             if (tabBean.getTab().equals("Refer to vacancy")) {
-                p = getMatchVacancy(p);
-                referral.setSelectVacancy(p.getVacancyName());
-                referral.setVacancyId(p.getVacancyId());
+                //p = getMatchVacancy(p); //???????
+                if(selectVacancyId!=null) {
+            		referral.setVacancyId(selectVacancyId);
+            		referral.setSelectVacancy(vacancyDao.getVacancyById(selectVacancyId).getName());
+            	}
+                
             }else{
                 String vacancyId = request.getParameter("vacancyId");
                 if(vacancyId==null||vacancyId.trim().length()==0){
@@ -1728,7 +1734,16 @@ public class ClientManagerAction extends BaseAction {
 
 		/* refer */
 		if (tabBean.getTab().equals("Refer") || tabBean.getTab().equals("Refer to vacancy")) {
-			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
+			List<ClientReferral> clientReferrals = clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId));
+			List<ClientReferral> clientReferralDisplay = new ArrayList<ClientReferral>();
+			for(ClientReferral cr : clientReferrals) {				
+				Vacancy v = vacancyDao.getVacancyById(cr.getVacancyId()==null?0:cr.getVacancyId());
+				if(v!=null) {
+					cr.setVacancyTemplateName(vacancyTemplateDao.getVacancyTemplate(v.getTemplateId()).getName());
+				}
+				clientReferralDisplay.add(cr);
+			}
+			request.setAttribute("referrals", clientReferralDisplay);
 
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 				try {
@@ -1789,45 +1804,40 @@ public class ClientManagerAction extends BaseAction {
 			}
 			//Added for refer to Vacancy
 			if(tabBean.getTab().equals("Refer to vacancy")){
-//				Program criteria = (Program) clientForm.get("program");
-				
+//				Program criteria = (Program) clientForm.get("program");				
 //				List<Program> programs = programManager.search(criteria);
-				List<Program> programs = programManager.getPrograms(facilityId);
-				List<VacancyDisplayBO> vacancyDisplayBOs = matchingManager.listNoOfVacanciesForWaitListProgram();
 				
-				for(int i=0;i<programs.size();i++){
-					Program program = programs.get(i);
-					for(int j=0;j<vacancyDisplayBOs.size();j++){
-						if(vacancyDisplayBOs.get(j).getProgramId().equals(programs.get(i).getId())){
-							if(vacancyDisplayBOs.get(j).getNoOfVacancy() != 0){
-								program.setNoOfVacancy(vacancyDisplayBOs.get(j).getNoOfVacancy());
-								program.setVacancyName(vacancyDisplayBOs.get(j).getVacancyName());
-								program.setDateCreated(vacancyDisplayBOs.get(j).getCreated().toString());
-								
-								int vacancyId = vacancyDisplayBOs.get(j).getVacancyID();
-								List<MatchBO> matchList= matchingManager.getClientMatches(vacancyId);
-								double percentageMatch = 0;
-								for(int k=0;k<matchList.size();k++){
-									percentageMatch = percentageMatch + matchList.get(k).getPercentageMatch();
-								}
-								program.setVacancyId(vacancyId);
-								program.setMatches(percentageMatch);
-								
-								programs.set(i, program);
-							}
-							
-						}
-					 }
-					}
+				//List<Program> programs = programManager.getPrograms(facilityId);				
 				
-				for(int i=0;i<programs.size();i++){
-					Program program = programs.get(i);
-					if(program.getNoOfVacancy() == 0){
-						programs.remove(i);
+				//List<VacancyDisplayBO> vacancyDisplayBOs = matchingManager.listVacanciesForWaitListProgram();	
+				//get all vacancies.
+				WaitListService s = new WaitListService();
+				List<VacancyDisplayBO> vacancyDisplayBOs = s.listVacanciesForAllWaitListPrograms();
+				
+				List<Program> vacancyPrograms = new ArrayList<Program>();
+				
+				for(int j=0;j<vacancyDisplayBOs.size();j++){
+					Program program = programManager.getProgram(vacancyDisplayBOs.get(j).getProgramId());
+					
+					//if(vacancyDisplayBOs.get(j).getNoOfVacancy() != 0){
+					//program.setNoOfVacancy(vacancyDisplayBOs.get(j).getNoOfVacancy());
+					program.setVacancyName(vacancyDisplayBOs.get(j).getVacancyName());
+					program.setDateCreated(vacancyDisplayBOs.get(j).getCreated().toString());
+								
+					int vacancyId = vacancyDisplayBOs.get(j).getVacancyID();
+					List<MatchBO> matchList= matchingManager.getClientMatches(vacancyId);
+					double percentageMatch = 0;
+					for(int k=0;k<matchList.size();k++){
+						percentageMatch = percentageMatch + matchList.get(k).getPercentageMatch();
 					}
+					
+					program.setVacancyId(vacancyId);
+					program.setMatches(percentageMatch);
+					program.setVacancyTemplateName(vacancyDisplayBOs.get(j).getVacancyTemplateName());
+					vacancyPrograms.add(program);
 				}
 				
-				request.setAttribute("programs", programs);
+				request.setAttribute("programs", vacancyPrograms);
 			}
 			
 		}
@@ -1943,9 +1953,18 @@ public class ClientManagerAction extends BaseAction {
 		ArrayList<ReferralSummaryDisplay> allResults = new ArrayList<ReferralSummaryDisplay>();
 
 		List<ClientReferral> tempResults = clientManager.getActiveReferrals(String.valueOf(demographicNo), String.valueOf(facilityId));
-		for (ClientReferral clientReferral : tempResults)
+		for (ClientReferral clientReferral : tempResults) {
+			String vacancyName = clientReferral.getSelectVacancy();
+			if(vacancyName!=null) {
+				List<Vacancy> vlist = vacancyDao.getVacanciesByName(vacancyName); //assume vacancyName is unique.
+				if(vlist.size()>0) {
+					Integer vacancyTemplateId = vlist.get(0).getTemplateId();
+					clientReferral.setVacancyTemplateName(vacancyTemplateDao.getVacancyTemplate(vacancyTemplateId).getName());
+				}				
+			}
 			allResults.add(new ReferralSummaryDisplay(clientReferral));
 
+		}
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {

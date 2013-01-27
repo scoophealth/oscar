@@ -112,7 +112,7 @@ public class Program implements Serializable {
 	private String dateCreated;
 	private double matches;
 	private Integer vacancyId;
-   
+    private String vacancyTemplateName;
     /**
      * Constructor for required fields
      */
@@ -829,6 +829,18 @@ public class Program implements Serializable {
 	public void setVacancyId(Integer vacancyId) {
 		this.vacancyId = vacancyId;
 	}
+
+
+
+	public String getVacancyTemplateName() {
+    	return vacancyTemplateName;
+    }
+
+
+
+	public void setVacancyTemplateName(String vacancyTemplateName) {
+    	this.vacancyTemplateName = vacancyTemplateName;
+    }
 	
 	
 }

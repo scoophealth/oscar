@@ -330,4 +330,13 @@ public class MatchingManager {
 		}
 		return bos;
 	}
+    
+    public List<VacancyDisplayBO> listVacanciesForWaitListProgram(){
+		List<VacancyDisplayBO> bos= waitlistDao.listVacanciesForWaitListProgram();
+		for(VacancyDisplayBO b:bos){
+			CriteriasBO crits		= assembleCriterias(b.getVacancyID());
+			b.setCriteriaSummary(crits.getSummary());
+		}
+		return bos;
+	}
 }
