@@ -803,10 +803,12 @@ String reason ="";
 
 <display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="referrals" export="false" pagesize="10" requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-
+	<display:column property="selectVacancy" sortable="true" title="Vacancy Name" />
+	<display:column property="vacancyTemplateName" sortable="true" title="Vacancy Template Name" />
 	<display:column property="programName" sortable="true" title="Facility / Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="referralDate" sortable="true" title="Referral Date" />
 	<display:column property="referringProvider" sortable="true" title="Referring Provider/Facility" />
 	<display:column property="daysInQueue" sortable="true" title="Days in Queue" />
+	
 </display:table>

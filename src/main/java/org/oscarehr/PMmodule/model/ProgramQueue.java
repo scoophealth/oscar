@@ -56,6 +56,9 @@ public class ProgramQueue implements Serializable {
     private String presentProblems;
     private Long headClientId = null;
 
+    private String _vacancyName;    
+    private String vacancyTemplateName;
+
     public String getVacancyName() {
         return _vacancyName;
     }
@@ -64,10 +67,16 @@ public class ProgramQueue implements Serializable {
         this._vacancyName = _vacancyName;
     }
 
-    private String _vacancyName;
+    
+    public String getVacancyTemplateName() {
+    	return vacancyTemplateName;
+    }
 
+	public void setVacancyTemplateName(String vacancyTemplateName) {
+    	this.vacancyTemplateName = vacancyTemplateName;
+    }
 
-    // constructors
+	// constructors
     public ProgramQueue () {
         initialize();
     }

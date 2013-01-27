@@ -76,8 +76,8 @@ request.setAttribute("listVac", filteredListVac);
  pagesize="1000"  requestURI="/PMmodule/AllVacancies.do" >
     <display:column property="vacancyID" title="Vacancy Id" sortable="true" url="/PMmodule/VacancyClientMatch.do" paramId="vacancyId" paramProperty="vacancyID" />
     <display:column property="programName" title="Program Name" sortable="true" url="/PMmodule/ProgramManagerView.do" paramId="id" paramProperty="programId" />
-    <display:column property="vacancyTemplateName" title="Vacancy Template" sortable="true" url="/PMmodule/VacancyClientMatch.do" paramId="vacancyId" paramProperty="vacancyID" />
     <display:column property="vacancyName" title="Vacancy Name" sortable="true"/>
+    <display:column property="vacancyTemplateName" title="Vacancy Template" sortable="true" url="/PMmodule/VacancyClientMatch.do" paramId="vacancyId" paramProperty="vacancyID" />
     <display:column property="created" title="Created date" sortable="true"/>
     <display:column property="pendingCount" title="Forwarded" sortable="true"/>
     <display:column property="rejectedCount" title="Rejected" sortable="true"/>

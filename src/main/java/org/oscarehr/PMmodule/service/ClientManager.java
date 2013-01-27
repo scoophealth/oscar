@@ -208,7 +208,7 @@ public class ClientManager {
             referral.setCompletionNotes("Client currently admitted");
             referral.setCompletionDate(new Date());
 
-            saveClientReferral(referral);
+            //saveClientReferral(referral); //???what's the point to save it if it's already admitted
             throw new AlreadyAdmittedException();
         }
 
@@ -218,7 +218,7 @@ public class ClientManager {
             referral.setCompletionNotes("Client already in queue");
             referral.setCompletionDate(new Date());
 
-            saveClientReferral(referral);
+            //saveClientReferral(referral); //???what's the point to save it if's already in queue
             throw new AlreadyQueuedException();
         }
 
