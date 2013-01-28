@@ -107,6 +107,7 @@ import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
+import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.dao.RemoteReferralDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.CdsClientForm;
@@ -115,6 +116,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.common.model.OcanStaffForm;
+import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteReferral;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
@@ -1398,6 +1400,17 @@ public class ClientManagerAction extends BaseAction {
 		clientForm.set("client", client);
 		clientForm.set("provider", provider);
 
+		OscarLogDao logDao = SpringUtils.getBean(OscarLogDao.class);
+		List<OscarLog> logs = logDao.findByActionAndData("update_admission_date",admissionId);
+		if(logs.size()>0)
+			request.setAttribute("admission_date_updates", logs);
+		              
+		logs = logDao.findByActionAndData("update_discharge_date",admissionId);
+		if(logs.size()>0)
+			request.setAttribute("discharge_date_updates", logs);
+		
+
+		
 		return mapping.findForward("view_admission");
 	}
 

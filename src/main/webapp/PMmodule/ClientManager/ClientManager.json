@@ -59,6 +59,46 @@
 		
  		
 	}
+	
+	else if ("save_discharge_date".equals(method)) {
+		Integer id = Integer.parseInt(request.getParameter("admissionId"));
+		String date = request.getParameter("date");
+		Date d = null;
+		
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+		try {
+			d = formatter.parse(date);
+		}catch(java.text.ParseException e) {
+			success=false;
+			error = "Unable to parse date";
+		}
+		
+		//does this provider have rights to this program?
+		
+		
+		if(d != null) {
+			Admission admission = admissionDao.find(id);
+			if(admission != null) {
+				Integer programId = admission.getProgramId();
+				if(programProviderDao.isThisProgramInProgramDomain(providerNo,programId)) {
+					admission.setDischargeDate(d);
+					admissionDao.merge(admission);
+					
+					OscarAuditLogger.getInstance().log("update_discharge_date",date,String.valueOf(id));
+					success=true;
+				} else {
+					error="You have insufficient rights to this program";
+					success=false;
+				}
+				
+			} else {
+				error = "Admission record not found";
+				success=false;
+			}
+		} 
+		
+ 		
+	}
 
 	
 	else {

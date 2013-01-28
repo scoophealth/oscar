@@ -43,7 +43,7 @@
     Admission admission = admissionDao.find(Integer.parseInt(admissionId));
     
     OscarLogDao oscarLogDao = SpringUtils.getBean(OscarLogDao.class);
-    List<OscarLog> logs = oscarLogDao.findByActionAndData("update_admission_date", admissionId);
+    List<OscarLog> logs = oscarLogDao.findByActionAndData(request.getParameter("type"), admissionId);
     
     pageContext.setAttribute("history", logs);
  %>
@@ -53,7 +53,7 @@
 <title>Note History</title>
 </head>
 <body>
-<h3 style="text-align: center;">Admission Date change history</h3>
+<h3 style="text-align: center;"><%=request.getParameter("title") %></h3>
 <h3 style="text-align: center;"></h3>
 <nested:iterate indexId="idx" id="log" name="history">
 	<div
