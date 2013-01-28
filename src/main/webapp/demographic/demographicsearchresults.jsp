@@ -345,7 +345,7 @@
 		<div class="chartNo"><%=demo.getChartNo()==null||demo.getChartNo().equals("")?"&nbsp;":demo.getChartNo()%></div>
 		<div class="sex"><%=demo.getSex()%></div>
 		<div class="dob"><%=demo.getFormattedDob()%></div>
-		<div class="doctor"><%=Misc.getShortStr(providerBean.getProperty(demo.getProviderNo()),"_",12 )%></div>
+		<div class="doctor"><%=Misc.getShortStr(providerBean.getProperty(demo.getProviderNo() == null ? "" : demo.getProviderNo()),"_",12 )%></div>
 		<div class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></div>
 		<div class="patientStatus"><%=demo.getPatientStatus()==null||demo.getPatientStatus().equals("")?"&nbsp;":demo.getPatientStatus()%></div>
 		<div class="phone"><%=demo.getPhone()==null||demo.getPhone().equals("")?"&nbsp;":(demo.getPhone().length()==10?(demo.getPhone().substring(0,3)+"-"+demo.getPhone().substring(3)):demo.getPhone())%></div>
