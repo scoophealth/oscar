@@ -103,7 +103,7 @@ function popupPage(vheight,vwidth,varpage) {
 			<td>
 				<bean:write name="clientManagerForm" property="admission.admissionDate" />
 				<%if(request.getAttribute("admission_date_updates") != null) { %>
-					<sup><a href="javascript:void(0)" onclick="popupPage(600,400,'<%=request.getContextPath()%>/PMmodule/ClientManager/showHistory.jsp?id=<%=admission.getId()%>');return false;"><%=((List<OscarLog>)request.getAttribute("admission_date_updates")).size() %></a></sup>
+					<sup><a href="javascript:void(0)" onclick="popupPage(600,400,'<%=request.getContextPath()%>/PMmodule/ClientManager/showHistory.jsp?type=update_admission_date&title=Admission Date Updates&id=<%=admission.getId()%>');return false;"><%=((List<OscarLog>)request.getAttribute("admission_date_updates")).size() %></a></sup>
 				<%} %>
 			</td>
 		</tr>
@@ -114,8 +114,13 @@ function popupPage(vheight,vwidth,varpage) {
 		</tr>
 		<tr class="b">
 			<td width="20%">Discharge date:</td>
-			<td><bean:write name="clientManagerForm"
-				property="admission.dischargeDate" /></td>
+			<td>
+				<bean:write name="clientManagerForm" property="admission.dischargeDate" />
+				<%if(request.getAttribute("discharge_date_updates") != null) { %>
+					<sup><a href="javascript:void(0)" onclick="popupPage(600,400,'<%=request.getContextPath()%>/PMmodule/ClientManager/showHistory.jsp?type=update_discharge_date&title=Discharge Date Updates&id=<%=admission.getId()%>');return false;"><%=((List<OscarLog>)request.getAttribute("discharge_date_updates")).size() %></a></sup>
+				<%} %>
+			
+			</td>
 		</tr>
 		<tr class="b">
 			<td width="20%">Discharge reason:</td>
