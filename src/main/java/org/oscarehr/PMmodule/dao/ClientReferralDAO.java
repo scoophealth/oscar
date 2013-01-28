@@ -159,7 +159,7 @@ public class ClientReferralDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? ORDER BY a.AdmissionDate DESC";
+        String queryStr = "FROM Admission a WHERE a.clientId=? ORDER BY a.admissionDate DESC";
         @SuppressWarnings("unchecked")
         List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
         return rs;
