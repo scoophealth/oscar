@@ -1079,10 +1079,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 		MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get());%>
 	    <li>
 			<a HREF="#" ONCLICK ="popup('600', '1024','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title='<bean:message key="global.myoscar"/>'>
-				<div id="unreadMessagesMenuMarker" style="display:inline-block;vertical-align:top">
-					<!-- place holder for unread message count -->
-					<bean:message key="global.btnmyoscar"/>
-				</div>
+				<bean:message key="global.btnmyoscar"/>
+				<div id="unreadMessagesMenuMarker" style="display:inline-block;vertical-align:top"><!-- place holder for unread message count --></div>
 			</a>
 			<script type="text/javascript">
 				function pollMessageCount()
