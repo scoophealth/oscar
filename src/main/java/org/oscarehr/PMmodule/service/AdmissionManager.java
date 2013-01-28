@@ -119,7 +119,7 @@ public class AdmissionManager {
 	}
 
     public Admission getAdmission(Long id) {    	
-		return dao.getAdmission(id);
+		return dao.getAdmission(id.intValue());
 	}
     
     public Admission getAdmission(Integer id) {    	
