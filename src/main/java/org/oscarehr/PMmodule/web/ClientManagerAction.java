@@ -1384,6 +1384,18 @@ public class ClientManagerAction extends BaseAction {
 		clientForm.set("client", client);
 
 		clientForm.set("provider", provider);
+		
+		OscarLogDao logDao = SpringUtils.getBean(OscarLogDao.class);
+		List<OscarLog> logs = logDao.findByActionAndData("update_referral_date",referralId);
+		if(logs.size()>0)
+			request.setAttribute("referral_date_updates", logs);
+
+		logs = logDao.findByActionAndData("update_completion_date",referralId);
+		if(logs.size()>0)
+			request.setAttribute("completion_date_updates", logs);
+		
+
+		
 
 		return mapping.findForward("view_referral");
 	}
@@ -1409,7 +1421,6 @@ public class ClientManagerAction extends BaseAction {
 		if(logs.size()>0)
 			request.setAttribute("discharge_date_updates", logs);
 		
-
 		
 		return mapping.findForward("view_admission");
 	}
