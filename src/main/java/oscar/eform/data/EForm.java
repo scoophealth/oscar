@@ -32,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.OtherIdManager;
@@ -85,6 +86,7 @@ public class EForm extends EFormBase {
 	}
 
 	public EForm(String fdid) {
+	    if(!StringUtils.isBlank(fdid) && !"null".equalsIgnoreCase(fdid)) {
 		EFormData eFormData = eFormDataDao.find(new Integer(fdid));
 		if (eFormData != null) {
 			this.fdid = fdid;
@@ -97,11 +99,12 @@ public class EForm extends EFormBase {
 			this.formHtml = eFormData.getFormData();
 			this.patientIndependent = eFormData.getPatientIndependent();
 			this.roleType = eFormData.getRoleType();
-		} else {
-			this.formName = "";
-			this.formSubject = "";
-			this.formHtml = "No Such Form in Database";
-		}
+		} 
+	    } else {
+		this.formName = "";
+		this.formSubject = "";
+		this.formHtml = "No Such Form in Database";
+            }
 	}
 
 	public void loadEForm(String fid, String demographicNo) {
