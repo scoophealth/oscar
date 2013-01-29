@@ -43,24 +43,18 @@ public class RptByExampleQueryBean{
        }
 
        public RptByExampleQueryBean(int id, String query, String queryName){   
-            oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();                
             this.id = id;
             this.query = query;
             this.queryName = queryName;
-            //this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
-            StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
             this.queryWithEscapeChar = StringEscapeUtils.escapeJavaScript(query);
             MiscUtils.getLogger().debug("query with javascript escape char: " + queryWithEscapeChar);
        }
       
        public RptByExampleQueryBean(String providerLastName, String providerFirstName, String query, String date){            
-            oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();             
             this.providerLastName = providerLastName;
             this.providerFirstName = providerFirstName;
             this.query = query;
             this.date = date;
-            //this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
-            StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
             this.queryWithEscapeChar = StringEscapeUtils.escapeJavaScript(query);
        }
        
