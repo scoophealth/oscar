@@ -140,7 +140,8 @@ public class BillingCodeData {
 		bs.setRegion("ON");
 		bs.setAnaesthesia("00");
 		bs.setTerminationDate(formatter.parse(termDate));
-
+		bs.setGstFlag(false);
+		bs.setSliFlag(false);
 		billingServiceDao.persist(bs);
 
 		return true;
