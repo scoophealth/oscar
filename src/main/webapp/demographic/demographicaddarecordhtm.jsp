@@ -112,6 +112,14 @@
    <script>
      jQuery.noConflict();
    </script>
+
+   <script type="text/javascript">
+        function aSubmit(){
+            if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
+            if(!checkFormTypeIn()) returnl
+            document.getElementById("adddemographic").submit();
+        }
+   </script>
 <oscar:customInterface section="masterCreate"/>
 
 <title><bean:message
@@ -1219,11 +1227,31 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				</table>
 				</td>
 			</tr>
+			<tr>
+			    <td colspan="4">
+			        <div>
+<%
+//    Integer fid = ((Facility)session.getAttribute("currentFacility")).getRegistrationIntake();
+    Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
+    Integer fid = null;
+    if(facility!=null) fid = facility.getRegistrationIntake();
+    if(fid==null||fid<0){
+        List<EForm> eforms = eformDao.getEfromInGroupByGroupName("Registration Intake");
+        if(eforms!=null&&eforms.size()==1) fid=eforms.get(0).getId();
+    }
+    if(fid!=null&&fid>=0){
+%>
+<!--<iframe src="../eform/efmshowform_data.jsp?fid=<%=fid%>" width="100%" height="100%"></iframe>-->
+<iframe scrolling="no" id="eform_iframe" name="eform_iframe" frameborder="0" src="../eform/efmshowform_data.jsp?fid=<%=fid%>" onload="this.height=0;var fdh=(this.Document?this.Document.body.scrollHeight:this.contentDocument.body.offsetHeight);this.height=(fdh>700?fdh:700)"></iframe>
+<%}%>
+			        </div>
+			    </td>
+			</tr>
 			<tr bgcolor="#CCCCFF">
 				<td colspan="4">
 				<div align="center"><input type="hidden" name="dboperation"
 					value="add_record"> <input type="hidden" name="displaymode" value="Add Record">
-				<input type="submit" id="btnAddRecord" name="submit"
+				<input type="button" id="btnAddRecord" name="btnAddRecord" onclick="javascript:aSubmit();"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>">
 				<input type="button" id="btnSwipeCard" name="Button"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnSwipeCard"/>"
@@ -1247,16 +1275,16 @@ Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d
 </script>
 <%
 //    Integer fid = ((Facility)session.getAttribute("currentFacility")).getRegistrationIntake();
-    Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
-    Integer fid = null;
-    if(facility!=null) fid = facility.getRegistrationIntake();
-    if(fid==null||fid<0){
-        List<EForm> eforms = eformDao.getEfromInGroupByGroupName("Registration Intake");
-        if(eforms!=null&&eforms.size()==1) fid=eforms.get(0).getId();
-    }
-    if(fid!=null&&fid>=0){
+//    Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
+//    Integer fid = null;
+//    if(facility!=null) fid = facility.getRegistrationIntake();
+//    if(fid==null||fid<0){
+//        List<EForm> eforms = eformDao.getEfromInGroupByGroupName("Registration Intake");
+//        if(eforms!=null&&eforms.size()==1) fid=eforms.get(0).getId();
+//    }
+//    if(fid!=null&&fid>=0){
 %>
-<iframe src="../eform/efmshowform_data.jsp?fid=<%=fid%>" width="100%" height="100%"></iframe>
-<%}%>
+<!--<iframe src="../eform/efmshowform_data.jsp?fid=<%=fid%>" width="100%" height="100%"></iframe>-->
+<%//}%>
 </body>
 </html:html>
