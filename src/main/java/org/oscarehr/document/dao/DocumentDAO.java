@@ -24,6 +24,7 @@
 
 package org.oscarehr.document.dao;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,13 +99,13 @@ public class DocumentDAO extends HibernateDaoSupport {
 
 	@SuppressWarnings("unchecked")
 	public int getNumberOfDocumentsAttachedToAProviderDemographics(String providerNo, Date startDate, Date endDate) {
-		Query query = getSession().createSQLQuery("select count(*) from ctl_document c, demographic d,document doc where c.module_id = d.demographic_no and c.document_no = doc.document_no   and d.provider_no = ? and doc.observationdate >= ? and doc.observationdate <= ? ");
-		query.setParameter(1, providerNo);
-		query.setParameter(2, new Timestamp(startDate.getTime()));
-		query.setParameter(3, new Timestamp(endDate.getTime()));
-		List<Integer> result = query.list();
+		Query query = getSession().createSQLQuery("select count(*) from ctl_document c, demographic d,document doc where c.module_id = d.demographic_no and c.document_no = doc.document_no   and d.provider_no = :providerNo and doc.observationdate >= :startDate and doc.observationdate <= :endDate ");
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("startDate", new Timestamp(startDate.getTime()));
+		query.setParameter("endDate", new Timestamp(endDate.getTime()));
+		List<BigInteger> result = query.list();
 		if (result.isEmpty()) return 0;
-		return result.get(0);
+		return result.get(0).intValue();
 	}
 
 	public void subtractPages(String documentNo, Integer i) {
