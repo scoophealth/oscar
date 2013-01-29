@@ -241,7 +241,7 @@ function t(s1,s2,s3,s4,s5,s6) {
     //DateTimeCodeBean.put("description"+rsdemo.getString("code"), rsdemo.getString("description"));
     DateTimeCodeBean.put("duration"+stc.getCode(), stc.getDuration());
     DateTimeCodeBean.put("color"+stc.getCode(), (stc.getColor()==null || stc.getColor().equals(""))?bgcolordef:stc.getColor() );
-    DateTimeCodeBean.put("bookinglimit" + stc.getCode(), stc.getBookinglimit());
+    DateTimeCodeBean.put("bookinglimit" + stc.getCode(), String.valueOf(stc.getBookinglimit()));
   } 
 
   DateTimeCodeBean.put("color-", "silver");
