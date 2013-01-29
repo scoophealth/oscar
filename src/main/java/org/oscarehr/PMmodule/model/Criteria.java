@@ -57,7 +57,7 @@ public class Criteria extends AbstractModel<Integer> implements java.io.Serializ
 	@Column(name = "MATCH_SCORE_WEIGHT", nullable = false, precision = 22, scale = 0)
 	private Double matchScoreWeight=1.0;
 	@Column(name = "CAN_BE_ADHOC", nullable = false)
-	private Boolean canBeAdhoc=true;
+	private Integer canBeAdhoc=0;
 
 	/**
 	 * @return the id
@@ -79,14 +79,14 @@ public class Criteria extends AbstractModel<Integer> implements java.io.Serializ
 	}
 
 	/** minimal constructor */
-	public Criteria(Integer criteriaTypeId, Double matchScoreWeight, Boolean canBeAdhoc) {
+	public Criteria(Integer criteriaTypeId, Double matchScoreWeight, Integer canBeAdhoc) {
 		this.criteriaTypeId = criteriaTypeId;
 		this.matchScoreWeight = matchScoreWeight;
 		this.canBeAdhoc = canBeAdhoc;
 	}
 
 	/** full constructor */
-	public Criteria(Integer criteriaTypeId, String criteriaValue, Integer rangeStartValue, Integer rangeEndValue, Integer templateId, Integer vacancyId, Double matchScoreWeight, Boolean canBeAdhoc) {
+	public Criteria(Integer criteriaTypeId, String criteriaValue, Integer rangeStartValue, Integer rangeEndValue, Integer templateId, Integer vacancyId, Double matchScoreWeight, Integer canBeAdhoc) {
 		this.criteriaTypeId = criteriaTypeId;
 		this.criteriaValue = criteriaValue;
 		this.rangeStartValue = rangeStartValue;
@@ -198,14 +198,14 @@ public class Criteria extends AbstractModel<Integer> implements java.io.Serializ
 	/**
 	 * @return the canBeAdhoc
 	 */
-	public Boolean getCanBeAdhoc() {
+	public Integer getCanBeAdhoc() {
 		return canBeAdhoc;
 	}
 
 	/**
 	 * @param canBeAdhoc the canBeAdhoc to set
 	 */
-	public void setCanBeAdhoc(Boolean canBeAdhoc) {
+	public void setCanBeAdhoc(Integer canBeAdhoc) {
 		this.canBeAdhoc = canBeAdhoc;
 	}
 

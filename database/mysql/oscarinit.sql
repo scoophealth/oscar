@@ -9517,7 +9517,7 @@ CREATE TABLE `criteria` (
   `TEMPLATE_ID` int(11),
   `VACANCY_ID` int(11),
   `MATCH_SCORE_WEIGHT` double NOT NULL,
-  `CAN_BE_ADHOC` tinyint(1) NOT NULL,
+  `CAN_BE_ADHOC` int(1) NOT NULL,
   PRIMARY KEY (`CRITERIA_ID`)
 );
 

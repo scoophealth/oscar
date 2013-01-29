@@ -84,8 +84,8 @@ public class CriteriaDao extends AbstractDao<Criteria> {
 	}
 	
 	public List<Criteria> getRefinedCriteriasByVacancyId(Integer vacancyId) {
-		Query q = entityManager.createQuery("select c from Criteria c where c.canBeAdhoc=? and c.vacancyId=?");
-		q.setParameter(1, true);
+		Query q = entityManager.createQuery("select c from Criteria c where c.canBeAdhoc!=? and c.vacancyId=?");
+		q.setParameter(1, 0);//canBeAdhoc=0 means don't appear in vacancy.
 		q.setParameter(2, vacancyId);
 		
 		@SuppressWarnings("unchecked")
@@ -95,8 +95,8 @@ public class CriteriaDao extends AbstractDao<Criteria> {
 	}
 	
 	public List<Criteria> getRefinedCriteriasByTemplateId(Integer templateId) {
-		Query q = entityManager.createQuery("select c from Criteria c where c.canBeAdhoc=? and c.templateId=?");
-		q.setParameter(1, true);
+		Query q = entityManager.createQuery("select c from Criteria c where c.canBeAdhoc!=? and c.templateId=?");
+		q.setParameter(1, 0); //canBeAdhoc=0 means don't appear in vacancy.
 		q.setParameter(2, templateId);
 		
 		@SuppressWarnings("unchecked")
