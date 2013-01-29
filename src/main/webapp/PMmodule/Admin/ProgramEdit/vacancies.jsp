@@ -122,9 +122,11 @@ $('#sortVacancies').click(function(e) {
 		VacancyTemplate vt = VacancyTemplateManager.getVacancyTemplateByTemplateId(v.getTemplateId());
 %>
 		<tr class="b">
-			<td style="text-align:left;"><%=v.getName() %></td>
+			<td style="text-align:left;">
+			<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=v.getName() %></a>
+			</td>
 			<td style="text-align:left;" class="beright">
-				<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
+				<a onclick="javascript:clickLink('General','Vacancy Template Add', '<%=vt.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
 			</td>
 			<td style="text-align:center;"><%= v.getStatus() %></td>
 			<td style="text-align:center;"><%=dateFormatter.format(v.getDateCreated()) %> </td>
