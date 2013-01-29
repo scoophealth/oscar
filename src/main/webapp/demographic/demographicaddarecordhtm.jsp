@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
