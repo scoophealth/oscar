@@ -9421,7 +9421,8 @@ create table Facility (
 	enableEncounterTime tinyint(1) not null,
 	enableEncounterTransportationTime tinyint(1) not null,
 	registrationIntake int(8),
-	rxInteractionWarningLevel int(10) not null
+	rxInteractionWarningLevel int(10) not null,
+	displayAllVacancies int(1) not null
 );
 
 
@@ -9478,8 +9479,7 @@ CREATE TABLE `program` (
 );
 
 CREATE TABLE `vacancy_template` (
-  `TEMPLATE_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `PROGRAM_ID` int(11) NOT NULL,
+  `TEMPLATE_ID` int(11) NOT NULL AUTO_INCREMENT,  
   `NAME` varchar(100) NOT NULL,
   `ACTIVE` tinyint(1) NOT NULL,
   `WL_PROGRAM_ID` int(11) NOT NULL,

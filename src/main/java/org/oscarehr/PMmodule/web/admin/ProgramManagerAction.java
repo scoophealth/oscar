@@ -898,6 +898,16 @@ public class ProgramManagerAction extends DispatchAction {
 				newCriteria.setVacancyId(vacancy.getId());			
 				newCriteria.setMatchScoreWeight(1.0); //???
 						
+				if(c.getCanBeAdhoc()==1) { //mandatory and not changeable, disabled in the form and the value not contained in request. But it should keep same value in new criteria.
+                                	newCriteria.setCanBeAdhoc(c.getCanBeAdhoc());
+                                	newCriteria.setCriteriaTypeId(c.getCriteriaTypeId());
+                                	newCriteria.setCriteriaValue(c.getCriteriaValue());
+                                	newCriteria.setRangeEndValue(c.getRangeEndValue());
+                                	newCriteria.setRangeStartValue(c.getRangeStartValue());
+                                	VacancyTemplateManager.saveCriteria(newCriteria);
+                                	continue;
+                        	}
+
 				String required = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Required";
 				if(request.getParameter(required) == null) 
 					newCriteria.setCanBeAdhoc(0);
@@ -918,6 +928,7 @@ public class ProgramManagerAction extends DispatchAction {
 	        	log.error("Match manager failed", e);
 	        }
 		}
+
 		setEditAttributes(request, String.valueOf(program.getId()));
 		return edit(mapping, form, request, response);		
 		
@@ -938,7 +949,6 @@ public class ProgramManagerAction extends DispatchAction {
 		String vacancyTemplateId = request.getParameter("vacancyOrTemplateId");
 		VacancyTemplate vacancyTemplate=VacancyTemplateManager.createVacancyTemplate(vacancyTemplateId);
 		vacancyTemplate.setName(request.getParameter("templateName"));
-		vacancyTemplate.setProgramId(Integer.parseInt(request.getParameter("associatedProgramId")));
 		if (request.getParameter("templateActive") == null) {
 			vacancyTemplate.setActive(false);
 		}		
