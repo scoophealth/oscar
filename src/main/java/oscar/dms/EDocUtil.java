@@ -542,7 +542,7 @@ public final class EDocUtil {
 
 		for (Object[] o : dao.findCtlDocsAndDocsByDocNo(ConversionUtils.fromIntString(documentNo))) {
 			Document d = (Document) o[0];
-			CtlDocument c = (CtlDocument) o[0];
+			CtlDocument c = (CtlDocument) o[1];
 
 			currentdoc.setModule("" + c.getModuleId());
 			currentdoc.setModuleId("" + c.getModuleId());
