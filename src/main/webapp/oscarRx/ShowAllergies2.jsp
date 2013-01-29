@@ -230,6 +230,10 @@ padding-right:6;
 					 }else{
 						 session.setAttribute("demographicNo", demoNo);
 					 }
+					 
+					 if(demoNo == null || demoNo.equals("null")) {
+						 demoNo = String.valueOf(bean.getDemographicNo());
+					 }
 
 					 String strView=request.getParameter("view");
 
