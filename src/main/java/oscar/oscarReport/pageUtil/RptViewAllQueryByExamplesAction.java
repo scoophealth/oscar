@@ -40,14 +40,11 @@ import oscar.oscarReport.bean.RptByExampleQueryBeanHandler;
 public class RptViewAllQueryByExamplesAction extends Action {
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException
-    {   
+    throws ServletException, IOException {   
         RptViewAllQueryByExamplesForm frm = (RptViewAllQueryByExamplesForm) form;   
         String startDate = frm.getStartDate();
         String endDate = frm.getEndDate();
         RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler(startDate, endDate);
-        
-        
         request.setAttribute("allQueries", hd);        
         
         return mapping.findForward("success");
