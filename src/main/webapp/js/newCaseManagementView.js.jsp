@@ -1656,14 +1656,12 @@ function fetchNote(nId) {
 }
 
 function toggleFullViewForAll(f) {
-    var triggers = document.getElementsByName('fullViewTrigger');
-    for (var i=0; i<triggers.length; i++) {
-        fullViewById(triggers[i].id);
-    }
-    triggers = document.getElementsByName('expandViewTrigger');
-    for (var i=0; i<triggers.length; i++) {
-        xpandViewById(triggers[i].id);
-    }
+	jQuery('[name="fullViewTrigger"]').each(function(){
+		$(this).click();
+	});
+	jQuery('[name="expandViewTrigger"]').each(function(){
+		$(this).click();
+	});
 }
 
 //this func fires only if maximize button is clicked
@@ -1674,18 +1672,21 @@ function fullView(e) {
 }
 
 function fullViewById(id) {
-    var url = ctx + "/CaseManagementView.do";
+	var url = ctx + "/CaseManagementView.do";
 
     var regEx = /\d+/;
     var nId = regEx.exec(id);
-
+	
+    
     var txt = "n" + nId;
     var img = "quitImg" + nId;
     var fullId = "full" + nId;
     var params = "method=viewNote&raw=false&noteId=" + nId;
-    var noteTxtId = "txt" + nId;
+    var noteTxtId = "txt" + nId; 
     var btnHtml = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
     Element.stopObserving(txt, 'click', fullView);
+	
+	
 
     var ajax = new Ajax.Request (
                     url,
@@ -1694,11 +1695,12 @@ function fullViewById(id) {
                         postBody: params,
                         evalScripts: true,
                         onSuccess: function(response) {
-                            $(noteTxtId).update(response.responseText);
+                        	$(noteTxtId).update(response.responseText);
                             if( largeNote(response.responseText) ) {
                                 new Insertion.After(noteTxtId,btnHtml);
                             }
                             $(fullId).value = "true";
+                         
                         }
                     }
                );
