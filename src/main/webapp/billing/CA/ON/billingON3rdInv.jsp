@@ -31,6 +31,7 @@
 <%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao,org.oscarehr.common.model.BillingONCHeader1"%>
 <%@page import="org.oscarehr.common.model.BillingONItem, org.oscarehr.common.service.BillingONService"%> 
 <%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 
@@ -98,29 +99,30 @@
         
         Provider provider = providerDao.getProvider(bCh1.getProviderNo());
         providerFormattedName = provider.getFormattedName();
-                
+           
+        String clinicBillingPhone = props.getProperty("clinic_billing_phone","");
+        if (clinicBillingPhone.isEmpty()) {
+            clinicBillingPhone = clinic.getClinicDelimPhone();
+        }
+                   
         BillingONExt billToBillExt = billExtDao.getBillTo(bCh1);
         
-         String useDemoClinicInfoOnInvoice = props.getProperty("useDemoClinicInfoOnInvoice","");
+        String useDemoClinicInfoOnInvoice = props.getProperty("useDemoClinicInfoOnInvoice","");
         if (!useDemoClinicInfoOnInvoice.isEmpty() && useDemoClinicInfoOnInvoice.equals("true")) { 
-            
-            String clinicBillingPhone = props.getProperty("clinic_billing_phone","");
-            if (clinicBillingPhone.isEmpty()) {
-                clinicBillingPhone = clinic.getClinicDelimPhone();
-            }
-            
-            String overrideUseDemoContact = request.getParameter("overrideUseDemoContact"); 
-            
-            if ((overrideUseDemoContact != null) && overrideUseDemoContact.equals("1")){
-                if (billToBillExt != null)
-                     billTo = billToBillExt.getValue();
+            BillingONExt useBillToExt = billExtDao.getUseBillTo(bCh1);
+            if (useBillToExt != null && billToBillExt != null 
+                    && useBillToExt.getValue().equalsIgnoreCase("on")) {  
+                billTo = billToBillExt.getValue();                                    
             } else {
                 StringBuilder buildBillTo = new StringBuilder();
                 buildBillTo.append(demo.getFirstName()).append(" ").append(demo.getLastName()).append("\n")
                         .append(demo.getAddress()).append("\n")
                         .append(demo.getCity()).append(",").append(demo.getProvince()).append("\n")
                         .append(demo.getPostal()).append("\n\n")                       
-                        .append("\n\n\n\n\nStudent ID:").append(demo.getChartNo());
+                        .append("\n\n\n\n\n")
+                        .append(LocaleUtils.getMessage(request.getLocale(),"billing.billing3rdInv.chartNo"))
+                        .append(": ")
+                        .append(demo.getChartNo());
                 billTo = buildBillTo.toString();
             }
             
@@ -216,7 +218,7 @@
                         Date serviceDate = null;
                         serviceDate = bCh1.getBillingDate();
                   %>
-                    <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=DateUtils.sumDate(serviceDate, numDaysTilDue, request.getLocale())%>
+                    <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=dueDateStr%>
                  <% }%>
                 </td>
             </tr>
