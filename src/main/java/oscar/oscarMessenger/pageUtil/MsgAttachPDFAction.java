@@ -44,7 +44,8 @@ public class MsgAttachPDFAction extends Action {
     private static Logger logger=MiscUtils.getLogger(); 
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+		logger.info("Starting...");
+		
 		MsgAttachPDFForm frm = (MsgAttachPDFForm) form;
 		String attachmentCount = frm.getAttachmentCount();
 		oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean) request.getSession().getAttribute("msgSessionBean");
@@ -54,6 +55,9 @@ public class MsgAttachPDFAction extends Action {
 		if (frm.getIsPreview()) {
 
 			String srcText = frm.getSrcText();
+			
+			logger.info("Got source text: " + srcText);
+			
 			Doc2PDF.parseString2PDF(request, response, "<HTML>" + srcText + "</HTML>");
 			frm.setIsPreview(false);
 		} else {
@@ -84,8 +88,8 @@ public class MsgAttachPDFAction extends Action {
 
 						bean.setAppendPDFAttachment(resultString, attachmentTitle);
 						bean.setCurrentAttachmentCount(bean.getCurrentAttachmentCount() + 1);
+						logger.info("Going to sleep");
 						Thread.sleep(500);
-
 					}
 
 					if (bean.getCurrentAttachmentCount() >= bean.getTotalAttachmentCount()) {
