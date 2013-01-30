@@ -509,35 +509,35 @@
     </databaseap>
     <databaseap>
         <ap-name>dtap_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'dtap-ipv-hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date asc limit 1
+        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'dtap-ipv-hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${prevention_date}</ap-output>
     </databaseap>
 
      <databaseap>
         <ap-name>flu_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'Flu' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date asc limit 1
+        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'Flu' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${prevention_date}</ap-output>
     </databaseap>
 
     <databaseap>
         <ap-name>fobt_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'FOBT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date asc limit 1
+        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'FOBT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${prevention_date}</ap-output>
     </databaseap>
  
     <databaseap>
         <ap-name>mammogram_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'MAM' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date asc limit 1
+        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'MAM' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${prevention_date}</ap-output>
     </databaseap>
 
     <databaseap>
         <ap-name>pap_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'PAP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date asc limit 1
+        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'PAP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${prevention_date}</ap-output>
     </databaseap>
