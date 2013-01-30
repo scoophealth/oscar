@@ -908,7 +908,9 @@ public class ProgramManagerAction extends BaseAction {
 					
 			String required = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Required";
 			if(request.getParameter(required) == null) 
-				newCriteria.setCanBeAdhoc(false);
+				newCriteria.setCanBeAdhoc(0);
+			else
+				newCriteria.setCanBeAdhoc(Integer.valueOf(request.getParameter(required)));
 			
 			String targetName = "targetOf"+ type.getFieldName().toLowerCase().replaceAll(" ","_");
 			String[] answers = parameters.get(targetName);
@@ -958,8 +960,7 @@ public class ProgramManagerAction extends BaseAction {
 			Criteria criteria = new Criteria();		
 			criteria.setTemplateId(vacancyTemplate.getId());			
 			String required = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Required";
-			if(request.getParameter(required) == null) 
-				criteria.setCanBeAdhoc(false);			
+			criteria.setCanBeAdhoc(request.getParameter(required)==null?0:Integer.valueOf(request.getParameter(required)));
 			String targetName = "targetOf"+ type.getFieldName().toLowerCase().replaceAll(" ","_");
 			String[] answers = parameters.get(targetName);
 			

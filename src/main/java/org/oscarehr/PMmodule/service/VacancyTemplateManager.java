@@ -172,7 +172,8 @@ public class VacancyTemplateManager {
 				max = String.valueOf(criteria.getRangeEndValue());
 			
 			value = criteria.getCriteriaValue(); //value is criteria type option value if "select_one", or number if type is "number".
-			required = (criteria.getCanBeAdhoc()==true?"checked":"");
+			//getCanBeAdhoc=0:never, 1:mandatory and not changeable 2: optional
+			required = (criteria.getCanBeAdhoc()==1?"disabled":"");
 			
 			selectedOptions = criteriaSelectionOptionDAO.getCriteriaSelectedOptionsByCriteriaId(criteria.getId());
 		}
@@ -188,11 +189,33 @@ public class VacancyTemplateManager {
 		sb.append("<table width=\"100%\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"> ");
 		sb.append("<tr class=\"b\">");
 		sb.append("<td width=\"30%\" class=\"beright\">Requires ");sb.append(type);sb.append(":</td>");
-		sb.append("<td><input type=\"checkbox\" value=\"on\" ");
+	/*	
+		sb.append("<td><input type=\"checkbox\" value=\"on\" ");		
 		sb.append(required);
 		sb.append(" name=\"");
 		sb.append(type.toLowerCase().replaceAll(" ","_"));  //
 		sb.append("Required\"></td>");
+		*/
+		sb.append("<td>");
+		for(int ii=0; ii<3; ii++) {
+			sb.append("<input type=\"radio\" value=\"");			
+			sb.append(String.valueOf(ii));
+			sb.append("\" name=\"");			
+			sb.append(type.toLowerCase().replaceAll(" ","_"));  //
+			sb.append("Required\" ");
+			if(criteria!=null && criteria.getCanBeAdhoc()==ii)
+				sb.append("checked ");	
+			sb.append(required);
+			sb.append(">");
+			if(ii==1) 
+				sb.append("Mandatory");
+			else if(ii==2)
+				sb.append("Optional");
+			else
+				sb.append("Never"); //default 0		
+			
+		}		
+		sb.append("</td>");
 		sb.append("</tr>");
 		
 		if(ctype.getFieldType().equalsIgnoreCase("number")) {	
@@ -200,11 +223,13 @@ public class VacancyTemplateManager {
 			sb.append("<td class=\"beright\">");
 			sb.append(type);
 			sb.append(" Value:</td>");
-			sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
+			sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\" ");
 			sb.append(value);
 			sb.append("\" name=\"");
 			sb.append(type.toLowerCase().replaceAll(" ","_"));
-			sb.append("Number\"></td>");
+			sb.append("Number\"");
+			sb.append(required);
+			sb.append("></td>");
 			sb.append("</tr>");
 		}
 		
@@ -229,7 +254,9 @@ public class VacancyTemplateManager {
 			
 			sb.append(" onchange='changeVacancyTemplateType(this,\"");
 			sb.append(type);
-			sb.append("\");' style=\"width: 200px;\">");
+			sb.append("\");' style=\"width: 200px;\" ");
+			sb.append(required);
+			sb.append(">");
 			
 			if(ctype.getFieldType().equalsIgnoreCase("select_one") || ctype.getFieldType().equalsIgnoreCase("select_one_range") )
 				sb.append("<option value=\"\"></option>");
@@ -286,7 +313,9 @@ public class VacancyTemplateManager {
 				sb.append(min);
 				sb.append("\" name=\"");
 				sb.append(type.toLowerCase().replaceAll(" ","_"));
-				sb.append("Minimum\"></td>");
+				sb.append("Minimum\" ");
+				sb.append(required);
+				sb.append("></td>");
 				sb.append("</tr>");
 				sb.append("<tr class=\"b\">");
 				sb.append("<td class=\"beright\">");
@@ -296,7 +325,9 @@ public class VacancyTemplateManager {
 				sb.append(max);
 				sb.append("\" name=\"");
 				sb.append(type.toLowerCase().replaceAll(" ","_"));
-				sb.append("Maximum\"></td>");
+				sb.append("Maximum\" ");
+				sb.append(required);
+				sb.append("></td>");
 				sb.append("</tr>");			
 				sb.append("</table>");
 				sb.append("</div>");
@@ -315,14 +346,18 @@ public class VacancyTemplateManager {
 		sb.append("<input type=\"button\" id=\"add_"); 
 		sb.append(type.toLowerCase().replaceAll(" ","_")); 
 		sb.append("\" name=\"add_"); sb.append(type.toLowerCase().replaceAll(" ","_"));
-		sb.append("\" value=\">>\">");
+		sb.append("\" value=\">>\" ");
+		sb.append(required);
+		sb.append(">");
 		sb.append("</div>");
 		sb.append("<div>");
 		sb.append("<input type=\"button\" id=\"remove_");
 		sb.append(type.toLowerCase().replaceAll(" ","_"));
 		sb.append("\" name=\"remove_");
 		sb.append(type.toLowerCase().replaceAll(" ","_"));
-		sb.append("\" value=\"<<\">");
+		sb.append("\" value=\"<<\" ");
+		sb.append(required);
+		sb.append(">");
 		sb.append("</div>");
 		sb.append("</div>");
 				
@@ -336,7 +371,9 @@ public class VacancyTemplateManager {
 		sb.append("\" name=\"targetOf");
 		sb.append(type.toLowerCase().replaceAll(" ","_"));
 		sb.append("\" multiple=\"multiple\" size=\"7\" ");
-		sb.append("style=\"width: 200px;\">");
+		sb.append("style=\"width: 200px;\" ");
+		sb.append(required);
+		sb.append(">");
 		
 		for(CriteriaSelectionOption cso : selectedOptions) {
 				//criteria_type_option's value is unique?
