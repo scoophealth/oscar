@@ -41,7 +41,7 @@ public class RptByExampleQueryBeanHandler {
 
 	Vector favoriteVector = new Vector();
 	Vector allQueryVector = new Vector();
-	Vector queryVector = new Vector();
+	Vector<RptByExampleQueryBean> queryVector = new Vector<RptByExampleQueryBean>();
 	String startDate;
 	String endDate;
 
@@ -86,11 +86,11 @@ public class RptByExampleQueryBeanHandler {
 		return query;
 	}
 
-	public Vector getQueryVector() {
+	public Vector<RptByExampleQueryBean> getQueryVector() {
 		ReportByExamplesDao dao = SpringUtils.getBean(ReportByExamplesDao.class);
 		for (Object[] o : dao.findReportsAndProviders(ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate))) {
 			ReportByExamples r = (ReportByExamples) o[0];
-			Provider p = (Provider) o[0];
+			Provider p = (Provider) o[1];
 
 			RptByExampleQueryBean query = toBean(r, p);
 			queryVector.add(query);
