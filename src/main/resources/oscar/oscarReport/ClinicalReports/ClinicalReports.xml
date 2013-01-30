@@ -140,8 +140,8 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
   select * from preventions where prevention_type ='MAM' and demographic_no = '${demographic_no}' and prevention_date &gt;= DATE_SUB(now(),INTERVAL 12 Month)
  </Numerator>
  
- <Numerator id ="pap24m" name="Pap in past 12m" type="SQL"  description="Number of patients in the denom that have a pat test in the last 24 months">
-  select * from preventions where prevention_type ='PAP' and demographic_no = '${demographic_no}' and prevention_date &gt;= DATE_SUB(now(),INTERVAL 24 Month)
+ <Numerator id ="pap24m" name="Pap in past 36m" type="SQL"  description="Number of patients in the denom that have a pat test in the last 36 months">
+  select * from preventions where prevention_type ='PAP' and demographic_no = '${demographic_no}' and prevention_date &gt;= DATE_SUB(now(),INTERVAL 36 Month)
  </Numerator>
    
     <Numerator id ="fobt2y" name="FOBT within 2 years or Colonoscopy within 5 years" type="SQL"  description="Number of patients in the denom that have an FOBT within 2 years or with a colonoscopy within 5 years">
