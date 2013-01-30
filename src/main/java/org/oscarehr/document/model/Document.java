@@ -75,7 +75,7 @@ public class Document implements Serializable {
 	private String docSubClass;
 	private String responsible;
 	private String sourceFacility;
-	private int programId;
+	private Integer programId;
 	private String reviewer;
 
 	// constructors
@@ -142,11 +142,11 @@ public class Document implements Serializable {
 		this.sourceFacility = sourceFacility;
 	}
 
-	public int getProgramId() {
+	public Integer getProgramId() {
 		return programId;
 	}
 
-	public void setProgramId(int programId) {
+	public void setProgramId(Integer programId) {
 		this.programId = programId;
 	}
 
@@ -166,15 +166,15 @@ public class Document implements Serializable {
 		this.reviewdatetime = reviewdatetime;
 	}
 	
-	public int getAppointmentNo() {
+	public Integer getAppointmentNo() {
 		if (appointmentNo == null) {
 			return 0;
 		}
 		return appointmentNo;
 	}
 
-	public void setAppointmentNo(int appointmentNo) {
-		this.appointmentNo = new Integer(appointmentNo);
+	public void setAppointmentNo(Integer appointmentNo) {
+		this.appointmentNo =appointmentNo;
 	}
 
 	public String getSource() {
