@@ -70,7 +70,6 @@ import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.service.PHRService;
-import org.oscarehr.phr.util.MyOscarServerRelationManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -595,7 +594,13 @@ public class PHRUserManagementAction extends DispatchAction {
 
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 		try {
-			MyOscarServerRelationManager.addPatientProviderRelationship(myOscarLoggedInInfo, demoNo);
+			DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+			Demographic demographic=demographicDao.getDemographic(demoNo);
+			Long patientMyOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
+
+			AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
+			accountWs.createRelationship2(patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), true, true, "PatientPrimaryCareProvider");
+
 			log.debug("Patient Provider relationship added or confirmed. providerNo=" + LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo() + ", patientDemoraphicNo=" + demoNo);
 			request.setAttribute("myOscarUserName", myOscarUserName);
 			request.setAttribute("demoNo", demoNo);
