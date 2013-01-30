@@ -25,9 +25,6 @@
 --%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
-
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-
 <%
 	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 	if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
@@ -37,12 +34,7 @@
 		if (count>0)
 		{
 			%>
-			<span style="color: red;">
-				<bean:message key="global.btnmyoscar"/>
-			</span>			
-			<span style="color:white;vertical-align:top;font-size:smaller;background-color:red;border-radius:4px;padding-left:2px;padding-right:1px">
-				<%=count%>
-			</span>
+				<div style="color:white;vertical-align:top;font-size:smaller;background-color:red;border-radius:4px;padding-left:2px;padding-right:1px"><%=count%></div>
 			<%
 		}
 	}
