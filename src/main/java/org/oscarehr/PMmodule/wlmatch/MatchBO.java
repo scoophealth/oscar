@@ -31,7 +31,15 @@ public class MatchBO {
 	int daysSinceLastContact=0;
 	int contactAttempts=0;
 	double percentageMatch=0;
+	String proportion = "";
 	int formDataID=0;
+	
+	public String getProportion() {
+		return proportion;
+	}
+	public void setProportion(String proportion) {
+		this.proportion = proportion;
+	}
 	
 	public int getFormDataID() {
 		return formDataID;
@@ -79,7 +87,7 @@ public class MatchBO {
     public String toString() {
 	    return "MatchBO [clientID=" + clientID + ", clientName=" + clientName + 
 	    ", daysInWaitList=" + daysInWaitList + ", daysSinceLastContact=" + daysSinceLastContact + 
-	    ", contactAttempts=" + contactAttempts + ", percentageMatch=" + percentageMatch + 
+	    ", contactAttempts=" + contactAttempts + ", percentageMatch=" + percentageMatch + ",proportion=" + proportion + 
 	    ", formDataID=" + formDataID + "]";
     }
 	
