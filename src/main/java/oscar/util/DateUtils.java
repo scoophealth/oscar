@@ -787,7 +787,7 @@ public final class DateUtils {
    
 		if (d1.equals(d2)) return 0;
 		if (d1.before(d2)) return 1;
-		if (d2.after(d2)) return -1;
+		if (d1.after(d2)) return -1;
    
 		return null; //should never happen
 	}
