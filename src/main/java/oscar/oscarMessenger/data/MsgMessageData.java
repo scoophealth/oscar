@@ -264,7 +264,7 @@ public class MsgMessageData {
     public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,ArrayList<MsgProviderData> providers,String attach, String pdfAttach ){
 
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
-      String messageid=null;
+      
      
         if (attach != null){
             attach = str.q(attach);
@@ -280,7 +280,7 @@ public class MsgMessageData {
      MessageTbl mt = new MessageTbl();
      mt.setDate(new Date());
      mt.setTime(new Date());
-     mt.setMessage(messageid);
+     mt.setMessage(message);
      mt.setSubject(subject);
      mt.setSentBy(userName);
      mt.setSentTo(sentToWho);
@@ -293,7 +293,7 @@ public class MsgMessageData {
      messageTblDao.persist(mt);
      
      
-     messageid = String.valueOf(mt.getId());
+     String messageid = String.valueOf(mt.getId());
 
    
 

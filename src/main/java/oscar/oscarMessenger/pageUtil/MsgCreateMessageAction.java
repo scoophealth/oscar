@@ -25,6 +25,7 @@
 
 package oscar.oscarMessenger.pageUtil;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarMessenger.data.MsgProviderData;
 import oscar.oscarMessenger.util.MsgDemoMap;
@@ -58,6 +60,11 @@ public class MsgCreateMessageAction extends Action {
             String message      = ((MsgCreateMessageForm)form).getMessage();
             String[] providers  = ((MsgCreateMessageForm)form).getProvider();
             String subject      = ((MsgCreateMessageForm)form).getSubject();
+            
+            MiscUtils.getLogger().info("Providers: " + Arrays.toString(providers));
+            MiscUtils.getLogger().info("Subject: " + subject);
+            MiscUtils.getLogger().info("Message: " + message);
+            
             String sentToWho    = null;
             String currLoco     = null;
             String messageId    = null;
@@ -89,8 +96,6 @@ public class MsgCreateMessageAction extends Action {
             }
 
             messageId = messageData.sendMessage2(message,subject,userName,sentToWho,userNo,providerListing,att, pdfAtt);
-
-            
 
             //link msg and demogrpahic if both messageId and demographic_no are not null
             if (demographic_no != null && (demographic_no.equals("") || demographic_no.equals("null")) ){
