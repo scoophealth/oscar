@@ -67,6 +67,16 @@ public class VacancyClientMatch extends AbstractModel<Integer> implements Compar
 	private int form_id;
 	@Column(name="match_percent")
 	private double matchPercentage;
+	@Column(name="proportion")
+	private String proportion = "";
+
+	public String getProportion() {
+		return proportion;
+	}
+
+	public void setProportion(String proportion) {
+		this.proportion = proportion;
+	}
 
 	public int getClient_id() {
 		return client_id;
