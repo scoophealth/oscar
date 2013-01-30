@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -107,7 +108,7 @@ public class ProviderDefaultProgramDao extends AbstractDao<ProviderDefaultProgra
 			query.setParameter(1, facilityId);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error(e.getMessage(),e);
-			return null;
+			return new ArrayList<Program>();
 		}
 		
 		@SuppressWarnings("unchecked")
