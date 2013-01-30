@@ -292,7 +292,7 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 			orderTable.put("sentto", "sentto");
 			orderTable.put("linked", "isnull");
 
-			orderBy = (String) orderTable.get(order);
+			orderBy = orderTable.get(order);
 			if (orderBy == null) {
 				orderBy = "message";
 			}
