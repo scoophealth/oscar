@@ -156,5 +156,20 @@ public class FormsDao {
 		Query query = entityManager.createNativeQuery(string);
 		return query.getResultList();
     }
+	
+	@NativeSql
+	public Object runNativeQuerySingleResult(String string) {
+		Query query = entityManager.createNativeQuery(string);
+		query.setMaxResults(1);
+		return query.getSingleResult();
+    }
+	
+	@NativeSql
+	public Object runNativeQueryWithOffset(String string, int offset) {
+		Query query = entityManager.createNativeQuery(string);
+		query.setFirstResult(offset);
+		query.setMaxResults(1);
+		return query.getSingleResult();
+    }
 
 }
