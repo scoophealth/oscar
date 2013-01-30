@@ -42,16 +42,16 @@ param3[4] = "1994";
 param3[5] = dateBegin;
 param3[6] = dateEnd ;
 
-for(Integer i: billingOnCHeaderDao.count_larrykain_clinic(clinicview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
+for(Long i: billingOnCHeaderDao.count_larrykain_clinic(clinicview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
 	cTotal = String.valueOf(i);
 }
 
 
-for(Integer i: billingOnCHeaderDao.count_larrykain_hospital("1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
+for(Long i: billingOnCHeaderDao.count_larrykain_hospital("1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
 	hTotal = String.valueOf(i);
 }
 
-for(Integer i: billingOnCHeaderDao.count_larrykain_other(clinicview,"1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
+for(Long i: billingOnCHeaderDao.count_larrykain_other(clinicview,"1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
 	oTotal = String.valueOf(i);
 }
 
