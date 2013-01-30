@@ -26,6 +26,9 @@ package org.oscarehr.common.printing;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -70,8 +73,10 @@ public class PrivacyStatementAppendingFilter implements Filter {
 	public static final String HTTP_HEADER_NAME_AJAX_REQUESTED_WITH = "X-Requested-With";
 	public static final String ATTRIBUTE_NAME_CONFIDENTIALITY_NOTE_PRINTED = "CONFIDENTIALITY_NOTE_PRINTED";
 
+	private Set<String> exclusions = Collections.synchronizedSet(new HashSet<String>());
+	
 	private String getPrivacyStatement() { 
-			return "<style type=\"text/css\">\n" +
+			return "<style type=\"text/css\"><!--\n" +
 			".yesprint {\n" + 
 			"	display: none;        \n" + 
 			"}\n" +  
@@ -80,7 +85,7 @@ public class PrivacyStatementAppendingFilter implements Filter {
 			"		display:block;\n" + 
 			"	}\n" + 
 			"}\n" +
-			"</style>" +
+			"--></style>" +
 			"<p class=\"yesprint\"><b>\n" + 
 			OscarProperties.getConfidentialityStatement() +
 			"</b><br/>" +
@@ -90,6 +95,14 @@ public class PrivacyStatementAppendingFilter implements Filter {
 	
 	@Override
     public void init(FilterConfig filterConfig) throws ServletException {
+		String exclusionsParam = filterConfig.getInitParameter("exclusions");
+		if (exclusionsParam == null || exclusionsParam.trim().isEmpty()) {
+			return;
+		}
+		
+		for(String ex : exclusionsParam.split(",")) {
+			exclusions.add(ex.toLowerCase().trim());
+		}
     }
 
 	@Override
@@ -103,6 +116,10 @@ public class PrivacyStatementAppendingFilter implements Filter {
 			
 			DelegatingServletResponse delegatingServletResponse = new DelegatingServletResponse(httpResponse);
 			chain.doFilter(request, delegatingServletResponse);
+			
+			if (isExcluded(httpRequest)) {
+				return;
+			}
 			
 			if (isConfidentialityNotePrinted)
 				return;
@@ -128,6 +145,22 @@ public class PrivacyStatementAppendingFilter implements Filter {
 		}
     }
 	
+	private boolean isExcluded(HttpServletRequest request) {
+		String servletPath = request.getServletPath();
+		if (servletPath == null) {
+			return false;
+		}
+		
+		servletPath = servletPath.toLowerCase().trim();
+		
+		for(String ex : exclusions) {
+			if (servletPath.startsWith(ex)) {
+				return true;
+			}
+		}
+	    return false;
+    }
+
 	private void printConfidentialityStatement(ServletResponse response, DelegatingServletResponse delegatingServletResponse) throws IOException {
 		if (delegatingServletResponse.isResponseOutputStreamObtained()) {
 			response.getOutputStream().write(getPrivacyStatement().getBytes());
