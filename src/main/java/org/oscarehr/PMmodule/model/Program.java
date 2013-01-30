@@ -101,8 +101,8 @@ public class Program implements Serializable {
     private Date lastUpdateDate;
     private LookupCodeValue shelter;
     private String siteSpecificField;
-    private boolean enableEncounterTime = false;
-    private boolean enableEncounterTransportationTime = false;
+    private Boolean enableEncounterTime = false;
+    private Boolean enableEncounterTransportationTime = false;
     private String emailNotificationAddressesCsv=null;
     private Date lastReferralNotification=null;
 
@@ -738,19 +738,19 @@ public class Program implements Serializable {
 		this.shelter = shelter;
 	}
 
-	public boolean isEnableEncounterTime() {
+	public Boolean isEnableEncounterTime() {
 		return enableEncounterTime;
 	}
 
-	public void setEnableEncounterTime(boolean enableEncounterTime) {
+	public void setEnableEncounterTime(Boolean enableEncounterTime) {
 		this.enableEncounterTime = enableEncounterTime;
 	}
 
-	public boolean isEnableEncounterTransportationTime() {
+	public Boolean isEnableEncounterTransportationTime() {
 		return enableEncounterTransportationTime;
 	}
 
-	public void setEnableEncounterTransportationTime(boolean enableEncounterTransportationTime) {
+	public void setEnableEncounterTransportationTime(Boolean enableEncounterTransportationTime) {
 		this.enableEncounterTransportationTime = enableEncounterTransportationTime;
 	}
 
