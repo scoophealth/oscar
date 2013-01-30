@@ -212,6 +212,32 @@ public class BillingCorrectionAction extends DispatchAction{
             }            
         }        
         
+        //Update Use Bill To for Reprint if changed                    
+        BillingONExt billExt = billExtDao.getUseBillTo(bCh1);            
+        if (billExt != null) {
+            if (request.getParameter("overrideUseDemoContact") != null) {
+                billExt.setValue(request.getParameter("overrideUseDemoContact")); 
+                billExt.setStatus('1');
+                billExtDao.merge(billExt);
+            }
+            else {
+                billExt.setStatus('0');
+                billExtDao.merge(billExt);
+            }
+        } else if (request.getParameter("overrideUseDemoContact") != null) {           
+            billExt = new BillingONExt();
+            billExt.setBillingNo(bCh1.getId());
+            billExt.setDateTime(new Date());
+            billExt.setDemographicNo(bCh1.getDemographicNo());
+            billExt.setKeyVal("useBillTo");
+            billExt.setPaymentId(new Integer(0));
+            billExt.setValue(request.getParameter("overrideUseDemoContact"));             
+            billExt.setStatus('1');
+            
+            billExtDao.persist(billExt);
+        }            
+    
+ 
         if(request.getParameter("submit").equals("Submit&Correct Another")){
             return mapping.findForward("closeReload");
         } else {
@@ -219,7 +245,7 @@ public class BillingCorrectionAction extends DispatchAction{
         }
                     
     }
-    
+        
     private boolean updateBillingONCHeader1(BillingONCHeader1 bCh1, HttpServletRequest request) {
         
         Locale locale = request.getLocale();
