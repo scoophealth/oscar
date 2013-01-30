@@ -454,9 +454,9 @@ if(bFlag) {
 			style="font-size: 80%;" name="provider_no">
 			<option value=""><bean:message
 				key="billing.billingCorrection.msgSelectProvider" /></option>
-			<%List pList = (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
+			<%List<String> pList = (new JdbcBillingPageUtil()).getCurProviderStr();
 				for (int i = 0; i < pList.size(); i++) {
-					String temp[] = ((String) pList.get(i)).split("\\|");
+					String temp[] = ( pList.get(i)).split("\\|");
 
 					%>
 			<option value="<%=temp[0]%>"
