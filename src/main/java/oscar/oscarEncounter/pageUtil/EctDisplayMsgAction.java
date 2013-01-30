@@ -99,7 +99,7 @@ public class EctDisplayMsgAction extends EctDisplayAction {
                 item.setDate(date);
                 hash = winName.hashCode();
                 hash = hash < 0 ? hash * -1 : hash;
-                url = "popupPage(600,900,'" + hash + "','" + request.getContextPath() + "/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=" + bean.demographicNo + "&messagePosition="+i + "'); return false;";
+                url = "popupPage(600,900,'" + hash + "','" + request.getContextPath() + "/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=date&demographic_no=" + bean.demographicNo + "&messagePosition="+i + "'); return false;";
                 item.setURL(url);                
                 item.setTitle(msgSubject);
                 item.setLinkTitle(msgData.getSubject() + " " + msgDate);

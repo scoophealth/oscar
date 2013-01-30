@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.dao.forms.FormsDao;
 import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.myoscar.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ParameterActionForward;
@@ -71,17 +72,19 @@ public class MsgViewMessageByPositionAction extends Action {
 		ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
 
 		String sql = "select m.messageid  " 
-				+ "from  messagetbl m, msgDemoMap map where map.demographic_no = '" + demographic_no + "'  " 
-				+ "and m.messageid = map.messageID  order by " + displayMsgBean.getOrderBy(orderBy) 
-				+ " limit " + messagePosition + ", 1";
+				+ "from  messagetbl m, msgDemoMap mapp where mapp.demographic_no = '" + demographic_no + "'  " 
+				+ "and m.messageid = mapp.messageID  order by " + displayMsgBean.getOrderBy(orderBy) ;
 		FormsDao dao = SpringUtils.getBean(FormsDao.class);
-		for (Object[] o : dao.runNativeQuery(sql)) {
-			String messageId = String.valueOf(o[0]);
-			actionforward.addParameter("messageID", messageId);
+		try {
+			Integer messageId = (Integer)dao.runNativeQueryWithOffset(sql,Integer.parseInt(messagePosition));
+			actionforward.addParameter("messageID", messageId.toString());
 			actionforward.addParameter("from", "encounter");
 			actionforward.addParameter("demographic_no", demographic_no);
 			actionforward.addParameter("messagePostion", messagePosition);
+		}catch(Throwable e) {
+			MiscUtils.getLogger().error("error",e);
 		}
+		
 
 		return actionforward;
 	}
