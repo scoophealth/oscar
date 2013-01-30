@@ -45,7 +45,7 @@ public class MatchManager implements IMatchManager {
 	}
 
 	private String processVacancyCreatedEvent(Vacancy vacancy) {
-		List<VacancyClientMatch> vacancyClientMatches = matcher.listClientMatchesForVacancy(vacancy.getId());
+		List<VacancyClientMatch> vacancyClientMatches = matcher.listClientMatchesForVacancy(vacancy.getId(), vacancy.getWlProgramId());
 		persistVacancyClientMatch(vacancyClientMatches);
 		return "Done";
 	}
