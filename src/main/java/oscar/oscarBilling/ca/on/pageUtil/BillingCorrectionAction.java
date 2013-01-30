@@ -247,7 +247,15 @@ public class BillingCorrectionAction extends DispatchAction{
             } catch (java.text.ParseException e) {
                 MiscUtils.getLogger().error("Invalid billing date:" + request.getParameter("xml_appointment_date"), e);
                 return false;
-            }                                    
+            }                     
+            
+            Date visitDate = null;
+            try {
+            	visitDate = DateUtils.parseDate(request.getParameter("xml_vdate"), locale);
+            }
+            catch( java.text.ParseException e) {
+            	MiscUtils.getLogger().warn("Could not parse visit date: " + request.getParameter("xml_vdate"), e);
+            }
                                                                                    
             String manualReview = "";
             
@@ -264,7 +272,8 @@ public class BillingCorrectionAction extends DispatchAction{
             bCh1.setVisitType(request.getParameter("visittype"));
             bCh1.setFaciltyNum(request.getParameter("clinic_ref_code"));                        
             bCh1.setManReview(manualReview);                        
-            bCh1.setBillingDate(billingDate);            
+            bCh1.setBillingDate(billingDate); 
+            bCh1.setAdmissionDate(visitDate);
             bCh1.setProviderNo(request.getParameter("provider_no"));
             bCh1.setComment(request.getParameter("comment"));           
             bCh1.setProviderOhipNo(provider.getOhipNo());
