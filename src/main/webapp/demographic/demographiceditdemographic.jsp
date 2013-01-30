@@ -2533,7 +2533,7 @@ if ( Dead.equals(PatStat) ) {%>
 								</select></td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formResident" />:</b></td>
-								<td align="left"><select name="nurse" style="width: 200px" <%=getDisabled("resident")%>>
+								<td align="left"><select name="resident" style="width: 200px" <%=getDisabled("resident")%>>
 									<option value=""></option>
 									<%
 									for(Provider p : providers) {
