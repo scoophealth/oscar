@@ -288,7 +288,7 @@ function t(s1,s2,s3,s4,s5,s6) {
 	  temp = new StringBuffer( ((String) DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))).substring(ratio,ratio+1) ); //(nStartTime*60*ratio/nStep+j*ratio),(nStartTime*60*ratio/nStep+j*ratio)+1)
           scheduleCode = temp.toString();  
         bookinglimit = String.valueOf(DateTimeCodeBean.get("bookinglimit"+scheduleCode));
-        if( bookinglimit == null ) {
+        if( bookinglimit == null || bookinglimit.equals("null") ) {
             bookinglimit = "";
         }
 	} else {
