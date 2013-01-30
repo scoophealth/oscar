@@ -306,15 +306,21 @@ public class WaitlistDao {
 		return bos;
 	}
 
-	private static final String QUERY_ALL_CLIENT_DATA = "SELECT demographic_no, fdid, var_name, var_value "
+	private static final String QUERY_ALL_CLIENT_DATA = "SELECT DISTINCT demographic_no, fdid, var_name, var_value "
 			+ "FROM eform_values LEFT JOIN client_referral cr ON cr.client_id=demographic_no, " 
 			+ "(SELECT demographic_no AS dmb,MAX(fdid) AS ffdid FROM eform_values GROUP BY demographic_no) xyz " 
 			+ "WHERE cr.referral_id IS NULL AND " + "demographic_no= xyz.dmb AND fdid=xyz.ffdid";
+	
+	private static final String QUERY_ALL_CLIENT_DATA_BY_PROGRAMID = "SELECT DISTINCT ef.demographic_no, ef.fdid, ef.var_name, ef.var_value "
+			+ "FROM eform_values ef LEFT JOIN client_referral cr ON cr.client_id=ef.demographic_no" 
+			+ " where cr.program_id=?1 and ef.var_name in ('age-years','gender','current-housing','preferred-language','location-preferences','referrer-contact-province','contact-province','Age category','prepared-live-toronto','bed_community_program_id','has-mental-illness-primary','current-legal-involvements')"
+			+ " and LENGTH(ef.var_value)>0 and not exists (select * from eform_values where demographic_no=ef.demographic_no and var_name=ef.var_name and fdid>ef.fdid)";
 
 		
-	private static final String QUERY_GET_CLIENT_DATA = "SELECT ef.demographic_no, ef.fdid, ef.var_name, ef.var_value "
-			+ "FROM eform_values ef LEFT JOIN client_referral cr ON cr.client_id=ef.demographic_no "
-			+ "WHERE demographic_no= ?1 AND not exists (select * from eform_values where ef.demographic_no=demographic_no and fdid>ef.fdid)";
+	private static final String QUERY_GET_CLIENT_DATA = "SELECT DISTINCT ef.demographic_no, ef.fdid, ef.var_name, ef.var_value "
+			+ "FROM eform_values ef WHERE ef.demographic_no= ?1 and "
+			+" ef.var_name in ('age-years','gender','current-housing','preferred-language','location-preferences','referrer-contact-province','contact-province','Age category','prepared-live-toronto','bed_community_program_id','has-mental-illness-primary','current-legal-involvements')"
+			+ "and LENGTH(ef.var_value)>0 AND not exists (select * from eform_values where ef.demographic_no=demographic_no and var_name=ef.var_name and fdid>ef.fdid)";
 
 
 	
@@ -359,15 +365,56 @@ public class WaitlistDao {
 		return new ArrayList<ClientData>(clientsDataList.values());
 	}
 	
+	public List<ClientData> getAllClientsDataByProgramId(int wlProgramId) {
+		Map<Integer, ClientData> clientsDataList = new HashMap<Integer, ClientData>();
+		
+		Query query = entityManager.createNativeQuery(QUERY_ALL_CLIENT_DATA_BY_PROGRAMID);
+		query.setParameter(1, wlProgramId);
+		
+		@SuppressWarnings("unchecked")
+		List<Object[]>result = query.getResultList();
+		for (Object[] cols : result) {
+			Integer demographicId = (Integer)cols[0];
+			Integer formId = (Integer)cols[1];
+			String paramName = (String)cols[2];
+			String paramValue = (String)cols[3];
+			if(demographicId == null) {
+				demographicId = 0;
+			}
+			ClientData clientData = clientsDataList.get(demographicId);
+			if(clientData == null){
+				clientData = new ClientData();
+				clientData.setClientId(demographicId);
+				clientData.setFormId(formId);
+				clientsDataList.put(demographicId, clientData);
+			}
+			
+			if (paramName != null) {
+				paramName = paramName.toLowerCase();
+			}
+			if ("has-mental-illness-primary".equalsIgnoreCase(paramName) && !"no".equalsIgnoreCase(paramValue)) {
+				String[] paramsValues = intakeVarToCriteriaFiled(paramName,paramValue);
+				if (paramsValues.length == 4) {
+					clientData.getClientData().put(paramsValues[0], paramsValues[1]);
+					clientData.getClientData().put(paramsValues[2], paramsValues[3]);
+				}
+			} else {
+				String[] paramVal = intakeVarToCriteriaFiled(paramName,paramValue);
+				clientData.getClientData().put(paramVal[0], paramVal[1]); 
+			}
+        }
+		return new ArrayList<ClientData>(clientsDataList.values());
+	}
+	
 	private String[] intakeVarToCriteriaFiled(String varName, String varValue) {
-		if ("age-years".equalsIgnoreCase(varName)) {
+		if ("age-years".equalsIgnoreCase(varName) || "age category".equalsIgnoreCase(varName)) {
 			return new String[]{"age",varValue};
 		} else if ("gender".equalsIgnoreCase(varName)) {
 			return new String[]{"gender",varValue};
 		} else if ("preferred-language".equalsIgnoreCase(varName)) {
-			if ("eng".equalsIgnoreCase(varValue)) {
+			if ("eng".equalsIgnoreCase(varValue) || "english".equalsIgnoreCase(varValue)) {
 				return new String[]{"language","English"};
-			} else if ("fre".equalsIgnoreCase(varValue)) {
+			} else if ("fre".equalsIgnoreCase(varValue) || "french".equalsIgnoreCase(varValue)) {
 				return new String[]{"language","French"};
 			} else {
 				return new String[]{"language","Other"};
@@ -378,10 +425,10 @@ public class WaitlistDao {
 			if ("yes".equalsIgnoreCase(varValue)) {
 				return new String[]{"area", "Toronto"};
 			}
-		} else if ("bed_community_program_id".equalsIgnoreCase(varName)) {
-			if ("10013".equalsIgnoreCase(varValue)) { // out of street
+		} else if ("current-housing".equalsIgnoreCase(varName)) {
+			if ("other".equalsIgnoreCase(varValue)) {
 				return new String[]{"residence", "Homeless"};
-			} else if ("10014".equalsIgnoreCase(varValue)) { // out of street
+			} else if ("no-fixed-address".equalsIgnoreCase(varValue)) {
 				return new String[]{"residence", "Transitional"};
 			} else {
 				return new String[]{"residence", "Housed"};
@@ -394,7 +441,7 @@ public class WaitlistDao {
 			}
 		} else if ("current-legal-involvements".equalsIgnoreCase(varName)) {
 			return new String[]{"Legal History", varValue};
-		}
+		} 
 		return new String[]{varName, varValue};
 	}
 	
@@ -444,10 +491,16 @@ public class WaitlistDao {
 			+ "LEFT JOIN criteria_selection_option cso ON cso.CRITERIA_ID=c.CRITERIA_ID "
 			+ "JOIN vacancy v ON v.id=c.VACANCY_ID WHERE v.id=?1";
 	
+	private static final String QUERY_VACANCY_DATA_BY_PROGRAMID = "SELECT v.id, v.wlProgramId, ct.field_name,ct.field_type,"
+			+ "c.criteria_value,cso.option_value,c.range_start_value,c.range_end_value "
+			+ "FROM criteria c JOIN criteria_type ct ON c.CRITERIA_TYPE_ID=ct.CRITERIA_TYPE_ID "
+			+ "LEFT JOIN criteria_selection_option cso ON cso.CRITERIA_ID=c.CRITERIA_ID "
+			+ "JOIN vacancy v ON v.id=c.VACANCY_ID WHERE v.id=?1 and v.wlProgramId=?2";
+	
 
 	private static final String field_type_multiple = "select_multiple";
 	private static final String field_type_range = "select_one_range";
-	private static final String field_type_one = "select_one";
+	//private static final String field_type_one = "select_one";
 	//private static final String field_type_number = "number";
 	
 	
@@ -465,7 +518,7 @@ public class WaitlistDao {
 		@SuppressWarnings("unchecked")
 		List<Object[]>results = query.getResultList();
 		for (Object[] cols : results) {
-			VacancyTemplateData vtData = new VacancyTemplateData();
+			
 			String fieldName = (String)cols[2];
 			String fieldType = (String)cols[3];
 			String critValue = (String)cols[4];
@@ -475,19 +528,67 @@ public class WaitlistDao {
 			if (fieldName != null) {
 				fieldName = fieldName.toLowerCase(Locale.ENGLISH);
 			}
+			VacancyTemplateData vtData = new VacancyTemplateData();
 			vtData.setParam(fieldName);
 			if (field_type_range.equals(fieldType)) {
 				vtData.setRange(true);
 				vtData.addRange(rangeStart, rangeEnd);
 			} else {
 				if (field_type_multiple.equals(fieldType)) {
-					vtData = vacancyData.getVacancyData().get(fieldName);
-					if (vtData == null) {
-						vtData = new VacancyTemplateData();
+					VacancyTemplateData vtMultiData = vacancyData.getVacancyData().get(fieldName);
+					if (vtMultiData != null) {
+						vtData = vtMultiData;
 					}
-				} else if (field_type_one.equals(fieldType)) {
-					vtData = new VacancyTemplateData();
-				} 
+				}
+				if (critValue != null) {
+					vtData.getValues().add(critValue);
+				} else {
+					vtData.getValues().add(optionValue);
+				}
+			}
+			
+			vacancyData.getVacancyData().put(vtData.getParam(), vtData);
+        }
+		
+		return vacancyData;
+	}
+	
+	public VacancyData loadVacancyData(final int vacancyId, final int wlProgramId) {
+		VacancyData vacancyData  = new VacancyData();
+		Vacancy vacancy = VacancyTemplateManager.getVacancyById(vacancyId);
+		if(vacancy == null) {
+			return null;
+		}
+		vacancyData.setVacancy_id(vacancy.getId());
+		vacancyData.setProgram_id(vacancy.getWlProgramId());
+		Query query = entityManager.createNativeQuery(QUERY_VACANCY_DATA_BY_PROGRAMID);
+		query.setParameter(1, vacancyId);
+		query.setParameter(2, wlProgramId);
+		
+		@SuppressWarnings("unchecked")
+		List<Object[]>results = query.getResultList();
+		for (Object[] cols : results) {
+			String fieldName = (String)cols[2];
+			String fieldType = (String)cols[3];
+			String critValue = (String)cols[4];
+			String optionValue = (String)cols[5];
+			Integer rangeStart = (Integer)cols[6];
+			Integer rangeEnd = (Integer)cols[7];
+			if (fieldName != null) {
+				fieldName = fieldName.toLowerCase(Locale.ENGLISH);
+			}
+			VacancyTemplateData vtData = new VacancyTemplateData();
+			vtData.setParam(fieldName);
+			if (field_type_range.equals(fieldType)) {
+				vtData.setRange(true);
+				vtData.addRange(rangeStart, rangeEnd);
+			} else {
+				if (field_type_multiple.equals(fieldType)) {
+					VacancyTemplateData vtMultiData = vacancyData.getVacancyData().get(fieldName);
+					if (vtMultiData != null) {
+						vtData = vtMultiData;
+					}
+				}
 				if (critValue != null) {
 					vtData.getValues().add(critValue);
 				} else {

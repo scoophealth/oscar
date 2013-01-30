@@ -59,6 +59,18 @@ public class Matcher {
 		return vacancyClientMatches;
 	}
 	
+	public List<VacancyClientMatch> listClientMatchesForVacancy(int vacancyId, int wlProgramId) {
+		List<VacancyClientMatch> vacancyClientMatches = new ArrayList<VacancyClientMatch>();
+		VacancyData vacancyData = waitlistDao.loadVacancyData(vacancyId, wlProgramId);
+		List<ClientData> clientDatas = waitlistDao.getAllClientsDataByProgramId(wlProgramId);
+		for (ClientData clientData : clientDatas) {
+			VacancyClientMatch vcMatch = match(clientData, vacancyData);
+			vacancyClientMatches.add(vcMatch);
+		}
+		Collections.sort(vacancyClientMatches);
+		return vacancyClientMatches;
+	}
+	
 	public List<VacancyClientMatch> listVacancyMatchesForClient(int clientId, int programId){
 		List<VacancyClientMatch> vacancyClientMatches = new ArrayList<VacancyClientMatch>();
 		ClientData clientData = waitlistDao.getClientData(clientId);
@@ -91,7 +103,7 @@ public class Matcher {
 			vacancyDataList.add(v.getId());
 		}
 		for (Integer vacancyId : vacancyDataList) {
-			VacancyData vacancyData = waitlistDao.loadVacancyData(vacancyId);
+			VacancyData vacancyData = waitlistDao.loadVacancyData(vacancyId,programId);
 			vacancies.add(vacancyData);
 		}
 		return vacancies;
