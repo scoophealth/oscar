@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -376,21 +377,33 @@ public class DemographicDao extends HibernateDaoSupport {
 
 		//format must be yyyy-mm-dd
 		String[] params = dobStr.split("-");
-		if(params.length!=3) {
-			return null;
-		}
 		
-		if(params.length != 3)
-			return new ArrayList<Demographic>();
+		//if(params.length != 3)
+		//	return new ArrayList<Demographic>();
+		
+		Map<String,String> paramMap = new HashMap<String,String>();
+		if(params.length >0) 
+			paramMap.put("yearOfBirth", params[0]);
+		else
+			paramMap.put("yearOfBirth", "");
+		if(params.length >1) 
+			paramMap.put("monthOfBirth", params[1]);
+		else
+			paramMap.put("monthOfBirth", "");
+		if(params.length >2) 
+			paramMap.put("dateOfBirth", params[2]);
+		else 
+			paramMap.put("dateOfBirth", "");
+		
 		Session session = this.getSession();
 		try {
 			Query q = session.createQuery(queryString);
 			q.setFirstResult(offset);
 			q.setMaxResults(limit);
 	
-			q.setParameter("yearOfBirth", params[0].trim() + "%");
-			q.setParameter("monthOfBirth", params[1].trim() + "%");
-			q.setParameter("dateOfBirth", params[2].trim() + "%");
+			q.setParameter("yearOfBirth", paramMap.get("yearOfBirth") + "%");
+			q.setParameter("monthOfBirth",  paramMap.get("monthOfBirth") + "%");
+			q.setParameter("dateOfBirth", paramMap.get("dateOfBirth") + "%");
 	
 			list = q.list();
 		}finally {
