@@ -38,7 +38,13 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%>
-<%@page import="org.oscarehr.util.MiscUtils"%><script type="text/javascript">
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.PMmodule.web.ReferralHistoryDisplay" %>
+<%
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
+<script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
         url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_admission&admissionId="/>';
         window.open(url + admissionId, 'admission', 'width=600,height=600');
@@ -76,6 +82,34 @@
     	}
     	
     }
+    
+    function changeReferralDate(referralId) {
+    	var newDate = prompt('Please enter a new Referral Date (yyyy-MM-dd HH:mm)');
+    	if(newDate != null && newDate.length>0) {
+    		$.ajax({url:'ClientManager/ClientManager.json?method=save_referral_date&referralId='+referralId + '&date='+newDate,async:true,dataType:'json', success:function(data) {
+    			if(!data.success) {
+    				alert(data.error);
+    			} else {
+    				location.href='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=((Demographic)request.getAttribute("client")).getDemographicNo()%>&view.tab=History&method=edit';
+    			}
+    		}});	
+    	}
+    	
+    }
+    
+    function changeCompletionDate(referralId) {
+    	var newDate = prompt('Please enter a new Completion Date (yyyy-MM-dd HH:mm)');
+    	if(newDate != null && newDate.length>0) {
+    		$.ajax({url:'ClientManager/ClientManager.json?method=save_completion_date&referralId='+referralId + '&date='+newDate,async:true,dataType:'json', success:function(data) {
+    			if(!data.success) {
+    				alert(data.error);
+    			} else {
+    				location.href='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=((Demographic)request.getAttribute("client")).getDemographicNo()%>&view.tab=History&method=edit';
+    			}
+    		}});	
+    	}
+    	
+    }
 </script>
 <%
 	try
@@ -99,7 +133,7 @@
 		
 	%>
 	<% boolean bShowEncounterLink = false; 
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	
 	%>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
 	<% bShowEncounterLink = true; %>
@@ -206,7 +240,27 @@
 	<display:column property="destinationProgramName" sortable="true" title="Program Name" />
 	<display:column property="destinationProgramType" sortable="true" title="Program Type" />
 	<display:column property="referralDate" sortable="true" title="Referral Date" />
-	<display:column property="completionDate" sortable="true" title="Completion Date" />
+	<display:column sortable="true" title="Referral Date">
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
+			<a href="javascript:void(0)" onclick="changeReferralDate('<%=((ReferralHistoryDisplay)referral).getId()%>');return false;"><%=((ReferralHistoryDisplay)referral).getReferralDate() %></a>
+		</security:oscarSec>
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
+			<%=((ReferralHistoryDisplay)referral).getReferralDate() %>
+		</security:oscarSec>
+	</display:column>
+	
+	<display:column sortable="true" title="Completion Date">
+	<%if(((ReferralHistoryDisplay)referral).getCompletionDate() != null) { %>
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
+			<a href="javascript:void(0)" onclick="changeCompletionDate('<%=((ReferralHistoryDisplay)referral).getId()%>');return false;"><%=((ReferralHistoryDisplay)referral).getCompletionDate() %></a>
+		</security:oscarSec>
+		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
+			<%=((ReferralHistoryDisplay)referral).getCompletionDate() %>
+		</security:oscarSec>
+		<% } %>
+	</display:column>
+	
+	
 	<display:column property="sourceProgramName" sortable="false" title="Referring program/agency" />
 	<display:column property="external" sortable="false" title="External" />
 </display:table>

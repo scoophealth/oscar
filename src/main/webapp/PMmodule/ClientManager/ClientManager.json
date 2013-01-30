@@ -8,11 +8,15 @@
 <%@page import="java.util.Date"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.OscarAuditLogger"%>
+<%@page import="org.oscarehr.PMmodule.dao.ClientReferralDAO"%>
+<%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
 
 <%
 	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 	AdmissionDao admissionDao = SpringUtils.getBean(AdmissionDao.class);
 	ProgramProviderDAO programProviderDao = (ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
+	ClientReferralDAO referralDao = (ClientReferralDAO)SpringUtils.getBean("clientReferralDAO");
+	
 	
 	boolean success = false;
     String error = "";
@@ -93,6 +97,82 @@
 				
 			} else {
 				error = "Admission record not found";
+				success=false;
+			}
+		} 
+		
+ 		
+	}
+	
+	else if ("save_referral_date".equals(method)) {
+		Long id = Long.parseLong(request.getParameter("referralId"));
+		String date = request.getParameter("date");
+		Date d = null;
+		
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+		try {
+			d = formatter.parse(date);
+		}catch(java.text.ParseException e) {
+			success=false;
+			error = "Unable to parse date";
+		}
+		
+		
+		if(d != null) {
+			ClientReferral referral = referralDao.getClientReferral(id);
+			if(referral != null) {
+				Long programId = referral.getProgramId();
+				if(programProviderDao.isThisProgramInProgramDomain(providerNo,programId.intValue())) {
+					referral.setReferralDate(d);
+					referralDao.saveClientReferral(referral);
+					
+					OscarAuditLogger.getInstance().log("update_referral_date",date,String.valueOf(id));
+					success=true;
+				} else {
+					error="You have insufficient rights to this program";
+					success=false;
+				}
+				
+			} else {
+				error = "Referral record not found";
+				success=false;
+			}
+		} 
+		
+ 		
+	}
+	
+	else if ("save_completion_date".equals(method)) {
+		Long id = Long.parseLong(request.getParameter("referralId"));
+		String date = request.getParameter("date");
+		Date d = null;
+		
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+		try {
+			d = formatter.parse(date);
+		}catch(java.text.ParseException e) {
+			success=false;
+			error = "Unable to parse date";
+		}
+		
+		
+		if(d != null) {
+			ClientReferral referral = referralDao.getClientReferral(id);
+			if(referral != null) {
+				Long programId = referral.getProgramId();
+				if(programProviderDao.isThisProgramInProgramDomain(providerNo,programId.intValue())) {
+					referral.setCompletionDate(d);
+					referralDao.saveClientReferral(referral);
+					
+					OscarAuditLogger.getInstance().log("update_completion_date",date,String.valueOf(id));
+					success=true;
+				} else {
+					error="You have insufficient rights to this program";
+					success=false;
+				}
+				
+			} else {
+				error = "Referral record not found";
 				success=false;
 			}
 		} 
