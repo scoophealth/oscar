@@ -84,58 +84,54 @@
     <table cellpadding="3" cellspacing="2">
     <tr>
     <td>
-    <table class="simple" cellpadding="3" cellspacing="2" width="100%">
-    <thead>
-		<tr>
-			<th>Client No</th>
-			<th>Name</th>
-			<th>Days in WL</th>
-			<th>Days since last contact</th>
-			<th>Intake Form</th>
-			<th>Create Referral<br/>(Forward Match)</th>
-			<th>Match %</th>
-		</tr>
-		</thead>
-		<tbody>
-		<logic:iterate id="matchedCLient" property="clientList" name="vacancyClientMatchForm" type="org.oscarehr.PMmodule.wlmatch.MatchBO">
-		<%
-		i++;
-		if (i % 2 == 0) {
-		%>
-		<tr class="even">
-			<%
-				} else {
-			%>
-		
-		<tr class="odd">
-			<%
-				}
-			%>
-			<td>
-				<a 
-				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${matchedCLient.clientID}"/>">
-					<c:out value="${matchedCLient.clientID}" /></a>
-			</td>
-			<td>
-				<a 
-				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${matchedCLient.clientID}"/>">
-					<c:out value="${matchedCLient.clientName}" /></a>
-			</td>
-			<td><c:out value="${matchedCLient.daysInWaitList}"></c:out></td>
-			<td><%=matchedCLient.getDaysSinceLastContact()>-1 ? (""+matchedCLient.getDaysSinceLastContact()) : "" %></td>
-			<td>
-				<a href="../eform/efmshowform_data.jsp?fdid=<c:out value="${matchedCLient.formDataID}"/>">
-					Form</a>			
-			</td>
-			<td>				<a 
-				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?method=vacancy_refer_select_program&program.id=<bean:write name="vacancyClientMatchForm" property="programId"/>&vacancyId=<%=vacancyId %>&vacancyName=<bean:write name="vacancyClientMatchForm" property="vacancy"/>&view.tab=Refer&id=<c:out value="${matchedCLient.clientID}" />">
-					Create Referral</a>
-			</td>
-			<td><c:out value="${matchedCLient.percentageMatch}"></c:out></td>
-		</tr>
-		</logic:iterate>
-		</tbody>
-	</table>
+	
+   <c:if test="${requestScope.clientList != null}">
+    	<display:table class="simple" cellspacing="2" cellpadding="3"
+			id="client" name="clientList" export="false" pagesize="50"
+			requestURI="/PMmodule/VacancyClientMatch.do">
+			<display:setProperty name="paging.banner.placement" value="bottom" />
+			<display:setProperty name="basic.msg.empty_list"
+				value="No matched clients found." />
+			<display:setProperty name="sort.amount" value="list"/>
+			
+			<display:column sortable="true" title="Client No" sortProperty="clientID" defaultorder="ascending">			
+				<a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.clientID}"/>">
+					<c:out value="${client.clientID}" />
+				</a>
+			</display:column>
+			
+			<display:column sortable="true" title="Name" sortProperty="clientName" defaultorder="ascending">			
+				<a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.clientID}"/>">
+					<c:out value="${client.clientName}" />
+				</a>
+			</display:column>
+			
+			<display:column sortable="true" title="Days in WL" sortProperty="daysInWaitList" defaultorder="ascending">			
+				<c:out value="${client.daysInWaitList}" />
+			</display:column>
+				
+			<display:column sortable="true" title="Days since last contact" sortProperty="daysSinceLastContact" defaultorder="ascending">			
+				<c:out value="${client.daysSinceLastContact}" />
+			</display:column>
+			
+			<display:column sortable="false" title="Intake Form">			
+				<a href="../eform/efmshowform_data.jsp?fdid=<c:out value="${client.formDataID}"/>">
+					Form</a>
+			</display:column>
+			
+			<display:column sortable="false" title="Create Referral<br/>(Forward Match)" >			
+				<a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?method=vacancy_refer_select_program&program.id=<bean:write name="vacancyClientMatchForm" property="programId"/>&vacancyId=<%=vacancyId %>&vacancyName=<bean:write name="vacancyClientMatchForm" property="vacancy"/>&view.tab=Refer&id=<c:out value="${client.clientID}" />">
+					Create Referral
+				</a>
+			</display:column>
+			
+			<display:column sortable="true" title="Match %" sortProperty="percentageMatch" defaultorder="ascending">			
+				<c:out value="${client.percentageMatch}" /><c:out value="(${client.proportion})" />
+			</display:column>
+			
+		</display:table>
+   </c:if>
+	
     </td>
     </tr>
     </table>

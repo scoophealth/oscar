@@ -60,7 +60,7 @@ public class VacancyClientMatchAction extends DispatchAction{
 		List<MatchBO> matchList= matchingManager.getClientMatches(vacancyId);
 		logger.info(" VacancyClientMatchList: " + matchList.size());
 		
-		intakeForm.set("clientList", matchList);
+		request.setAttribute("clientList", matchList);
 		
 		VacancyDisplayBO dis = matchingManager.getVacancyDisplay(vacancyId);
 		intakeForm.set("template", dis.getVacancyTemplateName());
