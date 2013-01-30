@@ -30,6 +30,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.DxAssociation;
+import org.oscarehr.myoscar.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -85,23 +86,27 @@ public class DxDao extends AbstractDao<DxAssociation> {
     @SuppressWarnings("unchecked")
 	public List<Object[]> findCodingSystemDescription(String codingSystem, String[] keywords) {
 		try {
+			boolean flag=false;
 			StringBuilder buf = new StringBuilder("select " + codingSystem + ", description from " + codingSystem);
-			if (keywords.length > 0) {
-				buf.append(" where "); 
-			}
 			
 			for(String keyword : keywords){
                 if(keyword == null || keyword.trim().equals("")) {
                 	continue;
                 }
-                
-                buf.append(" or " + codingSystem + " like '%" + keyword + "%' or description like '%" + keywords + "%' ");
+                if(!flag) {
+                	buf.append(" where "); 
+                }
+                if(flag) {
+                	buf.append(" or ");
+                }
+                buf.append(" " + codingSystem + " like '%" + keyword + "%' or description like '%" + keyword + "%' ");
+                flag=true;
             }
 			
-			Query query = entityManager.createQuery(buf.toString());
+			Query query = entityManager.createNativeQuery(buf.toString());
 			return query.getResultList();
 		} catch (Exception e) {
-			// TODO Add exclude to the test instead when it's merged
+			MiscUtils.getLogger().error("error",e);
 			return new ArrayList<Object[]>();
 		}
 		
