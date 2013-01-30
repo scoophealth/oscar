@@ -49,6 +49,9 @@ import oscar.util.DateUtils;
 import oscar.OscarProperties;
 import java.text.NumberFormat;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.model.BillingONExt;
+import org.oscarehr.common.dao.BillingONExtDao;
+
 /**
  *
  * @author mweston4
@@ -62,6 +65,9 @@ public class BillingONManager {
     @Autowired
     private BillingONCHeader1Dao billingONCHeader1Dao;
     
+    @Autowired
+    private BillingONExtDao billingONExtDao;
+        
     @Autowired
     private ClinicDAO clinicDAO;
     
@@ -102,11 +108,16 @@ public class BillingONManager {
                 Clinic clinic = clinicDAO.getClinic();
 
                 //Get Due Date of Invoice
-                String daysTilDue = OscarProperties.getInstance().getProperty("invoice_due_date", "N/A");
-                if (!daysTilDue.equals("N/A")) {    
+                String dueDateStr="";
+                if (OscarProperties.getInstance().hasProperty("invoice_due_date")) {
+                    BillingONExt dueDateExt = billingONExtDao.getDueDate(billingONCHeader1);
+                    if (dueDateExt != null) {
+                        dueDateStr = dueDateExt.getValue();
+                    } else {
+                        Integer numDaysTilDue = Integer.parseInt(OscarProperties.getInstance().getProperty("invoice_due_date", "0")); 
                         Date serviceDate = billingONCHeader1.getBillingDate();
-                        Date dueDate = org.apache.commons.lang.time.DateUtils.addDays(serviceDate, Integer.parseInt(daysTilDue));                      
-                        daysTilDue = DateUtils.formatDate(dueDate,locale);
+                        dueDateStr = DateUtils.sumDate(serviceDate, numDaysTilDue, locale);
+                    }  
                 }
                                         
                 BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService");
@@ -124,7 +135,7 @@ public class BillingONManager {
                 String endHour = emailProperties.getProperty("clinic_close_hour","");
                 velocityContext.put("end_hour",endHour);
 
-                velocityContext.put("date_due", daysTilDue);
+                velocityContext.put("date_due", dueDateStr);
                 velocityContext.put("balance_owing",NumberFormat.getCurrencyInstance().format(bdBalance));
 
                 InputStream is = null;

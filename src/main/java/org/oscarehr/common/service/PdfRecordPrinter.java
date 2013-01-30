@@ -46,6 +46,8 @@ import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONExt;
+import org.oscarehr.common.dao.BillingONExtDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.model.EyeForm;
@@ -125,6 +127,7 @@ public class PdfRecordPrinter {
     private PdfWriter writer;
     
     private BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
+    private BillingONExtDao billingONExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
     private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     private ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
     
@@ -333,13 +336,19 @@ public class PdfRecordPrinter {
                                 parameters.put(paramName,DateUtils.formatDate(new Date(),locale));
                             }                                
                             else if (paramName.equals("billing_due_date")){
-                                  
-                                    Date serviceDate = billingONCHeader1.getBillingDate();   
-                                    
-                                    String numDaysTilDue = props.getProperty("invoice_due_date","30");
-                                                                     
-                                    Date dueDate = org.apache.commons.lang.time.DateUtils.addDays(serviceDate, Integer.parseInt(numDaysTilDue));                                    
-                                    parameters.put(paramName, DateUtils.formatDate(dueDate,locale));
+                                String dueDateStr = "";
+                                if (props.hasProperty("invoice_due_date")) {
+                                  BillingONExt dueDateExt = billingONExtDao.getDueDate(billingONCHeader1);
+                                  if (dueDateExt != null) {
+                                      dueDateStr = dueDateExt.getValue();
+                                  } else {
+                                      Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0"));
+                                      Date serviceDate = billingONCHeader1.getBillingDate();
+                                      dueDateStr = DateUtils.sumDate(serviceDate, numDaysTilDue, locale);                                
+                                  }                                                                    
+                                }
+                                 
+                                parameters.put(paramName, dueDateStr);
 
                             } else if (paramName.equals("payee")){
                                 String payee = props.getProperty("PAYEE", "");
@@ -353,8 +362,21 @@ public class PdfRecordPrinter {
                                     remitToPhone = clinicDao.getClinic().getClinicPhone();
                                 }
                                 parameters.put(paramName, remitToPhone);
-                            }
-                            else {
+                            } else if (paramName.equals("use_billext")) {
+                                String useBillTo = "off";
+                                BillingONExt useBillToExt = billingONExtDao.getUseBillTo(billingONCHeader1);
+                                if (useBillToExt != null) {
+                                    useBillTo = useBillToExt.getValue();                                  
+                                }
+                                parameters.put(paramName, useBillTo);                                
+                            } else if (paramName.equals("billext_billto")) {
+                                    String billTo = "";
+                                    BillingONExt billToExt = billingONExtDao.getBillTo(billingONCHeader1);
+                                    if (billToExt != null) {
+                                        billTo = billToExt.getValue();
+                                    }
+                                    parameters.put(paramName,billTo);
+                            } else {
                                 parameters.put(paramName,apExe.execute(paramName,String.valueOf(billingONCHeader1.getDemographicNo()),invoiceNo));
                             }                            
                         }
