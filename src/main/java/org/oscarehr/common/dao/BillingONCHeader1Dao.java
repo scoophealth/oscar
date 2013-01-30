@@ -491,7 +491,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
     
     
-    public List<Integer> count_larrykain_clinic(String facilityNum, Date startDate, Date endDate) {
+    public List<Long> count_larrykain_clinic(String facilityNum, Date startDate, Date endDate) {
     	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType = '00' and b.faciltyNum = ? and b.status <> 'D' and b.billingDate >=? and b.billingDate <=?");
     	
     	 q.setParameter(1, facilityNum);
@@ -502,7 +502,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
     
     
-    public List<Integer> count_larrykain_hospital(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, Date startDate, Date endDate) {
+    public List<Long> count_larrykain_hospital(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, Date startDate, Date endDate) {
     	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType<>'00' and (b.faciltyNum=? or b.faciltyNum=? or b.faciltyNum=? or b.faciltyNum=?) and status<>'D' and b.billingDate >=? and b.billingDate <=?");
     	
     	 q.setParameter(1, facilityNum1);
@@ -516,7 +516,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
     
     
-    public List<Integer> count_larrykain_other(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, String facilityNum5, Date startDate, Date endDate) {
+    public List<Long> count_larrykain_other(String facilityNum1, String facilityNum2, String facilityNum3, String facilityNum4, String facilityNum5, Date startDate, Date endDate) {
     	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType<>'00' and status<>'D' and  (b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>? and b.faciltyNum<>?) and b.billingDate >=? and b.billingDate<=?");
     	
     	 q.setParameter(1, facilityNum1);
