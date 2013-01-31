@@ -1659,6 +1659,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <%--|--%>
         <%
         			if(demographic_no==0) {
+        				//MARC
         %>
         	<!--  caisi  -->
         	<% if (tickler_no.compareTo("") != 0) {%>
@@ -1668,13 +1669,32 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
     			<caisi:isModuleLoad moduleName="ticklerplus">
     				<a href="../ticklerPlus/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
     			</caisi:isModuleLoad>
-    		<%} %>
+    		<%} //end of tickler %>
 <a href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
 <bean:message key="provider.appointmentProviderAdminDay.reason"/>: <%=UtilMisc.htmlEscape(reason)%>
 <bean:message key="provider.appointmentProviderAdminDay.notes"/>: <%=UtilMisc.htmlEscape(notes)%>" >
+
             .<%=(view==0&&numAvailProvider!=1)?(name.length()>len?name.substring(0,len).toUpperCase():name.toUpperCase()):name.toUpperCase()%>
             </font></a><!--Inline display of reason -->
+        <% if(OscarProperties.getInstance().getProperty("APPT_MULTILINE", "false").equals("true") || OscarProperties.getInstance().getProperty("APPT_THREE_LINE", "true").equals("true")) { %>
+	      	<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<%if((apptType != null && apptType.length()>0) && (reason != null && reason.length()>0) ) { %>	
+			<%=UtilMisc.htmlEscape(apptType)%>&nbsp;|&nbsp;<%=UtilMisc.htmlEscape(reason)%>
+		<% } %>
+		<%if((apptType != null && apptType.length()>0) && (reason == null || reason.length() == 0) ) { %>	
+			<%=UtilMisc.htmlEscape(apptType)%>
+		<% } %>
+		<%if((apptType == null || apptType.length()==0) && (reason != null && reason.length() > 0) ) { %>	
+			<%=UtilMisc.htmlEscape(reason)%>
+		<% } %>
+		
+		<%if(OscarProperties.getInstance().getProperty("APPT_THREE_LINE", "true").equals("true")) { %>
+		<br/>
+		<% } %>
+	<% } %>
+	
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"><span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span></oscar:oscarPropertiesCheck></td>
         <%
         			} else {
