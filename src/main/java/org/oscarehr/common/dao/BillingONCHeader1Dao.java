@@ -691,7 +691,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 				"AND bd.ch1Id=b.id " +
 				"AND bd.serviceCode IN (:serviceCodes) " +
 				"AND b.billingDate >= :from " + 
-				"AND b.billing_date <= :to " + 
+				"AND b.billingDate <= :to " + 
 				"AND bd.status <> 'D' " +
 				"AND b.status <> 'D' " +
 				"ORDER BY b.billingDate DESC";
