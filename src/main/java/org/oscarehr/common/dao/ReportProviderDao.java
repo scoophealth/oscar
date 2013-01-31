@@ -70,4 +70,15 @@ public class ReportProviderDao extends AbstractDao<ReportProvider>{
         List<Object[]> results = query.getResultList();
         return results;
 	}
+	
+	public List<Object[]> search_reportprovider(String action,String providerNo) {
+		String sql = "from ReportProvider r, Provider p where r.providerNo=p.ProviderNo and r.status<>'D' and r.action=? and p.ProviderNo like ? order by r.team";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,action);
+    	query.setParameter(2, providerNo);
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> results = query.getResultList();
+        return results;
+	}
 }
