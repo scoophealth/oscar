@@ -48,6 +48,7 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="oscar.oscarDemographic.data.DemographicMerged" %>
 
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -336,11 +337,24 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 	} 
 	else {
 		Collections.sort(demoList, Demographic.LastNameComparator);
+		
+		DemographicMerged dmDAO = new DemographicMerged();
 	
 		for(Demographic demo : demoList) {
+
+			String dem_no = demo.getDemographicNo().toString();
+			String head = dmDAO.getHead(dem_no);
+			
+			if (head != null && !head.equals(dem_no)) {
+				//skip non head records
+				continue;
+			}
+			
 			rowCounter++;
 			bgColor = rowCounter%2==0?"#EEEEFF":"white";
+
 %>
+
    <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 		onClick="document.forms[0].demographic_no.value=<%=demo.getDemographicNo()%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=demo.getDemographicNo()%>','<%=URLEncoder.encode(demo.getLastName())%>','<%=URLEncoder.encode(demo.getFirstName())%>','<%=URLEncoder.encode(demo.getChartNo())%>','<%=request.getParameter("messageId")%>','<%=demo.getProviderNo()%>','')">
 
