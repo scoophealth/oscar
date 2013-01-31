@@ -75,8 +75,6 @@
         <ViolationValue>/src/main/java/oscar/Misc.java:Vector V = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditDocumentAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditHtmlAction.java:Hashtable errors = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:HashMap hm = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:HashMap&lt;String, String&gt; docQueue = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docStatus = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docType = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
@@ -1300,7 +1298,7 @@
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientNumDoc = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String, List&lt;String&gt;&gt; ab_NormalDoc = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Vector vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Vector&lt;Object&gt; vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1)) || documentResultsDao.isSentToProvider(docid, searchProviderNo)) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1))) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:import java.util.Hashtable;</ViolationValue>
@@ -2915,12 +2913,6 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/viewMeasurementMap.jsp:StringBuffer sb = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/viewMeasurementMap.jsp:for (Hashtable&lt;String,Object&gt; h:unList){</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/viewMeasurementMap.jsp:for(Hashtable&lt;String,String&gt; h : list){</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/Index.jsp:Hashtable docStatus=(Hashtable)request.getAttribute("docStatus");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/Index.jsp:Hashtable docType=(Hashtable)request.getAttribute("docType");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/Index.jsp:Hashtable patientDocs=(Hashtable)request.getAttribute("patientDocs");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/Index.jsp:Hashtable patientIdNames=(Hashtable)request.getAttribute("patientIdNames");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/Index.jsp:Hashtable patientNumDoc=(Hashtable)request.getAttribute("patientNumDoc");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/Index.jsp:Hashtable typeDocLab =(Hashtable)request.getAttribute("typeDocLab");</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:StringBuffer bufChart = null, bufName = null, bufNo = null;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:bufChart = new StringBuffer( (oscar.Misc.getString(rs,"chart_no"))   );</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:bufName = new StringBuffer( (oscar.Misc.getString(rs,"last_name")+ ","+ oscar.Misc.getString(rs,"first_name")) );</ViolationValue>

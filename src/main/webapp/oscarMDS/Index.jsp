@@ -47,34 +47,10 @@ String patientFirstName    = (String) request.getAttribute("patientFirstName");
 String patientLastName     = (String) request.getAttribute("patientLastName");
 String patientHealthNumber = (String) request.getAttribute("patientHealthNumber");
 
-boolean ajax = "true".equals(request.getParameter("ajax"));
-/*
-String view = (String)request.getAttribute("view");
-Integer pageSize=(Integer)request.getAttribute("pageSize");
-Integer pageNum=(Integer)request.getAttribute("pageNum");
-Integer pageCount=(Integer)request.getAttribute("pageCount");
-Hashtable docType=(Hashtable)request.getAttribute("docType");
-Hashtable patientDocs=(Hashtable)request.getAttribute("patientDocs");
-String providerNo=(String)request.getAttribute("providerNo");
-String searchProviderNo=(String)request.getAttribute("searchProviderNo");
-String demographicNo=(String)request.getAttribute("demographicNo");
-String ackStatus = (String)request.getAttribute("ackStatus");
+String startDate = (String) request.getAttribute("startDate");
+String endDate = (String) request.getAttribute("endDate");
 
-Hashtable patientIdNames=(Hashtable)request.getAttribute("patientIdNames");
-String patientIdNamesStr=(String)request.getAttribute("patientIdNamesStr");
-Hashtable docStatus=(Hashtable)request.getAttribute("docStatus");
-String patientIdStr =(String)request.getAttribute("patientIdStr");
-Hashtable typeDocLab =(Hashtable)request.getAttribute("typeDocLab");
-String demographicNo=(String)request.getAttribute("demographicNo");
-String ackStatus = (String)request.getAttribute("ackStatus");
-List labdocs=(List)request.getAttribute("labdocs");
-Hashtable patientNumDoc=(Hashtable)request.getAttribute("patientNumDoc");
-Integer totalDocs=(Integer) request.getAttribute("totalDocs");
-Integer totalHL7=(Integer)request.getAttribute("totalHL7");
-List<String> normals=(List<String>)request.getAttribute("normals");
-List<String> abnormals=(List<String>)request.getAttribute("abnormals");
-Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
-*/
+boolean ajax = "true".equals(request.getParameter("ajax"));
 %>
 
 <% if (!ajax) { %>
@@ -141,6 +117,8 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 	var searchStatus = "<%=(ackStatus == null ? "": ackStatus)%>";
 	var url = "<%=request.getContextPath()%>/dms/inboxManage.do?";
 	var contextpath = "<%=request.getContextPath()%>";
+	var startDate = "<%= startDate %>";
+	var endDate = "<%= endDate %>";
 	var request = null;
 	var canLoad = true;
 	var isListView = false;
@@ -241,7 +219,8 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 		var CATEGORY_ALL = 1,CATEGORY_DOCUMENTS = 2,CATEGORY_HL7 = 3,CATEGORY_NORMAL = 4,CATEGORY_ABNORMAL = 5,CATEGORY_PATIENT = 6,CATEGORY_PATIENT_SUB = 7,CATEGORY_TYPE_DOC = 'DOC',CATEGORY_TYPE_HL7 = 'HL7';
 		var query = "method=prepareForContentPage";
 		query +="&searchProviderNo="+searchProviderNo+"&providerNo="+providerNo+"&status="+searchStatus+"&page="+page
-			   +"&pageSize="+pageSize+"&isListView="+(isListView?"true":"false");
+			   +"&pageSize="+pageSize+"&isListView="+(isListView?"true":"false") 
+			   +"&startDate=" + startDate + "&endDate=" + endDate;
 		switch (selected_category) {
 		case CATEGORY_ALL:
 			query  += "&view=all";
