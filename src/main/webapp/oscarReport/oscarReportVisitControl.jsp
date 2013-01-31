@@ -193,6 +193,10 @@ function refresh() {
        if (reportAction.compareTo("lk") == 0) { %>
 <%@ include file="oscarReportVisit_lk.jspf"%>
 <%     }
+       if (reportAction.compareTo("vr") == 0) { %>
+		<%@ include file="oscarReportVisit_vr.jspf"%>
+	<%  }
+
    }
 %>
 
