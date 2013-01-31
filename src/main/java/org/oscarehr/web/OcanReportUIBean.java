@@ -280,11 +280,11 @@ public class OcanReportUIBean implements CallbackHandler {
     }
 
 
-	public static OCANv2SubmissionFileDocument generateOCANSubmission(String ocanType) {
+	public static OCANv2SubmissionFileDocument generateOCANSubmission(String ocanType,String assessmentid) {
 		int increment = 1;
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
-		List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findUnsubmittedOcanFormsByOcanType(loggedInInfo.currentFacility.getId(), ocanType);
+	 	List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findUnsubmittedOcanFormsByOcanType(loggedInInfo.currentFacility.getId(), ocanType,assessmentid);
 		logger.info("# of staff forms found for submission = " + ocanStaffForms.size());
 
 		OCANv2SubmissionFileDocument submissionFileDoc = OCANv2SubmissionFileDocument.Factory.newInstance();
@@ -580,18 +580,18 @@ public class OcanReportUIBean implements CallbackHandler {
 		return prepareSubmissionToIAR(submissionDoc, true, null) ;
 	}		
 
-	public static void writeExportIar(OutputStream out) {
+	public static void writeExportIar(OutputStream out, String assessmentid) {
 
-		writeExportIar_forOneOcanType(out, "FULL");
+		writeExportIar_forOneOcanType(out, "FULL", assessmentid);
 
-		writeExportIar_forOneOcanType(out, "SELF");
+		writeExportIar_forOneOcanType(out, "SELF", assessmentid);
 
-		writeExportIar_forOneOcanType(out, "CORE");
+		writeExportIar_forOneOcanType(out, "CORE", assessmentid);
 	}
 
-	public static void writeExportIar_forOneOcanType(OutputStream out, String ocanType) {
+	public static void writeExportIar_forOneOcanType(OutputStream out, String ocanType, String assessmentid) {
 
-		OCANv2SubmissionFileDocument submissionDoc = generateOCANSubmission(ocanType);
+		OCANv2SubmissionFileDocument submissionDoc = generateOCANSubmission(ocanType,assessmentid);
 		prepareSubmissionToIAR(submissionDoc, false, out );
 					
 	}	

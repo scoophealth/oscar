@@ -41,7 +41,8 @@ public class OcanIarSubmitAction extends DispatchAction {
 	
 	public ActionForward submit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		
-		int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("FULL"));
+		String assessmentid=request.getParameter("account");
+		int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("FULL",assessmentid ));
 		
 		try {
 			response.getWriter().println(submissionId_full);
@@ -49,7 +50,7 @@ public class OcanIarSubmitAction extends DispatchAction {
 			logger.error("Error",e);
 		}
 		
-		int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("SELF"));
+		int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("SELF",assessmentid));
 		
 		try {
 			response.getWriter().println(submissionId_self);
@@ -57,7 +58,7 @@ public class OcanIarSubmitAction extends DispatchAction {
 			logger.error("Error:",e);
 		}
 		
-		int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("CORE"));
+		int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("CORE",assessmentid));
 		
 		try {
 			response.getWriter().println(submissionId_core);

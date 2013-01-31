@@ -676,7 +676,9 @@ public class OcanStaffFormDaoTest extends DaoTestFixtures {
 		int assessmentId2 = 202;
 		int assessmentId3 = 303;
 		int assessmentId4 = 404;
-		
+	
+		String assessmentIds = "101,202,303,404";
+	
 		Date created1 = new Date(dfm.parse("20100110").getTime());
 		Date created2 = new Date(dfm.parse("20121110").getTime());
 		Date created3 = new Date(dfm.parse("20130410").getTime());
@@ -727,7 +729,7 @@ public class OcanStaffFormDaoTest extends DaoTestFixtures {
 		dao.persist(ocanStaffForm4);
 		
 		List<OcanStaffForm> expectedResult = new ArrayList<OcanStaffForm>(Arrays.asList(ocanStaffForm3, ocanStaffForm1));
-		List<OcanStaffForm> result = dao.findUnsubmittedOcanFormsByOcanType(facilityId1, ocanType1);
+		List<OcanStaffForm> result = dao.findUnsubmittedOcanFormsByOcanType(facilityId1, ocanType1, assessmentIds);
 
 		Logger logger = MiscUtils.getLogger();
 		
