@@ -49,13 +49,13 @@ public class OcanIarSubmissionTask extends TimerTask {
 				}
 			}
 
-			int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("FULL"));
+			int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("FULL","all"));
 			logger.info("FULL OCAN upload Completed: submissionId=" + submissionId_full);
 
-			int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("SELF"));
+			int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("SELF","all"));
 			logger.info("SELF OCAN upload Completed: submissionId=" + submissionId_self);
 
-			int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("CORE"));
+			int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("CORE","all"));
 			logger.info("CORE OCAN upload Completed: submissionId=" + submissionId_core);
 		} catch (Exception e) {
 			logger.error("Error", e);

@@ -49,6 +49,30 @@
 
 <script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
 <script>
+
+$(function () {
+
+    $("#checkA").bind("click", function () {
+        $("[name = test1]:checkbox").attr("checked", this.checked);
+	
+    });
+
+
+    $("[name = test1]:checkbox").bind("click", function () {
+        var $chk = $("[name = test1]:checkbox");	
+        $("#checkA").attr("checked", $chk.length == $chk.filter(":checked").length);
+		  if($(this).attr("checked"))
+   		  {
+			$(this).attr("checked",true);
+		  }
+		  else
+		  {
+		    $(this).attr("checked",false);
+		  }
+			
+		
+    })
+});
 	function submitIAR() {
 		document.getElementById("ocanForm").action="ocan_report_export_iar.jsp";
 	}
@@ -71,8 +95,18 @@
 		$("#subPending").val("Please Wait");
 		$("#SubPending").attr('disabled','true');
 				
-	    jQuery.ajax({url:ctx+"/OcanIarSubmit.do?method=submit",dataType:"html",success: function(data) {
-               location.href=ctx+'/oscarReport/ocan_iar.jsp';
+
+	    var arrChk1=$("input[name=test1][checked]");
+	   
+		var fieldList = [];
+	    for (var i=0;i<arrChk1.length;i++)
+	    {
+			
+			 fieldList.push(arrChk1[i].value);
+			 
+	    }		
+	    jQuery.ajax({url:ctx+"/OcanIarSubmit.do?method=submit&account="+fieldList+"",dataType:"html",success: function(data) {
+            location.href=ctx+'/oscarReport/ocan_iar.jsp?assessmentIds='+fieldList;		    
 		},error: function() {
 			alert('An error occurred');
 			$("#subPending").val("Submit Pending Records");
@@ -86,8 +120,17 @@
 
 	function submitManual() {
 		var ctx = '<%=request.getContextPath()%>';
-
-		document.getElementById('ocanForm').action='ocan_report_export_iar_manual.jsp';
+		
+	    var arrChk1=$("input[name=test1][checked]");
+	    //checkbox value1
+		var fieldList = [];
+	    for (var i=0;i<arrChk1.length;i++)
+	    {
+			
+			 fieldList.push(arrChk1[i].value);
+			 
+	    }		
+		document.getElementById('ocanForm').action='ocan_report_export_iar_manual.jsp?assessmentIds='+fieldList;
 		document.getElementById('ocanForm').submit();
 		
 	}
@@ -120,9 +163,9 @@
 	
 	<table class="borderedTableAndCells">
 		<tr>
-			<td colspan="5" align="center">Pending OCAN Forms</td>
+			<td colspan="6" align="center">Pending OCAN Forms</td>
 		</tr>
-		<tr>
+		<tr><td> <input type="checkbox" name="checkAll2" id="checkA" />All</td>
 			<td>Form Id</td>
 			<td>Date Started</td>
 			<td>Date Completed</td>
@@ -130,7 +173,7 @@
 			<td>Provider</td>			
 		</tr>
 		<%for(OcanStaffForm form:unsentForms) { %>
-			<tr>
+			<tr><td><input type="checkbox" name="test1" value="<%=form.getAssessmentId()%>"></td>
 				<td><%=form.getId()%></td>
 				<td><%=formatter2.format(form.getStartDate()) %></td>
 				<td><%=formatter2.format(form.getCompletionDate()) %></td>

@@ -33,8 +33,7 @@
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	response.setHeader("Content-Disposition", "attachment; filename=OCAN-IAR-"+formatter.format(new java.util.Date())  + ".xml");
 	
-
-	OcanReportUIBean.writeExportIar(response.getOutputStream());
+	OcanReportUIBean.writeExportIar(response.getOutputStream(), request.getParameter("assessmentIds"));
 	
 	response.getOutputStream().flush();
 %>
