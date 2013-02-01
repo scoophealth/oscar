@@ -109,7 +109,7 @@
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 
     FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
-    FlowSheetDrugDao flowSheetDrugDAO = (FlowSheetDrugDao) ctx.getBean("flowSheetDrugDAO");
+    FlowSheetDrugDao flowSheetDrugDAO = ctx.getBean(FlowSheetDrugDao.class);
 
     List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),Integer.parseInt(demographic_no));
 
