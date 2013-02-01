@@ -219,6 +219,27 @@
                                             <script type="text/javascript">
                                             jQuery.noConflict();
                                             
+                                            
+                                            function addDocComment(docId, status) {
+                                            	var url="<%=request.getContextPath()%>/oscarMDS/UpdateStatus.do";                                            	
+                                            	var formid = "#acknowledgeForm_" + docId;
+                                            	
+                                            	jQuery("#ackStatus").val(status);
+                                            	var data= jQuery(formid).serialize();
+                                            	data += "&method=addComment";
+                                            	
+                                            	jQuery.ajax({
+                                            		type: "POST",
+                                            		url: url,
+                                            		data: data,
+                                            		success: function(data) {
+                                            			window.location.reload();
+                                            		}
+                                            	});
+                                            	
+                                            }
+
+                                            
                                             function forwardDocument(docId) {
                                             	var frm = "#reassignForm_" + docId;
                                             	var query = jQuery(frm).serialize();
@@ -294,21 +315,29 @@
                                                     //disable previous link
                                                     $("prevP").setStyle({display:'none'});
                                                     $("firstP").setStyle({display:'none'});
+                                                    $("prevP2").setStyle({display:'none'});
+                                                    $("firstP2").setStyle({display:'none'});
                                                 }
                                                 hideNext=function(){
                                                     //disable next link
                                                     $("nextP").setStyle({display:'none'});
                                                     $("lastP").setStyle({display:'none'});
+                                                    $("nextP2").setStyle({display:'none'});
+                                                    $("lastP2").setStyle({display:'none'});
                                                 }
                                                 showPrev=function(){
                                                     //disable previous link
                                                     $("prevP").setStyle({display:'inline'});
                                                     $("firstP").setStyle({display:'inline'});
+                                                    $("prevP2").setStyle({display:'inline'});
+                                                    $("firstP2").setStyle({display:'inline'});
                                                 }
                                                 showNext=function(){
                                                     //disable next link
                                                     $("nextP").setStyle({display:'inline'});
                                                     $("lastP").setStyle({display:'inline'});
+                                                    $("nextP2").setStyle({display:'inline'});
+                                                    $("lastP2").setStyle({display:'inline'});
                                                 }
                                                 popupStart=function(vheight,vwidth,varpage,windowname) {
                                                     oscarLog("in popupStart ");
@@ -591,7 +620,7 @@ function sendMRP(ele){
 
                             <%
                             ArrayList ackList = AcknowledgementData.getAcknowledgements("DOC",docId);
-
+							String curAckStatus = "N";
                                             if (ackList.size() > 0){%>
                                             <fieldset>
                                                 <table width="100%" height="20" cellpadding="2" cellspacing="2">
@@ -604,6 +633,9 @@ function sendMRP(ele){
                                                                         <%= report.getProviderName() %> :
 
                                                                         <% String ackStatus = report.getStatus();
+                                                                        	if( providerNo.equals(report.getOscarProviderNo()) ) {
+                                                                        	    curAckStatus = ackStatus;
+                                                                        	}
                                                                             if(ackStatus.equals("A")){
                                                                                 ackStatus = "Acknowledged";
                                                                             }else if(ackStatus.equals("F")){
@@ -613,10 +645,10 @@ function sendMRP(ele){
                                                                             }
                                                                         %>
                                                                         <font color="red"><%= ackStatus %></font>
-                                                                        <% if ( ackStatus.equals("Acknowledged") ) { %>
-                                                                            <%= report.getTimestamp() %>,
-                                                                            <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
-                                                                        <% } %>
+                                                                       		&nbsp;
+                                                                            <%= report.getTimestamp()== null ? "" : report.getTimestamp() %>,&nbsp;
+                                                                            comment: <%= ( report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment() ) %>
+                                                                       
                                                                         <br>
                                                                     <% }
                                                                     if (ackList.size() == 0){
@@ -658,7 +690,7 @@ function sendMRP(ele){
                                                         <input type="hidden" name="segmentID" value="<%= docId%>"/>
                                                         <input type="hidden" name="multiID" value="<%= docId%>" />
                                                         <input type="hidden" name="providerNo" value="<%= providerNo%>"/>
-                                                        <input type="hidden" name="status" value="A"/>
+                                                        <input type="hidden" name="status" value="A" id="ackStatus"/>
                                                         <input type="hidden" name="labType" value="DOC"/>
                                                         <input type="hidden" name="ajaxcall" value="yes"/>
                                                         <textarea  tabindex="<%=tabindex++%>" name="comment" cols="40" rows="4"></textarea>
@@ -667,6 +699,7 @@ function sendMRP(ele){
                                                 <tr>
                                                     <td>
                                                         <input type="submit"  tabindex="<%=tabindex++%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                                        <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="Comment" onclick="addDocComment('<%=docId%>','<%=curAckStatus%>')"/>
                                                         <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popup(323, 685, '../oscarMDS/SelectProvider.jsp?docId=<%=docId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
                                                         <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnFile"/>" onclick="fileDoc('<%=documentNo%>');" >
                                                         <input type="button"  tabindex="<%=tabindex++%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
@@ -689,6 +722,20 @@ function sendMRP(ele){
                             </form>
                         </fieldset>
                     </td>
+                </tr>
+                <tr>
+                	 <td colspan="8">
+                        <div style="text-align: right; font-weight: bold"> 
+                        <% if( numOfPage > 1 ) {%> 
+                        <a id="firstP2" style="display: none;" href="javascript:void(0);" onclick="firstPage('<%=docId%>');">First</a>
+                        <a id="prevP2" style="display: none;" href="javascript:void(0);" onclick="prevPage('<%=docId%>');">Prev</a>
+                        <a id="nextP2" href="javascript:void(0);" onclick="nextPage('<%=docId%>');">Next</a>
+                        <a id="lastP2" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">Last</a>                        
+                        <%}%>
+                        </div>
+                                  
+                   </td>
+                   <td>&nbsp;</td>
                 </tr>
                 <tr><td colspan="9" ><hr width="100%" color="blue"></td></tr>
             </table>
