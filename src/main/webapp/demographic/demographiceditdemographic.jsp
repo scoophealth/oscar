@@ -1950,14 +1950,14 @@ if ( Dead.equals(PatStat) ) {%>
                                                     </span>
 							</li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formNurse" />:</span><span class="info"><%=providerBean.getProperty(nurse,"")%></span>
+                                                            key="demographic.demographiceditdemographic.formNurse" />:</span><span class="info"><%=providerBean.getProperty(nurse == null ? "" : nurse,"")%></span>
 							</li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formMidwife" />:</span><span class="info"><%=providerBean.getProperty(midwife,"")%></span>
+                                                            key="demographic.demographiceditdemographic.formMidwife" />:</span><span class="info"><%=providerBean.getProperty(midwife == null ? "" : midwife,"")%></span>
 							</li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formResident" />:</span>
-                                                        <span class="info"><%=providerBean.getProperty(resident,"")%></span></li>
+                                                        <span class="info"><%=providerBean.getProperty(resident==null ? "" : resident,"")%></span></li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formRefDoc" />:</span><span class="info"><%=rd%></span>
 							</li>
