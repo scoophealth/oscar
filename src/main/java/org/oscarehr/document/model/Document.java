@@ -54,28 +54,36 @@ public class Document implements Serializable {
 	private int hashCode = Integer.MIN_VALUE;
 
 	// primary key
+	// NOT NULL
 	private java.lang.Long id;
 
 	// fields
 	private java.lang.String doctype;
-	private java.lang.String docdesc;
+	// NOT NULL
+	private java.lang.String docdesc = "";
 	private java.lang.String docxml;
-	private java.lang.String docfilename;
-	private java.lang.String doccreator;
+	// NOT NULL
+	private java.lang.String docfilename = "";
+	// NOT NULL
+	private java.lang.String doccreator = "";
 	private java.util.Date updatedatetime;
-	private java.lang.String status;
-	private java.lang.String contenttype;
+	// NOT NULL
+	private java.lang.String status = "";
+	// NOT NULL
+	private java.lang.String contenttype = "";
 	private java.lang.Byte m_public; //
 	private java.util.Date observationdate;
-	private Integer numberOfPages; //
+	// NOT NULL
+	private Integer numberOfPages = new Integer(0);
 	private String source;
 	private java.util.Date reviewdatetime;
 	private Integer appointmentNo = new Integer(0);
 	private String docClass;
 	private String docSubClass;
-	private String responsible;
+	// NOT NULL
+	private String responsible = "";
 	private String sourceFacility;
-	private Integer programId;
+	private Integer programId = new Integer(0);
 	private String reviewer;
 
 	// constructors
