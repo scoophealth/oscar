@@ -59,13 +59,13 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 	private String providerNo;
 	
 	@Column(name = "dataField", nullable=false, length=255)
-	private String dataField;
+	private String dataField = "";
 	
 	@Column(name = "measuringInstruction", nullable=false, length=255)
-	private String measuringInstruction;
+	private String measuringInstruction = "";
 	
 	@Column(name = "comments", nullable=false, length=255)
-	private String comments;
+	private String comments = "";
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "dateObserved")
