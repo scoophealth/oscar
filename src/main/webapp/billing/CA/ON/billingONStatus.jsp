@@ -112,19 +112,19 @@ if ( visitType == null ) { visitType = "-" ; }
 if ( serviceCode == null || serviceCode.equals("")) serviceCode = "%";
 if ( billingForm == null ) { billingForm = "-" ; }
 
-List pList = isTeamBillingOnly
-		? (List)(new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
-		: (List)(new JdbcBillingPageUtil()).getCurProviderStr();
+List<String> pList = isTeamBillingOnly
+		? (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
+		: (new JdbcBillingPageUtil()).getCurProviderStr();
 
 BillingStatusPrep sObj = new BillingStatusPrep();
-List bList = null;
+List<BillingClaimHeader1Data> bList = null;
 if((serviceCode == null || billingForm == null) && dx.length()<2 && visitType.length()<2) {
-	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new Vector();
+	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new ArrayList<BillingClaimHeader1Data>();
 	//serviceCode = "-";
 	serviceCode = "%";
 } else {
 	serviceCode = (serviceCode == null || serviceCode.length()<2)? "%" : serviceCode; 
-	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new Vector();
+	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new ArrayList<BillingClaimHeader1Data>();
 }
 
 RAData raData = new RAData();
@@ -219,7 +219,7 @@ BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
         	var provider_no = document.serviceform.providerview[index].value;
         	
         	<% for (int i = 0 ; i < pList.size(); i++) { 
-				String temp[] = ((String) pList.get(i)).split("\\|");				
+				String temp[] = ( pList.get(i)).split("\\|");				
 			%>
 			
 			var temp_provider_no = <%=temp[0]%> ;			
@@ -481,7 +481,7 @@ function changeSite(sel) {
     <select name="providerview" onchange="changeProvider(true);">
 			<%
 			if(pList.size() == 1) {
-				String temp[] = ((String) pList.get(0)).split("\\|");
+				String temp[] = ( pList.get(0)).split("\\|");
 			%>
 			<option value="<%=temp[0]%>"> <%=temp[1]%>, <%=temp[2]%></option>
 			<%
@@ -489,7 +489,7 @@ function changeSite(sel) {
 			%>
        <option value="all">All Providers</option>
     <% for (int i = 0 ; i < pList.size(); i++) { 
-		String temp[] = ((String) pList.get(i)).split("\\|");
+		String temp[] = ( pList.get(i)).split("\\|");
 	%>
        <option value="<%=temp[0]%>" <%=providerNo.equals(temp[0])?"selected":""%>><%=temp[1]%>, <%=temp[2]%></option>
          
@@ -679,7 +679,7 @@ if(statusType.equals("_")) { %>
        boolean newInvoice = true;
        
        for (int i = 0 ; i < bList.size(); i++) { 
-    	   BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) bList.get(i);
+    	   BillingClaimHeader1Data ch1Obj = bList.get(i);
     	   
     	   if (bMultisites && ch1Obj.getClinic()!=null && curSite!=null 
     			   && !ch1Obj.getClinic().equals(curSite) && isSiteAccessPrivacy) // only applies on user have siteAccessPrivacy (SiteManager)
