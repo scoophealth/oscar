@@ -257,14 +257,13 @@ public class JdbcBillingReviewImpl {
 	}
 
 	public List<String> mergeServiceCodes(String serviceCodes, String billingForm) {
-		List<String> serviceCodeList = null;
+		List<String> serviceCodeList = new ArrayList<String>();
 		if (serviceCodes != null && serviceCodes.length() > 0) {
 			String[] serviceArray = serviceCodes.split(",");
-			serviceCodeList = new ArrayList<String>();
 			for (int i = 0; i < serviceArray.length; i++) {
 				serviceCodeList.add(serviceArray[i].trim());
 			}
-		}
+		} 
 		if (billingForm != null && billingForm.length() > 0) {
 			CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
 			
