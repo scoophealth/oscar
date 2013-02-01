@@ -25,6 +25,7 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -101,4 +102,11 @@ public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 	    assertNotNull(dao.findByMagic2(Arrays.asList(new String[] {"PP"}), "STS_TY", "PROV_NO", 
 	    		new Date(), new Date(), 100, Arrays.asList(new String[] {"SVN_CODE"}), "DX", "VIS_TYPE"));
     }
+    
+    @Test
+    public void testFindBillingsByDemoNoCh1HeaderServiceCodeAndDate() {
+	    assertNotNull(dao.findBillingsByDemoNoCh1HeaderServiceCodeAndDate(100, Arrays.asList(new String[] {"PP"}), new Date(), new Date()));
+    }
+    
+    
 }
