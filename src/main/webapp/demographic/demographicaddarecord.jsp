@@ -331,7 +331,10 @@
 	                for(org.oscarehr.common.model.WaitingList waitingList : waitingListList) {
 	                	positionList.add(waitingList.getPosition());
 	                }
-	                Long maxPosition = Collections.max(positionList);
+	                Long maxPosition = 0L;
+	                if(positionList.size()> 0) {
+	                	maxPosition = Collections.max(positionList);
+	                }
             	
                     String listId = request.getParameter("list_id");
                     if(listId != null && !listId.equals("") && !listId.equals("0")) {
