@@ -24,6 +24,7 @@
 
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -93,6 +94,13 @@
    <link rel="stylesheet" type="text/css" media="all" href="../share/css/searchBox.css"  />
    <style type="text/css"> .deep { background-color: <%= deepColor %>; } .weak { background-color: <%= weakColor %>; } </style>
 <% } %>
+
+<%
+	String ptstatus = request.getParameter("ptstatus") == null ? "active" : request.getParameter("ptstatus");
+
+	org.oscarehr.util.MiscUtils.getLogger().info("PSTATUS " + ptstatus);
+	OscarProperties props = OscarProperties.getInstance();
+%>
 
 <script language="JavaScript">
 
@@ -235,25 +243,72 @@
 		searchMode = "search_name";
 	if (orderBy == null)
 		orderBy = "last_name";
+	
+	String pstatus = props.getProperty("inactive_statuses", "IN, DE, IC, ID, MO, FI");
+	pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
+	List<String>stati = Arrays.asList(pstatus.split(","));
 
-	if(searchMode.equals("search_name")) {
-		demoList = demographicDao.searchDemographicByName(keyword, limit, offset);
+	if( "".equals(ptstatus) ) {
+		if(searchMode.equals("search_name")) {
+			demoList = demographicDao.searchDemographicByName(keyword, limit, offset);
+		}
+		else if(searchMode.equals("search_phone")) {
+			demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset);
+		}
+		else if(searchMode.equals("search_dob")) {
+			demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset);
+		}
+		else if(searchMode.equals("search_address")) {
+			demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset);
+		}
+		else if(searchMode.equals("search_hin")) {
+			demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset);
+		}
+		else if(searchMode.equals("search_chart_no")) {
+			demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset);
+		}
 	}
-	else if(searchMode.equals("search_phone")) {
-		demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset);
+	else if( "active".equals(ptstatus) ) {
+	    if(searchMode.equals("search_name")) {
+			demoList = demographicDao.searchDemographicByLastNameAndNotStatus(keyword, stati, limit, offset);
+		}
+	    else if(searchMode.equals("search_phone")) {
+			demoList = demographicDao.searchDemographicByPhoneAndNotStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_dob")) {
+			demoList = demographicDao.searchDemographicByDOBAndNotStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_address")) {
+			demoList = demographicDao.searchDemographicByAddressAndNotStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_hin")) {
+			demoList = demographicDao.searchDemographicByHINAndNotStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_chart_no")) {
+			demoList = demographicDao.findDemographicByChartNoAndNotStatus(keyword, stati, limit, offset);
+		}
 	}
-	else if(searchMode.equals("search_dob")) {
-		demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset);
+	else if( "inactive".equals(ptstatus) ) {
+	    if(searchMode.equals("search_name")) {
+			demoList = demographicDao.searchDemographicByLastNameAndStatus(keyword, stati, limit, offset);
+		}
+	    else if(searchMode.equals("search_phone")) {
+			demoList = demographicDao.searchDemographicByPhoneAndStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_dob")) {
+			demoList = demographicDao.searchDemographicByDOBAndStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_address")) {
+			demoList = demographicDao.searchDemographicByAddressAndStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_hin")) {
+			demoList = demographicDao.searchDemographicByHINAndStatus(keyword, stati, limit, offset);
+		}
+		else if(searchMode.equals("search_chart_no")) {
+			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset);
+		}
 	}
-	else if(searchMode.equals("search_address")) {
-		demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset);
-	}
-	else if(searchMode.equals("search_hin")) {
-		demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset);
-	}
-	else if(searchMode.equals("search_chart_no")) {
-		demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset);
-	}
+
 	
 	
 
@@ -261,7 +316,7 @@
 	int nItems=0;
 
 	if(demoList==null) {
-		out.println("failed!!!");
+		out.println("Your Search Returned No Results!!!");
 	} 
 	else {
 		
