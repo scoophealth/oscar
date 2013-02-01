@@ -414,7 +414,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 function reportWindow(page,height,width) {
 	//console.log(page);
 	if(height && width){
-		windowprops="height="+660+", width="+width+", location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0" ;
+		windowprops="height="+height+", width="+width+", location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0" ;
 	}else{
 		windowprops="height=660, width=960, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0";
 	}
@@ -1856,20 +1856,47 @@ function hidePrev(docid){
     //disable previous link
     $("prevP_"+docid).setStyle({display:'none'});
     $("firstP_"+docid).setStyle({display:'none'});
+    $("prevP2_"+docid).setStyle({display:'none'});
+    $("firstP2_"+docid).setStyle({display:'none'});
 }
 function hideNext(docid){
     //disable next link
     $("nextP_"+docid).setStyle({display:'none'});
     $("lastP_"+docid).setStyle({display:'none'});
+    $("nextP2_"+docid).setStyle({display:'none'});
+    $("lastP2_"+docid).setStyle({display:'none'});
+
 }
 function showPrev(docid){
     //disable previous link
     $("prevP_"+docid).setStyle({display:'inline'});
     $("firstP_"+docid).setStyle({display:'inline'});
+    $("prevP2_"+docid).setStyle({display:'inline'});
+    $("firstP2_"+docid).setStyle({display:'inline'});
+
 }
 function showNext(docid){
 
     //disable next link
     $("nextP_"+docid).setStyle({display:'inline'});
     $("lastP_"+docid).setStyle({display:'inline'});
+    $("nextP2_"+docid).setStyle({display:'inline'});
+    $("lastP2_"+docid).setStyle({display:'inline'});
+
+}
+
+function addDocComment(docId, providerNo) {
+	$("status_"+docId).value = 'N';
+	var url=contextpath+"/oscarMDS/UpdateStatus.do";
+	var formid = "acknowledgeForm_" + docId;
+	var data=$(formid).serialize();
+	data += "&method=addComment";
+	
+	new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+				$("status_"+docId).value = "A";
+				$("comment_"+docId+"_"+providerNo).update($("comment_"+docId).value);
+				$("comment_"+docId).update("");
+			}
+		}
+	);
 }

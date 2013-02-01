@@ -42,9 +42,34 @@ public class ReportStatus {
 	private String timestamp;
 
 	private String segmentID;
+	
+	private String oscarProviderNo;
 
 	public ReportStatus() {
 		// allow empty constructor
+	}
+	
+	public ReportStatus(String pName, String pNo, String oscarProviderNo, String s, String c, String t, String sID) {
+		this.oscarProviderNo = oscarProviderNo;
+		providerName = pName;
+		providerNo = pNo;
+		status = s;
+		comment = c;
+		segmentID = sID;
+
+		GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
+
+		// boneheaded calendar numbers months from 0
+		if (t.length() > 18) {
+			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(5, 7)) - 1, Integer.parseInt(t.substring(8, 10)), Integer.parseInt(t.substring(11, 13)), Integer.parseInt(t.substring(14, 16)), Integer.parseInt(t.substring(17, 19)));
+		} else if(t.length() == 10 ){
+			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(5, 7)) - 1, Integer.parseInt(t.substring(8, 10) ) );
+		} else {
+			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(4, 6)) - 1, Integer.parseInt(t.substring(6, 8)), Integer.parseInt(t.substring(8, 10)), Integer.parseInt(t.substring(10, 12)), Integer.parseInt(t.substring(12, 14)));
+		}
+		timestamp = dateFormat.format(cal.getTime());
+		
 	}
 
 	public ReportStatus(String pName, String pNo, String s, String c, String t, String sID) {
@@ -134,5 +159,19 @@ public class ReportStatus {
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
+
+	/**
+	 * @return the oscarProviderNo
+	 */
+    public String getOscarProviderNo() {
+	    return oscarProviderNo;
+    }
+
+	/**
+	 * @param oscarProviderNo the oscarProviderNo to set
+	 */
+    public void setOscarProviderNo(String oscarProviderNo) {
+	    this.oscarProviderNo = oscarProviderNo;
+    }
 
 }
