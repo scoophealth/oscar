@@ -82,6 +82,7 @@ import com.quatro.dao.security.SecObjectNameDao;
 import com.quatro.model.security.Secobjectname;
 
 public class DmsInboxManageAction extends DispatchAction {
+	
 	private static Logger logger=MiscUtils.getLogger();
 
 	private ProviderInboxRoutingDao providerInboxRoutingDAO = null;
@@ -191,15 +192,11 @@ public class DmsInboxManageAction extends DispatchAction {
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("error",e);
 		}
-		//String roleName = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
 		String providerNo = (String) session.getAttribute("user");
 		String searchProviderNo = request.getParameter("searchProviderNo");
 		String status = request.getParameter("status");
-		//String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
-		//String scannedDocStatus = request.getParameter("scannedDocument");
 
-		//scannedDocStatus = "I";
 		boolean providerSearch = !"-1".equals(searchProviderNo);
 
 		if (status == null) {
@@ -218,6 +215,8 @@ public class DmsInboxManageAction extends DispatchAction {
 		String patientFirstName = request.getParameter("fname");
 		String patientLastName = request.getParameter("lname");
 		String patientHealthNumber = request.getParameter("hnum");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 
 		if (patientFirstName == null) {
 			patientFirstName = "";
@@ -249,13 +248,16 @@ public class DmsInboxManageAction extends DispatchAction {
 			request.setAttribute("searchProviderNo", searchProviderNo);
 			request.setAttribute("ackStatus", status);
 			request.setAttribute("categoryHash", cData.getCategoryHash());
+			request.setAttribute("startDate", startDate);
+			request.setAttribute("endDate", endDate);
 			return mapping.findForward("dms_index");
 		} catch (SQLException e) {
 			return mapping.findForward("error");
 		}
 	}
 
-	public ActionForward prepareForContentPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+    public ActionForward prepareForContentPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		try {
 			if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
@@ -314,6 +316,8 @@ public class DmsInboxManageAction extends DispatchAction {
 			endDate = null;
 		}
 
+		logger.info("Got dates: " + startDate + "-" + endDate + " out of " + startDateStr + "-" + endDateStr);
+		
 		Boolean isAbnormal = null;
 		if ("abnormal".equals(view))
 			isAbnormal = new Boolean(true);
@@ -343,7 +347,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		// mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
 		// HashMap<String,String> docQueue=comLab.getDocumentQueueLinks();
 		List<QueueDocumentLink> qd = queueDocumentLinkDAO.getQueueDocLinks();
-		HashMap<String, String> docQueue = new HashMap();
+		HashMap<String, String> docQueue = new HashMap<String, String>();
 		for (QueueDocumentLink qdl : qd) {
 			Integer i = qdl.getDocId();
 			Integer n = qdl.getQueueId();
@@ -391,7 +395,7 @@ public class DmsInboxManageAction extends DispatchAction {
 					}
 					// if doc setn to non-default queue and valid provider, check if provider is in the queue or equal to the provider
 					else if (queueIdInt != Queue.DEFAULT_QUEUE_ID && documentResultsDao.isSentToValidProvider(docid)) {
-						Vector vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);
+						Vector<Object> vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);
 						if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1)) || documentResultsDao.isSentToProvider(docid, searchProviderNo)) {
 							// labs is in provider's queue,do nothing
 							if (isSegmentIDUnique(validlabdocs, data)) {
@@ -401,7 +405,7 @@ public class DmsInboxManageAction extends DispatchAction {
 					}
 					// if doc sent to non default queue and no valid provider, check if provider is in the non default queue
 					else if (!queueid.equals(Queue.DEFAULT_QUEUE_ID) && !documentResultsDao.isSentToValidProvider(docid)) {
-						Vector vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);
+						Vector<Object> vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);
 						if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1))) {
 							// labs is in provider's queue,do nothing
 							if (isSegmentIDUnique(validlabdocs, data)) {
@@ -664,7 +668,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			logger.error("Error", e);
 		}
 
-		HashMap hm = new HashMap();
+		HashMap<String, Boolean> hm = new HashMap<String, Boolean>();
 		hm.put("addNewQueue", success);
 		JSONObject jsonObject = JSONObject.fromObject(hm);
 		try {
@@ -701,7 +705,7 @@ public class DmsInboxManageAction extends DispatchAction {
                     logger.error("Error", e);
                 }
 
-                HashMap hm = new HashMap();
+                HashMap<String, Object> hm = new HashMap<String, Object>();
                 hm.put("isLinkedToDemographic", success);
                 hm.put("demoId", demoId);
                 JSONObject jsonObject = JSONObject.fromObject(hm);
@@ -731,7 +735,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			logger.error("Error", e);
 		}
 
-		HashMap hm = new HashMap();
+		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("isLinkedToDemographic", success);
 		hm.put("demoId", demoId);
 		JSONObject jsonObject = JSONObject.fromObject(hm);
@@ -755,7 +759,8 @@ public class DmsInboxManageAction extends DispatchAction {
 
 	// return a hastable containing queue id to queue name, a hashtable of queue id and a list of document nos.
 	// forward to documentInQueus.jsp
-	public ActionForward getDocumentsInQueues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+    public ActionForward getDocumentsInQueues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		try {
 			if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
@@ -804,7 +809,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		List<Integer> ListDocIds = new ArrayList<Integer>();
 		for (QueueDocumentLink q : qs) {
 			int qid = q.getQueueId();
-			List vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + qid);
+			List<Object> vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + qid);
 			// if queue is not default and provider doesn't have access to it,continue
 			if (qid != Queue.DEFAULT_QUEUE_ID && !OscarRoleObjectPrivilege.checkPrivilege(roleName.toString(), (Properties) vec.get(0), (List) vec.get(1))) {
 				continue;
