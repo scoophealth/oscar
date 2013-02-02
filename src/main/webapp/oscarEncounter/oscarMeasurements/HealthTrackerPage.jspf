@@ -1,0 +1,1386 @@
+<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+<%long startTime = System.currentTimeMillis();%>
+<%@page import="oscar.oscarRx.data.RxPatientData"%>
+<%@ page import="oscar.oscarRx.util.*" %>
+<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
+<%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.dao.FlowSheetDxDao,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedMeasurement,org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager,org.oscarehr.util.LoggedInInfo" %>
+<%@page import="oscar.util.UtilDateUtilities" %>
+<%@page import="oscar.OscarProperties"%>
+
+<%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet" %>
+<%@ page import="org.oscarehr.common.model.Flowsheet" %>
+<%@ page import="org.oscarehr.common.dao.FlowsheetDao" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+
+<%@page import="org.oscarehr.common.dao.AllergyDao"%>
+<%@page import="org.oscarehr.common.model.Allergy"%>
+
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<%
+	if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+    //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String demographic_no = request.getParameter("demographic_no");
+    String providerNo = (String) session.getAttribute("user");
+    String temp = request.getParameter("template");
+
+ AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
+%>
+<oscar:oscarPropertiesCheck property="SPEC3" value="yes">
+    <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
+        "You have no right to access this page!"
+        <%
+    	LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
+            response.sendRedirect("../../noRights.html");
+    %>
+    </security:oscarSec>
+</oscar:oscarPropertiesCheck>
+
+<%
+	if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) {
+%>
+	<%
+		if (temp.equals("diab3")) {
+	%>
+		<jsp:forward page="DiabFlowSheet.jsp" />
+	<%
+		} else if (request.getAttribute("temp") != null && request.getAttribute("temp").equals("diab3")) {
+	%>
+		<jsp:forward page="DiabFlowSheet.jsp" />
+	<%
+		}
+	%>
+<%
+	}
+%>
+
+<%
+	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
+
+
+    int numElementsToShow = 8;
+    Date sdate = null;
+    Date edate = null;
+    if ( request.getParameter("numEle") != null ){
+        try{
+            numElementsToShow = Integer.parseInt(request.getParameter("numEle"));
+        }catch(Exception e){}
+    }
+
+    if (request.getParameter("sdate") != null){
+        try{
+           sdate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("sdate"));
+        }catch(Exception e){sdate =null;}
+    }
+
+    if(request.getParameter("edate") != null){
+        try{
+           edate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("edate"));
+        }catch(Exception e){edate = null;}
+    }
+
+
+    long startTimeToGetP = System.currentTimeMillis();
+
+    boolean dsProblems = false;
+
+
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+
+    FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
+    FlowSheetDrugDao flowSheetDrugDao = (FlowSheetDrugDao) ctx.getBean("flowSheetDrugDao");
+	FlowSheetDxDao flowSheetDxDao = (FlowSheetDxDao) ctx.getBean("flowSheetDxDao");
+    List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),Integer.parseInt(demographic_no));
+
+    ////Start
+    MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
+
+
+    MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
+
+    MeasurementInfo mi = new MeasurementInfo(demographic_no);
+    List<String> measurementLs = mFlowsheet.getMeasurementList();
+    ArrayList<String> measurements = new ArrayList(measurementLs);
+    long startTimeToGetM = System.currentTimeMillis();
+
+    mi.getMeasurements(measurements);
+
+    try{
+    	mFlowsheet.getMessages(mi);
+    }catch(Exception e){
+    	MiscUtils.getLogger().error("Error getting messages for flowsheet ",e);
+    }
+
+
+    ArrayList recList = mi.getList();
+
+
+
+    mFlowsheet.sortToCurrentOrder(recList);
+    StringBuffer recListBuffer = new StringBuffer();
+    for(int i = 0; i < recList.size(); i++){
+        recListBuffer.append("&amp;measurement="+response.encodeURL( (String) recList.get(i)));
+    }
+
+
+    String flowSheet = mFlowsheet.getDisplayName();
+    ArrayList<String> warnings = mi.getWarnings();
+    ArrayList<String> recomendations = mi.getRecommendations();
+    ArrayList comments = new ArrayList();
+
+String[] demographicParam = new String[1];
+demographicParam[0] = demographic_no;
+String medicationsQuery = "intake_medications";
+List<Map<String,Object>> medicationsResult = oscarSuperManager.find("providerDao", medicationsQuery, demographicParam);
+String medicationsList = "";
+if (!medicationsResult.isEmpty()) {
+	for (int i=0; i<medicationsResult.size(); i++) {
+		if (i != 0) {
+			medicationsList += ",<br/>";
+		}
+
+		if (medicationsResult.get(i).get("customName")!=null && !medicationsResult.get(i).get("customName").toString().equals("null")) {
+			medicationsList += medicationsResult.get(i).get("customName").toString();
+		} else if (Integer.parseInt(medicationsResult.get(i).get("GCN_SEQNO").toString())==0) {
+			medicationsList += "Unknown";
+		} else {
+			medicationsList += medicationsResult.get(i).get("BN").toString();
+		}
+
+		medicationsList += " " + RxUtil.FloatToString(Float.parseFloat(medicationsResult.get(i).get("takemin").toString()));
+		if (!medicationsResult.get(i).get("takemin").toString().equals(medicationsResult.get(i).get("takemax").toString())) {
+			medicationsList += "-" + RxUtil.FloatToString(Float.parseFloat(medicationsResult.get(i).get("takemax").toString()));
+		}
+
+		if (medicationsResult.get(i).get("freqcode")!=null) {
+			medicationsList += " " + medicationsResult.get(i).get("freqcode").toString();
+		}
+
+		if (medicationsResult.get(i).get("prn").toString().equals("1")) {
+			medicationsList += " PRN";
+		}
+
+		if (medicationsResult.get(i).get("duration") != null && !medicationsResult.get(i).get("duration").toString().equals("null")) {
+			medicationsList += " " + medicationsResult.get(i).get("duration").toString();
+			if (medicationsResult.get(i).get("durunit")!=null) {
+				if (medicationsResult.get(i).get("durunit").toString().equals("D")) {
+					medicationsList += " Day";
+				} else if (medicationsResult.get(i).get("durunit").toString().equals("W")) {
+					medicationsList += " Week";
+				} else if (medicationsResult.get(i).get("durunit").toString().equals("M")) {
+					medicationsList += " Month";
+				}
+			}
+		}
+
+		if (medicationsResult.get(i).get("duration")!=null && !medicationsResult.get(i).get("duration").toString().equals("null") && !medicationsResult.get(i).get("duration").toString().equals("") && Integer.parseInt(medicationsResult.get(i).get("duration").toString())>1) {
+			medicationsList += "s";
+		}
+
+		medicationsList += "  " + medicationsResult.get(i).get("quantity").toString() + " Qty  Repeats: ";
+
+		medicationsList += medicationsResult.get(i).get("repeat").toString();
+
+		if (medicationsResult.get(i).get("repeat").toString().equals("1")) {
+			medicationsList += " No subs";
+		}
+	}
+}
+
+
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html:html locale="true">
+
+<head>
+<title>Health Tracker - <oscar:nameage demographicNo="<%=demographic_no%>"/></title><!--I18n-->
+<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css" />
+<script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../../share/javascript/prototype.js"></script>
+
+	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>
+	
+	<script type="text/javascript">
+
+	//this is just temp 
+	
+
+	function maxWindow(){
+		window.moveTo(0,0);
+		window.resizeTo(screen.availWidth,screen.availHeight);
+	}
+	
+    	$(function() {
+    		$('.inlinesparkline').sparkline('html',{width:"30px", height:"16px"});
+
+    		$('.checkmarksparkline').sparkline('html',{type:"line", lineColor:"#0f0", fillColor:"", spotRadius:"0", spotColor:""})
+
+    		var vals1 = [3,2,1];
+    		var vals2 = [1,2,3];
+    		$('.xsparkline').sparkline(vals1,{type:"line", lineColor:"#f00", fillColor:"", spotRadius:"0", spotColor:""});
+    		$('.xsparkline').sparkline(vals2,{type:"line", lineColor:"#f00", fillColor:"", spotRadius:"0", spotColor:"", composite:"true"});
+    	});
+    </script>
+
+<style type="text/css">
+    div.ImmSet { background-color: #ffffff;clear:left;margin-top:10px;}
+    div.ImmSet h2 {  }
+    div.ImmSet h2 span { font-size:smaller; }
+    div.ImmSet ul {  }
+    div.ImmSet li {  }
+    div.ImmSet li a { text-decoration:none; color:blue;}
+    div.ImmSet li a:hover { text-decoration:none; color:red; }
+    div.ImmSet li a:visited { text-decoration:none; color:blue;}
+</style>
+
+<style type="text/css" media="print">
+.DoNotPrint {
+	display: none;
+}
+
+.noborder{
+    border: 0px solid #FFF;
+}
+
+div.headPrevention {
+    position:relative;
+    margin-left:1px;
+    width:22em;
+}
+
+div.headPrevention a:active { color:black; }
+div.headPrevention a:hover { color:black; }
+div.headPrevention a:link { color:black; }
+div.headPrevention a:visited { color:black; }
+</style>
+
+<style type="text/css" media="screen">
+
+/* tabs */
+.tabs {
+  position: relative;   
+  min-height: 200px; /*needed for now*/
+  clear: both;
+  margin: 15px 0 15px 0;
+  height:400px;
+}
+.tab {
+  float: left;
+}
+.tab label {
+  background: #D6D6C2; 
+  padding: 5px; 
+  border: thin solid grey; 
+  margin-left: -1px; 
+  position: relative;
+  left: 1px; 
+  font-family: verdana,tahoma,sans-serif;
+  font-size: 11pt;
+
+}
+
+.tab label:hover {
+cursor: hand; cursor: pointer;
+
+}
+
+.tab [type=radio] {
+  display: none;   
+}
+.content {
+  position: absolute;
+  top: 23px;
+  left: 0;
+  background: white;
+  right: 0;
+  overflow-y:scroll;
+  padding: 20px;
+  border: thin solid grey; 
+  max-width:500px;
+  min-width:300px;
+
+  height:350px;
+  
+}
+[type=radio]:checked ~ label {
+  background: white;
+  border-bottom: 4px solid grey;
+  z-index: 2;
+}
+[type=radio]:checked ~ label ~ .content {
+  z-index: 1;
+}
+/* tabs end */
+
+.content_ckd {
+  background: white;
+  padding: 20px;
+  border: thin solid grey;
+  max-width:500px;
+  min-width:200px;
+  min-height:250px;
+}
+
+.DoNotScreen{ display:none;}
+
+div.headPrevention {
+    position:relative;
+    float:left;
+    width:23em;
+/* border-right: thin solid #D6D6C2; */
+height: 52px;
+	
+}
+
+
+
+div.headMtype a:active { color:black; }
+div.headMtype a:hover { color:black; }
+div.headMtype a:link { color:black; }
+div.headMtype a:visited { color:black; }
+
+div.headMtype span {
+    /*background:  #ffffff; #ddddff;*/
+    font-family: verdana,tahoma,sans-serif;
+    margin:0;
+    font-size: 10pt;
+    padding: 2px 0px 0px 2px;  /*Top Right Bottom Left   */
+    line-height: 1.2;
+    height:2em;
+    font-family: sans-serif;
+
+}
+
+.headPreventionWarning{
+font-size: 8pt;
+
+}
+
+</style>
+
+<script type="text/javascript">
+    window.onload=function(){
+        if(!NiftyCheck())
+            return;
+
+    }
+
+
+   function loadDifferentElements(){
+       //console.log("hapy");
+        var numEle = $('numEle').value;
+        var sdate = $('flowsheetStartDate').value;
+        var edate = $('flowsheetEndDate').value;
+        if( !numEle.blank()){
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+numEle;
+            //console.log("one");
+        }else if (!sdate.blank() && !edate.blank()){
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
+            //console.log("two");
+        }else{
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';
+        }
+
+    }
+
+
+    function fsPopup(width,height,url,window) {
+    	<%
+    		com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
+    		if(securityMgr.hasWriteAccess("_flowsheet."+mFlowsheet.getName(),roleName$)) {
+    	%>
+
+    	return popup(width,height,url,window);
+    	<%}%>
+    }
+    
+
+</script>
+
+
+<style type="text/css">
+body {
+margin-top: 0px;
+margin-left: 0px; 
+margin-right:0px;
+
+background-color: #B7B18D;
+}
+
+
+div.leftBox{
+    width:90%;
+    margin-top: 2px;
+    margin-left:3px;
+    margin-right:3px;
+    float: left;
+}
+
+span.footnote {
+    background-color: #ccccee;
+    border: 1px solid #000;
+    width: 4px;
+}
+
+div.leftBox h3 {
+    background-color: #ccccff;
+    font-size: 8pt;
+    font-variant:small-caps;
+    font-weight:bold;
+    margin-top:0px;
+    padding-top:0px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+}
+
+div.leftBox ul{
+    font-size: 1.0em;
+    list-style:none;
+    list-style-type:none;
+    list-style-position:outside;
+    padding-left:1px;
+    margin-left:1px;
+    margin-top:0px;
+    padding-top:1px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+}
+
+div.leftBox li {
+    padding-right: 15px;
+    white-space: nowrap;
+}
+
+
+div.headMtype a {
+    text-decoration:none;
+}
+
+
+div.preventionProcedure{
+    width:9em;
+    float:left;
+    margin-left:3px;
+    margin-bottom:3px;
+}
+
+div.graph{
+    width:60px;
+    float:left;
+    margin-left:3px;
+    margin-bottom:3px;
+}
+
+div.preventionProcedure p {
+    font-size: 0.8em;
+    font-family: verdana,tahoma,sans-serif;
+    /*background: #F0F0E7;*/
+    margin:0;
+    padding: 1px 2px;
+}
+
+div.preventionSection {
+    width: 820px;
+    Height: 70px;
+    position:relative;
+    margin-top:5px;
+    float:left;
+    clear:left;
+    border: thin solid grey;
+    background: white;
+}
+
+div.preventionSection:hover {
+
+background-color:#F7FE2E;
+
+}
+
+div.preventionSet {
+    border: thin solid grey;
+    clear:left;
+}
+
+div.recommendations{
+    font-family: verdana,tahoma,sans-serif;
+    font-size: 1.2em;
+}
+
+div.recommendations ul{
+    padding-left:15px;
+    margin-left:1px;
+    margin-top:0px;
+    padding-top:1px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+}
+
+div.recommendations li{
+
+}
+
+
+.button-ht {
+ 
+	background:#5CCD00;
+	background:-moz-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#5CCD00),color-stop(100%,#4AA400));
+	background:-webkit-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
+	background:-o-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
+	background:-ms-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
+	background:linear-gradient(top,#5CCD00 0%,#4AA400 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5CCD00',endColorstr='#4AA400',GradientType=0);
+	padding:6px 12px;
+	color:#fff;
+	font-family:'Helvetica Neue',sans-serif;
+	font-size:14px;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border:1px solid #459A00;
+	margin-right: 4px;
+
+}
+
+.button-ht:hover{
+border:1px solid #ccc;
+cursor: hand; cursor: pointer;
+}
+
+.button-ht-disabled {
+ 
+	background:#ccc;
+	padding:6px 12px;
+	color:grey;
+	font-family:'Helvetica Neue',sans-serif;
+	font-size:14px;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border:1px solid grey;
+	margin-right: 4px;
+
+}
+
+.button-ht-disabled:hover{
+cursor: hand; cursor: pointer;
+}
+
+#black_wrapper{
+
+	display: none;
+	position: fixed;
+	top: 20px;
+	right:0px;
+	width: 890px;
+	height: 100%;
+}
+
+div.black_overlay{
+	
+	position: fixed;
+	top: 20px;
+	right:0px;
+	width: 890px;
+	height: 100%;
+	background-color: black;
+	z-index:1002;
+	-moz-opacity: 0.4;
+	opacity:.40;
+	filter: alpha(opacity=40);
+	
+
+	
+} 
+
+ 
+#light {
+	
+	position: fixed;
+	top: 50px;
+	right:0px;
+	width: 880px;
+	height: 460px;
+	padding: 0px;
+	background-color: white;
+	z-index:1003;
+	
+}
+
+.close-graph{
+position: absolute;
+right:4px;
+top: 2px;
+z-index:1006;
+}
+
+.close-graph:hover
+{
+-moz-opacity: .4;
+opacity:.40;
+filter:alpha(opacity=40); /* For IE8 and earlier */
+}
+
+
+</style>
+
+<script type="text/javascript"> 
+
+function newSite(s) {
+	var url = "<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type="+s;
+
+
+	document.getElementById('gFrame').src = url;
+	document.getElementById('black_wrapper').style.display='block';
+	
+}
+
+function addMeas(s,t) {
+	var url = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?demographic_no=<%=demographic_no%>&template="+t+s;
+
+document.getElementById('gFrame').src = url;
+document.getElementById('black_wrapper').style.display='block';
+
+
+
+}
+
+function eform() {
+document.getElementById('gFrame').src = '<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=1&demographic_no=<%=demographic_no%>';
+document.getElementById('black_wrapper').style.display='block';
+}
+
+
+</script>
+</head>
+
+<body onload="maxWindow()">
+
+<% 
+String title_for_menu="<font size='4' color='#FFFFFF' style='padding-right:10px; text-shadow: 1px 1px black;'><span style='color:red;'>&hearts;</span> Health Tracker</font>";
+String patient_bar_colour="#1975D1";
+%>
+
+<%@ include file="/share/templates/top_menu.jspf"%>	
+
+<!-- Health Tracker Header START-->
+<table cellpadding="0" cellspacing="0" width="100%" style="position: fixed; top: 48px; z-index:1000; border-top: 1px solid black;;border-bottom: 1px solid black;">
+
+
+<tr bgcolor="#AEB5AE">
+    <td   valign="top">
+    	<!-- <font size="3"><oscar:nameage demographicNo="<%=demographic_no%>"/></font>-->
+    	<table cellpadding="3" cellspacing="0" width="100%">
+	    	<tr bgcolor="#fff">
+
+<!-- this will be replaced with a carousel	    	
+	    		<td width="20px" style="border-right: 1px solid #6E6E6E"><font size="3"><b> <a href="#" style="font-size:20px;color:#6E6E6E;text-decoration:none;"> << </a> </b></font></td>
+-->		    	
+				<td style="padding-left:8px;padding-right:8px;">	
+			<%
+				String btnSelected="";
+				String isDisabled = "";
+				
+				FlowsheetDao flowsheetDao = (FlowsheetDao) SpringUtils.getBean("flowsheetDao");
+				ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
+				dxResearchBeanHandler dxRes = new dxResearchBeanHandler(demographic_no);
+				Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
+				flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
+			
+				
+				Hashtable<String, String> systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();
+				for(String name:systemFlowsheets.keySet()) {
+					String displayName = systemFlowsheets.get(name);
+					MeasurementFlowSheet flowSheetGroups = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(name);
+					
+					Flowsheet fs = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetSettings().get(flowSheetGroups.getName());
+					
+					boolean enabled=true;
+					if(fs != null) {
+						enabled = fs.isEnabled();
+					}
+					
+					if(temp.equals(flowSheetGroups.getName())){
+						btnSelected="style='color:#000;'";
+					}else{
+						btnSelected="";
+					}
+					
+
+					
+					if(enabled && flowSheetGroups.isUniversal()!=true) { 
+						
+						isDisabled = "-disabled";
+						//out.print(flowsheets.size());
+						for (int f = 0; f < flowsheets.size(); f++) {
+							String flowsheetName = flowsheets.get(f);
+							//out.print(flowsheetName);
+							if(flowsheetName.equals(flowSheetGroups.getName())){
+								isDisabled="";
+								break;
+							}
+						}	
+					
+					%>
+						<%//=flowSheetGroups.getDisplayName()%>
+
+						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>">
+						<button  class="button-ht<%=isDisabled%>" <%=btnSelected%>><%=flowSheetGroups.getName().toUpperCase()%></button></a>
+
+
+					<% 
+					
+					} 
+					
+				}
+	
+	
+			%>				
+				
+				 </td>
+				
+<!-- this will be replaced with a carousel
+				<td width="20px" style="border-left: 1px solid #6E6E6E"><font size="3"><b> <a href="#" style="font-size:20px;color:#6E6E6E;text-decoration:none;"> >> </a> </b></font></td>
+				</td>
+-->
+			</tr>
+		</table> 
+			
+    </td>
+ </tr>
+</table>
+<!-- Health Tracker Header END -->
+
+
+<table width="100%" style="margin-top:90px;">
+<tr>
+<td valign="top" colspan="2">
+
+
+<!--TODO: john fix this with css -->
+<div id="meas_content" style="margin-top:10px;">
+
+<font style="font-size:18px;font-weight:bold;"><%=flowSheet%> </font>  
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+<% if (recList.size() > 0){ %>
+	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements.">
+<bean:message key="oscarencounter.templateflowsheet.addall" /></a> &nbsp;|&nbsp; 
+	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:addMeas('<%=recListBuffer.toString()%>', '<%=temp%>')" TITLE="Add all overdue measurements.">
+<bean:message key="oscarencounter.templateflowsheet.addoverdue" /> 
+	</a>
+<%}%>
+</security:oscarSec>
+
+<% if(flowSheet.equals("Pain")){ %>  &nbsp;| <a href="#" onclick="eform();"">eform test</a> <%} %>
+
+<%=mFlowsheet.getTopHTMLStream() %>
+
+</td>
+</tr>
+<tr>
+<td valign="top" width="860px">
+</div>
+
+<div >
+<%
+	//set add link array
+	String[] addAllLink = new String[measurements.size()];
+	int mCount=0;
+
+    EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
+    long startTimeToLoopAndPrint = System.currentTimeMillis();
+    for (String measure:measurements){
+        Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
+        FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
+
+        String hidden= "";
+        if (item.isHide()){
+            hidden= "display:none;";
+        }
+
+        if (h2.get("measurement_type") != null ){
+            Hashtable h = new Hashtable();
+            EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measure);//mFlowsheet.getMeasurementInfo(measure);
+
+            if(mtypeBean!=null) {
+                h.put("name",mtypeBean.getTypeDisplayName());
+                h.put("desc",mtypeBean.getTypeDesc());
+
+
+
+            }
+            String prevName = (String) h.get("name");
+            ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
+            if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+               EctMeasurementsDataBeanHandler.addRemoteMeasurements(alist,measure,Integer.parseInt(demographic_no));
+            }
+	    String warningColour = "white";                
+            if(mi.hasRecommendation(measure)){
+                warningColour = mFlowsheet.getRecommendationColour();
+            }else if(mi.hasWarning(measure)){
+                warningColour = mFlowsheet.getWarningColour();
+            }
+
+	   String warningIndicator = "style='float:left;padding:1px;width:4px;height:10px;background-color:"+warningColour+";'";
+            //measurement_type="EDGI"
+            //display_name="Autonomic Neuropathy"
+            //guideline="Erectile Dysfunction, hastrointestinal disturbance"
+            //graphable="no"
+            //value_name="Answer"
+
+	   
+%>
+<div class="preventionSection" >
+   
+<div class="headMtype" style="height:18px;background-color:#D6D6C2;width:100%" title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
+
+<div <%=warningIndicator%> > </div> <!--replace with indicator-->
+
+<!--mTYPE START----->
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+
+<a class="noborder" href="javascript:void(0)"  onclick="addMeas('&measurement=<%=measure%>','<%= URLEncoder.encode(temp,"UTF-8") %>');">
+
+
+
+</security:oscarSec>
+
+<%if(mi.getWarning(measure)!=null){%>
+<span style="color:red;padding-left:5px;"><%=mi.getWarning(measure)%></span>
+<%}else{%>
+<span style="padding-left:5px;"><%=h2.get("display_name")%></span>
+<%}%>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+            </a>
+</security:oscarSec>
+<!--mTYPE END----->
+
+
+<span style="float:right;">
+<!--graphing start--->
+
+					<%
+					String name = h2.get("display_name").toString();
+					name = name.replaceAll("\\W","");
+					
+					%>
+
+           
+<%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes") && !name.equals("BP")){   %>
+
+			            <%if (alist != null && alist.size() > 1) {
+			            boolean sep = false;
+			            %>
+			               	<a href = "javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="inlinesparkline" values="
+			               	 <%=alist.get(alist.size()-1).getDataField()%>
+			               	 <%for (int x=alist.size()-2; x>=0; x--){
+			               	 %>
+			               	 ,
+				               	 <%if (alist.get(x).getDataField().equals("")) { %>
+				               	 null
+				               	 <%}else{ %>
+				               	 <%=alist.get(x).getDataField()%>
+				               	 <%} %>
+			               	 <%}%>
+			               	 " ></span></a>
+			            <%}%>
+		           <%} else if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){
+		        	  
+		           		if (alist !=null && alist.size() > 0) {
+		           			if (alist.get(0).getDataField().equalsIgnoreCase("Yes")) { %>
+		           				<span class="checkmarksparkline" values="2,1,2,3"></span>
+		           			<%} else if (alist.get(0).getDataField().equalsIgnoreCase("No")) { %>
+		           				<span class="xsparkline"></span>
+		           			<%
+		           			}
+		           		}
+		           	} else if (name.equals("BP")) {
+		           		
+		           		if (alist != null && alist.size() > 1) {
+		           			List<String> first = new ArrayList<String>();
+		           			List<String> second = new ArrayList<String>();
+		           			for (int x=alist.size()-1; x>=0; x--){
+		           				if (alist.get(x) != null && alist.get(x).getDataField() != null && !alist.get(x).getDataField().equals("")) {
+			           				String[] parsed = alist.get(x).getDataField().split("/");
+			           				first.add(parsed[0]);
+			           				second.add(parsed[1]);
+		           				} else {
+		           					first.add("null");
+		           					second.add("null");
+		           				}
+		           			} %>
+		           			<a href="javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="bpline"></span></a>
+		           			<script type="text/javascript">
+		           				var first = new Array();
+		           				var second = new Array();
+
+		           				<%for (int x = 0; x < first.size(); x++) {%>
+		           					first[<%=x%>] = "<%=first.get(x)%>";
+		           					second[<%=x%>] = "<%=second.get(x)%>";
+		           				<%}%>
+
+		           				$('.bpline').sparkline(first,{width:"30px", height:"16px", type:"line", lineColor:"#00f", fillColor:"#cdf", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
+		           				$('.bpline').sparkline(second,{composite:"true", type:"line", lineColor:"#040", fillColor:"#7d7", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
+		           			</script>
+		           		<%}
+		           	} %>           
+<!-- graphing end-->
+
+</span>
+
+
+</div>
+
+<!--
+<div class="headPrevention" >
+
+<font size="1"><%if(h2.get("guideline")!=null){out.print(h2.get("guideline"));}%></font>
+
+  
+</div>
+-->
+<!-- old johnny graph
+<div class="graph"> 
+
+
+
+</div>	
+-->
+
+    <%  int k = 0;
+        for (EctMeasurementsDataBean mdb:alist){
+            k++;
+            mFlowsheet.runRulesForMeasurement(mdb);
+            Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
+            hdata.put("age",mdb.getDataField());
+            hdata.put("prevention_date",UtilDateUtilities.DateToString(mdb.getDateObservedAsDate()));
+            hdata.put("id",""+mdb.getId());
+            String com = mdb.getComments();
+            boolean comb = false;
+            if (com != null && !com.trim().equals("")){
+                comments.add(com);
+                comb = true;
+            }else{
+                com ="";
+            }
+            String hider = "";
+
+            int num =numElementsToShow;
+            if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
+                num =1;
+            }
+            if(sdate != null && edate != null){
+                Date itDate = mdb.getDateObservedAsDate();
+                if (itDate.before(sdate) || itDate.after(edate)){
+                        hider = "style=\"display:none\"";
+                }
+            }else if ( k > num){
+                hider = "style=\"display:none;\"";
+            }
+
+            String indColour = "";
+            String indText = "";
+            if ( mdb.getIndicationColour() != null ){
+                indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
+                if( mFlowsheet.getIndicatorColour(mdb.getIndicationColour()).equals("#9999FF")){ indText="LOW";}
+                if( mFlowsheet.getIndicatorColour(mdb.getIndicationColour()).equals("orange")){ indText="HIGH";}
+                indText="<font color='"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"' size='3'>"+indText+"</font>";
+            }
+
+            if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
+                hider = "style=\"display:none;\"";
+            }
+
+    %>
+
+
+    <div class="preventionProcedure" <%=hider%>  
+    <%if(mdb.getRemoteFacility() == null){ %>
+    style="cursor: hand; cursor: pointer;"
+    onclick="javascript:addMeas('&measurement=<%= response.encodeURL( measure) %>','<%= URLEncoder.encode(temp,"UTF-8") %>&amp;id=<%=hdata.get("id")%>');" 
+    <%}%>
+    >
+        <p align="center" <%//=indColour%> title="fade=[on] header=[Comment <%//=hdata.get("age")%>   <%//=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]">
+
+<!-- mValue -->
+<font size='3'><%=hdata.get("age")%></font> 
+<br/>
+<%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
+
+            <%if (comb) {%>
+            <span class="footnote"><%//=comments.size()%> C</span>
+            <%}%>
+           <%=getFromFacilityMsg(mdb) %> 
+        </p>
+        <p width="16px" <%=indColour%> >  </p>
+        <center><%=indText%></center>
+    </div>
+    <%}%>
+    
+</div>
+<%
+	//creating add all link array
+	addAllLink[mCount]=measure;
+	mCount++;
+
+    }else{
+    String prevType = (String) h2.get("prevention_type");
+    long startPrevType = System.currentTimeMillis();
+    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.parseInt(demographic_no));
+%>
+
+
+<div class="preventionSection" style="<%=hidden%>" >
+    <div class="headPrevention">
+        <p title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
+            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
+                <span title="<%=h2.get("guideline")%>" style="font-weight:bold;"><%=h2.get("display_name")%></span>
+            </a>
+            &nbsp;
+
+            <br/>
+        </p>
+    </div>
+    <%
+        out.flush();
+        for (int k = 0; k < alist.size(); k++){
+      	  	Map<String,Object> hdata = alist.get(k);
+            String com = PreventionData.getPreventionComment(""+hdata.get("id"));
+            boolean comb = false;
+            if (com != null ){
+                comments.add(com);
+                comb = true;
+            }else{
+                com ="";
+            }
+    %>
+    <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+        <p <%=r(hdata.get("refused"))%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>]" >Age: <%=hdata.get("age")%> <br/>
+            <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+            <%if (comb) {%>
+            <span class="footnote"><%=comments.size()%></span>
+            <%}%>
+        </p>
+    </div>
+    <%}%>
+    
+</div>
+
+<%
+	}
+
+}
+%>
+
+<script language="javascript">
+function createAddAll(d,t){
+
+	//most likely will remove this and create qs above to account for prevention
+	var newMtype;
+	newMtype='<%for(int i=0;i<mCount;i++){
+   				//out.print("&measurement="+ addAllLink[i]);
+				out.print("&measurement="+ addAllLink[i]);
+   				}%>';
+
+	//return fsPopup(760,670,'AddMeasurementData.jsp?demographic_no='+d+'&template='+t+newMtype,'addMeasurementData'+h);
+
+	
+	return addMeas(newMtype,t);
+	document.getElementById('black_wrapper').style.display='block';
+	
+}
+</script>
+
+<%
+    oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+    oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
+
+    List<FlowSheetDrug> atcCodes = flowSheetDrugDao.getFlowSheetDrugs(temp,Integer.parseInt(demographic_no));
+    for(FlowSheetDrug fsd : atcCodes){
+            arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());
+
+%>
+
+<div class="preventionSection"  >
+    <div class="headPrevention">
+        <p title="fade=[on] header=[ddddd] body=[ddddddddsdfsdf]">
+            <!-- a href="javascript: function myFunction() {return false; }"  -->
+                <span title="dd" style="font-weight:bold;"><%=arr[0].getGenericName()%></span>
+            <!-- /a -->
+            &nbsp;
+            <br/>
+        </p>
+    </div>
+    <%
+        out.flush();
+        for (oscar.oscarRx.data.RxPrescriptionData.Prescription pres : arr){
+    %>
+    <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'','addPreventionData')" >
+        <p <%=""/*r(hdata.get("refused"))*/%> title="fade=[on] header=[<%=""/*hdata.get("age")*/%> -- Date:<%=""/*hdata.get("prevention_date")*/%>] body=[<%=""/*com*/%>]" ><%=pres.getBrandName()%> <br/>
+            Date: <%=pres.getRxDate()%>
+            <%-- if (comb) {%>
+            <span class="footnote"><%=comments.size()%></span>
+            <%} --%>
+        </p>
+    </div>
+    <%}%>
+</div>
+
+<%}%>
+
+</div>
+<br style="clear:left;"/>
+
+<div style="margin-top: 20px;">
+<a id="ALT" name="ALT"></a>
+    <!--  TODO: Find a place for comments that is not at the bottom - maybe in a css overlay 
+    like I have put the graphs
+    <h3>Comments</h3>
+    -->
+    <ol>
+        <% for (int i = 0; i < comments.size(); i++){
+            String str = (String) comments.get(i);
+        %>
+        <li><%=str%></li>
+        <% }%>
+    </ol>
+</div>
+
+</td>
+<td valign="top" align="left">
+
+<div class="tabs">
+    
+   <div class="tab">
+       <input type="radio" id="tab-1" name="tab-group-1" checked>
+       <label for="tab-1">Medications</label>
+       
+       <div class="content">
+           <%=medicationsList%>
+       </div> 
+   </div>
+<%
+List<Allergy> allergies = allergyDao.findActiveAllergiesOrderByDescription(Integer.parseInt(demographic_no));
+String allergiesList="";
+for(int x=0;x<allergies.size();x++) {
+	if(x!=0) {
+		allergiesList += ",<br/>";
+	}
+	Allergy allergy = allergies.get(x);
+	allergiesList += allergy.getDescription();
+}
+
+
+%>   
+   <div class="tab">
+       <input type="radio" id="tab-2" name="tab-group-1">
+       <label for="tab-2">Allergies</label>
+       
+       <div class="content">
+
+       <%=allergiesList%>
+	 
+       </div> 
+   </div>
+<%
+String remindersQuery = "intake_reminders";
+List<Map<String,Object>> remindersResult = oscarSuperManager.find("providerDao", remindersQuery, demographicParam);
+String remindersList = (!remindersResult.isEmpty() && remindersResult.get(0).get("note")!=null) ? remindersResult.get(0).get("note").toString() : "";
+if (remindersResult.size() > 1) {
+	for (int i=1; i<remindersResult.size(); i++) {
+		remindersList += ",<br/>" + remindersResult.get(i).get("note").toString();
+	}
+}
+%>    
+    <div class="tab">
+       <input type="radio" id="tab-3" name="tab-group-1">
+       <label for="tab-3">Reminders</label>
+     
+       <div class="content" >
+           <%=remindersList%> 
+       </div> 
+   </div>
+
+    <div class="tab">
+       <input type="radio" id="tab-4" name="tab-group-1">
+       <label for="tab-4">Warnings</label>
+     
+       <div class="content">
+<% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
+
+<span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
+
+<ul >
+<% for (String warn : warnings){ %>
+<li style="color: red;"><%=warn%></li>
+<%}%>
+<% for (String warn : recomendations ){%>
+<li style="color: black;"><%=warn%></li>
+<%}%>
+<!--li style="color: red;">6 month TD overdue</li>
+<li>12 month MMR due in 2 months</li-->
+<% if (dsProblems){ %>
+<li style="color: red;">Decision Support Had Errors Running.</li>
+<% } %>
+</ul>
+
+<% } %>
+
+       </div> 
+   </div>
+    
+</div>
+
+<!--option
+<div id="extra_content" style="">
+<div id="rx_content" style="width:260px;height:200px;background-color:white;border:thin solid grey;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;">
+
+<h2>Medications</h2>
+</div>
+</div>
+-->
+
+<br>
+
+<%
+if(temp.equals("ckd")){
+%>
+<div class="tabs">
+    
+   <div class="tab">
+       <input type="radio" id="tab-2-1" name="tab-group-2" checked>
+       <label for="tab-2-1">Chronic Kidney Disease</label>
+       
+       <div id="content_ckd" class="content">
+          
+       </div> 
+
+   </div>
+</div>    
+
+<%
+}
+
+%>
+
+
+
+</td>
+</tr>
+</table>
+
+
+
+
+<div id="black_wrapper">
+<!-- GRAPH Overlay START-->
+<div id="light" class="white_content">
+<iframe id="gFrame" src="about:blank" width="820px" height="460px" frameborder="0" align="center"></iframe>
+</div>
+
+<!-- GRAPH Overlay END-->
+
+<!-- Guidelines Overlay START  -->
+
+<!-- Guidelines Overlay END  -->
+
+<div id="fade" class="black_overlay"></div>
+
+<a id="close-link" href = "javascript:void(0)" onclick = "document.getElementById('black_wrapper').style.display='none'"> 
+<img class="close-graph" src="<%=request.getContextPath()%>/images/close.png" title="Close Graph"></img>
+</a>
+<div>
+
+
+<script type="text/javascript" src="../../share/javascript/boxover.js"></script>
+</body>
+</html:html>
+
+<%!String refused(Object re){
+        String ret = "Given";
+        if (re instanceof java.lang.String){
+
+            if (re != null && re.equals("1")){
+                ret = "Refused";
+            }
+        }
+        return ret;
+    }
+    String r(Object re){
+        String ret = "";
+        if (re instanceof java.lang.String){
+            if (re != null && re.equals("1")){
+                ret = "style=\"background: #FFDDDD;\"";
+            }else if(re !=null && re.equals("2")){
+                ret = "style=\"background: #FFCC24;\"";
+            }
+        }
+        return ret;
+    }
+    String wrapWithSpanIfNotNull(String s,String colour){
+        String ret = "";
+        String q = "\"";
+        if (s != null){
+            ret = "<span style='color:"+colour+"'>"+s+"</span> </br>";
+        }
+        return ret;
+    }
+
+    public void printOutStringLists(List<String> measurements){
+       for (String measurement : measurements){
+
+       }
+    }
+    
+    
+    public String getFromFacilityMsg(EctMeasurementsDataBean emdb){
+		if (emdb.getRemoteFacility()!=null)	return("<br /><span style=\"color:#990000\">(At facility : "+emdb.getRemoteFacility()+")<span>");
+		else return("");
+	}
+    
+    
+    
+    
+    %>

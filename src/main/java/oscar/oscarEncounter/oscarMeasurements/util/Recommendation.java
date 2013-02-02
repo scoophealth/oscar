@@ -111,14 +111,14 @@ public class Recommendation {
 
         String NUMMONTHS = "\"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\"";
 
-
+        
         for(RecommendationCondition cond: getRecommendationCondition()){
              cond.getRuleBaseElement(list,measurement);
         }
 
         ////////88888
         if (text == null || text.trim().equals("")){
-             consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\");";
+             consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+  "  \"+m.getLastDateRecordedInMonthsMsg(\""+measurement+"\")+\" \");";
         }else if( text != null){
             String txt = text;
             log.debug("TRY TO REPLACE $NUMMONTHS:"+txt.indexOf("$NUMMONTHS")+" WITH "+NUMMONTHS+  " "+txt);
@@ -143,7 +143,7 @@ public class Recommendation {
 //        this.monthrange = monthrange;
 //    }
 
-    public String getStrength() {
+	public String getStrength() {
         return strength;
     }
 
