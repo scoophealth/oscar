@@ -160,9 +160,29 @@
 										<%}else if( historyRS != null && !historyRS.trim().equals("")){ %>
 											<td nowrap="nowrap"><%=DateUtils.formatDate(da.getRosterTerminationDate(),request.getLocale())%></td>
 										<%}%>
-					                		<td nowrap="nowrap"><%=(da.getProviderNo().length()>0 && historyRS.equals("RO"))?providerDao.getProvider(da.getProviderNo()).getFormattedName():"" %></td>
+					                		<td nowrap="nowrap">
+					                		<%
+					                		String name = "";
+					                		if(da.getProviderNo().length()>0 && historyRS.equals("RO")) {
+					                			org.oscarehr.common.model.Provider p  = providerDao.getProvider(da.getProviderNo());
+					                			if(p != null) {
+					                				name = p.getFormattedName();
+					                			}
+					                		}
+					                		%>
+					                		<%=name %>
+					                		</td>
 				                		<%if(StringUtils.filled(da.getLastUpdateUser())){ %>
-				                		    <td nowrap="nowrap"><%=providerDao.getProvider(da.getLastUpdateUser()).getFormattedName() %></td>
+				                		    <td nowrap="nowrap">
+				                		    	<%
+				                		    	name = "";
+				                		    	org.oscarehr.common.model.Provider p = providerDao.getProvider(da.getLastUpdateUser());
+				                		    	if(p != null) {
+				                		    		name = p.getFormattedName();
+				                		    	}
+				                		    	%>
+				                		    	<%=name %>
+				                		    </td>
 				                		<%}else{ %>
 				                		    <td nowrap="nowrap">System</td>
 				                		<%}%>
