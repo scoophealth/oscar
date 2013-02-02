@@ -602,15 +602,21 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/config/EditSpecialists.jsp:displayServiceUtil.estSpecialistVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/displayAttachedFiles.jsp:ArrayList privatedocs = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp:Hashtable extraData = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:ArrayList comments = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:ArrayList comments = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Hashtable h = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:ArrayList comments = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable dates = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable forPrint = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:ArrayList comments = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Hashtable h = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();</ViolationValue>   
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Hashtable&lt;String, String&gt; systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/addMeasurementMap2.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/adminFlowsheet/EditFlowsheet.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/adminFlowsheet/UpdateFlowsheet.jsp:Hashtable colourHash = mFlowsheet.getIndicatorHashtable();</ViolationValue>
@@ -2885,10 +2891,10 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/Measurements.jsp:&lt;%@ page import="java.util.Vector;"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/Measurements.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/Measurements.jsp:property="measuringInstructionVector"&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:StringBuffer recListBuffer = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Hashtable h = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:StringBuffer recListBuffer = new StringBuffer();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable dates = (Hashtable)oj;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable dates = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable forPrint = new Hashtable();</ViolationValue>
@@ -2896,6 +2902,12 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:StringBuffer recListBuffer = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPrint.jsp:}else if (oj instanceof Hashtable){</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Hashtable h = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:StringBuffer recListBuffer = new StringBuffer();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();</ViolationValue> 
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf:Hashtable&lt;String, String&gt; systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();</ViolationValue>    
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/addMeasurementMap.jsp:Hashtable ht = (Hashtable) loincCodes.get(i);%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/addMeasurementMap.jsp:Hashtable ht = (Hashtable) measurements.get(i);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/addMeasurementMap2.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>

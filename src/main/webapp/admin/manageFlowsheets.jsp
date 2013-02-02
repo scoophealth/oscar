@@ -183,7 +183,7 @@ br {
 					<td><b>Actions</b></td>
 				</tr>
 			<%
-				Hashtable<String, String> systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();
+			Hashtable<String, String> systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();
 				for(String name:systemFlowsheets.keySet()) {
 					String displayName = systemFlowsheets.get(name);
 					MeasurementFlowSheet flowSheet = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(name);
