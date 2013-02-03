@@ -722,46 +722,6 @@
         <ViolationValue>/src/main/webapp/report/reportonbilledvisitprovider.jsp:Vector     vec         = new Vector();</ViolationValue>
     </ViolationSet>
     <ViolationSet>
-        <ViolationKey>.*BaseGenericIntakeAction.*|.*BaseAction.*</ViolationKey>
-        <ViolationValue>/src/main/java/org/caisi/core/web/BaseAction.java:public class BaseAction extends DispatchActionSupport</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/core/web/InfirmAction.java:public class InfirmAction extends BaseAction</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java:public class StreetHealthIntakeReportAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/BaseAction.java:public abstract class BaseAction extends DispatchAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/BaseGenericIntakeAction.java:abstract class BaseGenericIntakeAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java:public class ClientManagerAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/ClientSearchAction2.java:public class ClientSearchAction2 extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/GenericIntakeEditAction.java:public class GenericIntakeEditAction extends BaseGenericIntakeAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/GenericIntakeReportAction.java:public class GenericIntakeReportAction extends BaseGenericIntakeAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/GenericIntakeSearchAction.java:public class GenericIntakeSearchAction extends BaseGenericIntakeAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/HomeAction.java:public class HomeAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/ProviderInfoAction.java:public class ProviderInfoAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/AdminHomeAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/AdminHomeAction.java:public class AdminHomeAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/AgencyManagerAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/AgencyManagerAction.java:public class AgencyManagerAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/BaseAdminAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/BaseAdminAction.java:public class BaseAdminAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/BedManagerAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/BedManagerAction.java:public class BedManagerAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/DefaultRoleAccessAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/DefaultRoleAccessAction.java:public class DefaultRoleAccessAction extends  BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/FacilityManagerAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/FacilityManagerAction.java:public class FacilityManagerAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java:public class ProgramManagerAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerViewAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerViewAction.java:public class ProgramManagerViewAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/StaffManagerAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/StaffManagerAction.java:public class StaffManagerAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/reports/BasicReportAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/reports/BasicReportAction.java:public class BasicReportAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/vaccine/VaccineProviderReportAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/vaccine/VaccineProviderReportAction.java:public class VaccineProviderReportAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/ShelterSelectionAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/ShelterSelectionAction.java:public final class ShelterSelectionAction extends BaseAction {</ViolationValue>
-    </ViolationSet>
-    <ViolationSet>
         <ViolationKey>.*DBHandler\..*|.*getConnection\(.*|.*DBHandler\..*|.*DBPreparedHandler.*|.*DBHelp.*|.*\.selectIntList.*|.*\.selectStringList.*|.*OscarSuperManager.*|.*HibernateDaoSupport.*</ViolationKey>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam param = params[i];</ViolationValue>
@@ -1203,7 +1163,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/GenericIntakeManager.java:private Hashtable&lt;Integer, Integer&gt; getEqAnswerIds(Set&lt;Integer&gt; caIds,</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/GenericIntakeManager.java:private Hashtable&lt;Integer, Integer&gt; getEqQuestionIds(</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/GenericIntakeManager.java:private void buildlastIndex(Hashtable&lt;Integer, Integer&gt; eqNodeIds) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/BaseAction.java:protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuffer parameters) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/GenericIntakeEditAction.java:protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuffer parameters) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/GenericIntakeSearchAction.java:protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuffer parameters) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
@@ -3257,12 +3218,5 @@
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:bgcolor = new StringBuffer("pink");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:strHolidayName = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:strHolidayName = new StringBuffer(aHScheduleHoliday.holiday_name) ;</ViolationValue>
-    </ViolationSet>
-    <ViolationSet>
-        <ViolationKey>.*\.(error|warn|debug|fatal)\s*\((e[0-9]*|ex[0-9]*|[a-zA-Z]+xception)\);</ViolationKey>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ExtractBean.java:MiscUtils.getLogger().error(e);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:_logger.error(e);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCreateBillingFile.java:_logger.error(e);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCreateBillingFile.java:_logger.warn(e);</ViolationValue>
     </ViolationSet>
 </TrackingRegexpCheck>

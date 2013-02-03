@@ -30,16 +30,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
@@ -49,13 +46,11 @@ import com.quatro.service.LookupManager;
 import com.quatro.service.security.SecurityManager;
 import com.quatro.service.security.UserAccessManager;
 
-public final class ShelterSelectionAction extends BaseAction {
+public final class ShelterSelectionAction extends DispatchAction {
 
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
     private LookupManager lookupManager = (LookupManager) SpringUtils.getBean("lookupManager");
-    private static final Logger _logger = Logger.getLogger(LoginAction.class);
-    private static final String LOG_PRE = "Login!@#$: ";
-
+   
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	 String mthd =request.getParameter("method");
@@ -67,8 +62,7 @@ public final class ShelterSelectionAction extends BaseAction {
          
     	String providerNo=(String)request.getSession(true).getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
     	List shelters=providerManager.getShelterIds(providerNo);
-    	ActionMessages messages = new ActionMessages();
-      
+    	
          if (shelters.size() > 1) {
          	String shlts = String.valueOf(shelters.get(0));
          	for(int i=1; i<shelters.size(); i++)
@@ -96,7 +90,7 @@ public final class ShelterSelectionAction extends BaseAction {
              request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTER, new LookupCodeValue());
          }
          // initiate security manager
-         UserAccessManager userAccessManager = (UserAccessManager) getAppContext().getBean("userAccessManager");
+         UserAccessManager userAccessManager = (UserAccessManager) SpringUtils.getBean("userAccessManager");
          
          SecurityManager secManager = userAccessManager.getUserSecurityManager(providerNo,null,lookupManager);
          request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER, secManager);
@@ -114,7 +108,7 @@ public final class ShelterSelectionAction extends BaseAction {
         request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTER, shelterObj);
         
         // initiate security manager
-        UserAccessManager userAccessManager = (UserAccessManager) getAppContext().getBean("userAccessManager");
+        UserAccessManager userAccessManager = (UserAccessManager) SpringUtils.getBean("userAccessManager");
          
         SecurityManager secManager = userAccessManager.getUserSecurityManager(providerNo,shelterId,lookupManager);
         request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER, secManager);
@@ -123,41 +117,6 @@ public final class ShelterSelectionAction extends BaseAction {
         
         return mapping.findForward("home");
     }
-    private void initMenu(HttpServletRequest request)
-	{
-		SecurityManager sec = getSecurityManager(request);
-		if (sec==null) return;
-		//Client Management
-		if (sec.GetAccess(KeyConstants.FUN_CLIENT, "").compareTo("r") >= 0) {
-			request.getSession(true).setAttribute(KeyConstants.MENU_CLIENT, KeyConstants.ACCESS_VIEW);
-		} else
-			request.getSession(true).setAttribute(KeyConstants.MENU_CLIENT, KeyConstants.ACCESS_NULL);
-	
-		//Program
-		if (sec.GetAccess(KeyConstants.FUN_PROGRAM, "").compareTo("r") >= 0) {
-			request.getSession(true).setAttribute(KeyConstants.MENU_PROGRAM, KeyConstants.ACCESS_VIEW);
-		} else
-			request.getSession(true).setAttribute(KeyConstants.MENU_PROGRAM, KeyConstants.ACCESS_NULL);
-
-		//Facility Management
-		if (sec.GetAccess(KeyConstants.FUN_FACILITY, "").compareTo("r") >= 0) {
-			request.getSession(true).setAttribute(KeyConstants.MENU_FACILITY, KeyConstants.ACCESS_VIEW);
-		} else
-			request.getSession(true).setAttribute(KeyConstants.MENU_FACILITY, KeyConstants.ACCESS_NULL);
-
-		//Report Runner
-		if (sec.GetAccess(KeyConstants.FUN_REPORTS, "").compareTo("r") >= 0) {
-			request.getSession(true).setAttribute(KeyConstants.MENU_REPORT, KeyConstants.ACCESS_VIEW);
-		} else
-			request.getSession(true).setAttribute(KeyConstants.MENU_REPORT, KeyConstants.ACCESS_NULL);
-
-		//System Admin
-		if (OscarProperties.getInstance().isAdminOptionOn() && sec.GetAccess("_admin", "").compareTo("r") >= 0) {
-			request.getSession(true).setAttribute(KeyConstants.MENU_ADMIN, KeyConstants.ACCESS_VIEW);
-		} else
-			request.getSession(true).setAttribute(KeyConstants.MENU_ADMIN, KeyConstants.ACCESS_NULL);
-		request.getSession(true).setAttribute(KeyConstants.MENU_HOME, KeyConstants.ACCESS_VIEW);
-		request.getSession(true).setAttribute(KeyConstants.MENU_TASK, KeyConstants.ACCESS_VIEW);
-	}
+    
 	
 }

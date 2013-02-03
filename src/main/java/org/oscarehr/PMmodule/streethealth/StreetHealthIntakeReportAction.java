@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,20 +42,21 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.service.StreetHealthReportManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * 
  * @author Marc Dumontier (marc@mdumontier.com)
  *
  */
-public class StreetHealthIntakeReportAction extends BaseAction {
+public class StreetHealthIntakeReportAction extends DispatchAction {
 	
 	private static Logger log = MiscUtils.getLogger();
 	
@@ -387,8 +387,7 @@ public class StreetHealthIntakeReportAction extends BaseAction {
 		}catch(NumberFormatException e) {log.warn(e);}
 	}
 	
-    @SuppressWarnings("unchecked")
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         String target = "success";   
         
         if(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("download")) {
@@ -401,7 +400,7 @@ public class StreetHealthIntakeReportAction extends BaseAction {
         loadNodeIdsWithNoLabels();
         
         //initialize business manager
-        this.mgr = (StreetHealthReportManager) getAppContext().getBean("streetHealthReportManager");
+        this.mgr = (StreetHealthReportManager) SpringUtils.getBean("streetHealthReportManager");
         
       
         //check to make sure use is logged in
@@ -450,7 +449,6 @@ public class StreetHealthIntakeReportAction extends BaseAction {
      * For each intake in the cohort, pull out the values, and add to the results map 
      * 
      */
-    @SuppressWarnings("unchecked")
 	public void getCohortCount(Map<StreetHealthReportKey,Integer> results, List cohortList, int idx) {
         int minAge=0;
         int maxAge=0;
@@ -788,7 +786,9 @@ public class StreetHealthIntakeReportAction extends BaseAction {
 	            		if(hospitalization.getDeclined().equalsIgnoreCase("T")) {
 	            			numDeclined++;
 	            		}
-	            	} catch(NumberFormatException e) {}
+	            	} catch(NumberFormatException e) {
+	            		MiscUtils.getLogger().warn("warning",e);
+	            	}
 	            }
 	           
 	            addToResults(results,idx,"Current Psychiatric Hospitalizations","Total Number of Episodes",numPsychHospitalizations);
@@ -952,11 +952,6 @@ public class StreetHealthIntakeReportAction extends BaseAction {
     
     public HospitalizationBean getHospitalizationInfo(Intake intake, String label, int date, int length, int psych, int phys, int declined) {
     	HospitalizationBean bean = new HospitalizationBean();
-    	//bean.setDate(getIntakeAnswerByNodeId(intake, label + " year",date));
-    	//bean.setLength(getIntakeAnswerByNodeId(intake, label + " length",length));
-    	//bean.setPsychiatric(getIntakeAnswerByNodeId(intake, label + " psychiatric",psych));
-    	//bean.setPhysical(getIntakeAnswerByNodeId(intake, label + " physical",phys));
-    	//bean.setDeclined(getIntakeAnswerByNodeId(intake, label + " declined",declined));    
     	
     	bean.setDate(getIntakeAnswerByNodeId(intake,date));
     	bean.setLength(getIntakeAnswerByNodeId(intake,length));

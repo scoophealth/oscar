@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.DuplicateBedNameException;
 import org.oscarehr.PMmodule.exception.DuplicateRoomNameException;
@@ -44,17 +45,19 @@ import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * Responsible for managing beds
  */
-public class BedManagerAction extends BaseAction {
+public class BedManagerAction extends DispatchAction {
 
     private static final String FORWARD_MANAGE = "manage";
 
@@ -66,6 +69,9 @@ public class BedManagerAction extends BaseAction {
 
     private FacilityDao facilityDao;
 
+    private BedDemographicManager bedDemographicManager = (BedDemographicManager) SpringUtils.getBean("bedDemographicManager");
+    private RoomDemographicManager roomDemographicManager = (RoomDemographicManager) SpringUtils.getBean("roomDemographicManager");
+    
     public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
 	}
@@ -183,7 +189,7 @@ public class BedManagerAction extends BaseAction {
         // if some bed assigned, retrieve all beds assigned to this room -> delete them all <-- ???
         // (3)then delete this room ('room' table)
         try {
-            List<RoomDemographic> roomDemographicList = getRoomDemographicManager().getRoomDemographicByRoom(roomId);
+            List<RoomDemographic> roomDemographicList = roomDemographicManager.getRoomDemographicByRoom(roomId);
 
             if (roomDemographicList != null && !roomDemographicList.isEmpty()) {
                 throw new RoomHasActiveBedsException("The room has client(s) assigned to it and cannot be removed.");
@@ -256,7 +262,7 @@ public class BedManagerAction extends BaseAction {
 
         try {
 
-            BedDemographic bedDemographic = getBedDemographicManager().getBedDemographicByBed(bedId);
+            BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(bedId);
 
             if (bedDemographic != null) {
                 throw new BedReservedException("The bed has client assigned to it and cannot be removed.");

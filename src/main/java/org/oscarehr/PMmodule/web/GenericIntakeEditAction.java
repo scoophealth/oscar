@@ -50,6 +50,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.RedirectingActionForward;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -58,8 +59,11 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeJavascript;
-import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.ClientManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
+import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
@@ -72,8 +76,10 @@ import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.match.IMatchManager;
 import org.oscarehr.match.MatchManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -82,7 +88,7 @@ import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
 
-public class GenericIntakeEditAction extends BaseGenericIntakeAction {
+public class GenericIntakeEditAction extends DispatchAction {
 
 	private static Logger LOG = MiscUtils.getLogger();
 	// Forwards
@@ -91,11 +97,48 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private static final String CLIENT_EDIT = "clientEdit";
 	private static final String EFORM_ADD = "eformAdd";
 	private static final String APPT = "appointment";
+	protected static final String CLIENT_EDIT_ID = "id";
 	
 	private ClientImageDAO clientImageDAO = null;
 	private SurveyManager surveyManager = new SurveyManagerImpl();
 	private IMatchManager matchManager = new MatchManager();
 	
+	protected static final String PROGRAM_ID = "programId";
+	protected static final String TYPE = "type";
+	protected static final String CLIENT = "client";
+	protected static final String APPOINTMENT = "appointment";
+	protected static final String DEMOGRAPHIC_NO = "demographic_no";
+	protected static final String FORM_ID = "fid";
+	protected static final String CLIENT_ID = "clientId";
+	protected static final String INTAKE_ID = "intakeId";
+	
+	
+	private GenericIntakeManager genericIntakeManager;
+	protected ClientManager clientManager;
+	protected ProgramManager programManager;
+	protected AdmissionManager admissionManager;
+	protected CaseManagementManager caseManagementManager;
+
+	
+	 public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+	        this.genericIntakeManager = genericIntakeManager;
+	    }
+	 
+	    protected Integer getProgramId(HttpServletRequest request) {
+			Integer programId = null;
+			
+			String programIdParam = request.getParameter(PROGRAM_ID);
+			
+			if (programIdParam != null) {
+				try {
+					programId = Integer.valueOf(programIdParam);
+				} catch (NumberFormatException e) {
+					LOG.error("Error", e);
+				}
+			}
+			
+			return programId;
+		}
 	public void setOscarSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
 	}
@@ -112,8 +155,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		formBean.setGenders(genders);
 		// end of change
 
-		String intakeType = getType(request);
-		String providerNo = getProviderNo(request);
+		String intakeType = request.getParameter(TYPE);
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		Intake intake = null;
 		MiscUtils.getLogger().debug("INTAKE TYPE " + intakeType);
@@ -188,13 +231,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		formBean.setGenders(genders);
 		// end of change
 
-		String intakeType = getType(request);
+		String intakeType = request.getParameter(TYPE);
 		//Integer clientId = getClientIdAsInteger(request);
-		String providerNo = getProviderNo(request);
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		Integer nodeId = null;
 		try {
-			String strNodeId = getParameter(request,"nodeId");
+			String strNodeId = request.getParameter("nodeId");
 			if(strNodeId != null)
 				nodeId = Integer.valueOf(strNodeId);
 		} catch(NumberFormatException e) {
@@ -270,13 +313,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		formBean.setGenders(genders);
 		// end of change
 
-		String intakeType = getType(request);
+		String intakeType = request.getParameter(TYPE);
 		Integer clientId = getClientIdAsInteger(request);
-		String providerNo = getProviderNo(request);
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		Integer nodeId = null;
 		try {
-			String strNodeId = getParameter(request,"nodeId");
+			String strNodeId = request.getParameter("nodeId");
 			if(strNodeId != null)
 				nodeId = Integer.valueOf(strNodeId);
 		} catch(NumberFormatException e) {
@@ -354,8 +397,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		Integer facilityId = loggedInInfo.currentFacility.getId();
 
-		String intakeType = getType(request);
-		String providerNo = getProviderNo(request);
+		String intakeType = request.getParameter(TYPE);
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		Integer clientId = getClientIdAsInteger(request);
 		Integer intakeId = getIntakeId(request);
 
@@ -392,7 +435,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		Intake intake = formBean.getIntake();
 		String intakeType = intake.getType();
 		Demographic client = formBean.getClient();
-		String providerNo = getProviderNo(request);
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		Integer nodeId = formBean.getNodeId();
 		Integer oldId = null;
 		
@@ -703,26 +746,26 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		String forward = null;
 		Integer clientEditId = formBean.getClient().getDemographicNo();
 
-		StringBuilder parameters = new StringBuilder(PARAM_START);
+		StringBuilder parameters = new StringBuilder("?");
 
 		Set<Integer> serviceProgramIds = formBean.getSelectedServiceProgramIds();
 		if (!serviceProgramIds.isEmpty()) {
 			Integer serviceProgramId = serviceProgramIds.iterator().next(); //assumption: there is only one item in this set at a time. Take the 1st one.
 			if (serviceProgramId == Integer.parseInt(OscarProperties.getIntakeProgramAccessServiceId())) {
-				parameters.append(FORM_ID).append(PARAM_EQUALS).append(OscarProperties.getIntakeProgramAccessFId());
+				parameters.append(FORM_ID).append("=").append(OscarProperties.getIntakeProgramAccessFId());
 				forward = EFORM_ADD;
 			} else if (serviceProgramId == Integer.parseInt(OscarProperties.getIntakeProgramCashServiceId())) {
-				parameters.append(FORM_ID).append(PARAM_EQUALS).append(OscarProperties.getIntakeProgramCashFId());
+				parameters.append(FORM_ID).append("=").append(OscarProperties.getIntakeProgramCashFId());
 				forward = EFORM_ADD;
 			}
 		}
 		if (EFORM_ADD.equals(forward)) {
-			parameters.append(PARAM_AND);
-			parameters.append(DEMOGRAPHIC_NO).append(PARAM_EQUALS).append(clientEditId);
-			parameters.append(PARAM_AND);
-			parameters.append(APPOINTMENT).append(PARAM_EQUALS).append(0); // appointment code is always 0
+			parameters.append("&");
+			parameters.append(DEMOGRAPHIC_NO).append("=").append(clientEditId);
+			parameters.append("&");
+			parameters.append(APPOINTMENT).append("=").append(0); // appointment code is always 0
 		} else {
-			parameters.append(CLIENT_EDIT_ID).append(PARAM_EQUALS).append(clientEditId);
+			parameters.append(CLIENT_EDIT_ID).append("=").append(clientEditId);
 			forward = CLIENT_EDIT;
 		}
 
@@ -1121,5 +1164,70 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 
 	}
+	
+    protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuffer parameters) {
+        ActionForward forward = mapping.findForward(forwardName);
+        StringBuilder path = new StringBuilder(forward.getPath());
+        path.append(parameters);
+        
+        return new RedirectingActionForward(path.toString());
+    }
 
+    protected ActionForward createRedirectForward(ActionMapping mapping, 
+        String forwardName, StringBuilder parameters) {
+	    ActionForward forward = mapping.findForward(forwardName);
+	    StringBuilder path = new StringBuilder(forward.getPath());
+	    path.append(parameters);
+	
+	    return new RedirectingActionForward(path.toString());
+    }
+
+    protected Demographic getClient(HttpServletRequest request) {
+		Demographic client = (Demographic) getSessionAttribute(request,CLIENT);
+		return (client != null) ? client : new Demographic();
+	}
+    
+    public void setClientManager(ClientManager mgr) {
+    	this.clientManager = mgr;
+    }
+    
+    public void setProgramManager(ProgramManager mgr) {
+    	this.programManager = mgr;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
+    
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+    
+	protected Integer getClientIdAsInteger(HttpServletRequest request) {
+		Integer clientId = null;
+		String clientId_str = request.getParameter(CLIENT_ID);
+		if(clientId_str!=null) {
+			try {
+				clientId = Integer.valueOf(clientId_str);
+			} catch (NumberFormatException e) {
+				LOG.error("Error", e);
+			}
+		}
+		return clientId;
+		
+	}
+
+	protected Integer getIntakeId(HttpServletRequest request) {
+		return Integer.valueOf(request.getParameter(INTAKE_ID));
+	}
+	
+	protected Object getSessionAttribute(HttpServletRequest request, String attributeName) {
+		Object attribute = request.getSession().getAttribute(attributeName);
+		
+		if (attribute != null) {
+			request.getSession().removeAttribute(attributeName);
+		}
+		
+		return attribute;
+	}
 }

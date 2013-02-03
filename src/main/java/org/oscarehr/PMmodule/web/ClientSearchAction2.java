@@ -33,18 +33,19 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
-
-import com.quatro.service.LookupManager;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.util.SpringUtils;
 
-public class ClientSearchAction2 extends BaseAction {
+import com.quatro.service.LookupManager;
+
+public class ClientSearchAction2 extends DispatchAction {
 	
 	private LookupManager lookupManager;
     private ClientManager clientManager;
@@ -91,12 +92,15 @@ public class ClientSearchAction2 extends BaseAction {
         if(noteId==null||noteId.trim().length()==0||noteId.trim().equalsIgnoreCase("null")||noteId.trim().substring(0,1).equalsIgnoreCase("0")){
             String demographicNo = request.getParameter("demographicNo");
             if(demographicNo==null||demographicNo.trim().length()==0){
+            	//don't do anything?
             }else{
                 List<CaseManagementNote> notes = caseManagementNoteDao.getNotesByDemographic(demographicNo);
                 if(notes!=null&&notes.size()>0) noteId = notes.get(notes.size()-1).getId()+"";
             }
         }
-        if(noteId==null||noteId.trim().length()==0){}else{
+        if(noteId==null||noteId.trim().length()==0){
+        	//don't do anything?
+        }else{
             request.getSession().setAttribute("noteId",noteId);
             request.setAttribute("noteId",noteId);
         }

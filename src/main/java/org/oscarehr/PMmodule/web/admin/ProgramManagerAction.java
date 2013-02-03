@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,10 +44,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.CriteriaDao;
-import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDao;
-import org.oscarehr.PMmodule.dao.CriteriaTypeDao;
 import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDao;
 import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.PMmodule.model.BedCheckTime;
@@ -76,7 +74,6 @@ import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.VacancyTemplateManager;
 import org.oscarehr.PMmodule.utility.ProgramAccessCache;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -97,7 +94,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.quatro.service.security.RolesManager;
 
-public class ProgramManagerAction extends BaseAction {
+public class ProgramManagerAction extends DispatchAction {
 
 	private static final Logger logger = MiscUtils.getLogger();
 
@@ -116,9 +113,9 @@ public class ProgramManagerAction extends BaseAction {
 	private FunctionalCentreDao functionalCentreDao;
 	private static VacancyTemplateDao vacancyTemplateDAO = (VacancyTemplateDao) SpringUtils.getBean(VacancyTemplateDao.class);
 	private static CriteriaDao criteriaDAO = SpringUtils.getBean(CriteriaDao.class);
-	private static CriteriaTypeDao criteriaTypeDAO = SpringUtils.getBean(CriteriaTypeDao.class);
+	//private static CriteriaTypeDao criteriaTypeDAO = SpringUtils.getBean(CriteriaTypeDao.class);
 	private static CriteriaTypeOptionDao criteriaTypeOptionDAO = SpringUtils.getBean(CriteriaTypeOptionDao.class);
-	private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean(CriteriaSelectionOptionDao.class);
+	//private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean(CriteriaSelectionOptionDao.class);
 	
 	private IMatchManager matchManager = new MatchManager();
 	
@@ -819,13 +816,10 @@ public class ProgramManagerAction extends BaseAction {
 	}
 	
 	public ActionForward viewVacancyTemplate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm programForm = (DynaActionForm) form;
-		String programId = request.getParameter("programId");
 		String templateId = request.getParameter("templateId");
 		
 		request.setAttribute("templateId", templateId);
 		
-		VacancyTemplate vt = vacancyTemplateDAO.getVacancyTemplate(Integer.valueOf(templateId));
 		List<Criteria> criterias = criteriaDAO.getCriteriaByTemplateId(Integer.valueOf(templateId));
 		request.setAttribute("criterias",criterias);
 		
@@ -839,7 +833,6 @@ public class ProgramManagerAction extends BaseAction {
 		
 		programForm.set("program", program);
 		
-		String programId = request.getParameter("programId");
 		String templateId = request.getParameter("requiredVacancyTemplateId");
 		
 		request.setAttribute("view.tab", "vacancy_add");
@@ -868,7 +861,6 @@ public class ProgramManagerAction extends BaseAction {
 		String templateId_str = request.getParameter("requiredVacancyTemplateId");
 		if(!StringUtils.isBlank(templateId_str))
 			templateId = Integer.valueOf(templateId_str);
-		VacancyTemplate vacancyTemplate=VacancyTemplateManager.createVacancyTemplate(templateId_str);
 		
 		Vacancy vacancy = new Vacancy();
 		String vacancyId = request.getParameter("vacancyId");
@@ -881,7 +873,7 @@ public class ProgramManagerAction extends BaseAction {
 		vacancy.setName(request.getParameter("vacancyName"));
 		String dateClosed = parameters.get("dateClosed")[0];
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", request.getLocale());
-		ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
+		
 		if (!StringUtils.isBlank(dateClosed)) {			
 			try {
 				Date dateClosedFormatted = formatter.parse(dateClosed);			
@@ -1562,4 +1554,23 @@ public class ProgramManagerAction extends BaseAction {
     	this.vacancyTemplateManager = vacancyTemplateManager;
     }
 
+	protected Integer getParameterAsInteger(HttpServletRequest request, String name, Integer defaultVal) {
+		String param = request.getParameter(name);
+		if(!(param==null || param.equals("null") || param.equals(""))) {
+			return Integer.valueOf(param);
+		}
+		return defaultVal;
+	}
+	
+	protected Boolean getParameterAsBoolean(HttpServletRequest request, String name, Boolean defaultVal) {
+		String param = request.getParameter(name);
+		if(param != null) {
+			return Boolean.valueOf(param);
+		}
+		return defaultVal;
+	}
+	
+	protected Boolean getParameterAsBoolean(HttpServletRequest request, String name) {
+		return getParameterAsBoolean(request,name,false);
+	}
 }
