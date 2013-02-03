@@ -562,7 +562,7 @@ changePassword.moveTo(0,0);
 function popupInboxManager(varpage){
     var page = "" + varpage;
     var windowname="apptProviderInbox";
-    windowprops = "height=700,width=1100,location=no,"
+    windowprops = "height=700,width=1215,location=no,"
     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
     var popup = window.open(page, windowname, windowprops);
     if (popup != null) {
