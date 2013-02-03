@@ -23,13 +23,18 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.ProgramQueueDao;
+import org.oscarehr.PMmodule.dao.VacancyDao;
+import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.oscarehr.PMmodule.model.Vacancy;
+import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -37,8 +42,16 @@ public class ProgramQueueManager
 {
 	private ProgramQueueDao dao;
 	private ClientReferralDAO referralDAO;
+	private VacancyTemplateDao vacancyTemplateDao;
+	private VacancyDao vacancyDao;
 	
+	public void setVacancyDao(VacancyDao vacancyDao) {
+    	this.vacancyDao = vacancyDao;
+    }
 	
+	public void setVacancyTemplateDao(VacancyTemplateDao vacancyTemplateDao) {
+    	this.vacancyTemplateDao = vacancyTemplateDao;
+    }
 	public void setProgramQueueDao(ProgramQueueDao dao)	{
 		this.dao = dao;
 	}
@@ -62,7 +75,25 @@ public class ProgramQueueManager
 	}
 	
 	public List<ProgramQueue> getActiveProgramQueuesByProgramId(Long programId) {
-		return dao.getActiveProgramQueuesByProgramId(programId);
+		List<ProgramQueue> queue = dao.getActiveProgramQueuesByProgramId(programId);
+		List<ProgramQueue> q = new ArrayList<ProgramQueue>();
+		//Get vacancy name and vacancy template name.
+		for(ProgramQueue pq : queue) {
+			if(pq.getReferralId()!=null) {
+				ClientReferral ref = referralDAO.getClientReferral(pq.getReferralId());				
+				if(ref.getSelectVacancy()!=null) {
+					pq.setVacancyName(ref.getSelectVacancy()==null?"":ref.getSelectVacancy());
+					Vacancy vacancy = vacancyDao.getVacancyById(ref.getVacancyId()==null?0:ref.getVacancyId());
+					if(vacancy!=null) {
+						VacancyTemplate vt = vacancyTemplateDao.getVacancyTemplate(vacancy.getTemplateId()==null?0:vacancy.getTemplateId());
+						pq.setVacancyTemplateName(vt!=null?vt.getName():"");
+					}			
+					
+				}
+			}
+			q.add(pq);
+		}
+		return q;
 	}
 	
 	public ProgramQueue getActiveProgramQueue(String programId, String demographicNo) {

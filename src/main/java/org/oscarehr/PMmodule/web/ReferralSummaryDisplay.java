@@ -57,13 +57,17 @@ public class ReferralSummaryDisplay {
 	private String referralDate;
 	private String referringProvider;
 	private int daysInQueue;
-
+	private String selectVacancy;
+	private String vacancyTemplateName;
+	
 	public ReferralSummaryDisplay(ClientReferral clientReferral) {
 		programName = "local / "+clientReferral.getProgramName();
 		programType = clientReferral.getProgramType();
 		referralDate = dateFormatter.format(clientReferral.getReferralDate());
 		referringProvider = clientReferral.getProviderFormattedName() + " / local";
 		daysInQueue = DateUtils.calculateDayDifference(clientReferral.getReferralDate(), new Date());
+		selectVacancy = clientReferral.getSelectVacancy();
+		vacancyTemplateName = clientReferral.getVacancyTemplateName();
 	}
 
 	public ReferralSummaryDisplay(Referral referral) throws MalformedURLException {
@@ -111,4 +115,11 @@ public class ReferralSummaryDisplay {
 		return daysInQueue;
 	}
 
+	public String getSelectVacancy() {
+		return selectVacancy;
+	}
+	
+	public String getVacancyTemplateName() {
+		return vacancyTemplateName;
+	}
 }

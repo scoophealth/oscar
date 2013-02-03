@@ -299,13 +299,34 @@ public class WaitlistDao {
             bo.setNoOfVacancy(((BigInteger)cols[1]).intValue());
             bo.setVacancyName((String)cols[2]);
             bo.setCreated((java.util.Date)cols[3]);
-            bo.setVacancyID((Integer)cols[4]);
+            bo.setVacancyID((Integer)cols[4]);            
 			bos.add(bo);
         }
 		
 		return bos;
 	}
 
+	public List<VacancyDisplayBO> listVacanciesForWaitListProgram() {
+		final List<VacancyDisplayBO> bos = new ArrayList<VacancyDisplayBO>();
+		String queryStr = "SELECT p.id, v.vacancyName, v.dateCreated, v.id as vacancyId, vt.name FROM vacancy v, program p, vacancy_template vt where " 
+			+ "v.wlProgramId=p.id and v.templateId=vt.TEMPLATE_ID and v.status=?1 order by v.vacancyName";
+		Query query = entityManager.createNativeQuery(queryStr);
+		query.setParameter(1, "active");
+		
+		@SuppressWarnings("unchecked")
+		List<Object[]> results = query.getResultList();
+		for (Object[] cols : results) {
+            VacancyDisplayBO bo = new VacancyDisplayBO();
+            bo.setProgramId((Integer)cols[0]);            
+            bo.setVacancyName((String)cols[1]);
+            bo.setCreated((java.util.Date)cols[2]);
+            bo.setVacancyID((Integer)cols[3]);
+            bo.setVacancyTemplateName((String)cols[4]);
+			bos.add(bo);
+        }
+		
+		return bos;
+	}
 	private static final String QUERY_ALL_CLIENT_DATA = "SELECT DISTINCT demographic_no, fdid, var_name, var_value "
 			+ "FROM eform_values LEFT JOIN client_referral cr ON cr.client_id=demographic_no, " 
 			+ "(SELECT demographic_no AS dmb,MAX(fdid) AS ffdid FROM eform_values GROUP BY demographic_no) xyz " 

@@ -86,6 +86,7 @@ function removeFromRemoteQueue(remoteReferralId) {
 		<display:column property="clientName" sortable="true" title="Client Name" />
 		<display:column property="remoteReferral.referralDate" sortable="true" title="Referral Date" />
 		<display:column property="providerName" sortable="true" title="Referring Provider" />
+		<display:column property="vacancyName" sortable="true"	title="Vacancy Name" />
 		<display:column property="remoteReferral.reasonForReferral" sortable="true" title="Notes" />
 	</display:table>
 </c:if>

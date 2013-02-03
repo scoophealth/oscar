@@ -59,8 +59,9 @@ public class ClientReferral implements Serializable {
     private String remoteProgramId;
 
     //transient
-    private String selectVacancy;
-
+    private String selectVacancy; //vacancy name
+    private String vacancyTemplateName;
+    
     public Integer getVacancyId() {
         return vacancyId;
     }
@@ -418,6 +419,14 @@ public class ClientReferral implements Serializable {
 	public void setSelectVacancy(String selectVacancy) {
 		this.selectVacancy = selectVacancy;
 	}
+
+	public String getVacancyTemplateName() {
+    	return vacancyTemplateName;
+    }
+
+	public void setVacancyTemplateName(String vacancyTemplateName) {
+    	this.vacancyTemplateName = vacancyTemplateName;
+    }
 	
 	
     
