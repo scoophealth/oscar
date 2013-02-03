@@ -132,16 +132,20 @@ public class Matcher {
 		vacancyClientMatch.setVacancy_id(vacancyData.getVacancy_id());
 		vacancyClientMatch.setForm_id(clientData.getFormId());
 		vacancyClientMatch.setStatus(VacancyClientMatch.PENDING);
-		vacancyClientMatch.setMatchPercentage(getMatchPercentage(clientData, vacancyData));
+		
+		int paramCntPercentage = vacancyData.getVacancyData().size();
+		int paramMatch = getParamMatch(clientData, vacancyData);
+		if (paramCntPercentage == 0) {
+			vacancyClientMatch.setMatchPercentage(0);
+		} else {
+			vacancyClientMatch.setMatchPercentage(paramMatch/vacancyData.getVacancyData().size());
+			String proportion = String.format("%d/%d", paramMatch/100, paramCntPercentage);
+			vacancyClientMatch.setProportion(proportion);
+		}
 		return vacancyClientMatch;
 	}
 
-	private int getMatchPercentage(ClientData clientData,
-			VacancyData vacancyData) {
-		int paramCntPercentage = vacancyData.getVacancyData().size() * 100;
-		if (paramCntPercentage == 0){ // indicates there's no template or criteria for the vacancy
-			return 0;
-		}
+	private int getParamMatch(ClientData clientData, VacancyData vacancyData){
 		int paramMatch = 0;
 		for (Entry<String, String> paramEntry : clientData.getClientData()
 				.entrySet()) {
@@ -150,7 +154,6 @@ public class Matcher {
 				paramMatch += vacancyTemlateData.matches(paramEntry.getValue());
 			}
 		}
-		return (paramMatch *100)/paramCntPercentage;
+		return paramMatch;
 	}
-
 }

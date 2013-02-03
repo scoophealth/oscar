@@ -9550,6 +9550,7 @@ CREATE TABLE `vacancy_client_match` (
   `rejection_reason` text,
   `form_id` int(10),
   `match_percent` double,
+  `proportion` varchar(8),
    PRIMARY KEY (`match_id`),
    UNIQUE KEY `vacancy_id` (`vacancy_id`,`client_id`,`form_id`)
 ) ;
