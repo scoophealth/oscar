@@ -25,11 +25,9 @@
 --%>
 
 
-
 <%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ page errorPage="/casemgmt/error.jsp" %>
-<% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
-<%@ page import="java.util.Enumeration, org.apache.commons.lang.StringEscapeUtils" %>
+<%@page errorPage="/casemgmt/error.jsp" %>
+<%@page import="java.util.Enumeration, org.apache.commons.lang.StringEscapeUtils" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*, org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, oscar.OscarProperties" %>
 <%@page import="org.oscarehr.common.model.UserProperty" %>
@@ -43,10 +41,10 @@
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     String beanName = "casemgmt_oscar_bean" + (String) request.getAttribute("demographicNo");
-    //bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute(beanName);
 
     pageContext.setAttribute("providerNo",request.getParameter("providerNo"), pageContext.PAGE_SCOPE);
     pageContext.setAttribute("demographicNo",request.getParameter("demographicNo"), pageContext.PAGE_SCOPE);
+    
     org.oscarehr.casemgmt.model.CaseManagementNoteExt cme = new org.oscarehr.casemgmt.model.CaseManagementNoteExt();
 
     String frmName = "caseManagementEntryForm" + request.getParameter("demographicNo");
@@ -54,9 +52,6 @@
 
 %>
 
-<%--<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
-<nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
---%>
 <html:html locale="true">
   <head>  	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
@@ -80,30 +75,30 @@
     <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/css/niftyCorners.css" />">
     <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
 
-      <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
+    <!-- calendar stylesheet -->
+	<link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
+  	<!-- main calendar program -->
+  	<script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+  	<!-- language for the calendar -->
+  	<script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+  	<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
+  	<script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
 
-  <%--<!-- js implementation of markdown -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>--%>
+  	<%--<!-- js implementation of markdown -->
+  	<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>--%>
 
-  <!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
+  	<!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
+  	<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
 
-  <!-- scriptaculous based select box -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
+  	<!-- scriptaculous based select box -->
+  	<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
 
-  <!-- phr popups -->
-  <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
+  	<!-- phr popups -->
+  	<script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
 
 <script type="text/javascript">
 var Colour = {
@@ -217,14 +212,7 @@ var Colour = {
                                method: 'post',
                                postBody: params,
                                evalScripts: true,
-                               /*onLoading: function() {
-                                               $(div).update("<p>Loading ...<\/p>");
-                                           }, */
                                onSuccess: function(request) {
-                                             //  alert(request.responseText);
-                                               //while( $(div).firstChild )
-                                               //    $(div).removeChild($(div).firstChild);
-                                               //alert("success " + div);
                                                $(div).update(request.responseText);
 
                                                if( $("leftColLoader") != null )
@@ -232,10 +220,6 @@ var Colour = {
 
                                                if( $("rightColLoader") != null )
                                                    Element.remove("rightColLoader");
-
-
-                                               //track ajax completions and display divs when last ajax call completes
-                                               //navBarObj.display(navBar,div);
                                           },
                                onFailure: function(request) {
                                                $(div).innerHTML = "<h3>" + div + "</h3>Error: " + request.status;
@@ -706,6 +690,7 @@ function doscroll(){
 		  <input type="hidden" id="annotation_attrib" name="annotation_attrib">
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" ></textarea><br>
+                  
 		  <table>
 		  	  <tr id="Itemproblemdescription"><td><bean:message key="oscarEncounter.problemdescription.title"/>: </td>
 			<td><input type="text" id="problemdescription" name="problemdescription" value="" ></td></tr>
