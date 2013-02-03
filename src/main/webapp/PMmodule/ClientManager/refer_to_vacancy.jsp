@@ -42,13 +42,15 @@
 	function do_referral() {
 		var form = document.clientManagerForm;
 		form.method.value='refer';
-		var program = document.getElementsByName('selectVacancy');
-		var programId;
+		var programVacancy = document.getElementsByName('selectVacancy');
+		var programId,vacancyId;
 		var i;
 		var checked = false;
-        for(i=0;i<program.length;i++){
-            if(program[i].checked){
-               programId = program[i].value;
+        for(i=0;i<programVacancy.length;i++){
+            if(programVacancy[i].checked){
+            	var arrayList = programVacancy[i].value.split("|");
+               programId = arrayList[0];
+               vacancyId = arrayList[1];
                checked = true;
                break;
             }
@@ -58,6 +60,7 @@
             return;
         }
 		document.clientManagerForm.elements['program.id'].value=programId;
+		document.clientManagerForm.elements['program.vacancyId'].value=vacancyId;
 		form.submit();
 	}
 </script>
@@ -65,7 +68,7 @@
 <%=WebUtils.popErrorMessagesAsHtml(session)%>
 
 <html:hidden property="program.id" />
-
+<html:hidden property="program.vacancyId" />
 <div class="tabs" id="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -77,10 +80,15 @@
 	id="referral" name="referrals" export="false" pagesize="0"
 	requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:column property="programName" sortable="true"
-		title="Program Name" />
+	
+	<display:column property="selectVacancy" sortable="true"
+		title="Vacancy Name" />
+	<display:column property="vacancyTemplateName" sortable="true"
+		title="Vacancy Template Name" />
 	<display:column property="referralDate" sortable="true"
 		title="Referral Date" />
+	<display:column property="programName" sortable="true"
+		title="Associated Program Name" />
 	<display:column property="providerFormattedName" sortable="true"
 		title="Referring Provider" />
 	<display:column property="status" sortable="true" title="Status" />
@@ -118,19 +126,24 @@
 	id="program" name="programs" pagesize="200"
 	requestURI="/PMmodule/ClientManager.do">
 	<html:hidden property="program.id" />
+	<html:hidden property="program.vacancyId" />
 	<display:setProperty name="paging.banner.placement" value="bottom" />
+	<%
+	Program p = (Program) pageContext.getAttribute("program");
+	String selectV = String.valueOf(p.getId()).concat("|").concat(String.valueOf(p.getVacancyId()));
+	%>
 	<display:column sortable="false" title="Select">
-		<input type="radio"  name="selectVacancy"  value="<c:out value="${program.id}" />">
-	</display:column>
-	<display:column sortable="true" title="Program Name">
-			<a href="<html:rewrite action="/PMmodule/ProgramManagerView.do"/>?id=<c:out value="${program.id}" />">
-				<c:out value="${program.name}" /> 
-			</a>		
+		<input type="radio"  name="selectVacancy"  value="<%=selectV %>">
 	</display:column>	
-	<display:column property="noOfVacancy" sortable="false" title="Vacancy"></display:column>
-	<display:column sortable="true" title="VacancyName">
+	
+	<display:column sortable="true" title="Vacancy Name">
 			<a href="">
 				<c:out value="${program.vacancyName}" />
+			</a>
+	</display:column>
+	<display:column sortable="true" title="Vacancy Template Name">
+			<a href="">
+				<c:out value="${program.vacancyTemplateName}" />
 			</a>
 	</display:column>
 	<display:column property="dateCreated" sortable="false" title="Created"></display:column>
@@ -145,7 +158,11 @@
 		</c:if>			
 	</display:column>
 	
-	
+	<display:column sortable="true" title="Program Name">
+			<a href="<html:rewrite action="/PMmodule/ProgramManagerView.do"/>?id=<c:out value="${program.id}" />">
+				<c:out value="${program.name}" /> 
+			</a>		
+	</display:column>	
 </display:table>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr class="b">

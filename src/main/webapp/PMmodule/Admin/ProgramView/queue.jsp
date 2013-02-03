@@ -232,6 +232,8 @@ String reason ="";
 		title="Referring Provider" />
 	<display:column property="vacancyName" sortable="true"
 		title="Vacancy Name" />		
+	<display:column property="vacancyTemplateName" sortable="true"
+		title="Vacancy Template Name" />
 	<display:column property="notes" sortable="true"
 		title="Reason for referral" />
 	<display:column property="presentProblems" sortable="true"
