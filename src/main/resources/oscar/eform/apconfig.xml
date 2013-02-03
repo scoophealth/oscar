@@ -77,12 +77,12 @@
     <databaseap>
         <ap-name>label</ap-name>
         <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${last_name}, ${first_name}\n${address}, ${city}, ${province} ${postal}\nTel:${phone}(H)  ${phone2}(W)\n${date_of_birth}/${month_of_birth}/${year_of_birth}(${sex})  HIN:${hin}${ver}</ap-output>
+        <ap-output>${last_name}, ${first_name} \n${address}, ${city}, ${province} ${postal} \nTel:${phone}(H)  ${phone2}(W) \n${date_of_birth}/${month_of_birth}/${year_of_birth}(${sex})  HIN:${hin}${ver}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>address</ap-name>
         <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${address}\n${city}, ${province}, ${postal}</ap-output>
+        <ap-output>${address} \n${city}, ${province}, ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>addressline</ap-name>
@@ -142,7 +142,7 @@
     <databaseap>
         <ap-name>NameAddress</ap-name>
         <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${last_name}, ${first_name}\n${address}\n${city},${province} ${postal}</ap-output>
+        <ap-output>${last_name}, ${first_name} \n${address} \n${city},${province} ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hin</ap-name>
@@ -214,6 +214,11 @@
         <ap-sql>SELECT sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${sex}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>sin</ap-name>
+        <ap-sql>SELECT sin FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${sin}</ap-output>
+    </databaseap>
 
 <!-- Patient medical information -->
     <databaseap>
@@ -266,23 +271,23 @@
 	</databaseap>
     <databaseap>
         <ap-name>recent_rx</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),'\n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} </ap-sql>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),' \n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} </ap-sql>
         <ap-output>${rx}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>today_rx</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),'\n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} and p.date_prescribed=LEFT(now(),10) </ap-sql>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),' \n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} and p.date_prescribed=LEFT(now(),10) </ap-sql>
         <ap-output>${rx}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>druglist_generic</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR '\n' ) AS rxgen
+        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ' \n' ) AS rxgen
                 FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
         <ap-output>${rxgen}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>druglist_trade</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, BN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR '\n' ) AS rxlist
+        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, BN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ' \n' ) AS rxlist
                 FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
         <ap-output>${rxlist}</ap-output>
     </databaseap>
@@ -291,6 +296,26 @@
         <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, CONCAT(UCASE(SUBSTRING(d.BN, 1, 1)),LOWER(SUBSTRING(d.BN, 2))), d.customName) , IF(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , IF(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ', ' ) AS rxlist
                 FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
         <ap-output>${rxlist}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>onGTPAL</ap-name>
+        <ap-sql>SELECT  CONCAT('G',c_gravida,' T', c_term,' P' , c_prem,' A', c_abort ,' L', c_living) as onGTPAL FROM formONAREnhanced f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-output>${onGTPAL}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>onEDB</ap-name>
+        <ap-sql>SELECT  c_finalEDB FROM formONAREnhanced f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-output>${c_finalEDB}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>bcGTPAL</ap-name>
+        <ap-sql>SELECT CONCAT('G',pg1_gravida,' T', pg1_term ,' P',  pg1_preterm ,' A',  pg1_abortion, ' L', pg1_living ) AS bcGTPAL FROM formBCAR2012 where demographic_no=${demographic} ORDER BY ID DESC LIMIT 1;</ap-sql>
+        <ap-output>${bcGTPAL}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>bcEDD</ap-name>
+        <ap-sql>SELECT  c_EDD FROM formBCAR2012 f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-output>${c_EDD}</ap-output>
     </databaseap>
 
 <!-- Doctor information -->
@@ -411,7 +436,7 @@
     <databaseap>
         <ap-name>clinic_label</ap-name>
         <ap-sql>SELECT * FROM clinic</ap-sql>
-        <ap-output>${clinic_name}\n${clinic_address}\n${clinic_city},${clinic_province},${clinic_postal}\nTel:${clinic_phone}\nFax:${clinic_fax}</ap-output>
+        <ap-output>${clinic_name} \n${clinic_address} \n${clinic_city},${clinic_province},${clinic_postal} \nTel:${clinic_phone} \nFax:${clinic_fax}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>clinic_addressLine</ap-name>
@@ -426,7 +451,7 @@
     <databaseap>
         <ap-name>clinic_address</ap-name>
         <ap-sql>SELECT * FROM clinic</ap-sql>
-        <ap-output>${clinic_address}\n${clinic_city},${clinic_postal}\n${clinic_province},Canada</ap-output>
+        <ap-output>${clinic_address} \n${clinic_city} ${clinic_province} ${clinic_postal} \nCanada</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>clinic_city</ap-name>
@@ -546,13 +571,13 @@
     	<ap-name>guardian_label</ap-name>
         <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from relationships r, demographic d where r.relation_demographic_no = d.demographic_no and r.demographic_no = ${demographic}
         </ap-sql>
-        <ap-output>${first_name} ${last_name}\n${address}\n${city} ${province}\n${postal}</ap-output>
+        <ap-output>${first_name} ${last_name} \n${address} \n${city} ${province} \n${postal}</ap-output>
     </databaseap>
     <databaseap>
     	<ap-name>guardian_label2</ap-name>
         <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from DemographicContact r, demographic d where r.contactId = d.demographic_no and r.sdm = 'true' and r.demographicNo =  ${demographic}
         </ap-sql>
-        <ap-output>${first_name} ${last_name}\n${address}\n${city} ${province}\n${postal}</ap-output>
+        <ap-output>${first_name} ${last_name} \n${address} \n${city} ${province} \n${postal}</ap-output>
     </databaseap>
      <databaseap>
         <ap-name>email</ap-name>
