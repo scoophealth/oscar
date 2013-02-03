@@ -355,13 +355,12 @@
                                                                                 ackStatus = "Filed but not Acknowledged";
                                                                             }else{
                                                                                 ackStatus = "Not Acknowledged";
-                                                                            }
+                                                                            } 
                                                                         %>
-                                                                        <font color="red"><%= ackStatus %></font>
-                                                                        <% if ( ackStatus.equals("Acknowledged") ) { %>
-                                                                            <%= report.getTimestamp() %>,
-                                                                            <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
-                                                                        <% } %>
+                                                                        <font color="red"><%= ackStatus %></font>                                                                        
+                                                                            <%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%>,
+                                                                            comment: <span id="comment_<%=docId + "_" + report.getOscarProviderNo()%>">&nbsp;<%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
+                                                                        
                                                                         <br>
                                                                     <% }
                                                                     if (ackList.size() == 0){
@@ -405,15 +404,17 @@
                                                         <input type="hidden" name="segmentID" value="<%= docId%>"/>
                                                         <input type="hidden" name="multiID" value="<%= docId%>" />
                                                         <input type="hidden" name="providerNo" value="<%= providerNo%>"/>
-                                                        <input type="hidden" name="status" value="A"/>
+                                                        <input type="hidden" name="status" value="A"/ id="status_<%=docId%>">
                                                         <input type="hidden" name="labType" value="DOC"/>
                                                         <input type="hidden" name="ajaxcall" value="yes"/>
                                                         <textarea id="comment_<%=docId%>" name="comment" cols="40" rows="4"></textarea>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>
+                                                    <td><% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
                                                         <input type="submit" id="ackBtn_<%=docId%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                                        <input type="button" value="Comment" onclick="addDocComment('<%=docId%>','<%=providerNo%>')"/>
+                                                        <%}%>
                                                         <input type="button" id="fwdBtn_<%=docId%>"  value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(355, 685, '../oscarMDS/SelectProvider.jsp?docId=<%=docId%>', 'providerselect');">
                                                         <input type="button" id="fileBtn_<%=docId%>"  value="<bean:message key="oscarMDS.index.btnFile"/>" onclick="fileDoc('<%=docId%>');">
                                                         <input type="button" id="closeBtn_<%=docId%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
@@ -435,6 +436,19 @@
                         </fieldset>
                     </td>
                 </tr>
+                <tr>
+                	<td colspan="8">
+                        <div style="text-align: right;font-weight: bold">
+                        <% if( numOfPage > 1 ) {%>                        
+                        	<a id="firstP2_<%=docId%>" style="display: none;" href="javascript:void(0);" onclick="firstPage('<%=docId%>','<%=cp%>');">First</a>
+                            <a id="prevP2_<%=docId%>" style="display: none;"  href="javascript:void(0);" onclick="prevPage('<%=docId%>','<%=cp%>');">Prev</a>
+                            <a id="nextP2_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>','<%=cp%>');">Next</a>
+                            <a id="lastP2_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>','<%=cp%>');">Last</a>
+                            <%} %>
+                        </div>
+                    </td>
+                	<td>&nbsp;</td>
+                </tr> 
                 <tr><td colspan="9" ><hr width="100%" color="red"></td></tr>
             </table>
         </div>        
