@@ -642,14 +642,20 @@ public class ManageDocumentAction extends DispatchAction {
 
 			BufferedInputStream bfis = null;
 			try {
-				bfis = new BufferedInputStream(new FileInputStream(outfile));
-				int data;
-				while ((data = bfis.read()) != -1) {
-					outs.write(data);
-					// outs.flush();
+				if (outfile != null) {
+					bfis = new BufferedInputStream(new FileInputStream(outfile));
+					int data;
+					while ((data = bfis.read()) != -1) {
+						outs.write(data);
+						// outs.flush();
+					}
+				} else {
+					log.info("Unable to retrieve content for " + d + ". This may indicate previous upload or save errors...");
 				}
 			} finally {
-				if (bfis!=null) bfis.close();
+				if (bfis!=null) {
+					bfis.close();
+				}
 			}
 
 			outs.flush();
