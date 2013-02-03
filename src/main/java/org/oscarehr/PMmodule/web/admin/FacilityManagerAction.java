@@ -37,10 +37,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.FacilityDischargedClients;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -58,7 +58,7 @@ import com.quatro.service.LookupManager;
 
 /**
  */
-public class FacilityManagerAction extends BaseAction {
+public class FacilityManagerAction extends DispatchAction {
 
 	private AdmissionDao admissionDao;
 	private DemographicDao demographicDao;

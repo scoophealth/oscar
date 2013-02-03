@@ -29,15 +29,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.utility.RoleCache;
-import org.oscarehr.PMmodule.web.BaseAction;
 
 import com.quatro.service.security.RolesManager;
 
-public class DefaultRoleAccessAction extends  BaseAction {
+public class DefaultRoleAccessAction extends  DispatchAction {
     private ProgramManager programManager;
     private RolesManager roleManager;
 	
@@ -114,4 +116,10 @@ public class DefaultRoleAccessAction extends  BaseAction {
     public void setRolesManager(RolesManager mgr) {
     	this.roleManager = mgr;
     }
+    
+    private  void addMessage(HttpServletRequest req, String key, String val) {
+		ActionMessages msgs = getMessages(req);
+		msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(key, val));
+		addMessages(req, msgs);
+	}
 }

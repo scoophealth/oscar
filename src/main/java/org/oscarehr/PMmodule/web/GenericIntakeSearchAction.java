@@ -39,9 +39,12 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.RedirectingActionForward;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
@@ -67,12 +70,32 @@ import oscar.OscarProperties;
 
 import com.quatro.model.LookupCodeValue;
 
-public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
+public class GenericIntakeSearchAction extends DispatchAction {
 
 	private static Logger LOG = MiscUtils.getLogger();
 
 	private static final List<LookupCodeValue> genders = new ArrayList<LookupCodeValue>();
+	protected ClientManager clientManager;
 
+	// Parameters
+		protected static final String METHOD = "method";
+		protected static final String TYPE = "type";
+		protected static final String CLIENT_ID = "clientId";
+		protected static final String INTAKE_ID = "intakeId";
+	    protected static final String CLIENT_EDIT_ID = "id";
+		protected static final String PROGRAM_ID = "programId";
+		protected static final String START_DATE = "startDate";
+		protected static final String END_DATE = "endDate";
+		protected static final String INCLUDE_PAST = "includePast";
+
+		// Method Names
+		protected static final String EDIT_CREATE = "create";
+
+	    protected static final String EDIT_UPDATE = "update";
+		
+		// Session Attributes
+		protected static final String CLIENT = "client";
+		
 	static {
 		LookupCodeValue lv1 = new LookupCodeValue();
 		lv1.setCode("M");
@@ -234,7 +257,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
-		//TODO: Erclerk - go to their consent.
 		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
 	    if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
 	    	request.setAttribute("demographicNo", new Long(intakeSearchBean.getDemographicId()));
@@ -255,9 +277,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
 			Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(remoteFacilityId, remoteDemographicId);
 						
-			//TODO: if this is ER clerk, go to their consent form.
-			//client.setProviderNo(providerNo);
-			//clientManager.saveClient(client);
+			
 			String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
 		    if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
 		    	clientManager.saveClient(demographic);
@@ -296,9 +316,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {
 		request.getSession().setAttribute(CLIENT, client);
 
-		StringBuilder parameters = new StringBuilder(PARAM_START);
-		parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE).append(PARAM_AND);
-		parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
+		StringBuilder parameters = new StringBuilder("?");
+		parameters.append(METHOD).append("=").append(EDIT_CREATE).append("&");
+		parameters.append(TYPE).append("=").append(Intake.QUICK);
 
 		copyParameter(request, "remoteReferralId", parameters);
 		copyParameter(request, "remoteFacilityId", parameters);
@@ -339,10 +359,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	}
 
 	protected ActionForward forwardIntakeEditUpdate(ActionMapping mapping, Integer clientId, HttpServletRequest request) {
-		StringBuilder parameters = new StringBuilder(PARAM_START);
-		parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_UPDATE).append(PARAM_AND);
-		parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK).append(PARAM_AND);
-		parameters.append(CLIENT_ID).append(PARAM_EQUALS).append(clientId);
+		StringBuilder parameters = new StringBuilder("?");
+		parameters.append(METHOD).append("=").append(EDIT_UPDATE).append("&");
+		parameters.append(TYPE).append("=").append(Intake.QUICK).append("&");
+		parameters.append(CLIENT_ID).append("=").append(clientId);
 
 		copyParameter(request, "remoteReferralId", parameters);
 		addDestinationProgramId(request, parameters);
@@ -382,5 +402,26 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			LOG.error("Error", e);
 		}
 	}
+	
+    protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuffer parameters) {
+        ActionForward forward = mapping.findForward(forwardName);
+        StringBuilder path = new StringBuilder(forward.getPath());
+        path.append(parameters);
+        
+        return new RedirectingActionForward(path.toString());
+    }
+
+    protected ActionForward createRedirectForward(ActionMapping mapping, 
+        String forwardName, StringBuilder parameters) {
+	    ActionForward forward = mapping.findForward(forwardName);
+	    StringBuilder path = new StringBuilder(forward.getPath());
+	    path.append(parameters);
+	
+	    return new RedirectingActionForward(path.toString());
+    }
+    
+    public void setClientManager(ClientManager mgr) {
+    	this.clientManager = mgr;
+    }
 
 }

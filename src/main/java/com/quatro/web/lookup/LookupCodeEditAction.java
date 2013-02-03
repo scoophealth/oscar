@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
+import org.apache.struts.actions.DispatchAction;
 
 import oscar.MyDateFormat;
 
@@ -45,7 +45,7 @@ import com.quatro.service.LookupManager;
 import com.quatro.service.security.SecurityManager;
 import com.quatro.util.Utility;
 
-public class LookupCodeEditAction extends BaseAdminAction {
+public class LookupCodeEditAction extends DispatchAction {
     private LookupManager lookupManager=null;
 
 	public LookupManager getLookupManager() {
@@ -62,7 +62,7 @@ public class LookupCodeEditAction extends BaseAdminAction {
 	
 	private ActionForward loadCode(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	try {
-    		super.getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP);
+    		getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP);
 			String [] codeIds = request.getParameter("id").split(":");
 	        String tableId = codeIds[0];
 	        String code = "0";
@@ -116,18 +116,18 @@ public class LookupCodeEditAction extends BaseAdminAction {
 		
 		if(isNew)
 		{
-			super.getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_WRITE);
+			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_WRITE);
 		}
 		else
 		{
-			super.getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_UPDATE);
+			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_UPDATE);
 		}
 		boolean isInActive = false;
 		
 		if(isNew)
-			super.getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_WRITE);
+			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_WRITE);
 		else
-			super.getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_UPDATE);
+			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_UPDATE);
 
 		String  code = "";
 		String providerNo = (String) request.getSession(true).getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
@@ -226,4 +226,32 @@ public class LookupCodeEditAction extends BaseAdminAction {
 			return mapping.findForward("edit");
 		}
 	}
+	
+	protected String getAccess(HttpServletRequest request,String functionName) throws NoAccessException
+	{
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String acc = sec.GetAccess(functionName, "");
+		if (acc.equals(KeyConstants.ACCESS_NONE)) throw new NoAccessException();
+		return acc;
+	}
+	protected String getAccess(HttpServletRequest request,String functionName, String rights) throws NoAccessException
+	{
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String acc = sec.GetAccess(functionName, "");
+		if (acc.compareTo(rights) < 0) throw new NoAccessException();
+		return acc;
+	}
+	public boolean isReadOnly(HttpServletRequest request,String funName) throws NoAccessException{
+		boolean readOnly =false;
+		
+		SecurityManager sec = (SecurityManager) request.getSession()
+				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+		String r = sec.GetAccess(funName, null); 
+		if (r.compareTo(KeyConstants.ACCESS_READ) < 0) throw new NoAccessException(); 
+		if (r.compareTo(KeyConstants.ACCESS_READ) == 0) readOnly=true;
+		return readOnly;
+	}
+
 }

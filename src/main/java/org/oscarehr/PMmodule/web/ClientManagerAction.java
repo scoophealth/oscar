@@ -52,6 +52,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -132,7 +133,7 @@ import oscar.oscarDemographic.data.DemographicRelationship;
 
 import com.quatro.service.LookupManager;
 
-public class ClientManagerAction extends BaseAction {
+public class ClientManagerAction extends DispatchAction {
 
 	private static final Logger logger = MiscUtils.getLogger();
 
@@ -143,7 +144,6 @@ public class ClientManagerAction extends BaseAction {
 	private CaseManagementManager caseManagementManager;
 	private AdmissionManager admissionManager;
 	private GenericIntakeManager genericIntakeManager;
-	private RoomDemographicManager roomDemographicManager;
 	private BedDemographicManager bedDemographicManager;
 	private BedManager bedManager;
 	private ClientManager clientManager;
@@ -151,18 +151,19 @@ public class ClientManagerAction extends BaseAction {
 	private ProgramManager programManager;
 	private ProviderManager providerManager;
 	private ProgramQueueManager programQueueManager;
-	private RoomManager roomManager;
 	private IntegratorConsentDao integratorConsentDao;
 	private CdsClientFormDao cdsClientFormDao;
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
-	// private OcanClientFormDao ocanClientFormDao = (OcanClientFormDao)SpringUtils.getBean("ocanClientFormDao");
-	// private CdsClientFormDao cdsClientFormDao = (CdsClientFormDao)SpringUtils.getBean("cdsClientFormDao");
 	private RemoteReferralDao remoteReferralDao = (RemoteReferralDao) SpringUtils.getBean("remoteReferralDao");
     private VacancyDao vacancyDao = (VacancyDao) SpringUtils.getBean(VacancyDao.class);
     private VacancyTemplateDao vacancyTemplateDao = (VacancyTemplateDao) SpringUtils.getBean(VacancyTemplateDao.class);
 	private MatchingManager matchingManager = new MatchingManager();
+	
+	private RoomDemographicManager roomDemographicManager = (RoomDemographicManager) SpringUtils.getBean("roomDemographicManager");
+	private RoomManager roomManager = (RoomManager) SpringUtils.getBean("roomManager");
+	
 
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
 		this.integratorConsentDao = integratorConsentDao;
@@ -190,7 +191,7 @@ public class ClientManagerAction extends BaseAction {
 		Program fullProgram = programManager.getProgram(String.valueOf(program.getId()));
 
 		try {
-			admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(), admission.isTemporaryAdmission());
+			admissionManager.processAdmission(Integer.valueOf(demographicNo), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(), admission.isTemporaryAdmission());
 		} catch (ProgramFullException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", "Program is full."));
@@ -288,7 +289,7 @@ public class ClientManagerAction extends BaseAction {
 		ActionMessages messages = new ActionMessages();
 
 		try {
-			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents);
+			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents);
 			logManager.log("write", "discharge", clientId, request);
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
@@ -528,7 +529,7 @@ public class ClientManagerAction extends BaseAction {
 			clientForm.set("referral", referral);
 
 			// store permission
-			request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), String.valueOf(referral.getClientId()), "" + program.getId()));
+			request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on referral", "access", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), String.valueOf(referral.getClientId()), "" + program.getId()));
 
 			// jump to service restriction error page to allow overrides, etc.
 			// return mapping.findForward("service_restriction_error");
@@ -637,7 +638,7 @@ public class ClientManagerAction extends BaseAction {
 		restriction.setProgramId(p.getId());
 		restriction.setDemographicNo(Integer.valueOf(id));
 		restriction.setStartDate(new Date());
-		restriction.setProviderNo(getProviderNo(request));
+		restriction.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 		cal.set(Calendar.HOUR, 23);
@@ -690,7 +691,7 @@ public class ClientManagerAction extends BaseAction {
 		p.setName(program.getName());
 
 		request.setAttribute("do_restrict", true);
-		request.setAttribute("can_restrict", caseManagementManager.hasAccessRight("Create service restriction", "access", getProviderNo(request), id, "" + p.getId()));
+		request.setAttribute("can_restrict", caseManagementManager.hasAccessRight("Create service restriction", "access", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), id, "" + p.getId()));
 		request.setAttribute("program", program);
 
 		return mapping.findForward("edit");
@@ -699,7 +700,7 @@ public class ClientManagerAction extends BaseAction {
 	public ActionForward terminate_early(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		int programClientRestrictionId = Integer.parseInt(request.getParameter("restrictionId"));
-		Provider provider = getProvider(request);
+		Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
 		clientRestrictionManager.terminateEarly(programClientRestrictionId, provider.getProviderNo());
 
 		return (edit(mapping, form, request, response));
@@ -711,7 +712,7 @@ public class ClientManagerAction extends BaseAction {
 
 		ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
-		if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), "" + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
+		if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "" + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
 			clientForm.set("referral", new ClientReferral());
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.cancelled"));
@@ -830,7 +831,7 @@ public class ClientManagerAction extends BaseAction {
 
 		} else {// check whether client is familyHead or independent client
 			// create roomDemographic from bedDemographic
-			roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(demographicNo, loggedInInfo.currentFacility.getId());
+			roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo, loggedInInfo.currentFacility.getId());
 			if (roomDemographic == null) {// demographicNo (familyHead or independent) has no record in 'room_demographic'
 				roomDemographic = RoomDemographic.create(demographicNo, bedDemographic.getProviderNo());
 			}
@@ -859,7 +860,7 @@ public class ClientManagerAction extends BaseAction {
 
 				int roomCapacity = 0;
 				int roomOccupancy = 0;
-				Room room = getRoomManager().getRoom(bedDemographic.getRoomId());
+				Room room = roomManager.getRoom(bedDemographic.getRoomId());
 				Integer[] dependentIds = new Integer[dependentList.size()];
 				List<Integer> unreservedBedIdList = new ArrayList<Integer>();
 				List<Integer> dependentsBedIdList = new ArrayList<Integer>();
@@ -888,23 +889,23 @@ public class ClientManagerAction extends BaseAction {
 
 				if (bedDemographic.getRoomId().intValue() == 0) {// unassigning whole family
 					// unassign family head first
-					getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+					roomDemographicManager.saveRoomDemographic(roomDemographic);
 					if (isBedSelected) {
 						bedDemographicManager.saveBedDemographic(bedDemographic);
 					} else {
 						// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
-						getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+						roomDemographicManager.cleanUpBedTables(roomDemographic);
 					}
 					// unassigning all dependents
 					for (int i = 0; dependentIds != null && i < dependentIds.length; i++) {
 						roomDemographic.getId().setDemographicNo(dependentIds[i]);
 						bedDemographic.getId().setDemographicNo(dependentIds[i]);
-						getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+						roomDemographicManager.saveRoomDemographic(roomDemographic);
 						if (isBedSelected) {
 							bedDemographicManager.saveBedDemographic(bedDemographic);
 						} else {
 							// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
-							getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+							roomDemographicManager.cleanUpBedTables(roomDemographic);
 						}
 					}
 				} else {
@@ -991,7 +992,7 @@ public class ClientManagerAction extends BaseAction {
 						Integer clientId = null;
 
 						// assigning for familyHead only
-						getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+						roomDemographicManager.saveRoomDemographic(roomDemographic);
 
 						if (isBedSelected) {
 							BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), loggedInInfo.currentFacility.getId());
@@ -1006,7 +1007,7 @@ public class ClientManagerAction extends BaseAction {
 							bedDemographicManager.saveBedDemographic(bedDemographic);
 						} else {
 							// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
-							getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+							roomDemographicManager.cleanUpBedTables(roomDemographic);
 						}
 						// Assign for each dependent member of family
 						for (int i = 0; i < dependentList.size(); i++) {
@@ -1014,7 +1015,7 @@ public class ClientManagerAction extends BaseAction {
 							clientId = new Integer(dependentList.get(i).getClientId().intValue());
 
 							if (clientId != null) {
-								roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(clientId, loggedInInfo.currentFacility.getId());
+								roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(clientId, loggedInInfo.currentFacility.getId());
 								bedDemographic.getId().setDemographicNo(clientId); // change to dependent member
 
 								// assigning both room & bed (different ones) for all dependents
@@ -1032,7 +1033,7 @@ public class ClientManagerAction extends BaseAction {
 										bedDemographic.setLatePass(false);
 									}
 
-									getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+									roomDemographicManager.saveRoomDemographic(roomDemographic);
 									if (bdDependent != null) {
 										bedDemographicManager.deleteBedDemographic(bdDependent);
 									}
@@ -1050,10 +1051,10 @@ public class ClientManagerAction extends BaseAction {
 									if (request.getParameter("bedDemographic.latePass") == null) {
 										bedDemographic.setLatePass(false);
 									}
-									getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+									roomDemographicManager.saveRoomDemographic(roomDemographic);
 
 									// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
-									getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+									roomDemographicManager.cleanUpBedTables(roomDemographic);
 								}
 
 							}// end of if( clientId != null )
@@ -1092,13 +1093,13 @@ public class ClientManagerAction extends BaseAction {
 
 			} else { // when client is independent -> just assign/unassign either room/bed or room only.
 
-				getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+				roomDemographicManager.saveRoomDemographic(roomDemographic);
 
 				if (isBedSelected) {
 					bedDemographicManager.saveBedDemographic(bedDemographic);
 				} else {
 					// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
-					getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+					roomDemographicManager.cleanUpBedTables(roomDemographic);
 				}
 			}// end of isIndependentClient
 
@@ -1289,7 +1290,7 @@ public class ClientManagerAction extends BaseAction {
 
 		request.getSession().setAttribute("er_consent_map", consentMap);
 
-		List<?> programDomain = providerManager.getProgramDomain(getProviderNo(request));
+		List<?> programDomain = providerManager.getProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		if (programDomain.size() > 0) {
 			boolean doAdmit = true;
 			boolean doRefer = true;
@@ -1302,7 +1303,7 @@ public class ClientManagerAction extends BaseAction {
 			referral.setClientId(new Long(demographicNo));
 			referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
 			referral.setProgramId(program.getProgramId().longValue());
-			referral.setProviderNo(getProviderNo(request));
+			referral.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 			referral.setReferralDate(new Date());
 			referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
@@ -1336,7 +1337,7 @@ public class ClientManagerAction extends BaseAction {
 			if (doAdmit) {
 				String admissionNotes = "ER Automated admission\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason();
 				try {
-					admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
+					admissionManager.processAdmission(Integer.valueOf(demographicNo), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Error", e);
 					ActionMessages messages = new ActionMessages();
@@ -1478,7 +1479,7 @@ public class ClientManagerAction extends BaseAction {
 		request.setAttribute("id", demographicNo);
 		request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
 
-		String providerNo = getProviderNo(request);
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		// program domain
 		List<Program> programDomain = new ArrayList<Program>();
@@ -1603,13 +1604,13 @@ public class ClientManagerAction extends BaseAction {
 		BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(demographicNo), facilityId);
 		request.setAttribute("bedDemographic", bedDemographic);
 
-		RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(Integer.valueOf(demographicNo), facilityId);
+		RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(Integer.valueOf(demographicNo), facilityId);
 
 		if (roomDemographic != null) {
 			Integer roomIdInt = roomDemographic.getId().getRoomId();
 			Room room = null;
 			if (roomIdInt != null) {
-				room = getRoomManager().getRoom(roomIdInt);
+				room = roomManager.getRoom(roomIdInt);
 			}
 			if (room != null) {
 				roomDemographic.setRoom(room);
@@ -1662,7 +1663,7 @@ public class ClientManagerAction extends BaseAction {
 
 			clientForm.set("bedDemographic", bedDemographic);
 
-			Room[] availableRooms = getRoomManager().getAvailableRooms(facilityId, bedProgramId, Boolean.TRUE, demographicNo);
+			Room[] availableRooms = roomManager.getAvailableRooms(facilityId, bedProgramId, Boolean.TRUE, demographicNo);
 
 			request.setAttribute("availableRooms", availableRooms);
 
@@ -1673,7 +1674,7 @@ public class ClientManagerAction extends BaseAction {
 			} else {
 				request.setAttribute("roomId", "0");
 			}
-			request.setAttribute("isAssignedBed", String.valueOf(getRoomManager().isAssignedBed((String) request.getAttribute("roomId"), availableRooms)));
+			request.setAttribute("isAssignedBed", String.valueOf(roomManager.isAssignedBed((String) request.getAttribute("roomId"), availableRooms)));
 
 			// retrieve an array of beds associated with this roomId
 			Bed[] unreservedBeds = null;
