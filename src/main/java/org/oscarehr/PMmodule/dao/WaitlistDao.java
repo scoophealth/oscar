@@ -58,7 +58,7 @@ public class WaitlistDao {
   
 	public List<MatchBO> getClientMatches(int vacancyId) {
 		String sql = "SELECT client_id, first_name, last_name, DATEDIFF(CURDATE(), e.form_date) days_in_waitlist, " +
-				"DATEDIFF(CURDATE(), last_contact_date) last_contact_days, form_id, match_percent "
+				"DATEDIFF(CURDATE(), last_contact_date) last_contact_days, form_id, match_percent, proportion "
 				+ " FROM vacancy_client_match m, demographic  d, eform_data e WHERE vacancy_id = ?1  " +
 						"and d.demographic_no = m.client_id and m.form_id = e.fdid"
 				+ " order by match_percent desc";
@@ -88,6 +88,7 @@ public class WaitlistDao {
 			}
 			out.setFormDataID((Integer)cols[5]);
 			out.setPercentageMatch((Double)cols[6]);
+			out.setProportion((String)cols[7]);
 			list.add(out);
 		}
 		return list;
