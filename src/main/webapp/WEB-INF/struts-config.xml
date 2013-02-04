@@ -591,6 +591,10 @@
 			<forward name="list" path="/caisicore/SystemMessageList.jsp" />
 			<forward name="edit" path="/caisicore/SystemMessageForm.jsp" />
 		</action>
+		<action path="/DefaultEncounterIssue" type="org.caisi.core.web.DefaultEncounterIssueAction" parameter="method" scope="request" input="/caisicore/DefaultEncounterIssueList.jsp" validate="false">
+			<forward name="list" path="/caisicore/DefaultEncounterIssueList.jsp" />
+			<forward name="edit" path="/caisicore/DefaultEncounterIssueForm.jsp" />
+		</action>
 		<action path="/FacilityMessage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="facilityMessageForm" input="/caisicore/FacilityMessageForm.jsp" validate="false">
 			<forward name="view" path="/caisicore/FacilityMessage.jsp" />
 			<forward name="list" path="/caisicore/FacilityMessageList.jsp" />
