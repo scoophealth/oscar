@@ -159,10 +159,13 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 		} else {
 			oscar.oscarWaitingList.WaitingList wL = oscar.oscarWaitingList.WaitingList.getInstance();
 			if (wL.getFound()) {
-				List<Object[]> wl = waitingListDao.findByDemographic(Integer.parseInt(request.getParameter("demographic_no")));
-				if(wl.size() > 0) {
-					org.oscarehr.common.model.WaitingListName wln = (org.oscarehr.common.model.WaitingListName)wl.get(0)[0];
-					org.oscarehr.common.model.WaitingList wl1 = (org.oscarehr.common.model.WaitingList)wl.get(0)[1];
+			   String demographicNo = request.getParameter("demographic_no");
+			   if( demographicNo != null && !"".equals(demographicNo)) {
+			    
+					List<Object[]> wl = waitingListDao.findByDemographic(Integer.parseInt(demographicNo));
+					if(wl.size() > 0) {
+						org.oscarehr.common.model.WaitingListName wln = (org.oscarehr.common.model.WaitingListName)wl.get(0)[0];
+						org.oscarehr.common.model.WaitingList wl1 = (org.oscarehr.common.model.WaitingList)wl.get(0)[1];
 					
 %>
 <form name="updateWLFrm"
@@ -182,6 +185,7 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 				}
 			}
 		}
+	}
 %>
 <p>
 <h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
