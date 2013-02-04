@@ -142,7 +142,7 @@
                             List<CtlBillingService> ctlBillSrvList = ctlBillingServiceDao.findByServiceTypeId(rosterStatus);
                             
                             if (!ctlBillSrvList.isEmpty() && !rosterStatus.isEmpty()) {
-                                ctlBillForm = rosterStatus;
+                                ctlBillForm = ctlBillSrvList.get(0).getServiceType();
                             }
                             else {                                                        
                                 // check user preference to show a bill form
@@ -1061,8 +1061,8 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 		CtlBillingServiceDao ctlBillingServiceDao = SpringUtils.getBean(CtlBillingServiceDao.class);
 		CtlBillingTypeDao  ctlBillingtypeDao = SpringUtils.getBean(CtlBillingTypeDao.class);
 		for(Object[] bs : ctlBillingServiceDao.findServiceTypesByStatus("A")) {
-			ctlcode = String.valueOf(bs[0]);
-			ctlcodename = String.valueOf(bs[1]);
+			ctlcode = String.valueOf(bs[1]);
+			ctlcodename = String.valueOf(bs[0]);
 			ctlCount++;
 			if (ctlcode.equals(ctlBillForm)) {
 			    currentFormName = ctlcodename;
