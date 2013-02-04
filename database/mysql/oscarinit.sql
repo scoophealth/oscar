@@ -11213,3 +11213,11 @@ CREATE TABLE `casemgmt_note_lock` (
   KEY `casemgmt_note_lock_note_id` (`note_id`),
   KEY `casemgmt_note_lock_providerNo_noteId` (`provider_no`,`note_id`)
 );
+
+CREATE TABLE `default_issue` (
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `assigned_time` datetime NOT NULL,
+  `issue_ids` text,
+  `provider_no` varchar(6) NOT NULL,
+  PRIMARY KEY (`id`)
+);

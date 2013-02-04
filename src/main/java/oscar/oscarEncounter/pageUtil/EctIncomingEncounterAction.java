@@ -27,6 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
@@ -39,8 +40,13 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.caisi.dao.DefaultIssueDao;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
@@ -50,6 +56,7 @@ import org.oscarehr.myoscar_server.ws.MinimalPersonTransfer2;
 import org.oscarehr.phr.web.MyOscarMessagesHelper;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SessionConstants;
 
 import org.oscarehr.util.SpringUtils;
 import oscar.util.DateUtils;
@@ -176,6 +183,33 @@ public class EctIncomingEncounterAction extends Action {
                 	bean.source = request.getParameter("source");
                 }
                 
+                long notesCount = caseManagementNoteDao.getNotesCountByDemographicId(bean.getDemographicNo());
+                if (notesCount == 0) {
+		            	// assign default issues for a feature: WL: default issues assignment
+		            	String wlProgramId = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+		            	DefaultIssueDao defaultIssueDao = SpringUtils.getBean(DefaultIssueDao.class);
+		            	IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
+		            	CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO) SpringUtils.getBean("CaseManagementIssueDAO");
+		            	String[] issueIds = defaultIssueDao.findAllDefaultIssueIds();
+		        		for (String id : issueIds) {
+		        			Issue issue = issueDao.getIssue(Long.valueOf(id));
+		        			CaseManagementIssue cmi = cmiDao.getIssuebyId(bean.getDemographicNo(), id);
+		        			if (cmi != null) {
+		        				continue;
+		        			}
+		        			cmi = new CaseManagementIssue();
+		        			cmi.setAcute(false);
+		        			cmi.setCertain(false);
+		        			cmi.setDemographic_no(bean.getDemographicNo());
+		        			cmi.setIssue_id(Long.valueOf(id));
+		        			cmi.setMajor(false);
+		        			cmi.setProgram_id(Integer.valueOf(wlProgramId));
+		        			cmi.setResolved(false);
+		        			cmi.setType(issue.getRole());
+		        			cmi.setUpdate_date(new Date());
+		        			cmiDao.saveIssue(cmi);
+		        		}
+                }
                 
                 
             }
