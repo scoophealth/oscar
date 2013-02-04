@@ -4,7 +4,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>myoscar_client_utils</artifactId>
 	<packaging>jar</packaging>
-	<version>2013.01-SNAPSHOT</version>
+	<version>2013.02-SNAPSHOT</version>
 	<name>myoscar_client_utils</name>
 	<url>http://www.oscarcanada.org</url>
 
@@ -43,6 +43,11 @@
 			<artifactId>tomcat-servlet-api</artifactId>
 			<version>7.0.34</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.2.3</version>
 		</dependency>
 		
 		<!-- MyOscarServer client Stubs -->

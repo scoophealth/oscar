@@ -762,7 +762,7 @@
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>myoscar_client_utils</artifactId>
-			<version>2013.01-SNAPSHOT</version>
+			<version>2013.02-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
