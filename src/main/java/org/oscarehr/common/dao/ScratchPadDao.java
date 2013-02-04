@@ -59,7 +59,7 @@ public class ScratchPadDao extends AbstractDao<ScratchPad> {
 	 * 		Returns the scratch pad for the specified id. 
 	 */
 	public ScratchPad findByProviderNo(String providerNo) {
-		Query query = createQuery("sp", "sp.providerNo = :providerNo order by sp.id");
+		Query query = createQuery("sp", "sp.providerNo = :providerNo order by sp.id DESC");
 		query.setMaxResults(1);
 		query.setParameter("providerNo", providerNo);
 		return getSingleResultOrNull(query);
