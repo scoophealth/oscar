@@ -42,7 +42,7 @@
               </rule>
             </ruleset>
         </item>
-		<item measurement_type="WC" display_name="Waist Circ " guideline="" graphable="yes" value_name="cm" />
+		<item measurement_type="WAIS" display_name="Waist Circ " guideline="" graphable="yes" value_name="cm" />
 		<item measurement_type="LDL" display_name="LDL" guideline="LDL &lt; 2.0" graphable="yes" value_name="">
 			<ruleset>
             	<rule indicationColor="HIGH">
@@ -285,7 +285,7 @@
 	</measurement>
 	
 	
-	<measurement type="WC" typeDesc="Waist Circumference" typeDisplayName="Waist Circ." measuringInstrc="in cm (nnn) Range:40-500 Interval:3mo.">
+	<measurement type="WAIS" typeDesc="Waist Circumference" typeDisplayName="Waist Circ." measuringInstrc="in cm (nnn) Range:40-500 Interval:3mo.">
 	  <validationRule name="Numeric Value: 40 to 500" maxValue="500" minValue="40" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
 	</measurement>
 	
