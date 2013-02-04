@@ -56,25 +56,25 @@ ds_rules="diab.drl"
               </rule>
             </ruleset>
           </item>
-           <item measurement_type="WC" display_name="Waist Circ " guideline="" graphable="yes" value_name="Waist Circ" >
+           <item measurement_type="WAIS" display_name="Waist Circ " guideline="" graphable="yes" value_name="Waist Circ" >
               <rules>
               <recommendation strength="recommendation" >
-                <condition type="monthrange" param="WC" value="3-6" />
+                <condition type="monthrange" param="WAIS" value="3-6" />
               </recommendation>
               <recommendation strength="warning" >
-                <condition type="monthrange" param="WC" value="&gt;6" />
+                <condition type="monthrange" param="WAIS" value="&gt;6" />
               </recommendation>
               <recommendation strength="warning" >
-                <condition type="monthrange" param="WC" value="-1" />
+                <condition type="monthrange" param="WAIS" value="-1" />
               </recommendation>
             </rules>
             <ruleset>
               <rule indicationColor="LOW">
-                <condition type="getDataAsDouble" param="WC" value="&gt;102" />
+                <condition type="getDataAsDouble" param="WAIS" value="&gt;102" />
                   <condition type="isMale"  value="true" />
               </rule>
               <rule indicationColor="HIGH">
-                <condition type="getDataAsDouble" param="WC" value="&gt;88" />
+                <condition type="getDataAsDouble" param="WAIS" value="&gt;88" />
                 <condition type="isFemale"  value="true" />
               </rule>
             </ruleset>
@@ -671,7 +671,7 @@ ds_rules="diab.drl"
   </measurement>
   
   
-  <measurement type="WC" typeDesc="Waist Circumference" typeDisplayName="Waist Circ." measuringInstrc="in cm (nnn) Range:40-500 Interval:3mo.">
+  <measurement type="WAIS" typeDesc="Waist Circumference" typeDisplayName="Waist Circ." measuringInstrc="in cm (nnn) Range:40-500 Interval:3mo.">
     <validationRule name="Numeric Value: 40 to 500" maxValue="500" minValue="40" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
   </measurement>
   
