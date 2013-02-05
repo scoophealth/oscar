@@ -53,11 +53,16 @@ public class VacancyClientMatchAction extends DispatchAction{
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		DynaActionForm intakeForm = (DynaActionForm) form;
 		MatchingManager matchingManager = new MatchingManager();
-		
+		double minPercentage = 0.0;
+		try {
+			minPercentage = Double.parseDouble(request.getParameter("percentage"));
+		} catch (Exception e) {
+			logger.info("Failed to get match cutoff!");
+		}
 		Integer vacancyId=Integer.parseInt(request.getParameter("vacancyId"));
 		logger.info("vacancyID: " + vacancyId);
 		//List<MatchBO> matchList= matchingManager.listTopMatches(vacancyID, 50);
-		List<MatchBO> matchList= matchingManager.getClientMatches(vacancyId);
+		List<MatchBO> matchList= matchingManager.getClientMatchesWithMinMatchPercentage(vacancyId,minPercentage);
 		logger.info(" VacancyClientMatchList: " + matchList.size());
 		
 		request.setAttribute("clientList", matchList);
