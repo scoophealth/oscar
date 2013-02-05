@@ -537,11 +537,15 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
 
                     <%
                     for (int i =0 ; i < providerArray.size(); i++){
-                    String pro = (String) providerArray.get(i);%>
+                    	String pro = (String) providerArray.get(i);
+                    	if( pro != null && !"".equals(pro) ) {
+                    %>
                      <li > <%=providerBean.getProperty(pro,pro)%>
                        <html:multibox property="providerNo" value="<%=pro%>"/>
                      </li>
-                    <%}%>
+                    <%}
+                    }
+                    %>
                     </ul>
                 </td>                
             </tr>
