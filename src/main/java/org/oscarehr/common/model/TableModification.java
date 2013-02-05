@@ -45,7 +45,7 @@ public class TableModification extends AbstractModel<Integer> {
 	private Integer id;
 
 	@Column(name="demographic_no")
-	private int demographicNo;
+	private Integer demographicNo;
 
 	@Column(name="provider_no")
 	private String providerNo;
@@ -73,11 +73,11 @@ public class TableModification extends AbstractModel<Integer> {
     	this.id = id;
     }
 
-	public int getDemographicNo() {
+	public Integer getDemographicNo() {
     	return demographicNo;
     }
 
-	public void setDemographicNo(int demographicNo) {
+	public void setDemographicNo(Integer demographicNo) {
     	this.demographicNo = demographicNo;
     }
 

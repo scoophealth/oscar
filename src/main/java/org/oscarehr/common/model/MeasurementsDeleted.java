@@ -45,22 +45,17 @@ public class MeasurementsDeleted extends AbstractModel<Integer> implements Seria
 	@Column(nullable = false)
 	private Integer demographicNo = null;
 	
-	@Column(nullable = false)
 	private String type = null;
-	
-	@Column(nullable = false)
+		
 	private String providerNo = null;
 	
 	@Column(nullable = false)
 	private String dataField = null;
-	
-	@Column(nullable = false)
+		
 	private String measuringInstruction = null;
 	
-	@Column(nullable = false)
 	private String comments = null;
 	
-	@Column(nullable = false)
 	private Date dateObserved = null;
 	
 	@Column(nullable = false)
