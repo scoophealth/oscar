@@ -176,8 +176,8 @@ public class EctMeasurementsDataBeanHandler {
 		}
     
     	Measurement m = (Measurement) i[0];
-    	MeasurementType mt = (MeasurementType) i[1];
-    	Provider p = (Provider) i[2];
+    	Provider p = (Provider) i[1];
+    	MeasurementType mt = (MeasurementType) i[2];
     	return toHashTable(m, mt, p);
     }
 
@@ -190,7 +190,7 @@ public class EctMeasurementsDataBeanHandler {
         data.put("measuringInstruction", m.getMeasuringInstruction());
         data.put("comments", m.getComments());
         data.put("dateObserved", ConversionUtils.toDateString(m.getDateObserved()));
-        data.put("dateObserved_date", ConversionUtils.toDateString(m.getDateObserved()));
+        data.put("dateObserved_date", m.getDateObserved());
         data.put("dateEntered", ConversionUtils.toDateString(m.getCreateDate()));
         data.put("dateEntered_date", m.getCreateDate());
         data.put("provider_first", p.getFirstName());
