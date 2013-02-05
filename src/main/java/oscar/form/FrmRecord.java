@@ -40,14 +40,24 @@ public abstract class FrmRecord {
 	 * @throws SQLException
 	 */
 	public Properties getGraph(int demographicNo, int existingID) throws SQLException {
-		return new Properties();
+		try {
+			return new Properties();
+		}
+		catch(Exception ex) {
+			throw new SQLException(ex);
+		}
 	}
 
 	/**
 	 * @throws SQLException
 	 */
 	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException {
-		return new Properties();
+		try {
+			return new Properties();
+		}
+		catch(Exception ex) {
+			throw new SQLException(ex);
+		}
 	}
 
 	public void setGraphType(String graphType) { /*Rourke needs to know whether plotting head circ or height*/

@@ -633,12 +633,18 @@ function pasteAppt(multipleSameDayGroupAppt) {
                 <a href=# onclick="onNotBook();"><font size='-1' color='brown'>Not book</font></a>
             </div>
             <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
-            <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name">
-            <INPUT TYPE="hidden" NAME="originalpage" VALUE="../appointment/addappointment.jsp">
-            <INPUT TYPE="hidden" NAME="limit1" VALUE="0">
-            <INPUT TYPE="hidden" NAME="limit2" VALUE="5">
-            <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
-			<input type="hidden" name="outofdomain" value="<%=OscarProperties.getInstance().getProperty("pmm.client.search.outside.of.domain.enabled","true")%>"/>
+<%
+    String searchMode = request.getParameter("search_mode");
+    if (searchMode == null || searchMode.isEmpty()) {
+        searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");
+    }
+%> 
+            <INPUT TYPE="hidden" NAME="search_mode" VALUE="<%=searchMode%>"> 
+            <INPUT TYPE="hidden" NAME="originalpage" VALUE="../appointment/addappointment.jsp"> 
+            <INPUT TYPE="hidden" NAME="limit1" VALUE="0"> 
+            <INPUT TYPE="hidden" NAME="limit2" VALUE="5"> 
+            <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active"> 
+			<input type="hidden" name="outofdomain" value="<%=OscarProperties.getInstance().getProperty("pmm.client.search.outside.of.domain.enabled","true")%>"/> 
             <!--input type="hidden" name="displaymode" value="Search " -->
             <div class="label">
                 <INPUT TYPE="submit" style="width:auto;"
