@@ -93,7 +93,7 @@ public class Hl7textResultsData {
 			for (Measurement m : dao.findByValue("lab_no", matchingLabs[k - 1])) {
 				measurementsDeleted = new MeasurementsDeleted(m);
 				measurementsDeletedDao.persist(measurementsDeleted);
-				measurementDao.remove(m);
+				measurementDao.remove(m.getId());
 			}
 		}
 		// loop through the measurements for the lab and add them
@@ -142,104 +142,105 @@ public class Hl7textResultsData {
 						measType = mm.getIdentCode();
 						measInst = type.getMeasuringInstruction();
 					}
-				}
+				
 
-				Measurement m = new Measurement();
-				m.setType(measType);
-				m.setDemographicId(Integer.parseInt(demographic_no));
-				m.setProviderNo("0");
-				m.setDataField(result);
-				m.setMeasuringInstruction(measInst);
-				m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
-
-				measurementDao.persist(m);
-
-				int mId = m.getId();
-
-				MeasurementsExt me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("lab_no");
-				me.setVal(lab_no);
-				measurementsExtDao.persist(me);
-
-				me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("abnormal");
-				me.setVal(abnormal);
-				measurementsExtDao.persist(me);
-
-				me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("identifier");
-				me.setVal(identifier);
-				measurementsExtDao.persist(me);
-
-				me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("name");
-				me.setVal(name);
-				measurementsExtDao.persist(me);
-
-				me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("labname");
-				me.setVal(labname);
-				measurementsExtDao.persist(me);
-
-				me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("accession");
-				me.setVal(accession);
-				measurementsExtDao.persist(me);
-
-				me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("request_datetime");
-				me.setVal(req_datetime);
-				measurementsExtDao.persist(me);
-
-				me = new MeasurementsExt();
-				me.setMeasurementId(mId);
-				me.setKeyVal("datetime");
-				me.setVal(datetime);
-				measurementsExtDao.persist(me);
-
-				if (olis_status != null && olis_status.length() > 0) {
+					Measurement m = new Measurement();
+					m.setType(measType);
+					m.setDemographicId(Integer.parseInt(demographic_no));
+					m.setProviderNo("0");
+					m.setDataField(result);
+					m.setMeasuringInstruction(measInst);
+					m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
+	
+					measurementDao.persist(m);
+	
+					int mId = m.getId();
+	
+					MeasurementsExt me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("lab_no");
+					me.setVal(lab_no);
+					measurementsExtDao.persist(me);
+	
 					me = new MeasurementsExt();
 					me.setMeasurementId(mId);
-					me.setKeyVal("olis_status");
-					me.setVal(olis_status);
+					me.setKeyVal("abnormal");
+					me.setVal(abnormal);
 					measurementsExtDao.persist(me);
-				}
-
-				if (unit != null && unit.length() > 0) {
+	
 					me = new MeasurementsExt();
 					me.setMeasurementId(mId);
-					me.setKeyVal("unit");
-					me.setVal(unit);
+					me.setKeyVal("identifier");
+					me.setVal(identifier);
 					measurementsExtDao.persist(me);
-				}
-
-				if (refRange[0].length() > 0) {
+	
 					me = new MeasurementsExt();
 					me.setMeasurementId(mId);
-					me.setKeyVal("range");
-					me.setVal(refRange[0]);
+					me.setKeyVal("name");
+					me.setVal(name);
 					measurementsExtDao.persist(me);
-				} else {
-					if (refRange[1].length() > 0) {
+	
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("labname");
+					me.setVal(labname);
+					measurementsExtDao.persist(me);
+	
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("accession");
+					me.setVal(accession);
+					measurementsExtDao.persist(me);
+	
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("request_datetime");
+					me.setVal(req_datetime);
+					measurementsExtDao.persist(me);
+	
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("datetime");
+					me.setVal(datetime);
+					measurementsExtDao.persist(me);
+	
+					if (olis_status != null && olis_status.length() > 0) {
 						me = new MeasurementsExt();
 						me.setMeasurementId(mId);
-						me.setKeyVal("minimum");
-						me.setVal(refRange[1]);
+						me.setKeyVal("olis_status");
+						me.setVal(olis_status);
 						measurementsExtDao.persist(me);
 					}
-
-					me = new MeasurementsExt();
-					me.setMeasurementId(mId);
-					me.setKeyVal("other_id");
-					me.setVal(i + "-" + j);
-					measurementsExtDao.persist(me);
+	
+					if (unit != null && unit.length() > 0) {
+						me = new MeasurementsExt();
+						me.setMeasurementId(mId);
+						me.setKeyVal("unit");
+						me.setVal(unit);
+						measurementsExtDao.persist(me);
+					}
+	
+					if (refRange[0].length() > 0) {
+						me = new MeasurementsExt();
+						me.setMeasurementId(mId);
+						me.setKeyVal("range");
+						me.setVal(refRange[0]);
+						measurementsExtDao.persist(me);
+					} else {
+						if (refRange[1].length() > 0) {
+							me = new MeasurementsExt();
+							me.setMeasurementId(mId);
+							me.setKeyVal("minimum");
+							me.setVal(refRange[1]);
+							measurementsExtDao.persist(me);
+						}
+	
+						me = new MeasurementsExt();
+						me.setMeasurementId(mId);
+						me.setKeyVal("other_id");
+						me.setVal(i + "-" + j);
+						measurementsExtDao.persist(me);
+					}
 				}
 			}
 		}
