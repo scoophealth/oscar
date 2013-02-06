@@ -270,7 +270,7 @@
 	}
 	else if( "active".equals(ptstatus) ) {
 	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByLastNameAndNotStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByNameAndNotStatus(keyword, stati, limit, offset);
 		}
 	    else if(searchMode.equals("search_phone")) {
 			demoList = demographicDao.searchDemographicByPhoneAndNotStatus(keyword, stati, limit, offset);
@@ -290,7 +290,7 @@
 	}
 	else if( "inactive".equals(ptstatus) ) {
 	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByLastNameAndStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByNameAndStatus(keyword, stati, limit, offset);
 		}
 	    else if(searchMode.equals("search_phone")) {
 			demoList = demographicDao.searchDemographicByPhoneAndStatus(keyword, stati, limit, offset);
