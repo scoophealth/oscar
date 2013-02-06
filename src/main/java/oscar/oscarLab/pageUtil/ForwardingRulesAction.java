@@ -36,6 +36,7 @@ package oscar.oscarLab.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -74,32 +75,42 @@ public class ForwardingRulesAction extends Action{
 
         String providerNo = request.getParameter("providerNo");
         String operation = request.getParameter("operation");
-
+        if (operation == null) {
+        	operation = "";
+        }
 
         logger.info("ForwardingRulesAction performing: "+operation+" for provider: "+providerNo);
         if (operation.equals("update")){
             String[] providerNums = request.getParameterValues("providerNums");
+            if (providerNums == null) {
+            	providerNums = new String[0];
+            }
             String status = request.getParameter("status");
-
+            
+            logger.info("Updating Rules for providers " + Arrays.toString(providerNums) + "; Status is " + status);
             try{
-
                 // insert forwarding rules
-                if (providerNums != null){
+                if (providerNums != null && providerNums.length > 0) {
                 	for(IncomingLabRules result:dao.findCurrentByProviderNoAndFrwdProvider(providerNo, "0")) {
                 		result.setArchive("1");
                 		dao.merge(result);
+                		logger.info("Archived rule: " + result);
                 	}
+                	
                     for (int i=0; i < providerNums.length; i++){
                     	IncomingLabRules r =new IncomingLabRules();
                     	r.setProviderNo(providerNo);
                     	r.setFrwdProviderNo(providerNums[i]);
                     	dao.persist(r);
+                    	
+                    	logger.info("Added rule: " + r);
                     }
                 }
 
                 ForwardingRules fr = new ForwardingRules();
                 ArrayList<ArrayList<String>> temp = fr.getProviders(providerNo);
-
+                logger.info("Found providers for frwd rules: " + temp);
+                
                 // check if there rules are set to forward the labs
                 if (temp == null || temp.size() <= 0){
                     // insert a new rule setting the status to final without forwarding
@@ -110,9 +121,13 @@ public class ForwardingRulesAction extends Action{
                     	r.setFrwdProviderNo("0");
                     	dao.persist(r);
                     	
+                    	logger.info("Inserted a new rule: " + r);
+                    	
                         // clear the rules if there is no forwarding and the user sets the
                         // status to New... since this is the default
                     }else if(!clearRules(providerNo)){
+                    	
+                    	logger.info("Unable to clear rules...");
                         return mapping.findForward("failure");
                     }
                     // if the rules are set to forward the labs update the status of those rules
@@ -120,6 +135,8 @@ public class ForwardingRulesAction extends Action{
                 	for(IncomingLabRules result:dao.findCurrentByProviderNo(providerNo)) {
                 		result.setStatus(status);
                 		dao.merge(result);
+                		
+                		logger.info("Set status to " + status + " for " + result);
                 	}
                 }
             }catch(Exception e){
