@@ -91,7 +91,7 @@ public class ArchiveDeletedRecords {
     
     private void addRowsToModifiedTable(String demoNo,String provNo,String modType,String table,String rowId,String resultSet){
     	TableModification tm = new TableModification();
-    	tm.setDemographicNo(Integer.parseInt(demoNo));
+    	tm.setDemographicNo(demoNo != null ? Integer.parseInt(demoNo) : null);
     	tm.setProviderNo(provNo);
     	tm.setModificationType(modType);
     	tm.setTableName(table);
