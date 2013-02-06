@@ -70,7 +70,7 @@ public class GDMLHandler implements MessageHandler {
 				MessageUploader.routeReport(serviceName, "GDML", msg, fileId, routeResults);
 				
 				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
-				msgHandler=null;
+				
 				if( msgHandler == null ) {
 					MessageUploader.clean(fileId);
 					logger.error("Saved lab but could not parse base64 value");
@@ -103,7 +103,7 @@ public class GDMLHandler implements MessageHandler {
 			Hl7TextInfo info = infos.get(k);
 
 			// only recheck the result status if it is not already set to abnormal
-			if (!info.getResultStatus().equals("A")) {
+			if (info.getResultStatus() == null ||  !info.getResultStatus().equals("A")) {
 				oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("" + info.getLabNumber());
 				int i = 0;
 				int j = 0;
