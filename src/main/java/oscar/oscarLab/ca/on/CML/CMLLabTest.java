@@ -184,10 +184,12 @@ public class CMLLabTest {
 		ArrayList<String> alist = new ArrayList<String>();
 		int count = 0;
 		for (LabTestResults r : dao.findByTitleAndLabInfoId(ConversionUtils.fromIntString(labid))) {
-			String title = r.getTitle();
-			count += title.length();
-			alist.add(title);
-			log.debug("line " + title);
+			if( r.getTitle() != null ) {
+				String title = r.getTitle();
+				count += title.length();
+				alist.add(title);
+				log.debug("line " + title);
+			}
 		}
 
 		if (alist.size() == 1) {
