@@ -322,17 +322,25 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Demographic> searchDemographicByLastNameAndNotStatus(String lastName, List<String> statuses, int limit, int offset) {
+	public List<Demographic> searchDemographicByNameAndNotStatus(String searchStr, List<String> statuses, int limit, int offset) {
 		List<Demographic> list = new ArrayList<Demographic>();
 		String queryString = "From Demographic d where d.LastName like :lastName and d.PatientStatus not in (:statuses)";
 
+		String[] name = searchStr.split(",");
+		if(name.length==2) {
+			queryString += " and first_name like :firstName ";
+		}
 		Session session = this.getSession();
 		try {
 			Query q =session.createQuery(queryString);
 			q.setFirstResult(offset);
 			q.setMaxResults(limit);
 			
-			q.setParameter("lastName", lastName + "%");
+			q.setParameter("lastName", name[0].trim() + "%");
+			if(name.length==2) {
+				q.setParameter("firstName", name[1].trim() + "%");
+			}
+			
 			q.setParameterList("statuses", statuses);
 			
 			list = q.list();
@@ -343,17 +351,25 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Demographic> searchDemographicByLastNameAndStatus(String lastName, List<String> statuses, int limit, int offset) {
+	public List<Demographic> searchDemographicByNameAndStatus(String searchStr, List<String> statuses, int limit, int offset) {
 		List<Demographic> list = new ArrayList<Demographic>();
 		String queryString = "From Demographic d where d.LastName like :lastName and d.PatientStatus in (:statuses)";
 
+		String[] name = searchStr.split(",");
+		if(name.length==2) {
+			queryString += " and first_name like :firstName ";
+		}
 		Session session = this.getSession();
 		try {
 			Query q =session.createQuery(queryString);
 			q.setFirstResult(offset);
 			q.setMaxResults(limit);
 			
-			q.setParameter("lastName", lastName + "%");
+			q.setParameter("lastName", name[0].trim() + "%");
+			if(name.length==2) {
+				q.setParameter("firstName", name[1].trim() + "%");
+			}
+			
 			q.setParameterList("statuses", statuses);
 			
 			list = q.list();
