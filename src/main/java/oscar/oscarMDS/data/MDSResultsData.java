@@ -348,7 +348,7 @@ public class MDSResultsData {
             
             for(Object[] o : searchResult) {
             	Integer MSHsegmentID = (Integer) o[0]; 
-            	String accessionNum = (String) o[1]; // mdsMSH.messageConID 
+            	String accessionNum = String.valueOf(o[1]); // mdsMSH.messageConID 
             	String providerLabRoutingStatus = (String) o[2];
             	String mdsPIDpatientName = (String) o[3]; 
             	String mdsPIDhealthNumber = (String) o[4];
