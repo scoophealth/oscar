@@ -189,52 +189,52 @@
 <br>
 <i><bean:message key="demographic.demographicsearchresults.msgSearchKeys" /></i> : <%=request.getParameter("keyword")%>
 
-    <ul>
-        <li class="tableHeadings deep">
+    <table>
+        <tr class="tableHeadings deep">
         
 		<% if ( fromMessenger ) {%>
 		<!-- leave blank -->
 		<%} else {%>
-                <div class="demoIdSearch">
+                <td class="demoIdSearch">
                     <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnDemoNo" /></a>
-                </div>
-		<div class="links"><bean:message key="demographic.demographicsearchresults.module" /> <!-- b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">Links<sup>*</sup></a></b --></div>
+                </td>
+		<td class="links"><bean:message key="demographic.demographicsearchresults.module" /> <!-- b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">Links<sup>*</sup></a></b --></td>
 
 		<%}%>
-		<div class="name"><a
+		<td class="name"><a
                     href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>"><bean:message
                     key="demographic.demographicsearchresults.btnDemoName"/></a>
-                </div>
-		<div class="chartNo"><a
+                </td>
+		<td class="chartNo"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnChart" /></a>
-                </div>
-		<div class="sex"><a
+                </td>
+		<td class="sex"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnSex" /></a>
-                </div>
-		<div class="dob"><a
+                </td>
+		<td class="dob"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=dob&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnDOB" /> <span class="dateFormat"><bean:message key="demographic.demographicsearchresults.btnDOBFormat" /></span></a>
-                </div>
-		<div class="doctor"><a
+                </td>
+		<td class="doctor"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=provider_no&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnDoctor" /></a>
-                </div>
-                <div class="rosterStatus"><a
+                </td>
+                <td class="rosterStatus"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnRosSta" /></a>
-                </div>
-		<div class="patientStatus"><a
+                </td>
+		<td class="patientStatus"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=patient_status&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnPatSta" /></a>
-                </div>
-                <div class="phone"><a
+                </td>
+                <td class="phone"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=phone&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnPhone" /></a>
-                </div>
-	</li>
+                </td>
+	</tr>
 	<%
 	List<Demographic> demoList = null;  
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
@@ -363,29 +363,28 @@
 			}
 
 %>
-	<li class="<%=toggleLine?"even":"odd"%>">
-	<div class="demoIdSearch">
+	<tr class="<%=toggleLine?"even":"odd"%>">
+	<td class="demoIdSearch">
 
 	<%
 
 		if (fromMessenger) {
 	%>
-		<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName())%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=demo.getDemographicNo()%></a></div>
+		<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName())%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=demo.getDemographicNo()%></a></td>
 	<%	
-		}
-		else { 
+		} else { 
 	%>
-		<a title="Master Demo File" href="#" onclick="popup(600,900,'demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail')"><%=dem_no%></a></div>
+		<a title="Master Demo File" href="demographiccontrol.jsp?demographic_no=<%=head%>&displaymode=edit&dboperation=search_detail" target="_blank"><%=dem_no%></a></td>
 	
 		<!-- Rights -->
-		<div class="links"><security:oscarSec roleName="<%=roleName$%>"
+		<td class="links"><security:oscarSec roleName="<%=roleName$%>"
 			objectName="_eChart" rights="r">
 			<a class="encounterBtn" title="Encounter" href="#"
 				onclick="popupEChart(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;">E</a>
 		</security:oscarSec> <!-- Rights --> <security:oscarSec roleName="<%=roleName$%>"
 			objectName="_rx" rights="r">
 			<a class="rxBtn" title="Prescriptions" href="#" onclick="popup(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=demo.getProviderNo()%>&demographicNo=<%=dem_no%>')">Rx</a>
-		</security:oscarSec></div>
+		</security:oscarSec></td>
 
 	<%	
 		}
@@ -397,15 +396,15 @@
 	<% 
 		} 
 	%>
-		<div class="name"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></div>
-		<div class="chartNo"><%=demo.getChartNo()==null||demo.getChartNo().equals("")?"&nbsp;":demo.getChartNo()%></div>
-		<div class="sex"><%=demo.getSex()%></div>
-		<div class="dob"><%=demo.getFormattedDob()%></div>
-		<div class="doctor"><%=Misc.getShortStr(providerBean.getProperty(demo.getProviderNo() == null ? "" : demo.getProviderNo()),"_",12 )%></div>
-		<div class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></div>
-		<div class="patientStatus"><%=demo.getPatientStatus()==null||demo.getPatientStatus().equals("")?"&nbsp;":demo.getPatientStatus()%></div>
-		<div class="phone"><%=demo.getPhone()==null||demo.getPhone().equals("")?"&nbsp;":(demo.getPhone().length()==10?(demo.getPhone().substring(0,3)+"-"+demo.getPhone().substring(3)):demo.getPhone())%></div>
-	</li>
+		<td class="name"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></td>
+		<td class="chartNo"><%=demo.getChartNo()==null||demo.getChartNo().equals("")?"&nbsp;":demo.getChartNo()%></td>
+		<td class="sex"><%=demo.getSex()%></td>
+		<td class="dob"><%=demo.getFormattedDob()%></td>
+		<td class="doctor"><%=Misc.getShortStr(providerBean.getProperty(demo.getProviderNo() == null ? "" : demo.getProviderNo()),"_",12 )%></td>
+		<td class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></td>
+		<td class="patientStatus"><%=demo.getPatientStatus()==null||demo.getPatientStatus().equals("")?"&nbsp;":demo.getPatientStatus()%></td>
+		<td class="phone"><%=demo.getPhone()==null||demo.getPhone().equals("")?"&nbsp;":(demo.getPhone().length()==10?(demo.getPhone().substring(0,3)+"-"+demo.getPhone().substring(3)):demo.getPhone())%></td>
+	</tr>
 	<%
 		
 	toggleLine = !toggleLine;
@@ -413,7 +412,7 @@
 		}
 	}
 %>
-</ul>
+</table>
 <%
   int nLastPage=0,nNextPage=0;
   nNextPage=Integer.parseInt(strLimit)+Integer.parseInt(strOffset);
