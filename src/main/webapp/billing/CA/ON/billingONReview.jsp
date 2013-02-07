@@ -303,8 +303,9 @@ boolean dupServiceCode = false;
 
 		function scriptAttach(elementName) {
 		     var d = elementName;
-		     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
-		     popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
+		     //t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
+		     
+		     popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+d);
 		}
                 function showtotal(){
                     var subtotal = document.getElementById("total").value;
@@ -313,6 +314,13 @@ boolean dupServiceCode = false;
                     if( element != null )
                         element.value = subtotal;
                 }
+                
+                
+       function updateElement(eId, data) {
+    	   jQuery("#"+eId).val(data);
+       }
+       
+       
 
 	//-->
 
@@ -902,9 +910,9 @@ if (bMultisites) {
 			<tr><td width="80%">
 
 			<table id="privateBillInfo" border="0" width="100%" >
-			<tr><td>Bill To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>]<br>
-			<textarea name="billto" id="billTo" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
-			<td>Remit To [<a href=# onclick="scriptAttach('remitto'); return false;">Search</a>]<br>
+			<tr><td>Bill To [<a href=# onclick="scriptAttach('billTo'); return false;">Search</a>]<br>
+			<textarea name="billto" id="billTo" cols=30 rows=6><%=strPatientAddr %></textarea></td>
+			<td>Remit To [<a href=# onclick="scriptAttach('remitTo'); return false;">Search</a>]<br>
 			<textarea name="remitto" id="remitTo" value="" cols=30 rows=6><%=clinicAddress%></textarea></td>
 			</tr>
 			</table>
@@ -994,7 +1002,6 @@ function getNewCurrentDxCodeList(origRequest){
    new Ajax.Updater('dxFullListing',url, {method:'get',parameters:params,asynchronous:true});
    //alert(origRequest.responseText);
 }
-
 
 </script>
 
