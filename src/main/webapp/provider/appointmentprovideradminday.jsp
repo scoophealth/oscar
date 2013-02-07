@@ -950,7 +950,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" id="firstTable" >
 <tr>
 <td align="center" >
-<img src="<%=request.getContextPath()%>/images/oscar_small.png" border="0">
+<a href="http://oscarmcmaster.org/" target="_blank" title="OSCAR EMR"><img src="<%=request.getContextPath()%>/images/oscar_small.png" border="0"></a>
 </td>
 <td id="firstMenu">
 <ul id="navlist">
