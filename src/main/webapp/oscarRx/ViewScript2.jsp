@@ -540,8 +540,8 @@ function toggleView(form) {
 
                                 }
                                 function expandPreview(text){
-                                    parent.document.getElementById('lightwindow_container').style.width="840px";
-                                    parent.document.getElementById('lightwindow_contents').style.width="820px";
+                                    parent.document.getElementById('lightwindow_container').style.width="1140px";
+                                    parent.document.getElementById('lightwindow_contents').style.width="1120px";
                                     document.getElementById('preview').style.width="580px";
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML=text;
                                     //frames['preview'].document.getElementById('removePharm').show();
@@ -549,8 +549,8 @@ function toggleView(form) {
 
                                 }
                                 function reducePreview(){
-                                    parent.document.getElementById('lightwindow_container').style.width="680px";
-                                    parent.document.getElementById('lightwindow_contents').style.width="660px";
+                                    parent.document.getElementById('lightwindow_container').style.width="980px";
+                                    parent.document.getElementById('lightwindow_contents').style.width="960px";
                                     document.getElementById('preview').style.width="420px";
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML="";
                                     $("selectedPharmacy").innerHTML="";
