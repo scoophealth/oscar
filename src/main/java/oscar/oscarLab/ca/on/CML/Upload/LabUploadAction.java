@@ -132,16 +132,14 @@ public class LabUploadAction extends Action {
 
 
    /**
-     *
-     * Save a Jakarta FormFile to a preconfigured place.
-     *
-     * @param file
-     * @return
-     */
+    * Save a Jakarta FormFile to a preconfigured place.
+    * @param stream
+    * @param filename
+    * @return String
+    */
    public static String saveFile(InputStream stream,String filename ){
       String retVal = null;
-      boolean isAdded = true;
-
+     
       try {
          OscarProperties props = OscarProperties.getInstance();
          //properties must exist

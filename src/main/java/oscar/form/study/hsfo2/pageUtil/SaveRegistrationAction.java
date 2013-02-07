@@ -180,23 +180,15 @@ public class SaveRegistrationAction extends DispatchAction
 
   /**
    * registration and flow sheet are almost same, so, use same method to handle them here.
-   * 
-   * @param mapping
-   * @param form
-   * @param request
-   * @param response
-   * @return
    */
   public ActionForward registrationOrFlowSheet( ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                                 HttpServletResponse response )
   {
-    SaveType saveType = SaveType.getSaveType( request.getParameter( "Save" ) );
-
+    
     // do different validation for different save type
 
     
     boolean isRegistrationForm = ConvertUtil.toBoolean( request.getParameter( "isFromRegistrationForm" ) );
-    int ID = ConvertUtil.toInt( request.getParameter( "ID" ) );    
    
     String Patient_Id = request.getParameter( "Patient_Id" ).toString().trim();
     
@@ -250,8 +242,8 @@ public class SaveRegistrationAction extends DispatchAction
       
       String Sex = request.getParameter( "Sex" );
       String PostalCode = request.getParameter( "PostalCode" );
-      double Height = 0.0; // Double.parseDouble(request.getParameter("Height"));
-      String Height_unit = request.getParameter( "Height_unit" );
+      //double Height = 0.0; // Double.parseDouble(request.getParameter("Height"));
+      //String Height_unit = request.getParameter( "Height_unit" );
   
       // Replaced copy and paste coded
       boolean Ethnic_White = parameterHasValue( request, "Ethnic_White" );
@@ -272,7 +264,7 @@ public class SaveRegistrationAction extends DispatchAction
       String PharmacyName = ""; // request.getParameter("PharmacyName");
       String PharmacyLocation = ""; // request.getParameter("PharmacyLocation");
       String sel_TimeAgoDx = request.getParameter( "sel_TimeAgoDx" );
-      String EmrHCPId1 = request.getParameter( "EmrHCPId1" );
+     // String EmrHCPId1 = request.getParameter( "EmrHCPId1" );
       //String EmrHCPId2 = request.getParameter( "EmrHCPId2" );
       //String EmrHCPId = EmrHCPId1 + "-" + EmrHCPId2;
       String EmrHCPId = request.getParameter( "EmrHCPId2" ); //should be the patient's doctor id
@@ -465,9 +457,9 @@ public class SaveRegistrationAction extends DispatchAction
     Date egfrDate = getDate( formater, eGFRDateYear, egfrDateMonth, egfrDateDay );
     
     // determine if data should be locked
-    String savestring = request.getParameter( "Save" );
+   //String savestring = request.getParameter( "Save" );
     
-    String submitstring = request.getParameter( "Submit" );
+    //String submitstring = request.getParameter( "Submit" );
     
     boolean locked = false;
     boolean monitor = parameterHasValue( request, "monitor");

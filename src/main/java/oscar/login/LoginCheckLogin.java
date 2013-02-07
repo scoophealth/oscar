@@ -109,7 +109,7 @@ public final class LoginCheckLogin {
 	/**
 	 * only works after you call auth successfully
 	 * 
-	 * @return
+	 * @return the Security object
 	 */
 	public Security getSecurity() {
 		return (lb.getSecurity());

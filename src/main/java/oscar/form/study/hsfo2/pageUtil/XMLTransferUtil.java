@@ -40,11 +40,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.xml.soap.SOAPPart;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -183,7 +178,6 @@ import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData.Site.SitePatient.TxtSurname;
 import org.oscarehr.common.model.Hsfo2Patient;
 import org.oscarehr.common.model.Hsfo2Visit;
 import org.oscarehr.util.MiscUtils;
-import org.w3c.dom.Node;
 
 import oscar.OscarProperties;
 import oscar.form.study.hsfo2.HSFODAO;
@@ -204,9 +198,9 @@ public class XMLTransferUtil
   private String defaultweb = "https://www.clinforma.net/Hsf/HmpVaultWS/";
   //"https://www.clinforma.net/P-Prompt/DataReceiveWS/";
 //  https://www.clinforma.net/Hsf/HmpVaultTestWS/
-  private String getDataDateRangeAction = "https://www.clinforma.net/P-Prompt/DataReceiveWS/GetDataDateRange";
+ // private String getDataDateRangeAction = "https://www.clinforma.net/P-Prompt/DataReceiveWS/GetDataDateRange";
   private String dataVaultAction = "https://www.clinforma.net/P-Prompt/DataReceiveWS/DataVault";
-  private String namespace = "https://www.clinforma.net/P-Prompt/DataReceiveWS/";
+ // private String namespace = "https://www.clinforma.net/P-Prompt/DataReceiveWS/";
 
 //  String                  soaplink     = "https://www.clinforma.net/HsfoHbps/DataVaultWS";
 
@@ -217,7 +211,7 @@ public class XMLTransferUtil
     {
       defaultweb="https://www.clinforma.net/P-Prompt/DataReceiveTestWS/";
       //"https://www.clinforma.net/P-Prompt/DataReceiveTestWS/";
-      getDataDateRangeAction = "https://www.clinforma.net/P-Prompt/DataReceiveTestWS/GetDataDateRange";
+    //  getDataDateRangeAction = "https://www.clinforma.net/P-Prompt/DataReceiveTestWS/GetDataDateRange";
       dataVaultAction = "https://www.clinforma.net/P-Prompt/DataReceiveTestWS/DataVault";
 //      namespace = "https://www.clinforma.net/P-Prompt/DataReceiveTestWS/";    //same as production
     }
@@ -339,7 +333,7 @@ public class XMLTransferUtil
     String startDateStr = String.valueOf(startDate.get(Calendar.YEAR)) + "-" + String.valueOf(startDate.get(Calendar.MONTH)+1)+ "-" + String.valueOf(startDate.get(Calendar.DATE)) ;
     String endDateStr = String.valueOf(endDate.get(Calendar.YEAR)) + "-" + String.valueOf(endDate.get(Calendar.MONTH)+1)+ "-" + String.valueOf(endDate.get(Calendar.DATE)) ;
 
-    String dateString2 = dformat2.format( pd.getConsentDate() );  //e.g. "2012-03-13"
+    //String dateString2 = dformat2.format( pd.getConsentDate() );  //e.g. "2012-03-13"
     Date signedDate = getSignedDate( pd.getPatient_Id(), startDateStr, endDateStr );
     if(signedDate == null) return;
 
@@ -1108,9 +1102,9 @@ public class XMLTransferUtil
     String visitDate = dformat2.format( vsd.getVisitDate_Id() );
 
     String signT = dformat1.format( vsd.getFormEdited() );
-    String signT2 = dformat2.format( vsd.getFormEdited() );
+   // String signT2 = dformat2.format( vsd.getFormEdited() );
     XmlCalendar when = new XmlCalendar( signT );
-    XmlCalendar when2 = new XmlCalendar( signT2 );
+   // XmlCalendar when2 = new XmlCalendar( signT2 );
     String who = getProviderName( vsd.getProvider_no());
 
     FormHsfHmpFlowsheet flowsheet = patient.addNewFormHsfHmpFlowsheet();
@@ -2105,36 +2099,15 @@ public class XMLTransferUtil
     }
   }
 
-  private static DOMResult transform( SOAPPart part ) throws Exception
-  {
-    Transformer trans = TransformerFactory.newInstance().newTransformer();
-    DOMResult rs = new DOMResult();
-    trans.transform( part.getContent(), rs );
 
-    return rs;
-  }
-
-  private static String getValueByTagName( Node n, String tag )
-  {
-    if ( n == null )
-      return null;
-    if ( tag.equals( n.getLocalName() ) )
-      return n.getFirstChild().getNodeValue();
-    if ( n.hasChildNodes() )
-      return getValueByTagName( n.getFirstChild(), tag );
-    else if ( n.getNextSibling() != null )
-      return getValueByTagName( n.getNextSibling(), tag );
-    else
-      return getValueByTagName( n.getParentNode().getNextSibling(), tag );
-  }
-
-  /**
-   *
-   * @param siteCode
-   * @param userId
-   * @param passwd
-   * @param fileType
-   */
+ /**
+  * 
+  * @param siteCode
+  * @param userId
+  * @param passwd
+  * @return map
+  * @throws Exception
+  */
   public Map< SoapElementKey, Object > soapHttpCallGetDataDateRange( int siteCode, String userId, String passwd ) throws Exception
   {
     final int fileType = 18;      //GetDataDateRange file type is 18?
@@ -2211,15 +2184,15 @@ public class XMLTransferUtil
   }
 
 
-  /**
-   * DataVault soap
-   * @param siteCode
-   * @param userId
-   * @param passwd
-   * @param xml
-   * @return
-   * @throws Exception
-   */
+/**
+ * 
+ * @param siteCode
+ * @param userId
+ * @param passwd
+ * @param xml
+ * @return map
+ * @throws Exception
+ */
   public Map< SoapElementKey, Object > soapHttpCallDataVault( int siteCode, String userId, String passwd, String xml )
       throws Exception
   {

@@ -63,7 +63,7 @@ public class BillingAssociationPersistence {
   /**
    * Saves a ServiceCodeAssociation object to the database
    * @param assoc ServiceCodeAssociation
-   * @return boolean
+   * @param mode
    */
   public void saveServiceCodeAssociation(ServiceCodeAssociation assoc,
                                          String mode) {
@@ -98,7 +98,7 @@ public class BillingAssociationPersistence {
 
   /**
    * Deletes a service code association from the database
-   * @param id String
+   * @param svcCode String
    * @return boolean
    */
   public boolean deleteServiceCodeAssoc(String svcCode) {

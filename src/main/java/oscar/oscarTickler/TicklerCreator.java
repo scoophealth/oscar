@@ -42,9 +42,9 @@ public class TicklerCreator {
   /**
    * createTickler
    *
-   * @param string String
-   * @param provNo int
-   * @param reason String
+   * @param demoNo the demographic no
+   * @param provNo the provider no
+   * @param message the tickler message
    */
   public void createTickler(String demoNo, String provNo, String message) {
     if (!ticklerExists(demoNo, message)) {
@@ -67,7 +67,6 @@ public class TicklerCreator {
    * Returns true if a tickler with the specified parameters exists
    *
    * @param demoNo String
-   * @param provNo String
    * @param message String
    * @return boolean
    */

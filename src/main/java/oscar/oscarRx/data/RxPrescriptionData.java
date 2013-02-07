@@ -920,19 +920,12 @@ public class RxPrescriptionData {
 			return b;
 		}
 
-		public void p(String s) {
-
-		}
-
-		public void p(String s, String s1) {
-
-		}
 
 		public void calcEndDate() {
 			try {
 				GregorianCalendar cal = new GregorianCalendar(Locale.CANADA);
 				int days = 0;
-				p("in calcEndDate");
+				
 				//          p("this.getRxDate()",this.getRxDate().toString());
 				cal.setTime(this.getRxDate());
 
@@ -1676,7 +1669,7 @@ public class RxPrescriptionData {
 		/**
 		 * Setter for property unitName.
 		 *
-		 * @param unit New value of property unitName.
+		 * @param unitName New value of property unitName.
 		 */
 		public void setUnitName(java.lang.String unitName) {
 			this.unitName = unitName;
@@ -1711,7 +1704,7 @@ public class RxPrescriptionData {
 		/**
 		 *Setter for property custom (does it have customized directions)
 		 *
-		 * @param boolean value for custom
+		 * @param custom value for custom
 		 */
 		public void setCustomInstr(boolean custom) {
 			this.custom = custom;

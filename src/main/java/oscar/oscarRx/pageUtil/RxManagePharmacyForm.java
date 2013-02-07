@@ -243,8 +243,8 @@ public final class RxManagePharmacyForm extends ActionForm {
    }
    
    /**
-    * Setter for Targeted Dispensing Facility.
-    * @param dispenseFacility New value of Targeted Dispensing Facility.
+    * Setter for Service Location Identifier
+    * @param serviceLocationIdentifier New value
     */
    public void setServiceLocationIdentifier(java.lang.String serviceLocationIdentifier) {
       this.serviceLocationIdentifier = serviceLocationIdentifier;

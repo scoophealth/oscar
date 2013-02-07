@@ -76,7 +76,6 @@ public class LabUploadAction extends Action {
              Connection connection = new Connection();
              ArrayList<String> messages = connection.Retrieve(is);
              if (messages != null) {
-                boolean success = true;
                 try {
                    int size = messages.size();
 
@@ -117,13 +116,12 @@ public class LabUploadAction extends Action {
    }
 
 
-   /**
-     *
-     * Save a Jakarta FormFile to a preconfigured place.
-     *
-     * @param file
-     * @return
-     */
+ /**
+  * Save a Jakarta FormFile to a preconfigured place.
+  * @param stream
+  * @param filename
+  * @return boolean
+  */
     public static boolean saveFile(InputStream stream,String filename ){
         String retVal = null;
         boolean isAdded = true;

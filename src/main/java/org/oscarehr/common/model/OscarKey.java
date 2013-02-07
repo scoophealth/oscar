@@ -50,7 +50,7 @@ public class OscarKey extends AbstractModel<String> implements Serializable {
 
 	/**
 	 * The OscarKey name is the ID
-	 * @param id
+	 * @param name
 	 */
 	public void setName(String name) {
 		this.name = name;

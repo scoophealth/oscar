@@ -92,7 +92,7 @@ public class SurveillanceAnswerForm extends ActionForm{
    
    /**
     * Setter for property demographic_no.
-    * @param demographic_no New value of property demographic_no.
+    * @param demographicNo New value of property demographic_no.
     */
    public void setDemographicNo(java.lang.String demographicNo) {
       this.demographicNo = demographicNo;

@@ -179,7 +179,7 @@ public class BillingDao extends AbstractDao<Billing> {
      * @param providerNo
      * @param statusList
      * @param dateRange
-     * @return
+     * @return list of Billing
      */
     
 	public List<Billing> findByProviderStatusAndDates(String providerNo, List<String> statusList, DateRange dateRange) {

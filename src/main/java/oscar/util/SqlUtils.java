@@ -158,8 +158,8 @@ public class SqlUtils {
 	 *
 	 * @param criteria
 	 *            String[] - he string array of criteria used to construct the query segment
-	 * @param type
-	 *            int - a value of true indicates that the clause components are enclosed in quotes
+	 * @param useQuotes
+	 *            boolean - a value of true indicates that the clause components are enclosed in quotes
 	 * @return String - The constructed sql 'in' clause String
 	 */
 	public static String constructInClauseString(String[] criteria, boolean useQuotes) {

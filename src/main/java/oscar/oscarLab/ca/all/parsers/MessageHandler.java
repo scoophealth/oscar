@@ -142,7 +142,7 @@ public interface MessageHandler {
      * Return the obx value type
      * @param i
      * @param j
-     * @return
+     * @return String the obx value
      */
     public String getOBXValueType(int i, int j);
 

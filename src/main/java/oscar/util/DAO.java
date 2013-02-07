@@ -32,8 +32,6 @@ import java.sql.SQLException;
 
 import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarDB.DBPreparedHandler;
-
 
 public class DAO {
 
@@ -85,13 +83,7 @@ public class DAO {
         }
     }
 
-    /**
-     * @return
-     */
-    public DBPreparedHandler getDBPreparedHandler() {
-        return new DBPreparedHandler();
-    }
-
+ 
     protected String getStrIn(String[] ids) {
         String id = "";
 

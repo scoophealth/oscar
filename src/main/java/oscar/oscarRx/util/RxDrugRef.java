@@ -462,8 +462,8 @@ public class RxDrugRef {
 
      /**returns basic identifiers of all drugs, drug products and drug classes available in the database which names match searchexpr, and which other criteria match the constraints in tags
       *
-      *@param searchexpr: (Partial) name of a drug (generic, brand name, composite drug) Case insensitive, partial match possible if using % as wild card
-      *@tags: see [tags] Additional optional keys:
+      *@param searchexpr (Partial) name of a drug (generic, brand name, composite drug) Case insensitive, partial match possible if using % as wild card
+      *@param tags see [tags] Additional optional keys:
       *       classes : boolean. If true, class names (ATC) are listed
       *       generics : boolean. If true, generic names are listed
       *       branded : boolean. If true, branded product names are listed
@@ -509,7 +509,9 @@ public class RxDrugRef {
            retHash.put("authors", new Integer(authors));
            try{
            retHash.put("modified_after", new SimpleDateFormat("yyyy-MM-dd").parse(modified_after.toString()));            
-           }catch (Exception e){}
+           }catch (Exception e){
+        	   MiscUtils.getLogger().error("error",e);
+           }
            retHash.put("return_tags",Boolean.toString(return_tags));      //If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
            return retHash;
      }
@@ -531,12 +533,12 @@ public class RxDrugRef {
      
      
      /**For Creating tags 
-      *@param source: Primary key of the referenced information source (Drugref, MIMS, MULTUM, AMIS, Manufacturer, Inhouse, ...)
-      *@param language:  string. Three character ISO language code
-      *@param country:  string. Two character ISO country code
-      *@param author : integer. Primary key of the submitter of the referenced information
-      *@param modified_after : string. ISO date (yyyy-mm-dd). If set, records older than this date will be ignored.
-      *@param return_tags:  boolean. If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+      *@param source Primary key of the referenced information source (Drugref, MIMS, MULTUM, AMIS, Manufacturer, Inhouse, ...)
+      *@param language  string. Three character ISO language code
+      *@param country  string. Two character ISO country code
+      *@param author  integer. Primary key of the submitter of the referenced information
+      *@param modified_after  string. ISO date (yyyy-mm-dd). If set, records older than this date will be ignored.
+      *@param return_tags  boolean. If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
       *@return Hashtable with values set from input for tags
       */
      public Hashtable tagCreator(int source,String language,String country,int author,Date  modified_after,boolean return_tags ){
@@ -547,19 +549,20 @@ public class RxDrugRef {
             retHash.put("author", new Integer(author));
             try{
             retHash.put("modified_after", new SimpleDateFormat("yyyy-MM-dd").parse(modified_after.toString()));            
-            }catch (Exception e){}
+            }catch (Exception e){
+            	 MiscUtils.getLogger().error("error",e);
+            }
             retHash.put("return_tags",Boolean.toString(return_tags));      //If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
             return retHash;
      }
      
      
      /**For Creating tags 
-      *@param source: Primary key of the referenced information source (Drugref, MIMS, MULTUM, AMIS, Manufacturer, Inhouse, ...)
-      *@param language:  string. Three character ISO language code
-      *@param country:  string. Two character ISO country code
-      *@param author : integer. Primary key of the submitter of the referenced information
-      *@param modified_after : string. ISO date (yyyy-mm-dd). If set, records older than this date will be ignored.
-      *@param return_tags:  boolean. If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+      *@param source Primary key of the referenced information source (Drugref, MIMS, MULTUM, AMIS, Manufacturer, Inhouse, ...)
+      *@param language  string. Three character ISO language code
+      *@param country  string. Two character ISO country code
+      *@param author  integer. Primary key of the submitter of the referenced information
+      *@param return_tags  boolean. If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
       *@return Hashtable with values set from input for tags
       */
      public Hashtable tagCreator(int source,String language,String country,int author,boolean return_tags ){
@@ -577,8 +580,8 @@ public class RxDrugRef {
 
      
       /**returns a fuill drug monograph formatted as HTML page, with all headings (= keys returned by get_drug) implemented as anchors.
-       *@param pkey: primary key.
-       *@param css: CSS style sheet used to format the retunred HTML page. Details not finalized yet.
+       *@param pkeye4 primary key.
+       *@param css CSS style sheet used to format the retunred HTML page. Details not finalized yet.
        *@return base64 encoded HTML page
        */
        public Base64 get_drug_html(int pkeye4,Base64 css){ //returns base64
@@ -588,9 +591,9 @@ public class RxDrugRef {
 
 
        /**returns all available products for a given drug as identified by pkey and constrained by tags
-        *@param pkey: primary key of a drug.
-        *@param tags: see [tags].
-        *return list of structs containing the following minimum keys:
+        *@param pkey primary key of a drug.
+        *@param tags see [tags].
+        *@return list of structs containing the following minimum keys:
         *           brandname : string
         *           form : string. (tablets, capsules, ...)
         *           strength : string. Brief human readable format
@@ -604,8 +607,8 @@ public class RxDrugRef {
 
        /**returns product specific information for a given drug as identified by pkey and constrained by tags, including available package sizes and strengths, manufacturers, prices and available subsidies as well as legal / subsidy access restrictions.
         *
-        *@param pkey: primary key of a specific drug product
-        *@param tags: see [tags]
+        *@param pkey primary key of a specific drug product
+        *@param tags see [tags]
         *
         *@return returns the same struct as get_drug(), but with the following additional keys:
         *           form : integer. Primary key of drug forms tablets, capsules, syrup ...)
@@ -632,8 +635,8 @@ public class RxDrugRef {
 
 
        /**returns the Consumer Product Information formatted as HTML, base64 encoded
-        *@param pkey: primary key of a drug product.
-        *@param css: CSS style sheet used to format the returned HTML page. Details not finalized yet.
+        *@param pkey primary key of a drug product.
+        *@param css CSS style sheet used to format the returned HTML page. Details not finalized yet.
         *@return base64 encoded HTML page
         */
        public Base64 get_product_CPI(int pkey,Base64 css){
@@ -641,8 +644,8 @@ public class RxDrugRef {
        }
 
        /**returns an array of structs describing the possible interactions between any two drugs contained in drugs. Information used for interaction checking constrained by tags.
-        *@param drugs: array of integers. Primary keys of drugs
-        *@param tags: see [tags].
+        *@param drugs array of integers. Primary keys of drugs
+        *@param tags see [tags].
         *@return array of structs with the following minimum keys:
         *       affecting_drug : integer. Primary Key
         *       affected_drug : integer. Primary key.
@@ -677,7 +680,7 @@ public class RxDrugRef {
        
        
        /**List all references this drugref database is based on. 
-        *@param tags: see [tags].
+        *@param tags see [tags].
         *@return array of structs with following minimum keys:
         *           name : string. short name of reference source
         *           full title : string.

@@ -314,9 +314,6 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
      * Returns the ID of the facility that the provider is associated with in the
      * external prescription service's authentication system.
      * 
-     * Please refer to the FUTURE notes at
-     * {@link org.oscarehr.common.model.ProviderPreference.eRxFacility}.
-     * 
      * @return The current value of eRxFacility.
      */
     public String getERxFacility() {
@@ -325,9 +322,6 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 
     /**
      * Returns the provider's password on the external prescription web service.
-     *
-     * Please refer to the FUTURE notes at
-     * {@link org.oscarehr.common.model.ProviderPreference.eRxPassword}.
      *
      * @return The current value of eRxPassword.
      */
@@ -338,8 +332,6 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
     /**
      * Returns the provider's username on the external prescription web service.
      * 
-     * Please refer to the FUTURE notes at
-     * {@link org.oscarehr.common.model.ProviderPreference.eRxUsername}.
      * 
      * @return The current value of eRxUsername.
      */
@@ -380,9 +372,6 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
     /**
      * Change the ID of the facility that the doctor is associated with in the
      * external prescription service's authentication system.
-     * 
-     * Please refer to the FUTURE notes at
-     * {@link org.oscarehr.common.model.ProviderPreference.eRxFacility}.
      * 
      * @param eRxFacility
      *            the new eRxFacility

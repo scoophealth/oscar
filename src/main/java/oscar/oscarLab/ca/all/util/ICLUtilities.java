@@ -97,13 +97,7 @@ public class ICLUtilities {
     }
     
     
-    /**
-     *
-     * Save a Jakarta FormFile to a preconfigured place.
-     *
-     * @param file
-     * @return
-     */
+
     public static String saveFile(InputStream stream,String filename ){
         String retVal = null;        
         

@@ -190,7 +190,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	 * Finds be
 	 * 
 	 * @param criteria
-	 * @return
+	 * @return list of measurements
 	 */
 	
 	public List<Measurement> find(SearchCriteria criteria) {
