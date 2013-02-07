@@ -7768,7 +7768,7 @@ CREATE TABLE `relationships` (
 
 CREATE TABLE `table_modification` (
   `id` int(10) NOT NULL auto_increment primary key,
-  `demographic_no` int(10) NOT NULL default '0',
+  `demographic_no` int(10) default '0',
   `provider_no` varchar(6) NOT NULL default '',
   `modification_date` datetime default NULL,
   `modification_type` varchar(20) default NULL,
