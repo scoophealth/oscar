@@ -54,7 +54,11 @@ public class ConsultationAttachDocs {
 	}
 
 	/**
-	 * @params demographic id, consultation id and array of document ids with prepended 'D' for each id as doc type
+	 * 
+	 * @param prov
+	 * @param demo
+	 * @param req
+	 * @param d
 	 */
 	public ConsultationAttachDocs(String prov, String demo, String req, String[] d) {
 		providerNo = prov;

@@ -114,7 +114,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 	 * Save a Jakarta FormFile to a preconfigured place.
 	 *
 	 * @param file
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean saveFile(FormFile file) {
 		String retVal = null;

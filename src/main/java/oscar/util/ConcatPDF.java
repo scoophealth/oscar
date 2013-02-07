@@ -76,7 +76,6 @@ public class ConcatPDF {
     /**
      * This class can be used to concatenate existing PDF files.
      * (This was an example known as PdfCopy.java)
-     * @param args the command line arguments
      */
     public static void concat(List<Object> alist,OutputStream out) {
 

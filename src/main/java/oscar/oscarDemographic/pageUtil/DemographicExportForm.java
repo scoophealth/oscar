@@ -114,7 +114,7 @@ public class DemographicExportForm extends ActionForm {
 
     /**
     * Setter for properties
-    * @param patientSet New value of properties.
+    * @param demographicNo 
     */
     public void setDemographicNo(String demographicNo) {
         this.demographicNo = demographicNo;

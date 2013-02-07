@@ -73,7 +73,7 @@ public class EFormDao extends AbstractDao<EForm> {
 
 	/**
 	 * @param current can be null for both
-	 * @return
+	 * @return list of EForms
 	 */
 	public List<EForm> findAll(Boolean current) {
 		StringBuilder sb = new StringBuilder();
@@ -217,7 +217,7 @@ public class EFormDao extends AbstractDao<EForm> {
     /**
      * get eform in group by group name
      * @param groupName
-     * @return
+     * @return list of EForms
      */
     public List<EForm> getEfromInGroupByGroupName(String groupName){
         String queryString = "select e from EForm e where e.id in (select formId from EFormGroup eg  where eg.groupName =?1)";

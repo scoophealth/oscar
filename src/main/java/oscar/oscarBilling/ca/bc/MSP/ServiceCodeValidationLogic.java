@@ -163,7 +163,6 @@ public class ServiceCodeValidationLogic {
 	 * @param demoNo String - The uid of the patient
 	 * @param code String - The service code to be evaluated
 	 * @param serviceDate String - The date of service
-	 * @param currentUnitAllotment int - Sum of service units to be added to the existing sum
 	 * @return 0 if more service units available, 1 if annual max units consumed, 2 if daily max units consumed
 	 */
 	public int getPatientManagementStatus(String demoNo, String code, String serviceDate) {

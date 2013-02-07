@@ -255,7 +255,7 @@ public class HRMXMLHandler implements MessageHandler {
 	 * @param i
 	 * @param j
 	 * @param its
-	 * @return
+	 * @return String
 	 */
 	public String getOBXResult(int i, int j, boolean its) {
 
@@ -413,17 +413,11 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	public String getDocName() {
-		String docName = "";
-
 		return "";
 	}
 
 	public String getCCDocs() {
-
-		String docNames = "";
-
 		return "";
-
 	}
 
 	public ArrayList<String> getDocNums() {

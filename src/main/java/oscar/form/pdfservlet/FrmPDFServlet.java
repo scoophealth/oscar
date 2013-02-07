@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -82,7 +81,7 @@ public class FrmPDFServlet extends HttpServlet {
 
     /**
      * @param req HTTP request object
-     * @param resp HTTP response object
+     * @param res HTTP response object
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
             java.io.IOException {
@@ -248,16 +247,7 @@ public class FrmPDFServlet extends HttpServlet {
                 }
             }
             
-            //specify the page of the picture using __graphicPage, it may be used multiple times to specify multiple pages
-            //ie. __graphicPage=2&__graphicPage=3
-            //__cfgGraphicFile will be mapped to page 1, __cfgGraphicFile0 will be mapped to page 2 etc.
-            String[] graphicPage = req.getParameterValues("__graphicPage"+suffix);
-            ArrayList<String> graphicPageArray = new ArrayList<String>();
-            
-            
-            if (graphicPage != null){
-                graphicPageArray = new ArrayList<String>(Arrays.asList(graphicPage));                
-            }                       
+                    
             
             Properties[][] graphicCfg = new Properties[numPages][];
             String[] cfgGraphicFile;
@@ -444,19 +434,17 @@ public class FrmPDFServlet extends HttpServlet {
             int n = reader.getNumberOfPages();
             // retrieve the size of the first page
             Rectangle pSize = reader.getPageSize(1);
-            float width = pSize.getWidth();
             float height = pSize.getHeight();
 
             PdfContentByte cb = writer.getDirectContent();
             ColumnText ct = new ColumnText(cb);
             int i = 0;
-            int p = 0;
             int fontFlags = 0;
             String propValue;
             
             while (i < n) {
                 document.newPage();
-                p++;
+                
                 i++;
                 PdfImportedPage page1 = writer.getImportedPage(reader, i);
                 cb.addTemplate(page1, 1, 0, 0, 1, 0, 0);
@@ -812,13 +800,6 @@ public class FrmPDFServlet extends HttpServlet {
             }
         }
         return ret;
-    }
-
-    private String getProjectName() {
-        String propPath = "" + this.getClass().getClassLoader().getResource("/");
-        propPath = propPath.substring(0, propPath.lastIndexOf("/WEB-INF"));
-        String propFilename = propPath.substring(propPath.lastIndexOf("/") + 1);
-        return propFilename;
     }
 
 }

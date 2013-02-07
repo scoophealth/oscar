@@ -68,8 +68,8 @@ public class RelationshipsDao extends AbstractDao<Relationships> {
 	/**
 	 * Finds all active relationships for the specified demographic ID
 	 * 
-	 * @param id
-	 * 		ID of the relationship to be loaded
+	 * @param demographicNumber
+	 * 		demographic id
 	 * @return
 	 * 		Returns the non-deleted rel'p with the specified ID or null if it can't be found
 	 */

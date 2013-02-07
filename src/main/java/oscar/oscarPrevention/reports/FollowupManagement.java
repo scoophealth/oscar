@@ -53,11 +53,12 @@ public class FollowupManagement {
     
     /**
      * Class used to mark prevention follow up procedures
-     *@param String followUpType   --  procedure type eg PAPF,FLUF,MAMF,FOBF,CIMF 
-     *@param String followUpValue  --  proedure value eg L1,L2,P1 letter 1, letter 2, phone call 1
-     *@param List demographicList  --  list of demographic numbers as strings 
+     *@param followUpType   --  procedure type eg PAPF,FLUF,MAMF,FOBF,CIMF 
+     *@param followUpValue  --  proedure value eg L1,L2,P1 letter 1, letter 2, phone call 1
+     *@param demographicList  --  list of demographic numbers as strings 
      *@param providerNo            --  provider # generating the list
      *@param dateObserved          --  date list is generated 
+     *@param comment				-- comment
      */
     public void markFollowupProcedure(String followUpType,String followUpValue, List demographicList, String providerNo,Date dateObserved,String comment){
         for (int i = 0; i < demographicList.size();i++){
@@ -69,11 +70,12 @@ public class FollowupManagement {
     
     /**
      * Class used to mark prevention follow up procedures
-     *@param String followUpType   --  procedure type eg PAPF,FLUF,MAMF,FOBF,CIMF 
-     *@param String followUpValue  --  proedure value eg L1,L2,P1 letter 1, letter 2, phone call 1
-     *@param List demographicList  --  list of demographic numbers as strings 
+     *@param followUpType   --  procedure type eg PAPF,FLUF,MAMF,FOBF,CIMF 
+     *@param followUpValue  --  proedure value eg L1,L2,P1 letter 1, letter 2, phone call 1
+     *@param demographicList  --  list of demographic numbers as strings 
      *@param providerNo            --  provider # generating the list
      *@param dateObserved          --  date list is generated 
+     *@param comment			-- comment
      */
     public void markFollowupProcedure(String followUpType,String followUpValue, String[] demographicList, String providerNo,Date dateObserved,String comment){
         for (int i = 0; i < demographicList.length;i++){   

@@ -36,11 +36,6 @@ public class OcanConnexOptionDao extends AbstractDao<OcanConnexOption> {
 		super(OcanConnexOption.class);
 	}
 	
-	/**
-	 * @param formVersion should be the major cds version, i.e. '4' (we're assuming minor versions are compatable, if it's not we can use the full version number instead)
-	 * @param mainCatgeory should be the cds main category, i.e. for '016-06' the main category should be '016'
-	 * @return results are sorted by their name as per in the CDS spec aka insertion order, not alphabetically.   
-	 */
 	public List<OcanConnexOption> findByLHINCode(String LHIN_code) {
 		// build sql string
 		String sqlCommand = "select x from OcanConnexOption x where x.LHINCode=?1 order by x.orgName";
@@ -56,9 +51,6 @@ public class OcanConnexOptionDao extends AbstractDao<OcanConnexOption> {
 		return (results);
 	}
 
-	/**
-	 * @param formVersion should be the major cds version, i.e. '4' (we're assuming minor versions are compatable, if it's not we can use the full version number instead)
-	 */
 	public List<OcanConnexOption> findByLHINCodeOrgName(String LHIN_code, String orgName) {
 		// build sql string
 		String sqlCommand = "select x from OcanConnexOption x where x.LHINCode=?1 and x.orgName=?2 order by x.programName";

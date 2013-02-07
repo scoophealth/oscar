@@ -155,7 +155,7 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
     /**
 	 * Finds unique test names for a patient
 	 * 
-	 * @param demoId
+	 * @param demoNo
 	 * 		Demographic ID for the patient
 	 * @param labType
 	 * 		Lab type to find test for

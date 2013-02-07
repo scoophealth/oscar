@@ -66,9 +66,6 @@ public class FrmToXMLUtil{
    public FrmToXMLUtil() {
    }
    
-   /**
-    * @param args the command line arguments
-    */
     public static String convertToXml(Vector measurementTypes, Properties nameProps, Properties dataProps){
              
         // TODO code application logic here            
@@ -146,7 +143,6 @@ public class FrmToXMLUtil{
                 String itemName = mt.getType();
                 String methodCall = (String) nameProps.get(itemName+"Value");
                 MiscUtils.getLogger().debug("method "+methodCall);
-                org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
                 
                 if(mt.getType().equalsIgnoreCase("BP") && !GenericValidator.isBlankOrNull(dataProps.getProperty("SBPValue"))){
                     methodCall = (String) nameProps.get("SBPValue");

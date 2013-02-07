@@ -141,7 +141,7 @@ public class ConversionUtils {
 	/**
 	 * Formats the date instance into a string keeping only the date.   
 	 * 
-	 * @param time
+	 * @param date
 	 * 		Date to be formatted using {@link #DEFAULT_DATE_PATTERN}
 	 * @return
 	 * 		Returns the formatted string
@@ -172,7 +172,7 @@ public class ConversionUtils {
 	/**
 	 * Parses the specified string as an Integer instance. 
 	 * 
-	 * @param intString
+	 * @param obj
 	 * 		String to be parsed as integer
 	 * @return
 	 * 		Returns the parsed integer
@@ -195,7 +195,7 @@ public class ConversionUtils {
 	 * @param integer
 	 * 		Integer to format as a string.
 	 * @return
-	 * 		Returns the formatted string, or {@value #ZERO_STRING} for null paramter value.
+	 * 		Returns the formatted string, or 0 for null parameter value.
 	 */
 	public static String toIntString(Integer integer) {
 		if (integer == null) {
@@ -210,7 +210,7 @@ public class ConversionUtils {
 	 * @param b
 	 * 		Boolean to format as a string.
 	 * @return
-	 * 		Returns {@value #ZERO_STRING} for false or null instance or "1" otherwise.
+	 * 		Returns 0 for false or null instance or "1" otherwise.
 	 */
 	public static String toBoolString(Boolean b) {
 		if (b == null || b == Boolean.FALSE) {
@@ -225,7 +225,7 @@ public class ConversionUtils {
 	 * @param str
 	 * 		String to be parsed
 	 * @return
-	 * 		Returns false for empty, null or {@value #ZERO_STRING} or true otherwise. 
+	 * 		Returns false for empty, null or 0 or true otherwise. 
 	 */
 	public static boolean fromBoolString(String str) {
 		if (str == null || str.trim().isEmpty() || ZERO_STRING.equals(str)) {
@@ -260,7 +260,7 @@ public class ConversionUtils {
 	 * @param d
 	 * 		Double to format as a string.
 	 * @return
-	 * 		Returns the formatted string, or {@value #ZERO_STRING} for null value.
+	 * 		Returns the formatted string, or 0 for null value.
 	 */
 	public static String toDoubleString(Double d) {
 		if (d == null) {

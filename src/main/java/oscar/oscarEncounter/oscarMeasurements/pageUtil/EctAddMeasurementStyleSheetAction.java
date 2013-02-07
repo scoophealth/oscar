@@ -87,7 +87,6 @@ public class EctAddMeasurementStyleSheetAction extends Action {
      * Save a Jakarta FormFile to a preconfigured place.
      *
      * @param file
-     * @return
      */
     public static boolean saveFile(FormFile file){
         String retVal = null;

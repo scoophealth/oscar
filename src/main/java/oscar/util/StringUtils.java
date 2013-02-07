@@ -251,7 +251,8 @@ public class StringUtils {
     /**
      * Returns true if the specified String represents a valid date
      *
-     * @param string String
+     * @param dateString String
+     * @param format String
      * @return boolean
      */
     public static boolean isValidDate(String dateString, String format) {

@@ -56,8 +56,7 @@ public class RptSearchData {
 		return retval;
 	}
 
-	/**
-	 * @return  */
+
 	public ArrayList<String> getPatientTypes() {
 		ArrayList<String> retval = new ArrayList<String>();
 		DemographicDao dao = SpringUtils.getBean(DemographicDao.class);

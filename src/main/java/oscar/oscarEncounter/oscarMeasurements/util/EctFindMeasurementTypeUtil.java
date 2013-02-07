@@ -90,8 +90,6 @@ public class EctFindMeasurementTypeUtil {
     /**
      * Compare the form definition xml file with the measurementtype table in the database. 
      * If a measurment type found in the definition file but not in the database, add a new type to the measurementtype table
-     * @param xmlpath the path of the form definition xml file
-     * @author - Ivy Chan - iConcept Technologies Inc.
      */
     static public Vector checkMeasurmentTypes(InputStream is, String formName){
 
