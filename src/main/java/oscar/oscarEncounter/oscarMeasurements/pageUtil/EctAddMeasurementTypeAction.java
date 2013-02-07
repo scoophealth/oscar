@@ -45,7 +45,6 @@ import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
-import oscar.oscarMessenger.util.MsgStringQuote;
 
 public class EctAddMeasurementTypeAction extends Action {
 
@@ -59,7 +58,6 @@ public class EctAddMeasurementTypeAction extends Action {
        
         request.getSession().setAttribute("EctAddMeasurementTypeForm", frm);
         
-        MsgStringQuote str = new MsgStringQuote();     
         List<String> messages = new LinkedList<String>();
          
 
@@ -74,7 +72,7 @@ public class EctAddMeasurementTypeAction extends Action {
         }
 
         MeasurementType mt = new MeasurementType();
-        mt.setType(typeDisplayName);
+        mt.setType(typeUp);
         mt.setTypeDescription(typeDesc);
         mt.setTypeDisplayName(typeDisplayName);
         mt.setMeasuringInstruction(measuringInstrc);
