@@ -64,7 +64,8 @@ public class NextApptTag extends TagSupport {
 		if (demoNo != null && !demoNo.equalsIgnoreCase("") && !demoNo.equalsIgnoreCase("null")) {
 			Integer demographicId = Integer.parseInt(demoNo);
 			OscarAppointmentDao dao = SpringUtils.getBean(OscarAppointmentDao.class);
-			for (Appointment appt : dao.findNonCancelledFutureAppointments(demographicId))
+			Appointment appt = dao.findNextAppointment(demographicId);
+			if(appt != null)
 				nextApptDate = appt.getAppointmentDate();
 		}
 
