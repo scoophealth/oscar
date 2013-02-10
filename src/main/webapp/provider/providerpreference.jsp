@@ -52,6 +52,13 @@
 <%@page import="org.oscarehr.common.model.EncounterForm"%>
 <%@page import="org.oscarehr.common.dao.CtlBillingServiceDao" %>
 <%@page import="org.oscarehr.common.model.CtlBillingService" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="java.util.List" %>
+<%@page import="java.util.ArrayList" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+
 <%
 	CtlBillingServiceDao ctlBillingServiceDao = SpringUtils.getBean(CtlBillingServiceDao.class);
 %>
@@ -259,7 +266,7 @@ function showHideERxPref() {
 				</td>
 			</tr>
 			<caisi:isModuleLoad moduleName="ticklerplus">
-				<tr>
+				<tr id="ticklerPlus">
 					<!-- check box of new-tickler-warnning-windows -->
 					<td class="preferenceLabel">
 						New Tickler Warning Window
@@ -278,9 +285,55 @@ function showHideERxPref() {
 								myCheck2 = "checked";
 							}
 						%>
-			            <input type="radio" name="new_tickler_warning_window" value="enabled" <%= myCheck1 %>> Enabled
+						
+						<script type="text/javascript">
+						function ticklerwarningchange(){
+							var tickRadios = document.getElementsByName("new_tickler_warning_window");
+							for (var i=0;i<tickRadios.length;i++) {
+								if (tickRadios[i].checked==true) {
+									if (tickRadios[i].value=="enabled") {
+										// hidden ticklerforprovider row 
+										document.getElementById("ticklerProvider").style.display="table-row";
+									} else {
+										// show ticklerforprovider row
+										document.getElementById("ticklerProvider").style.display="none";
+									}
+								}									
+							}
+						}
+						</script>
+			            
+			            <input type="radio" name="new_tickler_warning_window" value="enabled" <%= myCheck1 %> onchange="ticklerwarningchange()"> Enabled </input>
 			            <br>
-						<input type="radio" name="new_tickler_warning_window" value="disabled" <%= myCheck2 %>> Disabled
+						<input type="radio" name="new_tickler_warning_window" value="disabled" <%= myCheck2 %> onchange="ticklerwarningchange()"> Disabled </input>
+					</td>
+				</tr>
+				
+				<tr id="ticklerProvider" style=<%=myCheck1=="checked"?"display:table-row;":"display:none" %>>
+					<td class="preferenceLabel">
+						Tickler Warning Window for which provider?
+					</td>
+					<td class="preferenceValue">
+						<select id="ticklerforprovider" name="ticklerforproviderno">
+						<%
+//								LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+								
+								ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+								List<Provider> listProvider = new ArrayList<Provider>();
+								if (providerDao != null) {
+									listProvider = providerDao.getProviders();
+								}							
+								for (Provider provider : listProvider) {
+									String selected = "";
+									if (loggedInInfo.loggedInProvider.getProviderNo().equals(provider.getProviderNo())) {
+										selected ="selected";
+									}
+									String strOption = String.format("<option value=\"%s\" %s>%s,%s</option>"
+											, provider.getProviderNo(), selected, provider.getLastName(), provider.getFirstName());
+									out.print(strOption);
+								}
+						%>
+						</select>
 					</td>
 				</tr>
 
@@ -307,7 +360,7 @@ function showHideERxPref() {
 						<input type="radio" name="default_pmm" value="disabled" <%= myCheck4 %>> Disabled
 					</td>
 				</tr>
-
+				
 				 <tr>
 		            <td class="preferenceLabel">
 		            <bean:message key="provider.btnCaisiBillPreferenceNotDelete"/>
