@@ -92,8 +92,9 @@ public class IncomingLabRulesDao extends AbstractDao<IncomingLabRules>{
 	 */
 	@SuppressWarnings("unchecked")
     public List<Object[]> findRules(String providerNo) {
+    	// assume archive represents boolean with 0 == false and 1 == true
 		Query q = entityManager.createQuery("FROM IncomingLabRules i, " + Provider.class.getSimpleName() + " p " +
-				"WHERE i.archive = '0' " +
+				"WHERE i.archive <> '1' " + // non-archived rules
 				"AND i.providerNo = :providerNo " +
 				"AND p.id = i.frwdProviderNo");
 		q.setParameter("providerNo", providerNo);
