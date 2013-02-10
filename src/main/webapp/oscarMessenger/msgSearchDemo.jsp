@@ -24,6 +24,7 @@
 
 --%>
 <%@ page import="java.lang.*" errorPage="errorpage.jsp"%>
+<%@ page import="oscar.OscarProperties"%>
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 	String demographic_no = request.getParameter("demographic_no") ;
@@ -91,7 +92,13 @@ function write2Parent(keyword, demographic_no){
 				<td nowrap></td>
 				<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
 					NAME="keyword" VALUE="<%=keyword%>" SIZE="17" MAXLENGTH="100">
-				<input type="hidden" name="search_mode" value="search_name">
+<%
+    String searchMode = request.getParameter("search_mode");
+    if (searchMode == null || searchMode.isEmpty()) {
+        searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");
+    }
+%>
+				<input type="hidden" name="search_mode" value="<%=searchMode%>">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
