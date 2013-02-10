@@ -145,6 +145,10 @@ public class MatchingManager {
 		return waitlistDao.getClientMatches(vacancyID);
 	}
 	
+	public List<MatchBO> getClientMatchesWithMinMatchPercentage(int vacancyID, double percentage){
+		
+		return waitlistDao.getClientMatchesWithMinPercentage(vacancyID,percentage);
+	}
 	
 	class CritType{int id=0;String name=null;String type=null;}
 	class Crit{int id=0;CritType type=null;String value=null;String[] values=null;Integer rgn_start=null,rgn_end=null;double weight=0;}

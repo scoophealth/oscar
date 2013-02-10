@@ -81,8 +81,18 @@
 		
 		int i = 0;
     %>
-    <table cellpadding="3" cellspacing="2">
-    <tr>
+	
+	
+	<table><tr><td>
+	<form action="<%=request.getContextPath()%>/PMmodule/VacancyClientMatch.do" method="post">
+		&nbsp;Match % cutoff:<input type="text" name="percentage"/>(0~99)&nbsp;
+		<input type="hidden" name="vacancyId" value="<%=request.getParameter("vacancyId")%>"/>
+		<input type="submit" value="Filter" />
+	</form>
+	
+	</td></tr></table>
+	
+	<table cellpadding="3" cellspacing="2"></td></tr>
     <td>
 	
    <c:if test="${requestScope.clientList != null}">
