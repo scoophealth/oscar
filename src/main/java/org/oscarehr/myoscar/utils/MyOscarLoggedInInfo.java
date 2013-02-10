@@ -24,6 +24,7 @@
 package org.oscarehr.myoscar.utils;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
@@ -42,12 +43,14 @@ public final class MyOscarLoggedInInfo implements Serializable, MyOscarServerCre
 	private Long loggedInPersonId = null;
 	private String loggedInPersonSecurityToken;
 	private String loggedInSessionId;
+	private Locale locale;
 
-	public MyOscarLoggedInInfo(Long loggedInPersonId, String loggedInPersonSecurityToken, String loggedInSessionId)
+	public MyOscarLoggedInInfo(Long loggedInPersonId, String loggedInPersonSecurityToken, String loggedInSessionId, Locale locale)
 	{
 		this.loggedInPersonId = loggedInPersonId;
 		this.loggedInPersonSecurityToken = loggedInPersonSecurityToken;
 		this.loggedInSessionId = loggedInSessionId;
+		this.locale=locale;
 	}
 
 	public PersonTransfer3 getLoggedInPerson() throws NotAuthorisedException_Exception
@@ -123,4 +126,9 @@ public final class MyOscarLoggedInInfo implements Serializable, MyOscarServerCre
 	{
 		return(myOscarServerBaseUrl);
 	}
+
+	@Override
+    public Locale getLocale() {
+	    return(locale);
+    }
 }
