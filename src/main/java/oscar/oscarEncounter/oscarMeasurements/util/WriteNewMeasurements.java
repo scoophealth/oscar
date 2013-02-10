@@ -117,8 +117,7 @@ public class WriteNewMeasurements {
             	if(tmp.size() > 0) {
             		 measuringInst = tmp.get(0).getMeasuringInstruction();
                      curmeasure.put("measuringInstruction", measuringInst);
-            	} else {
-            		 i--;
+            	} else {            		 
                      continue;
             	}
             
@@ -147,10 +146,10 @@ public class WriteNewMeasurements {
             String comments = (String) measure.get("comments");
             String mInstrc, regCharExp;
             String regExp = null;
-            double dMax = 0;
-            double dMin = 0;
-            int iMax = 0;
-            int iMin = 0;
+            Double dMax = 0.0;
+            Double dMin = 0.0;
+            Integer iMax = 0;
+            Integer iMin = 0;
             org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
             if (GenericValidator.isBlankOrNull(inputValue)) {
                 measures.removeElementAt(i);
