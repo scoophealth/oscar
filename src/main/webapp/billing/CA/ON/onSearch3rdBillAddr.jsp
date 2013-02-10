@@ -24,8 +24,8 @@
 			if (session.getAttribute("user") == null) {
 				response.sendRedirect("../logout.jsp");
 			}
-			String strLimit1 = request.getParameter("limit1");
-			String strLimit2 = request.getParameter("limit2");
+			String strLimit1 = request.getParameter("limit1") == null ? "1" : request.getParameter("limit1");
+			String strLimit2 = request.getParameter("limit2") == null ? "25" : request.getParameter("limit2");
 
 			int nItems = 0;
 			Vector vec = new Vector();
@@ -82,8 +82,14 @@
 		}
 		<%if(param.length()>0) {%>
 		function typeInData1(data) {
-		  self.close();
-		  opener.<%=param%> = data;
+			if( opener.updateElement != undefined ) {				
+				opener.updateElement('<%=param%>', data);
+			}
+			else {
+	   	  		opener.<%=param%> = data;
+			}
+	   	  
+		  	self.close();		 
 		}
 		<%if(param2.length()>0) {%>
 		function typeInData2(data1, data2) {
