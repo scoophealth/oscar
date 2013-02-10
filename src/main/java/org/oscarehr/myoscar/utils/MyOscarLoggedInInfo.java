@@ -37,7 +37,7 @@ import oscar.OscarProperties;
 
 public final class MyOscarLoggedInInfo implements Serializable, MyOscarServerCredentials
 {
-	private static final String myOscarServerBaseUrl = (String)OscarProperties.getInstance().get("myoscar_server_base_url");
+	private static final String myOscarServerBaseUrl = initMyOscarServerBaseUrl();
 	private static final String MY_OSCAR_LOGGED_IN_INFO_SESSION_KEY = "MY_OSCAR_LOGGED_IN_INFO_SESSION_KEY";
 
 	private Long loggedInPersonId = null;
@@ -51,6 +51,14 @@ public final class MyOscarLoggedInInfo implements Serializable, MyOscarServerCre
 		this.loggedInPersonSecurityToken = loggedInPersonSecurityToken;
 		this.loggedInSessionId = loggedInSessionId;
 		this.locale=locale;
+	}
+	
+	public static String initMyOscarServerBaseUrl()
+	{
+		// this is here for compatibility reasons, can remove in the future, changed on 2013-02-04, we use to end the url with /ws
+		String temp=(String)OscarProperties.getInstance().get("myoscar_server_base_url");
+		if (temp.endsWith("/ws")) temp=temp.substring(0, temp.length()-3);
+		return(temp);
 	}
 
 	public PersonTransfer3 getLoggedInPerson() throws NotAuthorisedException_Exception
