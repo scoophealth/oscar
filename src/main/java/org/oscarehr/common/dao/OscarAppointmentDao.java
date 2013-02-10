@@ -222,6 +222,24 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter("demographicNo", demographicId);
 		return query.getResultList();
 	}
+	
+	/**
+	 * Finds appointment after current date and time for the specified demographic
+	 * 
+	 * @param demographicId
+	 * 		Demographic to find appointment for
+	 * @return
+	 * 		Returns the next non-cancelled future appointment or null if there are no appointments
+	 * 	scheduled
+	 */
+	public Appointment findNextAppointment(Integer demographicId) {
+		Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' " +
+				"	AND (appt.appointmentDate >= CURRENT_DATE AND appt.startTime >= CURRENT_TIME) ORDER BY appt.appointmentDate");
+		query.setParameter("demographicNo", demographicId);
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
+	}
+
 
 	public Appointment findDemoAppointmentToday(Integer demographicNo) {
 		Appointment appointment = null;
