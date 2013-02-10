@@ -77,6 +77,7 @@ public class LoggedInUserFilter implements javax.servlet.Filter {
 		x.loggedInProvider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 		x.loggedInSecurity = (Security) session.getAttribute(SessionConstants.LOGGED_IN_SECURITY);
 		x.initiatingCode = request.getRequestURI();
+		x.locale=request.getLocale();
 	
 		return(x);
 	}

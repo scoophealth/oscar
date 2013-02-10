@@ -86,7 +86,7 @@ public class PHRLoginAction extends DispatchAction
 			}
 			else
 			{
-				MyOscarLoggedInInfo myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), request.getSession().getId());
+				MyOscarLoggedInInfo myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), request.getSession().getId(), request.getLocale());
 				MyOscarLoggedInInfo.setLoggedInInfo(request.getSession(), myOscarLoggedInInfo);
 				
 				boolean saveMyOscarPassword=WebUtils.isChecked(request, "saveMyOscarPassword");
