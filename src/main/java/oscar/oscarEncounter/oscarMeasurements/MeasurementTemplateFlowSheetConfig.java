@@ -182,8 +182,8 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     public Hashtable<String, String> getFlowsheetDisplayNames(){
         return flowsheetDisplayNames;
     }
-
-
+    
+  
     public String addFlowsheet(MeasurementFlowSheet m ){
         if( m.getName() == null || m.getName().equals("")){
             m.setName("U"+(flowsheets.size()+1));
@@ -714,7 +714,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                     list.add(new DSCondition("getLastDateRecordedInMonths", measurement, ">=", betweenVals[0]));
                     list.add(new DSCondition("getLastDateRecordedInMonths", measurement, "<=", betweenVals[1]));
                     if ( recowarn.get("text") == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
+                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" 1 hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
                     }
                 }
 
@@ -726,7 +726,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
                 list.add(new DSCondition("getLastDateRecordedInMonths", measurement, ">", ""+gt));
                 if ( recowarn.get("text") == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
+                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" 2 hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
                 }
             }else if (toParse.indexOf("&lt;") != -1  ||  toParse.indexOf("<") != -1 ){ // less than style
                 toParse = toParse.replaceFirst("&lt;","");
@@ -735,14 +735,14 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                 int lt = Integer.parseInt(toParse);
                 list.add(new DSCondition("getLastDateRecordedInMonths", measurement, "<=", ""+lt));
                 if ( recowarn.get("text") == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
+                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" 3 hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
                     }
 
             }else if (!toParse.equals("")){ // less than style
                 int eq = Integer.parseInt(toParse);
                 list.add(new DSCondition("getLastDateRecordedInMonths", measurement, "==", ""+eq));
                 if ( recowarn.get("text") == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn'taaaaa been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
+                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" 4 hasn'taaaaa been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
                     }
             }
 

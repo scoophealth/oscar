@@ -189,6 +189,30 @@ public class MeasurementInfo {
         log.debug("Returning the number of months "+numMonths);
         return numMonths;
     }
+    
+    public String getLastDateRecordedInMonthsMsg (String measurement){
+
+        String message = "";
+        int numMonths = -1;
+        ArrayList list = getMeasurementData(measurement);
+
+        if ( list != null && list.size() > 0){
+           
+            EctMeasurementsDataBean mdata = (EctMeasurementsDataBean) list.get(0);
+            Date date = mdata.getDateObservedAsDate();
+            numMonths = getNumMonths(date, Calendar.getInstance().getTime());
+        }
+
+        log.debug("Returning the number of months "+message);
+        
+        if(numMonths == -1){
+        	message = "has never been reviewed";
+        }else{
+        	message = "hasn't been reviewed in " +numMonths+" months";
+        }
+        
+        return message;
+    }
 
     public int getLastValueAsInt(String measurement){
 
