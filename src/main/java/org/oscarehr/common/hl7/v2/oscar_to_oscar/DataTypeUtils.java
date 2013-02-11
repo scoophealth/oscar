@@ -122,9 +122,7 @@ public final class DataTypeUtils {
 
 	/**
 	 * @param xad
-	 * @param streetAddress i.e. 123 My St. unit 554
-	 * @param city
-	 * @param province 2 digit province / state code as defined by postal service, in canada it's in upper case, i.e. BC, ON
+	 * @param clinic
 	 * @param country iso 3166, 3 digit version / hl70399 code, i.e. USA, CAN, AUS in upper case.
 	 * @param addressType hlt0190 code, i.e. O=office, H=Home
 	 * @throws DataTypeException
@@ -150,7 +148,7 @@ public final class DataTypeUtils {
 	/**
 	 * @param msh
 	 * @param dateOfMessage
-	 * @param facilityName facility.getName();
+	 * @param clinicName 
 	 * @param messageCode i.e. "REF"
 	 * @param triggerEvent i.e. "I12"
 	 * @param messageStructure i.e. "REF_I12"
@@ -244,7 +242,7 @@ public final class DataTypeUtils {
 
 	/**
 	 * @param prd
-	 * @param provider
+	 * @param professionalSpecialist
 	 * @param providerRoleId Note that this is not the oscar provider role, look in the method to see valid values
 	 * @param providerRoleDescription Note that this is not the oscar provider role, look in the method to see valid values
 	 */
@@ -509,7 +507,7 @@ public final class DataTypeUtils {
 
 	/**
 	 * @param rol
-	 * @param provider
+	 * @param professionalSpecialist
 	 * @param actionRole the role of the given provider with regards to this communcations. There is HL7 table 0443. We will also add DataTypeUtils.ACTION_ROLE_* as roles so we can send and receive arbitrary data under arbitrary conditions.
 	 * @throws HL7Exception
 	 */

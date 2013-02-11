@@ -146,7 +146,7 @@ public class BillingViewBean {
 	/**
 	 * Updates the paymentMethod of the specified bill with the supplied paymentMethod code and payee number
 	 * @param billingNo String - The uid of the bill to be updated
-	 * @param paymentMethod String - The paymentMethod code
+	 * @param payeeNo String - The payee number
 	 */
 	public void updateBill(String billingNo, String payeeNo) {
 		BillingmasterDAO dao = SpringUtils.getBean(Billingmaster.class);

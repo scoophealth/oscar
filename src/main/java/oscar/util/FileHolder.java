@@ -81,7 +81,6 @@ public class FileHolder implements Serializable {
    *
    * @return name of file uploaded or <code>null</code>.
    *
-   * @see Part#getName()
    */
   public String getFileName() {
 	return fileName;

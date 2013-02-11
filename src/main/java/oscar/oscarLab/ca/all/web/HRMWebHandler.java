@@ -87,13 +87,6 @@ public class HRMWebHandler extends DispatchAction {
 
 	/**
 	 * Show current settings for all or any given group - typed or selected from available.
-	 *
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
 	public ActionForward showSettings(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response)  {

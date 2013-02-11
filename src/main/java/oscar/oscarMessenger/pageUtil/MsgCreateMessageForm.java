@@ -101,8 +101,8 @@ public final class MsgCreateMessageForm extends ActionForm {
     }
     
     /**
-     *The set method for the message String
-     * @param msg String, The text of a message
+     *The set method for the demographic no
+     * @param demographic_no String, The demographic no
      */
     public void setDemographic_no(String demographic_no){
         this.demographic_no = demographic_no;

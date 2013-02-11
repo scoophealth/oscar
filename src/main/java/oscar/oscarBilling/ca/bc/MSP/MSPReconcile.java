@@ -721,8 +721,9 @@ public class MSPReconcile {
 	 *  1.)teleplanS00 table where msp payments are stored
 	 *  2.)billing_history table where internal adjustments are stored
 	 *
-	 * @param billingNo String
-	 * @return String
+	 * @param billingmaster_no String
+	 * @param billType String
+	 * @return double the amount paid
 	 */
 	public double getAmountPaid(String billingmaster_no, String billType) {
 		double retval = 0.0;
@@ -1040,20 +1041,20 @@ public class MSPReconcile {
 	 * * Returns a BillSearch object containing a list of Bills according to the specified criteria
 	 *
 	 *
-	 * @param payee
 	 * @param account String
 	 * @param payeeNo String - The Payee responsible for the bill
-	 * @param provider String - The practitioner whom provided the billable service
+	 * @param providerNo String - The practitioner whom provided the billable service
 	 * @param startDate String - The lower limit of the specified date range
 	 * @param endDate String - The upper limit of the specified date range
 	 * @param excludeWCB boolean - Indicates whether to search for WCB insurer
 	 * @param excludeMSP boolean - Indicates whether to search for MSP insurer
 	 * @param excludePrivate boolean - Indicates whether to search for Private insurer
 	 * @param exludeICBC boolean - Indicates whether to search for ICBC insurer
-	 * @param status String
+	 * @param type String
 	 * @return BillSearch
 	 */
-	public MSPReconcile.BillSearch getBillsByType(String account, String payeeNo, String providerNo, String startDate, String endDate, boolean excludeWCB, boolean excludeMSP, boolean excludePrivate, boolean exludeICBC, String type) {
+	public MSPReconcile.BillSearch getBillsByType(String account, String payeeNo, String providerNo, String startDate, String endDate, boolean excludeWCB, 
+			boolean excludeMSP, boolean excludePrivate, boolean exludeICBC, String type) {
 		BillSearch billSearch = new BillSearch();
 		HashMap rejDetails = null;
 		boolean skipBill = false;
@@ -1274,13 +1275,17 @@ public class MSPReconcile {
 	}
 
 	/**
-	 *
 	 * Retrieves a list of all bills that were Paid by MSP
-	 * @param payee String
-	 * @param provider String
-	 * @param startDate String
-	 * @param endDate String
-	 * @param insurerList HashMap
+	 * 
+	 * @param account
+	 * @param payeeNo
+	 * @param providerNo
+	 * @param startDate
+	 * @param endDate
+	 * @param excludeWCB
+	 * @param excludeMSP
+	 * @param excludePrivate
+	 * @param exludeICBC
 	 * @return BillSearch
 	 */
 	public MSPReconcile.BillSearch getPayments(String account, String payeeNo, String providerNo, String startDate, String endDate, boolean excludeWCB, boolean excludeMSP, boolean excludePrivate, boolean exludeICBC) {
@@ -1395,13 +1400,14 @@ public class MSPReconcile {
 	}
 
 	/**
-	 *
 	 * Retrieves a list of all bills that were Paid by Privately
-	 * @param payee String
-	 * @param provider String
-	 * @param startDate String
-	 * @param endDate String
-	 * @param insurerList HashMap
+	 * 
+	 * @param account
+	 * @param payeeNo
+	 * @param providerNo
+	 * @param startDate
+	 * @param endDate
+	 * @param excludePrivate
 	 * @return BillSearch
 	 */
 	public MSPReconcile.BillSearch getPrivatePayments(String account, String payeeNo, String providerNo, String startDate, String endDate, boolean excludePrivate) {
@@ -1605,7 +1611,7 @@ public class MSPReconcile {
 	 * Really just a convenience method for selecting distinct values without hitting the database multiple times
 	 * @todo This method should be generalized to count the fields of a collection of arbitrary beans
 	 * @param bills List
-	 * @param fieldName String
+	 * @param status String
 	 * @return int
 	 */
 	public Integer getCountByStatus(List bills, String status) {
@@ -1800,7 +1806,7 @@ public class MSPReconcile {
 	 * Sets the billmaster record status to SETTLED if an amount isn't owing and the bill.
 	 * NOTE: Private bills are set to PAIDPRIVATE
 	 *
-	 * @param string String
+	 * @param billingmasterNo String
 	 */
 	public void settleIfBalanced(String billingmasterNo) {
 		BillingDao dao = SpringUtils.getBean(BillingDao.class);

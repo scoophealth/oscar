@@ -49,11 +49,6 @@ public class CreateBillingReportAction extends OscarAction {
 
     /**
      * Performs Report Generation Logic based on the supplied parameters form the submitted form
-     * @param actionMapping ActionMapping
-     * @param actionForm ActionForm
-     * @param httpServletRequest HttpServletRequest
-     * @param httpServletResponse HttpServletResponse
-     * @return ActionForward
      */
     public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
         request.getSession().getServletContext().getServletContextName();
@@ -206,9 +201,7 @@ public class CreateBillingReportAction extends OscarAction {
         else if (repType.equals(MSPReconcile.REP_REJ)) {
             billSearch = msp.getBillsByType(account, payee, provider, startDate, endDate, !showWCB, !showMSP, !showPriv, !showICBC, repType);
 
-            for (Iterator iter = billSearch.list.iterator(); iter.hasNext();) {
-                MSPBill item = (MSPBill)iter.next();
-            }
+            
             oscar.entities.Provider payProv = msp.getProvider(payee, 1);
             reportParams.put("account", account.equals("ALL")?"ALL":payProv.getFullName());
             //Fill document with report parameter data

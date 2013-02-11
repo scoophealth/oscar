@@ -28,11 +28,7 @@ public class CDMReminderHlp {
     return ret;
   }
 
-  /**
-   * Adds CDM Counselling reminders to the tickler list if the specified provider
-   * has patients that need counselling
-   * @param provNo String
-   */
+ 
   public void manageCDMTicklers(String[] alertCodes) throws Exception {
     //get all demographics with a problem that falls within CDM category
     TicklerCreator crt = new TicklerCreator();

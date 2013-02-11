@@ -48,7 +48,7 @@ import oscar.util.UtilXML;
 /**
  * Created on December 27, 2006, 10:54 AM
  * 
- * @apavel (Paul)
+ * @author apavel (Paul)
  */
 public class ReportManager {
 

@@ -115,7 +115,7 @@ public class PreventionItem {
 	/**
 	 * Setter for property next_date.
 	 * 
-	 * @param next_date
+	 * @param nextDate
 	 *            New value of property next_date.
 	 */
 	public void setNextDate(java.util.Date nextDate) {

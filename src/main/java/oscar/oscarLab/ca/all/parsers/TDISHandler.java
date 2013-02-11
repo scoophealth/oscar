@@ -393,7 +393,7 @@ public class TDISHandler implements MessageHandler {
 	 * @param i
 	 * @param j
 	 * @param its
-	 * @return
+	 * @return String obx result
 	 */
 	@SuppressWarnings("unchecked")
 	public String getOBXResult(int i, int j, boolean its) {

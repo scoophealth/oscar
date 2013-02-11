@@ -60,10 +60,9 @@ public class BillingPreferencesDAO extends AbstractDao<BillingPreference> {
 	/**
 	 * Saves the preferences for a specific user, if a record exists for the specific user,
 	 * the values in that record are updated otherwise a new record is created
-	 * @param demographicNo String
-	 * @return List
+	 * @param pref the preferences
 	 * 
-	 * @deprecated use {@link #save(BillingPreference)}} instead
+	 * @deprecated 
 	 */
 	public void saveUserPreferences(BillingPreference pref) {
 		saveEntity(pref);

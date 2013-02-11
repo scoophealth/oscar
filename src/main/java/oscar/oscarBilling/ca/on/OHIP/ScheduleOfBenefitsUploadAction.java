@@ -25,7 +25,6 @@
 
 package oscar.oscarBilling.ca.on.OHIP;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -120,10 +119,9 @@ public class ScheduleOfBenefitsUploadAction extends Action {
 
 	/**
 	 * 
-	 * Save a Jakarta FormFile to a preconfigured place.
-	 * 
-	 * @param file
-	 * @return
+	 * @param stream
+	 * @param filename
+	 * @return boolean
 	 */
 	public static boolean saveFile(InputStream stream,String filename ){
 		String retVal = null;        
@@ -131,7 +129,7 @@ public class ScheduleOfBenefitsUploadAction extends Action {
 
 		try {
 			//retrieve the file data
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			//ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			//InputStream stream = file.getInputStream();
 			OscarProperties props = OscarProperties.getInstance();
 

@@ -113,8 +113,7 @@ public class Hsfo2VisitDao extends AbstractDao<Hsfo2Visit>
   /**
    * 
    * @param patientId
-   * @param visitRecordId
-   * @return
+   * @return Hsfo2Visit
    */
   public Hsfo2Visit getFirstVisitRecordForThePatient( String patientId)
   {
