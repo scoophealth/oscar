@@ -191,8 +191,16 @@ public class Demographic implements Serializable {
 	}
 
 	/**
-	 * @param applyDefaultBirthDate should never be used
-	 * @return
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @param gender
+	 * @param monthOfBirth
+	 * @param dateOfBirth
+	 * @param yearOfBirth
+	 * @param hin
+	 * @param ver
+	 * @return Demographic
 	 */
 	public static Demographic create(String firstName, String lastName, String gender, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {
 		Demographic demographic = new Demographic();

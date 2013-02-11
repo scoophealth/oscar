@@ -367,8 +367,8 @@ public final class BillingCreateBillingForm extends ActionForm {
   }
 
   /**
-   * The set method for an Array of Strings that contains provider numbers
-   * @param prov
+   * The set method for an Array of Strings that contains services
+   * @param service
    */
   public void setService(String[] service) {
     this.service = service;

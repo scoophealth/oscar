@@ -78,7 +78,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
      * @param demographicId can not be null
      * @param current can be null for both
      * @param patientIndependent can be null to be both
-     * @return
+     * @return list of EFormData
      */
     public List<EFormData> findByDemographicIdCurrentPatientIndependent(Integer demographicId, Boolean current, Boolean patientIndependent)
 	{
@@ -134,7 +134,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
      * @param demographicId can not be null
      * @param current can be null for both
      * @param patientIndependent can be null to be both
-     * @return
+     * @return list of maps
      */
     public List<Map<String,Object>> findByDemographicIdCurrentPatientIndependentNoData(Integer demographicId, Boolean current, Boolean patientIndependent)
 	{

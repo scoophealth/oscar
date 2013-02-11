@@ -104,9 +104,9 @@ public class DrugDao extends AbstractDao<Drug> {
 	}
 
 	/**
-	 * @ deprecated ordering should be done after in java not on the db when all items are returns, use the findByDemographicId() instead.
+	 * deprecated ordering should be done after in java not on the db when all items are returns, use the findByDemographicId() instead.
 	 * 
-	 * @ undeprecated Sorting on multiple fields in the java adds complexity unless special tools are used for sorting 
+	 * undeprecated Sorting on multiple fields in the java adds complexity unless special tools are used for sorting 
 	 */
 	public List<Drug> findByDemographicIdOrderByPosition(Integer demographicId, Boolean archived) {
 		// build sql string
@@ -276,7 +276,7 @@ public class DrugDao extends AbstractDao<Drug> {
 	 * @param demographicNo
 	 * 		Demographic number to search entities for
 	 * @return
-	 * 		Returns the list of arrays, where first element is of type {@link Drug} and the second is of type {@link Prescription}.
+	 * 		Returns the list of arrays, where first element is of type Drug and the second is of type Prescription
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Object[]> findDrugsAndPrescriptions(int demographicNo) {
@@ -291,7 +291,7 @@ public class DrugDao extends AbstractDao<Drug> {
 	 * @param scriptNumber
 	 * 		Script number of a prescription to be found
 	 * @return
-	 * 		Returns the list of arrays, where first element is of type {@link Drug} and the second is of type {@link Prescription}.
+	 * 		Returns the list of arrays, where first element is of type Drug and the second is of type Prescription.
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Object[]> findDrugsAndPrescriptionsByScriptNumber(int scriptNumber) {

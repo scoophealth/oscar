@@ -632,7 +632,7 @@ public class BillingSessionBean implements java.io.Serializable{
   /**
    * setPaymentType
    *
-   * @param pmtTypeName String
+   * @param type String
    */
   public void setPaymentType(String type) {
     this.paymentType = type;

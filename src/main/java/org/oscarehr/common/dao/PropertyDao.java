@@ -41,8 +41,8 @@ public class PropertyDao extends AbstractDao<Property> {
 	}
 
 	/**
-     * Find all ordered by name.
-     * @param active, null is find all, true is find only active, false is find only inactive.
+     * Find by name.
+     * @param name
      */
     public List<Property> findByName(String name)
 	{

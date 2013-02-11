@@ -2468,8 +2468,7 @@ public class ERxPrescription {
 	 *            FALSE otherwise.
 	 * @param discontinuedPrescriptionId
 	 *            References the original
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.prescriptionId}
-	 *            that is being discontinued/ceased.
+	 *            prescriptionId that is being discontinued/ceased.
 	 * @param discontinuedUntil
 	 *            Specifies the date that the prescription will be re-activated
 	 *            on. If given, will be in the format "YYYY-MM-DD".
@@ -2477,7 +2476,7 @@ public class ERxPrescription {
 	 *            TRUE if the prescription is of type Renewal; FALSE otherwise.
 	 * @param renewedPrescriptionId
 	 *            References the original
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.prescriptionId}
+	 *            prescriptionId
 	 *            that is being renewed.
 	 * @param prescriptionDateTime
 	 *            Represents the date the prescription was made by the
@@ -2498,7 +2497,7 @@ public class ERxPrescription {
 	 *            The dispense quantity qualifier.
 	 * @param qtyUnitToString
 	 *            A (localized) string representing the
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.qtyUnitId}
+	 *            qtyUnitId
 	 *            interpretation.
 	 * @param refills
 	 *            The number of repeats.
@@ -2513,19 +2512,19 @@ public class ERxPrescription {
 	 * @param sigUnitId
 	 * @param sigUnitToString
 	 *            A (localized) string representing the
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.sigUnitId}
+	 *            sigUnitId
 	 *            interpretation.
 	 * @param sigFrequencyId
 	 *            The frequency at which the drug must be administered.
 	 * @param sigFrequencyToString
 	 *            A (localized) string containing the
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.sigFrequencyId}
+	 *           sigFrequencyId
 	 *            interpretation.
 	 * @param sigSpecifierId
 	 *            Additionnal SIG information.
 	 * @param sigSpecifierToString
 	 *            A (localized) string representing the
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.sigSpecifierId}
+	 *            sigSpecifierId
 	 *            .
 	 * @param sigPRN
 	 *            TRUE if this drug must be administered only if necessary;
@@ -2534,7 +2533,7 @@ public class ERxPrescription {
 	 *            The duration of one dispense.
 	 * @param treatmentDurationTimeUnit
 	 *            This field combines with
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.treatmentDuration}
+	 *            treatmentDuration
 	 *            .
 	 * @param instructions
 	 *            Manually entered instructions by the physician.
@@ -2543,19 +2542,19 @@ public class ERxPrescription {
 	 *            direct text input from the physician.
 	 * @param narcoticInterval
 	 *            The time interval at which the
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.narcoticTotalQuantity}
+	 *            narcoticTotalQuantity
 	 *            must be served.
 	 * @param narcoticIntervalTimeUnit
 	 *            This field combines with
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.narcoticInterval}
+	 *            narcoticInterval
 	 *            .
 	 * @param narcoticTotalQuantity
 	 *            The total quantity to be served at the specified
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.narcoticInterval}
+	 *            narcoticInterval
 	 *            .
 	 * @param status
 	 *            A (localized) string representing the
-	 *            {@link org.oscarehr.oscarRx.erx.model.ERxPrescription.statusID}.
+	 *            statusID.
 	 * @param statusID
 	 *            The current status of this prescription.
 	 * @param ceasingReason

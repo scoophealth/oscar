@@ -36,7 +36,7 @@ import oscar.util.UtilDateUtilities;
 /**
  * 
  * @author Dennis Warren
- * @company OSCARprn
+ * OSCARprn
  * 
  * Rewritten June 2012
  * New code is a proper re-hash of the file FrmBCAR2007Record.java 

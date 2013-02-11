@@ -64,7 +64,7 @@ public class BillHistory {
 
 	/**
 	 * Sets the number of the provider who is responsible for initiating this audit event
-	 * @param providerNo int
+	 * @param practitioner_no String
 	 */
 	public void setPractitioner_no(String practitioner_no) {
 

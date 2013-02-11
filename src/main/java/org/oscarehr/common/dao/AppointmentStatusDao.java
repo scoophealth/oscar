@@ -66,7 +66,7 @@ public class AppointmentStatusDao extends AbstractDao<AppointmentStatus> {
     /**
      * I don't know about this one...but i'm just converting it to a JPA entity for now.
      * @param allStatus
-     * @return
+     * @return int
      */
     public int checkStatusUsuage(List<AppointmentStatus> allStatus){
         int iUsuage = 0;

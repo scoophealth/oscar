@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -98,13 +97,13 @@ public class ManageHSFOAction extends Action
   {
     logger.info( "ContextPath: " + request.getContextPath() );
     logger.info( "pathInfo: " + request.getPathInfo() );
-    Map< String, String[] > params = request.getParameterMap();
+   // Map< String, String[] > params = request.getParameterMap();
 
 
     Hsfo2Visit latestHsfo2Visit = new Hsfo2Visit();
     PatientList historyList = new PatientList();
     // RecordList record = new RecordList();
-    List recordList = new LinkedList();
+    //List recordList = new LinkedList();
 
     String patientId = (String) request.getAttribute( "demographic_no" );
     if ( patientId == null )
@@ -486,11 +485,12 @@ public class ManageHSFOAction extends Action
     return 0.0;   //invalid
   }
   
-  /**
-   * get the most recent lab work of this patient
-   * @param Hsfo2Visit
-   * @param patientId
-   */
+ /**
+  * get the most recent lab work of this patient
+  * @param hsfo2Visit
+  * @param hsfo2Patient
+  * @param patientId
+  */
   protected void getLabWork( Hsfo2Visit hsfo2Visit, Hsfo2Patient hsfo2Patient, int patientId )
   {
     HSFODAO hsfoDao = new HSFODAO();

@@ -130,7 +130,6 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 	 * calls getMessageIDS and getInfo which are used to fill the Vectors
 	 * with the Message headers for the current provider No
 	 * @return Vector, Contains the messageids for use on the DisplayMessage.jsp
-	 * @see getMessageIDs , getInfo
 	 */
 	public Vector<String> getMessageid() {
 		getMessageIDs();
@@ -164,7 +163,6 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 	 * Will check to see if the status has already been set, if not it will intialize the
 	 * Vectors of this Bean with getMessageIDs and get Info
 	 * @return Vector Strings either read, new or del
-	 * @see getMessageIDs, getInfo
 	 */
 	public Vector<String> getStatus() {
 		if (status == null) {
@@ -182,7 +180,6 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 	 * Will check to see if the date has already been set, if not it will intialize the
 	 * Vectors of this Bean with getMessageIDs and get Info
 	 * @return Vector Strings either read, new or del
-	 * @see getMessageIDs, getInfo
 	 */
 	public Vector<String> getDate() {
 		if (date == null) {
@@ -204,7 +201,6 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 	 * Will check to see if the sentby has already been set, if not it will intialize the
 	 * Vectors of this Bean with getMessageIDs and get Info
 	 * @return Vector Strings either read, new or del
-	 * @see getMessageIDs, getInfo
 	 */
 	public Vector<String> getSentby() {
 		if (sentby == null) {
@@ -226,7 +222,6 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 	 * Will check to see if the subject has already been set, if not it will intialize the
 	 * Vectors of this Bean with getMessageIDs and get Info
 	 * @return Vector Strings either read, new or del
-	 * @see getMessageIDs, getInfo
 	 */
 	public Vector<String> getSubject() {
 		if (subject == null) {
@@ -247,7 +242,7 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 
 	/**
 	 * gets the current provider No
-	 * @return
+	 * @return the provider no
 	 */
 	public String getProviderNo() {
 		return this.providerNo;

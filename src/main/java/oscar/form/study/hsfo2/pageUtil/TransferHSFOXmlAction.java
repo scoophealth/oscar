@@ -40,15 +40,6 @@ public class TransferHSFOXmlAction extends Action
 {
 	Logger logger = MiscUtils.getLogger();
 	
-	/**
-	 * @param args
-	 * @throws IOException
-	 * @throws XmlException
-	 */
-    
-	
-	
-
 	public TransferHSFOXmlAction()
 	{
 
@@ -82,7 +73,7 @@ public class TransferHSFOXmlAction extends Action
 		try
 		{
 	      StringBuilder memoMsg = new StringBuilder();
-	      boolean updateSuccess = RecommitHSFOAction.uploadXmlToServer( tfutil, providerNo, demoNo, memoMsg );
+	      RecommitHSFOAction.uploadXmlToServer( tfutil, providerNo, demoNo, memoMsg );
 	
 	      request.setAttribute( "HSFOmessage", memoMsg.toString() );
 

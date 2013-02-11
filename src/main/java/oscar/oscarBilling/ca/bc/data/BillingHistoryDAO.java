@@ -101,9 +101,8 @@ public class BillingHistoryDAO {
 	}
 
 	/**
-	 * Saves a new new billing history instance, associated with the specified billingMaster Number
-	 * @param billMasterNo String - The BillingMaster record that the archive is associated with
-	 * @param status String - The status of the BillingMaster  record
+	 * 
+	 * @param history
 	 */
 	public void createBillingHistoryArchive(BillHistory history) {
 
@@ -124,7 +123,6 @@ public class BillingHistoryDAO {
 	/**
 	 * Saves a new new billing history instance, associated with the specified billingMaster Number
 	 * @param billMasterNo String - The BillingMaster record that the archive is associated with
-	 * @param status String - The status of the BillingMaster  record
 	 */
 	public void createBillingHistoryArchive(String billMasterNo) {
 		BillHistory item = getCurrentBillItemState(billMasterNo);
@@ -167,7 +165,6 @@ public class BillingHistoryDAO {
 	/**
 	 *  Saves a new new billing history instance, associated with the specified billing number
 	 * @param billingNo String - The billing number which will be used to determine the underlying billingMaster numbers
-	 * @param stat String - The status of the billingMaster records that will be archived
 	 */
 	public void createBillingHistoryArchiveByBillNo(String billingNo) {
 		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);

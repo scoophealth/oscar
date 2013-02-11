@@ -38,7 +38,7 @@ public class FacilityDao extends AbstractDao<Facility> {
 
 	/**
      * Find all ordered by name.
-     * @param active, null is find all, true is find only active, false is find only inactive.
+     * @param active null is find all, true is find only active, false is find only inactive.
      */
     public List<Facility> findAll(Boolean active)
 	{

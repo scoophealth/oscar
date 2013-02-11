@@ -326,11 +326,11 @@ public class EctSessionBean implements java.io.Serializable {
         
     }
 
-    /**
-     * over loaded method sets up the encounter page for print
-     *
-     * @param eChartId, demographic_no
-     */
+ /**
+  * over loaded method sets up the encounter page for print
+  * @param echartid
+  * @param demographicNo
+  */
     public void setUpEncounterPage(String echartid, String demographicNo) {
         resetAll();
 
