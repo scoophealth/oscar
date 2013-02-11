@@ -265,7 +265,7 @@ function ClipBoard4() {
 			<input type="text" name="height" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.height","145")%>" /> 
 			<bean:message key="demographic.demographiclabelprintsetting.msgPx" /></p>
 			<p><bean:message key="demographic.demographiclabelprintsetting.formGap" />: 
-			<inputtype="text" name="gap" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.gap","0")%>" /> 
+			<input type="text" name="gap" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.gap","0")%>" /> 
 			<bean:message key="demographic.demographiclabelprintsetting.msgPx" /></p>
 		</td>
 	</tr>
