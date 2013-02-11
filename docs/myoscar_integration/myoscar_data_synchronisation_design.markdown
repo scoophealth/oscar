@@ -210,3 +210,14 @@ We'll need at least a few new properties for the sync webapp
 	
 		# a la integrator send throttle, to prevent network saturation
 		sync_data_send_throttle_ms=1 
+
+
+Servicing Multiple Oscars
+-
+The main concept is basically ASP-ing this component. The main intent is so that oscar users don't have to actually install this component themselves. If we make this component host-able them oscar only needs to provide the hoster with the ip/user/password and all syncing can be done for them.
+
+The concern is locallity of data though. The audit logs must stay in oscar as they are oscar data. The sync logs can however be kept on the hosted sync machine.
+
+If we go with this model, the logs may need to be done twice. Oscar may need to log that data has left for the sync component, and the sync component would then log that data has left for the myoscar_server.
+
+This model would also imply that the sync component needs to maintain a list of oscar servers and credentials to that server. All data logs and sync logs on this server would then need to be qualified by the oscar instance.
