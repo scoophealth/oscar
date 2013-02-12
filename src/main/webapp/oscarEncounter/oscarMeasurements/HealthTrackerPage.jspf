@@ -74,7 +74,7 @@
     </security:oscarSec>
 </oscar:oscarPropertiesCheck>
 
-<%
+<%//john TODO: resolve this from template
 	if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) {
 %>
 	<%
@@ -315,14 +315,15 @@ div.headPrevention a:visited { color:black; }
   position: relative;
   left: 1px; 
   font-family: verdana,tahoma,sans-serif;
-  font-size: 11pt;
-
+  font-size: 10pt;
 }
 
 .tab label:hover {
-cursor: hand; cursor: pointer;
-
+cursor: hand; 
+cursor: pointer;
+text-decoration:underline;
 }
+
 
 .tab [type=radio] {
   display: none;   
@@ -583,8 +584,10 @@ div.recommendations li{
 }
 
 .button-ht:hover{
-border:1px solid #ccc;
 cursor: hand; cursor: pointer;
+border-bottom:2px solid #000;
+border-right:1px solid #000;
+
 }
 
 .button-ht-disabled {
@@ -604,6 +607,16 @@ cursor: hand; cursor: pointer;
 
 .button-ht-disabled:hover{
 cursor: hand; cursor: pointer;
+}
+
+.dxAlert{
+ position:relative;
+   margin-top:2px;
+   margin-left:2px;
+width:4px;
+height:4px;
+background-color:red;
+
 }
 
 #black_wrapper{
@@ -720,7 +733,7 @@ String patient_bar_colour="#1975D1";
 			<%
 				String btnSelected="";
 				String isDisabled = "";
-				
+								
 				FlowsheetDao flowsheetDao = (FlowsheetDao) SpringUtils.getBean("flowsheetDao");
 				ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
 				dxResearchBeanHandler dxRes = new dxResearchBeanHandler(demographic_no);
@@ -741,7 +754,7 @@ String patient_bar_colour="#1975D1";
 					}
 					
 					if(temp.equals(flowSheetGroups.getName())){
-						btnSelected="style='color:#000;'";
+						btnSelected="style='color:#000;font-weight:bold;border-bottom:2px solid #000;border-right:1px solid #000'";
 					}else{
 						btnSelected="";
 					}
@@ -762,10 +775,9 @@ String patient_bar_colour="#1975D1";
 						}	
 					
 					%>
-						<%//=flowSheetGroups.getDisplayName()%>
-
+						
 						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>">
-						<button  class="button-ht<%=isDisabled%>" <%=btnSelected%>><%=flowSheetGroups.getName().toUpperCase()%></button></a>
+						<button  class="button-ht<%=isDisabled%>" <%=btnSelected%> title="<%=flowSheetGroups.getDisplayName()%>"><%=flowSheetGroups.getName().toUpperCase()%> </button></a>
 
 
 					<% 
@@ -804,9 +816,9 @@ String patient_bar_colour="#1975D1";
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 <% if (recList.size() > 0){ %>
-	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements.">
+	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements">
 <bean:message key="oscarencounter.templateflowsheet.addall" /></a> &nbsp;|&nbsp; 
-	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:addMeas('<%=recListBuffer.toString()%>', '<%=temp%>')" TITLE="Add all overdue measurements.">
+	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:addMeas('<%=recListBuffer.toString()%>', '<%=temp%>')" TITLE="Add all overdue measurements">
 <bean:message key="oscarencounter.templateflowsheet.addoverdue" /> 
 	</a>
 <%}%>
@@ -880,9 +892,7 @@ String patient_bar_colour="#1975D1";
 <!--mTYPE START----->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 
-<a class="noborder" href="javascript:void(0)"  onclick="addMeas('&measurement=<%=measure%>','<%= URLEncoder.encode(temp,"UTF-8") %>');">
-
-
+<a class="noborder" id="<%=h2.get("display_name")%>" name="<%=h2.get("display_name")%>" href="javascript:void(0)"  onclick="addMeas('&measurement=<%=measure%>','<%= URLEncoder.encode(temp,"UTF-8") %>');">
 
 </security:oscarSec>
 
@@ -981,13 +991,6 @@ String patient_bar_colour="#1975D1";
   
 </div>
 -->
-<!-- old johnny graph
-<div class="graph"> 
-
-
-
-</div>	
--->
 
     <%  int k = 0;
         for (EctMeasurementsDataBean mdb:alist){
@@ -1042,7 +1045,7 @@ String patient_bar_colour="#1975D1";
     onclick="javascript:addMeas('&measurement=<%= response.encodeURL( measure) %>','<%= URLEncoder.encode(temp,"UTF-8") %>&amp;id=<%=hdata.get("id")%>');" 
     <%}%>
     >
-        <p align="center" <%//=indColour%> title="fade=[on] header=[Comment <%//=hdata.get("age")%>   <%//=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]">
+        <p align="center" <%//=indColour%> title="fade=[on] header=[Comment <%//=hdata.get("age")%>   <%//=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;<font size='1'>Entered By: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></font>]">
 
 <!-- mValue -->
 <font size='3'><%=hdata.get("age")%></font> 
@@ -1073,15 +1076,18 @@ String patient_bar_colour="#1975D1";
 
 
 <div class="preventionSection" style="<%=hidden%>" >
-    <div class="headPrevention">
-        <p title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
-            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
-                <span title="<%=h2.get("guideline")%>" style="font-weight:bold;"><%=h2.get("display_name")%></span>
-            </a>
-            &nbsp;
 
-            <br/>
-        </p>
+    <!--<div class="headPrevention">-->
+<div class="headMtype" style="height:18px;background-color:#D6D6C2;width:100%" title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
+
+ 
+<div style="float:left;padding:1px;width:4px;height:10px;background-color:white;"></div>
+            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
+                <span title="<%=h2.get("guideline")%>" style="padding-left:5px;"><%=h2.get("display_name")%></span>
+            </a>
+            
+
+   
     </div>
     <%
         out.flush();
@@ -1097,13 +1103,22 @@ String patient_bar_colour="#1975D1";
             }
     %>
     <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
-        <p <%=r(hdata.get("refused"))%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>]" >Age: <%=hdata.get("age")%> <br/>
-            <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+
+<font size="3">
+<p align="center" title="fade=[on] header=[<%=hdata.get("age")%> <br> <font size='1'><%=hdata.get("prevention_date")%></font>] body=[<%=com%>]" >
+<!--Age: <%=hdata.get("age")%> <br/>-->
+<%=refused(hdata.get("refused"))%>
+</font>
+		<font size="1"><%=hdata.get("prevention_date")%></font>
             <%if (comb) {%>
-            <span class="footnote"><%=comments.size()%></span>
+            <span class="footnote">C<%//=comments.size()%></span>
             <%}%>
+	
         </p>
+<p width="16px" <%=r(hdata.get("refused"))%> >  </p>
     </div>
+
+
     <%}%>
     
 </div>
@@ -1173,12 +1188,14 @@ function createAddAll(d,t){
 </div>
 <br style="clear:left;"/>
 
+
+
 <div style="margin-top: 20px;">
+<!---I think I want to get rid of this all together they can view the comments on hover or by click
 <a id="ALT" name="ALT"></a>
-    <!--  TODO: Find a place for comments that is not at the bottom - maybe in a css overlay 
-    like I have put the graphs
+
     <h3>Comments</h3>
-    -->
+  
     <ol>
         <% for (int i = 0; i < comments.size(); i++){
             String str = (String) comments.get(i);
@@ -1186,7 +1203,10 @@ function createAddAll(d,t){
         <li><%=str%></li>
         <% }%>
     </ol>
+--->
 </div>
+
+
 
 </td>
 <td valign="top" align="left">
@@ -1195,10 +1215,21 @@ function createAddAll(d,t){
     
    <div class="tab">
        <input type="radio" id="tab-1" name="tab-group-1" checked>
-       <label for="tab-1">Medications</label>
+<%if(medicationsResult.size()>=1){%>
+       <label for="tab-1" title="<%=medicationsResult.size()%> Medications">Medications</label>
        
        <div class="content">
-           <%=medicationsList%>
+
+	<%=medicationsList%>
+
+<%}else{%>
+       <label for="tab-1" style='color:grey;text-decoration:none;' title="No Medications">Medications</label>
+       
+       <div class="content">
+
+<%}%>
+
+           
        </div> 
    </div>
 <%
@@ -1216,11 +1247,19 @@ for(int x=0;x<allergies.size();x++) {
 %>   
    <div class="tab">
        <input type="radio" id="tab-2" name="tab-group-1">
-       <label for="tab-2">Allergies</label>
-       
-       <div class="content">
+
+<%if(allergies.size()>=1){%>
+       <label for="tab-2" title="<%=allergies.size()%> Allergies">Allergies</label>
+      	 <div class="content">
 
        <%=allergiesList%>
+ <%}else{%>
+	<label for="tab-2" style='color:grey;text-decoration:none;' title="No Allergies">Allergies</label>
+      	 <div class="content">
+		No Allergies
+      
+<%}%>      
+
 	 
        </div> 
    </div>
@@ -1236,20 +1275,30 @@ if (remindersResult.size() > 1) {
 %>    
     <div class="tab">
        <input type="radio" id="tab-3" name="tab-group-1">
-       <label for="tab-3">Reminders</label>
-     
-       <div class="content" >
-           <%=remindersList%> 
+<%
+if (remindersResult.size() > 1) {
+%>
+       <label for="tab-3" title="<%=remindersResult.size()%> Reminders">Reminders</label>
+	<div class="content" >
+		<%=remindersList%> 
+<%}else{%>
+
+	<label for="tab-3" style='color:grey;text-decoration:none;' title="No Reminders" >Reminders</label>
+		<div class="content" >
+			No Reminders
+<%}%>     
+       
+           
        </div> 
    </div>
 
     <div class="tab">
        <input type="radio" id="tab-4" name="tab-group-1">
-       <label for="tab-4">Warnings</label>
+
+<% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
+       <label for="tab-4" title="<%=warnings.size()+recomendations.size() %> Warnings">(<%=warnings.size()+recomendations.size() %>)Warnings</label>
      
        <div class="content">
-<% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
-
 <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
 
 <ul >
@@ -1263,10 +1312,15 @@ if (remindersResult.size() > 1) {
 <li>12 month MMR due in 2 months</li-->
 <% if (dsProblems){ %>
 <li style="color: red;">Decision Support Had Errors Running.</li>
-<% } %>
+<% }%>
 </ul>
 
-<% } %>
+<% }else{ %>
+       <label for="tab-4" style='color:grey;text-decoration:none;' title="No Warnings">Warnings</label>
+     
+       <div class="content">
+	No Warnings
+<%}%>
 
        </div> 
    </div>
