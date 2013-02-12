@@ -151,7 +151,7 @@
 							objFile.setOhipFilename(ohipFilename);
 							objFile.setHtmlFilename(htmlFilename);
 							objFile.createBillingFileStr("" + headerId, BILLING_STATUS, false, mohOffice, false, "on".equals(useProviderMOH));						
-							value += objFile.getValue() + "\n";
+							value += objFile.getValue();
 							objFile.writeHtml(objFile.getHtmlCode());
 							objFile.updateDisknameSum(diskId);
 						}
