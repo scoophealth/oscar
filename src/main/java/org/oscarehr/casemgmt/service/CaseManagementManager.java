@@ -45,11 +45,13 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.dao.ProgramQueueDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.utility.ProgramAccessCache;
@@ -138,6 +140,7 @@ public class CaseManagementManager {
 	private ProgramProviderDAO programProviderDao;
 	private ProgramAccessDAO programAccessDAO;
 	private SecRoleDao secRoleDao;
+	private ProgramQueueDao programQueueDao;
 
 	private boolean enabled;
 
@@ -1513,6 +1516,20 @@ public class CaseManagementManager {
 		return false;
 	}
 
+	public boolean isClientReferredInProgramDomain(String providerNo, String demographicNo) {
+	 	boolean referred = false;
+       		List providerPrograms = programProviderDao.getProgramProviderByProviderNo(providerNo);
+		for (int x = 0; x < providerPrograms.size(); x++) {
+			ProgramProvider pp = (ProgramProvider) providerPrograms.get(x);
+			long programId = pp.getProgramId().longValue();
+			ProgramQueue queue = programQueueDao.getActiveProgramQueue(programId, Long.valueOf(demographicNo));
+			if(queue!=null)
+				referred = true;
+		}
+		return referred;
+	}
+
+
 	public boolean unlockNote(int noteId, String password) {
 		CaseManagementNote note = this.caseManagementNoteDAO.getNote(new Long(noteId));
 		if (note != null) {
@@ -1586,6 +1603,10 @@ public class CaseManagementManager {
 
 	public void setProgramProviderDao(ProgramProviderDAO programProviderDao) {
 		this.programProviderDao = programProviderDao;
+	}
+
+	public void setProgramQueueDao(ProgramQueueDao programQueueDao) {
+		this.programQueueDao = programQueueDao; 
 	}
 
 	public void setRolesManager(RolesManager mgr) {

@@ -154,7 +154,7 @@
             if (!userHasExternalOrErClerkRole) {
         %> <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_pmm.newClient" rights="r">
-	<div><html:link action="/PMmodule/GenericIntake/Search.do">New Client</html:link>
+	<div><html:link action="/PMmodule/ClientSearch2.do">New Client</html:link>
 	</div>
 </security:oscarSec> <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_pmm.mergeRecords" rights="r">

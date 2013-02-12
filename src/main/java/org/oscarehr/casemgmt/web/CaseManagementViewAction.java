@@ -229,7 +229,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 		String programId = (String) request.getSession().getAttribute("case_program_id");
@@ -271,7 +271,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 
@@ -1871,7 +1871,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 		String programId = (String) request.getSession().getAttribute("case_program_id");
