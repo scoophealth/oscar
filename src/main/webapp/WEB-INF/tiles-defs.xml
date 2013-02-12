@@ -112,7 +112,7 @@
 	</definition>
 	<definition name="page.pmm.client.searchform" path="/PMmodule/layout.jsp">
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
-		<put name="body" value="/PMmodule/ClientSearchForm.jsp" />
+		<put name="body" value="/demographic/search.jsp" />
 	</definition>
 	<definition name="page.pmm.client.searchresults" path="/PMmodule/layout.jsp">
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
