@@ -1680,7 +1680,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
         %>
             <td class="appt" bgcolor='<%=as.getBgColor()%>' rowspan="<%=iRows%>" <%-- =view==0?(len==lenLimitedL?"nowrap":""):"nowrap"--%> nowrap>
 			<%
-				if (BookingSource.MYOSCAR_SELF_BOOKING.name().equals(appointment.getBookingSource()))
+			   if (BookingSource.MYOSCAR_SELF_BOOKING == appointment.getBookingSource())
 				{
 					%>
 						<bean:message key="provider.appointmentProviderAdminDay.SelfBookedMarker"/>
