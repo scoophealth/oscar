@@ -26,13 +26,11 @@
 <%@page import="oscar.*,java.util.*"%>
 <%@page import="java.io.InputStream"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Hashtable"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="org.apache.commons.httpclient.HttpClient"%>
-<%@page import="org.apache.commons.httpclient.methods.PostMethod"%>
-<%@page import="org.apache.commons.httpclient.methods.RequestEntity"%>
-<%@page import="org.apache.commons.httpclient.methods.StringRequestEntity"%>
+<%@page import="org.apache.commons.httpclient.methods.GetMethod"%>
 <%@page import="org.jdom.Document"%>
 <%@page import="org.jdom.Element"%>
 <%@page import="org.jdom.filter.ElementFilter"%>
@@ -80,20 +78,17 @@
         </style>
     </head>
     <body>
-
-
-
         <%
         String searchString = request.getParameter("searchterm");
-        List<Hashtable> list = searchTripDatabase(searchString);
+        List<HashMap <String,String>> list = searchTripDatabase(searchString);
         if (list != null && list.size() > 0){%>
         <table class="sample">
-            <%for (Hashtable h : list) {%>
+            <%for (HashMap<String,String> h : list) {%>
 
             <tr>
                 <td>
-                    <a href="<%=h.get("tripurl")%>" ><%=h.get("title")%></a><br/>
-                     <!-- publications name would go here --> <%=h.get("year")%>
+                    <a href="<%=h.get("link")%>" ><%=h.get("title")%></a><br/>
+                     <%=h.get("publication")%> -- <%=h.get("year")%>
                 </td>
 
             </tr>
@@ -107,26 +102,40 @@
     </body>
 </html>
 
+<%--
+
+<total>169703</total>
+<count>20</count>
+<skip>0</skip>
+ 
+
+"total" is the total number of results available, and "count" is the number returned in this request - we only send back the first 20 by default, but you can request the next 20 by appending a "skip" parameter thus:
+http://www.tripdatabase.com/search/xml?key=XXXXXX&criteria=cancer&skip=20
+
+
+FILTERS category and publication
+
+
+As I understand it you 'simply' transform the URL given (I think that was included in the previous instructions).  So, the URL for a search for 'prostate cancer' and restricted to 'systematic reviews' is:
+ 
+http://www.tripdatabase.com/search?criteria=prostate+cancer&sort=r&categoryid=11
+ 
+Similarly, to restrict by publication it's:
+ 
+http://www.tripdatabase.com/search?publicationid=14&criteria=prostate+cancer
+the trick with the latter one is to carry out a search and under each result the publisher name is 'clickable'.  If you click on the name it restricts the results to just that publication.
+ 
+
+
+ --%>
+
 <%!
-
-    public List searchTripDatabase(String searchString) throws Exception{
+    public List<HashMap <String,String>> searchTripDatabase(String searchString) throws Exception{
        Logger logger = MiscUtils.getLogger();
-       List h  = null;
-       PostMethod post = new PostMethod("http://tws.tripdatabase.com/en/trip.asmx");
-       post.setRequestHeader("SOAPAction", "http://www.tripdatabase.com/webservices/GetSummaries");
-      //post.setRequestHeader("SOAPAction", "http://www.tripdatabase.com/webservices/GetPublications");
-
-       post.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-       //String searchString = "cancer";
-       String apiKey = "MCM001";                                                                                                                                                                                                                                                                                                                                                                                                                                     //68               80   &gt;    =&gt;                                              &lt;             &lt;               &lt;                &lt;                &lt;               &lt;              &lt;
-       String soapMsg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><GetSummaries xmlns=\"http://www.tripdatabase.com/webservices/\"><sXMLIndividualSearch>&lt;search  showsources=\"0\" type=\"trip\" page=\"1\" pagesize=\"25\" &gt; &lt;criteria&gt;"+searchString+" &lt;/criteria&gt; &lt;categoryid>&lt;/categoryid&gt;&lt;publicationid&gt;&lt;/publicationid&gt;&lt;searchtype&gt;1&lt;/searchtype&gt;   &lt;/search &gt; </sXMLIndividualSearch><apiKey>MCM001</apiKey></GetSummaries></soap:Body></soap:Envelope>";
-       
-       RequestEntity re = new StringRequestEntity(soapMsg, "text/xml", "UTF-8");
-
-       post.setRequestEntity(re);
-
+       List<HashMap <String,String>> h  = null;
+       GetMethod post = new GetMethod("http://www.tripdatabase.com/search/xml?key=MCM001&criteria="+searchString);
+      
        HttpClient httpclient = new HttpClient();
-        // Execute request
        try{
                 int result = httpclient.executeMethod(post);
                 if (result != 200){
@@ -142,40 +151,29 @@
        return h;
     }
 
-     private List<Hashtable> parseReturn(InputStream is){
+     private List<HashMap <String,String>> parseReturn(InputStream is){
         Logger logger = MiscUtils.getLogger();
-        ArrayList list = new ArrayList();
+        List<HashMap <String,String>> list = new ArrayList<HashMap <String,String>>();
         try {
 
             SAXBuilder parser = new SAXBuilder();
             Document doc = parser.build(is);
             Element root = doc.getRootElement();
             logger.debug(root.getName());
-
-
-            Iterator results = root.getDescendants(new ElementFilter("resultspage"));
-
-            if(results.hasNext()){
-               Element ele = (Element) results.next();
-               List<Element> resultItems = ele.getChildren("resultitem");
-               for (Element e: resultItems){
-                   List<Element> resultData = e.getChildren("resultdata");
-                   Hashtable h = new Hashtable();
-                   for (Element e2: resultData){
-                       h.put(e2.getAttributeValue("name"), e2.getValue());
-                   }
-                   list.add(h);
-               }
+            Iterator<Element> results = root.getDescendants(new ElementFilter("document"));
+			
+            while(results.hasNext()){
+               Element ele = results.next();
+               HashMap<String,String> h = new HashMap<String,String>();
+               h.put("title",ele.getChild("title").getText());
+               h.put("link",ele.getChild("link").getText());
+               h.put("year", ele.getChild("pubDate").getText()); 
+               h.put("publication", ele.getChild("publication").getText()); 
+               list.add(h);
             }
-
-
         }catch(Exception e){
             logger.debug("parseReturn ",e);
         }
         return list;
     }
-
-
-
-
 %>
