@@ -70,21 +70,18 @@ opener.document.EctConsultationFormRequestForm.appointmentDay.options.selectedIn
 %>
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<tr>
-		<td BGCOLOR="#bbbbff" width="50%" align="center"><a
-			href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>">
-		&nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9"
-			BORDER="0"
-			ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVLastMonth"/>"
-			vspace="2"> <bean:message
-			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgLastMonth" />&nbsp;&nbsp;
-		</a> <b><span CLASS=title><%=year%>-<%=month%></span></b> <a
-			href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>">
-		&nbsp;&nbsp;<bean:message
-			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgNextMonth" />
-		<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
-			ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVNextMonth"/>"
-			vspace="2">&nbsp;&nbsp;</a></td>
-	</TR>
+		<td BGCOLOR="#bbbbff" width="50%" align="center">
+			<a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>">
+				<img src="<%= request.getContextPath() %>/images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" 
+					ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVLastMonth"/>"
+					vspace="2"> <bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgLastMonth" />&nbsp;&nbsp;</a> 
+			<b><span CLASS=title><%=year%>-<%=month%></span></b> 
+			<a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>">	&nbsp;&nbsp;<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgNextMonth" />
+				<img src="<%= request.getContextPath() %>/images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+					ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVNextMonth"/>"
+					vspace="2"></a>
+		</td>
+	</tr>
 </table>
 <p>
 <table width="100%" border="1" cellspacing="0" cellpadding="2"
