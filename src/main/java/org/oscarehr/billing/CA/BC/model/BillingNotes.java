@@ -58,7 +58,7 @@ public class BillingNotes extends AbstractModel<Integer> {
 	@Column(name = "provider_no", nullable = false, length = 6)
 	private String providerNo;
 	@Column(name = "note", length = 65535)
-	private String note;
+	private String note = "";
 	@Column(name = "note_type")
 	private Integer noteType;
 

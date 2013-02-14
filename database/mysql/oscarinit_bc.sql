@@ -98,7 +98,7 @@ CREATE TABLE billingnote (
   billingmaster_no int(10) NOT NULL default '0',
   createdate datetime default NULL,
   provider_no varchar(6) NOT NULL default '',
-  note text default '', 
+  note text, 
   note_type int(2) default '1',   
   PRIMARY KEY  (`billingnote_no`),
   KEY billingmaster_no (billingmaster_no),

@@ -1426,7 +1426,7 @@ INSERT INTO mygroup VALUES ('IT Support','88888','Support','IT',NULL,NULL);
 INSERT INTO oscarcommlocations VALUES (145,'Oscar Users',NULL,1,'<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<addressBook><group><group desc=\"doc\" id=\"17\"><address desc=\"Chan, David\" id=\"174\"/><address desc=\"oscardoc, doctor\" id=\"999998\"/></group><group desc=\"receptionist\" id=\"18\"><address desc=\"oscarrep, receptionist\" id=\"999999\"/><address desc=\"Support, IT\" id=\"88888\"/></group><group desc=\"admin\" id=\"19\"><address desc=\"oscaradmin, admin\" id=\"999997\"/></group><address desc=\"Chan, David\" id=\"174\"/><address desc=\"oscaradmin, admin\" id=\"999997\"/><address desc=\"oscardoc, doctor\" id=\"999998\"/><address desc=\"oscarrep, receptionist\" id=\"999999\"/><address desc=\"Support, IT\" id=\"88888\"/></group></addressBook>',NULL);
 
 
-insert into ProviderPreference (providerNo, startHour, endHour, everyMin, myGroupNo, colourTemplate, defaultCaisiPmm, defaultNewOscarCme, printQrCodeOnPrescriptions, lastUpdated, appointmentScreenLinkNameDisplayLength) values ('999998','8','18','15','.default','deepblue','disabled','disabled', 0, now(), 3);
+insert into ProviderPreference (providerNo, startHour, endHour, everyMin, myGroupNo, colourTemplate, defaultCaisiPmm, defaultNewOscarCme, printQrCodeOnPrescriptions, lastUpdated, appointmentScreenLinkNameDisplayLength,defaultDoNotDeleteBilling,eRxEnabled,eRxTrainingMode) values ('999998','8','18','15','.default','deepblue','disabled','disabled', 0, now(), 3,0,0,0);
 
 --
 -- Dumping data for table 'provider'
@@ -2222,19 +2222,19 @@ SELECT
 	,'Partner Doctor' AS `description`;
 
 
-insert into issue (code,description,role,update_date,priority,type) values ('PastOcularHistory','Past Ocular History','nurse',now(),NULL,'system');
-insert into issue (code,description,role,update_date,priority,type) values ('DiagnosticNotes','Diagnostic Notes','nurse',now(),NULL,'system');
-insert into issue (code,description,role,update_date,priority,type) values ('OcularMedication','Ocular Medication','nurse',now(),NULL,'system');
-insert into issue (code,description,role,update_date,priority,type) values ('PatientLog','Patient Log','nurse',now(),NULL,'system');
-insert into issue (`code`,`description`,`role`,`update_date`) Values('CurrentHistory','Current History', 'nurse', now());
+insert into issue (code,description,role,update_date,priority,type,sortOrderId) values ('PastOcularHistory','Past Ocular History','nurse',now(),NULL,'system',0);
+insert into issue (code,description,role,update_date,priority,type,sortOrderId) values ('DiagnosticNotes','Diagnostic Notes','nurse',now(),NULL,'system',0);
+insert into issue (code,description,role,update_date,priority,type,sortOrderId) values ('OcularMedication','Ocular Medication','nurse',now(),NULL,'system',0);
+insert into issue (code,description,role,update_date,priority,type,sortOrderId) values ('PatientLog','Patient Log','nurse',now(),NULL,'system',0);
+insert into issue (`code`,`description`,`role`,`update_date`,sortOrderId) Values('CurrentHistory','Current History', 'nurse', now(),0);
 
-INSERT INTO `issue` (`code`, `description`, `role`, `update_date`, `priority`, `type`)
+INSERT INTO `issue` (`code`, `description`, `role`, `update_date`, `priority`, `type`,sortOrderId)
 VALUES
-        ('eyeformFollowUp', 'Follow-Up Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
-        ('eyeformCurrentIssue', 'Current Presenting Issue Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
-        ('eyeformPlan', 'Plan Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
-        ('eyeformImpression', 'Impression History Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
-        ('eyeformProblem', 'Problem List Item for Eyeform', 'nurse', NOW(), NULL, 'system');
+        ('eyeformFollowUp', 'Follow-Up Item for Eyeform', 'nurse', NOW(), NULL, 'system',0),
+        ('eyeformCurrentIssue', 'Current Presenting Issue Item for Eyeform', 'nurse', NOW(), NULL, 'system',0),
+        ('eyeformPlan', 'Plan Item for Eyeform', 'nurse', NOW(), NULL, 'system',0),
+        ('eyeformImpression', 'Impression History Item for Eyeform', 'nurse', NOW(), NULL, 'system',0),
+        ('eyeformProblem', 'Problem List Item for Eyeform', 'nurse', NOW(), NULL, 'system',0);
 
 
 insert into HRMCategory values (null, 'General Oscar Lab', 'DEFAULT');
