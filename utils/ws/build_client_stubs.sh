@@ -13,7 +13,7 @@ ant -f build_client_stubs.xml compile_client_stubs
 
 rm -f ~/.m2/repository/org/oscarehr/client_stubs/0.0-SNAPSHOT/*.jar
 
-PROJECTS="oscar_patient_portal"
+PROJECTS="oscar_maven_repo"
 
 for foo in $PROJECTS;
 do
