@@ -51,7 +51,7 @@
 	String vacancyId = (String) request.getAttribute("vacancyOrTemplateId");
 	String vacancyName = "";
 	boolean dontSave = false;
-	
+	String vacancyStatus = "";
 	if (!StringUtils.isBlank(vacancyId) && !vacancyId.equalsIgnoreCase("null"))	{	
 		dontSave = true;
 		vacancyId_int = Integer.valueOf(vacancyId);	
@@ -79,7 +79,7 @@
 						
 		}
 		criterias = VacancyTemplateManager.getCriteriasByVacancyId(Integer.valueOf(vacancyId));
-		
+		vacancyStatus = vacancy.getStatus();
 	}	else	{	
 		vacancyId = "";		
 		vacancy= new Vacancy();	
@@ -88,6 +88,7 @@
 			templateId = selectedTemplate.getId();
 			criterias = VacancyTemplateManager.getRefinedCriteriasByTemplateId(templateId);				
 		}
+		vacancyStatus = "Active";
 	}
 	
 	
@@ -131,7 +132,7 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="30%" class="beright">Requirement Template:</td>
-		<td><select name="requiredVacancyTemplateId" onchange="chooseTemplate(this);">
+		<td><select name="requiredVacancyTemplateId" onchange="chooseTemplate(this);" <%= (dontSave==true)?"disabled":"" %>>
 			<option value="0">&nbsp;</option>
 		<% 				
 			Integer programId_int = null;
@@ -150,7 +151,7 @@
 	</tr>
 	<tr class="b">
 		<td class="beright">Vacancy Name:</td>
-		<td><input type="text" name="vacancyName" value="<%= vacancyName %>" size="40" /></td>
+		<td><input type="text" name="vacancyName" value="<%= vacancyName %>" size="40" <%=(dontSave==true)?"disabled":"" %>/></td>
 	</tr>
 	<legend>Additional Criteria For this Vacancy/Service Opening</legend>
 	
@@ -177,10 +178,10 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="30%" class="beright">Status:</td>
-		<td><select name="vacancyStatus">
-				<option value="Active">Active</option>
-				<option value="Withdrawn">Withdrawn</option>
-				<option value="Filled">Filled</option>
+		<td><select name="vacancyStatus">		
+				<option value="Active" <%=(vacancyStatus.equalsIgnoreCase("Active"))?"selected":"" %> >Active</option>
+				<option value="Withdrawn" <%=(vacancyStatus.equalsIgnoreCase("Withdrawn"))?"selected":"" %> >Withdrawn</option>
+				<option value="Filled" <%=(vacancyStatus.equalsIgnoreCase("Filled"))?"selected":"" %>>Filled</option>
 		</td>
 	</tr>
 	<tr class="b">
@@ -200,9 +201,9 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
 	<td colspan="2">
-	<% if(!dontSave) {%>
+	
 		 <input type="button" value="Save" onclick="return save()" /> 
-	<% } %>
+	
 		 <input type="button" value="Cancel" onclick="return cancel2()" /></td>
 	</tr>
 </table>
