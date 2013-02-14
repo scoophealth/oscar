@@ -253,7 +253,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	 */
 	public Appointment findNextAppointment(Integer demographicId) {
 		Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' " +
-				"	AND (appt.appointmentDate >= CURRENT_DATE AND appt.startTime >= CURRENT_TIME)");
+				"	AND (appt.appointmentDate >= CURRENT_DATE AND appt.startTime >= CURRENT_TIME) ORDER BY appt.appointmentDate");
 		query.setParameter("demographicNo", demographicId);
 		query.setMaxResults(1);
 		return getSingleResultOrNull(query);
