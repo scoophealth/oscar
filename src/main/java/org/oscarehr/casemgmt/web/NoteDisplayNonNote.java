@@ -28,8 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
@@ -58,7 +58,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	private boolean isInvoice = false;
 	private String linkInfo;
 
-	public NoteDisplayNonNote(HashMap<String, ? extends Object> eform) {
+	public NoteDisplayNonNote(Map<String, ? extends Object> eform) {
 		try {
 			date = (formatter.parse((String)eform.get("formDate") + " " + (String)eform.get("formTime")));
 		}catch(ParseException e) {

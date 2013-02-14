@@ -104,6 +104,7 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
+import oscar.util.ConversionUtils;
 
 import com.quatro.model.security.Secrole;
 import com.quatro.service.security.RolesManager;
@@ -988,7 +989,7 @@ public class CaseManagementManager {
 		return roleManager.getRole(id).getName();
 	}
 
-	public List search(CaseManagementSearchBean searchBean) {
+	public List<CaseManagementNote> search(CaseManagementSearchBean searchBean) {
 		return this.caseManagementNoteDAO.search(searchBean);
 	}
 
@@ -1018,7 +1019,9 @@ public class CaseManagementManager {
 	}
 
 	public void deleteTmpSave(String providerNo, String demographicNo, String programId) {
-		caseManagementTmpSaveDao.remove(providerNo, new Integer(demographicNo), new Integer(programId));
+		Integer intDemoNo = ConversionUtils.fromIntString(demographicNo);
+		Integer intProgramId = ConversionUtils.fromIntString(programId);
+		caseManagementTmpSaveDao.remove(providerNo, intDemoNo, intProgramId);
 	}
 
 	public CaseManagementTmpSave restoreTmpSave(String providerNo, String demographicNo, String programId) {
@@ -1055,7 +1058,6 @@ public class CaseManagementManager {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
-
 		if (notes.isEmpty()) {
 			return filteredNotes;
 		}

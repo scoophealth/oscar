@@ -27,7 +27,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,6 +65,7 @@ import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
@@ -85,6 +85,9 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
+import org.oscarehr.casemgmt.service.NoteSelectionCriteria;
+import org.oscarehr.casemgmt.service.NoteSelectionResult;
+import org.oscarehr.casemgmt.service.NoteService;
 import org.oscarehr.casemgmt.util.ExtPrint;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
@@ -135,7 +138,9 @@ import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarSurveillance.SurveillanceMaster;
+import oscar.util.Appender;
 import oscar.util.ConcatPDF;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
@@ -155,6 +160,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
 	private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	private CasemgmtNoteLockDao casemgmtNoteLockDao = SpringUtils.getBean(CasemgmtNoteLockDao.class);
+	private NoteService noteService = SpringUtils.getBean(NoteService.class);
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return edit(mapping, form, request, response);
@@ -1455,7 +1461,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		 */
 		if (inCaisi) {
 			/* get access right */
-			List accessRight = caseManagementMgr.getAccessRight(providerNo, getDemographicNo(request), (String) session.getAttribute("case_program_id"));
+			List<AccessType> accessRight = caseManagementMgr.getAccessRight(providerNo, getDemographicNo(request), (String) session.getAttribute("case_program_id"));
 			setCPPMedicalHistory(cpp, providerNo, accessRight);
 			cpp.setUpdate_date(now);
 			caseManagementMgr.saveCPP(cpp, providerNo);
@@ -2332,7 +2338,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		// get the issue list have search string
 		String search = cform.getSearString();
 
-		List searchResults;
+		List<Issue> searchResults;
 		searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
 
 		List<Issue> filteredSearchResults = new ArrayList<Issue>();
@@ -2340,8 +2346,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		// remove issues which we already have - we don't want duplicates
 		List existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
 		Map existingIssuesMap = convertIssueListToMap(existingIssues);
-		for (Iterator iter = searchResults.iterator(); iter.hasNext();) {
-			Issue issue = (Issue) iter.next();
+		for (Iterator<Issue> iter = searchResults.iterator(); iter.hasNext();) {
+			Issue issue = iter.next();
 			if (existingIssuesMap.get(issue.getId()) == null) {
 				filteredSearchResults.add(issue);
 			}
@@ -2939,7 +2945,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public void doPrint(HttpServletRequest request, OutputStream os) throws IOException, DocumentException {
-		String ids = request.getParameter("notes2print");
+		String ids = request.getParameter("notes2print");		
+		boolean printAllNotes = "ALL_NOTES".equals(ids);
+		if (printAllNotes) {
+			ids = getAllNoteIds(request);
+		}
+		logger.debug("NOTES2PRINT: " + ids);
 
 		String demono = getDemographicNo(request);
 		request.setAttribute("demoName", getDemoName(demono));
@@ -2952,8 +2963,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String providerNo = getProviderNo(request);
 
 		String[] noteIds;
-		if (ids.length() > 0) noteIds = ids.split(",");
-		else noteIds = (String[]) Array.newInstance(String.class, 0);
+		if (ids.length() > 0) {
+			noteIds = ids.split(",");
+		} else {
+			noteIds = new String[] {};
+		}
 
 		List<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
 		List<String> remoteNoteUUIDs = new ArrayList<String>();
@@ -2963,7 +2977,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				uuid = noteIds[idx].substring(4);
 				remoteNoteUUIDs.add(uuid);
 			} else {
-				notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
+				Long noteId = ConversionUtils.fromLongString(noteIds[idx]);
+				if (noteId > 0) {
+					notes.add(this.caseManagementMgr.getNote(noteId.toString()));
+				}
 			}
 		}
 
@@ -2988,7 +3005,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (noteSort.trim().equalsIgnoreCase("UP")) {
 			Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
 			Collections.reverse(notes);
-		} else Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
+		} else { 
+			Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
+		}
 
 		List<CaseManagementNote> issueNotes;
 		List<CaseManagementNote> tmpNotes;
@@ -3092,6 +3111,46 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		ConcatPDF.concat(pdfDocs, os);
 	}
+
+	@SuppressWarnings("unchecked")
+    private String getAllNoteIds(HttpServletRequest request) {
+		HttpSession se = request.getSession();
+		String demoNo = getDemographicNo(request);
+		String programId = (String) request.getSession().getAttribute("case_program_id");
+
+		// viewCurrentIssuesTab_newCmeNotesOpt(request, caseForm, demoNo, programId);
+		NoteSelectionCriteria criteria = new NoteSelectionCriteria();
+		criteria.setMaxResults(Integer.MAX_VALUE);
+		criteria.setDemographicId(ConversionUtils.fromIntString(demoNo));
+		criteria.setUserRole((String) request.getSession().getAttribute("userrole"));
+		criteria.setUserName((String) request.getSession().getAttribute("user"));
+		if (request.getParameter("note_sort") != null && request.getParameter("note_sort").length() > 0) {
+			criteria.setNoteSort(request.getParameter("note_sort"));
+		}
+		if (programId != null && !programId.trim().isEmpty()) {
+			criteria.setProgramId(programId);
+		}
+		
+		
+		if (se.getAttribute("CaseManagementViewAction_filter_roles") != null) {
+			criteria.getRoles().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_roles"));
+		}
+		
+		if (se.getAttribute("CaseManagementViewAction_filter_providers") != null) {
+			criteria.getProviders().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_providers"));
+		}
+
+		if (se.getAttribute("CaseManagementViewAction_filter_providers") != null) {
+			criteria.getIssues().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_issues"));
+		}
+
+		NoteSelectionResult result = noteService.findNotes(criteria);
+		Appender buf = new Appender(",");
+		for(NoteDisplay nd : result.getNotes()) {
+			buf.append(nd.getNoteId().toString());
+		}
+		return buf.toString();
+    }
 
 	private CaseManagementNote getFakedNote(CachedDemographicNote remoteNote) {
 		CaseManagementNote note = new CaseManagementNote();
