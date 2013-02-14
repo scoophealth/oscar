@@ -169,7 +169,7 @@ Demographic:<input type="text" name="demographicNo" size="5"
 	<li><input type="radio" name="billTypes" value="W"
 		<%=statusType.equals("W")?"checked":""%>>WCB</input></li>
 	<li><input type="radio" name="billTypes" value="B"
-		<%=statusType.equals("B")?"checked":""%>>Summitted OHIP</input></li>
+		<%=statusType.equals("B")?"checked":""%>>Submitted OHIP</input></li>
 	<li><input type="radio" name="billTypes" value="S"
 		<%=statusType.equals("S")?"checked":""%>>Settled/Paid by OHIP</input></li>
 	<li><input type="radio" name="billTypes" value="X"
