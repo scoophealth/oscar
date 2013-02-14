@@ -320,7 +320,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 			<option value="W" <%=BillType.equals("W")?"selected":""%>>W
 			| Bill Worker's Compensation Board</option>
 			<option value="B" <%=BillType.equals("B")?"selected":""%>>B
-			| Summitted OHIP</option>
+			| Submitted OHIP</option>
 			<option value="S" <%=BillType.equals("S")?"selected":""%>>S
 			| Settled/Paid by OHIP</option>
 			<option value="X" <%=BillType.equals("X")?"selected":""%>>X
