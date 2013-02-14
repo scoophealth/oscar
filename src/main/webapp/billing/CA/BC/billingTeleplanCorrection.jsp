@@ -385,7 +385,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 			| Bill Worker's Compensation Board</option>
 
 			<option value="B" <%=BillType.equals("B")?"selected":""%>>B
-			| Summitted MSP</option>
+			| Submitted MSP</option>
 
 			<option value="S" <%=BillType.equals("S")?"selected":""%>>S
 			| Settled/Paid by MSP</option>
