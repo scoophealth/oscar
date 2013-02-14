@@ -794,8 +794,12 @@ function pasteAppt(multipleSameDayGroupAppt) {
         <li class="row deep">
             <div class="label"><bean:message key="appointment.addappointment.formSurName" />:</div>
             <div class="input">
+            	<% 
+            		String name="";
+            		name = String.valueOf((bFirstDisp && !bFromWL)?"":request.getParameter("name")==null?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name"));
+            	%>
                 <INPUT TYPE="TEXT" NAME="keyword"
-                        VALUE='<%=(bFirstDisp && !bFromWL)?"":request.getParameter("name")==null?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name")%>'
+                        VALUE="<%=name%>"
                         HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">
             </div>
             <div class="space">
