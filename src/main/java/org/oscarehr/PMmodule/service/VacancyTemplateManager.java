@@ -177,7 +177,8 @@ public class VacancyTemplateManager {
 			
 			selectedOptions = criteriaSelectionOptionDAO.getCriteriaSelectedOptionsByCriteriaId(criteria.getId());
 		}
-		
+		if(vacancyId!=null)
+			required = "disabled";  //disabled all fields when view vacancy.
 		
 		//get type 
 		CriteriaType ctype = criteriaTypeDAO.find(typeId);

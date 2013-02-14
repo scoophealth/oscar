@@ -861,64 +861,64 @@ public class ProgramManagerAction extends DispatchAction {
 		String templateId_str = request.getParameter("requiredVacancyTemplateId");
 		if(!StringUtils.isBlank(templateId_str))
 			templateId = Integer.valueOf(templateId_str);
-		
-		Vacancy vacancy = new Vacancy();
-		String vacancyId = request.getParameter("vacancyId");
-		if(!StringUtils.isBlank(vacancyId)) {
-			vacancy = VacancyTemplateManager.getVacancyById(Integer.valueOf(vacancyId));
-		}		
-		vacancy.setTemplateId(templateId);
-		vacancy.setStatus(parameters.get("vacancyStatus")[0]);
-		vacancy.setReasonClosed(parameters.get("reasonClosed")[0]);		
-		vacancy.setName(request.getParameter("vacancyName"));
+				
 		String dateClosed = parameters.get("dateClosed")[0];
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", request.getLocale());
-		
+		Date dateClosedFormatted = new Date();
 		if (!StringUtils.isBlank(dateClosed)) {			
 			try {
-				Date dateClosedFormatted = formatter.parse(dateClosed);			
-				vacancy.setDateClosed(dateClosedFormatted);
+				dateClosedFormatted = formatter.parse(dateClosed);					
 			} catch (Exception e){
 				logger.warn("warn", e);
 			}
 		}
 		
-		vacancy.setDateCreated(new Date());
-		
-		vacancy.setWlProgramId(program.getId());
-		VacancyTemplateManager.saveVacancy(vacancy);		
-			
-		//Save Criteria
-		//List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypes();
-		//for(CriteriaType type : typeList) {	
-		List<Criteria> criteriaList = VacancyTemplateManager.getRefinedCriteriasByTemplateId(templateId);
-		for(Criteria c : criteriaList) {
-			CriteriaType type = VacancyTemplateManager.getCriteriaTypeById(c.getCriteriaTypeId());
-			Criteria newCriteria = new Criteria();			
-			newCriteria.setVacancyId(vacancy.getId());			
-			newCriteria.setMatchScoreWeight(1.0); //???
-					
-			String required = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Required";
-			if(request.getParameter(required) == null) 
-				newCriteria.setCanBeAdhoc(0);
-			else
-				newCriteria.setCanBeAdhoc(Integer.valueOf(request.getParameter(required)));
-			
-			String targetName = "targetOf"+ type.getFieldName().toLowerCase().replaceAll(" ","_");
-			String[] answers = parameters.get(targetName);
-			
-			saveTemplateOrVacancy(parameters, answers, type, newCriteria, request);
-			
-		}	
-		
+		Vacancy vacancy = new Vacancy();
+		String vacancyId = request.getParameter("vacancyId");
+		if(!StringUtils.isBlank(vacancyId)) {
+			vacancy = VacancyTemplateManager.getVacancyById(Integer.valueOf(vacancyId));	
+			vacancy.setStatus(parameters.get("vacancyStatus")[0]);
+			vacancy.setReasonClosed(parameters.get("reasonClosed")[0]);	
+			vacancy.setDateClosed(dateClosedFormatted);
+			VacancyTemplateManager.saveVacancy(vacancy);
+		} else {		
+			vacancy.setTemplateId(templateId);				
+			vacancy.setName(request.getParameter("vacancyName"));			
+			vacancy.setDateCreated(new Date());			
+			vacancy.setWlProgramId(program.getId());
+			vacancy.setStatus(parameters.get("vacancyStatus")[0]);
+			vacancy.setReasonClosed(parameters.get("reasonClosed")[0]);	
+			vacancy.setDateClosed(dateClosedFormatted);
+			VacancyTemplateManager.saveVacancy(vacancy);					
+				
+			List<Criteria> criteriaList = VacancyTemplateManager.getRefinedCriteriasByTemplateId(templateId);
+			for(Criteria c : criteriaList) {
+				CriteriaType type = VacancyTemplateManager.getCriteriaTypeById(c.getCriteriaTypeId());
+				Criteria newCriteria = new Criteria();			
+				newCriteria.setVacancyId(vacancy.getId());			
+				newCriteria.setMatchScoreWeight(1.0); //???
+						
+				String required = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Required";
+				if(request.getParameter(required) == null) 
+					newCriteria.setCanBeAdhoc(0);
+				else
+					newCriteria.setCanBeAdhoc(Integer.valueOf(request.getParameter(required)));
+				
+				String targetName = "targetOf"+ type.getFieldName().toLowerCase().replaceAll(" ","_");
+				String[] answers = parameters.get(targetName);
+				
+				saveTemplateOrVacancy(parameters, answers, type, newCriteria, request);			
+			}	
+				
+			//Call Match Manager
+			//TODO do the testing
+			try {
+		        matchManager.processEvent(vacancy, IMatchManager.Event.VACANCY_CREATED);
+	        } catch (MatchManagerException e) {
+	        	log.error("Match manager failed", e);
+	        }
+		}
 		setEditAttributes(request, String.valueOf(program.getId()));
-		//Call Match Manager
-		//TODO do the testing
-		try {
-	        matchManager.processEvent(vacancy, IMatchManager.Event.VACANCY_CREATED);
-        } catch (MatchManagerException e) {
-        	log.error("Match manager failed", e);
-        }
 		return edit(mapping, form, request, response);		
 		
 	}
