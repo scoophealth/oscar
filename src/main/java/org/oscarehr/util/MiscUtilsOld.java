@@ -28,15 +28,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -57,10 +52,8 @@ import org.apache.log4j.xml.DOMConfigurator;
  * upon startup as it may have been set true by a previous context stop
  * even though the jvm itself has not restarted.
  */
-public final class MiscUtils {
+public final class MiscUtilsOld {
 	
-	public static final String ENCODING = "UTF-8";
-	private static final Base64 base64 = new Base64(0);
 	private static boolean shutdownSignaled = false;
 	private static Thread shutdownHookThread = null;
 
@@ -98,7 +91,7 @@ public final class MiscUtils {
 	 * This menthod should only ever be called by a context startup listener. Other than that, the shutdown signal should be set by the shutdown hook.
 	 */
 	protected static void setShutdownSignaled(boolean shutdownSignaled) {
-		MiscUtils.shutdownSignaled=shutdownSignaled;
+		MiscUtilsOld.shutdownSignaled=shutdownSignaled;
 	}
 
 	public static byte[] propertiesToXmlByteArray(Properties p) throws IOException {
@@ -116,47 +109,6 @@ public final class MiscUtils {
 		return (p);
 	}
 
-	/**
-	 * This method will set the calendar to the beginning of the month, i.e. day=1, hour=0, minute=0, sec=0, ms=0. It will return the same instance passed in (not a clone of it).
-	 */
-	public static Calendar setToBeginningOfMonth(Calendar cal) {
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		return (setToBeginningOfDay(cal));
-	}
-
-	/**
-	 * This method will set the calenders hour/min/sec//milliseconds all to 0.
-	 */
-	public static Calendar setToBeginningOfDay(Calendar cal) {
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		// force calculation / materialisation of actual time.
-		cal.getTimeInMillis();
-
-		return (cal);
-	}
-
-	public static GregorianCalendar toCalendar(Date date)
-	{
-		if (date==null) return(null);
-		
-		GregorianCalendar cal=new GregorianCalendar();
-		cal.setTime(date);
-		return(cal);
-	}
-	
-	/**
-	 * Null safe toDate
-	 */
-	public static Date toDate(Calendar cal)
-	{
-		if (cal==null) return(null);
-		
-		return(cal.getTime());
-	}
 	
 	/**
 	 * This method should only really be called once per context in the context startup listener.
@@ -245,22 +197,6 @@ public final class MiscUtils {
      */
 	public static final Serializable deserialiseFromByteArray(byte b[]) throws IOException, ClassNotFoundException {
 		return ((Serializable) (new ObjectInputStream(new ByteArrayInputStream(b))).readObject());
-	}
-	
-	public static String encodeToBase64String(String s) throws UnsupportedEncodingException {
-		return (new String(base64.encode(s.getBytes(ENCODING)), ENCODING));
-	}
-
-	public static String decodeBase64StoString(String s) throws UnsupportedEncodingException {
-		return (new String(base64.decode(s.getBytes(ENCODING)), ENCODING));
-	}
-	
-	public static String encodeToBase64String(byte[] b) throws UnsupportedEncodingException {
-		return (new String(base64.encode(b), ENCODING));
-	}
-
-	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
-		return (base64.decode(s.getBytes(ENCODING)));
 	}
 	
 	public static String getUserNameNoDomain(String s)

@@ -103,11 +103,10 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     }
 
     public List<Hl7TextMessageInfo> getMatchingLabs(String hl7msg) {
-    	Base64 base64 = new Base64(0);
     	String sql = "SELECT a.lab_no as id, m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B, a.obr_date as labDate_A, b.obr_date as labDate_B FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no IN ( SELECT lab_id FROM hl7TextMessage WHERE message=?1 ) ORDER BY a.obr_date, a.lab_no";   	
     	Query query = entityManager.createNativeQuery(sql, Hl7TextMessageInfo.class);
     	try {
-	        query.setParameter(1, (new String(base64.encode(hl7msg.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING)));
+	        query.setParameter(1, (new String(Base64.encodeBase64(hl7msg.getBytes(MiscUtils.DEFAULT_UTF8_ENCODING)), MiscUtils.DEFAULT_UTF8_ENCODING)));
         } catch (UnsupportedEncodingException e) {
 
 	        MiscUtils.getLogger().error("Error setting query parameter hl7msg ",e);

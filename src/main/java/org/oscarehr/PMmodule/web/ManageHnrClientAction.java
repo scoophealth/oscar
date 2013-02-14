@@ -46,6 +46,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.util.DateUtils;
+
 public class ManageHnrClientAction {
 	private static Logger logger = MiscUtils.getLogger();
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -79,8 +81,8 @@ public class ManageHnrClientAction {
 				if (hnrClient.getHin() != null) demographic.setHin(hnrClient.getHin());
 				if (hnrClient.getHinVersion() != null) demographic.setVer(hnrClient.getHinVersion());
 				if (hnrClient.getHinType() != null) demographic.setHcType(hnrClient.getHinType());
-				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(MiscUtils.toDate(hnrClient.getHinValidStart()));
-				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(MiscUtils.toDate(hnrClient.getHinValidEnd()));
+				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(DateUtils.toDate(hnrClient.getHinValidStart()));
+				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(DateUtils.toDate(hnrClient.getHinValidEnd()));
 
 				if (hnrClient.getImage() != null) {
 					ClientImage clientImage = clientImageDAO.getClientImage(clientId);
@@ -163,8 +165,8 @@ public class ManageHnrClientAction {
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
 				if (demographic.getVer() != null) hnrClient.setHinVersion(demographic.getVer());
 				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType().toLowerCase());
-				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(MiscUtils.toCalendar(demographic.getEffDate()));
-				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(MiscUtils.toCalendar(demographic.getHcRenewDate()));
+				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(DateUtils.toCalendar(demographic.getEffDate()));
+				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(DateUtils.toCalendar(demographic.getHcRenewDate()));
 			}
 
 			ClientImage clientImage = clientImageDAO.getClientImage(clientId);

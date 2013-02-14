@@ -32,7 +32,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.ProviderDefaultProgram;
-import org.oscarehr.myoscar.util.MiscUtils;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository

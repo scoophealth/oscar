@@ -30,7 +30,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.eyeform.model.EyeForm;
-import org.oscarehr.myoscar.util.MiscUtils;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository

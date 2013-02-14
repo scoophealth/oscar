@@ -111,7 +111,6 @@ public final class MessageUploader {
 		String retVal = "";
 		try {
 			MessageHandler h = Factory.getHandler(type, hl7Body);
-			Base64 base64 = new Base64(0);
 
 			String firstName = h.getFirstName();
 			String lastName = h.getLastName();
@@ -207,7 +206,7 @@ public final class MessageUploader {
 				List<Hl7TextInfo> matchingTdisLab =  hl7TextInfoDao.searchByFillerOrderNumber(fillerOrderNum, sendingFacility);
 				if (matchingTdisLab.size()>0) {
 
-					hl7TextMessageDao.updateIfFillerOrderNumberMatches(MiscUtils.encodeToBase64String(hl7Body),fileId,matchingTdisLab.get(0).getLabNumber());
+					hl7TextMessageDao.updateIfFillerOrderNumberMatches(new String(Base64.encodeBase64(hl7Body.getBytes(MiscUtils.DEFAULT_UTF8_ENCODING)), MiscUtils.DEFAULT_UTF8_ENCODING),fileId,matchingTdisLab.get(0).getLabNumber());
 
 					hl7TextInfoDao.updateReportStatusByLabId(reportStatus,matchingTdisLab.get(0).getLabNumber());
 					hasBeenUpdated = true;
@@ -217,7 +216,7 @@ public final class MessageUploader {
 			if (!isTDIS || !hasBeenUpdated) {
 				hl7TextMessage.setFileUploadCheckId(fileId);
 				hl7TextMessage.setType(type);
-				hl7TextMessage.setBase64EncodedeMessage(MiscUtils.encodeToBase64String(hl7Body));
+				hl7TextMessage.setBase64EncodedeMessage(new String(Base64.encodeBase64(hl7Body.getBytes(MiscUtils.DEFAULT_UTF8_ENCODING)), MiscUtils.DEFAULT_UTF8_ENCODING));
 				hl7TextMessage.setServiceName(serviceName);
 				hl7TextMessageDao.persist(hl7TextMessage);
 

@@ -22,7 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
-<%@page import="org.apache.commons.lang.time.DateUtils"%>
+<%@page import="oscar.util.DateUtils"%>
 <%@page import="oscar.util.SqlUtils"%>
 <%@page import="java.util.*"%>
 <%@page import="org.caisi.model.*"%>
@@ -54,7 +54,7 @@
 	{
 		// do nothing, bad input
 	}
-	MiscUtils.setToBeginningOfMonth(startCalendar);
+	DateUtils.setToBeginningOfMonth(startCalendar);
 
 	Calendar endCalendar = Calendar.getInstance();
 	try
@@ -68,7 +68,7 @@
 	{
 		// do nothing, bad input
 	}
-	MiscUtils.setToBeginningOfMonth(endCalendar);
+	DateUtils.setToBeginningOfMonth(endCalendar);
 
 	// for each program...
 	//    for each month...
@@ -113,7 +113,7 @@
 		out.write('\n');
 	}
 
-	long months=(endCalendar.getTimeInMillis()-startCalendar.getTimeInMillis())/(DateUtils.MILLIS_PER_DAY*30);
+	long months=(endCalendar.getTimeInMillis()-startCalendar.getTimeInMillis())/(org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY*30);
 	long total=populationReportUIBean.getAllPrograms().size()*populationReportUIBean.getRoles().size()*3*months;
 	progressStatus.total="Estimated total "+total+" rows ("+populationReportUIBean.getAllPrograms().size()+" programs * "+populationReportUIBean.getRoles().size()+" roles * 3 encounter Types * "+months+" months)";
 	int rowsProcessed=0;
@@ -133,7 +133,7 @@
 		{
 			Calendar tempEndCalendar = (Calendar)tempStartCalendar.clone();
 			tempEndCalendar.add(Calendar.MONTH, 1);
-			MiscUtils.setToBeginningOfMonth(tempEndCalendar);
+			DateUtils.setToBeginningOfMonth(tempEndCalendar);
 			
 			populationReportUIBean.setStartDate(tempStartCalendar.getTime());
 			populationReportUIBean.setEndDate(tempEndCalendar.getTime());

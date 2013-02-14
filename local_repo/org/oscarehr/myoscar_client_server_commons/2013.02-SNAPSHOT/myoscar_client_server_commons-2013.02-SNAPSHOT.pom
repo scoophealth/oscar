@@ -4,7 +4,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>myoscar_client_server_commons</artifactId>
 	<packaging>jar</packaging>
-	<version>2013.01-SNAPSHOT</version>
+	<version>2013.02-SNAPSHOT</version>
 	<name>myoscar_client_server_commons</name>
 	<url>http://www.oscarcanada.org</url>
 
@@ -15,14 +15,14 @@
 	<repositories>
 		<repository>
 			<id>local_repo</id>
-			<url>file://${project.basedir}/local_repo</url>
+			<url>file://${basedir}/../oscar_maven_repo/local_repo</url>
 		</repository>
 	</repositories>
-	
+
 	<pluginRepositories>
        	<pluginRepository>
 			<id>local_repo</id>
-			<url>file://${project.basedir}/local_repo</url>
+			<url>file://${basedir}/../oscar_maven_repo/local_repo</url>
        	</pluginRepository>
 	</pluginRepositories>
 	
@@ -61,30 +61,13 @@
 			<artifactId>commons-email</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
-		<!-- CXF -->
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>apache-cxf</artifactId>
-			<version>2.6.2</version>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<artifactId>geronimo-servlet_2.5_spec</artifactId>
-					<groupId>org.apache.geronimo.specs</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>geronimo-servlet_3.0_spec</artifactId>
-					<groupId>org.apache.geronimo.specs</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+	
 		
 		<!-- our stuff -->
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>util</artifactId>
-			<version>2013.01.10</version>
+			<version>2013.02.14</version>
 		</dependency>
 	</dependencies>
 

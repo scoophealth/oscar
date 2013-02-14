@@ -120,7 +120,8 @@ public class NoteDisplayIntegrator implements NoteDisplay {
     }
 
 	public Date getObservationDate() {
-	    return(MiscUtils.toDate(cachedDemographicNote.getObservationDate()));
+		if (cachedDemographicNote.getObservationDate()==null) return(null);
+		else return(cachedDemographicNote.getObservationDate().getTime());
     }
 
 	public String getProgramName() {
@@ -152,7 +153,8 @@ public class NoteDisplayIntegrator implements NoteDisplay {
     }
 
 	public Date getUpdateDate() {
-	    return(MiscUtils.toDate(cachedDemographicNote.getUpdateDate()));
+		if (cachedDemographicNote.getUpdateDate()==null) return(null);
+		else return(cachedDemographicNote.getUpdateDate().getTime());
     }
 
 	public String getUuid() {

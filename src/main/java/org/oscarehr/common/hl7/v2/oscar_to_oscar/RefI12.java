@@ -190,7 +190,7 @@ public final class RefI12 {
 
             if (nteType.name().equals(nteCommentType))
             {
-            	return(new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), MiscUtils.ENCODING));
+            	return(new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), MiscUtils.DEFAULT_UTF8_ENCODING));
             }
 		}
 		

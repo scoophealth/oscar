@@ -22,7 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
-<%@page import="org.apache.commons.lang.time.DateUtils"%>
+<%@page import="oscar.util.DateUtils"%>
 <%@page import="java.util.*"%>
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
@@ -52,7 +52,7 @@
 	{
 		// do nothing, bad input
 	}
-	MiscUtils.setToBeginningOfMonth(startCalendar);
+	DateUtils.setToBeginningOfMonth(startCalendar);
 
 	Calendar endCalendar = Calendar.getInstance();
 	try
@@ -66,7 +66,7 @@
 	{
 		// do nothing, bad input
 	}
-	MiscUtils.setToBeginningOfMonth(endCalendar);
+	DateUtils.setToBeginningOfMonth(endCalendar);
 
 	// for each program...
 	//    for each month...
@@ -120,7 +120,7 @@
 		{
 			Calendar tempEndCalendar = (Calendar)tempStartCalendar.clone();
 			tempEndCalendar.add(Calendar.MONTH, 1);
-			MiscUtils.setToBeginningOfMonth(tempEndCalendar);
+			DateUtils.setToBeginningOfMonth(tempEndCalendar);
 			
 			populationReportUIBean.setStartDate(tempStartCalendar.getTime());
 			populationReportUIBean.setEndDate(tempEndCalendar.getTime());

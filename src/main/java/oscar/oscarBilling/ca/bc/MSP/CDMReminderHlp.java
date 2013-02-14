@@ -4,13 +4,11 @@ package oscar.oscarBilling.ca.bc.MSP;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.MiscUtilsOld;
 
 import oscar.oscarTickler.TicklerCreator;
 import oscar.util.SqlUtils;
@@ -42,7 +40,7 @@ public class CDMReminderHlp {
     crt.resolveTicklers(cdmPatientNos, remString);
 
     for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
-    	MiscUtils.checkShutdownSignaled();
+    	MiscUtilsOld.checkShutdownSignaled();
 
       String[] dxRecord = (String[]) iter.next();
       String demoNo = dxRecord[0];
@@ -82,14 +80,6 @@ public class CDMReminderHlp {
     for (Iterator<String[]> iter = cdmPatients.iterator(); iter.hasNext(); ) {
       String[] item = iter.next();
       cdmPatientNos.add(item[0]);
-    }
-    return cdmPatientNos;
-  }
-
-  private Vector getCDMDemoNos(Enumeration demoNos) {
-    Vector cdmPatientNos = new Vector();
-    while (demoNos.hasMoreElements()) {
-      cdmPatientNos.add(demoNos.nextElement());
     }
     return cdmPatientNos;
   }

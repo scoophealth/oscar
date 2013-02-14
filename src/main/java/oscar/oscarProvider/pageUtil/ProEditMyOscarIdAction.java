@@ -35,7 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.MiscUtilsOld;
 
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
@@ -53,7 +53,7 @@ public class ProEditMyOscarIdAction extends Action {
 
         DynaActionForm frm = (DynaActionForm)form;
         String loginId = (String)frm.get("myOscarLoginId");
-        loginId=MiscUtils.getUserNameNoDomain(loginId);
+        loginId=MiscUtilsOld.getUserNameNoDomain(loginId);
                 
         if( ProviderMyOscarIdData.getMyOscarId(providerNo).equals(loginId) ) {
             ActionMessages errors = new ActionMessages();

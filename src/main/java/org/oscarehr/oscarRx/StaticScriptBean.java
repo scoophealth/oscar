@@ -49,6 +49,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.data.RxProviderData;
 import oscar.oscarRx.util.RxUtil;
+import oscar.util.DateUtils;
 
 public class StaticScriptBean {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -155,7 +156,7 @@ public class StaticScriptBean {
 		drugDisplayData.providerName = cachedProvider.getFirstName() + ' ' + cachedProvider.getLastName()+" @ "+cachedFacility.getName();
 
 		drugDisplayData.startDate = RxUtil.DateToString(remoteDrug.getRxDate());
-		drugDisplayData.dateStartDate = MiscUtils.toDate(remoteDrug.getRxDate());
+		drugDisplayData.dateStartDate = DateUtils.toDate(remoteDrug.getRxDate());
 
 		drugDisplayData.writtenDate = RxUtil.DateToString(remoteDrug.getCreateDate());
 		drugDisplayData.endDate = RxUtil.DateToString(remoteDrug.getEndDate());

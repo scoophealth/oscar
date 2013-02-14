@@ -181,7 +181,7 @@ import org.oscarehr.ocan.SymptomDocument.Symptom;
 import org.oscarehr.ocan.SymptomListDocument.SymptomList;
 import org.oscarehr.ocan.TimeLivedInCanadaDocument.TimeLivedInCanada;
 import org.oscarehr.ocan.VisitEmergencyDepartmentDocument.VisitEmergencyDepartment;
-import org.oscarehr.util.CxfClientUtils;
+import org.oscarehr.util.CxfClientUtilsOld;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -518,9 +518,9 @@ public class OcanReportUIBean implements CallbackHandler {
 			SubmissionPortType port =  service.getSubmissionPort();
 			((BindingProvider)port).getRequestContext().put(
 				    BindingProvider.ENDPOINT_ADDRESS_PROPERTY,url);
-			CxfClientUtils.configureClientConnection(port);
-			CxfClientUtils.configureWSSecurity(port,user,new OcanReportUIBean());
-			CxfClientUtils.configureLogging(port);
+			CxfClientUtilsOld.configureClientConnection(port);
+			CxfClientUtilsOld.configureWSSecurity(port,user,new OcanReportUIBean());
+			CxfClientUtilsOld.configureLogging(port);
 
 			SubmissionResultType result=port.submitAssessment(is);
 			Result res = result.getResult();

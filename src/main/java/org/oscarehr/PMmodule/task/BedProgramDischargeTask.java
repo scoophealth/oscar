@@ -40,6 +40,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.MiscUtilsOld;
 import org.oscarehr.util.ShutdownException;
 
 public class BedProgramDischargeTask extends TimerTask {
@@ -81,7 +82,7 @@ public class BedProgramDischargeTask extends TimerTask {
             }
             
             for (Program bedProgram : bedPrograms) {
-            	MiscUtils.checkShutdownSignaled();
+            	MiscUtilsOld.checkShutdownSignaled();
             	
                 Date dischargeTime = DateTimeFormatUtils.getTimeFromString(DISCHARGE_TIME);
                 Date previousExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime() - PERIOD);
@@ -97,7 +98,7 @@ public class BedProgramDischargeTask extends TimerTask {
                     }
                     
                     for (Bed reservedBed : reservedBeds) {
-                    	MiscUtils.checkShutdownSignaled();
+                    	MiscUtilsOld.checkShutdownSignaled();
                     	
                         BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(reservedBed.getId());
                         

@@ -28,8 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -816,7 +814,7 @@ public final class EDocUtil {
 		eDoc.setContentType(remoteDocument.getContentType());
 		eDoc.setCreatorId(remoteDocument.getDocCreator());
 		eDoc.setDateTimeStamp(DateUtils.formatDate(remoteDocument.getUpdateDateTime(), null));
-		eDoc.setDateTimeStampAsDate(MiscUtils.toDate(remoteDocument.getUpdateDateTime()));
+		eDoc.setDateTimeStampAsDate(DateUtils.toDate(remoteDocument.getUpdateDateTime()));
 		eDoc.setDescription(remoteDocument.getDescription());
 		eDoc.setDocId(remoteDocument.getFacilityIntegerPk().getCaisiItemId().toString());
 		eDoc.setDocPublic("" + remoteDocument.getPublic1());
@@ -825,10 +823,10 @@ public final class EDocUtil {
 		eDoc.setModule("demographic");
 		eDoc.setModuleId("" + remoteDocument.getCaisiDemographicId());
 		eDoc.setNumberOfPages(remoteDocument.getNumberOfPages());
-		eDoc.setObservationDate(MiscUtils.toDate(remoteDocument.getObservationDate()));
+		eDoc.setObservationDate(DateUtils.toDate(remoteDocument.getObservationDate()));
 		eDoc.setProgramId(remoteDocument.getProgramId());
 		eDoc.setResponsibleId(remoteDocument.getResponsible());
-		eDoc.setReviewDateTimeDate(MiscUtils.toDate(remoteDocument.getReviewDateTime()));
+		eDoc.setReviewDateTimeDate(DateUtils.toDate(remoteDocument.getReviewDateTime()));
 		eDoc.setReviewDateTime(DateUtils.formatDate(remoteDocument.getReviewDateTime(), null));
 		eDoc.setReviewerId(remoteDocument.getReviewer());
 		eDoc.setSource(remoteDocument.getSource());
@@ -843,12 +841,5 @@ public final class EDocUtil {
 		doc.setNumberofpages(doc.getNumberofpages() - 1);
 
 		documentDao.merge(doc);
-	}
-
-	private static String rsGetString(ResultSet rs, String column) throws SQLException {
-		// protects agianst null values;
-		String thisStr = oscar.Misc.getString(rs, column);
-		if (thisStr == null) return "";
-		return thisStr;
 	}
 }
