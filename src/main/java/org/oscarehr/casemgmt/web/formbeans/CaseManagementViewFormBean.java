@@ -54,8 +54,8 @@ public class CaseManagementViewFormBean extends ActionForm {
 	
 	private String note_sort = null;
 	private String filter_provider = "";
-        private String filter_providers[];
-        private String filter_roles[];
+    private String filter_providers[];
+    private String filter_roles[];
 	
 	private long formId;
 	

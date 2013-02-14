@@ -394,6 +394,17 @@ function notesIncrementAndLoadMore() {
 	}
 }
 
+/**
+
+	Responsible for loading notes on the eChart
+	@param {offset} 
+		Offset from the beginning of the notes
+	@param {numToReturn}
+		Number of notes to load
+	@param {demoNo}
+		Demographic number to loads notes for
+
+*/
 function notesLoader(offset, numToReturn, demoNo) {
 	$("notesLoading").style.display = "inline";
 	var params = "method=viewNotesOpt&offset=" + offset + "&numToReturn=" + numToReturn + "&demographicNo=" + demoNo;
@@ -3375,9 +3386,10 @@ function autoCompleteShowMenuCPP(element, update) {
         var noteId;
         var notesDiv;
         var pos;
-
-        //$("notes2print").value = "";
-
+        
+        $("notes2print").value = "ALL_NOTES";
+        
+        /*
         //cycle through container divs for each note
         for( idx = 1; idx <= maxNcId; ++idx ) {
         
@@ -3392,6 +3404,7 @@ function autoCompleteShowMenuCPP(element, update) {
                     addPrintQueue(noteId);
             }
         }
+        */
     }
 
     var editUnsignedMsg;
