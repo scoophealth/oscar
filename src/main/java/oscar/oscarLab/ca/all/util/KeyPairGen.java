@@ -73,8 +73,8 @@ public final class KeyPairGen {
             	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
             	OscarKey oscarKey=new OscarKey();
             	oscarKey.setName("oscar");
-            	oscarKey.setPublicKey(new String(pubKey, MiscUtils.ENCODING));
-            	oscarKey.setPrivateKey(new String(privKey, MiscUtils.ENCODING));
+            	oscarKey.setPublicKey(new String(pubKey, MiscUtils.DEFAULT_UTF8_ENCODING));
+            	oscarKey.setPrivateKey(new String(privKey, MiscUtils.DEFAULT_UTF8_ENCODING));
 
             	oscarKeyDao.persist(oscarKey);            	
             	
@@ -87,8 +87,8 @@ public final class KeyPairGen {
                 PublicKey publicKeyObject=new PublicKey();
                 publicKeyObject.setService(name);
                 publicKeyObject.setType(type);
-                publicKeyObject.setBase64EncodedPublicKey(new String(pubKey, MiscUtils.ENCODING));
-                publicKeyObject.setBase64EncodedPrivateKey(new String(privKey, MiscUtils.ENCODING));
+                publicKeyObject.setBase64EncodedPublicKey(new String(pubKey, MiscUtils.DEFAULT_UTF8_ENCODING));
+                publicKeyObject.setBase64EncodedPrivateKey(new String(privKey, MiscUtils.DEFAULT_UTF8_ENCODING));
                 
                 publicKeyDao.persist(publicKeyObject);
                 

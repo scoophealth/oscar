@@ -47,8 +47,8 @@ import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Site;
-import org.oscarehr.myoscar.util.MiscUtils;
 import org.oscarehr.util.DateRange;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;

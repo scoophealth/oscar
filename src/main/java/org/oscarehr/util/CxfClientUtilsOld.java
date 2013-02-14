@@ -53,7 +53,7 @@ import org.apache.ws.security.handler.WSHandlerConstants;
 
 import oscar.OscarProperties;
 
-public class CxfClientUtils
+public class CxfClientUtilsOld
 {
 	private static long connectionTimeout=Long.parseLong(OscarProperties.getInstance().getProperty("web_service_client.connection_timeout_ms"));
 	private static long receiveTimeout=Long.parseLong(OscarProperties.getInstance().getProperty("web_service_client.received_timeout_ms"));

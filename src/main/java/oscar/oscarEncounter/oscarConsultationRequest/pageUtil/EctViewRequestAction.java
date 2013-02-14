@@ -41,6 +41,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.xml.security.exceptions.Base64DecodingException;
+import org.apache.xml.security.utils.Base64;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -224,14 +226,14 @@ public class EctViewRequestAction extends Action {
         thisForm.seteReferral(false);
 	}
 	
-	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception, UnsupportedEncodingException
+	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception, UnsupportedEncodingException, Base64DecodingException
 	{
 		Hl7TextMessageDao hl7TextMessageDao=(Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
 		Hl7TextMessage hl7TextMessage=hl7TextMessageDao.find(Integer.parseInt(segmentId));
 		
 		String encodedMessage=hl7TextMessage.getBase64EncodedeMessage();
-		byte[] decodedMessage=MiscUtils.decodeBase64(encodedMessage);
-		String decodedMessageString=new String(decodedMessage, MiscUtils.ENCODING);
+		byte[] decodedMessage=Base64.decode(encodedMessage);
+		String decodedMessageString=new String(decodedMessage, MiscUtils.DEFAULT_UTF8_ENCODING);
 		
 		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(decodedMessageString);
 		

@@ -170,7 +170,7 @@ public final class OruR01 {
 		temp=nte.getCommentType().getNameOfCodingSystem().getValue();
 		if (TEXT_DATA_FILENAME_PLACEHOLDER.equals(temp))
 		{
-			observationData.textMessage=new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), MiscUtils.ENCODING);
+			observationData.textMessage=new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), MiscUtils.DEFAULT_UTF8_ENCODING);
 		}
 		else
 		{
@@ -220,7 +220,7 @@ public final class OruR01 {
 		ORU_R01 newObservationMsg = (ORU_R01) OscarToOscarUtils.pipeParser.parse(messageString);
 		byte[] decoded = DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(1));
 		logger.info("equal binary data:" + Arrays.equals(b, decoded));
-		logger.info("text data:" + new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(0)), MiscUtils.ENCODING));
+		logger.info("text data:" + new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(0)), MiscUtils.DEFAULT_UTF8_ENCODING));
 		FileUtils.writeByteArrayToFile(new File("/tmp/out.test"), decoded);
 	}
 }

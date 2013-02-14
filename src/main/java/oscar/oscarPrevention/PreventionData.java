@@ -52,6 +52,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarProvider.data.ProviderData;
+import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
 
 public class PreventionData {
@@ -364,7 +365,7 @@ public class PreventionData {
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				Date preventionDate = MiscUtils.toDate(cachedDemographicPrevention.getPreventionDate());
+				Date preventionDate = DateUtils.toDate(cachedDemographicPrevention.getPreventionDate());
 
 				PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
 				pItem.setRemoteEntry(true);
@@ -403,7 +404,7 @@ public class PreventionData {
 					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
 
 					if (demographicDateOfBirth != null) {
-						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, MiscUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
+						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, DateUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
 						h.put("age", age);
 					}
 					else

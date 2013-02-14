@@ -36,6 +36,8 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.util.DateUtils;
+
 public class ReferralHistoryDisplay {
 	private static final Logger logger=MiscUtils.getLogger();
 	
@@ -83,7 +85,7 @@ public class ReferralHistoryDisplay {
 			logger.error("unexpected error", e);
 		}
 
-		referralDate = MiscUtils.toDate(referral.getReferralDate());
+		referralDate = DateUtils.toDate(referral.getReferralDate());
 		
 		// no completion date available yet
 		// completionDate=referral.getCompletionDate();

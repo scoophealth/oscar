@@ -33,7 +33,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.billing.CA.ON.model.Billing3rdPartyAddress;
 import org.oscarehr.common.NativeSql;
-import org.oscarehr.myoscar.util.MiscUtils;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository

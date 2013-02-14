@@ -39,6 +39,8 @@ import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.util.DateUtils;
+
 public class ProviderServiceReportUIBean {
 
 	private static Logger logger = MiscUtils.getLogger();
@@ -65,12 +67,13 @@ public class ProviderServiceReportUIBean {
 	public List<DataRow> getDataRows() {
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTimeInMillis(startDate.getTime());
-		MiscUtils.setToBeginningOfMonth(startCal);
+		DateUtils.setToBeginningOfMonth(startCal);
+
 
 		Calendar endCal = Calendar.getInstance();
 		endCal.setTimeInMillis(endDate.getTime());
 		endCal.add(Calendar.MONTH, 1);
-		MiscUtils.setToBeginningOfMonth(endCal);
+		DateUtils.setToBeginningOfMonth(endCal);
 
 		List<Program> activePrograms = programDao.getAllActivePrograms();
 		SecRole doctorRole = null;

@@ -29,16 +29,17 @@ import java.util.List;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.MiscUtilsOld;
 import org.oscarehr.util.ShutdownException;
 
 public class ErProgramDischargeTask extends TimerTask {
@@ -78,7 +79,7 @@ public class ErProgramDischargeTask extends TimerTask {
             boolean er_clerk = false;
 
             for (Iterator i = providers.iterator(); i.hasNext();) {
-            	MiscUtils.checkShutdownSignaled();
+            	MiscUtilsOld.checkShutdownSignaled();
             	
                 Provider provider = (Provider)i.next();
 
@@ -108,7 +109,7 @@ public class ErProgramDischargeTask extends TimerTask {
                     if (programAdmissions == null) continue;
 
                     for (Iterator j = programAdmissions.iterator(); j.hasNext();) {
-                    	MiscUtils.checkShutdownSignaled();
+                    	MiscUtilsOld.checkShutdownSignaled();
                     	
                         Admission admission = (Admission)j.next();
 

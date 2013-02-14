@@ -38,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -66,7 +67,7 @@ public final class Factory {
 			Hl7TextMessage hl7TextMessage = hl7TextMessageDao.find(Integer.parseInt(segmentID));
 
 			String type = hl7TextMessage.getType();
-			String hl7Body = MiscUtils.decodeBase64StoString(hl7TextMessage.getBase64EncodedeMessage());
+			String hl7Body = new String(Base64.decodeBase64(hl7TextMessage.getBase64EncodedeMessage()), MiscUtils.DEFAULT_UTF8_ENCODING);
 			return getHandler(type, hl7Body);
 		} catch (Exception e) {
 			logger.error("Could not retrieve lab for segmentID(" + segmentID + ")", e);
@@ -81,7 +82,7 @@ public final class Factory {
 			Hl7TextMessageDao hl7TextMessageDao = (Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
 			Hl7TextMessage hl7TextMessage = hl7TextMessageDao.find(Integer.parseInt(segmentID));
 
-			ret = MiscUtils.decodeBase64StoString(hl7TextMessage.getBase64EncodedeMessage());
+			ret = new String(Base64.decodeBase64(hl7TextMessage.getBase64EncodedeMessage()), MiscUtils.DEFAULT_UTF8_ENCODING);
 		} catch (Exception e) {
 			logger.error("Could not retrieve lab for segmentID(" + segmentID + ")", e);
 		}

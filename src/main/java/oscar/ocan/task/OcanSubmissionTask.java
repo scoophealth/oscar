@@ -40,6 +40,7 @@ import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.MiscUtilsOld;
 import org.oscarehr.util.ShutdownException;
 
 import oscar.ocan.service.OcanDataProcessor;
@@ -90,7 +91,7 @@ public class OcanSubmissionTask extends TimerTask {
 				}
 
 				for (Map<String, String> intakeMap : intakes) {
-					MiscUtils.checkShutdownSignaled();
+					MiscUtilsOld.checkShutdownSignaled();
 
 					try {
 						ocanDataProcessor.createOcanRecord(process,

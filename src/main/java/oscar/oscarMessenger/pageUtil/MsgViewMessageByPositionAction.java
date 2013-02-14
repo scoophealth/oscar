@@ -40,7 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.dao.forms.FormsDao;
 import org.oscarehr.common.model.ProviderData;
-import org.oscarehr.myoscar.util.MiscUtils;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ParameterActionForward;

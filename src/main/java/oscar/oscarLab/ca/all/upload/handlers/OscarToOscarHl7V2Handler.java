@@ -44,7 +44,7 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 		
 		try {
 	        byte[] dataBytes=FileUtils.readFileToByteArray(new File(fileName));
-	        String dataString=new String(dataBytes, MiscUtils.ENCODING);
+	        String dataString=new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING);
 	        logger.debug("Incoming HL7 Message : \n"+dataString);
 	        
 			AbstractMessage message=OscarToOscarUtils.pipeParserParse(dataString);

@@ -35,18 +35,18 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
 import org.oscarehr.caisi_integrator.ws.FacilityConsentPair;
@@ -65,14 +65,13 @@ import org.oscarehr.caisi_integrator.ws.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.ReferralWsService;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.hnr.ws.MatchingClientParameters;
 import org.oscarehr.hnr.ws.MatchingClientScore;
-import org.oscarehr.util.CxfClientUtils;
+import org.oscarehr.util.CxfClientUtilsOld;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
@@ -93,10 +92,10 @@ import org.oscarehr.util.SessionConstants;
 public class CaisiIntegratorManager {
 
 	/** only non-audited data should be cached in here */
-	private static QueueCache<String, Object> basicDataCache=new QueueCache<String, Object>(4, 100, DateUtils.MILLIS_PER_HOUR, null);
+	private static QueueCache<String, Object> basicDataCache=new QueueCache<String, Object>(4, 100, org.apache.commons.lang.time.DateUtils.MILLIS_PER_HOUR, null);
 	
 	/** data put here should be segmented by the requesting provider as part of the cache key */
-	private static QueueCache<String, Object> segmentedDataCache=new QueueCache<String, Object>(4, 100, DateUtils.MILLIS_PER_HOUR, null);
+	private static QueueCache<String, Object> segmentedDataCache=new QueueCache<String, Object>(4, 100, org.apache.commons.lang.time.DateUtils.MILLIS_PER_HOUR, null);
 	
 	public static void setIntegratorOffline(boolean status){
 		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
@@ -145,7 +144,7 @@ public class CaisiIntegratorManager {
 		FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
 		FacilityWs port = service.getFacilityWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		CxfClientUtilsOld.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -207,7 +206,7 @@ public class CaisiIntegratorManager {
 		DemographicWsService service = new DemographicWsService(buildURL(facility, "DemographicService"));
 		DemographicWs port = service.getDemographicWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		CxfClientUtilsOld.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -221,7 +220,7 @@ public class CaisiIntegratorManager {
 		ProgramWsService service = new ProgramWsService(buildURL(facility, "ProgramService"));
 		ProgramWs port = service.getProgramWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		CxfClientUtilsOld.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -297,7 +296,7 @@ public class CaisiIntegratorManager {
 		ProviderWsService service = new ProviderWsService(buildURL(facility, "ProviderService"));
 		ProviderWs port = service.getProviderWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		CxfClientUtilsOld.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -344,7 +343,7 @@ public class CaisiIntegratorManager {
 		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
 		ReferralWs port = service.getReferralWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		CxfClientUtilsOld.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -356,7 +355,7 @@ public class CaisiIntegratorManager {
 		HnrWsService service = new HnrWsService(buildURL(facility, "HnrService"));
 		HnrWs port = service.getHnrWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		CxfClientUtilsOld.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -415,10 +414,10 @@ public class CaisiIntegratorManager {
 	protected static SetConsentTransfer makeSetConsentTransfer(IntegratorConsent consent) {
 		SetConsentTransfer consentTransfer = new SetConsentTransfer();
 		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
-		consentTransfer.setCreatedDate(MiscUtils.toCalendar(consent.getCreatedDate()));
+		consentTransfer.setCreatedDate(oscar.util.DateUtils.toCalendar(consent.getCreatedDate()));
 		consentTransfer.setDemographicId(consent.getDemographicId());
 		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
-		consentTransfer.setExpiry(MiscUtils.toCalendar(consent.getExpiry()));
+		consentTransfer.setExpiry(oscar.util.DateUtils.toCalendar(consent.getExpiry()));
 
 		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet()) {
 			FacilityConsentPair pair = new FacilityConsentPair();

@@ -189,7 +189,7 @@
 			matchingDemographicParameters.setMinScore(7);
 			List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(matchingDemographicParameters);
 
-			MiscUtils.getLogger().debug("Integrator search results : "+MiscUtils.getSize(integratorSearchResults) );
+			MiscUtils.getLogger().debug("Integrator search results : "+(integratorSearchResults==null?"null":String.valueOf(integratorSearchResults.size())));
 			request.setAttribute("integratorSearchResults", integratorSearchResults);
 		}catch(Exception e){
 			log("error searching integrator", e);

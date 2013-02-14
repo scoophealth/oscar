@@ -176,8 +176,6 @@ public class LabUploadAction extends Action {
 	 */
 	public static InputStream decryptMessage(InputStream is, String skey, PublicKey pkey) {
 
-		Base64 base64 = new Base64(0);
-
 		// Decrypt the secret key and the message
 		try {
 
@@ -187,7 +185,7 @@ public class LabUploadAction extends Action {
 			// Decrypt the secret key using the servers private key
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.DECRYPT_MODE, key);
-			byte[] newSecretKey = cipher.doFinal(base64.decode(skey.getBytes(MiscUtils.ENCODING)));
+			byte[] newSecretKey = cipher.doFinal(Base64.decodeBase64(skey));
 
 			// Decrypt the message using the secret key
 			SecretKeySpec skeySpec = new SecretKeySpec(newSecretKey, "AES");
@@ -209,7 +207,6 @@ public class LabUploadAction extends Action {
 	 * Check that the signature 'sigString' matches the message InputStream 'msgIS' thus verifying that the message has not been altered.
 	 */
 	public static boolean validateSignature(PublicKey key, String sigString, File input) {
-		Base64 base64 = new Base64(0);
 		byte[] buf = new byte[1024];
 
 		try {
@@ -225,7 +222,7 @@ public class LabUploadAction extends Action {
 			}
 			msgIs.close();
 
-			return (sig.verify(base64.decode(sigString.getBytes(MiscUtils.ENCODING))));
+			return (sig.verify(Base64.decodeBase64(sigString)));
 
 		} catch (Exception e) {
 			logger.debug("Could not validate signature: " + e);
@@ -240,7 +237,6 @@ public class LabUploadAction extends Action {
 	public static ArrayList<Object> getClientInfo(String service) {
 
 		PublicKey Key = null;
-		Base64 base64 = new Base64(0);
 		String keyString = "";
 		String type = "";
 		byte[] publicKey;
@@ -255,7 +251,7 @@ public class LabUploadAction extends Action {
 				type = publicKeyObject.getType();
 			}
 
-			publicKey = base64.decode(keyString.getBytes(MiscUtils.ENCODING));
+			publicKey = Base64.decodeBase64(keyString);
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			Key = keyFactory.generatePublic(pubKeySpec);
@@ -275,7 +271,6 @@ public class LabUploadAction extends Action {
 	private static PrivateKey getServerPrivate() {
 
 		PrivateKey Key = null;
-		Base64 base64 = new Base64(0);
 		byte[] privateKey;
 
 		try {
@@ -283,7 +278,7 @@ public class LabUploadAction extends Action {
 			OscarKey oscarKey = oscarKeyDao.find("oscar");
 			logger.info("oscar key: " + oscarKey);
 
-			privateKey = base64.decode(oscarKey.getPrivateKey().getBytes(MiscUtils.ENCODING));
+			privateKey = Base64.decodeBase64(oscarKey.getPrivateKey());
 			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privateKey);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			Key = keyFactory.generatePrivate(privKeySpec);

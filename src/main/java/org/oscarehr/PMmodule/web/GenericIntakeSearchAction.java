@@ -67,6 +67,7 @@ import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.util.DateUtils;
 
 import com.quatro.model.LookupCodeValue;
 
@@ -216,7 +217,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 
 			GregorianCalendar cal = new GregorianCalendar();
 			{
-				MiscUtils.setToBeginningOfDay(cal);
+				DateUtils.setToBeginningOfDay(cal);
 
 				temp = StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
 				if (temp != null) cal.set(Calendar.YEAR, Integer.parseInt(temp));

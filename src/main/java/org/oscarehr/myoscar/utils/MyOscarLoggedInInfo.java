@@ -29,13 +29,13 @@ import java.util.Locale;
 import javax.servlet.http.HttpSession;
 
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
-import org.oscarehr.myoscar.client.ws_manager.MyOscarServerCredentials;
+import org.oscarehr.myoscar.client.ws_manager.MyOscarLoggedInInfoInterface;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer3;
 
 import oscar.OscarProperties;
 
-public final class MyOscarLoggedInInfo implements Serializable, MyOscarServerCredentials
+public final class MyOscarLoggedInInfo implements Serializable, MyOscarLoggedInInfoInterface
 {
 	private static final String myOscarServerBaseUrl = initMyOscarServerBaseUrl();
 	private static final String MY_OSCAR_LOGGED_IN_INFO_SESSION_KEY = "MY_OSCAR_LOGGED_IN_INFO_SESSION_KEY";

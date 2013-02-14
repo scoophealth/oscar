@@ -32,7 +32,7 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.BaseInputTag;
-import org.oscarehr.myoscar.util.MiscUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
 

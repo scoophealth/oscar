@@ -105,6 +105,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
 import oscar.util.ConversionUtils;
+import oscar.util.DateUtils;
 
 import com.quatro.model.security.Secrole;
 import com.quatro.service.security.RolesManager;
@@ -539,7 +540,7 @@ public class CaseManagementManager {
 					if (pd == null) {
 						prescriptions.add(getPrescriptDrug(cachedDrug));
 					} else {
-						if (pd.getRxDate().before(MiscUtils.toDate(cachedDrug.getRxDate())) || (pd.getRxDate().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(MiscUtils.toDate(cachedDrug.getCreateDate())))) {
+						if (pd.getRxDate().before(DateUtils.toDate(cachedDrug.getRxDate())) || (pd.getRxDate().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(DateUtils.toDate(cachedDrug.getCreateDate())))) {
 							prescriptions.remove(pd);
 							prescriptions.add(getPrescriptDrug(cachedDrug));
 						}
@@ -556,12 +557,12 @@ public class CaseManagementManager {
 
 		pd.setBrandName(cachedDrug.getBrandName());
 		pd.setCustomName(cachedDrug.getCustomName());
-		pd.setRxDate(MiscUtils.toDate(cachedDrug.getRxDate()));
+		pd.setRxDate(DateUtils.toDate(cachedDrug.getRxDate()));
 		pd.setArchived(cachedDrug.isArchived());
 		pd.setSpecial(cachedDrug.getSpecial());
-		pd.setEndDate(MiscUtils.toDate(cachedDrug.getEndDate()));
+		pd.setEndDate(DateUtils.toDate(cachedDrug.getEndDate()));
 		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
-		pd.setCreateDate(MiscUtils.toDate(cachedDrug.getCreateDate()));
+		pd.setCreateDate(DateUtils.toDate(cachedDrug.getCreateDate()));
 
 		pd.setId(cachedDrug.getFacilityIdIntegerCompositePk().getCaisiItemId());
 

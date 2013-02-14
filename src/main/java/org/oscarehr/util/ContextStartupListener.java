@@ -39,7 +39,6 @@ import com.quatro.dao.security.SecroleDao;
 
 public class ContextStartupListener implements javax.servlet.ServletContextListener {
 	private static final Logger logger = MiscUtils.getLogger();
-	private static String contextPath = null;
 
 	@Override
 	public void contextInitialized(javax.servlet.ServletContextEvent sce) {
@@ -47,14 +46,8 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			// ensure cxf uses log4j
 			System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
 
-			// need tc6 for this?
-			// String contextPath=sce.getServletContext().getContextPath();
+			String contextPath=sce.getServletContext().getContextPath();
 
-			// hack to get context path until tc6 is our standard.
-			// /data/cvs/caisi_utils/apache-tomcat-5.5.27/webapps/oscar
-			contextPath = sce.getServletContext().getRealPath("");
-			int lastSlash = contextPath.lastIndexOf('/');
-			contextPath = contextPath.substring(lastSlash + 1);
 
 			logger.info("Server processes starting. context=" + contextPath);
 
@@ -64,8 +57,8 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			String vmstatLoggingPeriod = properties.getProperty("VMSTAT_LOGGING_PERIOD");
 			VmStat.startContinuousLogging(Long.parseLong(vmstatLoggingPeriod));
 
-			MiscUtils.setShutdownSignaled(false);
-			MiscUtils.registerShutdownHook();
+			MiscUtilsOld.setShutdownSignaled(false);
+			MiscUtilsOld.registerShutdownHook();
 
 			createOscarProgramIfNecessary();
 			
@@ -116,18 +109,16 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 	}
 	@Override
     public void contextDestroyed(javax.servlet.ServletContextEvent sce) {
-		// need tc6 for this?
-		// logger.info("Server processes stopping. context=" + sce.getServletContext().getContextPath());
-		logger.info("Server processes stopping. context=" + contextPath);
+		logger.info("Server processes stopping. context=" + sce.getServletContext().getContextPath());
 
 		WaitListEmailThread.stopTask();
 		CaisiIntegratorUpdateTask.stopTask();
 		VmStat.stopContinuousLogging();
 
 		try {
-			MiscUtils.checkShutdownSignaled();
-			MiscUtils.deregisterShutdownHook();
-			MiscUtils.setShutdownSignaled(true);
+			MiscUtilsOld.checkShutdownSignaled();
+			MiscUtilsOld.deregisterShutdownHook();
+			MiscUtilsOld.setShutdownSignaled(true);
 		} catch (ShutdownException e) {
 			// do nothing it's okay.
 		}

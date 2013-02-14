@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.net.util.Base64;
 import org.oscarehr.common.model.RemoteIntegratedDataCopy;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ObjectMarshalUtil;
@@ -143,7 +144,7 @@ public class RemoteIntegratedDataCopyDao extends AbstractDao<RemoteIntegratedDat
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		md.reset();
         byte[] digest = md.digest(marshalledObject.getBytes("UTF-8"));                
-        String signature = MiscUtils.encodeToBase64String(digest);
+        String signature = new String(Base64.encodeBase64(digest), MiscUtils.DEFAULT_UTF8_ENCODING);
         
         MiscUtils.getLogger().debug("demo :"+demographicNo+" dataType : "+dataType+" Signature: "+signature+" providerNo "+providerNo+" facilityId "+facilityId);
 		
