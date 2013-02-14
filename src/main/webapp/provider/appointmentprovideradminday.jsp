@@ -266,7 +266,11 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	programId_oscarView="0";
 	session.setAttribute("programId_oscarView",programId_oscarView);
 }
-    int lenLimitedL=11, lenLimitedS=3; //L - long, S - short
+    int lenLimitedL=11; //L - long
+    if(OscarProperties.getInstance().getProperty("APPT_SHOW_FULL_NAME","").equalsIgnoreCase("true")) {
+    	lenLimitedL = 25;
+    }
+    int lenLimitedS=3; //S - short
     int len = lenLimitedL;
     int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
     //// THIS IS THE VALUE I HAVE BEEN LOOKING FOR!!!!!
