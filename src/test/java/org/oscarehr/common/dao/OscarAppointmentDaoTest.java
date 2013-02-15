@@ -35,6 +35,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -174,6 +175,7 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
+	@Ignore
 	public void testFindNextAppointment() throws Exception {
 		Integer demographicId = 999999;
 

@@ -2529,7 +2529,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:`is_history` char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`job_title` varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`key_val` varchar(64) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:`lastUpdateDate` date default NULL</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`lastUpdateDate` date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`lastUpdateUser` varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`length_10` varchar(6) default NULL,</ViolationValue>
