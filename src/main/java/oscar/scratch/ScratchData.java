@@ -26,6 +26,7 @@ package oscar.scratch;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.oscarehr.common.dao.ScratchPadDao;
@@ -47,6 +48,11 @@ public class ScratchData {
 
 	/** Creates a new instance of ScratchData */
 	public ScratchData() {
+	}
+	
+	public List<Object[]>getAllDates(String providerNo) {
+		ScratchPadDao dao = SpringUtils.getBean(ScratchPadDao.class);
+		return dao.findAllDatesByProviderNo(providerNo);
 	}
 
 	public Map<String, String> getLatest(String providerNo) {

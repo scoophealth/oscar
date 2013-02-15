@@ -56,6 +56,7 @@
   }
   
 
+  List<Object[]> dateIdList= scratchData.getAllDates(user_no);
       
 %>
 
@@ -177,6 +178,16 @@
 	    }
 	}
     }
+    
+    
+    function showVersion(id) {
+    	if( id == "showVersion" ) {
+    		return;
+    	}
+    	var url = "../Scratch.do?method=showVersion&id="+id;
+    	var win = window.open(url,"scratchPadVersion","width=755,height=1024,toolbar=no, scrollbars=yes");
+    	win.focus();
+    }
     </script>
 
 </head>
@@ -202,7 +213,24 @@
 	<tr>
 		<td class="MainTableLeftColumn" valign="top" id="tablelle"
 			style="height: 100%"><input type="button"
-			onclick="checkScratch()" id="savebutton" value="save" /></td>
+			onclick="checkScratch()" id="savebutton" value="save" />
+		<br/>
+			<select onChange="showVersion(this.options[this.selectedIndex].value)">
+				<option value="showVersion">Select Version to Display</option>
+				<% 
+				for( Object[]obj : dateIdList ) {
+				    String strId = String.valueOf(obj[1]);
+				    Date date = (Date) obj[0];
+				    
+				%>
+					<option value="<%=strId%>"><%=DateUtils.formatDateTime(date, request.getLocale())%></option>
+				<%
+				}
+				%>
+			</select>	
+			
+			
+	    </td>
 
 		<td valign="top" class="MainTableRightColumn">
 		<form id="scratch" action=""><input type="hidden"
