@@ -31,23 +31,31 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.ScratchPadDao;
+import org.oscarehr.common.model.ScratchPad;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
  * @author jay
  */
-public class ScratchAction extends Action {
+public class ScratchAction extends DispatchAction {
     
-    /** Creates a new instance of ScratchAction */
-    public ScratchAction() {
+    public ActionForward showVersion(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	String id = request.getParameter("id");
+    	ScratchPadDao dao = SpringUtils.getBean(ScratchPadDao.class);
+    	ScratchPad scratchPad = dao.find(Integer.parseInt(id));
+    	
+    	request.setAttribute("ScratchPad", scratchPad);
+    	return mapping.findForward("scratchPadVersion");
     }
     
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //String request.getParameter("");
 
         String providerNo =  (String) request.getSession().getAttribute("user");

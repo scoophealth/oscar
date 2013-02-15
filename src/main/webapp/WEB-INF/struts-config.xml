@@ -1805,8 +1805,9 @@
 		<action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/SendDocToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="finished" path="/phr/response.jsp"></forward>
 		</action>
-		<action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
+		<action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" parameter="method" type="oscar.scratch.ScratchAction">
 			<forward name="success" path="/scratch/index.jsp" />
+			<forward name="scratchPadVersion" path="/scratch/version.jsp" />
 		</action>
 		<action input="/oscarReport/ManageDemographicQueryFavourites.jsp" name="FrmForm" path="/report/DeleteDemographicReport" scope="request" type="oscar.oscarReport.pageUtil.RptDemographQueryFavouriteDeleteAction">
 			<forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
