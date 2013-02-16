@@ -314,7 +314,8 @@ public class SchemaUtils
 			try {
 				ResultSet rs = c.getMetaData().getTables(ConfigUtils.getProperty("db_schema"), null, "%", null);
 				while(rs.next()) {
-					String tableName = rs.getString("TABLE_NAME");				
+					String tableName = rs.getString("TABLE_NAME");	
+					
 					Statement stmt2 = c.createStatement();
 					ResultSet rs2 = stmt2.executeQuery("show create table " + tableName + ";");
 					if(rs2.next()) {

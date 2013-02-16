@@ -1,4 +1,24 @@
 
+
+CREATE TABLE `surveyData` (
+  surveyDataId int(10) NOT NULL auto_increment,
+  surveyId varchar(5) default NULL,
+  demographic_no int(10) default NULL,
+  provider_no varchar(6) default NULL,
+  status char(2) default NULL,
+  survey_date date default NULL,
+  answer varchar(10) default NULL,
+  processed int(10) default NULL,
+  INDEX `surveyId_index` (surveyId(5)),
+  INDEX `demographic_no_index` (demographic_no),
+  INDEX `provider_no_index` (provider_no(6)),
+  INDEX `status_index` (status(2)),
+  INDEX `survey_date_index` (survey_date),
+  INDEX `answer_index` (answer(10)),
+  INDEX `processed_index` (processed),
+  PRIMARY KEY  (`surveyDataId`)
+) ;
+
 --
 -- Table structure for table `FaxClientLog`
 --
@@ -7572,17 +7592,7 @@ create table demographicPharmacy (
 
 
 
-CREATE TABLE surveyData (
-  surveyDataId int(10) NOT NULL auto_increment,
-  surveyId varchar(5) default NULL,
-  demographic_no int(10) default NULL,
-  provider_no varchar(6) default NULL,
-  status char(2) default NULL,
-  survey_date date default NULL,
-  answer varchar(10) default NULL,
-  processed int(10) default NULL,
-  PRIMARY KEY  (`surveyDataId`)
-) ;
+
 
 CREATE TABLE `log` (
   id bigint auto_increment primary key,
@@ -7616,6 +7626,14 @@ CREATE TABLE preventions (
   never char(1) default '0',
   creator int(10) default NULL,
   lastUpdateDate datetime NOT NULL,
+  INDEX `preventions_demographic_no` (`demographic_no`),
+  INDEX `preventions_provider_no` (provider_no(6)),
+  INDEX `preventions_prevention_type` (prevention_type(10)),
+  INDEX `preventions_refused` (refused),
+  INDEX `preventions_deleted` (deleted),
+  INDEX `preventions_never` (never),
+  INDEX `preventions_creation_date` (`creation_date`),
+  INDEX `preventions_next_date` (next_date),
   PRIMARY KEY  (`id`)
 ) ;
 
@@ -7624,8 +7642,11 @@ CREATE TABLE preventionsExt (
   prevention_id int(10) default NULL,
   keyval varchar(20) default NULL,
   val text,
+  INDEX `preventionsExt_prevention_id` (prevention_id),
+  INDEX `preventionsExt_keyval` (keyval(10)),
   PRIMARY KEY  (`id`)
 ) ;
+
 
 CREATE TABLE `secRole` (
   `role_no` int(3) NOT NULL auto_increment,
@@ -7916,30 +7937,11 @@ CREATE TABLE incomingLabRules(
 
 
 
-create index preventions_demographic_no on preventions (demographic_no);
-create index preventions_provider_no on preventions (provider_no(6));
-create index preventions_prevention_type on preventions (prevention_type(10));
-create index preventions_refused on preventions (refused);
-create index preventions_deleted on preventions (deleted);
-create index preventions_never on preventions (never);
-create index preventions_creation_date on preventions (creation_date);
-create index preventions_next_date on preventions (next_date);
 
 
 
 
-create index preventionsExt_prevention_id on preventionsExt (prevention_id);
-create index preventionsExt_keyval on preventionsExt (keyval(10));
 
-
-
-create index surveyId_index on surveyData (surveyId(5));
-create index demographic_no_index on surveyData (demographic_no);
-create index provider_no_index on surveyData (provider_no(6));
-create index status_index on surveyData (status(2));
-create index survey_date_index on surveyData (survey_date);
-create index answer_index on surveyData (answer(10));
-create index processed_index on surveyData (processed);
 
 create table IssueGroup (id int primary key auto_increment, name varchar(255) not null);
 create table IssueGroupIssues (issueGroupId int not null, issue_id int not null, unique(issueGroupId,issue_id), index(issue_id));
@@ -7953,12 +7955,11 @@ CREATE TABLE demographic_merged(
     merged_to INT(10) NOT NULL,
     deleted INT(1) NOT NULL DEFAULT 0,
     `lastUpdateUser` varchar(6) default NULL,
-    `lastUpdateDate` date default NULL
+    `lastUpdateDate` date default NULL,
+    INDEX `dem_merged` (demographic_no, merged_to, deleted),
+    INDEX `dem_merged_dem` (demographic_no, deleted),
+    INDEX `dem_merged_merge` (merged_to, deleted)
 );
-
-CREATE INDEX dem_merged ON demographic_merged (demographic_no, merged_to, deleted);
-CREATE INDEX dem_merged_dem ON demographic_merged (demographic_no, deleted);
-CREATE INDEX dem_merged_merge ON demographic_merged (merged_to, deleted);
 
 --
 -- New audit table stores hashes of casemanagement notes
@@ -8506,10 +8507,9 @@ create table lst_orgcd
   activeyn     VARCHAR(1),
   orderbyindex int,
   codetree      VARCHAR(80),
-  primary key (code)
+  primary key (code),
+  INDEX `IDX_ORGCD_CODE` (codetree)
 );
-
-create index IDX_ORGCD_CODE on lst_orgcd (codetree);
 
 create table favoritesprivilege
 (
