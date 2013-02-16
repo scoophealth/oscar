@@ -190,6 +190,16 @@
             </td>
 		</tr>
 		<tr class="b">
+            <td width="20%">Display All vacancies</td>
+            <td>
+                <html:select property="facility.displayAllVacancies">                    
+                    <html:option value="1">All vacancies in all facilities</html:option>
+					<html:option value="0">All vacancies in users facility program domain</html:option>
+			</html:select>
+            </td>
+		</tr>
+		
+		<tr class="b">
 			<td width="20%">Enable Mandatory Encounter Time in Encounter:</td>
 			<td><html:checkbox property="facility.enableEncounterTime" /></td>
 		</tr>

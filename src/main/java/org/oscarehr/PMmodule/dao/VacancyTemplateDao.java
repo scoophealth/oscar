@@ -62,17 +62,6 @@ public class VacancyTemplateDao extends AbstractDao<VacancyTemplate> {
 		return results;	
 	}
 	
-	public List<VacancyTemplate> getActiveVacancyTemplatesByProgramId(Integer programId) {
-		Query query = entityManager.createQuery("select x from VacancyTemplate x where x.programId=? and x.active=?");
-		query.setParameter(1, programId);
-		query.setParameter(2, true);
-		
-		@SuppressWarnings("unchecked")
-		List<VacancyTemplate> results = query.getResultList();
-		
-		return results;	
-	}
-	
 	 public List<VacancyTemplate> getActiveVacancyTemplatesByWlProgramId(Integer wlProgramId) {
 		Query query = entityManager.createQuery("select x from VacancyTemplate x where x.wlProgramId=? and x.active=?");
 		query.setParameter(1, wlProgramId);

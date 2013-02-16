@@ -73,9 +73,9 @@ public class WaitlistDaoTest extends DaoTestFixtures {
 	
 	@Test
 	public void testGetDisplayVacanciesForAgencyProgram() {
-		assertNotNull(dao.getDisplayVacanciesForAgencyProgram(1));
+		assertNotNull(dao.getDisplayVacanciesForAgencyProgram(1));	
 	}
-	
+
 	@Test
 	public void testGetDisplayVacancy() {
 		assertNull(dao.getDisplayVacancy(45));
