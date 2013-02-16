@@ -53,7 +53,7 @@ function searchOutOfDomain() {
 
 </script>
 
-<form method="get" name="titlesearch" action="demographiccontrol.jsp"
+<form method="get" name="titlesearch" action="<%=request.getContextPath()%>/demographic/demographiccontrol.jsp"
 	onsubmit="return checkTypeIn()">
 <div class="searchBox">
 <div class="RowTop header">
