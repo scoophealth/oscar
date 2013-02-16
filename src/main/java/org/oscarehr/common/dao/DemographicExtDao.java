@@ -184,8 +184,10 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
  			throw new IllegalArgumentException();
  		}
 
- 		remove(getDemographicExt(demographicNo, key).getId());
-
+ 		DemographicExt tmp = getDemographicExt(demographicNo, key);
+ 		if(tmp != null) {
+ 			remove(tmp.getId());
+ 		}
  	}
 
     public Map<String,String> getAllValuesForDemo(Integer demo){
