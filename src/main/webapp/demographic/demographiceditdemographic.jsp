@@ -2018,6 +2018,14 @@ if ( Dead.equals(PatStat) ) {%>
 									onBlur="upCaseCtrl(this)"></td>
 							</tr>
 							<tr>
+							  <td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: </b> </td>
+							    <td align="left">
+					<% String lang = oscar.util.StringUtils.noNull(demographic.getOfficialLanguage()); %>
+								<select name="official_lang" <%=getDisabled("official_lang")%>>
+								    <option value="English" <%=lang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
+								    <option value="French" <%=lang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
+								</select>
+								</td>
 							  <td align="right"> <b><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>: </b></td>
 							    <td align="left">
 					<%
@@ -2043,18 +2051,8 @@ if ( Dead.equals(PatStat) ) {%>
 								    <option value="DR" <%=title.equalsIgnoreCase("DR")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgDr"/></option>
 								</select>
 							    </td>
-							  <td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: </b> </td>
-							    <td align="left">
-					<% String lang = oscar.util.StringUtils.noNull(demographic.getOfficialLanguage()); %>
-								<select name="official_lang" <%=getDisabled("official_lang")%>>
-                                                                    <option value="">--</option>
-								    <option value="English" <%=lang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
-								    <option value="French" <%=lang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
-								</select>
-								</td>
 							</tr>
 							<tr>
-							    <td colspan="2">&nbsp;</td>
                                 <td align="right">
 							    <b><bean:message key="demographic.demographiceditdemographic.msgSpoken"/>: </b>
 							    </td>
@@ -2066,6 +2064,7 @@ if ( Dead.equals(PatStat) ) {%>
 <%} %>
 									</select>
 							    </td>
+							    <td colspan="2">&nbsp;</td>
 							</tr>
 
 							<tr valign="top">
@@ -2216,15 +2215,30 @@ if ( Dead.equals(PatStat) ) {%>
 								<input type="hidden" name="demo_cellOrig"
 									value="<%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%>" />
 								</td>
-								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>: </b></td>
-								<td align="left"><select name="countryOfOrigin" <%=getDisabled("countryOfOrigin")%>>
-									<option value="-1"><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
-									<%for(CountryCode cc : countryList){ %>
-									<option value="<%=cc.getCountryId()%>"
-										<% if (oscar.util.StringUtils.noNull(demographic.getCountryOfOrigin()).equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
-									<%}%>
-								</select></td>
+																<td align="right"><b><bean:message
+                                									key="demographic.demographiceditdemographic.formNewsLetter" />:
+                                								</b></td>
+                                								<td align="left">
+                                								<% String newsletter = oscar.util.StringUtils.noNull(demographic.getNewsletter()).trim();
+                                                                     if( newsletter == null || newsletter.equals("")) {
+                                                                        newsletter = "Unknown";
+                                                                     }
+                                                                  %> <select name="newsletter" <%=getDisabled("newsletter")%>>
+                                									<option value="Unknown" <%if(newsletter.equals("Unknown")){%>
+                                										selected <%}%>><bean:message
+                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown" /></option>
+                                									<option value="No" <%if(newsletter.equals("No")){%> selected
+                                										<%}%>><bean:message
+                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optNo" /></option>
+                                									<option value="Paper" <%if(newsletter.equals("Paper")){%>
+                                										selected <%}%>><bean:message
+                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper" /></option>
+                                									<option value="Electronic"
+                                										<%if(newsletter.equals("Electronic")){%> selected <%}%>><bean:message
+                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic" /></option>
+                                								</select></td>
 							</tr>
+							<!--
 							<tr valign="top">
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
@@ -2244,7 +2258,7 @@ if ( Dead.equals(PatStat) ) {%>
 								</td>
 								<td align="right"><b>&nbsp;</b></td>
 								<td align="left">&nbsp;</td>
-							</tr>
+							</tr>-->
 							<tr valign="top">
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formEmail" />: </b></td>
@@ -2266,33 +2280,6 @@ if ( Dead.equals(PatStat) ) {%>
 									onclick="<%=onclickString%>"><sub
 									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterMyOSCAR"/></sub></a> <%}%>
 								</td>
-							</tr>
-							<tr valign="top">
-								<td align="right"><b><bean:message
-									key="demographic.demographiceditdemographic.formNewsLetter" />:
-								</b></td>
-								<td align="left">
-								<% String newsletter = oscar.util.StringUtils.noNull(demographic.getNewsletter()).trim();
-                                     if( newsletter == null || newsletter.equals("")) {
-                                        newsletter = "Unknown";
-                                     }
-                                  %> <select name="newsletter" <%=getDisabled("newsletter")%>>
-									<option value="Unknown" <%if(newsletter.equals("Unknown")){%>
-										selected <%}%>><bean:message
-										key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown" /></option>
-									<option value="No" <%if(newsletter.equals("No")){%> selected
-										<%}%>><bean:message
-										key="demographic.demographicaddrecordhtm.formNewsLetter.optNo" /></option>
-									<option value="Paper" <%if(newsletter.equals("Paper")){%>
-										selected <%}%>><bean:message
-										key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper" /></option>
-									<option value="Electronic"
-										<%if(newsletter.equals("Electronic")){%> selected <%}%>><bean:message
-										key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic" /></option>
-								</select></td>
-								<td align="right"><b>SIN:</b></td>
-								<td align="left"><input type="text" name="sin" size="30" <%=getDisabled("sin")%>
-									value="<%=demographic.getSin()%>"></td>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message
@@ -2359,30 +2346,6 @@ if ( Dead.equals(PatStat) ) {%>
 									value="<%= effDateMonth%>"> <input type="text"
 									name="eff_date_date" size="2" maxlength="2" <%=getDisabled("eff_date_date")%>
 									value="<%= effDateDay%>">
-								&nbsp;<b><bean:message key="demographic.demographiceditdemographic.formHCRenewDate" />:</b>
-								<%
-                                 // Put 0 on the left on dates
-                                 // Year
-                                 decF.applyPattern("0000");
-
-								 GregorianCalendar hcRenewalCal=new GregorianCalendar();
-								 String renewDateYear="";
-								 String renewDateMonth="";
-								 String renewDateDay="";
-								 if (demographic.getHcRenewDate()!=null)
-								 {
-								    hcRenewalCal.setTime(demographic.getHcRenewDate());
-	                                 renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
-                                 // Month and Day
-                                 decF.applyPattern("00");
-	                                 renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
-	                                 renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
-								 }
-
-                              %>
-								<input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=renewDateYear%>" <%=getDisabled("hc_renew_date_year")%>>
-								<input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%=renewDateMonth%>" <%=getDisabled("hc_renew_date_month")%>>
-								<input type="text" name="hc_renew_date_date" size="2" maxlength="2" value="<%=renewDateDay%>" <%=getDisabled("hc_renew_date_date")%>>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -2474,6 +2437,48 @@ if ( Dead.equals(PatStat) ) {%>
 									<% } %>
 								</select>
 								</td>
+
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.formHCRenewDate" />:</b></td>
+								<td align="left">
+								<%
+                                 // Put 0 on the left on dates
+                                 // Year
+                                 decF.applyPattern("0000");
+
+								 GregorianCalendar hcRenewalCal=new GregorianCalendar();
+								 String renewDateYear="";
+								 String renewDateMonth="";
+								 String renewDateDay="";
+								 if (demographic.getHcRenewDate()!=null)
+								 {
+								    hcRenewalCal.setTime(demographic.getHcRenewDate());
+	                                 renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
+                                 // Month and Day
+                                 decF.applyPattern("00");
+	                                 renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
+	                                 renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
+								 }
+
+                              %>
+								<input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=renewDateYear%>" <%=getDisabled("hc_renew_date_year")%>>
+								<input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%=renewDateMonth%>" <%=getDisabled("hc_renew_date_month")%>>
+								<input type="text" name="hc_renew_date_date" size="2" maxlength="2" value="<%=renewDateDay%>" <%=getDisabled("hc_renew_date_date")%>>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>: </b></td>
+								<td align="left"><select name="countryOfOrigin" <%=getDisabled("countryOfOrigin")%>>
+									<option value="-1"><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
+									<%for(CountryCode cc : countryList){ %>
+									<option value="<%=cc.getCountryId()%>"
+										<% if (oscar.util.StringUtils.noNull(demographic.getCountryOfOrigin()).equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
+									<%}%>
+								</select></td>
+							</tr>
+							<tr valign="top">
+								<td align="right"><b>SIN:</b></td>
+								<td align="left"><input type="text" name="sin" size="30" <%=getDisabled("sin")%>
+									value="<%=(demographic.getSin()==null||demographic.getSin().equals("null"))?"":demographic.getSin()%>"></td>
 								<td align="right" nowrap><b> <bean:message
 									key="demographic.demographiceditdemographic.cytolNum" />:</b></td>
 								<td><input type="text" name="cytolNum" <%=getDisabled("cytolNum")%>
@@ -2483,6 +2488,7 @@ if ( Dead.equals(PatStat) ) {%>
 									value="<%=StringUtils.trimToEmpty(demoExt.get("cytolNum"))%>" />
 								</td>
 							</tr>
+
 							<tr valign="top">
 								<td align="right" nowrap><b>
 								<% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
@@ -2689,13 +2695,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<input  type="text" name="roster_date_year" size="4" maxlength="4" value="<%=rosterDateYear%>">
 									<input  type="text" name="roster_date_month" size="2" maxlength="2" value="<%=rosterDateMonth%>">
 									<input  type="text" name="roster_date_day" size="2" maxlength="2" value="<%=rosterDateDay%>">
-									<b><bean:message
-									key="demographic.demographiceditdemographic.RosterTerminationDate" />: </b>
-									<input  type="text" name="roster_termination_date_year" size="4" maxlength="4" value="<%=rosterTerminationDateYear%>">
-									<input  type="text" name="roster_termination_date_month" size="2" maxlength="2" value="<%=rosterTerminationDateMonth%>">
-									<input  type="text" name="roster_termination_date_day" size="2" maxlength="2" value="<%=rosterTerminationDateDay%>">
 								</td>
 							</tr>
+							<!--
 							<tr valign="top">
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.RosterTerminationReason" />: </b></td>
@@ -2708,6 +2710,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									</select>
 								</td>
 							</tr>
+							-->
 							<tr valign="top">
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formPatientStatus" />:</b>
@@ -2744,6 +2747,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								</select> <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
 								
 								</td>
+								<!--
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.PatientStatusDate" />: </b></td>
 								<td align="left">
@@ -2754,6 +2758,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                         </tr>
                                                         <tr>
                                                                 <td>&nbsp;</td>
+                                                                -->
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"
@@ -2951,6 +2956,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(oscarVariables.getProperty("demographicExtJScript")); }
 %>
 
+<!--
 <tr valign="top">
 <td nowrap colspan="4">
 <b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
@@ -2978,7 +2984,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 					</oscar:oscarPropertiesCheck>
 
 </td>
-</tr>
+</tr>-->
 							<tr valign="top">
 								<td nowrap colspan="4">
 								<table width="100%" bgcolor="#EEEEFF">
