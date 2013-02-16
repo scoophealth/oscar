@@ -742,6 +742,10 @@ public class Program implements Serializable {
 		return enableEncounterTime;
 	}
 
+	public Boolean getEnableEncounterTime() {
+		return enableEncounterTime;
+	}
+	
 	public void setEnableEncounterTime(Boolean enableEncounterTime) {
 		this.enableEncounterTime = enableEncounterTime;
 	}
@@ -750,6 +754,10 @@ public class Program implements Serializable {
 		return enableEncounterTransportationTime;
 	}
 
+	public Boolean getEnableEncounterTransportationTime() {
+		return enableEncounterTransportationTime;
+	}
+	
 	public void setEnableEncounterTransportationTime(Boolean enableEncounterTransportationTime) {
 		this.enableEncounterTransportationTime = enableEncounterTransportationTime;
 	}
