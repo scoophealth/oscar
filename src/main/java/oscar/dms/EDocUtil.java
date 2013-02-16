@@ -130,14 +130,22 @@ public final class EDocUtil extends SqlUtilBaseS {
 		return providerDao.getProvider(providerNo);
 	}
 
-	public static ArrayList<String> getDoctypes(String module) {
+	public static ArrayList<String> getDoctypesByStatus(String module, String[] statuses) {
 		ArrayList<String> doctypes = new ArrayList<String>();
-		List<CtlDocType> result = ctldoctypedao.findByStatusAndModule(new String[]{"A","H","I"}, module);
-		for(CtlDocType obj:result) {
+		List<CtlDocType> result = ctldoctypedao.findByStatusAndModule(statuses, module);
+		for (CtlDocType obj : result) {
 			doctypes.add(obj.getDocType());
 		}
 
 		return doctypes;
+	}
+	
+	public static ArrayList<String> getDoctypes(String module) {
+		return getDoctypesByStatus(module,new String[]{ "A", "H", "I" });
+	}
+
+	public static ArrayList<String> getActiveDocTypes(String module) {
+		return getDoctypesByStatus(module,new String[]{"A"});
 	}
 
 	public static String getDocStatus(String module, String doctype){
