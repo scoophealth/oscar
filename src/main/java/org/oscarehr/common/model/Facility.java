@@ -65,12 +65,22 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean enableEncounterTransportationTime = false;
 	private int rxInteractionWarningLevel = 0;
     private Integer registrationIntake;
-
-    public Integer getRegistrationIntake() {
-        return registrationIntake;
+    private int displayAllVacancies=1;
+    
+  
+    public int getDisplayAllVacancies() {
+    	return displayAllVacancies;
     }
 
-    public void setRegistrationIntake(Integer registrationIntake) {
+	public void setDisplayAllVacancies(int displayAllVacancies) {
+    	this.displayAllVacancies = displayAllVacancies;
+    }
+
+	public Integer getRegistrationIntake() {
+	    return registrationIntake;
+	}
+
+	public void setRegistrationIntake(Integer registrationIntake) {
         this.registrationIntake = registrationIntake;
     }
 

@@ -213,7 +213,7 @@ public class WaitlistDao {
 	public List<VacancyDisplayBO> getDisplayVacanciesForAgencyProgram(int programID) {
 		List<VacancyDisplayBO> bos = new ArrayList<VacancyDisplayBO>();
 		String queryString = "SELECT v.id, t.NAME as tname, v.dateCreated, p.name as pname, v.vacancyName, v.wlProgramId  FROM vacancy v JOIN vacancy_template t ON" +
-			" v.templateId=t.TEMPLATE_ID JOIN program p ON v.wlProgramId=p.id WHERE t.PROGRAM_ID=?1 and v.status=?2";
+			" v.templateId=t.TEMPLATE_ID JOIN program p ON v.wlProgramId=p.id WHERE t.WL_PROGRAM_ID=?1 and v.status=?2";
 		
 		Query query = entityManager.createNativeQuery(queryString);
 		query.setParameter(1, programID);

@@ -126,12 +126,6 @@ public class VacancyTemplateManager {
 		return criteriaDAO.getRefinedCriteriasByTemplateId(templateId);
 	}
 	
-	public static List<VacancyTemplate> getActiveVacancyTemplatesByProgramId(Integer programId) {
-		if(programId == null)
-			return null;
-		return vacancyTemplateDAO.getActiveVacancyTemplatesByProgramId(programId);
-	}
-	
 	public static List<VacancyTemplate> getActiveVacancyTemplatesByWlProgramId(Integer programId) {
 		if(programId == null)
 			return null;

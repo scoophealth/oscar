@@ -135,21 +135,7 @@
 		<td><input type="text" size="50" maxlength="50" value="<%=template.getName()==null?"":template.getName() %>"
 			name="templateName"></td>
 	</tr>
-	<tr class="b">
-		<td class="beright">Associated Program:</td>
-		<td><select name="associatedProgramId">
-		<% 
-			List<Program> programs = VacancyTemplateManager.getPrograms(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
-			for(Program p : programs) {
-				String selectedOrNot = "";
-				Integer programIdFromTemplate = template.getProgramId();
-				if(programIdFromTemplate !=null && programIdFromTemplate.intValue()==p.getId().intValue())
-					selectedOrNot = "selected";
-		%>				
-			<option value="<%=p.getId()%>" <%=selectedOrNot%> ><%=p.getName() %></option>
-		<%} %>
-		</select></td>
-	</tr>
+	
 </table>
 
 <fieldset>

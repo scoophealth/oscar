@@ -57,11 +57,6 @@ public class VacancyTemplateDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testGetActiveVacancyTemplatesByProgramId() {
-		assertNotNull(dao.getActiveVacancyTemplatesByProgramId(1));
-	}
-	
-	@Test
 	public void testGetActiveVacancyTemplatesByWlProgramId() {
 		assertNotNull(dao.getActiveVacancyTemplatesByWlProgramId(1));
 	}

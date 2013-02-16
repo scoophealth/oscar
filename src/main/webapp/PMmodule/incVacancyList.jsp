@@ -43,11 +43,10 @@
 <%
 	String role = (String)session.getAttribute("userrole");
 
-    		
 	WaitListService s = new WaitListService();
 	List<VacancyDisplayBO> listVac = s.listVacanciesForAllWaitListPrograms();
    	List<VacancyDisplayBO> filteredListVac = new ArrayList<VacancyDisplayBO>();
-
+/* Should list vacancies based on facility, not role. So comment out the code lines below just in case we will use role again..
    	//We are filtering this list if you are an Agency Operator to only those in your program domain
     if(role.indexOf("Waitlist Agency Operator") != -1) {		
 		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
@@ -65,7 +64,24 @@
     else if (role.indexOf("Waitlist Operator") != -1) {
     	filteredListVac.addAll(listVac);
     }
-    
+   */ 
+   int displayAllVacancies = LoggedInInfo.loggedInInfo.get().currentFacility.getDisplayAllVacancies();
+   //1 means display all vacancies in db, 0 means only display the vacancies associated with program domain.
+   if(displayAllVacancies == 1) { //display all vacancies
+	   filteredListVac.addAll(listVac);
+   } else { //display the vacancies in program domain .
+	   Integer facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
+	   ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
+		List<Integer> pids = new ArrayList<Integer>();
+		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo())) {
+			pids.add(pp.getProgramId().intValue());
+		}
+		for(VacancyDisplayBO v: listVac) {
+			if(pids.contains(v.getProgramId().intValue()) ) {
+				filteredListVac.add(v);
+			}
+		}
+   }
 %>
 
 <% 
