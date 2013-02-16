@@ -30,6 +30,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <%
@@ -396,7 +397,12 @@
 	<% 
 		} 
 	%>
+		<caisi:isModuleLoad moduleName="caisi">
+		<td class="name"><a href="#" onclick="location.href='<%= request.getContextPath() %>/PMmodule/ClientManager.do?id=<%=dem_no%>'"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></a></td>
+		</caisi:isModuleLoad>
+		<caisi:isModuleLoad moduleName="caisi" reverse="true">
 		<td class="name"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></td>
+		</caisi:isModuleLoad>
 		<td class="chartNo"><%=demo.getChartNo()==null||demo.getChartNo().equals("")?"&nbsp;":demo.getChartNo()%></td>
 		<td class="sex"><%=demo.getSex()%></td>
 		<td class="dob"><%=demo.getFormattedDob()%></td>
