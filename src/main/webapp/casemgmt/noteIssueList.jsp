@@ -129,7 +129,7 @@ if (programId != null) {
     ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
     currentProgram = programDao.getProgram(Integer.valueOf(programId));
 }
-if(currentFacility.isEnableEncounterTime() || (currentProgram != null && currentProgram.isEnableEncounterTime())) {  
+if(currentFacility.isEnableEncounterTime() || (currentProgram != null && currentProgram.getEnableEncounterTime())) {  
 %>
 <div style="clear: right; margin: 0px 30px 0px 0px; font-size: 11px; float: right;"><span>
 <nested:notEmpty name="ajaxsave">
