@@ -241,7 +241,7 @@ CREATE TABLE billingservice (
   anaesthesia char(2) default NULL,
   termination_date date default '9999-12-31',
   displaystyle int(10),
-  sliFlag TINYINT(1) NOT NULL,
+  sliFlag TINYINT(1) NOT NULL default 0,
   PRIMARY KEY  (billingservice_no),
   KEY billingservice_service_code_index (service_code)
 ) ;
@@ -6858,7 +6858,7 @@ CREATE TABLE measurementGroupStyle(
 DROP TABLE IF EXISTS measurementType;
 CREATE TABLE measurementType (
   id int UNSIGNED AUTO_INCREMENT,
-  type varchar(4) NOT NULL,
+  type varchar(50) NOT NULL,
   typeDisplayName varchar(255) NOT NULL,
   typeDescription varchar(255) NOT NULL,
   measuringInstruction varchar(255) NOT NULL,
@@ -6875,7 +6875,7 @@ CREATE TABLE measurementType (
 --
 CREATE TABLE measurementTypeDeleted (
   id int UNSIGNED AUTO_INCREMENT,
-  type varchar(4) NOT NULL,
+  type varchar(50) NOT NULL,
   typeDisplayName varchar(20) NOT NULL,
   typeDescription varchar(255) NOT NULL,
   measuringInstruction varchar(255) NOT NULL,
