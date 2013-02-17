@@ -183,9 +183,11 @@ function checkTimeTypeIn(obj) {
       hours = obj.value.substring(0,2);
   
   minutes = obj.value.substring(colonIdx+1,colonIdx+3);
-  if (minutes.length == 1)
+  if (minutes.length == 0)
+	    minutes = "00";
+  else if (minutes.length == 1)
     minutes = "0" + minutes;
-  else if (minutes.length < 2)
+  else if (minutes > 59)
     minutes = "00";
 
   obj.value = hours + ":" + minutes;    
