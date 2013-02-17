@@ -46,15 +46,21 @@
 <%@page import="org.oscarehr.common.model.Demographic" %>
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@page import="org.oscarehr.common.model.WaitingListName" %>
+<%@page import="org.oscarehr.PMmodule.web.GenericIntakeEditAction" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
+<%@page import="org.oscarehr.PMmodule.service.ProgramManager" %>
 <%@page import="org.oscarehr.common.dao.WaitingListNameDao" %>
 <%@page import="org.oscarehr.common.dao.EFormDao" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
 <%@page import="org.oscarehr.common.model.Facility" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
 	EFormDao eformDao = (EFormDao)SpringUtils.getBean("EFormDao");
+	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
 %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -323,6 +329,14 @@ function checkHin() {
 	return(true);
 }
 
+function checkResidentStatus(){
+    var rs = document.adddemographic.rsid.value;
+    if(rs!="")return true;
+    else{
+        alert("you must choose a Residential Status");
+     return false;}
+}
+
 function checkAllDate() {
 	var typeInOK = false;
 	typeInOK = checkDateYMD( document.adddemographic.date_joined_year.value , document.adddemographic.date_joined_month.value , document.adddemographic.date_joined_date.value , "Date Joined" );
@@ -369,6 +383,7 @@ function checkFormTypeIn() {
 	if ( !checkName() ) return false;
 	if ( !checkDob() ) return false;
 	if ( !checkHin() ) return false;
+	if ( !checkResidentStatus() ) return false;
 	if ( !checkAllDate() ) return false;
 	return true;
 }
@@ -1182,6 +1197,54 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					name="end_date_month" size="2" maxlength="2"> <input
 					type="text" name="end_date_date" size="2" maxlength="2"></td>
 			</tr>
+			<tr valign="top">
+			    <td colspan="4">
+			        <table border="1" width="100%">
+			            <tr bgcolor="#CCCCFF">
+			                <td colspan="2" >Program Admissions</td>
+			            </tr>
+			            <tr>
+			                <td>Residential Status<font color="red">:</font></td>
+			                <td>Service Programs</td>
+			            </tr>
+			            <tr>
+			                <td>
+                                <select id="rsid" name="rps">
+                                    <%
+                                        GenericIntakeEditAction gieat = new GenericIntakeEditAction();
+                                        gieat.setProgramManager(pm);
+                                        String _pvid =org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(_pvid,org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getRegistrationIntake());
+                                        List<Program> bedP = gieat.getBedPrograms(pset,_pvid);
+                                        List<Program> commP = gieat.getCommunityPrograms();
+                      	                Program oscarp = programDao.getProgramByName("OSCAR");
+                                    %>
+                                        <option value="<%=oscarp.getId()%>" selected>OSCAR</option>
+                                    <%
+                                        for(Program _p:bedP){
+                                    %>
+                                        <option value="<%=_p.getId()%>"><%=_p.getName()%></option>
+                                    <%
+                                        }
+                                        for(Program _p:commP){
+                                    %>
+                                        <option value="<%=_p.getId()%>"><%=_p.getName()%></option>
+                                    <%}%>
+                                </select>
+			                </td>
+			                <td>
+			                    <%
+			                        List<Program> servP = gieat.getServicePrograms(pset,_pvid);
+			                        for(Program _p:servP){
+			                    %>
+			                        <input type="checkbox" name="sp" value="<%=_p.getId()%>"/><%=_p.getName()%><br/>
+			                    <%}%>
+			                </td>
+			            </tr>
+			        </table>
+			    </td>
+			</tr>
+
 			<% if(oscarVariables.getProperty("demographicExt") != null) {
     boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;
     String [] propDemoExtForm = bExtForm ? (oscarVariables.getProperty("demographicExtForm","").split("\\|") ) : null;
