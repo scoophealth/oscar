@@ -42,6 +42,9 @@
 
 <%@ page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
 <%@ page import="org.oscarehr.PMmodule.model.Program" %>
+<%@page import="org.oscarehr.PMmodule.web.GenericIntakeEditAction" %>
+<%@page import="org.oscarehr.PMmodule.service.ProgramManager" %>
+<%@page import="org.oscarehr.PMmodule.service.AdmissionManager" %>
 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -51,6 +54,8 @@
 	java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
 
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
+	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
+	AdmissionManager am = SpringUtils.getBean(AdmissionManager.class);
 	WaitingListDao waitingListDao = (WaitingListDao)SpringUtils.getBean("waitingListDao");
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
@@ -227,39 +232,52 @@
 
          //fetch programId associated with provider
             //if none(0) then check for OSCAR program; if available set it as default
-            oscar.oscarEncounter.data.EctProgram ectProgram = new oscar.oscarEncounter.data.EctProgram(request.getSession());
-            String progId = ectProgram.getProgram(request.getParameter("staff"));
-            if( progId.equals("0") ) {
-            	Program p = programDao.getProgramByName("OSCAR");
-            	if(p != null) {
-            		progId = p.getId().toString();
-            	}
-            }
-            String admissionDate=null;
+          //  oscar.oscarEncounter.data.EctProgram ectProgram = new oscar.oscarEncounter.data.EctProgram(request.getSession());
+          //  String progId = ectProgram.getProgram(request.getParameter("staff"));
+          //  if( progId.equals("0") ) {
+          //  	Program p = programDao.getProgramByName("OSCAR");
+          //  	if(p != null) {
+          //  		progId = p.getId().toString();
+          //  	}
+          //  }
+          //  String admissionDate=null;
 
-    		String yearTmp = StringUtils.trimToNull(request.getParameter("date_joined_year"));
-    		String monthTmp = StringUtils.trimToNull(request.getParameter("date_joined_month"));
-    		String dayTmp = StringUtils.trimToNull(request.getParameter("date_joined_date"));
-    		if (yearTmp!=null && monthTmp!=null && dayTmp!=null) {
-    			admissionDate = yearTmp+"-"+monthTmp+"-"+dayTmp;
-    		} else {
-    			GregorianCalendar cal=new GregorianCalendar();
-    			admissionDate=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
-    		}
+    	//	String yearTmp = StringUtils.trimToNull(request.getParameter("date_joined_year"));
+    	//	String monthTmp = StringUtils.trimToNull(request.getParameter("date_joined_month"));
+    	//	String dayTmp = StringUtils.trimToNull(request.getParameter("date_joined_date"));
+    	//	if (yearTmp!=null && monthTmp!=null && dayTmp!=null) {
+    	//		admissionDate = yearTmp+"-"+monthTmp+"-"+dayTmp;
+    	//	} else {
+    	//		GregorianCalendar cal=new GregorianCalendar();
+    	//		admissionDate=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
+    	//	}
 
-    		Admission admission = new Admission();
-    		admission.setClientId(demographic.getDemographicNo());
-    		admission.setProgramId(Integer.parseInt(progId));
-    		admission.setProviderNo(request.getParameter("staff"));
-    		admission.setAdmissionDate(MyDateFormat.getSysDate(admissionDate));
-    		admission.setAdmissionStatus("current");
-    		
-    		admission.setTemporaryAdmission(false);
-    		admission.setAdmissionFromTransfer(false);
-    		admission.setDischargeFromTransfer(false);
-    		admission.setRadioDischargeReason("0");
-    		
-            admissionDao.persist(admission);
+    	//	Admission admission = new Admission();
+    	//	admission.setClientId(demographic.getDemographicNo());
+    	//	admission.setProgramId(Integer.parseInt(progId));
+    	//	admission.setProviderNo(request.getParameter("staff"));
+    	//	admission.setAdmissionDate(MyDateFormat.getSysDate(admissionDate));
+    	//	admission.setAdmissionStatus("current");
+    	//
+    	//	admission.setTemporaryAdmission(false);
+    	//	admission.setAdmissionFromTransfer(false);
+    	//	admission.setDischargeFromTransfer(false);
+    	//	admission.setRadioDischargeReason("0");
+    	//
+          //  admissionDao.persist(admission);
+
+          GenericIntakeEditAction gieat = new GenericIntakeEditAction();
+          gieat.setAdmissionManager(am);
+          gieat.setProgramManager(pm);
+          String bedP = request.getParameter("rps");
+          gieat.admitBedCommunityProgram(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),Integer.parseInt(bedP),"","");
+
+          String[] servP = request.getParameterValues("sp");
+          if(servP!=null&&servP.length>0){
+	  Set<Integer> s = new HashSet<Integer>();
+            for(String _s:servP) s.add(Integer.parseInt(_s));
+            gieat.admitServicePrograms(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),s,"");
+          }
         
 
         //add democust record for alert

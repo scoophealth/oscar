@@ -806,7 +806,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		return activeProviderPrograms;
 	}
 
-	private List<Program> getBedPrograms(Set<Program> providerPrograms, String providerNo) {
+	public List<Program> getBedPrograms(Set<Program> providerPrograms, String providerNo) {
 		List<Program> bedPrograms = new ArrayList<Program>();
 
 		for (Program program : programManager.getBedPrograms()) {
@@ -825,7 +825,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		return bedPrograms;
 	}
 
-	private List<Program> getCommunityPrograms() {
+	public List<Program> getCommunityPrograms() {
 		List<Program> communityPrograms = new ArrayList<Program>();
 
 		for (Program program : programManager.getCommunityPrograms()) {
@@ -835,7 +835,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		return communityPrograms;
 	}
 
-	private List<Program> getServicePrograms(Set<Program> providerPrograms, String providerNo) {
+	public List<Program> getServicePrograms(Set<Program> providerPrograms, String providerNo) {
 		List<Program> servicePrograms = new ArrayList<Program>();
 
 		for (Object o : programManager.getServicePrograms()) {
@@ -957,7 +957,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		}
 	}
 
-	private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId, String saveWhich, String admissionText) throws ProgramFullException,
+	public void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId, String saveWhich, String admissionText) throws ProgramFullException,
 			AdmissionException, ServiceRestrictionException {
 		Program bedCommunityProgram = null;
 		Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);
@@ -1069,7 +1069,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		}
 	}
 
-	private void admitServicePrograms(Integer clientId, String providerNo, Set<Integer> serviceProgramIds, String admissionText) throws ProgramFullException, AdmissionException,
+	public void admitServicePrograms(Integer clientId, String providerNo, Set<Integer> serviceProgramIds, String admissionText) throws ProgramFullException, AdmissionException,
 			ServiceRestrictionException {
 		SortedSet<Integer> currentServicePrograms = getCurrentServiceProgramIds(clientId);
 
@@ -1107,7 +1107,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		genericIntakeManager.saveUpdateIntake(intake);
 	}
 
-	private Set<Program> getActiveProviderProgramsInFacility(String providerNo, Integer facilityId) {
+	public Set<Program> getActiveProviderProgramsInFacility(String providerNo, Integer facilityId) {
 		Set<Program> programs = new HashSet<Program>();
 		Set<Program> programsInDomain = getActiveProviderPrograms(providerNo);
 		if (facilityId == null) return programs;
