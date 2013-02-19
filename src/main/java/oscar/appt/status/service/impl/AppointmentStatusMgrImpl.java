@@ -37,14 +37,41 @@ import oscar.appt.status.service.AppointmentStatusMgr;
 
 public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
 
-    private AppointmentStatusDao appointStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
+    private static AppointmentStatusDao appointStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
 
-  
-    public List<AppointmentStatus> getAllStatus(){
+    private static List<AppointmentStatus> cachedActiveStatuses = null;
+    private static boolean cacheIsDirty=false;
+    
+    public static List<AppointmentStatus> getCachedActiveStatuses() {
+    	if(cachedActiveStatuses==null || cacheIsDirty) {
+    		cachedActiveStatuses = appointStatusDao.findActive();
+    	}
+		return cachedActiveStatuses;
+	}
+
+	public static void setCachedActiveStatuses(List<AppointmentStatus> cachedActiveStatuses) {
+		AppointmentStatusMgrImpl.cachedActiveStatuses = cachedActiveStatuses;
+	}
+	
+	
+
+	public static boolean isCacheIsDirty() {
+		return cacheIsDirty;
+	}
+
+	public static void setCacheIsDirty(boolean cacheIsDirty) {
+		AppointmentStatusMgrImpl.cacheIsDirty = cacheIsDirty;
+	}
+
+	public List<AppointmentStatus> getAllStatus(){
         return appointStatusDao.findAll();
     }
     
     public List<AppointmentStatus> getAllActiveStatus(){
+    	if(cacheIsDirty) {
+    		setCachedActiveStatuses(appointStatusDao.findActive());
+    		cacheIsDirty=false;
+    	}
         return appointStatusDao.findActive();
     }
 

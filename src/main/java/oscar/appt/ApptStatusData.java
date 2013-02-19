@@ -32,9 +32,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanComparator;
-import org.oscarehr.common.dao.AppointmentStatusDao;
 import org.oscarehr.common.model.AppointmentStatus;
-import org.oscarehr.util.SpringUtils;
+
+import oscar.appt.status.service.impl.AppointmentStatusMgrImpl;
 
 /**
  * Class ApptStatusData : set appt status and get the icon name and link
@@ -173,8 +173,9 @@ public final class ApptStatusData {
         String strOtherIcon = "";
         String strStatus = "";
         
-        AppointmentStatusDao dao = SpringUtils.getBean(AppointmentStatusDao.class);
-        List<AppointmentStatus> apptStatuses = dao.findActive();
+        
+        List<AppointmentStatus> apptStatuses = AppointmentStatusMgrImpl.getCachedActiveStatuses();
+        
         Collections.sort(apptStatuses, new BeanComparator("id"));
         
         if (apptStatus.length()>=2){
@@ -260,4 +261,6 @@ public final class ApptStatusData {
 
         return rstr;
     }
+    
+
 }
