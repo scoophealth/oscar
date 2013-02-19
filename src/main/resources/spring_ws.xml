@@ -39,11 +39,11 @@
 
 
 	<!-- web service endpoints -->
-	<jaxws:endpoint implementor="#systemInfoWs" address="/SystemInfoService" publishedEndpointUrl="${https_endpoint_url_base}/SystemInfoService" />	
-	<jaxws:endpoint implementor="#loginWs" address="/LoginService" publishedEndpointUrl="${https_endpoint_url_base}/LoginService" />	
-	<jaxws:endpoint implementor="#scheduleWs" address="/ScheduleService" publishedEndpointUrl="${https_endpoint_url_base}/ScheduleService" />	
-	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" publishedEndpointUrl="${https_endpoint_url_base}/ProviderService" />	
-	<jaxws:endpoint implementor="#demographicWs" address="/DemographicService" publishedEndpointUrl="${https_endpoint_url_base}/DemographicService" />	
-	<jaxws:endpoint implementor="#facilityWs" address="/FacilityService" publishedEndpointUrl="${https_endpoint_url_base}/FacilityService" />	
+	<jaxws:endpoint implementor="#systemInfoWs" address="/SystemInfoService" />	
+	<jaxws:endpoint implementor="#loginWs" address="/LoginService" />	
+	<jaxws:endpoint implementor="#scheduleWs" address="/ScheduleService" />	
+	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" />	
+	<jaxws:endpoint implementor="#demographicWs" address="/DemographicService" />	
+	<jaxws:endpoint implementor="#facilityWs" address="/FacilityService" />	
    	
 </beans>

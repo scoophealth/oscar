@@ -16,4 +16,3 @@ export JAVA_OPTS="-Djava.awt.headless=true -server -Xincgc -Dorg.apache.el.parse
 #export PATH=${MAVEN_ROOT}/bin:$PATH
 export MAVEN_OPTS="-Doscar_override_properties=${WORKING_ROOT}/oscar.properties "${MEM_SETTINGS}
 
-
