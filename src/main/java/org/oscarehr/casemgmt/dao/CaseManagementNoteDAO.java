@@ -208,6 +208,11 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 	}
 	
+	public long getNotesCountByDemographicId(String demographic_no) {
+		String hql = "select count(*) from CaseManagementNote cmm where cmm.demographic_no = ?";
+		return ((Long)getHibernateTemplate().find(hql, demographic_no).get(0)).longValue();
+	}
+	
 		@SuppressWarnings("unchecked")
 	    public List<Object[]> getRawNoteInfoByDemographic(String demographic_no) {
 			String hql = "select cmn.id,cmn.observation_date,cmn.providerNo,cmn.program_no,cmn.reporter_caisi_role,cmn.uuid from CaseManagementNote cmn where cmn.demographic_no = ? order by cmn.update_date DESC";

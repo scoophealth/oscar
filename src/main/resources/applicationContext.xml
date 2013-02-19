@@ -89,7 +89,8 @@
 	<bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
 	<bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
 	<bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />
-
+	<bean id="defaultIssueDao" class="org.caisi.dao.DefaultIssueDao" autowire="byName" />
+	
     <bean id="MacroDAO" class="org.oscarehr.eyeform.dao.MacroDao" autowire="byName" />
 	<bean id="rourke2009Dao" class="oscar.form.dao.Rourke2009DAO" autowire="byName" />
 	<bean id="ocanSubmissionLogDao" class="org.oscarehr.PMmodule.dao.OcanSubmissionLogDao" autowire="byName" />
