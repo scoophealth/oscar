@@ -15,14 +15,22 @@
 	<repositories>
 		<repository>
 			<id>local_repo</id>
-			<url>file://${project.basedir}/local_repo</url>
+			<url>file://${basedir}/../oscar_maven_repo/local_repo</url>
+		</repository>
+		<repository>
+			<id>oscar_repo</id>
+			<url>http://oscarmcmaster.sourceforge.net/m2</url>
 		</repository>
 	</repositories>
-	
+
 	<pluginRepositories>
        	<pluginRepository>
 			<id>local_repo</id>
-			<url>file://${project.basedir}/local_repo</url>
+			<url>file://${basedir}/../oscar_maven_repo/local_repo</url>
+       	</pluginRepository>
+       	<pluginRepository>
+			<id>oscar_repo</id>
+			<url>http://oscarmcmaster.sourceforge.net/m2</url>
        	</pluginRepository>
 	</pluginRepositories>
 	
@@ -64,7 +72,7 @@
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>util</artifactId>
-			<version>2013.01.10</version>
+			<version>2013.02.19</version>
 		</dependency>
 	</dependencies>
 
