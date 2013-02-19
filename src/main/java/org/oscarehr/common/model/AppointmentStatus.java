@@ -27,7 +27,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import javax.persistence.Table;
+
+import oscar.appt.status.service.impl.AppointmentStatusMgrImpl;
+
 
 @Entity
 @Table(name="appointment_status")
@@ -109,5 +114,9 @@ public class AppointmentStatus extends AbstractModel<Integer> {
 		this.editable = editable;
 	}
 	
-	
+    @PostPersist
+    @PostUpdate
+    public void on_jpa_update() {
+    	AppointmentStatusMgrImpl.setCacheIsDirty(true);
+    }
 }
