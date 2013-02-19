@@ -315,20 +315,13 @@ int i, j;
 								Custom Instructions:&nbsp;<input type="checkbox"
 									name="customInstr<%=i%>" <% if(f.getCustomInstr()) { %> checked
 									<%}%>></td>
-								<td width="100%"><textarea name="fldSpecial<%= i%>"
-									style="width: 100%" rows=5>
-								<%
-                                                        String s = f.getSpecial();
-                                                        if(s!=null)
-                                                        {
-                                                            if(! s.equals("null"))
-                                                            {
-                                                                %><%= s.trim()%>
-								<%
-                                                            }
-                                                        }
-                                                    %>
-								</textarea></td>
+								<td width="100%">
+								<% 
+									String s = f.getSpecial();
+									if (s == null || s.equals("null")) 
+										s = "";
+								%>
+								<textarea name="fldSpecial<%= i%>" style="width: 100%" rows=5 ><%=s.trim()%></textarea></td>
 							</tr>
 						</table>
 						</td>
