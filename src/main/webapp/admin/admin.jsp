@@ -337,6 +337,9 @@ div.logoutBox {
 			<li><html:link action="/SurveyManager.do">
 				<bean:message key="admin.admin.surveyManager" />
 			</html:link></li>
+			<li><html:link action="/DefaultEncounterIssue.do">
+				<bean:message key="admin.admin.defaultEncounterIssue" />
+			</html:link></li>
 		</ul>
 		</div>
 	</security:oscarSec>
