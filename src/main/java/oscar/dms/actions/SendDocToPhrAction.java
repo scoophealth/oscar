@@ -41,7 +41,6 @@ import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
-import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
@@ -131,8 +130,6 @@ public class SendDocToPhrAction extends Action {
     		remoteDataLog.setDocumentContents("id="+eDoc.getDocId()+", fileName="+eDoc.getFileName());
     		remoteDataLogDao.persist(remoteDataLog);
 
-	    } catch (ItemAlreadyExistsException_Exception e) {
-	    	request.setAttribute("error_msg", "This item has previously been sent to MyOscar, it will not be sent again.");
 	    } catch (Exception e) {
 	    	logger.error("Error", e);
 	    	request.setAttribute("error_msg", e.getMessage());
