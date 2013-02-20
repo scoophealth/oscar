@@ -53,18 +53,12 @@
 			</else>
 		</if>
 
-		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5" debug="on" memoryInitialSize="128m" memoryMaximumSize="1024m" fork="yes" encoding="UTF8">
+		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5" debug="on" memoryInitialSize="128m" compiler="modern" includeantruntime="false" memoryMaximumSize="1024m" fork="yes" encoding="UTF8">
 			<classpath>
 				<pathelement location="${jspc.expandedWarDir}/WEB-INF/classes" />
-				<fileset dir="${jspc.expandedWarDir}/WEB-INF/lib">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="${tomcat.lib.dir}">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="${catalina.home}/bin">
-					<include name="*.jar" />
-				</fileset>
+				<pathelement path="${jspc.expandedWarDir}/WEB-INF/lib/*" />
+                                <pathelement path="${tomcat.lib.dir}/*" />
+				<pathelement path="${catalina.home}/bin/*" />
 			</classpath>
 
 			<!-- we will allow this exclusion because this is not our code and is just included code from another library, this will allow upgrades to be  easier if  we don't change other people's library code. -->
