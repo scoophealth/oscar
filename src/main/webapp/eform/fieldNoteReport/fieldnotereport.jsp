@@ -63,7 +63,7 @@
 	
 	//get resident names
 	TreeSet<Integer> fieldNoteEforms = FieldNoteManager.getFieldNoteEforms();
-	HashMap<String, String> residentNameList = FieldNoteManager.getResidentNameList(fieldNoteEforms, startDate, endDate);
+	TreeMap<String, String> residentNameList = FieldNoteManager.getResidentNameList(fieldNoteEforms, startDate, endDate);
 %>
 <html:html locale="true">
 <head>
