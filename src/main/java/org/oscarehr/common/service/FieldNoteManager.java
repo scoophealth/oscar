@@ -27,6 +27,7 @@ package org.oscarehr.common.service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.oscarehr.common.dao.EFormDao;
@@ -134,10 +135,10 @@ public class FieldNoteManager {
 		}
 	}
 	
-	public static HashMap<String, String> getResidentNameList(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
+	public static TreeMap<String, String> getResidentNameList(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
 	{
 		setResidentList(fids, dateStart, dateEnd);
-		HashMap<String, String> residentNameList = new HashMap<String, String>();
+		TreeMap<String, String> residentNameList = new TreeMap<String, String>();
 		
 		for (String residentId : residentFieldNotes.keySet())
 		{
