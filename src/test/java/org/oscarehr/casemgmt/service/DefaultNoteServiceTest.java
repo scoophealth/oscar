@@ -23,14 +23,16 @@
  */
 package org.oscarehr.casemgmt.service;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
+@Ignore
 public class DefaultNoteServiceTest extends DaoTestFixtures {
 
 	private NoteService service = SpringUtils.getBean(NoteService.class);
