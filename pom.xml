@@ -1049,7 +1049,7 @@
 		        <artifactId>maven-surefire-plugin</artifactId>
 		        <configuration>
 		          <skipTests>false</skipTests>
-		          <argLine>-Xms256M -Xmx256m -Xss256k -XX:MaxNewSize=64m -XX:MaxPermSize=192m</argLine>
+		          <argLine>-Xms512m -Xmx512m -Xss256k -XX:MaxNewSize=64m -XX:MaxPermSize=192m</argLine>
 			  <excludes>
 		            <exclude>**/AR2005*.java</exclude>
 		            <exclude>**/OntarioMDSpec4DataTest.java</exclude>
