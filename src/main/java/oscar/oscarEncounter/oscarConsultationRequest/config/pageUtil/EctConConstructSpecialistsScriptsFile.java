@@ -131,7 +131,7 @@ public class EctConConstructSpecialistsScriptsFile {
 				ServiceSpecialists ser = (ServiceSpecialists) o[0];
 				ProfessionalSpecialist pro = (ProfessionalSpecialist) o[1];
 				
-				String name = pro.getLastName() + ", " + pro.getFirstName() + " " + pro.getProfessionalLetters();
+				String name = pro.getLastName() + ", " + pro.getFirstName()  + (pro.getProfessionalLetters() == null ? "" : " " + pro.getProfessionalLetters());
 				name = this.escapeString(name);
 				String specId = "" + ser.getId().getSpecId();
 				String phone = pro.getPhoneNumber();

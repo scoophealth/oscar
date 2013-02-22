@@ -61,8 +61,16 @@
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.title" /></title>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css" />
+<link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath()%>/share/css/extractedFromPages.css" />
+<style type="text/css">
+.doc {
+    color:blue;
+}
 
+.lab {
+    color: #CC0099;
+}
+</style>
 <script type="text/javascript">
 	//<!--
 	function setEmpty(selectbox) {
@@ -79,17 +87,22 @@
 	}
 
 	function swap(srcName, dstName) {
-		var src = document.getElementsByName(srcName)[0];
-		var dst = document.getElementsByName(dstName)[0];
+		
+		var srcElement = document.getElementsByName(srcName); 
+		var src = srcElement[0];
+		var dstElement = document.getElementsByName(dstName); 
+		var dst = dstElement[0];
 		var opt;
 
 		//if nothing or dummy is being transfered do nothing
-		if (src.selectedIndex == -1 || src.options[0].value == "0")
+		if (src.selectedIndex == -1 || src.options[0].value == "0") {
 			return;
+		}
 
 		//if dst has dummy clobber it with new options
-		if (dst.options[0].value == "0")
+		if (dst.options[0].value == "0") {
 			dst.remove(0);
+		}
 
 		for ( var idx = src.options.length - 1; idx >= 0; --idx) {
 
@@ -110,8 +123,9 @@
 
 		} //end for
 
-		if (src.options.length == 0)
+		if (src.options.length == 0) {
 			setEmpty(src);
+		}
 
 	}
 
@@ -147,11 +161,13 @@
 			} //end for
 		} //end if
 
-		if (attached.options.length == 0)
+		if (attached.options.length == 0) {
 			setEmpty(attached);
+		}
 
-		if (available.options.length == 0)
+		if (available.options.length == 0) {
 			setEmpty(available);
+		}
 
 	}
 
@@ -163,16 +179,18 @@
 			var saved = "";
 
 			//we don't want to initially save dummy
-			if (ops.options.length == 1 && ops.options[0].value == "0")
+			if (ops.options.length == 1 && ops.options[0].value == "0") {
 				ops.options.length = 0;
+			}
 
 			var list = window.opener.document.getElementById("attachedList");
 			var paragraph = window.opener.document
 					.getElementById("attachDefault");
 
 			//if we are saving something we need to update list on parent form
-			if (ops.options.length)
+			if (ops.options.length) {
 				paragraph.innerHTML = "";
+			}
 
 			//delete what we have before adding new docs to list
 			while (list.firstChild) {
@@ -182,8 +200,9 @@
 			for ( var idx = 0; idx < ops.options.length; ++idx) {
 				saved += ops.options[idx].value;
 
-				if (idx < ops.options.length - 1)
+				if (idx < ops.options.length - 1) {
 					saved += "|";
+				}
 
 				listElem = window.opener.document.createElement("li");
 				listElem.innerHTML = ops.options[idx].innerHTML;
@@ -194,15 +213,19 @@
 
 			window.opener.document.EctConsultationFormRequestForm.documents.value = saved;
 
-			if (list.childNodes.length == 0)
+			if (list.childNodes.length == 0) {
 				paragraph.innerHTML = "<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Empty"/>______$tag________________________________________________________________________";
+			}
 
 			ret = false;
 			window.close();
 		} else {
 			//but we will use dummy in updating an empty list
-			for ( var idx = 0; idx < ops.options.length; ++idx)
+			for ( var idx = 0; idx < ops.options.length; ++idx) {
 				ops.options[idx].selected = true;
+			}
+		}
+	}
 //-->
 </script>
 </head>
@@ -260,9 +283,9 @@
 						%>
 					</html:select></td>
 				<td style="width: 10%; text-align: center"><input type="button"
-					class="btn" onclick="swap('documents','attachedDocs')" value=">>" /><br />
+					class="btn" onclick="swap('documents','attachedDocs');" value=">>" /><br />
 					<input type="button" class="btn"
-					onclick="swap('attachedDocs','documents')" value="<<" /></td>
+					onclick="swap('attachedDocs','documents');" value="<<" /></td>
 				<td style="width: 45%; text-align: right"><html:select
 						style="width: 100%;" property="attachedDocs" multiple="1"
 						size="10">
