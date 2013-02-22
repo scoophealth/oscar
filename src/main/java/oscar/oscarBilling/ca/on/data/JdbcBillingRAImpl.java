@@ -38,6 +38,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RaDetail;
 import org.oscarehr.common.model.RaHeader;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
@@ -237,7 +238,7 @@ public class JdbcBillingRAImpl {
 						r.setServiceCount(serviceno);
 						r.setHin(newhin);
 						r.setAmountClaim(amountsubmit);
-						r.setAmountPay(amountpaysign);
+						r.setAmountPay((amountpaysign + amountpay).trim());
 						r.setServiceDate(servicedate);
 						r.setErrorCode(explain);
 						r.setBillType(billtype);
@@ -496,6 +497,14 @@ public class JdbcBillingRAImpl {
 				String explain = r.getErrorCode();
 				String amountsubmit = r.getAmountClaim();
 				String amountpay = r.getAmountPay();
+				try {
+						Double.parseDouble(amountpay);					
+				}
+				catch (NumberFormatException e ) {
+						amountpay = "0.00";
+						MiscUtils.getLogger().error("RA HEADER " + id + " had bad amount pay value " + r.getAmountPay());
+				}
+				
 				Properties prop = new Properties();
 				prop.setProperty("servicecode", servicecode);
 				prop.setProperty("servicedate", servicedate);
