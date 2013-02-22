@@ -39,7 +39,7 @@ public class SecObjectName extends AbstractModel<String> {
 	private String id;
 	private String description;
 	@Column(name="orgapplicable")
-	private boolean orgApplicable;
+	private Boolean orgApplicable;
 
 	public String getId() {
     	return id;
@@ -53,10 +53,10 @@ public class SecObjectName extends AbstractModel<String> {
 	public void setDescription(String description) {
     	this.description = description;
     }
-	public boolean isOrgApplicable() {
+	public Boolean isOrgApplicable() {
     	return orgApplicable;
     }
-	public void setOrgApplicable(boolean orgApplicable) {
+	public void setOrgApplicable(Boolean orgApplicable) {
     	this.orgApplicable = orgApplicable;
     }
 
