@@ -126,7 +126,7 @@
 			
 			<display:column sortable="false" title="Intake Form">			
 				<a href="../eform/efmshowform_data.jsp?fdid=<c:out value="${client.formDataID}"/>">
-					Form</a>
+					Intake</a>
 			</display:column>
 			
 			<display:column sortable="false" title="Create Referral<br/>(Forward Match)" >			

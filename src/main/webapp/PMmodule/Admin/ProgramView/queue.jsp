@@ -214,11 +214,11 @@ String reason ="";
 		<a href=#
 			onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;"
 			title="<bean:message key="global.encounter"/>"> <bean:message
-			key="provider.appointmentProviderAdminDay.btnE" /></a>&nbsp;&nbsp;
+			key="provider.appointmentProviderAdminDay.btnEncounter" /></a>&nbsp;&nbsp;
 		<a href=#
 			onClick="popupPage(710,1024,'<%=request.getContextPath()%>/eform/efmshowform_data.jsp?demographicNo=<%=demographic_no%>&fdid=<%=curform.get("fdid")%>','0'); return false;"
 			title="<bean:message key="global.remoteReferral"/>"> <bean:message
-			key="provider.appointmentProviderAdminDay.btnI"/></a>
+			key="provider.appointmentProviderAdminDay.btnIntake"/></a>
 		
 		
 	<% 	}	} 
