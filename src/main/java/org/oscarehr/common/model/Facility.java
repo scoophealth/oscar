@@ -64,15 +64,19 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean enableEncounterTime = false;
 	private boolean enableEncounterTransportationTime = false;
 	private int rxInteractionWarningLevel = 0;
-    private Integer registrationIntake;
-    private int displayAllVacancies=1;
-    private String vacancyWithdrawnTicklerProvider = null;
+	private String vacancyWithdrawnTicklerProvider = null;
 	private Integer vacancyWithdrawnTicklerDemographic = null;
+	private Integer registrationIntake;
+	private int displayAllVacancies=1;
+	private String assignNewVacancyTicklerProvider = null;
+	private Integer assignNewVacancyTicklerDemographic = null;
     
   
     public int getDisplayAllVacancies() {
     	return displayAllVacancies;
     }
+
+    
 
 	public void setDisplayAllVacancies(int displayAllVacancies) {
     	this.displayAllVacancies = displayAllVacancies;
@@ -337,6 +341,22 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 
 	public void setVacancyWithdrawnTicklerDemographic(Integer vacancyWithdrawnTicklerDemographic) {
 		this.vacancyWithdrawnTicklerDemographic = vacancyWithdrawnTicklerDemographic;
+	}
+
+	public String getAssignNewVacancyTicklerProvider() {
+		return assignNewVacancyTicklerProvider;
+	}
+
+	public void setAssignNewVacancyTicklerProvider(String assignNewVacancyTicklerProvider) {
+		this.assignNewVacancyTicklerProvider = assignNewVacancyTicklerProvider;
+	}
+
+	public Integer getAssignNewVacancyTicklerDemographic() {
+		return assignNewVacancyTicklerDemographic;
+	}
+
+	public void setAssignNewVacancyTicklerDemographic(Integer assignNewVacancyTicklerDemographic) {
+		this.assignNewVacancyTicklerDemographic = assignNewVacancyTicklerDemographic;
 	}
 
 	

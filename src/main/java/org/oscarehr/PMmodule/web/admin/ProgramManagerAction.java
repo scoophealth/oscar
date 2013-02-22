@@ -889,6 +889,13 @@ public class ProgramManagerAction extends DispatchAction {
 			vacancy.setReasonClosed(parameters.get("reasonClosed")[0]);	
 			vacancy.setDateClosed(dateClosedFormatted);
 			VacancyTemplateManager.saveVacancy(vacancy);
+
+			Facility f = LoggedInInfo.loggedInInfo.get().currentFacility;
+			if(f.getAssignNewVacancyTicklerProvider() != null && f.getAssignNewVacancyTicklerProvider().length()>0 
+				&& f.getAssignNewVacancyTicklerDemographic() != null && f.getAssignNewVacancyTicklerDemographic()> 0) {
+				createWaitlistNotificationTickler(f,vacancy);
+		
+			}
 		} else {		
 			vacancy.setTemplateId(templateId);				
 			vacancy.setName(request.getParameter("vacancyName"));			
@@ -940,6 +947,39 @@ public class ProgramManagerAction extends DispatchAction {
 		setEditAttributes(request, String.valueOf(program.getId()));
 		return edit(mapping, form, request, response);		
 		
+	}
+	
+    private void createWaitlistWithdrawnNotificationTickler(Facility facility, Vacancy vacancy) {
+        Tickler t = new Tickler();
+        t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+        t.setDemographic_no(facility.getVacancyWithdrawnTicklerDemographic().toString());
+        t.setMessage("vacancy=["+vacancy.getName()+"] withdrawn");
+        t.setPriority("Normal");
+        t.setProgram_id(vacancy.getWlProgramId());
+        t.setService_date(new Date());
+        t.setStatus('A');
+        t.setTask_assigned_to(facility.getVacancyWithdrawnTicklerProvider());
+        t.setUpdate_date(new Date());
+        
+        TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+        dao.saveTickler(t);
+    }
+
+	
+	private void createWaitlistNotificationTickler(Facility facility, Vacancy vacancy) {
+		Tickler t = new Tickler();
+		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		t.setDemographic_no(facility.getAssignNewVacancyTicklerDemographic().toString());
+		t.setMessage("New vacancy=["+vacancy.getName()+"]");
+		t.setPriority("Normal");
+		t.setProgram_id(vacancy.getWlProgramId());
+		t.setService_date(new Date());
+		t.setStatus('A');
+		t.setTask_assigned_to(facility.getAssignNewVacancyTicklerProvider());
+		t.setUpdate_date(new Date());
+		
+		TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+		dao.saveTickler(t);
 	}
 	
 	public ActionForward save_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -1480,21 +1520,6 @@ public class ProgramManagerAction extends DispatchAction {
 	}
 
 
-    private void createWaitlistNotificationTickler(Facility facility, Vacancy vacancy) {
-        Tickler t = new Tickler();
-        t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-        t.setDemographic_no(facility.getVacancyWithdrawnTicklerDemographic().toString());
-        t.setMessage("vacancy=["+vacancy.getName()+"] withdrawn");
-        t.setPriority("Normal");
-        t.setProgram_id(vacancy.getWlProgramId());
-        t.setService_date(new Date());
-        t.setStatus('A');
-        t.setTask_assigned_to(facility.getVacancyWithdrawnTicklerProvider());
-        t.setUpdate_date(new Date());
-        
-        TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
-        dao.saveTickler(t);
-    }
 
     
 	public ActionForward saveVacancyStatus(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -1515,7 +1540,7 @@ public class ProgramManagerAction extends DispatchAction {
             Facility f = LoggedInInfo.loggedInInfo.get().currentFacility;
             if(status.equals("Withdrawn") && f.getVacancyWithdrawnTicklerProvider() != null && f.getVacancyWithdrawnTicklerProvider().length()>0 
                     && f.getVacancyWithdrawnTicklerDemographic() != null && f.getVacancyWithdrawnTicklerDemographic()> 0) {
-                    createWaitlistNotificationTickler(f,vacancy);
+                    createWaitlistWithdrawnNotificationTickler(f,vacancy);
             }
             
 		} else {

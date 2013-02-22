@@ -9424,8 +9424,11 @@ create table Facility (
 	rxInteractionWarningLevel int(10) not null,
 	displayAllVacancies int(1) not null,
 	vacancyWithdrawnTicklerProvider varchar(25),
-	vacancyWithdrawnTicklerDemographic int(10)
+	vacancyWithdrawnTicklerDemographic int(10),
+	assignNewVacancyTicklerProvider varchar(25),
+	assignNewVacancyTicklerDemographic int(10)
 );
+
 
 
 CREATE TABLE `program` (
