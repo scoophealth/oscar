@@ -336,7 +336,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		HashMap<String, Measurement> map = new HashMap<String, Measurement>();
 		String queryStr = "select m from Measurement m WHERE m.demographicId = :demographicNo AND m.type IN (:types) ORDER BY m.type,m.dateObserved";
 		Query query = entityManager.createQuery(queryStr);
-		query.setParameter("demographicId", demographicNo);
+		query.setParameter("demographicNo", demographicNo);
 		List<String> lst = new ArrayList<String>();
 		for(int x=0;x<types.length;x++) {
 			lst.add(types[x]);

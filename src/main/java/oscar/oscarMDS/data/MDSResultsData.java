@@ -346,19 +346,48 @@ public class MDSResultsData {
             	searchResult = dao.findMdsResultResultDataByDemoId(demographicNo);
             }
             
+            Integer MSHsegmentID = null; 
+        	String accessionNum = null; 
+        	String providerLabRoutingStatus = null;
+        	String mdsPIDpatientName = null; 
+        	String mdsPIDhealthNumber = null;
+        	String mdsPIDsex = null;
+        	String abnormalFlag = null; // maxMdsZFR.abnormalFlag
+        	Date mdsMSHdateTime = null;
+            String mdsOBRquantityTiming = null;
+            String mdsPV1refDoctor = null;
+            String reportFormStatus = null; // minMdsZFR.reportFormStatus
+            String mdsZRGreportGroupDesc = null; 
+        	
+            
             for(Object[] o : searchResult) {
-            	Integer MSHsegmentID = (Integer) o[0]; 
-            	String accessionNum = String.valueOf(o[1]); // mdsMSH.messageConID 
-            	String providerLabRoutingStatus = (String) o[2];
-            	String mdsPIDpatientName = (String) o[3]; 
-            	String mdsPIDhealthNumber = (String) o[4];
-            	String mdsPIDsex = (String) o[5];
-            	String abnormalFlag = (String) o[6]; // maxMdsZFR.abnormalFlag
-            	Date mdsMSHdateTime = (Date) o[7];
-                String mdsOBRquantityTiming = (String) o[8];
-                String mdsPV1refDoctor = (String) o[9];
-                String reportFormStatus = (String) o[10]; // minMdsZFR.reportFormStatus
-                String mdsZRGreportGroupDesc = (String) o[11]; 
+            	if( demographicNo == null ) {
+            		MSHsegmentID = (Integer) o[0]; 
+            		accessionNum = String.valueOf(o[1]); // mdsMSH.messageConID  
+            		providerLabRoutingStatus = String.valueOf(o[2]);
+            		mdsPIDpatientName = (String) o[3]; 
+            		mdsPIDhealthNumber = (String) o[4];
+            		mdsPIDsex = (String) o[5];
+            		abnormalFlag = (String) o[6]; // maxMdsZFR.abnormalFlag
+            		mdsMSHdateTime = (Date) o[7];
+            		mdsOBRquantityTiming = (String) o[8];
+                	mdsPV1refDoctor = (String) o[9];
+                	reportFormStatus = (String) o[10]; // minMdsZFR.reportFormStatus
+                	mdsZRGreportGroupDesc = (String) o[11];
+            	}
+            	else {
+            		MSHsegmentID = (Integer) o[0]; 
+            		accessionNum = String.valueOf(o[1]); // mdsMSH.messageConID              		
+            		mdsPIDpatientName = (String) o[2]; 
+            		mdsPIDhealthNumber = (String) o[3];
+            		mdsPIDsex = (String) o[4];
+            		abnormalFlag = (String) o[5]; // maxMdsZFR.abnormalFlag
+            		mdsMSHdateTime = (Date) o[6];
+            		mdsOBRquantityTiming = (String) o[7];
+                	mdsPV1refDoctor = (String) o[8];
+                	reportFormStatus = (String) o[9]; // minMdsZFR.reportFormStatus
+                	mdsZRGreportGroupDesc = (String) o[10];
+            	}
             	
                 LabResultData lData = new LabResultData(LabResultData.MDS);
                 lData.segmentID = "" + MSHsegmentID;
