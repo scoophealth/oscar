@@ -30,6 +30,18 @@
 	src="<%=request.getContextPath()%>/js/validation.js">
 </script>
 <script type="text/javascript">
+
+	//Check if string is a whole number(digits only).
+	var isWhole_re       = /^\s*\d+\s*$/;
+	function isWhole (s) {
+	   var result =  String(s).search (isWhole_re) != -1
+	   if(s.trim().length > 0 && !result) {
+			alert('Default Client ID must be a number');   
+	   }
+	   return result;
+	}
+
+
 	function validateForm()
 	{
 		if (bCancel == true)
@@ -37,6 +49,8 @@
 		var isOk = false;
 		isOk = validateRequiredField('facilityName', 'Facility Name', 32);
 		if (isOk) isOk = validateRequiredField('facilityDesc', 'Facility Description', 70);
+		if(isOk) isOk = isWhole($("input[name='facility.assignNewVacancyTicklerDemographic']").val()) || $("input[name='facility.assignNewVacancyTicklerDemographic']").val() == '';
+		
 		return isOk;
 	}
 </script>
@@ -48,7 +62,6 @@
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
-			
 
 <div class="tabs" id="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -199,6 +212,20 @@
 				</html:select>
 				&nbsp;Default client ID:&nbsp;
 				<html:text property="facility.vacancyWithdrawnTicklerDemographic"/>
+			</td>
+		</tr>
+		
+		<tr class="b">
+			<td width="20%">Assign new vacancy tickler notification to:</td>
+			<td>
+				<html:select property="facility.assignNewVacancyTicklerProvider">
+					<html:option value="">Select Below</html:option>
+					<%for(Provider p : providerDao.getActiveProviders()) { %>
+						<html:option value="<%=p.getProviderNo() %>"><%=p.getFormattedName() %></html:option>
+					<% } %>
+				</html:select>
+				&nbsp;Default client ID:&nbsp;
+				<html:text property="facility.assignNewVacancyTicklerDemographic"/>
 			</td>
 		</tr>
 		
