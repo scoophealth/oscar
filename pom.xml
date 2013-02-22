@@ -41,9 +41,19 @@
 
 		<!-- general libraries -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -133,6 +143,11 @@
 			<version>3.1.0.RELEASE</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>3.2.1.RELEASE</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-ftp</artifactId>
 			<version>2.1.0.RELEASE</version>
@@ -147,6 +162,7 @@
 			<artifactId>spring-mock</artifactId>
 			<version>2.0.8</version>
 		</dependency>
+		
 
 		<!-- hibernate / sql -->
 		<dependency>
@@ -225,7 +241,17 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc-struts</artifactId>
-			<version>2.5.6.SEC02</version>
+			<version>2.5.6.SEC03</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-webmvc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -431,19 +457,14 @@
 
 		<!-- HttpClient -->
 		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.0-rc3</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.0.1</version>
+			<version>4.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
-			<version>4.0.1</version>
+			<version>4.2.2</version>
 		</dependency>
 
 		<!-- quartz -->
@@ -697,6 +718,11 @@
 						<exclusion>
 							<groupId>org.apache.ws.commons.schema</groupId>
 							<artifactId>XmlSchema</artifactId>
+						</exclusion>
+
+						<exclusion>
+							<groupId>org.apache.neethi</groupId>
+							<artifactId>neethi</artifactId>
 						</exclusion>
 					</exclusions>
                 </dependency>
