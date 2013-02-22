@@ -387,6 +387,11 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
 	.singlePage {
 
 	}
+	
+	
+
+	.TDISRes	{font-weight: bold; font-size: 10pt; color: black; font-family:
+               Verdana, Arial, Helvetica}
 </style>
 </head>
 
