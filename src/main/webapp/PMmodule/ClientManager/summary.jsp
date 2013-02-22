@@ -772,7 +772,7 @@ String reason ="";
 					%>
 					<logic:notEqual value="community" property="programType" name="admission">
 						<a href=# onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?programId=<%=tempAdmission.getProgramId()%>&demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
-						   <bean:message key="provider.appointmentProviderAdminDay.btnE" />
+						   <bean:message key="provider.appointmentProviderAdminDay.btnEncounter" />
 						</a>
 					</logic:notEqual>
 					<%
