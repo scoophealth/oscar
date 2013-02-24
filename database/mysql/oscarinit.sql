@@ -9426,7 +9426,8 @@ create table Facility (
 	vacancyWithdrawnTicklerProvider varchar(25),
 	vacancyWithdrawnTicklerDemographic int(10),
 	assignNewVacancyTicklerProvider varchar(25),
-	assignNewVacancyTicklerDemographic int(10)
+	assignNewVacancyTicklerDemographic int(10),
+	assignRejectedVacancyApplicant varchar(25)
 );
 
 
