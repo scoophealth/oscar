@@ -70,7 +70,7 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private int displayAllVacancies=1;
 	private String assignNewVacancyTicklerProvider = null;
 	private Integer assignNewVacancyTicklerDemographic = null;
-    
+    private String assignRejectedVacancyApplicant = null;
   
     public int getDisplayAllVacancies() {
     	return displayAllVacancies;
@@ -357,6 +357,18 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 
 	public void setAssignNewVacancyTicklerDemographic(Integer assignNewVacancyTicklerDemographic) {
 		this.assignNewVacancyTicklerDemographic = assignNewVacancyTicklerDemographic;
+	}
+
+
+
+	public String getAssignRejectedVacancyApplicant() {
+		return assignRejectedVacancyApplicant;
+	}
+
+
+
+	public void setAssignRejectedVacancyApplicant(String assignRejectedVacancyApplicant) {
+		this.assignRejectedVacancyApplicant = assignRejectedVacancyApplicant;
 	}
 
 	

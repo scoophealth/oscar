@@ -230,6 +230,19 @@
 		</tr>
 		
 		<tr class="b">
+			<td width="20%">Assign notification of rejected applicant from a vacancy:</td>
+			<td>
+				<html:select property="facility.assignRejectedVacancyApplicant">
+					<html:option value="">Select Below</html:option>
+					<%for(Provider p : providerDao.getActiveProviders()) { %>
+						<html:option value="<%=p.getProviderNo() %>"><%=p.getFormattedName() %></html:option>
+					<% } %>
+				</html:select>
+				
+			</td>
+		</tr>
+		
+		<tr class="b">
             <td width="20%">Registration Intake</td>
             <td>
                 <html:select property="facility.registrationIntake">
