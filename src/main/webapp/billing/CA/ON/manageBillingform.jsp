@@ -164,19 +164,18 @@ function manageBillType(id,oldtype,newtype) {
 			<option value="***" <%=clinicview.equals("***")?"selected":""%>><bean:message
 				key="billing.manageBillingform.formManagePremium" /></option>
 
-			<% 
-String formDesc="";
-String formID="";
-int Count = 0;  
-List<CtlBillingService> cbss = ctlBillingServiceDao.findByServiceType("%");
+<% 
+String serviceType="";
+String serviceTypeName="";
+List<Object[]> billingServices = ctlBillingServiceDao.findServiceTypes();
 
-for(CtlBillingService cbs:cbss){
-	formDesc = cbs.getServiceTypeName();
-	formID = cbs.getServiceType();
+for(Object[] billingService:billingServices){
+	serviceType = String.valueOf(billingService[0]);
+	serviceTypeName = String.valueOf(billingService[1]);
 %>
-			<option value="<%=formID%>"
-				<%=clinicview.equals(formID)?"selected":""%>><%=formDesc%></option>
-			<%
+			<option value="<%=serviceType%>"
+				<%=clinicview.equals(serviceType)?"selected":""%>><%=serviceTypeName%></option>
+<%
 }      
 %>
 		</select></td>
