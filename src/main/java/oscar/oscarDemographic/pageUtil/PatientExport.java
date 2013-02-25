@@ -26,6 +26,8 @@ package oscar.oscarDemographic.pageUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -94,6 +96,9 @@ public class PatientExport {
 			this.allergies = allergyDao.findAllergies(demographicNo);
 			// Master to 12.1 compatibility fix - revisit before submitting
 			this.drugs = drugDao.findByDemographicId(demographicNo, null);
+			// Sort drugs by reverse chronological order & group by DIN by sorting
+			Collections.reverse(drugs);
+			Collections.sort(drugs, new sortByDin());
 			
 			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 			List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
@@ -287,6 +292,12 @@ public class PatientExport {
 	public boolean isActiveDrug(Date rhs) {
 		if(currentDate.after(rhs)) return false;
 		else return true;
+	}
+	
+	public class sortByDin implements Comparator<Drug> {
+		public int compare(Drug one, Drug two) {
+			 return Integer.parseInt(one.getRegionalIdentifier()) - Integer.parseInt(two.getRegionalIdentifier());
+		}
 	}
 	
 	/*

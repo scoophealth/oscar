@@ -24,7 +24,7 @@ CDA Header
 	-->
 	<recordTarget typeCode="RCT" contextControlCode="OP">
 		<patientRole classCode="PAT">
-#*    *##if ( !$patient.hin )
+#*    *##if ( !$patient.hin || $patient.hin == "" )
 			<id extension="000000000" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
 #*    *##else
 			<id extension="$patient.hin" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
@@ -96,7 +96,7 @@ Allergies and Intolerances - (Reaction List)
 							<effectiveTime value="$dateTool.format('yyyyMMdd', $allergy.getLastUpdateDate())"/>
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
-#*    *##if ( $allergy.typecode == 8 ||  $allergy.typecode == 10 || $allergy.typecode == 11 || $allergy.typecode == 13 )
+#*    *##if ( $allergy.typecode == 8 || $allergy.typecode == 10 || $allergy.typecode == 11 || $allergy.typecode == 13 )
 									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4"            
 										codeSystemName="HL7 ActCode"/>
 #*    *##elseif ( $allergy.typecode == 12 ||  $allergy.typecode == 14 )
@@ -413,40 +413,150 @@ Medications and Prescriptions - Medication List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
 					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
+#**##set( $previousDin = "0" )
 #**##foreach ( $med in $patient.getMedications() )
+#*    *##if( !$previousDin.equals("0") && !$previousDin.equals($med.regionalIdentifier) )
+						</substanceAdministration>
+					</entry>
+#*    *##end
+#*    *##if( !$previousDin.equals($med.regionalIdentifier) )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
-							<id extension="$med.id" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
 							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
-#*    *##if ( $patient.isActiveDrug($med.getEndDate()) )
+#*        *##if ( $med.longTerm || $patient.isActiveDrug($med.getEndDate()) )
 							<statusCode code="active"/>
-#*    *##else
+#*        *##else
 							<statusCode code="completed"/>
-#*    *##end
-							<effectiveTime xsi:type="IVL_TS" operator="I">
-								<low value="$dateTool.format('yyyyMMdd', $med.getRxDate())"/>
-								<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
-							</effectiveTime>
+#*        *##end
+## Insert Record Type section here?
 							<!--Medication Identification-->
 							<consumable typeCode="CSM">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 								<manufacturedProduct classCode="MANU">
 									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
 										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
-#*    *##if ( $med.atc )
+#*        *##if ( $med.atc )
 										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
-#*    *##end
+#*        *##end
 										<name>$med.brandName</name>
 										<e2e:desc nullFlavor="UNK"/>
-										<e2e:formCode nullFlavor="UNK"/>
+## Don't know how to format this properly and still have it validate
+										<strength>
+											<center value="$med.dosage.substring(0, $med.dosage.indexOf(" "))" unit="$med.unit"/>
+										</strength>
 									</manufacturedLabeledDrug>
 								</manufacturedProduct>
 							</consumable>    
 							<!--end Medication Identification-->
+#*    *##end
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="$med.id" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+#*        *##if ( $patient.isActiveDrug($med.getEndDate()) )
+									<statusCode code="active"/>
+#*        *##else
+									<statusCode code="completed"/>
+#*        *##end
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="$dateTool.format('yyyyMMdd', $med.getRxDate())"/>
+										<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>$med.genericName</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="$dateTool.format('yyyyMMdd', $med.getWrittenDate())"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>$patient.getProviderFirstName($med.providerNo)</given>
+													<family>$patient.getProviderLastName($med.providerNo)</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="$med.duration" unit="$med.durUnit"/>
+											</effectiveTime>
+## Need to figure out frequency
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="2"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="$med.route" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="$med.route"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="$med.takeMin"/>
+												<high value="$med.takeMax"/>
+											</doseQuantity>
+## Double check form code field
+											<administrationUnitCode code="TBD" codeSystem="2.16.840.1.113883.5.1127" displayName="$med.drugForm"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>$med.genericName</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+#*    *##if( $med.isPrn() )
+											<text>PRN Indicator: true</text>
+											<value xsi:type="BL" value="true"/>
+#*    *##else
+											<text>PRN Indicator: false</text>
+											<value xsi:type="BL" value="false"/>
+#*    *##end
+										</observation>
+									</entryRelationship>
+#*    *##if( $med.specialInstruction )
+									<!--Instruction Observation-->
+									<entryRelationship typeCode="SUBJ" inversionInd="true">
+										<observation classCode="OBS" moodCode="EVN">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.35"/>
+										<code code="INSTRUCT" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Instructions"/>
+										<text>$med.specialInstruction</text>
+										<participant typeCode="PRCP" contextControlCode="OP">
+											<participantRole classCode="PAT"/>
+										</participant>
+										</observation>
+									</entryRelationship>
+#*    *##end
+								</substanceAdministration>
+							</entryRelationship>
+#*    *##set( $previousDin = $med.regionalIdentifier )
+#**##end
 						</substanceAdministration>
 					</entry>
-#**##end
 				</section>
 			</component>
 #else
