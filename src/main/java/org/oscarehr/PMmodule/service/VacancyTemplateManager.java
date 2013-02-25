@@ -72,6 +72,11 @@ public class VacancyTemplateManager {
 		return (results);
 	} 
 	
+	public static List<Vacancy> getVacanciesByWlProgramIdAndStatus(Integer wlProgramId,String status) {
+		List<Vacancy> results = vacancyDAO.getVacanciesByWlProgramIdAndStatus(wlProgramId,status);
+		return (results);
+	} 
+	
 	public static List<CriteriaTypeOption> getCriteriaTypeOptions(Integer typeId) {
 		List<CriteriaTypeOption> results = criteriaTypeOptionDAO.getCriteriaTypeOptionByTypeId(typeId);
 		return (results);
