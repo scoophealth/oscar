@@ -23,6 +23,7 @@
 
 package org.oscarehr.PMmodule.web.admin;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -45,9 +48,12 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.caisi.dao.TicklerDAO;
+import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.CriteriaDao;
 import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDao;
+import org.oscarehr.PMmodule.dao.VacancyDao;
 import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.PMmodule.model.BedCheckTime;
 import org.oscarehr.PMmodule.model.Criteria;
@@ -83,10 +89,12 @@ import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.Admission;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.FunctionalCentre;
 import org.oscarehr.match.IMatchManager;
 import org.oscarehr.match.MatchManager;
 import org.oscarehr.match.MatchManagerException;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1472,6 +1480,61 @@ public class ProgramManagerAction extends DispatchAction {
 	}
 
 
+    private void createWaitlistNotificationTickler(Facility facility, Vacancy vacancy) {
+        Tickler t = new Tickler();
+        t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+        t.setDemographic_no(facility.getVacancyWithdrawnTicklerDemographic().toString());
+        t.setMessage("vacancy=["+vacancy.getName()+"] withdrawn");
+        t.setPriority("Normal");
+        t.setProgram_id(vacancy.getWlProgramId());
+        t.setService_date(new Date());
+        t.setStatus('A');
+        t.setTask_assigned_to(facility.getVacancyWithdrawnTicklerProvider());
+        t.setUpdate_date(new Date());
+        
+        TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+        dao.saveTickler(t);
+    }
+
+    
+	public ActionForward saveVacancyStatus(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String vacancyId = request.getParameter("vacancyId");
+		String status = request.getParameter("status");
+		boolean success=true;
+		String error = "";
+		
+		VacancyDao vacancyDao = SpringUtils.getBean(VacancyDao.class);
+		Vacancy vacancy = vacancyDao.find(Integer.parseInt(vacancyId));
+		
+		if(vacancy != null) {
+			vacancy.setStatus(status);
+			vacancy.setStatusUpdateUser(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			vacancy.setStatusUpdateDate(new Date());
+			vacancyDao.merge(vacancy);
+			
+            Facility f = LoggedInInfo.loggedInInfo.get().currentFacility;
+            if(status.equals("Withdrawn") && f.getVacancyWithdrawnTicklerProvider() != null && f.getVacancyWithdrawnTicklerProvider().length()>0 
+                    && f.getVacancyWithdrawnTicklerDemographic() != null && f.getVacancyWithdrawnTicklerDemographic()> 0) {
+                    createWaitlistNotificationTickler(f,vacancy);
+            }
+            
+		} else {
+			error="Vacancy not found";
+			success=false;
+		}
+		
+		JSONObject obj = new JSONObject();
+		obj.put("success", success);
+		obj.put("error", error);
+		
+		try {
+			response.getWriter().print(obj.toString());
+		}catch(IOException e) {
+			MiscUtils.getLogger().warn("error writing json",e);
+		}
+		return null;
+	}
+	
 	private boolean isChanged(Program program1, Program program2) {
 		boolean changed = false;
 
