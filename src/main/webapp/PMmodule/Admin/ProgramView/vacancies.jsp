@@ -95,6 +95,20 @@ $('#sortVacancies').click(function(e) {
 
     
 });
+
+function saveStatus(vacancyId) {
+	var newStatus = $('#status'+vacancyId).val();
+	
+    $.getJSON("<%= request.getContextPath() %>/PMmodule/ProgramManager.do?method=saveVacancyStatus&status="+newStatus+"&vacancyId="+vacancyId,
+            function(data,textStatus){
+              if(data.success) {
+            	  alert('Status has been updated');
+              } else {
+            	  alert("Error saving status - " + data.error);
+              }
+            });
+
+}
 </script>
 
 <div class="tabs" id="tabs">
@@ -125,7 +139,15 @@ $('#sortVacancies').click(function(e) {
 			<td style="text-align:left;" class="beright">
 				<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
 			</td>
-			<td style="text-align:center;"><%= v.getStatus() %></td>
+			<td style="text-align:center;">
+				<select name="status" id="status<%=v.getId()%>">
+					<option value="Active" <%=(v.getStatus().equals("Active"))?"selected=\"selected\"":"" %>>Active</option>
+					<option value="Filled" <%=(v.getStatus().equals("Filled"))?"selected=\"selected\"":"" %>>Filled</option>
+					<option value="Withdrawn" <%=(v.getStatus().equals("Withdrawn"))?"selected=\"selected\"":"" %>>Withdrawn</option>
+				</select>
+				&nbsp;
+				<input type="button" value="save" onClick="saveStatus('<%=v.getId()%>')"/>
+			</td>
 			<td style="text-align:center;"><%=dateFormatter.format(v.getDateCreated()) %> </td>
 		</tr>
 	

@@ -66,6 +66,8 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private int rxInteractionWarningLevel = 0;
     private Integer registrationIntake;
     private int displayAllVacancies=1;
+    private String vacancyWithdrawnTicklerProvider = null;
+	private Integer vacancyWithdrawnTicklerDemographic = null;
     
   
     public int getDisplayAllVacancies() {
@@ -320,6 +322,22 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	public void setRxInteractionWarningLevel(int rxInteractionWarningLevel) {
     	this.rxInteractionWarningLevel = rxInteractionWarningLevel;
     }
+
+	public String getVacancyWithdrawnTicklerProvider() {
+		return vacancyWithdrawnTicklerProvider;
+	}
+
+	public void setVacancyWithdrawnTicklerProvider(String vacancyWithdrawnTicklerProvider) {
+		this.vacancyWithdrawnTicklerProvider = vacancyWithdrawnTicklerProvider;
+	}
+
+	public Integer getVacancyWithdrawnTicklerDemographic() {
+		return vacancyWithdrawnTicklerDemographic;
+	}
+
+	public void setVacancyWithdrawnTicklerDemographic(Integer vacancyWithdrawnTicklerDemographic) {
+		this.vacancyWithdrawnTicklerDemographic = vacancyWithdrawnTicklerDemographic;
+	}
 
 	
 	
