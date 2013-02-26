@@ -122,6 +122,10 @@ function searchOutOfDomain() {
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
 					VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
 					</security:oscarSec>
+				<caisi:isModuleLoad moduleName="caisi">
+				<input type="button" value="cancel" onclick="location.href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'" >
+				</caisi:isModuleLoad>	
+					
     </li>
 </ul>
 </div>
