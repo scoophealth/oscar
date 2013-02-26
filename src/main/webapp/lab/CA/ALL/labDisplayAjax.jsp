@@ -303,12 +303,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         };
         </script>
 
-<style>
 
-.TDISRes	{font-weight: bold; font-size: 10pt; color: black; font-family:
-               Verdana, Arial, Helvetica}
-
-</style>
     <div id="labdoc_<%=segmentID%>">
         <!-- form forwarding of the lab -->
         <form name="reassignForm_<%=segmentID%>" >
