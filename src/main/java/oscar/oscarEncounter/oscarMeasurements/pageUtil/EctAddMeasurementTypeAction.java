@@ -101,8 +101,7 @@ public class EctAddMeasurementTypeAction extends Action {
         for(MeasurementType mt:dao.findByType(type)) {
         	errors.add(type, new ActionMessage("error.oscarEncounter.Measurements.duplicateTypeName"));
             saveErrors(request, errors);
-            isValid = false;     
-                    
+            isValid = false;            
         }
         
         String errorField = "The type " + type;
@@ -133,7 +132,7 @@ public class EctAddMeasurementTypeAction extends Action {
             isValid = false;
         }
         
-        errorField = "The type description " + typeDisplayName;
+        errorField = "The display name " + typeDisplayName;
         if(!validate.matchRegExp(regExp, typeDisplayName)){
             errors.add(typeDisplayName,
             new ActionMessage("errors.invalid", errorField));
