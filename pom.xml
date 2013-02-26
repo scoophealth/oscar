@@ -5,13 +5,37 @@
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>oscar</name>
+	<description>OSCAR McMaster is a web-based electronic medical record (EMR) system initially developed for academic primary care clinics. It has grown into a comprehensive EMR and billing system used by many doctor's offices and private medical clinics in Canada and other parts of the world. The name is derived from where it was created and an acronym; OSCAR stands for Open Source Clinical Application and Resource and McMaster refers to McMaster University, where it was developed. It enables the delivery of evidence resources at the point of care.</description>
+	<issueManagement>
+		<system>SourceForge Tracker</system>
+		<url>https://sourceforge.net/tracker/?group_id=66701</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://demo.oscarmcmaster.org:11042/</url>
+	</ciManagement>
+	<inceptionYear>2001</inceptionYear>
+	<mailingLists>
+		<mailingList>
+			<name>oscarmcmaster-devel</name>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/oscarmcmaster-devel</subscribe>
+			<post>oscarmcmaster-devel@lists.sourceforge.net</post>
+			<archive>https://sourceforge.net/mailarchive/forum.php?forum_name=oscarmcmaster-devel</archive>
+		</mailingList>
+	</mailingLists>
+	<licenses>
+		<license>
+			<name>GPLv2</name>
+			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+		</license>
+	</licenses>
 	<url>http://www.oscarcanada.org</url>
 	<scm>
 		<url>http://oscarmcmaster.git.sourceforge.net/git/gitweb.cgi?p=oscarmcmaster/oscar</url>
 		<connection>scm:git:git://oscarmcmaster.git.sourceforge.net/gitroot/oscarmcmaster/oscar</connection>
+		<developerConnection>scm:git:ssh://user@source.oscartools.org:29418/oscar</developerConnection>
+		<tag>master</tag>
 	</scm>
-
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	 <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
