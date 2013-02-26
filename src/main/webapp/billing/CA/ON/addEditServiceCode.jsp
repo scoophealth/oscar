@@ -64,9 +64,9 @@
 				bs = billingServiceDao.find(Integer.parseInt(billingservice_no));
 			}else {
 				List<BillingService> bsList = billingServiceDao.findByServiceCode(serviceCode);
-				if(bsList.size()==1) {
+				if(bsList.size()>=0) {
 					bs = bsList.get(0);
-				}else if(bsList.size() > 1) {
+				}else {
 					msg = serviceCode + " is <font color='red'>NOT</font> updated. Action failed! Try edit it again." ;
 				    action = "search";
 
