@@ -390,10 +390,10 @@
                                 &nbsp;&nbsp;  <%-- blank column for spacing --%>
                             </td>
                             <td colspan="2" class="title4" id="clinicName">
-                            	<c:if test="${empty infirmaryView_programAddress}">
+                            	<c:if test="${empty infirmaryView_programAddress}">                            	
 	                                <b><%=clinic.getClinicName()%></b>
                                 </c:if>
-                            </td>
+                            </td>	
 <% if(vecAddressBillingNo != null) {%>
                             <td rowspan=3 align="right">
 		                    <table name="innerTable1" border="0" cellspacing="0">
