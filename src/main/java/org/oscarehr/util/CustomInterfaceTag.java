@@ -71,7 +71,7 @@ public class CustomInterfaceTag extends TagSupport {
 			JspWriter out = super.pageContext.getOut();
 			String contextPath = this.pageContext.getServletContext().getContextPath();
 			try {
-				out.println("<link rel=\"stylesheet\" href=\""+contextPath+"js/custom/global.css\" type=\"text/css\">");
+				out.println("<link rel=\"stylesheet\" href=\""+contextPath+"/js/custom/global.css\" type=\"text/css\">");
 				out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/global.js\"></script>");
 				if(getSection()!=null && getSection().length()>0) {
 					out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/"+getSection()+".js\"></script>");
