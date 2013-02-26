@@ -9422,7 +9422,9 @@ create table Facility (
 	enableEncounterTransportationTime tinyint(1) not null,
 	registrationIntake int(8),
 	rxInteractionWarningLevel int(10) not null,
-	displayAllVacancies int(1) not null
+	displayAllVacancies int(1) not null,
+	vacancyWithdrawnTicklerProvider varchar(25),
+	vacancyWithdrawnTicklerDemographic int(10)
 );
 
 
@@ -9537,7 +9539,9 @@ CREATE TABLE `vacancy` (
   `reasonClosed` varchar(255),
   `wlProgramId` int(11) NOT NULL,
   `dateCreated` datetime NOT NULL,
-  `emailNotificationAddressesCsv` varchar(255)
+  `emailNotificationAddressesCsv` varchar(255),
+   statusUpdateUser varchar(25),
+   statusUpdateDate datetime
 );
 
 CREATE TABLE `vacancy_client_match` (

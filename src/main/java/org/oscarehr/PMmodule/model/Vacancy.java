@@ -63,6 +63,11 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 		
 	private Date dateCreated;
 	
+	private String statusUpdateUser;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date statusUpdateDate;
+	
 	/**
 	 * @return the id
 	 */
@@ -183,6 +188,22 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStatusUpdateUser() {
+		return statusUpdateUser;
+	}
+
+	public void setStatusUpdateUser(String statusUpdateUser) {
+		this.statusUpdateUser = statusUpdateUser;
+	}
+
+	public Date getStatusUpdateDate() {
+		return statusUpdateDate;
+	}
+
+	public void setStatusUpdateDate(Date statusUpdateDate) {
+		this.statusUpdateDate = statusUpdateDate;
 	}
 	
 	
