@@ -707,8 +707,8 @@ function addToPatientSet(demoNo, patientSet) {
 var demographicNo='<%=demographic_no%>';
 
 
-function checkRosterStatus(){	
-	<oscar:oscarPropertiesCheck property="FORCED_ROSTER_INTEGRATOR_LOCAL_STORE" value="yes">	
+function checkRosterStatus2(){
+	<oscar:oscarPropertiesCheck property="FORCED_ROSTER_INTEGRATOR_LOCAL_STORE" value="yes">
 	var rosterSelect = document.getElementById("roster_status");
 	if(rosterSelect.getValue() == "RO"){
 		var primaryEmr = document.getElementById("primaryEMR");
@@ -794,7 +794,7 @@ div.demographicWrapper {
 }
 </style>
 </head>
-<body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();checkRosterStatus();"
+<body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();checkRosterStatus2();"
 	topmargin="0" leftmargin="0" rightmargin="0">
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
@@ -1627,6 +1627,10 @@ if ( PatStat.equals(Dead) ) {%>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formEFFDate" />:</span>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getEffDate())%></span>
+                                                    </li>
+                                                    <li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formHCRenewDate" />:</span>
+                                                        <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getHcRenewDate())%></span>
                                                     </li>
 						</ul>
 						</div>
@@ -2593,7 +2597,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   }
                                   %>
                                 <input type="hidden" name="initial_rosterstatus" value="<%=rosterStatus%>"/>
-								<select id="roster_status" name="roster_status" style="width: 120" <%=getDisabled("roster_status")%> onchange="checkRosterStatus()">
+								<select id="roster_status" name="roster_status" style="width: 120" <%=getDisabled("roster_status")%> onchange="checkRosterStatus2()">
 									<option value=""></option>
 									<option value="RO"
 										<%=rosterStatus.equals("RO")?" selected":""%>>
