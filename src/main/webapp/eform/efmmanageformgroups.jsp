@@ -31,7 +31,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
-  ArrayList groups = EFormUtil.getEFormGroups();
+  ArrayList<Hashtable<String,String>> groups = EFormUtil.getEFormGroups();
   ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
   String groupView = request.getParameter("group_view");
   if (groupView == null) {
