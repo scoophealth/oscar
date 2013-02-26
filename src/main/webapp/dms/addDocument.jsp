@@ -100,7 +100,7 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
     formdata.setHtml(defaultHtml);
     formdata.setAppointmentNo(appointment);
 }
-ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
+ArrayList doctypes = EDocUtil.getActiveDocTypes(formdata.getFunction());
 
 CtlDocClassDao docClassDao = (CtlDocClassDao)SpringUtils.getBean("ctlDocClassDao");
 List<String> reportClasses = docClassDao.findUniqueReportClasses();
