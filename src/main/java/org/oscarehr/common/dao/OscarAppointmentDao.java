@@ -66,6 +66,18 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 		return false;
 	}
+	
+	public List<Appointment> getAppointmentHistory(Integer demographicNo, Integer offset, Integer limit) {
+		String sql = "select a from Appointment a where a.demographicNo=? order by a.appointmentDate DESC, a.startTime DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
+		
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
 
 	public List<Appointment> getAppointmentHistory(Integer demographicNo) {
 		String sql = "select a from Appointment a where a.demographicNo=? order by a.appointmentDate DESC, a.startTime DESC";

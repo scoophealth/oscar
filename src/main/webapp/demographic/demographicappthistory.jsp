@@ -202,7 +202,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   if(request.getParameter("limit1")!=null) iRSOffSet= Integer.parseInt(request.getParameter("limit1"));
   if(request.getParameter("limit2")!=null) iPageSize = Integer.parseInt(request.getParameter("limit2"));
   
-  List<Appointment> appointmentList = appointmentDao.getAppointmentHistory(new Integer(demographic_no));
+  List<Appointment> appointmentList = appointmentDao.getAppointmentHistory(new Integer(demographic_no), iRSOffSet, iPageSize);
 
   boolean bodd=false;
   int nItems=0;
