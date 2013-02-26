@@ -42,6 +42,13 @@
 </script>
 <!-- don't close in 1 statement, will break IE7 -->
 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
+			
 
 <div class="tabs" id="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -180,6 +187,21 @@
 			<td width="20%">Enable Group Notes:</td>
 			<td><html:checkbox property="facility.enableGroupNotes" /></td>
 		</tr>
+		
+		<tr class="b">
+			<td width="20%">Assign vacancy withdrawn tickler notification:</td>
+			<td>
+				<html:select property="facility.vacancyWithdrawnTicklerProvider">
+					<html:option value="">Select Below</html:option>
+					<%for(Provider p : providerDao.getActiveProviders()) { %>
+						<html:option value="<%=p.getProviderNo() %>"><%=p.getFormattedName() %></html:option>
+					<% } %>
+				</html:select>
+				&nbsp;Default client ID:&nbsp;
+				<html:text property="facility.vacancyWithdrawnTicklerDemographic"/>
+			</td>
+		</tr>
+		
 		<tr class="b">
             <td width="20%">Registration Intake</td>
             <td>
