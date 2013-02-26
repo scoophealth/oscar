@@ -285,24 +285,28 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				head.setTotalWidth(272f);
 				head.writeSelectedRows(0, -1, 13f, height - 100f, cb);
 
+				bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+				writeDirectContent(cb, bf, 12, PdfContentByte.ALIGN_LEFT, "o s c a r", 21, page.getHeight() - 60, 90);
 				// draw R
-				writeDirectContent(cb, bf, 50, PdfContentByte.ALIGN_LEFT, "R", 20, page.getHeight() - 53, 0);
+				writeDirectContent(cb, bf, 50, PdfContentByte.ALIGN_LEFT, "P", 24, page.getHeight() - 53, 0);
 
+				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				// draw X
-				writeDirectContent(cb, bf, 43, PdfContentByte.ALIGN_LEFT, "X", 40, page.getHeight() - 71, 0);
+				writeDirectContent(cb, bf, 43, PdfContentByte.ALIGN_LEFT, "X", 38, page.getHeight() - 69, 0);
 
-				// render clinicName;
-				bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-				// p("render clinicName");
+				bf = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 80, (page.getHeight() - 25), 0);
+				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				int fontFlags = Font.NORMAL;
 				Font font = new Font(bf, 10, fontFlags);
 				ColumnText ct = new ColumnText(cb);
-				ct.setSimpleColumn(80, (page.getHeight() - 15), 280, (page.getHeight() - 100), 11, Element.ALIGN_LEFT);
+				ct.setSimpleColumn(80, (page.getHeight() - 25), 280, (page.getHeight() - 90), 11, Element.ALIGN_LEFT);
 				// p("value of clinic name", this.clinicName);
-				ct.setText(new Phrase(12, this.sigDoctorName +"\r\n"+clinicName+(pracNo != null && pracNo.trim().length() >0 ? "\r\nCPSO: "+ pracNo : ""), font));
+				ct.setText(new Phrase(12, clinicName+(pracNo != null && pracNo.trim().length() >0 ? "\r\nCPSID: "+ pracNo : ""), font));
 				ct.go();
 				// render clnicaTel;
 				// bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+				//bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				if (this.clinicTel.length() <= 13) {
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 188, (page.getHeight() - 70), 0);
@@ -576,7 +580,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			cb.setRGBColorStroke(0, 0, 255);
 			// render prescriptions
 			for (String rxStr : listRx) {
-				bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+				//bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				Paragraph p = new Paragraph(new Phrase(rxStr, new Font(bf, 10)));
 				p.setKeepTogether(true);
 				p.setSpacingBefore(5f);
