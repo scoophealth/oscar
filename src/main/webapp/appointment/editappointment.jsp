@@ -212,16 +212,61 @@ function calculateEndTime() {
   return true;
 }
 
+function checkTypeNum(typeIn) {
+	var typeInOK = true;
+	var i = 0;
+	var length = typeIn.length;
+	var ch;
+
+	// walk through a string and find a number
+	if (length>=1) {
+	  while (i <  length) {
+		  ch = typeIn.substring(i, i+1);
+		  if (ch == ":") { i++; continue; }
+		  if ((ch < "0") || (ch > "9") ) {
+			  typeInOK = false;
+			  break;
+		  }
+	    i++;
+      }
+	} else typeInOK = false;
+	return typeInOK;
+}
+
 function checkTimeTypeIn(obj) {
+  var colonIdx;
   if(!checkTypeNum(obj.value) ) {
 	  alert ("<bean:message key="Appointment.msgFillTimeField"/>");
-	} else {
-	  if(obj.value.indexOf(':')==-1) {
-	    if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
-	    obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
-	  }
-	}
+  } else {
+      colonIdx = obj.value.indexOf(':');
+      if(colonIdx==-1) {
+        if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
+        obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
+  }
 }
+          
+  var hours = "";
+  var minutes = "";  
+
+  colonIdx = obj.value.indexOf(':');  
+  if (colonIdx < 1)
+      hours = "00";     
+  else if (colonIdx == 1)
+      hours = "0" + obj.value.substring(0,1);
+  else
+      hours = obj.value.substring(0,2);
+  
+  minutes = obj.value.substring(colonIdx+1,colonIdx+3);
+  if (minutes.length == 0)
+	    minutes = "00";
+	else if (minutes.length == 1)
+		minutes = "0" + minutes;
+	else if (minutes > 59)
+		minutes = "00";
+
+  obj.value = hours + ":" + minutes;    
+}
+
 <% if (apptObj!=null) { %>
 function pasteAppt(multipleSameDayGroupAppt) {
 
@@ -473,7 +518,8 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
                 <INPUT TYPE="TEXT"
 					NAME="start_time"
 					VALUE="<%=bFirstDisp?ConversionUtils.toTimeStringNoSeconds(appt.getStartTime()):request.getParameter("start_time")%>"
-                    WIDTH="25">
+                    WIDTH="25"
+                    HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)" >
             </div>
             <div class="space">&nbsp;</div>
 
