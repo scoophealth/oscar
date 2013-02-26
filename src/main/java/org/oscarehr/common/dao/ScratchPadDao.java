@@ -64,4 +64,12 @@ public class ScratchPadDao extends AbstractDao<ScratchPad> {
 		query.setParameter("providerNo", providerNo);
 		return getSingleResultOrNull(query);
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findAllDatesByProviderNo(String providerNo) {
+		String sql = "Select sp.dateTime, sp.id from ScratchPad sp where sp.providerNo = :providerNo order by sp.dateTime DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("providerNo", providerNo);
+		return query.getResultList();
+	}
 }
