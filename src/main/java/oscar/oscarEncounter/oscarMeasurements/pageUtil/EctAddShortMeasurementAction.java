@@ -84,14 +84,13 @@ public class EctAddShortMeasurementAction extends DispatchAction{
     	String[] arrDemoMethod = null;
     	List<String> demos;
     	
-    	if( arrDemoContactMethods != null ) {
-    		
+    	if( arrDemoContactMethods != null ) {    		
 	    	for( int idx = 0; idx < arrDemoContactMethods.length; ++idx ) {
-	    		arrDemoMethod = arrDemoContactMethods[idx].split(",");
+	    		arrDemoMethod = arrDemoContactMethods[idx].split(",");	    		
 	    		if( arrDemoMethod.length != 2 ) {
 	    			continue;
 	    		}
-	    		
+	    	
 	    		demos = nextContactMethods.get(arrDemoMethod[1]);
 	    		if( demos == null ) {
 	    			demos = new ArrayList<String>();    			
@@ -109,7 +108,7 @@ public class EctAddShortMeasurementAction extends DispatchAction{
     		Set<String> keys = nextContactMethods.keySet();
     		
     		for( String key : keys ) {
-    			arrDemoMethod = nextContactMethods.get(key).toArray(arrDemoMethod);
+    			arrDemoMethod = nextContactMethods.get(key).toArray(new String[nextContactMethods.get(key).size()]);
     			fup.markFollowupProcedure(followUpType,key,arrDemoMethod,providerNo,UtilDateUtilities.now(),comment);
     		}
     	}

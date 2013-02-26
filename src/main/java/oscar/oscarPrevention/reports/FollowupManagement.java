@@ -78,7 +78,7 @@ public class FollowupManagement {
      *@param comment			-- comment
      */
     public void markFollowupProcedure(String followUpType,String followUpValue, String[] demographicList, String providerNo,Date dateObserved,String comment){
-        for (int i = 0; i < demographicList.length;i++){   
+        for (int i = 0; i < demographicList.length;i++){          	
             writeProcedure(followUpType, followUpValue, demographicList[i], providerNo ,dateObserved,comment);
             
         }
