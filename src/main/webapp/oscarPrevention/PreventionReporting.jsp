@@ -680,7 +680,7 @@ table.ele thead {
     String getUrlParamList(ArrayList list,String paramName){
         String queryStr = "";
         for (int i = 0; i < list.size(); i++){
-            String demo = (String) list.get(i);
+            String demo = String.valueOf(list.get(i));
             if (i == 0){
               queryStr += paramName+"="+demo;
             }else{
