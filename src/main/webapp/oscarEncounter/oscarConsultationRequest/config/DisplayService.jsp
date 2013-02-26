@@ -131,7 +131,7 @@ function BackToOscar()
 							<%}%>
 							</td>
 							<td>
-							<% out.print(lName+" "+fName+" "+proLetters); %>
+							<% out.print(lName+" "+fName + (proLetters == null ? "" : " " + proLetters)); %>
 							</td>
 							<td><%=address %></td>
 							<td><%=phone%></td>

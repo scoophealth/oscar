@@ -24,6 +24,7 @@
 
 --%>
 
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -36,7 +37,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 
-<%@page import="java.util.ArrayList, java.util.Collections, java.util.List, java.util.*, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
+<%@page import="java.util.ArrayList, java.util.Collections, java.util.List, java.util.*, oscar.util.StringUtils, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.oscarLab.ca.on.*"%>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager,org.oscarehr.casemgmt.model.CaseManagementNote,org.oscarehr.casemgmt.model.Issue,org.oscarehr.common.model.UserProperty,org.oscarehr.common.dao.UserPropertyDAO,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
@@ -946,11 +947,15 @@ function showSignatureImage()
 	if (document.getElementById('signatureImg') != null && document.getElementById('signatureImg').value.length > 0) {
 		document.getElementById('signatureImgTag').src = "<%=storedImgUrl %>" + document.getElementById('signatureImg').value;
 
-		<% if (OscarProperties.getInstance().getBooleanProperty("topaz_enabled", "true")) { %>
+		<% if (OscarProperties.getInstance().getBooleanProperty("topaz_enabled", "true")) { 
+		  //this is empty
+		%>
 
 		document.getElementById('clickToSign').style.display = "none";
 
-		<% } else { %>
+		<% } else { 
+		  //this is empty
+		%>
 
 		document.getElementById("signatureFrame").style.display = "none";
 
@@ -1061,7 +1066,7 @@ function updateFaxButton() {
 
 <%=WebUtils.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF"
+<body topmargin="0" leftmargin="0" vlink="#0000FF" 
 	onload="window.focus();disableDateFields();fetchAttached();disableEditing();showSignatureImage();">
 <html:errors />
 
@@ -1663,12 +1668,12 @@ function updateFaxButton() {
 							</td>
 							<td align="right" class="tite3">
 								<select name="letterheadName" id="letterheadName" onchange="switchProvider(this.value)">
-									<option value="-1"><%=clinic.getClinicName() %></option>
+									<option value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>"><%=clinic.getClinicName() %></option>
 								<%
 									for (Provider p : prList) {
 										if (p.getProviderNo().compareTo("-1") != 0 && (p.getFirstName() != null || p.getSurname() != null)) {
 								%>
-								<option value="<%=p.getProviderNo() %>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : "") %>>
+								<option value="<%=p.getProviderNo() %>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : p.getProviderNo().equalsIgnoreCase(providerNo) ? "selected='selected'"  : "") %>>
 
 									<%=p.getFirstName() %> <%=p.getSurname() %>
 								</option>
