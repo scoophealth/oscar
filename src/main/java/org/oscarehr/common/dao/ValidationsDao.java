@@ -80,14 +80,14 @@ public class ValidationsDao extends AbstractDao<Validations> {
 
 	@SuppressWarnings("unchecked")
     public List<Object[]> findValidationsBy(Integer demo, String type, Integer validationId) {
-		String sql = "FROM Validations v, Measurement m, Provider p " +
-				"WHERE m.providerNo = p.ProviderNo " +
-				"AND m.demographicId = :demoNo " +
+		String sql = "FROM Validations v, Measurement m " +
+				"WHERE " +
+				"m.demographicId = :demoNo " +
 				"AND m.type = :type " +
 				"AND v.id = :validation " +
 				"GROUP BY m.id " +
 				"ORDER BY m.dateObserved DESC, m.createDate DESC";
-		Query query = entityManager.createQuery(sql);
+		Query query = entityManager.createQuery(sql);		
 		query.setParameter("demoNo", demo);
 		query.setParameter("type", type);
 		query.setParameter("validation", validationId);

@@ -47,6 +47,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
 import oscar.util.ConversionUtils;
 
@@ -84,14 +85,17 @@ public class EctMeasurementsDataBeanHandler {
         EctMeasurementTypesBean mBean = mt.getByType(type);
         if ( mBean != null){
             ValidationsDao dao = SpringUtils.getBean(ValidationsDao.class);
+            ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);            
+            Provider provider = null;
+            
             for(Object[] o : dao.findValidationsBy(demo, type, ConversionUtils.fromIntString(mBean.getValidation()))) {
             	Validations v = (Validations) o[0];   
             	Measurement m = (Measurement) o[1];
-            	Provider p = (Provider) o[2];
+            	provider = providerDao.getProvider(m.getProviderNo());
 
                 String canPlot = null;
-                String firstName;
-                String lastName;
+                String firstName = null;
+                String lastName = null;
 
                 boolean isNumeric = v.isNumeric() != null && v.isNumeric();
                 if (isNumeric || v.getName().equalsIgnoreCase("Blood Pressure"))
@@ -99,8 +103,11 @@ public class EctMeasurementsDataBeanHandler {
                 else
                     canPlot = null;
 
-                firstName = p.getFirstName();
-                lastName = p.getLastName();
+                if( provider != null ) {
+                	firstName =  provider.getFirstName();
+                	lastName =  provider.getLastName();
+                }
+                
                 if (firstName == null && lastName == null){
                     firstName = "Automatic";
                     lastName = "";
