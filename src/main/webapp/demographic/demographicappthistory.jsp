@@ -267,7 +267,13 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
       <td align="center"><%=appointment.getStartTime()%></td>
       <td align="center"><%=appointment.getEndTime()%></td>
       <td><%=appointment.getReason()%></td>
-      <td><%=provider.getLastName() + "," + provider.getFirstName()%></td>
+      <% if( provider != null ) {%>
+      <td><%=(provider.getLastName() == null ? "N/A" : provider.getLastName()) + "," + (provider.getFirstName() == null ? "N/A" : provider.getFirstName())%></td>
+      <%}
+	  	else { %>
+	  	<td>N/A</td>
+	  <%}%>
+      
       <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
       <special:SpecialEncounterTag moduleName="eyeform">      
       <td><a href="#" onclick="popupPage(800,1000,'<%=request.getContextPath()%>/mod/specialencounterComp/EyeForm.do?method=view&appHis=true&demographicNo=<%=demographic_no%>&appNo=<%=appointment.getId().toString()%>')">eyeform</a></td>
