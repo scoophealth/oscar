@@ -27,44 +27,32 @@ function init() {
 	oDv.appendChild(dvHdr);
 	oDv.appendChild(dvBdy);
 	oDv.style.position="absolute";
+	oDv.style.zIndex="999";
 	oDv.style.visibility='hidden';
 	document.body.appendChild(oDv);
 }
 
 function defHdrStyle() {
-    //John Wilson - there seems to be no info.gif and it is throwing a 404 in the log removing.
-    //dvHdr.innerHTML='<img  style="vertical-align:middle"  src="info.gif">&nbsp;&nbsp;'+dvHdr.innerHTML;
     dvHdr.innerHTML='&nbsp;&nbsp;'+dvHdr.innerHTML
-	
 	dvHdr.style.fontWeight='bold';
 	dvHdr.style.width='150px';
 	dvHdr.style.fontFamily='arial';
-	//dvHdr.style.border='1px solid #A5CFE9';
-        dvHdr.style.border='1px solid #003399';
-	dvHdr.style.padding='3';
-	dvHdr.style.fontSize='11';
-	dvHdr.style.color='#4B7A98';
-	/*dvHdr.style.background='#D5EBF9';*/
-        dvHdr.style.background='#D9D8FF';
-	dvHdr.style.filter='alpha(opacity=85)'; // IE
-	dvHdr.style.opacity='0.85'; // FF
+    dvHdr.style.border='thin solid grey';
+	dvHdr.style.padding='3px';
+	dvHdr.style.fontSize='12px';
+	dvHdr.style.color='#000';
+    dvHdr.style.background='#1975D1';
 }
 
 function defBdyStyle() {
-	//dvBdy.style.borderBottom='1px solid #A5CFE9';
-        dvBdy.style.borderBottom='1px solid #003399';
-	//dvBdy.style.borderLeft='1px solid #A5CFE9';
-        dvBdy.style.borderLeft='1px solid #003399';
-	//dvBdy.style.borderRight='1px solid #A5CFE9';
-        dvBdy.style.borderRight='1px solid #003399';
+	dvBdy.style.borderTop='0px';
+	dvBdy.style.border='thin solid grey';
 	dvBdy.style.width='150px';
 	dvBdy.style.fontFamily='arial';
-	dvBdy.style.fontSize='11';
-	dvBdy.style.padding='3';
+	dvBdy.style.fontSize='14px';
+	dvBdy.style.padding='3px';
 	dvBdy.style.color='#1B4966';
 	dvBdy.style.background='#FFFFFF';
-	dvBdy.style.filter='alpha(opacity=85)'; // IE
-	dvBdy.style.opacity='0.85'; // FF
 }
 
 function checkElemBO(txt) {
