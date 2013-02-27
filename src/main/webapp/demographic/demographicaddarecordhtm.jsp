@@ -32,7 +32,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarDemographic.pageUtil.Util, oscar.oscarWaitingList.WaitingList"
 	errorPage="errorpage.jsp"%>
@@ -124,8 +124,10 @@
             if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
             if(!checkFormTypeIn()) return;
             document.getElementById("adddemographic").submit();
-        }
+        }        
+        
    </script>
+
 <oscar:customInterface section="masterCreate"/>
 
 <title><bean:message
@@ -1318,13 +1320,27 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				<input type="button" id="btnSwipeCard" name="Button"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnSwipeCard"/>"
 					onclick="window.open('zadddemographicswipe.htm','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>
-				&nbsp; <input type="button" id="btnCancel" name="Button"
+				&nbsp; 
+				<caisi:isModuleLoad moduleName="caisi" reverse="true">
+				<input type="button" name="closeButton"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnCancel"/>"
-					onclick=self.close();></div>
+					onclick="self.close();">
+				</caisi:isModuleLoad>				
+				</div>
+				&nbsp; 				
+				<caisi:isModuleLoad moduleName="caisi" reverse="true">
+				<input type="button" name="closeButton"
+					value="<bean:message key="demographic.demographicaddrecordhtm.btnCancel"/>"
+					onclick="self.close();">
+				</caisi:isModuleLoad>
+				
 				</td>
 			</tr>
 		</table>
 		</form>
+		
+				
+				
 		</td>
 	</tr>
 </table>
