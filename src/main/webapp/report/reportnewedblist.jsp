@@ -46,10 +46,8 @@
 
 <%
   String [][] dbQueries=new String[][] {
-{"select_maxformar_id", "select max(ID) from formAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no"  },
-{"select_formar", "select ID, demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  },
-{"select_backwardscompatible", "(select ID, demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ?) union " +
-                               "(select id as ID,demographic_no, edb as c_finalEDB, patient_name as c_pName, age as pg1_age, gravida as c_gravida, term as c_term, phone as pg1_homePhone, provider_no from edbrept where edb >= ? and edb <= ?) order by c_finalEDB desc limit ? offset ?"  },
+{"select_maxformar_id", "select max(ID) from formONAREnhanced where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no" },
+{"select_formar", "select ID, demographic_no, c_finalEDB, concat(c_lastName,', ',c_firstName) as c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formONAREnhanced where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  },
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 {"select_patientStatus", "select patient_status, provider_no from demographic where demographic_no = ?"  },
   };
@@ -351,11 +349,7 @@ function loadPage() {
         itemp1[0] = Integer.parseInt(strLimit2);
         boolean bodd=false;
         int nItems=0;
-        try {  // First try the version which also checks the edbrept table.  This will throw an exception if the edbrept table does not exist...
-        rs = reportMainBean.queryResults(paramb,itemp1, "select_backwardscompatible");
-        } catch (Exception e) {  // ...in which case we go with the standard version
-        rs = reportMainBean.queryResults(param,itemp1, "select_formar");
-        }
+	rs = reportMainBean.queryResults(param,itemp1, "select_formar");
         while (rs.next()) {
         if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
         if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
