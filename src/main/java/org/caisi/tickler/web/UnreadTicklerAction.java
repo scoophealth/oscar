@@ -36,6 +36,11 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.LazyValidatorForm;
 import org.caisi.model.CustomFilter;
 import org.caisi.service.TicklerManager;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.login.LoginCheckLogin;
 
@@ -64,15 +69,20 @@ public class UnreadTicklerAction extends DispatchAction {
 			return mapping.findForward("login");
 		}
 		
+		UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		UserProperty prop = propDao.getProp(providerNo, UserProperty.PROVIDER_FOR_TICKLER_WARNING);
+		ProviderDao provDao = (ProviderDao)SpringUtils.getBean("providerDao");
+		Provider prov = provDao.getProvider((prop != null) ? prop.getValue() : providerNo);
+		request.setAttribute("tklerProviderName", prov.getFormattedName());
+		
 		int oldNum = -1;
 		if(request.getSession().getAttribute("num_ticklers") != null) {
 			oldNum = ((Integer)request.getSession().getAttribute("num_ticklers")).intValue();
 		}
         CustomFilter filter = new CustomFilter();
-        filter.setAssignee(providerNo);
-        String providerId = (String)request.getSession().getAttribute("user");
+        filter.setAssignee(prov.getProviderNo());
         String programId = "";
-        Collection coll = ticklerMgr.getTicklers(filter, providerId, programId);
+        Collection coll = ticklerMgr.getTicklers(filter, prov.getProviderNo(), programId);
         if(oldNum != -1 && (coll.size() > oldNum)) {
         	request.setAttribute("difference",new Integer(coll.size() - oldNum));
         }

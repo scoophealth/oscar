@@ -92,8 +92,13 @@ function StartTheTimer()
 
 </head>
 <body onload="doAll()">
-
-You have
+<%
+	String ticklerProvName = (String)request.getAttribute("tklerProviderName");
+	if (ticklerProvName == null) {
+		ticklerProvName = "You";
+	}
+%>
+<%=ticklerProvName %> have
 <c:out value="${sessionScope.num_ticklers}" />
 ticklers.
 <html:form styleId="unreadTicklerForm" action="/UnreadTickler.do" target="_self">

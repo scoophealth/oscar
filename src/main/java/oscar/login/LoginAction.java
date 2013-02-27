@@ -176,6 +176,16 @@ public final class LoginAction extends DispatchAction {
         	session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE, providerPreference);
         	
             if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
+            	String tklerProviderNo = null;
+            	UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+        		UserProperty prop = propDao.getProp(providerNo, UserProperty.PROVIDER_FOR_TICKLER_WARNING);
+        		if (prop == null) {
+        			tklerProviderNo = providerNo;
+        		} else {
+        			tklerProviderNo = prop.getValue();
+        		}
+            	session.setAttribute("tklerProviderNo",tklerProviderNo);
+            	
                 session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
                 session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
                 session.setAttribute("caisiBillingPreferenceNotDelete", String.valueOf(providerPreference.getDefaultDoNotDeleteBilling()));
