@@ -31,8 +31,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
+import org.caisi.dao.TicklerDAO;
+import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -41,18 +45,21 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.CtlDocTypeDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.DocumentDao.Module;
 import org.oscarehr.common.dao.IndivoDocsDao;
+import org.oscarehr.common.dao.TicklerLinkDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.CtlDocType;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.CtlDocumentPK;
@@ -61,6 +68,8 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.MyDateFormat;
 import oscar.OscarProperties;
+import oscar.oscarLab.ca.all.AcknowledgementData;
+import oscar.oscarMDS.data.ReportStatus;
 import oscar.util.ConversionUtils;
 import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
@@ -92,7 +101,10 @@ public final class EDocUtil {
 
 	private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	private static CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
-	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+        private static CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
+        private static TicklerLinkDao ticklerLinkDao = (TicklerLinkDao) SpringUtils.getBean("ticklerLinkDao");
+        private static TicklerDAO ticklerDAO = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
+	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static DocumentDAO documentDAO = (DocumentDAO) SpringUtils.getBean("documentDAO");
@@ -445,8 +457,12 @@ public final class EDocUtil {
 		currentdoc.setReviewerId(d.getReviewer());
 		currentdoc.setReviewDateTime(ConversionUtils.toDateString(d.getReviewdatetime()));
 		currentdoc.setReviewDateTimeDate(d.getReviewdatetime());
-		return currentdoc;
-	}
+                currentdoc.setDateTimeStamp(ConversionUtils.toDateString(d.getUpdatedatetime()));
+                currentdoc.setDateTimeStampAsDate(d.getUpdatedatetime());
+                currentdoc.setDocClass(d.getDocClass());
+                currentdoc.setDocSubClass(d.getDocSubClass());
+	    return currentdoc;
+    }
 
 	public ArrayList<EDoc> getUnmatchedDocuments(String creator, String responsible, Date startDate, Date endDate, boolean unmatchedDemographics) {
 		ArrayList<EDoc> list = new ArrayList<EDoc>();
@@ -850,4 +866,86 @@ public final class EDocUtil {
 
 		documentDao.merge(doc);
 	}
-}
+        
+	public static String getHtmlTicklers(String docId ) {
+                                      
+            Long table_id=Long.valueOf(docId);
+            List<TicklerLink> linkList = ticklerLinkDao.getLinkByTableId("DOC",table_id );
+            String HtmlTickler="";
+            Tickler tickler= new Tickler();
+            Integer ticklerNo;
+        
+            if (linkList != null){
+                for(TicklerLink tl : linkList){
+                    ticklerNo = tl.getTicklerNo();
+                    Tickler t = ticklerDAO.getTickler(ticklerNo.longValue());
+                      if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {  
+                        HtmlTickler+="<br><a href='#' onclick=\"window.open('../Tickler.do?method=view&id="+ticklerNo.toString()+"','viewtickler"+ticklerNo.toString()+"','height=700,width=600,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0');\" >"+t.getMessage()+"</a>";
+                     } else
+                     {
+                        HtmlTickler+="<br>"+t.getMessage();
+                     }
+                }
+            }
+            return HtmlTickler;
+        }
+                   
+        public static String getHtmlAcknowledgement(Locale locale,String docId ) {
+  
+            ArrayList<ReportStatus> ackList = AcknowledgementData.getAcknowledgements( "DOC",docId);
+            String HtmlAcknowledgement="";
+            String comment="";
+            ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
+            for (int i=0; i < ackList.size(); i++) {
+                    ReportStatus report = (ReportStatus) ackList.get(i);
+                    HtmlAcknowledgement+=report.getProviderName()+": ";
+                    String ackStatus = report.getStatus();
+                    if(ackStatus.equals("A")){
+                        ackStatus= props.getString("dms.documentBrowser.msgAcknowledgedOn");
+                    }else if(ackStatus.equals("F")){
+                        ackStatus= props.getString("dms.documentBrowser.msgFileButNotAcknowledgedOn");
+                    }else{
+                        ackStatus= props.getString("dms.documentBrowser.msgNotAcknowledgeSince");
+                    }
+                                                                        
+                    HtmlAcknowledgement+=ackStatus;
+                    HtmlAcknowledgement+=" "+report.getTimestamp()+ " ";
+                                                                        
+                    comment=report.getComment();
+                    if(comment!=null) {
+                        HtmlAcknowledgement+= comment; }
+                    HtmlAcknowledgement+="<br>";
+                                                                   
+            }
+            
+            return HtmlAcknowledgement;
+        }
+        
+        public static String getHtmlAnnotation(String docId) {
+    
+            Long tableId = 0L;
+            String note="";
+                
+            if (docId!=null && docId.trim().length()>0)  {
+                tableId = Long.valueOf(docId);
+            }
+            
+            CaseManagementNoteLink cmnLink = caseManagementNoteLinkDao.getLastLinkByTableId(CaseManagementNoteLink.DOCUMENT, tableId);
+            CaseManagementNote p_cmn = null;
+            if (cmnLink!=null) {
+                p_cmn = caseManagementNoteDao.getNote(cmnLink.getNoteId());
+                //get the most recent previous note from uuid.
+                p_cmn=caseManagementNoteDao.getMostRecentNote(p_cmn.getUuid());
+            }
+    
+            //if get provider no is -1 , it's a document note.
+            if (p_cmn!=null && p_cmn.getProviderNo().equals("-1") ) { p_cmn=null;}  //don't use document note as annotation.
+    
+            if(p_cmn!=null) {
+                note=p_cmn.getNote();
+            }
+            return note;
+        }
+        
+
+	}

@@ -29,6 +29,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.PrintWriter;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +42,8 @@ import java.nio.channels.FileChannel;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -81,6 +84,7 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -846,4 +850,55 @@ public class ManageDocumentAction extends DispatchAction {
 		return null;
 	}
 
+        public ActionForward printAnnotation(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                response.setContentType("text/html");
+		doPrintAnnotation(request, response.getWriter());
+		return null;
+	}
+     
+        public void doPrintAnnotation(HttpServletRequest request, PrintWriter out) {
+
+                String doc_no = request.getParameter("doc_no");
+                Locale locale=request.getLocale();
+                
+		String annotation= "",acknowledgement="",tickler="";
+                if(doc_no!=null && doc_no.length()>0) { 
+                    annotation=EDocUtil.getHtmlAnnotation(doc_no);
+                    acknowledgement=EDocUtil.getHtmlAcknowledgement(locale,doc_no);
+                    if(acknowledgement==null) {acknowledgement="";}
+                    tickler=EDocUtil.getHtmlTicklers(doc_no);
+                }
+                
+                out.println("<!DOCTYPE html><html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'></head><body>");
+
+                if(annotation.length()>0)  {
+                    out.println(annotation+"<br>");
+                }
+                
+                if(acknowledgement.length()>0) {
+                    out.println(acknowledgement+"<br>");
+                }
+		
+                if(tickler.length()>0)
+                {
+                    out.println(tickler+"<br>");
+                }
+
+                EDoc curDoc= EDocUtil.getDoc(doc_no);
+                ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
+                out.println("<br>"+props.getString("dms.documentBrowser.DocumentUpdated")+":"+curDoc.getDateTimeStamp());
+                out.println("<br>"+props.getString("dms.documentBrowser.ObservationDate")+":"+curDoc.getObservationDate());
+                out.println("<br>"+props.getString("dms.documentBrowser.Type")+":"+curDoc.getType());
+                out.println("<br>"+props.getString("dms.documentBrowser.Class")+":"+curDoc.getDocClass());
+                out.println("<br>"+props.getString("dms.documentBrowser.Subclass")+":"+curDoc.getDocSubClass());
+                out.println("<br>"+props.getString("dms.documentBrowser.Creator")+":"+curDoc.getCreatorName());
+                out.println("<br>"+props.getString("dms.documentBrowser.Responsible")+":"+curDoc.getResponsibleName());
+                out.println("<br>"+props.getString("dms.documentBrowser.Reviewer")+":"+curDoc.getReviewerName());
+                out.println("<br>"+props.getString("dms.documentBrowser.Source")+":"+curDoc.getSource());
+                
+                out.println("</body></html>");
+		out.flush();
+                out.close();
+                
+        }
 }
