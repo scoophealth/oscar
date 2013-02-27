@@ -54,8 +54,8 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 
 	@Column(name = "demographicNo")
 	private Integer demographicId;
-
-	@Column(name = "providerNo")
+	
+	@Column(name = "providerNo")	
 	private String providerNo;
 	
 	@Column(name = "dataField", nullable=false, length=255)
