@@ -74,10 +74,9 @@
     </security:oscarSec>
 </oscar:oscarPropertiesCheck>
 
-<%//john TODO: resolve this from template
+<%
 	if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) {
-%>
-	<%
+
 		if (temp.equals("diab3")) {
 	%>
 		<jsp:forward page="DiabFlowSheet.jsp" />
@@ -87,16 +86,13 @@
 		<jsp:forward page="DiabFlowSheet.jsp" />
 	<%
 		}
-	%>
-<%
-	}
-%>
 
-<%
+	}
+
 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
 
 
-    int numElementsToShow = 8;
+    int numElementsToShow = 6;
     Date sdate = null;
     Date edate = null;
     if ( request.getParameter("numEle") != null ){
@@ -233,35 +229,15 @@ if (!medicationsResult.isEmpty()) {
 
 <head>
 <title>Health Tracker - <oscar:nameage demographicNo="<%=demographic_no%>"/></title><!--I18n-->
-<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css" />
-<script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
-<script type="text/javascript" src="../../share/javascript/prototype.js"></script>
 
-	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/share/css/OscarStandardLayout.css" />
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/prototype.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>
 	
-	<script type="text/javascript">
-
-	//this is just temp 
-	
-
-	function maxWindow(){
-		window.moveTo(0,0);
-		window.resizeTo(screen.availWidth,screen.availHeight);
-	}
-	
-    	$(function() {
-    		$('.inlinesparkline').sparkline('html',{width:"30px", height:"16px"});
-
-    		$('.checkmarksparkline').sparkline('html',{type:"line", lineColor:"#0f0", fillColor:"", spotRadius:"0", spotColor:""})
-
-    		var vals1 = [3,2,1];
-    		var vals2 = [1,2,3];
-    		$('.xsparkline').sparkline(vals1,{type:"line", lineColor:"#f00", fillColor:"", spotRadius:"0", spotColor:""});
-    		$('.xsparkline').sparkline(vals2,{type:"line", lineColor:"#f00", fillColor:"", spotRadius:"0", spotColor:"", composite:"true"});
-    	});
-    </script>
-
+<!-- 
 <style type="text/css">
     div.ImmSet { background-color: #ffffff;clear:left;margin-top:10px;}
     div.ImmSet h2 {  }
@@ -272,6 +248,7 @@ if (!medicationsResult.isEmpty()) {
     div.ImmSet li a:hover { text-decoration:none; color:red; }
     div.ImmSet li a:visited { text-decoration:none; color:blue;}
 </style>
+-->
 
 <style type="text/css" media="print">
 .DoNotPrint {
@@ -296,17 +273,68 @@ div.headPrevention a:visited { color:black; }
 
 <style type="text/css" media="screen">
 
+#flowsheet-controls{
+  background: white;
+  font-family: verdana,tahoma,sans-serif;
+  padding: 5px;  
+  border: thin solid grey; 
+  border-right:2px solid grey;
+  border-bottom:2px solid grey;
+  border-top: 0px; 
+  width:610px;
+}
+
+#manage-flowsheet{
+width:70px;
+border-left: 1px solid #6E6E6E;
+text-align:center;
+font-size:14px;
+}
+
+#manage-flowsheet a{
+text-decoration:none;
+color:#000;
+}
+
+#manage-flowsheet a:hover{
+text-decoration:underline;
+}
+
+#flowsheet-controls span{
+  font-family: verdana,tahoma,sans-serif;
+  font-size: 10pt;
+  padding-right:15px;
+}
+
+#flowsheet-controls span a{
+  text-decoration:none;
+  color:#000;
+}
+
+#flowsheet-controls span a:hover {
+cursor: hand; 
+cursor: pointer;
+text-decoration:underline;
+}
+
+.right-side-cell td{
+  max-width:500px; 
+  min-width:300px;
+}
+
 /* tabs */
 .tabs {
-  position: relative;   
+  position: relative;  
   min-height: 200px; /*needed for now*/
   clear: both;
-  margin: 15px 0 15px 0;
+  margin-top:6px;
   height:400px;
 }
+
 .tab {
   float: left;
 }
+
 .tab label {
   background: #D6D6C2; 
   padding: 5px; 
@@ -324,30 +352,30 @@ cursor: pointer;
 text-decoration:underline;
 }
 
-
 .tab [type=radio] {
   display: none;   
 }
+
 .content {
   position: absolute;
   top: 23px;
-  left: 0;
+  left: 0px;
+  right:0px;
   background: white;
-  right: 0;
   overflow-y:scroll;
   padding: 20px;
   border: thin solid grey; 
-  max-width:500px;
+  max-width:500px; 
   min-width:300px;
-
-  height:350px;
-  
+  height:200px;
 }
+
 [type=radio]:checked ~ label {
   background: white;
   border-bottom: 4px solid grey;
   z-index: 2;
 }
+
 [type=radio]:checked ~ label ~ .content {
   z-index: 1;
 }
@@ -373,8 +401,6 @@ height: 52px;
 	
 }
 
-
-
 div.headMtype a:active { color:black; }
 div.headMtype a:hover { color:black; }
 div.headMtype a:link { color:black; }
@@ -389,65 +415,16 @@ div.headMtype span {
     line-height: 1.2;
     height:2em;
     font-family: sans-serif;
-
 }
 
-.headPreventionWarning{
-font-size: 8pt;
+.headPreventionWarning{font-size: 8pt;}
 
-}
-
-</style>
-
-<script type="text/javascript">
-    window.onload=function(){
-        if(!NiftyCheck())
-            return;
-
-    }
-
-
-   function loadDifferentElements(){
-       //console.log("hapy");
-        var numEle = $('numEle').value;
-        var sdate = $('flowsheetStartDate').value;
-        var edate = $('flowsheetEndDate').value;
-        if( !numEle.blank()){
-            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+numEle;
-            //console.log("one");
-        }else if (!sdate.blank() && !edate.blank()){
-            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
-            //console.log("two");
-        }else{
-            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';
-        }
-
-    }
-
-
-    function fsPopup(width,height,url,window) {
-    	<%
-    		com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
-    		if(securityMgr.hasWriteAccess("_flowsheet."+mFlowsheet.getName(),roleName$)) {
-    	%>
-
-    	return popup(width,height,url,window);
-    	<%}%>
-    }
-    
-
-</script>
-
-
-<style type="text/css">
 body {
 margin-top: 0px;
 margin-left: 0px; 
 margin-right:0px;
-
 background-color: #B7B18D;
 }
-
 
 div.leftBox{
     width:90%;
@@ -521,7 +498,7 @@ div.preventionProcedure p {
 }
 
 div.preventionSection {
-    width: 820px;
+    width: 620px;
     Height: 70px;
     position:relative;
     margin-top:5px;
@@ -532,9 +509,7 @@ div.preventionSection {
 }
 
 div.preventionSection:hover {
-
-background-color:#F7FE2E;
-
+background-color: #FFFFAA;
 }
 
 div.preventionSet {
@@ -560,9 +535,7 @@ div.recommendations li{
 
 }
 
-
 .button-ht {
- 
 	background:#5CCD00;
 	background:-moz-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
 	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#5CCD00),color-stop(100%,#4AA400));
@@ -580,18 +553,15 @@ div.recommendations li{
 	-webkit-border-radius:5px;
 	border:1px solid #459A00;
 	margin-right: 4px;
-
 }
 
 .button-ht:hover{
-cursor: hand; cursor: pointer;
-border-bottom:2px solid #000;
-border-right:1px solid #000;
-
+	cursor: hand; cursor: pointer;
+	border-bottom:2px solid #000;
+	border-right:1px solid #000;
 }
 
 .button-ht-disabled {
- 
 	background:#ccc;
 	padding:6px 12px;
 	color:grey;
@@ -602,90 +572,137 @@ border-right:1px solid #000;
 	-webkit-border-radius:5px;
 	border:1px solid grey;
 	margin-right: 4px;
-
 }
 
 .button-ht-disabled:hover{
-cursor: hand; cursor: pointer;
+	cursor: hand; cursor: pointer;
 }
 
-.dxAlert{
- position:relative;
-   margin-top:2px;
-   margin-left:2px;
-width:4px;
-height:4px;
-background-color:red;
-
+#dxAlert{
+	position:relative;
+	font-size:12px;
+	border:thin solid #FFAD33;
+	background-color:#FFFFAA; 
+	padding:4px;
+	display:none;
+	max-width:1180px;
 }
 
 #black_wrapper{
-
 	display: none;
 	position: fixed;
-	top: 20px;
-	right:0px;
-	width: 890px;
+	top: 90px;
+	/*right:0px;*/
+	width: 100%; /*890px*/
 	height: 100%;
 }
 
+#close-link{
+	position:fixed;
+	top:90px;
+	right:5px;
+}
+
 div.black_overlay{
-	
 	position: fixed;
-	top: 20px;
-	right:0px;
-	width: 890px;
+	top: 90px;
+	width: 100%;
 	height: 100%;
 	background-color: black;
 	z-index:1002;
 	-moz-opacity: 0.4;
 	opacity:.40;
 	filter: alpha(opacity=40);
-	
-
-	
 } 
 
  
 #light {
-	
 	position: fixed;
-	top: 50px;
-	right:0px;
+	top: 100px;
 	width: 880px;
 	height: 460px;
 	padding: 0px;
 	background-color: white;
 	z-index:1003;
-	
+	display: block;	
+	left: 50%;
+	margin-left: -440px;
+	text-align:center;
 }
 
 .close-graph{
-position: absolute;
-right:4px;
-top: 2px;
-z-index:1006;
+	position: absolute;
+	right:4px;
+	top: 2px;
+	z-index:1006;
 }
 
-.close-graph:hover
-{
--moz-opacity: .4;
-opacity:.40;
-filter:alpha(opacity=40); /* For IE8 and earlier */
+.close-graph:hover{
+	-moz-opacity: .4;
+	opacity:.40;
+	filter:alpha(opacity=40); /* For IE8 and earlier */
 }
-
 
 </style>
 
-<script type="text/javascript"> 
+<script type="text/javascript">
+
+
+    window.onload=function(){
+		window.moveTo(0,0);
+		window.resizeTo(screen.availWidth,screen.availHeight);
+		
+        if(!NiftyCheck())
+            return;
+
+    }
+	
+    	$(function() {
+    		$('.inlinesparkline').sparkline('html',{width:"30px", height:"16px"});
+
+    		$('.checkmarksparkline').sparkline('html',{type:"line", lineColor:"#0f0", fillColor:"", spotRadius:"0", spotColor:""})
+
+    		var vals1 = [3,2,1];
+    		var vals2 = [1,2,3];
+    		$('.xsparkline').sparkline(vals1,{type:"line", lineColor:"#f00", fillColor:"", spotRadius:"0", spotColor:""});
+    		$('.xsparkline').sparkline(vals2,{type:"line", lineColor:"#f00", fillColor:"", spotRadius:"0", spotColor:"", composite:"true"});
+    	});
+
+    
+   function loadDifferentElements(){
+       //console.log("hapy");
+        var numEle = $('numEle').value;
+        var sdate = $('flowsheetStartDate').value;
+        var edate = $('flowsheetEndDate').value;
+        if( !numEle.blank()){
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+numEle;
+            //console.log("one");
+        }else if (!sdate.blank() && !edate.blank()){
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
+            //console.log("two");
+        }else{
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';
+        }
+
+    }
+
+
+    function fsPopup(width,height,url,window) {
+    	<%
+    		com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
+    		if(securityMgr.hasWriteAccess("_flowsheet."+mFlowsheet.getName(),roleName$)) {
+    	%>
+
+    	return popup(width,height,url,window);
+    	<%}%>
+    }
+    
 
 function newSite(s) {
 	var url = "<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type="+s;
 
-
 	document.getElementById('gFrame').src = url;
 	document.getElementById('black_wrapper').style.display='block';
-	
 }
 
 function addMeas(s,t) {
@@ -693,9 +710,6 @@ function addMeas(s,t) {
 
 document.getElementById('gFrame').src = url;
 document.getElementById('black_wrapper').style.display='block';
-
-
-
 }
 
 function eform() {
@@ -703,11 +717,11 @@ document.getElementById('gFrame').src = '<%=request.getContextPath()%>/eform/efm
 document.getElementById('black_wrapper').style.display='block';
 }
 
-
 </script>
+
 </head>
 
-<body onload="maxWindow()">
+<body>
 
 <% 
 String title_for_menu="<font size='4' color='#FFFFFF' style='padding-right:10px; text-shadow: 1px 1px black;'><span style='color:red;'>&hearts;</span> Health Tracker</font>";
@@ -726,13 +740,13 @@ String patient_bar_colour="#1975D1";
     	<table cellpadding="3" cellspacing="0" width="100%">
 	    	<tr bgcolor="#fff">
 
-<!-- this will be replaced with a carousel	    	
-	    		<td width="20px" style="border-right: 1px solid #6E6E6E"><font size="3"><b> <a href="#" style="font-size:20px;color:#6E6E6E;text-decoration:none;"> << </a> </b></font></td>
--->		    	
-				<td style="padding-left:8px;padding-right:8px;">	
+	    	<td style="padding-left:8px;padding-right:8px;">
+	    	
 			<%
 				String btnSelected="";
 				String isDisabled = "";
+				String dxAlert="";
+				String dxAlertfs="";
 								
 				FlowsheetDao flowsheetDao = (FlowsheetDao) SpringUtils.getBean("flowsheetDao");
 				ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
@@ -742,6 +756,7 @@ String patient_bar_colour="#1975D1";
 			
 				
 				Hashtable<String, String> systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();
+								
 				for(String name:systemFlowsheets.keySet()) {
 					String displayName = systemFlowsheets.get(name);
 					MeasurementFlowSheet flowSheetGroups = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(name);
@@ -774,27 +789,45 @@ String patient_bar_colour="#1975D1";
 							}
 						}	
 					
+						//simple alert trigger
+						if(btnSelected.length()>1 && isDisabled.length()>1){
+							
+								dxAlert="style='display:block;'";
+								dxAlertfs=flowSheetGroups.getDisplayName();
+							
+						}
 					%>
 						
 						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>">
-						<button  class="button-ht<%=isDisabled%>" <%=btnSelected%> title="<%=flowSheetGroups.getDisplayName()%>"><%=flowSheetGroups.getName().toUpperCase()%> </button></a>
-
-
+						<button  class="button-ht<%=isDisabled%>" <%=btnSelected%> title="<%=flowSheetGroups.getDisplayName()%>">
+						<%
+						if(flowSheetGroups.getName().toUpperCase().equals("DIAB2")){
+							out.print("DIAB");
+						}else{
+						
+							out.print(flowSheetGroups.getName().toUpperCase());
+						
+						}
+						%> 
+						</button></a>
 					<% 
-					
+										
 					} 
 					
 				}
-	
-	
 			%>				
 				
 				 </td>
-				
-<!-- this will be replaced with a carousel
-				<td width="20px" style="border-left: 1px solid #6E6E6E"><font size="3"><b> <a href="#" style="font-size:20px;color:#6E6E6E;text-decoration:none;"> >> </a> </b></font></td>
-				</td>
--->
+
+<security:oscarSec roleName="<%=roleNameMenu$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">				 
+  <td id="manage-flowsheet">
+  		<b><a href="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp" title="Create Flowsheet"> Create </a></b>
+  </td>
+  <td id="manage-flowsheet">		
+		<b><a href="<%=request.getContextPath()%>/admin/manageFlowsheets.jsp" title="Manage Flowsheets" > Manage</a></b>
+  </td>
+ </security:oscarSec>
+  	
 			</tr>
 		</table> 
 			
@@ -804,37 +837,58 @@ String patient_bar_colour="#1975D1";
 <!-- Health Tracker Header END -->
 
 
-<table width="100%" style="margin-top:90px;">
+<table width="98%" style="margin-top:90px;" align="center" border="0">
 <tr>
-<td valign="top" colspan="2">
+<td valign="top" colspan="2" >
 
-
-<!--TODO: john fix this with css -->
-<div id="meas_content" style="margin-top:10px;">
-
-<font style="font-size:18px;font-weight:bold;"><%=flowSheet%> </font>  
-
-<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-<% if (recList.size() > 0){ %>
-	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements">
-<bean:message key="oscarencounter.templateflowsheet.addall" /></a> &nbsp;|&nbsp; 
-	<a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:addMeas('<%=recListBuffer.toString()%>', '<%=temp%>')" TITLE="Add all overdue measurements">
-<bean:message key="oscarencounter.templateflowsheet.addoverdue" /> 
-	</a>
-<%}%>
-</security:oscarSec>
-
-<% if(flowSheet.equals("Pain")){ %>  &nbsp;| <a href="#" onclick="eform();"">eform test</a> <%} %>
-
-<%=mFlowsheet.getTopHTMLStream() %>
+<div id="dxAlert" <%=dxAlert%> ><b>Important!</b> You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=1&providerNo=999998&quickList="><b>Add Diagnosis</b></a></div>
 
 </td>
 </tr>
 <tr>
-<td valign="top" width="860px">
+<td valign="top" width="640px">
+<div style="border:thin solid grey;border-right:2px solid grey;background-color:#D6D6C2;padding: 5px;width:610px">
+<font style="font-size:18px;font-weight:bold;"><%=flowSheet%> </font> <!-- <span style="font-size:12px;font-weight:normal;" title="Edit <%=flowSheet%> Flowsheet"> [Edit]</span>-->
+</div>
+<div id="flowsheet-controls">
+
+<!-- <div style="float:right;display:inline-block;">-->
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+<% if (recList.size() > 0){ %>
+<span>
+<b>+</b><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements">
+<bean:message key="oscarencounter.templateflowsheet.addall" /></a>
+</span>
+
+<span>
+<b>+</b><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:addMeas('<%=recListBuffer.toString()%>', '<%=temp%>')" TITLE="Add all overdue measurements">
+<bean:message key="oscarencounter.templateflowsheet.addoverdue" /></a>
+</span>
+<!-- 
+<span>
+	<a class="DoNotPrint" href="#"  title="Tracker Graph">Tracker Graph</a>
+</span>
+
+<span>
+	<a class="DoNotPrint" href="#"  onclick="eform();" title="Clinical Resources">Resources</a>
+</span>
+
+<span>
+	<a class="DoNotPrint" href="#"  title="Search">Filter Results</a>
+</span>
+
+<span>
+	<a class="DoNotPrint" href="#"  title="Print Flowsheet">Print</a> 
+</span>
+-->
+<%}%>
+<!-- </div>-->
+</security:oscarSec>
+
+
+<%=mFlowsheet.getTopHTMLStream() %>
 </div>
 
-<div >
 <%
 	//set add link array
 	String[] addAllLink = new String[measurements.size()];
@@ -992,6 +1046,28 @@ String patient_bar_colour="#1975D1";
 </div>
 -->
 
+<!-- 
+<span style="float:left;border-right:thin solid grey;width:90px;height:50px;">
+
+<%
+/* not liking the inputs nested
+
+if ( (mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")) || (mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA"))){
+	
+	out.print("yes/no");
+	
+}else{
+	
+	out.print("<input type='text' style='width:60px'>");
+
+}
+*/
+%>
+<br><button>Add</button>
+
+
+</span>
+-->
     <%  int k = 0;
         for (EctMeasurementsDataBean mdb:alist){
             k++;
@@ -1205,11 +1281,9 @@ function createAddAll(d,t){
     </ol>
 --->
 </div>
-
-
-
+</br></br>
 </td>
-<td valign="top" align="left">
+<td valign="top" align="left" class="right-side-cell">
 
 <div class="tabs">
     
@@ -1369,22 +1443,17 @@ if(temp.equals("ckd")){
 
 
 <div id="black_wrapper">
-<!-- GRAPH Overlay START-->
-<div id="light" class="white_content">
-<iframe id="gFrame" src="about:blank" width="820px" height="460px" frameborder="0" align="center"></iframe>
-</div>
 
-<!-- GRAPH Overlay END-->
-
-<!-- Guidelines Overlay START  -->
-
-<!-- Guidelines Overlay END  -->
-
-<div id="fade" class="black_overlay"></div>
-
-<a id="close-link" href = "javascript:void(0)" onclick = "document.getElementById('black_wrapper').style.display='none'"> 
-<img class="close-graph" src="<%=request.getContextPath()%>/images/close.png" title="Close Graph"></img>
-</a>
+	<div id="fade" class="black_overlay"></div>
+	
+	<a id="close-link" href = "javascript:void(0)" onclick = "document.getElementById('black_wrapper').style.display='none'"> 
+	<img class="close-graph" src="<%=request.getContextPath()%>/images/close.png" title="Close"></img>
+	</a>
+	
+	<div id="light" class="white_content">
+	<iframe id="gFrame" src="about:blank" width="820px" height="460px" frameborder="0" align="center"></iframe>
+	</div>
+	
 <div>
 
 
