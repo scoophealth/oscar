@@ -59,7 +59,8 @@ public class DefaultIssueDao extends AbstractDao<DefaultIssue> {
 	
 	@SuppressWarnings("unchecked")
 	public String[] findAllDefaultIssueIds() {
-		Query query = entityManager.createQuery("select distinct x.issueIds from DefaultIssue x");
+		Query query = entityManager.createQuery("select x.issueIds from DefaultIssue x order by x.assignedtime");
+		query.setMaxResults(1);
 		List<String> issueIdsList = query.getResultList();
 		if (issueIdsList.size() == 0) {
 			return new String[0];
