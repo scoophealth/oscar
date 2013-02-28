@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.billing.CA.ON.dao.BillingONDiskNameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONFilenameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONHeaderDao;
@@ -110,7 +111,15 @@ public class JdbcBillingClaimImpl {
 		b.setLocation(val.location);
 		b.setDemographicNo(Integer.parseInt(val.demographic_no));
 		b.setProviderNo(val.provider_no);
-		b.setAppointmentNo(Integer.parseInt(val.appointment_no));
+		String apptNo = StringUtils.trimToNull(val.appointment_no);
+		
+		if( apptNo != null ) {
+			b.setAppointmentNo(Integer.parseInt(val.appointment_no));
+		}
+		else {
+			b.setAppointmentNo(null);
+		}
+		
 		b.setDemographicName(val.demographic_name);
 		b.setSex(val.sex);
 		b.setProvince(val.province);
