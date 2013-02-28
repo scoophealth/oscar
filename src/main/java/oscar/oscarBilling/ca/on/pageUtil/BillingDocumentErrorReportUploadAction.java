@@ -336,9 +336,9 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 				
 				if (!ds.isEmpty()) {
 					Demographic d = ds.get(0);
-					if (d.getVer().compareTo(bean.getVersion()) == 0) {
-						List<Demographic> demographics = demographicDao.searchByHealthCard(hin);
-						for(Demographic demographic:demographics) {
+					if (d.getVer().trim().compareTo(bean.getVersion().trim()) == 0) {
+						//List<Demographic> demographics = demographicDao.searchByHealthCard(hin);
+						for(Demographic demographic:ds) {
 							demographic.setVer("##");
 							demographicDao.save(demographic);
 						}
