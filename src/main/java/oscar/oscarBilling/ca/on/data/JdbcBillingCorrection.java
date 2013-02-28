@@ -128,7 +128,14 @@ public class JdbcBillingCorrection {
 
 			ch1Obj.setDemographic_no(h.getDemographicNo().toString());
 			ch1Obj.setProviderNo(h.getProviderNo());
-			ch1Obj.setAppointment_no(h.getAppointmentNo().toString());
+			
+			if( h.getAppointmentNo() != null ) {
+				ch1Obj.setAppointment_no(h.getAppointmentNo().toString());
+			}
+			else {
+				ch1Obj.setAppointment_no(null);
+			}
+			
 			ch1Obj.setDemographic_name(h.getDemographicName());
 			ch1Obj.setSex(h.getSex());
 			ch1Obj.setProvince(h.getProvince());
