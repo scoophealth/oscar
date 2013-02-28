@@ -159,7 +159,7 @@ PharmacyInfo pharmacy;
 pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
 if (pharmacy != null) {
 	pharmaFax = pharmacy.fax;
-	pharmaFax2 = "Fax: " + pharmacy.fax;
+	pharmaFax2 = "<bean:message key='RxPreview.msgFax'/>"+": " + pharmacy.fax;
 	pharmaName = pharmacy.getName();
 }
 
@@ -199,21 +199,24 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                     			String patientDOB = patient.getDOB() == null ? "" : formatter.format(patient.getDOB());
                                     			
                                             	String docInfo = doctorName + "\n"+provider.getClinicName().replaceAll("\\(\\d{6}\\)","")
-														+"\nCPSO #" + pracNo
+														+"<bean:message key='RxPreview.PractNo'/>"+ pracNo
 														+ "\n" + provider.getClinicAddress() + "\n"
 														+ provider.getClinicCity() + "   "
-														+ provider.getClinicPostal() + "\nTel: "
-														+ provider.getClinicPhone() + "\nFax: "
+														+ provider.getClinicPostal() + "\n"
+														+"<bean:message key='RxPreview.msgTel'/>"+": "
+														+ provider.getClinicPhone() + "\n"
+														+"<bean:message key='RxPreview.msgFax'/>"+": "
 														+ provider.getClinicFax();
                                         
                                             	String patientInfo = patient.getFirstName() + " "
 														+ patient.getSurname() + "\n"
 														+ patient.getAddress() + "\n"
 														+ patient.getCity() + "   "
-														+ patient.getPostal() + "\nTel: "
-														+ patient.getPhone()
-														+ (patientDOB != null && !patientDOB.trim().equals("") ? "\nDOB: " + patientDOB : "") 
-														+ (patient.getHin() != null && !patient.getHin().trim().equals("") ? "\nHIN: " + patient.getHin() : "");
+														+ patient.getPostal() + "\n"
+														+ "<bean:message key='RxPreview.msgTel'/>"+": "+ patient.getPhone()
+														+ (patientDOB != null && !patientDOB.trim().equals("") ? "\n"
+														+"<bean:message key='RxPreview.msgDOB'/>"+": "+ patientDOB : "") 
+														+ (patient.getHin() != null && !patient.getHin().trim().equals("") ? "\n"+"<bean:message key='oscar.oscarRx.hin'/>"+": " + patient.getHin() : "");
                                             }    
                                                     
                                             %> <input type="hidden" name="doctorName"
@@ -316,7 +319,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                             <%= provider.getClinicAddress() %><br>
                                                             <%= provider.getClinicCity() %>&nbsp;&nbsp;<%=provider.getClinicProvince()%>&nbsp;&nbsp;
                                                 <%= provider.getClinicPostal() %>
-                                                <% if(provider.getPractitionerNo() != null && !provider.getPractitionerNo().equals("")){ %><br>CPSO:<%= provider.getPractitionerNo() %><% } %>
+                                                <% if(provider.getPractitionerNo() != null && !provider.getPractitionerNo().equals("")){ %><br><bean:message key="RxPreview.PractNo"/>:<%= provider.getPractitionerNo() %><% } %>
                                                 <br>
                                                <%
                                                 	UserProperty phoneProp = userPropertyDAO.getProp(provider.getProviderNo(),"rxPhone");

@@ -52,6 +52,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.util.LocaleUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.PrescriptionQrCodeUIBean;
 
@@ -244,7 +245,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			cb.showTextAligned(alignment, text, x, y, rotation);
 			cb.endText();
 		}
-
+		
+		private String geti18nTagValue(Locale locale, String tag) {
+			return LocaleUtils.getMessage(locale,tag);
+		}
+		
 		public void renderPage(PdfWriter writer, Document document) {
 			Rectangle page = document.getPageSize();
 			PdfContentByte cb = writer.getDirectContent();
@@ -263,19 +268,16 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                                                 String newline = System.getProperty("line.separator");
                                 StringBuilder hStr = new StringBuilder(this.patientName);
                                 if(showPatientDOB){
-                                     hStr.append("   DOB:").append(this.patientDOB).append("                               ").append(this.rxDate).append(newline);}
-                                else{
-                                    hStr.append("                            ").append(this.rxDate).append(newline);
+                                     hStr.append("   "+geti18nTagValue(locale, "RxPreview.msgDOB")+":").append(this.patientDOB);
                                 }
-
-                                hStr.append(this.patientAddress).append(newline).append(this.patientCityPostal).append(newline).append(this.patientPhone);
+                                hStr.append(newline).append(this.patientAddress).append(newline).append(this.patientCityPostal).append(newline).append(this.patientPhone);
                                 
                                 if (patientHIN != null && patientHIN.trim().length() > 0) { 
-                                    hStr.append(newline).append("Health Ins #. ").append(patientHIN); 
+                                    hStr.append(newline).append(geti18nTagValue(locale, "oscar.oscarRx.hin")+" ").append(patientHIN); 
                                 }
 
                                 if (patientChartNo != null && !patientChartNo.isEmpty()) {
-                                    String chartNoTitle = org.oscarehr.util.LocaleUtils.getMessage(locale, "oscar.oscarRx.chartNo");
+                                    String chartNoTitle = geti18nTagValue(locale, "oscar.oscarRx.chartNo") ;
                                     hStr.append(newline).append(chartNoTitle).append(patientChartNo);
                                 }
                                 
@@ -296,28 +298,26 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 				bf = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 80, (page.getHeight() - 25), 0);
+				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.rxDate, 188, (page.getHeight() - 112), 0);
+				
 				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				int fontFlags = Font.NORMAL;
 				Font font = new Font(bf, 10, fontFlags);
 				ColumnText ct = new ColumnText(cb);
 				ct.setSimpleColumn(80, (page.getHeight() - 25), 280, (page.getHeight() - 90), 11, Element.ALIGN_LEFT);
 				// p("value of clinic name", this.clinicName);
-				ct.setText(new Phrase(12, clinicName+(pracNo != null && pracNo.trim().length() >0 ? "\r\nCPSID: "+ pracNo : ""), font));
-				ct.go();
+				ct.setText(new Phrase(12, clinicName+(pracNo != null && pracNo.trim().length() >0 ? "\r\n"+geti18nTagValue(locale, "RxPreview.PractNo")+": "+ pracNo : ""), font));ct.go();
 				// render clnicaTel;
-				// bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-				//bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-				bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				if (this.clinicTel.length() <= 13) {
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 188, (page.getHeight() - 70), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgTel")+":" + this.clinicTel, 188, (page.getHeight() - 70), 0);
 					// render clinicFax;
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.getHeight() - 80), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgFax")+":" + this.clinicFax, 188, (page.getHeight() - 80), 0);
 				} else {
 					String str1 = this.clinicTel.substring(0, 13);
 					String str2 = this.clinicTel.substring(13);
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + str1, 188, (page.getHeight() - 70), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgTel")+":" + str1, 188, (page.getHeight() - 70), 0);
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, str2, 188, (page.getHeight() - 80), 0);
-					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.getHeight() - 88), 0);
+					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgFax")+":" + this.clinicFax, 188, (page.getHeight() - 88), 0);
 				}
 
 				// get the end of paragraph
@@ -353,8 +353,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				cb.lineTo(285f, endPara - 60);
 				cb.stroke();
 				// Render "Signature:"
-				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Signature:", 20f, endPara - 30f, 0);
-				// Render line for Signature 75, 55, 280, 55, 0.5
+				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgSignature"), 20f, endPara - 30f, 0);// Render line for Signature 75, 55, 280, 55, 0.5
 				cb.setRGBColorStrokeF(0f, 0f, 0f);
 				cb.setLineWidth(0.5f);
 				// cb.moveTo(75f, 50f);
@@ -375,8 +374,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				// public void writeDirectContent(PdfContentByte cb, BaseFont bf, float fontSize, int alignment, String text, float x, float y, float rotation)
 				// render reprint origPrintDate and numPrint
 				if (origPrintDate != null && numPrint != null) {
-					String rePrintStr = "Reprint by " + this.sigDoctorName + "; Original Printed: " + origPrintDate + "; Times Printed: " + numPrint;
-					writeDirectContent(cb, bf, 6, PdfContentByte.ALIGN_LEFT, rePrintStr, 50, endPara - 48, 0);
+					String rePrintStr = geti18nTagValue(locale, "RxPreview.msgReprintBy")+" " + this.sigDoctorName + "; "+geti18nTagValue(locale, "RxPreview.msgOrigPrinted")+": " + origPrintDate + "; "+geti18nTagValue(locale, "RxPreview.msgTimesPrinted") +": " + numPrint;writeDirectContent(cb, bf, 6, PdfContentByte.ALIGN_LEFT, rePrintStr, 50, endPara - 48, 0);
 				}
 				// print promoText
 				writeDirectContent(cb, bf, 6, PdfContentByte.ALIGN_LEFT, this.promoText, 70, endPara - 57, 0);
