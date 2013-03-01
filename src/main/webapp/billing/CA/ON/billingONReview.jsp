@@ -320,7 +320,72 @@ boolean dupServiceCode = false;
     	   jQuery("#"+eId).val(data);
        }
        
+       function updateTotal(e) {
+    	   var editedValue = e.value;
+    	   if( isNaN(editedValue) ) {
+    		   alert("Please enter a valid fee");
+    		   e.focus();
+    	   }
+    	   else {
+    			var codeFees;
+    			var unit;
+    			var total = 0.0;
+    			var idx = 0;
+    			var displayTotal = "0.00";
+    			
+    			while( (codeFees = document.getElementById("percCodeSubtotal_" + idx)) ) {
+    				unit = document.getElementById("xserviceUnit_"+idx);    			
+    				total += (codeFees.value * unit.value);
+    				++idx;
+    			}
+    		    			
+    			updateElement("total", formatTotal(total));    			    			
+    			total += jQuery("#gst").val();    			
+    			updateElement("gstBilledTotal", formatTotal(total));
+    			
+    	   }
+    	   
+       }
        
+       function formatTotal(total) {
+    	   var displayTotal = "0.00";
+    	   var decimal = total % 1;
+    	   
+    	   if( decimal == 0 ) {
+				displayTotal = total + ".00";
+			}
+			else if( (decimal*10) % 1 < 0.1 ) {
+				displayTotal = total + "0";
+			}
+			else {
+				displayTotal = total;
+			}
+    	   
+    	   return displayTotal;
+       }
+       
+       function checkPaymentMethod(settle) {
+    	   var payMethods = document.getElementsByName("payMethod");
+    	   var checkedMethod = false;
+    	   
+    	   for( var idx = 0; idx < payMethods.length; ++idx ) {
+    		   if( payMethods[idx].checked ) {
+    			   checkedMethod = true;
+    		   }
+    	   }
+    	   
+    	   if( !checkedMethod ) {
+    		   alert("Please select a payment method");
+    	   }
+    	   else if( settle == "Settle") {
+    		   document.forms['titlesearch'].btnPressed.value='Settle';
+    		   document.forms['titlesearch'].submit();
+    		   popupPage(700,720,'billingON3rdInv.jsp');
+    	   }
+    	   
+    	   return checkedMethod;
+    	   
+       }
 
 	//-->
 
@@ -660,9 +725,9 @@ window.onload=function(){
                     <span style="color:red; float:left;"><%=strWarning%></span>
                     <%}%>
                     <span style="float:right;"> <%=codeFee %> x <%=codeUnit %><% if (gstFlag.equals("1")){%> + <%=percent%>% GST<%}%> =
-				<input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="<%=codeTotal %>" />
+				<input type="text" id="percCodeSubtotal_<%=i %>" name="percCodeSubtotal_<%=i %>" size="5" value="<%=codeTotal %>" onblur="updateTotal(this);" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
-				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
+				<input type="hidden" id="xserviceUnit_<%=i %>" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
                     </span>
 				</td>
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %></td>
@@ -941,8 +1006,8 @@ if (bMultisites) {
 			</td></tr>
 			<tr>
 				<td colspan='2' align='center' bgcolor="silver"><input type="submit" name="submit" value="Save & Print Invoice"
-					style="width: 120px;" /><input type="submit" name="submit" id="settlePrintBtn"
-					value="Settle & Print Invoice" onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');" style="width: 120px;" />
+					style="width: 120px;" onclick="return checkPaymentMethod('');" /><input type="submit" name="submit" id="settlePrintBtn"
+					value="Settle & Print Invoice" onClick="return checkPaymentMethod('Settle');" style="width: 120px;" />
 				<input type="hidden"  name="btnPressed" value="">
 				</td>
 			</tr>
