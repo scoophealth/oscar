@@ -47,6 +47,12 @@
 
 //-->
 </SCRIPT>
+<script src="<c:out value="../js/jquery.js"/>"></script>
+<script>
+	jQuery.noConflict();
+</script>
+
+<oscar:customInterface section="billingONHistory"/>
 </head>
 <body topmargin="0">
 
