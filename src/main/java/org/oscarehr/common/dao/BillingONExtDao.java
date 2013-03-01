@@ -70,7 +70,7 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
     }
             
     public String getPayMethodDesc(BillingONExt bExt) {
-        BillingPaymentTypeDao payMethod = (BillingPaymentTypeDao) SpringUtils.getBean("billingPaymentDao");
+        BillingPaymentTypeDao payMethod = SpringUtils.getBean(BillingPaymentTypeDao.class);
         Integer payMethodId = Integer.parseInt(bExt.getValue());
         BillingPaymentType payMethodDesc= payMethod.find(payMethodId);
         return payMethodDesc.getPaymentType();
