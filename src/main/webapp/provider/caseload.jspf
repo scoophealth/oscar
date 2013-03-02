@@ -18,6 +18,8 @@
 <%@ page import="oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.util.LocaleUtils" %>
+<%@ page import="java.util.Locale" %>
 
 <%
 
@@ -60,15 +62,11 @@
 </style>
 <c:import url="/infirm.do?action=showProgram"/>
 <%
-String[] clH = new String[] {"Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt"
-		, "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR"
-		, "LDL", "HDL", "TCHD", "EGFR", "EYEE", "LastEncounterDate", "LastEncounterType", "[CASH]AdmissionDate"
-		, "[ACCESS1]AdmissionDate"};
+Locale locale = request.getLocale();
+String[] clH = new String[] {   LocaleUtils.getMessage(locale, "caseload.msgDemographic"), "", LocaleUtils.getMessage(locale, "caseload.msgAge"), LocaleUtils.getMessage(locale, "caseload.msgSex"), LocaleUtils.getMessage(locale, "caseload.msgLastAppt"), LocaleUtils.getMessage(locale, "caseload.msgNextAppt"), LocaleUtils.getMessage(locale, "caseload.msgApptsLYTD"), LocaleUtils.getMessage(locale, "caseload.msgLab"), LocaleUtils.getMessage(locale, "caseload.msgDoc"), LocaleUtils.getMessage(locale, "caseload.msgTickler"), LocaleUtils.getMessage(locale, "caseload.msgMsg"), LocaleUtils.getMessage(locale, "caseload.msgBMI"), LocaleUtils.getMessage(locale, "caseload.msgBP"), LocaleUtils.getMessage(locale, "caseload.msgWT"), LocaleUtils.getMessage(locale, "caseload.msgSMK"), LocaleUtils.getMessage(locale, "caseload.msgA1C"), LocaleUtils.getMessage(locale, "caseload.msgACR"), LocaleUtils.getMessage(locale, "caseload.msgSCR"), LocaleUtils.getMessage(locale, "caseload.msgLDL"), LocaleUtils.getMessage(locale, "caseload.msgHDL"), LocaleUtils.getMessage(locale, "caseload.msgTCHD"), LocaleUtils.getMessage(locale, "caseload.msgEGFR"), LocaleUtils.getMessage(locale, "caseload.msgEYEE"), LocaleUtils.getMessage(locale, "caseload.msgLastEncounterDate"), LocaleUtils.getMessage(locale, "caseload.msgLastEncounterType"), LocaleUtils.getMessage(locale, "caseload.msgCASHAdmissionDate"), LocaleUtils.getMessage(locale, "caseload.msgACCESS1AdmissionDate")};
 %>
 <script type="text/javascript">
-clH = ["Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", "Lab", "Doc", "Tickler"
-       , "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR", "LDL", "HDL", "TCHD", "EGFR", "EYEE", "LastEncounterDate"
-       , "LastEncounterType", "[CASH]AdmissionDate", "[ACCESS1]AdmissionDate"];
+clH = ["<bean:message key="caseload.msgDemographic" />", "", "<bean:message key="caseload.msgAge" />", "<bean:message key="caseload.msgSex" />", "<bean:message key="caseload.msgLastAppt" />", "<bean:message key="caseload.msgNextAppt" />", "<bean:message key="caseload.msgApptsLYTD" />", "<bean:message key="caseload.msgLab" />", "<bean:message key="caseload.msgDoc" />", "<bean:message key="caseload.msgTickler" />", "<bean:message key="caseload.msgMsg" />", "<bean:message key="caseload.msgBMI" />", "<bean:message key="caseload.msgBP" />", "<bean:message key="caseload.msgWT" />", "<bean:message key="caseload.msgSMK" />", "<bean:message key="caseload.msgA1C" />", "<bean:message key="caseload.msgACR" />", "<bean:message key="caseload.msgSCR" />", "<bean:message key="caseload.msgLDL" />", "<bean:message key="caseload.msgHDL" />", "<bean:message key="caseload.msgTCHD" />", "<bean:message key="caseload.msgEYEE" />", "<bean:message key="caseload.msgLastEncounterDate" />", "<bean:message key="caseload.msgLastEncounterType" />", "<bean:message key="caseload.msgCASHAdmissionDate" />", "<bean:message key="caseload.msgACCESS1AdmissionDate" />"];
 </script>
 <table border="1" cellpadding="0" cellspacing="0" width="100%" id="caseloadTable">
 <tr><td colspan='<%=clH.length%>'>
@@ -78,16 +76,16 @@ clH = ["Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt", "Ap
 			<div>
 				<div id="leftSearch">
 					<form>
-						<b>Notes: </b>
+						<b><bean:message key="caseload.msgNotes" /></b>
 						<input type='text' id='caseloadQ' size='20' onclick='this.value=""; document.getElementById("caseloadDx").value="";' value="<%=StringEscapeUtils.escapeHtml(caseloadQ).replace("'","\\\'")%>" />
-						<input type='submit' value='Search' onclick='search("noteSearch"); return false;'>
+						<input type='submit' value='<bean:message key="caseload.msgSearch" />' onclick='search("noteSearch"); return false;'>
 					</form>
 				</div>
 				<div id="rightSearch">
 					<form>
 					<b>Program:</b>
 					<select id="program" onChange='search("search");'>
-						<option value="all" selected>All Programs</option>
+						<option value="all" selected><bean:message key="caseload.msgAllPrograms" /></option>
 						<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
 							<option value="<%=pb.getValue()%>" ><%= pb.getLabel() %></option>
 						</logic:iterate>
@@ -99,9 +97,9 @@ clH = ["Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt", "Ap
 					boolean bDefaultAllProviders = props.getBooleanProperty("CASELOAD_DEFAULT_ALL_PROVIDERS", "true");					
 					if (bDefaultAllProviders){
 					%>
-						<option value='all' selected>All Providers</option>
+						<option value='all' selected><bean:message key="caseload.msgAllProviders" /></option>
 					<%} else {%>
-						<option value='all'>All Providers</option>
+						<option value='all'><bean:message key="caseload.msgAllProviders" /></option>
 					<%} %>
 		<%
 		List<Provider> providerList = providerDao.getProviders();
@@ -134,16 +132,16 @@ clH = ["Demographic", "DisplayMode", "Age", "Sex", "Last Appt", "Next Appt", "Ap
 					</select>
 					<b>DxReg: </b>
 					<input type='text' id='caseloadDx' size='10' onclick='this.value=""; document.getElementById("caseloadQ").value="";' value="<%= StringEscapeUtils.escapeHtml(caseloadDx).replace("'","\\\'") %>" />
-					<input type='submit' value='Search' onclick='search("search"); return false;'>
-					| <a href='providercontrol.jsp?year=<%=caseloadCurYear%>&month=<%=caseloadCurMonth%>&day=<%=caseloadCurDay%>&view=0&displaymode=day&dboperation=searchappointmentday'>Schedule</a> &nbsp;
+					<input type='submit' value='<bean:message key="caseload.msgSearch" />' onclick='search("search"); return false;'>
+					| <a href='providercontrol.jsp?year=<%=caseloadCurYear%>&month=<%=caseloadCurMonth%>&day=<%=caseloadCurDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="caseload.msgSchedule" /></a> &nbsp;
 					</form>
 				</div>
 			</div>
 		</td></tr>
 	</table>
 </td></tr>
-<tr id='loadingHeader' class='caseloadRow'><td style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'><img src='../images/DMSLoader.gif' /> Loading results...</td></tr>
-<tr id='totalResults2' class='caseloadRow'><td style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'> <span id="rows2"></span>/<span id="totalRows2"></span> results retrieved </td></tr>
+<tr id='loadingHeader' class='caseloadRow'><td style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'><img src='../images/DMSLoader.gif' /><bean:message key="caseload.msgLoading" /></td></tr>
+<tr id='totalResults2' class='caseloadRow'><td style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'> <span id="rows2"></span>/<span id="totalRows2"></span>&nbsp;<bean:message key="caseload.msgResults" /></td></tr>
 <tr class='caseloadRow' id='caseloadHeader'>
 
 <%
@@ -169,9 +167,9 @@ String[] objIds = new String[] {"Demographic", "_caseload.DisplayMode", "_caselo
 	</security:oscarSec>
 	<% } %>
 <% } %>
-<tr id='loadingFooter' class='caseloadRow'><td colspan='<%=clH.length%>' style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'><img src='../images/DMSLoader.gif' /> Loading results...</td></tr>
-<tr id='noResults' class='caseloadRow'><td colspan='<%=clH.length%>' style='text-align: center;' bgcolor='#fffff0' > No results found. Please try a different search.</td></tr>
-<tr id='totalResults1' class='caseloadRow'><td colspan='<%=clH.length%>' style='text-align: center;' bgcolor='#fffff0' ><span id="rows1"></span>/<span id="totalRows1"></span> results retrieved.</td></tr>
+<tr id='loadingFooter' class='caseloadRow'><td colspan='<%=clH.length%>' style='text-align: center;' bgcolor='#fffff0' colspan='<%=clH.length%>'><img src='../images/DMSLoader.gif' /><bean:message key="caseload.msgLoading" /></td></tr>
+<tr id='noResults' class='caseloadRow'><td colspan='<%=clH.length%>' style='text-align: center;' bgcolor='#fffff0' ><bean:message key="caseload.msgTryAgain" /></td></tr>
+<tr id='totalResults1' class='caseloadRow'><td colspan='<%=clH.length%>' style='text-align: center;' bgcolor='#fffff0' ><span id="rows1"></span>/<span id="totalRows1"></span>&nbsp;<bean:message key="caseload.msgResults" /></td></tr>
 </table>
 <script type="text/javascript">
 
