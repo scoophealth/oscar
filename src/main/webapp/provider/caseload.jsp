@@ -55,7 +55,7 @@
 String[] clH = new String[] {"Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR", "LDL", "HDL", "TCHD", "EGFR", "EYEE"};
 %>
 <script type="text/javascript">
-clH = ["Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR", "LDL", "HDL", "TCHD", "EGFR", "EYEE"];
+clH = ["<bean:message key="caseload.msgDemographic" />", "", "<bean:message key="caseload.msgAge" />", "<bean:message key="caseload.msgSex" />", "<bean:message key="caseload.msgLastAppt" />", "<bean:message key="caseload.msgNextAppt" />", "<bean:message key="caseload.msgApptsLYTD" />", "<bean:message key="caseload.msgLab" />", "<bean:message key="caseload.msgDoc" />", "<bean:message key="caseload.msgTickler" />", "<bean:message key="caseload.msgMsg" />", "<bean:message key="caseload.msgBMI" />", "<bean:message key="caseload.msgBP" />", "<bean:message key="caseload.msgWT" />", "<bean:message key="caseload.msgSMK" />", "<bean:message key="caseload.msgA1C" />", "<bean:message key="caseload.msgACR" />", "<bean:message key="caseload.msgSCR" />", "<bean:message key="caseload.msgLDL" />", "<bean:message key="caseload.msgLDL" />", "<bean:message key="caseload.msgHDL" />", "<bean:message key="caseload.msgTCHD" />", "<bean:message key="caseload.msgEGFR"/> , "<bean:message key="caseload.msgEYEE" />" ];
 </script>
 <table border="1" cellpadding="0" cellspacing="0" width="100%" id="caseloadTable">
 <tr><td colspan='<%=clH.length%>'>
@@ -103,8 +103,8 @@ clH = ["Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", 
 					</select>
 					<b>DxReg: </b>
 					<input type='text' id='caseloadDx' size='10' onclick='this.value=""; document.getElementById("caseloadQ").value="";' value="<%= StringEscapeUtils.escapeHtml(caseloadDx).replace("'","\\\'") %>" />
-					<input type='submit' value='Search' onclick='search("search"); return false;'>
-					| <a href='providercontrol.jsp?year=<%=caseloadCurYear%>&month=<%=caseloadCurMonth%>&day=<%=caseloadCurDay%>&view=0&displaymode=day&dboperation=searchappointmentday'>Schedule</a> &nbsp;
+					<input type='submit' value='<bean:message key="caseload.msgSearch" />' onclick='search("search"); return false;'>
+					| <a href='providercontrol.jsp?year=<%=caseloadCurYear%>&month=<%=caseloadCurMonth%>&day=<%=caseloadCurDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="caseload.msgSchedule" /></a> &nbsp;
 					</form>
 				</div>
 			</div>
