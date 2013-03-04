@@ -2,7 +2,7 @@
 	<option><bean:message key="oscarEncounter.Header.Calculators"/></option>
 	<option>----------------------</option>
 	
-	<option onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49982.htm','BodyMassIndex');">
+	<option onclick="popperup(650,775,'http://www.mcw.edu/calculators/body-mass-index.htm','BodyMassIndex');">
 		<bean:message key="oscarEncounter.Index.bodyMass" />
 	</option>
 	
@@ -22,7 +22,7 @@
 		<bean:message key="oscarEncounter.Index.msgOsteoporotic" />
 	</option>
 	
-	<option onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49976.htm','PregancyCalculator');">
+	<option onclick="popperup(650,775,'http://www.mcw.edu/calculators/pregnancydate.htm','PregancyCalculator');">
 		<bean:message key="oscarEncounter.Index.pregnancy" />
 	</option>
 	
