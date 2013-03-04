@@ -151,8 +151,8 @@ public class DocumentDao extends AbstractDao<Document> {
 	public List<Object[]> findConstultDocsDocsAndProvidersByModule(Module module, Integer moduleId) {
 		String sql = "FROM Document d, Provider p, CtlDocument c " + 
 				"WHERE d.doccreator = p.ProviderNo " +
-				"AND d.documentNo = c.documentNo " + 
-				"AND c.module = :module " +
+				"AND d.id = c.id.documentNo " + 
+				"AND c.id.module = :module " +
 				"AND c.moduleId = :moduleId";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("module", module.getName());

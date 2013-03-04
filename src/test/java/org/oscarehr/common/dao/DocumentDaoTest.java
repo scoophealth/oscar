@@ -25,8 +25,11 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.oscarehr.common.dao.DocumentDao.Module;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Document;
@@ -41,7 +44,7 @@ public class DocumentDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("document", "ctl_document", "consultdocs");
+		SchemaUtils.restoreTable("document", "ctl_document", "consultdocs", "provider", "providersite", "demographic","provider_facility","Facility");
 	}
 
 	@Test
@@ -51,5 +54,11 @@ public class DocumentDaoTest extends DaoTestFixtures {
 		entity.setDocumentNo(null);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindConstultDocsDocsAndProvidersByModule() throws Exception {
+		List<Object[]> docs = dao.findConstultDocsDocsAndProvidersByModule(Module.DEMOGRAPHIC, 0);
+		assertNotNull(docs);
 	}
 }

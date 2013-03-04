@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao.forms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -151,10 +152,39 @@ public class FormsDao {
 		return query.getResultList();
 	}
 	
-	@NativeSql
+    @NativeSql
+    @SuppressWarnings("rawtypes")
 	public List<Object[]> runNativeQuery(String string) {
+		// run query
 		Query query = entityManager.createNativeQuery(string);
-		return query.getResultList();
+		List result = query.getResultList(); 
+		if (result == null) {
+			return new ArrayList<Object[]>();
+		}
+		
+		// get first meaningful element
+		Object firstNonNullElement = null;
+		for (int i = 0; i < result.size(); i++) {
+	        Object o = result.get(i);
+			if (o != null) {
+				firstNonNullElement = o;
+				break;
+			}
+		}
+		
+		// contains arrays, so it's safe to return the original result set
+		if (firstNonNullElement != null && firstNonNullElement.getClass().isArray()) {			
+			return result;
+		}
+		
+		// at this point we ended up having a list of single element and not an array, so
+		// wrap it up properly in the array values. This might happen when we select 
+		// a single value, for example "SELECT d.id FROM demographic d"
+		List<Object[]> wrappedResult = new ArrayList<Object[]>(result.size());
+		for(Object o : result) {
+			wrappedResult.add(new Object[] {o});
+		}
+		return wrappedResult; 
     }
 	
 	@NativeSql
