@@ -88,7 +88,8 @@ public class RptDemographicQueryBuilder {
 
 		String asofDate = frm.getAsofDate();
 
-		if (UtilDateUtilities.getDateFromString(asofDate, "yyyy-MM-dd") == null) {
+		if (asofDate == null || asofDate.trim().isEmpty() 
+				|| UtilDateUtilities.getDateFromString(asofDate, "yyyy-MM-dd") == null) {
 			asofDate = "CURRENT_DATE";
 		} else {
 			asofDate = "'" + asofDate + "'";
@@ -343,10 +344,14 @@ public class RptDemographicQueryBuilder {
 		MiscUtils.getLogger().debug("SEARCH SQL STATEMENT \n" + stringBuffer.toString());
 		java.util.ArrayList<ArrayList<String>> searchedArray = new java.util.ArrayList<ArrayList<String>>();
 		try {
-			MiscUtils.getLogger().debug(stringBuffer.toString());
+			MiscUtils.getLogger().info(stringBuffer.toString());
 
 			FormsDao dao = SpringUtils.getBean(FormsDao.class);
 			for (Object[] o : dao.runNativeQuery(stringBuffer.toString())) {
+				if (o == null) {
+					continue;
+				}
+				
 				String demoNo = null;
 				java.util.ArrayList<String> tempArr = new java.util.ArrayList<String>();
 				for (int i = 0; i < select.length; i++) {
