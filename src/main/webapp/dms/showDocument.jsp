@@ -496,7 +496,7 @@
 
                                                    args[0].getInputEl().value = args[2][0] + "("+args[2][1]+")";
                                                    selectedDemos.push(args[0].getInputEl().value);
-                                               	   	if (args[2][3] !== undefined) {
+                                               	   	if (args[2][3] != undefined) {
                                                    		addDocToList(args[2][3], args[2][4] + " (MRP)", "<%=docId%>");
                                                	   	}
                                                    //enable Save button whenever a selection is made

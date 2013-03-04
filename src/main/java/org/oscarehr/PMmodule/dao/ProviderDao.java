@@ -66,7 +66,7 @@ public class ProviderDao extends HibernateDaoSupport {
 
 	public Provider getProvider(String providerNo) {
 		if (providerNo == null || providerNo.length() <= 0) {
-			throw new IllegalArgumentException();
+			return null;
 		}
 
 		Provider provider = getHibernateTemplate().get(Provider.class, providerNo);
