@@ -72,6 +72,9 @@ public class RxProviderData {
         	clinicFax = clinic.getClinicFax();
         }
         
+        Provider prov = null;
+        String providerNo = null;
+        
         if(p != null) {
         	surname = p.getLastName();
         	firstName = p.getFirstName();
@@ -95,35 +98,38 @@ public class RxProviderData {
         		clinicAddress = p.getAddress();
         		useFullAddress=false;
         	}
-        }
+        
+        	providerNo = p.getProviderNo();
+        	UserProperty prop = null;
+        
+        	prop = userPropertyDao.getProp(providerNo, "faxnumber");
+        	if(prop != null && prop.getValue().length()>0) {
+        		clinicFax = prop.getValue();
+        	}
+        
+        	prop = userPropertyDao.getProp(providerNo, "rxPhone");
+        	if(prop != null && prop.getValue().length()>0) {
+        		clinicPhone = prop.getValue();
+        	}
+        
+        	prop = userPropertyDao.getProp(providerNo, "rxAddress");
+        	if(prop != null && prop.getValue().length()>0) {
+        		//we're going to override with the preference address
+        		clinicAddress = prop.getValue();
+        		clinicCity = readProperty(providerNo,"rxCity");
+        		clinicProvince = readProperty(providerNo,"rxProvince");
+        		clinicPostal = readProperty(providerNo,"rxPostal");
+        		useFullAddress=true;
+        	}
 
-        UserProperty prop = null;
-        
-        prop = userPropertyDao.getProp(p.getProviderNo(), "faxnumber");
-        if(prop != null && prop.getValue().length()>0) {
-        	clinicFax = prop.getValue();
         }
         
-        prop = userPropertyDao.getProp(p.getProviderNo(), "rxPhone");
-        if(prop != null && prop.getValue().length()>0) {
-        	clinicPhone = prop.getValue();
-        }
-        
-        prop = userPropertyDao.getProp(p.getProviderNo(), "rxAddress");
-        if(prop != null && prop.getValue().length()>0) {
-        	//we're going to override with the preference address
-        	clinicAddress = prop.getValue();
-        	clinicCity = readProperty(p.getProviderNo(),"rxCity");
-        	clinicProvince = readProperty(p.getProviderNo(),"rxProvince");
-        	clinicPostal = readProperty(p.getProviderNo(),"rxPostal");
-        	useFullAddress=true;
-        }
-
-       
-        Provider prov =  new Provider(p.getProviderNo(), surname, firstName, clinicName, clinicAddress,
+        prov =  new Provider(providerNo, surname, firstName, clinicName, clinicAddress,
                 clinicCity, clinicPostal, clinicPhone, clinicFax, clinicProvince, practitionerNo);
-        if(!useFullAddress)
+        
+        if(!useFullAddress) {
         	prov.fullAddress=false;
+        }
         
         return prov;
     }
