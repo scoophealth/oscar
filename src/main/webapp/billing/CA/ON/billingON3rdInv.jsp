@@ -68,6 +68,7 @@
     String invoiceRefNum = "";
     String billingDateStr ="";
     String dueDateStr = "";
+    String paymentDescription = "";
     
     ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
     Clinic clinic = clinicDao.getClinic();              
@@ -152,7 +153,12 @@
                 Date serviceDate = bCh1.getBillingDate();
                 dueDateStr = DateUtils.sumDate(serviceDate, numDaysTilDue, request.getLocale());
             }            
-        }                                 
+        }
+        
+        List<BillingONExt> payMethod = billExtDao.findByBillingNoAndKey(bCh1.getId(), "payMethod");
+        if( !payMethod.isEmpty() ) {
+        	paymentDescription = billExtDao.getPayMethodDesc(payMethod.get(0));
+        }
     }
    
 %>
@@ -343,6 +349,9 @@
                 <td><b>Balance:</b></td>
                 <td><%=balanceOwing.toPlainString()%></td>
             </tr>	
+            <tr align="right">
+            	<td colspan="2">Paid by <%=paymentDescription%></td>
+            </tr>
         </table>
     </body>
 </html>

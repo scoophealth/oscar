@@ -35,10 +35,12 @@ import org.oscarehr.billing.CA.ON.model.BillingONHeader;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONExtDao;
 import org.oscarehr.common.dao.BillingONItemDao;
+import org.oscarehr.common.dao.BillingONPaymentDao;
 import org.oscarehr.common.dao.BillingONRepoDao;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.BillingONPayment;
 import org.oscarehr.common.model.BillingONRepo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -181,7 +183,13 @@ public class JdbcBillingClaimImpl {
 		String[] temp = { "billTo", "remitTo", "total", "payment", "refund", "provider_no", "gst", "payDate", "payMethod"};
 		String demoNo = mVal.get("demographic_no");
 		String dateTime = UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss");
-                mVal.put("payDate", dateTime);
+        mVal.put("payDate", dateTime);
+        
+        BillingONPaymentDao billingONPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
+        BillingONPayment newPayment = new BillingONPayment();
+        newPayment.setBillingNo(id);
+        newPayment.setPayDate(UtilDateUtilities.StringToDate(dateTime));
+        
 		for (int i = 0; i < temp.length; i++) {
 				BillingONExt b = new BillingONExt();
 				b.setBillingNo(id);
@@ -191,8 +199,11 @@ public class JdbcBillingClaimImpl {
 				b.setDateTime(new Date());
 				b.setStatus('1');
 				b.setPaymentId(0);
-				extDao.persist(b);
+				newPayment.getBillingONExtItems().add(b);
 		}
+		
+		billingONPaymentDao.persist(newPayment);
+		
 		return retval;
 	}
 
