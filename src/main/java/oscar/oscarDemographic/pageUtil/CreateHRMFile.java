@@ -32,10 +32,16 @@ package oscar.oscarDemographic.pageUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.xmlbeans.XmlOptions;
+
 import cds.DemographicsDocument;
 import cds.ReportsReceivedDocument;
+import cdsDt.PersonNameStandard.OtherNames;
 import cdsDtHrm.Address;
 import cdsDtHrm.AddressStructured;
 import cdsDtHrm.AddressType;
@@ -68,9 +74,6 @@ import cdshrm.PatientRecordDocument.PatientRecord;
 import cdshrm.ReportsReceivedDocument.ReportsReceived;
 import cdshrm.ReportsReceivedDocument.ReportsReceived.ResultStatus;
 import cdshrm.TransactionInformationDocument.TransactionInformation;
-import java.util.HashMap;
-import java.util.List;
-import org.apache.xmlbeans.XmlOptions;
 
 /**
  *
@@ -111,9 +114,33 @@ public class CreateHRMFile {
         //Names
         cdsDt.PersonNameStandard personName = demo.getNames();
         cdsDt.PersonNameStandard.LegalName legalName = personName.getLegalName();
-        cdsDt.PersonNameStandard.LegalName.FirstName firstName = legalName.getFirstName();
-        cdsDt.PersonNameStandard.LegalName.LastName lastName = legalName.getLastName();
-        cdsDt.PersonNamePurposeCode.Enum namePurpose = legalName.getNamePurpose();
+        cdsDt.PersonNameStandard.LegalName.FirstName firstName = null;
+        cdsDt.PersonNameStandard.LegalName.LastName lastName = null;
+        cdsDt.PersonNamePurposeCode.Enum namePurpose = null;
+        OtherNames[] otherNames = personName.getOtherNamesArray();
+        
+        if (legalName!=null) {
+            lastName = legalName.getLastName();
+            firstName = legalName.getFirstName();
+            namePurpose = legalName.getNamePurpose();
+        } else if (otherNames.length > 0) {
+        	for (OtherNames.OtherName oName : otherNames[0].getOtherNameArray()) {
+	        	if (oName.getPartType().toString().equals("FAMC")) {
+	        		lastName = cdsDt.PersonNameStandard.LegalName.LastName.Factory.newInstance();
+	        		lastName.setPart(oName.getPart());
+	        		lastName.setPartQualifier(oName.getPartQualifier());
+	        		lastName.setPartType(oName.getPartType());
+	        	}
+	            if (oName.getPartType().toString().equals("GIV")) {
+	            	firstName = cdsDt.PersonNameStandard.LegalName.FirstName.Factory.newInstance();
+	            	firstName.setPart(oName.getPart());
+	            	firstName.setPartQualifier(oName.getPartQualifier());
+	            	firstName.setPartType(oName.getPartType());
+	            }	
+        	}
+        } else {
+        	Logger.getLogger(CreateHRMFile.class.getName()).log(Level.WARNING, null, "Error! No Legal Name or Other Name");
+        }
 
         PersonNameStandard HRMpersonName = HRMdemo.addNewNames();
         PersonNameStandard.LegalName HRMlegalName = HRMpersonName.addNewLegalName();
