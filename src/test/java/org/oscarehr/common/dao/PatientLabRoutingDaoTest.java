@@ -63,5 +63,15 @@ public class PatientLabRoutingDaoTest extends DaoTestFixtures {
 			fail();
 		}
 	}
-
+	
+	@Test
+	public void testFindByDemographicAndLabType() {
+		try {
+			dao.findByDemographicAndLabType(0, "LABTYPE");
+		} catch (HibernateException e) {
+			fail();
+		} catch (PersistenceException e) {
+			fail();
+		}
+	}
 }
