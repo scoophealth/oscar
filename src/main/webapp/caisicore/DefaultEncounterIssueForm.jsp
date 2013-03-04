@@ -35,8 +35,27 @@
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <title>Default Issue Editor</title>
+
+<%
+	
+
+%>
+
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/js/validation.js"></script>
+	
+<script type="text/javascript">
+function validaeIssues(){
+	var issuesStr = document.getElementById("issuesNames").value;
+	var trimedStr = issuesStr.replace(/^\s\s*/, '' ).replace(/\s\s*$/, '' );
+	if (trimedStr.length == 0){
+		alert(document.forms["issueForm"].elements["issuenotempty"].value);
+		return false;
+	}
+	return true;
+}
+</script>	
+
 </head>
 
 <body>
@@ -52,8 +71,9 @@
 </table>
 
 <br />
-<form action="<%=request.getContextPath()%>/DefaultEncounterIssue.do">
+<form name="issueForm" action="<%=request.getContextPath()%>/DefaultEncounterIssue.do" onsubmit="return validaeIssues();">
 	<input type="hidden" name="method" value="save" />
+	<input type="hidden" name="issuenotempty" value="<bean:message key='admin.admin.defaultEncounterIssue.issuenotempty' />" />
 	<table width="100%" border="0" cellpadding="0" cellspacing="1"
 		bgcolor="#C0C0C0">
 		<tr>
@@ -61,7 +81,7 @@
 		</tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr>
-			<td class="filedValue" colspan="3"><input type="text" name="issueNames"/></td>
+			<td class="filedValue" colspan="3"><input id="issuesNames" type="text" name="issueNames"/></td>
 			<td class="fieldValue" width="80%"><html:submit>Save</html:submit>
 			<input type="button" value="Cancel"
 				onclick="location.href='DefaultEncounterIssue.do'" /></td>
