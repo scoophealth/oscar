@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -81,27 +82,33 @@ public class SearchDemographicAutoCompleteAction extends Action {
              
              if (OscarProperties.getInstance().isPropertyActive("workflow_enhance")) {
             	 Provider p = rx.getProvider(demo.getProviderNo());
-            	 h.put("providerNo", demo.getProviderNo());
-            	 h.put("providerName", p.getSurname() + ", " + p.getFirstName());
+            	 if( demo.getProviderNo() != null ) {
+            		 h.put("providerNo", demo.getProviderNo());
+            	 }
+            	 if( p.getSurname() != null && p.getFirstName() != null ) {
+            		 h.put("providerName", p.getSurname() + ", " + p.getFirstName());
+            	 }
+            	 
             	 h.put("nextAppointment", AppointmentUtil.getNextAppointment(demo.getDemographicNo() + ""));
             	 DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
             	 DemographicCust demographicCust = demographicCustDao.find(demo.getDemographicNo());
             	 
             	 if (demographicCust!=null) {
-            		 String cust1 = demographicCust.getNurse();
-            		 String cust2 = demographicCust.getResident();
-            		 String cust4 = demographicCust.getMidwife();
-					if (!"".equals(cust1)) {
+            		 String cust1 = StringUtils.trimToNull(demographicCust.getNurse());
+            		 String cust2 = StringUtils.trimToNull(demographicCust.getResident());
+            		 String cust4 = StringUtils.trimToNull(demographicCust.getMidwife())
+            				 ;
+					if (cust1 != null) {
 						h.put("cust1", cust1);
 						p = rx.getProvider(cust1);
 						h.put("cust1Name", p.getSurname() + ", " + p.getFirstName());
 					}
-					if (!"".equals(cust2)) {
+					if (cust2 != null) {
 						h.put("cust2", cust2);
 						p = rx.getProvider(cust2);
 						h.put("cust2Name", p.getSurname() + ", " + p.getFirstName());
 					}
-					if (!"".equals(cust4)) {
+					if (cust4 != null) {
 						h.put("cust4", cust4);
 						p = rx.getProvider(cust4);
 						h.put("cust4Name", p.getSurname() + ", " + p.getFirstName());
