@@ -145,6 +145,7 @@
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <% if (OscarProperties.getInstance().getBooleanProperty("workflow_enhance", "true")) { %>
 <script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandler.js"></script>
 <script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandlerUpdateDemographic.js"></script>
@@ -184,7 +185,6 @@
 <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js"
 	type="text/javascript"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
    <script>
      jQuery.noConflict();
    </script>
@@ -558,6 +558,16 @@ function removeAccents(s){
 
 </script>
 <script language="JavaScript">
+
+function showEdit(){
+    document.getElementById('editDemographic').style.display = 'block';
+    document.getElementById('viewDemographics2').style.display = 'none';
+    document.getElementById('updateButton').style.display = 'block';
+    document.getElementById('swipeButton').style.display = 'block';
+    document.getElementById('editBtn').style.display = 'none';
+    document.getElementById('closeBtn').style.display = 'inline';
+}
+
 function showHideDetail(){
     showHideItem('editDemographic');
     showHideItem('viewDemographics2');
@@ -707,8 +717,8 @@ function addToPatientSet(demoNo, patientSet) {
 var demographicNo='<%=demographic_no%>';
 
 
-function checkRosterStatus2(){
-	<oscar:oscarPropertiesCheck property="FORCED_ROSTER_INTEGRATOR_LOCAL_STORE" value="yes">
+function checkRosterStatus(){	
+	<oscar:oscarPropertiesCheck property="FORCED_ROSTER_INTEGRATOR_LOCAL_STORE" value="yes">	
 	var rosterSelect = document.getElementById("roster_status");
 	if(rosterSelect.getValue() == "RO"){
 		var primaryEmr = document.getElementById("primaryEMR");
@@ -737,7 +747,7 @@ div.demographicSection h3 {
    background-color: #ccccff;
    font-size: 8pt;
    font-variant:small-caps;
-   font:bold;
+   font-weight:bold;
    margin-top:0px;
    padding-top:0px;
    margin-bottom:0px;
@@ -776,7 +786,7 @@ div.demographicWrapper {
     position: absolute;
     visibility: hidden;
     background-color: #6699cc;
-    layer-background-color: #6699cc;
+    /*layer-background-color: #6699cc;*/
     color: white;
     border-left: 1px solid black;
     border-top: 1px solid black;
@@ -794,7 +804,7 @@ div.demographicWrapper {
 }
 </style>
 </head>
-<body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();checkRosterStatus2();"
+<body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();checkRosterStatus();"
 	topmargin="0" leftmargin="0" rightmargin="0">
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
@@ -2597,7 +2607,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   }
                                   %>
                                 <input type="hidden" name="initial_rosterstatus" value="<%=rosterStatus%>"/>
-								<select id="roster_status" name="roster_status" style="width: 120" <%=getDisabled("roster_status")%> onchange="checkRosterStatus2()">
+								<select id="roster_status" name="roster_status" style="width: 120px" <%=getDisabled("roster_status")%> onchange="checkRosterStatus()">
 									<option value=""></option>
 									<option value="RO"
 										<%=rosterStatus.equals("RO")?" selected":""%>>
@@ -2702,7 +2712,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   	 <input type="text" name="patient_status" value="<%=pacStatus%>"> <% } else {
                                 String patientStatus = demographic.getPatientStatus(); %>
                                 <input type="hidden" name="initial_patientstatus" value="<%=patientStatus%>">
-								<select name="patient_status" style="width: 120" <%=getDisabled("patient_status")%>>
+								<select name="patient_status" style="width: 120px" <%=getDisabled("patient_status")%>>
 									<option value="AC"
 										<%=patientStatus.equals("AC")?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optActive"/></option>

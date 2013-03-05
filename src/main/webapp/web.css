@@ -61,7 +61,7 @@ th {
 
 select,textarea {
 	font-size: 16px;
-	border: 1 solid black;
+	border: 1px solid black;
 }
 
 .titleweb {
