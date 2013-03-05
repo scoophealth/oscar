@@ -34,8 +34,23 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%	
-	String currentProgramId = (String) request.getAttribute("id");
-	List<Vacancy> vacancies = VacancyTemplateManager.getVacanciesByWlProgramId(Integer.valueOf(currentProgramId));
+	String statusFilter = "Active";
+    List<Vacancy> vacancies = null;
+    String currentProgramId = (String) request.getAttribute("id");
+    		
+   
+    if(request.getParameter("statusFilter") != null && request.getParameter("statusFilter").length() == 0) {
+    	statusFilter = ""; 
+    	vacancies = VacancyTemplateManager.getVacanciesByWlProgramId(Integer.valueOf(currentProgramId));
+    } 
+    if(request.getParameter("statusFilter") != null && request.getParameter("statusFilter").length() > 0){
+    	statusFilter = request.getParameter("statusFilter");
+    	vacancies = VacancyTemplateManager.getVacanciesByWlProgramIdAndStatus(Integer.valueOf(currentProgramId),statusFilter);
+    }
+    if(request.getParameter("statusFilter") == null) {
+    	vacancies = VacancyTemplateManager.getVacanciesByWlProgramIdAndStatus(Integer.valueOf(currentProgramId),statusFilter);
+    }
+    
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");	
 %>
 
@@ -109,8 +124,32 @@ function saveStatus(vacancyId) {
             });
 
 }
+
+function filterByStatus() {
+	var status = $("#statusFilter").val();
+	var id = $("#id").val();
+	var programId = $("#programId").val();
+	location.href='<%=request.getContextPath()%>/PMmodule/ProgramManagerView.do?method=view&tab=Vacancies&subtab=Vacancies&status=Active&vacancyOrTemplateId=&id='+id+"&programId="+programId+"&statusFilter="+status;
+}
 </script>
 
+<table id="vt" width="100%"  border="1" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr class="b" >
+			<td width="10%"><b>Filter:</b></td>
+			<td>
+				<select onchange="filterByStatus()" name="statusFilter" id="statusFilter">
+					<option value="Active" <%=(statusFilter != null && statusFilter.equals("Active"))?"selected=\"selected\"":"" %>>Active</option>
+					<option value="Filled" <%=(statusFilter != null && statusFilter.equals("Filled"))?"selected=\"selected\"":"" %>>Filled</option>
+					<option value="Withdrawn" <%=(statusFilter != null && statusFilter.equals("Withdrawn"))?"selected=\"selected\"":"" %>>Withdrawn</option>
+					<option value=""  <%=(statusFilter != null && statusFilter.equals(""))?"selected=\"selected\"":"" %>>Any</option>
+				</select>
+			</td>
+		</tr>
+	</thead>
+</table>
+
+<br/>
 <div class="tabs" id="tabs">
 <input type="hidden" name="id" id="id" value="<%= currentProgramId%>" />
 <input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
@@ -120,6 +159,8 @@ function saveStatus(vacancyId) {
 		</tr>
 	</table>
 </div>
+
+
 
 <table id="vacancyTable" width="100%" border="1" cellspacing="2" cellpadding="3">
 	<thead>
