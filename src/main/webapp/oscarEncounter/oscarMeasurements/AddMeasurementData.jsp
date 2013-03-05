@@ -377,12 +377,8 @@ clear: left;
 							<%}%>
 							<br />
 
-
-
-
-
                             <label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label>
-                            <% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
+                            <% if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA"))){ %>
                             <select  id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" >
                                 <%if (measurements.length > 1){ %>
                                 <option value="" >Not Answered</option>
