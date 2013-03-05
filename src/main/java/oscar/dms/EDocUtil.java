@@ -566,7 +566,7 @@ public final class EDocUtil {
 			Document d = (Document) o[0];
 			CtlDocument c = (CtlDocument) o[1];
 
-			currentdoc.setModule("" + c.getModuleId());
+			currentdoc.setModule("" + c.getId().getModule());
 			currentdoc.setModuleId("" + c.getModuleId());
 			currentdoc.setDocId("" + d.getDocumentNo());
 			currentdoc.setDescription(d.getDocdesc());
