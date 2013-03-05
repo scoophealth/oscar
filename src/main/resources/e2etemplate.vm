@@ -430,7 +430,6 @@ Medications and Prescriptions - Medication List
 #*        *##else
 							<statusCode code="completed"/>
 #*        *##end
-## Insert Record Type section here?
 							<!--Medication Identification-->
 							<consumable typeCode="CSM">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
@@ -442,7 +441,7 @@ Medications and Prescriptions - Medication List
 #*        *##end
 										<name>$med.brandName</name>
 										<e2e:desc nullFlavor="UNK"/>
-## Don't know how to format this properly and still have it validate
+## Temporary solution until next E2E specification is released
 										<strength>
 											<center value="$med.dosage.substring(0, $med.dosage.indexOf(" "))" unit="$med.unit"/>
 										</strength>
@@ -498,20 +497,121 @@ Medications and Prescriptions - Medication List
 											<effectiveTime xsi:type="IVL_TS" operator="I">
 												<width value="$med.duration" unit="$med.durUnit"/>
 											</effectiveTime>
-## Need to figure out frequency
+											<!-- OSCAR Frequency Code "$med.freqCode" -->
+#*        *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
 											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
 												<frequency>
 													<numerator value="2"/>
 													<denominator value="1" unit="d"/>
 												</frequency>
 											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("TID") || $med.freqCode.equalsIgnoreCase("3x day") || $med.freqCode.equalsIgnoreCase("3x daily"))
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="3"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("QID") || $med.freqCode.equalsIgnoreCase("4x day") || $med.freqCode.equalsIgnoreCase("4x daily"))
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="4"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q1H") || $med.freqCode.equalsIgnoreCase("Q1-2H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q2H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="2" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q3-4H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="3" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q4H") || $med.freqCode.equalsIgnoreCase("Q4-6H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="4" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q6H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="6" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q8H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="8" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q12H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="12" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("QAM") || $med.freqCode.equalsIgnoreCase("QPM") || $med.freqCode.equalsIgnoreCase("QHS") || $med.freqCode.equalsIgnoreCase("daily") || $med.freqCode.equalsIgnoreCase("once daily") || $med.freqCode.equalsIgnoreCase("OD") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("weekly") || $med.freqCode.equalsIgnoreCase("Q1Week") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="w"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q2Week") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="2" unit="w"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q1Month") || $med.freqCode.equalsIgnoreCase("monthly") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="m"/>
+												</frequency>
+											</effectiveTime>
+#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q3Month") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="3" unit="m"/>
+												</frequency>
+											</effectiveTime>
+#*        *##else
+#*        *##end
 											<routeCode code="$med.route" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="$med.route"/>
 											<approachSiteCode nullFlavor="NA"/>
 											<doseQuantity>
 												<low value="$med.takeMin"/>
 												<high value="$med.takeMax"/>
 											</doseQuantity>
-## Double check form code field
+## Form code implementation to be added...
 											<administrationUnitCode code="TBD" codeSystem="2.16.840.1.113883.5.1127" displayName="$med.drugForm"/>
 											<consumable typeCode="CSM">
 												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
