@@ -23,7 +23,10 @@
 
 --%>
 
-<%@ page import="java.util.*" %>
+<%@page import="java.util.Collections"%>
+<%@page import="oscar.MyDateFormat"%>
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="java.util.ArrayList" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -37,21 +40,31 @@
 
 <%@page import="java.net.URLDecoder, java.net.URLEncoder,java.util.Date, java.util.List"%>
 <%@page import="oscar.dms.EDocUtil,oscar.dms.EDoc"%>
-
+<%@page import="org.oscarehr.casemgmt.web.NoteDisplay,org.oscarehr.casemgmt.web.NoteDisplayLocal"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager,org.oscarehr.casemgmt.model.CaseManagementNote"%>
 
 <%
-
-    if (session.getValue("user") == null) {
-        response.sendRedirect("../logout.jsp");
-    }
     if (session.getAttribute("userrole") == null) {
         response.sendRedirect("../logout.jsp");
     }
 
     String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String demographicID = request.getParameter("demographic_no");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
+	rights="r" reverse="<%=true%>">
+            <bean:message key="oscarEncounter.noteBrowser.accessDenied"/>
+<% response.sendRedirect("../noRights.html"); %>
+</security:oscarSec>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName='<%="_eChart$"+demographicID%>' rights="o"
+	reverse="<%=false%>">
+<bean:message key="oscarEncounter.noteBrowser.accessDenied"/>
+<% response.sendRedirect("../noRights.html"); %>
+</security:oscarSec>
 
-    String demographicID = request.getParameter("demographicID");
-    String categoryKey = request.getParameter("categorykey");
+<%
 
 //if delete request is made
     if (request.getParameter("delDocumentNo") != null && request.getParameter("delDocumentNo").length() > 0) {
@@ -70,39 +83,12 @@
     String view = "all";
     if (request.getParameter("view") != null) {
         view = (String) request.getParameter("view");
-    } else if (request.getAttribute("view") != null) {
-        view = (String) request.getAttribute("view");
     }
-    view = URLDecoder.decode(view);
-    String module = "";
+    view = URLDecoder.decode(view,"UTF-8");
 
-    String moduleid = "";
-    if (request.getParameter("function") != null) {
-        module = request.getParameter("function");
-        moduleid = request.getParameter("functionid");
-    } else if (request.getAttribute("function") != null) {
-        module = (String) request.getAttribute("function");
-        moduleid = (String) request.getAttribute("functionid");
-    }
-    String winwidth="";
-    String winheight="";
-    if (request.getParameter("winwidth") != null) {
-        winwidth = request.getParameter("winwidth");
-    }
-    
-    if (request.getParameter("winheight") != null) {
-        winheight = request.getParameter("winheight");
-    }
-    
-    if (!"".equalsIgnoreCase(moduleid) && (demographicID == null || demographicID.equalsIgnoreCase("null"))) {
-        demographicID = moduleid;
-    }
-    ArrayList doctypes = EDocUtil.getDoctypes(module);
-
-
-
-
-
+    String module="demographic"; 
+     
+    ArrayList doctypes = EDocUtil.getDoctypes("demographic");
     ArrayList<ArrayList<EDoc>> categories = new ArrayList<ArrayList<EDoc>>();
     ArrayList<EDoc> docs = new ArrayList<EDoc>();
     
@@ -115,29 +101,19 @@
         sort = EDocUtil.SORT_DATE;
         sortorder="Upload";
     }
-   
-    if (categoryKey.indexOf("Private") >= 0) {
-        docs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus);
-
-    } else if (categoryKey.indexOf("Public") >= 0) {
-        docs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort, viewstatus);
-
-    } else {%>
-Remote documents not supported
-<%}
+    docs = EDocUtil.listDocs(module, demographicID, view, EDocUtil.PRIVATE, sort, viewstatus);
+    
 
 %>
 
 <html>
     <head>
-        <title><bean:message key="dms.documentBrowser.title"/></title>
-
+        <title><bean:message key="oscarEncounter.noteBrowser.title"/> - <oscar:nameage demographicNo="<%=demographicID%>"/></title>
         <script type="text/javascript">  
-            window.moveTo(0,0);
 
             function popup(vheight,vwidth,varpage) { //open a new popup window
                 var page = "" + varpage;
-                windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
+                windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
                 var popup=window.open(page, "popup1", windowprops);
                 if (popup != null) {
                     if (popup.opener == null) {
@@ -155,8 +131,6 @@ Remote documents not supported
 
             function LoadView(viewstr)
             {
-                document.DisplayDoc.winwidth.value=getWidth();
-                document.DisplayDoc.winheight.value=getHeight();
                 document.DisplayDoc.view.value=viewstr;
                 document.DisplayDoc.viewstatus.value=document.DisplayDoc.selviewstatus.options[document.DisplayDoc.selviewstatus.selectedIndex].value;
                 document.DisplayDoc.submit();
@@ -206,32 +180,43 @@ Remote documents not supported
                 return myHeight;
             }
             
+                     
             showPageImg=function(curdocid,doctype){
                 if(curdocid!="0") {
-                                    
-                   
                     var url2='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=display&doc_no='
                         +curdocid;
-                    document.getElementById('docdisp').innerHTML = '<iframe	src="' +url2 +'"  width="' +(getWidth()-330) +'" height="' +(getHeight()-50) +'"></iframe>';
+                    document.getElementById('docdisp').innerHTML = '<iframe	src="' +url2 +'"  width="' +(getWidth()-40) +'" height="' +(getHeight()-50) +'"></iframe>';
                             
-                    var url4='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=viewDocumentInfo&doc_no='+curdocid;
-                    document.getElementById('docextrainfo').innerHTML = '<object data="' +url4 +'"  height=250px width="100%" type="text/html" ></object>';                    
-                      
+                    var url4='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=viewDocumentDescription&doc_no='+curdocid;
+                    document.getElementById('docextrainfo').innerHTML = '<object data="' +url4 +'"  height=250px width="100%" type="text/html" ></object>';
                     
+                    var url5='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=viewAnnotationAcknowledgementTickler&doc_no='+curdocid;
+                    document.getElementById('docinfo').innerHTML = '<object data="' +url5 +'"  height=100px width="100%" type="text/html" ></object>';                    
+                      
+                    document.getElementById('printnotesbutton').style.visibility = 'hidden'; 
                 } else  
                 {
                     document.getElementById('docdisp').innerHTML='';
+                    document.getElementById('docinfo').innerHTML='';
                     document.getElementById('docextrainfo').innerHTML='';
-                    
                 }
                                                   
             }
             showPageCombineImg=function(doclist){
                 
                 var url2='<%=request.getContextPath()%>'+'/dms/combinePDFs.do?ContentDisposition=inline'+doclist;
-                document.getElementById('docdisp').innerHTML = '<object	data="' +url2 +'" type="application/pdf" width="' +(getWidth()-330) +'" height="' +(getHeight()-50) +'"></object>';                    
+                document.getElementById('docdisp').innerHTML = '<object	data="' +url2 +'" type="application/pdf" width="' +(getWidth()-40) +'" height="' +(getHeight()-50) +'"></object>';
+                document.getElementById('docinfo').innerHTML='';
                 document.getElementById('docextrainfo').innerHTML='';
+                document.getElementById('printnotesbutton').style.visibility = 'hidden'; 
                                                   
+            }
+            function showEncounter(encList){
+                 var url2='<%=request.getContextPath()%>'+'/CaseManagementEntry.do?method=displayNotes&demographicNo=<%=demographicID%>'+encList+'&printCPP=false&printRx=false';
+                 document.getElementById('docdisp').innerHTML = '<object data="' +url2 +'"  width="' +(getWidth()-40) +'" height="' +(getHeight()-300) +'" type="text/html"></object>';
+                 document.getElementById('docinfo').innerHTML='';
+                 document.getElementById('docextrainfo').innerHTML = '';
+                 document.getElementById('printnotesbutton').style.visibility = 'visible'; 
             }
             
             function getSelected(opt) {
@@ -248,12 +233,12 @@ Remote documents not supported
                 }
                 return selected;
             }
+            
             function getDoc()
             {
                 var th = document.getElementById('doclist');
                 var selected = new Array();
                 selected=getSelected(th);
-      
    
                 if(selected.length==0) {
               
@@ -262,7 +247,11 @@ Remote documents not supported
                     docid="0";                    
                     showPageImg(docid,"");
            
-                }  
+                }  else
+                {
+                    var th1 = document.getElementById('encounterlist');
+                    th1.selectedIndex=-1;
+                }
                 if(selected.length>=2)
                 {
                     var div_ref = document.all("docbuttons");
@@ -285,7 +274,7 @@ Remote documents not supported
                     }
                     else
                     {
-                        alert("<bean:message key="dms.documentBrowser.msgOnlyPDFCanBeCombined"/>");
+                        alert("<bean:message key="oscarEncounter.noteBrowser.msgOnlyPDFCanBeCombined"/>");
                         setdefaultdoc();
                     }
               
@@ -295,17 +284,26 @@ Remote documents not supported
                     var docidindexend=selected[0].value.indexOf('-');
                     docid=selected[0].value.substring(0,docidindexend);
                     doctype=selected[0].value.substring(docidindexend+1,selected[0].value.length);
-                        
-               
                     
                     showPageImg(docid,doctype);
                     var div_ref = document.all("docbuttons");                    
                     div_ref.style.visibility = "visible";
-                    
                 }
             }
 
-
+            function setdefaultencounter()
+            {
+                var enclistObj = document.getElementById('encounterlist');
+                if(enclistObj.length>=1)
+                {
+                    enclistObj.selectedIndex=0;
+                    enclistObj.focus();
+                    
+                    getEncounter();
+                    enclistObj.focus();
+                }
+            }
+            
             function setdefaultdoc()
             {
     
@@ -326,7 +324,49 @@ Remote documents not supported
                 }
 
             }
-                                        
+            
+            function getEncounter()
+            {
+                var th = document.getElementById('encounterlist');
+                var selected = new Array();
+                selected=getSelected(th);
+                
+                var encList='';
+                if(selected.length>=1) {
+                    var th1 = document.getElementById('doclist');
+                    th1.selectedIndex=-1;
+                    getDoc();
+
+                    for(k=0;k<selected.length;k++) {
+
+                    if(encList=='') {encList='&notes2print='+selected[k].value;} else {
+                    encList=encList+','+selected[k].value;}
+                    }
+                }
+                showEncounter(encList);
+            }
+            
+            function PrintEncounter()
+            {
+    
+                var th = document.getElementById('encounterlist');
+                var selected = new Array();
+                selected=getSelected(th);
+                var encList='';
+                if(selected.length>=1) {
+                    var th1 = document.getElementById('doclist');
+                    th1.selectedIndex=-1;
+                    getDoc();
+
+                    for(k=0;k<selected.length;k++) {
+                        if(encList=='') {encList='&notes2print='+selected[k].value;} else {
+                        encList=encList+','+selected[k].value;}
+                    }
+             
+                    popup(700,960,'<%=request.getContextPath()%>'+'/CaseManagementEntry.do?method=print&demographicNo=<%=demographicID%>'+encList+'&printCPP=false&printRx=false','PrintEncounter');          
+                }
+            }
+
             function AddTickler()
             {
                 popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId='+docid+'&demographic_no=<%=demographicID%>','tickler');                                            
@@ -346,52 +386,68 @@ Remote documents not supported
                 var doctype=selected[0].value.substring(docidindexend+1,selected[0].value.length);
                 
                 if (doctype== 'text/html') { 
-                    popup(450,600,'addedithtmldocument.jsp?editDocumentNo='+docid+'&function=<%=module%>&functionid=<%=demographicID%>','EditDoc');                                               
+                    popup(450,600,'../dms/addedithtmldocument.jsp?editDocumentNo='+docid+'&function=<%=module%>&functionid=<%=demographicID%>','EditDoc');                                               
                 }
                 else {
                             
-                    popup(350,500,'editDocument.jsp?editDocumentNo='+docid+'&function=<%=module%>&functionid=<%=demographicID%>','EditDoc');                                               
+                    popup(350,500,'../dms/editDocument.jsp?editDocumentNo='+docid+'&function=<%=module%>&functionid=<%=demographicID%>','EditDoc');                                               
                 }                                        
             }
 
+            function getParameter(paramName) {
+                var searchString = window.location.search.substring(1);
+                var i,val;
+                var params = searchString.split("&");
+
+                for (i=0;i<params.length;i++) {
+                    val = params[i].split("=");
+                    if (val[0] == paramName) {
+                    return val[1];
+                    }
+                }
+                return null;
+            }
+            
+           function OnLoad()
+           {
+                
+                var FirstTime=getParameter("FirstTime");
+                if(FirstTime!=null && FirstTime=="1") {
+                    window.resizeTo(screen.width-1045,screen.height-40);
+                    window.moveTo(1045,0);
+                }
+                setdefaultencounter();
+           }
         </script>
     </head>
-    <body onload="window.innerWidth=<%=winwidth.length()>0?winwidth:"screen.availWidth*0.9"%>;window.innerHeight=<%=winheight.length()>0?winheight:"screen.availHeight*0.9"%>;" >
-        <form name="DisplayDoc" method="post" action="documentBrowser.jsp">
+    <body onload="OnLoad();" >
+        <form name="DisplayDoc" method="post" action="noteBrowser.jsp">
 
             <table>
-                <tr><td  align="left" valign="top" style="width: 400px" >
-                        <oscar:nameage demographicNo="<%=moduleid%>"/> &nbsp; <oscar:phrverification demographicNo="<%=moduleid%>"><bean:message key="phr.verification.link"/></oscar:phrverification><br>
-                        <%=categoryKey%>
-                        <br>                     
-                             
+                <tr><td  align="left" valign="top" width="50%">
+                        <oscar:nameage demographicNo="<%=demographicID%>"/><br>                     
+
                         <input type="hidden" name="viewstatus" value="<%=viewstatus%>">
                         <input type="hidden" name="sortorder" value="<%=sortorder%>">
-                        <input type="hidden" name="function" value="<%=module%>">
-                        <input type="hidden" name="functionid" value="<%=moduleid%>">
-                        <input type="hidden" name="categorykey" value="<%=categoryKey%>">
 
-                        <bean:message key="dms.documentBrowser.msgViewStatus"/> <select id="selviewstatus" name="selviewstatus"
-                                style="text-size: 8px; margin-bottom: -4px;"
-                                onchange="ReLoadDoc()">
+                        <bean:message key="oscarEncounter.noteBrowser.msgViewStatus"/> <select id="selviewstatus" name="selviewstatus" onchange="ReLoadDoc()">
                             <option value="all"
-                                    <%=viewstatus.equalsIgnoreCase("all") ? "selected" : ""%>><bean:message key="dms.documentBrowser.msgAll"/></option>
+                                    <%=viewstatus.equalsIgnoreCase("all") ? "selected" : ""%>><bean:message key="oscarEncounter.noteBrowser.msgAll"/></option>
                             <option value="deleted"
-                                    <%=viewstatus.equalsIgnoreCase("deleted") ? "selected" : ""%>><bean:message key="dms.documentBrowser.msgDeleted"/></option>
+                                    <%=viewstatus.equalsIgnoreCase("deleted") ? "selected" : ""%>><bean:message key="oscarEncounter.noteBrowser.msgDeleted"/></option>
                             <option value="active"
-                                    <%=viewstatus.equalsIgnoreCase("active") ? "selected" : ""%>><bean:message key="dms.documentBrowser.msgPublished"/></option>
+                                    <%=viewstatus.equalsIgnoreCase("active") ? "selected" : ""%>><bean:message key="oscarEncounter.noteBrowser.msgPublished"/></option>
                         </select>
 
-                        <bean:message key="dms.documentBrowser.msgSortDate"/>
-                        <select id="selsortorder" name="selsortorder"
-				style="text-size: 8px; margin-bottom: -4px;" onchange="ReLoadDoc()">
+                        <bean:message key="oscarEncounter.noteBrowser.msgSortDate"/>
+                        <select id="selsortorder" name="selsortorder" onchange="ReLoadDoc()">
                             <option value="Observation"
-                                    <%=sortorder.equalsIgnoreCase("Observation") ? "selected":""%>><bean:message key="dms.documentBrowser.msgObservation"/></option>
+                                    <%=sortorder.equalsIgnoreCase("Observation") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgObservation"/></option>
                             <option value="Upload"
-                                    <%=sortorder.equalsIgnoreCase("Upload") ? "selected":""%>><bean:message key="dms.documentBrowser.msgUpload"/></option>
+                                    <%=sortorder.equalsIgnoreCase("Upload") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgUpload"/></option>
 				
 			</select>
-                        <fieldset><legend><bean:message key="dms.documentBrowser.msgView"/>:</legend>      
+                        <fieldset><legend><bean:message key="oscarEncounter.noteBrowser.msgView"/>:</legend>      
                             <input type="hidden" name="view" value="<%=view%>">
                             <input type="hidden" name="demographic_no" value="<%=demographicID%>">
                             <input type="hidden" name="undelDocumentNo" value="">
@@ -400,21 +456,10 @@ Remote documents not supported
                             <a
                                 href="#" onclick="LoadView('all')" ><%=view.equals("all") ? "<b>":""%>All<%=view.equals("all") ? "</b>":""%></a> <% for (int i3 = 0; i3 < doctypes.size(); i3++) {%>
                             | <a
-                                href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3))%>')"><%=view.equals(URLEncoder.encode((String) doctypes.get(i3))) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals(URLEncoder.encode((String) doctypes.get(i3))) ? "</b>":""%></a>
+                                href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3),"UTF-8")%>')"><%=view.equals(URLEncoder.encode((String) doctypes.get(i3),"UTF-8")) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals(URLEncoder.encode((String) doctypes.get(i3),"UTF-8")) ? "</b>":""%></a>
                             <%}%> 
                         </fieldset>
-
-                        <fieldset> <legend><bean:message key="dms.documentBrowser.UploadObservationTypeDescription"/></legend>
-                            <SELECT MULTIPLE SIZE=15 id="doclist" onchange="getDoc();">
-                                <%
-                                    for (int i2 = 0; i2 < docs.size(); i2++) {
-                                        EDoc cmicurdoc = (EDoc) docs.get(i2);
-                                %>
-                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>"><%=cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=cmicurdoc.getDescription()%>
-                                </option> <%}%>
-                            </SELECT>
-                        </fieldset>
-                            <div id="docbuttons">
+                        <div id="docbuttons">
                                 <% if (viewstatus.equalsIgnoreCase("active")) {%>
                                 <% if (module.equalsIgnoreCase("demographic")) {%>
                                 <input type="button" value="Add Tickler" onclick="AddTickler();" > <%}%>
@@ -423,31 +468,54 @@ Remote documents not supported
                                 <input type="button" value="Delete" onclick="DeleteDoc();" > <%} else if (viewstatus.equalsIgnoreCase("deleted")) {%>
                                 <input type="button" value="UnDelete" onclick="UnDeleteDoc();" >   
                                 <%}%>
-                            </div>
-                        <fieldset>
-                                <div id="docextrainfo"></div>
+                        </div>
+                            
+                            
+                        <div id="docinfo"></div>
+                        <div id="printnotesbutton"><input type='image' src="../oscarEncounter/graphics/document-print.png" onclick="PrintEncounter();" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter"></div>  
+                    </td><td>
+                        <fieldset><legend><bean:message key="oscarEncounter.noteBrowser.UploadObservationTypeDescription"/></legend>
+                            <SELECT MULTIPLE SIZE=5 id="doclist" onchange="getDoc();">
+                                <%
+                                    for (int i2 = 0; i2 < docs.size(); i2++) {
+                                        EDoc cmicurdoc = (EDoc) docs.get(i2);
+                                %>
+                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>" title="<%=cmicurdoc.getDescription()%>"><%=cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=(cmicurdoc.getDescription().length()<20?cmicurdoc.getDescription():cmicurdoc.getDescription().substring(0,30)+"...")%>
+                                </option> <%}%>
+                            </SELECT>
                         </fieldset>
-
-                    </td>
-
-                    <td valign="top"> 
-
-                        <table><tr><td> 
-                                    <div id="docdisp"></div>                  
-                                </td></tr></table>    
-
+                            
+                        <fieldset><legend><bean:message key="oscarEncounter.noteBrowser.encounterNote"/> </legend>
+                            <select MULTIPLE SIZE=5 id="encounterlist" onchange="getEncounter();">
+                            <% 
+                                CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+                                List<CaseManagementNote> notes =  caseManagementManager.getNotes(demographicID);
+               
+                                ArrayList<NoteDisplay> notesToDisplay = new ArrayList<NoteDisplay>();
+                                for (CaseManagementNote noteTemp : notes)
+                                    notesToDisplay.add(new NoteDisplayLocal(noteTemp));
+                                Collections.sort(notesToDisplay, NoteDisplay.noteObservationDateComparator);
+                                int noteSize = notes.size();
+                                int idx=0;
+                                for (idx = 0; idx < noteSize; ++idx)
+                                { 
+                                    NoteDisplay curNote = notesToDisplay.get(idx); 
+                                    if (!(curNote.isDocument()) && !(curNote.isEformData()) && !(curNote.isRxAnnotation()) && !(curNote.isCpp())) {
+                            %>
+                                <option value="<%=curNote.getNoteId()%>"><%=DateUtils.getDate(MyDateFormat.getCalendar(curNote.getObservationDate()).getTime(), "yyyy-MM-dd  HH:mm ", request.getLocale())%> <%=curNote.getProviderName()%></option>
+                            <%          
+                                    }
+                                }  
+                        %>                   
+                            </select>
+                        </fieldset>
                     </td>
                 </tr>
-               
             </table>
-            <input type="hidden" name="winwidth" value="">
-            <input type="hidden" name="winheight" value="">
 
-            <script type="text/javascript">
-                setdefaultdoc();
-            </script>
-
+            <table><tr><td ><div id="docdisp"></div></td></tr>
+                   <tr><td><div id="docextrainfo"></div></td></tr>
+            </table>    
         </form>                        
     </body>
 </html>
-

@@ -145,6 +145,8 @@ import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
 import com.quatro.model.security.Secrole;
+import java.io.PrintWriter;
+import java.lang.reflect.Array;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
@@ -2936,6 +2938,42 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		return issueIds;
 	}
+        
+        public ActionForward displayNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                response.setContentType("text/html");
+		doDisplayNotes(request, response.getWriter());
+		return null;
+	}
+
+        public void doDisplayNotes(HttpServletRequest request, PrintWriter out) throws Exception {
+                
+                String ids = request.getParameter("notes2print");
+		String[] noteIds;
+                String textStr;
+                
+                ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
+                    
+		if (ids.length() > 0) noteIds = ids.split(",");
+		else noteIds = (String[]) Array.newInstance(String.class, 0);
+                
+                out.println("<!DOCTYPE html><html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'></head><body>");
+		
+		for (int idx = 0; idx < noteIds.length; ++idx) {
+                        if(this.caseManagementMgr.getNote(noteIds[idx]).isLocked()) {
+                            textStr= this.caseManagementMgr.getNote(noteIds[idx]).getObservation_date().toString()+" "
+                                    +this.caseManagementMgr.getNote(noteIds[idx]).getProviderName()+" "
+                                    +props.getString("oscarEncounter.noteBrowser.msgNoteLocked");
+                        } else {
+                        
+                            textStr=this.caseManagementMgr.getNote(noteIds[idx]).getNote();
+                        }
+                        textStr=textStr.replaceAll("\n","<br>");
+                        out.println(textStr);
+                        out.println("<br><br>");
+                }
+                
+                out.println("</body></html>");
+}
 
 	public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.setContentType("application/pdf"); // octet-stream

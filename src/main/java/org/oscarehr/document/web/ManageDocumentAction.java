@@ -850,13 +850,24 @@ public class ManageDocumentAction extends DispatchAction {
 		return null;
 	}
 
-        public ActionForward printAnnotation(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        public ActionForward viewDocumentInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
                 response.setContentType("text/html");
-		doPrintAnnotation(request, response.getWriter());
+		doViewDocumentInfo(request, response.getWriter(),true,true);
+		return null;
+	}
+        
+        public ActionForward viewDocumentDescription(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                response.setContentType("text/html");
+		doViewDocumentInfo(request, response.getWriter(),false,true);
+		return null;
+	}
+        public ActionForward viewAnnotationAcknowledgementTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                response.setContentType("text/html");
+		doViewDocumentInfo(request, response.getWriter(),true,false);
 		return null;
 	}
      
-        public void doPrintAnnotation(HttpServletRequest request, PrintWriter out) {
+        public void doViewDocumentInfo(HttpServletRequest request, PrintWriter out,boolean viewAnnotationAcknowledgementTicklerFlag, boolean viewDocumentDescriptionFlag) {
 
                 String doc_no = request.getParameter("doc_no");
                 Locale locale=request.getLocale();
@@ -870,31 +881,36 @@ public class ManageDocumentAction extends DispatchAction {
                 }
                 
                 out.println("<!DOCTYPE html><html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'></head><body>");
-
-                if(annotation.length()>0)  {
-                    out.println(annotation+"<br>");
+                
+                if(viewAnnotationAcknowledgementTicklerFlag) {
+                    if(annotation.length()>0)  {
+                        out.println(annotation+"<br>");
+                    }
+                
+                    if(acknowledgement.length()>0) {
+                        out.println(acknowledgement+"<br>");
+                    }
+		
+                    if(tickler.length()>0)
+                    {
+                        out.println(tickler+"<br>");
+                    }
                 }
                 
-                if(acknowledgement.length()>0) {
-                    out.println(acknowledgement+"<br>");
+                if(viewDocumentDescriptionFlag) {
+                    EDoc curDoc= EDocUtil.getDoc(doc_no);
+                    ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
+                    out.println("<br>"+props.getString("dms.documentBrowser.DocumentUpdated")+": "+curDoc.getDateTimeStamp());
+                    out.println("<br>"+props.getString("dms.documentBrowser.ObservationDate")+": "+curDoc.getObservationDate());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Type")+": "+curDoc.getType());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Class")+": "+curDoc.getDocClass());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Subclass")+": "+curDoc.getDocSubClass());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Description")+": "+curDoc.getDescription());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Creator")+": "+curDoc.getCreatorName());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Responsible")+": "+curDoc.getResponsibleName());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Reviewer")+": "+curDoc.getReviewerName());
+                    out.println("<br>"+props.getString("dms.documentBrowser.Source")+": "+curDoc.getSource());
                 }
-		
-                if(tickler.length()>0)
-                {
-                    out.println(tickler+"<br>");
-                }
-
-                EDoc curDoc= EDocUtil.getDoc(doc_no);
-                ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
-                out.println("<br>"+props.getString("dms.documentBrowser.DocumentUpdated")+":"+curDoc.getDateTimeStamp());
-                out.println("<br>"+props.getString("dms.documentBrowser.ObservationDate")+":"+curDoc.getObservationDate());
-                out.println("<br>"+props.getString("dms.documentBrowser.Type")+":"+curDoc.getType());
-                out.println("<br>"+props.getString("dms.documentBrowser.Class")+":"+curDoc.getDocClass());
-                out.println("<br>"+props.getString("dms.documentBrowser.Subclass")+":"+curDoc.getDocSubClass());
-                out.println("<br>"+props.getString("dms.documentBrowser.Creator")+":"+curDoc.getCreatorName());
-                out.println("<br>"+props.getString("dms.documentBrowser.Responsible")+":"+curDoc.getResponsibleName());
-                out.println("<br>"+props.getString("dms.documentBrowser.Reviewer")+":"+curDoc.getReviewerName());
-                out.println("<br>"+props.getString("dms.documentBrowser.Source")+":"+curDoc.getSource());
                 
                 out.println("</body></html>");
 		out.flush();
