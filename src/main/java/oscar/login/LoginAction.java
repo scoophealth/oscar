@@ -52,7 +52,6 @@ import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
 import org.oscarehr.phr.util.MyOscarUtils;
-import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.LoggedInUserFilter;
 import org.oscarehr.util.MiscUtils;
@@ -151,7 +150,7 @@ public final class LoginAction extends DispatchAction {
 
             // initial db setting
             Properties pvar = OscarProperties.getInstance();
-            EncryptionUtils.setDeterministicallyMangledPasswordSecretKeyIntoSession(session, password);
+            MyOscarUtils.setDeterministicallyMangledPasswordSecretKeyIntoSession(session, password);
             
 
             String providerNo = strAuth[0];
