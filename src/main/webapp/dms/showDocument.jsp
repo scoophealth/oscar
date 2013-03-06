@@ -36,10 +36,21 @@
 
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
+            UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+            
+            String providerNo = request.getParameter("providerNo");
+            UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);                        
+            boolean skipComment = false;
+
+            if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
+            	skipComment = true;
+            }
+
+            
             String demoName=request.getParameter("demoName");
             String documentNo = request.getParameter("segmentID");
 
-            String providerNo = request.getParameter("providerNo");
+            
             String searchProviderNo = request.getParameter("searchProviderNo");
             String status = request.getParameter("status");
             String inQueue=request.getParameter("inQueue");
@@ -58,6 +69,15 @@
 		demoName = demographic.getLastName()+","+demographic.getFirstName();
             }
             String docId = curdoc.getDocId();
+            
+            String ackFunc;
+            if( skipComment ) {
+            	ackFunc = "updateStatus('acknowledgeForm_" + docId + "'," + inQueueB + ");";
+            }
+            else {
+            	ackFunc = "getComment('" + docId + "','" + providerNo + "'," + inQueueB + ");";
+            }
+
 
             int slash = 0;
             String contentType = "";
@@ -359,7 +379,7 @@
                                                                         %>
                                                                         <font color="red"><%= ackStatus %></font>                                                                        
                                                                             <%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%>,
-                                                                            comment: <span id="comment_<%=docId + "_" + report.getOscarProviderNo()%>">&nbsp;<%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
+                                                                            comment: <span id="comment_<%=docId + "_" + report.getOscarProviderNo()%>"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
                                                                         
                                                                         <br>
                                                                     <% }
@@ -393,7 +413,7 @@
                          </fieldset>
                          <fieldset>
                          	<legend><bean:message key="inboxmanager.document.Comment"/></legend>
-                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>',<%=inQueueB%>);" method="post" action="javascript:void(0);">
+                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="<%=ackFunc%>" method="post" action="javascript:void(0);">
 
                                 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
@@ -413,7 +433,7 @@
                                                 <tr>
                                                     <td><% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
                                                         <input type="submit" id="ackBtn_<%=docId%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
-                                                        <input type="button" value="Comment" onclick="addDocComment('<%=docId%>','<%=providerNo%>')"/>
+                                                        <input type="button" value="Comment" onclick="addDocComment('<%=docId%>','<%=providerNo%>',true)"/>
                                                         <%}%>
                                                         <input type="button" id="fwdBtn_<%=docId%>"  value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(355, 685, '../oscarMDS/SelectProvider.jsp?docId=<%=docId%>', 'providerselect');">
                                                         <input type="button" id="fileBtn_<%=docId%>"  value="<bean:message key="oscarMDS.index.btnFile"/>" onclick="fileDoc('<%=docId%>');">
@@ -461,8 +481,8 @@
            
   	   }
        
-        var tmp;
-
+        var tmp;      
+        
         YAHOO.util.Event.onDOMReady(function() {
                                           if($("autocompletedemo<%=docId%>") && $("autocomplete_choices<%=docId%>")){
                                                  //oscarLog('in basic remote');
