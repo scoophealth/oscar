@@ -79,9 +79,11 @@ try{
 }
 
 String newticklerwarningwindow=null;
+String tklerProviderNo = null;
 String default_pmm=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
+	tklerProviderNo = (String) session.getAttribute("tklerProviderNo");
 	default_pmm = (String)session.getAttribute("default_pmm");
 }
 
@@ -154,7 +156,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				</security:oscarSec>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 				<li>
-					<a href="#" onClick ="popupPage(400,680,'<html:rewrite page="/provider/providerpreference.jsp"/>?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>"><u>P</u>ref</a>
+					<a href="#" onClick ="popupPage(400,680,'<html:rewrite page="/provider/providerpreference.jsp"/>?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&tklerproviderno=<%=tklerProviderNo %>&default_pmm=<%=default_pmm%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>"><u>P</u>ref</a>
 				</li>
 				</security:oscarSec>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r">
