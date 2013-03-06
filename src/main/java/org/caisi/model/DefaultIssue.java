@@ -52,6 +52,18 @@ public class DefaultIssue extends AbstractModel<Integer> {
 	
 	@Column(name="issue_ids", nullable=true)
 	private String issueIds = "";
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="update_time", nullable=true)
+	private Date updatetime;
+
+	public Date getUpdatetime() {
+		return updatetime;
+	}
+
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
+	}
 
 	@Override
 	public Integer getId(){
