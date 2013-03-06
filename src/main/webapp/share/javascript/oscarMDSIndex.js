@@ -1885,14 +1885,14 @@ function showNext(docid){
 
 }
 
-function addDocComment(docId, providerNo) {
+function addDocComment(docId, providerNo,sync) {
 	$("status_"+docId).value = 'N';
 	var url=contextpath+"/oscarMDS/UpdateStatus.do";
 	var formid = "acknowledgeForm_" + docId;
 	var data=$(formid).serialize();
 	data += "&method=addComment";
 	
-	new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+	new Ajax.Request(url,{method:'post',parameters:data,asynchronous:sync,onSuccess:function(transport){
 				$("status_"+docId).value = "A";
 				$("comment_"+docId+"_"+providerNo).update($("comment_"+docId).value);
 				$("comment_"+docId).update("");
@@ -1900,3 +1900,32 @@ function addDocComment(docId, providerNo) {
 		}
 	);
 }
+
+function getComment(docId, providerNo, inQueueB) {
+	
+	var ret = true;
+    var comment = "";
+    var text = jQuery("#comment_"+docId + "_" + providerNo);
+    if( text.length > 0 ) {
+        comment = jQuery("#comment_"+docId + "_" + providerNo).html();
+        if( comment == null || comment == "no comment" ) {
+        	comment = "";
+        }
+    }
+    var commentVal = prompt('Enter a comment:', comment);
+
+    if( commentVal == null ) {
+    	ret = false;
+    }
+    else if( commentVal != null && commentVal.length > 0 )
+    	jQuery("#" + "comment_" + docId).val(commentVal);                
+    else
+    	jQuery("#" + "comment_" + docId).val(comment);            	
+
+   if(ret) {
+	   addDocComment(docId,providerNo,false);
+	   updateStatus("acknowledgeForm_" + docId ,inQueueB);
+   }                    	
+	
+}
+
