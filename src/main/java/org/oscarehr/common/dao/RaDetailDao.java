@@ -235,7 +235,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 
 	
 	public List<RaDetail> findByBillingNoServiceDateAndProviderNo(Integer billingNo, String serviceDate, String providerNo) {
-		Query query = createQuery("r", "r.id = :billingNo AND r.serviceDate = :serviceDate and r.providerOhipNo = :providerNo");
+		Query query = createQuery("r", "r.billingNo = :billingNo AND r.serviceDate = :serviceDate and r.providerOhipNo = :providerNo");
 		query.setParameter("billingNo", billingNo);
 		query.setParameter("serviceDate", serviceDate);
 		query.setParameter("providerNo", providerNo);
@@ -244,7 +244,7 @@ public class RaDetailDao extends AbstractDao<RaDetail> {
 	}
 
 	public List<RaDetail> findByBillingNoAndErrorCode(Integer billingNo, String errorCode) {
-		Query query = createQuery("r", "r.id = :billingNo AND r.errorCode = :errorCode");
+		Query query = createQuery("r", "r.billingNo = :billingNo AND r.errorCode = :errorCode");
 		query.setParameter("billingNo", billingNo);
 		query.setParameter("errorCode", errorCode);
 		return query.getResultList();
