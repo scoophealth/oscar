@@ -42,15 +42,17 @@
 
 <title>Please assign default encounter issues</title>
 </head>
-
+<%
+	int colNum = 5;
+%>
 <body>
 <table border="0" cellspacing="0" cellpadding="1" width="100%"
 	bgcolor="#CCCCFF">
 	<tr class="subject">
-		<th colspan="4">CAISI</th>
+		<th colspan="<%=colNum %>">CAISI</th>
 	</tr>
 	<tr>
-		<td class="searchTitle" colspan="4">Please assign default encounter issues</td>
+		<td class="searchTitle" colspan="<%=colNum %>">Please assign default encounter issues</td>
 	</tr>
 </table>
 
@@ -65,6 +67,7 @@
 		<td width="25%">Assigned Date</td>
 		<td width="25%">Lastname</td>
 		<td width="25%">Firstname</td>
+		<td width="25%">Update Date</td>
 		<td width="25%">Issues</td>
 	</tr>
 
@@ -104,10 +107,15 @@
 			out.print("<td>"+sdf.format(defaultIssue.getAssignedtime())+"</td>");
 			out.print("<td>"+provider.getLastName()+"</td>");
 			out.print("<td>"+provider.getFirstName()+"</td>");
+			out.print("<td>"+sdf.format(defaultIssue.getUpdatetime())+"</td>");
 			out.print("<td>"+sb.toString()+"</td>");
 			out.print("</tr>");
 
 		}
+	} else {
+		out.print("<tr style="+style+" bgcolor=" + bgcolor + ">");
+		out.print("<td align=\"center\" colspan=\"" + colNum + "\" width=\"100%\" height=\"30px\">" + "There's no default issues!" + "</td>");
+		out.print("</tr>");
 	}
 	
 %>
@@ -122,6 +130,14 @@
 			onclick="location.href='<%=request.getContextPath()%>/admin/admin.jsp'" /></td>
 		<td><input type="button" value="Assign default issues"
 			onclick="location.href='<%=request.getContextPath()%>/DefaultEncounterIssue.do?method=edit'" /></td>
+		<%
+		if (issueList != null){
+		%>
+			<td><input type="button" value="Remove default issues" onclick="location.href='<%=request.getContextPath()%>/DefaultEncounterIssue.do?method=editRemove'");
+		<%
+		}
+		%>
+	
 	</tr>
 </table>
 
