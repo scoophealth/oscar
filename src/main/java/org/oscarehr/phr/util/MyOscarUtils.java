@@ -25,6 +25,7 @@
 package org.oscarehr.phr.util;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -53,8 +54,10 @@ import oscar.OscarProperties;
 public final class MyOscarUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 
-	private static ExecutorService asyncAutoLoginThreadPool=Executors.newFixedThreadPool(4, new DeamonThreadFactory("asyncAutoLoginThreadPool", Thread.MIN_PRIORITY));
+	private static final String MANGLED_SECRET_KEY_SESSION_KEY=MyOscarUtils.class.getName()+".MANGLED_SECRET_KEY";
 
+	private static ExecutorService asyncAutoLoginThreadPool=Executors.newFixedThreadPool(4, new DeamonThreadFactory("asyncAutoLoginThreadPool", Thread.MIN_PRIORITY));
+	
 	private static boolean myOscarEnabled=initMyOscarEnabled();
 
 	public static Demographic getDemographicByMyOscarUserName(String myOscarUserName) {
@@ -157,7 +160,7 @@ public final class MyOscarUtils {
 			byte[] encryptedMyOscarPassword = providerPreference.getEncryptedMyOscarPassword();
 			if (encryptedMyOscarPassword == null) return;
 			
-			SecretKeySpec key = EncryptionUtils.getDeterministicallyMangledPasswordSecretKeyFromSession(session);
+			SecretKeySpec key = getDeterministicallyMangledPasswordSecretKeyFromSession(session);
 			byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
 			String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
 
@@ -174,5 +177,43 @@ public final class MyOscarUtils {
 		} catch (Throwable t) {
 			logger.error("Error attempting auto-myoscar login", t);
 		}
+	}
+	
+	/**
+	 * deterministically mangle the byte input, doesn't have to be complex, just something different.
+	 * Reason being we don't want to just sha1 the oscar_password as the encryption key because
+	 * that's already stored in the db as the password record.
+	 */
+	public static String deterministicallyMangle(String s)
+	{
+		Random random=new Random(s.length());
+
+		StringBuilder sb=new StringBuilder();
+		
+		for (int i=0; i< s.length(); i++)
+		{
+			sb.append(random.nextInt(s.charAt(i)));
+			
+		}
+				
+		return(sb.toString());
+	}
+	
+	public static SecretKeySpec getSecretKeyFromDeterministicallyMangledPassword(String unmangledPassword)
+	{
+		String mangledPassword=deterministicallyMangle(unmangledPassword);
+		SecretKeySpec secretKeySpec=EncryptionUtils.generateEncryptionKey(mangledPassword);
+		return(secretKeySpec);
+	}
+	
+	public static void setDeterministicallyMangledPasswordSecretKeyIntoSession(HttpSession session, String unmangledPassword)
+	{
+		SecretKeySpec secretKeySpec=getSecretKeyFromDeterministicallyMangledPassword(unmangledPassword);
+		session.setAttribute(MANGLED_SECRET_KEY_SESSION_KEY, secretKeySpec);
+	}
+	
+	public static SecretKeySpec getDeterministicallyMangledPasswordSecretKeyFromSession(HttpSession session)
+	{
+		return (SecretKeySpec) (session.getAttribute(MANGLED_SECRET_KEY_SESSION_KEY));
 	}
 }
