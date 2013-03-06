@@ -894,7 +894,6 @@ public class ProgramManagerAction extends DispatchAction {
 			if(f.getAssignNewVacancyTicklerProvider() != null && f.getAssignNewVacancyTicklerProvider().length()>0 
 				&& f.getAssignNewVacancyTicklerDemographic() != null && f.getAssignNewVacancyTicklerDemographic()> 0) {
 				createWaitlistNotificationTickler(f,vacancy);
-		
 			}
 		} else {		
 			vacancy.setTemplateId(templateId);				
@@ -904,7 +903,13 @@ public class ProgramManagerAction extends DispatchAction {
 			vacancy.setStatus(parameters.get("vacancyStatus")[0]);
 			vacancy.setReasonClosed(parameters.get("reasonClosed")[0]);	
 			vacancy.setDateClosed(dateClosedFormatted);
-			VacancyTemplateManager.saveVacancy(vacancy);					
+			VacancyTemplateManager.saveVacancy(vacancy);	
+			
+			Facility f = LoggedInInfo.loggedInInfo.get().currentFacility;
+			if(f.getAssignNewVacancyTicklerProvider() != null && f.getAssignNewVacancyTicklerProvider().length()>0 
+				&& f.getAssignNewVacancyTicklerDemographic() != null && f.getAssignNewVacancyTicklerDemographic()> 0) {
+				createWaitlistNotificationTickler(f,vacancy);
+			}
 				
 			List<Criteria> criteriaList = VacancyTemplateManager.getRefinedCriteriasByTemplateId(templateId);
 			for(Criteria c : criteriaList) {

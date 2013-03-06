@@ -42,13 +42,18 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
+import org.caisi.dao.TicklerDAO;
+import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.ClientReferralDAO;
+import org.oscarehr.PMmodule.dao.VacancyDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -67,6 +72,7 @@ import org.oscarehr.PMmodule.service.VacancyTemplateManager;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
@@ -74,6 +80,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 public class ProgramManagerViewAction extends DispatchAction {
@@ -91,6 +98,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 	private ProgramManager programManager;
 	private ProgramManagerAction programManagerAction;
 	private ProgramQueueManager programQueueManager;	
+	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -577,6 +585,30 @@ public class ProgramManagerViewAction extends DispatchAction {
 
 		return view(mapping, form, request, response);
 	}
+	
+	private void createWaitlistRejectionNotificationTickler(Facility facility, String clientId, Integer vacancyId) {
+		if(vacancyId == null)
+			return;
+		VacancyDao vacancyDao = SpringUtils.getBean(VacancyDao.class);
+		Vacancy vacancy = vacancyDao.find(vacancyId);
+		if(vacancy == null)
+			return;
+		
+		Demographic d = demographicDao.getDemographic(clientId);
+		Tickler t = new Tickler();
+		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		t.setDemographic_no(clientId);
+		t.setMessage("Client=["+d.getFormattedName()+"] rejected from vacancy=["+vacancy.getName()+"]");
+		t.setPriority("Normal");
+		t.setProgram_id(vacancy.getWlProgramId());
+		t.setService_date(new Date());
+		t.setStatus('A');
+		t.setTask_assigned_to(facility.getAssignRejectedVacancyApplicant());
+		t.setUpdate_date(new Date());
+		
+		TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+		dao.saveTickler(t);
+	}
 
 	public ActionForward reject_from_queue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String notes = request.getParameter("admission.admissionNotes");
@@ -588,8 +620,23 @@ public class ProgramManagerViewAction extends DispatchAction {
 
 		logger.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
 
+		ProgramQueue queue = this.programQueueManager.getActiveProgramQueue(programId,clientId);
+		
 		programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
 
+		//TODO: WL notification
+		ClientReferralDAO clientReferralDao = SpringUtils.getBean(ClientReferralDAO.class);
+		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+		if(facility.getAssignRejectedVacancyApplicant() != null && facility.getAssignRejectedVacancyApplicant().length()>0) {
+			Integer vacancyId = null;
+			if(queue!=null) {
+				ClientReferral referral = clientReferralDao.getClientReferral(queue.getReferralId());
+				if(referral != null) {
+					vacancyId = referral.getVacancyId();
+				}
+			}
+			createWaitlistRejectionNotificationTickler(facility,clientId,vacancyId);
+		}
 		if (dependents != null) {
 			for (Integer l : dependents) {
 				logger.debug("rejecting from queue: program_id=" + programId + ",clientId=" + l.intValue());
