@@ -119,6 +119,8 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String INTEGRATOR_LAST_PUSH = "integrator_last_push";
     public static final String INTEGRATOR_LAST_UPDATED = "integrator_last_updated";
 	public static final String INTEGRATOR_LAST_PULL_PRIMARY_EMR = "integrator_last_pull";
+	
+	public static final String PROVIDER_FOR_TICKLER_WARNING = "provider_for_tickler_warning";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

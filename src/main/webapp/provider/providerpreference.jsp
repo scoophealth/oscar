@@ -57,7 +57,6 @@
 <%@page import="java.util.ArrayList" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@page import="org.oscarehr.common.model.Provider" %>
-<%@page import="org.oscarehr.util.LoggedInInfo" %>
 
 <%
 	CtlBillingServiceDao ctlBillingServiceDao = SpringUtils.getBean(CtlBillingServiceDao.class);
@@ -316,8 +315,10 @@ function showHideERxPref() {
 					<td class="preferenceValue">
 						<select id="ticklerforprovider" name="ticklerforproviderno">
 						<%
-//								LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-								
+								String ticklerforproviderNo = request.getParameter("tklerproviderno");
+								if (ticklerforproviderNo == null) {
+									ticklerforproviderNo = loggedInInfo.loggedInProvider.getProviderNo();
+								}
 								ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 								List<Provider> listProvider = new ArrayList<Provider>();
 								if (providerDao != null) {
@@ -325,11 +326,11 @@ function showHideERxPref() {
 								}							
 								for (Provider provider : listProvider) {
 									String selected = "";
-									if (loggedInInfo.loggedInProvider.getProviderNo().equals(provider.getProviderNo())) {
+									if (ticklerforproviderNo.equals(provider.getProviderNo())) {
 										selected ="selected";
 									}
-									String strOption = String.format("<option value=\"%s\" %s>%s,%s</option>"
-											, provider.getProviderNo(), selected, provider.getLastName(), provider.getFirstName());
+									String strOption = String.format("<option value=\"%s\" %s>%s</option>"
+											, provider.getProviderNo(), selected, provider.getFormattedName());
 									out.print(strOption);
 								}
 						%>
