@@ -3,11 +3,17 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>util</artifactId>
 	<packaging>jar</packaging>
-	<version>2013.02.19</version>
+	<version>2013.03.01</version>
 	<name>util</name>
 	<url>http://www.oscarcanada.org</url>
 
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
@@ -77,12 +83,12 @@
 			<type>pom</type>
 			<exclusions>
 				<exclusion>
-					<artifactId>geronimo-servlet_2.5_spec</artifactId>
 					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-servlet_2.5_spec</artifactId>
 				</exclusion>
 				<exclusion>
-					<artifactId>geronimo-servlet_3.0_spec</artifactId>
 					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-servlet_3.0_spec</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -93,6 +99,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
