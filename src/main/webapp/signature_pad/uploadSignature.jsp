@@ -35,13 +35,13 @@
 		String filename = DigitalSignatureUtils
 				.getTempFilePath(request
 						.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY));
-		FileOutputStream fos = new FileOutputStream(filename);
-
+		
 		String uploadSource = request.getParameter("source");
 
 		if (uploadSource != null
 				&& uploadSource.equalsIgnoreCase("IPAD")) {
-			
+                    
+			FileOutputStream fos = new FileOutputStream(filename);
 			String imageString = request.getParameter("signatureImage");
 			imageString = imageString.substring(imageString.indexOf(",")+1);
 			
@@ -58,8 +58,9 @@
 			fos.close();
 			
 			MiscUtils.getLogger().debug("Signature uploaded: " + filename + ", size=" + imageData.length);
-		} else {
+		} else if (uploadSource == null){
 
+                        FileOutputStream fos = new FileOutputStream(filename);
 			int i = 0;
 			int counter = 0;
 			InputStream is = request.getInputStream();
