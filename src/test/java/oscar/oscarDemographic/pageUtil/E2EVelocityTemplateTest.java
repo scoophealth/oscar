@@ -23,9 +23,14 @@
 
 package oscar.oscarDemographic.pageUtil;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 
 /**
  * 
@@ -34,17 +39,41 @@ import org.junit.Test;
  *  generated from a Velocity template.
  */
 public class E2EVelocityTemplateTest {
-
-	@Test
-	public void testE2EVelocityTemplate() {
-		E2EVelocityTemplate t = new E2EVelocityTemplate();
-		if (t==null) {
-			fail();
-		}
+	
+	@BeforeClass
+	public static void onlyOnce() throws Exception {
+		// Loading in the test data takes too long to do it
+		// before each unit test.
+		//
+		// In the sql script, configure FOREIGN_KEYS_CHECK=0
+		// before loading the db and reset to original value
+		// at end.
+		assertEquals("Error loading test data",
+				SchemaUtils.loadFileIntoMySQL(System.getProperty("basedir")+
+						"/src/test/resources/e2e-test-db.sql"),0);
 	}
 
 	@Test
-	public void testLoadPatient() {
-		
+	public void testE2EVelocityTemplate() {
+		assertNotNull(new E2EVelocityTemplate());
+	}
+
+	@Test
+	public void testExport() {
+		E2EVelocityTemplate e2etemplate = new E2EVelocityTemplate();
+		assertNotNull(e2etemplate);
+		PatientExport p = new PatientExport("1");
+		assertNotNull(p);
+		String s = null;
+		try {
+	        s = e2etemplate.export(p);
+        } catch (Exception e) {
+	        e.printStackTrace();
+	        fail();
+        }
+		assertNotNull(s);
+		assertFalse(s.isEmpty());
+		// should be no $ variables in output
+		assertFalse(s.contains("$"));
 	}
 }
