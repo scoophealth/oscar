@@ -24,19 +24,10 @@
 
 --%>
 
-<%
-  String user_no = (String) session.getAttribute("user");
-  int  nItems=0;
-  String strLimit1="0";
-  String strLimit2="5";
-  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
-  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-  String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
-%>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../admin/dbconnection.jsp"%>
-
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
@@ -45,34 +36,44 @@
 <%@page import="org.oscarehr.common.dao.ReportAgeSexDao" %>
 <%@page import="org.oscarehr.common.model.ReportAgeSex" %>
 <%@page import="oscar.util.ConversionUtils" %>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%
-	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+	String user_no = (String) session.getAttribute("user");
+	int  nItems=0;
+	String strLimit1="0";
+	String strLimit2="5";
+	
+	if(request.getParameter("limit1")!=null) {
+		  strLimit1 = request.getParameter("limit1");
+	}
+	
+	if(request.getParameter("limit2")!=null) {
+		  strLimit2 = request.getParameter("limit2");
+	}
+	String providerview = request.getParameter("providerview") == null ? "all" : request.getParameter("providerview");
+
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	ReportAgeSexDao reportAgeSexDao = SpringUtils.getBean(ReportAgeSexDao.class);
-%>
-<%
-GregorianCalendar now=new GregorianCalendar();
-   int curYear = now.get(Calendar.YEAR);
-   int curMonth = (now.get(Calendar.MONTH)+1);
-   int curDay = now.get(Calendar.DAY_OF_MONTH);
-   String clinic="";
-   String clinicview = oscarVariables.getProperty("clinic_view");
 
-   String visitLocation = clinicLocationDao.searchVisitLocation(clinicview);
-   if(visitLocation!=null) {
-  	 clinic = visitLocation;
-   }
-
-   //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
-   String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
-   String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
-   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
+	GregorianCalendar now=new GregorianCalendar();
+	int curYear = now.get(Calendar.YEAR);
+	int curMonth = (now.get(Calendar.MONTH)+1);
+	int curDay = now.get(Calendar.DAY_OF_MONTH);
+	String clinic = "";
+	String clinicview = oscarVariables.getProperty("clinic_view");
+	
+	String visitLocation = clinicLocationDao.searchVisitLocation(clinicview);
+	if(visitLocation!=null) {
+		clinic = visitLocation;
+	}
+	
+	String reportAction = request.getParameter("reportAction") == null ? "" : request.getParameter("reportAction");
+	String xml_vdate = request.getParameter("xml_vdate") == null ? "" : request.getParameter("xml_vdate");
+	String xml_appointment_date = request.getParameter("xml_appointment_date") == null ? "" : request.getParameter("xml_appointment_date");
 
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
-<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarReport.oscarReportAgeSex.title" /></title>
@@ -81,17 +82,16 @@ GregorianCalendar now=new GregorianCalendar();
 <script language="JavaScript">
 <!--
 
-
 function selectprovider(s) {
   if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
   else a = self.location.href;
 	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
 }
 
-
 function openBrWindow(theURL,winName,features) {
   window.open(theURL,winName,features);
 }
+
 function refresh() {
   var u = self.location.href;
   if(u.lastIndexOf("view=1") > 0) {
@@ -102,8 +102,6 @@ function refresh() {
 }
 //-->
 </script>
-
-
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
@@ -155,23 +153,24 @@ function refresh() {
 			name="providerview">
 			<option value="" <%=providerview.equals("all")?"selected":""%>>-------<bean:message
 				key="oscarReport.oscarReportAgeSex.formSelectProvider" /> ----------</option>
-			<%   String proFirst="";
-               String proLast="";
-               String proOHIP="";
-               String specialty_code;
-               String billinggroup_no;
-               int Count = 0;
-               for(Provider p: providerDao.getActiveProviders()) {
-               
-                  proFirst =p.getFirstName();
-                  proLast = p.getLastName();
-                  proOHIP = p.getProviderNo();
-                  billinggroup_no= SxmlMisc.getXmlContent(p.getComments(),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-                  specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-          %>
+			<% 
+				// builds provider dropdown
+				String proFirst="";
+               	String proLast="";
+               	String proOHIP="";
+               	String specialty_code;
+               	String billinggroup_no;
+               	int Count = 0;
+               	for(Provider p: providerDao.getActiveProviders()) {
+               		proFirst =p.getFirstName();
+                  	proLast = p.getLastName();
+                  	proOHIP = p.getProviderNo();
+                  	billinggroup_no= SxmlMisc.getXmlContent(p.getComments(),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+                  	specialty_code = SxmlMisc.getXmlContent(p.getComments(),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+          	%>
 			<option value="<%=proOHIP%>"
 				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,<%=proFirst%></option>
-			<%   }   %>
+			<% } // -- end of provider dropdown %>
 		</select></div>
 		</td>
 		<td width="20%"><font color="#333333" size="2"
@@ -198,40 +197,31 @@ function refresh() {
 			onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
 			key="oscarReport.oscarReportAgeSex.btnEnd" />:</a></font> <input type="text"
 			name="xml_appointment_date" value="<%=xml_appointment_date%>">
-
-
 		</div>
 		</td>
 	</tr>
 	</form>
 </table>
 
-
-
 <% if (reportAction.compareTo("") == 0 || reportAction == null){%>
-
 <p>&nbsp;</p>
 <% } else {
-
       String Total="0", mNum="", fNum="";
       String dateBegin = request.getParameter("xml_vdate");
       String dateEnd = request.getParameter("xml_appointment_date");
-      if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-      if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // set to any early date to start search from beginning
-
+      if (dateEnd.compareTo("") == 0) {
+    	  dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+      }
+      if (dateBegin.compareTo("") == 0) {
+    	  dateBegin="1950-01-01"; // set to any early date to start search from beginning
+      }
       if (reportAction.compareTo("NR") == 0) {
     	  Total = String.valueOf(reportAgeSexDao.count_reportagesex_noroster("RO", "%", providerview, 0, 200, ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString( dateEnd)));
-      }
-      
-      else if (reportAction.compareTo("RO") == 0) {
+      } else if (reportAction.compareTo("RO") == 0) {
     	  Total = String.valueOf(reportAgeSexDao.count_reportagesex("RO", "%", providerview, 0, 200, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd)));
-      }
-      
-      else {
+      } else {
     	  Total =  String.valueOf(reportAgeSexDao.count_reportagesex("%", "%", providerview, 0, 200, ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd))) ;
       }
-      
-  
 
       BigDecimal percent = new BigDecimal(100).setScale(2, BigDecimal.ROUND_HALF_UP);
       BigDecimal mdNum = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -251,8 +241,8 @@ function refresh() {
       BigDecimal LinePerc= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
    %>
 <pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message
-	key="oscarReport.oscarReportAgeSex.msgDate" />: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message
-	key="oscarReport.oscarReportAgeSex.msgUnit" />: <%=clinic%>                                              <bean:message
+	key="oscarReport.oscarReportAgeSex.msgDate" />: <%=curYear%>-<%=curMonth%>-<%=curDay%> <bean:message
+	key="oscarReport.oscarReportAgeSex.msgUnit" />: <%=clinic%> <bean:message
 	key="oscarReport.oscarReportAgeSex.msgPhysician" />: <%=providerview%></font></pre>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr bgcolor="#CCCCFF">
@@ -408,10 +398,7 @@ function refresh() {
      AgeMatrix[19][0] = "95";
      AgeMatrix[19][1] = "200";
 
-
-
-     for (int i=0;i<20; i++){
-    	 
+     for (int i=0;i<20; i++){    	 
          if (reportAction.compareTo("NR") == 0) {
         	 mNum = String.valueOf(reportAgeSexDao.count_reportagesex_noroster("RO", "M%", providerview, Integer.parseInt(AgeMatrix[i][0]),  Integer.parseInt(AgeMatrix[i][1]), ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString( dateEnd)));
          }
