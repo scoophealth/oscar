@@ -23,11 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.PersistenceException;
-
-import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -44,34 +41,17 @@ public class PatientLabRoutingDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testFindDemographicByLabId() {
-		try {
-			dao.findDemographicByLabId(1);
-		} catch (HibernateException e) {
-			fail();
-		} catch (PersistenceException e) {
-			fail();
-		}
+		dao.findDemographicByLabId(1);
 	}
 
 	@Test
 	public void testFindDemographic() {
-		try {
-			dao.findDemographics("TYPE", 10);
-		} catch (HibernateException e) {
-			fail();
-		} catch (PersistenceException e) {
-			fail();
-		}
+		dao.findDemographics("TYPE", 10);
 	}
 	
 	@Test
 	public void testFindByDemographicAndLabType() {
-		try {
-			dao.findByDemographicAndLabType(0, "LABTYPE");
-		} catch (HibernateException e) {
-			fail();
-		} catch (PersistenceException e) {
-			fail();
-		}
+		assertNotNull(dao.findByDemographicAndLabType(100, "MDS"));
 	}
+
 }
