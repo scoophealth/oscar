@@ -69,7 +69,7 @@ if(demo != null){
 	<tr>
 		<td align="center" class="menuLayer"><a
 			href="javascript: function myFunction() {return false; }"
-			onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49982.htm','BodyMassIndex');">
+			onclick="popperup(650,775,'http://www.mcw.edu/calculators/body-mass-index.htm','BodyMassIndex');">
 		<bean:message key="oscarEncounter.Index.bodyMass" /> </a></td>
 	</tr>
 	<tr>
@@ -101,7 +101,7 @@ if(demo != null){
 	<tr>
 		<td align="center" class="menuLayer"><a
 			href="javascript: function myFunction() {return false; }"
-			onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49976.htm','PregancyCalculator');">
+			onclick="popperup(650,775,'http://www.mcw.edu/calculators/pregnancydate.htm','PregancyCalculator');">
 		<bean:message key="oscarEncounter.Index.pregnancy" /> </a></td>
 	</tr>
 	<tr>
