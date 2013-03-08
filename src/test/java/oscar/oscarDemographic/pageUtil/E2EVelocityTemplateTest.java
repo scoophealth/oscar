@@ -28,10 +28,21 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 /**
  * 
  * @author rrusk
@@ -75,5 +86,41 @@ public class E2EVelocityTemplateTest {
 		assertFalse(s.isEmpty());
 		// should be no $ variables in output
 		assertFalse(s.contains("$"));
+		
+		// check output is well-formed
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setValidating(false);
+		factory.setNamespaceAware(true);
+        try {
+	        SAXParser parser = factory.newSAXParser();
+	        XMLReader reader = parser.getXMLReader();
+			reader.setErrorHandler(new SimpleErrorHandler());
+			// the parse method throws an exception
+			// if the XML is not well-formed
+			reader.parse(new InputSource(new StringReader(s)));
+        } catch (ParserConfigurationException e) {
+        	fail("ParserConfigurationException");
+        } catch (SAXException e) {
+	        fail("SAXException");
+        } catch (IOException e) {
+	        //e.printStackTrace();
+        	fail("IOException");
+        }
+	}
+	
+	// from http://www.edankert.com/validate.html and
+	// http://stackoverflow.com/questions/6362926/xml-syntax-validation-in-java
+	public class SimpleErrorHandler implements ErrorHandler {
+	    public void warning(SAXParseException e) throws SAXException {
+	        System.out.println(e.getMessage());
+	    }
+
+	    public void error(SAXParseException e) throws SAXException {
+	        System.out.println(e.getMessage());
+	    }
+
+	    public void fatalError(SAXParseException e) throws SAXException {
+	        System.out.println(e.getMessage());
+	    }
 	}
 }
