@@ -195,6 +195,10 @@
         
 		<% if ( fromMessenger ) {%>
 		<!-- leave blank -->
+		                <td class="demoIdSearch">
+                    <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
+                        key="demographic.demographicsearchresults.btnDemoNo" /></a>
+                </td>
 		<%} else {%>
                 <td class="demoIdSearch">
                     <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
@@ -371,11 +375,11 @@
 
 		if (fromMessenger) {
 	%>
-		<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName())%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=demo.getDemographicNo()%></a></td>
+		<a href="#" onclick="popup(700,1027,'demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName())%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail')" ><%=demo.getDemographicNo()%></a></td>
 	<%	
 		} else { 
 	%>
-		<a title="Master Demo File" href="demographiccontrol.jsp?demographic_no=<%=head%>&displaymode=edit&dboperation=search_detail" target="_blank"><%=dem_no%></a></td>
+		<a title="Master Demographic File" href="#"  onclick="popup(700,1027,'demographiccontrol.jsp?demographic_no=<%=head%>&displaymode=edit&dboperation=search_detail')" ><%=dem_no%></a></td>
 	
 		<!-- Rights -->
 		<td class="links"><security:oscarSec roleName="<%=roleName$%>"
