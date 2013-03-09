@@ -440,7 +440,7 @@ public class TeleplanFileWriter {
         return list;
     }
     
-    private String  roundUp (String str){
+    public static String  roundUp (String str){
        String retval = "1";
        try{
           retval = new java.math.BigDecimal(str).setScale(0,BigDecimal.ROUND_UP).toString();
