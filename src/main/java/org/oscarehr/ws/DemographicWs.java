@@ -27,6 +27,7 @@ package org.oscarehr.ws;
 
 import javax.jws.WebService;
 
+import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.ws.transfer_objects.DemographicTransfer;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Component;
 
 @WebService
 @Component
+@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
 public class DemographicWs extends AbstractWs {
 	@Autowired
 	private DemographicManager demographicManager;

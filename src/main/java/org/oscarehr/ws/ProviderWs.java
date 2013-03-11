@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.jws.WebService;
 
+import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.ProviderManager2;
 import org.oscarehr.ws.transfer_objects.ProviderTransfer;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Component;
 
 @WebService
 @Component
+@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
 public class ProviderWs extends AbstractWs {
 	@Autowired
 	private ProviderManager2 providerManager;

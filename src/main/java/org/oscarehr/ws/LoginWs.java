@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.jws.WebService;
 
+import org.apache.cxf.annotations.GZIP;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Security;
@@ -41,6 +42,7 @@ import org.springframework.stereotype.Component;
 
 @WebService
 @Component
+@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
 public class LoginWs extends AbstractWs {
 	private static final Logger logger = MiscUtils.getLogger();
 

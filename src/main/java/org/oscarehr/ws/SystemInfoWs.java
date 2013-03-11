@@ -27,10 +27,12 @@ package org.oscarehr.ws;
 
 import javax.jws.WebService;
 
+import org.apache.cxf.annotations.GZIP;
 import org.springframework.stereotype.Component;
 
 @WebService
 @Component
+@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
 public class SystemInfoWs extends AbstractWs
 {
 	/**
