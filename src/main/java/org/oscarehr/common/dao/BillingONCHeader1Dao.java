@@ -610,7 +610,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 	}
 
     public List<BillingONCHeader1> getBillingItemByDxCode(Integer demographicNo, String dxCode) {
-        String queryStr = "select h FROM BillingOnItem b, BillingONCHeader1 h WHERE h.id = b.ch1_id and h.demographicNo=? and b.dx =? or b.dx1 = ? or b.dx2=?";
+        String queryStr = "select h FROM BillingONItem b, BillingONCHeader1 h WHERE h.id = b.ch1Id and h.demographicNo=? and b.dx =? or b.dx1 = ? or b.dx2=?";
         Query query = entityManager.createQuery(queryStr);
         query.setParameter(1, demographicNo);
         query.setParameter(2, dxCode);

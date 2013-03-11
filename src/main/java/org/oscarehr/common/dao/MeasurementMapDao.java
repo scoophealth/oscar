@@ -29,7 +29,9 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.MeasurementType;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class MeasurementMapDao extends AbstractDao<MeasurementMap> {
 
 	public MeasurementMapDao() {

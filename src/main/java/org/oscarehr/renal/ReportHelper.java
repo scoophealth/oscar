@@ -50,7 +50,7 @@ public class ReportHelper {
 	static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	static DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-	static MeasurementMapDao measurementMapDao = (MeasurementMapDao)SpringUtils.getBean("measurementMapDao2");
+	static MeasurementMapDao measurementMapDao = (MeasurementMapDao)SpringUtils.getBean("measurementMapDao");
 	static FormLabReq07Dao labReq07Dao = SpringUtils.getBean(FormLabReq07Dao.class);
 	static DrugDao drugDao = SpringUtils.getBean(DrugDao.class);
 	
