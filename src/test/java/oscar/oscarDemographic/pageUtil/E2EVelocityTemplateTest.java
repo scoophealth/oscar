@@ -26,8 +26,10 @@ package oscar.oscarDemographic.pageUtil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -38,9 +40,13 @@ import javax.xml.parsers.SAXParserFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.MiscUtils;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 /**
@@ -50,6 +56,8 @@ import org.xml.sax.XMLReader;
  *  generated from a Velocity template.
  */
 public class E2EVelocityTemplateTest {
+	
+	private boolean isValid;  // used in ErrorHandler to flag invalid documents
 	
 	@BeforeClass
 	public static void onlyOnce() throws Exception {
@@ -79,7 +87,7 @@ public class E2EVelocityTemplateTest {
 		try {
 	        s = e2etemplate.export(p);
         } catch (Exception e) {
-	        e.printStackTrace();
+        	MiscUtils.getLogger().error(e.getMessage());
 	        fail();
         }
 		assertNotNull(s);
@@ -88,6 +96,19 @@ public class E2EVelocityTemplateTest {
 		assertFalse(s.contains("$"));
 		
 		// check output is well-formed
+		assertTrue(isWellFormedXML(s));
+		assertFalse(isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>")));
+
+		// validate against XML schema
+		assertTrue(isValidXML(s));
+		assertFalse(isValidXML(s.replace("DOCSECT", "DOXSECT")));
+
+	}
+	
+	// check input string is well-formed XML
+	public boolean isWellFormedXML(String xmlstring) {
+		boolean result = false;
+
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setValidating(false);
 		factory.setNamespaceAware(true);
@@ -97,30 +118,95 @@ public class E2EVelocityTemplateTest {
 			reader.setErrorHandler(new SimpleErrorHandler());
 			// the parse method throws an exception
 			// if the XML is not well-formed
-			reader.parse(new InputSource(new StringReader(s)));
+			isValid = true;
+			reader.parse(new InputSource(new StringReader(xmlstring)));
+			result = isValid;
         } catch (ParserConfigurationException e) {
-        	fail("ParserConfigurationException");
+        	MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
         } catch (SAXException e) {
-	        fail("SAXException");
+        	//MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
         } catch (IOException e) {
-	        //e.printStackTrace();
-        	fail("IOException");
+        	MiscUtils.getLogger().error(e.getCause());
+        	isValid = false;
         }
+		return result;
+	}
+		
+	public boolean isValidXML(String xmlstring) {	
+		boolean result = false;
+		
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setValidating(true);
+		factory.setNamespaceAware(true);
+
+        try {
+	        SAXParser parser = factory.newSAXParser();
+	        parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage", 
+	              "http://www.w3.org/2001/XMLSchema");
+	        XMLReader reader = parser.getXMLReader();
+			reader.setErrorHandler(new SimpleErrorHandler());
+			reader.setEntityResolver(new E2EEntityResolver());
+			isValid = true;
+	        reader.parse(new InputSource(new StringReader(xmlstring)));
+	        result = isValid;
+        } catch (ParserConfigurationException e) {
+        	MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
+        } catch (SAXNotRecognizedException e) {
+        	MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
+        } catch (SAXNotSupportedException e) {
+        	MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
+        } catch (SAXException e) {
+        	MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
+        } catch (IOException e) {
+        	MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
+        }
+		return result;
 	}
 	
-	// from http://www.edankert.com/validate.html and
-	// http://stackoverflow.com/questions/6362926/xml-syntax-validation-in-java
 	public class SimpleErrorHandler implements ErrorHandler {
 	    public void warning(SAXParseException e) throws SAXException {
-	        System.out.println(e.getMessage());
+        	//MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
 	    }
 
 	    public void error(SAXParseException e) throws SAXException {
-	        System.out.println(e.getMessage());
+	    	//Commented out to suppress output from forced failures
+        	//MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
 	    }
 
 	    public void fatalError(SAXParseException e) throws SAXException {
-	        System.out.println(e.getMessage());
+	    	//Commented out to suppress output from forced failures
+        	//MiscUtils.getLogger().error(e.getMessage());
+        	isValid = false;
 	    }
 	}
+	
+	private class E2EEntityResolver implements EntityResolver {
+		 
+		public InputSource resolveEntity(String publicId, String systemId)
+				throws SAXException, IOException {
+
+			// Grab only the filename part from the full path
+			String filename = new File(systemId).getName();
+		 
+			// Now prepend the correct path
+			String correctedId = System.getProperty("basedir")+
+					"/src/test/resources/e2e/" + filename;
+		 
+			InputSource is = new InputSource(
+					ClassLoader.getSystemResourceAsStream(correctedId));
+			is.setSystemId(correctedId);
+		 
+			return is;
+		}
+	}
+		
 }
