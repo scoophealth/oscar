@@ -37,6 +37,8 @@ import org.oscarehr.util.LoggedInInfo;
 
 public abstract class AbstractWs
 {
+	protected static final int GZIP_THRESHOLD = 0;
+
 	@Resource
     protected WebServiceContext context;
 	

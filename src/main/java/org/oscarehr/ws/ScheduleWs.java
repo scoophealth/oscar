@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.jws.WebService;
 
+import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.ScheduleTemplateCode;
@@ -44,6 +45,7 @@ import org.springframework.stereotype.Component;
 
 @WebService
 @Component
+@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
 public class ScheduleWs extends AbstractWs {
 	@Autowired
 	private ScheduleManager scheduleManager;
