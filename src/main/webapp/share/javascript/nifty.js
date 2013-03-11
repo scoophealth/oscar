@@ -52,10 +52,28 @@ else if(wich.indexOf("br")>=0){
 var v=getElementsBySelector(selector);
 var l=v.length;
 for(i=0;i<l;i++){
-    if(edges) AddBorder(v[i],ecolor);
-    if(t) AddTop(v[i],bk,color,ecolor,prefixt);
-    if(b) AddBottom(v[i],bk,color,ecolor,prefixb);
+	var containerElement = v[i];
+	// in case this container element has been processed already
+	if (containerElement.className.indexOf("_nifty") !== -1) {
+		// don't add border - just go to the next element
+		continue;
+	} else {
+		// otherwise, mark this as processed to avoid future nifty duplication
+		containerElement.className += " _nifty";
+	}
+	
+    if(edges) {
+    	AddBorder(containerElement,ecolor);
     }
+    
+    if(t) {
+    	AddTop(containerElement,bk,color,ecolor,prefixt);
+    }
+    
+    if(b) {
+    	AddBottom(containerElement,bk,color,ecolor,prefixb);
+    }
+}
 }
 
 function AddBorder(el,bc){
@@ -79,22 +97,48 @@ if(!el.passed){
 el.passed=true;
 }
     
+/**
+ * Adds top border around each individual note on the encounter screen 
+ *  
+ * @param el
+ * 		Element to add border to
+ * @param bk
+ * 		Background CSS style
+ * @param color
+ * 		Color of the element
+ * @param bc
+ * 		Background color of the element
+ * @param cn
+ * 		Prefix to be added to identify the element responsible for rendering border
+ */
 function AddTop(el,bk,color,bc,cn){
-var i,lim=4,d=CreateEl("b");
+	var i, lim = 4, d = CreateEl("b");
 
-if(cn.indexOf("s")>=0) lim=2;
-if(bc) d.className="artop";
-else d.className="rtop";
-d.style.backgroundColor=bk;
-for(i=1;i<=lim;i++){
-    var x=CreateEl("b");
-    x.className=cn + i;
-    x.style.backgroundColor=color;
-    if(bc) x.style.borderColor=bc;
-    d.appendChild(x);
-    }
-el.style.paddingTop=0;
-el.insertBefore(d,el.firstChild);
+	if (cn.indexOf("s") >= 0) {
+		lim = 2;
+	}
+	
+	if (bc) {
+		d.className = "artop";
+	} else {
+		d.className = "rtop";
+	}
+	
+	d.style.backgroundColor = bk;
+	
+	for (i = 1; i <= lim; i++) {
+		var x = CreateEl("b");
+		x.className = cn + i;
+		x.style.backgroundColor = color;
+		if (bc) {
+			x.style.borderColor = bc;
+		}
+		
+		d.appendChild(x);
+	}
+	
+	el.style.paddingTop = 0;
+	el.insertBefore(d, el.firstChild);
 }
 
 function AddBottom(el,bk,color,bc,cn){
