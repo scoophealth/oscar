@@ -168,6 +168,7 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdHypertensionFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdDiabetesFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesQueensFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/ckdFlowsheet.xml</value>
 			</list>
 		</property>
 	</bean>

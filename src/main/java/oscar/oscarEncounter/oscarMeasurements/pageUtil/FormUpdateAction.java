@@ -10,8 +10,10 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Validations;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -40,8 +43,12 @@ import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 
-public class FormUpdateAction extends Action {
+import org.apache.log4j.Logger;
 
+public class FormUpdateAction extends Action {
+	
+	private static Logger log = MiscUtils.getLogger();
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String dateEntered = request.getParameter("date");
 
@@ -50,10 +57,12 @@ public class FormUpdateAction extends Action {
 		boolean valid = true;
 		boolean errorPage = false;
 
+		
+		
 		HttpSession session = request.getSession();
 
-		String temp = "diab3";
-		session.setAttribute("temp", "diab3");
+		String temp = request.getParameter("template");	//"diab3";
+		session.setAttribute("temp", temp);
 		String demographic_no = request.getParameter("demographic_no");
 		String providerNo = (String) session.getAttribute("user");
 		String apptNo = (String) session.getAttribute("cur_appointment_no");
@@ -67,25 +76,34 @@ public class FormUpdateAction extends Action {
 		MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 		MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp, custList);
 
-		List<MeasurementTemplateFlowSheetConfig.Node> nodes = mFlowsheet.getItemHeirarchy();
+		//List<MeasurementTemplateFlowSheetConfig.Node> nodes = mFlowsheet.getItemHeirarchy();
+	    
+	    List<String> measurementLs = mFlowsheet.getMeasurementList();
+	    ArrayList<String> measurements = new ArrayList(measurementLs);
 
 		EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
 
-		FlowSheetItem item;
-		String measure;
+		//FlowSheetItem item;
+		//String measure;
 
-		for (int i = 0; i < nodes.size(); i++) {
+		/*for (int i = 0; i < nodes.size(); i++) {
 			MeasurementTemplateFlowSheetConfig.Node node = nodes.get(i);
 
 			for (int j = 0; j < node.children.size(); j++) {
 				MeasurementTemplateFlowSheetConfig.Node child = node.children.get(j);
-				if (child.children == null && child.flowSheetItem != null) {
-					item = child.flowSheetItem;
-					measure = item.getItemName();
-					mFlowsheet.getMeasurementFlowSheetInfo(measure);
+				if (child.children == null && child.flowSheetItem != null) {*/
+		
+		for (String measure:measurements){
+			Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
+	        FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
+					
+	               mFlowsheet.getMeasurementFlowSheetInfo(measure);
 					EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measure);
 
-					String name = child.flowSheetItem.getDisplayName().replaceAll("\\W", "");
+					String name = h2.get("display_name").toString().replaceAll("\\W","");
+					
+					log.error("TEST****************** 1" + name);
+
 
 					if (request.getParameter(name) != null && !request.getParameter(name).equals("")) {
 
@@ -96,7 +114,7 @@ public class FormUpdateAction extends Action {
 						valid = doInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), request.getParameter(name), comment, dateEntered, apptNo, request);
 
 						if (!valid) {
-							testOutput += child.flowSheetItem.getDisplayName() + ": " + request.getParameter(name) + "\n";
+							testOutput += name + ": " + request.getParameter(name) + "\n";
 							errorPage = true;
 						} else {
 							textOnEncounter += name + " " + request.getParameter(name) + "\\n";
@@ -108,8 +126,7 @@ public class FormUpdateAction extends Action {
 					}
 
 				}
-			}
-		}
+		
 
 		//if (request.getParameter("ycoord") != null) {
 		//	request.setAttribute("ycoord", request.getParameter("ycoord"));
@@ -120,7 +137,7 @@ public class FormUpdateAction extends Action {
 			return mapping.findForward("failure");
 		}
 		session.setAttribute("textOnEncounter", textOnEncounter);
-		if (request.getParameter("submit").equals("Update")) {
+		if (request.getParameter("submit").equals("Add")) {
 			return mapping.findForward("reload");
 		} else {
 			return mapping.findForward("success");
@@ -132,7 +149,7 @@ public class FormUpdateAction extends Action {
 		HttpSession session = request.getSession();
 		String providerNo = (String) session.getAttribute("user");
 		String comments = comment;
-
+		
 		String[] dateComp = date.split("-");
 		Date dateObs = new Date();
 		dateObs.setYear(Integer.parseInt(dateComp[0]) - 1900);
@@ -162,7 +179,7 @@ public class FormUpdateAction extends Action {
 	public boolean doInput(FlowSheetItem item, EctMeasurementTypesBean mtypeBean, MeasurementFlowSheet mFlowsheet, String inputType, String mInstructions, String value, String comment, String date, String apptNo, HttpServletRequest request) {
 		EctValidation ectValidation = new EctValidation();
 		ActionMessages errors = new ActionMessages();
-
+		
 		String demographicNo = request.getParameter("demographic_no");
 		HttpSession session = request.getSession();
 		String providerNo = (String) session.getAttribute("user");
@@ -216,7 +233,6 @@ public class FormUpdateAction extends Action {
 		}
 		if (!ectValidation.isValidBloodPressure(regExp, inputValue)) {
 			errors.add(inputValueName, new ActionMessage("error.bloodPressure"));
-			saveErrors(request, errors);
 			valid = false;
 		}
 		if (!ectValidation.isDate(dateObserved) && inputValue.compareTo("") != 0) {
