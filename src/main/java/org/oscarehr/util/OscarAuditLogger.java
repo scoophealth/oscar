@@ -57,4 +57,22 @@ public class OscarAuditLogger {
 			MiscUtils.getLogger().error("Couldn't write log message", e);
 		}
 	}
+	
+	public void log(String action, String content, Integer demographicNo, String data) {
+		try {
+			OscarLog logItem = new OscarLog();
+			logItem.setAction(action);
+			logItem.setContent(content);
+			logItem.setDemographicId(demographicNo);
+			logItem.setData(data);
+
+			if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
+				logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			
+			logDao.persist(logItem);
+
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Couldn't write log message", e);
+		}
+	}
 }

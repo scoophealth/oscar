@@ -245,6 +245,20 @@ public class DrugDao extends AbstractDao<Drug> {
 
 		return (results);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Drug> findByAtc(String atc) {
+		Query query = entityManager.createQuery("select d from Drug d where d.atc LIKE :atc");
+		query.setParameter("atc", atc);
+		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Drug> findByAtc(List<String> atc) {
+		Query query = entityManager.createQuery("select d from Drug d where d.atc in (:atc)");
+		query.setParameter("atc", atc);
+		return query.getResultList();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Drug> findByDemographicIdAndAtc(int demographicNo, String atc) {

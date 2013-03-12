@@ -82,6 +82,9 @@ public class EctDisplayDxAction extends EctDisplayAction {
             NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
             dxResearchBean dxBean = (dxResearchBean) diseases.get(idx);
             
+            if(!dxBean.getStatus().equals("A"))
+            	continue;
+            
             if (dxBean.getStatus() != null && dxBean.getStatus().equalsIgnoreCase("C")){
                item.setColour("000000");
             }

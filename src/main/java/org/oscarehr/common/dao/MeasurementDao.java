@@ -79,19 +79,6 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return results;
 	}
 
-	public List<Measurement> findByType(Integer demographicId, String type) {
-		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type = ?2 order by x.dateObserved desc";
-
-		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, demographicId);
-		query.setParameter(2, type);
-
-		
-		List<Measurement> results = query.getResultList();
-
-		return results;
-	}
-	
 	public List<Measurement> findByDemographicNo(Integer demographicNo) {
 		String sqlCommand = "select x from Measurement x where x.demographicId = ?1";
 
@@ -104,18 +91,19 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return results;
 	}
 	
-	public List<Measurement> findByDemographicNoAndType(Integer demographicNo, String type) {
-		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type=?2";
+    public List<Measurement> findByDemographicNoAndType(Integer demographicNo, String type) {
+        String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type=?2";
 
-		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, demographicNo);
-		query.setParameter(2, type);
-		
-		
-		List<Measurement> results = query.getResultList();
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, demographicNo);
+        query.setParameter(2, type);
 
-		return results;
-	}
+        
+        List<Measurement> results = query.getResultList();
+
+        return results;
+    }
+
 	
 	public Measurement findLatestByDemographicNoAndType(int demographicNo, String type) {
 		List<Measurement> ms = findByDemographicNoAndType(demographicNo,type);
@@ -697,4 +685,109 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return query.getResultList();
     }
 	
+    	public List<Measurement> findByType(Integer demographicId, String type) {
+    		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type = ?2 order by x.dateObserved desc";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter(1, demographicId);
+    		query.setParameter(2, type);
+
+    		@SuppressWarnings("unchecked")
+    		List<Measurement> results = query.getResultList();
+
+    		return results;
+    	}
+    	
+    	public List<Measurement> findByType(Integer demographicId, String type, Date after) {
+    		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type = ?2 and x.dateObserved >= ?3 order by x.dateObserved desc";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter(1, demographicId);
+    		query.setParameter(2, type);
+    		query.setParameter(3, after);
+
+    		@SuppressWarnings("unchecked")
+    		List<Measurement> results = query.getResultList();
+
+    		return results;
+    	}
+    	
+    	public List<Measurement> findByType(Integer demographicId, List<String> types) {
+    		String sqlCommand = "select x from Measurement x where x.demographicId = :demographicNo and x.type IN (:types) order by x.dateObserved desc";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter("demographicNo", demographicId);
+    		query.setParameter("types", types);
+
+    		@SuppressWarnings("unchecked")
+    		List<Measurement> results = query.getResultList();
+
+    		return results;
+    	}
+    	
+    	public List<Measurement> findByType(Integer demographicId, List<String> types,Date after) {
+    		String sqlCommand = "select x from Measurement x where x.demographicId = :demographicNo and x.type IN (:types) and x.dateObserved >= :after order by x.dateObserved desc";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter("demographicNo", demographicId);
+    		query.setParameter("types", types);
+    		query.setParameter("after", after);
+
+    		@SuppressWarnings("unchecked")
+    		List<Measurement> results = query.getResultList();
+
+    		return results;
+    	}
+    	
+    	
+    	public List<Measurement> findByType(String type) {
+    		String sqlCommand = "select x from Measurement x where x.type = ?1 order by x.demographicId, x.dateObserved desc";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter(1, type);
+
+    		@SuppressWarnings("unchecked")
+    		List<Measurement> results = query.getResultList();
+
+    		return results;
+    	}
+    	
+    	public List<Measurement> findByType(List<String> types) {
+    		String sqlCommand = "select x from Measurement x where x.type in (:type) order by x.demographicId, x.dateObserved desc";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter("type", types);
+
+    		@SuppressWarnings("unchecked")
+    		List<Measurement> results = query.getResultList();
+
+    		return results;
+    	}
+    	
+    	public List<Integer> findDemographicIdsByType(List<String> types) {
+    		String sqlCommand = "select distinct x.demographicId from Measurement x where x.type in (:types)";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter("types", types);
+
+    		@SuppressWarnings("unchecked")
+    		List<Integer> results = query.getResultList();
+
+    		return results;
+    	}
+    	
+       	public List<Measurement> findByTypeBefore(Integer demographicId, String type, Date date) {
+    		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type = ?2 and x.dateObserved <= ?3 order by x.dateObserved desc";
+
+    		Query query = entityManager.createQuery(sqlCommand);
+    		query.setParameter(1, demographicId);
+    		query.setParameter(2, type);
+    		query.setParameter(3, date);
+
+    		@SuppressWarnings("unchecked")
+    		List<Measurement> results = query.getResultList();
+
+    		return results;
+    	}
+
 }

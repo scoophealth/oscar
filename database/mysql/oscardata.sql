@@ -2535,3 +2535,5 @@ INSERT INTO secObjPrivilege VALUES('doctor','_caseload.LastEncounterDate','o',0,
 INSERT INTO secObjPrivilege VALUES('doctor','_caseload.LastEncounterType','o',0,'999998');
 INSERT INTO secObjPrivilege VALUES('doctor','_caseload.CashAdmissionDate','o',0,'999998');
 INSERT INTO secObjPrivilege VALUES('doctor','_caseload.Access1AdmissionDate','o',0,'999998');
+
+INSERT INTO `OscarCode` VALUES (1,'CKDSCREEN','Ckd Screening');

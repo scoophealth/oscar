@@ -265,4 +265,16 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
     	 }
     	 return null;
      }
+     
+	 public List<Integer> findDemographicIdsByKeyVal(String key, String val) {
+	 		Query query = entityManager.createQuery("SELECT distinct d.demographicNo from DemographicExt d where d.key=? and d.value=?");
+	 		query.setParameter(1, key);
+	 		query.setParameter(2, val);
+	 		
+	 		@SuppressWarnings("unchecked")
+	 		List<Integer> results = query.getResultList();
+
+	 		return results;
+	 	 }
+	 	 
 }

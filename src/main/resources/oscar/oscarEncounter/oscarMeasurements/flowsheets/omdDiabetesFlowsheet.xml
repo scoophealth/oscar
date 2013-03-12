@@ -23,7 +23,7 @@
 -->
 <flowsheet name="diab2" 
 ds_rules="diab.drl" 
-           dxcode_triggers="icd9:250" 
+           dxcode_triggers="icd9:250,OscarCode:CKDSCREEN" 
     display_name="Diabetes Flowsheet" warning_colour="#E00000" recommendation_colour="yellow" top_HTML="">
   <indicator key="HIGH 1" colour="#E00000" />
   <indicator key="HIGH" colour="orange" />
@@ -369,7 +369,16 @@ ds_rules="diab.drl"
                 <condition type="monthrange" param="EGFR" value="-1" />
               </recommendation>
             </rules>
+            <ruleset>
+              <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="ACR" value="&lt;60.0" />
+              </rule>
+            </ruleset>            
           </item>
+          <item measurement_type="AORA" display_name="ACE-I OR ARB" guideline="Yes No" graphable="no" value_name="ACE-I OR ARB" />
+          <!-- 
+          <item measurement_type="SKD" display_name="Signs of Kidney Damage" guideline="Yes No" graphable="no" value_name="Signs of Kidney Damage" />
+          -->
           <item measurement_type="CRCL" display_name="Creatinine Clearance" guideline="" graphable="yes" value_name="Creatinine Clearance" >
             <rules>
               <recommendation strength="warning" >
@@ -628,6 +637,13 @@ ds_rules="diab.drl"
     <validationRule name="Numeric Value: 0 to 500" maxValue="500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
   </measurement>
   
+  <measurement type="SKD" typeDesc="Signs of Kidney Damage" typeDisplayName="SKD">
+        <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+  </measurement>
+    
+  <measurement type="AORA" typeDesc="ACE-I OR ARB" typeDisplayName="AORA">
+        <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+  </measurement>
   
   <measurement type="SCR" typeDesc="CREATININE" typeDisplayName="CREATININE" measuringInstrc="">
     <validationRule name="Numeric Value: 0 to 1200" maxValue="1200" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />

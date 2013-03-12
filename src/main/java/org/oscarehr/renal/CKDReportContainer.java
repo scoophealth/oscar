@@ -30,9 +30,15 @@ public class CKDReportContainer {
 	private String aboriginalStr;
 	private boolean diabetic;
 	private boolean hypertensive;
-	private String bp;
+	private boolean medication;
+	private boolean bp;
 	private boolean hx;
-	private String labs;
+	private boolean labs;
+	
+	private String lastPatientLetter;
+	private String lastLabReq;
+	
+	private String lastVisit = "";
 	
 	
 	public Demographic getDemographic() {
@@ -59,10 +65,10 @@ public class CKDReportContainer {
 	public void setHypertensive(boolean hypertensive) {
 		this.hypertensive = hypertensive;
 	}
-	public String getBp() {
+	public boolean isBp() {
 		return bp;
 	}
-	public void setBp(String bp) {
+	public void setBp(boolean bp) {
 		this.bp = bp;
 	}
 	public boolean isHx() {
@@ -71,12 +77,37 @@ public class CKDReportContainer {
 	public void setHx(boolean hx) {
 		this.hx = hx;
 	}
-	public String getLabs() {
+	public boolean isLabs() {
 		return labs;
 	}
-	public void setLabs(String labs) {
+	public void setLabs(boolean labs) {
 		this.labs = labs;
 	}
+	public boolean isMedication() {
+		return medication;
+	}
+	public void setMedication(boolean medication) {
+		this.medication = medication;
+	}
+	public String getLastPatientLetter() {
+		return lastPatientLetter;
+	}
+	public void setLastPatientLetter(String lastPatientLetter) {
+		this.lastPatientLetter = lastPatientLetter;
+	}
+	public String getLastLabReq() {
+		return lastLabReq;
+	}
+	public void setLastLabReq(String lastLabReq) {
+		this.lastLabReq = lastLabReq;
+	}
+	public String getLastVisit() {
+		return lastVisit;
+	}
+	public void setLastVisit(String lastVisit) {
+		this.lastVisit = lastVisit;
+	}
+	
 	
 	
 }
