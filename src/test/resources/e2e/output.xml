@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
+ xmlns="urn:hl7-org:v3"
+ xmlns:hl7="urn:hl7-org:v3"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:e2e="http://standards.pito.bc.ca/E2E-DTC/cda">
+<!-- 
+********************************************************
+CDA Header
+********************************************************
+-->
+	<realmCode code="CA" />
+	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+	<id extension="1" root="2.16.840.1.113883.3.933"/>
+	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
+	<title>PITO EMR-2-EMR Complete Instance Example</title>
+	<effectiveTime value="201303080339"/>
+	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+	<!-- 
+	********************************************************
+	Record Target
+	********************************************************
+	-->
+	<recordTarget typeCode="RCT" contextControlCode="OP">
+		<patientRole classCode="PAT">
+			<id extension="000000000" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+			<patient>
+				<name>
+					<given>JOHN</given>
+					<family>CLEESE</family>
+				</name>
+				<administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="Male"/>
+				<birthTime value="19400925"/>
+			</patient>
+		</patientRole>
+	</recordTarget>
+	<!-- 
+	********************************************************
+	Author
+	********************************************************
+	-->
+	<author typeCode="AUT" contextControlCode="OP">
+		<time value="20130308"/>
+		<assignedAuthor>
+			<id extension="OSCAR EMR" root="DCCD2C68-389B-44C4-AD99-B8FB2DAD1493"/>
+		</assignedAuthor>
+	</author>
+	<!-- 
+	********************************************************
+	Custodian
+	********************************************************
+	-->
+	<custodian typeCode="CST">
+		<assignedCustodian classCode="ASSIGNED">
+			<representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+				<id extension="OSCAR EMR" root="7EEF0BCC-F03E-4742-A736-8BAC57180C5F"/>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
+<!-- 
+********************************************************
+e-MS CDA Structured Body
+********************************************************
+-->
+	<component>
+		<structuredBody>
+<!--
+********************************************************
+Allergies and Intolerances - (Reaction List)
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.4"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies and Adverse Reactions Doc"/>
+					<title>Allergies and Intolerances (Reaction List) [without entries]</title>
+					<text>No Allergy Entries</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Immunization List
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.14"/>
+					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
+					<title>Immunizations List [without entries]</title>
+					<text>No Immunization Entries</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Laboratory Results & Results
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.16"/>
+					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Laboratory Report"/>
+					<title>Laboratory Results and Reports [without entries]</title>
+					<text>No Laboratory Report Entries</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Medications and Prescriptions - Medication List
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
+					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<title>Medications and Prescriptions - Medication List [without entries]</title>
+					<text>No Medication Entries</text>
+				</section>
+			</component>
+<!--			
+********************************************************
+Problems and Conditions - Problem List
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
+					<title>Problems and Conditions - Problem List [without entries]</title>
+					<text>No Problem Entries</text>
+				</section>
+			</component>
+		</structuredBody>
+	</component>
+</ClinicalDocument>

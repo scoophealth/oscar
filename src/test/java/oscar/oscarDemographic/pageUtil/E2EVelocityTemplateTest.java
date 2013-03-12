@@ -51,7 +51,7 @@ public class E2EVelocityTemplateTest {
 		// at end.
 		assertEquals("Error loading test data",
 				SchemaUtils.loadFileIntoMySQL(System.getProperty("basedir")+
-						"/src/test/resources/e2e-test-db.sql"),0);
+						"/src/test/resources/e2e/e2e-test-db.sql"),0);
 	}
 
 	@Test
