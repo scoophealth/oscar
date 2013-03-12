@@ -83,22 +83,22 @@ public class EctValidationsBeanHandler {
 		int validationId = -1;
 
 		Validations v = new Validations();
-		if (validation.getName() != null) {
+		if (validation.getName() != null  && !validation.getName().isEmpty()) {
 			v.setName(validation.getName());
 		}
-		if (validation.getRegularExp() != null) {
+		if (validation.getRegularExp() != null  && !validation.getRegularExp().isEmpty()) {
 			v.setRegularExp(validation.getRegularExp());
 		}
-		if (validation.getMinValue() != null) {
+		if (validation.getMinValue() != null  && !validation.getMinValue().isEmpty()) {
 			v.setMinValue(Double.parseDouble(validation.getMinValue()));
 		}
-		if (validation.getMaxValue() != null) {
+		if (validation.getMaxValue() != null  && !validation.getMaxValue().isEmpty()) {
 			v.setMaxValue(Double.parseDouble(validation.getMaxValue()));
 		}
-		if (validation.getMinLength() != null) {
+		if (validation.getMinLength() != null && !validation.getMinLength().isEmpty()) {
 			v.setMinLength(Integer.parseInt(validation.getMinLength()));
 		}
-		if (validation.getMaxLength() != null) {
+		if (validation.getMaxLength() != null  && !validation.getMaxLength().isEmpty()) {
 			v.setMaxLength(Integer.parseInt(validation.getMaxLength()));
 		}
 		if (validation.isNumeric != null) {
