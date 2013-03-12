@@ -53,7 +53,7 @@ Demographic demographic_header=demographicDao_header.getDemographic(d);
 <!--<a><bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=d%>' /></a>-->
 
 <div class="span6" style="margin-left:15px;">
-<h4><a style="color:#333;text-decoration:none;" href="<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=d%>&displaymode=edit&dboperation=search_detail"><%=demographic_header.getLastName()%>, <%=demographic_header.getFirstName()%> (<%=demographic_header.getTitle() %>)</a>
+<h4><a style="color:#333;text-decoration:none;" href="<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=d%>&displaymode=edit&dboperation=search_detail"><%=demographic_header.getLastName()%>, <%=demographic_header.getFirstName()%> <%if(demographic_header.getTitle() != null && !demographic_header.getTitle().isEmpty()) {%>(<%=demographic_header.getTitle() %>) <%}%></a>
 
 <%if(alert.length()!=0){%>
 <a title="<%=alert%>"><i class="icon-warning-sign"></i></a>

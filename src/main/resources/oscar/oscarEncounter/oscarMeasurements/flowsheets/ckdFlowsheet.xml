@@ -23,43 +23,25 @@
 	<indicator key="LOW" colour="#9999FF" />
 	<indicator key="HIGH" colour="orange" />
 	<indicator key="HIGH 1" colour="#E00000" />
+	
+	<item measurement_type="AORA" display_name="ACE-I OR ARB" guideline="" graphable="no" value_name="" />
+	
+	  		<item measurement_type="ACR" display_name="Urine ACR" guideline="Target: &lt; 2.0 M : &lt;2.8 F" graphable="yes" value_name="">
+			<ruleset>
+	        	<rule indicationColor="HIGH">
+	          		<condition type="isMale"  value="true" />
+	          		<condition type="getDataAsDouble" param="ACR" value="&gt;2.0" />
+	       	 	</rule>
+	        	<rule indicationColor="HIGH">
+	          		<condition type="isFemale"  value="true" />
+	          		<condition type="getDataAsDouble" param="ACR" value="&gt;2.8" />
+	        	</rule>
+	     	</ruleset>
+		</item>
+		
+		<item measurement_type="EGFR" display_name="eGFR" guideline="" graphable="yes" value_name=""  />
 
-    <item measurement_type="EGFR" display_name="eGFR" guideline=""
-		graphable="yes" value_name="eGFR" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="EGFR" value="&gt;12" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="EGFR" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-
-
-   <item measurement_type="ACR" display_name="Alb: creat ratio" guideline="Target: &lt; 2.0 M : &lt;2.8 F" graphable="yes" value_name="ACR" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="ACR" value="&gt;24" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="ACR" value="-1" />
-            </recommendation>
-        </rules>
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="isMale"  value="true" />
-                <condition type="getDataAsDouble" param="ACR" value="&gt;2.0" />
-            </rule>
-            <rule indicationColor="HIGH">
-                <condition type="isFemale"  value="true" />
-                <condition type="getDataAsDouble" param="ACR" value="&gt;2.8" />
-            </rule>
-        </ruleset>
-    </item>
-
- <item measurement_type="AORA" display_name="ACE-I OR ARB" guideline="" graphable="no" value_name="" />
-
+    
 <measurement type="EGFR" typeDesc="EGFR" typeDisplayName="EGFR" measuringInstrc="">
 <validationRule name="Numeric Value: 0 to 500" maxValue="500" minValue="0" isNumeric="1" />
 </measurement>

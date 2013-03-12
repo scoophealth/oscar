@@ -68,6 +68,8 @@
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
     
+    String ornPilot = OscarProperties.getInstance().getProperty("ORN_PILOT", "no");
+	 
 //ADD MEAS
     String id = request.getParameter("id");
     String measurement = request.getParameter("measurement");
@@ -252,11 +254,11 @@ String date = year+"-"+month+"-"+day;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-	
 	<script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
-	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>                  
+	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>        
     <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
-
+        
+	<oscar:customInterface section="health_tracker"/>
     <!-- Le styles -->
     <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
@@ -400,6 +402,16 @@ overflow-y:scroll;
                     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
                                    <link rel="shortcut icon" href="ico/favicon.png">
                 
+         
+         
+     <script>
+        function getDemographicNo() {
+                return '<%=demographic_no%>';
+        }
+        function getContextPath() {
+                return '<%=request.getContextPath()%>';
+        }
+	</script>
                                    
     <script type="text/javascript">
 
@@ -690,14 +702,17 @@ function fsPopup(width,height,url,window) {
 		<bean:message key="oscarencounter.templateflowsheet.addoverdue" /></a>
 		</span>
 		<%}%>
-		<%if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){%>
+		<%
+		 if("yes".equalsIgnoreCase(ornPilot) || "true".equalsIgnoreCase(ornPilot)) {
+		 if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){
+		%>
 		
 		<span style="padding-left:10px;" id="add-renal">
 		<i id="plus-renal" class="icon-plus-sign"></i> <i id="minus-renal" class="icon-minus-sign" style="display:none"></i>
 		<a class="DoNotPrint" href="javascript:void(0)" id="add_renal" TITLE="Add Renal">
 		Add Renal</a>
 		</span>
-	 	<% }%>
+	 	<%} }%>
 	 	
 		<!-- 
 		<span>
@@ -1214,7 +1229,10 @@ function createAddAll(d,t){
            </div>
    </div>
  
- <%if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){ %>
+ <%
+ if("yes".equalsIgnoreCase(ornPilot) || "true".equalsIgnoreCase(ornPilot)) {
+ if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){
+ %>
  <!-- renal  start-->
    <div class="tabbable">
            <ul class="nav nav-tabs">
@@ -1223,20 +1241,21 @@ function createAddAll(d,t){
            <div class="tab-content">
                <div id="ckd" class="tab-pane active well well-small">
                <span class="label label-inverse" id="renal-next-steps">Next Steps</span><br>
+               <div id="renal_next_steps">
                N/A
-               
+               </div>
                <br><br>
                
                <span class="label label-info" id="renal-resources">Resources</span><br>
                
-               <a target="_blank" href="#">CSN Algorithm Detection, Monitoring &amp; Referral of CKD</a><br>
-               <a target="_blank" href="#">Kidney Foundation of Canada</a><br>
+               <a target='_blank' href="<%=request.getContextPath() %>/renal/csn_algorithm.pdf">CSN Algorithm Detection, Monitoring &amp; Referral of CKD</a><br>
+               <a target='_blank' href="<%=request.getContextPath() %>/renal/kfoc.pdf">Kidney Foundation of Canada</a><br>
                
                </div>
            </div>
     </div>    
  <!-- renal end -->       
-<%} %> 
+<%} }%> 
 
 
 <!-- TODO: These pain and topHTMLStream will become tabs where renal is instead of being there own tab set -->
