@@ -68,6 +68,11 @@ else
 
 
 <%
+String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
+if(labReqVer.equals("")) {labReqVer="07";}
+%>
+
+<%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -282,6 +287,14 @@ function setup() {
     else if( update == "true" && parentId == "" && !window.opener.closed )
         window.opener.location.reload();
   }
+  
+  
+function generateRenalLabReq(demographicNo) {
+	var url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer%>.jsp?demographic_no='+demographicNo+'&formId=0&provNo=<%=session.getAttribute("user")%>&fromSession=true';
+	jQuery.ajax({url:'<%=request.getContextPath()%>/renal/Renal.do?method=createLabReq&demographicNo='+demographicNo,async:false, success:function(data) {
+		popupPage(900,850,url);
+	}});
+}
 
 </script>
 <style type="text/css">
@@ -341,6 +354,10 @@ function setup() {
 </style>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/print.css"  />
+<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script>
+jQuery.noConflict();
+</script>
 </head>
 <oscar:customInterface section="ticklerMain"/>
 <body onload="setup();" bgcolor="#FFFFFF" text="#000000" leftmargin="0"
@@ -395,7 +412,7 @@ function setup() {
 		<td width="20%">
 		<div align="right"><input type="hidden" name="demoview"
 			value="<%=demoview%>"> <input type="hidden" name="Submit"
-			value=""> <input type="hiden" name="parentAjaxId"
+			value=""> <input type="hidden" name="parentAjaxId"
 			value="<%=parentAjaxId%>"> <input type="submit"
 			value="<bean:message key="tickler.ticklerDemoMain.btnCreateReport"/>"
 			class="mbttn"
@@ -410,7 +427,7 @@ function setup() {
 	<form name="ticklerform" method="post" action="dbTicklerDemoMain.jsp">
 	<tr>
 		<td><input type="hidden" name="demoview" value="<%=demoview%>">
-		<input type="hiden" name="parentAjaxId" value="<%=parentAjaxId%>">
+		<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
 		<input type="hidden" name="updateParent" value="true">
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">
 			<TR bgcolor=#666699>
@@ -562,7 +579,7 @@ if (nItems == 0) {
 					key="tickler.ticklerDemoMain.msgNoMessages" /></td>
 			</tr>
 			<%}%>
-			<tr bgcolor=#666699>
+			<tr bgcolor=#FFFFFF>
 				<td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnCheckAll" /></a> - <a
 					href="javascript:ClearAll();"><bean:message

@@ -32,6 +32,7 @@ import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
 import org.oscarehr.util.SpringUtils;
 
+
 public class TicklerCreator {
 	TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
 	
@@ -62,7 +63,22 @@ public class TicklerCreator {
 
     }
   }
-
+  
+  
+  public void createTickler(String demoNo, String provNo, String message, String assignedTo) {
+	   Tickler t = new Tickler();
+    	t.setDemographic_no(demoNo);
+    	t.setMessage(message);
+    	t.setStatus('A');
+    	t.setUpdate_date(new Date());
+    	t.setService_date(new Date());
+    	t.setCreator(provNo);
+    	t.setPriority("4");
+    	t.setTask_assigned_to(assignedTo);
+    	dao.saveTickler(t);
+	  }
+  
+ 
   /**
    * Returns true if a tickler with the specified parameters exists
    *

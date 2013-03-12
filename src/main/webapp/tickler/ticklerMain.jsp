@@ -38,12 +38,10 @@
 <%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.ViewDao, org.oscarehr.common.model.View, org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.LocaleUtils" %>
 
 
-<head>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
-    <script>
-        jQuery.noConflict();
-    </script>
-</head>
+<%
+String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
+if(labReqVer.equals("")) {labReqVer="07";}
+%>
 
  <%
  //select * from tickler where status = 'A' and service_date <= now() and task_assigned_to  = '999998' limit 1;
@@ -152,7 +150,10 @@ GregorianCalendar now=new GregorianCalendar();
 <!-- Prototype and scriptaculous -->
 <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>
-
+<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script>
+jQuery.noConflict();
+</script>
 <script language="JavaScript">
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
@@ -384,6 +385,13 @@ var beginD = "1900-01-01"
         );
 
     }
+    
+    function generateRenalLabReq(demographicNo) {
+		var url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer%>.jsp?demographic_no='+demographicNo+'&formId=0&provNo=<%=session.getAttribute("user")%>&fromSession=true';
+		jQuery.ajax({url:'<%=request.getContextPath()%>/renal/Renal.do?method=createLabReq&demographicNo='+demographicNo,async:false, success:function(data) {
+			popupPage(900,850,url);
+		}});
+	}
 
 </script>
 <style type="text/css">
@@ -609,7 +617,8 @@ function changeSite(sel) {
         </TR>
     </thead>
     <tfoot>
-                                <tr bgcolor=#666699><td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                                <tr><td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                     <input type="button" name="button" value="<bean:message key="tickler.ticklerMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn">
                                     <input type="hidden" name="submit_form" value="">
                                     <% if (ticklerview.compareTo("D") == 0){%>
@@ -620,6 +629,7 @@ function changeSite(sel) {
                                     <%}%>
                             <input type="button" name="button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()" class="sbttn"> </td></tr>
                         </tfoot>
+
 
                         <tbody>
 

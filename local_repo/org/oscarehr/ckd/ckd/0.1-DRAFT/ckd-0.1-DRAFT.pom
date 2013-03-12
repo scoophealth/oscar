@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.oscarehr.ckd</groupId>
+  <artifactId>ckd</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1-DRAFT</version>
+  <name>ckd</name>
+  <url>http://www.oscarmcmaster.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+<distributionManagement>
+  <repository>
+    <id>local_repo</id>
+    <name>Repository Name</name>
+    <url>file:///home/marc/workspaces/orn/oscar/local_repo</url>
+  </repository>
+</distributionManagement>
+
+
+  <dependencies>
+                <dependency>
+                        <groupId>org.apache.xmlbeans</groupId>
+                        <artifactId>xmlbeans</artifactId>
+                        <version>2.4.0</version>
+                </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+ <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>xmlbeans-maven-plugin</artifactId>
+    <version>2.3.3</version>
+    <executions>
+       <execution>
+          <goals>
+             <goal>xmlbeans</goal>
+          </goals>
+       </execution>
+    </executions>
+    <inherited>true</inherited>
+    <configuration>
+       <schemaDirectory>src/main/resources</schemaDirectory>
+    </configuration>
+  </plugin>
+
+    </plugins>
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.codehaus.mojo</groupId>
+    								<artifactId>
+    									xmlbeans-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[2.3.3,)
+    								</versionRange>
+    								<goals>
+    									<goal>xmlbeans</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
+  </build>
+</project>

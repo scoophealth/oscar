@@ -832,6 +832,33 @@ div.logoutBox {
 </oscar:oscarPropertiesCheck>
 
 </caisi:isModuleLoad>
+
+
+
+		<div class="adminBox">
+		<h3>&nbsp; CKD</h3>
+		<ul>	
+			<li>
+				<a href="#" onclick='popupPage(550,800,&quot;<html:rewrite page="/renal/ckd_screening_report.jsp"/>&quot;);return false;'>
+					CKD Screening Report
+				</a>
+			</li>	
+			<li>
+				<a href="#" onclick='popupPage(550,800,&quot;<html:rewrite page="/renal/preImplementationReport.jsp"/>&quot;);return false;'>
+					Pre-Implementation Report
+				</a>
+			</li>
+			<li>
+				<a href="#" onclick='popupPage(550,800,&quot;<html:rewrite page="/renal/patientLetterManager.jsp"/>&quot;);return false;'>
+					Manage Patient Letter
+				</a>
+			</li>					
+		</ul>
+		</div>
+
+
+
+
 <hr style="color: black;" />
 <div class="logoutBox">
 <%

@@ -721,6 +721,21 @@ function autoFillHin(){
 				</select></td>
 			</tr>
 			<tr valign="top">
+				<td align="right"><b><bean:message
+					key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
+				<td align="left">
+				
+				<select name="aboriginal">
+					<option value="">Unknown</option>
+					<option value="No">No</option>
+					<option value="Yes" >Yes</option>
+		
+				</select>
+				
+				<td align="right"><b>&nbsp;</b></td>
+				<td align="left">&nbsp;</td>
+			</tr>			
+			<tr valign="top">
 				<td id="emailLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formEMail" />: </b></td>
 				<td id="emailCell" align="left"><input type="text" id="email" name="email" value="">

@@ -29,7 +29,6 @@
 	
 	<header display_name="Cardiovascular">
 		<item measurement_type="BP" display_name="BP" guideline="Target &gt; 130/80" graphable="no" value_name="" ds_rules="diab-BP.drl" />
-        <item measurement_type="AORA" display_name="ACE-I OR ARB" guideline="" graphable="no" value_name="" />
         <item measurement_type="WT" display_name="Weight" guideline="" graphable="yes" value_name="kg" />
         <item measurement_type="HT" display_name="Height" guideline="" graphable="yes" value_name="cm" />
         <item measurement_type="BMI" display_name="BMI" guideline="Target: 18.5 - 24.9 (kg/m&lt;sup&gt;2&lt;/sup&gt;)" graphable="yes" value_name="">
@@ -61,6 +60,10 @@
 	</header>
 	
 	<header display_name="Renal">
+  	    <item measurement_type="AORA" display_name="ACE-I OR ARB" guideline="" graphable="no" value_name="" />
+  	    <!-- 
+	    <item measurement_type="SKD" display_name="Signs of Kidney Damage" guideline="" graphable="no" value_name="" />
+	    -->
 		<item measurement_type="ACR" display_name="Urine ACR" guideline="Target: &lt; 2.0 M : &lt;2.8 F" graphable="yes" value_name="">
 			<ruleset>
 	        	<rule indicationColor="HIGH">
@@ -413,6 +416,10 @@
 	</measurement>
 	
 	<measurement type="AORA" typeDesc="ACE-I OR ARB" typeDisplayName="ACE-I OR ARB" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	
+	<measurement type="SKD" typeDesc="Signs of Kidney Damage" typeDisplayName="Signs of Kidney Damage" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
 	</measurement>
 	
