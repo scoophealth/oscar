@@ -38,6 +38,5 @@
 	<drugs>
 	</drugs>
 	<excludes>
-		<exclude>999998</exclude>
 	</excludes>
 </ckd-config>
