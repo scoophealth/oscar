@@ -862,7 +862,7 @@ String date = year+"-"+month+"-"+day;
     	}%>
     	
     	<tr id="<%=header.getDisplayName()%>_update">
-    	<td><input style="font-size:12;" type="submit" name="submit" value="Update" /></td>
+    	<td><input style="font-size:12;" type="submit" name="submit" value="Add" /></td>
     	<td></td>
     	<td></td>
     	<td></td>

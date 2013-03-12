@@ -53,6 +53,12 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
+<!-- ADD MEAS -->
+<%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization"%>
+
 <%
 	if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
@@ -61,6 +67,16 @@
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
+    
+//ADD MEAS
+    String id = request.getParameter("id");
+    String measurement = request.getParameter("measurement");
+    //String[] measurements = request.getParameterValues("measurement");
+ 
+    id = "0";
+    measurement = "BP";
+    
+    
 
  AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
 %>
@@ -125,6 +141,7 @@
     FlowSheetDrugDao flowSheetDrugDao = (FlowSheetDrugDao) ctx.getBean("flowSheetDrugDao");
 	FlowSheetDxDao flowSheetDxDao = (FlowSheetDxDao) ctx.getBean("flowSheetDxDao");
     List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),Integer.parseInt(demographic_no));
+    
 
     ////Start
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
@@ -147,13 +164,13 @@
 
 
     ArrayList recList = mi.getList();
-
-
-
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
     for(int i = 0; i < recList.size(); i++){
-        recListBuffer.append("&amp;measurement="+response.encodeURL( (String) recList.get(i)));
+        //recListBuffer.append("&amp;measurement="+response.encodeURL( (String) recList.get(i)));
+        
+        recListBuffer.append("$('[id^=add-box-"+recList.get(i)+"]').toggle('slow');\n" );
+    	
     }
 
 
@@ -221,391 +238,120 @@ if (!medicationsResult.isEmpty()) {
 	}
 }
 
-
+java.util.Calendar calender = java.util.Calendar.getInstance();
+String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
+String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
+String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
+String date = year+"-"+month+"-"+day;
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html:html locale="true">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Health Tracker <oscar:nameage demographicNo="<%=demographic_no%>"/></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<head>
-<title>Health Tracker - <oscar:nameage demographicNo="<%=demographic_no%>"/></title><!--I18n-->
+	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>                  
+    <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
 
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/share/css/OscarStandardLayout.css" />
+    <!-- Le styles -->
+    <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
 
-<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/Oscar.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/prototype.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>
-	
-<!-- 
-<style type="text/css">
-    div.ImmSet { background-color: #ffffff;clear:left;margin-top:10px;}
-    div.ImmSet h2 {  }
-    div.ImmSet h2 span { font-size:smaller; }
-    div.ImmSet ul {  }
-    div.ImmSet li {  }
-    div.ImmSet li a { text-decoration:none; color:blue;}
-    div.ImmSet li a:hover { text-decoration:none; color:red; }
-    div.ImmSet li a:visited { text-decoration:none; color:blue;}
-</style>
--->
-
-<style type="text/css" media="print">
-.DoNotPrint {
-	display: none;
-}
-
-.noborder{
-    border: 0px solid #FFF;
-}
-
-div.headPrevention {
-    position:relative;
-    margin-left:1px;
-    width:22em;
-}
-
-div.headPrevention a:active { color:black; }
-div.headPrevention a:hover { color:black; }
-div.headPrevention a:link { color:black; }
-div.headPrevention a:visited { color:black; }
-</style>
-
-<style type="text/css" media="screen">
-
-#flowsheet-controls{
-  background: white;
-  font-family: verdana,tahoma,sans-serif;
-  padding: 5px;  
-  border: thin solid grey; 
-  border-right:2px solid grey;
-  border-bottom:2px solid grey;
-  border-top: 0px; 
-  width:610px;
-}
-
-#manage-flowsheet{
-width:70px;
-border-left: 1px solid #6E6E6E;
-text-align:center;
-font-size:14px;
-}
-
-#manage-flowsheet a{
-text-decoration:none;
-color:#000;
-}
-
-#manage-flowsheet a:hover{
-text-decoration:underline;
-}
-
-#flowsheet-controls span{
-  font-family: verdana,tahoma,sans-serif;
-  font-size: 10pt;
-  padding-right:15px;
-}
-
-#flowsheet-controls span a{
-  text-decoration:none;
-  color:#000;
-}
-
-#flowsheet-controls span a:hover {
-cursor: hand; 
-cursor: pointer;
-text-decoration:underline;
-}
-
-.right-side-cell td{
-  max-width:500px; 
-  min-width:300px;
-}
-
-/* tabs */
-.tabs {
-  position: relative;  
-  min-height: 200px; /*needed for now*/
-  clear: both;
-  margin-top:6px;
-  height:400px;
-}
-
-.tab {
-  float: left;
-}
-
-.tab label {
-  background: #D6D6C2; 
-  padding: 5px; 
-  border: thin solid grey; 
-  margin-left: -1px; 
-  position: relative;
-  left: 1px; 
-  font-family: verdana,tahoma,sans-serif;
-  font-size: 10pt;
-}
-
-.tab label:hover {
-cursor: hand; 
-cursor: pointer;
-text-decoration:underline;
-}
-
-.tab [type=radio] {
-  display: none;   
-}
-
-.content {
-  position: absolute;
-  top: 23px;
-  left: 0px;
-  right:0px;
-  background: white;
-  overflow-y:scroll;
-  padding: 20px;
-  border: thin solid grey; 
-  max-width:500px; 
-  min-width:300px;
-  height:200px;
-}
-
-[type=radio]:checked ~ label {
-  background: white;
-  border-bottom: 4px solid grey;
-  z-index: 2;
-}
-
-[type=radio]:checked ~ label ~ .content {
-  z-index: 1;
-}
-/* tabs end */
-
-.content_ckd {
-  background: white;
-  padding: 20px;
-  border: thin solid grey;
-  max-width:500px;
-  min-width:200px;
-  min-height:250px;
-}
-
-.DoNotScreen{ display:none;}
-
-div.headPrevention {
-    position:relative;
-    float:left;
-    width:23em;
-/* border-right: thin solid #D6D6C2; */
-height: 52px;
-	
-}
-
-div.headMtype a:active { color:black; }
-div.headMtype a:hover { color:black; }
-div.headMtype a:link { color:black; }
-div.headMtype a:visited { color:black; }
-
-div.headMtype span {
-    /*background:  #ffffff; #ddddff;*/
-    font-family: verdana,tahoma,sans-serif;
-    margin:0;
-    font-size: 10pt;
-    padding: 2px 0px 0px 2px;  /*Top Right Bottom Left   */
-    line-height: 1.2;
-    height:2em;
-    font-family: sans-serif;
-}
-
-.headPreventionWarning{font-size: 8pt;}
-
-body {
-margin-top: 0px;
-margin-left: 0px; 
-margin-right:0px;
-background-color: #B7B18D;
-}
-
-div.leftBox{
-    width:90%;
-    margin-top: 2px;
-    margin-left:3px;
-    margin-right:3px;
-    float: left;
-}
-
-span.footnote {
-    background-color: #ccccee;
-    border: 1px solid #000;
-    width: 4px;
-}
-
-div.leftBox h3 {
-    background-color: #ccccff;
-    font-size: 8pt;
-    font-variant:small-caps;
-    font-weight:bold;
-    margin-top:0px;
-    padding-top:0px;
-    margin-bottom:0px;
-    padding-bottom:0px;
-}
-
-div.leftBox ul{
-    font-size: 1.0em;
-    list-style:none;
-    list-style-type:none;
-    list-style-position:outside;
-    padding-left:1px;
-    margin-left:1px;
-    margin-top:0px;
-    padding-top:1px;
-    margin-bottom:0px;
-    padding-bottom:0px;
-}
-
-div.leftBox li {
-    padding-right: 15px;
-    white-space: nowrap;
-}
-
-
-div.headMtype a {
-    text-decoration:none;
-}
-
-
-div.preventionProcedure{
-    width:9em;
-    float:left;
-    margin-left:3px;
-    margin-bottom:3px;
-}
-
-div.graph{
-    width:60px;
-    float:left;
-    margin-left:3px;
-    margin-bottom:3px;
-}
-
-div.preventionProcedure p {
-    font-size: 0.8em;
-    font-family: verdana,tahoma,sans-serif;
-    /*background: #F0F0E7;*/
-    margin:0;
-    padding: 1px 2px;
-}
-
+   .navbar .nav > li > a {color:white;} 
+   
+   
+      #tracker-bar{
+      position:fixed;
+      top:40px;
+      /*border-bottom:thin solid grey;*/
+      z-index:9;
+      background-color:white;
+      width:100%;
+      padding-top:8px;
+      padding-left:15px;
+      padding-bottom:0px;
+      }
+ 
+ 	#dxAlert{display:none;}
+      
+      #main{
+      position:relative;
+      top:44px;
+      }
+            
+		div.preventionProcedure{
+		    width:9em;
+		    float:left;
+		    margin-left:3px;
+		    margin-bottom:3px;
+		    text-align:center;
+		    width:100px;
+		}
+		
+		div.preventionProcedure p {
+		    font-size: 0.8em;
+		    font-family: verdana,tahoma,sans-serif;
+		    margin:0;
+		    padding: 1px 2px;
+		}
+		
 div.preventionSection {
     width: 620px;
-    Height: 70px;
+    min-height: 70px;
     position:relative;
     margin-top:5px;
     float:left;
     clear:left;
     border: thin solid grey;
     background: white;
+    padding:0px 2px 8px 0px;
 }
 
 div.preventionSection:hover {
-background-color: #FFFFAA;
+background-color: #FFFFAA; /*#f5f5f5;*/
 }
 
-div.preventionSet {
-    border: thin solid grey;
-    clear:left;
-}
-
-div.recommendations{
-    font-family: verdana,tahoma,sans-serif;
-    font-size: 1.2em;
-}
-
-div.recommendations ul{
-    padding-left:15px;
-    margin-left:1px;
-    margin-top:0px;
-    padding-top:1px;
-    margin-bottom:0px;
-    padding-bottom:0px;
-}
-
-div.recommendations li{
-
-}
-
-.button-ht {
-	background:#5CCD00;
-	background:-moz-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
-	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#5CCD00),color-stop(100%,#4AA400));
-	background:-webkit-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
-	background:-o-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
-	background:-ms-linear-gradient(top,#5CCD00 0%,#4AA400 100%);
-	background:linear-gradient(top,#5CCD00 0%,#4AA400 100%);
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5CCD00',endColorstr='#4AA400',GradientType=0);
-	padding:6px 12px;
-	color:#fff;
-	font-family:'Helvetica Neue',sans-serif;
-	font-size:14px;
-	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border:1px solid #459A00;
-	margin-right: 4px;
-}
-
-.button-ht:hover{
-	cursor: hand; cursor: pointer;
-	border-bottom:2px solid #000;
-	border-right:1px solid #000;
-}
-
-.button-ht-disabled {
-	background:#ccc;
-	padding:6px 12px;
-	color:grey;
-	font-family:'Helvetica Neue',sans-serif;
-	font-size:14px;
-	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border:1px solid grey;
-	margin-right: 4px;
-}
-
-.button-ht-disabled:hover{
-	cursor: hand; cursor: pointer;
-}
-
-#dxAlert{
-	position:relative;
-	font-size:12px;
-	border:thin solid #FFAD33;
-	background-color:#FFFFAA; 
-	padding:4px;
-	display:none;
-	max-width:1180px;
+.headMtype{
+	height:18px;
+	/* background-color: #f5f5f5; *//*#D6D6C2;*/
+	width:100%;
+	margin-bottom:2px;
+	padding:0px;
 }
 
 #black_wrapper{
 	display: none;
 	position: fixed;
-	top: 90px;
+	top: 80px;
 	/*right:0px;*/
 	width: 100%; /*890px*/
 	height: 100%;
 }
 
 #close-link{
-	position:fixed;
-	top:90px;
+	position:absolute;
+	top:0px;
 	right:5px;
+	z-index:1006;
+}
+
+
+#close-link:hover{
+	-moz-opacity: .4;
+	opacity:.40;
+	filter:alpha(opacity=40); /* For IE8 and earlier */
 }
 
 div.black_overlay{
 	position: fixed;
-	top: 90px;
+	top: 80px;
 	width: 100%;
 	height: 100%;
 	background-color: black;
@@ -618,11 +364,11 @@ div.black_overlay{
  
 #light {
 	position: fixed;
-	top: 100px;
+	top: 84px;
 	width: 880px;
 	height: 460px;
 	padding: 0px;
-	background-color: white;
+	
 	z-index:1003;
 	display: block;	
 	left: 50%;
@@ -630,32 +376,65 @@ div.black_overlay{
 	text-align:center;
 }
 
-.close-graph{
-	position: absolute;
-	right:4px;
-	top: 2px;
-	z-index:1006;
+
+.tab-pane{
+font-size:12px;
+max-height:200px;
+overflow-y:scroll;
 }
 
-.close-graph:hover{
-	-moz-opacity: .4;
-	opacity:.40;
-	filter:alpha(opacity=40); /* For IE8 and earlier */
-}
-
-</style>
-
-<script type="text/javascript">
-
-
-    window.onload=function(){
-		window.moveTo(0,0);
-		window.resizeTo(screen.availWidth,screen.availHeight);
+    </style>
 		
-        if(!NiftyCheck())
-            return;
+    <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
 
-    }
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="ico/favicon.png">
+                
+                                   
+    <script type="text/javascript">
+
+
+
+    function getScrollCoords() {
+		var position;
+
+		if (document.all) {
+			if (!document.documentElement.scrollTop)
+	            position = document.body.scrollTop;
+	         else
+	            position = document.documentElement.scrollTop;
+		} else {
+	         position = window.pageYOffset;
+	    }
+
+		document.mainForm.ycoord.value = position;
+	}
+
+	function setScrollPos() {
+
+		var x = 0;
+		var y = document.mainForm.ycoord.value;
+
+		window.scrollTo(x, y);
+	}
+
+
+	window.resizeTo(screen.availWidth,screen.availHeight);
+	window.onload = setScrollPos;
+	window.onscroll = getScrollCoords;
+	window.onkeypress = getScrollCoords;
+	window.onclick = getScrollCoords;
+
+    
 	
     	$(function() {
     		$('.inlinesparkline').sparkline('html',{width:"30px", height:"16px"});
@@ -698,52 +477,60 @@ div.black_overlay{
     }
     
 
-function newSite(s) {
-	var url = "<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type="+s;
-
+	function newSite(s) {
+		var url = "<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type="+s;
+	
+		document.getElementById('gFrame').src = url;
+		document.getElementById('gFrame').style.display='block';
+		document.getElementById('black_wrapper').style.display='block';
+	}
+	
+	function addMeas(s,t) {
+		var url = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?demographic_no=<%=demographic_no%>&template="+t+s;
+	
 	document.getElementById('gFrame').src = url;
+	document.getElementById('gFrame').style.display='block';
 	document.getElementById('black_wrapper').style.display='block';
-}
+	}
+	
+	function eform() { //testing
+	document.getElementById('eFrame').src = '<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=6&demographic_no=1&appointment=1589';
+	document.getElementById('eFrame').style.display='block';
+	document.getElementById('black_wrapper').style.display='block';
+	}
 
-function addMeas(s,t) {
-	var url = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?demographic_no=<%=demographic_no%>&template="+t+s;
+	function closeAll(){
+		document.getElementById('black_wrapper').style.display='none'
+		document.getElementById('eFrame').style.display='none';
+		document.getElementById('gFrame').style.display='none';	
 
-document.getElementById('gFrame').src = url;
-document.getElementById('black_wrapper').style.display='block';
-}
+	}
 
-function eform() {
-document.getElementById('gFrame').src = '<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=1&demographic_no=<%=demographic_no%>';
-document.getElementById('black_wrapper').style.display='block';
-}
+	<%if (session.getAttribute("textOnEncounter")!=null) {%>
+	if( opener.opener.document.forms["caseManagementEntryForm"] != undefined ){
+        opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
+    }else if( opener.document.forms["caseManagementEntryForm"] != undefined ){
+        opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
+	}
+<%}%>	
+	
+	</script>
 
-</script>
+		
+  </head>
 
-</head>
+  <body>
+    <div class="navbar navbar-fixed-top well well-small" style="padding:0px;margin:0px;">
 
-<body>
+<%@ include file="/share/templates/patient.jspf"%>
 
-<% 
-String title_for_menu="<font size='4' color='#FFFFFF' style='padding-right:10px; text-shadow: 1px 1px black;'><span style='color:red;'>&hearts;</span> Health Tracker</font>";
-String patient_bar_colour="#1975D1";
-%>
+    </div>
+     
 
-<%@ include file="/share/templates/top_menu.jspf"%>	
-
-<!-- Health Tracker Header START-->
-<table cellpadding="0" cellspacing="0" width="100%" style="position: fixed; top: 48px; z-index:1000; border-top: 1px solid black;;border-bottom: 1px solid black;">
-
-
-<tr bgcolor="#AEB5AE">
-    <td   valign="top">
-    	<!-- <font size="3"><oscar:nameage demographicNo="<%=demographic_no%>"/></font>-->
-    	<table cellpadding="3" cellspacing="0" width="100%">
-	    	<tr bgcolor="#fff">
-
-	    	<td style="padding-left:8px;padding-right:8px;">
-	    	
-			<%
-				String btnSelected="";
+<div id="tracker-bar" class="container-fluid navbar-inner">
+   		<div class="span12" style="padding-left:0px;margin-left:0px">
+<%
+				boolean btnSelected=false;
 				String isDisabled = "";
 				String dxAlert="";
 				String dxAlertfs="";
@@ -769,37 +556,35 @@ String patient_bar_colour="#1975D1";
 					}
 					
 					if(temp.equals(flowSheetGroups.getName())){
-						btnSelected="style='color:#000;font-weight:bold;border-bottom:2px solid #000;border-right:1px solid #000'";
+						btnSelected=true;
 					}else{
-						btnSelected="";
+						btnSelected=false;
 					}
 					
 
 					
 					if(enabled && flowSheetGroups.isUniversal()!=true) { 
 						
-						isDisabled = "-disabled";
+						isDisabled = "btn";
 						//out.print(flowsheets.size());
 						for (int f = 0; f < flowsheets.size(); f++) {
 							String flowsheetName = flowsheets.get(f);
 							//out.print(flowsheetName);
 							if(flowsheetName.equals(flowSheetGroups.getName())){
-								isDisabled="";
+								isDisabled="btn-success";
 								break;
 							}
 						}	
 					
 						//simple alert trigger
-						if(btnSelected.length()>1 && isDisabled.length()>1){
-							
+						if(btnSelected && isDisabled.equals("btn")){
 								dxAlert="style='display:block;'";
 								dxAlertfs=flowSheetGroups.getDisplayName();
-							
 						}
 					%>
 						
 						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>">
-						<button  class="button-ht<%=isDisabled%>" <%=btnSelected%> title="<%=flowSheetGroups.getDisplayName()%>">
+						<button  class="btn <%=isDisabled%>" <%=btnSelected%> title="<%=flowSheetGroups.getDisplayName()%>" >
 						<%
 						if(flowSheetGroups.getName().toUpperCase().equals("DIAB2")){
 							out.print("DIAB");
@@ -815,86 +600,110 @@ String patient_bar_colour="#1975D1";
 					} 
 					
 				}
-			%>				
-				
-				 </td>
-
-<security:oscarSec roleName="<%=roleNameMenu$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">				 
-  <td id="manage-flowsheet">
-  		<b><a href="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp" title="Create Flowsheet"> Create </a></b>
-  </td>
-  <td id="manage-flowsheet">		
-		<b><a href="<%=request.getContextPath()%>/admin/manageFlowsheets.jsp" title="Manage Flowsheets" > Manage</a></b>
-  </td>
- </security:oscarSec>
-  	
-			</tr>
-		</table> 
+			%>	
 			
-    </td>
- </tr>
-</table>
-<!-- Health Tracker Header END -->
-
-
-<table width="98%" style="margin-top:90px;" align="center" border="0">
-<tr>
-<td valign="top" colspan="2" >
-
-<div id="dxAlert" <%=dxAlert%> ><b>Important!</b> You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=1&providerNo=999998&quickList="><b>Add Diagnosis</b></a></div>
-
-</td>
-</tr>
-<tr>
-<td valign="top" width="640px">
-<div style="border:thin solid grey;border-right:2px solid grey;background-color:#D6D6C2;padding: 5px;width:610px">
-<font style="font-size:18px;font-weight:bold;"><%=flowSheet%> </font> <!-- <span style="font-size:12px;font-weight:normal;" title="Edit <%=flowSheet%> Flowsheet"> [Edit]</span>-->
+		</div>
 </div>
-<div id="flowsheet-controls">
 
-<!-- <div style="float:right;display:inline-block;">-->
-<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-<% if (recList.size() > 0){ %>
-<span>
-<b>+</b><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements">
-<bean:message key="oscarencounter.templateflowsheet.addall" /></a>
-</span>
+   <div id="main" class="container-fluid">
+   <div class="row-fluid">
+  
+   	<div class="row-fluid">
+   		<div class="span12">
+    
+    <div id="dxAlert" class="alert" <%=dxAlert%>>
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Warning!</strong> 
+    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=1&providerNo=999998&quickList="><b>Add Diagnosis</b></a>
+    </div>
+       
+   		<%=flowSheet%>
 
-<span>
-<b>+</b><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:addMeas('<%=recListBuffer.toString()%>', '<%=temp%>')" TITLE="Add all overdue measurements">
-<bean:message key="oscarencounter.templateflowsheet.addoverdue" /></a>
-</span>
-<!-- 
-<span>
-	<a class="DoNotPrint" href="#"  title="Tracker Graph">Tracker Graph</a>
-</span>
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+		
+		<span style="padding-left:10px;" id="expand-all">
+		<i class="icon-plus-sign"></i> 
+		<a class="DoNotPrint" id="expand_all" href="javascript:void(0)" TITLE="Expand All">
+		Expand All</a>
+		</span>
+		
+		<span style="padding-left:10px;display:none" id="collapse-all" >
+		<i class="icon-minus-sign"></i>
+		<a class="DoNotPrint" id="collapse_all" href="javascript:void(0)" TITLE="Collapse All">
+		Collapse All</a>
+		</span>
+		
+		<!-- 
+		<span style="padding-left:10px;">
+		<b>+</b><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements">
+		<bean:message key="oscarencounter.templateflowsheet.addall" /></a>
+		</span>
+		-->
+		<%if (recList.size() > 0){ %>
+		<span style="padding-left:10px;">
+		<i id="plus-overdue" class="icon-plus-sign"></i> <i id="minus-overdue" class="icon-minus-sign" style="display:none"></i>
+		<a class="DoNotPrint" href="javascript:void(0)" id="add_overdue" TITLE="Add all overdue measurements">
+		<bean:message key="oscarencounter.templateflowsheet.addoverdue" /></a>
+		</span>
+		<%}%>
+		<%if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){%>
+		
+		<span style="padding-left:10px;" id="add-renal">
+		<i id="plus-renal" class="icon-plus-sign"></i> <i id="minus-renal" class="icon-minus-sign" style="display:none"></i>
+		<a class="DoNotPrint" href="javascript:void(0)" id="add_renal" TITLE="Add Renal">
+		Add Renal</a>
+		</span>
+	 	<% }%>
+	 	
+		<!-- 
+		<span>
+			<a class="DoNotPrint" href="#"  title="Tracker Graph">Tracker Graph</a>
+		</span>
+				
+		<span>
+			<a class="DoNotPrint" href="#"  title="Search">Filter Results</a>
+		</span>
+		
+		<span>
+			<a class="DoNotPrint" href="#"  title="Print Flowsheet">Print</a> 
+		</span>
+		-->
+		
+		</security:oscarSec>
+		
+   		</div>
+   	</div>
+   </div>
+     
+	    <div class="row-fluid">
+		    <div class="span6">
 
-<span>
-	<a class="DoNotPrint" href="#"  onclick="eform();" title="Clinical Resources">Resources</a>
-</span>
+              		    
+		    
+<!-- start of form -->	
+<form id="mainForm" name="mainForm" action="<%=request.getContextPath()%>/oscarEncounter/FormUpdate.do"	
+<fieldset>	
 
-<span>
-	<a class="DoNotPrint" href="#"  title="Search">Filter Results</a>
-</span>
+<input type="hidden"  name="ycoord"
+	<%if (request.getParameter("ycoord") != null) { %>
+		value="<%=request.getParameter("ycoord")%>"
+	<%} else {%>
+		value="0"
+	<%}%>
+	/>
 
-<span>
-	<a class="DoNotPrint" href="#"  title="Print Flowsheet">Print</a> 
-</span>
--->
-<%}%>
-<!-- </div>-->
-</security:oscarSec>
+<!-- is this date going to be customizable for each mtype? -->
+<input type="hidden" name="date" id="date" value="<%=date%>" size="10" > 
+               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
+               <input type="hidden" name="template" value="<%=temp%>"/>
 
-
-<%=mFlowsheet.getTopHTMLStream() %>
-</div>
 
 <%
 	//set add link array
 	String[] addAllLink = new String[measurements.size()];
 	int mCount=0;
 
-    EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
+    EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();  
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     for (String measure:measurements){
         Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
@@ -937,38 +746,39 @@ String patient_bar_colour="#1975D1";
 
 	   
 %>
-<div class="preventionSection" >
+
+
+<div class="preventionSection well-small" >
    
-<div class="headMtype" style="height:18px;background-color:#D6D6C2;width:100%" title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
-
-<div <%=warningIndicator%> > </div> <!--replace with indicator-->
-
-<!--mTYPE START----->
+<div class="well well-small headMtype" >
+<!--mTYPE START-->
+<!-- <div <%=warningIndicator%> > </div>  replace with indicator-->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-
-<a class="noborder" id="<%=h2.get("display_name")%>" name="<%=h2.get("display_name")%>" href="javascript:void(0)"  onclick="addMeas('&measurement=<%=measure%>','<%= URLEncoder.encode(temp,"UTF-8") %>');">
-
+<a href="javascript:void(0)" style="padding-left:5px;text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')" title="Add <%=measure%>"><i class="icon-plus"></i>
 </security:oscarSec>
 
+<span rel="popover" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
 <%if(mi.getWarning(measure)!=null){%>
 <span style="color:red;padding-left:5px;"><%=mi.getWarning(measure)%></span>
 <%}else{%>
 <span style="padding-left:5px;"><%=h2.get("display_name")%></span>
+
 <%}%>
+</span>
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-            </a>
+</a>
 </security:oscarSec>
-<!--mTYPE END----->
 
+<!-- <small><a href="#" style="padding-left:5px;" onclick="toggle_visibility('add-box-<%=measure%>')">Add</a></small>-->
+<!--mTYPE END-->
 
 <span style="float:right;">
-<!--graphing start--->
+<!--graphing start-->
 
 					<%
 					String name = h2.get("display_name").toString();
 					name = name.replaceAll("\\W","");
-					
 					%>
 
            
@@ -977,7 +787,7 @@ String patient_bar_colour="#1975D1";
 			            <%if (alist != null && alist.size() > 1) {
 			            boolean sep = false;
 			            %>
-			               	<a href = "javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="inlinesparkline" values="
+			               	<a href = "javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="inlinesparkline" title="<%=measure%> Graph" values="
 			               	 <%=alist.get(alist.size()-1).getDataField()%>
 			               	 <%for (int x=alist.size()-2; x>=0; x--){
 			               	 %>
@@ -990,7 +800,7 @@ String patient_bar_colour="#1975D1";
 			               	 <%}%>
 			               	 " ></span></a>
 			            <%}%>
-		           <%} else if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){
+		           <%} else if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA"))){
 		        	  
 		           		if (alist !=null && alist.size() > 0) {
 		           			if (alist.get(0).getDataField().equalsIgnoreCase("Yes")) { %>
@@ -1015,7 +825,7 @@ String patient_bar_colour="#1975D1";
 		           					second.add("null");
 		           				}
 		           			} %>
-		           			<a href="javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="bpline"></span></a>
+		           			<a href="javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="bpline" title="<%=measure%> Graph"></span></a>
 		           			<script type="text/javascript">
 		           				var first = new Array();
 		           				var second = new Array();
@@ -1037,37 +847,37 @@ String patient_bar_colour="#1975D1";
 
 </div>
 
-<!--
-<div class="headPrevention" >
-
-<font size="1"><%if(h2.get("guideline")!=null){out.print(h2.get("guideline"));}%></font>
-
-  
+<!-- hidden fields for form -->
+<div class="well well-small" id="add-box-<%=measure%>" style="display:none;">
+  <i class="icon-calendar"></i> 
+<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA"))){%> 
+                                
+                            <label class="radio inline">
+							<input type="radio" name="<%=name%>" id="<%=name%>-YES" value="Yes">
+							Yes
+							</label>
+							<label class="radio inline">
+							<input type="radio" name="<%=name%>" id="<%=name%>-NO" value="No" >
+							No
+							</label>  
+    
+     <%if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA")){%>                     
+ 					                            
+							<label class="radio inline">
+							<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="Na" >
+							NA
+							</label>
+	<%}%>					 		  
+                            
+  <%}else{ %>
+  <input type="text" class="input-large" id="<%=name%>" name="<%=name%>" placeholder="<%=mtypeBean.getValidationName()%>"> 
+  <%} %>
+   <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments"> 
+  <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
 </div>
--->
-
-<!-- 
-<span style="float:left;border-right:thin solid grey;width:90px;height:50px;">
-
-<%
-/* not liking the inputs nested
-
-if ( (mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")) || (mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA"))){
-	
-	out.print("yes/no");
-	
-}else{
-	
-	out.print("<input type='text' style='width:60px'>");
-
-}
-*/
-%>
-<br><button>Add</button>
 
 
-</span>
--->
+
     <%  int k = 0;
         for (EctMeasurementsDataBean mdb:alist){
             k++;
@@ -1121,24 +931,27 @@ if ( (mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equ
     onclick="javascript:addMeas('&measurement=<%= response.encodeURL( measure) %>','<%= URLEncoder.encode(temp,"UTF-8") %>&amp;id=<%=hdata.get("id")%>');" 
     <%}%>
     >
-        <p align="center" <%//=indColour%> title="fade=[on] header=[Comment <%//=hdata.get("age")%>   <%//=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;<font size='1'>Entered By: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></font>]">
-
+       
+		
 <!-- mValue -->
-<font size='3'><%=hdata.get("age")%></font> 
-<br/>
-<%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
+
+<p style="line-height:90%;" ><font size='3'><%=hdata.get("age")%></font></p>
+
+<font size='1' style="line-height:60%;"><%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M</font>
 
             <%if (comb) {%>
-            <span class="footnote"><%//=comments.size()%> C</span>
+            <a href="#" rel="popover" data-content="<%=com%>" data-original-title="Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>" data-trigger="hover" class="footnote"><%//=comments.size()%> <!-- C--> <i class="icon-comment"></i></a>
             <%}%>
            <%=getFromFacilityMsg(mdb) %> 
-        </p>
-        <p width="16px" <%=indColour%> >  </p>
-        <center><%=indText%></center>
+        <br>
+        <p width="16px" <%=indColour%> ></p>
+        <%=indText%>
+        
     </div>
     <%}%>
-    
+
 </div>
+
 <%
 	//creating add all link array
 	addAllLink[mCount]=measure;
@@ -1151,14 +964,13 @@ if ( (mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equ
 %>
 
 
-<div class="preventionSection" style="<%=hidden%>" >
-
-    <!--<div class="headPrevention">-->
-<div class="headMtype" style="height:18px;background-color:#D6D6C2;width:100%" title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
+<div class="preventionSection well-small" style="<%=hidden%>">
+   
+<div class="well well-small headMtype">
 
  
 <div style="float:left;padding:1px;width:4px;height:10px;background-color:white;"></div>
-            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
+            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-content="<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
                 <span title="<%=h2.get("guideline")%>" style="padding-left:5px;"><%=h2.get("display_name")%></span>
             </a>
             
@@ -1181,13 +993,14 @@ if ( (mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equ
     <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
 
 <font size="3">
-<p align="center" title="fade=[on] header=[<%=hdata.get("age")%> <br> <font size='1'><%=hdata.get("prevention_date")%></font>] body=[<%=com%>]" >
+<p align="center">
 <!--Age: <%=hdata.get("age")%> <br/>-->
 <%=refused(hdata.get("refused"))%>
 </font>
 		<font size="1"><%=hdata.get("prevention_date")%></font>
             <%if (comb) {%>
-            <span class="footnote">C<%//=comments.size()%></span>
+
+            <a href="#" rel="popover" data-content="<%=hdata.get("prevention_date")%>: <%=com%>" data-original-title="<%=hdata.get("age")%>" data-trigger="hover" class="footnote"> <i class="icon-comment"></i></a>
             <%}%>
 	
         </p>
@@ -1256,210 +1069,252 @@ function createAddAll(d,t){
             <%} --%>
         </p>
     </div>
-    <%}%>
+    <%}%> 
 </div>
+<%}%>		    
+		    </div>
+		    
+		    <div class="span6">
+  <div class="tabbable">
+           <ul class="nav nav-tabs">
+             <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
+             <li><a href="#tab2" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Allergy'/></a></li>
+             <li><a href="#tab3" data-toggle="tab"><bean:message key='oscarEncounter.reminders.title'/></a></li>
+             <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/></a></li>
+           </ul>
+           <div class="tab-content">
+               <div id="tab1" class="tab-pane active well well-small">
+				 <%if(medicationsResult.size()>=1){%>
+				
+									
+					<%=medicationsList%>
+					
+					
+				<%}else{%>
+					No medications
+				<%}%>
 
-<%}%>
+               </div>
+               
+               <div id="tab2" class="tab-pane well well-small">
+				   <%
+				List<Allergy> allergies = allergyDao.findActiveAllergiesOrderByDescription(Integer.parseInt(demographic_no));
+				String allergiesList="";
+				for(int x=0;x<allergies.size();x++) {
+					if(x!=0) {
+						allergiesList += ",<br/>";
+					}
+					Allergy allergy = allergies.get(x);
+					allergiesList += allergy.getDescription();
+				}
+				
+				
+				%>   
 
-</div>
-<br style="clear:left;"/>
+				<%if(allergies.size()>=1){%>
+				
+				       <%=allergiesList%>
+				 <%}else{%>
+						No Allergies
+				<%}%>   
+               </div>
+               
+               <div id="tab3" class="tab-pane well well-small">
+					 <%
+					String remindersQuery = "intake_reminders";
+					List<Map<String,Object>> remindersResult = oscarSuperManager.find("providerDao", remindersQuery, demographicParam);
+					String remindersList = (!remindersResult.isEmpty() && remindersResult.get(0).get("note")!=null) ? remindersResult.get(0).get("note").toString() : "";
+					if (remindersResult.size() > 1) {
+						for (int i=1; i<remindersResult.size(); i++) {
+							remindersList += ",<br/>" + remindersResult.get(i).get("note").toString();
+						}
+					}
 
-
-
-<div style="margin-top: 20px;">
-<!---I think I want to get rid of this all together they can view the comments on hover or by click
-<a id="ALT" name="ALT"></a>
-
-    <h3>Comments</h3>
-  
-    <ol>
-        <% for (int i = 0; i < comments.size(); i++){
-            String str = (String) comments.get(i);
-        %>
-        <li><%=str%></li>
-        <% }%>
-    </ol>
---->
-</div>
-</br></br>
-</td>
-<td valign="top" align="left" class="right-side-cell">
-
-<div class="tabs">
-    
-   <div class="tab">
-       <input type="radio" id="tab-1" name="tab-group-1" checked>
-<%if(medicationsResult.size()>=1){%>
-       <label for="tab-1" title="<%=medicationsResult.size()%> Medications">Medications</label>
-       
-       <div class="content">
-
-	<%=medicationsList%>
-
-<%}else{%>
-       <label for="tab-1" style='color:grey;text-decoration:none;' title="No Medications">Medications</label>
-       
-       <div class="content">
-
-<%}%>
-
-           
-       </div> 
-   </div>
-<%
-List<Allergy> allergies = allergyDao.findActiveAllergiesOrderByDescription(Integer.parseInt(demographic_no));
-String allergiesList="";
-for(int x=0;x<allergies.size();x++) {
-	if(x!=0) {
-		allergiesList += ",<br/>";
-	}
-	Allergy allergy = allergies.get(x);
-	allergiesList += allergy.getDescription();
-}
-
-
-%>   
-   <div class="tab">
-       <input type="radio" id="tab-2" name="tab-group-1">
-
-<%if(allergies.size()>=1){%>
-       <label for="tab-2" title="<%=allergies.size()%> Allergies">Allergies</label>
-      	 <div class="content">
-
-       <%=allergiesList%>
- <%}else{%>
-	<label for="tab-2" style='color:grey;text-decoration:none;' title="No Allergies">Allergies</label>
-      	 <div class="content">
-		No Allergies
+					if (remindersResult.size() > 1) {
+					%>
+					       
+							<%=remindersList%> 
+					<%}else{%>
+					
+	
+								No Reminders
+					<%}%>   
+               </div>
+               
+               <div id="tab4" class="tab-pane well well-small">
+               <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
       
-<%}%>      
-
-	 
-       </div> 
+				<span style="font-size:12px;"><%=flowSheet%> Recommendations</span>
+				
+				<ul >
+				<% for (String warn : warnings){ %>
+				<li style="color: red;"><%=warn%></li>
+				<%}%>
+				<% for (String warn : recomendations ){%>
+				<li style="color: black;"><%=warn%></li>
+				<%}%>
+				<!--li style="color: red;">6 month TD overdue</li>
+				<li>12 month MMR due in 2 months</li-->
+				<% if (dsProblems){ %>
+				<li style="color: red;">Decision Support Had Errors Running.</li>
+				<% }%>
+				</ul>
+				
+				<% }else{ %>
+				      
+					No Warnings
+				<%}%>
+               </div>
+               
+           </div>
    </div>
-<%
-String remindersQuery = "intake_reminders";
-List<Map<String,Object>> remindersResult = oscarSuperManager.find("providerDao", remindersQuery, demographicParam);
-String remindersList = (!remindersResult.isEmpty() && remindersResult.get(0).get("note")!=null) ? remindersResult.get(0).get("note").toString() : "";
-if (remindersResult.size() > 1) {
-	for (int i=1; i<remindersResult.size(); i++) {
-		remindersList += ",<br/>" + remindersResult.get(i).get("note").toString();
-	}
-}
-%>    
-    <div class="tab">
-       <input type="radio" id="tab-3" name="tab-group-1">
-<%
-if (remindersResult.size() > 1) {
-%>
-       <label for="tab-3" title="<%=remindersResult.size()%> Reminders">Reminders</label>
-	<div class="content" >
-		<%=remindersList%> 
-<%}else{%>
+ 
+ <%if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){ %>
+ <!-- renal  start-->
+   <div class="tabbable">
+           <ul class="nav nav-tabs">
+             <li class="active"><a href="#ckd" data-toggle="tab" >Renal</a></li>
+           </ul>
+           <div class="tab-content">
+               <div id="ckd" class="tab-pane active well well-small">
+               <span class="label label-inverse" id="renal-next-steps">Next Steps</span><br>
+               N/A
+               
+               <br><br>
+               
+               <span class="label label-info" id="renal-resources">Resources</span><br>
+               
+               <a target="_blank" href="#">CSN Algorithm Detection, Monitoring &amp; Referral of CKD</a><br>
+               <a target="_blank" href="#">Kidney Foundation of Canada</a><br>
+               
+               </div>
+           </div>
+    </div>    
+ <!-- renal end -->       
+<%} %> 
 
-	<label for="tab-3" style='color:grey;text-decoration:none;' title="No Reminders" >Reminders</label>
-		<div class="content" >
-			No Reminders
-<%}%>     
-       
-           
-       </div> 
-   </div>
 
-    <div class="tab">
-       <input type="radio" id="tab-4" name="tab-group-1">
+<!-- TODO: These pain and topHTMLStream will become tabs where renal is instead of being there own tab set -->
+ <%if(temp.toUpperCase().equals("PAIN")){ %>
+ <!-- pain  start-->
+   <div class="tabbable">
+           <ul class="nav nav-tabs">
+              <li class="active"><a href="#pain" data-toggle="tab">Pain</a></li>
+           </ul>
+               <div id="pain" class="tab-pane active well well-small">
+               <span class="label label-inverse" id="pain-next-steps">Next Steps</span><br>
+               N/A
+               
+               <br><br>
+               
+               <span class="label label-info" id="pain-resources">Resources</span><br>
+               <!-- testing <a href="#" onclick="eform();">Lower Back Pain</a> -->               
+               </div>
+  </div> 
+ <!-- pain end -->       
+<%} %>   
 
-<% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
-       <label for="tab-4" title="<%=warnings.size()+recomendations.size() %> Warnings">(<%=warnings.size()+recomendations.size() %>)Warnings</label>
-     
-       <div class="content">
-<span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
 
-<ul >
-<% for (String warn : warnings){ %>
-<li style="color: red;"><%=warn%></li>
-<%}%>
-<% for (String warn : recomendations ){%>
-<li style="color: black;"><%=warn%></li>
-<%}%>
-<!--li style="color: red;">6 month TD overdue</li>
-<li>12 month MMR due in 2 months</li-->
-<% if (dsProblems){ %>
-<li style="color: red;">Decision Support Had Errors Running.</li>
-<% }%>
-</ul>
+ <%if(mFlowsheet.getTopHTMLStream().length()>1){ %>
+ <!-- TopHTMLStream  start-->
+   <div class="tabbable">
+           <ul class="nav nav-tabs">
+              <li class="active"><a href="#TopHTMLStream" data-toggle="tab">Other</a></li>
+           </ul>
+               <div id="TopHTMLStream" class="tab-pane active well well-small">
+               
+               <span class="label label-info" id="TopHTMLStream-resources">Resources</span><br>
+                  <%=mFlowsheet.getTopHTMLStream() %>            
+               </div>
+   </div>   
+ <!-- TopHTMLStream end -->       
+<%} %> 
 
-<% }else{ %>
-       <label for="tab-4" style='color:grey;text-decoration:none;' title="No Warnings">Warnings</label>
-     
-       <div class="content">
-	No Warnings
-<%}%>
-
-       </div> 
-   </div>
     
+		    </div>
+	    </div>
+    </div>
+
+<div style="float:left;margin-left:570px;padding-top:50px">
+	<!-- this will have to be visible to user -->
+		<!-- <button type="submit" class="btn btn-primary">Save</button> -->
+		     <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
+<!-- end of form -->
+</fieldset>		    
+</form>
 </div>
-
-<!--option
-<div id="extra_content" style="">
-<div id="rx_content" style="width:260px;height:200px;background-color:white;border:thin solid grey;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;">
-
-<h2>Medications</h2>
-</div>
-</div>
--->
-
-<br>
-
-<%
-if(temp.equals("ckd")){
-%>
-<div class="tabs">
-    
-   <div class="tab">
-       <input type="radio" id="tab-2-1" name="tab-group-2" checked>
-       <label for="tab-2-1">Chronic Kidney Disease</label>
-       
-       <div id="content_ckd" class="content">
-          
-       </div> 
-
-   </div>
-</div>    
-
-<%
-}
-
-%>
-
-
-
-</td>
-</tr>
-</table>
-
-
-
 
 <div id="black_wrapper">
 
 	<div id="fade" class="black_overlay"></div>
-	
-	<a id="close-link" href = "javascript:void(0)" onclick = "document.getElementById('black_wrapper').style.display='none'"> 
-	<img class="close-graph" src="<%=request.getContextPath()%>/images/close.png" title="Close"></img>
+	<div id="light" class="white_content" >
+	<iframe id="eFrame" src="about:blank" width="820px" height="800px" frameborder="0" align="center" style="display:none;"></iframe>
+	<iframe id="gFrame" src="about:blank" width="820px" height="460px" frameborder="0" align="center" style="display:none;"></iframe>
+	<a id="close-link" href = "javascript:void(0)" onclick = "closeAll();"> 
+	<img src="<%=request.getContextPath()%>/images/close.png" title="Close"></img>
 	</a>
-	
-	<div id="light" class="white_content">
-	<iframe id="gFrame" src="about:blank" width="820px" height="460px" frameborder="0" align="center"></iframe>
 	</div>
 	
 <div>
 
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="../../share/javascript/boxover.js"></script>
-</body>
-</html:html>
+<script>  
+$(function (){ 
+	//$("#example").popover();
+	$("[rel=popover]").popover({});  
+});  
+
+$(document).ready(function () {
+    $("[rel=tooltip]").tooltip();
+ });
+
+$("#expand_all").click(function(){
+	$("[id^=add-box-]").slideDown("slow"); 
+	$('#collapse-all').show();
+	$('#expand-all').hide();
+});
+
+$("#collapse_all").click(function(){
+		$("[id^=add-box-]").hide(); 
+		$('#collapse-all').hide();
+		$('#expand-all').show();
+});
+
+$("#add_overdue").click(function(){
+	$('#plus-overdue').toggle();
+	$('#minus-overdue').toggle();
+	<%=recListBuffer.toString()%>
+});
+
+$("#add_renal").click(function(){
+	$('#plus-renal').toggle();
+	$('#minus-renal').toggle();
+	<%=recListBuffer.toString()%>
+});
+
+function checked_check(el)
+{
+alert("Hello checked! " + el.id);
+}
+
+function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if(e.style.display == 'block')
+       e.style.display = 'none';
+
+    else
+       e.style.display = 'block';
+ }
+</script>
+
+
+  </body>
+</html>
 
 <%!String refused(Object re){
         String ret = "Given";
@@ -1502,8 +1357,6 @@ if(temp.equals("ckd")){
 		if (emdb.getRemoteFacility()!=null)	return("<br /><span style=\"color:#990000\">(At facility : "+emdb.getRemoteFacility()+")<span>");
 		else return("");
 	}
-    
-    
-    
-    
-    %>
+       
+ %>
+ 

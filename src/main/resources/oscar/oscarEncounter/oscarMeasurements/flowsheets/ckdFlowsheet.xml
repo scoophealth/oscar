@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. This software is published under the
+		GPL GNU General Public License. This program is free software; you can
+		redistribute it and/or modify it under the terms of the GNU General
+		Public License as published by the Free Software Foundation; either
+		version 2 of the License, or (at your option) any later version. This
+		program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. * * You should have received a copy of the GNU
+		General Public License along with this program; if not, write to the
+		Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+		MA 02111-1307, USA. Document : inrFlowsheet.xml Created on : April 23,
+		2006, 12:47 PM Author : Jay Gallagher Description: Define hypertension
+		flowsheet /*" */
+	-->
+<flowsheet name="ckd" display_name="CKD Flowsheet"
+	ds_rules="hypertension.drl" dxcode_triggers="icd9:585"
+	warning_colour="#E00000" recommendation_colour="yellow">
+
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
+
+    <item measurement_type="EGFR" display_name="eGFR" guideline=""
+		graphable="yes" value_name="eGFR" >
+        <rules>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="EGFR" value="&gt;12" />
+            </recommendation>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="EGFR" value="-1" />
+            </recommendation>
+        </rules>
+    </item>
+
+
+   <item measurement_type="ACR" display_name="Alb: creat ratio" guideline="Target: &lt; 2.0 M : &lt;2.8 F" graphable="yes" value_name="ACR" >
+        <rules>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="ACR" value="&gt;24" />
+            </recommendation>
+            <recommendation strength="warning" >
+                <condition type="monthrange" param="ACR" value="-1" />
+            </recommendation>
+        </rules>
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isMale"  value="true" />
+                <condition type="getDataAsDouble" param="ACR" value="&gt;2.0" />
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="isFemale"  value="true" />
+                <condition type="getDataAsDouble" param="ACR" value="&gt;2.8" />
+            </rule>
+        </ruleset>
+    </item>
+
+ <item measurement_type="AORA" display_name="ACE-I OR ARB" guideline="" graphable="no" value_name="" />
+
+<measurement type="EGFR" typeDesc="EGFR" typeDisplayName="EGFR" measuringInstrc="">
+<validationRule name="Numeric Value: 0 to 500" maxValue="500" minValue="0" isNumeric="1" />
+</measurement>
+
+<measurement type="ACR" typeDesc="ACR" typeDisplayName="Alb creat ratio" measuringInstrc="">
+<validationRule name="Numeric Value: 0 to 300" maxValue="300" minValue="0" isNumeric="1" />
+</measurement>
+
+<measurement type="AORA" typeDesc="ACE-I OR ARB" typeDisplayName="ACE-I OR ARB" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+</measurement>
+
+
+</flowsheet>
+    

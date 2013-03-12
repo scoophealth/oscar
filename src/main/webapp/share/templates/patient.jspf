@@ -49,49 +49,31 @@ Demographic demographic_header=demographicDao_header.getDemographic(d);
 	}   		
 %>
 
-<ul style="background-color:<%=patient_bar_colour%>;">
-<li class="page-title">
-<%=title_for_menu%>
-</li>
 
+<!--<a><bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=d%>' /></a>-->
 
+<div class="span6" style="margin-left:15px;">
+<h4><a style="color:#333;text-decoration:none;" href="<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=d%>&displaymode=edit&dboperation=search_detail"><%=demographic_header.getLastName()%>, <%=demographic_header.getFirstName()%> (<%=demographic_header.getTitle() %>)</a>
 
-<li>
-<%//TODO: need to add a indicator for an alert, use a ! wrapped in a triangle???---? 
-if(alert.length()!=0){%>
-<a title="<%=alert%>"><img width="16px" height="16px" src="<%=request.getContextPath()%>/images/warning-icon.png" border="0"></a>
+<%if(alert.length()!=0){%>
+<a title="<%=alert%>"><i class="icon-warning-sign"></i></a>
 <%}%>
+</h4>
+</div>
 
- <b><a href="<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=d%>&displaymode=edit&dboperation=search_detail"><%=demographic_header.getLastName()%>, <%=demographic_header.getFirstName()%></a></b> <%=demographic_header.getTitle() %>. 
+<div  style="text-align:right;padding-top:8px;margin-right:15px;">
 
-</li>
+<span style="padding-right:10px;font-size:13px;">
+<a><oscar:phrverification demographicNo='<%=d%>' ><bean:message key="phr.verification.link"/></oscar:phrverification></a>
+</span>
 
-<li>
-<%=demographic_header.getSexDesc() %> 
-</li>
+<span style="padding-right:10px;font-size:13px;"><bean:message key="demographic.patient.context.born"/>: <strong><%=demographic_header.getFormattedDob()%>  <%if(demographic_header.getAgeInYears()>0){%>
 
-<li> 
- <%if(demographic_header.getAgeInYears()>0){%>
-
- <%=demographic_header.getAgeInYears() %> years
+ (<%=demographic_header.getAgeInYears() %>y)
  
- <%}else{ %>
- 
- DOB: <%=demographic_header.getFormattedDob()%>
- 
- <%} %>
+ <%} %></strong></span> 
+<span style="padding-right:10px;font-size:13px;"><bean:message key="demographic.patient.context.sex"/>: <strong><%=demographic_header.getSexDesc() %></strong></span> 
+<span style="padding-right:10px;font-size:13px;"><bean:message key="demographic.patient.context.hin"/>: <strong><%=demographic_header.getHin() %></strong></span>
 
-</li>
-<li>
-<bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=d%>' />
 
-</li>
-
-<li>
-
-</li>
-
-<li>
-<oscar:phrverification demographicNo='<%=d%>' ><bean:message key="phr.verification.link"/></oscar:phrverification>
-</li>
-</ul>
+</div>
