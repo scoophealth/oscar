@@ -74,7 +74,7 @@
 
 <head>
 <title>
-oscarMeasurement
+<bean:message key="oscarEncounter.Index.measurements" />
 </title><!--I18n-->
 <html:base/>
 <link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css">
@@ -151,6 +151,8 @@ function masterDateFill(v){
 </SCRIPT>
 
 <style type="text/css">
+	Body{background-color: #fff;}
+	
 	table.outline{
 	   margin-top:50px;
 	   border-bottom: 1pt solid #888888;
