@@ -11,8 +11,6 @@ jQuery(document).ready(function(){
 
 	//next steps
 	jQuery.ajax({url:getContextPath() + "/renal/Renal.do?method=getNextSteps&demographicNo="+getDemographicNo(),async:false, success:function(data) {
-		alert(data.result);
-		alert(jQuery("#renal_next_steps").html())
 		jQuery("#renal_next_steps").html(data.result);
 	}});
 	
