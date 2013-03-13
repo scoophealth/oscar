@@ -166,8 +166,8 @@ public class E2EExportValidator {
 			String filename = new File(systemId).getName();
 		 
 			// Now prepend the correct path
-			String correctedId = System.getProperty("basedir")+
-					"/src/main/resources/e2e/" + filename;
+			String correctedId = E2EExportValidator.
+					class.getResource("/e2e/"+filename).getPath();
 		 
 			InputSource is = new InputSource(
 					ClassLoader.getSystemResourceAsStream(correctedId));
