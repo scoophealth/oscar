@@ -17,7 +17,7 @@
 		flowsheet /*" */
 	-->
 <flowsheet name="ckd" display_name="CKD Flowsheet"
-	ds_rules="hypertension.drl" dxcode_triggers="icd9:585"
+	ds_rules="hypertension.drl" dxcode_triggers="icd9:585,OscarCode:CKDSCREEN"
 	warning_colour="#E00000" recommendation_colour="yellow">
 
 	<indicator key="LOW" colour="#9999FF" />
