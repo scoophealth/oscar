@@ -189,9 +189,11 @@ ProviderBillCenterDao providerBillCenterDao = (ProviderBillCenterDao)SpringUtils
 for(Provider p : providerDao.getBillableProviders()) {
 	String providerNo = p.getProviderNo();
 	ProviderBillCenter pbc = providerBillCenterDao.find(providerNo);
+	if(pbc != null) {
 	%>
-	providerBillCenterMap['<%=providerNo%>'] = '<%=pbc.getBillCenterCode()%>';
+		providerBillCenterMap['<%=providerNo%>'] = '<%=pbc.getBillCenterCode()%>';
 	<%
+	}
 }
 %>
 
