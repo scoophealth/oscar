@@ -48,11 +48,12 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 
 			String contextPath=sce.getServletContext().getContextPath();
 
-
 			logger.info("Server processes starting. context=" + contextPath);
-
+			
 			MiscUtils.addLoggingOverrideConfiguration(contextPath);
 
+			LocaleUtils.BASE_NAME="oscarResources";
+			
 			OscarProperties properties = OscarProperties.getInstance();
 			String vmstatLoggingPeriod = properties.getProperty("VMSTAT_LOGGING_PERIOD");
 			VmStat.startContinuousLogging(Long.parseLong(vmstatLoggingPeriod));

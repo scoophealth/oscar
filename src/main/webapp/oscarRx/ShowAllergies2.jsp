@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
@@ -175,7 +176,7 @@ padding-right:6;
 	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<%=WebUtils.popErrorAndInfoMessagesAsHtml(session)%>
+<%=WebUtilsOld.popErrorAndInfoMessagesAsHtml(session)%>
 <table border="0" cellpadding="0" cellspacing="0"
 	style="border-collapse: collapse" bordercolor="#111111" width="100%"
 	id="AutoNumber1" height="100%">
