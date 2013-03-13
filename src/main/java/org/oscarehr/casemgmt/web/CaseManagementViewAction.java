@@ -1889,8 +1889,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (request.getParameter("numToReturn") != null && request.getParameter("numToReturn").length() > 0) {
 			criteria.setMaxResults(ConversionUtils.fromIntString(request.getParameter("numToReturn")));
 		}
-		if (request.getParameter("offset") == null || request.getParameter("offset").equalsIgnoreCase("0")) {
-			criteria.setFirstResult(ConversionUtils.fromIntString(request.getParameter("offset")));
+		
+		String offset = request.getParameter("offset"); 
+		if (offset != null && !offset.trim().equals("0")) {
+			// in case offset is configured, make sure it's set on the criteria...
+			criteria.setFirstResult(ConversionUtils.fromIntString(offset));
 		}
 		criteria.setDemographicId(ConversionUtils.fromIntString(demoNo));
 		criteria.setUserRole((String) request.getSession().getAttribute("userrole"));
