@@ -107,7 +107,11 @@ public class E2EVelocityTemplate {
 		context.put("custodianIdRoot", "7EEF0BCC-F03E-4742-A736-8BAC57180C5F");
 		
 		// Merge Template & Data Model
-		return VelocityUtils.velocityEvaluate(context, template);
+		String result = VelocityUtils.velocityEvaluate(context, template);
+		@SuppressWarnings("unused")
+        Boolean isValidE2E = E2EExportValidator.isValidXML(result, true);
+		
+		return result;
 	}
 	
 	public class E2EResources {
