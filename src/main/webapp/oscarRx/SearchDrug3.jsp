@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.DrugDao"%>
 <%@page import="org.oscarehr.common.model.Drug"%>
@@ -825,7 +826,7 @@ body {
 
 
     <body  vlink="#0000FF" onload="checkFav();iterateStash();rxPageSizeSelect();checkReRxLongTerm();load()" class="yui-skin-sam">
-    	<%=WebUtils.popErrorAndInfoMessagesAsHtml(session)%>
+    	<%=WebUtilsOld.popErrorAndInfoMessagesAsHtml(session)%>
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
             <%@ include file="TopLinks2.jspf" %><!-- Row One included here-->
             <tr>

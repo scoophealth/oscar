@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
@@ -84,7 +85,7 @@
 				%>	
 						<div class="body">
 <%
-	ArrayList<String> errors=WebUtils.popErrorMessages(session);
+	ArrayList<String> errors=WebUtilsOld.popErrorMessages(session);
 	if (errors!=null)
 	{
 		%>
