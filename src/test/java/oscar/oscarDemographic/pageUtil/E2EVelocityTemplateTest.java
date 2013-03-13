@@ -30,6 +30,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -43,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
  *  This test class is meant to test the E2E document
  *  generated from a Velocity template.
  */
-public class E2EVelocityTemplateTest {
+public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	
     private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
     private static Integer demographicNo;
