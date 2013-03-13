@@ -23,7 +23,6 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -31,8 +30,13 @@ import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+
 /**
  * 
  * @author rrusk
@@ -41,17 +45,20 @@ import org.oscarehr.util.MiscUtils;
  */
 public class E2EVelocityTemplateTest {
 	
+    private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+    private static Integer demographicNo;
+    
 	@BeforeClass
 	public static void onlyOnce() throws Exception {
-		// Loading in the test data takes too long to do it
-		// before each unit test.
-		//
-		// In the sql script, configure FOREIGN_KEYS_CHECK=0
-		// before loading the db and reset to original value
-		// at end.
-		assertEquals("Error loading test data",
-				SchemaUtils.loadFileIntoMySQL(System.getProperty("basedir")+
-						"/src/test/resources/e2e/e2e-test-db.sql"),0);
+		SchemaUtils.restoreTable("demographicSets", "lst_gender", "demographic_merged",
+				"admission", "program", "health_safety", "demographic", "provider",
+				"allergies", "drugs", "preventions", "dxresearch", "patientLabRouting",
+				"icd9");
+		Demographic entity = new Demographic();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setDemographicNo(null);
+		demographicDao.save(entity);
+		demographicNo = entity.getDemographicNo();
 	}
 
 	@Test
@@ -63,7 +70,7 @@ public class E2EVelocityTemplateTest {
 	public void testExport() {
 		E2EVelocityTemplate e2etemplate = new E2EVelocityTemplate();
 		assertNotNull(e2etemplate);
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		assertNotNull(p);
 		String s = null;
 		try {
@@ -72,6 +79,13 @@ public class E2EVelocityTemplateTest {
         	MiscUtils.getLogger().error(e.getMessage());
 	        fail();
         }
+		
+		// Ugly hack because oscar_test doesn't have valid
+		// values for year/month/day in demographic table.
+		// Substitutes "19400925" if birthTime is "yearmoda".
+		s = s.replace("<birthTime value=\"yearmoda\"/>",
+				"<birthTime value=\"19400925\"/>");
+		
 		assertNotNull(s);
 		assertFalse(s.isEmpty());
 		// should be no $ variables in output
