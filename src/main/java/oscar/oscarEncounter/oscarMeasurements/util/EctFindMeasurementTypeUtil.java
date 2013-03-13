@@ -142,7 +142,7 @@ public class EctFindMeasurementTypeUtil {
             m.setTypeDisplayName(mt.getTypeDisplayName());
             m.setTypeDescription(mt.getTypeDesc());
             m.setMeasuringInstruction(mt.getMeasuringInstrc());
-            m.setValidation(mt.getValidation());
+            m.setValidation(String.valueOf(validationId));
             dao.persist(m);            
             
         }
