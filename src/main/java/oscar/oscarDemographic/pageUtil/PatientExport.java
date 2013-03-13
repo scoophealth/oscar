@@ -38,6 +38,7 @@ import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Icd9Dao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
@@ -47,12 +48,16 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.ProviderData;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
 /**
  * @author Jeremy Ho
@@ -70,6 +75,8 @@ public class PatientExport {
 	private static Icd9Dao icd9Dao = (Icd9Dao)SpringUtils.getBean("icd9Dao");
 	private static PatientLabRoutingDao patientLabRoutingDao = (PatientLabRoutingDao)SpringUtils.getBean("patientLabRoutingDao");
 	private static Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
+	private static MeasurementDao measurementDao = (MeasurementDao)SpringUtils.getBean("measurementDao");
+	private static MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao)SpringUtils.getBean("measurementsExtDao");
 	
 	private Date currentDate = new Date();
 	private Integer demographicNo = null;
@@ -78,7 +85,8 @@ public class PatientExport {
 	private List<Allergy> allergies = null;
 	private List<Prevention> preventions = null;
 	private List<Dxresearch> problems = null;
-	private List<Hl7TextInfo> labs = null;
+	//private List<Hl7TextInfo> labs = null;
+	private List<Lab> labs = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
@@ -109,16 +117,94 @@ public class PatientExport {
 				}
 			}
 			
-			// Master to 12.1 compatibility fix - added method to patientLabRoutingDao - revisit before submitting
-			List<PatientLabRouting> tempLabs = patientLabRoutingDao.findByDemographicAndLabType(demographicNo, "HL7");
-			labs = new ArrayList<Hl7TextInfo>();
-			for(PatientLabRouting routing : tempLabs) {
-				this.labs.add(hl7TextInfoDao.findLabId(routing.getLabNo()));
-			}
+			this.labs = assembleLabs();
 		}
 	    catch (Exception e) {
 	        log.error(e.getMessage(), e);
 	    }
+	}
+	
+	private List<Lab> assembleLabs() {
+		// Gather hl7TextInfo labs
+		// Master to 12.1 compatibility fix - added method to patientLabRoutingDao - revisit before submitting
+		List<PatientLabRouting> tempRouting = patientLabRoutingDao.findByDemographicAndLabType(demographicNo, "HL7");
+		List<Hl7TextInfo> tempLabs = new ArrayList<Hl7TextInfo>();
+		for(PatientLabRouting routing : tempRouting) {
+			tempLabs.add(hl7TextInfoDao.findLabId(routing.getLabNo()));
+		}
+		
+		// Short circuit if no labs
+		if(tempLabs.size() == 0)
+			return null;
+		
+		// Gather and filter measurements
+		List<Measurement> rawMeasurements = measurementDao.findByDemographicIdUpdatedAfterDate(demographicNo, new Date(0));
+		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
+		for(Measurement entry : rawMeasurements) {
+			if(Integer.parseInt(entry.getProviderNo()) == 0) {
+				tempMeasurements.add(entry);
+			}
+		}
+		
+		// Gather measurementsExt
+		List<List<MeasurementsExt>> tempMeasurementsExt = new ArrayList<List<MeasurementsExt>>();
+		for(Measurement entry : tempMeasurements) {
+			List<MeasurementsExt> tempMeasurementsExtElement = measurementsExtDao.getMeasurementsExtByMeasurementId(entry.getId());
+			tempMeasurementsExt.add(tempMeasurementsExtElement);
+		}
+		
+		// Create Lab Objects
+		List<Lab> allLabs = new ArrayList<Lab>();
+		
+		// Group Measurements into Lab Objects
+		for(Hl7TextInfo labReport : tempLabs) {
+			Lab labObj = new Lab();
+			labObj.hl7TextInfo = labReport;
+			
+			// Group Measurements by Lab Number
+			int labNumber = labReport.getLabNumber();
+			List<Measurement> labMeasurementAll = new ArrayList<Measurement>();
+			List<List<MeasurementsExt>> labMeasurementsExtAll = new ArrayList<List<MeasurementsExt>>();
+			
+			for(int i=0; i < tempMeasurementsExt.size(); i++) {
+				List<MeasurementsExt> entry = tempMeasurementsExt.get(i);
+				String entryLabNo = getLabExtValue(entry, "lab_no");
+				
+				// Add related entries to correct Lab
+				if(labNumber == Integer.valueOf(entryLabNo)) {
+					labMeasurementsExtAll.add(entry);
+					entry.get(0).getMeasurementId();
+					Measurement entryMeasurement = tempMeasurements.get(i);
+					labMeasurementAll.add(entryMeasurement);
+				}
+			}
+			
+			// Group Measurements into Organizer Groups
+			int prevGroup = 0;
+			LabGroup tempGroup = new LabGroup(prevGroup);
+			for(int i=0; i < labMeasurementsExtAll.size(); i++) {
+				int currGroup = parseOtherID(getLabExtValue(labMeasurementsExtAll.get(i), "other_id"))[0];
+				
+				// Create New Group
+				if(prevGroup != currGroup) {
+					labObj.group.add(tempGroup);
+					prevGroup = currGroup;
+					tempGroup = new LabGroup(prevGroup);
+				}
+				
+				// Add current measurement to Organizer Group
+				tempGroup.measurement.add(labMeasurementAll.get(i));
+				tempGroup.measurementsExt.add(labMeasurementsExtAll.get(i));
+			}
+			
+			// Save final Group
+			labObj.group.add(tempGroup);
+			
+			// Save Lab Object
+			allLabs.add(labObj);
+		}
+		
+		return allLabs;
 	}
 	
 	/*
@@ -239,7 +325,7 @@ public class PatientExport {
 	}
 	
 	public boolean hasAllergies() {
-		return!(!exAllergiesAndAdverseReactions || allergies==null || allergies.isEmpty());
+		return exAllergiesAndAdverseReactions && allergies!=null && !allergies.isEmpty();
 	}
 	
 	/*
@@ -250,7 +336,7 @@ public class PatientExport {
 	}
 	
 	public boolean hasImmunizations() {
-		return!(!exImmunizations || preventions==null || preventions.isEmpty());
+		return exImmunizations && preventions!=null && !preventions.isEmpty();
 	}
 	
 	// Function to allow access to PreventionsExt table data based on prevention id
@@ -270,12 +356,91 @@ public class PatientExport {
 	/*
 	 * Laboratory Reports
 	 */
-	public List<Hl7TextInfo> getLabs() {
+	public List<Lab> getLabs() {
 		return labs;
 	}
 	
 	public boolean hasLabs() {
-		return!(!exLaboratoryResults || labs==null || labs.isEmpty());
+		return exLaboratoryResults && labs!=null && !labs.isEmpty();
+	}
+	
+	// Function to allow access to LabsExt table data based on prevention id (direct version)
+	public static String getLabExtValue(String id, String keyval) {
+		try {
+			List<MeasurementsExt> measurementExt= measurementsExtDao.getMeasurementsExtByMeasurementId(Integer.valueOf(id));
+			for (MeasurementsExt entry : measurementExt) {
+				if(entry.getKeyVal().equals(keyval)) {
+					return entry.getVal();
+				}
+			}
+		}
+		catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return null;
+	}
+	
+	// Function to allow access to LabsExt table data based on prevention id (object version)
+	public static String getLabExtValue(List<MeasurementsExt> measurementExt, String keyval) {
+		for (MeasurementsExt entry : measurementExt) {
+			if(entry.getKeyVal().equals(keyval)) {
+				return entry.getVal();
+			}
+		}
+		return null;
+	}
+	
+	// Handles Other ID field parsing
+	private Integer[] parseOtherID(String rhs) {
+		Integer[] lhs = null;
+		try {
+			String[] temp = rhs.split("-");
+			lhs = new Integer[temp.length];
+			for(int i=0; i < temp.length; i++) {
+				lhs[i] = Integer.parseInt(temp[i]);
+			}
+		}
+		catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+		
+		return lhs;
+	}
+	
+	// Nested Lab Object Models
+	public static class Lab {
+		public Hl7TextInfo hl7TextInfo;
+		public List<LabGroup> group = new ArrayList<LabGroup>();
+		
+		public Hl7TextInfo getHl7TextInfo() {
+			return hl7TextInfo;
+		}
+		
+		public List<LabGroup> getGroup() {
+			return group;
+		}
+	}
+	
+	public static class LabGroup {
+		public int id;
+		public List<Measurement> measurement = new ArrayList<Measurement>();
+		public List<List<MeasurementsExt>> measurementsExt = new ArrayList<List<MeasurementsExt>>();
+		
+		public LabGroup(int id) {
+			this.id = id;
+		}
+		
+		public int getGroupId() {
+			return id;
+		}
+		
+		public List<Measurement> getMeasurement() {
+			return measurement;
+		}
+		
+		public List<List<MeasurementsExt>> getMeasurementsExt() {
+			return measurementsExt;
+		}
 	}
 	
 	/*
@@ -286,7 +451,7 @@ public class PatientExport {
 	}
 	
 	public boolean hasMedications() {
-		return!(!exMedicationsAndTreatments || drugs==null || drugs.isEmpty());
+		return exMedicationsAndTreatments && drugs!=null && !drugs.isEmpty();
 	}
 	
 	public boolean isActiveDrug(Date rhs) {
@@ -308,7 +473,7 @@ public class PatientExport {
 	}
 	
 	public boolean hasProblems() {
-		return!(!exProblemList || problems==null || problems.isEmpty());
+		return exProblemList && problems!=null && !problems.isEmpty();
 	}
 
 	// Function to allow access to ICD9 Description table data based on ICD9 code

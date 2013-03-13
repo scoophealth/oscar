@@ -99,7 +99,7 @@ Allergies and Intolerances - (Reaction List)
 #*    *##if ( $allergy.typecode == 8 || $allergy.typecode == 10 || $allergy.typecode == 11 || $allergy.typecode == 13 )
 									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4"            
 										codeSystemName="HL7 ActCode"/>
-#*    *##elseif ( $allergy.typecode == 12 ||  $allergy.typecode == 14 )
+#*    *##elseif ( $allergy.typecode == 12 || $allergy.typecode == 14 )
 									<code code="SUB" displayName="Substance" codeSystem="2.16.840.1.113883.5.4"            
 										codeSystemName="HL7 ActCode"/>
 #*    *##else
@@ -120,6 +120,7 @@ Allergies and Intolerances - (Reaction List)
 											</playingEntity>
 										</participantRole>
 									</participant>
+#*    *##if ( $allergy.reaction )
 									<entryRelationship typeCode="COMP" contextConductionInd="true">
 										<templateId root="2.16.840.1.113883.3.1818.10.4.23"/>
 										<!-- Reaction Observation -->
@@ -129,6 +130,7 @@ Allergies and Intolerances - (Reaction List)
 											<value xsi:type="CD" nullFlavor="NI" displayName="No Information"/>
 										</observation>
 									</entryRelationship>
+#*    *##end
 									<entryRelationship typeCode="COMP" contextConductionInd="true">
 										<templateId root="2.16.840.1.113883.3.1818.10.4.30"/>
 										<!-- Severity Observation -->
@@ -323,71 +325,102 @@ Laboratory Results & Results
 						<observation classCode="OBS" moodCode="RQO">
 							<id root="TBD" extension="AN123"/>
 							<code nullFlavor='UNK'/>
-							<text>$lab.discipline</text>
+							<text>$lab.hl7TextInfo.discipline</text>
 							<!-- Ordering Provider -->
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
-								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.getObrDate()))"/>
+								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
-## Not sure if this is the right author to use
 											<given>$patient.getProviderFirstName($patient.providerNo)</given>
 											<family>$patient.getProviderLastName($patient.providerNo)</family>
 										</name>
 									</assignedPerson>
-								</assignedAuthor>							
+								</assignedAuthor>
 							</author>
 							<!-- Result Organizer -->
+#*    *##foreach( $labGroup in $lab.getGroup() )
 							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.26"/>
 								<!-- Result Organizer -->
 								<organizer classCode="BATTERY" moodCode="EVN">
-									<id extension="$lab.id" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
+									<id extension="$labGroup.groupId" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
 									<code nullFlavor='UNK'/>
-## ValueSet OID not yet available - using Business Name/Description for now - not sure on xsd validation
-#*    *##if ( $lab.reportStatus == "P" )
+## ValueSet OID not yet available - using Business Name/Description for now
+## This status code comes from entire lab report - doesn't represent just this battery group
+#*        *##if ( $lab.hl7TextInfo.reportStatus == "P" )
 									<statusCode code="preliminary"/>
-#*    *##elseif ( $lab.reportStatus == "C" )
+#*        *##elseif ( $lab.hl7TextInfo.reportStatus == "C" )
 									<statusCode code="corrected"/>
-#*    *##else
+#*        *##else
 									<statusCode code="final"/>
-#*    *##end
+#*        *##end
+#*        *##foreach( $labEntry in $labGroup.getMeasurement() )
 									<component typeCode="COMP" contextConductionInd="true">
 										<templateId root="2.16.840.1.113883.3.1818.10.4.25"/>
 										<!-- Result Component -->
 										<observation classCode="OBS" moodCode="EVN">
-											<id extension="$lab.accessionNumber" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
-											<code nullFlavor='UNK'/>
-											<text>$lab.discipline</text>
-#*    *##if ( $lab.reportStatus == "P" )
+											<id extension="${patient.getLabExtValue("$labEntry.id", "accession")}" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
+											<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}"            
+												codeSystemName="LOINC"/>
+											<text>${patient.getLabExtValue("$labEntry.id", "name")}</text>
+## ValueSet OID not yet available - using Business Name/Description for now
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "olis_status")} == "P" )
 											<statusCode code="preliminary"/>
-#*    *##elseif ( $lab.reportStatus == "C" )
+#*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "olis_status")} == "C" )
 											<statusCode code="corrected"/>
-#*    *##else
+#*            *##else
 											<statusCode code="final"/>
-#*    *##end
-											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.getObrDate()))"/>
-											<value xsi:type="ST">$lab.finalResultCount</value>
-#*    *##if ( $lab.resultStatus == "A" )
+#*            *##end
+											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+											<value xsi:type="ST">$labEntry.dataField.replaceAll("<br\s*/>","$eol")</value>
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "abnormal")} == "A" )
 											<interpretationCode code="A"/>
-#*    *##else
+#*            *##else
 											<interpretationCode code="N"/>
-#*    *##end
+#*            *##end
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "labname")} != "" )
+											<performer typeCode="PRF">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.19"/>
+												<!--Performer Participation-->
+												<time value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+												<assignedEntity>
+													<id extension="TBD" root="TBD"/>
+													<representedOrganization classCode="ORG" determinerCode="INSTANCE">
+														<id extension="TBD" root="TBD"/>
+														<name>${patient.getLabExtValue("$labEntry.id", "labname")}</name>
+													</representedOrganization>
+												</assignedEntity>
+											</performer>
+#*            *##end
 											<entryRelationship typeCode="COMP">
 												<procedure classCode="PROC" moodCode="EVN">
 													<!-- specimen collection date -->
-													<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.getObrDate()))"/>
+													<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 												</procedure>
 											</entryRelationship>
-										</observation>        										
+#*            *##if ( $labEntry.comments != "" )
+											<!-- Result Notes -->
+											<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+												<!-- Comment Observation -->
+												<observation classCode="OBS" moodCode="EVN">
+													<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation Comment"/>
+													<value xsi:type="ST">$labEntry.comments</value>
+												</observation>												
+											</entryRelationship>
+#*            *##end
+										</observation>
 									</component>
-								</organizer>								
+#*        *##end
+								</organizer>
 							</entryRelationship>
-						</observation>						
+#*    *##end
+						</observation>
 					</entry>
 #**##end
 				</section>

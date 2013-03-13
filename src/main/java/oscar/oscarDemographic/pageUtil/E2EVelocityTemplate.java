@@ -92,11 +92,13 @@ public class E2EVelocityTemplate {
 	// Assembles the data model & predefined velocity template to yield an E2E document
 	public String export(PatientExport record) {
 		E2EResources e2eResources = new E2EResources();
+		String eol = System.getProperty("line.separator");
 		
 		// Create Data Model
 		context = VelocityUtils.createVelocityContextWithTools();
 		context.put("patient", record);
 		context.put("e2e", e2eResources);
+		context.put("eol", eol);
 		
 		// Temporary Author/Custodian Hardcode
 		context.put("authorId", "OSCAR EMR");
