@@ -105,9 +105,13 @@ Allergies and Intolerances - (Reaction List)
 #*    *##else
 									<code nullFlavor='NA'/>
 #*    *##end
+#*    *##if ( $allergy.getStartDate() )
 									<effectiveTime>
 										<low value="$dateTool.format('yyyyMMdd', $allergy.getStartDate())"/>
 									</effectiveTime>
+#*    *##else
+									<effectiveTime nullFlavor="NI"/>
+#*    *##end
 									<participant typeCode="CSM" contextControlCode="OP">
 										<participantRole classCode="MANU">
 											<playingEntity classCode="MMAT" determinerCode="INSTANCE">
@@ -669,7 +673,7 @@ Problems and Conditions - Problem List
 						<observation classCode="OBS" moodCode="EVN">
 							<id extension="$problem.id" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
 							<code code="$problem.getDxresearchCode()" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
-codeSystemName="ICD-9" displayName="${patient.getICD9Description("$problem.getDxresearchCode()")}"/>
+codeSystemName="ICD-9" displayName="${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}"/>
 #*    *##if ( $problem.status == "A" )
 							<statusCode code="active"/>
 #*    *##else
@@ -678,8 +682,8 @@ codeSystemName="ICD-9" displayName="${patient.getICD9Description("$problem.getDx
 							<effectiveTime xsi:type="IVL_TS">
 								<low value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
 							</effectiveTime>
-							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="${patient.getICD9Description("$problem.getDxresearchCode()")}">
-								<originalText>${patient.getICD9Description("$problem.getDxresearchCode()")}</originalText>
+							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}">
+								<originalText>${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}</originalText>
 							</value>
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
