@@ -252,7 +252,8 @@ String date = year+"-"+month+"-"+day;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
+	
+	<script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
 	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>                  
     <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
 
@@ -513,7 +514,17 @@ overflow-y:scroll;
         opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
 	}
 <%}%>	
-	
+
+
+function fsPopup(width,height,url,window) {
+	<%
+		
+		if(securityMgr.hasWriteAccess("_flowsheet."+mFlowsheet.getName(),roleName$)) {
+	%>
+
+	return popup(width,height,url,window);
+	<%}%>
+}
 	</script>
 
 		
@@ -584,7 +595,7 @@ overflow-y:scroll;
 					%>
 						
 						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>">
-						<button  class="btn <%=isDisabled%>" <%=btnSelected%> title="<%=flowSheetGroups.getDisplayName()%>" >
+						<button  class="btn <%=isDisabled%>"  title="<%=flowSheetGroups.getDisplayName()%>" >
 						<%
 						if(flowSheetGroups.getName().toUpperCase().equals("DIAB2")){
 							out.print("DIAB");
@@ -614,10 +625,43 @@ overflow-y:scroll;
     <div id="dxAlert" class="alert" <%=dxAlert%>>
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
-    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=1&providerNo=999998&quickList="><b>Add Diagnosis</b></a>
+    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=1&providerNo=999998&quickList=')"><b>Add Diagnosis</b></a>
     </div>
        
    		<%=flowSheet%>
+   		
+<!-- Modal -->
+<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel"></h3>
+</div>
+<div class="modal-body" style="text-align:center">
+ <form name="EctDeleteDataForm" method="post" action="/oscar_master/oscarEncounter/oscarMeasurements/DeleteData2.do" id="measurementForm">
+
+               <input type="hidden" name="value(numType)" value="<%=demographic_no%>"/>
+               <input type="hidden" name="template"  id="deleteTemplate" value="<%=temp%>"/>
+
+               <input type="hidden" name="id" id="deleteId" value=""/>
+               <input type="hidden" name="deleteCheckbox" id="deleteCheck" value=""/>
+               
+               <h1 id="deleteMeas"></h1>
+               <h3 id="deleteObsDate"></h3>
+               <hr>
+               <h4 id="deleteComment"></h4>
+               
+          
+</div>
+<div class="modal-footer">
+<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Close">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+<input type="submit" class="btn btn-danger" name="delete" id="deleteButton" value="Delete" disabled> 
+</security:oscarSec>
+</form>
+</div>
+</div>
+<!-- modal end -->
+   
 
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 		
@@ -849,7 +893,7 @@ overflow-y:scroll;
 
 <!-- hidden fields for form -->
 <div class="well well-small" id="add-box-<%=measure%>" style="display:none;">
-  <i class="icon-calendar"></i> 
+  <!--TODO <i class="icon-calendar"></i> --> 
 <%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA"))){%> 
                                 
                             <label class="radio inline">
@@ -928,9 +972,10 @@ overflow-y:scroll;
     <div class="preventionProcedure" <%=hider%>  
     <%if(mdb.getRemoteFacility() == null){ %>
     style="cursor: hand; cursor: pointer;"
-    onclick="javascript:addMeas('&measurement=<%= response.encodeURL( measure) %>','<%= URLEncoder.encode(temp,"UTF-8") %>&amp;id=<%=hdata.get("id")%>');" 
+    href="#deleteModal" role="button" data-toggle="modal"
+    onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=com%>','<%=hdata.get("id")%>')" 
     <%}%>
-    >
+     
        
 		
 <!-- mValue -->
@@ -1257,6 +1302,8 @@ function createAddAll(d,t){
 	
 <div>
 
+
+
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -1296,6 +1343,24 @@ $("#add_renal").click(function(){
 	$('#minus-renal').toggle();
 	<%=recListBuffer.toString()%>
 });
+
+
+
+function deleteMeasurement(type,value,date,comment,id){   
+
+	document.getElementById('myModalLabel').innerHTML= type;
+    document.getElementById('deleteMeas').innerHTML = value;
+    document.getElementById('deleteObsDate').innerHTML = date;
+    document.getElementById('deleteComment').innerHTML = comment;
+
+    document.getElementById('deleteId').value=id;
+    document.getElementById('deleteCheck').value=id;
+
+    document.getElementById('deleteButton').disabled=false;
+    
+}
+
+
 
 function checked_check(el)
 {
