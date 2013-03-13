@@ -198,9 +198,11 @@ ResultSet rsProviders = apptMainBean.queryResults("%", "search_provider_dt");
 while(rsProviders.next()) {
 	String providerNo = rsProviders.getString("provider_no");
 	ProviderBillCenter pbc = providerBillCenterDao.find(providerNo);
+	if(pbc != null) {
 	%>
-	providerBillCenterMap['<%=providerNo%>'] = '<%=pbc.getBillCenterCode()%>';
+		providerBillCenterMap['<%=providerNo%>'] = '<%=pbc.getBillCenterCode()%>';
 	<%
+	}
 }
 %>
 
