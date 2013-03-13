@@ -68,12 +68,12 @@ public class E2EExportValidator {
 			result = isValid;
         } catch (ParserConfigurationException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
         } catch (SAXException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
         } catch (IOException e) {
@@ -106,27 +106,27 @@ public class E2EExportValidator {
 	        result = isValid;
         } catch (ParserConfigurationException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
         } catch (SAXNotRecognizedException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
         } catch (SAXNotSupportedException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
         } catch (SAXException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
         } catch (IOException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
         }
@@ -137,21 +137,21 @@ public class E2EExportValidator {
 		
 	    public void warning(SAXParseException e) throws SAXException {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getMessage());
+        		MiscUtils.getLogger().error("Validation Error",e);
         	}
         	isValid = false;
 	    }
 
 	    public void error(SAXParseException e) throws SAXException {
 	    	if (loggingErrors) {
-	    		MiscUtils.getLogger().error(e.getMessage());
+	    		MiscUtils.getLogger().error("Validation Error",e);
 	    	}
         	isValid = false;
 	    }
 
 	    public void fatalError(SAXParseException e) throws SAXException {
 	    	if (loggingErrors) {
-	    		MiscUtils.getLogger().error(e.getMessage());
+	    		MiscUtils.getLogger().error("Validation Error",e);
 	    	}
         	isValid = false;
 	    }
