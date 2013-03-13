@@ -42,10 +42,11 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
-import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.ProviderData;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.oscarDemographic.pageUtil.PatientExport.Lab;
 
 /**
  * 
@@ -268,7 +269,7 @@ public class PatientExportTest extends DaoTestFixtures {
 	@Test
 	public void testLabs() {
 		PatientExport p = new PatientExport(demographicNo.toString());
-		List<Hl7TextInfo> list = p.getLabs();
+		List<Lab> list = p.getLabs();
 		if (p.hasLabs()) {
 			// exLaboratoryResults must be true
 			assertNotNull("lab results unexpectedly null",list);
