@@ -23,7 +23,6 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-//import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -34,48 +33,65 @@ import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.ProviderDataDao;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * 
  * @author rrusk
  * This class tests the model used for patient data export
  */
-public class PatientExportTest {
-		
+public class PatientExportTest extends DaoTestFixtures {
+	
+    private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+    private static ProviderDataDao providerDataDao = (ProviderDataDao)SpringUtils.getBean("providerDataDao");
+    private static Integer demographicNo;
+
     @BeforeClass
-    public static void onlyOnce() throws Exception {
-    	// Loading in the test data takes too long to do it
-    	// before each unit test.
-    	//
-    	// In the sql script, configure FOREIGN_KEYS_CHECK=0
-    	// before loading the db and reset to original value
-    	// at end.
-    	assertEquals("Error loading test data",
-    			SchemaUtils.loadFileIntoMySQL(System.getProperty("basedir")+
-    					"/src/test/resources/e2e/e2e-test-db.sql"),0);
-    }
+	public static void onlyOnce() throws Exception {
+		SchemaUtils.restoreTable("demographicSets", "lst_gender", "demographic_merged",
+				"admission", "program", "health_safety", "demographic", "provider",
+				"allergies", "drugs", "preventions", "dxresearch", "patientLabRouting",
+				"icd9");
+    	Demographic entity = new Demographic();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setDemographicNo(null);
+		demographicDao.save(entity);
+		demographicNo = entity.getDemographicNo();
+	}
     
     // Testing constructors
 
     @Test
     public void testPatientExport0() {
+    	
     	// very little can be done with default constructor
     	assertNotNull("PatientExport default constructor failed",new PatientExport());
     }
 
     @Test
 	public void testPatientExport1() {
-		PatientExport p = new PatientExport("1");
+    	assertNotNull(demographicNo);
+		assertNotNull(demographicDao.getDemographic(demographicNo.toString()));
+		assertNotNull(demographicDao.getDemographicById(demographicNo));
+		assertNotNull(demographicDao.getClientByDemographicNo(demographicNo));
+		
+		PatientExport p = new PatientExport(demographicNo.toString());
 		assertNotNull("PatientExport object unexpectedly null",p);
-		assertEquals("Unexpected demographic number",p.getDemographicNo(),"1");
+		assertEquals("Unexpected demographic number",p.getDemographicNo(),demographicNo.toString());
 	}
-	
+    
     // Testing utility methods that are used in other tests
     @Test
     public void testGetCurrentDate() {
@@ -93,16 +109,16 @@ public class PatientExportTest {
     
 	@Test
 	public void testGetSetDemographicNo() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		assertNotNull("PatientExport object unexpectedly null", p);
 		p.setDemographicNo("599999");
 		assertEquals("Wrong demographicNo", p.getDemographicNo(),"599999");
-		p.setDemographicNo("1");
+		p.setDemographicNo(demographicNo.toString());
 	}
 	
 	@Test
-	public void testGetSetFirstName() {
-		PatientExport p = new PatientExport("1");
+	public void testGetSetFirstName() {		
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getFirstName();
 		p.setFirstName("Jane");
 		assertEquals(p.getFirstName(),"Jane");
@@ -112,7 +128,7 @@ public class PatientExportTest {
 	
 	@Test
 	public void testGetSetLastName() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getLastName();
 		p.setLastName("Doe");
 		assertEquals(p.getLastName(),"Doe");
@@ -121,8 +137,8 @@ public class PatientExportTest {
 	}
 	
 	@Test
-	public void testGetSetGender() {
-		PatientExport p = new PatientExport("1");
+	public void testGetSetGender() {		
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getGender();
 		p.setGender("new_gender");
 		assertEquals(p.getGender(),"new_gender");
@@ -132,7 +148,7 @@ public class PatientExportTest {
 	
 	@Test
 	public void testGetSetDateOfBirth() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getDateOfBirth();
 		p.setDateOfBirth("new_date");
 		assertEquals(p.getDateOfBirth(),"new_date");
@@ -142,7 +158,7 @@ public class PatientExportTest {
 	
 	@Test
 	public void testGetSetMonthOfBirth() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getMonthOfBirth();
 		p.setMonthOfBirth("new_month");
 		assertEquals(p.getMonthOfBirth(),"new_month");
@@ -152,7 +168,7 @@ public class PatientExportTest {
 	
 	@Test
 	public void testGetSetYearOfBirth() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getYearOfBirth();
 		p.setYearOfBirth("new_year");
 		assertEquals(p.getYearOfBirth(),"new_year");
@@ -162,7 +178,7 @@ public class PatientExportTest {
 	
 	@Test
 	public void testGetSetHin() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getHin();
 		p.setHin("new_Hin");
 		assertEquals(p.getHin(),"new_Hin");
@@ -172,7 +188,7 @@ public class PatientExportTest {
 	
 	@Test
 	public void testGetSetProviderNo() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String old = p.getProviderNo();
 		p.setProviderNo("new_provider_no");
 		assertEquals(p.getProviderNo(),"new_provider_no");
@@ -183,7 +199,7 @@ public class PatientExportTest {
 	// Test convenience methods
 	@Test
 	public void testGetBirthDate() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String result = p.getBirthDate();
 		assertNotNull("Birth date unexpectedly null", result);
 		assertTrue("Birth date unexpectedly empty", !result.isEmpty());
@@ -191,7 +207,7 @@ public class PatientExportTest {
 	
 	@Test
 	public void testGetGenderDesc() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		String result = p.getBirthDate();
 		assertNotNull("GenderDesc unexpectedly null", result);
 		assertFalse("GenderDesc unexpectedly empty", result.isEmpty());
@@ -199,8 +215,8 @@ public class PatientExportTest {
 	
 	// Test allergies
 	@Test
-	public void testAllergies() {
-		PatientExport p = new PatientExport("1");
+	public void testAllergies() {		
+		PatientExport p = new PatientExport(demographicNo.toString());
 		List<Allergy> list = p.getAllergies();
 		if (p.hasAllergies()) {
 			// exAllergiesAndAdverseReachtions must be true
@@ -211,7 +227,7 @@ public class PatientExportTest {
 			p.setExAllergiesAndAdverseReactions(true);
 			assertTrue(p.hasAllergies());
 		}
-		if (!p.hasAllergies() && list!=null) {
+		if (!p.hasAllergies() && list!=null && !list.isEmpty()) {
 			// exAllergiesAndAdverseReachtions must be false
 			p.setExAllergiesAndAdverseReactions(true);
 			assertTrue(p.hasAllergies());
@@ -224,7 +240,7 @@ public class PatientExportTest {
 	// Test immunizations
 	@Test
 	public void testImmunizations() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		List<Prevention> list = p.getImmunizations();
 		if (p.hasImmunizations()) {
 			// exImmunizations must be true
@@ -246,15 +262,12 @@ public class PatientExportTest {
 		}
 	}
 	
-	@Test
-	public void testGetImmuExtValue() {
-		//TODO
-	}
+	//TODO testGetImmuExtValue()
 	
 	// Test laboratory reports
 	@Test
 	public void testLabs() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		List<Hl7TextInfo> list = p.getLabs();
 		if (p.hasLabs()) {
 			// exLaboratoryResults must be true
@@ -275,11 +288,15 @@ public class PatientExportTest {
 			assertFalse("has labs unexpectedly not false",p.hasLabs());
 		}
 	}
+
+	//TODO testGetLabExtValue() (2 versions)
+	
+	//TODO Possibly test classes Lab and LabGroup
 	
 	// Test medications
 	@Test
 	public void testMedications() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		List<Drug> list = p.getMedications();
 		if (p.hasMedications()) {
 			// exMedicationsAndTreatments must be true
@@ -311,15 +328,12 @@ public class PatientExportTest {
 		assertTrue(p.isActiveDrug(futureDate));
 	}
 	
-	@Test
-	public void testSortByDin() {
-		// TODO
-	}
+	// TODO testSortByDin()
 
 	// Test problem list
 	@Test
 	public void testProblems() {
-		PatientExport p = new PatientExport("1");
+		PatientExport p = new PatientExport(demographicNo.toString());
 		List<Dxresearch> list = p.getProblems();
 		if (p.hasProblems()) {
 			// exProblemList must be true
@@ -353,19 +367,37 @@ public class PatientExportTest {
 	// Test remaining Utility methods (others tested above)
 	@Test
 	public void testGetProviderFirstName() {
-		PatientExport p = new PatientExport("1");
-		// the test dataset has a row in the provider
-		// table for provider_no '000000'
-		String provider = p.getProviderFirstName("000000");
+		PatientExport p = new PatientExport(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+		
+		String provider = p.getProviderFirstName(list.get(0).getId());
 		assertNotNull(provider);
 		assertFalse(provider.isEmpty());
+		assertTrue(provider.equals(list.get(0).getFirstName()));
 	}
 	
 	@Test
 	public void testGetProviderLastName() {
-		PatientExport p = new PatientExport("1");
-		String provider = p.getProviderLastName("000000");
+		PatientExport p = new PatientExport(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+		
+		String provider = p.getProviderLastName(list.get(0).getId());
 		assertNotNull(provider);
 		assertFalse(provider.isEmpty());
+		assertTrue(provider.equals(list.get(0).getLastName()));
 	}
 }
