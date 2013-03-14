@@ -141,16 +141,16 @@ function searchAll() {
 
 </script>
 </head>
-<body bgcolor="white" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
+<body bgcolor="white" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
 <div id="demographicSearch" class="searchBox">
 	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
 	<%--@ include file="zdemographictitlesearch.htm"--%>
     <div class="header deep">
-        <div class="title"><bean:message key="demographic.demographicsearch2apptresults.findPatient" /></div>  
+        <div class="title"></div>  
     </div>
     <ul>
         <li>
-            <div class="label"><bean:message key="demographic.zdemographicfulltitlesearch.msgBy" />:
+            <div class="label">
             </div>
             <select class="wideInput" name="search_mode">
                 <option value="search_name" <%=request.getParameter("search_mode").equals("search_name")?"selected":""%>>
@@ -174,7 +174,7 @@ function searchAll() {
             </select>
         </li>
         <li>
-            <div class="label"><bean:message key="demographic.zdemographicfulltitlesearch.msgInput" />:</div>
+            <div class="label"> </div>
             <input type="text" class="wideInput" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17" MAXLENGTH="100"/>
         </li>
         <li>
@@ -243,6 +243,8 @@ function searchAll() {
 	</form>
 </div>
 
+
+
 <div id="searchResults">
     <div class="header deep">
         <div class="title"><bean:message key="demographic.demographicsearch2apptresults.patientsRecord" />
@@ -290,20 +292,41 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 <%}%>
 </script>
 
-<ul bgcolor="#C0C0C0">
-	<form method="post" name="addform"
-		action="../appointment/addappointment.jsp">
-        <li class="tableHeadings deep">
-            <div class="demoId"><bean:message key="demographic.demographicsearch2apptresults.demographicId" /></div>
-            <div class="lastName"><bean:message key="demographic.demographicsearch2apptresults.lastName" /></div>
-            <div class="firstName"><bean:message key="demographic.demographicsearch2apptresults.firstName" /></div>
-            <div class="age"><bean:message key="demographic.demographicsearch2apptresults.age" /></div>
-            <div class="rosterStatus"><font size='-1'><bean:message key="demographic.demographicsearch2apptresults.rosterStatus" /></font></div>
-            <div class="sex"><bean:message key="demographic.demographicsearch2apptresults.sex" /></div>
-            <div class="dob"><bean:message key="demographic.demographicsearch2apptresults.DOB" /></div>
-            <div class="doctor"><bean:message key="demographic.demographicsearch2apptresults.doctor" /></div>
-		</li>
 
+
+
+	<form method="post" name="addform" action="../appointment/addappointment.jsp">
+        
+<table>
+        <tr class="tableHeadings deep">
+        
+
+		<td class="demoIdSearch">
+		<bean:message key="demographic.demographicsearch2apptresults.demographicId" />
+       </td>
+
+		<td class="lastname">
+		<bean:message key="demographic.demographicsearch2apptresults.lastName" />
+                </td>
+		<td class="firstname">
+		<bean:message key="demographic.demographicsearch2apptresults.firstName" />
+                </td>
+		<td class="age">
+		<bean:message key="demographic.demographicsearch2apptresults.age" />
+                </td>
+		<td class="rosterStatus">
+		<bean:message key="demographic.demographicsearch2apptresults.rosterStatus" />
+                </td>
+		<td class="sex">
+		<bean:message key="demographic.demographicsearch2apptresults.sex" />
+                </td>
+        <td class="dob">
+        <bean:message key="demographic.demographicsearch2apptresults.DOB" />
+                </td>
+		<td class="doctor">
+		<bean:message key="demographic.demographicsearch2apptresults.doctor" />
+                </td>
+	</tr>
 
 
 <%
@@ -354,22 +377,21 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 			bgColor = rowCounter%2==0?"#EEEEFF":"white";
 
 %>
-
-   <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
+<tr style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 		onClick="document.forms[0].demographic_no.value=<%=demo.getDemographicNo()%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=demo.getDemographicNo()%>','<%=URLEncoder.encode(demo.getLastName())%>','<%=URLEncoder.encode(demo.getFirstName())%>','<%=URLEncoder.encode(demo.getChartNo())%>','<%=request.getParameter("messageId")%>','<%=demo.getProviderNo()%>','')">
 
-		<div class="demoId"><input type="submit" class="mbttn" name="demographic_no" value="<%=demo.getDemographicNo()%>"
+		<td class="demoId"><input type="submit" class="mbttn" name="demographic_no" value="<%=demo.getDemographicNo()%>"
 			onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=demo.getDemographicNo()%>','<%=URLEncoder.encode(demo.getLastName())%>','<%=URLEncoder.encode(demo.getFirstName())%>','<%=URLEncoder.encode(demo.getChartNo())%>','<%=request.getParameter("messageId")%>','<%=demo.getProviderNo()%>','')">
-        </div>
-		<div class="lastName"><%=Misc.toUpperLowerCase(demo.getLastName())%></div>
-		<div class="firstName"><%=Misc.toUpperLowerCase(demo.getFirstName())%></div>
-		<div class="age"><%=demo.getAge()%></div>
-		<div class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></div>
-		<div class="sex"><%=demo.getSex()%></div>
-		<div class="dob"><%=demo.getYearOfBirth() + "-" + demo.getMonthOfBirth() + "-" + demo.getDateOfBirth()%></div>
-        <div class="doctor"><%=providerBean.getProperty(demo.getProviderNo())==null?"":providerBean.getProperty(demo.getProviderNo())%>
-        </div>
-	</li>
+        </td>
+		<td class="lastName"><%=Misc.toUpperLowerCase(demo.getLastName())%></td>
+		<td class="firstName"><%=Misc.toUpperLowerCase(demo.getFirstName())%></td>
+		<td class="age"><%=demo.getAge()%></td>
+		<td class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></td>
+		<td class="sex"><%=demo.getSex()%></td>
+		<td class="dob"><%=demo.getYearOfBirth() + "-" + demo.getMonthOfBirth() + "-" + demo.getDateOfBirth()%></td>
+        <td class="doctor"><%=providerBean.getProperty(demo.getProviderNo())==null?"":providerBean.getProperty(demo.getProviderNo())%></td>
+        </tr>
+
 <%
     }
   }
@@ -382,13 +404,13 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		  bgColor = rowCounter%2==0?"#EEEEFF":"white";
 		  DemographicTransfer demographicTransfer=matchingDemographicTransferScore.getDemographicTransfer();
 %>
-		   <li style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
+		   <tr style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 			   onClick="document.forms[0].demographic_no.value=<%=demographicTransfer.getCaisiDemographicId()%>;addName('<%=demographicTransfer.getCaisiDemographicId()%>','<%=URLEncoder.encode(demographicTransfer.getLastName())%>','<%=URLEncoder.encode(demographicTransfer.getFirstName())%>','','<%=request.getParameter("messageId")%>','<%=demographicTransfer.getCaisiProviderId()%>','<%=demographicTransfer.getIntegratorFacilityId()%>')">
-			<div class="demoId">
+			<td class="demoId" colspan="8">
 				<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
-            </div>
-			<div class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></div>
-			<div class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></div>
+            </td>
+			<td class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></td>
+			<td class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></td>
 <%
 		String ageString="";
 		String bdayString="";
@@ -400,11 +422,11 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 			bdayString=DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate());
 		}
 %>
-			<div class="age"><%=ageString%></div>
-			<div class="rosterStatus"></div>
-			<div class="sex"><%=demographicTransfer.getGender()%></div>
-			<div class="dob"><%=bdayString%></div>
-	        <div class="doctor">
+			<td class="age"><%=ageString%></td>
+			<td class="rosterStatus"></td>
+			<td class="sex"><%=demographicTransfer.getGender()%></td>
+			<td class="dob"><%=bdayString%></td>
+	        <td class="doctor">
 <% 
    		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
    		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
@@ -420,8 +442,8 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
    		}
 %>
         	<%=providerName%>
-			</div>
-		</li>
+			</td>
+		</tr>
 <%	  
 		}
  	}
@@ -432,9 +454,9 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
   }
   
 %>
-	</form>
-
-</ul>
+	
+</table>
+</form>
 <%
 	int nLastPage=0,nNextPage=0;
 	nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
