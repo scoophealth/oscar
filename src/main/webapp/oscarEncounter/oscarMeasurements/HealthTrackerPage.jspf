@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<!DOCTYPE html>
 <%long startTime = System.currentTimeMillis();%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ page import="oscar.oscarRx.util.*" %>
@@ -246,7 +247,7 @@ String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
 String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
 String date = year+"-"+month+"-"+day;
 %>
-<!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -254,7 +255,7 @@ String date = year+"-"+month+"-"+day;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-	<script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/Oscar.js"></script>
 	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>        
     <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
         
@@ -392,7 +393,7 @@ overflow-y:scroll;
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="<%=request.getContextPath() %>/js/html5.js"></script>
     <![endif]-->
 
     <!-- Fav and touch icons -->
@@ -606,8 +607,8 @@ function fsPopup(width,height,url,window) {
 						}
 					%>
 						
-						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>">
-						<button  class="btn <%=isDisabled%>"  title="<%=flowSheetGroups.getDisplayName()%>" >
+						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=isDisabled%>" title="<%=flowSheetGroups.getDisplayName()%>">
+					
 						<%
 						if(flowSheetGroups.getName().toUpperCase().equals("DIAB2")){
 							out.print("DIAB");
@@ -617,7 +618,7 @@ function fsPopup(width,height,url,window) {
 						
 						}
 						%> 
-						</button></a>
+						</a>
 					<% 
 										
 					} 
@@ -1394,6 +1395,8 @@ function toggle_visibility(id) {
     else
        e.style.display = 'block';
  }
+
+
 </script>
 
 
