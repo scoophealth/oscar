@@ -60,7 +60,7 @@ a:hover {
 	TEXT-DECORATION: underline;
 }
 
-.deep { background-color: #B7B18D; }
+.deep { /*background-color: #B7B18D; */}
 .weak { background-color: #EEEEFF; }
 
 .title {
@@ -77,7 +77,6 @@ a:hover {
 	background-color: white;
 	width:100%;
 	border-collapse:collapse;
-	
 }
 
 .header {
