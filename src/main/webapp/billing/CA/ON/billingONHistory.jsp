@@ -93,17 +93,10 @@ for(int i=0; i<aL.size(); i=i+2) {
 	nItems++;
 	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
 	BillingItemData itObj = (BillingItemData) aL.get(i+1);
-	String strBillType = obj.getPay_program();
-	if(strBillType != null) {
-		if(strBillType.matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
-			if(BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"").equals("Settled")) {
-				strBillType += " Settled";
-			}
-		} else {
-			strBillType = BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"");
-		}
-	} else {
-		strBillType = "";
+	String strBillType = "";
+	String strPayProgram = obj.getPay_program();
+	if(strPayProgram != null) {
+		strBillType = BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"");
 	}
 %>
 	<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
