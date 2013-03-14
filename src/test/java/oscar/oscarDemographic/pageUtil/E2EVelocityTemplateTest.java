@@ -58,6 +58,19 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		Demographic entity = new Demographic();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDemographicNo(null);
+		// Ugly hack to ensure that oscar_test has valid numeric
+		// data for the year, month and day in demographic table.
+		// Without this fix, birthDate ends up being "yearmoda"
+		// which causes an XML schema validation error.
+		if (entity.getYearOfBirth().toLowerCase().contains("year")) {
+			entity.setYearOfBirth("1940");
+		}
+		if (entity.getMonthOfBirth().toLowerCase().contains("mo")) {
+			entity.setMonthOfBirth("09");
+		}
+		if (entity.getDateOfBirth().toLowerCase().contains("da")) {
+			entity.setDateOfBirth("25");
+		}
 		demographicDao.save(entity);
 		demographicNo = entity.getDemographicNo();
 	}
@@ -78,14 +91,8 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	        s = e2etemplate.export(p);
         } catch (Exception e) {
         	MiscUtils.getLogger().error(e.getMessage());
-	        fail();
+        	fail();
         }
-		
-		// Ugly hack because oscar_test doesn't have valid
-		// values for year/month/day in demographic table.
-		// Substitutes "19400925" if birthTime is "yearmoda".
-		s = s.replace("<birthTime value=\"yearmoda\"/>",
-				"<birthTime value=\"19400925\"/>");
 		
 		assertNotNull(s);
 		assertFalse(s.isEmpty());
