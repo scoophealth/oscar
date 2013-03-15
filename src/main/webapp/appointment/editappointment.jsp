@@ -24,6 +24,7 @@
 
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%
   if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
@@ -53,6 +54,7 @@
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+	org.oscarehr.PMmodule.dao.ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>
 <%
   ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
@@ -671,7 +673,7 @@ if (bMultisites) { %>
         <li class="weak row">
             <div class="label"><bean:message key="Appointment.formLastCreator" />:</div>
             <div class="input">
-<% String lastCreatorNo = bFirstDisp?((String)appt.get("creator")):request.getParameter("user_id"); %>
+		<% String lastCreatorNo = appt.get("lastUpdateUser")==null?(String)appt.get("creator"):providerDao.getProvider((String)appt.get("lastUpdateUser")).getFormattedName(); %>
                 <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
             </div>
             <div class="space">&nbsp;</div>
