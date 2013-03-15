@@ -68,6 +68,7 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
+<%@page import="org.apache.commons.lang.StringUtils" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 %>
@@ -261,9 +262,11 @@
 
   // set default value
   // use parameter -> history record
-  ProfessionalSpecialist specialist = professionalSpecialistDao.getByReferralNo(r_doctor_ohip);
-  if(specialist != null) {
+  if( StringUtils.trimToNull(r_doctor_ohip) != null ) {
+  	ProfessionalSpecialist specialist = professionalSpecialistDao.getByReferralNo(r_doctor_ohip);
+  	if(specialist != null) {
   	          	r_doctor = specialist.getLastName() + "," + specialist.getFirstName();
+  	}
   }
 
   String paraName = request.getParameter("dxCode");
@@ -653,8 +656,8 @@ int ctlCount = 0;
 
   CtlBillingServiceDao cbsDao = SpringUtils.getBean(CtlBillingServiceDao.class); 
   for(Object[] o : cbsDao.findServiceTypesByStatus("A")) {
-	ctlcode = String.valueOf(o[0]);
-	ctlcodename = String.valueOf(o[1]);
+	ctlcodename = String.valueOf(o[0]);
+	ctlcode = String.valueOf(o[1]);
 	ctlCount++;
 	if(ctlcode.equals(ctlBillForm)) {
 		currentFormName = ctlcodename;
