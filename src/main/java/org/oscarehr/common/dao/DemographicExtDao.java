@@ -54,7 +54,7 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
  			throw new IllegalArgumentException();
  		}
 
- 		Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.demographicNo=?");
+ 		Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.demographicNo=? order by d.dateCreated");
  		query.setParameter(1, demographicNo);
 
  	    @SuppressWarnings("unchecked")
@@ -192,7 +192,7 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
 
     public Map<String,String> getAllValuesForDemo(Integer demo){
     	Map<String,String> retval =  new HashMap<String,String>();
-    	Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.demographicNo=?");
+    	Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.demographicNo=? order by d.dateCreated");
  		query.setParameter(1, demo);
 
  		@SuppressWarnings("unchecked")
