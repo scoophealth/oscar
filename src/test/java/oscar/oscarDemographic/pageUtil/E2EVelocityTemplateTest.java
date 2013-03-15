@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.DaoTestFixtures;
@@ -46,6 +47,7 @@ import org.oscarehr.util.SpringUtils;
  */
 public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	
+	private static Logger logger = MiscUtils.getLogger();
     private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
     private static Integer demographicNo;
     
@@ -90,7 +92,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		try {
 	        s = e2etemplate.export(p);
         } catch (Exception e) {
-        	MiscUtils.getLogger().error(e.getMessage());
+        	logger.error(e.getMessage());
         	fail();
         }
 		
@@ -113,4 +115,35 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		logErrors = false;  // following statement should cause error, don't log
 		assertFalse(E2EExportValidator.isValidXML(s.replace("DOCSECT", "DOXSECT"), logErrors));
 	}
+	
+	/*
+	@Test
+	public void tortureTest() {
+		long startTime = System.nanoTime();
+		System.out.println("TortureTest start time = "+startTime);
+		PatientExport p = new PatientExport(demographicNo.toString());
+		boolean logErrors = false;
+		long prev = startTime;
+		long curr = prev;
+		for (int i = 0; i < 10000; i++) {
+			if (i%500 == 0) {
+				prev = curr;
+				curr = System.nanoTime();
+				System.out.println("["+i+"] "+curr);
+			}
+			String s = null;
+			try {
+				E2EVelocityTemplate e2etemplate = new E2EVelocityTemplate();
+		        s = e2etemplate.export(p);
+	        } catch (Exception e) {
+	        	logger.error(e.getMessage());
+	        	fail();
+	        }
+			assertTrue(E2EExportValidator.isValidXML(s, logErrors));
+		}
+		long stopTime = System.nanoTime();
+		System.out.println("TortureTest stop time = "+stopTime);
+		System.out.println("Total time (sec) = " + (stopTime-startTime)/1000000000.0);
+	}
+	*/
 }

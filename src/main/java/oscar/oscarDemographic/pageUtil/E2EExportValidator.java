@@ -31,6 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -43,6 +44,7 @@ import org.xml.sax.XMLReader;
 
 public class E2EExportValidator {
 	
+	private static Logger logger=MiscUtils.getLogger();
 	private static boolean isValid;  // used in ErrorHandler to flag invalid documents
 	private static boolean loggingErrors;
 	
@@ -68,17 +70,17 @@ public class E2EExportValidator {
 			result = isValid;
         } catch (ParserConfigurationException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
         } catch (SAXException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
         } catch (IOException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error(e.getCause());
+        		logger.error(e.getCause());
         	}
         	isValid = false;
         }
@@ -106,27 +108,27 @@ public class E2EExportValidator {
 	        result = isValid;
         } catch (ParserConfigurationException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
         } catch (SAXNotRecognizedException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
         } catch (SAXNotSupportedException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
         } catch (SAXException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
         } catch (IOException e) {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
         }
@@ -137,21 +139,21 @@ public class E2EExportValidator {
 		
 	    public void warning(SAXParseException e) throws SAXException {
         	if (loggingErrors) {
-        		MiscUtils.getLogger().error("Validation Error",e);
+        		logger.error("VALIDATION ERROR: " + e.getMessage());
         	}
         	isValid = false;
 	    }
 
 	    public void error(SAXParseException e) throws SAXException {
 	    	if (loggingErrors) {
-	    		MiscUtils.getLogger().error("Validation Error",e);
+	    		logger.error("VALIDATION ERROR: " + e.getMessage());
 	    	}
         	isValid = false;
 	    }
 
 	    public void fatalError(SAXParseException e) throws SAXException {
 	    	if (loggingErrors) {
-	    		MiscUtils.getLogger().error("Validation Error",e);
+	    		logger.error("VALIDATION ERROR: " + e.getMessage());
 	    	}
         	isValid = false;
 	    }
