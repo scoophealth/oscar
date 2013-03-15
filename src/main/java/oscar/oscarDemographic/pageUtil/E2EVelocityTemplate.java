@@ -108,8 +108,14 @@ public class E2EVelocityTemplate {
 		
 		// Merge Template & Data Model
 		String result = VelocityUtils.velocityEvaluate(context, template);
-		@SuppressWarnings("unused")
-        Boolean isValidE2E = E2EExportValidator.isValidXML(result, true);
+		
+		// Check for Validity
+		if(result.contains("$")) {
+			log.error("Export may have template merge errors");
+		}
+		if(!E2EExportValidator.isValidXML(result, true)) {
+			log.error("Export failed E2E XSD validation");
+		}
 		
 		return result;
 	}
