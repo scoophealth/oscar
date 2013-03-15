@@ -20,6 +20,8 @@
 		<medical_data_manager_cache_time_ms>3600000</medical_data_manager_cache_time_ms>
 		<message_manager_send_list_cache_size>128</message_manager_send_list_cache_size>
 		<message_manager_send_list_cache_time_ms>3600000</message_manager_send_list_cache_time_ms>
+		<unread_message_cache_size>256</unread_message_cache_size>
+		<unread_message_cache_time_ms>300000</unread_message_cache_time_ms>
 		<remote_component_manager_cache_time_ms>300000</remote_component_manager_cache_time_ms>
 	</myoscar_client>
 </server>
