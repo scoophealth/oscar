@@ -262,6 +262,10 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     	ectFormNames = ectFormNames.append("&encounterFormName=" + formName);
     }
 
+	boolean prescriptionQrCodes = providerPreference2.isPrintQrCodeOnPrescriptions();
+	boolean erx_enable = providerPreference2.isERxEnabled();
+	boolean erx_training_mode = providerPreference2.isERxTrainingMode();
+    
     boolean bShortcutIntakeForm = oscarVariables.getProperty("appt_intake_form", "").equalsIgnoreCase("on") ? true : false;
 
     String newticklerwarningwindow=null;
@@ -685,10 +689,10 @@ if(newGroupNo.indexOf("_grp_") != -1) {
 	var programId = 0;
 	var programId_forCME = document.getElementById("bedprogram_no").value;
 
-	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
+	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
 <%}else {%>
   var programId=0;
-  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
+  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
 <%}%>
 }
 
@@ -910,7 +914,10 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
     		 if(siteProviders.contains(result.getId().getProviderNo())) {
     			 curProvider_no[iTemp] = String.valueOf(result.getId().getProviderNo());
     			 
-        	     curProviderName[iTemp] = providerDao.getProvider(curProvider_no[iTemp]).getFullName();
+    			 Provider p = providerDao.getProvider(curProvider_no[iTemp]);
+    			 if (p!=null) {
+    				 curProviderName[iTemp] = p.getFullName();
+    			 }
         	     iTemp++;
     		 }
     	 }
@@ -919,8 +926,11 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
     	 List<MyGroup> results = myGroupDao.getGroupByGroupNo(mygroupno);
     	 for(MyGroup result:results) {
     		 curProvider_no[iTemp] = String.valueOf(result.getId().getProviderNo());
-    		 curProviderName[iTemp] = providerDao.getProvider(curProvider_no[iTemp]).getFullName();
-    	    
+    		 
+    		 Provider p = providerDao.getProvider(curProvider_no[iTemp]);
+    		 if (p!=null) {
+        		 curProviderName[iTemp] = p.getFullName();
+    		 }
     	     iTemp++;
     	 }
      }
