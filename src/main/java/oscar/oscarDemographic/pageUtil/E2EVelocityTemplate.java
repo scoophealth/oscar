@@ -111,10 +111,10 @@ public class E2EVelocityTemplate {
 		
 		// Check for Validity
 		if(result.contains("$")) {
-			log.error("Export may have template merge errors");
+			log.error("[Demo: "+record.getDemographicNo()+"] Template merge may have errors");
 		}
 		if(!E2EExportValidator.isValidXML(result, true)) {
-			log.error("Export failed E2E XSD validation");
+			log.error("[Demo: "+record.getDemographicNo()+"] Export failed E2E XSD validation");
 		}
 		
 		return result;
