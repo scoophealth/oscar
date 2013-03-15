@@ -273,10 +273,10 @@ public class ReportManager {
 			for (int i = 0; i < reports.size(); i++) {
 				Element report = reports.get(i);
 				//reading title
-				String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
+				String templateTitle = report.getAttributeValue("title");
 				if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
 				//reading description
-				String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
+				String templateDescription = report.getAttributeValue("description");
 				if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
 				//reading type
 				String type = report.getChildTextTrim("type");
@@ -284,7 +284,7 @@ public class ReportManager {
 					type = "";
 				}
 				//reading sql
-				String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
+				String querysql = report.getChildText("query");
 				if (type.equalsIgnoreCase(ReportFactory.SQL_TYPE) && (querysql == null || querysql.length() == 0)) return "Error: The sql query is missing in <report> tag";
 				//reading active switch
 				String active = report.getAttributeValue("active");
@@ -298,8 +298,7 @@ public class ReportManager {
 				//processing XML for sql storage
 				XMLOutputter templateout = new XMLOutputter();
 				String templateXMLstr = templateout.outputString(report).trim();
-				templateXMLstr = UtilXML.unescapeXML(templateXMLstr);
-				templateXMLstr = StringEscapeUtils.escapeSql(templateXMLstr);
+				templateXMLstr = UtilXML.unescapeXML(templateXMLstr);				
 
 				if (templateId == null) {
 					ReportTemplates r = new ReportTemplates();
