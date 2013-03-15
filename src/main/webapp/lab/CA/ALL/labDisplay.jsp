@@ -957,7 +957,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         <% if ( ackStatus.equals("Acknowledged") ) { %>
                                                                             <%= report.getTimestamp() %>,
                                                                         <% } %>
-                                                                        <span id="<%=report.getProviderNo()%>commentLabel"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="<%=report.getProviderNo()%>commentText"><%=report.getComment()%></span>
+                                                                        <span id="<%=report.getProviderNo()%>commentLabel"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="<%=report.getProviderNo()%>commentText"><%=report.getComment()==null ? "" : report.getComment()%></span>
                                                                         <br>
                                                                     <% }
                                                                     if (ackList.size() == 0){
