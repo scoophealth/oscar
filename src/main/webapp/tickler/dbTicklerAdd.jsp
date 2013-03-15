@@ -114,7 +114,7 @@ if (rowsAffected ){
         window.opener.location = ref;
       }
       else if( parentId != "" && !window.opener.closed ) {
-        window.opener.document.forms['encForm'].elements['reloadDiv'].value=parentId;
+        if (window.opener.document.forms['encForm']) { window.opener.document.forms['encForm'].elements['reloadDiv'].value=parentId; }
         window.opener.updateNeeded = true;
       }
       else if( updateParent == true && !window.opener.closed )
