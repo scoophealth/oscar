@@ -131,6 +131,7 @@ import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarBilling.ca.on.pageUtil.BillingSavePrep;
+import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -1316,8 +1317,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String team = null;
 
 		// if this is an update, don't overwrite the program id
-		if (note.getProgram_no() == null || note.getProgram_no().equals("") || !note.getProgram_no().equals("")) {
+		if (note.getProgram_no() == null || note.getProgram_no().equals("") || "0".equals(note.getProgram_no()) ) {
 			String programId = (String) session.getAttribute("case_program_id");
+			if( programId == null || "null".equalsIgnoreCase(programId) ) {
+				EctProgram ectProgram = new EctProgram(session);
+				programId = ectProgram.getProgram(providerNo);
+				session.setAttribute("case_program_id", programId);
+			}
 			note.setProgram_no(programId);
 		}
 
