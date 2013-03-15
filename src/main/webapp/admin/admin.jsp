@@ -41,6 +41,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <%
 	String curProvider_no = (String)session.getAttribute("user");
@@ -583,10 +584,14 @@ div.logoutBox {
 				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportRehabStudy.jsp"/>&quot;)"><bean:message key="admin.admin.rehabStudy"/></a></li>
 			<li><a href="#"
 				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/patientlist.jsp"/>&quot;)"><bean:message key="admin.admin.exportPatientbyAppt"/></a></li>
-			<li><html:link page="/PMmodule/reports/activity_report_form.jsp"><bean:message key="admin.admin.activityRpt"/></html:link></li>
+			<caisi:isModuleLoad moduleName="caisi">
+				<li><html:link page="/PMmodule/reports/activity_report_form.jsp"><bean:message key="admin.admin.activityRpt"/></html:link></li>
+			</caisi:isModuleLoad>
 			<li><html:link
 				page="/oscarReport/provider_service_report_form.jsp"><bean:message key="admin.admin.providerServiceRpt"/></html:link></li>
-			<li><html:link page="/PopulationReport.do"><bean:message key="admin.admin.popRpt"/></html:link></li>
+			<caisi:isModuleLoad moduleName="caisi">
+				<li><html:link page="/PopulationReport.do"><bean:message key="admin.admin.popRpt"/></html:link></li>
+			</caisi:isModuleLoad>
 			<li><html:link page="/oscarReport/cds_4_report_form.jsp"><bean:message key="admin.admin.cdsRpt"/></html:link></li>
 			<li><html:link page="/oscarReport/mis_report_form.jsp"><bean:message key="admin.admin.misRpt"/></html:link></li>
 			<li><html:link page="/oscarReport/ocan_report_form.jsp"><bean:message key="admin.admin.ocanRpt"/></html:link></li>
