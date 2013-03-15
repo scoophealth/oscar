@@ -74,6 +74,8 @@ ArrayList proList = fluData.providerList();
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/oscarMDSIndex.js"></script>
+
 <title><bean:message
 	key="oscarReport.oscarReportFluBilling.title" /> <%= years %></title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
@@ -142,9 +144,9 @@ ArrayList proList = fluData.providerList();
 					value="<bean:message key="oscarReport.oscarReportFluBilling.btnUpdate"/>" />
 				</td>
 				<td style="text-align: right"><oscar:help keywords="report flu" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					href="javascript:popupStart(400,600,'../oscarEncounter/About.jsp')"><bean:message
 					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					href="javascript:popupStart(300,400,'../oscarEncounter/License.jsp')"><bean:message
 					key="global.license" /></a></td>
 			</tr>
 			</form>
