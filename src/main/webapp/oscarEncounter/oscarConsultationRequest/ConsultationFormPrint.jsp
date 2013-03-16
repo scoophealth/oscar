@@ -165,7 +165,7 @@
 	        clinic.setClinic_fax(temp6[0]);
 	    } else {
 	    	//is letterhead different?
-	    	if(!reqFrm.letterheadName.equals(clinic.getClinicName())) {
+	    	if(!reqFrm.letterheadName.equals(clinic.getClinicName()) && !reqFrm.letterheadName.equals("-1")) {
 	    		Provider p = providerDao.getProvider(reqFrm.letterheadName);
 	    		if(p != null) {
 		    		//why, yes it is
