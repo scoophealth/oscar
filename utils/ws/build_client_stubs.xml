@@ -7,7 +7,7 @@
 	<property name="GENERATED_CLIENT_STUB_CLASSES" value="${TARGET_DIR}/client_stubs_classes" />
 	<property name="GENERATED_JAR" value="${TARGET_DIR}/${PROJECT_NAME}_client_stubs.jar" />
 	
-	<fileset id="lib_jars" dir="${TARGET_DIR}/${PROJECT_NAME}-0.0-SNAPSHOT/WEB-INF/lib">
+	<fileset id="lib_jars" dir="${TARGET_DIR}/${PROJECT_NAME}-1.0-SNAPSHOT/WEB-INF/lib">
 		<include name="*.jar" />
 	</fileset>
 
@@ -18,7 +18,7 @@
 		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
 			<classpath>
 				<fileset refid="lib_jars" />
-				<pathelement location="${TARGET_DIR}/${PROJECT_NAME}-0.0-SNAPSHOT/WEB-INF/classes"/>
+				<pathelement location="${TARGET_DIR}/${PROJECT_NAME}-1.0-SNAPSHOT/WEB-INF/classes"/>
 			</classpath>
 
 			<arg value="-verbose" />
@@ -32,7 +32,7 @@
 	</target>
 	
 	<target name="compile_client_stubs">
-		<javac target="1.6" srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
+		<javac source="1.6" target="1.6" srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
 			<classpath>
 				<fileset refid="lib_jars" />
 			</classpath>
