@@ -43,6 +43,9 @@ public class FacilityWs extends AbstractWs {
 	@Autowired
 	private FacilityDao facilityDao;
 
+	/**
+	 * @deprecated 2013-03-19 grammatical mistaken in name, this only returns 1 default facility, use getDefaultFacility() instead. 
+	 */
 	public FacilityTransfer getDefaultFacilities() {
 		List<Facility> results=facilityDao.findAll(true);
 		if (results.size()==0)
@@ -53,5 +56,22 @@ public class FacilityWs extends AbstractWs {
 		{
 			return(FacilityTransfer.toTransfer(results.get(0)));
 		}
+	}
+
+	public FacilityTransfer getDefaultFacility() {
+		List<Facility> results=facilityDao.findAll(true);
+		if (results.size()==0)
+			{
+			return(null);
+			}
+		else
+		{
+			return(FacilityTransfer.toTransfer(results.get(0)));
+		}
+	}
+
+	public FacilityTransfer[] getAllFacilities(Boolean active) {
+		List<Facility> results=facilityDao.findAll(active);
+		return(FacilityTransfer.toTransfers(results));
 	}
 }
