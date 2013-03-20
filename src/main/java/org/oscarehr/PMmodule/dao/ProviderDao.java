@@ -83,19 +83,46 @@ public class ProviderDao extends HibernateDaoSupport {
 			throw new IllegalArgumentException();
 		}
 
-		Provider provider = getProvider(providerNo);
 		String providerName = "";
+		Provider provider = getProvider(providerNo);
 
-		if (provider != null && provider.getFirstName() != null) {
-			providerName = provider.getFirstName() + " ";
+		if (provider != null) {
+			if (provider.getFirstName() != null) {
+				providerName = provider.getFirstName() + " ";
+			}
+	
+			if (provider.getLastName() != null) {
+				providerName += provider.getLastName();
+			}
+	
+			if (log.isDebugEnabled()) {
+				log.debug("getProviderName: providerNo=" + providerNo + ",result=" + providerName);
+			}
 		}
 
-		if (provider != null && provider.getLastName() != null) {
-			providerName += provider.getLastName();
+		return providerName;
+	}
+
+	public String getProviderNameLastFirst(String providerNo) {
+		if (providerNo == null || providerNo.length() <= 0) {
+			throw new IllegalArgumentException();
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("getProviderName: providerNo=" + providerNo + ",result=" + providerName);
+		String providerName = "";
+		Provider provider = getProvider(providerNo);
+
+		if (provider != null) {
+			if (provider.getLastName() != null) {
+				providerName = provider.getLastName() + ", ";
+			}
+	
+			if (provider.getFirstName() != null) {
+				providerName += provider.getFirstName();
+			}
+	
+			if (log.isDebugEnabled()) {
+				log.debug("getProviderNameLastFirst: providerNo=" + providerNo + ",result=" + providerName);
+			}
 		}
 
 		return providerName;
