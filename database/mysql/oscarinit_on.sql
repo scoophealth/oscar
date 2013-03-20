@@ -45,24 +45,6 @@ create table labPatientPhysicianInfo(
   collection_date varchar(20)
 );
 
-create table labTestResults(
-  id int(10) NOT NULL auto_increment primary key,
-  labPatientPhysicianInfo_id int(10),
-  line_type char (1),
-  title varchar(255),
-  notUsed1 varchar(255),
-  notUsed2 varchar(255),
-  test_name varchar(255),
-  abn char(1),
-  minimum varchar(65),
-  maximum varchar(65),
-  units varchar(65),
-  result varchar(65),
-  description text,
-  location_id  varchar(255),
-  last char(1)
-);
-
 CREATE TABLE formONAR(
   ID int(10) NOT NULL  auto_increment,
   demographic_no int(10) NOT NULL default '0',
