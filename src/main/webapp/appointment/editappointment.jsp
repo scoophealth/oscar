@@ -296,9 +296,9 @@ function pasteAppt(multipleSameDayGroupAppt) {
                 document.EDITAPPT.repeatButton.style.display = "none";
            }
         }
-        else {
-           warnMsgId.style.display = "none";
-        }
+        //else {
+        //   warnMsgId.style.display = "none";
+        //}
 	document.EDITAPPT.status.value = "<%=apptObj.getStatus()%>";
 	document.EDITAPPT.duration.value = "<%=apptObj.getDuration()%>";
 	document.EDITAPPT.chart_no.value = "<%=apptObj.getChart_no()%>";
