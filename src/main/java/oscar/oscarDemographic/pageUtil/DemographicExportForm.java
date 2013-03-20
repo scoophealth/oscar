@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,8 +21,6 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package oscar.oscarDemographic.pageUtil;
 
 import org.apache.struts.action.ActionForm;
@@ -36,6 +34,7 @@ public class DemographicExportForm extends ActionForm {
     String demographicNo;
     String patientSet;
     String pgpReady;
+    String template;
     
     boolean exPersonalHistory;
     boolean exFamilyHistory;
@@ -68,6 +67,9 @@ public class DemographicExportForm extends ActionForm {
     }
     public String getPgpReady() {
         return pgpReady;
+    }
+    public String getTemplate() {
+        return template;
     }
     public boolean getExPersonalHistory() {
         return exPersonalHistory;
@@ -124,6 +126,9 @@ public class DemographicExportForm extends ActionForm {
     }
     public void setPgpReady(String pgpReady) {
         this.pgpReady = pgpReady;
+    }
+    public void setTemplate(String template) {
+        this.template = template;
     }
     public void setExPersonalHistory(boolean rhs) {
         this.exPersonalHistory = rhs;

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,8 +21,6 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package oscar.oscarDemographic.pageUtil;
 
 import java.io.BufferedWriter;
@@ -148,6 +146,8 @@ public class DemographicExportAction4 extends Action {
 	private static final String REPORTBINARY = "Binary";
 	private static final String REPORTTEXT = "Text";
 	private static final String RISKFACTOR = "Risk";
+	public static final int CMS4 = 0;
+	public static final int E2E = 1;
 
 	Integer exportNo = 0;
 	ArrayList<String> exportError = null;
@@ -162,6 +162,7 @@ public class DemographicExportAction4 extends Action {
 		String demographicNo = defrm.getDemographicNo();
 		String setName = defrm.getPatientSet();
 		String pgpReady = defrm.getPgpReady();
+		String templateOption = defrm.getTemplate();
 		boolean exPersonalHistory = WebUtils.isChecked(request, "exPersonalHistory");
 		boolean exFamilyHistory = WebUtils.isChecked(request, "exFamilyHistory");
 		boolean exPastHealth = WebUtils.isChecked(request, "exPastHealth");
@@ -200,6 +201,11 @@ public class DemographicExportAction4 extends Action {
 
 	String ffwd = "fail";
 	String tmpDir = oscarProperties.getProperty("TMP_DIR");
+	
+	int template = Integer.parseInt(templateOption);
+	
+	switch(template) {
+		case CMS4:
 	if (!Util.checkDir(tmpDir)) {
 		logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
 	} else {
@@ -1991,6 +1997,94 @@ public class DemographicExportAction4 extends Action {
 		//Remove zip & export files from temp dir
 		Util.cleanFile(zipName, tmpDir);
 		Util.cleanFiles(files);
+	}
+			break;
+		case E2E:
+			if (!Util.checkDir(tmpDir)) {
+				logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+			} else {
+				ArrayList<File> files = new ArrayList<File>();
+				exportError = new ArrayList<String>();
+				for (String demoNo : list) {
+					if (StringUtils.empty(demoNo)) {
+						exportError.add("Error! No Demographic Number");
+						continue;
+					}
+					
+					// Create Patient
+					PatientExport patient = new PatientExport(demoNo);
+					
+					// Create Template View
+					E2EVelocityTemplate t = new E2EVelocityTemplate();
+					
+					// Call Template Export & add to ArrayList
+					patient.setExMedications(exMedicationsAndTreatments);
+					patient.setExAllergiesAndAdverseReactions(exAllergiesAndAdverseReactions);
+					patient.setExImmunizations(exImmunizations);
+					patient.setExProblemList(exProblemList);
+					patient.setExLaboratoryResults(exLaboratoryResults);
+					String output = t.export(patient);
+					
+					//export file to temp directory
+					try{
+						File directory = new File(tmpDir);
+						if(!directory.exists()){
+							throw new Exception("Temporary Export Directory does not exist!");
+						}
+		
+						//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
+						String expFile = patient.getFirstName()+"_"+patient.getLastName();
+						expFile += "_"+demoNo;
+						expFile += "_"+patient.getDateOfBirth()+patient.getMonthOfBirth()+patient.getYearOfBirth();
+						files.add(new File(directory, expFile+".xml"));
+					}catch(Exception e){
+						logger.error("Error", e);
+					}
+					try {
+						BufferedWriter out = new BufferedWriter(new FileWriter(files.get(files.size()-1)));
+						out.write(output);
+						out.close();
+					} catch (IOException ex) {logger.error("Error", ex);
+						throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
+					}
+				}
+		
+				//create ReadMe.txt & ExportEvent.log
+				//files.add(makeReadMe(files));
+				//files.add(makeExportLog(files.get(0).getParentFile()));
+		
+				//zip all export files
+				String zipName = files.get(0).getName().replace(".xml", ".zip");
+				if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".zip";
+				//	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".pgp";
+				if (!Util.zipFiles(files, zipName, tmpDir)) {
+					logger.debug("Error! Failed to zip export files");
+				}
+		
+				if (pgpReady.equals("Yes")) {
+					//PGP encrypt zip file
+					PGPEncrypt pgp = new PGPEncrypt();
+					if (pgp.encrypt(zipName, tmpDir)) {
+						Util.downloadFile(zipName+".pgp", tmpDir, response);
+						Util.cleanFile(zipName+".pgp", tmpDir);
+						ffwd = "success";
+					} else {
+						request.getSession().setAttribute("pgp_ready", "No");
+					}
+				} else {
+					logger.info("Warning: PGP Encryption NOT available - unencrypted file exported!");
+					Util.downloadFile(zipName, tmpDir, response);
+					ffwd = "success";
+				}
+		
+		
+				//Remove zip & export files from temp dir
+				Util.cleanFile(zipName, tmpDir);
+				Util.cleanFiles(files);
+			}
+			break;
+		default:
+			break;
 	}
 
 	return mapping.findForward(ffwd);
