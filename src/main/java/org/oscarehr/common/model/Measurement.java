@@ -93,7 +93,7 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 	}
 
 	public void setType(String type) {
-		this.type = StringUtils.trimToNull(type);
+		this.type = StringUtils.trimToEmpty(type);
 	}
 
 	public Integer getDemographicId() {
