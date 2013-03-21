@@ -307,9 +307,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							table.addCell(cell);
 							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							String abnFlag = handler.getOBXAbnormalFlag(j, k);
+							if (abnFlag == null || abnFlag.trim().equals(""))
+								abnFlag = "N";
 							cell.setPhrase(new Phrase(
-									(handler.isOBXAbnormal(j, k) ? handler
-											.getOBXAbnormalFlag(j, k) : "N"),
+									abnFlag,
 									lineFont));
 							table.addCell(cell);
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
