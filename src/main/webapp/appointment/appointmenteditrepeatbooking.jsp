@@ -203,7 +203,7 @@
 
 			// repeat doing
 			while (true) {
-				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)paramE[0]), (String)paramE[1], (java.sql.Time)paramE[2],(java.sql.Time) paramE[3],
+				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[11]), (String)paramE[1], (java.sql.Time)paramE[2],(java.sql.Time) paramE[3],
 						(String)paramE[4], (String)paramE[5], (String)paramE[6], (java.sql.Timestamp)paramE[7], (String)paramE[8], (Integer)paramE[9]);
 				for(Appointment appt:appts) {
 					appointmentArchiveDao.archiveAppointment(appt);
