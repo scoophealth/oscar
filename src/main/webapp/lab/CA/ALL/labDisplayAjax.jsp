@@ -679,14 +679,14 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                                         
                                                                             <%= report.getTimestamp() %>,
                                                                             <% String commentTitle = null;
-                                                                               if(report.getComment().equals("")) {
+                                                                               if(report.getComment() == null || report.getComment().equals("")) {
                                                                         	   	commentTitle = "no comment";
                                                                                }
                                                                                else {
                                                                         	   	commentTitle = "comment: ";
                                                                                }
                                                                             %>
-                                                                            <span id="<%="V" + j + "commentLabel" + segmentID + report.getProviderNo()%>"><%=commentTitle%></span><span id="<%="V" + j + "commentText" + segmentID + report.getProviderNo()%>"> <%=report.getComment()%></span>
+                                                                            <span id="<%="V" + j + "commentLabel" + segmentID + report.getProviderNo()%>"><%=commentTitle%></span><span id="<%="V" + j + "commentText" + segmentID + report.getProviderNo()%>"> <%=report.getComment() == null ? "" : report.getComment()%></span>
                                                                         
                                                                         <br>
                                                                     <% }
