@@ -483,10 +483,11 @@ table.ele thead {
                           <%}%>
                           <th>Phone</th>
                           <th>Address</th>
+                          <th>Next Appt.</th>
                           <th>Status</th>
                           <%if (type != null ){ %>
                           <th>Shot #</th>
-                          <%}%>
+                          <%}%>                          
                           <th>Bonus Stat</th>
                           <th>Since Last Procedure Date</th>
                           <th>Last Procedure Date</th>
@@ -549,7 +550,8 @@ table.ele thead {
                           <td><%=demo.getHin()+demo.getVer()%></td>
                           <td><%=demo.getPhone()%> </td>
                           <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
+                          <td><oscar:nextAppt demographicNo="<%=demo.getDemographicNo().toString()%>"/></td>
+                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>                          
                           <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
@@ -565,8 +567,9 @@ table.ele thead {
                           <td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%> <%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>
+                          <td><oscar:nextAppt demographicNo="<%=demo.getDemographicNo().toString()%>"/></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.numShots%></td>
+                          <td bgcolor="<%=dis.color%>"><%=dis.numShots%></td>                          
                           <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
