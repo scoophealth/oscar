@@ -46,6 +46,8 @@
 <%@page import="org.oscarehr.common.dao.AllergyDao"%>
 <%@page import="org.oscarehr.common.model.Allergy"%>
 
+<%@ page import="oscar.eform.data.*, oscar.eform.*"%>
+
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -114,7 +116,8 @@
     int numElementsToShow = 6;
     Date sdate = null;
     Date edate = null;
-    if ( request.getParameter("numEle") != null ){
+    
+    /*if ( request.getParameter("numEle") != null ){
         try{
             numElementsToShow = Integer.parseInt(request.getParameter("numEle"));
         }catch(Exception e){}
@@ -130,7 +133,7 @@
         try{
            edate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("edate"));
         }catch(Exception e){edate = null;}
-    }
+    }*/
 
 
     long startTimeToGetP = System.currentTimeMillis();
@@ -258,7 +261,12 @@ String date = year+"-"+month+"-"+day;
 	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/Oscar.js"></script>
 	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>        
     <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
-        
+    
+    
+	<script type="text/javascript" src="<%=request.getContextPath() %>/share/calendar/calendar.js" ></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/share/calendar/calendar-setup.js" ></script>  	
+    	    
 	<oscar:customInterface section="health_tracker"/>
     <!-- Le styles -->
     <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
@@ -289,6 +297,11 @@ String date = year+"-"+month+"-"+day;
       position:relative;
       top:44px;
       }
+       
+       .item{
+       margin-top:5px;
+       height:50px;
+       }
             
 		div.preventionProcedure{
 		    width:9em;
@@ -299,6 +312,7 @@ String date = year+"-"+month+"-"+day;
 		    width:100px;
 		}
 		
+			
 		div.preventionProcedure p {
 		    font-size: 0.8em;
 		    font-family: verdana,tahoma,sans-serif;
@@ -307,14 +321,16 @@ String date = year+"-"+month+"-"+day;
 		}
 		
 div.preventionSection {
-    width: 620px;
-    min-height: 70px;
     position:relative;
+    
+    width: 620px;
+    min-height:50px;
+    
     margin-top:5px;
     float:left;
-    clear:left;
+   
     border: thin solid grey;
-    background: white;
+    background: #fff;
     padding:0px 2px 8px 0px;
 }
 
@@ -323,7 +339,7 @@ background-color: #FFFFAA; /*#f5f5f5;*/
 }
 
 .headMtype{
-	height:18px;
+	height:34px;
 	/* background-color: #f5f5f5; *//*#D6D6C2;*/
 	width:100%;
 	margin-bottom:2px;
@@ -387,6 +403,7 @@ max-height:200px;
 overflow-y:scroll;
 }
 
+
     </style>
 		
     <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
@@ -404,8 +421,9 @@ overflow-y:scroll;
                                    <link rel="shortcut icon" href="ico/favicon.png">
                 
          
+     <link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath() %>/share/calendar/calendar.css" title="win2k-cold-1" />
          
-     <script>
+     <script>	
         function getDemographicNo() {
                 return '<%=demographic_no%>';
         }
@@ -430,7 +448,7 @@ overflow-y:scroll;
 	         position = window.pageYOffset;
 	    }
 
-		document.mainForm.ycoord.value = position;
+		document.trackerForm.ycoord.value = position;
 	}
 
 	function setScrollPos() {
@@ -451,7 +469,7 @@ overflow-y:scroll;
     
 	
     	$(function() {
-    		$('.inlinesparkline').sparkline('html',{width:"30px", height:"16px"});
+    		$('.inlinesparkline').sparkline('html',{width:"40px", height:"21px"});
 
     		$('.checkmarksparkline').sparkline('html',{type:"line", lineColor:"#0f0", fillColor:"", spotRadius:"0", spotColor:""})
 
@@ -642,7 +660,7 @@ function fsPopup(width,height,url,window) {
     </div>
        
    		<%=flowSheet%>
-   		
+   		   		
 <!-- Modal -->
 <div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-header">
@@ -659,9 +677,9 @@ function fsPopup(width,height,url,window) {
                <input type="hidden" name="deleteCheckbox" id="deleteCheck" value=""/>
                
                <h1 id="deleteMeas"></h1>
-               <h3 id="deleteObsDate"></h3>
-               <hr>
-               <h4 id="deleteComment"></h4>
+               <span id="deleteObsDate" style="font-size:18px"></span>
+               
+               <span id="deleteComment" style="font-size:18px"></span>
                
           
 </div>
@@ -741,7 +759,7 @@ function fsPopup(width,height,url,window) {
               		    
 		    
 <!-- start of form -->	
-<form id="mainForm" name="mainForm" action="<%=request.getContextPath()%>/oscarEncounter/FormUpdate.do"	
+<form id="mainForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/FormUpdate.do">
 <fieldset>	
 
 <input type="hidden"  name="ycoord"
@@ -762,6 +780,7 @@ function fsPopup(width,height,url,window) {
 	//set add link array
 	String[] addAllLink = new String[measurements.size()];
 	int mCount=0;
+	int iDate=0;
 
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();  
     long startTimeToLoopAndPrint = System.currentTimeMillis();
@@ -814,10 +833,10 @@ function fsPopup(width,height,url,window) {
 <!--mTYPE START-->
 <!-- <div <%=warningIndicator%> > </div>  replace with indicator-->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-<a href="javascript:void(0)" style="padding-left:5px;text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')" title="Add <%=measure%>"><i class="icon-plus"></i>
+<a href="javascript:void(0)" style="padding-left:5px;text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')">
 </security:oscarSec>
 
-<span rel="popover" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
+<span rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
 <%if(mi.getWarning(measure)!=null){%>
 <span style="color:red;padding-left:5px;"><%=mi.getWarning(measure)%></span>
 <%}else{%>
@@ -833,12 +852,13 @@ function fsPopup(width,height,url,window) {
 <!-- <small><a href="#" style="padding-left:5px;" onclick="toggle_visibility('add-box-<%=measure%>')">Add</a></small>-->
 <!--mTYPE END-->
 
-<span style="float:right;">
+<span>
 <!--graphing start-->
 
 					<%
 					String name = h2.get("display_name").toString();
 					name = name.replaceAll("\\W","");
+					iDate++;
 					%>
 
            
@@ -895,7 +915,7 @@ function fsPopup(width,height,url,window) {
 		           					second[<%=x%>] = "<%=second.get(x)%>";
 		           				<%}%>
 
-		           				$('.bpline').sparkline(first,{width:"30px", height:"16px", type:"line", lineColor:"#00f", fillColor:"#cdf", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
+		           				$('.bpline').sparkline(first,{width:"40px", height:"21px", type:"line", lineColor:"#00f", fillColor:"#cdf", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
 		           				$('.bpline').sparkline(second,{composite:"true", type:"line", lineColor:"#040", fillColor:"#7d7", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
 		           			</script>
 		           		<%}
@@ -904,43 +924,53 @@ function fsPopup(width,height,url,window) {
 
 </span>
 
+<span style="float:right;display:inline;margin:0px;padding:0px">
+	<a id="date<%=iDate%>"><i class="icon-calendar"></i></a>
+   <input type="text" class="input-small" name="<%=name%>_date" id="prevDate<%=iDate%>" value="<%=date%>">	
 
-</div>
-
-<!-- hidden fields for form -->
-<div class="well well-small" id="add-box-<%=measure%>" style="display:none;">
-  <!--TODO <i class="icon-calendar"></i> --> 
-<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA"))){%> 
+<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") )){%> 
                                 
                             <label class="radio inline">
-							<input type="radio" name="<%=name%>" id="<%=name%>-YES" value="Yes">
+							<input type="radio" name="<%=name%>" id="<%=name%>-YES" value="Yes" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							Yes
 							</label>
 							<label class="radio inline">
-							<input type="radio" name="<%=name%>" id="<%=name%>-NO" value="No" >
+							<input type="radio" name="<%=name%>" id="<%=name%>-NO" value="No" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							No
 							</label>  
+											
     
      <%if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA")){%>                     
  					                            
 							<label class="radio inline">
-							<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="Na" >
+							<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="Na" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							NA
 							</label>
 	<%}%>					 		  
                             
   <%}else{ %>
-  <input type="text" class="input-large" id="<%=name%>" name="<%=name%>" placeholder="<%=mtypeBean.getValidationName()%>"> 
+  <!-- placeholder="<%=mtypeBean.getValidationName()%>"-->
+  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<%=mtypeBean.getValidationName()%>" > 
   <%} %>
-   <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments"> 
-  <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
+<input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
+</span>
 </div>
 
+<!-- hidden fields for form -->
+<div class="well well-small" id="add-box-<%=measure%>" style="display:none;overflow:visible">
+  
 
+   <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" style="float:right"> 
+  
+</div>
 
+    <div id="myCarousel<%=measure%>" class="carousel slide" style="height:50px;padding:0px;margin:0px;">
+      <div class="carousel-inner">
     <%  int k = 0;
+    	int setx = 0;
         for (EctMeasurementsDataBean mdb:alist){
             k++;
+            setx++;
             mFlowsheet.runRulesForMeasurement(mdb);
             Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
             hdata.put("age",mdb.getDataField());
@@ -957,7 +987,8 @@ function fsPopup(width,height,url,window) {
             String hider = "";
 
             int num =numElementsToShow;
-            if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
+            
+            /*if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
             }
             if(sdate != null && edate != null){
@@ -967,7 +998,7 @@ function fsPopup(width,height,url,window) {
                 }
             }else if ( k > num){
                 hider = "style=\"display:none;\"";
-            }
+            }*/
 
             String indColour = "";
             String indText = "";
@@ -978,41 +1009,77 @@ function fsPopup(width,height,url,window) {
                 indText="<font color='"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"' size='3'>"+indText+"</font>";
             }
 
-            if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
+       /*     if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
                 hider = "style=\"display:none;\"";
-            }
-
+            } */
+            
+            
+	out.print("<!-- setx:"+ setx +" -->");
+    if(setx==1){ out.print("<div class='item active'>"); 
+    } else if(setx==7){
+    	setx=1;//start a new set
+    	out.print("<div class='item'>");  
+    }
+    
     %>
-
-
-    <div class="preventionProcedure" <%=hider%>  
+     
+      
+    <div class="preventionProcedure"  
     <%if(mdb.getRemoteFacility() == null){ %>
     style="cursor: hand; cursor: pointer;"
     href="#deleteModal" role="button" data-toggle="modal"
-    onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=com%>','<%=hdata.get("id")%>')" 
-    <%}%>
-     
-       
-		
-<!-- mValue -->
+    onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=com%>','<%=hdata.get("id")%>')" 
+    <%}%> >
 
-<p style="line-height:90%;" ><font size='3'><%=hdata.get("age")%></font></p>
-
-<font size='1' style="line-height:60%;"><%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M</font>
+<span rel="popover" data-container="body" data-html="true" data-content="Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>"  data-trigger="hover">     
+	<p style="line-height:90%;font-size:18px"  ><%=hdata.get("age")%></p>
+	
+	<span style="line-height:60%;font-size:10px;"><%=hdata.get("prevention_date")%>&nbsp;
+	<i title="<%=mdb.getNumMonthSinceObserved()%> Months since last observed."><%=mdb.getNumMonthSinceObserved()%>M</i>
+	</span> 
+</span>
 
             <%if (comb) {%>
-            <a href="#" rel="popover" data-content="<%=com%>" data-original-title="Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>" data-trigger="hover" class="footnote"><%//=comments.size()%> <!-- C--> <i class="icon-comment"></i></a>
+             <a  rel="tooltip" title="<b>Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><i class="icon-comment" ></i></a>
             <%}%>
+           
+            
            <%=getFromFacilityMsg(mdb) %> 
         <br>
         <p width="16px" <%=indColour%> ></p>
         <%=indText%>
         
-    </div>
+    </div><!-- prevention procedure -->
+   
+   <%if(setx==6){ out.print("</div> <!--item split -->");  } //splitting for carousel effect%> 
+  
     <%}%>
+ 
+ <%if(setx<1){%>
+ <!-- still display if now items -->
+ <div class='item active'>
+<div class="preventionProcedure">
 
-</div>
+</div><!-- prevention procedure --> 
+<%}%> 
+ 
+ 
+      <%if(setx<6){ out.print("</div> <!--end of items-->"); }%>
+      
+</div><!-- carousel-inner -->
 
+
+<%if(k>6){ %>
+    <a class="carousel-control left" href="#myCarousel<%=measure%>" data-slide="prev" id="prev_<%=measure%>" style="display:none;margin-left:-35px">&lsaquo;</a>
+    <a class="carousel-control right" href="#myCarousel<%=measure%>" data-slide="next" style="display:none;margin-right:-35px" title="Click to see more values">&rsaquo;</a>
+<%}else{%> 
+
+<a class="carousel-control right" href="#myCarousel<%=measure%>" data-slide="next" style="display:none;margin-right:-35px; background-color:#ccc" title="All values are visible.">&times;</a>
+<%} %>	
+
+   
+    </div><!-- /.carousel -->
+</div><!-- prevention section -->
 <%
 	//creating add all link array
 	addAllLink[mCount]=measure;
@@ -1029,15 +1096,20 @@ function fsPopup(width,height,url,window) {
    
 <div class="well well-small headMtype">
 
+
  
-<div style="float:left;padding:1px;width:4px;height:10px;background-color:white;"></div>
+<!-- <div style="float:left;padding:1px;width:4px;height:10px;background-color:white;"></div>-->
+
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-content="<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
                 <span title="<%=h2.get("guideline")%>" style="padding-left:5px;"><%=h2.get("display_name")%></span>
             </a>
-            
-
-   
-    </div>
+            <span style="float:right"><input type="button" class="btn" value="Add" onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
+           
+</div> <!-- div well -->
+    
+     <div id="myCarousel<%=measure%>" class="carousel slide">
+      <div class="carousel-inner"> 
+      <div class='item active'>
     <%
         out.flush();
         for (int k = 0; k < alist.size(); k++){
@@ -1051,6 +1123,7 @@ function fsPopup(width,height,url,window) {
                 com ="";
             }
     %>
+    
     <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
 
 <font size="3">
@@ -1066,13 +1139,18 @@ function fsPopup(width,height,url,window) {
 	
         </p>
 <p width="16px" <%=r(hdata.get("refused"))%> >  </p>
-    </div>
-
+    </div> <!-- prevention procedure -->
 
     <%}%>
     
-</div>
+    </div><!-- item -->
+  
+</div><!-- carousel-inner -->
+   
+    </div><!-- /.carousel -->
+    
 
+</div><!-- prevention section -->
 <%
 	}
 
@@ -1273,7 +1351,28 @@ function createAddAll(d,t){
                <br><br>
                
                <span class="label label-info" id="pain-resources">Resources</span><br>
-               <!-- testing <a href="#" onclick="eform();">Lower Back Pain</a> -->               
+               <!-- testing <a href="#" onclick="eform();">Lower Back Pain</a> -->   
+<!-- eform as resource -->
+<%
+	String groupToView = temp.toLowerCase(); 
+	String user = (String) session.getAttribute("user");
+	String roleName = (String)session.getAttribute("userrole") + "," + user;
+	
+ 		
+      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms("form_name", EFormUtil.CURRENT, groupToView, roleName);
+      if (eForms.size() > 0) {
+        for (int i=0; i<eForms.size(); i++) {
+        	HashMap<String, ? extends Object> curForm = eForms.get(i);
+%>
+        	<a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>')"><%=curForm.get("formName")%></a><br>
+        	
+<%         }
+        }
+  
+%>                
+               
+               
+                           
                </div>
   </div> 
  <!-- pain end -->       
@@ -1295,6 +1394,7 @@ function createAddAll(d,t){
  <!-- TopHTMLStream end -->       
 <%} %> 
 
+ 
     
 		    </div>
 	    </div>
@@ -1330,14 +1430,22 @@ function createAddAll(d,t){
     
 	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
 
-<script>  
+
+<script>
+
+$(".preventionSection").hover(function(){
+	  $(".carousel-control",this).fadeIn("slow");
+	  },function(){
+	  $(".carousel-control",this).fadeOut("slow");
+	});
+
 $(function (){ 
-	//$("#example").popover();
 	$("[rel=popover]").popover({});  
 });  
 
 $(document).ready(function () {
     $("[rel=tooltip]").tooltip();
+	
  });
 
 $("#expand_all").click(function(){
@@ -1364,15 +1472,27 @@ $("#add_renal").click(function(){
 	<%=recListBuffer.toString()%>
 });
 
+$('.carousel').carousel({
+    interval: false
+    })
+
+<% 
+
+for (int i=1; i < iDate+1; i++){ %>
+Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "date<%=i%>", singleClick : true, step : 1 } );
+<%}%>
 
 
-function deleteMeasurement(type,value,date,comment,id){   
+function deleteMeasurement(type,enteredBy,value,date,comment,id){   
 
 	document.getElementById('myModalLabel').innerHTML= type;
     document.getElementById('deleteMeas').innerHTML = value;
-    document.getElementById('deleteObsDate').innerHTML = date;
-    document.getElementById('deleteComment').innerHTML = comment;
+    document.getElementById('deleteObsDate').innerHTML = enteredBy + "<br>" + "Date: " + date;
 
+	if(comment){
+    document.getElementById('deleteComment').innerHTML = "<hr>" + comment;
+	}
+	
     document.getElementById('deleteId').value=id;
     document.getElementById('deleteCheck').value=id;
 
@@ -1389,12 +1509,15 @@ alert("Hello checked! " + el.id);
 
 function toggle_visibility(id) {
     var e = document.getElementById(id);
-    if(e.style.display == 'block')
+
+    e.style.display = 'block';
+    /*if(e.style.display == 'block')
        e.style.display = 'none';
 
     else
-       e.style.display = 'block';
+       e.style.display = 'block'; */
  }
+
 
 
 </script>

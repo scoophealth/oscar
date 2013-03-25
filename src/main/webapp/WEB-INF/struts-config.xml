@@ -1008,8 +1008,7 @@
 			<forward name="guidelineDetail" path="/oscarEncounter/decisionSupport/guidelineDetail.jsp" />
 		</action>
 		<action path="/oscarEncounter/displayMyOscar" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMyOscarAction"></action>
-
-
+		
 		<action input="/Index.jsp" path="/oscarEncounter/SaveEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
 			<forward name="saveAndStay" path="/oscarEncounter/Index.jsp?saved=true" />
 			<forward name="failure" path="/oscarEncounter/error.jsp" />
@@ -1195,6 +1194,16 @@
         	type="oscar.oscarEncounter.oscarMeasurements.pageUtil.FormUpdateAction">
         	<forward name="success" path="/oscarEncounter/oscarMeasurements/close.jsp" />
         	<forward name="reload" path="/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp" />
+        	<forward name="failure" path="/oscarEncounter/oscarMeasurements/FlowUpdate.jsp" />
+        </action>
+        
+        <action
+        	path="/oscarEncounter/FormUpdate"
+        	name="trackerForm"
+        	scope="request"
+        	type="oscar.oscarEncounter.oscarMeasurements.pageUtil.FormUpdateAction">
+        	<forward name="success" path="/oscarEncounter/oscarMeasurements/close.jsp" />
+        	<forward name="reload" path="/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf" />
         	<forward name="failure" path="/oscarEncounter/oscarMeasurements/FlowUpdate.jsp" />
         </action>
 

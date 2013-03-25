@@ -50,7 +50,7 @@ public class FormUpdateAction extends Action {
 	private static Logger log = MiscUtils.getLogger();
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String dateEntered = request.getParameter("date");
+		String date = request.getParameter("date");
 
 		String testOutput = "";
 		String textOnEncounter = ""; // ********CDM Indicators Update******** \\n";
@@ -111,7 +111,12 @@ public class FormUpdateAction extends Action {
 						if (request.getParameter(name + "_comments") != null && !request.getParameter(name + "_comments").equals("")) {
 							comment = request.getParameter(name + "_comments");
 						}
-						valid = doInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), request.getParameter(name), comment, dateEntered, apptNo, request);
+						
+						if(request.getParameter(name + "_date") !=null && !request.getParameter(name + "_date").equals("")){
+							date=request.getParameter(name + "_date");
+						}
+						
+						valid = doInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), request.getParameter(name), comment, date, apptNo, request);
 
 						if (!valid) {
 							testOutput += name + ": " + request.getParameter(name) + "\n";
@@ -122,7 +127,10 @@ public class FormUpdateAction extends Action {
 
 					} else if (request.getParameter(name) != null && request.getParameter(name + "_comments") != null && !request.getParameter(name + "_comments").equals("")) {
 						String comment = request.getParameter(name + "_comments");
-						doCommentInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), comment, dateEntered, apptNo, request);
+						if(request.getParameter(name + "_date") !=null && !request.getParameter(name + "_date").equals("")){
+							date=request.getParameter(name + "_date");
+						}
+						doCommentInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), comment, date, apptNo, request);
 					}
 
 				}
@@ -149,6 +157,7 @@ public class FormUpdateAction extends Action {
 		HttpSession session = request.getSession();
 		String providerNo = (String) session.getAttribute("user");
 		String comments = comment;
+		
 		
 		String[] dateComp = date.split("-");
 		Date dateObs = new Date();
@@ -183,7 +192,7 @@ public class FormUpdateAction extends Action {
 		String demographicNo = request.getParameter("demographic_no");
 		HttpSession session = request.getSession();
 		String providerNo = (String) session.getAttribute("user");
-
+		
 		String regExp = null;
 		Double dMax = 0.0;
 		Double dMin = 0.0;
