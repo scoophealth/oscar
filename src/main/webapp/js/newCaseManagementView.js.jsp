@@ -462,7 +462,7 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayMeasurements.do?hC=" + Colour.measurements,
                   ctx + "/oscarEncounter/displayConsultation.do?hC=" + Colour.consultation,
                   ctx + "/oscarEncounter/displayHRM.do?hC=",
-                  ctx + "/oscarEncounter/displayMyOscar.do?hC="                 
+                  ctx + "/oscarEncounter/displayMyOscar.do?hC=",              
               ];
 
             var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation","HRM","myoscar"];
