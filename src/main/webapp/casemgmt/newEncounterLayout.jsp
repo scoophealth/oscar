@@ -670,6 +670,7 @@ function doscroll(){
 	</div>
 
 	<div id="leftNavBar" style="display: inline; float: left; width: 20%;">
+	
 		<tiles:insert attribute="leftNavigation" />
 	</div>
 
