@@ -368,9 +368,15 @@ boolean dupServiceCode = false;
     	   var payMethods = document.getElementsByName("payMethod");
     	   var checkedMethod = false;
     	   
+    	   if( settle != "Settle" && document.forms[0].payment.value == 0 ) {
+    		   return true;
+    	   }
+    	   
+    	   
     	   for( var idx = 0; idx < payMethods.length; ++idx ) {
     		   if( payMethods[idx].checked ) {
     			   checkedMethod = true;
+    			   break;
     		   }
     	   }
     	   

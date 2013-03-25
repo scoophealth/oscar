@@ -156,7 +156,7 @@
         }
         
         List<BillingONExt> payMethod = billExtDao.findByBillingNoAndKey(bCh1.getId(), "payMethod");
-        if( !payMethod.isEmpty() ) {
+        if( !payMethod.isEmpty() && !"".equals(payMethod.get(0).getValue()) ) {
         	paymentDescription = billExtDao.getPayMethodDesc(payMethod.get(0));
         }
     }
@@ -350,7 +350,7 @@
                 <td><%=balanceOwing.toPlainString()%></td>
             </tr>	
             <tr align="right">
-            	<td colspan="2">Paid by <%=paymentDescription%></td>
+            	<td colspan="2"><%=paymentDescription.equals("") ? "" : "Paid by " + paymentDescription%></td>
             </tr>
         </table>
     </body>
