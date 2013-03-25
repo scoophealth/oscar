@@ -25,20 +25,5 @@
 --%>
 <%@page import="oscar.OscarProperties"%>
 
-<%
-String strPage="";
 
-if (OscarProperties.getInstance().getBooleanProperty("health_tracker", "true")) {
-
-	strPage="HealthTrackerPage.jspf";
-
-}else{
-
-	strPage="TemplateFlowSheetPage.jspf";
-
-}
-
-%>
-
-
-<jsp:include page="<%=strPage%>" />
+<jsp:include page="TemplateFlowSheetPage.jspf" />
