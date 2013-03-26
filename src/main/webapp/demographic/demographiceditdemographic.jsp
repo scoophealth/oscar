@@ -1438,7 +1438,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						<bean:message key="demographic.demographiceditdemographic.msgAddRelation"/><!--i18n--></a></b></h3>
 						<ul>
 							<%DemographicRelationship demoRelation = new DemographicRelationship();
-                                          List relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographic.getDemographicNo().toString());
+                                          List relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographic.getDemographicNo().toString(), loggedInInfo.currentFacility.getId());
                                           for (int reCounter = 0; reCounter < relList.size(); reCounter++){
                                              HashMap relHash = (HashMap) relList.get(reCounter);
                                              String sdb = relHash.get("subDecisionMaker") == null?"":((Boolean) relHash.get("subDecisionMaker")).booleanValue()?"<span title=\"SDM\" >/SDM</span>":"";

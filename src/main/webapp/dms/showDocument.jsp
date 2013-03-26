@@ -75,7 +75,7 @@
             	ackFunc = "updateStatus('acknowledgeForm_" + docId + "'," + inQueueB + ");";
             }
             else {
-            	ackFunc = "getComment('" + docId + "','" + providerNo + "'," + inQueueB + ");";
+            	ackFunc = "getDocComment('" + docId + "','" + providerNo + "'," + inQueueB + ");";
             }
 
 
