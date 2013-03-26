@@ -39,6 +39,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class BillingEDTOBECOutputSpecificationBeanHandler {
 
@@ -79,7 +80,7 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
 						osBean.setSex(demo.getSex());
 
 						ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-						Provider provider = providerDao.getProvider(demo.getProviderNo());
+						Provider provider = providerDao.getProvider(StringUtils.trimToNull(demo.getProviderNo()));
 
 						if (provider != null) {
 							osBean.setIdentifier(provider.getLastName());
