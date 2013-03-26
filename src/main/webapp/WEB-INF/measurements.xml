@@ -22,6 +22,8 @@
     <map loinc_code="33914-3" name="Estimated GFR/BSA.pred SerPl MDRD-ArVRat" />
     <map loinc_code="39469-2" name="LDLc SerPl Calc-sCnc" />
     <map loinc_code="32309-7" name="Cholest/HDLc SerPl-sRto " />
+    <map loinc_code="14698-5" name="Digoxin Ser/Plas SCnc" />
+	<map loinc_code="2157-6" name="Creatine Kinase SerPl CCnc" />
 	<map loinc_code="NULL" name="NULL" />
 	<map loinc_code="751-8" name="ABSOLUTE:      NEUTS" />
 	<map loinc_code="731-0" name="     (A)       LYMPH" />
@@ -130,7 +132,7 @@
 	<map loinc_code="14564-9" name="OCCULT BLOOD-FECES #2" />
 	<map loinc_code="14565-6" name="OCCULT BLOOD-FECES #3" />
 	<map loinc_code="NULL" name="NULL" />
-	<map loinc_code="NULL" name="ALBUMIN CREATININE RATIO RANDOM URINE" />
+	<map loinc_code="9318-7" name="ALBUMIN CREATININE [MASS RATIO] IN URINE" />
 	<map loinc_code="X10024" name="  MICROALBUMIN" />
 	<map loinc_code="14683-7" name="  CREATININE" />
 	<map loinc_code="13705-9" name="  MICROALBUMIN/CREATININE RATIO" />
