@@ -1901,7 +1901,7 @@ function addDocComment(docId, providerNo,sync) {
 	);
 }
 
-function getComment(docId, providerNo, inQueueB) {
+function getDocComment(docId, providerNo, inQueueB) {
 	
 	var ret = true;
     var comment = "";
