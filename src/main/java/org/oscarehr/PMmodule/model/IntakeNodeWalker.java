@@ -36,6 +36,7 @@ public class IntakeNodeWalker implements Serializable {
 
 	private static final Closure NULL_CLOSURE = new Closure() {
 		public void execute(Object o) {
+			// why is this all of a sudden crapping out the compiler....
 		}
 	};
 

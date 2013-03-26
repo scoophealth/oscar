@@ -36,7 +36,6 @@ public class IntakeNodeLabel implements Serializable {
 
   // constructors
 	public IntakeNodeLabel() {
-		initialize();
 	}
 
 	/**
@@ -44,7 +43,6 @@ public class IntakeNodeLabel implements Serializable {
 	 */
 	public IntakeNodeLabel(Integer id) {
 		this.setId(id);
-		initialize();
 	}
 
 	/**
@@ -54,16 +52,12 @@ public class IntakeNodeLabel implements Serializable {
 
 		this.setId(id);
 		this.setLabel(label);
-		initialize();
 	}
 
 	@Override
 	public String toString() {
 		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getLabel()).append(")").toString();
 	}
-
-    protected void initialize() {
-    }
 
     /**
 	 * Return the unique identifier of this class

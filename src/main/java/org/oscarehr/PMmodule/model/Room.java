@@ -53,7 +53,6 @@ public class Room implements Serializable {
 
     // constructors
     public Room() {
-        initialize();
     }
 
     /**
@@ -61,7 +60,6 @@ public class Room implements Serializable {
      */
     public Room(Integer id) {
         this.setId(id);
-        initialize();
     }
 
     /**
@@ -79,7 +77,6 @@ public class Room implements Serializable {
         this.setName(name);
         this.setActive(active);
         this.setFacilityId(facilityId);
-        initialize();
     }
 
     public static final Room create(Integer facilityId, RoomType roomType) {
@@ -124,9 +121,6 @@ public class Room implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    protected void initialize() {
     }
 
     /**

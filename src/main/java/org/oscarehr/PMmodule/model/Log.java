@@ -42,7 +42,7 @@ public class Log implements Serializable {
 
        // constructors
 	public Log () {
-		initialize();
+
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class Log implements Serializable {
 	 */
 	public Log (long _id) {
 		this.setId(_id);
-		initialize();
+
 	}
 
 	/**
@@ -62,10 +62,8 @@ public class Log implements Serializable {
 
 		this.setId(_id);
 		this.setContent(_content);
-		initialize();
-	}
 
-    protected void initialize () {}
+	}
 
     /**
 	 * Return the unique identifier of this class
