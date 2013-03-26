@@ -36,6 +36,7 @@
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
+<%@page import="org.oscarehr.common.dao.EFormDao"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="oscar.dms.EDocUtil"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>

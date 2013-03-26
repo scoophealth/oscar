@@ -1,3 +1,20 @@
+<%
+	EFormDao eformDao = SpringUtils.getBean(EFormDao.class);
+	List<EForm> eforms = eformDao.findByNameSimilar("Framingham");
+						
+	Integer framinghamFid = null;
+	if( !eforms.isEmpty() ) {
+	   framinghamFid = eforms.get(eforms.size()-1).getId();
+	}
+						
+	Integer ukpdsFid = null;
+	eforms = eformDao.findByNameSimilar("UKPDS");
+	if( !eforms.isEmpty() ) {
+	   ukpdsFid = eforms.get(eforms.size()-1).getId();
+	}
+%>
+
+
   <select style="width:100px;">
 	<option><bean:message key="oscarEncounter.Header.Calculators"/></option>
 	<option>----------------------</option>
