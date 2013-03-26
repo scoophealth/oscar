@@ -182,7 +182,8 @@ public class ProgramDao extends HibernateDaoSupport {
     	
     	if(programName == null) return null;
     	
-    	List<Program> programs = getHibernateTemplate().find("FROM Program p WHERE p.name = ? ORDER BY p.id ", programName);
+    	@SuppressWarnings("unchecked")
+        List<Program> programs = getHibernateTemplate().find("FROM Program p WHERE p.name = ? ORDER BY p.id ", programName);
     	if(!programs.isEmpty()) {
     		return programs.get(0).getId();
     	} else {
@@ -190,7 +191,18 @@ public class ProgramDao extends HibernateDaoSupport {
     	}
     }
 
+    
+    public List<Program> findAll()
+    {
+        @SuppressWarnings("unchecked")
+        List<Program> rs = getHibernateTemplate().find("FROM Program p");
 
+        return rs;
+    }
+
+    /**
+     * This method doesn't work, it doesn't find all programs, it only finds all community programs. See findAll instead.
+     */
     public List<Program> getAllPrograms() {
         @SuppressWarnings("unchecked")
         List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.type != ? ORDER BY p.name ", "community");

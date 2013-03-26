@@ -53,7 +53,7 @@ public class LoginWs extends AbstractWs {
 	 * Returns LoginResultTransfer on valid login, will be provided with a security token too.
 	 * @throws NotAuthorisedException if password is incorrect
 	 */
-	public org.oscarehr.ws.transfer_objects.LoginResultTransfer login(String userName, String password) throws NotAuthorisedException {
+	public LoginResultTransfer login(String userName, String password) throws NotAuthorisedException {
 		logger.info("Login attempt : user=" + userName);
 		logger.debug("Login attempt : p =" + password);
 

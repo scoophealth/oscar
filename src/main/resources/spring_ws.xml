@@ -59,4 +59,10 @@
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
   
+	<jaxws:endpoint implementor="#programWs" address="/ProgramService" >
+		<jaxws:inInterceptors>
+			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+     	
 </beans>

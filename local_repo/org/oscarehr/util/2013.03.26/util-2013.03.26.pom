@@ -7,16 +7,6 @@
 	<name>util</name>
 	<url>http://www.oscarcanada.org</url>
 
-<distributionManagement>
-  <repository>
-    <id>local_repo</id>
-    <name>Repository Name</name>
-        <!-- you'll want to change this to deploy -->
-    <url>file:///home/marc/workspaces/review/oscar/local_repo</url>
-  </repository>
-</distributionManagement>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

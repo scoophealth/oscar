@@ -42,7 +42,7 @@ public class ProgramAccess implements Serializable {
 
     // constructors
      public ProgramAccess () {
-         initialize();
+
      }
 
      /**
@@ -50,12 +50,11 @@ public class ProgramAccess implements Serializable {
       */
      public ProgramAccess (Long _id) {
          this.setId(_id);
-         initialize();
+
      }
 
 
-    protected void initialize () {}
-
+ 
     /**
 	 * Return the unique identifier of this class
 * 

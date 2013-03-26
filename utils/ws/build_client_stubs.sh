@@ -11,8 +11,6 @@ done
 
 ant -f build_client_stubs.xml compile_client_stubs
 
-rm -f ~/.m2/repository/org/oscarehr/client_stubs/0.0-SNAPSHOT/*.jar
-
 VERSION=2013.03-SNAPSHOT
 
 PROJECTS="oscar_maven_repo"

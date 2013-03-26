@@ -106,7 +106,7 @@ public class Program implements Serializable {
     private String emailNotificationAddressesCsv=null;
     private Date lastReferralNotification=null;
 
-    //these are all transient
+    //these are all transient - these need to be removed, we shouldn't be having fields like this in JPA model objects.
     private Integer noOfVacancy = 0;
 	private String vacancyName;
 	private String dateCreated;
