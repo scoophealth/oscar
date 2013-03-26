@@ -75,6 +75,7 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.DataExport;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Icd9;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
@@ -739,8 +740,11 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 			standardCoding.setStandardCode(dxResearch.getDxresearchCode());
 
 			if( "icd9".equalsIgnoreCase(dxResearch.getCodingSystem()) ) {
-				description = icd9Dao.getIcd9Code(standardCoding.getStandardCode()).get(0).getDescription();
-				standardCoding.setStandardCodeDescription(description);
+				List<Icd9>icd9Code = icd9Dao.getIcd9Code(standardCoding.getStandardCode());
+				if( !icd9Code.isEmpty() ) {
+					description = icd9Code.get(0).getDescription();
+					standardCoding.setStandardCodeDescription(description);
+				}
 			}
 
 			date = dxResearch.getStartDate();
