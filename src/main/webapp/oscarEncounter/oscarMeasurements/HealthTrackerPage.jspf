@@ -928,7 +928,7 @@ function fsPopup(width,height,url,window) {
 	<a id="date<%=iDate%>"><i class="icon-calendar"></i></a>
    <input type="text" class="input-small" name="<%=name%>_date" id="prevDate<%=iDate%>" value="<%=date%>">	
 
-<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") )){%> 
+<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
                                 
                             <label class="radio inline">
 							<input type="radio" name="<%=name%>" id="<%=name%>-YES" value="Yes" onfocus="toggle_visibility('add-box-<%=measure%>')">
@@ -943,7 +943,7 @@ function fsPopup(width,height,url,window) {
      <%if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA")){%>                     
  					                            
 							<label class="radio inline">
-							<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="Na" onfocus="toggle_visibility('add-box-<%=measure%>')">
+							<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="NA" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							NA
 							</label>
 	<%}%>					 		  
@@ -1364,7 +1364,7 @@ function createAddAll(d,t){
         for (int i=0; i<eForms.size(); i++) {
         	HashMap<String, ? extends Object> curForm = eForms.get(i);
 %>
-        	<a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>')"><%=curForm.get("formName")%></a><br>
+        	<a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>')"><%=curForm.get("formName")%></a><br>
         	
 <%         }
         }
