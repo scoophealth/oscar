@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.ws;
 
 import java.util.List;
@@ -30,48 +29,32 @@ import java.util.List;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
-import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.managers.FacilityManager;
 import org.oscarehr.ws.transfer_objects.FacilityTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @WebService
 @Component
-@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
+@GZIP(threshold = AbstractWs.GZIP_THRESHOLD)
 public class FacilityWs extends AbstractWs {
 	@Autowired
-	private FacilityDao facilityDao;
+	private FacilityManager facilityManager;
 
 	/**
 	 * @deprecated 2013-03-19 grammatical mistaken in name, this only returns 1 default facility, use getDefaultFacility() instead. 
 	 */
 	public FacilityTransfer getDefaultFacilities() {
-		List<Facility> results=facilityDao.findAll(true);
-		if (results.size()==0)
-			{
-			return(null);
-			}
-		else
-		{
-			return(FacilityTransfer.toTransfer(results.get(0)));
-		}
+		return (FacilityTransfer.toTransfer(facilityManager.getDefaultFacility()));
 	}
 
 	public FacilityTransfer getDefaultFacility() {
-		List<Facility> results=facilityDao.findAll(true);
-		if (results.size()==0)
-			{
-			return(null);
-			}
-		else
-		{
-			return(FacilityTransfer.toTransfer(results.get(0)));
-		}
+		return (FacilityTransfer.toTransfer(facilityManager.getDefaultFacility()));
 	}
 
 	public FacilityTransfer[] getAllFacilities(Boolean active) {
-		List<Facility> results=facilityDao.findAll(active);
-		return(FacilityTransfer.toTransfers(results));
+		List<Facility> results = facilityManager.getAllFacilities(active);
+		return (FacilityTransfer.toTransfers(results));
 	}
 }
