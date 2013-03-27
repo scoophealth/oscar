@@ -559,11 +559,11 @@ String date = year+"-"+month+"-"+day;
 	<table class="formTable" id="headTable">
 		<tr><th colspan="8"><oscar:nameage demographicNo="<%=demographic_no%>"/></th></tr>
 		<tr>
-<<<<<<< HEAD
+
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders</a></td>
-=======
+
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders</a></td>
->>>>>>> ae3403b... ORN Pilot Code
+
 			<td width="650px"><%=remindersList%></td>
 			<td>
 			<div class="highlightBox">
@@ -583,20 +583,20 @@ String date = year+"-"+month+"-"+day;
 		</tr>
 
 		<tr>
-<<<<<<< HEAD
+
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies</a></td>
-=======
+
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies</a></td>
->>>>>>> ae3403b... ORN Pilot Code
+
 			<td width="650px"><%=allergiesList%></td>
 		</tr>
 
 		<tr>
-<<<<<<< HEAD
+
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications</a></td>
-=======
+
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications</a></td>
->>>>>>> ae3403b... ORN Pilot Code
+
 			<td width="650px"><%=medicationsList%></td>
 			<td>
    			</td>
@@ -793,11 +793,11 @@ String date = year+"-"+month+"-"+day;
    							hdata.put("comments",mdb.getComments());
    							hdata.put("unixTime", Long.toString(mdb.getDateEnteredAsDate().getTime()));
    						%>
-<<<<<<< HEAD
+
    							<div itemtime="<%=hdata.get("unixTime")%>" class="recentBlock measurements" onclick="javascript:popup(465,635,'<%=project%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
-=======
+
    							<div itemtime="<%=hdata.get("unixTime")%>" class="recentBlock measurements" onclick="javascript:popup(465,635,'../../oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
->>>>>>> ae3403b... ORN Pilot Code
+
 		   		               		<b><%=hdata.get("data")%></b>; <%=hdata.get("prevention_date")%> <br>
 		   		               <b>
 		   		                    <%=hdata.get("comments")%>
