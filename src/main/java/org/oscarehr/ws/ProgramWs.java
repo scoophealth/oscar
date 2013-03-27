@@ -30,8 +30,10 @@ import java.util.List;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.ws.transfer_objects.ProgramProviderTransfer;
 import org.oscarehr.ws.transfer_objects.ProgramTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,10 +43,22 @@ import org.springframework.stereotype.Component;
 @GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
 public class ProgramWs extends AbstractWs {
 	@Autowired
-	private ProgramDao programDao;
+	private ProgramManager2 programManager;
 
-	public ProgramTransfer[] getAllPrograms(Boolean active) {
-		List<Program> results=programDao.findAll();
-		return(ProgramTransfer.toTransfers(results));
+	public ProgramTransfer[] getAllPrograms() {
+		List<Program> tempResults = programManager.getAllPrograms();
+
+		ProgramTransfer[] results = ProgramTransfer.toTransfers(tempResults);
+
+		return (results);
+	}
+	
+	public ProgramProviderTransfer[] getAllProgramProviders()
+	{
+		List<ProgramProvider> tempResults = programManager.getAllProgramProviders();
+
+		ProgramProviderTransfer[] results = ProgramProviderTransfer.toTransfers(tempResults);
+
+		return (results);
 	}
 }

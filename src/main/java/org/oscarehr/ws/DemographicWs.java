@@ -25,6 +25,8 @@
 
 package org.oscarehr.ws;
 
+import java.util.List;
+
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
@@ -52,4 +54,10 @@ public class DemographicWs extends AbstractWs {
 		Demographic demographic=demographicManager.getDemographicByMyOscarUserName(myOscarUserName);
 		return(DemographicTransfer.toTransfer(demographic));
 	}
+	
+	public DemographicTransfer[] searchDemographicByName(String searchString, int startIndex, int itemsToReturn)
+	{
+		List<Demographic> demographics=demographicManager.searchDemographicByName(searchString, startIndex, itemsToReturn);
+		return(DemographicTransfer.toTransfers(demographics));
+	}	
 }

@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.managers;
 
 import java.util.List;
@@ -34,20 +33,20 @@ import org.springframework.stereotype.Service;
 
 import oscar.log.LogAction;
 
-
 @Service
-public class ProviderManager2
-{
+public class ProviderManager2 {
 	@Autowired
 	private ProviderDao providerDao;
-	
-	public List<Provider> getProviders(boolean active)
-	{
-		List<Provider> results=providerDao.getProviders(active);
-		
+
+	public List<Provider> getProviders(Boolean active) {
+		List<Provider> results = null;
+
+		if (active == null) results = providerDao.getProviders();
+		else results = providerDao.getProviders(active);
+
 		//--- log action ---
-		LogAction.addLogSynchronous("ProviderManager.getProviders, active="+active, null);
-		
-		return(results);
+		LogAction.addLogSynchronous("ProviderManager.getProviders, active=" + active, null);
+
+		return (results);
 	}
 }

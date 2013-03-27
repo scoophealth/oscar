@@ -22,39 +22,41 @@
  * Ontario, Canada
  */
 
-package org.oscarehr.ws;
+package org.oscarehr.managers;
 
 import java.util.List;
 
-import javax.jws.WebService;
-
-import org.apache.cxf.annotations.GZIP;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.managers.ProviderManager2;
-import org.oscarehr.ws.transfer_objects.ProviderTransfer;
+import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Facility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@WebService
-@Component
-@GZIP(threshold = AbstractWs.GZIP_THRESHOLD)
-public class ProviderWs extends AbstractWs {
+import oscar.log.LogAction;
+
+@Service
+public class FacilityManager {
 	@Autowired
-	private ProviderManager2 providerManager;
+	private FacilityDao facilityDao;
 
-	/**
-	 * @deprecated 2013-03-27 parameter should have been an object to allow nulls
-	 */
-	public ProviderTransfer[] getProviders(boolean active) {
-		return (getProviders2(active));
+	public Facility getDefaultFacility() {
+		List<Facility> results = facilityDao.findAll(true);
+		if (results.size() == 0) {
+			return (null);
+		} else {
+
+			//--- log action ---
+			LogAction.addLogSynchronous("FacilityManager.getDefaultFacility", null);
+
+			return (results.get(0));
+		}
 	}
 
-	public ProviderTransfer[] getProviders2(Boolean active) {
-		List<Provider> tempResults = providerManager.getProviders(active);
-
-		ProviderTransfer[] results = ProviderTransfer.toTransfers(tempResults);
+	public List<Facility> getAllFacilities(Boolean active) {
+		List<Facility> results = facilityDao.findAll(active);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("FacilityManager.getAllFacilities", null);
 
 		return (results);
 	}
-
 }

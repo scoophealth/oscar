@@ -22,8 +22,9 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.managers;
+
+import java.util.List;
 
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
@@ -32,36 +33,41 @@ import org.springframework.stereotype.Service;
 
 import oscar.log.LogAction;
 
-
 @Service
-public class DemographicManager
-{
+public class DemographicManager {
 	@Autowired
 	private DemographicDao demographicDao;
-	
-	public Demographic getDemographic(Integer demographicId)
-	{
-		Demographic result=demographicDao.getDemographicById(demographicId);
-		
+
+	public Demographic getDemographic(Integer demographicId) {
+		Demographic result = demographicDao.getDemographicById(demographicId);
+
 		//--- log action ---
-		if (result!=null)
-		{
-			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId="+demographicId);
+		if (result != null) {
+			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId=" + demographicId);
 		}
-		
-		return(result);
+
+		return (result);
 	}
-	
-	public Demographic getDemographicByMyOscarUserName(String myOscarUserName)
-	{
-		Demographic result=demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
-		
+
+	public Demographic getDemographicByMyOscarUserName(String myOscarUserName) {
+		Demographic result = demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
+
 		//--- log action ---
-		if (result!=null)
-		{
-			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId="+result.getDemographicNo());
+		if (result != null) {
+			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId=" + result.getDemographicNo());
 		}
-		
-		return(result);
+
+		return (result);
+	}
+
+	public List<Demographic> searchDemographicByName(String searchString, int startIndex, int itemsToReturn) {
+		List<Demographic> results = demographicDao.searchDemographicByName(searchString, startIndex, itemsToReturn);
+
+		//--- log action ---
+		for (Demographic demographic : results) {
+			LogAction.addLogSynchronous("DemographicManager.searchDemographicByName result", "demographicId=" + demographic.getDemographicNo());
+		}
+
+		return (results);
 	}
 }

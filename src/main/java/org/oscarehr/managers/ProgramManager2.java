@@ -22,39 +22,42 @@
  * Ontario, Canada
  */
 
-package org.oscarehr.ws;
+package org.oscarehr.managers;
 
 import java.util.List;
 
-import javax.jws.WebService;
-
-import org.apache.cxf.annotations.GZIP;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.managers.ProviderManager2;
-import org.oscarehr.ws.transfer_objects.ProviderTransfer;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@WebService
-@Component
-@GZIP(threshold = AbstractWs.GZIP_THRESHOLD)
-public class ProviderWs extends AbstractWs {
+import oscar.log.LogAction;
+
+@Service
+public class ProgramManager2 {
 	@Autowired
-	private ProviderManager2 providerManager;
+	private ProgramDao programDao;
 
-	/**
-	 * @deprecated 2013-03-27 parameter should have been an object to allow nulls
-	 */
-	public ProviderTransfer[] getProviders(boolean active) {
-		return (getProviders2(active));
-	}
+	@Autowired
+	private ProgramProviderDAO programProviderDAO;
 
-	public ProviderTransfer[] getProviders2(Boolean active) {
-		List<Provider> tempResults = providerManager.getProviders(active);
+	public List<Program> getAllPrograms() {
+		List<Program> results = programDao.findAll();
 
-		ProviderTransfer[] results = ProviderTransfer.toTransfers(tempResults);
+		//--- log action ---
+		LogAction.addLogSynchronous("ProgramManager2.getAllPrograms" , null);
 
 		return (results);
 	}
 
+	public List<ProgramProvider> getAllProgramProviders() {
+		List<ProgramProvider> results = programProviderDAO.getAllProgramProviders();
+
+		//--- log action ---
+		LogAction.addLogSynchronous("ProgramManager2.getAllProgramProviders", null);
+
+		return (results);
+	}
 }
