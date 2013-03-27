@@ -103,7 +103,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         itemHeader = StringUtils.maxLenString(t.getMessage(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
         item.setLinkTitle(itemHeader+ " " + DateUtils.formatDate(serviceDate,request.getLocale()));
         item.setTitle(itemHeader);
-        item.setValue(String.valueOf(t.getTickler_no()));
+        // item.setValue(String.valueOf(t.getTickler_no()));
         winName = StringUtils.maxLenString(t.getMessage(), MAX_LEN_TITLE, MAX_LEN_TITLE, "");
         hash = Math.abs(winName.hashCode());
         if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
