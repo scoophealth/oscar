@@ -26,8 +26,10 @@ package org.oscarehr.managers;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,8 @@ import oscar.log.LogAction;
 
 @Service
 public class DemographicManager {
+	private static Logger logger=MiscUtils.getLogger();
+	
 	@Autowired
 	private DemographicDao demographicDao;
 
@@ -61,8 +65,10 @@ public class DemographicManager {
 	}
 
 	public List<Demographic> searchDemographicByName(String searchString, int startIndex, int itemsToReturn) {
-		List<Demographic> results = demographicDao.searchDemographicByName(searchString, startIndex, itemsToReturn);
-
+		
+		List<Demographic> results = demographicDao.searchDemographicByNameString(searchString, startIndex, itemsToReturn);
+		logger.debug("searchDemographicByName, searchString="+searchString+", result.size="+results.size());
+		
 		//--- log action ---
 		for (Demographic demographic : results) {
 			LogAction.addLogSynchronous("DemographicManager.searchDemographicByName result", "demographicId=" + demographic.getDemographicNo());
