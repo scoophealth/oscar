@@ -29,6 +29,9 @@
 	String caseloadCurUser_no = (String) session.getAttribute("user");
 
 %>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+
 <tr><td colspan="3">
 <style>
 #caseloadTable {
@@ -55,7 +58,29 @@
 String[] clH = new String[] {"Demographic", "", "Age", "Sex", "Last Appt", "Next Appt", "Appts LYTD", "Lab", "Doc", "Tickler", "Msg", "BMI", "BP", "WT", "SMK", "A1C", "ACR", "SCR", "LDL", "HDL", "TCHD", "EGFR", "EYEE"};
 %>
 <script type="text/javascript">
-clH = ["<bean:message key="caseload.msgDemographic" />", "", "<bean:message key="caseload.msgAge" />", "<bean:message key="caseload.msgSex" />", "<bean:message key="caseload.msgLastAppt" />", "<bean:message key="caseload.msgNextAppt" />", "<bean:message key="caseload.msgApptsLYTD" />", "<bean:message key="caseload.msgLab" />", "<bean:message key="caseload.msgDoc" />", "<bean:message key="caseload.msgTickler" />", "<bean:message key="caseload.msgMsg" />", "<bean:message key="caseload.msgBMI" />", "<bean:message key="caseload.msgBP" />", "<bean:message key="caseload.msgWT" />", "<bean:message key="caseload.msgSMK" />", "<bean:message key="caseload.msgA1C" />", "<bean:message key="caseload.msgACR" />", "<bean:message key="caseload.msgSCR" />", "<bean:message key="caseload.msgLDL" />", "<bean:message key="caseload.msgLDL" />", "<bean:message key="caseload.msgHDL" />", "<bean:message key="caseload.msgTCHD" />", "<bean:message key="caseload.msgEGFR"/>" , "<bean:message key="caseload.msgEYEE" />" ];
+clH = ["<bean:message key="caseload.msgDemographic" />", 
+			"", 
+			"<bean:message key="caseload.msgAge" />", 
+			"<bean:message key="caseload.msgSex" />", 
+			"<bean:message key="caseload.msgLastAppt" />", 
+			"<bean:message key="caseload.msgNextAppt" />", 
+			"<bean:message key="caseload.msgApptsLYTD" />", 
+			"<bean:message key="caseload.msgLab" />", 
+			"<bean:message key="caseload.msgDoc" />", 
+			"<bean:message key="caseload.msgTickler" />", 
+			"<bean:message key="caseload.msgMsg" />", 
+			"<bean:message key="caseload.msgBMI" />", 
+			"<bean:message key="caseload.msgBP" />", 
+			"<bean:message key="caseload.msgWT" />", 
+			"<bean:message key="caseload.msgSMK" />", 
+			"<bean:message key="caseload.msgA1C" />", 
+			"<bean:message key="caseload.msgACR" />", 
+			"<bean:message key="caseload.msgSCR" />", 
+			"<bean:message key="caseload.msgLDL" />", 
+			"<bean:message key="caseload.msgHDL" />", 
+			"<bean:message key="caseload.msgTCHD" />", 
+			"<bean:message key="caseload.msgEGFR"/>" , 
+			"<bean:message key="caseload.msgEYEE" />" ];
 </script>
 <table border="1" cellpadding="0" cellspacing="0" width="100%" id="caseloadTable">
 <tr><td colspan='<%=clH.length%>'>
