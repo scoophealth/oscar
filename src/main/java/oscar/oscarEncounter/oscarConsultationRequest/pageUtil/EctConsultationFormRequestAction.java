@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -72,7 +73,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
-import org.apache.commons.lang.StringUtils;
+
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -89,7 +90,7 @@ import com.lowagie.text.DocumentException;
 public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
-	private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -343,11 +344,11 @@ public class EctConsultationFormRequestAction extends Action {
 			// upon failure, go to consultation update page with message
 			try {
 	            doHl7Send(Integer.parseInt(requestId));
-	            WebUtils.addResourceBundleInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
+	            WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
             } catch (Exception e) {
             	logger.error("Error contacting remote server.", e);
             	
-	            WebUtils.addResourceBundleErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESendError");
+            	WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESendError");
 	    		ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
 	    		forward.addParameter("de", demographicNo);
 	    		forward.addParameter("requestId", requestId);

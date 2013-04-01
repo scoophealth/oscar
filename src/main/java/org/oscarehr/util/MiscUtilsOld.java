@@ -51,6 +51,15 @@ import org.apache.log4j.xml.DOMConfigurator;
  * maybe sent. Similarly you should set the shutdownSignaled=false
  * upon startup as it may have been set true by a previous context stop
  * even though the jvm itself has not restarted.
+ * 
+ * -----------------------
+ * 
+ * This file has been renamed to "Old" because this file should no longer be enhanced. A common version of this class
+ * is made available from the Utils package. There maybe some methods left here which don't entirely make sense
+ * or don't make sense in the context of a general purpose project agnostic utility class. This class still exists as "Old" so
+ * we can slowly refactor the non sensical code to use the new common utilities. Any remaining methods which do make sense
+ * should then me moved to a generic Oscar Utility class or similar. If the method makes sense in a project
+ * agnostic fashion, then it should be moved to the util project itself. 
  */
 public final class MiscUtilsOld {
 	

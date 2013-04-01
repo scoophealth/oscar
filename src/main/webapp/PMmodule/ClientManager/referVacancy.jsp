@@ -26,6 +26,7 @@
 
 
 
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
@@ -56,7 +57,7 @@ String vacancyId = request.getParameter("vacancyId");
 	}
 </script>
 
-<%=WebUtils.popErrorMessagesAsHtml(session)%>
+<%=WebUtilsOld.popErrorMessagesAsHtml(session)%>
 
 <c:if test="${remoteReferrals!=null}">
 	<br />

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*"%>
@@ -418,7 +419,7 @@ text-align:left;
 
 <body class="BodyStyle">
 <!--  -->
-<%=WebUtils.popErrorAndInfoMessagesAsHtml(session)%>
+<%=WebUtilsOld.popErrorAndInfoMessagesAsHtml(session)%>
 <table class="MainTable" id="scrollNumber1">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn"><bean:message key="oscarprevention.index.oscarpreventiontitre" /></td>

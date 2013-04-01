@@ -26,6 +26,7 @@
 
 
 
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
@@ -77,7 +78,7 @@
 	}
 </script>
 
-<%=WebUtils.popErrorMessagesAsHtml(session)%>
+<%=WebUtilsOld.popErrorMessagesAsHtml(session)%>
 
 <div class="tabs" id="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
