@@ -220,8 +220,8 @@
 
 			// repeat doing
 			while (true) {
-				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)paramE[0]), (String)paramE[1], ConversionUtils.fromTimeStringNoSeconds((String)paramE[2]), ConversionUtils.fromTimeStringNoSeconds((String)paramE[3]),
-						(String)paramE[4], (String)paramE[5], (String)paramE[6],  ConversionUtils.fromTimestampString((String)paramE[7]), (String)paramE[8], Integer.parseInt((String)paramE[9]));
+				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[11]), (String)paramE[1], (java.sql.Time)paramE[2],(java.sql.Time) paramE[3],
+						(String)paramE[4], (String)paramE[5], (String)paramE[6], (java.sql.Timestamp)paramE[7], (String)paramE[8], (Integer)paramE[9]);
 				for(Appointment appt:appts) {
 					appointmentArchiveDao.archiveAppointment(appt);
 					appt.setStartTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"))));
