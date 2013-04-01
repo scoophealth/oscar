@@ -25,6 +25,7 @@
 --%>
 
 
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -1064,7 +1065,7 @@ function updateFaxButton() {
 }
 </script>
 
-<%=WebUtils.popErrorMessagesAsAlert(session)%>
+<%=WebUtilsOld.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" 
 	onload="window.focus();disableDateFields();fetchAttached();disableEditing();showSignatureImage();">
@@ -1920,13 +1921,13 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 								String rdName = "";
 								String rdFaxNo = "";
 								for (int i=0;i < displayServiceUtil.specIdVec.size(); i++) {
-		                                 String  specId     = (String) displayServiceUtil.specIdVec.elementAt(i);
-		                                 String  fName      = (String) displayServiceUtil.fNameVec.elementAt(i);
-		                                 String  lName      = (String) displayServiceUtil.lNameVec.elementAt(i);
-		                                 String  proLetters = (String) displayServiceUtil.proLettersVec.elementAt(i);
-		                                 String  address    = (String) displayServiceUtil.addressVec.elementAt(i);
-		                                 String  phone      = (String) displayServiceUtil.phoneVec.elementAt(i);
-		                                 String  fax        = (String) displayServiceUtil.faxVec.elementAt(i);
+		                                 String  specId     =  displayServiceUtil.specIdVec.elementAt(i);
+		                                 String  fName      =  displayServiceUtil.fNameVec.elementAt(i);
+		                                 String  lName      =  displayServiceUtil.lNameVec.elementAt(i);
+		                                 String  proLetters =  displayServiceUtil.proLettersVec.elementAt(i);
+		                                 String  address    =  displayServiceUtil.addressVec.elementAt(i);
+		                                 String  phone      =  displayServiceUtil.phoneVec.elementAt(i);
+		                                 String  fax        =  displayServiceUtil.faxVec.elementAt(i);
 		                                 String  referralNo = ""; // TODO: add referal number to specialists ((String) displayServiceUtil.referralNoList.get(i)).trim();
 		                                 if (rdohip != null && !"".equals(rdohip) && rdohip.equals(referralNo)) {
 		                                	 rdName = String.format("%s, %s", lName, fName);
