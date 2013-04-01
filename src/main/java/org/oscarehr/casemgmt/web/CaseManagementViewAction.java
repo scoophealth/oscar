@@ -2051,18 +2051,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		logger.info("FILTER NOTES ISSUES " + (System.currentTimeMillis() - intTime) + "ms");
 		intTime = System.currentTimeMillis();
 
-		//TODO: issue filter for remote notes
-		if(checkedIssues != null && checkedIssues.length>0) {
-			for(String cmnIssueId:checkedIssues) {
-				if(cmnIssueId.length()>0) {
-					Issue issue = this.caseManagementMgr.getIssueIByCmnIssueId(Integer.parseInt(cmnIssueId));
-					if(issue != null) {
-						issue.getCode();
-						issue.getType();
-					}
-				}
-			}
-		}
 
 		List<EChartNoteEntry> slice = new ArrayList<EChartNoteEntry>();
 
