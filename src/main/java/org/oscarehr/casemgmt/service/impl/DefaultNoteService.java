@@ -42,7 +42,6 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.casemgmt.common.EChartNoteEntry;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
-import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.NoteSelectionCriteria;
 import org.oscarehr.casemgmt.service.NoteSelectionResult;
@@ -259,19 +258,6 @@ public class DefaultNoteService implements NoteService {
 		entries = applyIssueFilter1(entries, criteria.getIssues());
 		logger.debug("FILTER NOTES ISSUES " + (System.currentTimeMillis() - intTime) + "ms");
 		intTime = System.currentTimeMillis();
-
-		//TODO: issue filter for remote notes
-		if (!criteria.getIssues().isEmpty()) {
-			for (String cmnIssueId : criteria.getIssues()) {
-				if (cmnIssueId.length() > 0) {
-					Issue issue = caseManagementManager.getIssueIByCmnIssueId(Integer.parseInt(cmnIssueId));
-					if (issue != null) {
-						issue.getCode();
-						issue.getType();
-					}
-				}
-			}
-		}
 
 		List<EChartNoteEntry> slice = new ArrayList<EChartNoteEntry>();
 
