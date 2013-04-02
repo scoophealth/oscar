@@ -3023,6 +3023,7 @@ CREATE TABLE `formLabReq10` (
   `male` tinyint(1),
   `female` tinyint(1),
   `patientChartNo` varchar(20),
+  `letterhead` varchar(25),
   PRIMARY KEY (`ID`)
 );
 
