@@ -24,6 +24,8 @@
 
 --%>
 
+<!-- page updated to support better use of CRUD operations -->
+
 <%@page
 	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -106,28 +108,25 @@ function disableifchecked(ele,nextDate){
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
-<!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="100"><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDemographic"/></td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td><bean:message key="oscarReport.oscarReportDemoSetEdit.msgSetEdit"/></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="report set" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
-		<td valign="top" class="MainTableRightColumn"><html:form
+<body class="preview" id="top" data-spy="scroll" data-target=".subnav" data-offset="180">
+
+  <div class="container">
+  
+  <div class="page-header">
+    <h1><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDemographic"/> - <bean:message key="oscarReport.oscarReportDemoSetEdit.msgSetEdit"/></h1>
+  </div>
+
+  	<section id="mainContent">
+		<% if(request.getAttribute("deleteSetSuccess")!=null && (Boolean)request.getAttribute("deleteSetSuccess")){ %>
+			<div class="alert alert-block alert-success fade in">
+				<button type="button" class="close" data-dismiss="alert">×</button>
+				<h4 class="alert-heading">Success!</h4>
+				<p>Patient set "${requestScope.setname}" has been successfully deleted.</p>
+			</div>
+		<% } %>
+		<div class="row">
+		<div class="span12">
+		<html:form styleClass="form-horizontal well form-search" 
 			action="/report/DemographicSetEdit">
 			<div><bean:message key="oscarReport.oscarReportDemoSetEdit.msgPatientSet"/>: <html:select property="patientSet">
 				<html:option value="-1"><bean:message key="oscarReport.oscarReportDemoSetEdit.msgOptionSet"/></html:option>
@@ -185,6 +184,48 @@ function disableifchecked(ele,nextDate){
     //Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
 </script>
 
+	</section>
+</div>
+
+	<div id="delete-set-confirm" class="modal hide fade" tabindex="-1" role="dialog">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3>Delete Set</h3>
+		</div>
+		<div class="modal-body">
+			<p>This will permanently delete the set, this procedure is
+				irreversible.</p>
+			<p>Are you sure you want to proceed?</p>
+		</div>
+		<div class="modal-footer">
+			<a href="javascript:onDeleteConfirm()" class="btn btn-danger">Yes</a> 
+			<a href="javascript:$('#delete-set-confirm').modal('hide')" class="btn secondary">No</a>
+		</div>
+	</div>	
+
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
+	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/global.js"></script>
+
+	<script type="text/javascript">
+	
+	function onDeleteConfirm(){
+		$('#delete-set-confirm').modal('hide');
+    	$('#deleteSet').val('deleteSet');
+    	$('form[name="DemographicSetEditForm"]').submit();
+	}
+	
+
+	function onDeleteSetClick() {
+	    //e.preventDefault();
+	    
+	    var id = $(this).data('id');
+		$('#delete-set-confirm').modal({ backdrop: true });
+	    $('#delete-set-confirm').data('id', id).modal('show');
+	};
+	
+	</script>
 </body>
 </html:html>
 <%!
