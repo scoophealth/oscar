@@ -34,11 +34,12 @@ String demographic_no = request.getParameter("demo");
 DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 Map<String,String> demoExt = null;
 if(demographic_no != null){
-	demographicExtDao.getAllValuesForDemo( Integer.parseInt(demographic_no) );
+	demoExt = demographicExtDao.getAllValuesForDemo(Integer.parseInt(demographic_no) );
 }
-if(demoExt == null) demoExt = new HashMap<String,String>();
-%>
 
+if(demoExt == null) demoExt = new HashMap<String,String>();
+
+%>
 <tr>
 	<td align="right"><b>Status #:</b></td>
 	<td align="left" >
