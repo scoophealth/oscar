@@ -223,6 +223,10 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 			    <%}%>
 			    </html:select>
 		    <%}%>
+		    	<bean:message key="demographic.demographicexport.exporttemplate" /><html:select property="template">
+		    		<html:option value="<%=(new Integer(DemographicExportAction4.CMS4)).toString() %>">CMS Spec 4.0</html:option>
+		    		<html:option value="<%=(new Integer(DemographicExportAction4.E2E)).toString() %>">E2E</html:option>
+		    	</html:select>
 		    </div>
                     <p><table border="1"><tr><td>
 		       <bean:message key="demographic.demographicexport.exportcategories" />
@@ -255,7 +259,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
     if (!pgpReady) { %>
                     <bean:message key="demographic.demographicexport.msgwarning" /><br>
 <%  } %>
-                    <input type="submit" value="<bean:message key="export" /> (CMS spec 4.0)" <%=pgpReady?"":"disabled"%> />
+                    <input type="submit" value="<bean:message key="export" />"<%=pgpReady?"":"disabled"%> />
 		</html:form></td>
 	</tr>
 	<tr>

@@ -1,0 +1,1361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
+ xmlns="urn:hl7-org:v3"
+ xmlns:hl7="urn:hl7-org:v3"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:e2e="http://standards.pito.bc.ca/E2E-DTC/cda">
+<!-- 
+********************************************************
+CDA Header
+********************************************************
+-->
+	<realmCode code="CA" />
+	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+	<id extension="1" root="2.16.840.1.113883.3.933"/>
+	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
+	<title>PITO EMR-2-EMR Complete Instance Example</title>
+	<effectiveTime value="201303180340"/>
+	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+	<!-- 
+	********************************************************
+	Record Target
+	********************************************************
+	-->
+	<recordTarget typeCode="RCT" contextControlCode="OP">
+		<patientRole classCode="PAT">
+			<id extension="000000000" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+			<patient>
+				<name>
+					<given>JOHN</given>
+					<family>CLEESE</family>
+				</name>
+				<administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="Male"/>
+				<birthTime value="19400925"/>
+			</patient>
+		</patientRole>
+	</recordTarget>
+	<!-- 
+	********************************************************
+	Author
+	********************************************************
+	-->
+	<author typeCode="AUT" contextControlCode="OP">
+		<time value="20130318"/>
+		<assignedAuthor>
+			<id extension="OSCAR EMR" root="DCCD2C68-389B-44C4-AD99-B8FB2DAD1493"/>
+		</assignedAuthor>
+	</author>
+	<!-- 
+	********************************************************
+	Custodian
+	********************************************************
+	-->
+	<custodian typeCode="CST">
+		<assignedCustodian classCode="ASSIGNED">
+			<representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+				<id extension="OSCAR EMR" root="7EEF0BCC-F03E-4742-A736-8BAC57180C5F"/>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
+<!-- 
+********************************************************
+e-MS CDA Structured Body
+********************************************************
+-->
+	<component>
+		<structuredBody>
+<!--
+********************************************************
+Allergies and Intolerances - (Reaction List)
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.4.1"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies and Adverse Reactions Doc"/>
+					<title>Allergies and Intolerances (Reaction List) [with entries]</title>
+					<text>Allergies</text>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.3"/>
+						<!--Allergy and Intolerance Observation-->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="1" root="2.16.840.1.113883.3.1818.10.2.10.1"/>
+							<code nullFlavor='NA'/>
+							<statusCode code="active"/>
+							<effectiveTime value="20130305"/>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+									<code nullFlavor='NA'/>
+									<effectiveTime>
+										<low value="19350101"/>
+									</effectiveTime>
+									<participant typeCode="CSM" contextControlCode="OP">
+										<participantRole classCode="MANU">
+											<playingEntity classCode="MMAT" determinerCode="INSTANCE">
+												<code nullFlavor='NA'/>
+												<name>PENICILLINS, COMBINATIONS WITH OTHER ANTIBACTERIAL</name>
+											</playingEntity>
+										</participantRole>
+									</participant>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.30"/>
+										<!-- Severity Observation -->
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="SEV" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode" displayName="Severity"/>
+											<value xsi:type="CD" code="MI" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ObservationValue" displayName="unknown"/>
+										</observation>	
+									</entryRelationship>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="ALLCLINSTS" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Allergy Clinical Status Code"/>
+											<value xsi:type="CD" code="C" codeSystem="2.16.840.1.113883.3.1818.10.2.8.2" codeSystemName="PITO AllergyClinicalStatus" displayName="Confirmed"/>
+										</observation>
+									</entryRelationship>
+								</observation>
+							</entryRelationship>
+						</observation>
+					</entry>
+				</section>
+			</component>
+<!--
+********************************************************
+Immunization List
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.14.1"/>
+					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
+					<title>Immunizations List [with entries]</title>
+					<text>Immunizations</text>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
+						<!-- Immunization Observation -->
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120211VAC-145999X" root="2.16.840.1.113883.3.1818.10.10.3"/>
+							<code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" displayName="Immunization"/>
+							<statusCode code="active"/>
+							<effectiveTime value="20120901"/>
+							<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="IM"/>
+							<doseQuantity nullFlavor="UNK"/>
+							<consumable typeCode="CSM">
+								<manufacturedProduct classCode="MANU">
+									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+										<code nullFlavor='NA'/>
+										<name>Td</name>
+										<lotNumberText>1234</lotNumberText>
+									</manufacturedMaterial>
+								</manufacturedProduct>
+							</consumable>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="20130305"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>doctor</given>
+											<family>oscardoc</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<!-- Location -->
+							<participant typeCode="LOC" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
+								<!-- Location Participation -->
+								<participantRole classCode="SDLOC">
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.22"/>
+									<playingEntity classCode="PLC" determinerCode="INSTANCE">
+										<name>Left Delt</name>
+									</playingEntity>								
+								</participantRole>
+							</participant>
+						</substanceAdministration>						
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
+						<!-- Immunization Observation -->
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120211VAC-145999X" root="2.16.840.1.113883.3.1818.10.10.3"/>
+							<code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" displayName="Immunization"/>
+							<statusCode code="active"/>
+							<effectiveTime value="20090201"/>
+							<doseQuantity nullFlavor="UNK"/>
+							<consumable typeCode="CSM">
+								<manufacturedProduct classCode="MANU">
+									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+										<code nullFlavor='NA'/>
+										<name>Pneumovax</name>
+									</manufacturedMaterial>
+								</manufacturedProduct>
+							</consumable>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="20130305"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>doctor</given>
+											<family>oscardoc</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+						</substanceAdministration>						
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
+						<!-- Immunization Observation -->
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120211VAC-145999X" root="2.16.840.1.113883.3.1818.10.10.3"/>
+							<code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" displayName="Immunization"/>
+							<statusCode code="active"/>
+							<effectiveTime value="20121031"/>
+							<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="IM"/>
+							<doseQuantity nullFlavor="UNK"/>
+							<consumable typeCode="CSM">
+								<manufacturedProduct classCode="MANU">
+									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+										<code nullFlavor='NA'/>
+										<name>Flu</name>
+									</manufacturedMaterial>
+								</manufacturedProduct>
+							</consumable>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="20130305"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>doctor</given>
+											<family>oscardoc</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<!-- Location -->
+							<participant typeCode="LOC" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
+								<!-- Location Participation -->
+								<participantRole classCode="SDLOC">
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.22"/>
+									<playingEntity classCode="PLC" determinerCode="INSTANCE">
+										<name>Right Delt</name>
+									</playingEntity>								
+								</participantRole>
+							</participant>
+						</substanceAdministration>						
+					</entry>
+				</section>
+			</component>
+<!--
+********************************************************
+Laboratory Results & Results
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.16"/>
+					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Laboratory Report"/>
+					<title>Laboratory Results and Reports [without entries]</title>
+					<text>No Laboratory Report Entries</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Medications and Prescriptions - Medication List
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
+					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<title>Medications and Prescriptions - Medication List [with entries]</title>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="00559407" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="ACETAMINOPHEN"/>
+										<code code="N02BE01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="ACETAMINOPHEN"/>
+										<name>TYLENOL EXTRA STRENGTH TAB 500MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="500.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="5" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130424" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>ACETAMINOPHEN</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="25" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "QID" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="4"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="2.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>ACETAMINOPHEN</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: true</text>
+											<value xsi:type="BL" value="true"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="00613215" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="SPIRONOLACTONE"/>
+										<code code="C03DA01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="SPIRONOLACTONE"/>
+										<name>SPIRONOLACTONE 25MG TABLET</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="25.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="2" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130430" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>SPIRONOLACTONE</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="28" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "QAM" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>SPIRONOLACTONE</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: false</text>
+											<value xsi:type="BL" value="false"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="00636533" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="IBUPROFEN"/>
+										<code code="M01AE01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="IBUPROFEN"/>
+										<name>IBUPROFEN TAB 400MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="400.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="9" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130430" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>IBUPROFEN</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="28" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "TID" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="3"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>IBUPROFEN</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: true</text>
+											<value xsi:type="BL" value="true"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="02041421" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="LORAZEPAM"/>
+										<code code="N05BA06" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="LORAZEPAM"/>
+										<name>ATIVAN 1MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="1.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="7" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130414" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>LORAZEPAM</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="20" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "BID" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="2"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="SL" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="SL"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>LORAZEPAM</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: true</text>
+											<value xsi:type="BL" value="true"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="02244993" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="ACETYLSALICYLIC ACID"/>
+										<code code="B01AC06" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="ACETYLSALICYLIC ACID"/>
+										<name>ASA 81 MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="81.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="6" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130430" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>ACETYLSALICYLIC ACID</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="28" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "OD" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET (ENTERIC-COATED)" -->
+											<administrationUnitCode code="ECTAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET (ENTERIC-COATED)"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>ACETYLSALICYLIC ACID</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: false</text>
+											<value xsi:type="BL" value="false"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="02351420" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="FUROSEMIDE"/>
+										<code code="C03CA01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="FUROSEMIDE"/>
+										<name>FUROSEMIDE 20MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="20.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="3" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130625" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>FUROSEMIDE</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="56" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "QAM" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>FUROSEMIDE</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: false</text>
+											<value xsi:type="BL" value="false"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="02363283" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="RAMIPRIL"/>
+										<code code="C09AA05" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="RAMIPRIL"/>
+										<name>AVA-RAMIPRIL 5MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="5.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="1" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130430" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>RAMIPRIL</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="28" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "OD" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>RAMIPRIL</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: false</text>
+											<value xsi:type="BL" value="false"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="02364948" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="CARVEDILOL"/>
+										<code code="C07AG02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="CARVEDILOL"/>
+										<name>CARVEDILOL 12.5MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="12.5" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="8" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130430" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>CARVEDILOL</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="28" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "OD" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>CARVEDILOL</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: false</text>
+											<value xsi:type="BL" value="false"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+										<code code="02387913" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="ATORVASTATIN (ATORVASTATIN CALCIUM)"/>
+										<code code="C10AA05" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="ATORVASTATIN (ATORVASTATIN CALCIUM)"/>
+										<name>ATORVASTATIN 40MG</name>
+										<e2e:desc nullFlavor="UNK"/>
+										<strength>
+											<center value="40.0" unit="MG"/>
+										</strength>
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+							<!-- Medication Prescription Event-->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="4" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<statusCode code="active"/>
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="20130305"/>
+										<high value="20130430" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!--Medication Identification-->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+												<name>ATORVASTATIN (ATORVASTATIN CALCIUM)</name>
+											</manufacturedMaterial>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Author Participation -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+										<time value="20130305"/>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<code nullFlavor='NA'/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>doctor</given>
+													<family>oscardoc</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+											<effectiveTime xsi:type="IVL_TS" operator="I">
+												<width value="28" unit="D"/>
+											</effectiveTime>
+											<!-- OSCAR Frequency Code "OD" -->
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+											<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="PO"/>
+											<approachSiteCode nullFlavor="NA"/>
+											<doseQuantity>
+												<low value="1.0"/>
+												<high value="1.0"/>
+											</doseQuantity>
+											<!-- OSCAR Form Code "TABLET" -->
+											<administrationUnitCode code="TAB" codeSystem="2.16.840.1.113883.5.1127" displayName="TABLET"/>
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!--Medication Identification-->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<name>ATORVASTATIN (ATORVASTATIN CALCIUM)</name>
+													</manufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!--Medication Observation-->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="PRN Indicator"/>
+											<text>PRN Indicator: false</text>
+											<value xsi:type="BL" value="false"/>
+										</observation>
+									</entryRelationship>
+								</substanceAdministration>
+							</entryRelationship>
+						</substanceAdministration>
+					</entry>
+				</section>
+			</component>
+<!--			
+********************************************************
+Problems and Conditions - Problem List
+********************************************************
+-->
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
+					<title>Problems and Conditions - Problem List [with entries]</title>
+					<text>Text text text</text>
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
+						<!-- Problem List Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="1" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
+							<code code="428" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
+codeSystemName="ICD-9" displayName="HEART FAILURE*"/>
+							<statusCode code="active"/>
+							<effectiveTime xsi:type="IVL_TS">
+								<low value="20130305"/>
+							</effectiveTime>
+							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="HEART FAILURE*">
+								<originalText>HEART FAILURE*</originalText>
+							</value>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="20130305"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>doctor</given>
+											<family>doe</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>								
+							</author>
+						</observation>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
+						<!-- Problem List Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="2" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
+							<code code="401" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
+codeSystemName="ICD-9" displayName="ESSENTIAL HYPERTENSION*"/>
+							<statusCode code="active"/>
+							<effectiveTime xsi:type="IVL_TS">
+								<low value="20130305"/>
+							</effectiveTime>
+							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="ESSENTIAL HYPERTENSION*">
+								<originalText>ESSENTIAL HYPERTENSION*</originalText>
+							</value>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="20130305"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>doctor</given>
+											<family>doe</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>								
+							</author>
+						</observation>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
+						<!-- Problem List Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="3" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
+							<code code="250" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
+codeSystemName="ICD-9" displayName="DIABETES MELLITUS*"/>
+							<statusCode code="active"/>
+							<effectiveTime xsi:type="IVL_TS">
+								<low value="20130305"/>
+							</effectiveTime>
+							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="DIABETES MELLITUS*">
+								<originalText>DIABETES MELLITUS*</originalText>
+							</value>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="20130305"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>doctor</given>
+											<family>doe</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>								
+							</author>
+						</observation>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
+						<!-- Problem List Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="4" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
+							<code code="491" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
+codeSystemName="ICD-9" displayName="CHRONIC BRONCHITIS*"/>
+							<statusCode code="active"/>
+							<effectiveTime xsi:type="IVL_TS">
+								<low value="20130305"/>
+							</effectiveTime>
+							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="CHRONIC BRONCHITIS*">
+								<originalText>CHRONIC BRONCHITIS*</originalText>
+							</value>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="20130305"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>doctor</given>
+											<family>doe</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>								
+							</author>
+						</observation>
+					</entry>
+				</section>
+			</component>
+		</structuredBody>
+	</component>
+</ClinicalDocument>
