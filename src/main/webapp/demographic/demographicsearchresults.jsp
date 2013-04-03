@@ -24,6 +24,8 @@
 
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -375,7 +377,7 @@
 
 		if (fromMessenger) {
 	%>
-		<a href="#" onclick="popup(700,1027,'demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName())%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail')" ><%=demo.getDemographicNo()%></a></td>
+		<a href="demographiccontrol.jsp?keyword=<%=StringEscapeUtils.escapeJavaScript(Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName()))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail" ><%=demo.getDemographicNo()%></a></td>
 	<%	
 		} else { 
 	%>
