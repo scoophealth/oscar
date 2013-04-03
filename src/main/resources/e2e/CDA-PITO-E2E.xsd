@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:hl7-org:v3" xmlns:mif="urn:hl7-org:v3/mif" 
+    xmlns:e2e="http://standards.pito.bc.ca/E2E-DTC/cda" targetNamespace="urn:hl7-org:v3" elementFormDefault="qualified">
+	<xs:include schemaLocation="POCD_MT000040-PITO-E2E.xsd"/>
+	<xs:element name="ClinicalDocument" type="POCD_MT000040.ClinicalDocument"/>
+</xs:schema>
