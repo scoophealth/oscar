@@ -26,11 +26,16 @@
 
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
-<%@ page
-	import="oscar.form.*, oscar.OscarProperties, java.util.Date, oscar.util.UtilDateUtilities"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>    
 <%@page import="org.oscarehr.common.dao.FrmLabReqPreSetDao, org.oscarehr.util.SpringUtils"%>
-    
+<%@page import="oscar.form.*, oscar.OscarProperties, java.util.Date, oscar.util.UtilDateUtilities"%>
+<%@page import="oscar.oscarRx.data.RxProviderData, oscar.oscarRx.data.RxProviderData.Provider" %>
+<%@page import="org.oscarehr.util.MiscUtils,oscar.oscarClinic.ClinicData"%>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="java.util.List" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -45,12 +50,22 @@
 	href="labReq07Style.css">
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
 <script src="../share/javascript/prototype.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 <%
 	String formClass = "LabReq10";
 	String formLink = "formlabreq10.jsp";
+	
+	ClinicData clinic = new ClinicData();
+	RxProviderData rx = new RxProviderData();
+	List<Provider> prList = rx.getAllProviders();
+	
+	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
+	List<Program> programList = programDao.getAllActivePrograms();
+
+	
 
    boolean readOnly = false;
    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
@@ -286,10 +301,83 @@ var maxYear=3100;
     }
 
     function popup(link) {
-    windowprops = "height=700, width=960,location=no,"
-    + "scrollbars=yes, menubars=no, toolbars=no, resizable=no, top=0, left=0 titlebar=yes";
-    window.open(link, "_blank", windowprops);
-}
+    	windowprops = "height=700, width=960,location=no,"
+   			 + "scrollbars=yes, menubars=no, toolbars=no, resizable=no, top=0, left=0 titlebar=yes";
+    	window.open(link, "_blank", windowprops);
+	}
+    
+    
+    var providerData = new Object(); //{};
+    <%
+    for (Provider p : prList) {
+    	if (!p.getProviderNo().equalsIgnoreCase("-1")) {
+    		String prov_no = "prov_"+p.getProviderNo();
+
+    		%>
+    	 providerData['<%=prov_no%>'] = new Object(); //{};
+
+    	providerData['<%=prov_no%>'].address = "<%=p.getClinicAddress() %>";
+    	providerData['<%=prov_no%>'].city = "<%=p.getClinicCity() %>";
+    	providerData['<%=prov_no%>'].province = "<%=p.getClinicProvince() %>";
+    	providerData['<%=prov_no%>'].postal = "<%=p.getClinicPostal() %>";
+    	
+
+    <%	}
+    }
+
+
+if (OscarProperties.getInstance().getBooleanProperty("consultation_program_letterhead_enabled", "true")) {
+	if (programList != null) {
+		for (Program p : programList) {
+			String progNo = "prog_" + p.getId();
+%>
+		providerData['<%=progNo %>'] = new Object();
+		providerData['<%=progNo %>'].address = "<%=(p.getAddress() != null && p.getAddress().trim().length() > 0) ? p.getAddress().trim() : ((clinic.getClinicAddress() + "  " + clinic.getClinicCity() + "   " + clinic.getClinicProvince() + "  " + clinic.getClinicPostal()).trim()) %>";
+		providerData['<%=progNo %>'].city = "";
+		providerData['<%=progNo %>'].province = "";
+		providerData['<%=progNo %>'].postal = "";
+<%
+		}
+	}
+} %>
+
+    
+    function switchProvider(value) {
+    	
+    	if (value==-1) {
+    		$("select[name='letterhead']").value = value;
+    		$("input[name='clinicName']").val ("<%=clinic.getClinicName()%>");
+    		$("input[name='clinicAddress']").val ("<%=clinic.getClinicAddress() %>");
+    		$("input[name='clinicCity']").val ("<%=clinic.getClinicCity() + " " + clinic.getClinicProvince()%>");
+    		$("input[name='clinicPC']").val ("<%=clinic.getClinicPostal()  %>");
+    		
+    		$("#clinicName").html("<%=clinic.getClinicName()%>");
+    		$("#clinicAddress").html("<%=clinic.getClinicAddress() %>");
+    		$("#clinicCity").html("<%=clinic.getClinicCity() + " " + clinic.getClinicProvince()%>");
+    		$("#clinicPC").html("<%=clinic.getClinicPostal()  %>");
+    		
+    	} else {
+    		
+    		if (typeof providerData["prov_" + value] != "undefined")
+    			value = "prov_" + value;
+
+    		$("select[name='letterhead']").value = value;
+    		
+    		$("input[name='clinicName']").val ("");
+    		$("input[name='clinicAddress']").val (providerData[value]['address']);
+    		$("input[name='clinicCity']").val (providerData[value]['city'] + providerData[value]['province']);
+    		$("input[name='clinicPC']").val (providerData[value]['postal']);
+    		
+    		$("#clinicName").html ("");
+    		$("#clinicAddress").html (providerData[value]['address']);
+    		$("#clinicCity").html(providerData[value]['city'] + " " + providerData[value]['province']);
+    		$("#clinicPC").html(providerData[value]['postal']);
+    	}  
+    }
+    
+    $(document).ready(function(){
+    	switchProvider($("select[name='letterhead']").val());
+    });
 </script>
 
 <body style="page: doublepage; page-break-after: right">
@@ -322,12 +410,36 @@ var maxYear=3100;
 	<table class="Head" class="hidePrint">
 		<tr>
 			<td nowrap="true">
-			<% if(!readOnly){ %> <input type="submit" value="Save"
-				onclick="javascript:return onSave();" /> <input type="submit"
-				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <% } %>
-			<input type="submit" value="Exit"
-				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print Pdf" onclick="javascript:return onPrintPDF();" /></td>
+				<% if(!readOnly){ %> 
+					<input type="submit" value="Save" onclick="javascript:return onSave();" /> 
+					<input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();" />
+				 <% } %>
+				<input type="submit" value="Exit" onclick="javascript:return onExit();" /> 
+				<input type="submit" value="Print Pdf" onclick="javascript:return onPrintPDF();" />
+
+				<select name="letterhead" id="letterhead" onchange="switchProvider(this.value)">
+					<option value="-1"><%=clinic.getClinicName() %></option>
+				<%
+					for (Provider p : prList) {
+						if (p.getProviderNo().compareTo("-1") != 0 && (p.getFirstName() != null || p.getSurname() != null)) {
+				%>
+				<option value="<%=p.getProviderNo() %>" <%=(!props.getProperty("letterhead","-1").equals("-1") && p.getProviderNo().equals(props.getProperty("letterhead","-1")))?" selected=\"selected\" ":"" %>>
+		
+					<%=p.getFirstName() %> <%=p.getSurname() %>
+				</option>
+				<% }}  
+		
+				if (OscarProperties.getInstance().getBooleanProperty("consultation_program_letterhead_enabled", "true")) {
+				for (Program p : programList) {
+				%>
+					<option value="prog_<%=p.getId() %>" <%=(!props.getProperty("letterhead","-1").equals("-1") && props.getProperty("letterhead","-1").equals("prog_"+p.getId()))?" selected=\"selected\" ":"" %>>
+					<%=p.getName() %>
+					</option>
+				<% }
+				}%>
+				</select>
+
+			</td>
 		</tr>
 	</table>
 
@@ -357,14 +469,10 @@ var maxYear=3100;
 						<%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>
 					<% } %>
 					
-					<input type="hidden" style="width: 100%" name="clinicName"
-						value="<%=props.getProperty("clinicName","")%>" /> <%=props.getProperty("clinicName","")%>&nbsp;<br>
-					<input type="hidden" style="width: 100%" name="clinicAddress"
-						value="<%=props.getProperty("clinicAddress", "")%>" /> <%=props.getProperty("clinicAddress", "")%>&nbsp;<br>
-					<input type="hidden" style="width: 100%" name="clinicCity"
-						value="<%=props.getProperty("clinicCity", "")%>" /> <%=props.getProperty("clinicCity", "")%>,<%=props.getProperty("clinicProvince","") %><br>
-					<input type="hidden" style="width: 100%" name="clinicPC"
-						value="<%=props.getProperty("clinicPC", "")%>" /> <%=props.getProperty("clinicPC", "")%>&nbsp;<br>
+					<input type="hidden" style="width: 100%" name="clinicName" value="<%=props.getProperty("clinicName","")%>" /><span id="clinicName"><%=props.getProperty("clinicName","")%></span><br>
+					<input type="hidden" style="width: 100%" name="clinicAddress" value="<%=props.getProperty("clinicAddress", "")%>" /> <span id="clinicAddress"><%=props.getProperty("clinicAddress", "")%></span><br>
+					<input type="hidden" style="width: 100%" name="clinicCity" value="<%=props.getProperty("clinicCity", "")%>" /><span id="clinicCity"> <%=props.getProperty("clinicCity", "")%>,<%=props.getProperty("clinicProvince","") %></span><br>
+					<input type="hidden" style="width: 100%" name="clinicPC" value="<%=props.getProperty("clinicPC", "")%>" /><span id="clinicPC"> <%=props.getProperty("clinicPC", "")%></span><br>
 					</td>
 				</tr>
 				<tr>
