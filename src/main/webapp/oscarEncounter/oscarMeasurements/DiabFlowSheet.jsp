@@ -562,8 +562,6 @@ String date = year+"-"+month+"-"+day;
 
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders</a></td>
 
-			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders</a></td>
-
 			<td width="650px"><%=remindersList%></td>
 			<td>
 			<div class="highlightBox">
@@ -586,16 +584,12 @@ String date = year+"-"+month+"-"+day;
 
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies</a></td>
 
-			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies</a></td>
-
 			<td width="650px"><%=allergiesList%></td>
 		</tr>
 
 		<tr>
 
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications</a></td>
-
-			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications</a></td>
 
 			<td width="650px"><%=medicationsList%></td>
 			<td>
