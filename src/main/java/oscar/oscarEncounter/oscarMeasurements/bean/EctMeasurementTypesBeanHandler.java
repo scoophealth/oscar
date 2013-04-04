@@ -96,7 +96,11 @@ public class EctMeasurementTypesBeanHandler {
                 mt = m;
             }
             
-            Measurement ms = msDao.findLastEntered(ConversionUtils.fromIntString(demo), mt.getType());
+            Measurement ms = null;            
+            if( mt != null ) {
+            	ms = msDao.findLastEntered(ConversionUtils.fromIntString(demo), mt.getType());
+            }
+            
             boolean hasPreviousData = false;
             if(ms != null){
                 String providerNo = ms.getProviderNo();
@@ -139,7 +143,7 @@ public class EctMeasurementTypesBeanHandler {
                 
             }
             
-            if(!hasPreviousData){
+            if(!hasPreviousData && mt != null ){
                 EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( mt.getId(), 
 																                        mt.getType(), 
 																                        mt.getTypeDisplayName(), 
