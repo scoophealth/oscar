@@ -77,7 +77,7 @@ function refresh() {
 
 
 <pre>
-<%=request.getParameter("textfield")==null?"":request.getParameter("textfield")%>
+<%=request.getParameter("textfield")==null?"":request.getParameter("textfield").replaceAll("\r[^\n]|[^\r]\n]", "\r\n")%>
 </pre>
 
 <pre>
@@ -85,11 +85,11 @@ function refresh() {
 String tmp1 = "";
 String tmp =request.getParameter("textfield1")==null?"":request.getParameter("textfield1");
 tmp1 = tmp;
-while (tmp1.length() > 70){
+while (tmp1.length() > 80){
 %>
-<%=tmp1.substring(0,70)%>
+<%=tmp1.substring(0,80)%>
 <%
-tmp1 = tmp1.substring(70);
+tmp1 = tmp1.substring(80);
 
 }
 
