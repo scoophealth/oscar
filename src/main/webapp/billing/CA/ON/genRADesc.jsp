@@ -125,7 +125,7 @@ while ((nextline=input.readLine())!=null){
 		}
 
 		if (headerCount.compareTo("8") == 0){
-			message_txt = message_txt + nextline.substring(3,73)+"<br>";                       
+			message_txt = message_txt + nextline.substring(3,73)+"\r\n";                       
 		}
 	}
 }
@@ -286,7 +286,7 @@ Colposcopy Total :
             </tr>
         </table>    
     </html:form>
-<%      } %>
+<%      } %><%--  --%>
 <pre><%=message_txt%></pre>
 
 </body>

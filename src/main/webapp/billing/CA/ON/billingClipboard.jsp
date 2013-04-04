@@ -78,14 +78,14 @@ function refresh() {
 			value="Print Preview"></td>
 	</tr>
 	<tr>
-		<td align="right"><textarea name="textfield" cols="71" rows="10"></textarea>
+		<td align="right"><textarea name="textfield" cols="80" rows="10"></textarea>
 
 		</td>
 	</tr>
 	<tr>
 		<td align="right">
 		<div align="left">
-		<p><textarea name="textfield1" cols="71" rows="30"></textarea></p>
+		<p><textarea name="textfield1" cols="80" rows="30"></textarea></p>
 		<p></p>
 		</div>
 		</td>
