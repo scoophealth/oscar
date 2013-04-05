@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-<%@page import="org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils, org.oscarehr.util.SpringUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils, org.oscarehr.util.SpringUtils,org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.util.Set, java.util.List,org.oscarehr.util.LocaleUtils, java.util.Calendar, java.util.GregorianCalendar"%>
 <%@page import="org.caisi.model.TicklerComment,org.caisi.model.Tickler, org.caisi.dao.TicklerDAO,org.caisi.model.CustomFilter"%>
 <%@page import="org.oscarehr.common.model.Demographic, org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.Provider, org.oscarehr.common.model.TicklerTextSuggest, org.oscarehr.common.dao.TicklerTextSuggestDao"%>
