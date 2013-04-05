@@ -244,11 +244,7 @@ if (!medicationsResult.isEmpty()) {
 	}
 }
 
-java.util.Calendar calender = java.util.Calendar.getInstance();
-String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
-String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
-String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
-String date = year+"-"+month+"-"+day;
+String date = UtilDateUtilities.getToday("yyyy-MM-dd");
 %>
 
 <html lang="en">
