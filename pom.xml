@@ -783,6 +783,7 @@
                         <validHeader>utils/headers/asl.txt</validHeader>
                         <validHeader>utils/headers/cmi.txt</validHeader>
                         <validHeader>utils/headers/indivica.txt</validHeader>
+                        <validHeader>utils/headers/indivica2013.txt</validHeader>
                         <validHeader>utils/headers/peaceworks.txt</validHeader>
                 </validHeaders>
                 <includes>

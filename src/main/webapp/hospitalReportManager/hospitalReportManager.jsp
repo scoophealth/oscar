@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2008-2012 Indivica Inc.
+    Copyright (c) 2008-2013 Indivica Inc.
 
     This software is made available under the terms of the
     GNU General Public License, Version 2, 1991 (GPLv2).
@@ -174,7 +174,8 @@ br {
 			</form>
 
 			<br />
-			<input type="button" value="I don't want to receive any more HRM outtage messages for this outtage instance" onclick="window.location='disable_msg_action.jsp'" />
+			<input type="button" value="Prevent further HRM outage messages for this outage instance" onclick="window.location='disable_msg_action.jsp'" />
+
 		</td>
 	</tr>
 	<tr>
