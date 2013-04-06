@@ -211,6 +211,11 @@ function calculateEndTime() {
   var shour = stime.substring(0,2) ;
   var smin = stime.substring(stime.length-vlen) ;
   var duration = document.ADDAPPT.duration.value ;
+  
+  if(isNaN(duration)) {
+	  alert("<bean:message key="Appointment.msgFillTimeField"/>");
+	  return false;
+  }
 
   if(eval(duration) == 0) { duration =1; }
   if(eval(duration) < 0) { duration = Math.abs(duration) ; }
