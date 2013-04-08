@@ -26,6 +26,8 @@
 
 <%@page import="java.util.*,oscar.eform.*"%>
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
 	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
@@ -33,11 +35,12 @@
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String country = request.getLocale().getCountry();
 	
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	
 	String orderByRequest = request.getParameter("orderby");
 	String orderBy = "";
 	if (orderByRequest == null) orderBy = EFormUtil.DATE;
-	else if (orderByRequest.equals("form_subject")) orderBy = EFormUtil.SUBJECT;
-	else if (orderByRequest.equals("form_name")) orderBy = EFormUtil.NAME;
+	else orderBy = orderByRequest;
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -106,13 +109,16 @@ function checkSelectBox() {
 				<table class="elements" style="width:100%">
 					<tr bgcolor=<%=deepColor%>>
 						<th>
-							<a href="efmmanageindependent.jsp?orderby=form_name">
+							<a href="efmmanageindependent.jsp?orderby=<%=EFormUtil.NAME%>">
 								<bean:message key="eform.showmyform.btnFormName" />
 							</a>
 						</th>
 						<th><a
-							href="efmmanageindependent.jsp?orderby=form_subject"><bean:message
+							href="efmmanageindependent.jsp?orderby=<%=EFormUtil.SUBJECT%>"><bean:message
 							key="eform.showmyform.btnSubject" /></a></th>
+						<th><a
+							href="efmmanageindependent.jsp?orderby=<%=EFormUtil.PROVIDER%>"><bean:message
+							key="eform.showmyform.btnFormProvider" /></a></th>
 						<th><a
 							href="efmmanageindependent.jsp"><bean:message
 							key="eform.showmyform.formDate" /></a></th>
@@ -132,6 +138,7 @@ function checkSelectBox() {
 							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
 							onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
 						<td><%=curform.get("formSubject")%></td>
+						<td align='center'><%=providerDao.getProviderNameLastFirst((String)curform.get("providerNo"))%></td>
 						<td align='center'><%=curform.get("formDate")%></td>
 						<td align='center'><a
 							href="../eform/removeEForm.do?callpage=independent&fdid=<%=curform.get("fdid")%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
