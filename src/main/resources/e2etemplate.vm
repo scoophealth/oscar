@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 #**
  * Copyright (c) 2013. Department of Family Practice, University of British Columbia. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -21,8 +20,8 @@
  * Faculty of Medicine
  * University of British Columbia
  * Vancouver, Canada
- *#
-<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ *#<?xml version="1.0" encoding="UTF-8"?>
+ <ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
  xmlns="urn:hl7-org:v3"
  xmlns:hl7="urn:hl7-org:v3"
@@ -557,7 +556,7 @@ Medications and Prescriptions - Medication List
 											<effectiveTime xsi:type="IVL_TS" operator="I">
 												<width value="$med.duration" unit="$med.durUnit"/>
 											</effectiveTime>
-											<!-- OSCAR Frequency Code "$med.freqCode" -->
+											<!-- OSCAR Frequency Code $!med.freqCode -->
 											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
 												<frequency>
 #*        *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
@@ -677,7 +676,7 @@ Medications and Prescriptions - Medication List
 				</section>
 			</component>
 #end
-<!--			
+<!--
 ********************************************************
 Problems and Conditions - Problem List
 ********************************************************
@@ -695,8 +694,7 @@ Problems and Conditions - Problem List
 						<!-- Problem List Observation -->
 						<observation classCode="OBS" moodCode="EVN">
 							<id extension="$problem.id" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
-							<code code="$problem.getDxresearchCode()" codeSystem="2.16.840.1.113883.3.1818.10.4.28"
-codeSystemName="ICD-9" displayName="${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}"/>
+							<code nullFlavor="UNK"/>
 #*    *##if ( $problem.status == "A" )
 							<statusCode code="active"/>
 #*    *##else
@@ -723,6 +721,14 @@ codeSystemName="ICD-9" displayName="${patient.getICD9Description("$problem.getDx
 									</assignedPerson>
 								</assignedAuthor>
 							</author>
+							<entryRelationship typeCode="COMP" contextConductionInd="false">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"
+									codeSystemName="PITO ObservationType"/>
+									<value xsi:type="CD" code="$problem.getDxresearchCode()" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}"/>
+								</observation>
+							</entryRelationship>
 						</observation>
 					</entry>
 #**##end
