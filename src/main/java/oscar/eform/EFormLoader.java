@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.data.DatabaseAP;
@@ -102,9 +103,9 @@ public class EFormLoader {
 
     public static String getOpenEform(String url, String fdid, String fname, String field, EForm efm) {
         String fid = EFormUtil.getEFormIdByName(fname);
-        if (EFormUtil.blank(fid)) return "alert('Eform does not exist ["+fname+"]');";
-        if (EFormUtil.blank(url)) return null;
-        if (EFormUtil.blank(field)) return null;
+        if (StringUtils.isBlank(fid)) return "alert('Eform does not exist ["+fname+"]');";
+        if (StringUtils.isBlank(url)) return null;
+        if (StringUtils.isBlank(field)) return null;
 
         String providerNo = efm.getProviderNo();
         String demographicNo = efm.getDemographicNo();
@@ -113,7 +114,7 @@ public class EFormLoader {
 
         if (url.contains("efmformadd_data.jsp")) { //whole new eform
             url += "?fid="+fid+"&demographic_no="+demographicNo+"&appointment="+appointmentNo;
-        } else if (!EFormUtil.blank(fdid)) { //filled eform, eform already linked
+        } else if (!StringUtils.isBlank(fdid)) { //filled eform, eform already linked
             url += "?fdid="+fdid+"&appointment="+appointmentNo;
         } else if (demographicNo.equals("-1")) { //eform viewed in admin
             url += "?fid="+fid;

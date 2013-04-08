@@ -47,6 +47,7 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -66,6 +67,7 @@ import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -74,7 +76,6 @@ import oscar.eform.data.EForm;
 import oscar.eform.data.EFormBase;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgMessageData;
-import oscar.oscarProvider.data.ProviderData;
 import oscar.util.ConversionUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 
@@ -86,16 +87,18 @@ public class EFormUtil {
 	public static final String SUBJECT = "subject";
 	public static final String DATE = "form_date DESC, form_time DESC";
 	public static final String FILE_NAME = "file_name";
+	public static final String PROVIDER = "form_provider";
 	// -----------
 	public static final String DELETED = "deleted";
 	public static final String CURRENT = "current";
 	public static final String ALL = "all";
 
-	private static CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-	private static CaseManagementNoteLinkDAO cmDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
-	private static EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
-	private static EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
-	private static EFormGroupDao eFormGroupDao = (EFormGroupDao) SpringUtils.getBean("EFormGroupDao");
+	private static CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean(CaseManagementManager.class);
+	private static CaseManagementNoteLinkDAO cmDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean(CaseManagementNoteLinkDAO.class);
+	private static EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean(EFormDataDao.class);
+	private static EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean(EFormValueDao.class);
+	private static EFormGroupDao eFormGroupDao = (EFormGroupDao) SpringUtils.getBean(EFormGroupDao.class);
+	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean(ProviderDao.class);
 
 	private EFormUtil() {
 	}
@@ -266,6 +269,7 @@ public class EFormUtil {
 
 		if (NAME.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_NAME_COMPARATOR);
 		else if (SUBJECT.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_SUBJECT_COMPARATOR);
+		else if (PROVIDER.equals(sortBy)) sortByProviderName(allEformDatas);
 		else Collections.sort(allEformDatas, EFormData.FORM_DATE_COMPARATOR);
 
 		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
@@ -707,7 +711,7 @@ public class EFormUtil {
 
 	public static void writeEformTemplate(ArrayList<String> paramNames, ArrayList<String> paramValues, EForm eForm, String fdid, String programNo, String context_path) {
 		String text = eForm != null ? eForm.getTemplate() : null;
-		if (blank(text)) return;
+		if (StringUtils.isBlank(text)) return;
 
 		text = putTemplateValues(paramNames, paramValues, text);
 		text = putTemplateEformValues(eForm, fdid, context_path, text);
@@ -719,7 +723,7 @@ public class EFormUtil {
 		for (int i = 0; i < template_echart.length; i++) {
 			templates = getWithin(template_echart[i], text);
 			for (String template : templates) {
-				if (blank(template)) continue;
+				if (StringUtils.isBlank(template)) continue;
 
 				template = putTemplateEformHtml(eForm.getFormHtml(), template);
 				saveCMNote(eForm, fdid, programNo, code[i], template);
@@ -729,11 +733,11 @@ public class EFormUtil {
 		// write to document
 		templates = getWhole("document", text);
 		for (String template : templates) {
-			if (blank(template)) continue;
+			if (StringUtils.isBlank(template)) continue;
 
 			String docDesc = getInfo("docdesc", template, eForm.getFormName());
 			String belong = getAttribute("belong", getBeginTag("document", template));
-			if (blank(belong)) belong = "provider";
+			if (StringUtils.isBlank(belong)) belong = "provider";
 			String docOwner = getInfo("docowner", template, eForm.getProviderNo());
 			if (belong.equalsIgnoreCase("patient")) docOwner = getInfo("docowner", template, eForm.getDemographicNo());
 			String docText = getContent(template);
@@ -750,13 +754,13 @@ public class EFormUtil {
 		// write to message
 		templates = getWithin("message", text);
 		for (String template : templates) {
-			if (blank(template)) continue;
+			if (StringUtils.isBlank(template)) continue;
 
 			String subject = getInfo("subject", template, eForm.getFormName());
 			String sentWho = getSentWho(template);
 			String[] sentList = getSentList(template);
 			String userNo = eForm.getProviderNo();
-			String userName = getProviderName(eForm.getProviderNo());
+			String userName = providerDao.getProviderName(eForm.getProviderNo());
 			String message = getContent(template);
 			message = putTemplateEformHtml(eForm.getFormHtml(), message);
 
@@ -766,7 +770,7 @@ public class EFormUtil {
 	}
 
 	public static int findIgnoreCase(String phrase, String text, int start) {
-		if (blank(phrase) || blank(text)) return -1;
+		if (StringUtils.isBlank(phrase) || StringUtils.isBlank(text)) return -1;
 
 		text = text.toLowerCase();
 		phrase = phrase.toLowerCase();
@@ -774,13 +778,13 @@ public class EFormUtil {
 	}
 
 	public static String removeQuotes(String s) {
-		if (blank(s)) return s;
+		if (StringUtils.isBlank(s)) return s;
 
 		s = s.trim();
-		if (blank(s)) return s;
+		if (StringUtils.isBlank(s)) return s;
 
 		if (s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"') s = s.substring(1, s.length() - 1);
-		if (blank(s)) return s;
+		if (StringUtils.isBlank(s)) return s;
 
 		if (s.charAt(0) == '\'' && s.charAt(s.length() - 1) == '\'') s = s.substring(1, s.length() - 1);
 		return s.trim();
@@ -791,7 +795,7 @@ public class EFormUtil {
 	}
 
 	public static String getAttribute(String key, String htmlTag, boolean startsWith) {
-		if (blank(key) || blank(htmlTag)) return null;
+		if (StringUtils.isBlank(key) || StringUtils.isBlank(htmlTag)) return null;
 
 		Matcher m = getAttributeMatcher(key, htmlTag, startsWith);
 		if (m == null) return null;
@@ -805,7 +809,7 @@ public class EFormUtil {
 
 	public static int getAttributePos(String key, String htmlTag) {
 		int pos = -1;
-		if (blank(key) || blank(htmlTag)) return pos;
+		if (StringUtils.isBlank(key) || StringUtils.isBlank(htmlTag)) return pos;
 
 		Matcher m = getAttributeMatcher(key, htmlTag, false);
 		if (m == null) return pos;
@@ -813,10 +817,20 @@ public class EFormUtil {
 		return m.start();
 	}
 
-	public static boolean blank(String s) {
-		return (s == null || s.trim().equals(""));
+	public static ArrayList<String> listRichTextLetterTemplates() {
+		String imagePath = OscarProperties.getInstance().getProperty("eform_image");
+		MiscUtils.getLogger().debug("Img Path: " + imagePath);
+		File dir = new File(imagePath);
+		String[] files = DisplayImageAction.getRichTextLetterTemplates(dir);
+		ArrayList<String> fileList;
+		if (files != null) fileList = new ArrayList<String>(Arrays.asList(files));
+		else fileList = new ArrayList<String>();
+
+		return fileList;
 	}
 
+	
+	
 	@Deprecated
 	private static ResultSet getSQL(String sql) {
 		ResultSet rs = null;
@@ -838,7 +852,7 @@ public class EFormUtil {
 
 	private static Matcher getAttributeMatcher(String key, String htmlTag, boolean startsWith) {
 		Matcher m_return = null;
-		if (blank(key) || blank(htmlTag)) return m_return;
+		if (StringUtils.isBlank(key) || StringUtils.isBlank(htmlTag)) return m_return;
 
 		Pattern p = Pattern.compile("\\b[^\\s'\"=>]+[ ]*=[ ]*\"[^\"]*\"|\\b[^\\s'\"=>]+[ ]*=[ ]*'[^']*'|\\b[^\\s'\"=>]+[ ]*=[ ]*[^ >]*|\\b[^\\s>]+", Pattern.CASE_INSENSITIVE);
 		Matcher m = p.matcher(htmlTag);
@@ -858,7 +872,7 @@ public class EFormUtil {
 	}
 
 	private static String putTemplateValues(ArrayList<String> paramNames, ArrayList<String> paramValues, String template) {
-		if (blank(template)) return template;
+		if (StringUtils.isBlank(template)) return template;
 
 		String tag = "$t{";
 		String nwTemplate = "";
@@ -881,7 +895,7 @@ public class EFormUtil {
 	}
 
 	private static String putTemplateEformValues(EForm eForm, String fdid, String path, String template) {
-		if (eForm == null || blank(template)) return template;
+		if (eForm == null || StringUtils.isBlank(template)) return template;
 
 		String[] efields = { "name", "subject", "patient", "provider", "link" };
 		String[] eValues = { eForm.getFormName(), eForm.getFormSubject(), eForm.getDemographicNo(), eForm.getProviderNo(), "<a href='" + path + "/eform/efmshowform_data.jsp?fdid=" + fdid + "' target='_blank'>" + eForm.getFormName() + "</a>" };
@@ -917,7 +931,7 @@ public class EFormUtil {
 	}
 
 	private static String putTemplateEformHtml(String html, String template) {
-		if (blank(html) || blank(template)) return "";
+		if (StringUtils.isBlank(html) || StringUtils.isBlank(template)) return "";
 
 		html = removeAction(html);
 		String tag = "$te{eform.html}";
@@ -934,7 +948,7 @@ public class EFormUtil {
 	}
 
 	private static String removeAction(String html) {
-		if (blank(html)) return html;
+		if (StringUtils.isBlank(html)) return html;
 
 		Pattern p = Pattern.compile("<form[^<>]*>", Pattern.CASE_INSENSITIVE);
 		Matcher m = p.matcher(html);
@@ -953,10 +967,10 @@ public class EFormUtil {
 	}
 
 	private static void saveCMNote(EForm eForm, String fdid, String programNo, String code, String note) {
-		if (blank(note)) return;
+		if (StringUtils.isBlank(note)) return;
 
 		CaseManagementNote cNote = createCMNote(eForm.getDemographicNo(), eForm.getProviderNo(), programNo, note);
-		if (!blank(code)) {
+		if (!StringUtils.isBlank(code)) {
 			Set<CaseManagementIssue> scmi = createCMIssue(eForm.getDemographicNo(), code);
 			cNote.setIssues(scmi);
 		}
@@ -1005,7 +1019,7 @@ public class EFormUtil {
 
 	private static ArrayList<Integer> getFieldIndices(String fieldtag, String s) {
 		ArrayList<Integer> fieldIndexList = new ArrayList<Integer>();
-		if (blank(fieldtag) || blank(s)) return fieldIndexList;
+		if (StringUtils.isBlank(fieldtag) || StringUtils.isBlank(s)) return fieldIndexList;
 
 		fieldtag = fieldtag.toLowerCase();
 		s = s.toLowerCase();
@@ -1021,13 +1035,13 @@ public class EFormUtil {
 	}
 
 	private static String getInfo(String tag, String template, String deflt) {
-		if (blank(tag) || blank(template)) return deflt;
+		if (StringUtils.isBlank(tag) || StringUtils.isBlank(template)) return deflt;
 
 		ArrayList<String> infos = getWithin(tag, template);
 		if (infos.isEmpty()) return deflt;
 
 		String info = infos.get(0).replaceAll("\\s", "");
-		return blank(info) ? deflt : info;
+		return StringUtils.isBlank(info) ? deflt : info;
 	}
 
 	private static String getContent(String template) {
@@ -1042,7 +1056,7 @@ public class EFormUtil {
 
 	private static ArrayList<String> getWithin(String tag, String s) {
 		ArrayList<String> within = new ArrayList<String>();
-		if (blank(tag) || blank(s)) return within;
+		if (StringUtils.isBlank(tag) || StringUtils.isBlank(s)) return within;
 
 		ArrayList<String> w = getWhole(tag, s);
 		for (String whole : w) {
@@ -1055,7 +1069,7 @@ public class EFormUtil {
 
 	private static ArrayList<String> getWhole(String tag, String s) {
 		ArrayList<String> whole = new ArrayList<String>();
-		if (blank(tag) || blank(s)) return whole;
+		if (StringUtils.isBlank(tag) || StringUtils.isBlank(s)) return whole;
 
 		String sBegin = "<" + tag;
 		String sEnd = "</" + tag + ">";
@@ -1091,22 +1105,11 @@ public class EFormUtil {
 	}
 
 	private static String getBeginTag(String tag, String template) {
-		if (blank(tag) || blank(template)) return "";
+		if (StringUtils.isBlank(tag) || StringUtils.isBlank(template)) return "";
 
 		Pattern p = Pattern.compile("<" + tag + "[^<>]*>", Pattern.CASE_INSENSITIVE);
 		Matcher m = p.matcher(template);
 		return m.find() ? m.group() : "";
-	}
-
-	private static String getProviderName(String providerNo) {
-		if (blank(providerNo)) return null;
-
-		ProviderData pd = new ProviderData(providerNo);
-		String firstname = pd.getFirst_name();
-		String lastname = pd.getLast_name();
-		String name = blank(firstname) ? "" : firstname;
-		name += blank(lastname) ? "" : " " + lastname;
-		return name;
 	}
 
 	private static String[] getSentList(String msgtxt) {
@@ -1122,8 +1125,8 @@ public class EFormUtil {
 		String[] sentList = getSentList(msgtxt);
 		String sentWho = "";
 		for (String sent : sentList) {
-			sent = getProviderName(sent);
-			if (!blank(sentWho) && !blank(sent)) {
+			sent = providerDao.getProviderName(sent);
+			if (!StringUtils.isBlank(sentWho) && !StringUtils.isBlank(sent)) {
 				sentWho += ", " + sent;
 			} else {
 				sentWho += sent;
@@ -1132,16 +1135,24 @@ public class EFormUtil {
 		return sentWho;
 	}
 
-	public static ArrayList<String> listRichTextLetterTemplates() {
-		String imagePath = OscarProperties.getInstance().getProperty("eform_image");
-		MiscUtils.getLogger().debug("Img Path: " + imagePath);
-		File dir = new File(imagePath);
-		String[] files = DisplayImageAction.getRichTextLetterTemplates(dir);
-		ArrayList<String> fileList;
-		if (files != null) fileList = new ArrayList<String>(Arrays.asList(files));
-		else fileList = new ArrayList<String>();
-
-		return fileList;
+	private static void sortByProviderName(List<EFormData> allEformDatas) {
+		if (allEformDatas == null || allEformDatas.isEmpty()) return;
+		
+		for (int i=allEformDatas.size()-1; i>0; i--) {
+			
+			boolean swapped = false;
+			for (int j=0; j<i; j++) {
+				String providerName = providerDao.getProviderNameLastFirst(allEformDatas.get(j).getProviderNo());
+				String providerNamePlus = providerDao.getProviderNameLastFirst(allEformDatas.get(j+1).getProviderNo());
+				
+				if (providerName.compareToIgnoreCase(providerNamePlus)>0) {
+					EFormData tmp = allEformDatas.get(j);
+					allEformDatas.set(j, allEformDatas.get(j+1));
+					allEformDatas.set(j+1, tmp);
+					swapped = true;
+				}
+			}
+			if (!swapped) break;
+		}
 	}
-
 }
