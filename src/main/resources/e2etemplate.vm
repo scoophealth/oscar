@@ -349,7 +349,7 @@ Laboratory Results & Results
 						<!-- Laboratory Observation -->
 						<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
 						<observation classCode="OBS" moodCode="RQO">
-							<id root="TBD" extension="AN123"/>
+							<id extension="$lab.hl7TextInfo.id" root="TBD"/>
 							<code nullFlavor='UNK'/>
 							<text>$lab.hl7TextInfo.discipline</text>
 							<!-- Ordering Provider -->
