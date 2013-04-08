@@ -1308,14 +1308,30 @@ ctlCount = 0;
 <script type="text/javascript">//<![CDATA[
     // the default multiple dates selected, first time the calendar is instantiated
     var MA = [];
+    setupServiceDates();
+    
+    function setupServiceDates() {
+		var el = document.titlesearch.billDate.value;
+		
+		var dates = el.split('\n');
+		
+		MA.length = 0;
+		for (var i in dates) {
+			if (dates[i])
+				MA[MA.length] = new Date(dates[i]);
+		}
+	}
+    
     function closed(cal) {
       //var el = document.getElementById("output");
       var el = document.titlesearch.billDate;
       // reset initial content.
       el.innerHTML = "";
+      el.value = "";
       MA.length = 0;
       for (var i in cal.multiple) {
         var d = cal.multiple[i];
+        
         if (d) {
           //el.innerHTML += d.print("%Y-%m-%d") + "<br />";
           el.value += d.print("%Y-%m-%d") + "\n";
@@ -1323,6 +1339,7 @@ ctlCount = 0;
         }
       }
       cal.hide();
+      
       return true;
     };
 
