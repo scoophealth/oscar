@@ -80,7 +80,8 @@ CDA Header
 	<custodian typeCode="CST">
 		<assignedCustodian classCode="ASSIGNED">
 			<representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
-				<id extension="$custodianId" root="$custodianIdRoot"/>
+				<id extension="$custodian.id" root="$custodianIdRoot"/>
+				<name>$custodian.clinicName</name>
 			</representedCustodianOrganization>
 		</assignedCustodian>
 	</custodian>

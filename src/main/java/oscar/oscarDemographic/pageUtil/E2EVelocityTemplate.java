@@ -32,7 +32,10 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
 
 /**
@@ -42,10 +45,12 @@ import org.oscarehr.util.VelocityUtils;
 
 public class E2EVelocityTemplate {
 	private static Logger log = MiscUtils.getLogger();
+	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2etemplate.vm";
 	private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2eformcode.csv";
 	private static String template = null;
 	protected static Map<String,String> formCodes = null;
+	private Clinic clinic = clinicDao.getClinic();
 	private VelocityContext context;
 	
 	public E2EVelocityTemplate() {
@@ -113,10 +118,9 @@ public class E2EVelocityTemplate {
 		context.put("e2e", e2eResources);
 		context.put("eol", eol);
 		
-		// Author/Custodian Hardcode
 		context.put("authorId", "OSCAR EMR");
 		context.put("authorIdRoot", "DCCD2C68-389B-44C4-AD99-B8FB2DAD1493");
-		context.put("custodianId", "OSCAR EMR");
+		context.put("custodian", clinic);
 		context.put("custodianIdRoot", "7EEF0BCC-F03E-4742-A736-8BAC57180C5F");
 		
 		// Merge Template & Data Model
