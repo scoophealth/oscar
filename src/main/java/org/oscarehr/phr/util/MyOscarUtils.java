@@ -42,6 +42,7 @@ import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.LoginResultTransfer3;
+import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.util.DeamonThreadFactory;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
@@ -164,12 +165,16 @@ public final class MyOscarUtils {
 			byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
 			String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
 
+			try
+			{
 			LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
 			
-			if (loginResultTransfer != null) {
 				myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.locale);
 				MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
-			} else {
+			}
+			catch (NotAuthorisedException_Exception e) {
+				logger.warn("Could not login to MyOscar, invalid credentials. myOscarUserName="+myOscarUserName);
+				
 				// login failed, remove myoscar saved password
 				providerPreference.setEncryptedMyOscarPassword(null);
 				providerPreferenceDao.merge(providerPreference);
