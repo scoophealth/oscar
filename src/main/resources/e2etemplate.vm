@@ -516,11 +516,11 @@ Medications and Prescriptions - Medication List
 								<substanceAdministration classCode="SBADM" moodCode="RQO">
 									<id extension="$med.id" root="2.16.840.1.113883.3.1818.10.10.3"/>
 									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
-#*        *##if ( $patient.isActiveDrug($med.getEndDate()) )
+#*    *##if ( $patient.isActiveDrug($med.getEndDate()) )
 									<statusCode code="active"/>
-#*        *##else
+#*    *##else
 									<statusCode code="completed"/>
-#*        *##end
+#*    *##end
 									<effectiveTime xsi:type="IVL_TS" operator="I">
 										<low value="$dateTool.format('yyyyMMdd', $med.getRxDate())"/>
 										<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
@@ -560,55 +560,55 @@ Medications and Prescriptions - Medication List
 											<!-- OSCAR Frequency Code $!med.freqCode -->
 											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
 												<frequency>
-#*        *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
+#*    *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
 													<numerator value="2"/>
 													<denominator value="1" unit="d"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("TID") || $med.freqCode.equalsIgnoreCase("3x day") || $med.freqCode.equalsIgnoreCase("3x daily"))
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("TID") || $med.freqCode.equalsIgnoreCase("3x day") || $med.freqCode.equalsIgnoreCase("3x daily"))
 													<numerator value="3"/>
 													<denominator value="1" unit="d"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("QID") || $med.freqCode.equalsIgnoreCase("4x day") || $med.freqCode.equalsIgnoreCase("4x daily"))
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QID") || $med.freqCode.equalsIgnoreCase("4x day") || $med.freqCode.equalsIgnoreCase("4x daily"))
 													<numerator value="4"/>
 													<denominator value="1" unit="d"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q1H") || $med.freqCode.equalsIgnoreCase("Q1-2H") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1H") || $med.freqCode.equalsIgnoreCase("Q1-2H") )
 													<numerator value="1"/>
 													<denominator value="1" unit="h"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q2H") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2H") )
 													<numerator value="1"/>
 													<denominator value="2" unit="h"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q3-4H") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3-4H") )
 													<numerator value="1"/>
 													<denominator value="3" unit="h"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q4H") || $med.freqCode.equalsIgnoreCase("Q4-6H") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q4H") || $med.freqCode.equalsIgnoreCase("Q4-6H") )
 													<numerator value="1"/>
 													<denominator value="4" unit="h"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q6H") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q6H") )
 													<numerator value="1"/>
 													<denominator value="6" unit="h"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q8H") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q8H") )
 													<numerator value="1"/>
 													<denominator value="8" unit="h"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q12H") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q12H") )
 													<numerator value="1"/>
 													<denominator value="12" unit="h"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("QAM") || $med.freqCode.equalsIgnoreCase("QPM") || $med.freqCode.equalsIgnoreCase("QHS") || $med.freqCode.equalsIgnoreCase("daily") || $med.freqCode.equalsIgnoreCase("once daily") || $med.freqCode.equalsIgnoreCase("OD") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QAM") || $med.freqCode.equalsIgnoreCase("QPM") || $med.freqCode.equalsIgnoreCase("QHS") || $med.freqCode.equalsIgnoreCase("daily") || $med.freqCode.equalsIgnoreCase("once daily") || $med.freqCode.equalsIgnoreCase("OD") )
 													<numerator value="1"/>
 													<denominator value="1" unit="d"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("weekly") || $med.freqCode.equalsIgnoreCase("Q1Week") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("weekly") || $med.freqCode.equalsIgnoreCase("Q1Week") )
 													<numerator value="1"/>
 													<denominator value="1" unit="w"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q2Week") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2Week") )
 													<numerator value="1"/>
 													<denominator value="2" unit="w"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q1Month") || $med.freqCode.equalsIgnoreCase("monthly") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1Month") || $med.freqCode.equalsIgnoreCase("monthly") )
 													<numerator value="1"/>
 													<denominator value="1" unit="m"/>
-#*        *##elseif ( $med.freqCode.equalsIgnoreCase("Q3Month") )
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3Month") )
 													<numerator value="1"/>
 													<denominator value="3" unit="m"/>
-#*        *##else
+#*    *##else
 													<numerator nullFlavor="UNK"/>
 													<denominator nullFlavor="UNK"/>
-#*        *##end
+#*    *##end
 												</frequency>
 											</effectiveTime>
 											<routeCode code="$med.route" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="$med.route"/>
@@ -618,9 +618,9 @@ Medications and Prescriptions - Medication List
 												<high value="$med.takeMax"/>
 											</doseQuantity>
 											<!-- OSCAR Form Code "$med.drugForm" -->
-#*        *##if( $e2e.formCodeMap($med.drugForm) )
+#*    *##if( $e2e.formCodeMap($med.drugForm) )
 											<administrationUnitCode code="$e2e.formCodeMap($med.drugForm)" codeSystem="2.16.840.1.113883.5.1127" displayName="$med.drugForm"/>
-#*        *##end
+#*    *##end
 											<consumable typeCode="CSM">
 												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 												<!--Medication Identification-->
