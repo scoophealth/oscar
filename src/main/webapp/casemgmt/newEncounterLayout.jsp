@@ -335,6 +335,7 @@ var Colour = {
         li.cpp {
             color: #000000;
             font-family:arial,sans-serif;
+            margin-bottom: 1.2em;
         }
 
         /*Note format */
