@@ -654,7 +654,7 @@ public class OLISSearchAction extends DispatchAction {
 				String orderingFacility = request.getParameter("orderingFacility");
 
 				if (orderingFacility != null && orderingFacility.trim().length() > 0) {
-					((Z06Query) query).setOrderingFacilityId(new ORC21(orderingFacility, "ISO"));
+					((Z06Query) query).setOrderingFacilityId(new ORC21(orderingFacility, "^ISO"));
 				}
 
 			} else if (queryType.equalsIgnoreCase("Z07")) {
