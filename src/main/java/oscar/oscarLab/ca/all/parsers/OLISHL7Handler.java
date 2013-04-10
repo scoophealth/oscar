@@ -681,15 +681,32 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 	}
 
-	public String getLastUpdateInOLIS() {
+	
+	public String getLastUpdateInOLISUnformated() {
 		try {
-			String date = getString(terser.get("/.OBR-22-1"));
-			if (date.length() > 0) return formatDateTime(date);
-			return "";
+			 String date = null;
+			 
+			 int obrNum = getOBRCount();
+			 Segment obr = null;
+			 if (obrNum == 1) {
+				obr = terser.getSegment("/.OBR");
+			 } else {
+				obr = (Segment) terser.getFinder().getRoot().get("OBR" + obrNum);
+			 }
+			 
+			 date = Terser.get(obr, 22, 0,1,1);
+			 
+			return date;
 		} catch (HL7Exception e) {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
 			return "";
 		}
+	}
+	
+	public String getLastUpdateInOLIS() {
+			String date = getLastUpdateInOLISUnformated();
+			if (date.length() > 0) return formatDateTime(date);
+			return "";
 	}
 
 	public String getOBXCEParentId(int obr, int obx) {

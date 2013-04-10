@@ -50,18 +50,24 @@ public class OLISHL7Handler implements MessageHandler {
 	}
 	public String parse(String serviceName, String fileName, int fileId, boolean routeToCurrentProvider) {		
 		int i = 0;
+		String lastTimeStampAccessed = null;
 		RouteReportResults results = new RouteReportResults();
 		
-		String provNo =  LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-		try {
+				try {
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
+			
 			for (i = 0; i < messages.size(); i++) {
 				String msg = messages.get(i);
+				logger.info(msg);
+				
+				lastTimeStampAccessed = getLastUpdateInOLIS(msg) ;
+				
 				if(isDuplicate(msg)) {
-					return "success";
+					continue; 
 				}
 				MessageUploader.routeReport(serviceName,"OLIS_HL7", msg.replace("\\E\\", "\\SLASHHACK\\").replace("µ", "\\MUHACK\\").replace("\\H\\", "\\.H\\").replace("\\N\\", "\\.N\\"), fileId, results);
 				if (routeToCurrentProvider) {
+					String provNo =  LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 					ProviderLabRouting routing = new ProviderLabRouting();
 					routing.route(results.segmentId, provNo, DbConnectionFilter.getThreadLocalDbConnection(), "HL7");
 					this.lastSegmentId = results.segmentId;
@@ -73,7 +79,7 @@ public class OLISHL7Handler implements MessageHandler {
 			logger.error("Could not upload message", e);
 			return null;
 		}
-		return ("success");
+		return lastTimeStampAccessed;
 	}
 	
 	public int getLastSegmentId() {
@@ -82,6 +88,10 @@ public class OLISHL7Handler implements MessageHandler {
 	//TODO: check HIN
 	//TODO: check # of results
 	
+	private String getLastUpdateInOLIS(String msg) {
+		oscar.oscarLab.ca.all.parsers.OLISHL7Handler h = (oscar.oscarLab.ca.all.parsers.OLISHL7Handler) Factory.getHandler("OLIS_HL7", msg);
+		return h.getLastUpdateInOLISUnformated();	
+	}
 	private boolean isDuplicate(String msg) {
 		
 		
