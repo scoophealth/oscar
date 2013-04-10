@@ -184,7 +184,7 @@ Allergies and Intolerances - (Reaction List)
 							</entryRelationship>
 						</observation>
 					</entry>
-#**##end		
+#**##end
 				</section>
 			</component>
 #else
@@ -490,7 +490,7 @@ Medications and Prescriptions - Medication List
 #*        *##else
 							<statusCode code="completed"/>
 #*        *##end
-							<!--Medication Identification-->
+							<!-- Medication Identification -->
 							<consumable typeCode="CSM">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 								<manufacturedProduct classCode="MANU">
@@ -507,8 +507,31 @@ Medications and Prescriptions - Medication List
 										</strength>
 									</manufacturedLabeledDrug>
 								</manufacturedProduct>
-							</consumable>    
-							<!--end Medication Identification-->
+							</consumable>
+							<!-- Record Type -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.32"/>
+								<!-- Unbounded Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="29546-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Record Type"/>
+#*        *##if ( $med.longTerm )
+									<text>Usual medication</text>
+#*        *##else
+									<text>One-time/acute medication</text>
+#*        *##end
+								</observation>
+							</entryRelationship>
+							<!-- Last Review Date -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
+								<!-- Date Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="DTREVIEW" displayName="Date Reviewed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"
+									codeSystemName="PITO ObservationType"/>
+									<effectiveTime value="$dateTool.format('yyyyMMdd', $med.getLastUpdateDate())"/>
+									<e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+								</observation>
+							</entryRelationship>
 #*    *##end
 							<!-- Medication Prescription Event-->
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
