@@ -356,10 +356,10 @@ try
 					<%@include file="calculatorsSelectList.jspf" %>
 				</security:oscarSec>
 				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false">
-					<select style="width:100px;">
+					<select style="width:100px;" onchange="javascript:popupPage(700,700,'Templates',this.value);">
 						<option><bean:message key="oscarEncounter.Header.Templates"/></option>
 						<option>------------------</option>
-						<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()%>/admin/providertemplate.jsp');">New Template</option>
+						<option value="<%=request.getContextPath()%>/admin/providertemplate.jsp">New Template</option>
 						<option>------------------</option>
 						<%
 							EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
@@ -369,7 +369,7 @@ try
 							{
 								String templateName=StringEscapeUtils.escapeHtml(encounterTemplate.getEncounterTemplateName());
 								%>
-									<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()+"/admin/providertemplate.jsp?dboperation=Edit&name="+templateName%>');"><%=templateName%></option>
+									<option value="<%=request.getContextPath()+"/admin/providertemplate.jsp?dboperation=Edit&name="+templateName%>"><%=templateName%></option>
 								<%
 							}
 						%>
