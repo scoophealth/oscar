@@ -55,6 +55,7 @@ import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -78,6 +79,7 @@ public class PatientExport {
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
 	
 	private Date currentDate = new Date();
+	private String authorId = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 	private Integer demographicNo = null;
 	private Demographic demographic = null;
 	private List<Drug> drugs = null;
@@ -494,6 +496,10 @@ public class PatientExport {
 			log.error(e.getMessage(), e);
 		}
 		return date;
+	}
+	
+	public String getAuthorId() {
+		return authorId;
 	}
 	
 	public String getProviderFirstName(String providerNo) {

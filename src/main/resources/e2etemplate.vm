@@ -69,7 +69,13 @@ CDA Header
 	<author typeCode="AUT" contextControlCode="OP">
 		<time value="$dateTool.get('yyyyMMdd')"/>
 		<assignedAuthor>
-			<id extension="$authorId" root="$authorIdRoot"/>
+			<id extension="$patient.authorId" root="$authorIdRoot"/>
+			<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+				<name use="L">
+					<given>$patient.getProviderFirstName($patient.authorId)</given>
+					<family>$patient.getProviderLastName($patient.authorId)</family>
+				</name>
+			</assignedPerson>
 		</assignedAuthor>
 	</author>
 	<!-- 
