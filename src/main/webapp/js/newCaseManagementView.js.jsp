@@ -389,6 +389,7 @@ function notesLoader(offset, numToReturn, demoNo) {
 			ctx + "/CaseManagementView.do",
 			{
 				method: 'post',
+				asynchronous:false,
 				postBody: params,
 				evalScripts: true,
 				insertion: Insertion.Top,
@@ -3252,8 +3253,13 @@ function autoCompleteShowMenuCPP(element, update) {
 
         //$("notes2print").value = "";
 
+		// load all notes before printing
+		var demographicNo = $("demographicNo").value;
+		notesLoader(0, 9999, demographicNo);
+		var size = $("encMainDiv").children.length;
+
         //cycle through container divs for each note
-        for( idx = 1; idx <= maxNcId; ++idx ) {
+        for( idx = 1; idx <= size; ++idx ) {
         
         	if( $("nc" + idx) == null ) continue;
         
