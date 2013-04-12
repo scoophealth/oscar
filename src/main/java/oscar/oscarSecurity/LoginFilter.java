@@ -69,7 +69,10 @@ public class LoginFilter implements Filter {
 		"/EFormViewForPdfGenerationServlet",
 		"/EFormSignatureViewForPdfGenerationServlet",
 		"/EFormImageViewForPdfGenerationServlet",
-		"/ProxyEformNotification"
+		"/ProxyEformNotification",
+		"/js/jquery-1.7.1.min.js",
+		"/js/bootstap",
+		"/css/bootstrap"
 	};
 	
 	private static final String[] EXEMPT_URLS_FOR_REQUEST_TIMEOUT = {
@@ -91,7 +94,10 @@ public class LoginFilter implements Filter {
 		"/oscar/provider/tabAlertsRefresh.jsp",
 		"/oscar/SystemMessage.do",
 		"/oscar/FacilityMessage.do",
-		"/ProxyEformNotification"
+		"/ProxyEformNotification",
+		"/js/jquery-1.7.1.min.js",
+		"/js/bootstrap",
+		"/css/bootstrap"
 	};
 	
 	private static final String[] EXEMPT_URLS_FOR_REQUEST_TIMEOUT_REDIRECT = {

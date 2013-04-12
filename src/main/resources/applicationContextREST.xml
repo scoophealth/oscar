@@ -1,0 +1,94 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:cxf="http://cxf.apache.org/core"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+		http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+		http://cxf.apache.org/jaxws	http://cxf.apache.org/schemas/jaxws.xsd
+		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+	">
+	
+	<context:component-scan base-package="org.oscarehr.ws.rest"/>
+	
+	
+	    <bean id="oauthProvider" class="oscar.login.OscarOAuthDataProvider" autowire="byName"/>
+
+	<bean id="requestTokenService" class="oscar.login.OscarRequestTokenService">
+	   <property name="dataProvider" ref="oauthProvider"/>
+	</bean>
+	
+	<bean id="oAuthFilter" class="org.apache.cxf.rs.security.oauth.filters.OAuthRequestFilter">
+         <property name="dataProvider" ref="oauthProvider"/>
+         <property name="useUserSubject" value="true"/>
+     </bean>
+	
+	<bean id="authorizationService" class="org.apache.cxf.rs.security.oauth.services.AuthorizationRequestService">
+		<property name="dataProvider" ref="oauthProvider"/>
+	</bean>
+     
+     <bean id="dispatchProvider" class="org.apache.cxf.jaxrs.provider.RequestDispatcherProvider">
+      <property name="resourcePath" value="/login/3rdpartyLogin.jsp"/>
+	 </bean>
+	 
+	      
+	<bean id="accessTokenService" class="org.apache.cxf.rs.security.oauth.services.AccessTokenService">
+	  <property name="dataProvider" ref="oauthProvider"/>
+	</bean>
+  
+	
+    <jaxrs:server id="oauthService" address="/oauth" >
+   
+        <jaxrs:serviceBeans>
+            <ref bean="requestTokenService"/>
+            <ref bean="authorizationService"/>
+            <ref bean="accessTokenService"/>
+        </jaxrs:serviceBeans>
+         
+        <jaxrs:providers>
+      		<ref bean="dispatchProvider"/>
+   		</jaxrs:providers> 
+      
+        <jaxrs:extensionMappings>
+            <entry key="xml" value="application/xml" />         
+        </jaxrs:extensionMappings>
+        
+    </jaxrs:server>
+
+  <jaxrs:server id="restServices" address="/services">
+        <jaxrs:serviceBeans>
+            <bean class="org.oscarehr.ws.rest.ProviderService"  autowire="byName"/>
+        </jaxrs:serviceBeans>
+      
+      
+       
+      <jaxrs:providers>
+           <ref bean="oAuthFilter"/>
+           <ref bean="jaxb"/>
+        </jaxrs:providers>
+      
+      
+        <jaxrs:extensionMappings>
+            <entry key="xml" value="application/xml" />
+            <entry key="json" value="application/json" />
+        </jaxrs:extensionMappings>
+    </jaxrs:server>
+    
+   
+    <bean id="jaxb" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
+      <property name="singleJaxbContext" value="true"/>
+ 
+      <property name="extraClass">
+         <list>
+           <value>org.oscarehr.ws.transfer_objects.ProviderTransfer</value>
+         </list>
+      </property>
+
+</bean>
+
+</beans>
