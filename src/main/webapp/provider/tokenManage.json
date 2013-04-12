@@ -1,0 +1,87 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="net.sf.json.JSONSerializer"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.dao.ServiceRequestTokenDao" %>
+<%@ page import="org.oscarehr.common.dao.ServiceAccessTokenDao" %>
+<%@ page import="org.oscarehr.common.dao.ServiceClientDao" %>
+<%@ page import="org.oscarehr.common.model.ServiceClient" %>
+<%@ page import="org.oscarehr.common.model.ServiceRequestToken" %>
+<%@ page import="org.oscarehr.common.model.ServiceAccessToken" %>
+<%@page import="java.util.List"%>
+
+<%
+	ServiceClientDao serviceClientDao = SpringUtils.getBean(ServiceClientDao.class);
+	ServiceRequestTokenDao serviceRequestTokenDao = SpringUtils.getBean(ServiceRequestTokenDao.class);
+	ServiceAccessTokenDao serviceAccessTokenDao = SpringUtils.getBean(ServiceAccessTokenDao.class);
+%>
+<%
+	boolean success = false;
+    String error = "";
+	String method = request.getParameter("method");	
+	
+	JSONObject json = new JSONObject();
+	json.put("method", method);
+
+	if ("deleteRequestToken".equals(method)) {
+		String id = request.getParameter("id");
+	
+		json.put("id", id);
+		
+		if (id.equals("")) {
+			success = false;
+			error = "Cannot delete token with empty value.";
+		} else {
+			ServiceRequestToken srt = serviceRequestTokenDao.find(Integer.parseInt(id));
+			if(srt != null) {
+				serviceRequestTokenDao.remove(srt.getId());
+				success=true;
+			} else {
+				success = false;
+				error = "Token not found.";
+			}
+		}
+	}
+	
+	else if ("deleteAccessToken".equals(method)) {
+		String id = request.getParameter("id");
+	
+		json.put("id", id);
+		
+		if (id.equals("")) {
+			success = false;
+			error = "Cannot delete token with empty value.";
+		} else {
+			ServiceAccessToken sat = serviceAccessTokenDao.find(Integer.parseInt(id));
+			if(sat != null) {
+				serviceAccessTokenDao.remove(sat.getId());
+				success=true;
+			} else {
+				success = false;
+				error = "Token not found.";
+			}
+		}
+	}
+	else {
+		success = false;
+		error = "Invalid method supplied.";
+	}
+	
+	    response.setContentType("text/x-json");    
+		
+		json.put("success", success);
+		json.put("error", error);
+		
+	    json.write(out);    	
+	
+%>
+
+<%!
+public String randomString(int length, String chars) {
+	    String result = "";
+	    for (int i = length; i > 0; --i) 
+	    result += chars.charAt((int)(Math.round(Math.random() * (chars.length() - 1))));
+	    return result;
+	}
+	
+%>

@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONObject;
+
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -45,10 +47,12 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.OcanForm;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
+import org.oscarehr.common.dao.ServiceRequestTokenDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
+import org.oscarehr.common.model.ServiceRequestToken;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
 import org.oscarehr.phr.util.MyOscarUtils;
@@ -84,7 +88,8 @@ public final class LoginAction extends DispatchAction {
     private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    	boolean ajaxResponse = request.getParameter("ajaxResponse") != null?Boolean.valueOf(request.getParameter("ajaxResponse")):false;
+    	
         String ip = request.getRemoteAddr();
         Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
         String nextPage=request.getParameter("nextPage");
@@ -115,6 +120,16 @@ public final class LoginAction extends DispatchAction {
             // change to block page
             String newURL = mapping.findForward("error").getPath();
             newURL = newURL + "?errormsg=Your account is locked. Please contact your administrator to unlock.";
+            
+            if(ajaxResponse) {
+            	JSONObject json = new JSONObject();
+            	json.put("success", false);
+            	json.put("error", "Your account is locked. Please contact your administrator to unlock.");
+            	response.setContentType("text/x-json");
+            	json.write(response.getWriter());
+            	return null;
+            }
+            
             return(new ActionForward(newURL));
         }
         logger.debug("ip was not blocked: "+ip);
@@ -131,6 +146,16 @@ public final class LoginAction extends DispatchAction {
             else {
                 newURL = newURL + "?errormsg=Database connection error: " + e.getMessage() + ".";
             }
+            
+            if(ajaxResponse) {
+            	JSONObject json = new JSONObject();
+            	json.put("success", false);
+            	json.put("error", "Database connection error:"+e.getMessage() + ".");
+            	response.setContentType("text/x-json");
+            	json.write(response.getWriter());
+            	return null;
+            }
+            
             return(new ActionForward(newURL));
         }
         
@@ -139,7 +164,11 @@ public final class LoginAction extends DispatchAction {
             // invalidate the existing sesson
             HttpSession session = request.getSession(false);
             if (session != null) {
-                session.invalidate();
+            	if(request.getParameter("invalidate_session") != null && request.getParameter("invalidate_session").equals("false")) {
+            		//don't invalidate in this case..messes up authenticity of OAUTH
+            	} else {
+            		session.invalidate();
+            	}
             }
             session = request.getSession(); // Create a new session for this user
             LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
@@ -245,8 +274,8 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER, provider);
             session.setAttribute(SessionConstants.LOGGED_IN_SECURITY, cl.getSecurity());
 
-	    loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
-	    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo);
+		    loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
+		    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo);
             
             List<Integer> facilityIds = providerDao.getFacilityIds(provider.getProviderNo());
             if (facilityIds.size() > 1) {
@@ -285,6 +314,16 @@ public final class LoginAction extends DispatchAction {
             cl.updateLoginList(ip, userName);
             String newURL = mapping.findForward("error").getPath();
             newURL = newURL + "?errormsg=Your account is expired. Please contact your administrator.";
+            
+            if(ajaxResponse) {
+            	JSONObject json = new JSONObject();
+            	json.put("success", false);
+            	json.put("error", "Your account is expired. Please contact your administrator.");
+            	response.setContentType("text/x-json");
+            	json.write(response.getWriter());
+            	return null;
+            }
+            
             return(new ActionForward(newURL));
         }
         else { // go to normal directory
@@ -292,9 +331,41 @@ public final class LoginAction extends DispatchAction {
             // LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);
             cl.updateLoginList(ip, userName);
             CRHelper.recordLoginFailure(userName, request);
+            
+            if(ajaxResponse) {
+            	JSONObject json = new JSONObject();
+            	json.put("success", false);
+            	response.setContentType("text/x-json");
+            	json.put("error", "Invalid Credentials");
+            	json.write(response.getWriter());
+            	return null;
+            }
+            
             return mapping.findForward(where);
         }
 
+        if(request.getParameter("oauth_token") != null) {
+    		String proNo = (String)request.getSession().getAttribute("user");
+    		ServiceRequestTokenDao serviceRequestTokenDao = SpringUtils.getBean(ServiceRequestTokenDao.class);
+    		ServiceRequestToken srt = serviceRequestTokenDao.findByTokenId(request.getParameter("oauth_token"));
+    		if(srt != null) {
+    			srt.setProviderNo(proNo);
+    			serviceRequestTokenDao.merge(srt);
+    		}
+    	}
+        
+        if(ajaxResponse) {
+        	
+        	Provider prov = providerDao.getProvider((String)request.getSession().getAttribute("user"));
+        	JSONObject json = new JSONObject();
+        	json.put("success", true);
+        	json.put("providerName", prov.getFormattedName());
+        	json.put("providerNo", prov.getProviderNo());
+        	response.setContentType("text/x-json");
+        	json.write(response.getWriter());
+        	return null;
+        }
+        
         return mapping.findForward(where);
     }
     
