@@ -40,6 +40,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
@@ -50,6 +53,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.olis.OLISProtocolSocketFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -76,16 +80,15 @@ public class Driver {
 		try {
 			OLISMessage message = new OLISMessage(query);
 
-			System.setProperty("javax.net.ssl.keyStore", OscarProperties.getInstance().getProperty("olis_ssl_keystore").trim());
-			System.setProperty("javax.net.ssl.keyStorePassword", OscarProperties.getInstance().getProperty("olis_ssl_keystore_password").trim());
 			System.setProperty("javax.net.ssl.trustStore", OscarProperties.getInstance().getProperty("olis_truststore").trim());
 			System.setProperty("javax.net.ssl.trustStorePassword", OscarProperties.getInstance().getProperty("olis_truststore_password").trim());
-
+			
 			OLISRequest olisRequest = new OLISRequest();
 			olisRequest.setHIALRequest(new HIALRequest());
 			String olisRequestURL = OscarProperties.getInstance().getProperty("olis_request_url", "https://olis.ssha.ca/ssha.olis.webservices.ER7/OLIS.asmx");
 			OLISStub olis = new OLISStub(olisRequestURL);
-
+			olis._getServiceClient().getOptions().setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, new Protocol("https",(ProtocolSocketFactory)  new OLISProtocolSocketFactory(),443));
+			
 			olisRequest.getHIALRequest().setClientTransactionID(message.getTransactionId());
 			olisRequest.getHIALRequest().setSignedRequest(new HIALRequestSignedRequest());
 
