@@ -344,7 +344,7 @@
 		<ap-sql>SELECT professionalSpecialists.lName, professionalSpecialists.fName FROM professionalSpecialists, demographic
                 WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0
                 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
-                <ap-output>${last_name}, ${first_name}</ap-output>
+                <ap-output>${lName}, ${fName}</ap-output>
 	</databaseap>
 
 	<databaseap>
