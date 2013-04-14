@@ -312,7 +312,7 @@ public class LabResultData implements Comparable{
 			}catch(Exception e){
 				logger.error("Error in getDateObj (CML message)", e);
 			}
-			this.dateTimeObr = UtilDateUtilities.getDateFromString(date, "yyyyMMddHH:mm");
+			this.dateTimeObr = UtilDateUtilities.getDateFromString(date, "yyyy-MM-ddHH:mm");
 		}
 
 		return this.dateTimeObr;
