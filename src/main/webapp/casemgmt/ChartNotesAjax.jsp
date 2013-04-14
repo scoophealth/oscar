@@ -363,7 +363,7 @@ int maxId = 0;
  						</script>
  						<% } %>						
 						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=globalNoteId%>, event)" style='float: right; margin-right: 5px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png'>
-						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=note.getNote() %></textarea>
+						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="soft" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=note.getNote() %></textarea>
 						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=globalNoteId%>"><%@ include file="noteIssueList.jsp"%></div>
 
 						<c:if test="${sessionScope.passwordEnabled=='true'}">
@@ -756,7 +756,7 @@ int maxId = 0;
 		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;">
 		<input type="hidden" id="editWarn<%=savedId%>" value="false">
 		<div id="n<%=savedId%>" style="line-height: 1.1em;">
-			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=cform.getCaseNote_note() %></textarea>
+			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="soft" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=cform.getCaseNote_note() %></textarea>
 			<div class="sig" id="sig<%=savedId%>"><%@ include file="noteIssueList.jsp"%></div>
 
 			<c:if test="${sessionScope.passwordEnabled=='true'}">
