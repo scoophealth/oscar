@@ -652,7 +652,7 @@ function fsPopup(width,height,url,window) {
     <div id="dxAlert" class="alert" <%=dxAlert%>>
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
-    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=1&providerNo=999998&quickList=')"><b>Add Diagnosis</b></a>
+    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=999998&quickList=')"><b>Add Diagnosis</b></a>
     </div>
        
    		<%=flowSheet%>
