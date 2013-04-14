@@ -782,8 +782,8 @@
         </parameter>
         <java:condition>prev.getHowManyMonthsSinceLast("COLONOSCOPY") != -1</java:condition>
         <java:consequence>
-              prev.log("FOBT Inelligible debug");
-              prev.addReminder("Colonoscopy makes FOBT Inelligible");
+              prev.log("FOBT Ineligible debug");
+              prev.addReminder("Colonoscopy makes FOBT Ineligible");
         </java:consequence>
     </rule>
 
