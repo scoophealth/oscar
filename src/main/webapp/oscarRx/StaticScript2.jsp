@@ -113,6 +113,7 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
        if (favoriteName.length > 0){
             var url= '<%=request.getContextPath()%>' + "/oscarRx/addFavorite2.do?parameterValue=addFav2";
             oscarLog(url);
+            favoriteName=encodeURIComponent(favoriteName);
             var data="drugId="+drugId+"&favoriteName="+favoriteName;
             new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
                     window.location.href="StaticScript2.jsp?regionalIdentifier="+'<%=regionalIdentifier%>'+"&cn="+'<%=cn%>';
