@@ -717,7 +717,7 @@ Problems and Conditions - Problem List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
 					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
 					<title>Problems and Conditions - Problem List [with entries]</title>
-					<text>Text text text</text>
+					<text>Problems</text>
 #**##foreach ( $problem in $patient.getProblems() )
 					<entry typeCode="COMP" contextConductionInd="true"> 
 						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
@@ -771,6 +771,69 @@ Problems and Conditions - Problem List
 					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
 					<title>Problems and Conditions - Problem List [without entries]</title>
 					<text>No Problem Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Risk Factors
+********************************************************
+-->
+#if ( $patient.hasRiskFactors() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.24.1"/>
+					<code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
+					<title>Risk Factors [with entries]</title>
+					<text>Risk Factors</text>
+#**##foreach ( $risk in $patient.getRiskFactors() )
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.17"/>
+						<!-- Risk Factors Organizer -->
+						<organizer classCode="CLUSTER" moodCode="EVN">
+							<id extension="$risk.Id" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
+							<code nullFlavor='UNK'/>
+#*        *##if ( !$risk.isArchived() )
+							<statusCode code="active"/>
+#*        *##else
+							<statusCode code="complete"/>
+#*        *##end
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="$dateTool.format('yyyyMMdd', $risk.getUpdate_date())"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($risk.providerNo)</given>
+											<family>$patient.getProviderLastName($risk.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<component typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+									<id extension="$risk.Id" root="TBD"/>
+									<code nullFlavor="UNK"/>
+									<text>$risk.note</text>
+									<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $risk.getObservation_date())"/>
+									<value xsi:type="ST">$risk.note</value>
+								</observation>
+							</component>
+						</organizer>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.24"/>
+					<code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
+					<title>Risk Factors [without entries]</title>
+					<text>No Risk Factors</text>
 				</section>
 			</component>
 #end

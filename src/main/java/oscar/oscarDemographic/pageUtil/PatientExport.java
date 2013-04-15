@@ -32,7 +32,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
@@ -77,6 +82,17 @@ public class PatientExport {
 	private static Hl7TextInfoDao hl7TextInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+	private static CaseManagementIssueDAO caseManagementIssueDao = SpringUtils.getBean(CaseManagementIssueDAO.class);
+	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao = SpringUtils.getBean(CaseManagementIssueNotesDao.class);
+	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
+	
+	private static final int OTHERMEDS = 64;
+	private static final int SOCIALHISTORY = 65;
+	private static final int MEDICALHISTORY = 66;
+	private static final int ONGOINGCONCERNS = 67;
+	private static final int REMINDERS = 68;
+	private static final int FAMILYHISTORY = 69;
+	private static final int RISKFACTORS = 70;
 	
 	private Date currentDate = new Date();
 	private String authorId = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
@@ -87,12 +103,16 @@ public class PatientExport {
 	private List<Prevention> preventions = null;
 	private List<Dxresearch> problems = null;
 	private List<Lab> labs = null;
+	private List<CaseManagementNote> riskFactors = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
 	private boolean exImmunizations = false;
 	private boolean exProblemList = false;
 	private boolean exLaboratoryResults = false;
+	private boolean exRiskFactors = false;
+	private boolean exFamilyHistory = false;
+	private boolean exAlertsAndSpecialNeeds = false;
 	
 	protected PatientExport() {
 	}
@@ -117,6 +137,25 @@ public class PatientExport {
 		}
 		
 		this.labs = assembleLabs();
+		
+		// Gather all Case Management data
+		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDao.getIssuesByDemographic(demographicNo.toString());
+		List<String> cmRiskFactorIssues = new ArrayList<String>();
+		
+		for(CaseManagementIssue entry : caseManagementIssues) {
+			if(entry.getIssue_id() == RISKFACTORS) {
+				cmRiskFactorIssues.add(entry.getId().toString());
+			}
+		}
+		
+		List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
+		List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
+		if(cmRiskFactorNotes != null) {
+			for(Integer i : cmRiskFactorNotes) {
+				cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+			}
+		}
+		this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
 	}
 	
 	private List<Lab> assembleLabs() {
@@ -222,6 +261,18 @@ public class PatientExport {
 	
 	public void setExLaboratoryResults(boolean rhs) {
 		this.exLaboratoryResults = rhs;
+	}
+	
+	public void setExRiskFactors(boolean rhs) {
+		this.exRiskFactors = rhs;
+	}
+	
+	public void setExFamilyHistory(boolean rhs) {
+		this.exFamilyHistory = rhs;
+	}
+	
+	public void setExAlertsAndSpecialNeeds(boolean rhs) {
+		this.exAlertsAndSpecialNeeds = rhs;
 	}
 	
 	/*
@@ -479,6 +530,17 @@ public class PatientExport {
 		
 		return result;
     }
+	
+	/*
+	 * Risk Factors
+	 */
+	public List<CaseManagementNote> getRiskFactors() {
+		return riskFactors;
+	}
+	
+	public boolean hasRiskFactors() {
+		return exRiskFactors && riskFactors!=null && !riskFactors.isEmpty();
+	}
 	
 	/*
 	 * Utility
