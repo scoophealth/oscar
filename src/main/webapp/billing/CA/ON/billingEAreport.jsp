@@ -199,13 +199,13 @@
 								<tr>
 									<td class="fieldName" width="5%">Batch #</td>
 									<td class="fieldName" width="5%">Oper.#</td>
+									<td class="fieldName" width="7%">Provider #</td>
+									<td class="fieldName" width="4%">Group#</td>
 									<td class="fieldName" width="7%">Create Date</td>
-									<td class="fieldName" width="4%">Seq#</td>
 									<td class="fieldName" width="7%">Rec Start</td>
+									<td class="fieldName" width="4%">Seq#</td>
 									<td class="fieldName" width="5%">Rec End</td>
 									<td class="fieldName" width="7%">Rec Type</td>
-									<td class="fieldName" width="4%">Group#</td>
-									<td class="fieldName" width="7%">Provider #</td>
 									<td class="fieldName" width="5%">Claims</td>
 									<td class="fieldName" width="5%">Records</td>
 									<td class="fieldName" width="12%">Batch Process Date</td>
