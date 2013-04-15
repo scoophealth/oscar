@@ -48,9 +48,11 @@ public class OscarAuditLogger {
 			logItem.setContent(content);
 			logItem.setData(data);
 
-			if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
+			try{
 				logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-			
+			}catch(Exception e){
+				//Not running as user. Don't really need to log this.
+			}
 			logDao.persist(logItem);
 
 		} catch (Exception e) {
