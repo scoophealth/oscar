@@ -258,7 +258,8 @@ public class MDSResultsData {
                 // solve lbData.resultStatus.add(oscar.Misc.getString(rs,"abnormalFlag"));
 
                 lbData.dateTime = oscar.Misc.getString(rs, "collection_date");
-                lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
+                //lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
+                lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "yyyy-MM-dd") );
 
                 //priority
                 lbData.priority = "----";
