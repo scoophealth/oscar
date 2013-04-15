@@ -769,6 +769,10 @@ function doscroll(){
           <div id="printOps" class="printOps">
               <h3 style="margin-bottom:5px; text-align:center;"><bean:message key="oscarEncounter.Index.PrintDialog"/></h3>
               <form id="frmPrintOps" action="" onsubmit="return false;">
+	              	<%
+	              		String demographicNo = (String) request.getParameter("demographicNo");
+	              	%>
+              		<input type="hidden" id="demographicNo" value="<%=demographicNo%>" />
               		<table id="printElementsTable">
               			<tr>
               				<td><input type="radio" id="printopSelected" name="printop" value="selected"><bean:message key="oscarEncounter.Index.PrintSelect"/></td>
