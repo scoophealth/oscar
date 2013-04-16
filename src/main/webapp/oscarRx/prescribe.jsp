@@ -474,7 +474,8 @@ if(listRxDrugs!=null){
             }
 
             var specArr=new Array();
-            var specStr='<%=specStr%>';
+            var specStr='<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(specStr)%>';
+            
             specArr=specStr.split("*");// * is used as delimiter
             //oscarLog("specArr="+specArr);
             YAHOO.example.BasicLocal = function() {
