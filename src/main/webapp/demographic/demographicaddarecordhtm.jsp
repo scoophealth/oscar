@@ -123,6 +123,7 @@
         function aSubmit(){
             if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
             if(!checkFormTypeIn()) return;
+
             document.getElementById("adddemographic").submit();
         }        
         
