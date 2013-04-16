@@ -99,7 +99,7 @@ var _hc_newDemographicHandler = function(args) {
 }
 
 jQuery(document).ready(function() {
-	jQuery("#_hc_window #_hc_matchSearch img").attr("src", ctx + "/images/DMSLoader.gif");
+	jQuery("#_hc_window #_hc_matchSearch img").attr("src", window.pageContext + "/images/DMSLoader.gif");
 
 	jQuery("#_hc_window #_hc_closeBtn").click(function() {
 		jQuery("#_hc_window").hide();
