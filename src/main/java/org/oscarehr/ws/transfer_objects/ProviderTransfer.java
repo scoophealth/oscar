@@ -29,13 +29,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Provider;
 import org.springframework.beans.BeanUtils;
 
+@XmlRootElement(name = "provider")
+@XmlAccessorType(XmlAccessType.FIELD)  
 public final class ProviderTransfer {
 	private String providerNo;
+	
+	@XmlJavaTypeAdapter(value=Adapter.class)
 	private String comments;
+	
 	private String phone;
 	private String billingNo;
 	private String workPhone;
@@ -257,4 +268,25 @@ public final class ProviderTransfer {
 	public String toString() {
 		return (ReflectionToStringBuilder.toString(this));
 	}
+	
+	
+	
+
+	 private static class Adapter extends XmlAdapter<String, String>  
+	 {  
+	  
+	  @Override  
+	  public String marshal( String v ) throws Exception  
+	  {  
+	   return "<![CDATA[" + v + "]]>";  
+	  }  
+	  
+	  @Override  
+	  public String unmarshal( String v ) throws Exception  
+	  {  
+	   return v;  
+	  }  
+	    
+	 }  
+	 
 }

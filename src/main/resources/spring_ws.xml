@@ -4,46 +4,59 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:cxf="http://cxf.apache.org/core"
 	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
 		http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
 		http://cxf.apache.org/jaxws	http://cxf.apache.org/schemas/jaxws.xsd
+		
 	">
 
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	
 
-	<!-- security interceptor -->
+	<!-- security interceptor --> 
+
     <cxf:bus>
 		<cxf:properties>
 			<entry key="ws-security.ut.validator" value="org.oscarehr.ws.OscarUsernameTokenValidator" />
 		</cxf:properties>
-    	
-        <cxf:inInterceptors>
-			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor">
-				<property name="excludes">
-					<list>
-						<value>/SystemInfoService</value>
-						<value>/LoginService</value>
-					</list>
-				</property>
-			</bean>
-        </cxf:inInterceptors>
     </cxf:bus>
-  
+
 	<!-- Managed WS Beans -->
 	<!-- The WS classes are turned into spring beans to allow autowiring etc, then the endpoints reference them -->
  	<context:component-scan base-package="org.oscarehr.ws"/>
-
+	
 
 	<!-- web service endpoints -->
-	<jaxws:endpoint implementor="#systemInfoWs" address="/SystemInfoService" />	
+	<jaxws:endpoint implementor="#systemInfoWs" address="/SystemInfoService"/>		
 	<jaxws:endpoint implementor="#loginWs" address="/LoginService" />	
-	<jaxws:endpoint implementor="#scheduleWs" address="/ScheduleService" />	
-	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" />	
-	<jaxws:endpoint implementor="#demographicWs" address="/DemographicService" />	
-	<jaxws:endpoint implementor="#facilityWs" address="/FacilityService" />	
-   	
+	
+	<jaxws:endpoint implementor="#scheduleWs" address="/ScheduleService">
+		<jaxws:inInterceptors>
+			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+	
+	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" >
+		<jaxws:inInterceptors>
+			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+	
+	<jaxws:endpoint implementor="#demographicWs" address="/DemographicService" >
+		<jaxws:inInterceptors>
+			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+		
+	<jaxws:endpoint implementor="#facilityWs" address="/FacilityService" >
+		<jaxws:inInterceptors>
+			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+  
 </beans>
