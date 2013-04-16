@@ -301,18 +301,18 @@ public class LabResultData implements Comparable{
 			this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
 		}else if(CML.equals(this.labType)){
 			String date="";
-			String sql = "select print_date, print_time from labReportInformation, labPatientPhysicianInfo where labPatientPhysicianInfo.id = '"+this.segmentID+"' and labReportInformation.id = labPatientPhysicianInfo.labReportInfo_id ";
+			String sql = "select collection_date from labReportInformation, labPatientPhysicianInfo where labPatientPhysicianInfo.id = '"+this.segmentID+"' and labReportInformation.id = labPatientPhysicianInfo.labReportInfo_id ";
 			try{
 
 				ResultSet rs = DBHandler.GetSQL(sql);
 				if(rs.next()){
-					date=oscar.Misc.getString(rs, "print_date")+oscar.Misc.getString(rs, "print_time");
+					date=oscar.Misc.getString(rs, "collection_date");
 				}
 				rs.close();
 			}catch(Exception e){
 				logger.error("Error in getDateObj (CML message)", e);
 			}
-			this.dateTimeObr = UtilDateUtilities.getDateFromString(date, "yyyy-MM-ddHH:mm");
+			this.dateTimeObr = UtilDateUtilities.getDateFromString(date, "yyyy-MM-dd");
 		}
 
 		return this.dateTimeObr;
