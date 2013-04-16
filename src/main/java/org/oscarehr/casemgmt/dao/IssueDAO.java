@@ -78,6 +78,25 @@ public class IssueDAO extends HibernateDaoSupport {
         String sql = "from Issue i where lower(i.code) like ? or lower(i.description) like ?";
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
     }
+    
+    public List<Long> getIssueCodeListByRoles(List<Secrole> roles) {
+    	if (roles.size() == 0) {
+            return new ArrayList<Long>();
+        }
+
+        StringBuilder buf = new StringBuilder();
+        for (int x = 0; x < roles.size(); x++) {
+            if (x != 0) {
+                buf.append(",");
+            }
+            buf.append("\'" + StringEscapeUtils.escapeSql((roles.get(x)).getName()) + "\'");
+        }
+        String roleList = buf.toString();
+
+        String sql = "select i.id from Issue i where i.role in (" + roleList + ") order by sortOrderId";
+        logger.debug(sql);
+        return this.getHibernateTemplate().find(sql);
+    }
 
     public List<Issue> search(String search, List<Secrole> roles) {
         if (roles.size() == 0) {

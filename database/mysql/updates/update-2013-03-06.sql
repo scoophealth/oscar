@@ -1,0 +1,1 @@
+ALTER TABLE default_issue ADD update_time DATETIME NOT NULL;
