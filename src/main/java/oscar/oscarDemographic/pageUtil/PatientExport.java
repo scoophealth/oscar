@@ -34,8 +34,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -85,6 +87,7 @@ public class PatientExport {
 	private static CaseManagementIssueDAO caseManagementIssueDao = SpringUtils.getBean(CaseManagementIssueDAO.class);
 	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao = SpringUtils.getBean(CaseManagementIssueNotesDao.class);
 	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
+	private static CaseManagementNoteExtDAO caseManagementNoteExtDao = SpringUtils.getBean(CaseManagementNoteExtDAO.class);
 	
 	private static final int OTHERMEDS = 64;
 	private static final int SOCIALHISTORY = 65;
@@ -111,6 +114,7 @@ public class PatientExport {
 	private boolean exProblemList = false;
 	private boolean exLaboratoryResults = false;
 	private boolean exRiskFactors = false;
+	private boolean exPersonalHistory = false;
 	private boolean exFamilyHistory = false;
 	private boolean exAlertsAndSpecialNeeds = false;
 	
@@ -143,7 +147,7 @@ public class PatientExport {
 		List<String> cmRiskFactorIssues = new ArrayList<String>();
 		
 		for(CaseManagementIssue entry : caseManagementIssues) {
-			if(entry.getIssue_id() == RISKFACTORS) {
+			if(entry.getIssue_id() == RISKFACTORS || entry.getIssue_id() == SOCIALHISTORY) {
 				cmRiskFactorIssues.add(entry.getId().toString());
 			}
 		}
@@ -265,6 +269,10 @@ public class PatientExport {
 	
 	public void setExRiskFactors(boolean rhs) {
 		this.exRiskFactors = rhs;
+	}
+	
+	public void setExPersonalHistory(boolean rhs) {
+		this.exPersonalHistory = rhs;
 	}
 	
 	public void setExFamilyHistory(boolean rhs) {
@@ -539,7 +547,7 @@ public class PatientExport {
 	}
 	
 	public boolean hasRiskFactors() {
-		return exRiskFactors && riskFactors!=null && !riskFactors.isEmpty();
+		return exRiskFactors && exPersonalHistory && riskFactors!=null && !riskFactors.isEmpty();
 	}
 	
 	/*
@@ -559,6 +567,17 @@ public class PatientExport {
 		}
 		return date;
 	}
+	
+	// Function to allow access to Casemanagement Note Ext table data based on note id
+	public static String getCMNoteExtValue(String id, String keyval) {
+		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
+		for(CaseManagementNoteExt entry : cmNoteExts) {
+			if(entry.getKeyVal().equals(keyval)) {
+				return entry.getValue();
+			}
+		}
+        return null;
+    }
 	
 	public String getAuthorId() {
 		return authorId;
