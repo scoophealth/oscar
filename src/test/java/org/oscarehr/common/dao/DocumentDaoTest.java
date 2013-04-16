@@ -57,7 +57,7 @@ public class DocumentDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testFindConstultDocsDocsAndProvidersByModule() throws Exception {
+	public void testFindConstultDocsDocsAndProvidersByModule() {
 		List<Object[]> docs = dao.findConstultDocsDocsAndProvidersByModule(Module.DEMOGRAPHIC, 0);
 		assertNotNull(docs);
 	}
