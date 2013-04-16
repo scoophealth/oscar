@@ -778,6 +778,15 @@ div.logoutBox {
 			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp"/>&quot;);return false;'>Create New Flowsheet</a></li>
 			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/manageFlowsheets.jsp"/>&quot;);return false;'><bean:message key="admin.admin.flowsheetManager"/></a></li>
 			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/MyoscarConfiguration.jsp"/>&quot;);return false;'><bean:message key="admin.admin.myoscarconfig"/></a></li>
+			
+			<%
+				if (OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url")!=null)
+				{
+					%>
+						<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/oscar_myoscar_sync_config_redirect.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
+					<%
+				}
+			%>
 
 			<%
 				if (oscarVariables.getProperty("hsfo.loginSiteCode", "") != null && !"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode", "")))

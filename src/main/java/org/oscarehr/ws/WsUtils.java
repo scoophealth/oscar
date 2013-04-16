@@ -67,7 +67,7 @@ public final class WsUtils
 	}
 
 	private static boolean checkToken(Security security, String securityToken) {
-// will sort this out later when we setup tokens
-	    return false;
+		// for now since we have no token framework we're using the encrypted pw as the token
+		return(securityToken.equals(security.getPassword()));
     }
 }

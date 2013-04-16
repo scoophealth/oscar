@@ -268,7 +268,6 @@ public final class LoginAction extends DispatchAction {
             }
             CRHelper.recordLoginSuccess(userName, strAuth[0], request);
 
-            // setup caisi stuff
             String username = (String) session.getAttribute("user");
             Provider provider = providerManager.getProvider(username);
             session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER, provider);
