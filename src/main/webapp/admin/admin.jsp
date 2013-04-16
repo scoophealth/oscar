@@ -836,8 +836,8 @@ div.logoutBox {
 	</security:oscarSec>
 </oscar:oscarPropertiesCheck>
 
-</caisi:isModuleLoad>
 
+</caisi:isModuleLoad>
 
 
 		<div class="adminBox">
@@ -863,8 +863,16 @@ div.logoutBox {
 
 
 
+<div class="adminBox">
+	<h3>&nbsp;API/Connections</h3>
+	<ul>
+	<li><a href="#" onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/api/clients.jsp"/>&quot;);return false;'>REST Clients</a></li>
+	</ul>
+</div>
 
 <hr style="color: black;" />
+
+
 <div class="logoutBox">
 <%
 	if (roleName$.equals("admin" + "," + curProvider_no))
