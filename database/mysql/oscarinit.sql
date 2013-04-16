@@ -11227,6 +11227,7 @@ CREATE TABLE `default_issue` (
   `assigned_time` datetime NOT NULL,
   `issue_ids` text,
   `provider_no` varchar(6) NOT NULL,
+  `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
 );
 

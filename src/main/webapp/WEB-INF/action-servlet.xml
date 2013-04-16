@@ -50,6 +50,7 @@
 	</bean>
 	<bean name="/SystemMessage" class="org.caisi.core.web.SystemMessageAction" singleton="false" autowire="byName" />
 	<bean name="/FacilityMessage" class="org.caisi.core.web.FacilityMessageAction" singleton="false" autowire="byName" />
+	<bean name="/DefaultEncounterIssue" class="org.caisi.core.web.DefaultEncounterIssueAction" singleton="false" autowire="byName" />
 	<bean name="/issueAdmin" class="org.caisi.core.web.IssueAdminAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ClientSearch2" class="org.oscarehr.PMmodule.web.ClientSearchAction2" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false" autowire="byName">

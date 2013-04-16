@@ -37,10 +37,22 @@ public class DefaultIssueDao extends AbstractDao<DefaultIssue> {
 	public DefaultIssueDao(){
 		super(DefaultIssue.class);
 	}
+	
 	public DefaultIssue findDefaultIssue(Integer id) {
 		Query query = entityManager.createQuery("select x from DefaultIssue x where x.id = ?1");
 		query.setParameter(1, id);
 		return getSingleResultOrNull(query);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public DefaultIssue getLastestDefaultIssue() {
+		Query query = entityManager.createQuery("select x from DefaultIssue x order by x.assignedtime desc");
+		query.setMaxResults(1);
+		List<DefaultIssue> issueList = query.getResultList();
+		if (issueList == null || issueList.size() == 0) {
+			return null;
+		}
+		return issueList.get(0);
 	}
 	
 	@SuppressWarnings("unchecked")
