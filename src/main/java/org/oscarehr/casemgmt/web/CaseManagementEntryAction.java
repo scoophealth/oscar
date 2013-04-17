@@ -2129,7 +2129,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		Long noteId = noteSave(cform, request);
 		session.removeAttribute("casemgmtNoteLock"+demoNo);
 		if (noteId == -1) {
-			return mapping.findForward("windowClose");
+			return mapping.findForward("windowCloseError");
 		}
 		
 		releaseNoteLock(providerNo, Integer.parseInt(demoNo), noteId);
@@ -2885,7 +2885,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			//if other window has acquired lock don't save
 			CasemgmtNoteLock casemgmtNoteLock = casemgmtNoteLockDao.find(casemgmtNoteLockSession.getId());
-			if( !casemgmtNoteLock.getIpAddress().equals(casemgmtNoteLockSession.getIpAddress()) || !request.getRemoteAddr().equals(casemgmtNoteLockSession.getIpAddress()) ) {
+			if( !casemgmtNoteLock.getSessionId().equals(casemgmtNoteLockSession.getSessionId()) ) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				return null;
 			}
