@@ -6,7 +6,6 @@
  * License details are available via "indivica.ca/gplv2"
  * and "gnu.org/licenses/gpl-2.0.html".
  */
-
 package org.oscarehr.hospitalReportManager.dao;
 
 
