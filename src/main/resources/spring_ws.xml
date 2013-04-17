@@ -30,6 +30,7 @@
 	<!-- The WS classes are turned into spring beans to allow autowiring etc, then the endpoints reference them -->
  	<context:component-scan base-package="org.oscarehr.ws"/>
 	
+	<bean id="authenticationInWSS4JInterceptor" class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor" />
 
 	<!-- web service endpoints -->
 	<jaxws:endpoint implementor="#systemInfoWs" address="/SystemInfoService"/>		
@@ -37,31 +38,31 @@
 	
 	<jaxws:endpoint implementor="#scheduleWs" address="/ScheduleService">
 		<jaxws:inInterceptors>
-			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+			<ref bean="authenticationInWSS4JInterceptor"/>
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
 	
 	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" >
 		<jaxws:inInterceptors>
-			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+			<ref bean="authenticationInWSS4JInterceptor"/>
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
 	
 	<jaxws:endpoint implementor="#demographicWs" address="/DemographicService" >
 		<jaxws:inInterceptors>
-			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+			<ref bean="authenticationInWSS4JInterceptor"/>
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>
 		
 	<jaxws:endpoint implementor="#facilityWs" address="/FacilityService" >
 		<jaxws:inInterceptors>
-			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+			<ref bean="authenticationInWSS4JInterceptor"/>
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
   
 	<jaxws:endpoint implementor="#programWs" address="/ProgramService" >
 		<jaxws:inInterceptors>
-			<bean class="org.oscarehr.ws.AuthenticationInWSS4JInterceptor"/>
+			<ref bean="authenticationInWSS4JInterceptor"/>
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
      	
