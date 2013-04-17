@@ -20,6 +20,8 @@
  * Faculty of Medicine
  * University of British Columbia
  * Vancouver, Canada
+ *
+ * @author Jeremy Ho
  *#<?xml version="1.0" encoding="UTF-8"?>
  <ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
@@ -200,6 +202,107 @@ Allergies and Intolerances - (Reaction List)
 					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies and Adverse Reactions Doc"/>
 					<title>Allergies and Intolerances (Reaction List) [without entries]</title>
 					<text>No Allergy Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Family History
+********************************************************
+-->
+#if ( $patient.hasFamilyHistory() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.13.1"/>
+					<code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
+					<title>Family History [with entries]</title>
+					<text>Family History</text>
+#**##foreach ( $family in $patient.getFamilyHistory() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.10"/>
+						<!-- Family History Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$family.Id" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
+							<code code="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code" displayName="Diagnosis"/>
+							<text>$family.note</text>
+							<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $family.getObservation_date())"/>
+							<value xsi:type="ST">$family.note</value>
+							<!--Relationship to the patient-->
+							<subject typeCode="SBJ" contextControlCode="OP">
+								<relatedSubject classCode="PRS">
+## Code OTH used in interim - freetext to code translation won't be accurate
+#*    *##if ( ${patient.getCMNoteExtValue("$family.getId()", "Relationship")} != "")
+									<code codeSystem="2.16.840.1.113883.5.111" code="OTH" displayName="${patient.getCMNoteExtValue("$family.getId()", "Relationship")}"/>
+#*    *##else
+									<code codeSystem="2.16.840.1.113883.5.111" code="UNK" displayName="Unknown"/>
+#*    *##end
+								</relatedSubject>
+							</subject>
+#*    *##if ( ${patient.getCMNoteExtValue("$family.getId()", "Treatment")} != "")
+							<!-- Treatment Comment -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+								<!-- Comment Observation -->								
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation Comment"/>
+									<value xsi:type="ST">${patient.getCMNoteExtValue("$family.getId()", "Treatment")}</value>
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( $family.Billing_code != "")
+							<!-- Diagnosis Billing Code -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
+								<!-- Secondary Code (ICD9) -->
+								<observation classCode="OBS" moodCode="EVN"> 
+									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"            
+										codeSystemName="PITO ObservationType"/>
+									<value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="${patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")}"/>								
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( ${patient.getCMNoteExtValue("$family.getId()", "Life Stage")} != "")
+							<!-- Lifestage Observation -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.12"/>
+								<!-- Lifestage Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="LIFEOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Lifestage Observation"/>
+#*        *##if ( ${patient.getCMNoteExtValue("$family.getId()", "Life Stage")} == "N")
+									<value xsi:type="CD" code="N" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Newborn"/>
+#*        *##elseif ( ${patient.getCMNoteExtValue("$family.getId()", "Life Stage")} == "I")
+									<value xsi:type="CD" code="I" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Infant"/>
+#*        *##elseif ( ${patient.getCMNoteExtValue("$family.getId()", "Life Stage")} == "C")
+									<value xsi:type="CD" code="C" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Child"/>
+#*        *##elseif ( ${patient.getCMNoteExtValue("$family.getId()", "Life Stage")} == "T")
+									<value xsi:type="CD" code="T" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Adolescent"/>
+#*        *##else
+									<value xsi:type="CD" code="A" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Adult"/>
+#*        *##end
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( ${patient.getCMNoteExtValue("$family.getId()", "Age at Onset")} != "")
+							<entryRelationship typeCode="COMP">
+								<observation classCode="OBS" moodCode="EVN">
+									<!--Age at Onset-->
+									<code code="30972-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Age at onset"/>
+									<value xsi:type="INT" value="${patient.getCMNoteExtValue("$family.getId()", "Age at Onset")}"/>
+								</observation>
+							</entryRelationship>
+#*    *##end
+						</observation>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.13"/>
+					<code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
+					<title>Family History [without entries]</title>
+					<text>No Family History</text>
 				</section>
 			</component>
 #end
@@ -583,9 +686,11 @@ Medications and Prescriptions - Medication List
 										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
 										<!-- Dose Observation -->
 										<substanceAdministration classCode="SBADM" moodCode="RQO">
+#*    *##if ( $med.duration != "0" && $med.durUnit )
 											<effectiveTime xsi:type="IVL_TS" operator="I">
 												<width value="$med.duration" unit="$med.durUnit"/>
 											</effectiveTime>
+#*    *##end
 											<!-- OSCAR Frequency Code $!med.freqCode -->
 											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
 												<frequency>

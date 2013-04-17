@@ -89,10 +89,10 @@ public class PatientExport {
 	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
 	private static CaseManagementNoteExtDAO caseManagementNoteExtDao = SpringUtils.getBean(CaseManagementNoteExtDAO.class);
 	
-	private static final int OTHERMEDS = 64;
+	//private static final int OTHERMEDS = 64;
 	private static final int SOCIALHISTORY = 65;
-	private static final int MEDICALHISTORY = 66;
-	private static final int ONGOINGCONCERNS = 67;
+	//private static final int MEDICALHISTORY = 66;
+	//private static final int ONGOINGCONCERNS = 67;
 	private static final int REMINDERS = 68;
 	private static final int FAMILYHISTORY = 69;
 	private static final int RISKFACTORS = 70;
@@ -107,6 +107,8 @@ public class PatientExport {
 	private List<Dxresearch> problems = null;
 	private List<Lab> labs = null;
 	private List<CaseManagementNote> riskFactors = null;
+	private List<CaseManagementNote> familyHistory = null;
+	private List<CaseManagementNote> alerts = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
@@ -141,14 +143,25 @@ public class PatientExport {
 		}
 		
 		this.labs = assembleLabs();
-		
+		parseCaseManagement();
+	}
+	
+	private void parseCaseManagement() {
 		// Gather all Case Management data
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDao.getIssuesByDemographic(demographicNo.toString());
 		List<String> cmRiskFactorIssues = new ArrayList<String>();
+		List<String> cmFamilyHistoryIssues = new ArrayList<String>();
+		List<String> cmAlertsIssues = new ArrayList<String>();
 		
 		for(CaseManagementIssue entry : caseManagementIssues) {
 			if(entry.getIssue_id() == RISKFACTORS || entry.getIssue_id() == SOCIALHISTORY) {
 				cmRiskFactorIssues.add(entry.getId().toString());
+			}
+			if(entry.getIssue_id() == FAMILYHISTORY) {
+				cmFamilyHistoryIssues.add(entry.getId().toString());
+			}
+			if(entry.getIssue_id() == REMINDERS) {
+				cmAlertsIssues.add(entry.getId().toString());
 			}
 		}
 		
@@ -160,6 +173,24 @@ public class PatientExport {
 			}
 		}
 		this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
+		
+		List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
+		List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
+		if(cmFamilyHistoryNotes != null) {
+			for(Integer i : cmFamilyHistoryNotes) {
+				cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+			}
+		}
+		this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
+		
+		List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
+		List<Long> cmAlertsNotesLong = new ArrayList<Long>();
+		if(cmAlertsNotes != null) {
+			for(Integer i : cmAlertsNotes) {
+				cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+			}
+		}
+		this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 	}
 	
 	private List<Lab> assembleLabs() {
@@ -403,7 +434,7 @@ public class PatientExport {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return null;
+        return "";
     }
 	
 	/*
@@ -440,7 +471,7 @@ public class PatientExport {
 				return entry.getVal();
 			}
 		}
-		return null;
+		return "";
 	}
 	
 	// Handles Other ID field parsing
@@ -551,6 +582,28 @@ public class PatientExport {
 	}
 	
 	/*
+	 * Family History
+	 */
+	public List<CaseManagementNote> getFamilyHistory() {
+		return familyHistory;
+	}
+	
+	public boolean hasFamilyHistory() {
+		return exFamilyHistory && familyHistory!=null && !familyHistory.isEmpty();
+	}
+	
+	/*
+	 * Alerts
+	 */
+	public List<CaseManagementNote> getAlerts() {
+		return alerts;
+	}
+	
+	public boolean hasAlerts() {
+		return exAlertsAndSpecialNeeds && alerts!=null && !alerts.isEmpty();
+	}
+	
+	/*
 	 * Utility
 	 */
 	public Date getCurrentDate() {
@@ -576,7 +629,7 @@ public class PatientExport {
 				return entry.getValue();
 			}
 		}
-        return null;
+        return "";
     }
 	
 	public String getAuthorId() {
