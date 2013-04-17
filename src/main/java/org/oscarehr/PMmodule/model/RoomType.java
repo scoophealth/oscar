@@ -37,7 +37,7 @@ public class RoomType implements Serializable {
 
     // constructors
     public RoomType () {
-        initialize();
+    	// empty constructor
     }
 
     /**
@@ -45,7 +45,6 @@ public class RoomType implements Serializable {
      */
     public RoomType (Integer id) {
         this.setId(id);
-        initialize();
     }
 
     /**
@@ -59,15 +58,12 @@ public class RoomType implements Serializable {
         this.setId(id);
         this.setName(name);
         this.setDefault(m_default);
-        initialize();
     }
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-
-    protected void initialize () {}
 
     public Integer getId () {
         return id;
