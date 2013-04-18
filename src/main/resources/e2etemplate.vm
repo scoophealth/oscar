@@ -102,6 +102,49 @@ e-MS CDA Structured Body
 		<structuredBody>
 <!--
 ********************************************************
+Alerts
+********************************************************
+-->
+#if ( $patient.hasAlerts() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.3.1"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies or Adverse Reactions Doc"/>
+					<title>Alerts [with entries]</title>
+					<text>Alerts</text>
+#**##foreach ( $alert in $patient.getAlerts() )
+					<!--Alert Observation-->
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.7"/>
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="alert.Id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="ALERT" displayName="Alert Observation" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
+							<text>$alert.note</text>
+#*    *##if ( !$alert.isArchived() )
+							<statusCode code="active"/>
+#*    *##else
+							<statusCode code="complete"/>
+#*    *##end
+							<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $alert.getObservation_date())"/>
+							<e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+							<value xsi:type="ST">$alert.note</value>
+						</observation>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.3"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies or Adverse Reactions Doc"/>
+					<title>Alerts [without entries]</title>
+					<text>No Alerts</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
 Allergies and Intolerances - (Reaction List)
 ********************************************************
 -->
@@ -898,11 +941,11 @@ Risk Factors
 						<organizer classCode="CLUSTER" moodCode="EVN">
 							<id extension="$risk.Id" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
 							<code nullFlavor='UNK'/>
-#*        *##if ( !$risk.isArchived() )
+#*    *##if ( !$risk.isArchived() )
 							<statusCode code="active"/>
-#*        *##else
+#*    *##else
 							<statusCode code="complete"/>
-#*        *##end
+#*    *##end
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
