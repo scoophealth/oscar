@@ -2994,7 +2994,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (printAllNotes) {
 			ids = getAllNoteIds(request);
 		}
-		logger.debug("NOTES2PRINT: " + ids);
+		logger.info("NOTES2PRINT: " + ids);
 
 		String demono = getDemographicNo(request);
 		request.setAttribute("demoName", getDemoName(demono));
@@ -3188,9 +3188,25 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			criteria.getIssues().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_issues"));
 		}
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("SEARCHING FOR NOTES WITH CRITERIA: " + criteria);
+		}
+		
 		NoteSelectionResult result = noteService.findNotes(criteria);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("FOUND: " + result);
+			for(NoteDisplay nd : result.getNotes()) {
+				logger.debug("   " + nd.getClass().getSimpleName() + " " + nd.getNoteId() + " " + nd.getNote());
+			}
+		}
+		
 		Appender buf = new Appender(",");
 		for(NoteDisplay nd : result.getNotes()) {
+			if (!(nd instanceof NoteDisplayLocal)) {
+				continue;
+			}
+
 			buf.append(nd.getNoteId().toString());
 		}
 		return buf.toString();

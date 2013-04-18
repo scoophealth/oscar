@@ -63,6 +63,7 @@ import org.springframework.stereotype.Component;
 import oscar.eform.EFormUtil;
 import oscar.oscarEncounter.data.EctFormData;
 import oscar.oscarEncounter.data.EctFormData.PatientForm;
+import oscar.util.ConversionUtils;
 
 /**
  * Default implementation of the notes service.
@@ -111,7 +112,7 @@ public class DefaultNoteService implements NoteService {
 			e.setId(note.get("id"));
 			e.setDate((Date) note.get("observation_date"));
 			e.setProviderNo((String) note.get("providerNo"));
-			e.setProgramId(Integer.parseInt((String) note.get("program_no")));
+			e.setProgramId(ConversionUtils.fromIntString("program_no"));
 			e.setRole((String) note.get("reporter_caisi_role"));
 			e.setType("local_note");
 			entries.add(e);
