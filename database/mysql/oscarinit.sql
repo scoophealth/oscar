@@ -242,6 +242,7 @@ CREATE TABLE billingservice (
   termination_date date default '9999-12-31',
   displaystyle int(10),
   sliFlag TINYINT(1) NOT NULL default 0,
+  gstFlag tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (billingservice_no),
   KEY billingservice_service_code_index (service_code)
 ) ;

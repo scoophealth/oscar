@@ -253,7 +253,7 @@ public class BillingService extends AbstractModel<Integer> implements Serializab
             Date d;
             for( int idx = 0; idx < billingPercLimit.size(); ++idx) {
                 d = billingPercLimit.get(idx).getEffective_date();
-                if( d.compareTo(this.billingserviceDate) < 0 || d.compareTo(this.billingserviceDate) == 0) {
+                if( d != null && d.compareTo(this.billingserviceDate) < 0 || d.compareTo(this.billingserviceDate) == 0) {
                     return billingPercLimit.get(idx);
                 }
             }
