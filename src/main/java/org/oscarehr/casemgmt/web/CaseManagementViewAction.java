@@ -1923,7 +1923,19 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			se.setAttribute("CaseManagementViewAction_filter_issues", rs);
 		}
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("SEARCHING FOR NOTES WITH CRITERIA: " + criteria);
+		}
+		
 		NoteSelectionResult result = noteService.findNotes(criteria);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("FOUND: " + result);
+			for(NoteDisplay nd : result.getNotes()) {
+				logger.debug("   " + nd.getClass().getSimpleName() + " " + nd.getNoteId() + " " + nd.getNote());
+			}
+		}
+		
 		if (result.isMoreNotes()) {
 			request.setAttribute("moreNotes", true);
 		}
