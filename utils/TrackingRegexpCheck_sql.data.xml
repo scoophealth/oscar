@@ -2024,7 +2024,6 @@
         <ViolationValue>/database/mysql/icd9.sql:icd9 varchar(7) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/measurementMapData.sql:) ENGINE=MyISAM AUTO_INCREMENT=1076 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/measurementMapData.sql:`loinc_code` varchar(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscardata_on.sql:ALTER TABLE `billingservice` ADD COLUMN `gstFlag` tinyint(1) NOT NULL default '0';</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:#  day date NOT NULL default '0001-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:#  diagnostic_code varchar(5) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:#  provider_no varchar(6) NOT NULL default '',</ViolationValue>
@@ -8862,7 +8861,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:dx char(4) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:dx1 char(4) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:dx2 char(4) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:effective_date date default '1970-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:facilty_num varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:fee varchar(7) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:first_name char(5) default NULL,</ViolationValue>
@@ -8876,8 +8874,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:last_name char(9) default '  ',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:location varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:man_review char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:max varchar(8) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:min varchar(8) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:moh_office char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:monthCode char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:name varchar(60) default '',</ViolationValue>
@@ -11494,7 +11490,7 @@
         <ViolationValue>/database/mysql/updates/update-2012-11-03.sql:alter table formONAREnhanced change provider_no provider_no varchar(10) default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2012-11-05.sql:alter table admission change clientstatus_id clientstatus_id bigint(20) default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2013-02-14.sql:alter table billingservice change sliFlag sliFlag TINYINT(1) NOT NULL default 0;</ViolationValue>
-        <ViolationValue>/database/mysql/updates/update-2013-04-16.sql:ALTER TABLE `billingservice` ADD COLUMN gstFlag tinyint(1) NOT NULL default 0;</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2013-04-19.sql:alter table billingservice add gstFlag tinyint(1) NOT NULL default 0;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:A1C double(2, 2) default null,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:ABPM bool NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:Ace_RxDecToday enum('Same', 'Increase', 'Decrease', 'Stop', 'Start', 'InClassSwitch', 'null') default null,</ViolationValue>
