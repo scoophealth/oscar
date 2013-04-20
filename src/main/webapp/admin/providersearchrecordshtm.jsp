@@ -105,8 +105,6 @@
 	</form>
 </table>
 
-<p><bean:message
-	key="admin.providersearchrecordshtm.msgInstructions" /></p>
 <hr width="100%" color="orange">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr>
