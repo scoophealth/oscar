@@ -137,6 +137,7 @@ if(outcome != null){
 					<option value="Spire">Spire</option>
 					<option value="OUL_R21">OUL_R21</option>
 					<option value="ORU_R01">ORU_R01</option>
+					<option value="BIOTEST">BioTest</option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>
