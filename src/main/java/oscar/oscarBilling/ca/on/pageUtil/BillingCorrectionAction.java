@@ -155,7 +155,7 @@ public class BillingCorrectionAction extends DispatchAction{
             if (!billingONService.updateTotal(bCh1))
                 return mapping.findForward("failure");
         }
-                       
+        
         bCh1Dao.merge(bCh1);
          
         String newStatus = request.getParameter("status").substring(0,1);
@@ -276,7 +276,7 @@ public class BillingCorrectionAction extends DispatchAction{
             }                     
             
             Date visitDate = null;
-            try {
+            try {            	
             	visitDate = DateUtils.parseDate(request.getParameter("xml_vdate"), locale);
             }
             catch( java.text.ParseException e) {
@@ -295,7 +295,8 @@ public class BillingCorrectionAction extends DispatchAction{
             bCh1.setStatus(status);
             bCh1.setPayProgram(payProgram);
             bCh1.setRefNum(request.getParameter("rdohip"));
-            bCh1.setVisitType(request.getParameter("visittype"));
+            bCh1.setVisitType(request.getParameter("visittype"));            
+            bCh1.setAdmissionDate(visitDate);
             bCh1.setFaciltyNum(request.getParameter("clinic_ref_code"));                        
             bCh1.setManReview(manualReview);                        
             bCh1.setBillingDate(billingDate); 
@@ -513,12 +514,12 @@ public class BillingCorrectionAction extends DispatchAction{
         if (manualReview != null)
             manualReview = "Y";
         else
-            manualReview="";
+            manualReview="";                
         
         if (   !bCh1.getStatus().equals(request.getParameter("status").substring(0, 1))
             || !bCh1.getPayProgram().equals(request.getParameter("payProgram"))
             || !bCh1.getRefNum().equals(request.getParameter("rdohip"))
-            || !bCh1.getVisitType().equals(request.getParameter("visittype"))
+            || !bCh1.getVisitType().equals(request.getParameter("visittype"))            
             || !admissionDateStr.equals(request.getParameter("xml_vdate"))
             || !bCh1.getFaciltyNum().equals(request.getParameter("clinic_ref_code"))
             || !bCh1.getManReview().equals(manualReview)
