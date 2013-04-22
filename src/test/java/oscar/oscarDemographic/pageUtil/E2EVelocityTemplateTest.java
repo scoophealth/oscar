@@ -101,7 +101,6 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		
 		assertNotNull(s);
 		assertFalse("XML document unexpectedly empty", s.isEmpty());
-		System.out.println(s);
 		// should be no $ variables in output
 		assertFalse("XML document unexpectedly contains '$'", s.contains("$"));
 		
