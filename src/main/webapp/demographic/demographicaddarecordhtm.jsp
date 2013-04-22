@@ -116,7 +116,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script> 
    <script>
-     jQuery.noConflict();
+     jQuery.noConflict();     
    </script>
 
    <script type="text/javascript">
@@ -383,6 +383,7 @@ function checkAllDate() {
 	}
 
 function checkFormTypeIn() {
+	if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
 	if ( !checkName() ) return false;
 	if ( !checkDob() ) return false;
 	if ( !checkHin() ) return false;
@@ -1332,7 +1333,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				<td colspan="4">
 				<div align="center"><input type="hidden" name="dboperation"
 					value="add_record"> <input type="hidden" name="displaymode" value="Add Record">
-				<input type="button" id="btnAddRecord" name="btnAddRecord" onclick="javascript:aSubmit();"
+				<input type="submit" id="btnAddRecord" name="btnAddRecord" 
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>">
 				<input type="button" id="btnSwipeCard" name="Button"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnSwipeCard"/>"
