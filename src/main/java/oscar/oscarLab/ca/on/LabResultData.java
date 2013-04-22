@@ -71,6 +71,7 @@ public class LabResultData implements Comparable<LabResultData> {
 	public String sex;
 	public String resultStatus;
 	public int finalResultsCount = 0;
+	public String lastUpdateDate;
 	public String dateTime;
 	private Date dateTimeObr;
 	public String priority;
@@ -83,6 +84,7 @@ public class LabResultData implements Comparable<LabResultData> {
 	public Boolean isMatchedToPatient = null;
 	public String multiLabId;
 	public String label;
+	public String description;
 	public boolean cancelledReport = false;
 
 	private Integer ackCount = null;
