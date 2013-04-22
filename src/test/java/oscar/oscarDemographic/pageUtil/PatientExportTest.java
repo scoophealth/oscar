@@ -33,6 +33,7 @@ import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProviderDataDao;
@@ -363,6 +364,83 @@ public class PatientExportTest extends DaoTestFixtures {
 		String desc = PatientExport.getICD9Description("001");
 		assertNotNull(desc);
 		assertFalse(desc.isEmpty());
+	}
+	
+	// Test Risk Factors
+	@Test
+	public void testRiskFactors() {
+		PatientExport p = new PatientExport(demographicNo.toString());
+		List<CaseManagementNote> list = p.getRiskFactors();
+		if (p.hasRiskFactors()) {
+			// exRiskFactors or exPersonalHistory must be true
+			assertNotNull("risk factors unexpectedly null",list);
+			assertFalse("risk factors unexpectedly empty",list.isEmpty());
+			p.setExRiskFactors(false);
+			p.setExPersonalHistory(false);
+			assertFalse(p.hasRiskFactors());
+			// put boolean back to original state
+			p.setExRiskFactors(true);
+			p.setExPersonalHistory(true);
+			assertTrue(p.hasRiskFactors());
+		}
+		if (!p.hasRiskFactors() && list!=null && !list.isEmpty()) {
+			// exRiskFactors and exPersonalHistory must be false
+			p.setExRiskFactors(true);
+			assertTrue("risk factors unexpectedly not true", p.hasRiskFactors());
+			// put boolean back to original state
+			p.setExRiskFactors(false);
+			assertFalse("risk factors unexpectedly not false",p.hasRiskFactors());
+		}
+	}
+	
+	// Test Family History
+	@Test
+	public void testFamilyHistory() {
+		PatientExport p = new PatientExport(demographicNo.toString());
+		List<CaseManagementNote> list = p.getFamilyHistory();
+		if (p.hasFamilyHistory()) {
+			// exFamilyHistory must be true
+			assertNotNull("family history unexpectedly null",list);
+			assertFalse("family history unexpectedly empty",list.isEmpty());
+			p.setExFamilyHistory(false);
+			assertFalse(p.hasRiskFactors());
+			// put boolean back to original state
+			p.setExFamilyHistory(true);
+			assertTrue(p.hasFamilyHistory());
+		}
+		if (!p.hasFamilyHistory() && list!=null && !list.isEmpty()) {
+			// exFamilyHistory must be false
+			p.setExFamilyHistory(true);
+			assertTrue("family history unexpectedly not true", p.hasFamilyHistory());
+			// put boolean back to original state
+			p.setExFamilyHistory(false);
+			assertFalse("family history unexpectedly not false",p.hasFamilyHistory());
+		}
+	}
+	
+	// Test Alerts
+	@Test
+	public void testAlerts() {
+		PatientExport p = new PatientExport(demographicNo.toString());
+		List<CaseManagementNote> list = p.getAlerts();
+		if (p.hasAlerts()) {
+			// exAlertsAndSpecialNeeds must be true
+			assertNotNull("alerts unexpectedly null",list);
+			assertFalse("alerts unexpectedly empty",list.isEmpty());
+			p.setExAlertsAndSpecialNeeds(false);
+			assertFalse(p.hasAlerts());
+			// put boolean back to original state
+			p.setExAlertsAndSpecialNeeds(true);
+			assertTrue(p.hasAlerts());
+		}
+		if (!p.hasAlerts() && list!=null && !list.isEmpty()) {
+			// exAlertsAndSpecialNeeds must be false
+			p.setExAlertsAndSpecialNeeds(true);
+			assertTrue("alerts unexpectedly not true", p.hasAlerts());
+			// put boolean back to original state
+			p.setExAlertsAndSpecialNeeds(false);
+			assertFalse("alerts unexpectedly not false",p.hasAlerts());
+		}
 	}
 	
 	// Test remaining Utility methods (others tested above)

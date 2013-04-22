@@ -461,7 +461,7 @@ public class PatientExport {
 		catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-		return null;
+		return "";
 	}
 	
 	// Function to allow access to LabsExt table data based on prevention id (object version)
