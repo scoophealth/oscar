@@ -1200,35 +1200,7 @@
 					</execution>
 				</executions>
 -->
-
       		</plugin>
-
-			<plugin>
-				<groupId>org.oscarehr.maven.plugins</groupId>
-				<artifactId>repository_cleaner_plugin</artifactId>
-				<version>0.2-SNAPSHOT</version>
-				<configuration>
-					<groupIdsToRemove>
-						<param>org.oscarehr.caisi_integrator.caisi_integrator_client_stubs</param>
-						<param>org.oscarehr.myoscar_server_client_stubs</param>
-						<param>org.oscarehr.ar2005.ar2005</param>
-						<param>dm.dm</param>
-						<param>cds.cds</param>
-						<param>cds.cds_cihi_phcvrs</param>
-						<param>cds.cds_cihi</param>
-						<param>cds.cds_rourke</param>
-						<param>cds.cds_hrm</param>
-						<param>ca.ssha.www.olis-service</param>
-					</groupIdsToRemove>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>purge-local-repository-libs</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
