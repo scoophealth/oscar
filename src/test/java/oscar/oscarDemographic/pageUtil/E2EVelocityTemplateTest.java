@@ -33,6 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
@@ -49,6 +50,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	
 	private static Logger logger = MiscUtils.getLogger();
     private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+    private static ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
     private static Integer demographicNo;
     
 	@BeforeClass
@@ -56,7 +58,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("demographicSets", "lst_gender", "demographic_merged",
 				"admission", "program", "health_safety", "demographic", "provider",
 				"allergies", "drugs", "preventions", "dxresearch", "patientLabRouting",
-				"icd9", "clinic", "casemgmt_notes");
+				"icd9", "casemgmt_issue", "clinic");
 		Demographic entity = new Demographic();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDemographicNo(null);
@@ -73,6 +75,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		if (entity.getDateOfBirth().toLowerCase().contains("da")) {
 			entity.setDateOfBirth("25");
 		}
+		entity.setProviderNo(providerDataDao.getLastId().toString());
 		demographicDao.save(entity);
 		demographicNo = entity.getDemographicNo();
 	}
@@ -98,6 +101,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		
 		assertNotNull(s);
 		assertFalse("XML document unexpectedly empty", s.isEmpty());
+		System.out.println(s);
 		// should be no $ variables in output
 		assertFalse("XML document unexpectedly contains '$'", s.contains("$"));
 		
