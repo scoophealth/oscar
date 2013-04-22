@@ -264,8 +264,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
             }
 	}
 
-	public void setAdmissionDate(Date admissionDate) {
-            if (admissionDate != null) 
+	public void setAdmissionDate(Date admissionDate) {             
 		this.admissionDate = DateUtils.formatDate(admissionDate,java.util.Locale.getDefault());
 	}
 
