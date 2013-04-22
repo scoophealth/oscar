@@ -45,7 +45,7 @@ public class AdminDao extends OscarSuperDao {
 
 	private String [][] dbQueries = new String[][] {
 		{"security_search_detail", "select * from security where security_no=?"},
-	    {"provider_search_providerno", "select provider_no, first_name, last_name from provider order by last_name"},
+	    {"provider_search_providerno", "select provider_no, first_name, last_name from provider where status=1 order by last_name"},
 	};
 
 	/**
