@@ -826,13 +826,13 @@ Medications and Prescriptions - Medication List
 #*    *##if( $med.specialInstruction )
 									<!--Instruction Observation-->
 									<entryRelationship typeCode="SUBJ" inversionInd="true">
-										<observation classCode="OBS" moodCode="EVN">
 										<templateId root="2.16.840.1.113883.3.1818.10.4.35"/>
-										<code code="INSTRUCT" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Instructions"/>
-										<text>$med.specialInstruction</text>
-										<participant typeCode="PRCP" contextControlCode="OP">
-											<participantRole classCode="PAT"/>
-										</participant>
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="INSTRUCT" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Instructions"/>
+											<text>$med.specialInstruction</text>
+											<participant typeCode="PRCP" contextControlCode="OP">
+												<participantRole classCode="PAT"/>
+											</participant>
 										</observation>
 									</entryRelationship>
 #*    *##end
