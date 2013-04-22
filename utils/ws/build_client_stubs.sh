@@ -15,6 +15,8 @@ VERSION=2013.03.28
 
 PROJECTS="oscar_maven_repo"
 
+mvn install:install-file -DgroupId=org.oscarehr.oscar -DartifactId=oscar_client_stubs -Dversion=${VERSION} -Dpackaging=jar -Dfile=../../target/oscar_client_stubs.jar -DcreateChecksum=true -DgeneratePom=true
+
 for foo in $PROJECTS;
 do
    mvn install:install-file -DgroupId=org.oscarehr.oscar -DartifactId=oscar_client_stubs -Dversion=${VERSION} -Dpackaging=jar -Dfile=../../target/oscar_client_stubs.jar -DcreateChecksum=true -DgeneratePom=true -DlocalRepositoryPath=../../../${foo}/local_repo -DlocalRepositoryId=local_repo
