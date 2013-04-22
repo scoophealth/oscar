@@ -131,7 +131,7 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 					p.setProviderNo(s);
 					p.setLabNo(labNo);
 					p.setLabType(labType);
-					p.setStatus(fileForMainProvider ? ProviderInboxItem.FILE : ProviderInboxItem.NEW);
+					p.setStatus(ProviderInboxItem.NEW);
 
 					persist(p);
 				}
