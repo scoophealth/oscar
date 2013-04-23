@@ -2023,6 +2023,10 @@ public class DemographicExportAction4 extends Action {
 					patient.setExImmunizations(exImmunizations);
 					patient.setExProblemList(exProblemList);
 					patient.setExLaboratoryResults(exLaboratoryResults);
+					patient.setExRiskFactors(exRiskFactors);
+					patient.setExPersonalHistory(exPersonalHistory);
+					patient.setExFamilyHistory(exFamilyHistory);
+					patient.setExAlertsAndSpecialNeeds(exAlertsAndSpecialNeeds);
 					String output = t.export(patient);
 					
 					//export file to temp directory
