@@ -34,6 +34,10 @@ import java.util.List;
  */
 public class ConversionUtils {
 
+	public static final String DATE_PATTERN_YEAR = "yyyy";
+	public static final String DATE_PATTERN_MONTH = "MM";
+	public static final String DATE_PATTERN_DAY = "dd";
+	
 	public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
 	public static final String DEFAULT_TS_PATTERN = "yyyy-MM-dd HH:mm:ss";
@@ -117,7 +121,18 @@ public class ConversionUtils {
 		}
 	}
 
-	private static String toDateString(Date date, String formatPattern) {
+	/**
+	 * Formats date instance using the provided date format pattern
+	 * 
+	 * @param date
+	 * 		Date to be formatted
+	 * @param formatPattern
+	 * 		Format pattern to apply
+	 * @return
+	 * 		Returns the formatted date as a string, or an empty string for 
+	 * 		null date parameter.
+	 */
+	public static String toDateString(Date date, String formatPattern) {
 		if (date == null) {
 			return "";
 		}
