@@ -5,3 +5,4 @@ ScheduleService
 DemographicService
 FacilityService
 ProgramService
+AllergyService

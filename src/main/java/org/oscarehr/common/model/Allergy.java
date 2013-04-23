@@ -60,7 +60,8 @@ public class Allergy extends AbstractModel<Integer> {
 	private String description;
 
 	private String reaction;
-	private String archived;
+	
+	private boolean archived=false;
 
 	@Column(name = "HICL_SEQNO")
 	private Integer hiclSeqno;
@@ -114,11 +115,11 @@ public class Allergy extends AbstractModel<Integer> {
 	 */
 	private String providerNo;
 
-	public String getArchived() {
+	public boolean getArchived() {
 		return archived;
 	}
 
-	public void setArchived(String archived) {
+	public void setArchived(boolean archived) {
 		this.archived = archived;
 	}
 

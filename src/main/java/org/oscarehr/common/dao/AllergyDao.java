@@ -37,6 +37,26 @@ public class AllergyDao extends AbstractDao<Allergy> {
 		super(Allergy.class);
 	}
 
+	/**
+	 * This method will return a list of allergies starting from the provided ID.
+	 * It is an efficient method for iterating through all Allergies (more efficient than using a startIndex).
+	 */
+    public List<Allergy> findAllergiesByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
+    	String sql = "select x from Allergy x where x.id>=?1 ";
+    	if (archived!=null)	sql=sql+"and x.archived=?2 ";
+    	sql=sql+"order by x.id";
+    	
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, startIdInclusive);
+    	if (archived!=null)	query.setParameter(2, archived);
+    	
+    	setLimit(query, itemsToReturn);
+
+        @SuppressWarnings("unchecked")
+        List<Allergy> allergies = query.getResultList();
+        return allergies;
+    }
+    
     public List<Allergy> findAllergies(Integer demographic_no) {
     	String sql = "select x from Allergy x where x.demographicNo=?1 order by x.archived,x.severityOfReaction desc";
     	Query query = entityManager.createQuery(sql);
@@ -48,7 +68,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
     }
 
     public List<Allergy> findActiveAllergies(Integer demographic_no) {
-    	String sql = "select x from Allergy x where x.demographicNo=?1 and (x.archived = '0' or x.archived is NULL) order by x.position, x.severityOfReaction";
+    	String sql = "select x from Allergy x where x.demographicNo=?1 and x.archived = 0 order by x.position, x.severityOfReaction";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,demographic_no);
 
@@ -58,7 +78,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
     }
 
     public List<Allergy> findActiveAllergiesOrderByDescription(Integer demographic_no) {
-    	String sql = "select x from Allergy x where x.demographicNo=?2 and (x.archived = '0' or x.archived is NULL) order by x.description";
+    	String sql = "select x from Allergy x where x.demographicNo=?2 and x.archived = 0 order by x.description";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(2,demographic_no);
 

@@ -75,7 +75,7 @@ public final class AllergyHelperBean {
 			allergyDisplay.setReaction(allergy.getReaction());
 			allergyDisplay.setSeverityCode(allergy.getSeverityOfReaction());
 			allergyDisplay.setTypeCode(allergy.getTypeCode());
-			allergyDisplay.setArchived(allergy.getArchived());
+			allergyDisplay.setArchived(allergy.getArchived()?"1":"0");
 
 			String entryDate = partialDateDao.getDatePartial(allergy.getEntryDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_ENTRYDATE);
 			String startDate = partialDateDao.getDatePartial(allergy.getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);

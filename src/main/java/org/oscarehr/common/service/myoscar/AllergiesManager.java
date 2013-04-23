@@ -180,7 +180,7 @@ public final class AllergiesManager {
 			medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_ALLERGIES_DATA_TYPE, allergy.getId()));
 
 			boolean active = true;
-			if (allergy.getArchived() != null && "1".equals(allergy.getArchived())) active = false;
+			if (allergy.getArchived()) active = false;
 			medicalDataTransfer.setActive(active);
 
 			return (medicalDataTransfer);

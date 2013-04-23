@@ -613,7 +613,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
 		}
 
-		Allergy getAllergy(String demographic,Date entryDate,String description,Integer hiclseqno,Integer hicSeqno,Integer agcsp,Integer agccs,Integer typeCode,String reaction, String drugrefId,String archived,Date startDate,String severityOfReaction,String onsetOfReaction,String regionalIdentifier,String lifeStage){
+		Allergy getAllergy(String demographic,Date entryDate,String description,Integer hiclseqno,Integer hicSeqno,Integer agcsp,Integer agccs,Integer typeCode,String reaction, String drugrefId,boolean archived,Date startDate,String severityOfReaction,String onsetOfReaction,String regionalIdentifier,String lifeStage){
 	        Allergy allergy = new Allergy();
 	        allergy.setDemographicNo(Integer.valueOf(demographic));
 	        allergy.setEntryDate(entryDate);
@@ -1031,7 +1031,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		CaseManagementNote cmn=getCaseManagementNote(tenYearsAgo,ericIdle,drw.getProviderNo(),"Type 2 Diabetes",oscarProgramID, caseManagementIssue);
         caseManagementNoteDAO.saveNote(cmn);
 
-        Allergy allergy = getAllergy(""+ericIdle.getDemographicNo(),tenYearsAgo,"PENICILLINS",0,0,0,0,10,"","42063","0",null,"1","1",null,null);
+        Allergy allergy = getAllergy(""+ericIdle.getDemographicNo(),tenYearsAgo,"PENICILLINS",0,0,0,0,10,"","42063",false,null,"1","1",null,null);
         allergyDao.persist(allergy);
 
 
@@ -1167,15 +1167,15 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         caseManagementNoteDAO.saveNote(getCaseManagementNote(tenYearsAgo,juneElder,drw.getProviderNo(),"Allergic Rhinitis",oscarProgramID, caseManagementIssueJuneElderAllergicRhinitis));
 
 		//ALLERGIES
-        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"PENICILLINS",0,0,0,0,10,"Causing mild rash","42063","0",null,"1","1",null,null);
+        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"PENICILLINS",0,0,0,0,10,"Causing mild rash","42063",false,null,"1","1",null,null);
         allergyDao.persist(allergy);
 
 
         //ADVERSE REACTION
-        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"CELEBREX 100MG",0,0,0,0,13,"celebrex intolerance","8879","0",null,"3","1","02239941",null);
+        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"CELEBREX 100MG",0,0,0,0,13,"celebrex intolerance","8879",false,null,"3","1","02239941",null);
         allergyDao.persist(allergy);
 
-        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"CELEBREX 200MG",0,0,0,0,13,"celebrex intolerance","8878","0",null,"3","1","02239942",null);
+        allergy = getAllergy(""+juneElder.getDemographicNo(),tenYearsAgo,"CELEBREX 200MG",0,0,0,0,13,"celebrex intolerance","8878",false,null,"3","1","02239942",null);
         allergyDao.persist(allergy);
 
 
@@ -2892,7 +2892,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         CaseManagementNoteLinkDao.save(caseManagementNoteLink);
 
         //Allergies
-        allergy = getAllergy(""+coleenCopper.getDemographicNo(),getDate("2005-02-01"),"PENICILLIN G SOD INJ PWS 1000000UNIT/VIAL",0,0,0,0,13,"Adverse Reaction - Rash","11231","0",getDate("2005-01-01"),"1","1","01930672","A");
+        allergy = getAllergy(""+coleenCopper.getDemographicNo(),getDate("2005-02-01"),"PENICILLIN G SOD INJ PWS 1000000UNIT/VIAL",0,0,0,0,13,"Adverse Reaction - Rash","11231",false,getDate("2005-01-01"),"1","1","01930672","A");
         allergyDao.persist(allergy);
 
         CaseManagementNote coleenCopperAdverseReactionAnnotation = getCaseManagementNote(getDate("2005-02-01"),coleenCopper,drs.getProviderNo(),"Responded to Benadryl",oscarProgramID, null);
@@ -2907,7 +2907,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
 
 
-        allergy = getAllergy(""+coleenCopper.getDemographicNo(),getDate("2005-02-01"),"PEANUTS",0,0,0,0,0,"Anaphylaxis","11231","0",null,"2","1",null,"I");
+        allergy = getAllergy(""+coleenCopper.getDemographicNo(),getDate("2005-02-01"),"PEANUTS",0,0,0,0,0,"Anaphylaxis","11231",false,null,"2","1",null,"I");
         allergyDao.persist(allergy);
 
         CaseManagementNote coleenCopperAllergyAnnotation = getCaseManagementNote(getDate("2005-02-01"),coleenCopper,drs.getProviderNo(),"Carries epipen",oscarProgramID, null);
@@ -3421,11 +3421,11 @@ Past Medical and Surgical History:	TAH  BSO at 48 yo (menometrorrhagia)
 		caseManagementNoteDAO.saveNote(debbieDiabetesTAHNote);
 
 		//Drug Allergies: Amoxicillin mild rash
-		allergy = getAllergy(""+debbieDiabetes.getDemographicNo(),tenYearsAgo,"AMINOPENICILLINS",0,0,0,0,10,"mild rash","42228","0",null,"1","1",null,null);
+		allergy = getAllergy(""+debbieDiabetes.getDemographicNo(),tenYearsAgo,"AMINOPENICILLINS",0,0,0,0,10,"mild rash","42228",false,null,"1","1",null,null);
         allergyDao.persist(allergy);
 
 		//Adverse Reactions:Codeine  xs GI upset
-		allergy = getAllergy(""+debbieDiabetes.getDemographicNo(),tenYearsAgo,"CODEINE 30MG TAB",0,0,0,0,13,"xs GI upset","4704","0",null,"1","1",null,null);
+		allergy = getAllergy(""+debbieDiabetes.getDemographicNo(),tenYearsAgo,"CODEINE 30MG TAB",0,0,0,0,13,"xs GI upset","4704",false,null,"1","1",null,null);
         allergyDao.persist(allergy);
 
     	String eightMonthValidationVisit = "Reason for Visit: Diabetes F/U \n\nSubjective:\nPatient states she is feeling well  excited to share some good news\nSmoking Status:quit smoking 3 weeks ago\nSelf Monitoring BG: 1x/d\n2 hr PC BG: Glucometer reading today 11 mmol/L\nHypoglycemic Episodes:none\nCollaborative Goal Setting: Excercise 20min 5x/wk, reports up to 20 min 3x/wk\nSelf Management Challenges:Excess salt in diet\nMedications: reviewed, compliant, except Lipitor left at cottage, missed one wk, Continues with daily ASA. No medication S/E reported.\n\nObjective:\nBP: 140/80; HR:72 reg.; Waist Circumference 80cm; Ht: 170cm; Wt:80 kg; BMI:27.7\nH&N: HEENT normal\nChest: clear\nCVS: Normal HS,no murmurs\nAbdo: Soft, normal BS, no masses, tenderness, or bruits\n Foot Exam: skin intact, good nail care,ppp equal, good cap refill\nNeurological Exam: 10-g monofilament - normal bilat\nLabs reiewed labs ordered "+getDate(eightMonthsAgo,Calendar.MONTH,-3)+" - A1C, FPG not at target\n\nAssessment:\nDM F/U - BP, FPG,HbA1C, BMI not at target, Glucometer Calibration and eye exam due, \nPatient reluctant to increase Metformin due to concerns regarding GI S/E.\n\nPlan:\nBP MgmtL Increase to Vasotec 10 mg qd #30 rpt 6; rpt 6; RN visit for BP check2 wks; lab req for lytes and eGFR in 10 days\nDM Mgmt:R/O Metformin; Add Glyburide 5 mg qd #30 rpt 6, use and S/E reviewed. Script Provided.\nEducation Nutrition:agrees to increase nutrional compliance\nGlucometer Calibration with fasting lab visit\nBook F/U DM visit 3/12 in three months, with fasting lab and ACR one wk prior.\nReferred for retinal exam";

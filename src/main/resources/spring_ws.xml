@@ -66,4 +66,10 @@
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
      	
+	<jaxws:endpoint implementor="#allergyWs" address="/AllergyService" >
+		<jaxws:inInterceptors>
+			<ref bean="authenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+     	
 </beans>
