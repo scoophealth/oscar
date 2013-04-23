@@ -27,20 +27,46 @@ package org.oscarehr.managers;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.DemographicMergedDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Demographic.PatientStatus;
+import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.DemographicMerged;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import oscar.log.LogAction;
 
+/**
+ * Will provide access to demographic data, as well as closely related data such as 
+ * extensions (DemographicExt), merge data, archive data, etc.
+ * 
+ * Future Use: Add privacy, security, and consent profiles
+ * 
+ *
+ */
 @Service
 public class DemographicManager {
 	private static Logger logger=MiscUtils.getLogger();
 	
 	@Autowired
 	private DemographicDao demographicDao;
+	
+	@Autowired
+	private DemographicExtDao demographicExtDao;
+
+	@Autowired
+	private DemographicArchiveDao demographicArchiveDao;
+
+	@Autowired
+	private DemographicMergedDao demographicMergedDao;
+
+	
 
 	public Demographic getDemographic(Integer demographicId) {
 		Demographic result = demographicDao.getDemographicById(demographicId);
@@ -76,4 +102,189 @@ public class DemographicManager {
 
 		return (results);
 	}
+	
+	public List<DemographicExt> getDemographicExts(Integer id) {
+		
+		List<DemographicExt> result = null;
+		
+		result = demographicExtDao.getDemographicExtByDemographicNo(id);
+		
+		//--- log action ---
+		if (result != null) {
+			for(DemographicExt item:result) {
+				LogAction.addLogSynchronous("DemographicManager.getDemographicExts", "id="+item.getId() + "(" + id.toString() +")");
+			}
+		}
+
+		return result;
+	}
+
+	public List<Demographic> getDemographicsByProvider(Provider provider) {
+		List<Demographic> result = demographicDao.getDemographicByProvider(provider.getProviderNo(), true);
+		
+		//--- log action ---
+		if (result != null) {
+			for (Demographic demographic : result) {
+				LogAction.addLogSynchronous("DemographicManager.getDemographicsByProvider result", "demographicId=" + demographic.getDemographicNo());
+			}
+		}
+		
+		return result;
+	}
+
+	public void createDemographic(Demographic demographic) {
+		try {
+			demographic.getBirthDay();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Birth date was specified for " + demographic.getFullName() 
+					+ ": " + demographic.getBirthDayAsString());
+		}
+		
+		demographic.setPatientStatus(PatientStatus.AC.name());
+		demographicDao.save(demographic);
+
+		if (demographic.getExtras() != null) {
+			for(DemographicExt ext : demographic.getExtras()) {
+				createExtension(ext);
+			}
+		}
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.createDemographic", "new id is =" + demographic.getDemographicNo());
+		
+	}
+	
+	public void updateDemographic(Demographic demographic) {
+		try {
+			demographic.getBirthDay();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Birth date was specified for " + demographic.getFullName() 
+					+ ": " + demographic.getBirthDayAsString());
+		}
+		
+		demographicDao.save(demographic);
+		
+		// TODO What needs to be done with extras - delete first, then save?!?, or build another service? 
+		if (demographic.getExtras() != null) {
+			for(DemographicExt ext : demographic.getExtras()) {
+				LogAction.addLogSynchronous("DemographicManager.updateDemographic ext", "id=" + ext.getId() + "(" +  ext.toString() + ")");
+				updateExtension(ext);
+			}
+		}
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.updateDemographic", "demographicNo=" + demographic.getDemographicNo());
+				
+	}
+
+	public void createExtension(DemographicExt ext) {
+		demographicExtDao.saveEntity(ext);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.createExtension", "id=" + ext.getId());
+	}
+	
+	public void updateExtension(DemographicExt ext) {
+		demographicExtDao.saveEntity(ext);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.updateExtension", "id=" + ext.getId());
+	}
+
+	public void deleteDemographic(Demographic demographic) {
+		demographicArchiveDao.archiveRecord(demographic);
+		demographic.setPatientStatus(Demographic.PatientStatus.DE.name());
+		demographicDao.save(demographic);
+		
+		for(DemographicExt ext : getDemographicExts(demographic.getDemographicNo())) {
+			LogAction.addLogSynchronous("DemographicManager.deleteDemographic ext", "id=" + ext.getId() + "(" + ext.toString() +")");
+			deleteExtension(ext);
+		}
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.deleteDemographic", "demographicNo=" + demographic.getDemographicNo());
+	}
+
+	public void deleteExtension(DemographicExt ext) {
+		demographicExtDao.removeDemographicExt(ext.getId());
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.removeDemographicExt", "id=" + ext.getId());
+	}
+
+	public void mergeDemographics(Integer parentId, List<Integer> children) {
+		for (Integer child : children) {
+			DemographicMerged dm = new DemographicMerged();
+			dm.setDemographicNo(child);
+			dm.setMergedTo(parentId);
+			demographicMergedDao.persist(dm);
+			
+			//--- log action ---
+			LogAction.addLogSynchronous("DemographicManager.mergeDemographics", "id=" + dm.getId());
+		}
+		
+	}
+
+	public void unmergeDemographics(Integer parentId, List<Integer> children) {
+		for (Integer childId : children) {
+			List<DemographicMerged> dms = demographicMergedDao.findByParentAndChildIds(parentId, childId);
+			if (dms.isEmpty()) {
+				throw new IllegalArgumentException("Unable to find merge record for parent " + parentId + " and child " + childId);
+			}
+			for(DemographicMerged dm : demographicMergedDao.findByParentAndChildIds(parentId, childId)) {
+				dm.setDeleted(1);
+				demographicMergedDao.merge(dm);
+				
+				//--- log action ---
+				LogAction.addLogSynchronous("DemographicManager.unmergeDemographics", "id=" + dm.getId());
+			}
+		}
+	}
+
+
+
+	public Long getActiveDemographicCount() {
+		Long count =  demographicDao.getActiveDemographicCount();
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.getActiveDemographicCount", "");
+		
+		return count;
+	}
+	
+	public List<Demographic> getActiveDemographics(int offset, int limit) {
+	    List<Demographic>  result = demographicDao.getActiveDemographics(offset, limit);
+	    
+	    if(result != null) {
+	    	for(Demographic d:result) {
+		    	//--- log action ---
+				LogAction.addLogSynchronous("DemographicManager.getActiveDemographics result", "demographicNo="+d.getDemographicNo());
+	    	}
+	    }
+	    
+	    return result;
+    }
+
+	/**
+	 * Gets all merged demographic for the specified parent record ID 
+	 * 
+	 * @param parentId
+	 * 		ID of the parent demographic record 
+	 * @return
+	 * 		Returns all merged demographic records for the specified parent id.
+	 */
+	public List<DemographicMerged> getMergedDemgrpaphics(Integer parentId) {
+	    List<DemographicMerged> result = demographicMergedDao.findCurrentByMergedTo(parentId);
+	    
+	    if(result != null) {
+	    	for(DemographicMerged d:result) {
+		    	//--- log action ---
+				LogAction.addLogSynchronous("DemographicManager.getMergedDemogrpaphics result", "demographicNo="+d.getDemographicNo());
+	    	}
+	    	
+	    }
+	    
+	    return result;
+    }
+
 }
