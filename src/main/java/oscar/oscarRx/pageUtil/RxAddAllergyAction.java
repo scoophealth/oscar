@@ -41,7 +41,6 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarRx.data.RxAllergyData;
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPatientData;
 
@@ -63,7 +62,7 @@ public final class RxAddAllergyAction extends Action {
             String lifeStage = request.getParameter("lifeStage");
 
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
-            RxAllergyData ald = new RxAllergyData();
+            
             Allergy allergy = new Allergy();
             allergy.setDrugrefId(String.valueOf(id));
             allergy.setDescription(name);
@@ -95,7 +94,7 @@ public final class RxAddAllergyAction extends Action {
             }
 
             allergy.setDemographicNo(patient.getDemographicNo());
-            allergy.setArchived("0");
+            allergy.setArchived(false);
 
             Allergy allerg = patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);
 

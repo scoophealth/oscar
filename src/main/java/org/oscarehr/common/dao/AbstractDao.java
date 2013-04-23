@@ -36,7 +36,6 @@ import oscar.util.ParamAppender;
 
 @Transactional
 public abstract class AbstractDao<T extends AbstractModel<?>> {
-	
 	protected int DEFAULT_MAX_SELECT_SIZE = 5000;
 
 	protected Class<T> modelClass;
@@ -322,5 +321,23 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 */
 	protected ParamAppender getAppender(String alias) {
 		return new ParamAppender(getBaseQuery(alias));
+	}
+	
+	protected final void setDefaultLimit(Query query)
+	{
+		query.setMaxResults(getMaxSelectSize());
+	}
+
+	protected final void setLimit(Query query, int itemsToReturn)
+	{
+		if (itemsToReturn > getMaxSelectSize()) throw(new IllegalArgumentException("Requested too large of a result list size : " + itemsToReturn));
+
+		query.setMaxResults(itemsToReturn);
+	}
+
+	protected final void setLimit(Query query, int startIndex, int itemsToReturn)
+	{
+		query.setFirstResult(startIndex);
+		setLimit(query, itemsToReturn);
 	}
 }

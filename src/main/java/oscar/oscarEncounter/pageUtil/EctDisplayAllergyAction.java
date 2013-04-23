@@ -88,9 +88,6 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 
 			// --- get local allergies ---
 			for (int idx = 0; idx < allergies.length; ++idx) {
-				if(allergies[idx].getArchived().equals("1")) {
-					continue;
-				}
 				Date date = allergies[idx].getEntryDate();
 				NavBarDisplayDAO.Item item = makeItem(date, allergies[idx].getDescription(), allergies[idx].getSeverityOfReaction(), locale);
 				Dao.addItem(item);

@@ -344,7 +344,7 @@ padding-right:6;
 								}
 
 								boolean filterOut=false;
-								strArchived=allergy.getArchived();
+								strArchived=allergy.getArchived()?"1":"0";
 
 								try
 								{

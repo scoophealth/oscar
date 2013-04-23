@@ -31,8 +31,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
@@ -81,18 +79,6 @@ public class RxPatientData {
 	public static Patient getPatient(String demographicNo) {	
             Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
             return new Patient(demographic);
-	}
-
-	private static java.util.Date calcDate(String year, String month, String day) {
-		if (StringUtils.isBlank(year) || StringUtils.isBlank(month) || StringUtils.isBlank(day)) return null;
-		if (!NumberUtils.isDigits(year) || !NumberUtils.isDigits(month) || !NumberUtils.isDigits(day)) return null;
-
-		int iYear = Integer.parseInt(year);
-		int iMonth = Integer.parseInt(month) - 1;
-		int iDay = Integer.parseInt(day);
-
-		GregorianCalendar ret = new GregorianCalendar(iYear, iMonth, iDay);
-		return ret.getTime();
 	}
 
 	private static int calcAge(java.util.Date DOB) {
@@ -309,11 +295,11 @@ public class RxPatientData {
 			return allergy;
 		}
 
-		private static boolean setAllergyArchive(int allergyId, String archiveString) {
+		private static boolean setAllergyArchive(int allergyId, boolean archive) {
 			org.oscarehr.common.model.Allergy allergy=allergyDao.find(allergyId);
 			if (allergy!=null)
 			{
-				allergy.setArchived(archiveString);
+				allergy.setArchived(archive);
 				allergyDao.merge(allergy);
 				return(true);
 			}
@@ -322,11 +308,11 @@ public class RxPatientData {
 		}
 
 		public boolean deleteAllergy(int allergyId) {
-			return(setAllergyArchive(allergyId, "1"));
+			return(setAllergyArchive(allergyId, true));
 		}
 
 		public boolean activateAllergy(int allergyId) {
-			return(setAllergyArchive(allergyId, "0"));
+			return(setAllergyArchive(allergyId, false));
 		}
 
 		public Diseases[] getDiseases() {

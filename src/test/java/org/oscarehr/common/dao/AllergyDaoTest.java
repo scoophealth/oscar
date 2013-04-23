@@ -105,19 +105,19 @@ public class AllergyDaoTest extends DaoTestFixtures {
 		Allergy allergy = new Allergy();
 		EntityDataGenerator.generateTestDataForModelClass(allergy);
 		allergy.setDemographicNo(3);
-		allergy.setArchived(null);
+		allergy.setArchived(false);
 		dao.persist(allergy);
 
 		allergy = new Allergy();
 		EntityDataGenerator.generateTestDataForModelClass(allergy);
 		allergy.setDemographicNo(3);
-		allergy.setArchived("0");
+		allergy.setArchived(false);
 		dao.persist(allergy);
 
 		allergy = new Allergy();
 		EntityDataGenerator.generateTestDataForModelClass(allergy);
 		allergy.setDemographicNo(3);
-		allergy.setArchived("1");
+		allergy.setArchived(true);
 		dao.persist(allergy);
 
 		assertEquals(dao.findActiveAllergies(3).size(),2);
