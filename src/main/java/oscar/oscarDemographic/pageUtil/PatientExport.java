@@ -32,7 +32,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
@@ -74,10 +82,25 @@ public class PatientExport {
 	private static Icd9Dao icd9Dao = SpringUtils.getBean(Icd9Dao.class);
 	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
 	private static Hl7TextInfoDao hl7TextInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
+	private static IssueDAO issueDao = SpringUtils.getBean(IssueDAO.class);
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+	private static CaseManagementIssueDAO caseManagementIssueDao = SpringUtils.getBean(CaseManagementIssueDAO.class);
+	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao = SpringUtils.getBean(CaseManagementIssueNotesDao.class);
+	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
+	private static CaseManagementNoteExtDAO caseManagementNoteExtDao = SpringUtils.getBean(CaseManagementNoteExtDAO.class);
+	
+	//private static final long OTHERMEDS = getIssueID("OMeds");
+	private static final long SOCIALHISTORY = getIssueID("SocHistory");
+	//private static final long MEDICALHISTORY = getIssueID("MedHistory");
+	//private static final long ONGOINGCONCERNS = getIssueID("Concerns");
+	private static final long REMINDERS = getIssueID("Reminders");
+	private static final long FAMILYHISTORY = getIssueID("FamHistory");
+	private static final long RISKFACTORS = getIssueID("RiskFactors");
 	
 	private Date currentDate = new Date();
+	//private String authorId = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	private String authorId = null;
 	private Integer demographicNo = null;
 	private Demographic demographic = null;
 	private List<Drug> drugs = null;
@@ -85,12 +108,19 @@ public class PatientExport {
 	private List<Prevention> preventions = null;
 	private List<Dxresearch> problems = null;
 	private List<Lab> labs = null;
+	private List<CaseManagementNote> riskFactors = null;
+	private List<CaseManagementNote> familyHistory = null;
+	private List<CaseManagementNote> alerts = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
 	private boolean exImmunizations = false;
 	private boolean exProblemList = false;
 	private boolean exLaboratoryResults = false;
+	private boolean exRiskFactors = false;
+	private boolean exPersonalHistory = false;
+	private boolean exFamilyHistory = false;
+	private boolean exAlertsAndSpecialNeeds = false;
 	
 	protected PatientExport() {
 	}
@@ -98,6 +128,7 @@ public class PatientExport {
 	public PatientExport(String demoNo) {
 		this.demographicNo = new Integer(demoNo);
 		this.demographic = demographicDao.getDemographic(demoNo);
+		this.authorId = demographic.getProviderNo();
 		this.allergies = allergyDao.findAllergies(demographicNo);
 		this.drugs = drugDao.findByDemographicId(demographicNo);
 		
@@ -115,6 +146,65 @@ public class PatientExport {
 		}
 		
 		this.labs = assembleLabs();
+		parseCaseManagement();
+	}
+	
+	private static long getIssueID(String rhs) {
+		long answer;
+		try {
+			answer = issueDao.findIssueByCode(rhs).getId();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			answer = 0;
+		}
+		return answer;
+	}
+	
+	private void parseCaseManagement() {
+		// Gather all Case Management data
+		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDao.getIssuesByDemographic(demographicNo.toString());
+		List<String> cmRiskFactorIssues = new ArrayList<String>();
+		List<String> cmFamilyHistoryIssues = new ArrayList<String>();
+		List<String> cmAlertsIssues = new ArrayList<String>();
+		
+		for(CaseManagementIssue entry : caseManagementIssues) {
+			if(entry.getIssue_id() == RISKFACTORS || entry.getIssue_id() == SOCIALHISTORY) {
+				cmRiskFactorIssues.add(entry.getId().toString());
+			}
+			if(entry.getIssue_id() == FAMILYHISTORY) {
+				cmFamilyHistoryIssues.add(entry.getId().toString());
+			}
+			if(entry.getIssue_id() == REMINDERS) {
+				cmAlertsIssues.add(entry.getId().toString());
+			}
+		}
+		
+		List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
+		List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
+		if(cmRiskFactorNotes != null) {
+			for(Integer i : cmRiskFactorNotes) {
+				cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+			}
+		}
+		this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
+		
+		List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
+		List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
+		if(cmFamilyHistoryNotes != null) {
+			for(Integer i : cmFamilyHistoryNotes) {
+				cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+			}
+		}
+		this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
+		
+		List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
+		List<Long> cmAlertsNotesLong = new ArrayList<Long>();
+		if(cmAlertsNotes != null) {
+			for(Integer i : cmAlertsNotes) {
+				cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+			}
+		}
+		this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 	}
 	
 	private List<Lab> assembleLabs() {
@@ -175,13 +265,16 @@ public class PatientExport {
 			int prevGroup = 0;
 			LabGroup tempGroup = new LabGroup(prevGroup);
 			for(int i=0; i < labMeasurementsExtAll.size(); i++) {
-				int currGroup = parseOtherID(getLabExtValue(labMeasurementsExtAll.get(i), "other_id"))[0];
-				
-				// Create New Group
-				if(prevGroup != currGroup) {
-					labObj.group.add(tempGroup);
-					prevGroup = currGroup;
-					tempGroup = new LabGroup(prevGroup);
+				String temp = getLabExtValue(labMeasurementsExtAll.get(i), "other_id");
+				if(temp != "" && temp != null) {
+					int currGroup = parseOtherID(temp)[0];
+					
+					// Create New Group
+					if(prevGroup != currGroup) {
+						labObj.group.add(tempGroup);
+						prevGroup = currGroup;
+						tempGroup = new LabGroup(prevGroup);
+					}
 				}
 				
 				// Add current measurement to Organizer Group
@@ -220,6 +313,22 @@ public class PatientExport {
 	
 	public void setExLaboratoryResults(boolean rhs) {
 		this.exLaboratoryResults = rhs;
+	}
+	
+	public void setExRiskFactors(boolean rhs) {
+		this.exRiskFactors = rhs;
+	}
+	
+	public void setExPersonalHistory(boolean rhs) {
+		this.exPersonalHistory = rhs;
+	}
+	
+	public void setExFamilyHistory(boolean rhs) {
+		this.exFamilyHistory = rhs;
+	}
+	
+	public void setExAlertsAndSpecialNeeds(boolean rhs) {
+		this.exAlertsAndSpecialNeeds = rhs;
 	}
 	
 	/*
@@ -338,11 +447,10 @@ public class PatientExport {
     		for (PreventionExt preventionExt : preventionExts) {
     			return preventionExt.getVal();
     		}
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return null;
+        return "";
     }
 	
 	/*
@@ -365,11 +473,10 @@ public class PatientExport {
 					return entry.getVal();
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-		return null;
+		return "";
 	}
 	
 	// Function to allow access to LabsExt table data based on prevention id (object version)
@@ -379,7 +486,7 @@ public class PatientExport {
 				return entry.getVal();
 			}
 		}
-		return null;
+		return "";
 	}
 	
 	// Handles Other ID field parsing
@@ -391,8 +498,7 @@ public class PatientExport {
 			for(int i=0; i < temp.length; i++) {
 				lhs[i] = Integer.parseInt(temp[i]);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 		
@@ -479,6 +585,40 @@ public class PatientExport {
     }
 	
 	/*
+	 * Risk Factors (and Personal History)
+	 * Both sections map into the Risk Factors section of the export
+	 */
+	public List<CaseManagementNote> getRiskFactorsandPersonalHistory() {
+		return riskFactors;
+	}
+	
+	public boolean hasRiskFactorsandPersonalHistory() {
+		return (exRiskFactors || exPersonalHistory) && riskFactors!=null && !riskFactors.isEmpty();
+	}
+	
+	/*
+	 * Family History
+	 */
+	public List<CaseManagementNote> getFamilyHistory() {
+		return familyHistory;
+	}
+	
+	public boolean hasFamilyHistory() {
+		return exFamilyHistory && familyHistory!=null && !familyHistory.isEmpty();
+	}
+	
+	/*
+	 * Alerts
+	 */
+	public List<CaseManagementNote> getAlerts() {
+		return alerts;
+	}
+	
+	public boolean hasAlerts() {
+		return exAlertsAndSpecialNeeds && alerts!=null && !alerts.isEmpty();
+	}
+	
+	/*
 	 * Utility
 	 */
 	public Date getCurrentDate() {
@@ -494,6 +634,21 @@ public class PatientExport {
 			log.error(e.getMessage(), e);
 		}
 		return date;
+	}
+	
+	// Function to allow access to Casemanagement Note Ext table data based on note id
+	public static String getCMNoteExtValue(String id, String keyval) {
+		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
+		for(CaseManagementNoteExt entry : cmNoteExts) {
+			if(entry.getKeyVal().equals(keyval)) {
+				return entry.getValue();
+			}
+		}
+        return "";
+    }
+	
+	public String getAuthorId() {
+		return authorId;
 	}
 	
 	public String getProviderFirstName(String providerNo) {
