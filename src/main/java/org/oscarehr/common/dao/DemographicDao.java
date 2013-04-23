@@ -64,6 +64,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.hl7.generators.HL7A04Generator;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.MyDateFormat;
@@ -74,6 +75,8 @@ import oscar.util.SqlUtils;
  */
 public class DemographicDao extends HibernateDaoSupport {
 
+	private static final int MAX_SELECT_SIZE = 500;
+	
 	static Logger log = MiscUtils.getLogger();
 
 	/**
@@ -117,6 +120,38 @@ public class DemographicDao extends HibernateDaoSupport {
 		logger.error("No one should be calling this method, this is a good way to run out of memory and crash a server... this is too large of a result set, it should be pagenated.", new IllegalArgumentException("The entire demographic table is too big to allow a full select."));
 		return this.getHibernateTemplate().find("from Demographic d order by d.LastName");
 	}
+	
+	public Long getActiveDemographicCount() {
+		List<?> res = this.getHibernateTemplate().find("SELECT COUNT(*) FROM Demographic d WHERE d.PatientStatus = 'AC'");
+		for(Object r : res) {
+			return (Long) r;
+		}
+		return 0L;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public List<Demographic> getActiveDemographics(final int offset, final int limit) {
+		return getHibernateTemplate().executeFind(new HibernateCallback<List<Demographic>>() {
+			@Override
+            public List<Demographic> doInHibernate(Session session) throws HibernateException, SQLException {
+				Query query = session.createQuery("FROM Demographic d WHERE d.PatientStatus = 'AC'");
+				if (offset > 0) {
+					query.setFirstResult(offset);
+				}
+				int aLimit = limit;
+				if (aLimit <= 0) {
+					aLimit = MAX_SELECT_SIZE;
+				}
+				if (aLimit > MAX_SELECT_SIZE) {
+					throw new MaxSelectLimitExceededException(MAX_SELECT_SIZE, aLimit);
+				}
+				query.setMaxResults(aLimit);
+				
+	            return query.list();
+            }
+		});
+	}
+	
 
 	public Demographic getDemographicById(Integer demographic_id) {
 		String q = "FROM Demographic d WHERE d.DemographicNo = ?";
@@ -849,14 +884,20 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 
 	public void save(Demographic demographic) {
-		if (demographic == null) return;
+		if (demographic == null) {
+			return;
+		}
 
 		boolean objExists = false;
-		if (demographic.getDemographicNo() != null) objExists = clientExistsThenEvict(demographic.getDemographicNo());
+		if (demographic.getDemographicNo() != null) {
+			objExists = clientExistsThenEvict(demographic.getDemographicNo());
+		}
 
 		this.getHibernateTemplate().saveOrUpdate(demographic);
 
-		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && !objExists) (new HL7A04Generator()).generateHL7A04(demographic);
+		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && !objExists) {
+			(new HL7A04Generator()).generateHL7A04(demographic);
+		}
 	}
 
 	public static List<Integer> getDemographicIdsAlteredSinceTime(Date value) {

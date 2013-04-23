@@ -66,4 +66,12 @@ public class DemographicMergedDao extends AbstractDao<DemographicMerged> {
 		
 		return results;
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<DemographicMerged> findByParentAndChildIds(Integer parentId, Integer childId) {
+		Query q = createQuery("d", "d.demographicNo = :childId AND d.mergedTo = :parentId");
+		q.setParameter("parentId", parentId);
+		q.setParameter("childId", childId);
+		return q.getResultList();
+    }
 }
