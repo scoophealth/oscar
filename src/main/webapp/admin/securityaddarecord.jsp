@@ -218,7 +218,7 @@
 <%
 	List<Map<String,Object>> resultList ;
     if (isSiteAccessPrivacy) {
-    	for(Provider p : providerDao.getProviders()) {
+    	for(Provider p : providerDao.getActiveProviders()) {
     		List<Security> s = securityDao.findByProviderNo(p.getProviderNo());
     		if(s.size() > 0) {
     			%>
@@ -231,7 +231,7 @@
     		
     }
     else {
-    	for(Provider p : providerDao.getProviders()) {
+    	for(Provider p : providerDao.getActiveProviders()) {
     		%>
 			<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></option>    	
 			<%
