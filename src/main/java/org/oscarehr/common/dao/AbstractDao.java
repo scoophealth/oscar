@@ -29,6 +29,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.oscarehr.common.Dangerous;
 import org.oscarehr.common.model.AbstractModel;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,9 @@ import oscar.util.ParamAppender;
 
 @Transactional
 public abstract class AbstractDao<T extends AbstractModel<?>> {
+	
+	protected int DEFAULT_MAX_SELECT_SIZE = 5000;
+
 	protected Class<T> modelClass;
 
 	@PersistenceContext
@@ -84,6 +88,37 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 * 		Returns all instances available in the backend  
 	 */
 	@SuppressWarnings("unchecked")
+	public List<T> findAll(Integer offset, Integer limit) {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName());
+		
+		if (offset != null && offset > 0) {
+			query.setFirstResult(offset);
+		}
+		// mandatory set limit
+		int intLimit = (limit == null) ? getMaxSelectSize() : limit;
+		if (intLimit > getMaxSelectSize()) {
+			throw new MaxSelectLimitExceededException(getMaxSelectSize(), limit);
+		}
+		query.setMaxResults(intLimit);
+		
+		return query.getResultList();
+	}
+	
+	protected int getMaxSelectSize() {
+	    return DEFAULT_MAX_SELECT_SIZE;
+    }
+
+	/**
+	 * Fetches all instances of the persistent class handled by this DAO.
+	 * 
+	 * @deprecated use {@link #findAll(Integer, Integer)} instead
+	 * 
+	 * @return
+	 * 		Returns all instances available in the backend  
+	 */
+	@Dangerous
+	@Deprecated
+	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
 		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName());
 		return query.getResultList();
@@ -98,7 +133,9 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 */
 	public boolean remove(Object id) {
 		T abstractModel = find(id);
-		if (abstractModel == null) return false;
+		if (abstractModel == null) {
+			return false;
+		}
 
 		remove(abstractModel);
 		return true;
