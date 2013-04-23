@@ -40,6 +40,8 @@ import javax.persistence.Column;
 
 public class Textualizer {
 
+	private static final Class<?>[] PRIMITIVES = { String.class, Integer.class, Date.class, Boolean.class, Long.class, Character.class, Byte.class, Short.class, Float.class, Double.class, int.class, boolean.class, long.class, char.class, byte.class, short.class, float.class, double.class };
+
 	public SortedMap<String, String> toMap(Object object) throws Exception {
 		return toMap(object, new ToTemplate());
 	}
@@ -71,16 +73,16 @@ public class Textualizer {
 
 			String propertyName = getPropertyName(descriptor, objectClass);
 			String propertyValue = map.get(propertyName);
-			
+
 			Object value = template.convert(propertyValue, descriptor);
 			Method writeMethod = descriptor.getWriteMethod();
 			if (writeMethod == null) {
 				throw new IllegalStateException("Unable to find write method for " + propertyName);
 			}
-			
+
 			try {
 				writeMethod.invoke(object, value);
-			} catch (Exception e ) {
+			} catch (Exception e) {
 				throw new IllegalStateException("Unable to invoke write method");
 			}
 		}
@@ -128,8 +130,8 @@ public class Textualizer {
 		return result;
 	}
 
-	private boolean isPrimitive(Class<?> propertyType) {
-		for (Class<?> c : new Class[] { Date.class, Integer.class, Boolean.class, Long.class, String.class, Character.class, Byte.class, Short.class, Float.class, Double.class, int.class, boolean.class, long.class, char.class, byte.class, short.class, float.class, double.class }) {
+	public static boolean isPrimitive(Class<?> propertyType) {
+		for (Class<?> c : PRIMITIVES) {
 			if (c.isAssignableFrom(propertyType)) {
 				return true;
 			}
@@ -188,22 +190,22 @@ public class Textualizer {
 			if (str == null) {
 				return null;
 			}
-			
+
 			Method readMethod = descriptor.getReadMethod();
 			if (readMethod == null) {
 				throw new IllegalArgumentException("Write method doesn't exist for " + str + " with descriptor " + descriptor);
 			}
 
 			Class<?> returnType = readMethod.getReturnType();
-			
+
 			if (String.class.isAssignableFrom(returnType)) {
 				return String.valueOf(str);
 			}
-			
+
 			if ("".equals(str)) {
 				return null;
 			}
-			
+
 			if (Date.class.isAssignableFrom(returnType)) {
 				// time patter is the default Date.toString() time pattern
 				return ConversionUtils.fromDateString(str, "EEE MMM dd HH:mm:ss zzz yyyy");
@@ -244,7 +246,7 @@ public class Textualizer {
 			if (Double.class.isAssignableFrom(returnType) || double.class.isAssignableFrom(returnType)) {
 				return new Double(Double.parseDouble(str));
 			}
-			
+
 			throw new IllegalStateException("Unsupported type " + returnType + " for property " + descriptor.getName());
 		}
 
