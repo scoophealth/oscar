@@ -66,12 +66,7 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			CaisiIntegratorUpdateTask.startTask();
 
 			WaitListEmailThread.startTaskIfEnabled();
-			
-			if (Boolean.parseBoolean(properties.getProperty("allow_all_ssl_certificates")))
-			{
-				MiscUtils.setJvmDefaultSSLSocketFactoryAllowAllCertificates();
-			}
-			
+						
 			//Run some optimizations
 			loadCaches();
 			logger.info("Server processes starting completed. context=" + contextPath);
