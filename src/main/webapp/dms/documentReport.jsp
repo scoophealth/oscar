@@ -216,14 +216,13 @@ function showhide(hideelement, button) {
     }
 }
 
-
-function checkAll(checkboxId,parentEle, className){
-   var f = document.getElementById(checkboxId);
-   var val = f.checked;
-   var chkList = document.getElementsByClassName(className, parentEle);
-   for (i =0; i < chkList.length; i++){
-      chkList[i].checked = val;
-   }
+function selectAll(checkboxId,parentEle, className) {
+	var f = document.getElementById(checkboxId);
+	var val = f.checked;
+	var chkList = document.getElementsByClassName(className, parentEle);
+	for (i =0; i < chkList.length; i++){
+		chkList[i].checked = val;
+	}	
 }
 
 function submitForm(actionPath) {
@@ -406,7 +405,7 @@ function popup1(height, width, url, windowName){
 			<table id="privateDocs" class="docTable">
 				<tr>
 					<td>
-						<input class="tightCheckbox" type="checkbox" id="pdfCheck<%=i%>" onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');" />
+						<input class="tightCheckbox" type="checkbox" id="pdfCheck<%=i%>" onclick="selectAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');" />
 					</td>
 					<td width="30%"><b><a
 						href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
