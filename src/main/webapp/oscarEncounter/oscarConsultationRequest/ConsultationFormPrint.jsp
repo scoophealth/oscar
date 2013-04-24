@@ -471,16 +471,7 @@
                                         <td class="subTitles">
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgDate"/>:
                                         </td>
-                                        <td class="fillLine">
-			<%
-                                	if(reqFrm.pwb.equals("1")){
-                                %>
-                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.pwb"/>
-                                <%}else{
-                                %>
-                                <%=reqFrm.referalDate%>
-                                <%}%>
-                                        </td>
+                                        <td class="fillLine"><%=reqFrm.referalDate%></td>
                                     </tr>
                                     <tr>
                                         <td class="subTitles">
@@ -642,11 +633,22 @@ for(ConsultationRequestExt ext:exts) {
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgTime"/>:
                                         </td>
                                         <td class="fillLine">
-                            <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
-                                <%=reqFrm.appointmentHour %>:<%=reqFrm.appointmentMinute %> <%=reqFrm.appointmentPm %>
-                            <%}else{%>
-                                &nbsp;
-		                      <%}%>
+                                        <%
+                                        	if(reqFrm.pwb.equals("1")) {
+                                        %>
+                                        	<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.pwb"/>
+                                        <%	} else {
+                                        		if (Integer.parseInt(reqFrm.status) > 2 ) {
+                                        %>
+                                        			<%=reqFrm.appointmentHour %>:<%=reqFrm.appointmentMinute %> <%=reqFrm.appointmentPm %>
+                                        <%		} else {
+                                        	
+                                        %>
+                                        			&nbsp;
+                                        <%
+                                        		}
+                                        	}
+                                        %> 
                                         </td>
                                     </tr>
                                     <tr>
