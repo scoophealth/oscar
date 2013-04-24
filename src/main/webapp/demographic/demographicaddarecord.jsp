@@ -365,6 +365,7 @@
 	                    waitingList.setPosition(maxPosition.longValue()+1);
 	                    waitingList.setOnListSince(MyDateFormat.getSysDate(request.getParameter("waiting_list_referral_date")));
 	                    waitingList.setIsHistory("N");
+	                    waitingList.setOnListSince(new java.util.Date());
 	                    waitingListDao.persist(waitingList);
                     }
                 }
