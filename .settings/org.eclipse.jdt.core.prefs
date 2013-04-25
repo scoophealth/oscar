@@ -81,7 +81,7 @@ org.eclipse.jdt.core.compiler.problem.typeParameterHiding=warning
 org.eclipse.jdt.core.compiler.problem.unavoidableGenericTypeProblems=enabled
 org.eclipse.jdt.core.compiler.problem.uncheckedTypeOperation=warning
 org.eclipse.jdt.core.compiler.problem.unclosedCloseable=warning
-org.eclipse.jdt.core.compiler.problem.undocumentedEmptyBlock=error
+org.eclipse.jdt.core.compiler.problem.undocumentedEmptyBlock=ignore
 org.eclipse.jdt.core.compiler.problem.unhandledWarningToken=warning
 org.eclipse.jdt.core.compiler.problem.unnecessaryElse=ignore
 org.eclipse.jdt.core.compiler.problem.unnecessaryTypeCheck=error
@@ -92,7 +92,7 @@ org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownExceptionIncludeDocCom
 org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownExceptionWhenOverriding=disabled
 org.eclipse.jdt.core.compiler.problem.unusedImport=error
 org.eclipse.jdt.core.compiler.problem.unusedLabel=error
-org.eclipse.jdt.core.compiler.problem.unusedLocal=error
+org.eclipse.jdt.core.compiler.problem.unusedLocal=warning
 org.eclipse.jdt.core.compiler.problem.unusedObjectAllocation=warning
 org.eclipse.jdt.core.compiler.problem.unusedParameter=warning
 org.eclipse.jdt.core.compiler.problem.unusedParameterIncludeDocCommentReference=disabled

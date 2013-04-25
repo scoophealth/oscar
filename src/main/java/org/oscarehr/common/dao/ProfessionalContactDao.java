@@ -41,6 +41,14 @@ public class ProfessionalContactDao extends AbstractDao<ProfessionalContact> {
 		super(ProfessionalContact.class);
 	}
 	
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	//Only used in the migrate script.bad idea to try this under normal conditions.
+	public List<ProfessionalContact> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public List<ProfessionalContact> search(String searchMode, String orderBy, String keyword) {
 		StringBuilder where = new StringBuilder();
 		List<String> paramList = new ArrayList<String>();

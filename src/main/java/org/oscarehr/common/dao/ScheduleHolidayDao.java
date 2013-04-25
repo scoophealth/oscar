@@ -40,6 +40,12 @@ public class ScheduleHolidayDao extends AbstractDao<ScheduleHoliday>{
 		super(ScheduleHoliday.class);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleHoliday> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public List<ScheduleHoliday> findAfterDate(Date date) {
 		Query query = entityManager.createQuery("select s from ScheduleHoliday s where s.id > ?");
 		query.setParameter(1, date);

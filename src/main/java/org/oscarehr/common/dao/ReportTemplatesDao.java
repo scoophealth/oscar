@@ -39,6 +39,11 @@ public class ReportTemplatesDao extends AbstractDao<ReportTemplates>{
 	public ReportTemplatesDao() {
 		super(ReportTemplates.class);
 	}
+	
+	public List<ReportTemplates> findAll() {
+		Query q = createQuery("t", null);
+		return q.getResultList();
+    }
 
     public List<ReportTemplates> findActive() {
 		Query q = createQuery("t", "t.active = 1");

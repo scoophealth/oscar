@@ -1862,7 +1862,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return "";
 	}
 
-	public ActionForward viewNotesOpt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward viewNotesOpt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		// response.setCharacterEncoding("UTF-8");
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 

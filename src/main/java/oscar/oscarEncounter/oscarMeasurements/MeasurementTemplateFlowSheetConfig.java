@@ -690,7 +690,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         return h;
     }
 
-    private Element getRuleBaseElement(String ruleName,String measurement,Hashtable<String,String> recowarn){
+    protected Element getRuleBaseElement(String ruleName,String measurement,Hashtable<String,String> recowarn){
 
         log.debug("LOADING RULES - getRuleBaseElement");
                     ArrayList<DSCondition> list = new ArrayList<DSCondition>();

@@ -40,6 +40,12 @@ public class QuickListDao extends AbstractDao<QuickList>{
 	public QuickListDao() {
 		super(QuickList.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QuickList> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
 
 	@SuppressWarnings("unchecked")
     public List<QuickList> findByNameResearchCodeAndCodingSystem(String quickListName, String researchCode, String codingSystem) {

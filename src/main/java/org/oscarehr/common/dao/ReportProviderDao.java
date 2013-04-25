@@ -39,6 +39,12 @@ public class ReportProviderDao extends AbstractDao<ReportProvider>{
 		super(ReportProvider.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ReportProvider> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public List<ReportProvider> findByAction(String action) {
     	String sql = "select x from ReportProvider x where x.action=?";
     	Query query = entityManager.createQuery(sql);

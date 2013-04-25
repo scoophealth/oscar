@@ -23,6 +23,10 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Institution;
 import org.springframework.stereotype.Repository;
 
@@ -31,5 +35,11 @@ public class InstitutionDao extends AbstractDao<Institution>{
 
 	public InstitutionDao()  {
 		super(Institution.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Institution> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
 	}
 }

@@ -43,6 +43,13 @@ public class ClinicDAO extends AbstractDao<Clinic> {
     	super(Clinic.class);
     }
 
+    @SuppressWarnings("unchecked")
+ 	public List<Clinic> findAll() {
+ 		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+ 		List<Clinic> results = query.getResultList();
+ 		return results;
+ 	}
+    
     public Clinic getClinic(){
     	Query query = entityManager.createQuery("select c from Clinic c");
         @SuppressWarnings("unchecked")

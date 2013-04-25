@@ -69,7 +69,7 @@ public class ServiceCodeValidationLogic {
 				v.add(svcList[i]);
 			}
 		}
-		return (BillingService[]) v.toArray(arr);
+		return v.toArray(arr);
 	}
 
 	/**

@@ -66,7 +66,7 @@
     }
 
     function encryptPIN(){
-	   window.open("<c:out value="${ctx}"/>/admin/encryptPIN.jsp","_blank","width=100,height=100");
+	   alert('This function has been disabled. Please contact your administrator');
     }
     //-->
     </script>

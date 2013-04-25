@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.CtlFrequency;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +38,14 @@ public class CtlFrequencyDao extends AbstractDao<CtlFrequency>{
 	public CtlFrequencyDao() {
 		super(CtlFrequency.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CtlFrequency> findAll() {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+		List<CtlFrequency> results = query.getResultList();
+		return results;
+	}
+	
+	
 	
 }

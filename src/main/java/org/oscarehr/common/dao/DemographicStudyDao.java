@@ -41,6 +41,12 @@ public class DemographicStudyDao extends AbstractDao<DemographicStudy>{
 		super(DemographicStudy.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<DemographicStudy> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public int removeByDemographicNo(Integer demographicNo) {
 		Query query = entityManager.createQuery("delete from DemographicStudy x where x.id.demographicNo=?");
 		query.setParameter(1, demographicNo);
