@@ -344,7 +344,10 @@ public class CommonLabResultData {
 					ProviderLabRoutingModel plr  = providerLabRoutingDao.find(Integer.parseInt(id));
 					if(plr != null) {
 						plr.setStatus(""+status);
-						plr.setComment(comment);
+						//we don't want to clobber existing comments when filing labs
+						if( status != 'F' ) {
+							plr.setComment(comment);
+						}
 						providerLabRoutingDao.merge(plr);
 					}
 				}
