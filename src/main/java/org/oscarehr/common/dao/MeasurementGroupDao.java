@@ -40,6 +40,11 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 		super(MeasurementGroup.class);
 	}
 	
+	public List<MeasurementGroup> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public List<MeasurementGroup> findByNameAndTypeDisplayName(String name, String typeDisplayName) {
 		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.name=?1 AND x.typeDisplayName=?2";
 

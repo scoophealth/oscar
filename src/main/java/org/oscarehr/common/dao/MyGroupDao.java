@@ -46,6 +46,12 @@ public class MyGroupDao extends AbstractDao<MyGroup> {
 		super(MyGroup.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<MyGroup> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
      public List<String> getGroupDoctors (String groupNo){
 
         Query query = entityManager.createQuery("SELECT g.id.providerNo FROM MyGroup g WHERE g.id.myGroupNo=?");

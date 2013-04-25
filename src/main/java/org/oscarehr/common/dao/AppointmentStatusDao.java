@@ -37,6 +37,12 @@ public class AppointmentStatusDao extends AbstractDao<AppointmentStatus> {
 	public AppointmentStatusDao() {
 		super(AppointmentStatus.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AppointmentStatus> findAll() {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName());
+		return query.getResultList();
+	}
     
     public List<AppointmentStatus> findActive() {
     	Query q = entityManager.createQuery("select a from AppointmentStatus a where a.active=?1");

@@ -64,45 +64,6 @@ public class ScheduleTemplateCodeDaoTest extends DaoTestFixtures {
                 assertNotNull(entity.getId());
         }
 
-	@Test
-	public void testGetAll() throws Exception {
-		
-		char code1 = 's';
-		char code2 = 'a';
-		char code3 = 'b';
-		
-		ScheduleTemplateCode scheduleTempCode1 = new ScheduleTemplateCode();
-		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode1);
-		scheduleTempCode1.setCode(code1);
-		dao.persist(scheduleTempCode1);
-		
-		ScheduleTemplateCode scheduleTempCode2 = new ScheduleTemplateCode();
-		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode2);
-		scheduleTempCode2.setCode(code2);
-		dao.persist(scheduleTempCode2);
-		
-		ScheduleTemplateCode scheduleTempCode3 = new ScheduleTemplateCode();
-		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode3);
-		scheduleTempCode3.setCode(code3);
-		dao.persist(scheduleTempCode3);
-
-		List<ScheduleTemplateCode> expectedResult = new ArrayList<ScheduleTemplateCode>(Arrays.asList(scheduleTempCode2, scheduleTempCode3, scheduleTempCode1));	
-		List<ScheduleTemplateCode> result = dao.getAll();
-		
-		Logger logger = MiscUtils.getLogger();
-		
-		if (result.size() != expectedResult.size()) {
-			logger.warn("Array sizes do not match. Result: "+ result.size());
-			fail("Array sizes do not match.");
-		}
-		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items  do not match.");
-				fail("Items  do not match.");
-			}
-		}
-		assertTrue(true);			
-	}
 	
 	@Test
 	public void testGetByCode() throws Exception {

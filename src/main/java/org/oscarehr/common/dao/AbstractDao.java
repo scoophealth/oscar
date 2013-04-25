@@ -29,7 +29,6 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.oscarehr.common.Dangerous;
 import org.oscarehr.common.model.AbstractModel;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,22 +106,6 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	protected int getMaxSelectSize() {
 	    return DEFAULT_MAX_SELECT_SIZE;
     }
-
-	/**
-	 * Fetches all instances of the persistent class handled by this DAO.
-	 * 
-	 * @deprecated use {@link #findAll(Integer, Integer)} instead
-	 * 
-	 * @return
-	 * 		Returns all instances available in the backend  
-	 */
-	@Dangerous
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public List<T> findAll() {
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName());
-		return query.getResultList();
-	}
 
 	/** Removes an entity based on the ID
 	 * 

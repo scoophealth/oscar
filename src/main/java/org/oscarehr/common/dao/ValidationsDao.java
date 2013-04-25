@@ -42,6 +42,12 @@ public class ValidationsDao extends AbstractDao<Validations> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Validations> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
     public List<Validations> findByAll(String regularExpParam, Double minValueParam, Double maxValueParam, 
 			Integer minLengthParam, Integer maxLengthParam, Boolean isNumericParam,
 			Boolean isDateParam) {

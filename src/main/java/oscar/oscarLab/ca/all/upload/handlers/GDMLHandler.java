@@ -94,6 +94,7 @@ public class GDMLHandler implements MessageHandler {
 	}
 
 	// recheck the abnormal status of the last 'n' labs
+	//this is a very weird method, and needs to be refactored or better yet, removed, and rethought out.
 	private void updateLabStatus(int n) {
 		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 		

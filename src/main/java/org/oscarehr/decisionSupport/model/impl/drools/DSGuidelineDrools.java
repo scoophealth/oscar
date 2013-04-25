@@ -369,7 +369,7 @@ public class DSGuidelineDrools extends DSGuideline {
         return ruleElement;
     }
 
-    private Element getRule(Element conditionElement, Element consequenceElement) {
+    protected Element getRule(Element conditionElement, Element consequenceElement) {
         List<Element> conditionElements = new ArrayList<Element>();
         conditionElements.add(conditionElement);
         return getRule(conditionElements, consequenceElement);

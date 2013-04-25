@@ -62,7 +62,7 @@ public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
 	public static void setCacheIsDirty(boolean cacheIsDirty) {
 		AppointmentStatusMgrImpl.cacheIsDirty = cacheIsDirty;
 	}
-
+	
 	public List<AppointmentStatus> getAllStatus(){
         return appointStatusDao.findAll();
     }
