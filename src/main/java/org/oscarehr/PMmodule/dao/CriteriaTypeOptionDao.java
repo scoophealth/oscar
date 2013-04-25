@@ -39,6 +39,14 @@ public class CriteriaTypeOptionDao extends AbstractDao<CriteriaTypeOption> {
 		super(CriteriaTypeOption.class);
 	}
 
+	public List<CriteriaTypeOption> findAll() {
+		Query query = entityManager.createQuery("select x from CriteriaTypeOption x");
+		
+		@SuppressWarnings("unchecked")
+	    List<CriteriaTypeOption> results = query.getResultList();
+		
+		return results;
+	}
 	
 	public List<CriteriaTypeOption> getCriteriaTypeOptionByTypeId(Integer typeId) {
 		Query query = entityManager.createQuery("select x from CriteriaTypeOption x where x.criteriaTypeId=?");

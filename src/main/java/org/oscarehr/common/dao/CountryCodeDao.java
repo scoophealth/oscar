@@ -42,12 +42,16 @@ public class CountryCodeDao extends AbstractDao<CountryCode> {
     public CountryCodeDao() {
     	super(CountryCode.class);
     }
-
-    public List<CountryCode> getAllCountryCodes(){
+    
+    public List<CountryCode> findAll(){
     	Query query = entityManager.createQuery("SELECT cc from CountryCode cc");
         @SuppressWarnings("unchecked")
         List<CountryCode> codeList = query.getResultList();
         return codeList;
+    }
+
+    public List<CountryCode> getAllCountryCodes(){
+    	return findAll();
     }
 
     //NOT USED YET

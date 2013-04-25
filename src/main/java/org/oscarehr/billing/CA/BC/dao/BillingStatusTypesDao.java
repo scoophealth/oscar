@@ -38,6 +38,13 @@ public class BillingStatusTypesDao extends AbstractDao<BillingStatusTypes> {
 	    super(BillingStatusTypes.class);
     }
 
+    @SuppressWarnings("unchecked")
+	public List<BillingStatusTypes> findAll() {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+		List<BillingStatusTypes> results = query.getResultList();
+		return results;
+	}
+    
 	@SuppressWarnings("unchecked")
     public List<BillingStatusTypes> findByCodes(List<String> codes) {
 	    Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " bst WHERE bst.id IN (:typeCodes)");

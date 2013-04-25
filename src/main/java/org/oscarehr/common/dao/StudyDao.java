@@ -39,6 +39,12 @@ public class StudyDao extends AbstractDao<Study>{
 		super(Study.class);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Study> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public Study findByName(String studyName) {
 		Query query = entityManager.createQuery("select s from Study s where s.studyName = ?1");
 		query.setParameter(1, studyName);

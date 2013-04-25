@@ -37,6 +37,14 @@ public class BillCenterDao extends AbstractDao<BillCenter>{
 		super(BillCenter.class);
 	}
 	
+	public List<BillCenter> findAll() {
+		Query query = entityManager.createQuery("SELECT b FROM BillCenter b");
+		
+		@SuppressWarnings("unchecked")
+        List<BillCenter> results = query.getResultList();
+		return results;
+	}
+	
 	public List<BillCenter> findByBillCenterDesc(String descr) {
 		Query query = entityManager.createQuery("SELECT b FROM BillCenter b WHERE b.billCenterDesc like ?");
 		query.setParameter(1,descr);

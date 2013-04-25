@@ -43,6 +43,13 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 	public Hl7TextInfoDao() {
 		super(Hl7TextInfo.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public List<Hl7TextInfo> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
 
 	/**
 	 * LabId is also refereed to as Lab_no, and segmentId.

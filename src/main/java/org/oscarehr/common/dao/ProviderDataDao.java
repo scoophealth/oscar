@@ -249,6 +249,12 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 
 		return query.getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ProviderData> findAll() {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName());
+		return query.getResultList();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<ProviderData> findAll(boolean inactive) {

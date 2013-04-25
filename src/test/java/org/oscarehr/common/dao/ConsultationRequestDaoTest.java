@@ -60,12 +60,10 @@ public class ConsultationRequestDaoTest extends DaoTestFixtures {
 		cr.setReferralDate(ConversionUtils.fromDateString("1891-05-15"));
 		dao.persist(cr);
 		
-		List<ConsultationRequest> crs = dao.findAll();
-		assertNotNull(crs);
-		assertTrue(crs.size() == 2);
+		
 
 		// should include both - cutoff is in the future
-		crs = dao.getReferrals("1", new Date());
+		List<ConsultationRequest> crs = dao.getReferrals("1", new Date());
 		assertNotNull(crs);
 		assertTrue(crs.isEmpty());
 

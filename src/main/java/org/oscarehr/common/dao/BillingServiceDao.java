@@ -300,7 +300,6 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return query.getResultList();
 	}
 
-    @Override
     public List<BillingService> findAll() {
 	    Query query = entityManager.createQuery("FROM BillingService bs ORDER BY TRIM(bs.description)");
 	    return query.getResultList();

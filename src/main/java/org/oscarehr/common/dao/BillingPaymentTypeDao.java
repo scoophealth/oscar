@@ -23,8 +23,12 @@
  */
 package org.oscarehr.common.dao;
 
-import org.springframework.stereotype.Repository;
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.BillingPaymentType;
+import org.springframework.stereotype.Repository;
 /**
  *
  * @author mweston4
@@ -34,5 +38,12 @@ public class BillingPaymentTypeDao extends AbstractDao<BillingPaymentType>{
     
     public BillingPaymentTypeDao() {
         super(BillingPaymentType.class);
-    }        
+    }     
+    
+    @SuppressWarnings("unchecked")
+	public List<BillingPaymentType> findAll() {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+		List<BillingPaymentType> results = query.getResultList();
+		return results;
+	}
 }

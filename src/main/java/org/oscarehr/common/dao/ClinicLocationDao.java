@@ -38,6 +38,13 @@ public class ClinicLocationDao extends AbstractDao<ClinicLocation> {
 	public ClinicLocationDao() {
 		super(ClinicLocation.class);
 	}
+	
+	   @SuppressWarnings("unchecked")
+		public List<ClinicLocation> findAll() {
+			Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+			List<ClinicLocation> results = query.getResultList();
+			return results;
+		}
 
 	public List<ClinicLocation> findByClinicNo(Integer clinicNo) {
 	   	String sql = "select c from ClinicLocation c where c.clinicNo=?1 order by c.clinicLocationNo";

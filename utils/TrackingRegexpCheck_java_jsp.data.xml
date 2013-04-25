@@ -1655,8 +1655,8 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheetDisplayNames = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheets = new Hashtable&lt;String, MeasurementFlowSheet&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:private Element getRuleBaseElement(String ruleName,String measurement,Hashtable&lt;String,String&gt; recowarn){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:private Hashtable&lt;String,String&gt; getRecommendationHash(Element recowarn){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:protected Element getRuleBaseElement(String ruleName,String measurement,Hashtable&lt;String,String&gt; recowarn){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public Hashtable&lt;String, ArrayList&lt;String&gt;&gt; getDxTrigHash() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public Hashtable&lt;String, String&gt; getFlowsheetDisplayNames(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBeanHandler.java:Vector&lt;EctGroupNameBean&gt; groupNameVector = new Vector&lt;EctGroupNameBean&gt;();</ViolationValue>

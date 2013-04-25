@@ -41,6 +41,12 @@ public class TeleplanS00Dao extends AbstractDao<TeleplanS00> {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<TeleplanS00> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<TeleplanS00> findByBillingNo(String mspCtlNo) {
 		Query q = createQuery("t", "t.mspCtlNo = :no");
 		q.setParameter("no", mspCtlNo);

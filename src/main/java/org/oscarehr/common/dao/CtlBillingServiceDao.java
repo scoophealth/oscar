@@ -40,6 +40,12 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
 	public CtlBillingServiceDao() {
 		super(CtlBillingService.class);
 	}
+	
+	public List<CtlBillingService> findAll() {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+		List<CtlBillingService> results = query.getResultList();
+		return results;
+	}
 
 	/**
 	 * Gets distinct service type for services with the specific service status 

@@ -27,20 +27,12 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Study;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class StudyDaoTest extends DaoTestFixtures {
@@ -52,38 +44,6 @@ public class StudyDaoTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("study");
 	}
 
-	@Test
-	public void testFindAll() throws Exception {
-		
-		Study study1 = new Study();
-		EntityDataGenerator.generateTestDataForModelClass(study1);
-		dao.persist(study1);
-		
-		Study study2 = new Study();
-		EntityDataGenerator.generateTestDataForModelClass(study2);
-		dao.persist(study2);
-		
-		Study study3 = new Study();
-		EntityDataGenerator.generateTestDataForModelClass(study3);
-		dao.persist(study3);
-		
-		List<Study> expectedResult = new ArrayList<Study>(Arrays.asList(study1, study2, study3));		
-		List<Study> result = dao.findAll();
-		
-		Logger logger = MiscUtils.getLogger();
-		if (result.size() != expectedResult.size()) {
-			logger.warn("Array sizes do not match.");
-			fail("Array sizes do not match.");
-		}
-
-		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items do not match.");
-				fail("Items do not match.");
-			}
-		}
-		assertTrue(true);	
-	}
 
 	@Test
 	public void testFindByName() throws Exception {
