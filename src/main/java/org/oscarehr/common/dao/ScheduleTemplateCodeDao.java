@@ -39,13 +39,19 @@ public class ScheduleTemplateCodeDao extends AbstractDao<ScheduleTemplateCode> {
 		super(ScheduleTemplateCode.class);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleTemplateCode> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
+	@Deprecated
+	/**
+	 * Use findAll()
+	 * @return
+	 */
 	public List<ScheduleTemplateCode> getAll() {
-		Query query = entityManager.createQuery("select s from ScheduleTemplateCode s order by s.code");
-		
-		@SuppressWarnings("unchecked")
-		List<ScheduleTemplateCode> results = query.getResultList();
-		
-		return results;
+		return findAll();
 	}
 	
 	public ScheduleTemplateCode getByCode(char code) {

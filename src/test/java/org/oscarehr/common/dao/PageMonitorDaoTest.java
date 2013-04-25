@@ -38,7 +38,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -158,157 +157,9 @@ public class PageMonitorDaoTest extends DaoTestFixtures {
 		assertTrue(true);
 	}
 
-	@Test
-	public void testUpdatePage() throws Exception {
-		
-		String pageId1 = "100";
-		
-		String pageName1 = "alpha";
-				
-		PageMonitor pageMonitor1 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor1);
-		pageMonitor1.setPageId(pageId1);
-		pageMonitor1.setPageName(pageName1);
-		Date updateDate1 = new Date(dfm.parse("20010701").getTime());
-		pageMonitor1.setUpdateDate(updateDate1);
-		dao.persist(pageMonitor1);
-		
-		PageMonitor pageMonitor2 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor2);
-		pageMonitor2.setPageId(pageId1);
-		pageMonitor2.setPageName(pageName1);
-		Date updateDate2 = new Date(dfm.parse("20130901").getTime());
-		pageMonitor2.setUpdateDate(updateDate2);
-		dao.persist(pageMonitor2);
-		
-		PageMonitor pageMonitor3 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor3);
-		pageMonitor3.setPageId(pageId1);
-		pageMonitor3.setPageName(pageName1);
-		Date updateDate3 = new Date(dfm.parse("20130701").getTime());
-		pageMonitor3.setUpdateDate(updateDate3);
-		dao.persist(pageMonitor3);
-			
-		dao.updatePage(pageName1, pageId1);
-		List<PageMonitor> expectedResult = new ArrayList<PageMonitor>(Arrays.asList(pageMonitor2, pageMonitor3));
-		List<PageMonitor> result = dao.findAll();
 
-		Logger logger = MiscUtils.getLogger();
-		
-		if (result.size() != expectedResult.size()) {
-			logger.warn("Array sizes do not match.");
-			fail("Array sizes do not match.");
-		}
-		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items  do not match.");
-				fail("Items  do not match.");
-			}
-		}
-		assertTrue(true);
-	}
 
-	@Test
-	public void testRemovePageNameKeepPageIdForProvider() throws Exception {
-		
-		String pageId1 = "100";
-		String pageId2 = "200";
-		
-		String providerNo1 = "111";
-		String providerNo2 = "222";
-		
-		String pageName1 = "alpha";
-		String pageName2 = "bravo";
-		
-		PageMonitor pageMonitor1 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor1);
-		pageMonitor1.setPageId(pageId1);
-		pageMonitor1.setPageName(pageName1);
-		pageMonitor1.setProviderNo(providerNo1);
-		dao.persist(pageMonitor1);
-		
-		PageMonitor pageMonitor2 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor2);
-		pageMonitor2.setPageId(pageId2);
-		pageMonitor2.setPageName(pageName2);
-		pageMonitor2.setProviderNo(providerNo2);
-		dao.persist(pageMonitor2);
-		
-		PageMonitor pageMonitor3 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor3);
-		pageMonitor3.setPageId(pageId1);
-		pageMonitor3.setPageName(pageName1);
-		pageMonitor3.setProviderNo(providerNo1);
-		dao.persist(pageMonitor3);
-		
-		dao.removePageNameKeepPageIdForProvider(pageName2, "2", providerNo2);
-		List<PageMonitor> expectedResult = new ArrayList<PageMonitor>(Arrays.asList(pageMonitor1, pageMonitor3));
-		List<PageMonitor> result = dao.findAll();
+	
 
-		Logger logger = MiscUtils.getLogger();
-		
-		if (result.size() != expectedResult.size()) {
-			logger.warn("Array sizes do not match.");
-			fail("Array sizes do not match.");
-		}
-		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items  do not match.");
-				fail("Items  do not match.");
-			}
-		}
-		assertTrue(true);
-	}
 
-	@Test @Ignore //not deleting the id that is being passed....also Marc said to skip tests that do not return anything
-	public void testCancelPageIdForProvider() throws Exception {
-		
-		String pageId1 = "100";
-		String pageId2 = "200";
-		
-		String providerNo1 = "111";
-		String providerNo2 = "222";
-		
-		String pageName1 = "alpha";
-		String pageName2 = "bravo";
-		
-		PageMonitor pageMonitor1 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor1);
-		pageMonitor1.setPageId(pageId1);
-		pageMonitor1.setPageName(pageName1);
-		pageMonitor1.setProviderNo(providerNo1);
-		dao.persist(pageMonitor1);
-		
-		PageMonitor pageMonitor2 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor2);
-		pageMonitor2.setPageId(pageId2);
-		pageMonitor2.setPageName(pageName2);
-		pageMonitor2.setProviderNo(providerNo2);
-		dao.persist(pageMonitor2);
-		
-		PageMonitor pageMonitor3 = new PageMonitor();
-		EntityDataGenerator.generateTestDataForModelClass(pageMonitor3);
-		pageMonitor3.setPageId(pageId1);
-		pageMonitor3.setPageName(pageName1);
-		pageMonitor3.setProviderNo(providerNo1);
-		dao.persist(pageMonitor3);
-		
-		dao.cancelPageIdForProvider(pageName1, "1", providerNo1);
-		List<PageMonitor> expectedResult = new ArrayList<PageMonitor>(Arrays.asList(pageMonitor2, pageMonitor3));
-		List<PageMonitor> result = dao.findAll();
-
-		Logger logger = MiscUtils.getLogger();
-		
-		if (result.size() != expectedResult.size()) {
-			logger.warn("Array sizes do not match." +result.size());
-			fail("Array sizes do not match.");
-		}
-		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items  do not match.");
-				fail("Items  do not match.");
-			}
-		}
-		assertTrue(true);
-	}
 }

@@ -140,7 +140,7 @@ public class DepressionContinuityReporter implements Reporter{
         return true;
     }
 
-    private StringBuilder addCodeEntry(String demographic_no, String service_date, String dx, Boolean odd) throws Exception {
+    private StringBuilder addCodeEntry(String demographic_no, String service_date, String dx, Boolean odd)  {
          StringBuilder html = new StringBuilder("<tr class=\"");
         if( odd ) {
             html.append("reportRow1\">");
@@ -157,12 +157,12 @@ public class DepressionContinuityReporter implements Reporter{
         return html;
     }
 
-    private String csvCodeEntry(String demographic_no, String service_date, String dx) throws Exception {
+    private String csvCodeEntry(String demographic_no, String service_date, String dx) {
         String csvCode =  demographic_no + "," + service_date + "," + dx + ", , , , , , \n";
         return csvCode;
     }
 
-    private void addAppt(String apptSQL, String curDemo, Date from, Date to, Boolean odd) throws Exception {
+    private void addAppt(String apptSQL, String curDemo, Date from, Date to, Boolean odd) {
     	OscarAppointmentDao dao = SpringUtils.getBean(OscarAppointmentDao.class);
 
         Set<String>setDemo = demographics.keySet();

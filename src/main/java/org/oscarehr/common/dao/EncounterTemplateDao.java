@@ -36,6 +36,14 @@ public class EncounterTemplateDao extends AbstractDao<EncounterTemplate> {
 	public EncounterTemplateDao() {
 		super(EncounterTemplate.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EncounterTemplate> findAll() {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+		List<EncounterTemplate> results = query.getResultList();
+		return results;
+	}
+	
 
 	   public List<EncounterTemplate> findByName(String name)
 		{

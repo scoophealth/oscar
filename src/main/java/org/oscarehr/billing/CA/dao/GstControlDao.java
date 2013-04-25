@@ -24,6 +24,10 @@
 
 package org.oscarehr.billing.CA.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.model.GstControl;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -38,4 +42,10 @@ public class GstControlDao extends AbstractDao<GstControl> {
     public GstControlDao() {
         super(GstControl.class);
     }
+    
+	@SuppressWarnings("unchecked")
+	public List<GstControl> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
 }

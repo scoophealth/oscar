@@ -37,6 +37,13 @@ public class EncounterFormDao extends AbstractDao<EncounterForm> {
 		super(EncounterForm.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<EncounterForm> findAll() {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x");
+		List<EncounterForm> results = query.getResultList();
+		return results;
+	}
+	
     public List<EncounterForm> findByFormName(String formName)
 	{
 		Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formName=?1");

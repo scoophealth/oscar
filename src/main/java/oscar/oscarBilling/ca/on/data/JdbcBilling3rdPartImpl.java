@@ -28,15 +28,13 @@ import org.apache.log4j.Logger;
 import org.oscarehr.billing.CA.ON.model.Billing3rdPartyAddress;
 import org.oscarehr.common.dao.Billing3rdPartyAddressDao;
 import org.oscarehr.common.dao.BillingONExtDao;
-import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.util.SpringUtils;
 
 public class JdbcBilling3rdPartImpl {
 	private static final Logger _logger = Logger
 			.getLogger(JdbcBilling3rdPartImpl.class);
-	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
-
+	
 	public static final String ACTIVE = "1";
 	public static final String INACTIVE = "0";
 

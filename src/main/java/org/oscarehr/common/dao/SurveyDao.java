@@ -37,6 +37,13 @@ public class SurveyDao extends AbstractDao<Survey> {
 		super(Survey.class);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public List<Survey> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public Survey findByName(String name) {
 		Query q = entityManager.createQuery("select s from Survey s where s.description = ?1");
 		q.setParameter(1, name);

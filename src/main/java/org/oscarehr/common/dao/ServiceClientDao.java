@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.ServiceClient;
@@ -33,6 +35,12 @@ public class ServiceClientDao extends AbstractDao<ServiceClient>{
 
 	public ServiceClientDao() {
 		super(ServiceClient.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ServiceClient> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
 	}
 	
 	public ServiceClient findByName(String name) {

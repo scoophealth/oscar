@@ -38,6 +38,15 @@ public class CriteriaTypeDao extends AbstractDao<CriteriaType> {
 	public CriteriaTypeDao() {
 		super(CriteriaType.class);
 	}
+	
+	public List<CriteriaType> findAll() {
+		Query query = entityManager.createQuery("select x from CriteriaType x");
+		
+		@SuppressWarnings("unchecked")
+	    List<CriteriaType> results = query.getResultList();
+		
+		return results;
+	}
 
 	public CriteriaType findByName(String fieldName) {		
 		Query query = entityManager.createQuery("select x from CriteriaType x where x.fieldName=?");

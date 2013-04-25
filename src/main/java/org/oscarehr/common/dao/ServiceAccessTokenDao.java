@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.ServiceAccessToken;
@@ -34,6 +36,12 @@ public class ServiceAccessTokenDao extends AbstractDao<ServiceAccessToken>{
 
 	public ServiceAccessTokenDao() {
 		super(ServiceAccessToken.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ServiceAccessToken> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
 	}
 	
 	public ServiceAccessToken findByTokenId(String token) {

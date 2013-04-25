@@ -40,6 +40,15 @@ public class IchppccodeDao extends AbstractCodeSystemDao<Ichppccode>{
 		super(Ichppccode.class);
 	}
 	
+	/**
+	 * this is ok here, only 440 entries in this code..i wouldn't put this in icd9, or snomed.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Ichppccode> findAll() {
+		Query query = createQuery("x", null);
+		return query.getResultList();
+	}
+	
 	public List<Ichppccode> getIchppccodeCode(String term){
 		Query query = entityManager.createQuery("select i from Ichppccode i where i.id=?");
 		query.setParameter(1, term);

@@ -38,6 +38,15 @@ public class CtlServiceCodesDxCodesDao extends AbstractDao<CtlServiceCodesDxCode
 		super(CtlServiceCodesDxCodes.class);
 	}
 	
+	public List<CtlServiceCodesDxCodes> findAll() {
+		Query q = entityManager.createQuery("select c from CtlServiceCodesDxCodes c");
+		
+		@SuppressWarnings("unchecked")
+		List<CtlServiceCodesDxCodes> results = q.getResultList();
+		
+		return results;
+	}
+	
 	public List<CtlServiceCodesDxCodes> findByServiceCode(String serviceCode) {
 		Query q = entityManager.createQuery("select c from CtlServiceCodesDxCodes where c.serviceCode=:serviceCode");
 		q.setParameter("serviceCode", serviceCode);
