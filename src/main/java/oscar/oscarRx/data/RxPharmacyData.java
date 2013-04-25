@@ -37,6 +37,7 @@ import org.oscarehr.common.dao.DemographicPharmacyDao;
 import org.oscarehr.common.dao.PharmacyInfoDao;
 import org.oscarehr.common.model.DemographicPharmacy;
 import org.oscarehr.common.model.PharmacyInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -136,17 +137,21 @@ public class RxPharmacyData {
       demographicPharmacyDao.addPharmacyToDemographic(Integer.parseInt(pharmacyId), Integer.parseInt(demographicNo));
    }
 
-   /**
-    * Used to get the most recent pharmacy associated with this patient.  Returns a Pharmacy object with the latest data about that pharmacy.
-    * @param demographicNo patients demographic number
-    *
-    * @return Pharmacy data object
-    */
-   public PharmacyInfo getPharmacyFromDemographic(String demographicNo){
-	   DemographicPharmacy dp = demographicPharmacyDao.findByDemographicId(Integer.parseInt(demographicNo));
-	   if(dp != null) {
-		   return pharmacyInfoDao.getPharmacy(dp.getPharmacyId());
-	   }
-	   return null;
-   }
+	/**
+	 * Used to get the most recent pharmacy associated with this patient.  Returns a Pharmacy object with the latest data about that pharmacy.
+	 * @param demographicNo patients demographic number
+	 *
+	 * @return Pharmacy data object
+	 */
+	public PharmacyInfo getPharmacyFromDemographic(String demographicNo) {
+		List<DemographicPharmacy> dp = demographicPharmacyDao.findByDemographicId(Integer.parseInt(demographicNo));
+		if (dp.isEmpty()) {
+			return null;
+		}
+		if (dp.size() > 1) {
+			MiscUtils.getLogger().warn("Loaded multiple pharmacies for " + demographicNo + " but returning info for the first one...");
+		}
+
+		return pharmacyInfoDao.getPharmacy(dp.get(0).getPharmacyId());
+	}
 }
