@@ -158,7 +158,8 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     				isURLjavaScript = true;
     			}
     			else if( curDoc.getRemoteFacilityId()==null && curDoc.isPDF() ) {
-    				url = request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A&demoName=" + StringEscapeUtils.escapeJavaScript(bean.getPatientLastName()) + ", " + StringEscapeUtils.escapeJavaScript(bean.getPatientFirstName());
+    				url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A&demoName=" + StringEscapeUtils.escapeJavaScript(bean.getPatientLastName() + ", " + bean.getPatientFirstName()) + "'); return false;";
+    				isURLjavaScript = true;
     			}
     			else {
     				url = request.getContextPath() + "/dms/ManageDocument.do?method=display&doc_no=" + dispDocNo + "&providerNo=" + user + (curDoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curDoc.getRemoteFacilityId():"");
