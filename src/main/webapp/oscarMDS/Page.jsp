@@ -8,6 +8,7 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" %>
 <%@ page import="java.util.*" %>
 <%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*,oscar.util.StringUtils,oscar.util.UtilDateUtilities" %>
@@ -329,7 +330,7 @@ String curUser_no = (String) session.getAttribute("user");
                                     	}
                                     }
                                     else if (result.isDocument()){ %>
-                                    <a href="javascript:parent.reportWindow('<%=request.getContextPath()%>/dms/showDocument.jsp?inWindow=true&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=StringEscapeUtils.escapeJavaScript(result.getPatientName())%> ',screen.availHeight,screen.availWidth)"><%=StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
+                                    <a href="javascript:parent.reportWindow('<%=request.getContextPath()%>/dms/showDocument.jsp?inWindow=true&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=URLEncoder.encode(result.getPatientName(), "UTF-8")%>',screen.availHeight,screen.availWidth)"><%=StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
                                     <% }else if(result.isHRM()){
                                     	StringBuilder duplicateLabIds=new StringBuilder();
                                     	for (Integer duplicateLabId : result.getDuplicateLabIds())
@@ -338,9 +339,9 @@ String curUser_no = (String) session.getAttribute("user");
                                     		duplicateLabIds.append(duplicateLabId);
                                     	}
                                     %>
-                                    <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=segmentID%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=result.getPatientName()%>&duplicateLabIds=<%=duplicateLabIds.toString()%> ',850,1020)"><%=labRead%><%=result.getPatientName()%></a>
+                                    <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=segmentID%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=URLEncoder.encode(result.getPatientName(), "UTF-8")%>&duplicateLabIds=<%=duplicateLabIds.toString()%> ',850,1020)"><%=labRead%><%=result.getPatientName()%></a>
                                     <% }else {%>
-                                    <a href="javascript:parent.reportWindow('<%=request.getContextPath()%>/lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=labRead%><%=StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
+                                    <a href="javascript:parent.reportWindow('<%=request.getContextPath()%>/lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=labRead%><%=StringEscapeUtils.escapeJavaScript(result.getPatientName())%></a>
                                     <% }%>
                                 </td>
                                 <td nowrap>
@@ -350,7 +351,7 @@ String curUser_no = (String) session.getAttribute("user");
                                     <%= (result.isAbnormal() ? "Abnormal" : "" ) %>
                                 </td>
                                 <td nowrap>
-                                    <%=result.getDateTime()%>
+                                    <%=result.getDateTime() + (result.isDocument() ? " / " + result.lastUpdateDate : "")%>
                                 </td>
                                 <td nowrap>
                                     <%=result.getPriority()%>
@@ -359,7 +360,7 @@ String curUser_no = (String) session.getAttribute("user");
                                     <%=result.getRequestingClient()%>
                                 </td>
                                 <td nowrap>
-                                    <%=result.getDisciplineDisplayString()%>
+                                    <%=result.isDocument() ? result.description == null ? "" : result.description : result.getDisciplineDisplayString()%>
                                 </td>
                                 <td nowrap> <!--  -->
                                     <%= ((result.isReportCancelled())? "Cancelled" : result.isFinal() ? "Final" : "Partial")%>
