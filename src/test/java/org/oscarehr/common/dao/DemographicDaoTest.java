@@ -155,7 +155,7 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDemographicNo(null);
 		dao.save(entity);
-
+		assertNotNull(entity.getDemographicNo());
 		assertTrue(dao.clientExists(entity.getDemographicNo()));
 	}
 
