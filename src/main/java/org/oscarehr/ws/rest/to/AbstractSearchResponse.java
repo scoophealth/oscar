@@ -28,11 +28,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
-@XmlRootElement(name = "List")
-public class OscarSearchResponse<T> implements Serializable {
+@XmlSeeAlso({ DemographicResponse.class })
+public class AbstractSearchResponse<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class OscarSearchResponse<T> implements Serializable {
 
 	private List<T> content = new ArrayList<T>();
 
-	@XmlElement(name = "Item")
+	@XmlAnyElement(lax = true)
 	public List<T> getContent() {
 		return content;
 	}

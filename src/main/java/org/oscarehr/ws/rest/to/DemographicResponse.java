@@ -23,68 +23,26 @@
  */
 package org.oscarehr.ws.rest.to;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
-@XmlRootElement(name = "List")
-public class OscarSearchResponse<T> implements Serializable {
+import org.oscarehr.ws.rest.to.model.DemographicTo1;
 
-	private static final long serialVersionUID = 1L;
+@XmlRootElement
+@XmlSeeAlso({DemographicTo1.class})
+public class DemographicResponse extends AbstractSearchResponse<DemographicTo1> {
 
-	private int offset;
+    private static final long serialVersionUID = 1L;
 
-	private int limit;
-
-	private int total;
-
-	private Date timestamp = new Date();
-
-	private List<T> content = new ArrayList<T>();
-
-	@XmlElement(name = "Item")
-	public List<T> getContent() {
-		return content;
-	}
-
-	public void setContent(List<T> content) {
-		this.content = content;
-	}
-
-	public int getOffset() {
-		return offset;
-	}
-
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	public Date getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public int getTotal() {
-		return total;
-	}
-
-	public void setTotal(int total) {
-		this.total = total;
-	}
+	@Override
+	@XmlElement(name="demographic", type = DemographicTo1.class)
+	@XmlElementWrapper(name="content")
+    public List<DemographicTo1> getContent() {
+	    return super.getContent();
+    }
 
 }
