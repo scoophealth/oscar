@@ -15,6 +15,8 @@
 	">
 	
 	<context:component-scan base-package="org.oscarehr.ws.rest"/>
+	<context:component-scan base-package="org.oscarehr.ws.rest.util"/>
+	<aop:aspectj-autoproxy/>
 	
 	
 	    <bean id="oauthProvider" class="oscar.login.OscarOAuthDataProvider" autowire="byName"/>
@@ -43,7 +45,7 @@
   
 	
     <jaxrs:server id="oauthService" address="/oauth" >
-   
+
         <jaxrs:serviceBeans>
             <ref bean="requestTokenService"/>
             <ref bean="authorizationService"/>
@@ -64,9 +66,7 @@
         <jaxrs:serviceBeans>
             <bean class="org.oscarehr.ws.rest.ProviderService"  autowire="byName"/>
         </jaxrs:serviceBeans>
-      
-      
-       
+             
       <jaxrs:providers>
            <ref bean="oAuthFilter"/>
            <ref bean="jaxb"/>
@@ -89,6 +89,34 @@
          </list>
       </property>
 
-</bean>
+	</bean>
 
+
+	<!-- RESTful web service  -->
+	<jaxrs:server address="/rs" id="jaxrServer">
+
+		<jaxrs:inInterceptors>
+			<bean name="authInInterceptor"
+				class="org.oscarehr.ws.rest.util.AuthenticationInInterceptor" />
+		</jaxrs:inInterceptors>
+		
+		<jaxrs:providers>
+			<ref bean="jaxb"/>
+		</jaxrs:providers>
+
+		<jaxrs:features>
+			<cxf:logging />
+		</jaxrs:features>
+
+		<jaxrs:serviceBeans>
+		<bean class="org.oscarehr.ws.rest.PharmacyService"  autowire="byName"/>
+
+		</jaxrs:serviceBeans>
+
+		<jaxrs:extensionMappings>
+			<entry key="xml" value="application/xml" />
+			<entry key="json" value="application/json" />
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
+	
 </beans>
