@@ -222,6 +222,7 @@ String curUser_no = (String) session.getAttribute("user");
                                 doclabid_seq.add(segmentID);
                                 request.setAttribute("segmentID", segmentID);
                                 String demoName = StringEscapeUtils.escapeJavaScript(result.getPatientName());
+                                String escapedDemoName = org.apache.commons.lang.StringUtils.replace(demoName, "\'", "%27");
 
                                 if (!isListView) {
                                 	try {
@@ -317,7 +318,7 @@ String curUser_no = (String) session.getAttribute("user");
                                     	}
                                     }
                                     else if (result.isDocument()){ %>
-                                    <a href="javascript:parent.reportWindow('<%=request.getContextPath()%>/dms/showDocument.jsp?inWindow=true&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=StringEscapeUtils.escapeHtml(result.getPatientName())%> ',660,1020)"><%=StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
+                                    <a href="javascript:parent.reportWindow('<%=request.getContextPath()%>/dms/showDocument.jsp?inWindow=true&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=escapedDemoName%> ',660,1020)"><%=StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
                                     <% }else if(result.isHRM()){
                                     	StringBuilder duplicateLabIds=new StringBuilder();
                                     	for (Integer duplicateLabId : result.getDuplicateLabIds())
@@ -326,7 +327,7 @@ String curUser_no = (String) session.getAttribute("user");
                                     		duplicateLabIds.append(duplicateLabId);
                                     	}
                                     %>
-                                    <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=segmentID%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=result.getPatientName()%>&duplicateLabIds=<%=duplicateLabIds.toString()%> ',850,1020)"><%=labRead%><%=result.getPatientName()%></a>
+                                    <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=segmentID%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=escapedDemoName%>&duplicateLabIds=<%=duplicateLabIds.toString()%> ',850,1020)"><%=labRead%><%=result.getPatientName()%></a>
                                     <% }else {%>
                                     <a href="javascript:parent.reportWindow('<%=request.getContextPath()%>/lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=labRead%><%=StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
                                     <% }%>
