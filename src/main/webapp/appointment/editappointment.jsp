@@ -190,10 +190,12 @@ function onSub() {
 function calculateEndTime() {
   var stime = document.EDITAPPT.start_time.value;
   var vlen = stime.indexOf(':')==-1?1:2;
+  
   if(vlen==1 && stime.length==4 ) {
     document.EDITAPPT.start_time.value = stime.substring(0,2) +":"+ stime.substring(2);
     stime = document.EDITAPPT.start_time.value;
   }
+
   if(stime.length!=5) {
     alert("<bean:message key="Appointment.msgInvalidDateFormat"/>");
     return false;
@@ -202,6 +204,12 @@ function calculateEndTime() {
   var shour = stime.substring(0,2) ;
   var smin = stime.substring(stime.length-vlen) ;
   var duration = document.EDITAPPT.duration.value ;
+  
+  if(isNaN(duration)) {
+	  alert("<bean:message key="Appointment.msgFillTimeField"/>");
+	  return false;
+  }
+  
   if(eval(duration) == 0) { duration =1; }
   if(eval(duration) < 0) { duration = Math.abs(duration) ; }
 
