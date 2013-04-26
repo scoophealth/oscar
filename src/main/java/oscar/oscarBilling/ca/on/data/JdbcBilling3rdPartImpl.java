@@ -34,6 +34,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
+
 public class JdbcBilling3rdPartImpl {
 	private static final Logger _logger = Logger
 			.getLogger(JdbcBilling3rdPartImpl.class);
@@ -314,8 +315,7 @@ public class JdbcBilling3rdPartImpl {
 
 	public Properties get3rdAddrProp(String name) {
 		Properties prop = new Properties();
-		String sql = "select * from billing_on_3rdPartyAddress where company_name ='"
-				+ name + "'";
+		String sql = "select * from billing_on_3rdPartyAddress where company_name = '" + StringEscapeUtils.escapeSql(name) + "'";
 		ResultSet rsdemo = dbObj.searchDBRecord(sql);
 		try {
 			while (rsdemo.next()) {
