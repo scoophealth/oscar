@@ -49,7 +49,7 @@ Demographic demographic_header=demographicDao_header.getDemographic(d);
 	}   		
 %>
 
-
+<div class="navbar navbar-fixed-top well well-small" style="padding:0px;margin:0px;">
 <!--<a><bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=d%>' /></a>-->
 
 <div class="span6" style="margin-left:15px;">
@@ -75,5 +75,5 @@ Demographic demographic_header=demographicDao_header.getDemographic(d);
 <span style="padding-right:10px;font-size:13px;"><bean:message key="demographic.patient.context.sex"/>: <strong><%=demographic_header.getSexDesc() %></strong></span> 
 <span style="padding-right:10px;font-size:13px;"><bean:message key="demographic.patient.context.hin"/>: <strong><%=demographic_header.getHin() %></strong></span>
 
-
+</div>
 </div>

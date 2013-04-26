@@ -417,19 +417,16 @@ overflow-y:scroll;
                                    <link rel="shortcut icon" href="ico/favicon.png">
                 
          
-     <link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath() %>/share/calendar/calendar.css" title="win2k-cold-1" />
+    <link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath() %>/share/calendar/calendar.css" title="win2k-cold-1" />
          
-     <script>	
+                                   
+    <script type="text/javascript">
         function getDemographicNo() {
                 return '<%=demographic_no%>';
         }
         function getContextPath() {
                 return '<%=request.getContextPath()%>';
         }
-	</script>
-                                   
-    <script type="text/javascript">
-
 
 
     function getScrollCoords() {
@@ -558,12 +555,9 @@ function fsPopup(width,height,url,window) {
   </head>
 
   <body>
-    <div class="navbar navbar-fixed-top well well-small" style="padding:0px;margin:0px;">
+    
 
 <%@ include file="/share/templates/patient.jspf"%>
-
-    </div>
-     
 
 <div id="tracker-bar" class="container-fluid navbar-inner">
    		<div class="span12" style="padding-left:0px;margin-left:0px">
