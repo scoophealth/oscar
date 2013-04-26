@@ -594,6 +594,7 @@ function showHideDetail(){
 
     showHideBtn('editBtn');
     showHideBtn('closeBtn');
+   
 }
 
 // Used to display demographic sections, where sections is an array of id's for
@@ -1291,12 +1292,15 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                     }
                                 }
                             %> ) </span></b>
+                            
+                            <security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="w">
                             <%
                                                     if( head.equals(demographic_no)) {
                                                     %>
                                                         <a id="editBtn" href="javascript: showHideDetail();"><bean:message key="demographic.demographiceditdemographic.msgEdit"/></a>
                                                         <a id="closeBtn" href="javascript: showHideDetail();" style="display:none;">Close</a>
                                                    <% } %>
+                              </security:oscarSec>
 						</td>
 					</tr>
 					
@@ -1307,35 +1311,12 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                         <table border="0" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="30%" valign="top">
-                                <span id="editButton1" style="display:inline;">
-                                <security:oscarSec
-                                    roleName="<%=roleName$%>" objectName="_demographic" rights="w">
-                                    <input type="button"
-                                        value="<bean:message key="demographic.demographiceditdemographic.msgEdit"/>"
-                                        onclick="showHideDetail(); return false;">
-                                </security:oscarSec>
-                                </span>
-                                <span id="cancelButton1" style="display:none;">
-                                <security:oscarSec
-                                    roleName="<%=roleName$%>" objectName="_demographic" rights="w">
-                                    <input type="button" 
-                                        value="<bean:message key="demographic.demographiceditdemographic.msgCancel"/>"
-                                        onclick="showHideDetail(); return false;">
-                                </security:oscarSec>
-                                </span>
+                                                             
+                                <input type="hidden" name="displaymode" value="Update Record">
                                 
-                                <input
-                                    type="hidden" name="displaymode" value="Update Record">
-                                <!-- security code block --> <span id="updateButton1"
-                                    style="display: none;"> <security:oscarSec
-                                    roleName="<%=roleName$%>" objectName="_demographic" rights="w">
-                                    <input type="submit"
-                                        value="<bean:message key="demographic.demographiceditdemographic.btnUpdate"/>">
-                                </security:oscarSec> </span> <!-- security code block -->
-                                <input type="hidden"
-                                    name="dboperation" value="update_record">
+                                <input type="hidden" name="dboperation" value="update_record">
                             
-                                <br><input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
+                                <input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
                                     onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
                                 </td>
                                 <td width="30%" align='center' valign="top">
@@ -3042,16 +3023,15 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 						<td colspan="4">
 						<table border="0" width="100%" cellpadding="0" cellspacing="0">
 							<tr>
-								<td width="30%" valign="top"><input type="hidden"
-									name="dboperation" value="update_record"> 
-                                                                        <input type="button"
-									name="Button" value="<bean:message key="global.btnBack" />"
-									onclick="history.go(-1);return false;"> <input
-									type="button" name="Button" id="cancelButton" class="leftButton top"
-									value="<bean:message key="global.btnCancel" />"
-									onclick=self.close();>
-								<br><input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
+								<td width="30%" valign="top">
+								<input type="hidden" name="dboperation" value="update_record"> 
+
+								<input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
 									onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
+									<br>
+								<input
+									type="button" name="Button" id="cancelButton" class="leftButton top"
+									value="Exit Master Record"	onclick="self.close();">
 								</td>
 								<td width="30%" align='center' valign="top"><input
 									type="hidden" name="displaymode" value="Update Record">
