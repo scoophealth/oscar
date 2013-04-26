@@ -34,6 +34,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <script language="JavaScript">
 function searchInactive() {
@@ -122,10 +123,10 @@ function searchOutOfDomain() {
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
 					VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
 					</security:oscarSec>
+					
 				<caisi:isModuleLoad moduleName="caisi">
 				<input type="button" value="cancel" onclick="location.href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'" >
-				</caisi:isModuleLoad>	
-					
+				</caisi:isModuleLoad>			
     </li>
 </ul>
 </div>
