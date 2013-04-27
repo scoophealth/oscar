@@ -568,6 +568,13 @@
     </databaseap>
 
     <databaseap>
+        <ap-name>cytology_no</ap-name>
+        <ap-sql>select value from demographicExt d where d.key_val = 'cytolNum' and d.demographic_no = ${demographic};
+       </ap-sql>
+        <ap-output>${value}</ap-output>
+    </databaseap>
+    
+    <databaseap>
     	<ap-name>guardian_label</ap-name>
         <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from relationships r, demographic d where r.relation_demographic_no = d.demographic_no and r.demographic_no = ${demographic}
         </ap-sql>
