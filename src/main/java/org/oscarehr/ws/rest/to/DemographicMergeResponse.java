@@ -23,68 +23,36 @@
  */
 package org.oscarehr.ws.rest.to;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name = "List")
-public class OscarSearchResponse<T> implements Serializable {
+import org.oscarehr.ws.rest.to.model.DemographicMergedTo1;
 
-	private static final long serialVersionUID = 1L;
+@XmlRootElement
+@XmlSeeAlso({DemographicMergedTo1.class})
+public class DemographicMergeResponse extends AbstractSearchResponse<DemographicMergedTo1> {
 
-	private int offset;
+    private static final long serialVersionUID = 1L;
 
-	private int limit;
+	@Override
+	@XmlElement(name="demographicMerged", type = DemographicMergedTo1.class)
+	@XmlElementWrapper(name="content")
+    public List<DemographicMergedTo1> getContent() {
+	    return super.getContent();
+    }
 
-	private int total;
-
-	private Date timestamp = new Date();
-
-	private List<T> content = new ArrayList<T>();
-
-	@XmlElement(name = "Item")
-	public List<T> getContent() {
-		return content;
-	}
-
-	public void setContent(List<T> content) {
-		this.content = content;
-	}
-
-	public int getOffset() {
-		return offset;
-	}
-
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	public Date getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public int getTotal() {
-		return total;
-	}
-
-	public void setTotal(int total) {
-		this.total = total;
-	}
-
+	@XmlTransient
+	public List<Integer> getMergedIds() {
+	    List<Integer> result = new ArrayList<Integer>();
+	    for(DemographicMergedTo1 to : getContent()) {
+	    	result.add(to.getDemographicNo());
+	    }
+	    return result;
+    }
 }
