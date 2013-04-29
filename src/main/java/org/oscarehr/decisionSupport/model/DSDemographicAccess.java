@@ -589,7 +589,36 @@ public class DSDemographicAccess {
     	return retval;
     }
 
-    public boolean paidAll(String searchStrings,Map options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+    public boolean paidAll(String searchStrings,Map options) {
+
+        int countPaid = 0;
+        int numCodes = 0;
+
+	if(options.containsKey("payer") && options.get("payer").equals("MSP")){
+
+            BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao");
+            String[] codes = searchStrings.replaceAll("'","" ).split(",");
+            numCodes = codes.length;
+
+            if(options.containsKey("inDays")){
+                int inDays = getAsInt(options,"inDays");
+
+                for (String code: codes){
+                    //This returns how many days since the last time this code was paid and -1 if it never has been settled
+                    int numDaysSinceSettled = billingONCHeader1Dao.getDaysSincePaid(code, Integer.parseInt(demographicNo));
+                    int numDaysSinceBilled =  billingONCHeader1Dao.getDaysSinceBilled(code, Integer.parseInt(demographicNo));
+
+                    if  (((numDaysSinceSettled <= inDays) && (numDaysSinceSettled != -1))
+                      ||((numDaysSinceBilled <= inDays) && (numDaysSinceBilled != -1))){
+                        countPaid++;
+                    }
+                    logger.debug("PAYER:MSP demo "+demographicNo+" Code:"+code+" numDaysSinceSettled "+numDaysSinceSettled+"  numDaysSinceBilled "+numDaysSinceBilled+" inDays:"+inDays+ " Answer: "+((countPaid > 0) && (countPaid == numCodes))+" Setting number paid to :"+countPaid);
+                }
+            }
+        }
+
+	return ((countPaid > 0) && (countPaid == numCodes));
+    }
     public boolean paidNot(String searchStrings,Map options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
     public boolean paidNotall(String searchStrings,Map options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
     public boolean paidNotany(String searchStrings,Map options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }

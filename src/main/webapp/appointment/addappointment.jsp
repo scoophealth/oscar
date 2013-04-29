@@ -26,6 +26,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines"%>
+<%@page import="org.oscarehr.decisionSupport.model.DSConsequence"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="java.util.Set,java.util.HashSet"%>
 <%
  
   String DONOTBOOK = "Do_Not_Book";
@@ -45,6 +49,21 @@
   if (request.getParameter("demographic_no")!=null) bFromWL=true;
 
   String duration = request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin) ;
+
+  //check for management fee code eligibility
+  Set<String> billingRecommendations = new HashSet<String>();
+  try{
+    List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), curProvider_no);
+
+    for (DSConsequence dscon : list){
+        if (dscon.getConsequenceStrength().equals(DSConsequence.ConsequenceStrength.recommendation)) {
+            String recommendation = new String(dscon.getText());
+            billingRecommendations.add(recommendation);
+        }
+    }
+  }catch(Exception e){
+    MiscUtils.getLogger().error("Error", e);
+  }
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*, oscar.appt.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
@@ -702,6 +721,17 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	</tr>
 </table>
 <% } %>
+
+<% if (billingRecommendations.size() > 0) { %>
+        <table width="98%" align="center" style="border:solid 3px red;padding-left:10px;line-height:150%;font-family:Arial;color: red; background-color: #FFFFFF; font-size: 18px; font-weight: bold; text-align:left;">
+            <% for (String recommendation : billingRecommendations) { %>
+                <tr>
+                    <th><%=recommendation%></th>
+                </tr>
+            <% } %>
+        </table>
+<% } %>
+
 <FORM NAME="ADDAPPT" id="addappt" METHOD="post" ACTION="<%=request.getContextPath()%>/appointment/appointmentcontrol.jsp"
 	onsubmit="return(calculateEndTime())"><INPUT TYPE="hidden"
 	NAME="displaymode" value="">
