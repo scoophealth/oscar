@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -37,6 +38,9 @@ import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
 import org.oscarehr.util.MiscUtils;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import oscar.OscarProperties;
 
@@ -48,29 +52,20 @@ import oscar.OscarProperties;
 public class BillingGuidelines  {
 
     private static Logger log = MiscUtils.getLogger();
+    private List<DSGuideline> billingGuideLines;
 
-    private List<DSGuideline> billingGuideLines = null ;
+    private static BillingGuidelines measurementTemplateFlowSheetConfig = new BillingGuidelines();
+    private static String region;
 
+    private static final String[] filenamesBC= {"BC250.xml","BC401a.xml","BC401b.xml","BC428.xml"};
+    private static final String[] filenamesON= {"ON250.xml","ON428.xml","ONA003A.xml","ONK017A.xml","ONK130A.xml","ONK131A.xml","ONK132A.xml"};
 
-    static BillingGuidelines measurementTemplateFlowSheetConfig = new BillingGuidelines();
-    static String region = "";
-
-    HashMap<String,String[]> filenameMap = new HashMap<String,String[]>();
-    String[] filenamesBC= {"BC250.xml","BC401a.xml","BC401b.xml","BC428.xml"};
-    String[] filenamesON= {"ON250.xml","ON428.xml"};
-    String[] filenameON250 = {"ON250.xml"};
-    String[] filenameON428 = {"ON428.xml"};
-
+    private static final Boolean DEFAULT_LOCATION = true;
 
     /**
      * Creates a new instance of MeasurementTemplateFlowSheetConfig
      */
-    private BillingGuidelines() {
-        filenameMap.put("BC", filenamesBC);
-        filenameMap.put("ON", filenamesON);
-        filenameMap.put("250", filenameON250);
-        filenameMap.put("428", filenameON428);
-    }
+    private BillingGuidelines() {}
 
     static public BillingGuidelines getInstance(String code) {
         if (measurementTemplateFlowSheetConfig.billingGuideLines == null || !code.equals(region)) {
@@ -86,46 +81,98 @@ public class BillingGuidelines  {
     static public BillingGuidelines getInstance() {
         String tmpRegion = OscarProperties.getInstance().getProperty("billregion","");
         if (measurementTemplateFlowSheetConfig.billingGuideLines == null || !tmpRegion.equals(region)) {
-
                 region = tmpRegion;
                 measurementTemplateFlowSheetConfig.loadGuidelines(region);
-
-
         }
         return measurementTemplateFlowSheetConfig;
+    }
+
+    private Map<String,Boolean> populateFileList(String region) {
+
+        Map<String,Boolean>filenamesList = new HashMap<String,Boolean>();
+
+        //load internal billing rule files
+        String defaultFileLocation = "oscar/oscarBilling/ca/decisionSupport/";
+
+        if (region.equals("BC")) {
+            for (String filename : filenamesBC) {
+                filenamesList.put(defaultFileLocation + filename,DEFAULT_LOCATION);
+            }
+        } else if (region.equals("ON")) {
+            for (String filename : filenamesON) {
+                filenamesList.put(defaultFileLocation + filename,DEFAULT_LOCATION);
+            }
+        }
+
+        //load external billing rule files
+        String fileLocation = OscarProperties.getInstance().getProperty("decision_support_dir");
+        if (fileLocation != null && !fileLocation.isEmpty()) {
+
+            if (!fileLocation.endsWith("/")){
+                fileLocation = fileLocation + "/";
+            }
+
+            String[] filenamesLocal = OscarProperties.getInstance().getProperty("decision_support_files").split(",");
+            if (filenamesLocal != null) {
+                for (String filename : filenamesLocal) {
+                        filenamesList.put(fileLocation + filename, !DEFAULT_LOCATION);
+                }
+            }
+        }
+
+        return filenamesList;
     }
 
     /**
      * Loads all the guidelines from preset files in this package.  This will probably change to load them from a table in the database.
      */
     void loadGuidelines(String regionCode) {
-        log.debug("LOADING FLOWSSHEETS");
+        log.debug("LOADING GUIDELINES");
         billingGuideLines = new ArrayList<DSGuideline>();
 
-        String[] filenames = filenameMap.get(regionCode);
-        if( filenames != null ) {
-        for (String filename : filenames) {
-            DSGuideline guideline = null;
-            StringBuilder sb = new StringBuilder();
-            try{
-                    String streamToGet = "oscar/oscarBilling/ca/decisionSupport/"+filename;
-                log.debug("Trying to get "+streamToGet);
-                BufferedReader in = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(streamToGet)));
-                String str;
-                while ((str = in.readLine()) != null) {
-                    sb.append(str+"\n");
+        Map<String,Boolean> files = populateFileList(regionCode);
+        if( files != null ) {
+            for(String streamToGet : files.keySet()) {
+
+                Boolean isDefaultFileLocation = files.get(streamToGet);
+                StringBuilder sb = new StringBuilder();
+                InputStream is = null;
+                BufferedReader in = null;
+
+                try{
+                    log.debug("Trying to get "+ streamToGet);
+
+                    if (isDefaultFileLocation){
+                        is = this.getClass().getClassLoader().getResourceAsStream(streamToGet);
+                    } else {
+                        is = new FileInputStream(streamToGet);
+                    }
+                    in = new BufferedReader(new InputStreamReader(is));
+                    String str;
+                    while ((str = in.readLine()) != null) {
+                        sb.append(str+"\n");
+                    }
+                    in.close();
+                    DSGuidelineFactory dsFactory = new DSGuidelineFactory();
+                    log.debug("xml "+sb.toString());
+                    DSGuideline guideline = dsFactory.createGuidelineFromXml(sb.toString());
+                    billingGuideLines.add(guideline);
+                }catch(Exception e){
+                    MiscUtils.getLogger().error("Error", e);
+                } finally {
+                    if (in != null) {
+                        try {
+                            in.close();
+                        } catch (IOException e) {}
+                    }
+                    if (is != null) {
+                        try {
+                            is.close();
+                        } catch (IOException e) {}
+                    }
                 }
-                in.close();
-                DSGuidelineFactory dsFactory = new DSGuidelineFactory();
-                log.debug("xml "+sb.toString());
-                guideline = dsFactory.createGuidelineFromXml(sb.toString());
-                billingGuideLines.add(guideline);
-            }catch(Exception e){
-                MiscUtils.getLogger().error("Error", e);
             }
-        }
-    }
-        else {
+        } else {
             throw new RuntimeException("bill code not found");
         }
     }

@@ -116,11 +116,13 @@
             	List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
 
             	for (DSConsequence dscon : list){
-                	billingRecomendations.append(dscon.getText() + " ");
-           		}
-        	}catch(Exception e){
-            	MiscUtils.getLogger().error("Error", e);
-        	}
+                     if (dscon.getConsequenceStrength().equals(DSConsequence.ConsequenceStrength.warning)) {
+                        billingRecomendations.append(dscon.getText()).append("<br/>");
+                     }
+                }
+            }catch(Exception e){
+                    MiscUtils.getLogger().error("Error", e);
+            }
 
             ProviderPreferenceDao preferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
             ProviderPreference preference = null;
@@ -1186,8 +1188,13 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 								size="10" /> <%} else {%> <input type="text" name="service_date"
 								readonly value="<%=request.getParameter("appointment_date")%>"
 								size="10" maxlength="10" style="width: 80px;" /> <%}%></td>
-							<td
-								style="color: red; background-color: #FFFFFF; font-size: 18px; font-weight: bold;"><%=billingRecomendations.length() > 0 ? billingRecomendations.toString() : ""%></td>
+                                                        <%
+                                                              String warningStyle = "";
+                                                              if (billingRecomendations.length() > 0) {
+                                                                  warningStyle="border:solid 3px red;padding-left:10px;line-height:150%;font-family:Arial;";
+                                                              }
+                                                        %>
+							<td style="<%=warningStyle%> color: red; background-color: #FFFFFF; font-size: 18px; font-weight: bold;"><%=billingRecomendations.toString()%></td>
 							<td align="center"><font color="black"><%=msg%></font></td>
 						</tr>
 					</table>
