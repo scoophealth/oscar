@@ -110,6 +110,7 @@ public class ProviderDao extends OscarSuperDao {
 			{"updatepassword", "update security set password = ? where  provider_no= ?" },
 
 		    {"search_provider", "select provider_no, last_name, first_name from provider where last_name like ? and first_name like ? order by last_name"},
+		    {"search_active_provider", "select provider_no, last_name, first_name from provider where last_name like ? and first_name like ? and status=1 order by last_name"},
 		    {"search_providersgroup", "select mygroup_no, last_name, first_name from mygroup where last_name like ? and first_name like ? order by last_name, first_name, mygroup_no"},
 		    {"search_mygroup", "select mygroup_no from mygroup where mygroup_no like ? group by mygroup_no order by mygroup_no"},
 		    //multi-site query, schedule day view page

@@ -119,7 +119,7 @@ function selectProviderCaisi(p,pn) {
 	</tr>
 <%
   boolean bGrpSearch = providername.startsWith(".")?true:false ;
-  String dboperation = bGrpSearch?"search_providersgroup":"search_provider" ;
+  String dboperation = bGrpSearch?"search_providersgroup":"search_active_provider" ;
   String field1 = bGrpSearch?"mygroup_no":"provider_no" ;
   providername = bGrpSearch?providername.substring(1):providername ;
 
