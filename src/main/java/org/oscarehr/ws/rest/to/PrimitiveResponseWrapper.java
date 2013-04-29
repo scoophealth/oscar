@@ -24,67 +24,33 @@
 package org.oscarehr.ws.rest.to;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "List")
-public class OscarSearchResponse<T> implements Serializable {
+@XmlRootElement(name = "response")
+public class PrimitiveResponseWrapper<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int offset;
+	private T value;
 
-	private int limit;
-
-	private int total;
-
-	private Date timestamp = new Date();
-
-	private List<T> content = new ArrayList<T>();
-
-	@XmlElement(name = "Item")
-	public List<T> getContent() {
-		return content;
+	public PrimitiveResponseWrapper() {
 	}
 
-	public void setContent(List<T> content) {
-		this.content = content;
+	public PrimitiveResponseWrapper(T value) {
+		setValue(value);
 	}
 
-	public int getOffset() {
-		return offset;
+	@XmlElement
+	@XmlAnyElement(lax = true)
+	public T getValue() {
+		return value;
 	}
 
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	public Date getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public int getTotal() {
-		return total;
-	}
-
-	public void setTotal(int total) {
-		this.total = total;
+	public void setValue(T value) {
+		this.value = value;
 	}
 
 }
