@@ -228,7 +228,7 @@ public abstract class BaseRestServiceTest {
 			Marshaller m = context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-			// Write to System.out
+			
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			m.marshal(o, os);
 			os.flush();
@@ -286,7 +286,8 @@ public abstract class BaseRestServiceTest {
 
 		// go to the root of REST services
 		client.replacePath("/ws/rs");
-
+		
+		
 		// create service
 		T service = JAXRSClientFactory.fromClient(client, resourceClass);
 		Client newClient = WebClient.client(service);

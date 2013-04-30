@@ -37,11 +37,13 @@ import org.oscarehr.ws.rest.conversion.PharmacyInfoConverter;
 import org.oscarehr.ws.rest.to.OscarSearchResponse;
 import org.oscarehr.ws.rest.to.model.PharmacyInfoTo1;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Defines service contract for create/read/update/delete operations on pharmacies.
  */
 @Path("/pharmacies/")
+@Component("pharmacyService")
 public class PharmacyService extends AbstractServiceImpl {
 
 	@Autowired
