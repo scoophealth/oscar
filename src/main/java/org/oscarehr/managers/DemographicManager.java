@@ -93,7 +93,10 @@ public class DemographicManager {
 	public List<Demographic> searchDemographicByName(String searchString, int startIndex, int itemsToReturn) {
 		
 		List<Demographic> results = demographicDao.searchDemographicByNameString(searchString, startIndex, itemsToReturn);
-		logger.debug("searchDemographicByName, searchString="+searchString+", result.size="+results.size());
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("searchDemographicByName, searchString="+searchString+", result.size="+results.size());
+		}
 		
 		//--- log action ---
 		for (Demographic demographic : results) {
@@ -273,7 +276,7 @@ public class DemographicManager {
 	 * @return
 	 * 		Returns all merged demographic records for the specified parent id.
 	 */
-	public List<DemographicMerged> getMergedDemgrpaphics(Integer parentId) {
+	public List<DemographicMerged> getMergedDemographics(Integer parentId) {
 	    List<DemographicMerged> result = demographicMergedDao.findCurrentByMergedTo(parentId);
 	    
 	    if(result != null) {
