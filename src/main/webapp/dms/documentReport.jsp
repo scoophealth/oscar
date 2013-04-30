@@ -465,7 +465,7 @@ function popup1(height, width, url, windowName){
                               //String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
 
 					%>	<a <%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
-						href="<%=url%>" target="_blank"> <%=curdoc.getDescription()%></a></td>
+						href="javascript:void(0);" onclick="popupFocusPage(500,700,'<%=url%>','demographic_document');"> <%=curdoc.getDescription()%></a></td>
 					<td><%=contentType%></td>
 					<td><%=curdoc.getType()%></td>
 					<td><%=curdoc.getCreatorName()%></td>
