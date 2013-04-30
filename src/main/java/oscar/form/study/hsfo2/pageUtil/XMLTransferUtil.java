@@ -1989,10 +1989,7 @@ public class XMLTransferUtil
           if ( pdata != null && pdata.getPatient_Id() != null ) {
         	  Calendar dateOfHmpStatus = Calendar.getInstance();
         	  dateOfHmpStatus.setTime(pdata.getDateOfHmpStatus());
-
-        	  if(dateOfHmpStatus.after(dataBeginDate) && dateOfHmpStatus.before(dataEndDate) ) { //must be in date range
-        		  addPatientToSite( site, pdata, null, dataBeginDate, dataEndDate); // FIXME: add parameter for first visit data
-        	  }
+        	  addPatientToSite( site, pdata, null, dataBeginDate, dataEndDate); // FIXME: add parameter for first visit data        	  
           }
         }
       if ( patientIdList == null || patientIdList.size() == 0 )
