@@ -32,9 +32,16 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.Hsfo2Visit;
 import org.springframework.stereotype.Repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import org.oscarehr.util.MiscUtils;
+import org.apache.log4j.Logger;
+
+
 @Repository
 public class Hsfo2VisitDao extends AbstractDao<Hsfo2Visit>
 {
+	private static Logger logger = MiscUtils.getLogger();
 	public Hsfo2VisitDao() {
 		super(Hsfo2Visit.class);
 	}
@@ -48,7 +55,7 @@ public class Hsfo2VisitDao extends AbstractDao<Hsfo2Visit>
 		return getSingleResultOrNull(query);
     }
 
-    public List<Hsfo2Visit> getHsfoVisitByDemographicNo( String demographic_no) {
+    public List<Hsfo2Visit> getHsfoVisitByDemographicNo( Integer demographic_no) {
     	String sqlCommand = "select x from Hsfo2Visit x where x.demographic_no=? order by x.VisitDate_Id";
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographic_no);
@@ -101,20 +108,33 @@ public class Hsfo2VisitDao extends AbstractDao<Hsfo2Visit>
 	  String sqlCommand = "select x FROM Hsfo2Visit x where x.Patient_Id=?1 and x.VisitDate_Id>?2 and x.VisitDate_Id<?3 group by x.VisitDate_Id";  	  
 	  Query query = entityManager.createQuery(sqlCommand);
 	  query.setParameter(1, patientId);
-	  query.setParameter(2, startDate);
-	  query.setParameter(3, endDate);
+	  
+	  try {
+		  Date start = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+		  Date end = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+		 
+		  query.setParameter(2, start);
+		  query.setParameter(3, end);
 	
-	  @SuppressWarnings("unchecked")
-	  List<Hsfo2Visit> results=query.getResultList();
-		
-	  return results;
+		  @SuppressWarnings("unchecked")
+		  List<Hsfo2Visit> results=query.getResultList();
+	  
+		  return results;
+		  
+	  	} catch (ParseException e) {
+
+			logger.error("[Hsfo2VisitDao] - formatDate: ", e);
+
+			return null;
+
+	  	}
+
   }
    
   /**
    * 
    * @param patientId
-   * @param visitRecordId
-   * @return
+   * @return Hsfo2Visit
    */
   public Hsfo2Visit getFirstVisitRecordForThePatient( String patientId)
   {
