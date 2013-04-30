@@ -23,15 +23,6 @@
  */
 
 
-/*
- * GDMLHandler.java
- *
- * Created on June 7, 2007, 12:00 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package oscar.oscarLab.ca.all.parsers;
 
 import java.text.DateFormat;
@@ -65,16 +56,16 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
  *
  * @author wrighd
  */
-public class GDMLHandler implements MessageHandler {
+public class BioTestHandler implements MessageHandler {
 
-    Logger logger = Logger.getLogger(GDMLHandler.class);
+    Logger logger = Logger.getLogger(BioTestHandler.class);
     ORU_R01 msg = null;
     ArrayList<String> headers = null;
     HashMap<OBR,ArrayList<OBX>> obrSegMap = null;
     ArrayList<OBR> obrSegKeySet = null;
 
     /** Creates a new instance of CMLHandler */
-    public GDMLHandler(){
+    public BioTestHandler(){
     }
 
     public void init(String hl7Body) throws HL7Exception {
@@ -83,7 +74,7 @@ public class GDMLHandler implements MessageHandler {
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
 
-        ArrayList<String> labs = getMatchingGDMLLabs(hl7Body);
+        ArrayList<String> labs = getMatchingBioTestLabs(hl7Body);
         headers = new ArrayList<String>();
         obrSegMap = new LinkedHashMap<OBR,ArrayList<OBX>>();
         obrSegKeySet = new ArrayList<OBR>();
@@ -120,7 +111,7 @@ public class GDMLHandler implements MessageHandler {
         }
     }
 
-    private ArrayList<String> getMatchingGDMLLabs(String hl7Body) {
+    private ArrayList<String> getMatchingBioTestLabs(String hl7Body) {
 		Base64 base64 = new Base64(0);
 		ArrayList<String> ret = new ArrayList<String>();
 		int monthsBetween = 0;
@@ -156,7 +147,7 @@ public class GDMLHandler implements MessageHandler {
 	}
 
     public String getMsgType(){
-        return("GDML");
+        return("BIOTEST");
     }
 
     public String getMsgDate(){
@@ -373,7 +364,7 @@ public class GDMLHandler implements MessageHandler {
     }
 
     public int getOBXFinalResultCount(){
-        // not applicable to gdml labs
+        // not applicable to biotest labs
         return 0;
     }
 
@@ -588,7 +579,7 @@ public class GDMLHandler implements MessageHandler {
     }
 
     public String getOrderStatus(){
-        // gdml won't send pending labs... they'll send only the final parts of the
+        // biotest won't send pending labs... they'll send only the final parts of the
         // labs
         return("F");
     }
