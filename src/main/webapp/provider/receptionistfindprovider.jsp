@@ -172,7 +172,7 @@ function selectProviderCustom(p,pn) {
   if(bGrpSearch) {
 	  results = myGroupDao.search_providersgroup(param[0],param[1]);
   } else {
-	  results = providerDao.getProviderLikeFirstLastName(param[1],param[0]);
+	  results = providerDao.getActiveProviderLikeFirstLastName(param[1],param[0]);
   }
   
   Iterator iter = results.iterator();
