@@ -219,11 +219,12 @@ public class PatientExport {
 		if(tempLabs.size() == 0)
 			return null;
 		
-		// Gather and filter measurements
+		// Gather and filter measurements based on existence of lab_no field
 		List<Measurement> rawMeasurements = measurementDao.findByDemographicIdUpdatedAfterDate(demographicNo, new Date(0));
 		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
 		for(Measurement entry : rawMeasurements) {
-			if(Integer.parseInt(entry.getProviderNo()) == 0) {
+			MeasurementsExt isFromLab = measurementsExtDao.getMeasurementsExtByMeasurementIdAndKeyVal(entry.getId(), "lab_no");
+			if(isFromLab != null) {
 				tempMeasurements.add(entry);
 			}
 		}
