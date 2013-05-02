@@ -163,7 +163,7 @@ if (selfSubmit) {
 		m.setMeasuringInstruction("");
 		m.setComments((request.getParameter("pulse_comment") != null) ? request.getParameter("pulse_comment") : "");
 		m.setDateObserved(new java.util.Date());
-		m.setType("PULS");
+		m.setType("HR");
 		dao.persist(m);
 	}
 
@@ -629,7 +629,7 @@ String msmtValueBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField"
 String msmtDateBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
 String msmtCommentBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
 
-msmtParam[0] = "PULS";
+msmtParam[0] = "HR";
 msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
 String msmtValuePULSE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" bpm" : "";
 String msmtDatePULSE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
