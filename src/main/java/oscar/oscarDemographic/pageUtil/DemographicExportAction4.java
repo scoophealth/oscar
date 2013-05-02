@@ -2037,9 +2037,9 @@ public class DemographicExportAction4 extends Action {
 						}
 		
 						//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
-						String expFile = patient.getFirstName()+"_"+patient.getLastName();
+						String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName();
 						expFile += "_"+demoNo;
-						expFile += "_"+patient.getDateOfBirth()+patient.getMonthOfBirth()+patient.getYearOfBirth();
+						expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth();
 						files.add(new File(directory, expFile+".xml"));
 					}catch(Exception e){
 						logger.error("Error", e);
