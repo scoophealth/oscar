@@ -26,6 +26,7 @@ package oscar.oscarReport.data;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.oscarehr.common.dao.forms.FormsDao;
 import org.oscarehr.util.MiscUtils;
@@ -322,6 +323,24 @@ public class RptDemographicQueryBuilder {
 			whereClause();
 			firstClause();
 			stringBuffer.append(" ( d.provider_no = p.provider_no )");
+		}
+		
+		List<Integer> demoIds = frm.getDemographicIds();
+		if (!demoIds.isEmpty()) {
+			whereClause();
+			firstClause();
+
+			stringBuffer.append("(");
+			boolean isFirst = true;
+			for (Integer i : demoIds) {
+				if (isFirst) {
+					isFirst = false;
+				} else {
+					stringBuffer.append(" OR ");
+				}
+				stringBuffer.append("d.demographic_no = " + i);
+			}
+			stringBuffer.append(")");
 		}
 
 		if (orderBy != null && orderBy.length() != 0) {

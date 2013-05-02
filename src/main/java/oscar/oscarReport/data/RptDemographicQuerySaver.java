@@ -73,6 +73,7 @@ public class RptDemographicQuerySaver {
         String lastName         = frm.getLastName();
         String sex              = frm.getSex();
         String queryName        = frm.getQueryName();
+        String demoIds        	= frm.getDemoIds();
 
 
         if (firstName != null ){
@@ -163,6 +164,7 @@ public class RptDemographicQuerySaver {
     	dqf.setPatientStatus(sqPatientStatus);
     	dqf.setQueryName(sqQueryName);
     	dqf.setArchived("1");
+    	dqf.setDemoIds(demoIds);
 
     	demographicQueryFavouritesDao.persist(dqf);
 

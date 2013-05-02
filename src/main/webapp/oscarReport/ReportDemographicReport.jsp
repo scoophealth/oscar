@@ -573,6 +573,14 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                 </td>                
             </tr>
             <tr>
+            	<td>
+             		Demographic ID(s):
+				</td>
+				<td colspan="3">
+					<html:textarea property="demoIds" cols="60" rows="5"> </html:textarea>
+				</td>
+			</tr>            
+            <tr>
                 <td>
                     Order By
                 </td>
