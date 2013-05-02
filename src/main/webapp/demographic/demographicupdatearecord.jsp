@@ -36,7 +36,9 @@
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.common.dao.DemographicExtArchiveDao" %>
 <%@page import="org.oscarehr.common.model.DemographicExt" %>
+<%@page import="org.oscarehr.common.model.DemographicExtArchive" %>
 
 <%@ page import="org.oscarehr.common.dao.WaitingListDao" %>
 <%@ page import="org.oscarehr.common.model.WaitingList" %>
@@ -56,6 +58,7 @@
 	java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
 
     DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+    DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
@@ -210,23 +213,26 @@
 	String proNo = (String) session.getValue("user");
 	String demoNo = request.getParameter("demographic_no");
 	int demographicNo = Integer.parseInt(demoNo);
-	demographicExtDao.addKey(proNo, demographicNo, "demo_cell", request.getParameter("demo_cell"), request.getParameter("demo_cellOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "aboriginal", request.getParameter("aboriginal"), request.getParameter("aboriginalOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "hPhoneExt", request.getParameter("hPhoneExt"), request.getParameter("hPhoneExtOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "wPhoneExt", request.getParameter("wPhoneExt"), request.getParameter("wPhoneExtOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "cytolNum",  request.getParameter("cytolNum"),  request.getParameter("cytolNumOrig"));
+	List<DemographicExt> extensions = new ArrayList<DemographicExt>();
+
+	extensions.add(new DemographicExt(request.getParameter("demo_cell_id"), proNo, demographicNo, "demo_cell", request.getParameter("demo_cell")));
+	extensions.add(new DemographicExt(request.getParameter("aboriginal_id"), proNo, demographicNo, "aboriginal", request.getParameter("aboriginal")));
+	extensions.add(new DemographicExt(request.getParameter("hPhoneExt_id"), proNo, demographicNo, "hPhoneExt", request.getParameter("hPhoneExt")));
+	extensions.add(new DemographicExt(request.getParameter("wPhoneExt_id"), proNo, demographicNo, "wPhoneExt", request.getParameter("wPhoneExt")));
+	extensions.add(new DemographicExt(request.getParameter("cytolNum_id"), proNo, demographicNo, "cytolNum",  request.getParameter("cytolNum")));
+	extensions.add(new DemographicExt(request.getParameter("ethnicity_id"), proNo, demographicNo, "ethnicity",  request.getParameter("ethnicity")));
+	extensions.add(new DemographicExt(request.getParameter("area_id"), proNo, demographicNo, "area", request.getParameter("area")));
+	extensions.add(new DemographicExt(request.getParameter("statusNum_id"), proNo, demographicNo, "statusNum",  request.getParameter("statusNum")));
+	extensions.add(new DemographicExt(request.getParameter("fNationCom_id"), proNo, demographicNo, "fNationCom", request.getParameter("fNationCom")));
+	extensions.add(new DemographicExt(request.getParameter("given_consent_id"), proNo, demographicNo, "given_consent", request.getParameter("given_consent")));
+	extensions.add(new DemographicExt(request.getParameter("rxInteractionWarningLevel_id"), proNo, demographicNo, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel")));
+	extensions.add(new DemographicExt(request.getParameter("primaryEMR_id"), proNo, demographicNo, "primaryEMR", request.getParameter("primaryEMR")));
 	
-	demographicExtDao.addKey(proNo, demographicNo, "ethnicity",  request.getParameter("ethnicity"),  request.getParameter("ethnicityOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "area",		  request.getParameter("area"),		  request.getParameter("areaOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "statusNum",  request.getParameter("statusNum"),  request.getParameter("statusNumOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "fNationCom", request.getParameter("fNationCom"), request.getParameter("fNationComOrig"));
+	for (DemographicExt extension : extensions) {
+	    demographicExtDao.saveEntity(extension);
+	}
 	
-	demographicExtDao.addKey(proNo, demographicNo, "given_consent", request.getParameter("given_consent"), request.getParameter("given_consentOrig"));
-	demographicExtDao.addKey(proNo, demographicNo, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), request.getParameter("rxInteractionWarningLevelOrig"));
-	
-	demographicExtDao.addKey(proNo, demographicNo, "primaryEMR", request.getParameter("primaryEMR"), request.getParameter("primaryEMROrig"));
-	
-	   // for the IBD clinic
+	// for the IBD clinic
 	OtherIdManager.saveIdDemographic(demographicNo, "meditech_id", request.getParameter("meditech_id"));
 	
 	// customized key
@@ -267,10 +273,15 @@
 	    }
 	}
 
-   // DemographicArchive da = new DemographicArchive();
-	//da.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
-    demographicArchiveDao.archiveRecord(demographic);
-
+    Long archiveId = demographicArchiveDao.archiveRecord(demographic);
+	for (DemographicExt extension : extensions) {
+		DemographicExtArchive archive = new DemographicExtArchive(extension);
+		archive.setArchiveId(archiveId);
+		String oldValue = request.getParameter(archive.getKey() + "Orig");
+		archive.setValue(oldValue);
+		demographicExtArchiveDao.saveEntity(archive);	
+	}	
+	
     demographicDao.save(demographic);
     
     try{
