@@ -212,7 +212,7 @@ INSERT INTO `measurementTypeTEMP` (`type`, `typeDisplayName`, `typeDescription`,
 ( 'PSPA', 'Patient Sets physical Activity Goal', 'Patient Sets physical Activity Goal', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'PSSC', 'Psychosocial Screening', 'Psychosocial Screening', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'PsyC', 'Psychosocial Counseling Given', 'Psychosocial Counseling Given', 'Yes/No', '7', '2013-02-01 00:00:00'),
-( 'PULSE', 'P', 'Heart Rate', 'in bpm (nnn) Range:40-180', '5', '2013-02-01 00:00:00'),
+( 'HR', 'P', 'Heart Rate', 'in bpm (nnn) Range:40-180', '5', '2013-02-01 00:00:00'),
 ( 'PVD', 'PVD', 'Peripheral vascular disease', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'QDSH', 'QuickDASH Score', 'Disabilities of the Arm, Shoulder and Hand - Score', 'number', '5', '2013-02-01 00:00:00'),
 ( 'RABG', 'Recommend ABG', 'Recommend ABG', 'Yes/No', '7', '2013-02-01 00:00:00'),
@@ -278,6 +278,9 @@ UPDATE `measurementType` m, `measurementTypeTEMP` t  SET m.measuringInstruction=
 -- UPDATE measurements SET type='SmkD' WHERE type='POSK';
 -- UPDATE measurements SET type='SmkPY' WHERE type='SmkH';
 -- UPDATE measurements SET type='WAIS' WHERE type='WS';
+UPDATE measurements SET type='HR' WHERE type='PULS';
+UPDATE measurements SET type='ACR' WHERE type='UACR';
+
 
 -- now relink existing measurements
 -- UPDATE `measurements` m, `measurementTypeTEMP` t  SET m.measuringInstruction=t.measuringInstruction where m.measuringInstruction IS NULL;
@@ -614,7 +617,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `measuringInstruction`, `validation`, `createDate`) VALUES
 ( 'HPCP', 'Hep C PCR', 'Hep C PCR', 'Yes/No', '7', '2013-02-01 00:00:00') ON DUPLICATE KEY UPDATE `validation`=7;
 INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `measuringInstruction`, `validation`, `createDate`) VALUES
-( 'PULSE', 'P', 'Heart Rate', 'in bpm (nnn) Range:40-180', '5', '2013-02-01 00:00:00') ON DUPLICATE KEY UPDATE `validation`=5;
+( 'HR', 'P', 'Heart Rate', 'in bpm (nnn) Range:40-180', '5', '2013-02-01 00:00:00') ON DUPLICATE KEY UPDATE `validation`=5;
 INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `measuringInstruction`, `validation`, `createDate`) VALUES
 ( 'HRMS', 'Review med use and side effects', 'HTN Review of Medication use and side effects', 'null', '11', '2013-02-01 00:00:00') ON DUPLICATE KEY UPDATE `validation`=11;
 INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `measuringInstruction`, `validation`, `createDate`) VALUES
