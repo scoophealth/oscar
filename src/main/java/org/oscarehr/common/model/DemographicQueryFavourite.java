@@ -23,7 +23,6 @@
  */
 package org.oscarehr.common.model;
 
-
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -33,132 +32,138 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name="demographicQueryFavourites")
+@Table(name = "demographicQueryFavourites")
 public class DemographicQueryFavourite extends AbstractModel<Integer> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="favId")
+	@Column(name = "favId")
 	private Integer id;
-	
-	
-	private String selects;
-	private String age;           
-	private String startYear;     
-	private String endYear;      
-	private String firstName;   
-	private String lastName;     
-	private String rosterStatus;  
-	private String sex;          
-	private String providerNo;    
-	private String patientStatus;
-	private String queryName;      
-	private String archived;    
 
-	
+	private String selects;
+	private String age;
+	private String startYear;
+	private String endYear;
+	private String firstName;
+	private String lastName;
+	private String rosterStatus;
+	private String sex;
+	private String providerNo;
+	private String patientStatus;
+	private String queryName;
+	private String archived;
+	private String demoIds;
+
 	public String getSelects() {
-    	return selects;
-    }
+		return selects;
+	}
 
 	public void setSelects(String selects) {
-    	this.selects = selects;
-    }
+		this.selects = selects;
+	}
 
 	public String getAge() {
-    	return age;
-    }
+		return age;
+	}
 
 	public void setAge(String age) {
-    	this.age = age;
-    }
+		this.age = age;
+	}
 
 	public String getStartYear() {
-    	return startYear;
-    }
+		return startYear;
+	}
 
 	public void setStartYear(String startYear) {
-    	this.startYear = startYear;
-    }
+		this.startYear = startYear;
+	}
 
 	public String getEndYear() {
-    	return endYear;
-    }
+		return endYear;
+	}
 
 	public void setEndYear(String endYear) {
-    	this.endYear = endYear;
-    }
+		this.endYear = endYear;
+	}
 
 	public String getFirstName() {
-    	return firstName;
-    }
+		return firstName;
+	}
 
 	public void setFirstName(String firstName) {
-    	this.firstName = firstName;
-    }
+		this.firstName = firstName;
+	}
 
 	public String getLastName() {
-    	return lastName;
-    }
+		return lastName;
+	}
 
 	public void setLastName(String lastName) {
-    	this.lastName = lastName;
-    }
+		this.lastName = lastName;
+	}
 
 	public String getRosterStatus() {
-    	return rosterStatus;
-    }
+		return rosterStatus;
+	}
 
 	public void setRosterStatus(String rosterStatus) {
-    	this.rosterStatus = rosterStatus;
-    }
+		this.rosterStatus = rosterStatus;
+	}
 
 	public String getSex() {
-    	return sex;
-    }
+		return sex;
+	}
 
 	public void setSex(String sex) {
-    	this.sex = sex;
-    }
+		this.sex = sex;
+	}
 
 	public String getProviderNo() {
-    	return providerNo;
-    }
+		return providerNo;
+	}
 
 	public void setProviderNo(String providerNo) {
-    	this.providerNo = providerNo;
-    }
+		this.providerNo = providerNo;
+	}
 
 	public String getPatientStatus() {
-    	return patientStatus;
-    }
+		return patientStatus;
+	}
 
 	public void setPatientStatus(String patientStatus) {
-    	this.patientStatus = patientStatus;
-    }
+		this.patientStatus = patientStatus;
+	}
 
 	public String getQueryName() {
-    	return queryName;
-    }
+		return queryName;
+	}
 
 	public void setQueryName(String queryName) {
-    	this.queryName = queryName;
-    }
+		this.queryName = queryName;
+	}
 
 	public String getArchived() {
-    	return archived;
-    }
+		return archived;
+	}
 
 	public void setArchived(String archived) {
-    	this.archived = archived;
-    }
-
+		this.archived = archived;
+	}
 
 	@Override
-    public Integer getId() {
+	public Integer getId() {
 		return id;
 	}
-	
+
+	public String getDemoIds() {
+		return demoIds;
+	}
+
+	public void setDemoIds(String demoIds) {
+		this.demoIds = demoIds;
+	}
 
 }
