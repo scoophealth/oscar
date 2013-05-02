@@ -556,6 +556,8 @@
 	<action path="/study/ManageStudy" scope="request" parameter="method" type="org.oscarehr.study.ManageStudyAction">
 		<forward name="AddedToStudy" path="/admin/addStudy.jsp"></forward>
 		<forward name="closeWindow" path="/study/closeWindow.html"></forward>
+		<forward name="create" path="/study/closeWindow.html" />
+		<forward name="update" path="/study/closeWindow.html" />
 	</action>
 	
 	<action input="/dms/addNewDocumentCategories.jsp" name="addDocumentType"
