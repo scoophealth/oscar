@@ -60,7 +60,8 @@ public class ManageStudyAction extends DispatchAction {
 		StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);
 		String studyId = request.getParameter("studyId");
 		
-		if( studyId == null || studyId.equals("") ) {
+		boolean isNewStudy = studyId == null || studyId.equals("");
+		if(isNewStudy) {
 			Study study = new Study();
 			study.setStudyName(request.getParameter("studyName"));
 			study.setStudyLink(request.getParameter("studyLink"));
@@ -85,7 +86,8 @@ public class ManageStudyAction extends DispatchAction {
 			studyDao.merge(study);
 		}
 		
-		return null;
+		 String resultName = isNewStudy ? "create" : "update";
+		 return mapping.findForward(resultName);
 	}
 	
 	public ActionForward setStudyStatus(ActionMapping mapping, ActionForm form,

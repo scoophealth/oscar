@@ -67,7 +67,7 @@ function validateForm() {
 	}
 	else {
 		window.opener.reload();
-		window.close();
+		// window.close();
 	}	
 
 		

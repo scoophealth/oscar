@@ -83,10 +83,11 @@ a:hover {
 </style>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
 <script type="text/javascript">
+var popup;
 function popupStart(vheight,vwidth,varpage,windowname) {
     var page = varpage;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-    var popup=window.open(varpage, windowname, windowprops);
+    popup = window.open(varpage, windowname, windowprops);
 }
 
 function changeStatus(id, value) {
@@ -111,7 +112,6 @@ function changeStatus(id, value) {
 
 function reload() {
 	setTimeout(function(){window.location.reload();},2000);
-	
 }
 
 </script>
