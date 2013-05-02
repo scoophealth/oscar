@@ -98,7 +98,7 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 	}
 
 	public List<Object> findUniqueTypeDisplayNames() {
-	    String sql = "SELECT DISTINCT m.typeDisplayName FROM MeasurementType m";
+	    String sql = "SELECT DISTINCT m.typeDisplayName FROM MeasurementType m order by m.typeDisplayName";
 		Query query = entityManager.createQuery(sql);
 		return query.getResultList();
     }
