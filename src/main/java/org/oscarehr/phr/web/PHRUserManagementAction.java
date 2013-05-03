@@ -471,6 +471,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		newAccount.setPhone1((String) phrRegistrationForm.get("phone"));
 		newAccount.setPhone2((String) phrRegistrationForm.get("phone2"));
 		newAccount.setEmailAddress((String) phrRegistrationForm.get("email"));
+		newAccount.setActive(true);
 
 		String iDob = (String) phrRegistrationForm.get("dob");
 		if (iDob != null) {
