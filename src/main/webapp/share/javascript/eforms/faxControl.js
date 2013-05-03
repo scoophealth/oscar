@@ -1,8 +1,8 @@
 if (typeof jQuery == "undefined") { alert("The faxControl library requires jQuery. Please ensure that it is loaded first"); }
 
 var faxControlPlaceholder = "<br/>Fax Recipients:<br/><div id='faxForm'>Loading fax options..</div>";
-var faxControlFaxButton     = "<span>&nbsp;</span><input value='Fax' name='FaxSaveButton' id='fax_button' disabled type='button' onclick='submitFaxButtonAjax(false)'>";
-var faxControlFaxSaveButton = "<span>&nbsp;</span><input value='Submit & Fax' name='FaxButton' id='faxSave_button' disabled type='button' onclick='submitFaxButtonAjax(true)'>";
+var faxControlFaxButton     = "<span>&nbsp;</span><input value='Fax' name='FaxButton' id='fax_button' disabled type='button' onclick='submitFaxButtonAjax(false)'>";
+var faxControlFaxSaveButton = "<span>&nbsp;</span><input value='Submit & Fax' name='FaxSaveButton' id='faxSave_button' disabled type='button' onclick='submitFaxButtonAjax(true)'>";
 var faxControlMemoryInput = "<input value='false' name='faxEForm' id='faxEForm' type='hidden' />";	
 var faxControl = {
 	initialize: function () {
