@@ -1,6 +1,6 @@
 /*  editControl - a WYSIWYG edit control using iFrames and designMode
-    Copyright (C) 2009-2010 Peter Hutten-Czapski
-     Version 1.3 now about 500 lines of code
+    Copyright (C) 2009-2013 Peter Hutten-Czapski
+     Version 1.4 now about 500 lines of code
         NEW in 0.2 button styles, links, select box
         NEW in 0.3 help, date, rule, select all, and clean functions
         NEW in 0.4 code completely rewritten, more functions including images and
@@ -10,9 +10,10 @@
         NEW in 1.1 first commit to cvs
         NEW in 1.2 bugfix for button style mouse behavior and 5 more buttons/functions
         NEW in 1.3 support for IE template loading, cut, copy, paste buttons/functions
+        NEW in 1.4 support for Firefox FF18+ browsers (ionMonkey series)
     * Requirements: DesignMode and other Dom 2 methods
     * Mozilla 1.3+ IE 5.5+ Netscape 6+ Opera 9+ Konqueror 3.5.7+ Safari 1.3+ Chrome
-    * designed for and tested on Firefox 2/3.  Tested on Opera 10, Chrome 4 and IE 6/7
+    * designed for and tested on Firefox 2 - 20.  Tested on Opera 10, Chromium 25 and IE 6/7
 
     This is a simplistic emulation of Xinha and TinyMCE javascript texteditors
 
@@ -99,6 +100,7 @@ var cfg_boutstyle = 'solid 2px #ccccff'; 	//the CSS of the button elements om mo
 var cfg_sstyle = 'vertical-align: top; height:24px;';//the CSS of the option select box.  Selects will take font and background but not border.
 var cfg_sepstyle = 'width:6px;height:24px;border: solid 2px #ccccff; background-color: #ccccff;';	//the CSS of the seperator icon
 
+
 function insertEditControl() {
 	// The main initialising function which writes the edit control as per passed variables
 	// ...OR... if it fails, degrades nicely by supplying a text area with the same ID (cfg_editorname)
@@ -149,8 +151,7 @@ function insertEditControl() {
 
 	var separator = '<input type="image" src="' + cfg_isrc + 'separator.png" value="|" name="' + cfg_editorname + '" style="'+ cfg_sepstyle+ '">';
 	var editControl =  '<iframe id="' + cfg_editorname + '" \n style="width:' + cfg_width + 'px; height:' + cfg_height + 'px; border-style:inset; border-width:thin;" frameborder="0px"></iframe>';
-
-
+	
 	// SECOND GET THE LAYOUT STRING PASSED AND REPLACE IT WITH THE BUTTONS AS REQUESTED
 	var editControlHTML = cfg_layout;
 	if (editControlHTML=="[all]"){editControlHTML = "<div id=control>[select-block][select-face][select-size][select-template]|[bold][italic][underlined][unordered][ordered][rule]|[undo][redo]|[cut][copy][paste]|[left][center][full][right]|[indent][outdent][select-all][clean]|[image][link]|[clock][date][spell][help]</div>[edit-area]"};
@@ -190,9 +191,7 @@ function insertEditControl() {
 	editControlHTML = editControlHTML.replace("[edit-area]", editControl);
 	editControlHTML = editControlHTML.replace("[select-template]", selectTemplate);
 
-	var agent=navigator.userAgent.toLowerCase();
-	if ((agent.indexOf("msie") != -1) && (agent.indexOf("opera") == -1)) {
-		//Browser is Microsoft Internet Explorer : Can load browser specific code
+	if (isIE()){
 		editControlHTML = editControlHTML.replace("[spell]", ieSpellButton);
 		editControlHTML = editControlHTML.replace("[cut]", cutButton);
 		editControlHTML = editControlHTML.replace("[copy]", copyButton);
@@ -215,13 +214,24 @@ function insertEditControl() {
 	}
 }
 
+function isIE(){
+	//this function introduced in v1.4 required as object testing for window[editorname] fails in ionMonkey
+	var agent=navigator.userAgent.toLowerCase();
+	if ((agent.indexOf("msie") != -1) && (agent.indexOf("opera") == -1)) {
+		//Browser is Microsoft Internet Explorer : Can load browser specific code
+		return true;
+	} else {
+	return false;
+	}
+}
+
 function editControlContents(editorname) {
 	var value = "";
 	// this function retrieves the HTML contents of the edit control "editorname"
 	if (document.designMode) {
 		// Explorer reformats HTML during document.write() removing quotes on element ID names
 		// so we need to address Explorer elements as window[elementID]
-		if (window[editorname]) { value = window[editorname].document.body.innerHTML; }
+		if (isIE()) { value = window[editorname].document.body.innerHTML; }
 		else { value = document.getElementById(editorname).contentWindow.document.body.innerHTML; }
 	} else {
 		// play nice and at least return the value from the <textarea> if document.designMode does not exist
@@ -237,7 +247,7 @@ function seteditControlContents(editorname, value){
 	value = jQuery().convertImagePaths(value);
 	
     if (document.designMode) {
-		if (window[editorname]){
+		if (isIE()){
 		    window[editorname].document.body.innerHTML = value; //if browser supports M$ conventions
 		    return
 		} else {
@@ -303,7 +313,7 @@ function Select(selectname){
   	var cursel = document.getElementById(selectname).selectedIndex;
   	if (cursel != 0) { // First one is a label
     	var selected = document.getElementById(selectname).options[cursel].value;
-    	if (window[cfg_editorname]) { window[cfg_editorname].document.execCommand(selectname, false, selected); } //if browser supports M$ conventions
+    	if (isIE()) { window[cfg_editorname].document.execCommand(selectname, false, selected); } //if browser supports M$ conventions
 	else { document.getElementById(cfg_editorname).contentWindow.document.execCommand(selectname, false, selected); }
     	document.getElementById(selectname).selectedIndex = 0;
   	document.getElementById(cfg_editorname).contentWindow.focus();
@@ -328,7 +338,7 @@ function loadDefaultTemplate() {
 		var obj = document.getElementById(cfg_editorname);
 		obj.onload = function() { parseTemplate(); }
 		//for IE put some delay to ensure that the new src is loaded before we parse it
-    	if (window[cfg_editorname]) { setTimeout('parseTemplate()',1000); } //if M$ like browser    	
+    	if (isIE()) { setTimeout('parseTemplate()',1000); } //if M$ like browser    	
 	} else {
 		var blankTemplate = '<html><head><title>Blank Document Template</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"><style type=\"text/css\">body {font-size: 1em; font-family:\"Times New Roman\", Times, serif; background-color: #FFFFFF;}</style><style type=\"text/css\" media=\"print\">* {color: #000000;}</style></head><body contenteditable onLoad=\"document.designMode = \'on\';\"></body></html>';
 		document.getElementById(cfg_editorname).src = "data:text/html;charset=utf-8," + escape(blankTemplate);
@@ -350,7 +360,7 @@ function loadTemplate(selectname){
 		var obj = document.getElementById(cfg_editorname);
 		obj.onload = function() { parseTemplate(); }
 		//for IE put some delay to ensure that the new src is loaded before we parse it
-    		if (window[cfg_editorname]) { setTimeout('parseTemplate()',1000); } //if M$ like browser
+    		if (isIE()) { setTimeout('parseTemplate()',1000); } //if M$ like browser
     	}
 }
 
@@ -442,7 +452,7 @@ function parseText(obs) {
 
 function doHtml(value) {
 	//insert HTML of value
-	if (window[cfg_editorname]){  //if you can't support insertHtml do something else
+	if (isIE()){  //if you can't support insertHtml do something else
 		var tmp=window[cfg_editorname].document.body.innerHTML;
 		tmp=tmp+value;  // for IE this means append the text
 		window[cfg_editorname].document.body.innerHTML=tmp;
@@ -532,7 +542,7 @@ return;
 function viewsource(source) {
 	// load the html into a variable, blank the body, import as text, disable gui
 	var html;
-	if (window[cfg_editorname]){
+	if (isIE()){
 		html=window[cfg_editorname].document.body.innerHTML ; //if browser supports M$ conventions
 		alert(html) ; //load into an alert as importnode not supported by IE
 		return;
@@ -557,7 +567,7 @@ function viewsource(source) {
 }
 
 function usecss(source) {
-	if (window[cfg_editorname]){
+	if (isIE()){
 		//if browser supports M$ conventions it may error on this execCommand
 		return;
 	}
