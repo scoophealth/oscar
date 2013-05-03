@@ -47,12 +47,12 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.CaseManagementEntryAction;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.RemoteDataLog;
+import org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils;
+import org.oscarehr.myoscar.client.ws_manager.MedicalDataManager;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
-import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
@@ -201,14 +201,10 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			XmlUtils.appendChildToRoot(doc, "Data", eDoc.getFileBytes());
 			String docAsString=XmlUtils.toString(doc, false);
 			
-			MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
-			
 			GregorianCalendar dateOfData=new GregorianCalendar();
 			if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
 			
 			MedicalDataTransfer4 medicalDataTransfer=new MedicalDataTransfer4();
-			medicalDataTransfer.setActive(true);
-			medicalDataTransfer.setCompleted(true);
 			medicalDataTransfer.setData(docAsString);
 			medicalDataTransfer.setDateOfData(dateOfData);
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.BINARY_DOCUMENT.name());
@@ -219,7 +215,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 						
-			Long medicalDataId=medicalDataWs.addMedicalData4(medicalDataTransfer);
+			Long medicalDataId=MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);
 			
 			// log the send
 			RemoteDataLogDao remoteDataLogDao=(RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
@@ -235,7 +231,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			MessageManager.sendMessage(myOscarLoggedInInfo, patientMyOscarUserId, subject, message);
 
 			//--- send annotations ---
-			medicalDataWs.addMedicalDataAnnotation2(patientMyOscarUserId, medicalDataId, message);
+			MedicalDataManager.addMedicalDataAnnotation(myOscarLoggedInInfo, patientMyOscarUserId, medicalDataId, message);
 			
 			return mapping.findForward("loginPage");
             

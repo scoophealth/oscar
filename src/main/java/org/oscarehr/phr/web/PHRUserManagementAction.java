@@ -471,7 +471,6 @@ public class PHRUserManagementAction extends DispatchAction {
 		newAccount.setPhone1((String) phrRegistrationForm.get("phone"));
 		newAccount.setPhone2((String) phrRegistrationForm.get("phone2"));
 		newAccount.setEmailAddress((String) phrRegistrationForm.get("email"));
-		newAccount.setActive(true);
 
 		String iDob = (String) phrRegistrationForm.get("dob");
 		if (iDob != null) {
@@ -487,7 +486,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		// if no password is set, we'll make one up, the nano time is to ensure it's not guessable.
 		if (newAccountPassword == null || newAccountPassword.length() == 0) newAccountPassword = newAccount.getUserName() + System.nanoTime();
 
-		newAccount = AccountManager.createPerson(myOscarLoggedInInfo, newAccount, newAccountPassword);
+		newAccount = AccountManager.createPerson(myOscarLoggedInInfo, newAccount, newAccountPassword, true);
 
 		if (newAccount == null) throw (new Exception("Error creating new Myoscar Account."));
 

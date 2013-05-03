@@ -43,10 +43,10 @@ import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.common.model.SentToPHRTracking;
+import org.oscarehr.myoscar.client.ws_manager.MedicalDataManager;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
-import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
@@ -97,10 +97,8 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(medicalDataTransfer);
 	}
 	
-	public static Long addMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
-
-		Long resultId=medicalDataWs.addMedicalData4(medicalDataTransfer);
+	public static Long addMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId, boolean completed, boolean active) throws NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+		Long resultId=MedicalDataManager.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, completed, active);
 		logger.debug("addMedicalData success : resultId="+resultId);
 
 		addSendRemoteDataLog(oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
@@ -108,15 +106,11 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(resultId);
 	}
 	
-	public static Long updateMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
-
-		Long resultId=medicalDataWs.updateMedicalData5(medicalDataTransfer);
-		logger.debug("updateMedicalData success : resultId="+resultId);
+	public static void updateMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+		MedicalDataManager.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer);
+		logger.debug("updateMedicalData success : objectId="+medicalDataTransfer.getId());
 
 		addSendRemoteDataLog(oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
-		
-		return(resultId);
 	}
 	
 	public static Long addMedicalDataRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo, Long ownerId, Long primaryMedicalDataId, Long relatedMedicalDataId, String relationship) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
