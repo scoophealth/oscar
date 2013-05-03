@@ -42,7 +42,6 @@ import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
-import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
@@ -178,12 +177,7 @@ public final class MeasurementsManager {
 				logger.debug("sendHeightWeight : getCompositeId=" + hw.getCompositeId());
 
 				MedicalDataTransfer4 medicalDataTransfer = toHeightWeightMedicalDataTransfer(myOscarLoggedInInfo, hw);
-
-				try {
-					MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, hw.getCompositeId());
-				} catch (ItemAlreadyExistsException_Exception e) {
-					logger.warn("Odd, this item is not updateable but is already sent? heightWeightCompositeId=" + hw.getCompositeId());
-				}
+				MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, hw.getCompositeId(), true, true);
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}
@@ -255,11 +249,7 @@ public final class MeasurementsManager {
 		try {
 			MedicalDataTransfer4 medicalDataTransfer = toBloodPressureMedicalDataTransfer(myOscarLoggedInInfo, measurement);
 
-			try {
-				MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId());
-			} catch (ItemAlreadyExistsException_Exception e) {
-				logger.warn("Odd, this item is not updateable but is already sent? measurementId=" + measurement.getId());
-			}
+			MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId(), true, true);
 		} catch (Exception e) {
 			logger.error("Error", e);
 		}
@@ -299,11 +289,7 @@ public final class MeasurementsManager {
 		try {
 			MedicalDataTransfer4 medicalDataTransfer = toA1CMedicalDataTransfer(myOscarLoggedInInfo, measurement);
 
-			try {
-				MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId());
-			} catch (ItemAlreadyExistsException_Exception e) {
-				logger.warn("Odd, this item is not updateable but is already sent? measurementId=" + measurement.getId());
-			}
+			MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId(), true, true);
 		} catch (Exception e) {
 			logger.error("Error", e);
 		}
@@ -340,11 +326,7 @@ public final class MeasurementsManager {
 			MedicalDataTransfer4 ohtCategory = ensureOHTCategoryExists(myOscarLoggedInInfo, patientMyOscarId, measurement, measurementType);
 			MedicalDataTransfer4 medicalDataTransfer = toOHTMedicalDataTransfer(myOscarLoggedInInfo, measurement, ohtCategory);
 
-			try {
-				MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId());
-			} catch (ItemAlreadyExistsException_Exception e) {
-				logger.warn("Odd, this item is not updateable but is already sent? measurementId=" + measurement.getId());
-			}
+			MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId(), true, true);
 		} catch (Exception e) {
 			logger.error("Error", e);
 		}
@@ -375,7 +357,7 @@ public final class MeasurementsManager {
 	/**
 	 * get the oht category, create one if it doesn't already exist
 	 */
-	private static MedicalDataTransfer4 ensureOHTCategoryExists(MyOscarLoggedInInfo myOscarLoggedInInfo, Long patientMyOscarId, Measurement measurement, MeasurementType measurementType) throws IOException, SAXException, ParserConfigurationException, NoSuchItemException_Exception, NotAuthorisedException_Exception, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ItemAlreadyExistsException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+	private static MedicalDataTransfer4 ensureOHTCategoryExists(MyOscarLoggedInInfo myOscarLoggedInInfo, Long patientMyOscarId, Measurement measurement, MeasurementType measurementType) throws IOException, SAXException, ParserConfigurationException, NoSuchItemException_Exception, NotAuthorisedException_Exception, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
 		// we'll assume there's not more than 1024 categories.
 		int MAX_SIZE = 1024;		
 		List<MedicalDataTransfer4> categories = MyOscarMedicalDataManagerUtils.getMedicalData(myOscarLoggedInInfo, patientMyOscarId, MedicalDataType.OTHER_HEALTH_TRACKER_CATEGORY.name(), true, 0, MAX_SIZE);
@@ -389,10 +371,10 @@ public final class MeasurementsManager {
 
 		// non exist, create one.
 		MedicalDataTransfer4 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer(myOscarLoggedInInfo, new Date(), measurement.getProviderNo(), measurement.getDemographicId());
-		medicalDataTransfer.setCompleted(false);
 		medicalDataTransfer.setData(makeOHTCategoryXmlString(measurementType));
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.OTHER_HEALTH_TRACKER_CATEGORY.name());
-		Long resultId=MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, "OHT_CATEGORY", "OHT_CATEGORY");
+		// not sure why we're allowed to modify OHT records, but we are... *shrugs*
+		Long resultId=MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, "OHT_CATEGORY", "OHT_CATEGORY", false, true);
 		medicalDataTransfer=MyOscarMedicalDataManagerUtils.getMedicalData(myOscarLoggedInInfo, medicalDataTransfer.getOwningPersonId(), resultId);
 		
 		return (medicalDataTransfer);

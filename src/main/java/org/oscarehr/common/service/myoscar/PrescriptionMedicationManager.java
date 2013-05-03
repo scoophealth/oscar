@@ -42,7 +42,6 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
-import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataRelationshipType;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
@@ -93,12 +92,8 @@ public final class PrescriptionMedicationManager {
 
 			try {
 				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prescription);
-				try {
-					Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
-					linkPrescriptionToMedications(myOscarLoggedInInfo, prescription, medicalDataTransfer.getOwningPersonId(), remotePrescriptionId, remoteMedicationIdMap);
-				} catch (ItemAlreadyExistsException_Exception e) {
-					MyOscarMedicalDataManagerUtils.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
-				}
+				Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId(), true, true);
+				linkPrescriptionToMedications(myOscarLoggedInInfo, prescription, medicalDataTransfer.getOwningPersonId(), remotePrescriptionId, remoteMedicationIdMap);
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}
@@ -127,10 +122,13 @@ public final class PrescriptionMedicationManager {
 			try {
 				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, drug);
 				Long remoteMedicationId = null;
+				
+				// something really odd going on here, we're allowed to update prescriptions/medications? not sure why, we're also not tracking it locally and relying on an error from the server???
 				try {
-					remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
-				} catch (ItemAlreadyExistsException_Exception e) {
-					remoteMedicationId = MyOscarMedicalDataManagerUtils.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
+					remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId(), false, true);
+				} catch (Exception e) {
+					MyOscarMedicalDataManagerUtils.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
+					remoteMedicationId=medicalDataTransfer.getId();
 				}
 
 				remoteIdMap.put(drug, remoteMedicationId);

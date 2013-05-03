@@ -41,11 +41,8 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
-import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
-import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.UnsupportedEncodingException_Exception;
 import org.oscarehr.util.LoggedInInfo;
@@ -61,7 +58,7 @@ public final class ImmunizationsManager {
 	
 	private static HashMap<String,String> preventionExtLabels = null; 
 
-	public static void sendImmunizationsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+	public static void sendImmunizationsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
 		// get last synced info
 
 		// get the items for the person which are changed since last sync
@@ -82,11 +79,7 @@ public final class ImmunizationsManager {
 			logger.debug("sendImmunizationsToMyOscar : preventionId=" + prevention.getId());
 			MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prevention, preventionExt);
 
-			try {
-				MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId());
-			} catch (ItemAlreadyExistsException_Exception e) {
-				MyOscarMedicalDataManagerUtils.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId());
-			}
+			MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId(), true, true);
 		}
 
 		sentToPHRTracking.setSentDatetime(startSyncTime);

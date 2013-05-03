@@ -38,12 +38,11 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.RemoteDataLog;
+import org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
-import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer4;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -103,15 +102,12 @@ public class SendDocToPhrAction extends Action {
     		String docAsString=XmlUtils.toString(doc, false);
 
     		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-    		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 
     		Long patientMyOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, demo.getMyOscarUserName());
     		GregorianCalendar dateOfData=new GregorianCalendar();
     		if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
 
 			MedicalDataTransfer4 medicalDataTransfer=new MedicalDataTransfer4();
-			medicalDataTransfer.setActive(true);
-			medicalDataTransfer.setCompleted(true);
 			medicalDataTransfer.setData(docAsString);
 			medicalDataTransfer.setDateOfData(dateOfData);
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.BINARY_DOCUMENT.name());
@@ -120,7 +116,7 @@ public class SendDocToPhrAction extends Action {
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 
-    		medicalDataWs.addMedicalData4(medicalDataTransfer);
+    		MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);    		
 
     		// log the send
     		RemoteDataLog remoteDataLog=new RemoteDataLog();
