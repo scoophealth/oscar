@@ -7013,6 +7013,10 @@ CREATE TABLE `scheduledate` (
   `hour` varchar(255) default NULL,
   `creator` varchar(50) default NULL,
   `status` char(1) NOT NULL default '',
+   key(sdate),
+   key(provider_no),
+   key(status),
+   key(sdate,provider_no,hour,status),
   PRIMARY KEY  (`id`)
 ) ;
 
