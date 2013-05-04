@@ -84,13 +84,12 @@ public final class LoginAction extends DispatchAction {
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String ip = request.getRemoteAddr();
+    	String ip = request.getRemoteAddr();
         Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
         String nextPage=request.getParameter("nextPage");
         logger.debug("nextPage: "+nextPage);
         if (nextPage!=null) {
-            // set current facility
+        	// set current facility
             String facilityIdString=request.getParameter(SELECTED_FACILITY_ID);
             Facility facility=facilityDao.find(Integer.parseInt(facilityIdString));
             request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
@@ -101,7 +100,7 @@ public final class LoginAction extends DispatchAction {
             }
             return mapping.findForward(nextPage);
         }
-
+        
         String where = "failure";
         // String userName, password, pin, propName;
         String userName = ((LoginForm) form).getUsername();
@@ -110,7 +109,7 @@ public final class LoginAction extends DispatchAction {
 
         LoginCheckLogin cl = new LoginCheckLogin();
         if (cl.isBlock(ip, userName)) {
-            logger.info(LOG_PRE + " Blocked: " + userName);
+        	logger.info(LOG_PRE + " Blocked: " + userName);
             // return mapping.findForward(where); //go to block page
             // change to block page
             String newURL = mapping.findForward("error").getPath();
@@ -133,10 +132,23 @@ public final class LoginAction extends DispatchAction {
             }
             return(new ActionForward(newURL));
         }
-        
         logger.debug("strAuth : "+strAuth);
         if (strAuth != null && strAuth.length != 1) { // login successfully
-            // invalidate the existing sesson
+        	
+        	
+        	//is the provider record inactive?
+        	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+            Provider p = providerDao.getProvider(strAuth[0]);
+            if(p == null || (p.getStatus() != null && p.getStatus().equals("0"))) {
+            	logger.info(LOG_PRE + " Inactive: " + userName);           
+            	LogAction.addLog(strAuth[0], "login", "failed", "inactive");
+            	
+                String newURL = mapping.findForward("error").getPath();
+                newURL = newURL + "?errormsg=Your account is inactive. Please contact your administrator to activate.";
+                return(new ActionForward(newURL));
+            }
+            
+            // invalidate the existing session
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
@@ -167,6 +179,8 @@ public final class LoginAction extends DispatchAction {
             if (isMobileOptimized) session.setAttribute("mobileOptimized","true");
             // initiate security manager
             String default_pmm = null;
+            
+            
             
             // get preferences from preference table
         	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
