@@ -602,12 +602,28 @@ for(ConsultationRequestExt ext:exts) {
                                     </tr>
                                     <tr>
                                         <td class="subTitles">
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSex"/>:
+                                        </td>
+                                        <td class="fillLine">
+                                <%=reqFrm.patientSex %>
+                                        </td>
+                                    </tr>                                         
+                                    <tr>
+                                        <td class="subTitles">
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCard"/>
                                         </td>
                                         <td class="fillLine">
                              (<%=reqFrm.patientHealthCardType%>)&nbsp;<%=reqFrm.patientHealthNum %>&nbsp;<%=reqFrm.patientHealthCardVersionCode%>&nbsp;
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="subTitles">
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes"/>:
+                                        </td>
+                                        <td class="fillLine">
+                                <%=reqFrm.appointmentNotes %>
+                                        </td>
+                                    </tr>                                           
                                     <tr>
                                         <td class="subTitles">
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgappDate"/>:
