@@ -144,14 +144,18 @@ public class Hl7textResultsData {
 					}
 				}
 				
-					
+				
 				Measurement m = new Measurement();
 				m.setType(measType);
 				m.setDemographicId(Integer.parseInt(demographic_no));
 				m.setProviderNo("0");
 				m.setDataField(result);
 				m.setMeasuringInstruction(measInst);
-				m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
+				if(datetime != null && datetime.length()>0) {
+					m.setDateObserved(UtilDateUtilities.StringToDate(datetime, "yyyy-MM-dd hh:mm:ss"));
+				} else {
+					m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
+				}
 				m.setAppointmentNo(0);
 
 				measurementDao.persist(m);
@@ -236,13 +240,20 @@ public class Hl7textResultsData {
 						me.setVal(refRange[1]);
 						measurementsExtDao.persist(me);
 					}
-
-					me = new MeasurementsExt();
-					me.setMeasurementId(mId);
-					me.setKeyVal("other_id");
-					me.setVal(i + "-" + j);
-					measurementsExtDao.persist(me);
+					if (refRange[2].length() > 0) {
+						me = new MeasurementsExt();
+						me.setMeasurementId(mId);
+						me.setKeyVal("maximum");
+						me.setVal(refRange[2]);
+						measurementsExtDao.persist(me);
+					}
 				}
+				
+				me = new MeasurementsExt();
+				me.setMeasurementId(mId);
+				me.setKeyVal("other_id");
+				me.setVal(i + "-" + j);
+				measurementsExtDao.persist(me);
 			}
 		}
 		
