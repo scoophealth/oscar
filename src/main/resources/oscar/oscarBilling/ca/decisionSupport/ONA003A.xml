@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+If:
+billing code and Payer MSP have been billed in the past 365 days.
+-->
+<guideline title="A003AMessage" >
+    <conditions>	
+            <condition type="paid" all="A003A">
+                            <param key="payer" value="MSP"/>
+                            <param key="inDays" value="365"/>
+            </condition>
+    </conditions>
+    <consequence>
+        <warning strength="warning">Not eligible to bill A003A</warning>
+        <warning strength="recommendation">Not eligible for general assessment</warning>
+    </consequence>
+</guideline>
+
+
