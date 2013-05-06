@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+If:
+billing code and Payer MSP have been billed in the past 366 days.
+-->
+<guideline title="K017AAMessage" >
+    <conditions>	
+            <condition type="paid" all="K017A">
+                            <param key="payer" value="MSP"/>
+                            <param key="inDays" value="365"/>
+            </condition>          	
+    </conditions>
+    <consequence>
+        <warning strength="warning">Not eligible to bill K017A</warning>
+        <warning strength="recommendation">Not eligible for periodic health visit</warning>
+    </consequence>
+</guideline>
