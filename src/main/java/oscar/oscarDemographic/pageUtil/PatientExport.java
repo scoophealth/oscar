@@ -640,11 +640,20 @@ public class PatientExport {
 	// Check if string is valid numeric
 	public boolean isNumeric(String rhs) {
 		try {
-			double d = Double.parseDouble(rhs);
+			Double.parseDouble(rhs);
 		} catch (NumberFormatException nfe) {
 			return false;
 		}
 		return true;
+	}
+	
+	// Remove invalid characters and formatting from strings
+	public String cleanString(String rhs) {
+		String eol = System.getProperty("line.separator");
+		String str = rhs.replaceAll("<br( )+/>", eol);
+		str = str.replaceAll("<", "&lt;");
+		str = str.replaceAll(">", "&gt;");
+		return str;
 	}
 	
 	// Function to allow access to Casemanagement Note Ext table data based on note id

@@ -445,6 +445,17 @@ public class PatientExportTest extends DaoTestFixtures {
 	
 	// Test remaining Utility methods (others tested above)
 	@Test
+	public void testIsNumeric() {
+		assertTrue((new PatientExport()).isNumeric("42"));
+		assertFalse((new PatientExport()).isNumeric("<42"));
+	}
+	
+	@Test
+	public void testCleanString() {
+		assertNotNull((new PatientExport()).cleanString(" "));
+	}
+	
+	@Test
 	public void testGetProviderFirstName() {
 		PatientExport p = new PatientExport(demographicNo.toString());
 
