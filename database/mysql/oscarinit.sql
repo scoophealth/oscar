@@ -7713,6 +7713,7 @@ CREATE TABLE demographicQueryFavourites (
   patientStatus text,
   queryName varchar(255) default NULL,
   archived char(1) default NULL,
+  demoIds varchar(21844),
   PRIMARY KEY  (favId)
 );
 
