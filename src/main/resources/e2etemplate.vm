@@ -556,11 +556,13 @@ Laboratory Results & Results
 											<statusCode code="final"/>
 #*            *##end
 											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
-###*            *##if ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" )
-##											<value xsi:type="PQ" value="$labEntry.dataField.replaceAll("<br\s*/>","$eol")" unit="${patient.getLabExtValue("$labEntry.id", "unit")}"/>
-###*            *##else
-											<value xsi:type="ST">$labEntry.dataField.replaceAll("<br\s*/>","$eol")</value>
-###*            *##end
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" && ${patient.isNumeric($labEntry.dataField.replaceAll("<br\s*/>","$eol"))} )
+											<value xsi:type="PQ" value="$labEntry.dataField.replaceAll("<br\s*/>","$eol")" unit="${patient.getLabExtValue("$labEntry.id", "unit")}"/>
+#*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" )
+											<value xsi:type="ST">"$labEntry.dataField.replaceAll("<br\s*/>","$eol") ${patient.getLabExtValue("$labEntry.id", "unit")}"</value>
+#*            *##else
+											<value xsi:type="ST">"$labEntry.dataField.replaceAll("<br\s*/>","$eol")"</value>
+#*            *##end
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "abnormal")} == "A" )
 											<interpretationCode code="A"/>
 #*            *##else

@@ -637,6 +637,16 @@ public class PatientExport {
 		return date;
 	}
 	
+	// Check if string is valid numeric
+	public boolean isNumeric(String rhs) {
+		try {
+			double d = Double.parseDouble(rhs);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
+	}
+	
 	// Function to allow access to Casemanagement Note Ext table data based on note id
 	public static String getCMNoteExtValue(String id, String keyval) {
 		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
