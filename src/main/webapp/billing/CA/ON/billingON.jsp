@@ -247,7 +247,7 @@
 			Vector vecProvider = new Vector();
 			Properties propT = null;
 			sql = "select first_name,last_name,provider_no,ohip_no from provider "
-					+ "where provider_type='doctor' and status='1' and ohip_no || null and ohip_no!='' order by last_name, first_name";
+					+ "where status='1' and ohip_no || null and ohip_no!='' order by last_name, first_name";
 			rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
 				propT = new Properties();
