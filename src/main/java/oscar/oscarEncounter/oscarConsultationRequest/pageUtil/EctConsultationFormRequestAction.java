@@ -244,8 +244,8 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setServiceId(new Integer(frm.getService()));
 
                                 consult.setSignatureImg(signatureId);
-                                
-                                consult.setProviderNo(frm.getProviderNo());
+                                //We shouldn't change the referral provider just because someone updated and printed it! 
+                                //consult.setProviderNo(frm.getProviderNo());
                                 
                         		consult.setLetterheadName(frm.getLetterheadName());
                         		consult.setLetterheadAddress(frm.getLetterheadAddress());
