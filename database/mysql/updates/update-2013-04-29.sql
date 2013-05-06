@@ -1,0 +1,1 @@
+ALTER TABLE demographicQueryFavourites ADD demoIds VARCHAR(21844);
