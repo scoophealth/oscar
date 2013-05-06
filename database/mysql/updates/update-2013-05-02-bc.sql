@@ -1,0 +1,26 @@
+create table labPatientPhysicianInfo(
+  id int(10) NOT NULL auto_increment primary key,
+  labReportInfo_id int(10),
+  accession_num varchar(64),
+  physician_account_num varchar(30),
+  service_date varchar(10),
+  patient_first_name varchar(100),
+  patient_last_name varchar(100),
+  patient_sex char(1),
+  patient_health_num varchar(20),
+  patient_dob varchar(15),
+  lab_status char(1),
+  doc_num varchar(50),
+  doc_name varchar(100),
+  doc_addr1 varchar(100),
+  doc_addr2 varchar(100),
+  doc_addr3 varchar(100),
+  doc_postal varchar(15),
+  doc_route varchar(50),
+  comment1 text,
+  comment2 text,
+  patient_phone varchar(20),
+  doc_phone varchar(20),
+  collection_date varchar(20)
+);
+
