@@ -554,7 +554,7 @@ function fsPopup(width,height,url,window) {
 		
   </head>
 
-  <body>
+  <body onload="moveTo(0,0);">
     
 
 <%@ include file="/share/templates/patient.jspf"%>
@@ -563,9 +563,11 @@ function fsPopup(width,height,url,window) {
    		<div class="span12" style="padding-left:0px;margin-left:0px">
 <%
 				boolean btnSelected=false;
-				String isDisabled = "";
+				String btnState = "";
 				String dxAlert="";
 				String dxAlertfs="";
+				String isSelected="";
+				String dxCodeQueryString="";
 								
 				FlowsheetDao flowsheetDao = (FlowsheetDao) SpringUtils.getBean("flowsheetDao");
 				ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
@@ -597,27 +599,34 @@ function fsPopup(width,height,url,window) {
 					
 					if(enabled && flowSheetGroups.isUniversal()!=true) { 
 						
-						isDisabled = "btn";
+						btnState = "btn";
 						//out.print(flowsheets.size());
 						for (int f = 0; f < flowsheets.size(); f++) {
 							String flowsheetName = flowsheets.get(f);
 							//out.print(flowsheetName);
 							if(flowsheetName.equals(flowSheetGroups.getName())){
-								isDisabled="btn-success";
+								btnState="btn-success";
 								break;
 							}
 						}	
 					
 						//simple alert trigger
-						if(btnSelected && isDisabled.equals("btn")){
+						if(btnSelected && btnState.equals("btn")){
 								dxAlert="style='display:block;'";
 								dxAlertfs=flowSheetGroups.getDisplayName();
+								dxCodeQueryString=flowSheetGroups.getDxTriggersQueryBuilder(demographic_no,providerNo);
 						}
+						
+						if(btnSelected){ isSelected=" active"; }
 					%>
 						
-						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=isDisabled%>" title="<%=flowSheetGroups.getDisplayName()%>">
-					
+						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=btnState%> <%=isSelected%>" title="<%=flowSheetGroups.getDisplayName()%> <%=dxCodeQueryString%>" id="group-btn" data-loading-text="Loading...">
+						
+						
+						
 						<%
+						if(btnSelected){out.print("*");}
+								
 						if(flowSheetGroups.getName().toUpperCase().equals("DIAB2")){
 							out.print("DIAB");
 						}else{
@@ -625,6 +634,8 @@ function fsPopup(width,height,url,window) {
 							out.print(flowSheetGroups.getName().toUpperCase());
 						
 						}
+						
+						isSelected=""; //clear
 						%> 
 						</a>
 					<% 
@@ -646,15 +657,24 @@ function fsPopup(width,height,url,window) {
     <div id="dxAlert" class="alert" <%=dxAlert%>>
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
-    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=999998&quickList=')"><b>Add Diagnosis</b></a>
+    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <!-- <a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=999998&quickList=')"><b>Add Diagnosis</b> </a>-->
+    <!-- <form action="<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/dxResearch.do" method="get" name="dxResearchForm">
+    <input type="hidden" name="selectedCodingSystem" value="icd9">
+    <input type="hidden" name="forward" value="401" >
+    <input type="hidden" name="providerNo" value="<%=providerNo%>" >
+    <input type="hidden" name="demographicNo" value="<%=demographic_no%>">
+    <input type="submit" class="btn btn-primary">
+    </form> -->
+    To add a diagnosis use one of the available codes: 
+    <%=dxCodeQueryString %>
     </div>
-       
-   		<%=flowSheet%>
+   
+   		<h4 style="display:inline;"><%=flowSheet%></h4>
    		   		
 <!-- Modal -->
 <div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">\D7</button>
 <h3 id="myModalLabel"></h3>
 </div>
 <div class="modal-body" style="text-align:center">
@@ -1053,11 +1073,9 @@ function fsPopup(width,height,url,window) {
 </div><!-- prevention procedure --> 
 <%}%> 
  
- 
       <%if(setx<6){ out.print("</div> <!--end of items-->"); }%>
       
 </div><!-- carousel-inner -->
-
 
 <%if(k>6){ %>
     <a class="carousel-control left" href="#myCarousel<%=measure%>" data-slide="prev" id="prev_<%=measure%>" style="display:none;margin-left:-35px">&lsaquo;</a>
@@ -1435,6 +1453,29 @@ $(function (){
 
 $(document).ready(function () {
     $("[rel=tooltip]").tooltip();
+
+   /* $('#group-btn')
+    .click(function () {
+        var btn = $(this)
+        btn.button('loading')
+        setTimeout(function () {
+            btn.button('reset')
+        }, 3000)
+    }); */
+
+    $("[id^=dxlink]").click(function(){
+        var link = "<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/dxResearch.do";
+        //alert(link);
+        $.ajax({
+            url: link,
+            method: 'POST',
+            data: $(this).attr('rel'),
+            success: function(returnData){
+            	window.location.reload();
+            }
+        });
+
+    });    
 	
  });
 
@@ -1465,6 +1506,7 @@ $("#add_renal").click(function(){
 $('.carousel').carousel({
     interval: false
     })
+    
 
 <% 
 
