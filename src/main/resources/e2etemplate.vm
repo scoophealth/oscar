@@ -22,6 +22,7 @@
  * Vancouver, Canada
  *
  * @author Jeremy Ho
+ *
  *#<?xml version="1.0" encoding="UTF-8"?>
  <ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
@@ -544,8 +545,7 @@ Laboratory Results & Results
 										<!-- Result Component -->
 										<observation classCode="OBS" moodCode="EVN">
 											<id extension="${patient.getLabExtValue("$labEntry.id", "accession")}" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
-											<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}"
-												codeSystemName="LOINC"/>
+											<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
 											<text>${patient.getLabExtValue("$labEntry.id", "name")}</text>
 ## ValueSet OID not yet available - using Business Name/Description for now
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "olis_status")} == "P" )
@@ -588,6 +588,24 @@ Laboratory Results & Results
 													<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 												</procedure>
 											</entryRelationship>
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "range")} != "" )
+											<referenceRange typeCode="REFV">
+												<observationRange classCode="OBS" moodCode="EVN.CRT">
+													<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+													<text>${patient.getLabExtValue("$labEntry.id", "range")}</text>
+													<value xsi:type="ST">${patient.getLabExtValue("$labEntry.id", "range")}</value>
+												</observationRange>
+											</referenceRange>
+#*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "minimum")} != "" || ${patient.getLabExtValue("$labEntry.id", "maximum")} != "" )
+											<referenceRange typeCode="REFV">
+												<observationRange classCode="OBS" moodCode="EVN.CRT">
+													<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+													<text>${patient.getLabExtValue("$!labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</text>
+													<value xsi:type="ST">$!{patient.getLabExtValue("$labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</value>
+												</observationRange>
+											</referenceRange>
+#*            *##else
+#*            *##end
 #*            *##if ( $labEntry.comments != "" )
 											<!-- Result Notes -->
 											<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
