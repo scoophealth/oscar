@@ -120,6 +120,10 @@ public class Appender {
 	 *         otherwise.
 	 */
 	public boolean append(String string) {
+		if (string == null) {
+			return false;
+		}
+		
 		string = string.trim();
 		if (isSet(string)) {
 			if (isAppended()) {

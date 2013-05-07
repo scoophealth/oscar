@@ -24,16 +24,22 @@
 
 package oscar.dms;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
@@ -44,8 +50,8 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
-import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.CtlDocTypeDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -872,7 +878,6 @@ public final class EDocUtil {
             Long table_id=Long.valueOf(docId);
             List<TicklerLink> linkList = ticklerLinkDao.getLinkByTableId("DOC",table_id );
             String HtmlTickler="";
-            Tickler tickler= new Tickler();
             Integer ticklerNo;
         
             if (linkList != null){
@@ -946,6 +951,69 @@ public final class EDocUtil {
             }
             return note;
         }
+     
+        /**
+		 * Reads content of the specified file with.
+		 * 
+		 * @param fileName
+		 * 		Name of the file to use for saving the content
+		 * @param content
+		 * 		Content to be saved into the file
+		 * @return
+		 * 		Returns the content of the file
+		 * @throws IOException
+		 * 		IOException is thrown in case file can not be read  
+		 */
+        public static byte[] readContent(String fileName) throws IOException {
+    		InputStream is = null;
+    		try {
+    			is = new BufferedInputStream(new FileInputStream(new File(fileName)));
+    			return IOUtils.toByteArray(is);
+    		} finally {
+    			try {
+	                is.close();
+                } catch (IOException e) {
+                	logger.error("Unable to close output stream", e);
+                }
+    		}
+        }
         
+		/**
+		 * Saves content to the OSCAR document directory as a file with the specified name.
+		 * File with the same name will be overwritten.
+		 * 
+		 * @param fileName
+		 * 		Name of the file to use for saving the content
+		 * @param content
+		 * 		Content to be saved into the file
+		 * @throws IOException
+		 * 		IOException is thrown in case of any save errors  
+		 */
+        public static void writeDocContent(String fileName, byte[] content) throws IOException {
+        	String docDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        	File file = new File(docDir, fileName);
+        	writeContent(file.getAbsolutePath(), content);        	
+        }
+        
+        public static void writeContent(String fileName, byte[] content) throws IOException {
+        	OutputStream os = null;
+    		try {
+    			File file = new File(fileName);
+    			if (!file.exists()) {
+    				file.createNewFile();
+    			}
+    			os = new BufferedOutputStream(new FileOutputStream(file));
+    			os.write(content);
+    			os.flush();
+    		} finally {
+    			if (os != null) {
+    				try {
+    					os.close();
+    				} catch (IOException e) {
+    					logger.error("Unable to close output stream", e);
+    				}
+    			}
+    		}
+        }
 
 	}

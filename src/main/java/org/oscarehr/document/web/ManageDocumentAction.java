@@ -782,7 +782,11 @@ public class ManageDocumentAction extends DispatchAction {
 			File file = new File(documentDir, d.getDocfilename());
 			filename = d.getDocfilename();
 
-			if (file.exists()) contentBytes = FileUtils.readFileToByteArray(file);
+			if (file.exists()) {
+				contentBytes = FileUtils.readFileToByteArray(file);
+			} else {
+				throw new IllegalStateException("Local document doesn't exist for eDoc (ID " + d.getId() + "): " + file.getAbsolutePath());
+			}
 
 		} else // remote document
 		{
