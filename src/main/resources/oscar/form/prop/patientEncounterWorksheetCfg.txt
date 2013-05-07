@@ -1,0 +1,30 @@
+printer_info	: center, 304, 20, 0, BaseFont.HELVETICA, 6 
+
+clinic_name      : left, 90, 85, 0, BaseFont.HELVETICA, 8
+clinic_address1      : left, 90, 95, 0, BaseFont.HELVETICA, 8
+clinic_address2      : left, 90, 105, 0, BaseFont.HELVETICA, 8
+clinic_phone      : left, 90, 115, 0, BaseFont.HELVETICA, 8
+clinic_fax      : left, 90, 125, 0, BaseFont.HELVETICA, 8
+
+
+demo_name      : left, 365, 85, 0, BaseFont.HELVETICA, 8
+demo_address1      : left, 365, 95, 0, BaseFont.HELVETICA, 8
+demo_address2      : left, 365, 105, 0, BaseFont.HELVETICA, 8
+demo_id      : left, 365, 125, 0, BaseFont.HELVETICA, 8
+demo_bday      : left, 480, 125, 0, BaseFont.HELVETICA, 8
+demo_hin      : left, 365, 137, 0, BaseFont.HELVETICA, 8
+
+mrp_provider      : left, 90, 161, 0, BaseFont.HELVETICA, 8
+fam_provider      : left, 90, 175, 0, BaseFont.HELVETICA, 8
+ref_provider      : left, 90, 187, 0, BaseFont.HELVETICA, 8
+
+appt_date      : left, 375, 161, 0, BaseFont.HELVETICA, 8
+appt_type      : left, 375, 175, 0, BaseFont.HELVETICA, 8
+appt_reason      : left, 375, 187, 0, BaseFont.HELVETICA, 8
+
+allergies      : left, 32, 225, 0, BaseFont.HELVETICA, 8
+
+encounter_notes      : left, 32, 261, 0, BaseFont.HELVETICA, 8, _, 580, 630, 10
+
+diagnosis      : left, 97, 645, 0, BaseFont.HELVETICA, 8
+signature      : left, 97, 670, 0, BaseFont.HELVETICA, 8
