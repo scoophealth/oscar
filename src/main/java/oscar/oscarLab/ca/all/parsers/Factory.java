@@ -116,11 +116,21 @@ public final class Factory {
 			doc = parser.build(is);
 
 			Element root = doc.getRootElement();
-			List items = root.getChildren();
+			List<?> items = root.getChildren();
 			for (int i = 0; i < items.size(); i++) {
 				Element e = (Element) items.get(i);
 				msgType = e.getAttributeValue("name");
-				if (msgType.equals(type)) msgHandler = "oscar.oscarLab.ca.all.parsers." + e.getAttributeValue("className");
+				if (msgType.equals(type)) {
+					String className = e.getAttributeValue("className");
+					
+					// in case we have dots in the handler class name (i.e. package 
+					// is specified), don't assume default package
+					if (className.indexOf("\\.") != -1) {
+						msgHandler = className;
+					} else {
+						msgHandler = "oscar.oscarLab.ca.all.parsers." + className;
+					}
+				}
 			}
 
 			// create and return the message handler
