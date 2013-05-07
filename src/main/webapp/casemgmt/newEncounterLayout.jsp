@@ -24,6 +24,7 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@page errorPage="/casemgmt/error.jsp" %>
@@ -59,15 +60,24 @@
 <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">
 <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print">
 
+<!-- 
 <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
-<script>
+ -->
+ <script src="<c:out value="${ctx}/js/jquery-1.7.1.min.js"/>"></script>
+<script language="javascript">
      jQuery.noConflict();
 </script>
-
 
 <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>
 
+<script type="text/javascript" src="<c:out value="${ctx}"/>/js/messenger/messenger.js"> </script>
+<script type="text/javascript" src="<c:out value="${ctx}"/>/js/messenger/messenger-theme-future.js"> </script>
+<link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/js/messenger/messenger.css"> </link>
+<link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/js/messenger/messenger-theme-future.css"> </link>
+
+<script type="text/javascript" src="newEncounterLayout.js.jsp"> </script>
+	
 <%-- for popup menu of forms --%>
 <script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js" type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js" type="text/javascript"></script>
@@ -625,9 +635,10 @@ function init() {
     monitorNavBars(null);
 
     Element.observe(window, "resize", monitorNavBars);
-
-    if(!NiftyCheck())
+    
+    if(!NiftyCheck()) {
         return;
+    }
 
     Rounded("div.showEdContent","all","transparent","#CCCCCC","big border #000000");
     Rounded("div.printOps","all","transparent","#CCCCCC","big border #000000");
@@ -645,21 +656,35 @@ function init() {
     <nested:notEmpty name="DateError">
         alert("<nested:write name="DateError"/>");
     </nested:notEmpty>
-
 }
 
 function doscroll(){
 	x=document.body.scrollHeight;
 	x=x+99999
 	window.scrollTo(0,x);
-	}
+}
 	
-	window.onbeforeunload = onClosing;
+window.onbeforeunload = onClosing;
+    		
 
 </script>
 </head>
 <body id="body" style="margin: 0px;">
 
+	<%--
+	<caisi:isModuleLoad moduleName="eaaps.enabled">
+		<div id="eaaps" style="display: none;">
+			  <div id="basic-template">
+		      <a class="ui-notify-cross ui-notify-close" href="#">x</a>
+		      <h1>TITLE</h1>
+		      <p>text</p>
+	   </div>
+
+			<!-- jsp : include page="/eaaps/status.jsp">< / jsp : include -->
+		</div>
+	</caisi:isModuleLoad>
+	--%>
+	 
 	<div id="header">
 		<tiles:insert attribute="header" />
 	</div>
