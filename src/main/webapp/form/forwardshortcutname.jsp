@@ -47,8 +47,14 @@
         formPath[0] = formPath[0].trim();
         
         String remoteFacilityIdString=request.getParameter("remoteFacilityId");
-        String nextPage=formPath[0] + request.getParameter("demographic_no")  + (remoteFacilityIdString!=null?"&remoteFacilityId="+remoteFacilityIdString+"&formId="+request.getParameter("formId"):"&formId=" + formPath[1]);
-        MiscUtils.getLogger().debug("Forwarding to page : "+nextPage);
+        String appointmentNo=request.getParameter("appointmentNo");
+        
+        String nextPage = formPath[0] + 
+        				 request.getParameter("demographic_no")  + 
+        				 ((remoteFacilityIdString!=null)?"&remoteFacilityId="+remoteFacilityIdString:"") + 
+        				 ((appointmentNo!=null)?"&appointmentNo="+appointmentNo:"") + 
+        				 ((request.getParameter("formId") != null)?"&formId="+request.getParameter("formId"):"&formId=" + formPath[1]);
+        MiscUtils.getLogger().info("Forwarding to page : "+nextPage);
         pageContext.forward(nextPage);
         return;
     }

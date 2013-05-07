@@ -61,6 +61,13 @@ public class EctDisplayFormAction extends EctDisplayAction {
 	@Override
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+		String appointmentNo = bean.appointmentNo;
+		if(appointmentNo == null  && request.getSession().getAttribute("cur_appointment_no") != null) {
+			appointmentNo = (String)request.getSession().getAttribute("cur_appointment_no");
+	   
+		}
+    	
+		
 		boolean a = true;
 		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.forms");
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -141,7 +148,17 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							}
 							
 							hash = Math.abs(winName.hashCode());
-							url = new StringBuilder("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + encounterForm.getFormName() + "&demographic_no=" + bean.demographicNo + (pfrm.getRemoteFacilityId()!=null?"&remoteFacilityId="+pfrm.getRemoteFacilityId()+"&formId="+pfrm.getFormId():"")+"');");
+							url = new StringBuilder(
+									"popupPage(700,960,'" + hash + "started', '" +
+							        request.getContextPath() +
+							        "/form/forwardshortcutname.jsp?formname="
+							        + encounterForm.getFormName() +
+							        "&demographic_no=" + bean.demographicNo +
+							        (pfrm.getRemoteFacilityId()!=null?"&remoteFacilityId="+pfrm.getRemoteFacilityId():"") +
+							        (appointmentNo!=null?"&appointmentNo="+appointmentNo:"")
+										        
+							        +"&formId="+pfrm.getFormId() + "');");
+
 							key = StringUtils.maxLenString(fullTitle, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
 							key = StringEscapeUtils.escapeJavaScript(key);
 
@@ -178,7 +195,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 					// we add all unhidden forms to the pop up menu
 					if (!encounterForm.isHidden()) {
 						hash = Math.abs(winName.hashCode());
-						url = new StringBuilder("popupPage(700,960,'" + hash + "new', '" + encounterForm.getFormValue() + bean.demographicNo + "&formId=0&provNo=" + bean.providerNo + "&parentAjaxId=" + cmd + "')");
+						url = new StringBuilder("popupPage(700,960,'" + hash + "new', '" + encounterForm.getFormValue() + bean.demographicNo + "&formId=0&provNo=" + bean.providerNo + "&parentAjaxId=" + cmd + ((appointmentNo!=null)?"&appointmentNo="+ appointmentNo:"") +"')");
 						Dao.addPopUpUrl(url.toString());
 						key = StringUtils.maxLenString(encounterForm.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
 						Dao.addPopUpText(encounterForm.getFormName());
