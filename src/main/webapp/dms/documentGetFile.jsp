@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.util.ConversionUtils"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
@@ -87,16 +88,19 @@
          outs.close();
         }
   } else {
-	for(Document d: documentDao.findActiveByDocumentNo(Integer.parseInt(doc_no))) {
-		out.print(d.getDocxml());
-	}
-    
-  }
+      Integer doc_no_as_int = ConversionUtils.fromIntString(doc_no);
+      if (doc_no_as_int != null) {
+	      List<Document> documents = documentDao.findActiveByDocumentNo(doc_no_as_int);
+	      
+		  for(Document d: documents) {
+			out.print(d.getDocxml());
+		  }
+	  }
+     }
   } else {
 %>
 <jsp:forward page='../dms/errorpage.jsp'>
 	<jsp:param name="msg"
 		value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>' />
 </jsp:forward>
-
 <%}%>

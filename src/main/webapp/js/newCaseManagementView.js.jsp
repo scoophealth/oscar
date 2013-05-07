@@ -361,6 +361,9 @@ var oMedsLabel;
 var famHistoryLabel;
 var riskFactorsLabel;
 
+/*
+	Loads issue notes: Social History, Medical History, Ongoing Concerns, Reminders
+*/
 function showIssueNotes() {
 /*
     var issueNoteUrls = {
@@ -462,10 +465,11 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayMeasurements.do?hC=" + Colour.measurements,
                   ctx + "/oscarEncounter/displayConsultation.do?hC=" + Colour.consultation,
                   ctx + "/oscarEncounter/displayHRM.do?hC=",
-                  ctx + "/oscarEncounter/displayMyOscar.do?hC=",              
+                  ctx + "/oscarEncounter/displayMyOscar.do?hC=",
+                  ctx + "/eaaps/displayEctEaaps.do?hC="
               ];
 
-            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation","HRM","myoscar"];
+            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation","HRM","myoscar", "eaaps"];
 
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=" + Colour.allergy,
@@ -3277,8 +3281,6 @@ function autoCompleteShowMenuCPP(element, update) {
         }
         else if( $("printopAll").checked )
             printAll();
-
-		// alert($F("notes2print"));
 
         if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" ) {
             alert(nothing2PrintMsg);
