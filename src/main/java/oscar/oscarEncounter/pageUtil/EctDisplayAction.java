@@ -22,11 +22,10 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +35,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.processors.JsDateJsonBeanProcessor;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -44,175 +44,196 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
+
+
 /**
  * Base action class for populating left navbar of encounter
+ * 
  * @author rjonasz
  */
 public class EctDisplayAction extends Action {
-    private static Hashtable Actions = null;
-    protected static final String ELLIPSES = "...";
-    protected static final int MAX_LEN_TITLE = 48;
-    protected static final int CROP_LEN_TITLE = 45;
-    protected static final int MAX_LEN_KEY = 12;
-    protected static final int CROP_LEN_KEY = 9;
 
-    public EctDisplayAction() {
-        super();
-        if( Actions == null ) {
-            Actions = new Hashtable();
-            Actions.put("labs", "/oscarEncounter/displayLabs.do");
-            Actions.put("forms", "/oscarEncounter/displayForms.do");
-            Actions.put("msgs", "/oscarEncounter/displayMessages.do");
-            Actions.put("eforms", "/oscarEncounter/displayEForms.do");
-            Actions.put("docs", "/oscarEncounter/displayDocuments.do");
-            Actions.put("measurements", "/oscarEncounter/displayMeasurements.do");
-            Actions.put("tickler", "/oscarEncounter/displayTickler.do");
-            Actions.put("Dx", "/oscarEncounter/displayDisease.do");
-            Actions.put("preventions", "/oscarEncounter/displayPrevention.do");
-            Actions.put("consultation", "/oscarEncounter/displayConsultation.do");
-            Actions.put("allergies", "/oscarEncounter/displayAllergy.do");
-            Actions.put("unresolvedIssues", "/oscarEncounter/displayIssues.do");
-            Actions.put("resolvedIssues", "/oscarEncounter/displayIssues.do");
-            Actions.put("Rx", "/oscarEncounter/displayRx.do");
-            Actions.put("success", "/oscarEncounter/LeftNavBarDisplay.jsp");
-            Actions.put("error", "/oscarEncounter/LeftNavBarError.jsp");
-            Actions.put("HRM","/oscarEncounter/displayHRM.do");
-            Actions.put("myoscar","/oscarEncounter/displayMyOscar.do");
-        }
-    }
+	private static Logger logger = Logger.getLogger(EctDisplayAction.class);
+	
+	private static HashMap<String, String> Actions = null;
+	protected static final String ELLIPSES = "...";
+	protected static final int MAX_LEN_TITLE = 48;
+	protected static final int CROP_LEN_TITLE = 45;
+	protected static final int MAX_LEN_KEY = 12;
+	protected static final int CROP_LEN_KEY = 9;
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response) throws IOException, ServletException {
+	public EctDisplayAction() {
+		super();
+		if (Actions == null) {
+			Actions = new HashMap<String, String>();
+			Actions.put("labs", "/oscarEncounter/displayLabs.do");
+			Actions.put("forms", "/oscarEncounter/displayForms.do");
+			Actions.put("msgs", "/oscarEncounter/displayMessages.do");
+			Actions.put("eforms", "/oscarEncounter/displayEForms.do");
+			Actions.put("docs", "/oscarEncounter/displayDocuments.do");
+			Actions.put("measurements", "/oscarEncounter/displayMeasurements.do");
+			Actions.put("tickler", "/oscarEncounter/displayTickler.do");
+			Actions.put("Dx", "/oscarEncounter/displayDisease.do");
+			Actions.put("preventions", "/oscarEncounter/displayPrevention.do");
+			Actions.put("consultation", "/oscarEncounter/displayConsultation.do");
+			Actions.put("allergies", "/oscarEncounter/displayAllergy.do");
+			Actions.put("unresolvedIssues", "/oscarEncounter/displayIssues.do");
+			Actions.put("resolvedIssues", "/oscarEncounter/displayIssues.do");
+			Actions.put("Rx", "/oscarEncounter/displayRx.do");
+			Actions.put("success", "/oscarEncounter/LeftNavBarDisplay.jsp");
+			Actions.put("error", "/oscarEncounter/LeftNavBarError.jsp");
+			Actions.put("HRM", "/oscarEncounter/displayHRM.do");
+			Actions.put("myoscar", "/oscarEncounter/displayMyOscar.do");
+			Actions.put("eaaps", "/eaaps/displayEctEaaps.do");
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("Instantiated encounter display actions: " + Actions);
+			}
+		}
+		
+	}
 
-        EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
-        String forward = "error";
-        String cmd = getCmd();
-        String navName;
-        if( (navName = (String) request.getAttribute("navbarName")) != null )
-            navName += "+" + cmd;
-        else
-            navName = cmd;
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        request.setAttribute("navbarName", navName);
+		EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
+		String forward = "error";
+		String cmd = getCmd();
+		String navName;
+		if ((navName = (String) request.getAttribute("navbarName")) != null) navName += "+" + cmd;
+		else navName = cmd;
 
-        boolean isJsonRequest = request.getParameter("json") != null && request.getParameter("json").equalsIgnoreCase("true");
-        request.setAttribute("isJsonRequest", isJsonRequest);
+		request.setAttribute("navbarName", navName);
 
-        if( bean == null || request.getParameter("demographicNo") != null ) {
-        	bean = new EctSessionBean();
-        	bean.currentDate = UtilDateUtilities.StringToDate(request.getParameter("curDate"));
+		boolean isJsonRequest = request.getParameter("json") != null && request.getParameter("json").equalsIgnoreCase("true");
+		request.setAttribute("isJsonRequest", isJsonRequest);
 
-            if (bean.currentDate == null){
-                bean.currentDate = UtilDateUtilities.Today();
-            }
-            bean.providerNo=request.getParameter("providerNo");
-            if(bean.providerNo == null){
-                bean.providerNo = (String) request.getSession().getAttribute("user");
-            }
-            bean.demographicNo=request.getParameter("demographicNo");
-            bean.appointmentNo=request.getParameter("appointmentNo");
-            bean.curProviderNo=request.getParameter("curProviderNo");
-            bean.reason=request.getParameter("reason");
-            bean.encType=request.getParameter("encType");
-            bean.userName=request.getParameter("userName");
-            if (bean.userName == null){
-                 bean.userName =  ( (String) request.getSession().getAttribute("userfirstname") ) + " " + ( (String) request.getSession().getAttribute("userlastname") );
-            }
+		if (bean == null || request.getParameter("demographicNo") != null) {
+			bean = new EctSessionBean();
+			bean.currentDate = UtilDateUtilities.StringToDate(request.getParameter("curDate"));
 
-            bean.appointmentDate=request.getParameter("appointmentDate");
-            bean.startTime=request.getParameter("startTime");
-            bean.status=request.getParameter("status");
-            bean.date=request.getParameter("date");
-            bean.check= "myCheck";
-            bean.oscarMsgID = request.getParameter("msgId");
-            bean.setUpEncounterPage();
-            request.getSession().setAttribute("EctSessionBean",bean);
-            request.getSession().setAttribute("eChartID", bean.eChartId);
-            if(request.getParameter("source")!=null) {
-            	bean.source = request.getParameter("source");
-            }
+			if (bean.currentDate == null) {
+				bean.currentDate = UtilDateUtilities.Today();
+			}
+			bean.providerNo = request.getParameter("providerNo");
+			if (bean.providerNo == null) {
+				bean.providerNo = (String) request.getSession().getAttribute("user");
+			}
+			bean.demographicNo = request.getParameter("demographicNo");
+			bean.appointmentNo = request.getParameter("appointmentNo");
+			bean.curProviderNo = request.getParameter("curProviderNo");
+			bean.reason = request.getParameter("reason");
+			bean.encType = request.getParameter("encType");
+			bean.userName = request.getParameter("userName");
+			if (bean.userName == null) {
+				bean.userName = ((String) request.getSession().getAttribute("userfirstname")) + " " + ((String) request.getSession().getAttribute("userlastname"));
+			}
 
-            request.setAttribute("EctSessionBean", bean);
-        }
+			bean.appointmentDate = request.getParameter("appointmentDate");
+			bean.startTime = request.getParameter("startTime");
+			bean.status = request.getParameter("status");
+			bean.date = request.getParameter("date");
+			bean.check = "myCheck";
+			bean.oscarMsgID = request.getParameter("msgId");
+			bean.setUpEncounterPage();
+			request.getSession().setAttribute("EctSessionBean", bean);
+			request.getSession().setAttribute("eChartID", bean.eChartId);
+			if (request.getParameter("source") != null) {
+				bean.source = request.getParameter("source");
+			}
 
-        //Can we handle request?
-        //Check attrib first so we know if we are in a chain call before a direct request
-        String params = (String)request.getAttribute("cmd");
-        if( params == null )
-            params = request.getParameter("cmd");
-        request.setAttribute("cmd", params);
+			request.setAttribute("EctSessionBean", bean);
+		}
 
-        if( params != null ) {
-            //Check to see if this call is for us
-            if( params.indexOf(cmd) > -1 ) {
+		//Can we handle request?
+		//Check attrib first so we know if we are in a chain call before a direct request
+		String params = (String) request.getAttribute("cmd");
+		if (params == null) params = request.getParameter("cmd");
+		request.setAttribute("cmd", params);
 
-                MessageResources messages = getResources(request);
+		if (params != null) {
+			//Check to see if this call is for us
+			if (params.indexOf(cmd) > -1) {
 
-                NavBarDisplayDAO Dao = (NavBarDisplayDAO)request.getAttribute("DAO");
-                if( Dao == null )
-                    Dao = new NavBarDisplayDAO();
+				MessageResources messages = getResources(request);
 
-                String headingColour = request.getParameter("hC");
-                if (headingColour != null){
-                   Dao.setHeadingColour(headingColour);
-                }
+				NavBarDisplayDAO Dao = (NavBarDisplayDAO) request.getAttribute("DAO");
+				if (Dao == null) Dao = new NavBarDisplayDAO();
 
-                Dao.setReloadUrl(request.getRequestURL().toString() + "?" + request.getQueryString());
+				String headingColour = request.getParameter("hC");
+				if (headingColour != null) {
+					Dao.setHeadingColour(headingColour);
+				}
 
-                com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
-            	if(securityMgr.hasReadAccess("_" + cmd.toLowerCase(), request.getSession().getAttribute("userrole") + "," + request.getSession().getAttribute("user"))) {
+				Dao.setReloadUrl(request.getRequestURL().toString() + "?" + request.getQueryString());
 
+				com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
+				if (securityMgr.hasReadAccess("_" + cmd.toLowerCase(), request.getSession().getAttribute("userrole") + "," + request.getSession().getAttribute("user"))) {
 
-	                if( getInfo(bean,request, Dao,messages) ) {
-	                    request.setAttribute("DAO",Dao);
+					if (getInfo(bean, request, Dao, messages)) {
+						request.setAttribute("DAO", Dao);
 
-	                    String regex = "\\b" + cmd + "\\b";
-	                    String remainingCmds = params.replaceAll(regex,"").trim();
+						String regex = "\\b" + cmd + "\\b";
+						String remainingCmds = params.replaceAll(regex, "").trim();
 
-	                    //Are there more commmands to forward to or do we print what we have?
-	                    if( remainingCmds.length() > 0 ) {
-	                        request.setAttribute("cmd",remainingCmds);
-	                        int pos = remainingCmds.indexOf(' ');
-	                        if( pos > -1 )
-	                            forward = remainingCmds.substring(0,pos);
-	                        else
-	                            forward = remainingCmds;
+						//Are there more commmands to forward to or do we print what we have?
+						if (remainingCmds.length() > 0) {
+							request.setAttribute("cmd", remainingCmds);
+							int pos = remainingCmds.indexOf(' ');
+							if (pos > -1) forward = remainingCmds.substring(0, pos);
+							else forward = remainingCmds;
 
-	                        if( Actions.get(forward) == null ){
-	                        	MiscUtils.getLogger().error("forward not found, returning error");
-	                            forward = "error";
-	                        }
-	                    } else if (isJsonRequest) {
-	                        	JsonConfig config = new JsonConfig();
-	                        	config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());
-	                        	JSONObject json = JSONObject.fromObject(Dao.getMap(), config);
-	                        	response.getOutputStream().write(json.toString().getBytes());
-	                        	return null;
-	                    } else {
-	                        forward = "success";
-	                    }
-	                }
-                } else {
-                	return null;
-                }
-            }
-        }
-        if(forward != null && !forward.equals("success")) {
-        	MiscUtils.getLogger().error("Forward :"+forward+" navName :"+navName+" cmd "+cmd+" params "+params);
-        }
-        return new ActionForward((String)Actions.get(forward));
-    }
+							if (Actions.get(forward) == null) {
+								MiscUtils.getLogger().error("forward not found, returning error");
+								forward = "error";
+							}
+						} else if (isJsonRequest) {
+							JsonConfig config = new JsonConfig();
+							config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());
+							JSONObject json = JSONObject.fromObject(Dao.getMap(), config);
+							response.getOutputStream().write(json.toString().getBytes());
+							return null;
+						} else {
+							forward = "success";
+						}
+					}
+				} else {
+					return null;
+				}
+			}
+		}
+		if (forward != null && !forward.equals("success")) {
+			MiscUtils.getLogger().error("Forward :" + forward + " navName :" + navName + " cmd " + cmd + " params " + params);
+		}
+		return new ActionForward((String) Actions.get(forward));
+	}
 
-    //must be implemented by subclasses to populate dao object
-    public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-        return true;
-    }
+	/**
+	 * Must be implemented by subclasses to populate DAO object
+	 * 
+	 * @param bean
+	 * 		Current session information
+	 * @param request
+	 * 		Current request
+	 * @param Dao
+	 * 		View DAO responsible for rendering encounter
+	 * @param messages
+	 * 		i18n message bundle
+	 * @return
+	 * 		Returns true if the content was loaded successfully and false otherwise. Please note that returning false will case
+	 * 	an error message rendered for this action.
+	 */
+	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+		return true;
+	}
 
-    //must be implemented by subclasses to retrieve module name
-    public String getCmd() {
-        return new String("");
-    }
+	/**
+	 * Must be implemented by subclasses to retrieve module name
+	 * 
+	 * @return
+	 * 		Returns name of the module corresponding to the mapping in the {@link #Actions} 
+	 */
+	public String getCmd() {
+		return "";
+	}
 
 }
