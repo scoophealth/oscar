@@ -43,6 +43,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.ProviderData;
 import org.oscarehr.util.SpringUtils;
@@ -237,6 +238,36 @@ public class PatientExportTest extends DaoTestFixtures {
 			p.setExAllergiesAndAdverseReactions(false);
 			assertFalse(p.hasAllergies());
 		}
+	}
+	
+	// Test Clinically Measured Observations
+	@Test
+	public void testMeasurements() {
+		PatientExport p = new PatientExport(demographicNo.toString());
+		List<Measurement> list = p.getMeasurements();
+		if (p.hasMeasurements()) {
+			// exImmunizations must be true
+			assertNotNull(list);
+			assertFalse(list.isEmpty());
+			p.setExLaboratoryResults(false);
+			assertFalse(p.hasImmunizations());
+			// put boolean back to original state
+			p.setExLaboratoryResults(true);
+			assertTrue(p.hasImmunizations());
+		}
+		if (!p.hasMeasurements() && list!=null && !list.isEmpty()) {
+			// exImmunizations must be false
+			p.setExLaboratoryResults(true);
+			assertTrue(p.hasImmunizations());
+			// put boolean back to original state
+			p.setExLaboratoryResults(false);
+			assertFalse(p.hasMeasurements());
+		}
+	}
+	
+	@Test
+	public void testGetTypeDescription() {
+		assertNotNull((new PatientExport()).getTypeDescription("test"));
 	}
 	
 	// Test immunizations
