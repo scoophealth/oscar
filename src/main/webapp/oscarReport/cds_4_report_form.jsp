@@ -22,6 +22,8 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.managers.ProviderManager2"%>
 <%@page import="org.oscarehr.common.dao.FunctionalCentreDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.List"%>
@@ -29,9 +31,11 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.text.DateFormatSymbols"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
+	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
 
 	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
@@ -128,6 +132,31 @@
 						<%
 					}
 				%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Providers to include
+				<div style="font-size:smaller">
+					(leave blank to report on all providers, multi select is allowed)
+				</div>
+			<td>
+				<select multiple="multiple" name="providerIds">
+					<%
+						// null for both active and inactive because the report might be for a provider who's just left in the current reporting period.
+						List<Provider> providers=providerManager.getProviders(null);
+
+						for (Provider provider : providers)
+						{
+							// skip (system,system) user
+							if (provider.getProviderNo().equals(Provider.SYSTEM_PROVIDER_NO)) continue;
+							
+							%>
+								<option value="<%=provider.getProviderNo()%>"><%=StringEscapeUtils.escapeHtml(provider.getFormattedName())%></option>
+							<%
+						}
+					%>
 				</select>
 			</td>
 		</tr>
