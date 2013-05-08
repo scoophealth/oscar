@@ -39,6 +39,7 @@
 <%@ page import="oscar.login.*"%>
 <%@ page import="oscar.log.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.springframework.dao.DataIntegrityViolationException"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.model.SecRole"%>
 <%@ page import="org.oscarehr.common.dao.SecRoleDao"%>
@@ -146,8 +147,17 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 		sop.setPrivilege(privilege);
 		sop.setPriority(Integer.parseInt(priority));
 		sop.setProviderNo(curUser_no);
-		secObjPrivilegeDao.persist(sop);
-		msg += "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is added. ";
+		String secExceptionMsg = new String();
+		try {
+			secObjPrivilegeDao.persist(sop);
+		} 
+		catch(DataIntegrityViolationException divEx) {
+			secExceptionMsg = divEx.getMostSpecificCause().getLocalizedMessage();
+		}
+		if(secExceptionMsg.length() > 0)
+			msg += secExceptionMsg;
+		else
+			msg += "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is added. ";
 	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName +"|"+privilege, ip);
 	}
 }
