@@ -172,11 +172,9 @@ Allergies and Intolerances - (Reaction List)
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
 #*    *##if ( $allergy.typecode == 8 || $allergy.typecode == 10 || $allergy.typecode == 11 || $allergy.typecode == 13 )
-									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4"
-										codeSystemName="HL7 ActCode"/>
+									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
 #*    *##elseif ( $allergy.typecode == 12 || $allergy.typecode == 14 )
-									<code code="SUB" displayName="Substance" codeSystem="2.16.840.1.113883.5.4"
-										codeSystemName="HL7 ActCode"/>
+									<code code="SUB" displayName="Substance" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
 #*    *##else
 									<code nullFlavor='NA'/>
 #*    *##end
@@ -251,6 +249,66 @@ Allergies and Intolerances - (Reaction List)
 #end
 <!--
 ********************************************************
+Clinically Measured Observation
+********************************************************
+-->
+#if ( $patient.hasMeasurements() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.8.1"/>
+					<code code="CLINOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.100.1" codeSystemName="PITOObservationType" displayName="Clinically Measured Observations"/>
+					<title>Clinical Measured Observations [with entries]</title>
+					<text>Clinical Measured Observations</text>
+#**##foreach ( $measurement in $patient.getMeasurements() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.7"/>
+						<!-- Clinically Measured Observations Organizer -->
+						<organizer classCode="CLUSTER" moodCode="EVN">
+							<id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="MEAOBSORG" displayName="Measured Observations Organizer" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
+							<statusCode code="active"/>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="$dateTool.format('yyyyMMddhhmmss', $measurement.getCreateDate())"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($measurement.providerNo)</given>
+											<family>$patient.getProviderLastName($measurement.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<component typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+									<id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+									<code nullFlavor="UNK"/>
+									<!-- OSCAR Type Code: $measurement.type -->
+									<text>${patient.getTypeDescription($measurement.type)}</text>
+									<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $measurement.getDateObserved())"/>
+									<value xsi:type="ST">$measurement.dataField ($measurement.measuringInstruction)</value>
+								</observation>
+							</component>
+						</organizer>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.8"/>
+					<code code="CLINOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.100.1" codeSystemName="PITOObservationType" displayName="Clinically Measured Observations"/>
+					<title>Clinical Measured Observations [without entries]</title>
+					<text>No Clinical Measured Observations</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
 Family History
 ********************************************************
 -->
@@ -299,8 +357,7 @@ Family History
 								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
 								<!-- Secondary Code (ICD9) -->
 								<observation classCode="OBS" moodCode="EVN"> 
-									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"            
-										codeSystemName="PITO ObservationType"/>
+									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
 									<value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="${patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")}"/>								
 								</observation>
 							</entryRelationship>
@@ -424,8 +481,7 @@ Immunization List
 								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
 								<!-- Date Observation -->
 								<observation classCode="OBS" moodCode="EVN">
-									<code code="DTREVIEW" displayName="Date Reviewed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"
-										codeSystemName="PITO ObservationType"/>
+									<code code="DTREVIEW" displayName="Date Reviewed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
 									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunizaton.getNextDate())"/>
 								</observation>
 							</entryRelationship>
@@ -437,8 +493,7 @@ Immunization List
 								<!-- Reason Observation -->
 									<observation classCode="OBS" moodCode="EVN">
 										<id extension="12366" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
-										<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"
-											codeSystemName="PITO ObservationType"/>
+										<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
 										<text>${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</text>
 										<effectiveTime value="20120201"/>
 										<value xsi:type="CD" code="10144323" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT" displayName="Patient findings pneumonia"/>

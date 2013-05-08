@@ -47,6 +47,7 @@ import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Icd9Dao;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.PreventionDao;
@@ -58,6 +59,7 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Prevention;
@@ -85,6 +87,7 @@ public class PatientExport {
 	private static IssueDAO issueDao = SpringUtils.getBean(IssueDAO.class);
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+	private static MeasurementTypeDao measurementTypeDao = SpringUtils.getBean(MeasurementTypeDao.class);
 	private static CaseManagementIssueDAO caseManagementIssueDao = SpringUtils.getBean(CaseManagementIssueDAO.class);
 	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao = SpringUtils.getBean(CaseManagementIssueNotesDao.class);
 	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
@@ -111,6 +114,7 @@ public class PatientExport {
 	private List<CaseManagementNote> riskFactors = null;
 	private List<CaseManagementNote> familyHistory = null;
 	private List<CaseManagementNote> alerts = null;
+	private List<Measurement> measurements = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
@@ -147,6 +151,7 @@ public class PatientExport {
 		
 		this.labs = assembleLabs();
 		parseCaseManagement();
+		this.measurements = parseMeasurements();
 	}
 	
 	private static long getIssueID(String rhs) {
@@ -158,6 +163,19 @@ public class PatientExport {
 			answer = 0;
 		}
 		return answer;
+	}
+	
+	private List<Measurement> parseMeasurements() {
+		// Gather and filter measurements based on lack of lab_no field
+		List<Measurement> rawMeasurements = measurementDao.findByDemographicNo(demographicNo);
+		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
+		for(Measurement entry : rawMeasurements) {
+			MeasurementsExt isFromLab = measurementsExtDao.getMeasurementsExtByMeasurementIdAndKeyVal(entry.getId(), "lab_no");
+			if(isFromLab == null) {
+				tempMeasurements.add(entry);
+			}
+		}
+		return tempMeasurements;
 	}
 	
 	private void parseCaseManagement() {
@@ -220,7 +238,7 @@ public class PatientExport {
 			return null;
 		
 		// Gather and filter measurements based on existence of lab_no field
-		List<Measurement> rawMeasurements = measurementDao.findByDemographicIdUpdatedAfterDate(demographicNo, new Date(0));
+		List<Measurement> rawMeasurements = measurementDao.findByDemographicNo(demographicNo);
 		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
 		for(Measurement entry : rawMeasurements) {
 			MeasurementsExt isFromLab = measurementsExtDao.getMeasurementsExtByMeasurementIdAndKeyVal(entry.getId(), "lab_no");
@@ -428,6 +446,30 @@ public class PatientExport {
 	
 	public boolean hasAllergies() {
 		return exAllergiesAndAdverseReactions && allergies!=null && !allergies.isEmpty();
+	}
+	
+	/*
+	 * Clinical Measured Observations
+	 */
+	public List<Measurement> getMeasurements() {
+		return measurements;
+	}
+	
+	// Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
+	public boolean hasMeasurements() {
+		return exLaboratoryResults && measurements!=null && !measurements.isEmpty();
+	}
+	
+	public String getTypeDescription(String rhs) {
+		try {
+			List<MeasurementType> measurementType = measurementTypeDao.findByType(rhs);
+			for(MeasurementType entry : measurementType) {
+				return entry.getTypeDescription();
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return rhs;
 	}
 	
 	/*
