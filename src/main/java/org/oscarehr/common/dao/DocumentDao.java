@@ -171,6 +171,6 @@ public class DocumentDao extends AbstractDao<Document> {
 		if (r == null) {
 			return 0L;
 		}
-		return (Long) r; 
+		return ((Integer) r).longValue(); 
     }
 }
