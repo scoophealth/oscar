@@ -22,20 +22,40 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.managers.ProviderManager2"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.model.CdsFormOption"%>
 <%@page import="org.oscarehr.web.Cds4ReportUIBean"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
-	int startYear = Integer.parseInt(request.getParameter("startYear"));
+	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
+
+    int startYear = Integer.parseInt(request.getParameter("startYear"));
 	int startMonth = Integer.parseInt(request.getParameter("startMonth"));
 	int endYear = Integer.parseInt(request.getParameter("endYear"));
 	int endMonth = Integer.parseInt(request.getParameter("endMonth"));
-	
 	String functionalCentreId=request.getParameter("functionalCentreId");
-
-	Cds4ReportUIBean cds4ReportUIBean=new Cds4ReportUIBean(functionalCentreId, startYear, startMonth, endYear, endMonth);
+	
+	// null for none selected, array of providerIds if selected
+	String[] providerIdList=request.getParameterValues("providerIds");
+	
+	Cds4ReportUIBean cds4ReportUIBean=new Cds4ReportUIBean(functionalCentreId, startYear, startMonth, endYear, endMonth, providerIdList);
 	
 	List<CdsFormOption> cdsFormOptions=Cds4ReportUIBean.getCdsFormOptions();
+	
+	StringBuilder providerNamesList=new StringBuilder();
+	if (providerIdList==null) providerNamesList.append("All Providers");
+	else
+	{
+		for (String providerId : providerIdList)
+		{
+			Provider provider=providerManager.getProvider(providerId);
+
+			providerNamesList.append(provider.getFormattedName()+" ("+provider.getProviderNo()+"), ");
+		}
+	}
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
@@ -45,7 +65,8 @@
 <span style="font-weight:bold">Functional Centre : </span><%=cds4ReportUIBean.getFunctionalCentreDescription()%>
 <br />
 <span style="font-weight:bold">Dates : </span><%=cds4ReportUIBean.getDateRangeForDisplay()%>
-
+<br />
+<span style="font-weight:bold">Providers : </span><%=StringEscapeUtils.escapeHtml(providerNamesList.toString())%>
 <br />
 
 <table class="genericTable borderedTableAndCells" style="font-size:12px">

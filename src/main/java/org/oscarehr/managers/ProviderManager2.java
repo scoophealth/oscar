@@ -49,4 +49,14 @@ public class ProviderManager2 {
 
 		return (results);
 	}
+
+	public Provider getProvider(String providerNo) {
+
+		Provider result = providerDao.getProvider(providerNo);
+
+		//--- log action ---
+		LogAction.addLogSynchronous("ProviderManager.getProvider, providerNo=" + providerNo, null);
+
+		return (result);
+	}
 }

@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.collections.map.MultiValueMap;
@@ -99,21 +100,32 @@ public final class Cds4ReportUIBean {
 	private FunctionalCentre functionalCentre=null;
 	private GregorianCalendar startDate=null;
 	private GregorianCalendar endDate=null;
+	private HashSet<String> providerIdsToReportOn=null;
 	
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public Cds4ReportUIBean(String functionalCentreId, int startYear, int startMonth, int endYear, int endMonth) {
+	public Cds4ReportUIBean(String functionalCentreId, int startYear, int startMonth, int endYear, int endMonth, String[] providerIdList) {
 
 		startDate = new GregorianCalendar(startYear, startMonth, 1);
 		endDate = new GregorianCalendar(endYear, endMonth, 1);
 		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
+
+		// put providerId's in a Hash for quicker searches.
+		if (providerIdList!=null)
+		{
+			providerIdsToReportOn=new HashSet<String>();
+			for (String s : providerIdList)
+			{
+				providerIdsToReportOn.add(s);
+			}
+		}	
 		
 		functionalCentre=functionalCentreDao.find(functionalCentreId);
 		
-		admissionMap=getAdmissionMap(functionalCentreId, startDate, endDate);
+		admissionMap=getAdmissionMap();
 		
-		singleMultiAdmissions = getAdmissionsSortedSingleMulti(startDate, endDate);
+		singleMultiAdmissions = getAdmissionsSortedSingleMulti();
 	}
 	
 	public String getFunctionalCentreDescription()
@@ -134,7 +146,7 @@ public final class Cds4ReportUIBean {
 		return(cdsFormOptionDao.findByVersion("4"));
 	}
 	
-	private SingleMultiAdmissions getAdmissionsSortedSingleMulti(GregorianCalendar startDate, GregorianCalendar endDate) {
+	private SingleMultiAdmissions getAdmissionsSortedSingleMulti() {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
@@ -201,26 +213,36 @@ public final class Cds4ReportUIBean {
 		return(singleMultiAdmissions);
 	}
 
-	private static HashMap<Integer, Admission> getAdmissionMap(String functionalCentreId, GregorianCalendar startDate, GregorianCalendar endDate) {
+	private HashMap<Integer, Admission> getAdmissionMap() {
 
 		// put admissions into map so it's easier to retrieve by id.
 		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
+		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
 		
 		for (Program program : programs) {			
 			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDate.getTime());
 
-			logger.debug("corresponding cds admissions count:"+admissions.size());
+			logger.debug("corresponding cds admissions count (before provider filter) :"+admissions.size());
 			
 			for (Admission admission : admissions) {
-				admissionMap.put(admission.getId().intValue(), admission);
-				logger.debug("valid cds admission, id="+admission.getId());
+				if (isAdmissionForSelectedProviders(admission))
+				{
+					admissionMap.put(admission.getId().intValue(), admission);
+					logger.debug("valid cds admission, id="+admission.getId());
+				}
 			}
 		}
 
 		return admissionMap;
+	}
+	
+	private boolean isAdmissionForSelectedProviders(Admission admission)
+	{
+		if (providerIdsToReportOn==null) return(true);
+		
+		return(providerIdsToReportOn.contains(admission.getProviderNo()));
 	}
 
 	private static int getCohortBucket(Admission admission) {
