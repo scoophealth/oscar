@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.dms;
 
 import java.io.File;
@@ -44,7 +43,7 @@ import oscar.OscarProperties;
 import oscar.oscarTags.TagObject;
 import oscar.util.UtilDateUtilities;
 
-public class EDoc extends TagObject implements Comparable {
+public class EDoc extends TagObject implements Comparable<EDoc> {
 	private static final Logger logger = MiscUtils.getLogger();
 
 	private String docId;
@@ -53,8 +52,8 @@ public class EDoc extends TagObject implements Comparable {
 	private String dateTimeStamp = "";
 	private Date dateTimeStampAsDate = null;
 	private String type = "";
-        private String docClass = "";
-        private String docSubClass = "";
+	private String docClass = "";
+	private String docSubClass = "";
 	private String fileName = "";
 	private String html = "";
 
@@ -115,9 +114,9 @@ public class EDoc extends TagObject implements Comparable {
 		this.setNumberOfPages(numberOfPages);
 		preliminaryProcessing();
 	}
-        
-        public EDoc(String description, String type, String fileName, String html, String creatorId, String responsibleId, String source, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId, boolean updateFilename) {
-                this.setDescription(description.trim());
+
+	public EDoc(String description, String type, String fileName, String html, String creatorId, String responsibleId, String source, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId, boolean updateFilename) {
+		this.setDescription(description.trim());
 		this.setType(type.trim());
 		this.setFileName(fileName.trim());
 		this.setHtml(html);
@@ -130,15 +129,16 @@ public class EDoc extends TagObject implements Comparable {
 		this.setObservationDate(observationDate);
 		this.setReviewerId(reviewerId);
 		this.setReviewDateTime(reviewDateTime);
-		
-                if (updateFilename) {
-                    preliminaryProcessing();
-                }
-        }
+
+		if (updateFilename) {
+			preliminaryProcessing();
+		}
+	}
+
 	/**
 	 *Comparable based on document id
 	 */
-	public int compareTo(Object o) {
+	public int compareTo(EDoc o) {
 		EDoc doc = (EDoc) o;
 		int ret;
 		int id1 = Integer.parseInt(docId);
@@ -152,9 +152,11 @@ public class EDoc extends TagObject implements Comparable {
 	}
 
 	public boolean equals(Object o) {
-		if (o == null) return false;
+		if (o == null || !(o instanceof EDoc)) {
+			return false;
+		}
 
-		return (compareTo(o) == 0);
+		return (compareTo((EDoc) o) == 0);
 	}
 
 	private void preliminaryProcessing() {
@@ -217,12 +219,12 @@ public class EDoc extends TagObject implements Comparable {
 	}
 
 	public Integer getRemoteFacilityId() {
-    	return (remoteFacilityId);
-    }
+		return (remoteFacilityId);
+	}
 
 	public void setRemoteFacilityId(Integer remoteFacilityId) {
-    	this.remoteFacilityId = remoteFacilityId;
-    }
+		this.remoteFacilityId = remoteFacilityId;
+	}
 
 	public void setDocId(String docId) {
 		this.docId = docId;
@@ -233,12 +235,12 @@ public class EDoc extends TagObject implements Comparable {
 	}
 
 	public Date getReviewDateTimeDate() {
-    	return (reviewDateTimeDate);
-    }
+		return (reviewDateTimeDate);
+	}
 
 	public void setReviewDateTimeDate(Date reviewDateTimeDate) {
-    	this.reviewDateTimeDate = reviewDateTimeDate;
-    }
+		this.reviewDateTimeDate = reviewDateTimeDate;
+	}
 
 	public void setDescription(String description) {
 		this.description = description;
@@ -376,6 +378,7 @@ public class EDoc extends TagObject implements Comparable {
 		else if (docPublic == null || docPublic.length() == 0) this.docPublic = "0";
 		else this.docPublic = docPublic;
 	}
+
 	/**
 	 *Returns true if document a PDF.
 	 */
@@ -393,16 +396,16 @@ public class EDoc extends TagObject implements Comparable {
 	public boolean isImage() {
 		return this.contentType != null && !isPDF() && this.contentType.toLowerCase().contains("image/");
 	}
-	
+
 	/**
 	 * Returns true if this document is printable to PDF format.
 	 * @return true if this document is printable to PDF format and false otherwise
 	 */
-	public boolean isPrintable() {		
+	public boolean isPrintable() {
 		// At this time only PDF  and image files are supported.
 		return isPDF() || isImage();
 	}
-	
+
 	public String getObservationDate() {
 		return observationDate;
 	}
@@ -440,8 +443,6 @@ public class EDoc extends TagObject implements Comparable {
 		this.programId = programId;
 	}
 
-
-
 	public Integer getAppointmentNo() {
 		return appointmentNo;
 	}
@@ -469,7 +470,7 @@ public class EDoc extends TagObject implements Comparable {
 
 	public String getReviewerOhip() {
 		Provider provider = EDocUtil.getProvider(reviewerId);
-		if(provider != null) {
+		if (provider != null) {
 			return provider.getOhipNo();
 		}
 		return "";
@@ -496,8 +497,7 @@ public class EDoc extends TagObject implements Comparable {
 	}
 
 	@Override
-    public String toString()
-	{
-		return(ReflectionToStringBuilder.toString(this));
+	public String toString() {
+		return (ReflectionToStringBuilder.toString(this));
 	}
 }

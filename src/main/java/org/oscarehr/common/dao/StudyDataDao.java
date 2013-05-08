@@ -39,6 +39,19 @@ public class StudyDataDao extends AbstractDao<StudyData>{
 		super(StudyData.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<StudyData> findByContent(String content) {
+		Query query = createQuery("s", "s.content LIKE :content");
+		query.setParameter("content", content);
+		return query.getResultList();
+	}
+	
+	public StudyData findSingleByContent(String content) {
+		Query query = createQuery("s", "s.content LIKE :content");
+		query.setParameter("content", content);
+		return getSingleResultOrNull(query);
+	}
+	
 	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
 		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
 		

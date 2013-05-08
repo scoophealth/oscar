@@ -94,7 +94,11 @@ public final class SendingUtils {
 		byte[] encryptedSecretKey = encryptEncryptionKey(senderSecretKey, receiverOscarKey);
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
+		if (loggedInInfo != null) {
+			LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
+		} else {
+			LogAction.addLog(null, SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
+		}
 		
 		return (postData(url, encryptedBytes, encryptedSecretKey, signature, serviceName));
 	}
@@ -187,10 +191,15 @@ public final class SendingUtils {
     }
 
 	public static void main(String... argv) throws Exception {
-		String url = "http://localhost:49898/oscar/lab/newLabUpload.do";
+		// String url = "http://localhost:49898/oscar/lab/newLabUpload.do";
+		String url = "http://localhost:8080/oscar/lab/newLabUpload.do";
 		String publicOscarKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCCYf7j1EXWHdbtZgn7e28Yc4a/0Mznx1irA0NW1yknJU9TScpFUVJ9LKmo3+pqAqaGkWmZgz4bn0XZQ/PJNw9z24dRwaVzOgjJ9h1ci/cmei80UK7uL7soS3c1Hj6lddkZbAJ5+F9amasRsaabFI+Gvevq0EYMIaETFjZiEkDNUwIDAQAB";
 		String publicServiceKeyString = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI61yqsLH352cc+Ij3X/WzUKrFD6izRCwRqdS7RobiKmRqp6Ol1fiFJEOGGot1deNpIWJP05SNvx1qhMb9r6g8JamQvORR4QgUfKVOxwauOqm9myvSr8kPjAbQVHG8QcCBs+2qPfQU2whf+dpJFlx2P/Gx42W7S6HhK9awu9ZKeBAgMBAAECgYBRhwmBLZmQZZofNaS/hGJWqwJGQNvFv10SF0pohkBlCxjTy4AMV8dJOC/9mqUjBG+ohX4cK92zyTUYcJJ2Ryd9veIrVKM/3oUAXeHBaAHyaamFb8s6tZMHuJNJipV5igod/7nkRVGFa1RzamnMzrcnBLhqVZacwkN2F+BFzMTAAQJBAPxkQTT46O4DCbuNNxnIvMcpzIT17mhXNE+ZUOL1R2LMFM0bSyItkeiTaWQ1zgK4BPT3iAYiyvUq7fZOVGuGP9ECQQCQwBsubAM8R1STJERefMZRGAUg+UVTXatq9BK1xU9vQQCwKXBf78a+JLONQN/h8F8RXQduyyrNe0qpo7vTVAixAkA2zjJWpWI3JNO9NTns0Gkluk7d5GVjpOQIENu+nNJmgrhVnYKgJlMTtMbi6sgUUQ9KfmG8K1v1BuBrZrDwNFOxAkA9JSlWPsJPIEKVtWg8EbEkaGUiPKoQQS08DMYqiqK3eFn2EEsr+3mUsKQ4MwNfyc4e45FUN/ZovoAXkNayunjBAkAzhYBxLxjJTf7SBCjwcKus/Z0G1+mYWaKQuYWhyXhVJ7w8oNZ0KqoXECDYdeSAMEwGUkLHJjRtIFBHyJzR2vU6";
 
-		send("foo bar was here".getBytes(), url, getPublicOscarKey(publicOscarKeyString), getPublicServiceKey(publicServiceKeyString), "server1");
+		PublicKey publicOscarKey = getPublicOscarKey(publicOscarKeyString); 
+		PrivateKey publicServiceKey = getPublicServiceKey(publicServiceKeyString);
+		
+		byte[] bytes = "foo bar was here".getBytes(); 
+		send(bytes, url, publicOscarKey, publicServiceKey, "server1");
 	}
 }
