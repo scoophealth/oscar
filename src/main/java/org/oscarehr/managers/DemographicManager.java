@@ -54,6 +54,10 @@ import oscar.log.LogAction;
  */
 @Service
 public class DemographicManager {
+	public static final String PHR_VERIFICATION_LEVEL_3 = "+3";
+	public static final String PHR_VERIFICATION_LEVEL_2 = "+2";
+	public static final String PHR_VERIFICATION_LEVEL_1 = "+1";
+
 	private static Logger logger=MiscUtils.getLogger();
 	
 	@Autowired
@@ -314,15 +318,37 @@ public class DemographicManager {
         if (phrVerification!=null){
         	String authLevel =phrVerification.getVerificationLevel();
         	if ( PHRVerification.VERIFICATION_METHOD_FAX.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_MAIL.equals(authLevel)  || PHRVerification.VERIFICATION_METHOD_EMAIL.equals(authLevel)){
-        		return "+1";
+        		return PHR_VERIFICATION_LEVEL_1;
         	}else if (PHRVerification.VERIFICATION_METHOD_TEL.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_VIDEOPHONE.equals(authLevel)){
-        		return "+2";
+        		return PHR_VERIFICATION_LEVEL_2;
         	}else if (PHRVerification.VERIFICATION_METHOD_INPERSON.equals(authLevel)){
-        		return "+3";
+        		return PHR_VERIFICATION_LEVEL_3;
         	}
         }
         
         // blank string because preserving existing behaviour moved from PHRVerificationDao, I would have preferred returnning null on a new method...
         return("");
-	} 
+	}
+	
+	/**
+	 * This method should only return true if the demographic passed in is "phr verified" to a sufficient level to allow a provider to send this phr account messages.
+	 */
+	public boolean isPhrVerifiedToSendMessages(Integer demographicId)
+	{
+		String level=getPhrVerificationLevelByDemographicId(demographicId);
+		// hard coded to 3 until some one tells me how to configure/check this
+		if (PHR_VERIFICATION_LEVEL_3.equals(level)) return(true);
+		else return(false);
+	}
+
+	/**
+	 * This method should only return true if the demographic passed in is "phr verified" to a sufficient level to allow a provider to send this phr account medicalData.
+	 */
+	public boolean isPhrVerifiedToSendMedicalData(Integer demographicId)
+	{
+		String level=getPhrVerificationLevelByDemographicId(demographicId);
+		// hard coded to 3 until some one tells me how to configure/check this
+		if (PHR_VERIFICATION_LEVEL_3.equals(level)) return(true);
+		else return(false);		
+	}
 }

@@ -143,14 +143,6 @@ public class ReportObjectGeneric implements ReportObject {
         return sql;
     }
     
-    private Parameter getParameter(String id) {
-        for (int i=0; i<parameters.size(); i++) {
-            Parameter curParam = (Parameter) parameters.get(i);
-            if (curParam.getParamId() == id) return curParam;
-        }
-        return null;
-    }
-
     public int getActive() {
         return active;
     }
