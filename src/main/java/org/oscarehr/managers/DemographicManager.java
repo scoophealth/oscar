@@ -31,10 +31,12 @@ import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DemographicMergedDao;
+import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Demographic.PatientStatus;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.DemographicMerged;
+import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,8 @@ public class DemographicManager {
 	@Autowired
 	private DemographicMergedDao demographicMergedDao;
 
+	@Autowired
+	private PHRVerificationDao phrVerificationDao;
 	
 
 	public Demographic getDemographic(Integer demographicId) {
@@ -290,4 +294,35 @@ public class DemographicManager {
 	    return result;
     }
 
+	
+	public PHRVerification getLatestPhrVerificationByDemographicId(Integer demographicId)
+	{
+		PHRVerification result=phrVerificationDao.findLatestByDemographicId(demographicId);
+
+		//--- log action ---
+		if (result != null) {
+			LogAction.addLogSynchronous("DemographicManager.getLatestPhrVerificationByDemographicId", "demographicId=" + demographicId);
+		}
+		
+		return(result);
+	}
+	
+	public String getPhrVerificationLevelByDemographicId(Integer demographicId)
+	{
+		PHRVerification phrVerification=getLatestPhrVerificationByDemographicId(demographicId);
+		
+        if (phrVerification!=null){
+        	String authLevel =phrVerification.getVerificationLevel();
+        	if ( PHRVerification.VERIFICATION_METHOD_FAX.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_MAIL.equals(authLevel)  || PHRVerification.VERIFICATION_METHOD_EMAIL.equals(authLevel)){
+        		return "+1";
+        	}else if (PHRVerification.VERIFICATION_METHOD_TEL.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_VIDEOPHONE.equals(authLevel)){
+        		return "+2";
+        	}else if (PHRVerification.VERIFICATION_METHOD_INPERSON.equals(authLevel)){
+        		return "+3";
+        	}
+        }
+        
+        // blank string because preserving existing behaviour moved from PHRVerificationDao, I would have preferred returnning null on a new method...
+        return("");
+	} 
 }

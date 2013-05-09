@@ -38,34 +38,23 @@ public class PHRVerificationDao extends AbstractDao<PHRVerification> {
 		super(PHRVerification.class);
 	}
 	
-	public List<PHRVerification> getForDemographic(int demographicNo){
+	public PHRVerification findLatestByDemographicId(Integer demographicId){
         Query query = entityManager.createQuery("SELECT f FROM PHRVerification f WHERE f.demographicNo =? and archived = ? order by createdDate desc");
-        query.setParameter(1,demographicNo);
+        query.setParameter(1,demographicId);
         query.setParameter(2, false);
         
-        //@SuppressWarnings("unchecked")
-        return query.getResultList();                
+        query.setMaxResults(1);
+        
+        return(getSingleResultOrNull(query));                
      }
 	
-	public String getVerificationLevel(int demographicNo){
-		String verificationLevel = ""; //No authentication 
-		Query query = entityManager.createQuery("SELECT f FROM PHRVerification f WHERE f.demographicNo =? and archived = ? order by createdDate desc");
-        query.setParameter(1,demographicNo);
-        query.setParameter(2, false);
+    public List<PHRVerification> findByDemographic(Integer demographicId, boolean active){
+        Query query = entityManager.createQuery("SELECT f FROM PHRVerification f WHERE f.demographicNo =? and archived = ? order by createdDate desc");
+        query.setParameter(1,demographicId);
+        query.setParameter(2, !active);
         
-        List<PHRVerification> list = query.getResultList();
-        
-        if (list.size() > 0){
-        	String authLevel =list.get(0).getVerificationLevel();
-        	if ( PHRVerification.VERIFICATION_METHOD_FAX.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_MAIL.equals(authLevel)  || PHRVerification.VERIFICATION_METHOD_EMAIL.equals(authLevel)){
-        		return "+1";
-        	}else if (PHRVerification.VERIFICATION_METHOD_TEL.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_VIDEOPHONE.equals(authLevel)){
-        		return "+2";
-        	}else if (PHRVerification.VERIFICATION_METHOD_INPERSON.equals(authLevel)){
-        		return "+3";
-        	}
-        }
-        return verificationLevel;
-	}
-	
+    	@SuppressWarnings("unchecked")
+    	List<PHRVerification> results=query.getResultList();
+        return(results);                
+     }
 }

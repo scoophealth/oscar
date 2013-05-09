@@ -24,11 +24,15 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.managers.DemographicManager"%>
 <%@page import="org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%
+	DemographicManager demographicManager=(DemographicManager)SpringUtils.getBean("demographicManager");
+
 	String medicalDataType = request.getParameter("medicalDataType");
 	String parentPage = request.getParameter("parentPage");
 	String demographicNoString=request.getParameter("demographicId");
@@ -40,7 +44,7 @@
 
 	try
 	{
-		String verificationLevel = MyOscarMedicalDataManagerUtils.getVerificationLevel(Integer.parseInt(demographicNoString));
+		String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(Integer.parseInt(demographicNoString));
 		
 		if ("+3".equals(verificationLevel)) {
 			response.sendRedirect(sendDataPath);

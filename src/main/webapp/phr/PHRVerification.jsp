@@ -63,7 +63,7 @@ Integer demoNo = Integer.parseInt(demographicNo);
 PHRVerificationDao phrVerificationDao = (PHRVerificationDao)SpringUtils.getBean("PHRVerificationDao");
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
-List<PHRVerification> phrVerifications = phrVerificationDao.getForDemographic(demoNo);
+List<PHRVerification> phrVerifications = phrVerificationDao.findByDemographic(demoNo, true);
 
 org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demographicNo); 
 String myOscarUserName = demo.getMyOscarUserName();

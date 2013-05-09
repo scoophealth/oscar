@@ -40,8 +40,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
@@ -161,8 +161,8 @@ public class PHRMessageAction extends DispatchAction {
         }
 		
         //Check if patient has been verified
-        PHRVerificationDao phrVerificationDao = SpringUtils.getBean(PHRVerificationDao.class); 
-	   	String verificationLevel = phrVerificationDao.getVerificationLevel(Integer.parseInt(demographicNo));
+        DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class); 
+	   	String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(Integer.parseInt(demographicNo));
 	   	int verifyLevel = 0;
 	   	try{
 	      verifyLevel = Integer.parseInt(verificationLevel.replace('+', ' ').trim());
