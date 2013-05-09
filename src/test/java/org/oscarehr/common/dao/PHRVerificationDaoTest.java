@@ -123,8 +123,8 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 		int demographicNo1 = 100;
 		int demographicNo2 = 200;
 		
-		String authenticationLevel1 = "FAX";
-		String authenticationLevel2 = "VIDEOPHONE";
+		String authenticationLevel1 = PHRVerification.VERIFICATION_METHOD_FAX;
+		String authenticationLevel2 = PHRVerification.VERIFICATION_METHOD_VIDEOPHONE;
 		
 		boolean isArchived = true;
 		boolean isNotArchived = false;

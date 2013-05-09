@@ -215,12 +215,12 @@ br {
 			    	<label><bean:message key="phr.verification.add.fieldset.method"/>:</label> 
 				    	<select name="verificationLevel">
 				    		<option value="">--</option>
-				    		<option value="FAX"><bean:message key="phr.verification.add.fieldset.method.option.fax"/></option>
-				    		<option value="MAIL"><bean:message key="phr.verification.add.fieldset.method.option.mail"/></option>
-				    		<option value="EMAIL"><bean:message key="phr.verification.add.fieldset.method.option.email"/></option>
-				    		<option value="TEL"><bean:message key="phr.verification.add.fieldset.method.option.tel"/></option>
-				    		<option value="VIDEOPHONE"><bean:message key="phr.verification.add.fieldset.method.option.videophone"/></option>
-				    		<option value="INPERSON"><bean:message key="phr.verification.add.fieldset.method.option.inperson"/></option>
+				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_FAX%>"><bean:message key="phr.verification.add.fieldset.method.option.fax"/></option>
+				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_MAIL%>"><bean:message key="phr.verification.add.fieldset.method.option.mail"/></option>
+				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_EMAIL%>"><bean:message key="phr.verification.add.fieldset.method.option.email"/></option>
+				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_TEL%>"><bean:message key="phr.verification.add.fieldset.method.option.tel"/></option>
+				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_VIDEOPHONE%>"><bean:message key="phr.verification.add.fieldset.method.option.videophone"/></option>
+				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_INPERSON%>"><bean:message key="phr.verification.add.fieldset.method.option.inperson"/></option>
 				    	</select>
 		    	
 			    	<label><bean:message key="phr.verification.add.date"/>:</label><input type="text" name="verificationDate"  value="<%=UtilDateUtilities.getToday("yyyy-MM-dd")%>" size="10"/>  

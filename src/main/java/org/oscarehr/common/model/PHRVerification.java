@@ -37,25 +37,13 @@ import javax.persistence.TemporalType;
 
 @Entity
 public class PHRVerification  extends AbstractModel<Integer> implements Serializable {
-	/*
-	create table PHRVerification(
-	id int(10) auto_increment primary key,
-	demographicNo int(10),
-	phrUserName varchar(255),
-	verificationLevel varchar(100),
-	verificationDate datetime,
-	verificationBy varchar(6),
-	photoId tinyint(1),
-	parentGuardian tinyint(1),
-	comments text,
-	createdDate datetime,
-	archived tinyint(1)
-	);
-	
-	Should i have a field for head record
-	
-	*/
 
+	public static final String VERIFICATION_METHOD_FAX="FAX";
+	public static final String VERIFICATION_METHOD_MAIL="MAIL";
+	public static final String VERIFICATION_METHOD_EMAIL="EMAIL";
+	public static final String VERIFICATION_METHOD_TEL="TEL";
+	public static final String VERIFICATION_METHOD_VIDEOPHONE="VIDEOPHONE";
+	public static final String VERIFICATION_METHOD_INPERSON="INPERSON";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
