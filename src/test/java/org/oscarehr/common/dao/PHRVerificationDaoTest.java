@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.PHRVerification;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.MiscUtils;
 
@@ -100,7 +101,7 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 		dao.persist(phrVerification3);
 		
 		List<PHRVerification> expectedResult = new ArrayList<PHRVerification>(Arrays.asList(phrVerification1, phrVerification3));
-		List<PHRVerification> result = dao.getForDemographic(demographicNo1);
+		List<PHRVerification> result = dao.findByDemographic(demographicNo1, true);
 
 		Logger logger = MiscUtils.getLogger();
 		
@@ -148,7 +149,8 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 		dao.persist(phrVerification2);
 		
 		String expectedResult = "+1";
-		String result = dao.getVerificationLevel(demographicNo1);
+		DemographicManager demographicManager=(DemographicManager) SpringUtils.getBean("demographicManager");
+		String result = demographicManager.getPhrVerificationLevelByDemographicId(demographicNo1);
 		
 		assertEquals(expectedResult, result);
 	}

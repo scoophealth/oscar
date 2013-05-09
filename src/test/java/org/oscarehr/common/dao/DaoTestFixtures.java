@@ -64,6 +64,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.ConfigUtils;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -79,6 +80,8 @@ public abstract class DaoTestFixtures
 	@BeforeClass
 	public static void classSetUp() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
+		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+		
 		Logger.getRootLogger().setLevel(Level.WARN);
 		
 		long start = System.currentTimeMillis();

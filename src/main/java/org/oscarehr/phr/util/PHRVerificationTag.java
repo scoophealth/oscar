@@ -30,7 +30,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.oscarehr.common.dao.PHRVerificationDao;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -99,8 +99,8 @@ public class PHRVerificationTag extends TagSupport {
     	if(conditionMet){
     		try{
     			JspWriter out = super.pageContext.getOut();         
-    			PHRVerificationDao phrVerificationDao = (PHRVerificationDao)SpringUtils.getBean("PHRVerificationDao"); 
-    			out.print("<sup>"+phrVerificationDao.getVerificationLevel(Integer.parseInt(demoNo))+"</sup></a>");
+    			DemographicManager demographicManager = (DemographicManager)SpringUtils.getBean("demographicManager"); 
+    			out.print("<sup>"+demographicManager.getPhrVerificationLevelByDemographicId(Integer.parseInt(demoNo))+"</sup></a>");
     		}catch(Exception p) {
     			MiscUtils.getLogger().error("Error",p);
     		}
