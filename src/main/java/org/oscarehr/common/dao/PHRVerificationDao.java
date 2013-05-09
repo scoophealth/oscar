@@ -57,11 +57,11 @@ public class PHRVerificationDao extends AbstractDao<PHRVerification> {
         
         if (list.size() > 0){
         	String authLevel =list.get(0).getVerificationLevel();
-        	if ( "FAX".equals(authLevel) || "MAIL".equals(authLevel)  || "EMAIL".equals(authLevel)){
+        	if ( PHRVerification.VERIFICATION_METHOD_FAX.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_MAIL.equals(authLevel)  || PHRVerification.VERIFICATION_METHOD_EMAIL.equals(authLevel)){
         		return "+1";
-        	}else if ("TEL".equals(authLevel) || "VIDEOPHONE".equals(authLevel)){
+        	}else if (PHRVerification.VERIFICATION_METHOD_TEL.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_VIDEOPHONE.equals(authLevel)){
         		return "+2";
-        	}else if ("INPERSON".equals(authLevel)){
+        	}else if (PHRVerification.VERIFICATION_METHOD_INPERSON.equals(authLevel)){
         		return "+3";
         	}
         }
