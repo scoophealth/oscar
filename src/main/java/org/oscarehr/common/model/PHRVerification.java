@@ -47,7 +47,7 @@ public class PHRVerification  extends AbstractModel<Integer> implements Serializ
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer id;
+	private Integer id;
 	
 	private Integer demographicNo; 
 	private String phrUserName ;

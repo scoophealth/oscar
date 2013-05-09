@@ -33,7 +33,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -46,7 +45,6 @@ import oscar.oscarRx.util.RxUtil;
 
 public final class RxUseFavoriteAction extends DispatchAction {
 
-    private static final Logger logger = MiscUtils.getLogger();
     public ActionForward unspecified(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
