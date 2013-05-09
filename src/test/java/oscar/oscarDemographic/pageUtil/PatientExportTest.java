@@ -78,7 +78,6 @@ public class PatientExportTest extends DaoTestFixtures {
 
     @Test
     public void testPatientExport0() {
-    	
     	// very little can be done with default constructor
     	assertNotNull("PatientExport default constructor failed",new PatientExport());
     }
@@ -92,7 +91,7 @@ public class PatientExportTest extends DaoTestFixtures {
 		
 		PatientExport p = new PatientExport(demographicNo.toString());
 		assertNotNull("PatientExport object unexpectedly null",p);
-		assertEquals("Unexpected demographic number",p.getDemographicNo(),demographicNo.toString());
+		assertEquals("Unexpected demographic number",p.getDemographic().getDemographicNo(),demographicNo);
 	}
     
     // Testing utility methods that are used in other tests
@@ -109,94 +108,10 @@ public class PatientExportTest extends DaoTestFixtures {
     // Testing booleans is done within other tests below
     
     // Testing Demographics
-    
 	@Test
-	public void testGetSetDemographicNo() {
+	public void testDemographic() {		
 		PatientExport p = new PatientExport(demographicNo.toString());
-		assertNotNull("PatientExport object unexpectedly null", p);
-		p.setDemographicNo("599999");
-		assertEquals("Wrong demographicNo", p.getDemographicNo(),"599999");
-		p.setDemographicNo(demographicNo.toString());
-	}
-	
-	@Test
-	public void testGetSetFirstName() {		
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getFirstName();
-		p.setFirstName("Jane");
-		assertEquals(p.getFirstName(),"Jane");
-		p.setFirstName(old);
-		assertEquals(p.getFirstName(), old);
-	}
-	
-	@Test
-	public void testGetSetLastName() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getLastName();
-		p.setLastName("Doe");
-		assertEquals(p.getLastName(),"Doe");
-		p.setLastName(old);
-		assertEquals(p.getLastName(), old);
-	}
-	
-	@Test
-	public void testGetSetGender() {		
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getGender();
-		p.setGender("new_gender");
-		assertEquals(p.getGender(),"new_gender");
-		p.setGender(old);
-		assertEquals(p.getGender(), old);
-	}
-	
-	@Test
-	public void testGetSetDateOfBirth() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getDateOfBirth();
-		p.setDateOfBirth("new_date");
-		assertEquals(p.getDateOfBirth(),"new_date");
-		p.setDateOfBirth(old);
-		assertEquals(p.getDateOfBirth(), old);
-	}
-	
-	@Test
-	public void testGetSetMonthOfBirth() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getMonthOfBirth();
-		p.setMonthOfBirth("new_month");
-		assertEquals(p.getMonthOfBirth(),"new_month");
-		p.setMonthOfBirth(old);
-		assertEquals(p.getMonthOfBirth(), old);
-	}
-	
-	@Test
-	public void testGetSetYearOfBirth() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getYearOfBirth();
-		p.setYearOfBirth("new_year");
-		assertEquals(p.getYearOfBirth(),"new_year");
-		p.setYearOfBirth(old);
-		assertEquals(p.getYearOfBirth(), old);
-	}
-	
-	@Test
-	public void testGetSetHin() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getHin();
-		p.setHin("new_Hin");
-		assertEquals(p.getHin(),"new_Hin");
-		p.setHin(old);
-		assertEquals(p.getHin(), old);
-	}
-	
-	@Test
-	public void testGetSetProviderNo() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-		String old = p.getProviderNo();
-		p.setProviderNo("new_provider_no");
-		assertEquals(p.getProviderNo(),"new_provider_no");
-		p.setProviderNo(old);
-		assertEquals(p.getProviderNo(), old);
+		assertNotNull(p.getDemographic());
 	}
 	
 	// Test convenience methods

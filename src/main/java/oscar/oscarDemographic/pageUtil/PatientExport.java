@@ -353,81 +353,11 @@ public class PatientExport {
 	/*
 	 * Demographics
 	 */
-	// Directly mapped functions
-	public String getDemographicNo() {
-		return demographicNo.toString();
+	public Demographic getDemographic() {
+		return demographic;
 	}
 	
-	public void setDemographicNo(String demoNo) {
-		demographicNo = Integer.parseInt(demoNo);
-		demographic.setDemographicNo(demographicNo);
-	}
-	
-	public String getFirstName() {
-		return demographic.getFirstName();
-	}
-
-	public void setFirstName(String rhs) {
-		demographic.setFirstName(rhs);
-	}
-	
-	public String getLastName() {
-		return demographic.getLastName();
-	}
-
-	public void setLastName(String rhs) {
-		demographic.setLastName(rhs);
-	}
-	
-	public String getGender() {
-		return demographic.getSex();
-	}
-
-	public void setGender(String rhs) {
-		demographic.setSex(rhs);
-	}
-	
-	public String getDateOfBirth() {
-		return demographic.getDateOfBirth();
-	}
-
-	public void setDateOfBirth(String rhs) {
-		demographic.setDateOfBirth(rhs);
-	}
-	
-	public String getMonthOfBirth() {
-		return demographic.getMonthOfBirth();
-	}
-
-	public void setMonthOfBirth(String rhs) {
-		demographic.setMonthOfBirth(rhs);
-	}
-	
-	public String getYearOfBirth() {
-		return demographic.getYearOfBirth();
-	}
-
-	public void setYearOfBirth(String rhs) {
-		demographic.setYearOfBirth(rhs);
-	}
-	
-	public String getHin() {
-		return demographic.getHin();
-	}
-	
-	public void setHin(String rhs) {
-		demographic.setHin(rhs);
-	}
-	
-	public String getProviderNo() {
-		return demographic.getProviderNo();
-	}
-	
-	public void setProviderNo(String rhs) {
-		demographic.setProviderNo(rhs);
-	}
-	
-	// Output get convenience functions
+	// Output convenience functions
 	public String getBirthDate() {
 		return demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
 	}
@@ -714,12 +644,26 @@ public class PatientExport {
 	}
 	
 	public String getProviderFirstName(String providerNo) {
-		ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
-		return providerData.getFirstName();
+		String name;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			name = providerData.getFirstName();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			name = "";
+		}
+		return name;
 	}
 	
 	public String getProviderLastName(String providerNo) {
-		ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
-		return providerData.getLastName();
+		String name;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			name = providerData.getLastName();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			name = "";
+		}
+		return name;
 	}
 }

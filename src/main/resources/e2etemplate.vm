@@ -23,8 +23,9 @@
  *
  * @author Jeremy Ho
  *
- *#<?xml version="1.0" encoding="UTF-8"?>
- <ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ *##set( $demographic = $patient.getDemographic() )
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
  xmlns="urn:hl7-org:v3"
  xmlns:hl7="urn:hl7-org:v3"
@@ -37,7 +38,7 @@ CDA Header
 -->
 	<realmCode code="CA" />
 	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
-	<id extension="$patient.demographicNo" root="2.16.840.1.113883.3.933"/>
+	<id extension="$demographic.demographicNo" root="2.16.840.1.113883.3.933"/>
 	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
 	<title>PITO EMR-2-EMR Complete Instance Example</title>
 	<effectiveTime value="$dateTool.get('yyyyMMddhhmm')"/>
@@ -49,18 +50,41 @@ CDA Header
 	-->
 	<recordTarget typeCode="RCT" contextControlCode="OP">
 		<patientRole classCode="PAT">
-#*    *##if ( !$patient.hin || $patient.hin == "" )
-			<id extension="000000000" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
-#*    *##else
-			<id extension="$patient.hin" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
-#*    *##end
+#if ( !$demographic.hin || $demographic.hin == "" )
+			<id extension="000000000" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#else
+			<id extension="$demographic.hin" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#end
+#if ( $demographic.address || $demographic.city || $demographic.province || $demographic.postal )
+			<addr>
+				<streetAddressLine>$!demographic.address</streetAddressLine>
+				<city>$!demographic.city</city>
+				<state>$!demographic.province</state>
+				<postalCode>$!demographic.postal</postalCode>
+			</addr>
+#end
+#if ( $demographic.phone != "" )
+			<!-- Home Phone -->
+			<telecom value="tel: $demographic.phone" use="HP"/>
+#end
+#if ( $demographic.phone2 != "" )
+			<!-- Work Phone -->
+			<telecom value="tel: $demographic.phone2" use="HP"/>
+#end
 			<patient>
 				<name>
-					<given>$patient.firstName</given>
-					<family>$patient.lastName</family>
+					<given>$demographic.firstName</given>
+					<family>$demographic.lastName</family>
 				</name>
-				<administrativeGenderCode code="$patient.gender" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
+				<administrativeGenderCode code="$demographic.sex" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
 				<birthTime value="$patient.birthDate"/>
+				<languageCommunication>
+#if ( $demographic.officialLanguage == "English" )
+					<languageCode code="EN"/>
+#else
+					<languageCode code="FR"/>
+#end
+				</languageCommunication>
 			</patient>
 		</patientRole>
 	</recordTarget>
@@ -571,8 +595,8 @@ Laboratory Results & Results
 									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
-											<given>$patient.getProviderFirstName($patient.providerNo)</given>
-											<family>$patient.getProviderLastName($patient.providerNo)</family>
+											<given>$patient.getProviderFirstName($demographic.providerNo)</given>
+											<family>$patient.getProviderLastName($demographic.providerNo)</family>
 										</name>
 									</assignedPerson>
 								</assignedAuthor>
@@ -972,8 +996,8 @@ Problems and Conditions - Problem List
 									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
-											<given>$patient.getProviderFirstName($patient.providerNo)</given>
-											<family>$patient.getProviderLastName($patient.providerNo)</family>
+											<given>$patient.getProviderFirstName($demographic.providerNo)</given>
+											<family>$patient.getProviderLastName($demographic.providerNo)</family>
 										</name>
 									</assignedPerson>
 								</assignedAuthor>

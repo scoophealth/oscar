@@ -125,10 +125,10 @@ public class E2EVelocityTemplate {
 		
 		// Check for Validity
 		if(result.contains("$")) {
-			log.error("[Demo: "+record.getDemographicNo()+"] Export contains '$' - may contain errors");
+			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export contains '$' - may contain errors");
 		}
 		if(!E2EExportValidator.isValidXML(result)) {
-			log.error("[Demo: "+record.getDemographicNo()+"] Export failed E2E XSD validation");
+			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export failed E2E XSD validation");
 		}
 		
 		return result;

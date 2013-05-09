@@ -65,6 +65,10 @@ public class E2ESchedulerJob extends TimerTask {
 				patient.setExImmunizations(true);
 				patient.setExProblemList(true);
 				patient.setExLaboratoryResults(true);
+				patient.setExRiskFactors(true);
+				patient.setExPersonalHistory(true);
+				patient.setExFamilyHistory(true);
+				patient.setExAlertsAndSpecialNeeds(true);
 				String output = t.export(patient);
 				
 				//export file to temp directory
@@ -75,9 +79,9 @@ public class E2ESchedulerJob extends TimerTask {
 					}
 	
 					//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
-					String expFile = patient.getFirstName()+"_"+patient.getLastName();
+					String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName();
 					expFile += "_"+id;
-					expFile += "_"+patient.getDateOfBirth()+patient.getMonthOfBirth()+patient.getYearOfBirth();
+					expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth();
 					files.add(new File(directory, expFile+".xml"));
 				}catch(Exception e){
 					logger.error("Error", e);
