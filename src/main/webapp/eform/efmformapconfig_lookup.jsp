@@ -39,8 +39,7 @@ for (String key : keys) {
 					output = "";
 				} else {
 					for (int i=0; i<names.size(); i++) {
-						output = DatabaseAP.parserReplace(names.get(i), values.get(i), output);
-					}
+						output = DatabaseAP.parserReplace(names.get(i), org.apache.commons.lang.StringEscapeUtils.escapeHtml(values.get(i)), output);					}
 				}
 			}		
 %><input type="hidden" name="<%=key%>" value="<%=output%>"/><%		
