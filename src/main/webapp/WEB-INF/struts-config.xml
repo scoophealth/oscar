@@ -346,7 +346,7 @@
 			<form-property name="bedDemographic" type="org.oscarehr.PMmodule.model.BedDemographic" />
 			<form-property name="client" type="org.oscarehr.common.model.Demographic" />
 			<form-property name="erconsent" type="org.oscarehr.PMmodule.web.formbean.ErConsentFormBean" />
-			<form-property name="form" type="org.oscarehr.survey.model.oscar.OscarFormInstance" />
+			<form-property name="form" type="org.oscarehr.common.model.CaisiFormInstance" />
 			<form-property name="program" type="org.oscarehr.PMmodule.model.Program" />
 			<form-property name="referral" type="org.oscarehr.PMmodule.model.ClientReferral" />
 			<form-property name="unreservedBeds" type="org.oscarehr.PMmodule.model.Bed[]" />
@@ -387,7 +387,7 @@
 			<form-property name="form" type="org.oscarehr.PMmodule.model.DefaultRoleAccess" />
 		</form-bean>
 		<form-bean name="surveyForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="survey" type="org.oscarehr.survey.model.Survey" />
+			<form-property name="survey" type="org.oscarehr.common.model.Survey" />
 			<form-property name="model" type="org.oscarehr.surveymodel.SurveyDocument" />
 			<form-property name="web" type="org.oscarehr.survey.web.formbean.SurveyManagerFormBean" />
 			<form-property name="pageModel" type="org.oscarehr.surveymodel.Page" />
@@ -2011,7 +2011,7 @@
 			<forward name="report" path="/PMmodule/GenericIntake/Report.jsp" />
 		</action>
 		<!-- FORMS -->
-		<action path="/PMmodule/Forms/SurveyExecute" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyExecuteForm" scope="session">
+		<action path="/PMmodule/Forms/SurveyExecute" type="org.oscarehr.PMmodule.web.forms.SurveyExecuteAction" parameter="method" name="surveyExecuteForm" scope="session">
 			<forward name="view" path="/PMmodule/survey/surveyView.jsp" />
 			<forward name="execute" path="/PMmodule/survey/surveyExecute.jsp" />
 			<forward name="printPreview" path="/PMmodule/survey/surveyPrintPreview.jsp" />
@@ -2056,7 +2056,8 @@
 			<action path="/PMmodule/Reports/CustomReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="customReportForm" scope="request" validate="false"> <forward name="list" path="page.customreport.list" /> <forward
 			name="form" path="page.customreport.form" /> </action>
 		-->
-		<action path="/SurveyManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyForm" scope="session">
+				
+		<action path="/SurveyManager" type="org.oscarehr.survey.web.SurveyManagerAction" parameter="method" name="surveyForm" scope="session">
 			<forward name="edit" path=".view.survey.form" />
 			<forward name="list" path=".view.survey.manager" redirect="true" />
 			<forward name="new_survey" path=".view.survey.new_survey" />
@@ -2067,7 +2068,7 @@
 			<forward name="reportForm" path="/PMmodule/reports/UcfReportForm.jsp" />
 			<forward name="report" path="/PMmodule/reports/UcfReport.jsp" />
 		</action>
-		<action path="/SurveyTest" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyTestForm" scope="session">
+		<action path="/SurveyTest" type="org.oscarehr.survey.web.SurveyTestAction" parameter="method" name="surveyTestForm" scope="session">
 			<forward name="view" path="/survey/surveyTest/surveyView.jsp" />
 			<forward name="execute" path="/survey/surveyTest/surveyExecute.jsp" />
 			<forward name="manager" path="/SurveyManager.do?method=list" redirect="true" />

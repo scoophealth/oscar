@@ -63,7 +63,6 @@
 	<bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.RoleProgramAccessDAO" autowire="byName" />
 	<bean id="clientImageDAO" class="org.oscarehr.casemgmt.dao.ClientImageDAO" autowire="byName" />
 	<bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.TicklerDAO" autowire="byName" />
-	<bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.SurveyDAO" autowire="byName" />
 	<bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.ProgramProviderDAO" autowire="byName" />
 	<bean id="programFunctionalUserDAO" class="org.oscarehr.PMmodule.dao.ProgramFunctionalUserDAO" autowire="byName" />
 	<bean id="programAccessDAO" class="org.oscarehr.PMmodule.dao.ProgramAccessDAO" autowire="byName" />

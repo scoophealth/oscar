@@ -90,7 +90,6 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
-import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -113,6 +112,7 @@ import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.dao.RemoteReferralDao;
 import org.oscarehr.common.model.Admission;
+import org.oscarehr.common.model.CaisiFormInstance;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
@@ -122,7 +122,6 @@ import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteReferral;
-import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -139,7 +138,7 @@ public class ClientManagerAction extends DispatchAction {
 
 	private HealthSafetyManager healthSafetyManager;
 	private ClientRestrictionManager clientRestrictionManager;
-	private SurveyManager surveyManager = new SurveyManagerImpl();
+	private SurveyManager surveyManager = (SurveyManager)SpringUtils.getBean("surveyManager2");
 	private LookupManager lookupManager;
 	private CaseManagementManager caseManagementManager;
 	private AdmissionManager admissionManager;
@@ -1116,7 +1115,7 @@ public class ClientManagerAction extends DispatchAction {
 
 	public ActionForward save_survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
-		OscarFormInstance formInstance = (OscarFormInstance) clientForm.get("form");
+		CaisiFormInstance formInstance = (CaisiFormInstance) clientForm.get("form");
 
 		ClientManagerFormBean formBean = (ClientManagerFormBean) clientForm.get("view");
 
@@ -1359,7 +1358,7 @@ public class ClientManagerAction extends DispatchAction {
 
 	public ActionForward survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
-		OscarFormInstance formInstance = (OscarFormInstance) clientForm.get("form");
+		CaisiFormInstance formInstance = (CaisiFormInstance) clientForm.get("form");
 
 		if (request.getAttribute("survey_saved") != null) {
 			setEditAttributes(form, request, (String) request.getAttribute("clientId"));
