@@ -2671,6 +2671,8 @@
         <ViolationValue>/src/main/webapp/dms/editDocument.jsp:docerrors = (Hashtable) request.getAttribute("docerrors");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:List&lt;Hashtable&gt; queues=queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:for (Hashtable ht : queues) {</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:for (Hashtable ht : queues) {</ViolationValue>        
         <ViolationValue>/src/main/webapp/dms/listDocumentFromProvider.jsp:Hashtable providerDocs=(Hashtable)request.getSession().getAttribute("providerDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromQueue.jsp:Hashtable queueDocs=(Hashtable)request.getSession().getAttribute("queueDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/eform/efmSendform.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%&gt;&lt;%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%&gt;&lt;%</ViolationValue>

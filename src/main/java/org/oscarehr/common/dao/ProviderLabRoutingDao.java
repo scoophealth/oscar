@@ -134,6 +134,22 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		query.setParameter("lType", labType);
 		return query.getResultList();
     }
+        
+    public List<Integer> findLastRoutingIdGroupedByProviderAndCreatedByDocCreator(String docCreator) {
+        Query query = entityManager.createQuery("SELECT max(r.id) FROM ProviderLabRoutingModel r, Document d "
+                + "WHERE d.documentNo=r.labNo AND d.doccreator= :docCreator AND r.providerNo!=0 AND r.providerNo!=-1 AND r.providerNo IS NOT NULL group by r.providerNo");
+        query.setParameter("docCreator", docCreator);
+        return query.getResultList();
+    }
+
+    public List<Object[]> findProviderAndLabRoutingById(Integer id) {
+        String sql = "FROM Provider provider, ProviderLabRoutingModel providerLabRouting "
+                + "WHERE provider.ProviderNo = providerLabRouting.providerNo "
+                + "AND providerLabRouting.id = :id ";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("id", id);
+        return query.getResultList();
+    }
 
 	@NativeSql({"providerLabRouting", "mdsMSH","mdsPID","mdsPV1","mdsZFR","mdsOBR","mdsZRG"})
 	public List<Object[]> findMdsResultResultDataByManyThings(String status, String providerNo, String patientLastName, String patientFirstName, String patientHealthNumber) {

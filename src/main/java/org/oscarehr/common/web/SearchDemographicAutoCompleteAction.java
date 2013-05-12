@@ -71,7 +71,14 @@ public class SearchDemographicAutoCompleteAction extends Action {
         
         RxProviderData rx = new RxProviderData();
         
-        List<Demographic> list = demographicDao.searchDemographic(searchStr);
+        List<Demographic> list = null;
+
+        if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
+            list = demographicDao.searchDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0);
+        } else {
+            list = demographicDao.searchDemographic(searchStr);
+        }
+        
         List secondList= new ArrayList();
         for(Demographic demo :list){
             Hashtable h = new Hashtable();
@@ -80,15 +87,16 @@ public class SearchDemographicAutoCompleteAction extends Action {
              h.put("demographicNo",demo.getDemographicNo());
              h.put("status",demo.getPatientStatus());
              
-             if (OscarProperties.getInstance().isPropertyActive("workflow_enhance")) {
-            	 Provider p = rx.getProvider(demo.getProviderNo());
-            	 if( demo.getProviderNo() != null ) {
-            		 h.put("providerNo", demo.getProviderNo());
-            	 }
-            	 if( p.getSurname() != null && p.getFirstName() != null ) {
-            		 h.put("providerName", p.getSurname() + ", " + p.getFirstName());
-            	 }
-            	 
+
+            Provider p = rx.getProvider(demo.getProviderNo());
+            if ( demo.getProviderNo() != null ) {
+                h.put("providerNo", demo.getProviderNo());
+            }
+            if ( p.getSurname() != null && p.getFirstName() != null ) {
+                h.put("providerName", p.getSurname() + ", " + p.getFirstName());
+            }
+            
+            if (OscarProperties.getInstance().isPropertyActive("workflow_enhance")) {            	 
             	 h.put("nextAppointment", AppointmentUtil.getNextAppointment(demo.getDemographicNo() + ""));
             	 DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
             	 DemographicCust demographicCust = demographicCustDao.find(demo.getDemographicNo());
