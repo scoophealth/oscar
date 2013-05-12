@@ -32,12 +32,15 @@
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.common.model.OcanClientForm"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="java.util.Enumeration"%><input type="hidden" name="clientId" value="" />
+<%@page import="java.util.Enumeration"%>
+
+<input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
-<% Demographic currentDemographic=(Demographic)request.getAttribute("client");
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+<% 
+	Demographic currentDemographic=(Demographic)request.getAttribute("client");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 
 <script>
@@ -314,7 +317,7 @@ New General Form:&nbsp;
 New User Created Form:&nbsp;
 <html:select property="form.formId" onchange="openSurvey(0)">
 	<html:option value="0">&nbsp;</html:option>
-	<html:options collection="survey_list" property="formId" labelProperty="description" />
+	<html:options collection="survey_list" property="id" labelProperty="description" />
 </html:select>
 <br />
 <br />

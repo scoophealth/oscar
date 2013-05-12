@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,71 +15,107 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This software was written for
- * Centre for Research on Inner City Health, St. Michael's Hospital,
- * Toronto, Ontario, Canada
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
+package org.oscarehr.common.model;
 
-package org.oscarehr.survey.model.oscar;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class OscarFormQuestion {
+@Entity
+@Table(name="caisi_form_question")
+public class CaisiFormQuestion extends AbstractModel<Integer> {
 
-	private Long id;
-	private long page;
-	private long section;
-	private long question;
-	private String description;
-	private long formId;
-	private String formQuestionId;
-	private String type;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	private Integer page;
 	
-	public String getType() {
-		return type;
+	private Integer section;
+	
+	private Integer question;
+	
+	private String description;
+	
+	@Column(name="form_id")
+	private Integer formId;
+	
+	@Column(name="form_question_id")
+	private String formQuestionId;
+	
+	private String type;
+
+	public Integer getId() {
+		return id;
 	}
-	public void setType(String type) {
-		this.type = type;
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
-	public long getPage() {
+
+	public Integer getPage() {
 		return page;
 	}
-	public void setPage(long page) {
+
+	public void setPage(Integer page) {
 		this.page = page;
 	}
-	public long getSection() {
+
+	public Integer getSection() {
 		return section;
 	}
-	public void setSection(long section) {
+
+	public void setSection(Integer section) {
 		this.section = section;
 	}
-	public long getQuestion() {
+
+	public Integer getQuestion() {
 		return question;
 	}
-	public void setQuestion(long question) {
+
+	public void setQuestion(Integer question) {
 		this.question = question;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public long getFormId() {
+
+	public Integer getFormId() {
 		return formId;
 	}
-	public void setFormId(long formId) {
+
+	public void setFormId(Integer formId) {
 		this.formId = formId;
 	}
+
 	public String getFormQuestionId() {
 		return formQuestionId;
 	}
+
 	public void setFormQuestionId(String formQuestionId) {
 		this.formQuestionId = formQuestionId;
 	}
-	public Long getId() {
-		return id;
+
+	public String getType() {
+		return type;
 	}
-	public void setId(Long id) {
-		this.id = id;
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

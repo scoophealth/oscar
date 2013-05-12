@@ -65,7 +65,6 @@ import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
-import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
@@ -100,7 +99,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 	protected static final String CLIENT_EDIT_ID = "id";
 	
 	private ClientImageDAO clientImageDAO = null;
-	private SurveyManager surveyManager = new SurveyManagerImpl();
+	private SurveyManager surveyManager = new SurveyManager();
 	private IMatchManager matchManager = new MatchManager();
 	
 	protected static final String PROGRAM_ID = "programId";

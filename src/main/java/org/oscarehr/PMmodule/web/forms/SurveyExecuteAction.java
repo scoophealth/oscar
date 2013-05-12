@@ -51,19 +51,18 @@ import org.oscarehr.PMmodule.dao.SurveySecurityDao;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
-import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.CaisiForm;
+import org.oscarehr.common.model.CaisiFormData;
+import org.oscarehr.common.model.CaisiFormDataTmpSave;
+import org.oscarehr.common.model.CaisiFormInstance;
+import org.oscarehr.common.model.CaisiFormInstanceTmpSave;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.survey.model.oscar.OscarForm;
-import org.oscarehr.survey.model.oscar.OscarFormData;
-import org.oscarehr.survey.model.oscar.OscarFormDataTmpsave;
-import org.oscarehr.survey.model.oscar.OscarFormInstance;
-import org.oscarehr.survey.model.oscar.OscarFormInstanceTmpsave;
 import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.web.formbean.SurveyExecuteDataBean;
 import org.oscarehr.survey.web.formbean.SurveyExecuteFormBean;
@@ -73,28 +72,18 @@ import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.SurveyDocument.Survey;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 
 public class SurveyExecuteAction extends DispatchAction {
     private static Logger log = MiscUtils.getLogger();
 
-    private SurveyManager surveyManager = new SurveyManagerImpl();
-    private CaseManagementManager cmeManager;
-    private ClientManager clientManager;
-    private AdmissionManager admissionManager;
+    private SurveyManager surveyManager = (SurveyManager)SpringUtils.getBean("surveyManager2");
+    private CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+    private ClientManager clientManager = (ClientManager)SpringUtils.getBean("clientManager");
+    private AdmissionManager admissionManager = (AdmissionManager)SpringUtils.getBean("admissionManager");
 
-
-    public void setCaseManagementManager(CaseManagementManager mgr) {
-        this.cmeManager = mgr;
-    }
-
-    public void setClientManager(ClientManager mgr) {
-        this.clientManager = mgr;
-    }
-
-    public void setAdmissionManager(AdmissionManager mgr) {
-        this.admissionManager = mgr;
-    }
-
+   
+    
     protected String getProviderNo(HttpServletRequest request) {
         return getProvider(request).getProviderNo();
     }
@@ -141,7 +130,7 @@ public class SurveyExecuteAction extends DispatchAction {
 
     protected long getUserId(HttpServletRequest request) {
         String value = (String) request.getSession().getAttribute("user");
-        return Long.parseLong(value);
+        return Integer.parseInt(value);
     }
 
     protected String getUsername(HttpServletRequest request) {
@@ -212,9 +201,9 @@ public class SurveyExecuteAction extends DispatchAction {
             clientId = String.valueOf(formBean.getClientId());
         }
 
-        formBean.setId(Long.parseLong(surveyId));
-        formBean.setClientId(Long.parseLong(clientId));
-        OscarForm surveyObj = surveyManager.getForm(surveyId);
+        formBean.setId(Integer.parseInt(surveyId));
+        formBean.setClientId(Integer.parseInt(clientId));
+        CaisiForm surveyObj = surveyManager.getForm(surveyId);
         if (surveyObj == null) {
             postMessage(request, "survey.missing");
             if (type != null && type.equals("provider")) {
@@ -238,7 +227,7 @@ public class SurveyExecuteAction extends DispatchAction {
             request.getSession().setAttribute("validation_file", null);
         }
 
-        log.debug("executing survey " + surveyObj.getFormId());
+        log.debug("executing survey " + surveyObj.getId());
 
         SurveyDocument model = null;
         try {
@@ -257,15 +246,15 @@ public class SurveyExecuteAction extends DispatchAction {
         }
 
         /* load test/tmpsave data - if exists */
-        OscarFormInstance instance = null;
+        CaisiFormInstance instance = null;
         if (!clientId.equals("0")) {
             //instance = surveyManager.getLatestForm(surveyId, clientId);
         	List tmpInstances = surveyManager.getTmpForms(formInstanceId, surveyId, clientId, String.valueOf(getUserId(request)));
         	if(tmpInstances.size()==0 || tmpInstances == null) {
         		instance = surveyManager.getCurrentFormById(formInstanceId);
         	} else {
-        		OscarFormInstanceTmpsave tmpsave = (OscarFormInstanceTmpsave)tmpInstances.get(0);
-            	instance = new OscarFormInstance();
+        		CaisiFormInstanceTmpSave tmpsave = (CaisiFormInstanceTmpSave)tmpInstances.get(0);
+            	instance = new CaisiFormInstance();
         		instance.setClientId(tmpsave.getClientId());
                 instance.setDateCreated(new Date());
                 instance.setFormId(tmpsave.getFormId());
@@ -273,7 +262,7 @@ public class SurveyExecuteAction extends DispatchAction {
                 instance.setDescription(tmpsave.getDescription());
                 instance.setUsername(tmpsave.getUsername());
                 
-                //instance.setData(tmpsave.getData()); //OscarFormDataTmpsave???
+                //instance.setData(tmpsave.getData()); //CaisiFormDataTmpSave???
                 org.oscarehr.surveymodel.SurveyDocument.Survey surveyModel = surveyManager.getFormModel(String.valueOf(formBean.getId()));
                 List qids = SurveyModelManager.getAllQuestionIds(surveyModel);
             	for (Iterator iter = qids.iterator(); iter.hasNext();) {
@@ -283,19 +272,19 @@ public class SurveyExecuteAction extends DispatchAction {
             		String sectionId = parsed[1];
             		String questionId = parsed[2];              
           
-            		OscarFormData dataItem = new OscarFormData();
-            		dataItem.setPageNumber(Long.parseLong(pageNumber));
-            		dataItem.setSectionId(Long.parseLong(sectionId));
-            		dataItem.setQuestionId(Long.parseLong(questionId));
+            		CaisiFormData dataItem = new CaisiFormData();
+            		dataItem.setPageNumber(Integer.parseInt(pageNumber));
+            		dataItem.setSectionId(Integer.parseInt(sectionId));
+            		dataItem.setQuestionId(Integer.parseInt(questionId));
             		//dataItem.setValue((String)data.getValue(key));//?????
             		Set data_tmp = tmpsave.getData();
             		for(Iterator it = data_tmp.iterator(); it.hasNext();) {
-            			OscarFormDataTmpsave oneItem = (OscarFormDataTmpsave)it.next();
-            			if(key.equals(oneItem.getKey())) {
+            			CaisiFormDataTmpSave oneItem = (CaisiFormDataTmpSave)it.next();
+            			if(key.equals(oneItem.getDataKey())) {
             				dataItem.setValue(oneItem.getValue());
             			}
             		}  		
-            		dataItem.setKey(key);            		
+            		dataItem.setDataKey(key);            		
             		instance.getData().add(dataItem);
             	} 
                 
@@ -304,8 +293,8 @@ public class SurveyExecuteAction extends DispatchAction {
         if (instance != null) {
             log.debug("loading up existing data");
             for (Iterator iter = instance.getData().iterator(); iter.hasNext();) {
-                OscarFormData dataItem = (OscarFormData) iter.next();
-                String key = dataItem.getKey();
+                CaisiFormData dataItem = (CaisiFormData) iter.next();
+                String key = dataItem.getDataKey();
                 if (SurveyModelManager.isCheckbox(model.getSurvey(), key)) {
                     String value = dataItem.getValue();
                     if (value != null) {
@@ -510,11 +499,11 @@ public class SurveyExecuteAction extends DispatchAction {
         SurveyExecuteDataBean data = (SurveyExecuteDataBean) form.get("data");
         org.oscarehr.surveymodel.SurveyDocument.Survey surveyModel = surveyManager.getFormModel(String.valueOf(formBean.getId()));
 
-        OscarFormInstance instance = new OscarFormInstance();
-        instance.setClientId(formBean.getClientId());
+        CaisiFormInstance instance = new CaisiFormInstance();
+        instance.setClientId((int)formBean.getClientId());
         instance.setDateCreated(new Date());
-        instance.setFormId(formBean.getId());
-        instance.setUserId(getUserId(request));
+        instance.setFormId((int)formBean.getId());
+        instance.setUserId((int)getUserId(request));
         instance.setDescription(formBean.getDescription());
         instance.setUsername(getUsername(request));
 
@@ -549,12 +538,12 @@ public class SurveyExecuteAction extends DispatchAction {
             String sectionId = parsed[1];
             String questionId = parsed[2];
 
-            OscarFormData dataItem = new OscarFormData();
-            dataItem.setPageNumber(Long.parseLong(pageNumber));
-            dataItem.setSectionId(Long.parseLong(sectionId));
-            dataItem.setQuestionId(Long.parseLong(questionId));
+            CaisiFormData dataItem = new CaisiFormData();
+            dataItem.setPageNumber(Integer.parseInt(pageNumber));
+            dataItem.setSectionId(Integer.parseInt(sectionId));
+            dataItem.setQuestionId(Integer.parseInt(questionId));
             dataItem.setValue((String) data.getValue(key));
-            dataItem.setKey(key);
+            dataItem.setDataKey(key);
             instance.getData().add(dataItem);
         }
 
@@ -640,14 +629,14 @@ public class SurveyExecuteAction extends DispatchAction {
         log.debug("CaisObject=" + caisiObject);
 
         if (caisiObject.equals("Current Medications")) {
-            List<Drug> meds = cmeManager.getPrescriptions(demographic_no, true);
+            List<Drug> meds = caseManagementManager.getPrescriptions(demographic_no, true);
             StringBuilder str = new StringBuilder();
             for (Drug med : meds) {
                 str.append(med.getSpecial().replaceAll("\r\n", " ")).append("\r\n");
             }
             data.getValues().put(key, str.toString());
         } else if (caisiObject.equals("Current Issues")) {
-            List issues = cmeManager.getIssues(Integer.parseInt(demographic_no), false);
+            List issues = caseManagementManager.getIssues(Integer.parseInt(demographic_no), false);
             StringBuilder str = new StringBuilder();
             for (Iterator iter = issues.iterator(); iter.hasNext();) {
                 CaseManagementIssue issue = (CaseManagementIssue) iter.next();
@@ -655,7 +644,7 @@ public class SurveyExecuteAction extends DispatchAction {
             }
             data.getValues().put(key, str.toString());
         } else if (caisiObject.equals("Allergies")) {
-            List allergies = cmeManager.getAllergies(demographic_no);
+            List allergies = caseManagementManager.getAllergies(demographic_no);
             StringBuilder str = new StringBuilder();
             for (Iterator iter = allergies.iterator(); iter.hasNext();) {
                 Allergy med = (Allergy) iter.next();
@@ -748,21 +737,21 @@ public class SurveyExecuteAction extends DispatchAction {
         org.oscarehr.surveymodel.SurveyDocument.Survey surveyModel = surveyManager.getFormModel(String.valueOf(formBean.getId()));
 
         //check instanceId,formId,clientId, and userId to see if tmp form instance exists :
-        OscarFormInstanceTmpsave instance = new OscarFormInstanceTmpsave();
+        CaisiFormInstanceTmpSave instance = new CaisiFormInstanceTmpSave();
         boolean newForm;
         List tmpInstanceForms = surveyManager.getTmpForms(formInstanceId, String.valueOf(formBean.getId()),String.valueOf(formBean.getClientId()), String.valueOf(getUserId(request)));
         if(tmpInstanceForms.size()==0 || tmpInstanceForms==null ) {
         	newForm = true;
-        	instance.setInstanceId(Long.valueOf(formInstanceId));
-        	instance.setClientId(formBean.getClientId());
+        	instance.setInstanceId(Integer.valueOf(formInstanceId));
+        	instance.setClientId((int)formBean.getClientId());
             instance.setDateCreated(new Date());
-            instance.setFormId(formBean.getId());
-            instance.setUserId(getUserId(request));
+            instance.setFormId((int)formBean.getId());
+            instance.setUserId((int)getUserId(request));
             instance.setDescription(formBean.getDescription());
             instance.setUsername(getUsername(request));
         } else {        	
         	newForm = false;
-        	instance = (OscarFormInstanceTmpsave)tmpInstanceForms.get(0);
+        	instance = (CaisiFormInstanceTmpSave)tmpInstanceForms.get(0);
               	
         }        
 
@@ -798,20 +787,20 @@ public class SurveyExecuteAction extends DispatchAction {
         		String sectionId = parsed[1];
         		String questionId = parsed[2];              
       
-        		OscarFormDataTmpsave dataItem = new OscarFormDataTmpsave();
-        		dataItem.setPageNumber(Long.parseLong(pageNumber));
-        		dataItem.setSectionId(Long.parseLong(sectionId));
-        		dataItem.setQuestionId(Long.parseLong(questionId));
+        		CaisiFormDataTmpSave dataItem = new CaisiFormDataTmpSave();
+        		dataItem.setPageNumber(Integer.parseInt(pageNumber));
+        		dataItem.setSectionId(Integer.parseInt(sectionId));
+        		dataItem.setQuestionId(Integer.parseInt(questionId));
         		dataItem.setValue((String) data.getValue(key));
-        		dataItem.setKey(key);
+        		dataItem.setDataKey(key);
         		instance.getData().add(dataItem);
         	} 
         } else {
         		instance.getData().clear();
-            	List tmpFormData = surveyManager.getTmpFormData(String.valueOf(instance.getTmpInstanceId()));
+            	List tmpFormData = surveyManager.getTmpFormData(String.valueOf(instance.getId()));
             	for(Iterator it = tmpFormData.iterator(); it.hasNext();) {
-            		OscarFormDataTmpsave formData = (OscarFormDataTmpsave)it.next();
-            		formData.setValue((String)data.getValue(formData.getKey()));
+            		CaisiFormDataTmpSave formData = (CaisiFormDataTmpSave)it.next();
+            		formData.setValue((String)data.getValue(formData.getDataKey()));
             		instance.getData().add(formData);
             	}
         }	        

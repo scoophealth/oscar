@@ -62,62 +62,62 @@
 		<c:if test="${entry.status eq 0}">
 			<!--  in review -->
 			<a
-				href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.id}"/>"><img
 				src="images/edit.png" border="0"></a>
   			&nbsp;
 	  		<a
-				href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.id}"/>"><img
 				src="images/delete.png" border="0"></a>
 		  	&nbsp;
 	        <a
-				href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.id}"/>"><img
 				src="images/test.png" border="0"></a>
 		</c:if>
 		<c:if test="${entry.status eq 1}">
 			<!-- test -->
 			<a
-				href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.id}"/>"><img
 				src="images/edit.png" border="0"></a>
   			&nbsp;
 	  		<a
-				href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.id}"/>"><img
 				src="images/delete.png" border="0"></a>
 		  	&nbsp;
 			<a
-				href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.id}"/>"><img
 				src="images/test.png" border="0"></a>
 	    	&nbsp;
 	    	<a
-				href="<html:rewrite action="/SurveyManager"/>?method=clear_test_data&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=clear_test_data&id=<c:out value="${entry.id}"/>"><img
 				src="images/clear.png" border="0"></a>
 	    	&nbsp;
 	   		<a
-				href="<html:rewrite action="/SurveyManager"/>?method=launch&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=launch&id=<c:out value="${entry.id}"/>"><img
 				src="images/launch.png" border="0"></a>
 		</c:if>
 		<c:if test="${entry.status eq 2}">
 			<!-- launched -->
 			<a
-				href="<html:rewrite action="/SurveyManager"/>?method=close&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=close&id=<c:out value="${entry.id}"/>"><img
 				src="images/close.png" border="0"></a>
 	        &nbsp;
 	        <a
-				href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.id}"/>"><img
 				src="images/export.gif" border="0"></a>
 		</c:if>
 		<c:if test="${entry.status eq 3}">
 			<!--  closed -->
 			<a
-				href="<html:rewrite action="/SurveyManager"/>?method=reopen&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=reopen&id=<c:out value="${entry.id}"/>"><img
 				src="images/launch.png" border="0"></a>
 	        &nbsp;
 	        <a
-				href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.surveyId}"/>"><img
+				href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.id}"/>"><img
 				src="images/export.gif" border="0"></a>
 		</c:if>
 
 	</display:column>
-	<display:column property="surveyId" sortable="false" title="SurveyId" />
+	<display:column property="id" sortable="false" title="SurveyId" />
 	<display:column style="width:60%" property="description"
 		sortable="false" title="Description" />
 	<display:column property="version" sortable="false" title="Version" />
@@ -179,7 +179,7 @@ Export Form Data:&nbsp;
 <select onchange="export_csv(this);">
 	<option value=""></option>
 	<c:forEach var="f" items="${released_forms}">
-		<option value="<c:out value="${f.formId}"/>"><c:out
+		<option value="<c:out value="${f.id}"/>"><c:out
 			value="${f.description}" /></option>
 	</c:forEach>
 </select>
@@ -190,7 +190,7 @@ Export Form Data (MFH):&nbsp;
 <select onchange="export_inverse_csv(this);">
 	<option value=""></option>
 <c:forEach var="f" items="${released_forms}">
-	<option value="<c:out value="${f.formId}"/>"><c:out value="${f.description}"/></option>
+	<option value="<c:out value="${f.id}"/>"><c:out value="${f.description}"/></option>
 </c:forEach>
 </select>
 <% } %>
@@ -201,7 +201,7 @@ Export form structure to database:&nbsp;
 <select onchange="export_to_db(this);">
 	<option value=""></option>
 	<c:forEach var="f" items="${released_forms}">
-		<option value="<c:out value="${f.formId}"/>"><c:out
+		<option value="<c:out value="${f.id}"/>"><c:out
 			value="${f.description}" /></option>
 	</c:forEach>
 </select>
