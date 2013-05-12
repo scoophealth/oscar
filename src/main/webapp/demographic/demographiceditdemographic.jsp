@@ -519,6 +519,8 @@ function referralScriptAttach2(elementName, name2) {
 
 function newStatus() {
     newOpt = prompt("<bean:message key="demographic.demographiceditdemographic.msgPromptStatus"/>:", "");
+    if(newOpt == null)
+    	return;
     if (newOpt != "") {
         document.updatedelete.patient_status.options[document.updatedelete.patient_status.length] = new Option(newOpt, newOpt);
         document.updatedelete.patient_status.options[document.updatedelete.patient_status.length-1].selected = true;
@@ -529,6 +531,8 @@ function newStatus() {
 
 function newStatus1() {
     newOpt = prompt("<bean:message key="demographic.demographiceditdemographic.msgPromptStatus"/>:", "");
+    if(newOpt == null)
+    	return;
     if (newOpt != "") {
         document.updatedelete.roster_status.options[document.updatedelete.roster_status.length] = new Option(newOpt, newOpt);
         document.updatedelete.roster_status.options[document.updatedelete.roster_status.length-1].selected = true;
