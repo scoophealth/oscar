@@ -93,6 +93,9 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String LAB_ACK_COMMENT="lab_ack_comment";
     public static final String EDOC_BROWSER_IN_MASTER_FILE="edoc_browser_in_master_file";
     public static final String EDOC_BROWSER_IN_DOCUMENT_REPORT="edoc_browser_in_document_report";
+    public static final String VIEW_DOCUMENT_AS="view_document_as";
+    public static final String INCOMING_DOCUMENT_DEFAULT_QUEUE="incoming_document_default_queue";
+    public static final String INCOMING_DOCUMENT_ENTRY_MODE="incoming_document_entry_mode";
   
 
     public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";

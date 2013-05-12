@@ -87,6 +87,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.dms.IncomingDocUtil;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDemographic.data.DemographicData;
@@ -920,4 +921,305 @@ public class ManageDocumentAction extends DispatchAction {
                 out.close();
                 
         }
+
+        public ActionForward addIncomingDocument(ActionMapping mapping, ActionForm form,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String pdfDir = request.getParameter("pdfDir");
+        String pdfName = request.getParameter("pdfName");
+        String demographic_no = request.getParameter("demog");
+        String observationDate = request.getParameter("observationDate");
+        String documentDescription = request.getParameter("documentDescription");
+        String docType = request.getParameter("docType");
+        String docClass = request.getParameter("docClass");
+        String docSubClass = request.getParameter("docSubClass");
+        String[] flagproviders = request.getParameterValues("flagproviders");
+        String queueId1 = request.getParameter("queueId");
+        String sourceFilePath = IncomingDocUtil.getIncomingDocumentFilePathName(queueId1, pdfDir, pdfName);
+        String destFilePath;
+
+        String savePath = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        if (!savePath.endsWith(File.separator)) {
+            savePath += File.separator;
+        }
+
+        Date obDate = UtilDateUtilities.StringToDate(observationDate);
+        String formattedDate = UtilDateUtilities.DateToString(obDate, EDocUtil.DMS_DATE_FORMAT);
+        String source = "";
+
+
+        int numberOfPages = 0;
+        String fileName = pdfName;
+        String user = (String) request.getSession().getAttribute("user");
+        EDoc newDoc = new EDoc(documentDescription, docType, fileName, "", user, user, source, 'A', formattedDate, "", "", "demographic", demographic_no, 0);
+        newDoc.setDocClass(docClass);
+        newDoc.setDocSubClass(docSubClass);
+        newDoc.setDocPublic("0");
+        fileName = newDoc.getFileName();
+        destFilePath = savePath + fileName;
+        String doc_no = "";
+
+
+        newDoc.setContentType(docType);
+        File f1 = new File(sourceFilePath);
+        boolean success = f1.renameTo(new File(destFilePath));
+        if (!success) {
+            log.error("Not able to move " + f1.getName() + " to " + destFilePath);
+            // File was not successfully moved
+        } else {
+
+            newDoc.setContentType("application/pdf");
+            if (fileName.endsWith(".PDF") || fileName.endsWith(".pdf")) {
+                newDoc.setContentType("application/pdf");
+                numberOfPages = countNumOfPages(fileName);
+            }
+            newDoc.setNumberOfPages(numberOfPages);
+            doc_no = EDocUtil.addDocumentSQL(newDoc);
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
+
+
+            if (flagproviders != null && flagproviders.length > 0) { 
+                try {
+                    for (String proNo : flagproviders) {
+                        providerInboxRoutingDAO.addToProviderInbox(proNo, Integer.parseInt(doc_no), LabResultData.DOCUMENT);
+                    }
+                } catch (Exception e) {
+                    MiscUtils.getLogger().error("Error", e);
+                }
+            }
+
+            //Check to see if we have to route document to patient
+            PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+            List<PatientLabRouting> patientLabRoutingList = patientLabRoutingDao.findByLabNoAndLabType(Integer.parseInt(doc_no), docType);
+            if (patientLabRoutingList == null || patientLabRoutingList.isEmpty()) {
+                PatientLabRouting patientLabRouting = new PatientLabRouting();
+                patientLabRouting.setDemographicNo(Integer.parseInt(demographic_no));
+                patientLabRouting.setLabNo(Integer.parseInt(doc_no));
+                patientLabRouting.setLabType("DOC");
+                patientLabRoutingDao.persist(patientLabRouting);
+            }
+
+            try {
+
+                CtlDocument ctlDocument = ctlDocumentDao.getCtrlDocument(Integer.parseInt(doc_no));
+
+                ctlDocument.getId().setModuleId(Integer.parseInt(demographic_no));
+                ctlDocumentDao.merge(ctlDocument);
+                //save a document created note
+                if (ctlDocument.isDemographicDocument()) {
+                    //save note
+                    saveDocNote(request, documentDescription, demographic_no, doc_no);
+                }
+            } catch (Exception e) {
+                MiscUtils.getLogger().error("Error", e);
+            }
+        }
+
+        return (mapping.findForward("nextIncomingDoc"));
+    }
+        
+    public ActionForward viewIncomingDocPageAsPdf(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+
+        String pageNum = request.getParameter("curPage");
+        String queueId = request.getParameter("queueId");
+        String pdfDir = request.getParameter("pdfDir");
+        String pdfName = request.getParameter("pdfName");
+        String filePath = IncomingDocUtil.getIncomingDocumentFilePathName(queueId, pdfDir, pdfName);
+        Locale locale=request.getLocale();
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
+        
+        if (pageNum == null) {
+            pageNum = "0";
+        }
+
+        Integer pn = Integer.parseInt(pageNum);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=\"" + pdfName + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
+        
+        com.itextpdf.text.pdf.PdfCopy extractCopy = null;
+        com.itextpdf.text.Document document = null;
+        com.itextpdf.text.pdf.PdfReader reader = null;
+
+        try {
+            reader = new com.itextpdf.text.pdf.PdfReader(filePath);
+            document = new com.itextpdf.text.Document(reader.getPageSizeWithRotation(1));
+            extractCopy = new com.itextpdf.text.pdf.PdfCopy(document, response.getOutputStream());
+
+            document.open();
+            extractCopy.addPage(extractCopy.getImportedPage(reader, pn));
+
+
+        } catch (Exception ex) {
+            response.setContentType("text/html");
+            response.getWriter().print(props.getString("dms.incomingDocs.errorInOpening") + pdfName);
+            response.getWriter().print("<br>"+props.getString("dms.incomingDocs.PDFCouldBeCorrupted"));
+
+            MiscUtils.getLogger().error("Error", ex);
+        } finally {
+            if (extractCopy != null) {
+                extractCopy.close();
+            }
+            if (document != null) {
+                document.close();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+        }
+
+        return null;
+    }
+
+    public int countNumOfPages(String fileName) { // count number of pages in a pdf file
+        int numOfPage = 0;
+        String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+
+        if (!docdownload.endsWith(File.separator)) {
+            docdownload += File.separator;
+        }
+
+        String filePath = docdownload + fileName;
+        PdfReader reader = null;
+
+        try {
+            reader = new PdfReader(filePath);
+            numOfPage = reader.getNumberOfPages();
+
+        } catch (IOException e) {
+            MiscUtils.getLogger().error("Error", e);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return numOfPage;
+    }
+
+    public ActionForward displayIncomingDocs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String queueId = request.getParameter("queueId");
+        String pdfDir = request.getParameter("pdfDir");
+        String pdfName = request.getParameter("pdfName");
+        String filePath = IncomingDocUtil.getIncomingDocumentFilePathName(queueId, pdfDir, pdfName);
+
+        String contentType = "application/pdf";
+        File file = new File(filePath);
+
+        response.setContentType(contentType);
+        response.setContentLength((int) file.length());
+        response.setHeader("Content-Disposition", "inline; filename=" + pdfName);
+
+        BufferedInputStream bfis = null;
+        ServletOutputStream outs = response.getOutputStream();
+
+        try {
+
+            bfis = new BufferedInputStream(new FileInputStream(file));
+
+            org.apache.commons.io.IOUtils.copy(bfis,outs);
+            outs.flush();
+            
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Error", e);
+        } finally {
+            if (bfis != null) {
+                bfis.close();
+            }
+        }
+
+        return null;
+    }
+        
+    public ActionForward viewIncomingDocPageAsImage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+
+        String pageNum = request.getParameter("curPage");
+        String queueId = request.getParameter("queueId");
+        String pdfDir = request.getParameter("pdfDir");
+        String pdfName = request.getParameter("pdfName");
+
+        if (pageNum == null) {
+            pageNum = "0";
+        }
+
+        BufferedInputStream bfis = null;
+        ServletOutputStream outs = null;
+
+        try {
+            Integer pn = Integer.parseInt(pageNum);
+            File outfile = createIncomingCacheVersion(queueId, pdfDir, pdfName, pn);
+            outs = response.getOutputStream();
+
+            if (outfile != null) {
+                bfis = new BufferedInputStream(new FileInputStream(outfile));
+
+
+                response.setContentType("image/png");
+                response.setHeader("Content-Disposition", "inline;filename=" + pdfName);
+                org.apache.commons.io.IOUtils.copy(bfis,outs);
+                outs.flush();
+                
+            } else {
+                log.info("Unable to retrieve content for " + queueId + "/" + pdfDir + "/" + pdfName);
+            }
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Error", e);
+
+        } finally {
+            if (bfis != null) {
+                bfis.close();
+            }
+        }
+        return null;
+    }
+
+    public File createIncomingCacheVersion(String queueId, String pdfDir, String pdfName, Integer pageNum) throws Exception {
+
+
+        String incomingDocPath = IncomingDocUtil.getIncomingDocumentFilePath(queueId, pdfDir);
+        File documentDir = new File(incomingDocPath);
+        File documentCacheDir = getDocumentCacheDir(incomingDocPath);
+        File file = new File(documentDir, pdfName);
+
+        PdfDecoder decode_pdf = new PdfDecoder(true);
+        File ofile = null;
+        FileInputStream is = null;
+        
+        try {
+
+            FontMappings.setFontReplacements();
+
+            decode_pdf.useHiResScreenDisplay(true);
+
+            decode_pdf.setExtractionMode(0, 96, 96 / 72f);
+
+            is = new FileInputStream(file);
+
+            decode_pdf.openPdfFileFromInputStream(is, false);
+
+            BufferedImage image_to_save = decode_pdf.getPageAsImage(pageNum);
+
+            decode_pdf.getObjectStore().saveStoredImage(documentCacheDir.getCanonicalPath() + "/" + pdfName + "_" + pageNum + ".png", image_to_save, true, false, "png");
+
+            decode_pdf.flushObjectValues(true);
+
+        } catch (Exception e) {
+            log.error("Error decoding pdf file " + pdfDir + pdfName);
+        } finally {
+            if (decode_pdf != null) {
+                decode_pdf.closePdfFile();
+            }
+            if (is!=null) {
+                is.close();
+            }
+                
+        }
+        
+        ofile = new File(documentCacheDir, pdfName + "_" + pageNum + ".png");
+        
+        return ofile;
+
+    }
 }
