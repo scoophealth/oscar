@@ -143,6 +143,22 @@ public class MeasurementFlowSheet {
        return sb.toString();
     }
 
+    public String getDxTriggersQueryBuilder(String demo, String provider){
+        StringBuilder sb = new StringBuilder();
+        String query="";
+        if (dxTriggers != null){
+            for(String s:dxTriggers){
+                 if (!s.equals("OscarCode:CKDSCREEN")){
+                	 String[] type = s.split(":");	 
+                 sb.append("<a href='javascript:void(0);' id='dxlink"+type[1]+"' rel='selectedCodingSystem="+type[0]+"&forward="+type[1]+"&demographicNo="+demo+"&providerNo="+provider+"'>"+s+"</a> ");
+                 }
+            }
+            
+            query=sb.toString();
+        }
+        return query;
+     }
+    
     public String getProgramTriggersString(){
     	StringBuilder sb = new StringBuilder();
         boolean firstElement = true;
