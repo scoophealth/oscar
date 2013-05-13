@@ -337,7 +337,15 @@ public class JdbcBillingCreateBillingFile {
 				errorPartMsg += "Header1: outPatient Visit. wrong!<br>";
 			}
 		}
-		if (ch1Obj.getVer() != null && (ch1Obj.getVer().length() > 2 || "##".equals(ch1Obj.getVer()))) errorPartMsg += "Header1: Ver. code wrong!<br>";
+		if (ch1Obj.getVer() != null && (ch1Obj.getVer().length() > 2 || "##".equals(ch1Obj.getVer())))
+			errorPartMsg += "Header1: Ver. code wrong!<br>";
+
+		if(ch1Obj.getHin() != null && ch1Obj.getHin().length() == 10 && ch1Obj.getHin().matches("[0-9]+")) {
+			//hin is valid
+		}
+		else {
+			errorPartMsg += "Header1: HIN is invalid!<br>";
+		}
 
 		errorMsg += errorPartMsg;
 	}
