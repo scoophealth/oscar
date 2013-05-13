@@ -131,7 +131,7 @@
 
 	<input type="hidden" name="numPages" id="numPages" value="1" />
 
-	<html:hidden property="survey.surveyId" />
+	<html:hidden property="survey.id" />
 	<br />
 	<table width="100%">
 		<tr>

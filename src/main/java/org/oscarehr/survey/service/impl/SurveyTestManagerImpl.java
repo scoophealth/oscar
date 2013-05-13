@@ -32,16 +32,20 @@ import org.oscarehr.common.model.SurveyTestData;
 import org.oscarehr.common.model.SurveyTestInstance;
 import org.oscarehr.survey.service.SurveyTestManager;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
+@Component(value="surveyTestManager")
 public class SurveyTestManagerImpl implements SurveyTestManager {
 
 	private static Logger log = MiscUtils.getLogger();
 
-	private SurveyTestInstanceDao surveyTestDAO = SpringUtils.getBean(SurveyTestInstanceDao.class);
-	private SurveyTestDataDao surveyTestDataDAO = SpringUtils.getBean(SurveyTestDataDao.class);
+	@Autowired
+	private SurveyTestInstanceDao surveyTestDAO;
+	@Autowired
+	private SurveyTestDataDao surveyTestDataDAO;
 	
 	public SurveyTestInstance getSurveyInstance(String id) {
 		return this.surveyTestDAO.find(Integer.valueOf(id));

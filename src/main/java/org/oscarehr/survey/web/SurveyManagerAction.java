@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.util.LabelValueBean;
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.common.dao.CaisiFormDao;
 import org.oscarehr.common.model.Survey;
 import org.oscarehr.survey.model.QuestionTypes;
 import org.oscarehr.survey.service.OscarFormManager;
@@ -52,7 +53,7 @@ import org.oscarehr.survey.service.SurveyLaunchManager;
 import org.oscarehr.survey.service.SurveyManager;
 import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.service.SurveyTestManager;
-import org.oscarehr.survey.service.impl.SurveyTestManagerImpl;
+import org.oscarehr.survey.service.UserManager;
 import org.oscarehr.survey.web.formbean.PageNavEntry;
 import org.oscarehr.survey.web.formbean.SurveyManagerFormBean;
 import org.oscarehr.surveymodel.DateDocument;
@@ -65,22 +66,20 @@ import org.oscarehr.surveymodel.SelectDocument.Select;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 
 
 public class SurveyManagerAction extends AbstractSurveyAction {
 	private static Logger log = MiscUtils.getLogger();
 
-	private SurveyManager surveyManager;
-	private SurveyTestManager surveyTestManager = new SurveyTestManagerImpl();
-	private SurveyLaunchManager surveyLaunchManager;
-	private QuestionTypes questionTypes;
-	
-	private OscarFormManager oscarFormManager;
-	
-	public void setOscarFormManager(OscarFormManager mgr) {
-		this.oscarFormManager = mgr;
-	}
+	private SurveyManager surveyManager = (SurveyManager)SpringUtils.getBean("surveyManager");
+	private SurveyTestManager surveyTestManager = (SurveyTestManager)SpringUtils.getBean("surveyTestManager");
+	private SurveyLaunchManager surveyLaunchManager = (SurveyLaunchManager)SpringUtils.getBean("surveyLaunchManager");
+	private QuestionTypes questionTypes = (QuestionTypes)SpringUtils.getBean("QuestionTypes");
+	private CaisiFormDao caisiFormDao = SpringUtils.getBean(CaisiFormDao.class);
+	private OscarFormManager oscarFormManager = (OscarFormManager)SpringUtils.getBean("oscarFormManager");
+	private UserManager surveyUserManager = (UserManager)SpringUtils.getBean("surveyUserManager");
 	
 	public void setSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
@@ -90,9 +89,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		this.surveyTestManager = mgr;
 	}
     
-	public void setSurveyLaunchManager(SurveyLaunchManager mgr) {
-		this.surveyLaunchManager = mgr;
-	}
+	
 	
 	public void setQuestionTypes(QuestionTypes qt) {
 		this.questionTypes = qt;
@@ -104,14 +101,14 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	if(!userManager.isAdmin(request)) {
+    	if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
     	
         request.setAttribute("surveys",surveyManager.getSurveys());
         
-        request.setAttribute("released_forms", oscarFormManager.getForms());
+        request.setAttribute("released_forms", caisiFormDao.getCaisiForms());
         return mapping.findForward("list");
     }
     
@@ -122,7 +119,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
     
     
     public ActionForward test(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	if(!userManager.isAdmin(request)) {
+    	if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -136,7 +133,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
     }
     
     public ActionForward new_survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	if(!userManager.isAdmin(request)) {
+    	if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -153,7 +150,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
     }
     
     public ActionForward create_survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	if(!userManager.isAdmin(request)) {
+    	if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -208,7 +205,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
     }
     
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -255,7 +252,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -335,7 +332,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward add_introduction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -354,7 +351,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward remove_introduction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -373,7 +370,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward add_page(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -390,7 +387,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward remove_page(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -421,7 +418,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 
 	public ActionForward add_closing(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -441,7 +438,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward remove_closing(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -465,7 +462,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward add_section(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -486,7 +483,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward remove_section(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -515,7 +512,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward add_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -554,7 +551,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward edit_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -636,7 +633,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward question_adjust_possible_answers(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -673,7 +670,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward save_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -714,7 +711,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 
 	public ActionForward remove_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -735,7 +732,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 
 	
 	public ActionForward clear_test_data(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -748,7 +745,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward launch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -767,7 +764,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward close(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -781,7 +778,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward reopen(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -796,7 +793,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	
 	
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-	if(!userManager.isAdmin(request)) {
+	if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -846,7 +843,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -862,7 +859,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 
 	public ActionForward show_import_form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -871,7 +868,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}	
 	
 	public ActionForward import_survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -900,7 +897,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			survey.setDescription(surveyDocument.getSurvey().getName());
 			survey.setStatus(new Short(Survey.STATUS_TEST));
 			//survey.setSurveyData()
-			survey.setUserId(new Long(userManager.getUserId(request)).intValue());
+			survey.setUserId(new Long(surveyUserManager.getUserId(request)).intValue());
 			survey.setVersion(surveyDocument.getSurvey().getVersion());
 			
 			//save data
@@ -919,7 +916,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	
 	
 	public ActionForward export(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -947,7 +944,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	}
 	
 	public ActionForward copy(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		if(!userManager.isAdmin(request)) {
+		if(!surveyUserManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
     		return mapping.findForward("auth");
     	}
@@ -966,7 +963,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		newSurvey.setDateCreated(new Date());
 		newSurvey.setDescription(survey.getDescription());
 		newSurvey.setSurveyData(survey.getSurveyData());
-		newSurvey.setUserId(new Long(userManager.getUserId(request)).intValue());
+		newSurvey.setUserId(new Long(surveyUserManager.getUserId(request)).intValue());
 		newSurvey.setVersion(survey.getVersion());
 		newSurvey.setStatus(new Short(Survey.STATUS_IN_REVIEW));
 		
@@ -982,7 +979,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			response.setContentType("APPLICATION/OCTET-STREAM");
 			String strProjectInfoPageHeader = "Attachment;Filename=" + id + ".csv";
 			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
-			this.oscarFormManager.generateCSV(Long.valueOf(id), response.getOutputStream());
+			this.oscarFormManager.generateCSV(Integer.valueOf(id), response.getOutputStream());
 		}catch(IOException e) {
 			MiscUtils.getLogger().error("Error", e);
 		}
@@ -996,7 +993,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			response.setContentType("APPLICATION/OCTET-STREAM");
 			String strProjectInfoPageHeader = "Attachment;Filename=" + id + ".csv";
 			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
-			this.oscarFormManager.generateInverseCSV(Long.valueOf(id), response.getOutputStream());
+			this.oscarFormManager.generateInverseCSV(Integer.valueOf(id), response.getOutputStream());
 		}catch(IOException e) {
 			MiscUtils.getLogger().error("Error", e);
 		}
@@ -1006,7 +1003,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	public ActionForward export_to_db(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		
 		String id = request.getParameter("id");
-		this.oscarFormManager.convertFormXMLToDb(Long.valueOf(id));
+		this.oscarFormManager.convertFormXMLToDb(Integer.valueOf(id));
 		
 		return list(mapping,form,request,response);
 	}
@@ -1134,7 +1131,7 @@ public ActionForward getUcfReport(ActionMapping mapping, ActionForm form, HttpSe
 		
 		Long id = Long.valueOf(request.getParameter("formId"));
 		
-		this.oscarFormManager.convertFormXMLToDb(Long.valueOf(id));
+		this.oscarFormManager.convertFormXMLToDb(Long.valueOf(id).intValue());
 		//request.setAttribute("ucfReports", oscarFormManager.getFormReport(id, startDate, endDate));
 		
 		return mapping.findForward("ucfReport");

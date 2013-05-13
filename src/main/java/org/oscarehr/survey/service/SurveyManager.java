@@ -23,18 +23,80 @@
 
 package org.oscarehr.survey.service;
 
+import java.io.StringReader;
 import java.util.List;
 
+import org.oscarehr.common.dao.SurveyDao;
 import org.oscarehr.common.model.Survey;
+import org.oscarehr.surveymodel.SurveyDocument;
+import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+public class SurveyManager {
+	@Autowired
+	private SurveyDao surveyDAO;
+	
+	
+	public void saveSurvey(Survey survey) {
+		if(survey.getId()==null)
+			surveyDAO.persist(survey);
+		else
+			surveyDAO.merge(survey);
+	}
 
-public interface SurveyManager {
-	public void saveSurvey(Survey survey);
-	public Survey getSurvey(String surveyId);
-	public org.oscarehr.surveymodel.SurveyDocument.Survey getSurveyModel(String surveyId);
-	public Survey getSurveyByName(String name);
-	public List getSurveys();
-	public void deleteSurvey(String surveyId);
-	public org.oscarehr.surveymodel.SurveyDocument getSurveyDocument(String surveyId);
-	public Survey updateStatus(String surveyId, short status);
+	public Survey getSurvey(String surveyId) {
+		return surveyDAO.find(Integer.valueOf(surveyId));
+	}
+
+	public List<Survey> getSurveys() {
+		return surveyDAO.findAll();
+	}
+
+	public void deleteSurvey(String surveyId) {
+		surveyDAO.remove(Integer.valueOf(surveyId));
+	}
+
+	public Survey getSurveyByName(String name) {
+		return surveyDAO.findByName(name);
+	}
+	
+	public Survey updateStatus(String surveyId, short status) {
+		Survey survey = getSurvey(surveyId);
+		if(survey != null && survey.getStatus() != new Short(status)) {
+			survey.setStatus(new Short(status));
+		}
+		saveSurvey(survey);
+		return survey;
+	}
+	
+	public org.oscarehr.surveymodel.SurveyDocument.Survey getSurveyModel(String surveyId) {
+		Survey survey = getSurvey(surveyId);
+		if(survey != null) {
+			try {
+            	String xml = survey.getSurveyData();
+            	SurveyDocument model = SurveyDocument.Factory.parse(new StringReader(xml));
+            	return model.getSurvey();
+            }catch(Exception e) {
+            	MiscUtils.getLogger().error("Error", e);
+            }
+		}
+		return null;
+	}
+	
+	public org.oscarehr.surveymodel.SurveyDocument getSurveyDocument(String surveyId) {
+		Survey survey = getSurvey(surveyId);
+		if(survey != null) {
+			try {
+            	String xml = survey.getSurveyData();
+            	SurveyDocument model = SurveyDocument.Factory.parse(new StringReader(xml));
+            	return model;
+            }catch(Exception e) {
+            	MiscUtils.getLogger().error("Error", e);
+            }
+		}
+		return null;
+	}
+	
 }

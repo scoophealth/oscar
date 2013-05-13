@@ -46,7 +46,6 @@ import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
-import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -126,7 +125,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		this.clientImageDAO = clientImageDAO;
 	}
 	
-	private SurveyManager surveyManager = new SurveyManagerImpl();
+	private SurveyManager surveyManager = new SurveyManager();
 	
 
 	@Override
