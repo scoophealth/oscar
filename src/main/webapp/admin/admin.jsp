@@ -735,6 +735,12 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(550,810,&quot;<html:rewrite page="/admin/demographicstudy.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnStudy" /></a></li>
+			<caisi:isModuleLoad moduleName="eaaps.enabled">
+	                                <li><a href="#"
+	                                        onclick='popupPage(550,810,&quot;<html:rewrite page="/eaaps/index.jsp"/>&quot;);return false;'>
+						<bean:message key="admin.admin.btnEaaps" /></a>
+					</li>
+                        </caisi:isModuleLoad>
 			<%
 				if (oscarVariables.getProperty("billregion", "").equals("ON"))
 								{

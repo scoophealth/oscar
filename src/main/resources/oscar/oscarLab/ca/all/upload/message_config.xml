@@ -18,4 +18,5 @@
     <handler name="PFHT"	className="PFHTHandler"/>
     <handler name="Spire"	className="SpireHandler"/>
     <handler name="BIOTEST"    className="BioTestHandler"/>
+    <handler name="eaaps"       className="org.oscarehr.research.eaaps.EaapsHandler"/>
 </message-configuration>

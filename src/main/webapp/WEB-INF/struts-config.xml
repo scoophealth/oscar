@@ -542,6 +542,7 @@
 			<form-property name="fdid" type="java.lang.String"/>
                         <form-property name="appointment" type="java.lang.String"/>
 		</form-bean>
+		<form-bean name="eaapsExportForm" type="org.oscarehr.research.eaaps.EaapsExportForm" />
 	</form-beans>
 
 	<global-forwards>
@@ -553,6 +554,24 @@
 
 	<action-mappings>
 	
+        <!-- Notification Mappings -->
+        <action path="/notification/create"
+                type="org.oscarehr.common.web.ProviderNotificationAction"
+                scope="request">
+        </action>
+        <!-- End of Notification Mappings -->
+        
+        <!-- EAAPS Start -->
+        <action path="/eaaps/displayEctEaaps" scope="request" type="org.oscarehr.research.eaaps.EctDisplayEaapsAction" />
+        
+        <action path="/eaaps/export"
+                type="org.oscarehr.research.eaaps.EaapsExportAction"
+                name="eaapsExportForm"
+                input="/eaaps/index.jsp">
+                <forward name="status" path="/eaaps/status.jsp" />
+        </action>
+        <!-- EAAPS End -->
+
 	<action path="/study/ManageStudy" scope="request" parameter="method" type="org.oscarehr.study.ManageStudyAction">
 		<forward name="AddedToStudy" path="/admin/addStudy.jsp"></forward>
 		<forward name="closeWindow" path="/study/closeWindow.html"></forward>
