@@ -39,6 +39,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 
+        public static final Integer UNMATCHED = 0;
 	public static final String HL7 = "HL7";
 
 	public PatientLabRoutingDao() {
