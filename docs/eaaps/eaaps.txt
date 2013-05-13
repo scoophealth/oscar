@@ -1,0 +1,95 @@
+Electronic Asthma Action Plan
+=============================
+
+Solution Overview
+-----------------
+
+EAAPs is the pilot project for development of a research module that can be tightly integrated into OSCAR. EAAPS module is intended to 
+improve well-being of asthma patients by delivery of an action plan tailored for each patient. Solution contains three integration
+points: data export, EEAP status query and data import.
+
+Initially, a set of patients suitable for the study is identified. Existing OSCAR study facilities should be used for creation of this 
+user set. After the set is created and populated with the required demographics, it can be exported to the EAAPs server. This can be 
+done through the Admin menu.
+
+EAAPS status query takes place during the eChart load. In case a patient participates in the EAAP study (i.e. is exported at the previous 
+phase), at the time of eChart load EAAPS encounter component would query the EAAPS web service in order to retrieve the status of the EAAPs.
+Status information describes if the patient started/completed the questionnaire required for the EEAPs generation (handled outside of 
+OSCAR), or if the provider has reviewed and accepted the action plan.
+
+PDF upload via HL7. This is the final step in the integration that takes place after the provider reviewed and accepted the action plan. 
+At this integration point, EAAPS server pushed the PDF for the action plan as HL7 message containing the PDF message content.
+
+In order to anonymously identify patients, patient information is encoded using a one-way hashing mechanism.  
+
+Implementation Details
+----------------------
+
+The implementation follows the standard OSCAR solution design guidelines. The main emphasis was to reduce the impact on OSCAR, while
+implementing all the required functionality. This was achieved by encapsulating all the EAAPS-specific modification to OSCAR into its
+own package (org.oscarehr.research.eaaps), re-using the OSCAR system components and developing "generic" new functionality that can
+be used in other parts of the system.
+
+Components for exporting patient medical information using Ontario MD data format 
+ * oscar.oscarDemographic.pageUtil.DemographicExportHelper
+ * oscar.oscarDemographic.pageUtil.DemographicExportHelperCallback
+
+UI components that handle export of the OSCAR patient data to the EAAPS server:
+ * EaapsExportAction.java - Struts action
+ * EaapsExportForm.java - Corresponding struts form
+ * ExportEntry.java - component for encapsulating the patient medication information for the export
+
+Code for secure content transfer to the EAAPS server
+ * SshHandler.java
+
+Component for integrating EAAPS functionality into the encounter chart
+ * EctDisplayEaapsAction.java - Struts action for handling display of the EAAPs widget on the eChart
+ * EaapsServiceClient.java - Service client for carrying out the RESTful call to retrieve the EAAPs status
+ * EaapsPatientData.java - class for encapsulating the RESTful service response
+
+Component responsible for building the one-way hash from the patient information
+ * EaapsHash.java
+
+Classes that are responsible for importing the resulting action plan (as the PDF document)
+ * EaapsHandler.java - Handler class for processing HL7 PDF upload 
+
+Configuration
+-------------
+
+The following settings should be placed into OSCAR properties file for the normal operation of the component
+
+ * eaaps.enabled - boolean flag for enabling or disabling the research module
+	e.g.:
+	eaaps.enabled=true
+
+ * eaaps.clinic - Name of the clinic that the demographic record belongs to (used for generating the patient hash)
+	e.g.:
+	eaaps.clinic=Stonechurch
+
+ * eaaps.knownHosts - Location of the known hosts file to be used for exporting medications. This value is optional
+ 	e.g.:
+ 	eaaps.knownHosts=/usr/root/.ssh/known_hosts
+
+ * eaaps.user - user name for pushing Ontario MD export files with medications to eAAps server
+	e.g.:
+	eaaps.user=test
+
+ * eaaps.pass - password for pushing Ontario MD export files with medications to eAAps server
+	e.g.:
+	eaaps.pass=tEsT;
+	
+ * eaaps.host - Server URL for pushing Ontario MD export files with medications to eAAps server
+	e.g.:
+	eaaps.host=knowledgetranslation.ca
+	
+ * eaaps.ws.host - End point for the REST web service for the eAAPs status pull
+	e.g.:
+	eaaps.ws.host=https://secure.knowledgetranslation.ca:8081/eaaps/v0/
+	
+ * eaaps.ws.user - User name for the REST web service for the eAAPs status pull
+	e.g.:
+	eaaps.ws.user=test
+	
+ * eaaps.ws.password - Password for the REST web service for the eAAPs status pull
+	e.g.:
+	eaaps.ws.pass=test

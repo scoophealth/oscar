@@ -1,0 +1,41 @@
+Electronic Asthma Action Plan
+=============================
+
+Setup Instructions
+------------------
+
+EAAPS depends on OSCAR studies and OSCAR lab uploads. Before eAAPs feature can be used, the 
+both of the dependencies must be configured.
+
+Configuring OSCAR Labs
+----------------------
+
+Steps 1-3 are optional in case OSCAR keys have already been generated. 
+
+1. Create OSCAR key by going to Admin > Key Gen
+2. Type in:
+	Service Name: oscar
+	Lab type: other
+	Message Type: oscar
+3. Click "Create Key Pair"
+
+This should create default OSCAR keys, in case they haven't been generated.
+
+4. Now create service keys using the same page (Admin > Key Gen)
+5. Type in:
+	Service NAme: eaaps
+	Lab type: other
+	Message Type: eaaps
+6. Click "Create Key Pair". This should present a "Save the file" dialog, which provides the
+required keys for use with OSCAR lab upload protocol.
+
+Configuring eAAPs Study
+----------------------
+
+1. Open study interface by going to Admin > Misc > Study
+2. Create a new study by clicking "New Study"
+3. Enter study details (can be any, as long as they can identify the right user group)
+4. Make Study Active by selecting "Active" radio button
+5. Add required demographics using the Demographic Search in oscarReports (just click "Add
+demographics" button to open it from the Study admin page) 
+6. Add provider to the study (by clicking "Add provider" button on the Study admin page)
