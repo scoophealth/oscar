@@ -22,8 +22,10 @@
  * Vancouver, Canada
  *
  * @author Jeremy Ho
- *#<?xml version="1.0" encoding="UTF-8"?>
- <ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ *
+ *##set( $demographic = $patient.getDemographic() )
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
  xmlns="urn:hl7-org:v3"
  xmlns:hl7="urn:hl7-org:v3"
@@ -36,7 +38,7 @@ CDA Header
 -->
 	<realmCode code="CA" />
 	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
-	<id extension="$patient.demographicNo" root="2.16.840.1.113883.3.933"/>
+	<id extension="$demographic.demographicNo" root="2.16.840.1.113883.3.933"/>
 	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
 	<title>PITO EMR-2-EMR Complete Instance Example</title>
 	<effectiveTime value="$dateTool.get('yyyyMMddhhmm')"/>
@@ -48,18 +50,41 @@ CDA Header
 	-->
 	<recordTarget typeCode="RCT" contextControlCode="OP">
 		<patientRole classCode="PAT">
-#*    *##if ( !$patient.hin || $patient.hin == "" )
-			<id extension="000000000" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
-#*    *##else
-			<id extension="$patient.hin" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
-#*    *##end
+#if ( !$demographic.hin || $demographic.hin == "" )
+			<id extension="000000000" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#else
+			<id extension="$demographic.hin" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#end
+#if ( $demographic.address || $demographic.city || $demographic.province || $demographic.postal )
+			<addr>
+				<streetAddressLine>$!demographic.address</streetAddressLine>
+				<city>$!demographic.city</city>
+				<state>$!demographic.province</state>
+				<postalCode>$!demographic.postal</postalCode>
+			</addr>
+#end
+#if ( $demographic.phone != "" )
+			<!-- Home Phone -->
+			<telecom value="tel: $demographic.phone" use="HP"/>
+#end
+#if ( $demographic.phone2 != "" )
+			<!-- Work Phone -->
+			<telecom value="tel: $demographic.phone2" use="HP"/>
+#end
 			<patient>
 				<name>
-					<given>$patient.firstName</given>
-					<family>$patient.lastName</family>
+					<given>$demographic.firstName</given>
+					<family>$demographic.lastName</family>
 				</name>
-				<administrativeGenderCode code="$patient.gender" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
+				<administrativeGenderCode code="$demographic.sex" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
 				<birthTime value="$patient.birthDate"/>
+				<languageCommunication>
+#if ( $demographic.officialLanguage == "English" )
+					<languageCode code="EN"/>
+#else
+					<languageCode code="FR"/>
+#end
+				</languageCommunication>
 			</patient>
 		</patientRole>
 	</recordTarget>
@@ -171,11 +196,9 @@ Allergies and Intolerances - (Reaction List)
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
 #*    *##if ( $allergy.typecode == 8 || $allergy.typecode == 10 || $allergy.typecode == 11 || $allergy.typecode == 13 )
-									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4"
-										codeSystemName="HL7 ActCode"/>
+									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
 #*    *##elseif ( $allergy.typecode == 12 || $allergy.typecode == 14 )
-									<code code="SUB" displayName="Substance" codeSystem="2.16.840.1.113883.5.4"
-										codeSystemName="HL7 ActCode"/>
+									<code code="SUB" displayName="Substance" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
 #*    *##else
 									<code nullFlavor='NA'/>
 #*    *##end
@@ -250,6 +273,66 @@ Allergies and Intolerances - (Reaction List)
 #end
 <!--
 ********************************************************
+Clinically Measured Observation
+********************************************************
+-->
+#if ( $patient.hasMeasurements() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.8.1"/>
+					<code code="CLINOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.100.1" codeSystemName="PITOObservationType" displayName="Clinically Measured Observations"/>
+					<title>Clinical Measured Observations [with entries]</title>
+					<text>Clinical Measured Observations</text>
+#**##foreach ( $measurement in $patient.getMeasurements() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.7"/>
+						<!-- Clinically Measured Observations Organizer -->
+						<organizer classCode="CLUSTER" moodCode="EVN">
+							<id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="MEAOBSORG" displayName="Measured Observations Organizer" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
+							<statusCode code="active"/>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+								<time value="$dateTool.format('yyyyMMddhhmmss', $measurement.getCreateDate())"/>
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<code nullFlavor='NA'/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($measurement.providerNo)</given>
+											<family>$patient.getProviderLastName($measurement.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<component typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+									<id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+									<code nullFlavor="UNK"/>
+									<!-- OSCAR Type Code: $measurement.type -->
+									<text>${patient.getTypeDescription($measurement.type)}</text>
+									<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $measurement.getDateObserved())"/>
+									<value xsi:type="ST">$measurement.dataField ($measurement.measuringInstruction)</value>
+								</observation>
+							</component>
+						</organizer>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.8"/>
+					<code code="CLINOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.100.1" codeSystemName="PITOObservationType" displayName="Clinically Measured Observations"/>
+					<title>Clinical Measured Observations [without entries]</title>
+					<text>No Clinical Measured Observations</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
 Family History
 ********************************************************
 -->
@@ -298,8 +381,7 @@ Family History
 								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
 								<!-- Secondary Code (ICD9) -->
 								<observation classCode="OBS" moodCode="EVN"> 
-									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"            
-										codeSystemName="PITO ObservationType"/>
+									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
 									<value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="${patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")}"/>								
 								</observation>
 							</entryRelationship>
@@ -423,8 +505,7 @@ Immunization List
 								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
 								<!-- Date Observation -->
 								<observation classCode="OBS" moodCode="EVN">
-									<code code="DTREVIEW" displayName="Date Reviewed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"
-										codeSystemName="PITO ObservationType"/>
+									<code code="DTREVIEW" displayName="Date Reviewed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
 									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunizaton.getNextDate())"/>
 								</observation>
 							</entryRelationship>
@@ -436,8 +517,7 @@ Immunization List
 								<!-- Reason Observation -->
 									<observation classCode="OBS" moodCode="EVN">
 										<id extension="12366" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
-										<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"
-											codeSystemName="PITO ObservationType"/>
+										<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
 										<text>${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</text>
 										<effectiveTime value="20120201"/>
 										<value xsi:type="CD" code="10144323" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT" displayName="Patient findings pneumonia"/>
@@ -515,8 +595,8 @@ Laboratory Results & Results
 									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
-											<given>$patient.getProviderFirstName($patient.providerNo)</given>
-											<family>$patient.getProviderLastName($patient.providerNo)</family>
+											<given>$patient.getProviderFirstName($demographic.providerNo)</given>
+											<family>$patient.getProviderLastName($demographic.providerNo)</family>
 										</name>
 									</assignedPerson>
 								</assignedAuthor>
@@ -544,8 +624,7 @@ Laboratory Results & Results
 										<!-- Result Component -->
 										<observation classCode="OBS" moodCode="EVN">
 											<id extension="${patient.getLabExtValue("$labEntry.id", "accession")}" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
-											<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}"
-												codeSystemName="LOINC"/>
+											<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
 											<text>${patient.getLabExtValue("$labEntry.id", "name")}</text>
 ## ValueSet OID not yet available - using Business Name/Description for now
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "olis_status")} == "P" )
@@ -556,11 +635,13 @@ Laboratory Results & Results
 											<statusCode code="final"/>
 #*            *##end
 											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
-###*            *##if ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" )
-##											<value xsi:type="PQ" value="$labEntry.dataField.replaceAll("<br\s*/>","$eol")" unit="${patient.getLabExtValue("$labEntry.id", "unit")}"/>
-###*            *##else
-											<value xsi:type="ST">$labEntry.dataField.replaceAll("<br\s*/>","$eol")</value>
-###*            *##end
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" && $patient.isNumeric($labEntry.dataField) )
+											<value xsi:type="PQ" value="$patient.cleanString($labEntry.dataField)" unit="${patient.getLabExtValue("$labEntry.id", "unit")}"/>
+#*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" )
+											<value xsi:type="ST">$patient.cleanString($labEntry.dataField) ${patient.getLabExtValue("$labEntry.id", "unit")}</value>
+#*            *##else
+											<value xsi:type="ST">$patient.cleanString($labEntry.dataField)</value>
+#*            *##end
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "abnormal")} == "A" )
 											<interpretationCode code="A"/>
 #*            *##else
@@ -586,6 +667,24 @@ Laboratory Results & Results
 													<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 												</procedure>
 											</entryRelationship>
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "range")} != "" )
+											<referenceRange typeCode="REFV">
+												<observationRange classCode="OBS" moodCode="EVN.CRT">
+													<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+													<text>${patient.getLabExtValue("$labEntry.id", "range")}</text>
+													<value xsi:type="ST">${patient.getLabExtValue("$labEntry.id", "range")}</value>
+												</observationRange>
+											</referenceRange>
+#*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "minimum")} != "" || ${patient.getLabExtValue("$labEntry.id", "maximum")} != "" )
+											<referenceRange typeCode="REFV">
+												<observationRange classCode="OBS" moodCode="EVN.CRT">
+													<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+													<text>${patient.getLabExtValue("$!labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</text>
+													<value xsi:type="ST">$!{patient.getLabExtValue("$labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</value>
+												</observationRange>
+											</referenceRange>
+#*            *##else
+#*            *##end
 #*            *##if ( $labEntry.comments != "" )
 											<!-- Result Notes -->
 											<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
@@ -897,8 +996,8 @@ Problems and Conditions - Problem List
 									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
-											<given>$patient.getProviderFirstName($patient.providerNo)</given>
-											<family>$patient.getProviderLastName($patient.providerNo)</family>
+											<given>$patient.getProviderFirstName($demographic.providerNo)</given>
+											<family>$patient.getProviderLastName($demographic.providerNo)</family>
 										</name>
 									</assignedPerson>
 								</assignedAuthor>
