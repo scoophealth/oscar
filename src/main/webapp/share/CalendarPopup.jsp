@@ -73,7 +73,7 @@ boolean bTodayDate = false;
 <!--
 
 function typeInDate(year1,month1,day1) {
-  self.close();
+
 <%
     if (param.startsWith("&formdatebox=")) {
 %>
@@ -83,6 +83,7 @@ function typeInDate(year1,month1,day1) {
 %>  
   opener.location.href="<%=urlfrom%>"+"?year=" + year1 + "&month=" + month1 + "&day=" + day1 +"<%=param%>"; 
 <%  }  %>  
+  self.close();
 }
 //-->
 </script>
