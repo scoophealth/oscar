@@ -531,6 +531,14 @@ public class ProviderDao extends HibernateDaoSupport {
 			return getHibernateTemplate().find(sql);
 		}
 		
+		public List<Provider> getProvidersWithNonEmptyCredentials() {
+			String sql = "FROM Provider p WHERE p.Status='1' " +
+					"AND p.OhipNo IS NOT NULL " +
+					"AND p.OhipNo != '' " +
+					"ORDER BY p.LastName, p.FirstName";
+			return getHibernateTemplate().find(sql);
+		}
+
 		public List<String> getProvidersInTeam(String teamName) {
 			List<String> providerList = getHibernateTemplate().find("select distinct p.ProviderNo from Provider p  where p.Team = ?",new Object[]{teamName});			
 			return providerList;
