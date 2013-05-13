@@ -456,6 +456,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             }
                                                                             else if( action == 'addComment' ) {
                                                                             	addComment(formid,labid);
+                                                                            } else if (action == 'unlinkDemo') {
+                                                                                unlinkDemographic(labid);
                                                                             }
 
                                                                         }else{
@@ -508,6 +510,28 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                 }
         }});
 
+        }
+        
+        function unlinkDemographic(labNo){           
+            var reason = "Incorrect demographic";
+            reason = prompt('<bean:message key="oscarMDS.segmentDisplay.msgUnlink"/>', reason);
+
+            //must include reason
+            if( reason == null || reason.length == 0) {
+            	return false;
+            }
+            
+            var urlStr='<%=request.getContextPath()%>'+"/lab/CA/ALL/UnlinkDemographic.do";
+            var dataStr="reason="+reason+"&labNo="+labNo;
+            jQuery.ajax({
+    			type: "POST",
+    			url:  urlStr,
+    			data: dataStr,
+    			success: function (data) {
+                            top.opener.location.reload();
+                            window.close();
+    			}
+            });                            
         }
 
         function addComment(formid,labid) {
@@ -593,6 +617,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                                     <input type="button" value="Msg" onclick="handleLab('','<%=segmentID%>','msgLab');"/>
                                     <input type="button" value="Tickler" onclick="handleLab('','<%=segmentID%>','ticklerLab');"/>
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnUnlinkDemo"/>" onclick="handleLab('','<%=segmentID%>','unlinkDemo');"/>
 
                                     <% if ( searchProviderNo != null ) { // null if we were called from e-chart%>
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">

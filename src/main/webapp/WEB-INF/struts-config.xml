@@ -886,6 +886,9 @@
 			<forward name="failure" path="/errorpage.jsp" />
 			<forward name="success" path="/lab/CA/BC/labDisplay.jsp" />
 		</action>
+                <action input="/labDisplay.jsp" path="/lab/CA/ALL/UnlinkDemographic" scope="request" type="oscar.oscarLab.ca.all.pageUtil.UnlinkDemographicAction">
+			<forward name="success" path="/oscarMDS/Close.jsp" />
+		</action>
 		<action input="/labDisplayOLIS.jsp" path="/lab/CA/ALL/PrintOLIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.PrintOLISLabsAction">
             <forward name="error" path="/lab/CA/ALL/labDisplay.jsp" />
         </action>
