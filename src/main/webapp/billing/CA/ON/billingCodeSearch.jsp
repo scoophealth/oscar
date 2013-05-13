@@ -80,7 +80,6 @@
 <!--
 function CodeAttach(File0) {
       
-      self.close();
 <% 
 if(request.getParameter("nameF") != null) {
 		out.println("self.opener." + request.getParameter("nameF") + " = File0;");
@@ -90,6 +89,7 @@ if(request.getParameter("nameF") != null) {
       self.opener.document.serviceform.xml_other2.value ="";
       self.opener.document.serviceform.xml_other3.value ="";
 <% } %>
+      self.close();
 }
 -->
 </script>
