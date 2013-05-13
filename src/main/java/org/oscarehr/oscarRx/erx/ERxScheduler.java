@@ -88,17 +88,18 @@ public class ERxScheduler extends TimerTask {
 			    		
 			    		logger.info("External Prescriber: Synchronization started at :" + sdf.format(now));
 			    		logger.info("External Prescriber: Importing Rx dated on: " + ymd.format(now));
-						ERxScheduledSynchronizer.syncPrescriptions(now);				    	
+						ERxScheduledSynchronizer.syncPrescriptions(now);
+						
+						lastRun = now.getTime();
 				    }
-				    
 				} else {
 					logger.info("External Prescriber*: Synchronization started at :" + sdf.format(now));
 		    		logger.info("External Prescriber*: Importing Rx dated on: " + ymd.format(now));
 					ERxScheduledSynchronizer.syncPrescriptions(now);
 					ERxScheduler.firstRun = false;
+					
+					lastRun = now.getTime();
 				}
-
-				lastRun = new Date().getTime();	    			    
 				logger.debug("===== External Prescriber Synchronizer JOB RUNNING....");
 				
 			} catch (Exception e) {
