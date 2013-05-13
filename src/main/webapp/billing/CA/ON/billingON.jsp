@@ -287,12 +287,6 @@
 				//propHist.setProperty("service_code", serCode);
 				propHist.setProperty("diagnostic_code", iobj.getDx());
 				vecHistD.add(propHist);
-				//r_doctor_ohip = rs.getString("ref_num");
-				// get the latest ref. doctor number
-				//if (bFirst && "checked".equals(SxmlMisc.getXmlContent(rs.getString("content"), "xml_referral"))) {
-				//	bFirst = false;
-				//	r_doctor_ohip = SxmlMisc.getXmlContent(rs.getString("content"), "rdohip");
-				//}
 			}
 
 			// display the fixed billing part
@@ -300,7 +294,7 @@
 			Vector vecProvider = new Vector();
 			Properties propT = null;
 			ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
-			for(Provider p : dao.getDoctorsWithNonEmptyCredentials()) {
+			for(Provider p : dao.getProvidersWithNonEmptyCredentials()) {
 				propT = new Properties();
 				propT.setProperty("last_name", p.getLastName());
 				propT.setProperty("first_name", p.getFirstName());
