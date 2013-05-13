@@ -35,7 +35,6 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
-import org.oscarehr.PMmodule.service.impl.SurveyManagerImpl;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -54,7 +53,7 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	protected RolesManager roleMgr;
 	protected ProgramManager programMgr;
 	protected AdmissionManager admissionMgr;
-	protected SurveyManager surveyMgr = new SurveyManagerImpl();
+	protected SurveyManager surveyMgr = new SurveyManager();
 
 
 	public ApplicationContext getAppContext() {

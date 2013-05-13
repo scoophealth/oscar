@@ -73,11 +73,7 @@
 	<bean name="/PMmodule/HealthSafety" class="org.oscarehr.PMmodule.web.HealthSafetyAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/StaffManager" class="org.oscarehr.PMmodule.web.admin.StaffManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/Reports/ProgramActivityReport" class="org.oscarehr.PMmodule.web.reports.ActivityReportAction" singleton="false" autowire="byName" />
-	<bean name="/PMmodule/Forms/SurveyExecute" class="org.oscarehr.PMmodule.web.forms.SurveyExecuteAction" singleton="false">
-		<property name="caseManagementManager" ref="caseManagementManager" />
-		<property name="clientManager" ref="clientManager" />
-		<property name="admissionManager" ref="admissionManager" />
-	</bean>
+	
 	<bean name="/PMmodule/Reports/BasicReport" class="org.oscarehr.PMmodule.web.reports.BasicReportAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/Reports/ClientListsReport" class="org.oscarehr.PMmodule.web.reports.ClientListsReportAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/Admin/DefaultRoleAccess" class="org.oscarehr.PMmodule.web.admin.DefaultRoleAccessAction" singleton="false" autowire="byName" />
@@ -87,17 +83,7 @@
 	<bean name="/PMmodule/GenericIntake/Edit" class="org.oscarehr.PMmodule.web.GenericIntakeEditAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/GenericIntake/Report" class="org.oscarehr.PMmodule.web.GenericIntakeReportAction" singleton="false" autowire="byName" />
 	<!-- Generic Intake -->
-	<bean name="/SurveyManager" class="org.oscarehr.survey.web.SurveyManagerAction" singleton="false">
-		<property name="surveyManager" ref="surveyManager" />
-		<property name="surveyLaunchManager" ref="surveyLaunchManager" />
-		<property name="questionTypes" ref="QuestionTypes" />
-		<property name="userManager" ref="surveyUserManager" />
-		<property name="oscarFormManager" ref="oscarFormManager" />
-	</bean>
-	<bean name="/SurveyTest" class="org.oscarehr.survey.web.SurveyTestAction" singleton="false">
-		<property name="surveyManager" ref="surveyManager" />
-		<property name="userManager" ref="surveyUserManager" />
-	</bean>
+	
 	<!-- Data Export -->
 	<bean name="/demographic/cihiExportOMD4" class="oscar.oscarDemographic.pageUtil.CihiExportAction" singleton="false">
 		<property name="clinicDAO" ref="clinicDAO"></property>

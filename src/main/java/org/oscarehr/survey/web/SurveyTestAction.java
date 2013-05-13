@@ -39,35 +39,46 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.model.SurveyTestData;
 import org.oscarehr.common.model.SurveyTestInstance;
 import org.oscarehr.survey.service.SurveyManager;
 import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.service.SurveyTestManager;
-import org.oscarehr.survey.service.impl.SurveyTestManagerImpl;
+import org.oscarehr.survey.service.UserManager;
 import org.oscarehr.survey.web.formbean.SurveyExecuteDataBean;
 import org.oscarehr.survey.web.formbean.SurveyExecuteFormBean;
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.SurveyDocument.Survey;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 
-public class SurveyTestAction extends AbstractSurveyAction {
+public class SurveyTestAction extends DispatchAction {
 
 	private static Logger log = MiscUtils.getLogger();
 
-	private SurveyManager surveyManager;
-	private SurveyTestManager surveyTestManager = new SurveyTestManagerImpl();
+	private SurveyManager surveyManager = (SurveyManager)SpringUtils.getBean("surveyManager");
+	private SurveyTestManager surveyTestManager = (SurveyTestManager)SpringUtils.getBean("surveyTestManager");
+	private UserManager userManager = (UserManager)SpringUtils.getBean("surveyUserManager");
 	
-	public void setSurveyManager(SurveyManager mgr) {
-		this.surveyManager = mgr;
+	
+	protected void postMessage(HttpServletRequest request, String key, String val) {
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage(key,val));
+		saveMessages(request,messages);
 	}
 	
-	public void setSurveyTestManager(SurveyTestManager mgr) {
-		this.surveyTestManager = mgr;
+	protected void postMessage(HttpServletRequest request, String key) {
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage(key));
+		saveMessages(request,messages);
 	}
+	
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return test(mapping,form,request,response);

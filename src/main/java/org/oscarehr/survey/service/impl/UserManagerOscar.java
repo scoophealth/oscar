@@ -26,7 +26,9 @@ package org.oscarehr.survey.service.impl;
 import javax.servlet.http.HttpServletRequest;
 
 import org.oscarehr.survey.service.UserManager;
+import org.springframework.stereotype.Component;
 
+@Component(value="surveyUserManager")
 public class UserManagerOscar implements UserManager {
 
 	public long getUserId(HttpServletRequest request) {

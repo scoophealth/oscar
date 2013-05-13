@@ -33,9 +33,11 @@
 <%@page import="org.oscarehr.PMmodule.web.*"%>
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="java.text.*"%>
-<%@page
-	import="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate"%>
-<%@page import="org.oscarehr.survey.model.oscar.OscarForm"%>
+<%@page import="org.oscarehr.common.model.CaisiForm"%>
+<%@page import="org.oscarehr.common.dao.CaisiFormDao"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.survey.service.OscarFormManager" %>
+
 <%
 	Long formId=Long.parseLong(request.getParameter("formId"));
 	String startDateString=request.getParameter("startDate");
@@ -64,11 +66,12 @@
 		// do nothing, bad input
 	}
 	
+	CaisiFormDao caisiFormDao = SpringUtils.getBean(CaisiFormDao.class);	
 	
-	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-	OscarFormDAOHibernate caisiForms = (OscarFormDAOHibernate) applicationContext.getBean("oscarFormDAO");
-	Map data = caisiForms.getFormReport(formId,startDate,endDate);
-	OscarForm form = caisiForms.getOscarForm(formId);	
+	OscarFormManager oscarFormManager = (OscarFormManager)SpringUtils.getBean("oscarFormManager");
+	
+	Map data = oscarFormManager.getFormReport(formId.intValue(),startDate,endDate);
+	CaisiForm form = caisiFormDao.find(formId.intValue());	
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
