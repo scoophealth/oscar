@@ -47,6 +47,7 @@ import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Icd9Dao;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.PreventionDao;
@@ -58,6 +59,7 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Prevention;
@@ -85,6 +87,7 @@ public class PatientExport {
 	private static IssueDAO issueDao = SpringUtils.getBean(IssueDAO.class);
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+	private static MeasurementTypeDao measurementTypeDao = SpringUtils.getBean(MeasurementTypeDao.class);
 	private static CaseManagementIssueDAO caseManagementIssueDao = SpringUtils.getBean(CaseManagementIssueDAO.class);
 	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao = SpringUtils.getBean(CaseManagementIssueNotesDao.class);
 	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
@@ -111,6 +114,7 @@ public class PatientExport {
 	private List<CaseManagementNote> riskFactors = null;
 	private List<CaseManagementNote> familyHistory = null;
 	private List<CaseManagementNote> alerts = null;
+	private List<Measurement> measurements = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
@@ -147,6 +151,7 @@ public class PatientExport {
 		
 		this.labs = assembleLabs();
 		parseCaseManagement();
+		this.measurements = parseMeasurements();
 	}
 	
 	private static long getIssueID(String rhs) {
@@ -158,6 +163,19 @@ public class PatientExport {
 			answer = 0;
 		}
 		return answer;
+	}
+	
+	private List<Measurement> parseMeasurements() {
+		// Gather and filter measurements based on lack of lab_no field
+		List<Measurement> rawMeasurements = measurementDao.findByDemographicNo(demographicNo);
+		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
+		for(Measurement entry : rawMeasurements) {
+			MeasurementsExt isFromLab = measurementsExtDao.getMeasurementsExtByMeasurementIdAndKeyVal(entry.getId(), "lab_no");
+			if(isFromLab == null) {
+				tempMeasurements.add(entry);
+			}
+		}
+		return tempMeasurements;
 	}
 	
 	private void parseCaseManagement() {
@@ -219,11 +237,12 @@ public class PatientExport {
 		if(tempLabs.size() == 0)
 			return null;
 		
-		// Gather and filter measurements
-		List<Measurement> rawMeasurements = measurementDao.findByDemographicIdUpdatedAfterDate(demographicNo, new Date(0));
+		// Gather and filter measurements based on existence of lab_no field
+		List<Measurement> rawMeasurements = measurementDao.findByDemographicNo(demographicNo);
 		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
 		for(Measurement entry : rawMeasurements) {
-			if(Integer.parseInt(entry.getProviderNo()) == 0) {
+			MeasurementsExt isFromLab = measurementsExtDao.getMeasurementsExtByMeasurementIdAndKeyVal(entry.getId(), "lab_no");
+			if(isFromLab != null) {
 				tempMeasurements.add(entry);
 			}
 		}
@@ -334,81 +353,11 @@ public class PatientExport {
 	/*
 	 * Demographics
 	 */
-	// Directly mapped functions
-	public String getDemographicNo() {
-		return demographicNo.toString();
+	public Demographic getDemographic() {
+		return demographic;
 	}
 	
-	public void setDemographicNo(String demoNo) {
-		demographicNo = Integer.parseInt(demoNo);
-		demographic.setDemographicNo(demographicNo);
-	}
-	
-	public String getFirstName() {
-		return demographic.getFirstName();
-	}
-
-	public void setFirstName(String rhs) {
-		demographic.setFirstName(rhs);
-	}
-	
-	public String getLastName() {
-		return demographic.getLastName();
-	}
-
-	public void setLastName(String rhs) {
-		demographic.setLastName(rhs);
-	}
-	
-	public String getGender() {
-		return demographic.getSex();
-	}
-
-	public void setGender(String rhs) {
-		demographic.setSex(rhs);
-	}
-	
-	public String getDateOfBirth() {
-		return demographic.getDateOfBirth();
-	}
-
-	public void setDateOfBirth(String rhs) {
-		demographic.setDateOfBirth(rhs);
-	}
-	
-	public String getMonthOfBirth() {
-		return demographic.getMonthOfBirth();
-	}
-
-	public void setMonthOfBirth(String rhs) {
-		demographic.setMonthOfBirth(rhs);
-	}
-	
-	public String getYearOfBirth() {
-		return demographic.getYearOfBirth();
-	}
-
-	public void setYearOfBirth(String rhs) {
-		demographic.setYearOfBirth(rhs);
-	}
-	
-	public String getHin() {
-		return demographic.getHin();
-	}
-	
-	public void setHin(String rhs) {
-		demographic.setHin(rhs);
-	}
-	
-	public String getProviderNo() {
-		return demographic.getProviderNo();
-	}
-	
-	public void setProviderNo(String rhs) {
-		demographic.setProviderNo(rhs);
-	}
-	
-	// Output get convenience functions
+	// Output convenience functions
 	public String getBirthDate() {
 		return demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
 	}
@@ -427,6 +376,30 @@ public class PatientExport {
 	
 	public boolean hasAllergies() {
 		return exAllergiesAndAdverseReactions && allergies!=null && !allergies.isEmpty();
+	}
+	
+	/*
+	 * Clinical Measured Observations
+	 */
+	public List<Measurement> getMeasurements() {
+		return measurements;
+	}
+	
+	// Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
+	public boolean hasMeasurements() {
+		return exLaboratoryResults && measurements!=null && !measurements.isEmpty();
+	}
+	
+	public String getTypeDescription(String rhs) {
+		try {
+			List<MeasurementType> measurementType = measurementTypeDao.findByType(rhs);
+			for(MeasurementType entry : measurementType) {
+				return entry.getTypeDescription();
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return rhs;
 	}
 	
 	/*
@@ -636,6 +609,25 @@ public class PatientExport {
 		return date;
 	}
 	
+	// Check if string is valid numeric
+	public boolean isNumeric(String rhs) {
+		try {
+			Double.parseDouble(rhs);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
+	}
+	
+	// Remove invalid characters and formatting from strings
+	public String cleanString(String rhs) {
+		String eol = System.getProperty("line.separator");
+		String str = rhs.replaceAll("<br( )+/>", eol);
+		str = str.replaceAll("<", "&lt;");
+		str = str.replaceAll(">", "&gt;");
+		return str;
+	}
+	
 	// Function to allow access to Casemanagement Note Ext table data based on note id
 	public static String getCMNoteExtValue(String id, String keyval) {
 		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
@@ -652,12 +644,26 @@ public class PatientExport {
 	}
 	
 	public String getProviderFirstName(String providerNo) {
-		ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
-		return providerData.getFirstName();
+		String name;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			name = providerData.getFirstName();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			name = "";
+		}
+		return name;
 	}
 	
 	public String getProviderLastName(String providerNo) {
-		ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
-		return providerData.getLastName();
+		String name;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			name = providerData.getLastName();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			name = "";
+		}
+		return name;
 	}
 }

@@ -110,14 +110,12 @@ public class E2EVelocityTemplate {
 	// Assembles the data model & predefined velocity template to yield an E2E document
 	public String export(PatientExport record) {
 		E2EResources e2eResources = new E2EResources();
-		String eol = System.getProperty("line.separator");
 		
 		// Create Data Model
 		context = VelocityUtils.createVelocityContextWithTools();
 		context.put("patient", record);
 		context.put("e2e", e2eResources);
 		context.put("custodian", clinic);
-		context.put("eol", eol);
 		
 		context.put("authorIdRoot", "DCCD2C68-389B-44C4-AD99-B8FB2DAD1493");
 		context.put("custodianIdRoot", "7EEF0BCC-F03E-4742-A736-8BAC57180C5F");
@@ -127,10 +125,10 @@ public class E2EVelocityTemplate {
 		
 		// Check for Validity
 		if(result.contains("$")) {
-			log.error("[Demo: "+record.getDemographicNo()+"] Export contains '$' - may contain errors");
+			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export contains '$' - may contain errors");
 		}
 		if(!E2EExportValidator.isValidXML(result)) {
-			log.error("[Demo: "+record.getDemographicNo()+"] Export failed E2E XSD validation");
+			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export failed E2E XSD validation");
 		}
 		
 		return result;
