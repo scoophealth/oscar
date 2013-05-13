@@ -106,7 +106,7 @@ if (selfSubmit) {
 		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
 	}
 
-	measurementSetParam[0] = "PULS";
+	measurementSetParam[0] = "HR";
 	if (request.getParameter("pulse_value")!=null && isNumeric(request.getParameter("pulse_value"))) {
 		measurementSetParam[3] = request.getParameter("pulse_value");
 		measurementSetParam[4] = "";
@@ -476,7 +476,7 @@ String msmtValueBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField"
 String msmtDateBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
 String msmtCommentBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
 
-msmtParam[0] = "PULS";
+msmtParam[0] = "HR";
 msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
 String msmtValuePULSE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" bpm" : "";
 String msmtDatePULSE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
