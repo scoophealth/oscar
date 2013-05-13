@@ -116,6 +116,24 @@ for(SecRole secRole:secRoles) {
 
 }
 
+//set the primary role
+if (request.getParameter("buttonSetPrimaryRole") != null && request.getParameter("buttonSetPrimaryRole").length() > 0) {
+	String providerNo = request.getParameter("primaryRoleProvider");
+	String roleName = request.getParameter("primaryRoleRole");
+	SecRole secRole = secRoleDao.findByName(roleName);
+	Long roleId = secRole.getId().longValue();
+	ProgramProvider pp = programProviderDao.getProgramProvider(providerNo, Long.valueOf(caisiProgram));
+	if(pp != null) {
+		pp.setRoleId(roleId);
+		programProviderDao.saveProgramProvider(pp);
+	} else {
+		pp = new ProgramProvider();
+		pp.setProgramId(Long.valueOf(caisiProgram));
+		pp.setProviderNo(providerNo);
+		pp.setRoleId(roleId);
+		programProviderDao.saveProgramProvider(pp);
+	}
+}
 
 // update the role
 if (request.getParameter("buttonUpdate") != null && request.getParameter("buttonUpdate").length() > 0) {
@@ -223,48 +241,8 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 }
 
 String keyword = request.getParameter("keyword")!=null?request.getParameter("keyword"):"";
-%>
 
-  <html>
-    <head>
-      <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-      <title>
-        PROVIDER
-      </title>
-      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
-      <script language="JavaScript">
-<!--
-function setfocus() {
-	this.focus();
-	document.forms[0].keyword.select();
-}
-function submit(form) {
-	form.submit();
-}
-//-->
-      </script>
-    </head>
-    <body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <form name="myform" action="providerRole.jsp" method="POST">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr bgcolor="#486ebd">
-          <th align="CENTER" width="90%">
-            <font face="Helvetica" color="#FFFFFF">
-            <% if(msg.length()>1) {%>
-			<%=msg%>
-			<% } %>
-            </font>
-          </th>
-          <td nowrap>
-            <font size="-1" color="#FFFFFF">
-              Name:
-              <input type="text" name="keyword" size="15" value="<%=keyword%>" />
-              <input type="submit" name="search" value="Search">
-            </font>
-          </td>
-        </tr>
-      </table>
-      </form>
+%>
 <%
 String lastName = "";
 String firstName = "";
@@ -300,14 +278,122 @@ while (rs.next()) {
 	prop.setProperty("provider_no", DBHelp.getString(rs,"provider_no")==null?"":DBHelp.getString(rs,"provider_no"));
 	prop.setProperty("first_name", DBHelp.getString(rs,"first_name"));
 	prop.setProperty("last_name", DBHelp.getString(rs,"last_name"));
+	//this is confusing..this is NOT the role id, but the secUserRole.id
 	prop.setProperty("role_id", DBHelp.getString(rs,"id")!=null?DBHelp.getString(rs,"id"):"");
 	prop.setProperty("role_name", DBHelp.getString(rs,"role_name")!=null?DBHelp.getString(rs,"role_name"):"");
 	vec.add(prop);
 }
+
+
+List<Boolean> primaries = new ArrayList<Boolean>();
+
+//when caisi is off, we need to show which role is the one in the program_provider table for each provider.
+for(Properties prop:vec) {
+	boolean res = false;
+	String providerNo = prop.getProperty("provider_no");
+	String secUserRoleId = prop.getProperty("role_id");
+	String roleName = prop.getProperty("role_name");
+	if(!roleName.equals("")) {
+		SecRole secRole = secRoleDao.findByName(roleName);
+		if(secRole != null) {
+			ProgramProvider pp = programProviderDao.getProgramProvider(providerNo, Long.valueOf(caisiProgram), secRole.getId().longValue());
+			res = (pp != null);
+		} 
+	} else {
+		res = false;
+	}
+	primaries.add(res);
+}
+
 %>
+
+  <html>
+    <head>
+      <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+      <title>
+        PROVIDER
+      </title>
+      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+      <script src="../js/jquery-1.7.1.min.js"></script>
+      <script language="JavaScript">
+<!--
+function setfocus() {
+	this.focus();
+	document.forms[0].keyword.select();
+}
+function submit(form) {
+	form.submit();
+}
+//-->
+      </script>
+
+	<script>
+	var items = new Array();
+	<%
+		for(Properties prop:vec) {
+			%>
+				item={providerNo:"<%=prop.get("provider_no")%>",role_id:"<%=prop.get("role_id")%>",roleName:"<%=prop.get("role_name")%>"};
+				items.push(item);
+			<%
+		}
+	%>
+	</script>
+	<script>
+	$(document).ready(function(){
+		$("#primaryRoleProvider").val("");
+	});
+	
+	function primaryRoleChooseProvider() {
+		$("#primaryRoleRole").find('option').remove();
+		var provider = $("#primaryRoleProvider").val();
+		for(var i=0;i<items.length;i++) {
+			if(items[i].providerNo == provider && items[i].role_id != "") {
+				$("#primaryRoleRole").append('<option value="'+items[i].roleName+'">'+items[i].roleName+'</option>');
+			}
+		}
+	}
+	
+	function setPrimaryRole() {
+		var providerNo = $("#primaryRoleProvider").val();
+		var roleName = $("#primaryRoleRole").val();
+		if(providerNo != '' && roleName != '') {
+			return true;
+		} else {
+			alert('Please enter in a provider and a corresponding role');
+			return false;
+		}
+	}
+	</script>
+    </head>
+    <body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+      <form name="myform" action="providerRole.jsp" method="POST">
+      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr bgcolor="#486ebd">
+          <th align="CENTER" width="90%">
+            <font face="Helvetica" color="#FFFFFF">
+            <% if(msg.length()>1) {%>
+			<%=msg%>
+			<% } %>
+            </font>
+          </th>
+          <td nowrap>
+            <font size="-1" color="#FFFFFF">
+              Name:
+              <input type="text" name="keyword" size="15" value="<%=keyword%>" />
+              <input type="submit" name="search" value="Search">
+            </font>
+          </td>
+        </tr>
+      </table>
+      </form>
+
         <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
           <tr bgcolor="mediumaquamarine">
-            <th colspan="5" align="left">
+          <% if( newCaseManagement ) { %>
+            <th colspan="6" align="left">
+           <%} else { %>
+           <th colspan="5" align="left">
+           <%} %>
               Provider-Role List
             </th>
           </tr>
@@ -321,9 +407,19 @@ while (rs.next()) {
             <th width="20%" nowrap>
               <b>Last Name</b>
             </th>
-            <th width="20%" nowrap>
+<% if( newCaseManagement ) { %>
+ 
+            <th width="10%" nowrap>
               Role
             </th>
+           <th width="10%" nowrap>
+              Primary Role
+            </th>
+<% } else {%>
+           <th width="20%" nowrap>
+              Role
+            </th>
+<%} %>
             <th nowrap>
               Action
             </th>
@@ -359,6 +455,11 @@ while (rs.next()) {
 %>
                   </select>
             </td>
+<% if( newCaseManagement ) { %>
+            <td align="center">
+ 				<%=((Boolean)primaries.get(i)!=null && ((Boolean)primaries.get(i)).booleanValue()==true)?"Yes":"" %>
+            </td>
+<% } %>            
             <td align="center">
               <input type="hidden" name="keyword" value="<%=keyword%>" />
               <input type="hidden" name="providerId" value="<%=providerNo%>">
@@ -377,5 +478,48 @@ while (rs.next()) {
 %>
         </table>
       <hr>
+      <% if( newCaseManagement ) { %>
+      
+       <form name="myform" action="providerRole.jsp" method="POST">
+      <table>
+      <tr>
+      	<td colspan="2">Set primary role</td>
+      </tr>
+      <tr>
+      	<td>Provider:</td>
+      	<td>
+      		<select id="primaryRoleProvider" name="primaryRoleProvider" onChange="primaryRoleChooseProvider()">
+      			<option value="">Select Below</option>
+      			<%
+      				List<String> temp1 = new ArrayList<String>();
+      				for(Properties prop:vec) {
+      					String providerNo = prop.getProperty("provider_no");
+      					if(!temp1.contains(providerNo)) {
+      						%>
+      							<option value="<%=providerNo%>"><%=prop.getProperty("last_name") + "," + prop.getProperty("first_name") %></option>
+      						<%
+      						temp1.add(providerNo);
+      					}
+      				}
+      			%>
+      		</select>
+      	</td>
+      	</tr>
+      </tr>
+      <tr>
+      	<td>Role:</td>
+      	<td>
+      		<select id="primaryRoleRole" name="primaryRoleRole">	
+      		</select>
+      	</td>
+      </tr>
+      <tr>
+      	<td colspan="2">
+      		<input type="submit" name="buttonSetPrimaryRole" value="Set Primary Role" onClick="return setPrimaryRole();"/>
+      	</td>
+      </tr>
+      </table>
+       </form>
+       <% } %>
       </body>
     </html>
