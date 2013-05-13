@@ -96,11 +96,8 @@ String demographic_no = (String) request.getAttribute("demographic_no");
     function checkGroup(tblName,event)
     {
         var chk = event.srcElement;
-
         var newValue = chk.checked;
-
         var td = chk.parentNode;
-
         checkTD(td);
 
         function checkTD(element){
@@ -120,9 +117,7 @@ String demographic_no = (String) request.getAttribute("demographic_no");
     function showTbl(tblName,event)
     {
         var i;
-
         var span;
-
         if(event.srcElement.tagName=='SPAN')
         {
             span = event.srcElement;
@@ -260,7 +255,26 @@ function BackToOscar()
         window.close();
     }
 }
-//-->
+
+function XMLHttpRequestSendnArch() {
+	var oRequest = new XMLHttpRequest();
+	var theLink=document.referrer;
+	var theLinkComponents=theLink.split('?');
+	var theQueryComponents=theLinkComponents[1].split('&');
+
+	for (index = 0; index < theQueryComponents.length; ++index) {
+    		var theKeyValue=theQueryComponents[index].split('=');
+		if(theKeyValue[0]=='messageID'){
+			var theArchiveLink=theLinkComponents[0].substring(0,theLinkComponents[0].lastIndexOf('/'))+'/DisplayMessages.do?btnDelete=archive&messageNo='+theKeyValue[1];
+		}
+	}
+
+	oRequest.open('GET', theArchiveLink, false);
+	oRequest.send();
+	document.forms[0].submit();
+}
+
+
 </script>
 
 <script type="text/javascript">
@@ -394,11 +408,15 @@ function popupAttachDemo(demographic){ // open a new popup window
 								key="oscarMessenger.CreateMessage.msgMessage" /></th>
 						</tr>
 						<tr>
+						
 							<td bgcolor="#EEEEFF" valign=top>
 							<table>
 								<tr>
 									<td><input type="submit" class="ControlPushButton"
 										value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>">
+									</td>
+									<td><input type="button" class="ControlPushButton"
+										value="<bean:message key="oscarMessenger.CreateMessage.btnSendnArchiveMessage"/>" onClick="XMLHttpRequestSendnArch()">
 									</td>
 								</tr>
 							</table>
