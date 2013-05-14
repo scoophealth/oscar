@@ -117,27 +117,9 @@ public class FieldNoteManager {
 		saveFieldNoteEformProperty(fieldNoteEformSet);
 	}
 	
-	public static void setResidentList(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
-	{
-		residentFieldNotes.clear();
-		List<Integer> fdids = eformDataDao.findFdidsByFidsAndDates(fids, dateStart, dateEnd);
-		for (Integer fdid : fdids)
-		{
-			EFormValue efValue = eformValueDao.findByFormDataIdAndKey(fdid, "residentId");
-			if (efValue!=null)
-			{
-				String residentId = efValue.getVarValue();
-				TreeSet<Integer> residentFdids = residentFieldNotes.get(residentId);
-				if (residentFdids == null) residentFdids = new TreeSet<Integer>();
-				residentFdids.add(fdid);
-				residentFieldNotes.put(residentId, residentFdids);
-			}
-		}
-	}
-	
 	public static TreeMap<String, String> getResidentNameList(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
 	{
-		setResidentList(fids, dateStart, dateEnd);
+		resetResidentList(fids, dateStart, dateEnd);
 		TreeMap<String, String> residentNameList = new TreeMap<String, String>();
 		
 		for (String residentId : residentFieldNotes.keySet())
@@ -173,11 +155,11 @@ public class FieldNoteManager {
 	
 	public static HashMap<Integer, List<EFormValue>> filterResidentFieldNoteValues(HashMap<Integer, List<EFormValue>> fieldNoteValues, String varName)
 	{
-		return filterResidentFieldNoteValues(fieldNoteValues, varName, "\b");
+		return filterResidentFieldNoteValues(fieldNoteValues, varName, "\b"); //"\b" is used as indicator for "match whatever value"
 	}
 	
 	public static HashMap<Integer, List<EFormValue>> filterResidentFieldNoteValues(HashMap<Integer, List<EFormValue>> fieldNoteValues, String varName, String varValue)
-	{
+	{	
 		if (fieldNoteValues == null) return fieldNoteValues;
 		if (StringUtils.empty(varName)) return fieldNoteValues;
 		
@@ -220,24 +202,41 @@ public class FieldNoteManager {
 		return counter;
 	}
 	
-	public static String getValue(List<EFormValue> fieldNoteValues, String varName)
+	public static int countItem(HashMap<Integer, List<EFormValue>> fieldNoteValues, String varName, String varValue)
 	{
-		if (fieldNoteValues == null) return null;
+		if (fieldNoteValues == null) return 0;
+		if (StringUtils.empty(varName)) return 0;
+		if (StringUtils.empty(varValue)) return 0;
+
+		int counter = 0;
+		for (Integer fdid : fieldNoteValues.keySet())
+		{
+			for (EFormValue fieldNoteValue : fieldNoteValues.get(fdid))
+			{
+				if (varName.equals(fieldNoteValue.getVarName()) && varValue.trim().equals(fieldNoteValue.getVarValue().trim())) counter++;
+			}
+		}
+		return counter;
+	}
+	
+	public static String getValue(List<EFormValue> valuesOf1FieldNote, String varName)
+	{
+		if (valuesOf1FieldNote == null) return null;
 		if (StringUtils.empty(varName)) return null;
 		
-		for (EFormValue fieldNoteValue : fieldNoteValues)
+		for (EFormValue oneValue : valuesOf1FieldNote)
 		{
-			if (varName.equals(fieldNoteValue.getVarName())) return fieldNoteValue.getVarValue();
+			if (varName.equals(oneValue.getVarName())) return oneValue.getVarValue();
 		}
 		return null;
 	}
 	
-	public static String getValues(List<EFormValue> fieldNoteValues, String ...varNames)
+	public static String getValues(List<EFormValue> valuesOf1FieldNote, String ...varNames)
 	{
 		String values = null;
 		for (String varName : varNames)
 		{
-			String value = getValue(fieldNoteValues, varName);
+			String value = getValue(valuesOf1FieldNote, varName);
 			if (StringUtils.empty(value)) continue;
 			
 			if (StringUtils.filled(values)) values += "\n" + value;
@@ -273,5 +272,23 @@ public class FieldNoteManager {
 		}
 		property.setValue(newList);
 		propertyDao.merge(property);
+	}
+	
+	private static void resetResidentList(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
+	{
+		residentFieldNotes.clear();
+		List<Integer> fdids = eformDataDao.findFdidsByFidsAndDates(fids, dateStart, dateEnd);
+		for (Integer fdid : fdids)
+		{
+			EFormValue efValue = eformValueDao.findByFormDataIdAndKey(fdid, "residentId");
+			if (efValue!=null)
+			{
+				String residentId = efValue.getVarValue();
+				TreeSet<Integer> residentFdids = residentFieldNotes.get(residentId);
+				if (residentFdids == null) residentFdids = new TreeSet<Integer>();
+				residentFdids.add(fdid);
+				residentFieldNotes.put(residentId, residentFdids);
+			}
+		}
 	}
 }

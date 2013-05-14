@@ -87,7 +87,7 @@
 	clinicalDomains.put("vulnerable population", "Vulnerable Population");
 	clinicalDomains.put("women's health", "Women's Health");
     
-    HashMap<Integer, List<EFormValue>> fieldNoteValues = FieldNoteManager.getResidentFieldNoteValues(residentId);
+    HashMap<Integer, List<EFormValue>> residentFieldNoteValues = FieldNoteManager.getResidentFieldNoteValues(residentId);
 %>
 <html:html locale="true">
 <head>
@@ -117,21 +117,25 @@
 	<tr>
 		<td valign="top">
 			<input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.location.href='fieldnotereport.jsp?date_start=<%= dateStart %>&date_end=<%= dateEnd %>'" />
-			<br/>&nbsp;
+		</td>
+		<td>
 <%
 	}
 %>
 			<table>
 				<tr>
-					<td>Resident :</td>
+					<td>Resident</td>
+					<td>:</td>
 					<td><%= residentName %></td>
 				</tr>
 				<tr>
-					<td>Report dates :</td>
+					<td>Report dates</td>
+					<td>:</td>
 					<td><%= dateStart %> ~ <%= dateEnd %>
 				</tr>
 				<tr>
-					<td>Total field notes :</td>
+					<td>Total field notes</td>
+					<td>:</td>
 					<td><%= FieldNoteManager.getTotalNumberOfFieldNotes(residentId) %></td>
 				</tr>
 			</table>
@@ -142,12 +146,18 @@
 	for (String purpose : keys) {
 %>
 				<tr>
-					<td><%= purposes.get(purpose) %> :</td>
-					<td><%= FieldNoteManager.countItem(fieldNoteValues, purpose) %></td>
+					<td><%= purposes.get(purpose) %></td>
+					<td>:</td>
+					<td><%= FieldNoteManager.countItem(residentFieldNoteValues, purpose) %></td>
 				</tr>
 <%
 	}
 %>
+            <tr>
+                    <td>BS tutorial</td>
+                    <td>:</td>
+                    <td><%= FieldNoteManager.countItem(residentFieldNoteValues, "location", "BS tutorial") %></td>
+            </tr>
 			</table>
 <%
 	if ("download".equals(method)) {
@@ -167,8 +177,9 @@
 	for (String roleSkill : keys) {
 %>
 				<tr>
-					<td><%= roleSkills.get(roleSkill) %> :</td>
-					<td><%= FieldNoteManager.countItem(fieldNoteValues, roleSkill) %></td>
+					<td><%= roleSkills.get(roleSkill) %></td>
+					<td>:</td>
+					<td><%= FieldNoteManager.countItem(residentFieldNoteValues, roleSkill) %></td>
 				</tr>
 <%
 	}
@@ -189,11 +200,11 @@
 	keys = new TreeSet<String>(impressions.keySet());
 	for (String impression : keys)
 	{
-		HashMap<Integer, List<EFormValue>> fieldNoteValues_impression = FieldNoteManager.filterResidentFieldNoteValues(fieldNoteValues, impression.substring(2));
+		HashMap<Integer, List<EFormValue>> fieldNoteValues_impression = FieldNoteManager.filterResidentFieldNoteValues(residentFieldNoteValues, impression.substring(2));
 %>
 	<tr>
 		<td class="eformInputHeadingActive" colspan="2">
-			Impression : <%= impressions.get(impression) %>
+			<%= impressions.get(impression) %>
 			(<%= fieldNoteValues_impression.size() %>)
 		</td>
 	</tr>
@@ -296,5 +307,13 @@
 	}
 %>
 </table>
+<%
+    if (!"download".equals(method)) {
+%>
+        <p>&nbsp;</p>
+        <input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.location.href='fieldnotereport.jsp?date_start=<%= dateStart %>&date_end=<%= dateEnd %>'" />
+<%
+    }
+%>
 </body>
 </html:html>
