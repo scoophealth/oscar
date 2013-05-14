@@ -41,7 +41,7 @@
 <%@page import="org.oscarehr.common.model.ProviderInboxItem" %>
 <%@page import="org.oscarehr.casemgmt.dao.TicklerDAO" %>
 <%@page import="org.caisi.model.CustomFilter" %>
-<%@page import="org.oscarehr.document.dao.DocumentDAO" %>
+<%@page import="org.oscarehr.common.dao.DocumentDao" %>
 <%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao" %>
 <%
 	BillingONCHeader1Dao billingONCHeader1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
@@ -53,7 +53,7 @@ BillingDao billingDAO 							=(BillingDao)SpringUtils.getBean("billingDao");
 DrugDao drugDao 								= (DrugDao) SpringUtils.getBean("drugDao");
 ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) SpringUtils.getBean("providerInboxRoutingDAO");
 TicklerDAO ticklerDAO 							= (TicklerDAO) SpringUtils.getBean("ticklerDAO");
-DocumentDAO documentDAO							=(DocumentDAO) SpringUtils.getBean("documentDAO");
+DocumentDao documentDao							=(DocumentDao) SpringUtils.getBean("documentDao");
 ProviderDao providerDao 						= (ProviderDao)SpringUtils.getBean("providerDao");
 
 List<Provider> providers = providerDao.getActiveProviders();
@@ -180,7 +180,7 @@ List<Provider> providers = providerDao.getActiveProviders();
 						 int billing              = billingONCHeader1Dao.getNumberOfDemographicsWithInvoicesForProvider(providerNo,startDate, endDate,true);
 						 int encounterNote        = caseManagementNoteDao.getNoteCountForProviderForDateRange(providerNo,startDate,endDate);
 						 int problemList          = caseManagementNoteDao.getNoteCountForProviderForDateRangeWithIssueId(providerNo,startDate,endDate,"Concerns");
-						 int storedDocuments      = documentDAO.getNumberOfDocumentsAttachedToAProviderDemographics(providerNo, startDate, endDate);
+						 int storedDocuments      = documentDao.getNumberOfDocumentsAttachedToAProviderDemographics(providerNo, startDate, endDate);
 						 int rxNewRenewals        = drugDao.getNumberOfDemographicsWithRxForProvider(providerNo,startDate, endDate,true);
 						 int useOfRemindersAlerts = caseManagementNoteDao.getNoteCountForProviderForDateRangeWithIssueId(providerNo,startDate,endDate,"Reminders");
 						 	CustomFilter customFilter = new CustomFilter();

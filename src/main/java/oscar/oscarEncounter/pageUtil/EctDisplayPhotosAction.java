@@ -40,6 +40,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.dms.EDocUtil.EDocSort;
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
@@ -92,7 +93,7 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
 
     StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
     String js = new String();
-    ArrayList<EDoc> docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
+    ArrayList<EDoc> docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "active");
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = new String();
     String key;

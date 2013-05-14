@@ -86,19 +86,18 @@ import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.CtlDocument;
+import org.oscarehr.common.model.CtlDocumentPK;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicQueryFavourite;
+import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
-import org.oscarehr.document.dao.DocumentDAO;
-import org.oscarehr.document.model.CtlDocument;
-import org.oscarehr.document.model.CtlDocumentPK;
-import org.oscarehr.document.model.Document;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -124,10 +123,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		document.setDoccreator(doccreator);
 		document.setObservationdate(observationdate);
 		document.setUpdatedatetime(updatedatetime);
-		document.setStatus(status);
+		document.setStatus(status.charAt(0));
 		document.setContenttype(contenttype);
-		document.setPublic(public1.byteValue());
-		document.setNumberOfPages(number_of_pages);
+		document.setPublic1(public1.byteValue());
+		document.setNumberofpages(number_of_pages);
 		document.setResponsible(responsible);
 		document.setProgramId(program_id);
 		return document;
@@ -135,7 +134,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
  CtlDocument getCtlDocument(String module,Integer moduleId,Integer documentNo,String status){
   	CtlDocument ctlDocument = new CtlDocument();
-  	ctlDocument.setModuleId(moduleId);
+  	ctlDocument.getId().setModuleId(moduleId);
   	ctlDocument.setStatus(status);
   	ctlDocument.setId(new CtlDocumentPK(documentNo,module));
   	return ctlDocument;
@@ -686,7 +685,8 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
 		SecUserRoleDao secuserroleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 		AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
-		DocumentDAO documentDao = (DocumentDAO) SpringUtils.getBean("documentDAO");
+		DocumentDao documentDao = (DocumentDao) SpringUtils.getBean("documentDao");
+		CtlDocumentDao ctlDocumentDao = (CtlDocumentDao) SpringUtils.getBean("ctlDocumentDao");
 
 		oscarProgramID = programDao.getProgramIdByProgramName("OSCAR");
 
@@ -1232,17 +1232,17 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         }
 
         Document document = getDocument("lab","Example text document","","exampleDoc.txt",drw.getProviderNo(),drw.getProviderNo(),null,-1,tenYearsAgo,"A","text/plain",0,tenYearsAgo,null,null,0,0);
-        documentDao.save(document);
+        documentDao.persist(document);
 
         CtlDocument cltDocument =  getCtlDocument("demographic",juneElder.getDemographicNo(),Integer.parseInt(""+document.getId()),"A");
         MiscUtils.getLogger().info(" ctldoc "+cltDocument.toString());
-        documentDao.saveCtlDocument(cltDocument);
+        ctlDocumentDao.persist(cltDocument);
 
         document = getDocument("lab","Example text JPG","","exampleJPG.jpg",drw.getProviderNo(),drw.getProviderNo(),null,-1,tenYearsAgo,"A","image/jpeg",0,tenYearsAgo,null,null,0,0);
-        documentDao.save(document);
+        documentDao.persist(document);
 
         cltDocument =  getCtlDocument("demographic",juneElder.getDemographicNo(),Integer.parseInt(""+document.getId()),"A");
-        documentDao.saveCtlDocument(cltDocument);
+        ctlDocumentDao.persist(cltDocument);
 
 
         //Aug 12, 2005 Aug 12, 2005 Aug 12, 2005     Glyburide 1 2.5 mg qd 10 10 tab oral DRW

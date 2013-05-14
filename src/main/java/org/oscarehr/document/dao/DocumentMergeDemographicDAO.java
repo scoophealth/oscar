@@ -25,15 +25,17 @@ package org.oscarehr.document.dao;
 
 import java.util.List;
 
+import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.merge.MergedDemographicTemplate;
-import org.oscarehr.document.model.Document;
+import org.oscarehr.common.model.Document;
 
+import oscar.dms.EDocUtil.EDocSort;
 import oscar.util.ConversionUtils;
 
-public class DocumentMergeDemographicDAO extends DocumentDAO {
+public class DocumentMergeDemographicDAO extends DocumentDao {
 
 	@Override
-	public List<Object[]> findDocuments(final String module, String moduleid, final String docType, final boolean includePublic, final boolean includeDeleted, final boolean includeActive, final String sort) {
+	public List<Object[]> findDocuments(final String module, String moduleid, final String docType, final boolean includePublic, final boolean includeDeleted, final boolean includeActive, final EDocSort sort) {
 		List<Object[]> result = super.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort);
 		MergedDemographicTemplate<Object[]> template = new MergedDemographicTemplate<Object[]>() {
 			@Override
