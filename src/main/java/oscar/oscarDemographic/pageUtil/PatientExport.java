@@ -23,7 +23,6 @@
  */
 package oscar.oscarDemographic.pageUtil;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -140,7 +139,7 @@ public class PatientExport {
 		Collections.reverse(drugs);
 		Collections.sort(drugs, new sortByDin());
 		
-		this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+		//this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 		List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
 		problems = new ArrayList<Dxresearch>();
 		for(Dxresearch problem : tempProblems) {
@@ -152,6 +151,7 @@ public class PatientExport {
 		this.labs = assembleLabs();
 		parseCaseManagement();
 		this.measurements = parseMeasurements();
+		log.info("Demo: " + demographicNo.toString());
 	}
 	
 	private static long getIssueID(String rhs) {
@@ -230,11 +230,14 @@ public class PatientExport {
 		List<PatientLabRouting> tempRouting = patientLabRoutingDao.findByDemographicAndLabType(demographicNo, "HL7");
 		List<Hl7TextInfo> tempLabs = new ArrayList<Hl7TextInfo>();
 		for(PatientLabRouting routing : tempRouting) {
-			tempLabs.add(hl7TextInfoDao.findLabId(routing.getLabNo()));
+			Hl7TextInfo temp = hl7TextInfoDao.findLabId(routing.getLabNo());
+			if(temp != null) {
+				tempLabs.add(temp);
+			}
 		}
 		
 		// Short circuit if no labs
-		if(tempLabs.size() == 0)
+		if(tempLabs.size() < 1)
 			return null;
 		
 		// Gather and filter measurements based on existence of lab_no field
@@ -242,7 +245,7 @@ public class PatientExport {
 		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
 		for(Measurement entry : rawMeasurements) {
 			MeasurementsExt isFromLab = measurementsExtDao.getMeasurementsExtByMeasurementIdAndKeyVal(entry.getId(), "lab_no");
-			if(isFromLab != null) {
+			if(isFromLab != null && isValidLabMeasurement(tempRouting, isFromLab.getVal())) {
 				tempMeasurements.add(entry);
 			}
 		}
@@ -309,6 +312,16 @@ public class PatientExport {
 		}
 		
 		return allLabs;
+	}
+	
+	private boolean isValidLabMeasurement(List<PatientLabRouting> routing, String lab_no) {
+		int labNo = Integer.parseInt(lab_no);
+		for(PatientLabRouting entry : routing) {
+			if(entry.getLabNo() == labNo) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/*
@@ -397,7 +410,7 @@ public class PatientExport {
 				return entry.getTypeDescription();
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error("getTypeDescription - Type description not found");
 		}
 		return rhs;
 	}
@@ -472,7 +485,7 @@ public class PatientExport {
 				lhs[i] = Integer.parseInt(temp[i]);
 			}
 		} catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("parseOtherID - other_id field not in expected format");
         }
 		
 		return lhs;
@@ -532,7 +545,13 @@ public class PatientExport {
 	
 	public class sortByDin implements Comparator<Drug> {
 		public int compare(Drug one, Drug two) {
-			 return Integer.parseInt(one.getRegionalIdentifier()) - Integer.parseInt(two.getRegionalIdentifier());
+			int answer;
+			try {
+				answer = Integer.parseInt(one.getRegionalIdentifier()) - Integer.parseInt(two.getRegionalIdentifier());
+			} catch (Exception e){
+				answer = 0;
+			}
+			return answer;
 		}
 	}
 	
@@ -599,14 +618,14 @@ public class PatientExport {
 	}
 	
 	public Date stringToDate(String rhs) {
-		Date date = new Date();
-		try {
-			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			date = formatter.parse(rhs);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		String[] formatStrings = {"yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm", "yyyy-MM-dd"};
+		for(String format : formatStrings) {
+			try {
+				return new SimpleDateFormat(format).parse(rhs);
+			} catch (Exception e) {}
 		}
-		return date;
+		log.error("stringToDate - Can't parse " + rhs);
+		return new Date();
 	}
 	
 	// Check if string is valid numeric
@@ -625,6 +644,7 @@ public class PatientExport {
 		String str = rhs.replaceAll("<br( )+/>", eol);
 		str = str.replaceAll("<", "&lt;");
 		str = str.replaceAll(">", "&gt;");
+		str = str.replaceAll("&", "&amp;");
 		return str;
 	}
 	
@@ -640,6 +660,9 @@ public class PatientExport {
     }
 	
 	public String getAuthorId() {
+		if (authorId.length() < 1 || authorId == null) {
+			return "0";
+		}
 		return authorId;
 	}
 	
@@ -649,7 +672,7 @@ public class PatientExport {
 			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
 			name = providerData.getFirstName();
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error("getProviderFirstName - Provider not found");
 			name = "";
 		}
 		return name;
@@ -661,7 +684,7 @@ public class PatientExport {
 			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
 			name = providerData.getLastName();
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error("getProviderLastName - Provider not found");
 			name = "";
 		}
 		return name;

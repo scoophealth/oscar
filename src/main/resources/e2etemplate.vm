@@ -212,7 +212,7 @@ Allergies and Intolerances - (Reaction List)
 									<participant typeCode="CSM" contextControlCode="OP">
 										<participantRole classCode="MANU">
 											<playingEntity classCode="MMAT" determinerCode="INSTANCE">
-#*    *##if ( !$allergy.regionalIdentifier )
+#*    *##if ( !$allergy.regionalIdentifier || $allergy.regionalIdentifier.length() < 1 )
 												<code nullFlavor='NA'/>
 #*    *##else
 												<code code="$allergy.regionalIdentifier" displayName="$allergy.description" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN"/>
@@ -584,7 +584,9 @@ Laboratory Results & Results
 						<observation classCode="OBS" moodCode="RQO">
 							<id extension="$lab.hl7TextInfo.id" root="TBD"/>
 							<code nullFlavor='UNK'/>
-							<text>$lab.hl7TextInfo.discipline</text>
+#*    *##if ( $lab.hl7TextInfo.discipline )
+							<text>$!lab.hl7TextInfo.discipline</text>
+#*    *##end
 							<!-- Ordering Provider -->
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
@@ -623,8 +625,16 @@ Laboratory Results & Results
 										<templateId root="2.16.840.1.113883.3.1818.10.4.25"/>
 										<!-- Result Component -->
 										<observation classCode="OBS" moodCode="EVN">
+#*        *##if ( ${patient.getLabExtValue("$labEntry.id", "accession")} != "" )
 											<id extension="${patient.getLabExtValue("$labEntry.id", "accession")}" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
-											<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+#*        *##else
+											<id nullFlavor='UNK'/>
+#*        *##end
+#*        *##if ( ${patient.getLabExtValue("$labEntry.id", "identifier")} != "" )
+											<code code="$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "identifier")})" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+#*        *##else
+											<code nullFlavor='UNK'/>
+#*        *##end
 											<text>${patient.getLabExtValue("$labEntry.id", "name")}</text>
 ## ValueSet OID not yet available - using Business Name/Description for now
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "olis_status")} == "P" )
@@ -671,8 +681,8 @@ Laboratory Results & Results
 											<referenceRange typeCode="REFV">
 												<observationRange classCode="OBS" moodCode="EVN.CRT">
 													<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
-													<text>${patient.getLabExtValue("$labEntry.id", "range")}</text>
-													<value xsi:type="ST">${patient.getLabExtValue("$labEntry.id", "range")}</value>
+													<text>$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "range")})</text>
+													<value xsi:type="ST">$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "range")})</value>
 												</observationRange>
 											</referenceRange>
 #*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "minimum")} != "" || ${patient.getLabExtValue("$labEntry.id", "maximum")} != "" )
