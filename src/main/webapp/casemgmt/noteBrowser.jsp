@@ -82,7 +82,7 @@
     }
     String view = "all";
     if (request.getParameter("view") != null) {
-        view = (String) request.getParameter("view");
+        view = request.getParameter("view");
     }
     view = URLDecoder.decode(view,"UTF-8");
 
@@ -93,12 +93,12 @@
     ArrayList<EDoc> docs = new ArrayList<EDoc>();
     
     String sortorder = "";
-    String sort="";
+    EDocUtil.EDocSort sort=null;
     if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Observation")) {
-        sort = EDocUtil.SORT_OBSERVATIONDATE;
+    	sort = EDocUtil.EDocSort.OBSERVATIONDATE;
         sortorder="Observation";
     } else  {
-        sort = EDocUtil.SORT_DATE;
+    	sort = EDocUtil.EDocSort.DATE;
         sortorder="Upload";
     }
     docs = EDocUtil.listDocs(module, demographicID, view, EDocUtil.PRIVATE, sort, viewstatus);
@@ -478,7 +478,7 @@
                             <SELECT MULTIPLE SIZE=5 id="doclist" onchange="getDoc();">
                                 <%
                                     for (int i2 = 0; i2 < docs.size(); i2++) {
-                                        EDoc cmicurdoc = (EDoc) docs.get(i2);
+                                        EDoc cmicurdoc = docs.get(i2);
                                 %>
                                 <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>" title="<%=cmicurdoc.getDescription()%>"><%=cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=(cmicurdoc.getDescription().length()<20?cmicurdoc.getDescription():cmicurdoc.getDescription().substring(0,30)+"...")%>
                                 </option> <%}%>

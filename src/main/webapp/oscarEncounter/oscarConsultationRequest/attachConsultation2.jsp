@@ -208,7 +208,7 @@ function toggleSelectAll() {
             final String UNPRINTABLE_TITLE = "This file must be manually printed.";
             final String UNPRINTABLE_ALT = "Unprintable";
             
-            privatedocs = EDocUtil.listDocs("demographic", demoNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_DESCRIPTION, "active");
+            privatedocs = EDocUtil.listDocs("demographic", demoNo, null, EDocUtil.PRIVATE, EDocUtil.EDocSort.DESCRIPTION, "active");
             labData = new CommonLabResultData();
             labs = labData.populateLabResultsData("",demoNo, "", "","","U");
             Collections.sort(labs);       

@@ -37,15 +37,15 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.common.dao.CtlDocumentDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
-import org.oscarehr.document.dao.DocumentDAO;
-import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.DbConnectionFilter;
@@ -555,13 +555,13 @@ public class CommonLabResultData {
 	}
 
 	public boolean isDocLinkedWithPatient(String labId, String labType) {
-		DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
+		CtlDocumentDao dao = SpringUtils.getBean(CtlDocumentDao.class);
 		List<CtlDocument> docList = dao.findByDocumentNoAndModule(ConversionUtils.fromIntString(labId), "demographic");
 		if (docList.isEmpty()) {
 			return false;
 		}
 		
-		String mi = ConversionUtils.toIntString(docList.get(0).getModuleId());
+		String mi = ConversionUtils.toIntString(docList.get(0).getId().getModuleId());
 		return mi != null && !mi.trim().equals("-1");		
 	}
 
