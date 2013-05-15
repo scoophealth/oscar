@@ -80,7 +80,6 @@
 	<bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
 	<bean id="dataExportDAO" class="org.oscarehr.common.dao.DataExportDao" autowire="byName" />
 	<bean id="siteDao" class="org.oscarehr.common.dao.SiteDao" autowire="byName" />
-	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
 	<bean id="BillingmasterDAO" class="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" autowire="byName" />
 	<bean id="BillingPreferencesDAO" class="oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO" autowire="byName" />
 	<bean id="PrivateBillTransactionDAO" class="oscar.oscarBilling.ca.bc.data.PrivateBillTransactionsDAO" autowire="byName" />
@@ -163,7 +162,6 @@
 	<!-- managers  -->
 	<bean id="agencyManager" class="org.oscarehr.PMmodule.service.AgencyManager" autowire="byName" />
 	<bean id="facilityMessageManager" class="org.caisi.service.FacilityMessageManager">
-		<property name="facilityMessageDAO" ref="facilityMessageDAO" />
 	</bean>
 
 	<!-- Manager classes -->

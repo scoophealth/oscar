@@ -37,17 +37,19 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.model.FacilityMessage;
 import org.caisi.service.FacilityMessageManager;
-import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.dao.FacilityMessageDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.FacilityMessage;
+import org.oscarehr.util.SpringUtils;
 
 public class FacilityMessageAction extends DispatchAction {
 
 	private FacilityMessageManager mgr = null;
 	private FacilityDao facilityDao = null;
-	private ProgramProviderDAO programProviderDAO;
+	private FacilityMessageDao facilityMessageDao = SpringUtils.getBean(FacilityMessageDao.class);
+	
 	
 	public void setFacilityMessageManager(FacilityMessageManager mgr) {
 		this.mgr = mgr;
@@ -56,10 +58,6 @@ public class FacilityMessageAction extends DispatchAction {
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
 	}
-	
-	public void setProgramProviderDAO(ProgramProviderDAO dao) {
-		this.programProviderDAO = dao;
-	}	
 	
 	public ActionForward unspecified(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping,form,request,response);
@@ -72,7 +70,7 @@ public class FacilityMessageAction extends DispatchAction {
 		if(facility!=null)
 			facilityId = facility.getId();
 		
-		List<FacilityMessage> activeMessages = mgr.getMessagesByFacilityId(facilityId);
+		List<FacilityMessage> activeMessages = mgr.getMessagesByFacilityIdOrNull(facilityId);
 		if(activeMessages!=null && activeMessages.size() >0)
 			request.setAttribute("ActiveFacilityMessages",activeMessages);
 		return mapping.findForward("list");
@@ -107,7 +105,7 @@ public class FacilityMessageAction extends DispatchAction {
 	public ActionForward save(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm userForm = (DynaActionForm)form;
 		FacilityMessage msg = (FacilityMessage)userForm.get("facility_message");
-		msg.setCreation_date(new Date());
+		msg.setCreationDate(new Date());
 		Integer facilityId = msg.getFacilityId().intValue();
 		String facilityName = "";
 		if(facilityId!=null && facilityId.intValue()!=0)
@@ -130,7 +128,7 @@ public class FacilityMessageAction extends DispatchAction {
 		Integer facilityId = null;
 		if(facility!=null) 
 			facilityId = facility.getId();
-		List<FacilityMessage> messages = programProviderDAO.getFacilityMessagesByFacilityId(facilityId);
+		List<FacilityMessage> messages = facilityMessageDao.getMessagesByFacilityIdOrNull(facilityId);
 		if(messages!=null && messages.size()>0) {
 			request.setAttribute("FacilityMessages",messages);
 		}
