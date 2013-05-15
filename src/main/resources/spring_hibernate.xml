@@ -20,8 +20,7 @@
 				<value>classpath:/org/oscarehr/common/model</value>
 				<value>classpath:/org/oscarehr/eyeform/model</value>
 				<value>classpath:/com/quatro/model</value>
-		                <value>classpath:/org/oscarehr/decisionSupport/model</value>
-                		<value>classpath:/oscar/entities</value>
+				<value>classpath:/oscar/entities</value>
 			</list>
 		</property>
 		<property name="annotatedClasses">

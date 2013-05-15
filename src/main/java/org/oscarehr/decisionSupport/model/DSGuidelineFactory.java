@@ -200,7 +200,7 @@ public class DSGuidelineFactory {
 
     public DSGuideline createBlankGuideline() {
         DSGuidelineDrools newGuideline = new DSGuidelineDrools();
-        newGuideline.setEngine("drools");
+        //newGuideline.setEngine("drools");
         return newGuideline;
     }
 
