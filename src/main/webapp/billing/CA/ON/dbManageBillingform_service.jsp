@@ -52,7 +52,15 @@ for(int j=1;j<4;j++){
 			cbs.setServiceGroupName(group[j]);
 			cbs.setServiceGroup("Group"+j);
 			cbs.setStatus("A");
-			cbs.setServiceOrder(Integer.parseInt(request.getParameter("group"+j+"_service"+i+"_order")));
+			int nOrder = 0;
+			String strOrder = request.getParameter("group"+j+"_service"+i+"_order");
+			try {
+				nOrder = Integer.parseInt(strOrder);
+			}
+			catch(NumberFormatException nfEx) {
+				continue;
+			}
+			cbs.setServiceOrder(nOrder);
 		    ctlBillingServiceDao.persist(cbs);
 		}
 	}
