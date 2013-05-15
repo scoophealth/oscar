@@ -9,6 +9,7 @@
 package oscar.eform.util;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,6 +91,6 @@ public final class EFormViewForPdfGenerationServlet extends HttpServlet {
 		eForm.setNowDateTime();
 
 		response.setContentType("text/html");
-		response.getOutputStream().print(eForm.getFormHtml());		
+		response.getOutputStream().write(eForm.getFormHtml().getBytes(Charset.forName("UTF-8")));		
 	}
 }
