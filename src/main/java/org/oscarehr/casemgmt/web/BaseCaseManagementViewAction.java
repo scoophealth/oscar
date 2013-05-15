@@ -40,6 +40,7 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.ClientImageManager;
 import org.oscarehr.casemgmt.service.TicklerManager;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -53,7 +54,7 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	protected RolesManager roleMgr;
 	protected ProgramManager programMgr;
 	protected AdmissionManager admissionMgr;
-	protected SurveyManager surveyMgr = new SurveyManager();
+	protected SurveyManager surveyMgr = (SurveyManager)SpringUtils.getBean("surveyManager2");
 
 
 	public ApplicationContext getAppContext() {
