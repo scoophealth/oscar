@@ -69,14 +69,22 @@ public class SearchDemographicAutoCompleteAction extends Action {
            searchStr = request.getParameter("name");
         }
         
+        boolean activeOnly = false;
+        activeOnly = request.getParameter("activeOnly") != null && request.getParameter("activeOnly").equalsIgnoreCase("true");
+        
         RxProviderData rx = new RxProviderData();
         
+
         List<Demographic> list = null;
 
         if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
             list = demographicDao.searchDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0);
-        } else {
-            list = demographicDao.searchDemographic(searchStr);
+        } 
+        else if( activeOnly ) {
+        	list = demographicDao.searchDemographicActive(searchStr);
+        }
+        else {
+        	list = demographicDao.searchDemographic(searchStr);
         }
         
         List secondList= new ArrayList();

@@ -25,6 +25,7 @@
 package oscar.oscarRx.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -386,8 +387,11 @@ public class RxPrescriptionData {
 		DrugDao dao = SpringUtils.getBean(DrugDao.class);
 
 		boolean myOscarEnabled = OscarProperties.getInstance().isPropertyActive("MY_OSCAR");
+		List<Drug> drugList = dao.findByDemographicId(demographicNo);
+		
+		Collections.sort(drugList, new Drug.ComparatorIdDesc());
 
-		for (Drug drug : dao.findByDemographicId(demographicNo)) {
+		for (Drug drug : drugList) {
 
 			boolean isCustomName = true;
 
@@ -402,7 +406,7 @@ public class RxPrescriptionData {
 			}
 
 			if (isCustomName) {
-				logger.info("ADDING PRESCRIPTION");
+				logger.info("ADDING PRESCRIPTION " + drug.getId());
 				Prescription p = toPrescription(drug, demographicNo);
 
 				if (myOscarEnabled) {
@@ -836,9 +840,7 @@ public class RxPrescriptionData {
 		}
 
 		public void setArchived(String tf) {
-			if (!tf.equals("0")) {
-				this.archived = true;
-			}
+			this.archived = Boolean.parseBoolean(tf);
 		}
 
 		//////////////////////////////

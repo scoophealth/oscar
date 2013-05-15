@@ -53,9 +53,6 @@ public class EctEditMeasurementGroupAction extends Action {
         request.getSession().setAttribute("EctEditMeasurementGroupForm", frm);
         String groupName = frm.getGroupName();
 
-        String requestId = "";
-        
-                
         if(frm.getForward()!=null){
           
                                                                                         
@@ -69,17 +66,18 @@ public class EctEditMeasurementGroupAction extends Action {
                         MeasurementGroup mg = new MeasurementGroup();
                         mg.setName(groupName);
                         mg.setTypeDisplayName(selectedAddTypes[i]);
-                        dao.persist(mg);  
-                        requestId = mg.getId().toString();
+                        dao.persist(mg);
                     }
                 }
             }
             else if (frm.getForward().compareTo("delete")==0){
                 MiscUtils.getLogger().debug("the delete button is pressed");
-                String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();  
+                String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();
+                List<MeasurementGroup>mesList = null; 
                 if(selectedDeleteTypes != null){
                     for(int i=0; i<selectedDeleteTypes.length; i++){
                         MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
+
                         List<MeasurementGroup> mgList = dao.findByNameAndTypeDisplayName(groupName, selectedDeleteTypes[i]);
                         if(mgList != null && mgList.size()==1)
                         	dao.remove(mgList.get(0).getId());

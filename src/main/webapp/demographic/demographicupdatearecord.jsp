@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.provider.model.PreventionManager"%>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.log.*, org.oscarehr.common.OtherIdManager" errorPage="errorpage.jsp"%>
 
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -43,6 +44,7 @@
 
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.provider.model.PreventionManager" %>
 
 
 
@@ -372,6 +374,9 @@
 </h2>
 
 <%
+	PreventionManager prevMgr = (PreventionManager) SpringUtils.getBean("preventionMgr");
+	prevMgr.removePrevention(request.getParameter("demographic_no"));
+
     String ip = request.getRemoteAddr();
     String user = (String)session.getAttribute("user");
     LogAction.addLog((String) session.getAttribute("user"), LogConst.UPDATE, LogConst.CON_DEMOGRAPHIC,  request.getParameter("demographic_no") , request.getRemoteAddr(),request.getParameter("demographic_no"));

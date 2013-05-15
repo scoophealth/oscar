@@ -157,8 +157,7 @@ public class InboxResultsDao {
 
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
 		String sql = "";
-
-		int idLoc = -1;
+		
 		int docNoLoc = -1;
 		int statusLoc = -1;
 		int docTypeLoc = -1;
@@ -177,7 +176,7 @@ public class InboxResultsDao {
 			// Get mix from labs
 			if (mixLabsAndDocs) {
 				if ("0".equals(demographicNo) || "0".equals(providerNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9; descriptionLoc = 10; updateDateLoc = 11;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9; descriptionLoc = 10; updateDateLoc = 11;
 					sql = " SELECT X.id, X.lab_no as document_no, X.status, X.lab_type as doctype, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate, doc.doctype as description, date(doc.updatedatetime) "
 							+ " FROM document doc, "
 							+ " (SELECT plr.id, plr.lab_type, plr.lab_no, plr.status "
@@ -208,7 +207,7 @@ public class InboxResultsDao {
 							+ " WHERE X.lab_type = 'DOC' AND doc.document_no = X.lab_no ";
 
 				} else if (demographicNo != null && !"".equals(demographicNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
 					sql = " SELECT plr.id, doc.document_no, plr.status, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime) "
 							+ " FROM demographic d, providerLabRouting plr, document doc, "
 							+ " (SELECT * FROM "
@@ -242,7 +241,7 @@ public class InboxResultsDao {
 							+ " WHERE X.lab_type = 'DOC' and X.id = plr.id and doc.document_no = plr.lab_no and d.demographic_no = '"
 							+ demographicNo + "' ";
 				} else if (patientSearch) { // N arg
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
 					sql = " SELECT plr.id, doc.document_no, plr.status, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime) "
 							+ " FROM demographic d, providerLabRouting plr, document doc,  "
 							+ " (SELECT * FROM "
@@ -294,15 +293,15 @@ public class InboxResultsDao {
 					// document_no, status, last_name, first_name, hin, sex, module_id, observationdate
 					sql = " SELECT doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime)"
 							+ " FROM document doc, "
-							+ " 	(SELECT DISTINCT plr.* FROM providerLabRouting plr"
+							+ " 	(SELECT DISTINCT pl.status, pl.lab_type, pl.lab_no FROM providerLabRouting pl"
 							+ (isAbnormal != null ? ", hl7TextInfo info " : "")
-							+ " 	WHERE plr.status like '%"
+							+ " 	WHERE pl.status like '%"
 							+ status
 							+ "%' "
-							+ (searchProvider ? " AND plr.provider_no = '" + providerNo + "' " : "")
+							+ (searchProvider ? " AND pl.provider_no = '" + providerNo + "' " : "")
 							// The only time abnormal matters for documents is when we are looking for normal documents since there are no abnormal documents.
-							+ (isAbnormal != null ? "     AND (plr.lab_type = 'DOC' OR (plr.lab_no = info.lab_no AND (info.result_status IS NULL OR info.result_status != 'A'))) "
-									: " ")
+							+ (isAbnormal != null ? "     AND (pl.lab_type = 'DOC' OR (pl.lab_no = info.lab_no AND (info.result_status IS NULL OR info.result_status != 'A'))) "
+									: " AND pl.lab_type = 'DOC' ")
 							+ " 	ORDER BY id DESC "
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "")
 							+ "     ) AS plr"
@@ -314,11 +313,11 @@ public class InboxResultsDao {
 							+ "(SELECT demographic_no, first_name, last_name, hin, sex "
 							+ "FROM demographic d) AS Z "
 							+ "ON Y.module_id = Z.demographic_no "
-							+ "WHERE doc.document_no = plr.lab_no AND plr.lab_type = 'DOC'";
+							+ "WHERE doc.document_no = plr.lab_no";
 				}
 			} else { // Don't mix labs and docs.
 				if ("0".equals(demographicNo) || "0".equals(providerNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 5; lastNameLoc = 6; firstNameLoc = 7; hinLoc = 8; sexLoc = 9; moduleLoc = 3; obsDateLoc = 4; descriptionLoc = 10; updateDateLoc = 11;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 5; lastNameLoc = 6; firstNameLoc = 7; hinLoc = 8; sexLoc = 9; moduleLoc = 3; obsDateLoc = 4; descriptionLoc = 10; updateDateLoc = 11;
 					sql = " SELECT id, document_no, status, demographic_no as module_id, observationdate, doctype, last_name, first_name, hin, sex, docdesc, updateDateLoc"
 							+ " FROM "
 							+ " (SELECT plr.id, doc.document_no, plr.status, observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime) as updateDateLoc, docdesc"
@@ -334,7 +333,7 @@ public class InboxResultsDao {
 							+ ") as X"
 							+ " LEFT JOIN demographic d" + " ON d.demographic_no = -1";
 				} else if (demographicNo != null && !"".equals(demographicNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
 					sql = "SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime) "
 							+ "FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
 							+ "WHERE d.demographic_no = '"
@@ -351,7 +350,7 @@ public class InboxResultsDao {
 							+ " ORDER BY id DESC "
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 				} else if (patientSearch) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
 					sql = "SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime) "
 							+ "FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
 							+ "WHERE d.first_name like '%"
@@ -372,7 +371,7 @@ public class InboxResultsDao {
 							+ " ORDER BY id DESC "
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 				} else {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
 					sql = " SELECT * "
 							+ " FROM (SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, docdesc, updatedatetime "
 							+ " FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
