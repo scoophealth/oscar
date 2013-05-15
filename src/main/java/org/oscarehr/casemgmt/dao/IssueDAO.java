@@ -70,6 +70,11 @@ public class IssueDAO extends HibernateDaoSupport {
     public void saveIssue(Issue issue) {
         this.getHibernateTemplate().saveOrUpdate(issue);
     }
+    
+    @Deprecated
+    public void delete(Long issueId) {
+    	this.getHibernateTemplate().delete(getIssue(issueId));
+    }
 
     @SuppressWarnings("unchecked")
     public List<Issue> findIssueBySearch(String search) {
