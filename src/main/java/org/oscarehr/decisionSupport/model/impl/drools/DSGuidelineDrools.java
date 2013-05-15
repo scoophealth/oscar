@@ -35,6 +35,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.drools.FactException;
@@ -57,17 +61,19 @@ import oscar.oscarEncounter.oscarMeasurements.util.RuleBaseCreator;
  *
  * @author apavel
  */
+@Entity
+@DiscriminatorValue("drools")
 public class DSGuidelineDrools extends DSGuideline {
     private static final Logger log=MiscUtils.getLogger();
 
-    Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
-    Namespace javaNamespace = Namespace.getNamespace("java", "http://drools.org/semantics/java");
-    Namespace xsNs = Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema-instance");
+    public static final Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
+    public static final Namespace javaNamespace = Namespace.getNamespace("java", "http://drools.org/semantics/java");
+   // public static final Namespace xsNs = Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema-instance");
 
 
-    private final String demographicAccessObjectClassPath =  "org.oscarehr.decisionSupport.model.DSDemographicAccess";
+    private static final String demographicAccessObjectClassPath =  "org.oscarehr.decisionSupport.model.DSDemographicAccess";
 
-
+    @Transient
     private RuleBase _ruleBase = null;
 
     public List<DSConsequence> evaluate(String demographicNo) throws DecisionSupportException {
@@ -313,12 +319,12 @@ public class DSGuidelineDrools extends DSGuideline {
     }
 
     private Element getRule(List<Element> conditionElements, List<Element> parameterElements, Element consequenceElement) {
-        Element ruleElement = new Element("rule", namespace);
+        Element ruleElement = new Element("rule", DSGuidelineDrools.namespace);
         ruleElement.setAttribute("name", this.getTitle());
 
-        Element accessClassParameter = new Element("parameter", namespace);
+        Element accessClassParameter = new Element("parameter", DSGuidelineDrools.namespace);
         accessClassParameter.setAttribute("identifier", "a");
-        Element accessClass = new Element("class", namespace);
+        Element accessClass = new Element("class", DSGuidelineDrools.namespace);
         accessClass.addContent(demographicAccessObjectClassPath);
         accessClassParameter.addContent(accessClass);
         ruleElement.addContent(accessClassParameter);
@@ -327,9 +333,9 @@ public class DSGuidelineDrools extends DSGuideline {
 
         for (DSCondition condition: this.getConditions()) {
             if (condition.getParam() != null && !condition.getParam().isEmpty()){
-                Element paramsHashEle = new Element("parameter", namespace);
+                Element paramsHashEle = new Element("parameter", DSGuidelineDrools.namespace);
                 paramsHashEle.setAttribute("identifier", condition.getLabel());
-                Element paramClass = new Element("class", namespace);
+                Element paramClass = new Element("class", DSGuidelineDrools.namespace);
                 paramClass.addContent("java.util.Hashtable");
                 paramsHashEle.addContent(paramClass);
                 ruleElement.addContent(paramsHashEle);
@@ -342,12 +348,12 @@ public class DSGuidelineDrools extends DSGuideline {
     }
 
     private Element getRule(List<Element> conditionElements, Element consequenceElement) {
-        Element ruleElement = new Element("rule", namespace);
+        Element ruleElement = new Element("rule", DSGuidelineDrools.namespace);
         ruleElement.setAttribute("name", this.getTitle());
 
-        Element accessClassParameter = new Element("parameter", namespace);
+        Element accessClassParameter = new Element("parameter", DSGuidelineDrools.namespace);
         accessClassParameter.setAttribute("identifier", "a");
-        Element accessClass = new Element("class", namespace);
+        Element accessClass = new Element("class", DSGuidelineDrools.namespace);
         accessClass.addContent(demographicAccessObjectClassPath);
         accessClassParameter.addContent(accessClass);
         ruleElement.addContent(accessClassParameter);
@@ -355,9 +361,9 @@ public class DSGuidelineDrools extends DSGuideline {
 
         for (DSCondition condition: this.getConditions()) {
             if (condition.getParam() != null && !condition.getParam().isEmpty()){
-                Element paramsHashEle = new Element("parameter", namespace);
+                Element paramsHashEle = new Element("parameter", DSGuidelineDrools.namespace);
                 paramsHashEle.setAttribute("identifier", condition.getLabel());
-                Element paramClass = new Element("class", namespace);
+                Element paramClass = new Element("class", DSGuidelineDrools.namespace);
                 paramClass.addContent("java.util.Hashtable");
                 paramsHashEle.addContent(paramClass);
                 ruleElement.addContent(paramsHashEle);
@@ -378,7 +384,7 @@ public class DSGuidelineDrools extends DSGuideline {
     //multiple conditions because to handle OR statements, need to have multiple
     public Element getDroolsCondition(DSCondition condition) {
         String accessMethod = condition.getConditionType().getAccessMethod();
-        Element javaCondition = new Element("condition", javaNamespace);
+        Element javaCondition = new Element("condition", DSGuidelineDrools.javaNamespace);
         String parameters = "\"" + StringUtils.join(condition.getValues(), ",") + "\"";
         accessMethod = accessMethod + StringUtils.capitalize(condition.getListOperator().name());
         String functionStr = "a." + accessMethod + "(" + parameters; // + ")";
@@ -393,9 +399,9 @@ public class DSGuidelineDrools extends DSGuideline {
     }
 
     public Element getDroolsParameter(DSParameter dsParameter) {
-        Element accessClassParameter = new Element("parameter", namespace);
+        Element accessClassParameter = new Element("parameter", DSGuidelineDrools.namespace);
         accessClassParameter.setAttribute("identifier", dsParameter.getStrAlias());
-        Element accessClass = new Element("class", namespace);
+        Element accessClass = new Element("class", DSGuidelineDrools.namespace);
         accessClass.addContent(dsParameter.getStrClass());
         accessClassParameter.addContent(accessClass);
 
@@ -403,7 +409,7 @@ public class DSGuidelineDrools extends DSGuideline {
     }
 
     public Element getDroolsConsequences(List<DSConsequence> consequences) {
-        Element javaElement = new Element("consequence", javaNamespace);
+        Element javaElement = new Element("consequence", DSGuidelineDrools.javaNamespace);
         String consequencesStr = "a.setPassedGuideline(true);";
         for (DSConsequence consequence: consequences) {
             if (consequence.getConsequenceType() == DSConsequence.ConsequenceType.java) {

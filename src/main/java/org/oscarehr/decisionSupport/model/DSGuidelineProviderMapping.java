@@ -30,13 +30,32 @@
 
 package org.oscarehr.decisionSupport.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.oscarehr.common.model.AbstractModel;
+
 /**
  *
  * @author apavel
  */
-public class DSGuidelineProviderMapping {
-    private int id;
+@Entity
+@Table(name="dsGuidelineProviderMap")
+public class DSGuidelineProviderMapping extends AbstractModel<Integer> {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="mapid")
+    private Integer id;
+	
+	@Column(name="provider_no",nullable=false)
     private String providerNo;
+	
+	@Column(name="guideline_uuid",length=60,nullable=false)
     private String guidelineUUID;
 
     public DSGuidelineProviderMapping() {
@@ -60,14 +79,14 @@ public class DSGuidelineProviderMapping {
     /**
      * @return the id
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

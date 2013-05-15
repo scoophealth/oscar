@@ -89,7 +89,7 @@ public class DSGuidelineAction extends DispatchAction {
             return null;
         }
         DSGuidelineFactory factory = new DSGuidelineFactory();
-        DSGuideline dsGuideline = dsService.getDsGuidelineDAO().getDSGuideline(guidelineId);
+        DSGuideline dsGuideline = dsService.findGuideline(Integer.parseInt(guidelineId));
         if (demographicNo == null) { //if just viewing details about guideline.
             request.setAttribute("guideline", dsGuideline);
             List<DSCondition> dsConditions = dsGuideline.getConditions();
