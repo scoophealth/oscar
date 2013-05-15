@@ -23,28 +23,44 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.oscarehr.common.dao.utils.SchemaUtils;
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.CtlDocument;
-import org.oscarehr.util.SpringUtils;
+import org.springframework.stereotype.Repository;
 
-public class CtlDocumentDaoTest extends DaoTestFixtures {
+@Repository
+public class CtlDocumentDao extends AbstractDao<CtlDocument>{
 
-	protected CtlDocumentDao dao = SpringUtils.getBean(CtlDocumentDao.class);
+	public CtlDocumentDao() {
+		super(CtlDocument.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public CtlDocument getCtrlDocument(Integer docId) {
+		Query query = entityManager.createQuery("select x from CtlDocument x where x.id.documentNo=?");
+		query.setParameter(1, docId);
+		
+		List<CtlDocument> cList = query.getResultList();
+		
 
-	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("ctl_document","document","demographic");
+		if (cList != null && cList.size() > 0) {
+			return cList.get(0);
+		} else {
+			return null;
+		}
 	}
 
-	@Test
-	public void testFindByDocumentNoAndModule() {
-		List<CtlDocument> result = dao.findByDocumentNoAndModule(100, "demo");
-		assertNotNull(result);
-	}
+
+	@SuppressWarnings("unchecked")
+    public List<CtlDocument> findByDocumentNoAndModule(Integer ctlDocNo, String module) {
+		Query query = entityManager.createQuery("select x from CtlDocument x where x.id.documentNo=? and x.id.module = ?");
+		query.setParameter(1, ctlDocNo);
+		query.setParameter(2, module);
+		
+		List<CtlDocument> cList = query.getResultList();
+		
+		return cList;
+    }
 }

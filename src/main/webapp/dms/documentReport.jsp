@@ -113,16 +113,16 @@ if (request.getParameter("curUser") != null) {
 }
 
 //sorting
-String sort = EDocUtil.SORT_OBSERVATIONDATE;
+EDocUtil.EDocSort sort = EDocUtil.EDocSort.OBSERVATIONDATE;
 String sortRequest = request.getParameter("sort");
 if (sortRequest != null) {
-    if (sortRequest.equals("description")) sort = EDocUtil.SORT_DESCRIPTION;
-    else if (sortRequest.equals("type")) sort = EDocUtil.SORT_DOCTYPE;
-    else if (sortRequest.equals("contenttype")) sort = EDocUtil.SORT_CONTENTTYPE;
-    else if (sortRequest.equals("creator")) sort = EDocUtil.SORT_CREATOR;
-    else if (sortRequest.equals("uploaddate")) sort = EDocUtil.SORT_DATE;
-    else if (sortRequest.equals("observationdate")) sort = EDocUtil.SORT_OBSERVATIONDATE;
-    else if (sortRequest.equals("reviewer")) sort = EDocUtil.SORT_REVIEWER;
+    if (sortRequest.equals("description")) sort = EDocUtil.EDocSort.DESCRIPTION;
+    else if (sortRequest.equals("type")) sort = EDocUtil.EDocSort.DOCTYPE;
+    else if (sortRequest.equals("contenttype")) sort = EDocUtil.EDocSort.CONTENTTYPE;
+    else if (sortRequest.equals("creator")) sort = EDocUtil.EDocSort.CREATOR;
+    else if (sortRequest.equals("uploaddate")) sort = EDocUtil.EDocSort.DATE;
+    else if (sortRequest.equals("observationdate")) sort = EDocUtil.EDocSort.OBSERVATIONDATE;
+    else if (sortRequest.equals("reviewer")) sort = EDocUtil.EDocSort.REVIEWER;
 }
 
 ArrayList doctypes = EDocUtil.getDoctypes(module);

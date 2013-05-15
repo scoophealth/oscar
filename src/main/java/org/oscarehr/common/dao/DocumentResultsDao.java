@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.ProviderInboxItem;
-import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -142,8 +141,8 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
 
                 //BAD!!!! CODING APROACHING
-                DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
-                Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
+                DocumentDao documentDao=(DocumentDao) SpringUtils.getBean("documentDao");
+                Demographic demo =documentDao.getDemoFromDocNo(lbData.segmentID);
 
                 lbData.isMatchedToPatient = false;
                 if(demo!=null){
@@ -237,8 +236,8 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
                 lbData.patientName = "Not, Assigned";//change to use internationalization
 
-                DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
-                Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
+                DocumentDao documentDao=(DocumentDao) SpringUtils.getBean("documentDao");
+                Demographic demo =documentDao.getDemoFromDocNo(lbData.segmentID);
 
                 lbData.isMatchedToPatient = false;
                 if(demo!=null){
@@ -336,7 +335,7 @@ public class DocumentResultsDao extends AbstractDao<Document>{
 
 
                 //BAD!!!! CODING APROACHING
-                DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
+                DocumentDao documentDAO=(DocumentDao) SpringUtils.getBean("documentDao");
                 Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
 
                 lbData.isMatchedToPatient = false;

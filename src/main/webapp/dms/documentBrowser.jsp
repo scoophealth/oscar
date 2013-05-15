@@ -107,12 +107,12 @@
     ArrayList<EDoc> docs = new ArrayList<EDoc>();
     
     String sortorder = "";
-    String sort="";
+    EDocUtil.EDocSort sort=null;
     if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Observation")) {
-        sort = EDocUtil.SORT_OBSERVATIONDATE;
+    	sort = EDocUtil.EDocSort.OBSERVATIONDATE;
         sortorder="Observation";
     } else  {
-        sort = EDocUtil.SORT_DATE;
+    	sort = EDocUtil.EDocSort.DATE;
         sortorder="Upload";
     }
    

@@ -43,15 +43,16 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.CtlDocumentDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.CtlDocument;
+import org.oscarehr.common.model.CtlDocumentPK;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
-import org.oscarehr.document.dao.DocumentDAO;
-import org.oscarehr.document.model.CtlDocument;
-import org.oscarehr.document.model.CtlDocumentPK;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
@@ -409,27 +410,29 @@ public class PHRUserManagementAction extends DispatchAction {
 			fos.close();
 			boas.close();
 
-			org.oscarehr.document.model.Document document = new org.oscarehr.document.model.Document();
+			org.oscarehr.common.model.Document document = new org.oscarehr.common.model.Document();
 			document.setContenttype("application/pdf");
 			document.setDocdesc("MyOscar Registration");
 			document.setDocfilename(filename);
 			document.setDoccreator(user);
-			document.setPublic(new Byte("0"));
-			document.setStatus("A");
+			document.setPublic1(new Byte("0"));
+			document.setStatus('A');
 			document.setObservationdate(registrationDate);
 			document.setUpdatedatetime(registrationDate);
 			document.setDoctype("others");
 
-			DocumentDAO documentDAO = (DocumentDAO) SpringUtils.getBean("documentDAO");
-			documentDAO.save(document);
+			DocumentDao documentDAO = (DocumentDao) SpringUtils.getBean("documentDao");
+			documentDAO.persist(document);
 
 			CtlDocumentPK ctlDocumentPK = new CtlDocumentPK(Integer.parseInt("" + document.getId()), "demographic");
 
 			CtlDocument ctlDocument = new CtlDocument();
 			ctlDocument.setId(ctlDocumentPK);
-			ctlDocument.setModuleId(Integer.parseInt(demographicNo));
+			ctlDocument.getId().setModuleId(Integer.parseInt(demographicNo));
 			ctlDocument.setStatus("A");
-			documentDAO.saveCtlDocument(ctlDocument);
+			
+			CtlDocumentDao ctlDocumentDao = SpringUtils.getBean(CtlDocumentDao.class);
+			ctlDocumentDao.persist(ctlDocument);
 
 			ar.addParameter("DocId", "" + document.getId());
 

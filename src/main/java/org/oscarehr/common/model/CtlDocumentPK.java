@@ -21,30 +21,62 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
+package org.oscarehr.common.model;
 
-import static org.junit.Assert.assertNotNull;
+import java.io.Serializable;
 
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.CtlDocument;
-import org.oscarehr.util.SpringUtils;
+@Embeddable
+public class CtlDocumentPK implements Serializable{
 
-public class CtlDocumentDaoTest extends DaoTestFixtures {
+	private String module;
+	
+	@Column(name="module_id")
+	private Integer moduleId;
+	
+	@Column(name="document_no")
+	private Integer documentNo;
 
-	protected CtlDocumentDao dao = SpringUtils.getBean(CtlDocumentDao.class);
-
-	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("ctl_document","document","demographic");
+	public CtlDocumentPK() {
+		
+	}
+	
+	public CtlDocumentPK(String module, Integer moduleId, Integer documentNo) {
+		setModule(module);
+		setModuleId(moduleId);
+		setDocumentNo(documentNo);
+	}
+	
+	public CtlDocumentPK(Integer documentNo, String module) {
+		setModule(module);
+		setDocumentNo(documentNo);
+	}
+	
+	public String getModule() {
+		return module;
 	}
 
-	@Test
-	public void testFindByDocumentNoAndModule() {
-		List<CtlDocument> result = dao.findByDocumentNoAndModule(100, "demo");
-		assertNotNull(result);
+	public void setModule(String module) {
+		this.module = module;
 	}
+
+	public Integer getModuleId() {
+		return moduleId;
+	}
+
+	public void setModuleId(Integer moduleId) {
+		this.moduleId = moduleId;
+	}
+
+	public Integer getDocumentNo() {
+		return documentNo;
+	}
+
+	public void setDocumentNo(Integer documentNo) {
+		this.documentNo = documentNo;
+	}
+	
+	
 }

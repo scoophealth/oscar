@@ -54,6 +54,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.CtlDocTypeDao;
+import org.oscarehr.common.dao.CtlDocumentDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.DocumentDao.Module;
@@ -61,14 +62,13 @@ import org.oscarehr.common.dao.IndivoDocsDao;
 import org.oscarehr.common.dao.TicklerLinkDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.CtlDocType;
+import org.oscarehr.common.model.CtlDocument;
+import org.oscarehr.common.model.CtlDocumentPK;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.TicklerLink;
-import org.oscarehr.document.dao.DocumentDAO;
-import org.oscarehr.document.model.CtlDocument;
-import org.oscarehr.document.model.CtlDocumentPK;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -91,6 +91,29 @@ public final class EDocUtil {
 
 	public static final String PUBLIC = "public";
 	public static final String PRIVATE = "private";
+	
+	public enum EDocSort {
+		DATE("d.updatedatetime DESC, d.updatedatetime DESC"),
+		DESCRIPTION("d.docdesc, d.updatedatetime DESC"),
+		DOCTYPE("d.doctype, d.updatedatetime DESC"),
+		CREATOR("d.doccreator, d.updatedatetime DESC"),
+		RESPONSIBLE("d.responsible, d.updatedatetime DESC"),
+		OBSERVATIONDATE("d.observationdate DESC, d.updatedatetime DESC"),
+		CONTENTTYPE("d.contenttype, d.updatedatetime DESC"),
+		REVIEWER("d.reviewer, d.updatedatetime DESC");
+		
+		private String value;
+		
+		private EDocSort(String value) {
+			this.value = value;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+		
+	}
+	
 	public static final String SORT_DATE = "d.updatedatetime DESC, d.updatedatetime DESC";
 	public static final String SORT_DESCRIPTION = "d.docdesc, d.updatedatetime DESC";
 	public static final String SORT_DOCTYPE = "d.doctype, d.updatedatetime DESC";
@@ -99,6 +122,7 @@ public final class EDocUtil {
 	public static final String SORT_OBSERVATIONDATE = "d.observationdate DESC, d.updatedatetime DESC";
 	public static final String SORT_CONTENTTYPE = "d.contenttype, d.updatedatetime DESC";
 	public static final String SORT_REVIEWER = "d.reviewer, d.updatedatetime DESC";
+	
 	public static final boolean ATTACHED = true;
 	public static final boolean UNATTACHED = false;
 
@@ -113,8 +137,8 @@ public final class EDocUtil {
 	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-	private static DocumentDAO documentDAO = (DocumentDAO) SpringUtils.getBean("documentDAO");
-
+	private static CtlDocumentDao ctlDocumentDao = (CtlDocumentDao) SpringUtils.getBean("ctlDocumentDao");
+	
 	public static String getProviderName(String providerNo) {
 		if (providerNo == null || providerNo.length() == 0) {
 			return "";
@@ -208,9 +232,9 @@ public final class EDocUtil {
 		cd.setId(cdpk);
 		cdpk.setModule(newDocument.getModule());
 		cdpk.setDocumentNo(document_no);
-		cd.setModuleId(Integer.parseInt(newDocument.getModuleId()));
+		cd.getId().setModuleId(Integer.parseInt(newDocument.getModuleId()));
 		cd.setStatus(String.valueOf(newDocument.getStatus()));
-		documentDAO.saveCtlDocument(cd);
+		ctlDocumentDao.persist(cd);
 
 		return document_no.toString();
 	}
@@ -369,7 +393,7 @@ public final class EDocUtil {
 		return resultDocs;
 	}
 
-	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort) {
+	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, EDocSort sort) {
 		return listDocs(module, moduleid, docType, publicDoc, sort, "active");
 	}
 
@@ -382,7 +406,7 @@ public final class EDocUtil {
 			CtlDocument c = (CtlDocument) o[1];
 
 			currentdoc.setModule(c.getId().getModule());
-			currentdoc.setModuleId("" + c.getModuleId());
+			currentdoc.setModuleId("" + c.getId().getModuleId());
 			currentdoc.setDocId("" + d.getDocumentNo());
 			currentdoc.setDescription(d.getDocdesc());
 			currentdoc.setType(d.getDoctype());
@@ -423,17 +447,16 @@ public final class EDocUtil {
 		return resultDocs;
 	}
 
-	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus) {
-		DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
-
+	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, EDocSort sort, String viewstatus) {
+		
 		boolean includePublic = publicDoc.equals(PUBLIC);
 		boolean includeDeleted = viewstatus.equals("deleted");
 		boolean includeActive = viewstatus.equals("active");
-		List<Object[]> documents = dao.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort);
+		List<Object[]> documents = documentDao.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort);
 
 		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
 		for (Object[] o : documents) {
-			org.oscarehr.document.model.Document d = (org.oscarehr.document.model.Document) o[1];
+			Document d = (Document)o[1];
 			EDoc currentdoc = toEDoc(d);
 			resultDocs.add(currentdoc);
 		}
@@ -445,7 +468,7 @@ public final class EDocUtil {
 		return resultDocs;
 	}
 
-	private static EDoc toEDoc(org.oscarehr.document.model.Document d) {
+	private static EDoc toEDoc(Document d) {
 		EDoc currentdoc = new EDoc();
 		currentdoc.setDocId(d.getId().toString());
 		currentdoc.setDescription(d.getDocdesc());
@@ -458,7 +481,7 @@ public final class EDocUtil {
 		currentdoc.setProgramId(d.getProgramId());
 		currentdoc.setAppointmentNo(d.getAppointmentNo());
 		currentdoc.setType(d.getDoctype());
-		currentdoc.setStatus(d.getStatus().charAt(0));
+		currentdoc.setStatus(d.getStatus());
 		currentdoc.setObservationDate(ConversionUtils.toDateString(d.getObservationdate()));
 		currentdoc.setReviewerId(d.getReviewer());
 		currentdoc.setReviewDateTime(ConversionUtils.toDateString(d.getReviewdatetime()));
@@ -481,7 +504,7 @@ public final class EDocUtil {
 
 			EDoc currentdoc = new EDoc();
 			currentdoc.setModule(c.getId().getModule());
-			currentdoc.setModuleId("" + c.getModuleId());
+			currentdoc.setModuleId("" + c.getId().getModuleId());
 			currentdoc.setDocId("" + d.getDocumentNo());
 			currentdoc.setDescription(d.getDocdesc());
 			currentdoc.setType(d.getDoctype());
@@ -573,7 +596,7 @@ public final class EDocUtil {
 			CtlDocument c = (CtlDocument) o[1];
 
 			currentdoc.setModule("" + c.getId().getModule());
-			currentdoc.setModuleId("" + c.getModuleId());
+			currentdoc.setModuleId("" + c.getId().getModuleId());
 			currentdoc.setDocId("" + d.getDocumentNo());
 			currentdoc.setDescription(d.getDocdesc());
 			currentdoc.setType(d.getDoctype());
@@ -619,8 +642,7 @@ public final class EDocUtil {
 	}
 
 	public static void undeleteDocument(String documentNo) {
-		DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
-		CtlDocument cd = dao.getCtrlDocument(ConversionUtils.fromIntString(documentNo));
+		CtlDocument cd = ctlDocumentDao.getCtrlDocument(ConversionUtils.fromIntString(documentNo));
 		String status = "";
 		if (cd != null) {
 			status = cd.getStatus();
@@ -694,9 +716,9 @@ public final class EDocUtil {
 			cd.setId(cdpk);
 			cdpk.setModule("demographic");
 			cdpk.setDocumentNo(doc.getDocumentNo());
-			cd.setModuleId(Integer.parseInt(demoNo));
+			cd.getId().setModuleId(Integer.parseInt(demoNo));
 			cd.setStatus(String.valueOf('A'));
-			documentDAO.saveCtlDocument(cd);
+			ctlDocumentDao.persist(cd);
 			key = 1;
 		}
 		return key;
@@ -902,7 +924,7 @@ public final class EDocUtil {
             String comment="";
             ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
             for (int i=0; i < ackList.size(); i++) {
-                    ReportStatus report = (ReportStatus) ackList.get(i);
+                    ReportStatus report = ackList.get(i);
                     HtmlAcknowledgement+=report.getProviderName()+": ";
                     String ackStatus = report.getStatus();
                     if(ackStatus.equals("A")){

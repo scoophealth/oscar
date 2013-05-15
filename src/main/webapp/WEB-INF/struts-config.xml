@@ -2309,12 +2309,12 @@
 			<forward name="success" path="/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp" />
 		</action>
 
-		<action path="/dms/ManageDocument" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+		<action path="/dms/ManageDocument" name="FrmForm" type="org.oscarehr.document.web.ManageDocumentAction" parameter="method" scope="request">
 			<forward name="success" path="/dms/undocument.jsp" />
 			<forward name="displaySingleDoc" path="/dms/MultiPageDocDisplay.jsp" />
 		</action>
 		
-		<action path="/dms/SplitDocument" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+		<action path="/dms/SplitDocument" name="FrmForm" type="org.oscarehr.document.web.SplitDocumentAction" parameter="method" scope="request">
         	<forward name="success" path="/oscarMDS/Splitclose.jsp" />
         </action>
 

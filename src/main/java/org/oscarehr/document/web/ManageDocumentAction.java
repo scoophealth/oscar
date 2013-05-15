@@ -29,13 +29,13 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.PrintWriter;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -70,15 +70,16 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.CtlDocumentDao;
+import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.common.model.CtlDocument;
+import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
-import org.oscarehr.document.dao.DocumentDAO;
-import org.oscarehr.document.model.CtlDocument;
-import org.oscarehr.document.model.Document;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -104,17 +105,11 @@ public class ManageDocumentAction extends DispatchAction {
 
 	private static Logger log = MiscUtils.getLogger();
 
-	private DocumentDAO documentDAO = null;
-	private ProviderInboxRoutingDao providerInboxRoutingDAO = null;
+	private DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
+	private CtlDocumentDao ctlDocumentDao = SpringUtils.getBean(CtlDocumentDao.class);
+	private ProviderInboxRoutingDao providerInboxRoutingDAO = SpringUtils.getBean(ProviderInboxRoutingDao.class);
 
-	public void setDocumentDAO(DocumentDAO documentDAO) {
-		this.documentDAO = documentDAO;
-	}
-
-	public void setProviderInboxRoutingDAO(ProviderInboxRoutingDao providerInboxRoutingDAO) {
-		this.providerInboxRoutingDAO = providerInboxRoutingDAO;
-	}
-
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		return null;
@@ -164,28 +159,31 @@ public class ManageDocumentAction extends DispatchAction {
 		}
 		
 		
-		Document d = documentDAO.getDocument(documentId);
+		Document d = documentDao.getDocument(documentId);
 
-		d.setDocdesc(documentDescription);
-		d.setDoctype(docType);
-		Date obDate = UtilDateUtilities.StringToDate(observationDate);
-
-		if (obDate != null) {
-			d.setObservationdate(obDate);
+		if(d != null) {
+			d.setDocdesc(documentDescription);
+			d.setDoctype(docType);
+			Date obDate = UtilDateUtilities.StringToDate(observationDate);
+	
+			if (obDate != null) {
+				d.setObservationdate(obDate);
+			}
+	
+			documentDao.merge(d);
 		}
-
-		documentDAO.save(d);
 
 		try {
 
-			CtlDocument ctlDocument = documentDAO.getCtrlDocument(Integer.parseInt(documentId));
-
-			ctlDocument.setModuleId(Integer.parseInt(demog));
-			documentDAO.saveCtlDocument(ctlDocument);
-			// save a document created note
-			if (ctlDocument.isDemographicDocument()) {
-				// save note
-				saveDocNote(request, d.getDocdesc(), demog, documentId);
+			CtlDocument ctlDocument = ctlDocumentDao.getCtrlDocument(Integer.parseInt(documentId));
+			if(ctlDocument != null) {
+				ctlDocument.getId().setModuleId(Integer.parseInt(demog));
+				ctlDocumentDao.merge(ctlDocument);
+				// save a document created note
+				if (ctlDocument.isDemographicDocument()) {
+					// save note
+					saveDocNote(request, d.getDocdesc(), demog, documentId);
+				}
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -271,28 +269,31 @@ public class ManageDocumentAction extends DispatchAction {
 				MiscUtils.getLogger().error("Error", e);
 			}
 		}
-		Document d = documentDAO.getDocument(documentId);
+		Document d = documentDao.getDocument(documentId);
 
-		d.setDocdesc(documentDescription);
-		d.setDoctype(docType);
-		Date obDate = UtilDateUtilities.StringToDate(observationDate);
-
-		if (obDate != null) {
-			d.setObservationdate(obDate);
+		if(d != null) {
+			d.setDocdesc(documentDescription);
+			d.setDoctype(docType);
+			Date obDate = UtilDateUtilities.StringToDate(observationDate);
+	
+			if (obDate != null) {
+				d.setObservationdate(obDate);
+			}
+	
+			documentDao.merge(d);
 		}
-
-		documentDAO.save(d);
 
 		try {
 
-			CtlDocument ctlDocument = documentDAO.getCtrlDocument(Integer.parseInt(documentId));
-
-			ctlDocument.setModuleId(Integer.parseInt(demog));
-			documentDAO.saveCtlDocument(ctlDocument);
-			// save a document created note
-			if (ctlDocument.isDemographicDocument()) {
-				// save note
-				saveDocNote(request, d.getDocdesc(), demog, documentId);
+			CtlDocument ctlDocument = ctlDocumentDao.getCtrlDocument(Integer.parseInt(documentId));
+			if(ctlDocument != null) {
+				ctlDocument.getId().setModuleId(Integer.parseInt(demog));
+				ctlDocumentDao.merge(ctlDocument);
+				// save a document created note
+				if (ctlDocument.isDemographicDocument()) {
+					// save note
+					saveDocNote(request, d.getDocdesc(), demog, documentId);
+				}
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -396,7 +397,7 @@ public class ManageDocumentAction extends DispatchAction {
 		return outfile;
 	}
 
-	public static void deleteCacheVersion(org.oscarehr.document.model.Document d, int pageNum) {
+	public static void deleteCacheVersion(Document d, int pageNum) {
 		File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
 		//pageNum=pageNum-1;
 		File outfile = new File(documentCacheDir,d.getDocfilename()+"_"+pageNum+".png");
@@ -405,7 +406,7 @@ public class ManageDocumentAction extends DispatchAction {
 		}
 	}
 
-	private File hasCacheVersion(org.oscarehr.document.model.Document d, int pageNum){
+	private File hasCacheVersion(Document d, int pageNum){
 		File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
 		//pageNum= pageNum-1;
 		File outfile = new File(documentCacheDir,d.getDocfilename()+"_"+pageNum+".png");
@@ -572,7 +573,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
 
-			Document d = documentDAO.getDocument(doc_no);
+			Document d = documentDao.getDocument(doc_no);
 			log.debug("Document Name :" + d.getDocfilename());
 
 			File outfile = hasCacheVersion(d, pageNum);
@@ -620,7 +621,7 @@ public class ManageDocumentAction extends DispatchAction {
 			log.debug("Document No :" + doc_no);
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
 
-			Document d = documentDAO.getDocument(doc_no);
+			Document d = documentDao.getDocument(doc_no);
 			log.debug("Document Name :" + d.getDocfilename());
 			String name = d.getDocfilename() + "_" + pn + ".png";
 			log.debug("name " + name);
@@ -680,7 +681,7 @@ public class ManageDocumentAction extends DispatchAction {
 		File documentDir = new File(docdownload);
 		log.debug("Document Dir is a dir" + documentDir.isDirectory());
 
-		Document d = documentDAO.getDocument(doc_no);
+		Document d = documentDao.getDocument(doc_no);
 		log.debug("Document Name :" + d.getDocfilename());
 
 		// TODO: Right now this assumes it's a pdf which it shouldn't
@@ -726,7 +727,7 @@ public class ManageDocumentAction extends DispatchAction {
 		String doc_no = request.getParameter("doc_no");
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		// File documentDir = new File(docdownload);
-		Document d = documentDAO.getDocument(doc_no);
+		Document d = documentDao.getDocument(doc_no);
 		String filePath = docdownload + d.getDocfilename();
 
 		int numOfPage = 0;
@@ -761,9 +762,9 @@ public class ManageDocumentAction extends DispatchAction {
 
 		// local document
 		if (remoteFacilityId == null) {
-			CtlDocument ctld = documentDAO.getCtrlDocument(Integer.parseInt(doc_no));
+			CtlDocument ctld = ctlDocumentDao.getCtrlDocument(Integer.parseInt(doc_no));
 			if (ctld.isDemographicDocument()) {
-				LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr(), "" + ctld.getModuleId());
+				LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr(), "" + ctld.getId().getModuleId());
 			} else {
 				LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
 			}
@@ -773,7 +774,7 @@ public class ManageDocumentAction extends DispatchAction {
 			File documentDir = new File(docdownload);
 			log.debug("Document Dir is a dir" + documentDir.isDirectory());
 
-			Document d = documentDAO.getDocument(doc_no);
+			Document d = documentDao.getDocument(doc_no);
 			log.debug("Document Name :" + d.getDocfilename());
 
 			docxml = d.getDocxml();
