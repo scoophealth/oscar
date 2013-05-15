@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,70 +15,115 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This software was written for
- * Centre for Research on Inner City Health, St. Michael's Hospital,
- * Toronto, Ontario, Canada
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
-
-package org.caisi.model;
+package org.oscarehr.common.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class FacilityMessage extends BaseObject {
-	private Long id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name="facility_message")
+public class FacilityMessage extends AbstractModel<Integer> {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	@Column(nullable=false)
 	private String message;
-	private Date creation_date;
-	private Date expiry_date;
+	
+	@Column(name="creation_date",nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date creationDate;
+	
+	@Column(name="expiry_date",nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date expiryDate;
+	
+	@Column(name="facility_id",nullable=true)
 	private Integer facilityId;
+	
+	@Column(name="facility_name",length=32,nullable=true)
 	private String facilityName;
+
 	
 	public FacilityMessage() {
-		creation_date = new Date();
-		expiry_date = new Date();
+		setCreationDate(new Date());
+		setExpiryDate(new Date());
 	}
-	public Date getCreation_date() {
-		return creation_date;
-	}
-	public void setCreation_date(Date creation_date) {
-		this.creation_date = creation_date;
-	}
-	public Date getExpiry_date() {
-		return expiry_date;
-	}
-	public void setExpiry_date(Date expiry_date) {
-		this.expiry_date = expiry_date;
-	}
-	public Long getId() {
+	
+	public Integer getId() {
 		return id;
 	}
-	public void setId(Long id) {
+
+	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getMessage() {
 		return message;
 	}
+
 	public void setMessage(String message) {
 		this.message = message;
-	}	
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
 	public Integer getFacilityId() {
 		return facilityId;
 	}
-	public void setFacilityId(Integer facility_id) {
-		this.facilityId = facility_id;
+
+	public void setFacilityId(Integer facilityId) {
+		this.facilityId = facilityId;
 	}
+
 	public String getFacilityName() {
 		return facilityName;
 	}
-	public void setFacilityName(String facility_name) {
-		this.facilityName = facility_name;
+
+	public void setFacilityName(String facilityName) {
+		this.facilityName = facilityName;
 	}
+	
+	
+	/**
+	 * Just copying this over from the old hibernate
+	 */
 	
 	/* web specific */
 	public String getExpiry_day() {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		return formatter.format(getExpiry_date());
+		return formatter.format(getExpiryDate());
 	}
 	
 	public void setExpiry_day(String day) throws IllegalArgumentException {
@@ -89,11 +133,11 @@ public class FacilityMessage extends BaseObject {
 			Calendar cal1 = Calendar.getInstance();
 			cal1.setTime(dt);
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(getExpiry_date());		
+			cal.setTime(getExpiryDate());		
 			cal.set(Calendar.DAY_OF_MONTH, cal1.get(Calendar.DAY_OF_MONTH));
 			cal.set(Calendar.MONTH, cal1.get(Calendar.MONTH));
 			cal.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
-			setExpiry_date(cal.getTime());
+			setExpiryDate(cal.getTime());
 		}catch(Exception e) {
 			throw new IllegalArgumentException("date must be in yyyy-MM-dd format");
 		}
@@ -101,7 +145,7 @@ public class FacilityMessage extends BaseObject {
 	
 	public String getExpiry_hour() {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getExpiry_date());
+		cal.setTime(getExpiryDate());
 		int hour = cal.get(Calendar.HOUR);
 		if(cal.get(Calendar.AM_PM) == Calendar.PM) {
 			hour += 12;
@@ -111,7 +155,7 @@ public class FacilityMessage extends BaseObject {
 	
 	public void setExpiry_hour(String hour) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getExpiry_date());		
+		cal.setTime(getExpiryDate());		
 		int hr = Integer.valueOf(hour).intValue();
 		if (hr >= 12 ) {
 			cal.set(Calendar.AM_PM,Calendar.PM);
@@ -122,35 +166,35 @@ public class FacilityMessage extends BaseObject {
 			cal.set(Calendar.AM_PM,Calendar.AM);
 			cal.set(Calendar.HOUR,hr);
 		}
-		setExpiry_date(cal.getTime());
+		setExpiryDate(cal.getTime());
 	}
 	
 	public String getExpiry_minute() {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getExpiry_date());		
+		cal.setTime(getExpiryDate());		
 		return String.valueOf(cal.get(Calendar.MINUTE));
 	}
 	
 	public void setExpiry_minute(String minute) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getExpiry_date());		
+		cal.setTime(getExpiryDate());		
 		cal.set(Calendar.MINUTE,Integer.valueOf(minute).intValue());
-		setExpiry_date(cal.getTime());
+		setExpiryDate(cal.getTime());
 	}
 	
 	public String getFormattedCreationDate() {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm");
-		return formatter.format(getCreation_date());
+		return formatter.format(getCreationDate());
 	}
 	
 	public String getFormattedExpiryDate() {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm");
-		return formatter.format(getExpiry_date());
+		return formatter.format(getExpiryDate());
 	}
 	
 	public boolean getActive() {
 		Date now = new Date();
-		if(now.before(getExpiry_date())) {
+		if(now.before(getExpiryDate())) {
 			return true;
 		}
 		return false;
@@ -158,7 +202,7 @@ public class FacilityMessage extends BaseObject {
 	
 	public boolean getExpired() {
 		Date now = new Date();
-		if(now.after(getExpiry_date())) {
+		if(now.after(getExpiryDate())) {
 			return true;
 		}
 		return false;
