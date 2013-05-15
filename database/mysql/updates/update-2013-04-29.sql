@@ -1,1 +1,1 @@
-ALTER TABLE demographicQueryFavourites ADD demoIds VARCHAR(21844);
+ALTER TABLE demographicQueryFavourites ADD demoIds text;
