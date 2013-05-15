@@ -156,6 +156,7 @@ import org.w3c.dom.Document;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.dms.EDocUtil.EDocSort;
 import oscar.form.FrmLabReq07Record;
 import oscar.log.LogAction;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
@@ -734,7 +735,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		StringBuilder sentIds = new StringBuilder();
 
 		logger.debug("module=demographic, moduleid=" + demographicId.toString() + ", view=all, EDocUtil.PRIVATE=" + EDocUtil.PRIVATE + ", sort=" + EDocUtil.SORT_OBSERVATIONDATE + ", viewstatus=active");
-		List<EDoc> privateDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
+		List<EDoc> privateDocs = EDocUtil.listDocs("demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "active");
 		for (EDoc eDoc : privateDocs) {
 			sendSingleDocument(lastDataUpdated, demographicWs, eDoc, demographicId);
 			throttleAndChecks();

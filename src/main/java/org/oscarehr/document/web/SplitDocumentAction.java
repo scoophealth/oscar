@@ -22,17 +22,18 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.CtlDocumentDao;
+import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
+import org.oscarehr.common.model.CtlDocument;
+import org.oscarehr.common.model.CtlDocumentPK;
+import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
-import org.oscarehr.document.dao.DocumentDAO;
-import org.oscarehr.document.model.CtlDocument;
-import org.oscarehr.document.model.CtlDocumentPK;
-import org.oscarehr.document.model.Document;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -46,17 +47,14 @@ import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
 public class SplitDocumentAction extends DispatchAction {
 
-	private DocumentDAO documentDAO = null;
-	public void setDocumentDAO(DocumentDAO documentDAO) {
-		this.documentDAO = documentDAO;
-	}
-
+	private DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
+	
 
 	public ActionForward split(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String docNum = request.getParameter("document");
 		String[] commands = request.getParameterValues("page[]");
 
-		Document doc = documentDAO.getDocument(docNum);
+		Document doc = documentDao.getDocument(docNum);
 
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		new File(docdownload);
@@ -140,14 +138,16 @@ public class SplitDocumentAction extends DispatchAction {
 				patientLabRoutingDao.persist(newPatientRoute);
 			}
 
-			DocumentDAO documentDao = (DocumentDAO) SpringUtils.getBean("documentDAO");
-			CtlDocument result3 = documentDao.getCtrlDocument(Integer.parseInt(docNum));
+			CtlDocumentDao ctlDocumentDao = SpringUtils.getBean(CtlDocumentDao.class);
+			CtlDocument result3 = ctlDocumentDao.getCtrlDocument(Integer.parseInt(docNum));
 
 			if (result3!=null) {
 				CtlDocumentPK ctlDocumentPK = new CtlDocumentPK(Integer.parseInt(newDocNo), "demographic");
-				CtlDocument newCtlDocument = new CtlDocument(ctlDocumentPK,result3.getModuleId());
+				CtlDocument newCtlDocument = new CtlDocument();
+				newCtlDocument.setId(ctlDocumentPK);
+				newCtlDocument.getId().setModuleId(result3.getId().getModuleId());
 				newCtlDocument.setStatus(result3.getStatus());
-				documentDao.saveCtlDocument(newCtlDocument);
+				documentDao.persist(newCtlDocument);
 			}
 
 
@@ -160,7 +160,7 @@ public class SplitDocumentAction extends DispatchAction {
 	}
 
 	public ActionForward rotate180(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Document doc = documentDAO.getDocument(request.getParameter("document"));
+		Document doc = documentDao.getDocument(request.getParameter("document"));
 
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 
@@ -187,7 +187,7 @@ public class SplitDocumentAction extends DispatchAction {
 	}
 
 	public ActionForward rotate90(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Document doc = documentDAO.getDocument(request.getParameter("document"));
+		Document doc = documentDao.getDocument(request.getParameter("document"));
 
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 
@@ -214,7 +214,7 @@ public class SplitDocumentAction extends DispatchAction {
 	}
 
 	public ActionForward removeFirstPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Document doc = documentDAO.getDocument(request.getParameter("document"));
+		Document doc = documentDao.getDocument(request.getParameter("document"));
 
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 

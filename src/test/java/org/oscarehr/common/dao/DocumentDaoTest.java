@@ -44,7 +44,7 @@ public class DocumentDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("document", "ctl_document", "consultdocs", "provider", "providersite", "demographic","provider_facility","Facility");
+		SchemaUtils.restoreTable("document", "ctl_document", "consultdocs", "provider", "providersite", "demographic","provider_facility","Facility","demographic_merged");
 	}
 
 	@Test

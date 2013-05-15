@@ -21,30 +21,49 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
+package org.oscarehr.common.model;
 
-import static org.junit.Assert.assertNotNull;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-import java.util.List;
+@Entity
+@Table(name="ctl_document")
+public class CtlDocument extends AbstractModel<CtlDocumentPK> {
 
-import org.junit.Before;
-import org.junit.Test;
-import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.CtlDocument;
-import org.oscarehr.util.SpringUtils;
-
-public class CtlDocumentDaoTest extends DaoTestFixtures {
-
-	protected CtlDocumentDao dao = SpringUtils.getBean(CtlDocumentDao.class);
-
-	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("ctl_document","document","demographic");
+	@EmbeddedId
+	private CtlDocumentPK id;
+	
+	@Column(nullable=true)
+	private String status;
+	
+	public CtlDocument() {
+		id = new CtlDocumentPK();
 	}
 
-	@Test
-	public void testFindByDocumentNoAndModule() {
-		List<CtlDocument> result = dao.findByDocumentNoAndModule(100, "demo");
-		assertNotNull(result);
+	public CtlDocumentPK getId() {
+		return id;
 	}
+
+	public void setId(CtlDocumentPK id) {
+		this.id = id;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+    public boolean isDemographicDocument(){
+        if(id.getModule() != null && id.getModule().equals("demographic")){
+            return true;
+        }
+        return false;
+    }
+
+	
 }

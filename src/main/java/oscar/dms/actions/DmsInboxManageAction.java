@@ -55,6 +55,7 @@ import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.InboxResultsDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
@@ -64,7 +65,6 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.common.model.Queue;
 import org.oscarehr.common.model.QueueDocumentLink;
-import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -796,7 +796,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		HashMap<Integer, List<Integer>> queueDocNos = new HashMap<Integer, List<Integer>>();
 		HashMap<Integer, String> docType = new HashMap<Integer, String>();
 		HashMap<Integer, List<Integer>> patientDocs = new HashMap<Integer, List<Integer>>();
-		DocumentDAO documentDAO = (DocumentDAO) SpringUtils.getBean("documentDAO");
+		DocumentDao documentDao = (DocumentDao) SpringUtils.getBean("documentDao");
 		Demographic demo = new Demographic();
 		List<Integer> docsWithPatient = new ArrayList<Integer>();
 		HashMap<Integer, String> patientIdNames = new HashMap<Integer, String>();// lbData.patientName = demo.getLastName()+ ", "+demo.getFirstName();
@@ -817,7 +817,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			int docid = q.getDocId();
 			ListDocIds.add(docid);
 			docType.put(docid, "DOC");
-			demo = documentDAO.getDemoFromDocNo(Integer.toString(docid));
+			demo = documentDao.getDemoFromDocNo(Integer.toString(docid));
 			if (demo == null) demoNo = -1;
 			else demoNo = demo.getDemographicNo();
 			if (!patientIds.contains(demoNo)) patientIds.add(demoNo);

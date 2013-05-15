@@ -18,7 +18,7 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
-<%@page import="org.oscarehr.document.dao.DocumentDAO, java.io.File, java.io.RandomAccessFile, java.nio.channels.FileChannel, java.nio.ByteBuffer, com.sun.pdfview.PDFFile" %>
+<%@page import="org.oscarehr.common.dao.DocumentDao, java.io.File, java.io.RandomAccessFile, java.nio.channels.FileChannel, java.nio.ByteBuffer, com.sun.pdfview.PDFFile" %>
 
 <html>
 <head>
@@ -51,8 +51,8 @@
 <ul id="picker">
 <%
 String documentId = request.getParameter("document");
-DocumentDAO docdao = (DocumentDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("documentDAO");
-org.oscarehr.document.model.Document thisDocument = docdao.getDocument(documentId);
+DocumentDao docdao = (DocumentDao) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("documentDao");
+org.oscarehr.common.model.Document thisDocument = docdao.getDocument(documentId);
 
 String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 File documentDir = new File(docdownload);
