@@ -416,14 +416,14 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 	var popup=window.open(varpage, windowname, windowprops);
 }
 
-function reportWindow(page,height,width) {
+function reportWindow(page,height,width) {	
 	//console.log(page);
 	if(height && width){
 		windowprops="height="+height+", width="+width+", location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0" ;
 	}else{
 		windowprops="height=660, width=960, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0";
 	}
-	var popup = window.open(page, "labreport", windowprops);
+	var popup = window.open(encodeURI(page), "labreport", windowprops);
 	popup.focus();
 }
 
@@ -1891,19 +1891,41 @@ function showNext(docid){
 }
 
 function addDocComment(docId, providerNo,sync) {
-	$("status_"+docId).value = 'N';
-	var url=contextpath+"/oscarMDS/UpdateStatus.do";
-	var formid = "acknowledgeForm_" + docId;
-	var data=$(formid).serialize();
-	data += "&method=addComment";
 	
-	new Ajax.Request(url,{method:'post',parameters:data,asynchronous:sync,onSuccess:function(transport){
-				$("status_"+docId).value = "A";
-				$("comment_"+docId+"_"+providerNo).update($("comment_"+docId).value);
-				$("comment_"+docId).update("");
+	var ret = true;
+    var comment = "";
+    var text = jQuery("#comment_"+docId + "_" + providerNo);
+    if( text.length > 0 ) {
+        comment = jQuery("#comment_"+docId + "_" + providerNo).html();
+        if( comment == null || comment == "no comment" ) {
+        	comment = "";
+        }
+    }
+    var commentVal = prompt("Please enter a comment (max. 255 characters)", comment);
+
+    if( commentVal == null ) {
+    	ret = false;
+    }
+    else if( commentVal != null && commentVal.length > 0 )
+    	jQuery("#" + "comment_" + docId).val(commentVal);                
+    else
+    	jQuery("#" + "comment_" + docId).val(comment);            	
+
+    if( ret ) {
+    	$("status_"+docId).value = 'N';
+    	var url=contextpath+"/oscarMDS/UpdateStatus.do";
+    	var formid = "acknowledgeForm_" + docId;
+    	var data=$(formid).serialize();
+    	data += "&method=addComment";
+
+    	new Ajax.Request(url,{method:'post',parameters:data,asynchronous:sync,onSuccess:function(transport){
+					$("status_"+docId).value = "A";
+					$("comment_"+docId+"_"+providerNo).update($("comment_"+docId).value);
+					$("comment_"+docId).update("");
+				}
 			}
-		}
-	);
+    	);
+    }
 }
 
 function getDocComment(docId, providerNo, inQueueB) {
@@ -1917,7 +1939,7 @@ function getDocComment(docId, providerNo, inQueueB) {
         	comment = "";
         }
     }
-    var commentVal = prompt('Enter a comment:', comment);
+    var commentVal = prompt("Please enter a comment (max. 255 characters)", comment);
 
     if( commentVal == null ) {
     	ret = false;
@@ -1927,8 +1949,7 @@ function getDocComment(docId, providerNo, inQueueB) {
     else
     	jQuery("#" + "comment_" + docId).val(comment);            	
 
-   if(ret) {
-	   addDocComment(docId,providerNo,false);
+   if(ret) {	   
 	   updateStatus("acknowledgeForm_" + docId ,inQueueB);
    }                    	
 	

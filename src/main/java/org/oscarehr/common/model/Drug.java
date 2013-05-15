@@ -24,6 +24,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -847,5 +848,22 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setLastUpdateDate(Date lastUpdateDate) {
     	this.lastUpdateDate = lastUpdateDate;
     }
+		
+	//Sorts Ids in descending order
+	public static class ComparatorIdDesc implements Comparator<Drug> {
+		public int compare(Drug d1, Drug d2) {
+			if( d1 == null && d2 == null )
+				return 0;
+			
+			if( d1 == null )
+				return 1;
+			
+			if( d2 == null ) 
+				return -1;
+			
+			return d2.getId().compareTo(d1.getId());				
+			
+		}
+	}
 
 }

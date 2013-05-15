@@ -25,12 +25,12 @@
 
 	/* styles for results container */
 	.yui-ac-container {
-	    position:absolute;top:0em;width:100%;
+	    position:absolute;top:0em;width:400px;
 	}
 
 	/* styles for header/body/footer wrapper within container */
 	.yui-ac-content {
-	    position:absolute;width:200px;border:1px solid #808080;background:#fff;overflow:hidden;z-index:9050;
+	    position:absolute;width:400px;border:1px solid #808080;background:#fff;overflow:hidden;z-index:9050;
 	}
 
 	/* styles for container shadow */
@@ -40,7 +40,7 @@
 
 	/* styles for results list */
 	.yui-ac-content ul{
-	    margin:0;padding:0;width:100%;
+	    margin:0;padding:0;width:400px;
 	}
 
 	/* styles for result item */

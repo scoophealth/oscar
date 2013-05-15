@@ -168,18 +168,18 @@ public class DocumentDao extends AbstractDao<Document> {
 		return query.getResultList();
     }
 
-	public Long findMaxDocNo() {
+	public Integer findMaxDocNo() {
 		String sql = "select max(d.documentNo) from Document d";
 		Query query = entityManager.createQuery(sql);
 		List<Object> o = query.getResultList();
 		if (o.isEmpty()) {
-			return 0L;
+			return 0;
 		}
 		Object r = o.get(0);
 		if (r == null) {
-			return 0L;
+			return 0;
 		}
-		return ((Integer) r).longValue(); 
+		return (Integer) r; 
     }
 	
 	public Document getDocument(String documentNo) {

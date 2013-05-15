@@ -90,6 +90,8 @@ public class ChildImmunizationReport implements PreventionReport{
 			PreventionData.addRemotePreventions(prevs2, demo,"Hib",null);
 			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);
 			PreventionData.addRemotePreventions(prevs4, demo,"MMR",null);
+			prevs4.addAll(PreventionData.getPreventionData("MMRV", demo));
+			PreventionData.addRemotePreventions(prevs4, demo,"MMRV",null);
 
              //need to compile accurate dtap numbers
 			 Map<String, Object> hDtapIpv, hDtapIpvHib;

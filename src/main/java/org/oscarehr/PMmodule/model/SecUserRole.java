@@ -57,7 +57,9 @@ public class SecUserRole implements Serializable {
         initialize();
     }
 
-    protected void initialize () {}
+    protected void initialize () {
+    	//empty
+    }
 
     public String getRoleName () {
         return this._roleName;

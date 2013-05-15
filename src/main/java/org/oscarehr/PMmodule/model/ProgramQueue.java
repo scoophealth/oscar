@@ -113,7 +113,9 @@ public class ProgramQueue implements Serializable {
         return getClientLastName() + "," + getClientFirstName();
     }
 
-    protected void initialize () {}
+    protected void initialize () {
+    	//empty
+    }
 
     /**
      * Return the unique identifier of this class

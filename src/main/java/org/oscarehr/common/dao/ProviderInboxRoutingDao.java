@@ -126,14 +126,7 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 
 			for (String s : listofAdditionalProviders) {
 				if (!hasProviderBeenLinkedWithDocument(labType, labNo, s)) {
-					p = new ProviderInboxItem();
-
-					p.setProviderNo(s);
-					p.setLabNo(labNo);
-					p.setLabType(labType);
-					p.setStatus(ProviderInboxItem.NEW);
-
-					persist(p);
+					addToProviderInbox(s, labNo, labType);
 				}
 			}
 		} catch (Exception e) {

@@ -23,7 +23,6 @@
 
 package oscar.caisi;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -40,15 +39,7 @@ public class IsModuleLoadTag extends TagSupport {
 
 	public int doStartTag() throws JspException {
 		try { 
-			HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-         
-                        
-			String propFile = request.getContextPath().substring(1) + ".properties";
-                     
-			String sep = System.getProperty("file.separator");
-          
-			String propFileName = System.getProperty("user.home") + sep + propFile;
-             
+
 			OscarProperties proper = OscarProperties.getInstance();
 
 			if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on"))
