@@ -26,9 +26,13 @@ package org.oscarehr.casemgmt.model;
 import java.util.Date;
 
 import org.caisi.model.BaseObject;
+import org.oscarehr.util.MiscUtils;
 
 public class Issue extends BaseObject {
-	
+	  
+	private java.text.DateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+	  
 	private Long id;
 	private String code;
 	private String description;
@@ -48,6 +52,7 @@ public class Issue extends BaseObject {
 
 	public Issue() {
 		update_date = new Date();
+		sortOrderId=0;
 	}
 	
 	public Long getId() {
@@ -105,4 +110,25 @@ public class Issue extends BaseObject {
 	public void setType(String type) {
             this.type = type;
         }
+	
+    public String getUpdate_date_web() {        
+        if(update_date==null)
+                return null;
+        else
+                return formatter.format(update_date);
+    }
+    public void setUpdate_date_web(String update_date_s) {
+        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        //sdf.setLenient(false);
+        //SimpleDateFormat sdf = new SimpleDateFormat();
+    formatter.setLenient(false);
+        try{
+                        if(update_date_s!=null)
+                                this.update_date = formatter.parse(update_date_s);
+                        else
+                                this.update_date = new Date();
+            }catch(Exception e){ MiscUtils.getLogger().error("Invalid issue update date", e);}
+        }
+
+    
 }

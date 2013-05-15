@@ -36,8 +36,8 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.model.IssueAdmin;
 import org.caisi.service.IssueAdminManager;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.util.MiscUtils;
 
@@ -95,7 +95,7 @@ public class IssueAdminAction extends DispatchAction {
         String issueAdminId = request.getParameter("id");
         // null issueAdminId indicates an add
         if (issueAdminId != null) {
-            IssueAdmin issueAdmin = mgr.getIssueAdmin(issueAdminId);
+            Issue issueAdmin = mgr.getIssueAdmin(issueAdminId);
             if (issueAdmin == null) {
                 ActionMessages errors = new ActionMessages();
                 errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -139,11 +139,11 @@ public class IssueAdminAction extends DispatchAction {
         DynaActionForm issueAdminForm = (DynaActionForm) form;
 
 	//issue code cannot be duplicated
-	String newCode = ((IssueAdmin)issueAdminForm.get("issueAdmin")).getCode();
-	String newId = String.valueOf(((IssueAdmin)issueAdminForm.get("issueAdmin")).getId());
-	List issueAdmins = mgr.getIssueAdmins();
-	for(Iterator it = issueAdmins.iterator(); it.hasNext();) {
-	    IssueAdmin issueAdmin = (IssueAdmin)it.next();
+	String newCode = ((Issue)issueAdminForm.get("issueAdmin")).getCode();
+	String newId = String.valueOf(((Issue)issueAdminForm.get("issueAdmin")).getId());
+	List<Issue> issueAdmins = mgr.getIssueAdmins();
+	for(Iterator<Issue> it = issueAdmins.iterator(); it.hasNext();) {
+	    Issue issueAdmin = it.next();
 	    String existCode = issueAdmin.getCode();
 	    String existId = String.valueOf(issueAdmin.getId());
 	    if((existCode.equals(newCode)) && !(existId.equals(newId))) {
@@ -155,7 +155,7 @@ public class IssueAdminAction extends DispatchAction {
 	    }
 	}
 
-        mgr.saveIssueAdmin((IssueAdmin)issueAdminForm.get("issueAdmin"));
+        mgr.saveIssueAdmin((Issue)issueAdminForm.get("issueAdmin"));
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE,
                      new ActionMessage("issueAdmin.saved"));
