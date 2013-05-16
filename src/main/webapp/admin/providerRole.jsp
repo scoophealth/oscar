@@ -288,6 +288,8 @@ while (rs.next()) {
 List<Boolean> primaries = new ArrayList<Boolean>();
 
 //when caisi is off, we need to show which role is the one in the program_provider table for each provider.
+if(newCaseManagement) {
+
 for(Properties prop:vec) {
 	boolean res = false;
 	String providerNo = prop.getProperty("provider_no");
@@ -305,6 +307,7 @@ for(Properties prop:vec) {
 	primaries.add(res);
 }
 
+}
 %>
 
   <html>
