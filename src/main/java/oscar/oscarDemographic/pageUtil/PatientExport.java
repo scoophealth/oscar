@@ -132,6 +132,8 @@ public class PatientExport {
 		this.demographicNo = new Integer(demoNo);
 		this.demographic = demographicDao.getDemographic(demoNo);
 		this.authorId = demographic.getProviderNo();
+		log.debug("Demo: " + demographicNo.toString());
+		
 		this.allergies = allergyDao.findAllergies(demographicNo);
 		this.drugs = drugDao.findByDemographicId(demographicNo);
 		
@@ -139,7 +141,7 @@ public class PatientExport {
 		Collections.reverse(drugs);
 		Collections.sort(drugs, new sortByDin());
 		
-		//this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+		this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 		List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
 		problems = new ArrayList<Dxresearch>();
 		for(Dxresearch problem : tempProblems) {
@@ -151,7 +153,6 @@ public class PatientExport {
 		this.labs = assembleLabs();
 		parseCaseManagement();
 		this.measurements = parseMeasurements();
-		log.info("Demo: " + demographicNo.toString());
 	}
 	
 	private static long getIssueID(String rhs) {
@@ -632,7 +633,7 @@ public class PatientExport {
 	public boolean isNumeric(String rhs) {
 		try {
 			Double.parseDouble(rhs);
-		} catch (NumberFormatException nfe) {
+		} catch (Exception e) {
 			return false;
 		}
 		return true;

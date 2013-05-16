@@ -294,7 +294,11 @@ Clinically Measured Observation
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
+#*    *##if ( $measurement.getCreateDate() )
 								<time value="$dateTool.format('yyyyMMddhhmmss', $measurement.getCreateDate())"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<code nullFlavor='NA'/>
@@ -474,7 +478,11 @@ Immunization List
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
+#*    *##if ( $immunization.getCreationDate() )
 								<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<code nullFlavor='NA'/>
@@ -524,7 +532,11 @@ Immunization List
 										<author typeCode="AUT" contextControlCode="OP">
 											<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 											<!-- Author Participation -->
+#*    *##if ( $immunization.getCreationDate() )
 											<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
+#*    *##else
+											<time nullFlavor="UNK"/>
+#*    *##end
 											<assignedAuthor>
 												<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 												<code nullFlavor='NA'/>
@@ -591,7 +603,11 @@ Laboratory Results & Results
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
+#*    *##if ( $patient.stringToDate($lab.hl7TextInfo.getObrDate()) )
 								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<code nullFlavor='NA'/>
@@ -740,9 +756,12 @@ Medications and Prescriptions - Medication List
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
 #**##set( $previousDin = "0" )
 #**##foreach ( $med in $patient.getMedications() )
-#*    *##if( !$previousDin.equals("0") && !$previousDin.equals($med.regionalIdentifier) )
+#*    *##if( !$previousDin.equals("0") && ( !$previousDin.equals($med.regionalIdentifier) || !$med.regionalIdentifier ) )
 						</substanceAdministration>
 					</entry>
+#*    *##end
+#*    *##if( !$med.regionalIdentifier )
+#*        *##set( $previousDin = "null" )
 #*    *##end
 #*    *##if( !$previousDin.equals($med.regionalIdentifier) )
 					<entry typeCode="COMP" contextConductionInd="true">
@@ -760,16 +779,31 @@ Medications and Prescriptions - Medication List
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 								<manufacturedProduct classCode="MANU">
 									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+#*        *##if ( $med.regionalIdentifier && $med.regionalIdentifier != "" )
+#*            *##if ( $med.genericName )
 										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
-#*        *##if ( $med.atc )
-										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
+#*            *##else
+										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="Unknown"/>
+#*            *##end
 #*        *##end
-										<name>$med.brandName</name>
+#*        *##if ( $med.atc && $med.atc != "" )
+#*            *##if ( $med.genericName )
+										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
+#*            *##else
+										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
+#*            *##end
+#*        *##end
+#*        *##if ( $med.regionalIdentifier && $med.regionalIdentifier != "" && $med.atc && $med.atc != "" )
+										<code nullFlavor="UNK"/>
+#*        *##end
+										<name>$!med.brandName</name>
 										<e2e:desc nullFlavor="UNK"/>
 ## Temporary solution until next E2E specification is released
+#*        *##if ( $med.dosage && $med.dosage != "" && $med.unit && $med.unit != "" )
 										<strength>
-											<center value="$med.dosage.substring(0, $med.dosage.indexOf(" "))" unit="$med.unit"/>
+											<center value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
 										</strength>
+#*        *##end
 									</manufacturedLabeledDrug>
 								</manufacturedProduct>
 							</consumable>
@@ -780,7 +814,7 @@ Medications and Prescriptions - Medication List
 								<observation classCode="OBS" moodCode="EVN">
 									<code code="29546-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Record Type"/>
 #*        *##if ( $med.longTerm )
-									<text>Usual medication</text>
+									<text>Usual/long-term medication</text>
 #*        *##else
 									<text>One-time/acute medication</text>
 #*        *##end
@@ -818,15 +852,18 @@ Medications and Prescriptions - Medication List
 										<!--Medication Identification-->
 										<manufacturedProduct classCode="MANU">
 											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
-												<name>$med.genericName</name>
+												<name>$!med.brandName</name>
 											</manufacturedMaterial>
 										</manufacturedProduct>
 									</consumable>
-									<!-- Author Participation -->
 									<author typeCode="AUT" contextControlCode="OP">
 										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 										<!-- Author Participation -->
+#*    *##if ( $med.getWrittenDate() )
 										<time value="$dateTool.format('yyyyMMdd', $med.getWrittenDate())"/>
+#*    *##else
+										<time nullFlavor="UNK"/>
+#*    *##end
 										<assignedAuthor>
 											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 											<code nullFlavor='NA'/>
@@ -842,7 +879,7 @@ Medications and Prescriptions - Medication List
 										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
 										<!-- Dose Observation -->
 										<substanceAdministration classCode="SBADM" moodCode="RQO">
-#*    *##if ( $med.duration != "0" && $med.durUnit )
+#*    *##if ( $patient.isNumeric($med.duration) && $med.duration != "0" && $med.durUnit )
 											<effectiveTime xsi:type="IVL_TS" operator="I">
 												<width value="$med.duration" unit="$med.durUnit"/>
 											</effectiveTime>
@@ -901,13 +938,15 @@ Medications and Prescriptions - Medication List
 #*    *##end
 												</frequency>
 											</effectiveTime>
+#*    *##if ( $med.route && $med.route != "" )
 											<routeCode code="$med.route" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="$med.route"/>
+#*    *##end
 											<approachSiteCode nullFlavor="NA"/>
 											<doseQuantity>
 												<low value="$med.takeMin"/>
 												<high value="$med.takeMax"/>
 											</doseQuantity>
-											<!-- OSCAR Form Code "$med.drugForm" -->
+											<!-- OSCAR Form Code $!med.drugForm -->
 #*    *##if( $e2e.formCodeMap($med.drugForm) )
 											<administrationUnitCode code="$e2e.formCodeMap($med.drugForm)" codeSystem="2.16.840.1.113883.5.1127" displayName="$med.drugForm"/>
 #*    *##end
@@ -916,7 +955,7 @@ Medications and Prescriptions - Medication List
 												<!--Medication Identification-->
 												<manufacturedProduct classCode="MANU">
 													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
-														<name>$med.genericName</name>
+														<name>$!med.brandName</name>
 													</manufacturedMaterial>
 												</manufacturedProduct>
 											</consumable>
@@ -951,7 +990,11 @@ Medications and Prescriptions - Medication List
 #*    *##end
 								</substanceAdministration>
 							</entryRelationship>
-#*    *##set( $previousDin = $med.regionalIdentifier )
+#*    *##if( !$med.regionalIdentifier )
+#*        *##set( $previousDin = "null" )
+#*    *##else
+#*        *##set( $previousDin = $med.regionalIdentifier )
+#*    *##end
 #**##end
 						</substanceAdministration>
 					</entry>
@@ -1000,7 +1043,11 @@ Problems and Conditions - Problem List
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
+#*    *##if ( $problem.getUpdateDate() )
 								<time value="$dateTool.format('yyyyMMdd', $problem.getUpdateDate())"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<code nullFlavor='NA'/>
@@ -1062,7 +1109,11 @@ Risk Factors
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
+#*    *##if ( $risk.getUpdate_date() )
 								<time value="$dateTool.format('yyyyMMdd', $risk.getUpdate_date())"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<code nullFlavor='NA'/>
