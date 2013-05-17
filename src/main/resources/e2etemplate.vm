@@ -696,7 +696,7 @@ Laboratory Results & Results
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "range")} != "" )
 											<referenceRange typeCode="REFV">
 												<observationRange classCode="OBS" moodCode="EVN.CRT">
-													<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+													<code code="$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "identifier")})" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
 													<text>$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "range")})</text>
 													<value xsi:type="ST">$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "range")})</value>
 												</observationRange>
