@@ -224,6 +224,52 @@ ArrayList<String> recomendations = mi.getRecommendations();
             }
     }
 
+    function isNumber(ss){
+		var s = ss.value;
+        var i;
+        for (i = 0; i < s.length; i++){
+            // Check that current character is number.
+            var c = s.charAt(i);
+			if (c == '.') {
+				continue;
+			} else if (((c < "0") || (c > "9"))) {
+                alert('Invalid '+s+' in field ' + ss.name);
+                ss.focus();
+                return false;
+			}
+        }
+        // All characters are numbers.
+        return true;
+    }
+	
+    function wtEnglish2Metric(obj) {
+		if(isNumber(obj) ) {
+			weight = obj.value;
+			weightM = Math.round(weight * 10 * 0.4536) / 10 ;
+			if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
+				obj.value = weightM;
+			}
+		}
+    }
+
+    function htEnglish2Metric(obj) {
+		height = obj.value;
+		if(height.length > 1 && height.indexOf("'") > 0 ) {
+			feet = height.substring(0, height.indexOf("'"));
+			inch = height.substring(height.indexOf("'"));
+			if(inch.length == 1) {
+				inch = 0;
+			} else {
+				inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
+				inch = inch.substring(1);
+			}
+			height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10 ;
+			if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
+				obj.value = height;
+			}
+		}
+    }
+
     function calcBMI() {
     	if (isNumeric(document.getElementsByName("Weight")[0].value) && isNumeric(document.getElementsByName("Height")[0].value)) {
     		if (document.getElementsByName("Height")[0].value > 0) {
@@ -665,7 +711,10 @@ String date = year+"-"+month+"-"+day;
 	                           <input type="button" onclick="document.mainForm.<%=name%>[2].checked = true;" value="Clear">
 	                 <%}else{%>
 	                       <input type="text" id="<%=name%>" name="<%=name%>" size="14"
-	                       	<% if (name.equals("Weight") || name.equals("Height") ){ %> onchange="calcBMI()"<%}%>
+	                       	<% if (name.equals("Weight") || name.equals("Height") ){ %> onchange="calcBMI();"<%}%>
+	                       	<% if (name.equals("Weight")){ %> title="Double click to automatically convert from lbs to kg" onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
+	                       	<% if (name.equals("Height")){ %> title="Double click to automatically convert from feet and inches to cm" onDblClick="htEnglish2Metric(this); calcBMI();"<%}%>
+	                       	<% if (name.equals("BMI")){ %> title="Double click to automatically calculate BMI from height and weight" onDblClick="calcBMI();"<%}%>
 	                       />
 	                       <%=child.flowSheetItem.getValueName()%>
 
