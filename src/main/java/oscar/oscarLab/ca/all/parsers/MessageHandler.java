@@ -35,7 +35,7 @@ import ca.uhn.hl7v2.HL7Exception;
  *      ORU_R01 msg = null;
  *
  *  ORU_R01 is located at 'ca.uhn.hl7v2.model.vXX.message.ORU_R01' where 'vXX'
- *  is the version specified by the hl7 messages that you inted to parse, it is
+ *  is the version specified by the hl7 messages that you intend to parse, it is
  *  stored in the 12th field of the MSH segment.
  *
  *  'msg' should be initialized in the init(String hl7Body) method
