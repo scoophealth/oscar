@@ -319,9 +319,9 @@ public class InboxResultsDao {
 			} else { // Don't mix labs and docs.
 				if ("0".equals(demographicNo) || "0".equals(providerNo)) {
 					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 5; lastNameLoc = 6; firstNameLoc = 7; hinLoc = 8; sexLoc = 9; moduleLoc = 3; obsDateLoc = 4; descriptionLoc = 10; updateDateLoc = 11;
-					sql = " SELECT id, document_no, status, demographic_no as module_id, observationdate, doctype, last_name, first_name, hin, sex, docdesc"
+					sql = " SELECT id, document_no, status, demographic_no as module_id, observationdate, doctype, last_name, first_name, hin, sex, docdesc, updateDateLoc"
 							+ " FROM "
-							+ " (SELECT plr.id, doc.document_no, plr.status, observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime)"
+							+ " (SELECT plr.id, doc.document_no, plr.status, observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime) as updateDateLoc, docdesc"
 							+ " FROM providerLabRouting plr, document doc"
 							+ " WHERE plr.lab_type = 'DOC' "
 							+ " AND plr.status like '%"
@@ -374,7 +374,7 @@ public class InboxResultsDao {
 				} else {
 					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11;
 					sql = " SELECT * "
-							+ " FROM (SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype "
+							+ " FROM (SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, docdesc, updatedatetime "
 							+ " FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
 							+ " WHERE (cd.module_id = d.demographic_no) "
 							+ " 	AND cd.document_no = plr.lab_no "
@@ -385,8 +385,8 @@ public class InboxResultsDao {
 							+ (searchProvider ? " AND plr.provider_no = '" + providerNo + "' " : "")
 							+ " 	AND doc.document_no = cd.document_no  "
 							+ " UNION "
-							+ " SELECT X.id, X.lab_no as document_no, X.status, last_name, first_name, hin, sex, X.module_id, X.observationdate, X.lab_type as doctype "
-							+ " FROM (SELECT plr.id, plr.lab_no, plr.status, plr.lab_type, cd.module_id, observationdate "
+							+ " SELECT X.id, X.lab_no as document_no, X.status, last_name, first_name, hin, sex, X.module_id, X.observationdate, X.lab_type as doctype, docdesc, updatedatetime "
+							+ " FROM (SELECT plr.id, plr.lab_no, plr.status, plr.lab_type, cd.module_id, observationdate, docdesc, updatedatetime "
 							+ " FROM ctl_document cd, providerLabRouting plr, document d "
 							+ " WHERE plr.lab_type = 'DOC' " + "	AND plr.status like '%" + status + "%'  "
 							+ (searchProvider ? " AND plr.provider_no = '" + providerNo + "' " : "")
