@@ -29,8 +29,10 @@ import java.util.List;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.ws.transfer_objects.ProviderPropertyTransfer;
 import org.oscarehr.ws.transfer_objects.ProviderTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,10 +53,14 @@ public class ProviderWs extends AbstractWs {
 
 	public ProviderTransfer[] getProviders2(Boolean active) {
 		List<Provider> tempResults = providerManager.getProviders(active);
-
 		ProviderTransfer[] results = ProviderTransfer.toTransfers(tempResults);
-
 		return (results);
 	}
-
+	
+	public ProviderPropertyTransfer[] getProviderProperties(String providerNo, String propertyName)
+	{
+		List<Property> tempResults=providerManager.getProviderProperties(providerNo, propertyName);
+		ProviderPropertyTransfer[] results = ProviderPropertyTransfer.toTransfers(tempResults);
+		return (results);
+	}
 }
