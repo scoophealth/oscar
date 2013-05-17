@@ -108,9 +108,17 @@ public class EaapsExportAction extends Action {
 			if (providerNo == null) {
 				providerNo = "";
 			}
-			docs.add(new ExportEntry(omdCdsDoc, s.getId().getDemographicNo(), demoId, hash.getHash(), providerNo));
+			docs.add(new ExportEntry(omdCdsDoc,  s.getId().getDemographicNo(), demoId, hash.getHash(), providerNo));
 		}
 
+		String clinicName = OscarProperties.getInstance().getProperty("eaaps.clinic", "");
+		if (clinicName == null) {
+			clinicName = "";
+		}
+		if (!clinicName.isEmpty()) {
+			clinicName = clinicName.concat("_");
+		}
+		
 		// push records 
 		SshHandler handler = null;
 		try {
@@ -125,7 +133,8 @@ public class EaapsExportAction extends Action {
 				
 				//  now save the record to the server
 				String demographicData = e.getDocContent();
-				handler.put(demographicData, String.format("%08d", ConversionUtils.fromIntString(e.getEntryId())) + ".xml");
+				String fileName = clinicName.concat(String.format("%08d", ConversionUtils.fromIntString(e.getEntryId())) + ".xml");
+				handler.put(demographicData, fileName);
 				
 				// finally log the update
 				auditLogger.log("eaaps export", "demographic", e.getDemographicId(), demographicData);

@@ -23,17 +23,22 @@
  */
 package org.oscarehr.research.eaaps;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.AuthUtils;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
+import org.oscarehr.common.model.Demographic;
+
+import oscar.util.ConversionUtils;
 
 public class EaapsIntegrationTest extends DaoTestFixtures {
 
@@ -85,17 +90,55 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 			"wMTc2NSAwMDAwMCBuIAowMDAwMDAxODEwIDAwMDAwIG4gCnRyYWlsZXIKPDwvUm9vdCA2IDAgUi9JRCBbPDkyMThlYWZhYmZkOWM0ZjcyNmY2YjlkNDZmZDI1NmZkPjw4ODc3YzNkN2RjZDIz" + 
 			"ODAxMTU5NmMxZDJlZDQ2YjgyZj5dL0luZm8gNyAwIFIvU2l6ZSA4Pj4Kc3RhcnR4cmVmCjE5MzIKJSVFT0YK";
 	
-	private static final String HASH = "f5950749dc36f9db4dc10fa024c86b498df592f9472775f718c9024f084339c7";
+	// 221b0a55cff1f973bcf3fb927ae4c96232dcfb539ba1398a224e97dab3d0ec29 - 6
+	// c28e21162eea908aa65f70eaab08a429a42170b1068d274c3bac1d444d16265a - 8
+	// 64546ac46047a74ae6edcf73c0d84c8fa08f1ffff4dc9cf745e4a0ceab9369e9 - 9
+	// f5b57b900d6d251b1deebcc0c4fb9cbfa1807a055c0364e86b1681d8c36ffd07 - 31
+	private static final String HASH = "64546ac46047a74ae6edcf73c0d84c8fa08f1ffff4dc9cf745e4a0ceab9369e9";
+	
+	private static final String TIMESTAMP_STRING = ConversionUtils.toDateString(new Date(), "yyyyMMddHHmmss");
 	
 	private static final String HL7 = 
-			"MSH|^~\\&|SENDING APP||||20130408170018.445-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".001-0400||ORU^R01|2501|01|2.2|1\r" + 
 			"PID||" + HASH + "\r" + 
 			"OBR||||SERVICE ID: EAAPS\r" + 
-			"NTE|1|eaaps_" + HASH + "_20130408170040.pdf|" + PDF;
+			"NTE|1|eaaps_" + HASH + "_" + System.currentTimeMillis() + ".pdf|" + PDF + "\r" +
+			"NTE|2||Note comment for message with the AAP attachment " + HASH + "\r" +
+			"NTE|3||MRP message for message with the AAP attachment " + HASH + "\r";
+	
+	private static final String HL7_EMPTY_MESSAGE = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".002-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS\r" + 
+			"NTE|1|eaaps_" + HASH + "_" + (System.currentTimeMillis() + 1) + ".pdf|" + PDF + "\r" +
+			"NTE|2||Note comment for the message without MRP note " + HASH + "\r";
+	
+	private static final String HL7_EMPTY_PDF = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".003-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS\r" + 
+			"NTE|1||\r" +
+			"NTE|2||\r" +
+			"NTE|3||MRP message only without AAP attachment " + HASH + "\r";
 	
 	@BeforeClass
 	public static void init() throws Exception {
 		SchemaUtils.restoreAllTables();
+		AuthUtils.initLoginContext();
+	}
+	
+	@Test
+	public void testHash() {
+		Demographic demo = new Demographic();
+		demo.setFirstName("Joe");
+		demo.setLastName("Doe");
+		demo.setDateOfBirth("23");
+		demo.setMonthOfBirth("12");
+		demo.setYearOfBirth("1983");
+		
+		EaapsHash hash = new EaapsHash(demo, "Stonechurch");
+		assertEquals("JOEDOE19831223Stonechurch", hash.getKey());
+		assertEquals("6cf8b86a2f7e5d68e09cd1c116cb847282a1cdeb4746c0916b14ad493e157a79", hash.getHash());
 	}
 	
 	@Test
@@ -111,10 +154,13 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 		PublicKey publicOscarKey = SendingUtils.getPublicOscarKey(publicOscarKeyString); 
 		PrivateKey publicServiceKey = SendingUtils.getPublicServiceKey(publicServiceKeyString);
 		
-		byte[] bytes = HL7.getBytes(); 
-		int statusCode = SendingUtils.send(bytes, url, publicOscarKey, publicServiceKey, "eaaps");
-		logger.info("Completed EAAPS call with status " + statusCode);
-		assertTrue(statusCode == 200);
+		for(String messageText : new String[] {HL7_EMPTY_PDF, HL7, HL7_EMPTY_MESSAGE}) {
+			byte[] bytes = messageText.getBytes(); 
+			int statusCode = SendingUtils.send(bytes, url, publicOscarKey, publicServiceKey, "eaaps");
+			logger.info("Completed EAAPS call with status " + statusCode);
+			assertEquals(200, statusCode);
+		}
+		
 	}
 
 }
