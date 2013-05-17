@@ -3486,7 +3486,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			e.setId(note.get("id"));
 			e.setDate((Date)note.get("observation_date"));
 			e.setProviderNo((String)note.get("providerNo"));
-			e.setProgramId(Integer.parseInt((String)note.get("program_no")));
+			e.setProgramId(ConversionUtils.fromIntString(note.get("program_no")));
 			e.setRole((String)note.get("reporter_caisi_role"));
 			e.setType("local_note");
 			entries.add(e);
