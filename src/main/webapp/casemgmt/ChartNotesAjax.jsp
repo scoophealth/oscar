@@ -247,6 +247,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 		
 		int currentNcId = 0;
 		String strCurrentNcId = null;
+		// begin for loop for rendering notes
 		for (idx = 0; idx < noteSize; ++idx)
 		{
 
@@ -311,8 +312,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 			boolean hideDocumentNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_document_notes");
 			boolean hideEformNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_eform_notes");
 			//boolean hideMetaData = OscarProperties.getInstance().isPropertyActive("encounter.hide_metadata");
-			boolean hideInvoices = OscarProperties.getInstance().isPropertyActive("encounter.hide_invoices");
-			
+
 			String noteDisplay = "block";
 			if(note.isCpp() && hideCppNotes) {
 				noteDisplay="none";
@@ -321,9 +321,6 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 				noteDisplay="none";
 			}
 			if(note.isEformData() && hideEformNotes) {
-				noteDisplay="none";
-			}
-			if(note.isInvoice() && hideInvoices) {
 				noteDisplay="none";
 			}
 
@@ -344,12 +341,20 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 			}
 
 			//String metaDisplay = (hideMetaData)?"none":"block";
+			
+			String noteIdAttribute = new StringBuilder("nc").append(offset > 0 ? offset : "").append(idx+1).toString();
+			boolean isMagicNote = note.isDocument() || note.isCpp() || note.isEformData() || note.isEncounterForm() || note.isInvoice();
+			String noteClassAttribute = new StringBuilder("note").append(isMagicNote ? "" : " noteRounded").toString(); 
 		%>
-		<div id="nc<%=offset > 0 ? offset : ""%><%=idx+1%>" style="display:<%=noteDisplay %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice()?"":" noteRounded"%>">
-			<input type="hidden" id="signed<%=globalNoteId%>" value="<%=note.isSigned()%>">
-			<input type="hidden" id="full<%=globalNoteId%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>">
-			<input type="hidden" id="bgColour<%=globalNoteId%>" value="<%=bgColour%>">
-			<input type="hidden" id="editWarn<%=globalNoteId%>" value="<%=editWarn%>">
+		
+		<div id="<%=noteIdAttribute%>" 
+			 style="display:<%=noteDisplay%>" 
+			 class="<%=noteClassAttribute%>">
+			 
+			<input type="hidden" id="signed<%=globalNoteId%>" value="<%=note.isSigned()%>" />
+			<input type="hidden" id="full<%=globalNoteId%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>" />
+			<input type="hidden" id="bgColour<%=globalNoteId%>" value="<%=bgColour%>" /> 
+			<input type="hidden" id="editWarn<%=globalNoteId%>" value="<%=editWarn%>" />
 
 	  		<div id="n<%=globalNoteId%>">
 			<%
@@ -367,10 +372,16 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
  						<script>
  							_setupNewNote();
  						</script>
- 						<% } %>						
-						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=globalNoteId%>, event)" style='float: right; margin-right: 5px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png'>
+ 						<% } %>
+ 												
+						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=globalNoteId%>, event)" style='float: right; margin-right: 5px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png' />
 						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="soft" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=cform.getCaseNote_note()%></textarea>
-						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=globalNoteId%>"><%@ include file="noteIssueList.jsp"%></div>
+						
+						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=globalNoteId%>">
+							<%@ include file="noteIssueList.jsp"%>
+							<%--
+							 --%>
+						</div>
 
 						<c:if test="${sessionScope.passwordEnabled=='true'}">
 							<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<input type="password" name="caseNote.password" value="" />&nbsp;Confirmation:&nbsp;<input type='password' name='caseNote.passwordConfirm'/></p>
@@ -400,13 +411,13 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 							{
 							%>
 	 							<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='quitImg<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)"
-								style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/triangle_up.gif'>
+								style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/triangle_up.gif' />
 							<%
 		 					}
 							else
 							{
 							%>
-								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=globalNoteId%>' name='fullViewTrigger' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/triangle_down.gif'>
+								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=globalNoteId%>' name='fullViewTrigger' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/triangle_down.gif' />
 							<%
 							}
 						}
@@ -414,14 +425,18 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 						if (note.getRemoteFacilityId()!=null) // if it's a remote note, say where if came from on the top of the note
 						{
 					 	%>
-						 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" />&nbsp;<%=note.getLocation()%>,<%=note.getProviderName()%></div>
+						 	<div style="background-color:#ffcccc; text-align:right">
+						 		<bean:message key="oscarEncounter.noteFrom.label" />&nbsp;<%=note.getLocation()%>,<%=note.getProviderName()%>
+						 	</div>
 						<%
 						}
 
 						if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
 						{
 					 	%>
-						 	<div style="background-color:#33FFCC; text-align:right">Group Note - Editable note in this <a  href="javascript:void()" onClick="popupPage(700,1000,'Master1','<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=note.getLocation() %>&displaymode=edit&dboperation=search_detail');return false;">client</a></div>
+						 	<div style="background-color:#33FFCC; text-align:right">
+						 		Group Note - Editable note in this <a  href="javascript:void()" onClick="popupPage(700,1000,'Master1','<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=note.getLocation() %>&displaymode=edit&dboperation=search_detail');return false;">client</a>
+						 	</div>
 						<%
 						}
 
@@ -429,7 +444,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 						{
 
 					 	%>
-						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint('<%=globalNoteId%>'   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png'>
+						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint('<%=globalNoteId%>'   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png' />
 						<%
 						}
 
@@ -444,7 +459,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 						 		%>
 							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=globalNoteId%>"
 							 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 10px;">
-							 		<bean:message key="oscarEncounter.edit.msgEdit" />
+							 			<bean:message key="oscarEncounter.edit.msgEdit" />
 							 		</a>
 								<%
 								}
@@ -503,10 +518,12 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 								if(!note.isReadOnly())
 								{
 								%>
+									<div>
 							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=globalNoteId%>"
 							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 10px;">
 							 		<bean:message key="oscarEncounter.edit.msgEdit" />
 							 		</a>
+							 		</div>
 						 		<%
 								}
 							}
@@ -564,7 +581,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 					 		String atbname = "anno" + String.valueOf(new Date().getTime());
 					 		String addr = request.getContextPath() + "/annotation/annotation.jsp?atbname=" + atbname + "&table_id=" + String.valueOf(note.getNoteId()) + "&display=EChartNote&demo=" + demographicNo;
 						%>
-							<input type="image" id="anno<%=globalNoteId%>" src='<%=ctx %>/oscarEncounter/graphics/annotation.png' title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style="float: right; margin-right: 5px; margin-bottom: 3px; height:10px;width:10px" onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;">
+							<input type="image" id="anno<%=globalNoteId%>" src='<%=ctx %>/oscarEncounter/graphics/annotation.png' title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style="float: right; margin-right: 5px; margin-bottom: 3px; height:10px;width:10px" onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;" />
 						<%}
 						%>
 							<%-- render the note contents here --%>
@@ -599,18 +616,18 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 															}
 														}
 													%>
-											</div>
+											</div> <!-- end of observation<%=globalNoteId%> -->
 		  								<%
 		  							}
 		  						%>
-			  				</div>
+			  				</div> <!-- end of txt<%=globalNoteId%> -->
 						<%
 
 			 			if (largeNote(noteStr))
 						{
 			 			%>
 						 	<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='bottomQuitImg<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)" style='float: right; margin-right: 5px; margin-bottom: 3px;'
-							src='<%=ctx %>/oscarEncounter/graphics/triangle_up.gif'>
+							src='<%=ctx %>/oscarEncounter/graphics/triangle_up.gif' />
 						<%
 				 		}
 
@@ -680,15 +697,22 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 									<%
 									if(facility.isEnableEncounterTime() || (program != null && program.isEnableEncounterTime())) {
 									%>
-									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;"><bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;<span id="encTime<%=globalNoteId%>"><%=note.getEncounterTime()%></span></div>
+									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;">
+										<bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;<span id="encTime<%=globalNoteId%>"><%=note.getEncounterTime()%></span>
+									</div>
 									<% } %>
 									<%
 									if(facility.isEnableEncounterTransportationTime() || (program != null && program.isEnableEncounterTransportationTime())) {
 									%>
-									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;"><bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;<span id="encTransTime<%=globalNoteId%>"><%=note.getEncounterTransportationTime()%></span></div>
+									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;">
+										<bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;<span id="encTransTime<%=globalNoteId%>"><%=note.getEncounterTransportationTime()%></span>
+									</div>
 									<% } %>
 
-									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;"><bean:message key="oscarEncounter.encType.title"/>:&nbsp;<span id="encType<%=globalNoteId%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
+									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;">
+										<bean:message key="oscarEncounter.encType.title"/>:&nbsp;
+										<span id="encType<%=globalNoteId%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span>
+									</div>
 
 
 									<div style="display: block; font-size: 11px;">
@@ -712,42 +736,46 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 												<%
 											}
 										%>
-										<br style="clear: both;">
-									</div>
-								</div>
-							</div>
+										<br style="clear: both;" />
+									</div> <!-- end of assigned title -->
+								</div> <!-- end of div summary<%=globalNoteId%> -->
+							</div> <!-- end of div sig<%=globalNoteId%> -->
 						<%
-						}
+						} // end of if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm() && !note.isInvoice())
 					}
 				}
 				%>
-			</div>
-		</div>
+			</div><!-- end of div n<%=globalNoteId%> -->
+		</div><!-- end of div <%=noteIdAttribute%> -->
+		
 		<% if (request.getAttribute("moreNotes") != null && ((Boolean) request.getAttribute("moreNotes"))) { %>
 		<script type="text/javascript">
 		setupOneNote('<%=offset%><%=idx+1%>');
 		</script>
 		<% } %>
 
-					<%
-						//if we are not editing note, remember note ids for setting event listeners
-						//Internet Explorer does not play nice with inserting javascript between divs
-						//so we store the ids here and list the event listeners at the end of this script
-						if (note.getNoteId()!=null && note.getNoteId() != savedId)
-						{
-							if (note.isLocked())
-							{
-								lockedNotes.add(note.getNoteId());
-							}
-							else if (!fulltxt && !note.isDocument() && !note.isEformData() && !note.isEncounterForm() && !note.isRxAnnotation() && !note.isInvoice())
-							{
-								unLockedNotes.add(note.getNoteId());
-							}
-						}
+<%
+		//if we are not editing note, remember note ids for setting event listeners
+		//Internet Explorer does not play nice with inserting javascript between divs
+		//so we store the ids here and list the event listeners at the end of this script
+		if (note.getNoteId()!=null && note.getNoteId() != savedId)
+		{
+			if (note.isLocked())
+			{
+				lockedNotes.add(note.getNoteId());
+			}
+			else if (!fulltxt && !note.isDocument() && !note.isEformData() && !note.isEncounterForm() && !note.isRxAnnotation() && !note.isInvoice())
+			{
+				unLockedNotes.add(note.getNoteId());
+			}
+		}
 
-					} //end for */
+} //end for */
 					%>
-				</c:if> <%
+</c:if> <%-- END OF "not empty notesToDisplay" --%>
+
+
+ <%
  	if (!found && request.getAttribute("moreNotes") == null) {
  		//if we didn't find note but savedId is > 0 then we have a note to edit which is not part of the quick chart
  		if( savedId > 0 ) {
@@ -757,19 +785,25 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
  			//savedId = 0;
  %>
 	<div id="nc<%=offset%><%=savedId%>" class="note noteRounded">
-		<input type="hidden" id="signed<%=savedId%>" value="false">
-		<input type="hidden" id="full<%=savedId%>" value="true">
-		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;">
-		<input type="hidden" id="editWarn<%=savedId%>" value="false">
+		<input type="hidden" id="signed<%=savedId%>" value="false" />
+		<input type="hidden" id="full<%=savedId%>" value="true" />
+		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;" />
+		<input type="hidden" id="editWarn<%=savedId%>" value="false" />
 		<div id="n<%=savedId%>" style="line-height: 1.1em;">
 			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=cform.getCaseNote_note() %></textarea>
-			<div class="sig" id="sig<%=savedId%>"><%@ include file="noteIssueList.jsp"%></div>
+			<div class="sig" id="sig<%=savedId%>">
+				<%--@ include file="noteIssueList.jsp"--%>
+			</div> <!-- end of div sig<%=savedId%> -->
 
 			<c:if test="${sessionScope.passwordEnabled=='true'}">
-				<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<input type="password" name="caseNote.password" value="" />&nbsp;Confirmation:&nbsp;<input type='password' name='caseNote.passwordConfirm'/></p>
+				<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;
+				<input type="password" name="caseNote.password" value="" />&nbsp;Confirmation:&nbsp;
+				<input type='password' name='caseNote.passwordConfirm'/>
+				</p>
 			</c:if>
-		</div>
-	</div>
+		</div> <!-- end of div n<%=savedId%>  -->
+	</div> <!-- end of div nc<%=offset%><%=savedId%> -->
+	
 	<% if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) { %>
  	<script>
 		_setupNewNote();

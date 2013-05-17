@@ -98,7 +98,9 @@
 </nested:empty>
 </div>
 
-<div style="margin-left: 3px; font-size: 11px;"><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span> <nested:equal
+<div style="margin-left: 3px; font-size: 11px;"><span style="float: left;">
+<bean:message key="oscarEncounter.editors.title"/>:</span> 
+<nested:equal
 	name="newNote" value="false">
 	<ul style="list-style: none inside none; margin: 0px;">
 		<nested:iterate indexId="eIdx" id="editor" property="caseNote.editors"
@@ -181,7 +183,8 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 <%
 	encSelect += noteIndex;
 %>
-<div style="clear: right; margin: 0px 3px 0px 0px; font-size: 11px; float: right;"><bean:message key="oscarEncounter.encType.title"/>:&nbsp;
+<div style="clear: right; margin: 0px 3px 0px 0px; font-size: 11px; float: right;">
+<bean:message key="oscarEncounter.encType.title"/>:&nbsp;
 <span id="encType<%=noteIndex%>">
 	<nested:empty name="ajaxsave">
 	<html:select styleId="<%=encSelect%>" styleClass="encTypeCombo"
@@ -320,6 +323,8 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 </table>
 </div>
 
+<!-- end of div noteIssues-resolved -->
+
 <% int countUnresolvedIssue = -1; %>
 <div id="noteIssues-unresolved" style="margin: 0px; background-color: #CCCCFF; font-size: 11px; display: none;">
 <b><bean:message key="oscarEncounter.referenceUnresolvedIssues.title"/></b>
@@ -338,10 +343,8 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 	countUnresolvedIssue ++;
 	if (countUnresolvedIssue % 2 == 0)
 	{
-	%>
-	<tr>
-	<%
-	}
+		%> <tr> <% 
+	} 
 	%>
 	<td style="width: 50%; font-size: 11px; background-color: #CCCCFF;">
 		<%
@@ -381,24 +384,18 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 		<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.major" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">not major</nested:radio></div>
 		<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="true" onchange="<%=submitString%>">resolved</nested:radio></div>
 		<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="false" onchange="<%=submitString%>">unresolved</nested:radio></div>
-		 <div style="text-align: center;"><nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" size="10" disabled="<%=disabled%>" /></div>
+		<div style="text-align: center;"><nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" size="10" disabled="<%=disabled%>" /></div>
 		</div>
 		</div>
 	</td>
- 	<%
-	if (countUnresolvedIssue % 2 != 0)
- 	{
-	%>
+ 	<% if (countUnresolvedIssue % 2 != 0) { %>
 	</tr>
-	<%
- 	}
-	 %>
+	<% } %>
 	</nested:equal>
 	</nested:iterate>
 </table>
-</div>
-</div>
-	
+</div> <!-- end of div noteIssues-unresolved -->
+</div> <!-- end of div noteIssues -->	
 			
 <div id='autosaveTime' class='sig' style='text-align:center; margin:0px;'></div>
 <script type="text/javascript">   
@@ -494,3 +491,4 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
         Calendar.setup({ inputField : "observationDate", ifFormat : "%d-%b-%Y %H:%M ", showsTime :true, button : "observationDate_cal", singleClick : true, step : 1 });    
    }
 </script>
+</div>
