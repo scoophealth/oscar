@@ -1,6 +1,6 @@
 /*  editControl - a WYSIWYG edit control using iFrames and designMode
     Copyright (C) 2009-2013 Peter Hutten-Czapski
-     Version 1.4 now about 500 lines of code
+     Version 1.5 now about 600 lines of code
         NEW in 0.2 button styles, links, select box
         NEW in 0.3 help, date, rule, select all, and clean functions
         NEW in 0.4 code completely rewritten, more functions including images and
@@ -10,7 +10,9 @@
         NEW in 1.1 first commit to cvs
         NEW in 1.2 bugfix for button style mouse behavior and 5 more buttons/functions
         NEW in 1.3 support for IE template loading, cut, copy, paste buttons/functions
+        NEW in 1.3i grafted on compatibility with signature and faxing features
         NEW in 1.4 support for Firefox FF18+ browsers (ionMonkey series)
+        NEW in 1.5 restored support for images, measurements and user template default values lost in 1.3i
     * Requirements: DesignMode and other Dom 2 methods
     * Mozilla 1.3+ IE 5.5+ Netscape 6+ Opera 9+ Konqueror 3.5.7+ Safari 1.3+ Chrome
     * designed for and tested on Firefox 2 - 20.  Tested on Opera 10, Chromium 25 and IE 6/7
@@ -411,11 +413,18 @@ function populateTemplate(){
 				//known field placeholder with a value so use it
 				temp[x]=cache.get(temp[x]);
 			} else {
+				//try to get the placeholder value from measurements
+				if((document.getElementById(temp[x]))&&(document.getElementById(temp[x]).value.length>0)){
+					//supplied measurement placeholder with a value so use it
+					temp[x]=document.getElementById(temp[x]).value;
+				} else {
 				//get the placeholder value from the user
 				var prompttext=new Array();
 				prompttext=temp[x].split('=');
-				temp[x]= prompt(prompttext[0] + " returned an empty value, please supply a value below.", "");
+				if (prompttext[1]==undefined){prompttext[1]="";}
+				temp[x]= prompt("Please supply a value for "+ prompttext[0], prompttext[1]);
 				if (temp[x] == null) { temp[x] = ""; }
+				}
 			}
 		}
 		contents += temp[x];
@@ -526,11 +535,12 @@ function tbuttonOnClick() {
   		case "help" : window.open (cfg_filesrc+"editor_help.html","mywindow","resizable=1,width=300,height=500"); break;
   		case "insertimage":
   			value = prompt(this.getAttribute('promptText'));  
-  			if (editControlContents(cfg_editorname).trim() == "") { seteditControlContents(cfg_editorname, "<img src='" + value + "'></img>"); }  			  			
-  			else if (window[this.name]) { window[this.name].document.execCommand(this.id, false, value); } 
-  			else { document.getElementById(this.name).contentWindow.document.execCommand(this.id, false, value); }
-  			html = jQuery().convertImagePaths(document.getElementById('edit').contentWindow.document.body.innerHTML);
-  			document.getElementById('edit').contentWindow.document.body.innerHTML = html;
+			var pattern = /^(http[s]?:\/\/){1}((www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5})|((\d{1,3}\.){3}\d{1,3})/;
+			if(!pattern.test(value)) { 
+				//not URL so use a relative address
+      				value = cfg_isrc + value;
+			}
+			document.getElementById(this.name).contentWindow.document.execCommand(this.id, false, value); 
   			break;
   		case "promptUser" : value = prompt(this.getAttribute('promptText'));	
   		default: 
