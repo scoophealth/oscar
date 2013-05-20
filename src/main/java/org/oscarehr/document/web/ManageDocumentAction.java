@@ -889,16 +889,14 @@ public class ManageDocumentAction extends DispatchAction {
                 
                 if(viewAnnotationAcknowledgementTicklerFlag) {
                     if(annotation.length()>0)  {
-                        out.println(annotation+"<br>");
+                        out.println(annotation);
                     }
-                
-                    if(acknowledgement.length()>0) {
-                        out.println(acknowledgement+"<br>");
-                    }
-		
                     if(tickler.length()>0)
                     {
                         out.println(tickler+"<br>");
+                    }
+                    if(acknowledgement.length()>0) {
+                        out.println(acknowledgement+"<br>");
                     }
                 }
                 
