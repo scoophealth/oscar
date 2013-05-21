@@ -342,6 +342,11 @@ function removeFirstPage(id) {
 	}});
 }
 
+function split(id) {
+        	var loc = contextpath+"/oscarMDS/Split.jsp?document=" + id;
+        	popupStart(1100, 1100, loc, "Splitter");
+        }
+        
 function hideTopBtn(){
 	$('topFRBtn').hide();
 	if($('topFBtn') && $('topFileBtn')){
