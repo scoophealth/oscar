@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html"
@@ -786,7 +787,7 @@ div.logoutBox {
 			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/MyoscarConfiguration.jsp"/>&quot;);return false;'><bean:message key="admin.admin.myoscarconfig"/></a></li>
 			
 			<%
-				if (OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url")!=null)
+				if (StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"))!=null)
 				{
 					%>
 						<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/oscar_myoscar_sync_config_redirect.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
