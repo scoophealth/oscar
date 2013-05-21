@@ -24,10 +24,10 @@
 
 --%>
 
-<%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
-<%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.common.model.ProviderPreference"%>
-<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.ProviderSiteDao"%>
+<%@ page import="org.oscarehr.util.SessionConstants"%>
+<%@ page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.dao.ScheduleHolidayDao" %>
@@ -36,7 +36,7 @@
 <%@ page import="org.oscarehr.common.model.MyGroup" %>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
-<%@page import="oscar.util.ConversionUtils" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 <%@ page import="org.oscarehr.common.dao.ScheduleDateDao" %>
 <%@ page import="org.oscarehr.common.model.ScheduleDate" %>
 <%@ page import="org.oscarehr.common.dao.ProviderSiteDao" %>
@@ -461,16 +461,10 @@ function refreshTabAlerts(id) {
 	</td>
 		<td>
 		<ul id="navlist">
-			<li><a
-				href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday"
-				TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>'
-				OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"><bean:message
-				key="global.today" /></a></li>
-			<li><a
-				href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth"
-				TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>'
-				OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message
-				key="global.month" /></a></li>
+			<li><a href='providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1'><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a></li>
+			 <li>
+			 <a href='providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=0&displaymode=day&dboperation=searchappointmentday&caseload=1&clProv=<%=curUser_no%>'><bean:message key="global.caseload"/></a>
+			 </li>
 			<li><a href="#"
 				ONCLICK="popupOscarRx(550,687,'<%=resourcebaseurl%>');return false;"
 				title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>"
@@ -574,25 +568,9 @@ function refreshTabAlerts(id) {
 		</ul>
 		</td>
 
-		<form method="post" name="jumptodate" action="providercontrol.jsp">
-		<td align="right" valign="bottom"><INPUT TYPE="text" NAME="year"
-			VALUE="<%=strYear%>" WIDTH="4" HEIGHT="10" border="0" size="4"
-			maxlength="4">- <INPUT TYPE="text" NAME="month"
-			VALUE="<%=strMonth%>" WIDTH="2" HEIGHT="10" border="0" size="2"
-			maxlength="2">- <INPUT TYPE="text" NAME="day"
-			VALUE="<%=strDay%>" WIDTH="2" HEIGHT="10" border="0" size="2"
-			maxlength="2"> <INPUT TYPE="hidden" NAME="view"
-			VALUE="<%=view%>"> <INPUT TYPE="hidden" NAME="curProvider"
-			VALUE="<%=request.getParameter("curProvider")%>"> <INPUT
-			TYPE="hidden" NAME="curProviderName"
-			VALUE="<%=request.getParameter("curProviderName")%>"> <INPUT
-			TYPE="hidden" NAME="displaymode" VALUE="day"> <INPUT
-			TYPE="hidden" NAME="dboperation" VALUE="searchappointmentday">
-		<input type="hidden" name="Go" value=""> <INPUT TYPE="SUBMIT"
-			VALUE="<bean:message key="provider.appointmentprovideradminmonth.btnGo"/>"
-			onclick="document.forms['jumptodate'].Go.value='GO'; document.forms['jumptodate'].submit();"
-			SIZE="5">&nbsp;&nbsp;
-
+		
+		<td align="right" valign="bottom">
+		
 		  <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>&nbsp;
 		  
 
@@ -601,11 +579,9 @@ function refreshTabAlerts(id) {
 		  </caisi:isModuleLoad>			
 			
 			| <a href="../logout.jsp"><bean:message key="provider.appointmentprovideradminmonth.btnlogOut" />  &nbsp;</a>
-			
-			
-			
+
 			</td>
-		</form>
+		
 	</tr>
 </table>
 
@@ -623,11 +599,40 @@ function refreshTabAlerts(id) {
 				<b><span CLASS=title><%=strYear%>-<%=strMonth%></span></b> <a
 					href="providercontrol.jsp?year=<%=year%>&month=<%=(month+1)%>&day=<%=day%>&displaymode=month&dboperation=searchappointmentmonth&providerview=<%=providerview%>">
 				<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
-					ALT="<%=arrayMonthOfYear[month%12]%>" vspace="2">&nbsp;&nbsp;</a></td>
+					ALT="<%=arrayMonthOfYear[month%12]%>" vspace="2">&nbsp;&nbsp;</a>
+				
+         		| <u><a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1"  title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a></u>				
+					
+				| <a
+				href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday"
+				TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>'
+				OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"><bean:message key="global.today" /></a>	
+				
+				| <span style="color:#333">Month</span>
+				
+				</td>
 				<TD ALIGN="center" width="33%"><B> <%= arrayMonthOfYear[(month+11)%12] %>
 				</b></TD>
 				<td ALIGN="RIGHT">
-
+		<form method="post" name="jumptodate" action="providercontrol.jsp" style="display:inline;margin:0px;padding:0px;padding-right:10px;">
+		<INPUT TYPE="text" NAME="year"
+			VALUE="<%=strYear%>" WIDTH="4" HEIGHT="10" border="0" size="4"
+			maxlength="4">- <INPUT TYPE="text" NAME="month"
+			VALUE="<%=strMonth%>" WIDTH="2" HEIGHT="10" border="0" size="2"
+			maxlength="2">- <INPUT TYPE="text" NAME="day"
+			VALUE="<%=strDay%>" WIDTH="2" HEIGHT="10" border="0" size="2"
+			maxlength="2"> <INPUT TYPE="hidden" NAME="view"
+			VALUE="<%=view%>"> <INPUT TYPE="hidden" NAME="curProvider"
+			VALUE="<%=request.getParameter("curProvider")%>"> <INPUT
+			TYPE="hidden" NAME="curProviderName"
+			VALUE="<%=request.getParameter("curProviderName")%>"> <INPUT
+			TYPE="hidden" NAME="displaymode" VALUE="day"> <INPUT
+			TYPE="hidden" NAME="dboperation" VALUE="searchappointmentday">
+		<input type="hidden" name="Go" value=""> <INPUT TYPE="SUBMIT"
+			VALUE="<bean:message key="provider.appointmentprovideradminmonth.btnGo"/>"
+			onclick="document.forms['jumptodate'].Go.value='GO'; document.forms['jumptodate'].submit();"
+			SIZE="5">
+		</form>
 
 <% boolean isTeamOnly=false; %>
 
