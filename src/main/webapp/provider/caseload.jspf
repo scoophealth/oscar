@@ -133,7 +133,6 @@ clH = ["<bean:message key="caseload.msgDemographic" />", "", "<bean:message key=
 					<b>DxReg: </b>
 					<input type='text' id='caseloadDx' size='10' onclick='this.value=""; document.getElementById("caseloadQ").value="";' value="<%= StringEscapeUtils.escapeHtml(caseloadDx).replace("'","\\\'") %>" />
 					<input type='submit' value='<bean:message key="caseload.msgSearch" />' onclick='search("search"); return false;'>
-					| <a href='providercontrol.jsp?year=<%=caseloadCurYear%>&month=<%=caseloadCurMonth%>&day=<%=caseloadCurDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="caseload.msgSchedule" /></a> &nbsp;
 					</form>
 				</div>
 			</div>
