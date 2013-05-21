@@ -223,36 +223,13 @@ public class FrmData {
                 }
             }
 
-            ////////////////////////
-//            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
-//                ret = getShortcutFormValue(demoNo, "AR2005");
-
-//                String[] foo = ret[0].split(".jsp");
-//                ret[0] = foo[0] + "pg1.jsp" + foo[1];
-
-//            }
-//            String[] ret_backup =  (String[]) ret.clone();
-//            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
-//                ret = getShortcutFormValue(demoNo, "AR");
-
-//                String[] foo = ret[0].split(".jsp");
-//                ret[0] = foo[0] + "pg1.jsp" + foo[1];
-
-//            }
-//            if ( ret[1].equals("0") && formName.equals("AR1") && !xmlForm[1].equals("0")) { // ditto
-//                ret = xmlForm;
-//            }
-//            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
-//                ret = ret_backup;
-//            }
-//
-//            if ( ret[1].equals("0") && formName.equals("AR2") ) { // ditto
-//                ret = getShortcutFormValue(demoNo, "AR");
-//                String[] foo = ret[0].split(".jsp");
-//                ret[0] = foo[0] + "pg2.jsp" + foo[1];
-
-//            }
-        } else {
+   
+        } else if("".equals(table)){
+        	rs = null;
+            ret[1] = "0";
+        } 
+        
+        else {
             sql = "SELECT ID FROM " + table + " WHERE demographic_no=" + demoNo +" order by formEdited desc limit 0,1";
             rs = DBHandler.GetSQL(sql);
             while(rs.next()) {
@@ -260,7 +237,8 @@ public class FrmData {
             }
         }
 
-        rs.close();
+        if(rs != null)
+        	rs.close();
         _log.debug("RETURNING "+ret[0]+" = "+ret[1]);
         return ret;
     }
