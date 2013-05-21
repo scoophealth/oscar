@@ -27,6 +27,8 @@ package org.oscarehr.managers;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,9 @@ import oscar.log.LogAction;
 public class ProviderManager2 {
 	@Autowired
 	private ProviderDao providerDao;
+
+	@Autowired
+	private PropertyDao propertyDao;
 
 	public List<Provider> getProviders(Boolean active) {
 		List<Provider> results = null;
@@ -58,5 +63,15 @@ public class ProviderManager2 {
 		LogAction.addLogSynchronous("ProviderManager.getProvider, providerNo=" + providerNo, null);
 
 		return (result);
+	}
+	
+	public List<Property> getProviderProperties(String providerNo, String propertyName)
+	{
+		List<Property> results=propertyDao.findByNameAndProvider(propertyName, providerNo);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("ProviderManager.getProviderProperties, providerNo=" + providerNo+", propertyName="+propertyName, null);
+		
+		return(results);
 	}
 }
