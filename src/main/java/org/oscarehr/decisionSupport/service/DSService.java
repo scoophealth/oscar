@@ -34,11 +34,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.decisionSupport.dao.DSGuidelineDAO;
+import org.oscarehr.common.dao.DSGuidelineDao;
+import org.oscarehr.common.dao.DSGuidelineProviderMappingDao;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -46,15 +48,18 @@ import org.oscarehr.util.MiscUtils;
  */
 public abstract class DSService {
     private static final Logger logger = MiscUtils.getLogger();
-    protected DSGuidelineDAO dsGuidelineDAO;
+    @Autowired
+    protected DSGuidelineDao dSGuidelineDao;
+    @Autowired
+    protected DSGuidelineProviderMappingDao dSGuidelineProviderMappingDao;
 
     public DSService() {
-        this.setDsGuidelineDAO(new DSGuidelineDAO());
+  
     }
 
     public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo) {
         logger.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
-        List<DSGuideline> dsGuidelines = this.dsGuidelineDAO.getDSGuidelinesByProvider(providerNo);
+        List<DSGuideline> dsGuidelines = this.dSGuidelineDao.getDSGuidelinesByProvider(providerNo);
         logger.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + dsGuidelines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
         for (DSGuideline dsGuideline: dsGuidelines) {
@@ -78,20 +83,10 @@ public abstract class DSService {
     public abstract void fetchGuidelinesFromService(String providerNo);
 
     public List<DSGuideline> getDsGuidelinesByProvider(String provider) {
-        return dsGuidelineDAO.getDSGuidelinesByProvider(provider);
+        return dSGuidelineDao.getDSGuidelinesByProvider(provider);
     }
 
-    /**
-     * @return the dsGuidelineDAO
-     */
-    public DSGuidelineDAO getDsGuidelineDAO() {
-        return dsGuidelineDAO;
-    }
-
-    /**
-     * @param dsGuidelineDAO the dsGuidelineDAO to set
-     */
-    public void setDsGuidelineDAO(DSGuidelineDAO dsGuidelineDAO) {
-        this.dsGuidelineDAO = dsGuidelineDAO;
+    public DSGuideline findGuideline(Integer guidelineId) {
+    	return dSGuidelineDao.find(guidelineId);
     }
 }
