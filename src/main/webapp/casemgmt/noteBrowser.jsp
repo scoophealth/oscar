@@ -456,7 +456,7 @@
                             <a
                                 href="#" onclick="LoadView('all')" ><%=view.equals("all") ? "<b>":""%>All<%=view.equals("all") ? "</b>":""%></a> <% for (int i3 = 0; i3 < doctypes.size(); i3++) {%>
                             | <a
-                                href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3),"UTF-8")%>')"><%=view.equals(URLEncoder.encode((String) doctypes.get(i3),"UTF-8")) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals(URLEncoder.encode((String) doctypes.get(i3),"UTF-8")) ? "</b>":""%></a>
+                                href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3),"UTF-8")%>')"><%=view.equals((String) doctypes.get(i3)) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals((String) doctypes.get(i3)) ? "</b>":""%></a>
                             <%}%> 
                         </fieldset>
                         <div id="docbuttons">
@@ -473,14 +473,14 @@
                             
                         <div id="docinfo"></div>
                         <div id="printnotesbutton"><input type='image' src="../oscarEncounter/graphics/document-print.png" onclick="PrintEncounter();" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter"></div>  
-                    </td><td>
+                    </td><td valign="top">
                         <fieldset><legend><bean:message key="oscarEncounter.noteBrowser.UploadObservationTypeDescription"/></legend>
                             <SELECT MULTIPLE SIZE=5 id="doclist" onchange="getDoc();">
                                 <%
                                     for (int i2 = 0; i2 < docs.size(); i2++) {
                                         EDoc cmicurdoc = docs.get(i2);
                                 %>
-                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>" title="<%=cmicurdoc.getDescription()%>"><%=cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=(cmicurdoc.getDescription().length()<20?cmicurdoc.getDescription():cmicurdoc.getDescription().substring(0,30)+"...")%>
+                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>" title="<%=cmicurdoc.getDescription()%>"><%=cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=(cmicurdoc.getDescription().length()<30?cmicurdoc.getDescription():cmicurdoc.getDescription().substring(0,30)+"...")%>
                                 </option> <%}%>
                             </SELECT>
                         </fieldset>
