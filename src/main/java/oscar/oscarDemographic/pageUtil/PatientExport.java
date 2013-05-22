@@ -68,8 +68,9 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
+ * Models a "patient" which bundles all data required to define a "patient" for export
+ * 
  * @author Jeremy Ho
- * This class models a "patient" which bundles all data required to define a "patient" for export
  */
 public class PatientExport {
 	private static Logger log = MiscUtils.getLogger();
@@ -128,6 +129,9 @@ public class PatientExport {
 	protected PatientExport() {
 	}
 	
+	/**
+	 * @param demoNo
+	 */
 	public PatientExport(String demoNo) {
 		this.demographicNo = new Integer(demoNo);
 		this.demographic = demographicDao.getDemographic(demoNo);
@@ -155,6 +159,10 @@ public class PatientExport {
 		this.measurements = parseMeasurements();
 	}
 	
+	/**
+	 * @param rhs
+	 * @return issueID as long
+	 */
 	private static long getIssueID(String rhs) {
 		long answer;
 		try {
@@ -315,6 +323,11 @@ public class PatientExport {
 		return allLabs;
 	}
 	
+	/**
+	 * @param routing
+	 * @param lab_no
+	 * @return True if valid Lab Measurement, else false
+	 */
 	private boolean isValidLabMeasurement(List<PatientLabRouting> routing, String lab_no) {
 		int labNo = Integer.parseInt(lab_no);
 		for(PatientLabRouting entry : routing) {
@@ -427,7 +440,13 @@ public class PatientExport {
 		return exImmunizations && preventions!=null && !preventions.isEmpty();
 	}
 	
-	// Function to allow access to PreventionsExt table data based on prevention id
+	/**
+	 * Function to allow access to PreventionsExt table data based on prevention id
+	 * 
+	 * @param id
+	 * @param keyval
+	 * @return String containing result, or empty string if not available
+	 */
 	public static String getImmuExtValue(String id, String keyval) {
     	try {
     		List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), keyval);
@@ -451,7 +470,13 @@ public class PatientExport {
 		return exLaboratoryResults && labs!=null && !labs.isEmpty();
 	}
 	
-	// Function to allow access to LabsExt table data based on prevention id (direct version)
+	/**
+	 * Function to allow access to LabsExt table data based on prevention id (direct version)
+	 * 
+	 * @param id
+	 * @param keyval
+	 * @return String containing result, or empty string if not available
+	 */
 	public static String getLabExtValue(String id, String keyval) {
 		try {
 			List<MeasurementsExt> measurementExt= measurementsExtDao.getMeasurementsExtByMeasurementId(Integer.valueOf(id));
@@ -466,7 +491,13 @@ public class PatientExport {
 		return "";
 	}
 	
-	// Function to allow access to LabsExt table data based on prevention id (object version)
+	/**
+	 * Function to allow access to LabsExt table data based on prevention id (object version)
+	 * 
+	 * @param measurementExt
+	 * @param keyval
+	 * @return String containing result, or empty string if not available
+	 */
 	public static String getLabExtValue(List<MeasurementsExt> measurementExt, String keyval) {
 		for (MeasurementsExt entry : measurementExt) {
 			if(entry.getKeyVal().equals(keyval)) {
@@ -476,7 +507,12 @@ public class PatientExport {
 		return "";
 	}
 	
-	// Handles Other ID field parsing
+	/**
+	 * Handles Other ID field parsing
+	 * 
+	 * @param rhs
+	 * @return Integer x of string "x-y"
+	 */
 	private Integer[] parseOtherID(String rhs) {
 		Integer[] lhs = null;
 		try {
@@ -492,7 +528,12 @@ public class PatientExport {
 		return lhs;
 	}
 	
-	// Nested Lab Object Models
+	/**
+	 * Nested Lab Object Model
+	 * 
+	 * @author Jeremy Ho
+	 * 
+	 */
 	public static class Lab {
 		public Hl7TextInfo hl7TextInfo;
 		public List<LabGroup> group = new ArrayList<LabGroup>();
@@ -506,6 +547,12 @@ public class PatientExport {
 		}
 	}
 	
+	/**
+	 * Lab Group Object Model
+	 * 
+	 * @author Jeremy Ho
+	 *
+	 */
 	public static class LabGroup {
 		public int id;
 		public List<Measurement> measurement = new ArrayList<Measurement>();
@@ -539,11 +586,23 @@ public class PatientExport {
 		return exMedicationsAndTreatments && drugs!=null && !drugs.isEmpty();
 	}
 	
+	/**
+	 * Checks if drug is "active" by comparing to current date
+	 * 
+	 * @param rhs
+	 * @return True if active, false if not
+	 */
 	public boolean isActiveDrug(Date rhs) {
 		if(currentDate.after(rhs)) return false;
 		else return true;
 	}
 	
+	/**
+	 * Allows for collection sort by DIN numbers
+	 * 
+	 * @author Jeremy Ho
+	 *
+	 */
 	public class sortByDin implements Comparator<Drug> {
 		public int compare(Drug one, Drug two) {
 			int answer;
@@ -567,11 +626,16 @@ public class PatientExport {
 		return exProblemList && problems!=null && !problems.isEmpty();
 	}
 
-	// Function to allow access to ICD9 Description table data based on ICD9 code
+	/**
+	 * Function to allow access to ICD9 Description table data based on ICD9 code
+	 * 
+	 * @param code
+	 * @return String representing the ICD9 Code's description
+	 */
 	public static String getICD9Description(String code) {
 		String result = icd9Dao.findByCode(code).getDescription();
 		if (result == null || result.isEmpty()) {
-			return " ";
+			return "";
 		}
 		
 		return result;
@@ -618,6 +682,12 @@ public class PatientExport {
 		return currentDate;
 	}
 	
+	/**
+	 * Takes in string dates in multiple possible formats and returns a date object of that time
+	 * 
+	 * @param rhs
+	 * @return Date represented by the string if possible, else return current time
+	 */
 	public Date stringToDate(String rhs) {
 		String[] formatStrings = {"yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm", "yyyy-MM-dd"};
 		for(String format : formatStrings) {
@@ -629,7 +699,12 @@ public class PatientExport {
 		return new Date();
 	}
 	
-	// Check if string is valid numeric
+	/**
+	 * Check if string is valid numeric
+	 * 
+	 * @param rhs
+	 * @return True if rhs is a number, else false
+	 */
 	public boolean isNumeric(String rhs) {
 		try {
 			Double.parseDouble(rhs);
@@ -639,7 +714,12 @@ public class PatientExport {
 		return true;
 	}
 	
-	// Remove invalid characters and formatting from strings
+	/**
+	 * Remove invalid characters and formatting from strings
+	 * 
+	 * @param rhs
+	 * @return String without invalid characters
+	 */
 	public String cleanString(String rhs) {
 		String eol = System.getProperty("line.separator");
 		String str = rhs.replaceAll("<br( )+/>", eol);
@@ -649,7 +729,13 @@ public class PatientExport {
 		return str;
 	}
 	
-	// Function to allow access to Casemanagement Note Ext table data based on note id
+	/**
+	 * Function to allow access to Casemanagement Note Ext table data based on note id
+	 * 
+	 * @param id
+	 * @param keyval
+	 * @return String of result if available, otherwise empty string
+	 */
 	public static String getCMNoteExtValue(String id, String keyval) {
 		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
 		for(CaseManagementNoteExt entry : cmNoteExts) {
@@ -667,6 +753,12 @@ public class PatientExport {
 		return authorId;
 	}
 	
+	/**
+	 * Get Provider's First Name based on provider number
+	 * 
+	 * @param providerNo
+	 * @return String of name if available, else empty string
+	 */
 	public String getProviderFirstName(String providerNo) {
 		String name;
 		try {
@@ -679,6 +771,12 @@ public class PatientExport {
 		return name;
 	}
 	
+	/**
+	 * Get Provider's Last Name based on provider number
+	 * 
+	 * @param providerNo
+	 * @return String of name if available, else empty string
+	 */
 	public String getProviderLastName(String providerNo) {
 		String name;
 		try {
