@@ -45,6 +45,7 @@ import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DSGuidelineProviderMapping;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction;
 
@@ -54,6 +55,7 @@ import oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction;
  */
 public class DSServiceMyDrugref extends DSService {
     private static final Logger logger = MiscUtils.getLogger();
+    @Autowired
     private UserPropertyDAO  userPropertyDAO;
 
     public DSServiceMyDrugref() {
@@ -84,35 +86,35 @@ public class DSServiceMyDrugref extends DSService {
                 logger.debug("uuid: " + uuid);
                 logger.debug("version: " + versionNumber);
 
-                DSGuideline matchedGuideline = dsGuidelineDAO.getDSGuidelineByUUID(uuid);
+                DSGuideline matchedGuideline = dSGuidelineDao.findByUUID(uuid);
                 if (matchedGuideline == null) {
                     guidelinesToFetch.add(uuid);
                 } else if (matchedGuideline.getVersion() < versionNumber) {
                     matchedGuideline.setStatus('I');
                     matchedGuideline.setDateDecomissioned(new Date());
-                    dsGuidelineDAO.update(matchedGuideline);
+                    dSGuidelineDao.merge(matchedGuideline);
                     guidelinesToFetch.add(uuid);
                 }
             }
             //fetch the new ones
             List<DSGuideline> newGuidelines = this.fetchGuidelines(guidelinesToFetch);
             for (DSGuideline newGuideline: newGuidelines) {
-                dsGuidelineDAO.save(newGuideline);
+                dSGuidelineDao.persist(newGuideline);
             }
             //Do mappings-guideline mappings;
-            List<DSGuidelineProviderMapping> uuidsMapped = dsGuidelineDAO.getMappingsByProvider(providerNo);
+            List<DSGuidelineProviderMapping> uuidsMapped = dSGuidelineProviderMappingDao.getMappingsByProvider(providerNo);
             for (Hashtable<String,String> newMapping: providerGuidelines) {
                 String newUuid = newMapping.get("uuid");
                 DSGuidelineProviderMapping newUuidObj = new DSGuidelineProviderMapping(newUuid, providerNo);
                 if (uuidsMapped.contains(newUuidObj)) {
                     uuidsMapped.remove(newUuidObj);
                 } else {
-                    dsGuidelineDAO.save(newUuidObj);
+                	dSGuidelineProviderMappingDao.persist(newUuidObj);
                 }
             }
             //remove ones left over
             for (DSGuidelineProviderMapping uuidLeft: uuidsMapped) {
-                dsGuidelineDAO.delete(uuidLeft);
+            	dSGuidelineProviderMappingDao.remove(uuidLeft);
             }
         } catch (Exception e) {
             logger.error("Unable to fetch guidelines from MyDrugref", e);

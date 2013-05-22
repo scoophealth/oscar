@@ -115,17 +115,6 @@
 
 	<!-- OSCAR Desicion Support -->
 	<bean id="dsService" class="org.oscarehr.decisionSupport.service.DSServiceMyDrugref">
-		<property name="dsGuidelineDAO">
-			<ref bean="dsGuidelineDAO"/>
-		</property>
-		<property name="userPropertyDAO">
-			<ref bean="UserPropertyDAO"/>
-		</property>
-	</bean>
-	<bean id="dsGuidelineDAO" class="org.oscarehr.decisionSupport.dao.DSGuidelineDAO">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory" />
-		</property>
 	</bean>
 
 	<!--Container for holding preventions -->
