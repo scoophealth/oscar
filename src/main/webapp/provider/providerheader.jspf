@@ -1,0 +1,405 @@
+<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+
+<%@ page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.common.model.UserProperty" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+<%@ page import="oscar.OscarProperties" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.util.*" %>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+
+
+<% 
+UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+    		
+Properties oscarVariables = OscarProperties.getInstance();
+
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+String curUser_no = (String) session.getAttribute("user");
+String userfirstname = (String) session.getAttribute("userfirstname");
+String userlastname = (String) session.getAttribute("userlastname");
+String prov= (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+
+String resourcebaseurl =  oscarVariables.getProperty("resource_base_url");
+
+ 	    UserProperty rbu = userPropertyDao.getProp("resource_baseurl");
+ 	    if(rbu != null) {
+ 	    	resourcebaseurl = rbu.getValue();
+ 	    }
+    		
+GregorianCalendar cal = new GregorianCalendar();
+int curYear = cal.get(Calendar.YEAR);
+int curMonth = (cal.get(Calendar.MONTH)+1);
+int curDay = cal.get(Calendar.DAY_OF_MONTH);
+%>
+
+
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/prototype.js"></script><!-- needed for tabalerts -->
+<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script> 
+
+
+<script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+
+<oscar:customInterface section="main"/>
+
+<script>
+window.onload=function(){
+
+	refreshAllTabAlerts();
+}
+
+//TODO: get rid of these multiple popup scripts
+function popupOscarRx(vheight,vwidth,varpage) {
+	var page = varpage;
+	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+	var popup=window.open(varpage, "<bean:message key="global.oscarRx"/>_appt", windowprops);
+	if (popup != null) {
+	if (popup.opener == null) {
+	popup.opener = self;
+	}
+	popup.focus();
+	}
+}
+
+function popupInboxManager(varpage){
+    var page = "" + varpage;
+    var windowname="apptProviderInbox";
+    windowprops = "height=700,width=1215,location=no,"
+    + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
+    var popup = window.open(page, windowname, windowprops);
+    if (popup != null) {
+        if (popup.opener == null) {
+            popup.opener = self;
+        }
+        popup.focus();
+    }
+}
+
+function popupPage2(varpage) {
+	popupPage2(varpage, "apptProviderSearch");
+	}
+
+	function popupPage2(varpage, windowname) {
+	popupPage2(varpage, windowname, 700, 1024);
+	}
+
+	function popupPage2(varpage, windowname, vheight, vwidth) {
+	// Provide default values for windowname, vheight, and vwidth incase popupPage2
+	// is called with only 1 or 2 arguments (must always specify varpage)
+	windowname  = typeof(windowname)!= 'undefined' ? windowname : 'apptProviderSearch';
+	vheight     = typeof(vheight)   != 'undefined' ? vheight : '700px';
+	vwidth      = typeof(vwidth)    != 'undefined' ? vwidth : '1024px';
+	var page = "" + varpage;
+	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
+	var popup = window.open(page, windowname, windowprops);
+	if (popup != null) {
+		if (popup.opener == null) {
+	  		popup.opener = self;
+		}
+		popup.focus();
+		}
+	}
+
+	<%-- Refresh tab alerts --%>
+	function refreshAllTabAlerts() {
+	refreshTabAlerts("oscar_new_lab");
+	refreshTabAlerts("oscar_new_msg");
+	refreshTabAlerts("oscar_new_tickler");
+	refreshTabAlerts("oscar_aged_consults");
+	refreshTabAlerts("oscar_scratch");
+	}
+
+	function callRefreshTabAlerts(id) {
+	setTimeout("refreshTabAlerts('"+id+"')", 10);
+	}
+
+	function refreshTabAlerts(id) {
+	var url = "../provider/tabAlertsRefresh.jsp";
+	var pars = "id=" + id;
+
+	var myAjax = new Ajax.Updater(id, url, {method: 'get', parameters: pars});
+	}	
+</script>
+   <script>
+     jQuery.noConflict();
+   </script>
+
+<style>
+sup{  
+color:#000;
+font-weight:bold;
+}    
+</style>
+
+<div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+
+          <a href="http://oscarmcmaster.org/" target="_blank" title="OSCAR EMR"><img src="<%=request.getContextPath()%>/images/oscar_logo_small.png" border="0" style="float:left"></a>
+          
+			<div class="dropdown navbar-text pull-right" style="display:inline">
+					<bean:message key="global.loggedIn" />  <a class="navbar-link dropdown-toggle" data-toggle="dropdown" id="dLabel" role="button" href="#username" style="color:#000;"><%=userfirstname%> <%=userlastname%></a>
+					 <ul class="dropdown-menu">
+					 				<li>	
+					 				<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+									<a href=# onClick ="popupPage2('<%=resourcebaseurl%>')"><bean:message key="global.help"/></a>
+									</caisi:isModuleLoad>
+									</li>
+									<li class="divider"></li>
+									
+									<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+										<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
+										  <li id="admin">
+										     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp');return false;"><i class="icon-cog"></i> <bean:message key="global.admin"/></a>
+										  </li>
+										
+										<% if (OscarProperties.getInstance().getBooleanProperty("admin2.enabled", "true")) { %>
+										<li id="admin2">
+										 <a href="<%=request.getContextPath()%>/administration/" TITLE='Administration Panel'><i class="icon-cog"></i> New Administration</a>
+										<!--title new is temp for development-->
+										</li>
+										<% } %>
+										  
+										</security:oscarSec>
+									</caisi:isModuleLoad>
+									
+							        <security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
+									<li>  
+									    <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
+										<a href=# onClick ="popupPage2('<%=request.getContextPath()%>/provider/providerpreference.jsp?provider_no=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><i class="icon-user"></i> <bean:message key="global.pref"/></a>
+									    </caisi:isModuleLoad>
+									</li>
+									</security:oscarSec>
+									
+							        <li><a href="#" onclick='window.open("<%=request.getContextPath()%>/provider/providerchangepassword.jsp","changePassword","resizable=yes,scrollbars=yes,width=700,height=300");'><i class="icon-lock"></i> Change Password</a></li>
+							        <li><a href="javascript: function myFunction() {return false; }" onClick="popupPage2('<%=request.getContextPath()%>/scratch/index.jsp','scratch')" style="padding-right:10px;"><i class="icon-pencil"></i> Scratch Pad</a></li>
+							        <li class="divider"></li>
+							        <li><a href="<%=request.getContextPath()%>/logout.jsp"><i class="icon-off"></i> <bean:message key="global.btnLogout"/></a></li>
+							    </ul>
+			</div>
+		    
+		    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </a>	
+		  
+		    <div class="nav-collapse collapse">
+
+			<ul class="nav" id="navlist" >
+			
+			<logic:notEqual name="infirmaryView_isOscar" value="false">
+			<% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
+			         <li>
+			         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a>
+			         </li>
+			 <% } else if((request.getParameter("caseload")!=null && request.getParameter("caseload").equals("1")) || (request.getParameter("displaymode")==null) ) {  %>
+			 <li>
+			 <a href='<%=request.getContextPath()%>/provider/providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1'>Schedule</a>
+			 </li>
+			         
+			<% } else {  %>
+				<li>
+			         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a>
+			         </li>
+			<% } %>
+			</logic:notEqual>
+			
+			 <li>
+			 <a href='<%=request.getContextPath()%>/provider/providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=0&displaymode=day&dboperation=searchappointmentday&caseload=1&clProv=<%=curUser_no%>'><bean:message key="global.caseload"/></a>
+			 </li>
+			
+			<!-- TODO:mobile version code excluded here re-visit -->
+			
+			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+			 <security:oscarSec roleName="<%=roleName$%>" objectName="_resource" rights="r">
+			 <li>
+			    <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="oscarEncounter.Index.clinicalResources"/></a>
+			 </li>
+			 </security:oscarSec>
+			</caisi:isModuleLoad>
+			
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_search" rights="r">
+			 <li id="search">
+			    <caisi:isModuleLoad moduleName="caisi">
+			       <a HREF="../PMmodule/ClientSearch2.do" TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
+			    </caisi:isModuleLoad>
+			    <caisi:isModuleLoad moduleName="caisi" reverse="true">
+			       <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
+			    </caisi:isModuleLoad>
+			</li>
+			</security:oscarSec>
+			
+			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="r">
+			<li>
+			    <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a>
+			</li>
+			</security:oscarSec>
+			<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
+			
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
+			<li>
+			     
+				<a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a>
+			    
+			</li>
+			</security:oscarSec>
+			</oscar:oscarPropertiesCheck>
+			 </caisi:isModuleLoad>			
+			 			 
+			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_con" rights="r">
+			<li id="con">
+			 <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
+			 <span id="oscar_aged_consults"><bean:message key="global.con"/></span></a>
+			</li>
+			</security:oscarSec>
+			</caisi:isModuleLoad>
+			
+			 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r">
+			<li>
+			   <a HREF="#" onclick="popupPage2('<%=request.getContextPath()%>/dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a>
+			</li>
+			</security:oscarSec>
+			 </caisi:isModuleLoad>
+			 
+			<oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
+			<li>
+			    <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/oscarLearning/CourseView.jsp','<bean:message key="global.courseview"/>');return false;" TITLE='<bean:message key="global.courseview"/>'>
+				<span id="oscar_courseview"><bean:message key="global.btncourseview"/></span></a>
+			</li>
+			</oscar:oscarPropertiesCheck>
+			
+			<oscar:oscarPropertiesCheck property="WORKFLOW" value="yes">
+			   <li><a href="javascript: function myFunction() {return false; }" onClick="popupPage2('<%=request.getContextPath()%>/oscarWorkflow/WorkFlowList.jsp','<bean:message key="global.workflow"/>')"><bean:message key="global.btnworkflow"/></a></li>
+			</oscar:oscarPropertiesCheck>
+
+			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+			 <oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">			
+			 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
+			   <li>
+			       <a HREF="#" style="display:inline-block;padding-right:0px" onclick="popupInboxManager('<%=request.getContextPath()%>/dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%=curUser_no%>', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
+				   <span id="oscar_new_lab" ><bean:message key="global.lab"/></span>
+			       </a>
+			       <oscar:newUnclaimedLab>
+			       <a class="tabalert" HREF="#" style="display:inline-block;padding-left:0px" ONCLICK ="popupInboxManager('<%=request.getContextPath()%>/dms/inboxManage.do?method=prepareForIndexPage&providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
+			       </oscar:newUnclaimedLab>
+			   </li>
+			  </security:oscarSec>
+			 </oscar:oscarPropertiesCheck>
+			
+			 	<security:oscarSec roleName="<%=roleName$%>" objectName="_msg" rights="r">
+			     <li>
+				 <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
+				 <span id="oscar_new_msg"><bean:message key="global.msg"/></span></a>
+			     </li>
+			   	</security:oscarSec>
+			 </caisi:isModuleLoad>
+			
+		   <security:oscarSec roleName="<%=roleName$%>" objectName="_tickler" rights="r">
+			<li>
+			   <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
+			    <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'>
+				<span id="oscar_new_tickler"><bean:message key="global.btntickler"/></span></a>
+			   </caisi:isModuleLoad>
+			   <caisi:isModuleLoad moduleName="ticklerplus">
+			    <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/Tickler.do?filter.assignee=<%=curUser_no%>&filter.demographic_no=&filter.demographic_webName=','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'+'+'>
+				<span id="oscar_new_tickler"><bean:message key="global.btntickler"/></span></a>
+			   </caisi:isModuleLoad>
+			</li>
+			</security:oscarSec>
+			
+			 <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+			    <myoscar:indivoRegistered provider="<%=curUser_no%>">
+					<%
+					MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get());%>
+				    <li>
+						<a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title='<bean:message key="global.myoscar"/>'>
+							<bean:message key="global.btnmyoscar"/>
+							<div id="unreadMessagesMenuMarker" style="display:inline-block;vertical-align:top"><!-- place holder for unread message count --></div>
+						</a>
+						<script type="text/javascript">
+							function pollMessageCount()
+							{
+								jQuery('#unreadMessagesMenuMarker').load('<%=request.getContextPath()%>/phr/msg/unread_message_count.jsp')
+							}
+							
+							window.setInterval(pollMessageCount, 60000);
+							window.setTimeout(pollMessageCount, 2000);
+						</script>
+				    </li>
+			    </myoscar:indivoRegistered>
+			</oscar:oscarPropertiesCheck>
+			
+			
+			
+			<!-- plugins menu extension point add -->
+			<%int pluginMenuTagNumber=0; %>
+			<plugin:pageContextExtension serviceName="oscarMenuExtension" stemFromPrefix="Oscar"/>
+			<logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
+			<%if (oscar.util.plugin.IsPropertiesOn.propertiesOn(pt.getName().toLowerCase())) {
+				pluginMenuTagNumber++;
+			%>
+			
+			       <li><a href='<html:rewrite page="<%= pt.getLink() %>"/>'>
+			       <%= pt.getName() %></a></li>
+			<%} %>
+			</logic:iterate>
+			
+			<!-- plugin menu extension point add end-->
+			
+			<%int menuTagNumber=0; %>
+			<caisi:isModuleLoad moduleName="caisi">
+			   <li>
+			     <a href='<html:rewrite page="<%=request.getContextPath()%>/PMmodule/ProviderInfo.do"/>'>Program</a>
+			     <% menuTagNumber++ ; %>
+			   </li>
+			</caisi:isModuleLoad>
+			</ul>
+
+		    </div>
+	             
+		    
+    	</div>
+    </div>
+</div>
