@@ -53,16 +53,16 @@ public class FacilityMessageManager {
 	}
 
 	public List<FacilityMessage> getMessagesByFacilityId(Integer facilityId) {
-		if (facilityId == null || facilityId == null) {           
-        	return null;
-        }
+		if (facilityId == null || facilityId.intValue() == 0) {           
+        		return null;
+        	}
 		return facilityMessageDao.getMessagesByFacilityId(facilityId);
 	}
 	
 	public List<FacilityMessage> getMessagesByFacilityIdOrNull(Integer facilityId) {
-		if (facilityId == null || facilityId == null) {           
-        	return null;
-        }
+		if (facilityId == null || facilityId.intValue() == 0) {           
+        		return null;
+        	}
 		return facilityMessageDao.getMessagesByFacilityIdOrNull(facilityId);
 	}
 }
