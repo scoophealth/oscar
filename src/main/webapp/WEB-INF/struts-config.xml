@@ -13,7 +13,7 @@
 			<form-property name="system_message" type="org.oscarehr.common.model.SystemMessage" />
 		</form-bean>
 		<form-bean name="facilityMessageForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="facility_message" type="org.caisi.model.FacilityMessage" />
+			<form-property name="facility_message" type="org.oscarehr.common.model.FacilityMessage" />
 		</form-bean>
 		<form-bean name="roleForm" type="org.apache.struts.validator.DynaValidatorForm"></form-bean>
 		<form-bean name="inputForm" type="org.apache.struts.validator.LazyValidatorForm"></form-bean>

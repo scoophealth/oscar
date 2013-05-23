@@ -28,7 +28,6 @@ import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
-import org.caisi.model.FacilityMessage;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.MiscUtils;
@@ -304,24 +303,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         return results;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<FacilityMessage> getFacilityMessagesInProgramDomain(String providerNo) {
-        if (providerNo == null || Long.valueOf(providerNo) == null) {
-            throw new IllegalArgumentException();
-        }
-        List results = this.getHibernateTemplate().find("select distinct fm from FacilityMessage fm, Room r, ProgramProvider pp where pp.ProgramId = r.programId and fm.facilityId = r.facilityId and pp.ProviderNo = ?", providerNo);
 
-        return results;
-    }
-
-    public List<FacilityMessage> getFacilityMessagesByFacilityId(Integer facilityId) {
-        if (facilityId == null || facilityId == null) {
-            //throw new IllegalArgumentException();
-        	return null;
-        }
-        List results = this.getHibernateTemplate().find("select distinct fm from FacilityMessage fm where fm.facilityId = ?", facilityId);
-        return results;
-    }
 
 	public void updateProviderRoles(Long providerId, Long roleId) {
 		getHibernateTemplate().bulkUpdate("UPDATE ProgramProvider pp SET pp.RoleId = ? WHERE pp.Id = ?", new Object[] { roleId, providerId });
