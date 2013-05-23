@@ -11,7 +11,7 @@ done
 
 ant -f build_client_stubs.xml compile_client_stubs
 
-VERSION=2013.05.17
+VERSION=2013.05.23
 
 PROJECTS="oscar_maven_repo"
 

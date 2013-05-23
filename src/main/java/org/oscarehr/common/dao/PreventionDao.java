@@ -45,7 +45,27 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		return (results);
 	}
 
-	public List<Prevention> findByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
+	/**
+	 * This method will return a list of items starting from the provided ID.
+	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
+	 */
+    public List<Prevention> findByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
+    	String sql = "select x from Prevention x where x.id>=?1 ";
+    	if (archived!=null)	sql=sql+"and x.deleted=?2 ";
+    	sql=sql+"order by x.id";
+    	
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, startIdInclusive);
+    	if (archived!=null)	query.setParameter(2, archived?'0':'1');
+    	
+    	setLimit(query, itemsToReturn);
+
+        @SuppressWarnings("unchecked")
+        List<Prevention> preventions = query.getResultList();
+        return preventions;
+    }
+    
+    public List<Prevention> findByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate>=?2");
 		query.setParameter(1, demographicId);
 		query.setParameter(2, dateTime);
