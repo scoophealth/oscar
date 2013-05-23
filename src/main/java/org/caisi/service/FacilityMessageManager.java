@@ -25,36 +25,44 @@ package org.caisi.service;
 
 import java.util.List;
 
-import org.caisi.dao.FacilityMessageDAO;
-import org.caisi.model.FacilityMessage;
+import org.oscarehr.common.dao.FacilityMessageDao;
+import org.oscarehr.common.model.FacilityMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class FacilityMessageManager {
 
-	private FacilityMessageDAO dao = null;	
+	@Autowired
+	private FacilityMessageDao facilityMessageDao;	
 	
 	public FacilityMessage getMessage(String messageId) {
-		return dao.getMessage(Long.valueOf(messageId));
-	}
-	
-	
-	public void setFacilityMessageDAO(FacilityMessageDAO dao) {
-		this.dao = dao;
+		return facilityMessageDao.find(Integer.valueOf(messageId));
 	}
 	
 	public void saveFacilityMessage(FacilityMessage msg) {
-		dao.saveMessage(msg);
+		if(msg.getId() == null || msg.getId().intValue() == 0) {
+			facilityMessageDao.persist(msg);
+		} else {
+			facilityMessageDao.merge(msg);
+		}
 	}
 	
 	public List<FacilityMessage> getMessages() {
-		return dao.getMessages();
+		return facilityMessageDao.getMessages();
 	}
 
 	public List<FacilityMessage> getMessagesByFacilityId(Integer facilityId) {
 		if (facilityId == null || facilityId == null) {           
         	return null;
         }
-		return dao.getMessagesByFacilityId(facilityId);
+		return facilityMessageDao.getMessagesByFacilityId(facilityId);
+	}
+	
+	public List<FacilityMessage> getMessagesByFacilityIdOrNull(Integer facilityId) {
+		if (facilityId == null || facilityId == null) {           
+        	return null;
+        }
+		return facilityMessageDao.getMessagesByFacilityIdOrNull(facilityId);
 	}
 }
