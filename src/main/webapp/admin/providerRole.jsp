@@ -271,21 +271,23 @@ for (Object[] providerSecUser : providerList) {
 List<Boolean> primaries = new ArrayList<Boolean>();
 
 //when caisi is off, we need to show which role is the one in the program_provider table for each provider.
-for(Properties prop:vec) {
-      boolean res = false;
-      String providerNo = prop.getProperty("provider_no");
-      String secUserRoleId = prop.getProperty("role_id");
-      String roleName = prop.getProperty("role_name");
-      if(!roleName.equals("")) {
-              SecRole secRole = secRoleDao.findByName(roleName);
-              if(secRole != null) {
-                      ProgramProvider pp = programProviderDao.getProgramProvider(providerNo, Long.valueOf(caisiProgram), secRole.getId().longValue());
-                      res = (pp != null);
-              }
-      } else {
-              res = false;
-      }
-      primaries.add(res);
+if(newCaseManagement) {
+	for(Properties prop:vec) {
+	      boolean res = false;
+	      String providerNo = prop.getProperty("provider_no");
+	      String secUserRoleId = prop.getProperty("role_id");
+	      String roleName = prop.getProperty("role_name");
+	      if(!roleName.equals("")) {
+	              SecRole secRole = secRoleDao.findByName(roleName);
+	              if(secRole != null) {
+	                      ProgramProvider pp = programProviderDao.getProgramProvider(providerNo, Long.valueOf(caisiProgram), secRole.getId().longValue());
+	                      res = (pp != null);
+	              }
+	      } else {
+	              res = false;
+	      }
+	      primaries.add(res);
+	}
 }
 
 
