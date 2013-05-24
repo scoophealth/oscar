@@ -537,9 +537,13 @@
         </parameter>
         <java:condition>prev.getNumberOfPreventionType("Td") &gt;= 1</java:condition> 
         <java:condition>prev.getHowManyMonthsSinceLast("Td") &gt;= 120</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("dTaP") &gt;= 120</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Td-IPV") &gt;= 120</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("TdP-IPV-Hib") &gt;= 120</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Tdap-IPV") &gt;= 120</java:condition>
         <java:consequence>              
               prev.log("Td 2");
-              prev.addWarning("Td", "Needs Td");
+              prev.addWarning("Td", "Needs repeat Td");
         </java:consequence>
     </rule>
 
