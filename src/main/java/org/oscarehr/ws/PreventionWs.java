@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.ws;
 
 import java.util.Calendar;
@@ -33,6 +32,7 @@ import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.ws.transfer_objects.PreventionTransfer;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
@@ -41,49 +41,51 @@ import org.springframework.stereotype.Component;
 
 @WebService
 @Component
-@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
+@GZIP(threshold = AbstractWs.GZIP_THRESHOLD)
 public class PreventionWs extends AbstractWs {
 	@Autowired
 	private PreventionManager preventionManager;
-	
-	public PreventionTransfer getPrevention(Integer preventionId)
-	{
-		Prevention prevention=preventionManager.getPrevention(preventionId);
-		return(PreventionTransfer.toTransfer(prevention));
+
+	public PreventionTransfer getPrevention(Integer preventionId) {
+		Prevention prevention = preventionManager.getPrevention(preventionId);
+
+		if (prevention != null) {
+			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(prevention.getId());
+			return (PreventionTransfer.toTransfer(prevention, preventionExts));
+		}
+
+		return (null);
 	}
 
 	/**
 	 * Get a list of DataIdTransfer objects for preventions starting with the passed in Id.
 	 */
-	public DataIdTransfer[] getPreventionDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn)
-	{
-		Boolean archived=null;
-		if (active!=null) archived=!active;
-		
-		List<Prevention> preventions=preventionManager.getPreventionsByIdStart(archived, startIdInclusive, itemsToReturn);
-		
-		DataIdTransfer[] results=new DataIdTransfer[preventions.size()];
-		for (int i=0; i<preventions.size(); i++)
-		{
-			results[i]=getDataIdTransfer(preventions.get(i));
+	public DataIdTransfer[] getPreventionDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
+		Boolean archived = null;
+		if (active != null) archived = !active;
+
+		List<Prevention> preventions = preventionManager.getPreventionsByIdStart(archived, startIdInclusive, itemsToReturn);
+
+		DataIdTransfer[] results = new DataIdTransfer[preventions.size()];
+		for (int i = 0; i < preventions.size(); i++) {
+			results[i] = getDataIdTransfer(preventions.get(i));
 		}
-		
-		return(results);
+
+		return (results);
 	}
-	
-	private DataIdTransfer getDataIdTransfer(Prevention prevention)
-	{
-		DataIdTransfer result=new DataIdTransfer();
-		
-		Calendar cal=new GregorianCalendar();
+
+	private DataIdTransfer getDataIdTransfer(Prevention prevention) {
+		DataIdTransfer result = new DataIdTransfer();
+
+		Calendar cal = new GregorianCalendar();
 		cal.setTime(prevention.getCreationDate());
 		result.setCreateDate(cal);
-		
+
 		result.setCreatorProviderId(prevention.getProviderNo());
 		result.setDataId(prevention.getId().toString());
 		result.setDataType(Prevention.class.getSimpleName());
 		result.setOwnerDemographicId(prevention.getDemographicId());
-		
-		return(result);
+
+		return (result);
 	}
 }
