@@ -88,6 +88,11 @@ public class EctIncomingEncounterAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		EctSessionBean bean = new EctSessionBean();
+		String appointmentNo = null;
+
+		if(request.getSession().getAttribute("cur_appointment_no") != null) {
+			appointmentNo = (String)request.getSession().getAttribute("cur_appointment_no");
+		}
 
 		if (request.getParameter("appointmentList") != null) {
 			bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
@@ -137,8 +142,13 @@ public class EctIncomingEncounterAction extends Action {
 			if (bean.providerNo == null) {
 				bean.providerNo = (String) request.getSession().getAttribute("user");
 			}
-			bean.demographicNo = request.getParameter("demographicNo");
+				bean.demographicNo = request.getParameter("demographicNo");
 			bean.appointmentNo = request.getParameter("appointmentNo");
+			//use this one.
+			if(appointmentNo != null) {
+				bean.appointmentNo = appointmentNo;
+			}
+
 			bean.curProviderNo = request.getParameter("curProviderNo");
 			Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
 			if (bean.curProviderNo == null || bean.curProviderNo.trim().length() == 0) bean.curProviderNo = provider.getProviderNo();
