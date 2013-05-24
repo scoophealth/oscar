@@ -612,10 +612,7 @@ Laboratory Results & Results
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
-										<name use="L">
-											<given>$patient.getProviderFirstName($demographic.providerNo)</given>
-											<family>$patient.getProviderLastName($demographic.providerNo)</family>
-										</name>
+										<name use="L">$patient.cleanString($lab.hl7TextInfo.requestingProvider)</name>
 									</assignedPerson>
 								</assignedAuthor>
 							</author>
@@ -704,7 +701,7 @@ Laboratory Results & Results
 #*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "minimum")} != "" || ${patient.getLabExtValue("$labEntry.id", "maximum")} != "" )
 											<referenceRange typeCode="REFV">
 												<observationRange classCode="OBS" moodCode="EVN.CRT">
-													<code code="${patient.getLabExtValue("$labEntry.id", "identifier")}" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+													<code code="$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "identifier")})" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
 													<text>${patient.getLabExtValue("$!labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</text>
 													<value xsi:type="ST">$!{patient.getLabExtValue("$labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</value>
 												</observationRange>
