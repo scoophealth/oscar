@@ -1065,6 +1065,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                           	   <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
                            </tr>
                            <%
+                           
                            for ( j=0; j < OBRCount; j++){
 
                                boolean obrFlag = false;
@@ -1072,6 +1073,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                for (k=0; k < obxCount; k++){
 
                                	String obxName = handler.getOBXName(j, k);
+                               	String test = "Document obxname";
+                               	boolean isDocument = false;
 
 
                                    boolean b1=false, b2=false, b3=false;
@@ -1104,7 +1107,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                        if( b1 && b2 && b3){
                                        %>
                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
-                                               <td valign="top" align="left"><%=obrName%></td>
+                                               <td valign="top" align="center"><%=obrName%></td>
                                                <td colspan="6">&nbsp;</td>
                                            </tr>
                                            <%obrFlag = true;
@@ -1300,21 +1303,46 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
                                     } else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) )  { %>
-
-                                      		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                           <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a>
+                                    	<%// if two successive loincCodes are the same, do not print the obxName %>
+     									<%if(handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k+1))){%>
+     											<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                           		<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=""%></a>
+                  								<% isDocument = true; %>
+                                           <%}
+     									
+                                           else{ %>
+                                      			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                           		<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a>
+                                          <%} %> 
+                                          
                                            &nbsp;<%if(loincCode != null){ %>
                                                 	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
                                                 	<%} %> </td>
-                                           <td align="right"><%= handler.getOBXResult( j, k) %></td>
-
-                                           <td align="center">
-                                                   <%= handler.getOBXAbnormalFlag(j, k)%>
-                                           </td>
-                                           <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
-                                           <td align="left"><%=handler.getOBXUnits( j, k) %></td>
-                                           <td align="center"><%= handler.getTimeStamp(j, k) %></td>
-                                           <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
+                                                	
+                                           <%if(isDocument){%>
+                                        	    <td align="left"><%= handler.getOBXResult(j, k) %></td><%}
+                                           	else{%>
+                                          		 <td align="right"><%= handler.getOBXResult(j, k) %></td>
+											<%} %>
+		                                           <td align="center"><%= handler.getOBXAbnormalFlag(j, k)%></td>
+		                                           <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
+		                                           <td align="left"><%=handler.getOBXUnits( j, k) %></td>
+		                                           
+                                           <%// if it's a document the check the date and status too %>
+                                           <%if(isDocument){
+	                                        	   if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k+1))){
+	                                         			%><td align="center"><%= "" %></td><%}
+	                                         		else{ 
+	                                        			%> <td align="center"><%= handler.getTimeStamp(j, k) %></td> <%}
+	                                           	   if (handler.getOBXResultStatus(j, k).equals(handler.getOBXResultStatus(j, k+1))){
+	                                         			%><td align="center"><%= "" %></td><%}
+	                                           	   else{ %> 
+	                                           			<td align="center"><%= handler.getOBXResultStatus( j, k) %></td> <%}
+                                         	}else{%>
+										  			<td align="center"><%= handler.getTimeStamp(j, k) %></td> 
+                                          			<td align="center"><%= handler.getOBXResultStatus( j, k) %></td> 
+                                          	<%} //end of else (date/status check) %>
+                                      		
                                       		<td align="center" valign="top">
 	                                                <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
 	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
@@ -1327,7 +1355,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
                                             </tr>
                                        <%}
-
 
                                     } else { %>
                                        	<%for (l=0; l < handler.getOBXCommentCount(j, k); l++){
