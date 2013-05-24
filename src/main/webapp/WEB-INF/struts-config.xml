@@ -18,7 +18,7 @@
 		<form-bean name="roleForm" type="org.apache.struts.validator.DynaValidatorForm"></form-bean>
 		<form-bean name="inputForm" type="org.apache.struts.validator.LazyValidatorForm"></form-bean>
 		<form-bean name="issueAdminForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="issueAdmin" type="org.caisi.model.IssueAdmin" />
+			<form-property name="issueAdmin" type="org.oscarehr.casemgmt.model.Issue" />
 		</form-bean>
 		<form-bean name="lookupListForm" type="com.quatro.web.lookup.LookupListForm" />
 		<form-bean name="lookupTableListForm" type="org.apache.struts.validator.DynaValidatorForm">

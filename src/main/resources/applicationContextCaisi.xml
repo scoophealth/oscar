@@ -31,7 +31,6 @@
 	</bean>
 
 	<!-- DAO -->
-	<bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO" autowire="byName" />
 	<bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.BedCheckTimeDAO" autowire="byName" />
 	<bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO" autowire="byName" />
 	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeDAO" autowire="byName" />
