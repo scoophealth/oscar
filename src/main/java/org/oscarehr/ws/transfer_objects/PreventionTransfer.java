@@ -24,12 +24,12 @@
 
 package org.oscarehr.ws.transfer_objects;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.PreventionExt;
 
 public final class PreventionTransfer {
 
@@ -45,6 +45,8 @@ public final class PreventionTransfer {
 	private Date nextDate;
 	private String creatorProviderNo;
 	private Date lastUpdateDate;
+	
+	private PreventionExtTransfer[] preventionExts;
 
 	public Integer getDemographicId() {
 		return (demographicId);
@@ -142,7 +144,18 @@ public final class PreventionTransfer {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
-	public static PreventionTransfer toTransfer(Prevention prevention) {
+	public PreventionExtTransfer[] getPreventionExts() {
+		return (preventionExts);
+	}
+
+	public void setPreventionExts(PreventionExtTransfer[] preventionExts) {
+		this.preventionExts = preventionExts;
+	}
+
+	/**
+	 * both preventions and exts are required, null is not allowed.
+	 */
+	public static PreventionTransfer toTransfer(Prevention prevention, List<PreventionExt> preventionExts) {
 		if (prevention == null) return (null);
 
 		PreventionTransfer preventionTransfer = new PreventionTransfer();
@@ -159,18 +172,10 @@ public final class PreventionTransfer {
 		preventionTransfer.setPreventionType(prevention.getPreventionType());
 		preventionTransfer.setProviderNo(prevention.getProviderNo());
 		preventionTransfer.setRefused(prevention.isRefused());
+		
+		preventionTransfer.setPreventionExts(PreventionExtTransfer.toTransfers(preventionExts));
 
 		return (preventionTransfer);
-	}
-
-	public static PreventionTransfer[] toTransfers(List<Prevention> preventions) {
-		ArrayList<PreventionTransfer> results = new ArrayList<PreventionTransfer>();
-
-		for (Prevention prevention : preventions) {
-			results.add(toTransfer(prevention));
-		}
-
-		return (results.toArray(new PreventionTransfer[0]));
 	}
 
 	@Override
