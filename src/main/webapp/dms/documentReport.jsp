@@ -316,9 +316,11 @@ function popup1(height, width, url, windowName){
 				<oscar:nameage demographicNo="<%=moduleid%>"/> &nbsp; <oscar:phrverification demographicNo="<%=moduleid%>"><bean:message key="phr.verification.link"/></oscar:phrverification>
 				</td>
 				<td>&nbsp;</td>
-				<td style="text-align: right;"><oscar:help keywords="2.6.1" key="app.top1" /> | <a
-					href="javascript: popupStart(300, 400, 'About.jsp')"><bean:message key="global.about"/></a> | <a
-					href="javascript: popupStart(300, 400, 'License.jsp')"><bean:message key="global.license"/></a>
+				<td style="text-align: right;">
+				<span class="HelpAboutLogout">
+					<oscar:help keywords="&Title=eDocuments&portal_type%3Alist=Document" key="app.top1" style="color:white; font-size:10px;font-style:normal;"/>&nbsp;|
+        				<a style="color:white; font-size:10px;font-style:normal;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new"><bean:message key="global.about" /></a>
+				</span>
 				</td>
 			</tr>
 		</table>
