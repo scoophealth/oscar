@@ -240,11 +240,15 @@ GregorianCalendar now = new GregorianCalendar();
 GregorianCalendar cal = (GregorianCalendar) now.clone();
 String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
 %>
-<form name='report'>
-        <table border=0 cellspacing=0 cellpadding=0 width="100%">
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="#486ebd">
-		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
-			key="report.reportindex.msgTitle" /></font></th>
+		<td align=LEFT><font face="Helvetica" color="#FFFFFF"><bean:message key="report.reportindex.msgTitle" /></td>
+		<td align=RIGHT>
+		<span class="HelpAboutLogout">
+			<oscar:help keywords="&Title=Report+Tab&portal_type%3Alist=Document" key="app.top1" style="color:white; font-size:10px;font-style:normal;"/>&nbsp;
+        		<a style="color:white; font-size:10px;font-style:normal;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new"><bean:message key="global.about" /></a>
+		</span> </font>
+		</td>
 	</tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="95%">

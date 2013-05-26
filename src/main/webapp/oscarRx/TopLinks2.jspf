@@ -57,8 +57,8 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
                     <td valign="top" align="right">
                         <span class="HelpAboutLogout" style="color:white;">
 							<a style="color:white;" href="javascript: popupFocusPage(200,700,'./drugrefInfo.jsp','Drugref Info');" >Drugref Info</a> |
-							<oscar:help keywords="2.2.4" key="app.top1" style="color:white;"/> |
-                            <a style="color:white;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new">About</a>
+							<oscar:help keywords="&Title=Writing+Prescriptions&portal_type%3Alist=Document" key="app.top1" style="color:white;"/> |
+                            <a style="color:white;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new"><bean:message key="global.about" /></a>
                             <!-- is this needed? 
                             <a style="color:white;" href="Disclaimer.htm">Disclaimer</a> 
                             -->
