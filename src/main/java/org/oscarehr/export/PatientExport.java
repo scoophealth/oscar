@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package oscar.oscarDemographic.pageUtil;
+package org.oscarehr.export;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class PatientExport {
 	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao = SpringUtils.getBean(CaseManagementIssueNotesDao.class);
 	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
 	private static CaseManagementNoteExtDAO caseManagementNoteExtDao = SpringUtils.getBean(CaseManagementNoteExtDAO.class);
-	
+
 	//private static final long OTHERMEDS = getIssueID("OMeds");
 	private static final long SOCIALHISTORY = getIssueID("SocHistory");
 	//private static final long MEDICALHISTORY = getIssueID("MedHistory");
@@ -100,7 +100,7 @@ public class PatientExport {
 	private static final long REMINDERS = getIssueID("Reminders");
 	private static final long FAMILYHISTORY = getIssueID("FamHistory");
 	private static final long RISKFACTORS = getIssueID("RiskFactors");
-	
+
 	private Date currentDate = new Date();
 	//private String authorId = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 	private String authorId = null;
@@ -115,7 +115,7 @@ public class PatientExport {
 	private List<CaseManagementNote> familyHistory = null;
 	private List<CaseManagementNote> alerts = null;
 	private List<Measurement> measurements = null;
-	
+
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
 	private boolean exImmunizations = false;
@@ -125,10 +125,10 @@ public class PatientExport {
 	private boolean exPersonalHistory = false;
 	private boolean exFamilyHistory = false;
 	private boolean exAlertsAndSpecialNeeds = false;
-	
+
 	protected PatientExport() {
 	}
-	
+
 	/**
 	 * @param demoNo
 	 */
@@ -137,14 +137,14 @@ public class PatientExport {
 		this.demographic = demographicDao.getDemographic(demoNo);
 		this.authorId = demographic.getProviderNo();
 		log.debug("Demo: " + demographicNo.toString());
-		
+
 		this.allergies = allergyDao.findAllergies(demographicNo);
 		this.drugs = drugDao.findByDemographicId(demographicNo);
-		
+
 		// Sort drugs by reverse chronological order & group by DIN by sorting
 		Collections.reverse(drugs);
 		Collections.sort(drugs, new sortByDin());
-		
+
 		this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 		List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
 		problems = new ArrayList<Dxresearch>();
@@ -153,12 +153,12 @@ public class PatientExport {
 				this.problems.add(problem);
 			}
 		}
-		
+
 		this.labs = assembleLabs();
 		parseCaseManagement();
 		this.measurements = parseMeasurements();
 	}
-	
+
 	/**
 	 * @param rhs
 	 * @return issueID as long
@@ -173,7 +173,7 @@ public class PatientExport {
 		}
 		return answer;
 	}
-	
+
 	private List<Measurement> parseMeasurements() {
 		// Gather and filter measurements based on lack of lab_no field
 		List<Measurement> rawMeasurements = measurementDao.findByDemographicNo(demographicNo);
@@ -186,14 +186,14 @@ public class PatientExport {
 		}
 		return tempMeasurements;
 	}
-	
+
 	private void parseCaseManagement() {
 		// Gather all Case Management data
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDao.getIssuesByDemographic(demographicNo.toString());
 		List<String> cmRiskFactorIssues = new ArrayList<String>();
 		List<String> cmFamilyHistoryIssues = new ArrayList<String>();
 		List<String> cmAlertsIssues = new ArrayList<String>();
-		
+
 		for(CaseManagementIssue entry : caseManagementIssues) {
 			if(entry.getIssue_id() == RISKFACTORS || entry.getIssue_id() == SOCIALHISTORY) {
 				cmRiskFactorIssues.add(entry.getId().toString());
@@ -205,7 +205,7 @@ public class PatientExport {
 				cmAlertsIssues.add(entry.getId().toString());
 			}
 		}
-		
+
 		List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
 		List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
 		if(cmRiskFactorNotes != null) {
@@ -214,7 +214,7 @@ public class PatientExport {
 			}
 		}
 		this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
-		
+
 		List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
 		List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
 		if(cmFamilyHistoryNotes != null) {
@@ -223,7 +223,7 @@ public class PatientExport {
 			}
 		}
 		this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
-		
+
 		List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
 		List<Long> cmAlertsNotesLong = new ArrayList<Long>();
 		if(cmAlertsNotes != null) {
@@ -233,7 +233,7 @@ public class PatientExport {
 		}
 		this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 	}
-	
+
 	private List<Lab> assembleLabs() {
 		// Gather hl7TextInfo labs
 		List<PatientLabRouting> tempRouting = patientLabRoutingDao.findByDemographicAndLabType(demographicNo, "HL7");
@@ -244,11 +244,11 @@ public class PatientExport {
 				tempLabs.add(temp);
 			}
 		}
-		
+
 		// Short circuit if no labs
 		if(tempLabs.size() < 1)
 			return null;
-		
+
 		// Gather and filter measurements based on existence of lab_no field
 		List<Measurement> rawMeasurements = measurementDao.findByDemographicNo(demographicNo);
 		List<Measurement> tempMeasurements = new ArrayList<Measurement>();
@@ -258,31 +258,31 @@ public class PatientExport {
 				tempMeasurements.add(entry);
 			}
 		}
-		
+
 		// Gather measurementsExt
 		List<List<MeasurementsExt>> tempMeasurementsExt = new ArrayList<List<MeasurementsExt>>();
 		for(Measurement entry : tempMeasurements) {
 			List<MeasurementsExt> tempMeasurementsExtElement = measurementsExtDao.getMeasurementsExtByMeasurementId(entry.getId());
 			tempMeasurementsExt.add(tempMeasurementsExtElement);
 		}
-		
+
 		// Create Lab Objects
 		List<Lab> allLabs = new ArrayList<Lab>();
-		
+
 		// Group Measurements into Lab Objects
 		for(Hl7TextInfo labReport : tempLabs) {
 			Lab labObj = new Lab();
 			labObj.hl7TextInfo = labReport;
-			
+
 			// Group Measurements by Lab Number
 			int labNumber = labReport.getLabNumber();
 			List<Measurement> labMeasurementAll = new ArrayList<Measurement>();
 			List<List<MeasurementsExt>> labMeasurementsExtAll = new ArrayList<List<MeasurementsExt>>();
-			
+
 			for(int i=0; i < tempMeasurementsExt.size(); i++) {
 				List<MeasurementsExt> entry = tempMeasurementsExt.get(i);
 				String entryLabNo = getLabExtValue(entry, "lab_no");
-				
+
 				// Add related entries to correct Lab
 				if(labNumber == Integer.valueOf(entryLabNo)) {
 					labMeasurementsExtAll.add(entry);
@@ -291,7 +291,7 @@ public class PatientExport {
 					labMeasurementAll.add(entryMeasurement);
 				}
 			}
-			
+
 			// Group Measurements into Organizer Groups
 			int prevGroup = 0;
 			LabGroup tempGroup = new LabGroup(prevGroup);
@@ -299,7 +299,7 @@ public class PatientExport {
 				String temp = getLabExtValue(labMeasurementsExtAll.get(i), "other_id");
 				if(temp != "" && temp != null) {
 					int currGroup = parseOtherID(temp)[0];
-					
+
 					// Create New Group
 					if(prevGroup != currGroup) {
 						labObj.group.add(tempGroup);
@@ -307,22 +307,22 @@ public class PatientExport {
 						tempGroup = new LabGroup(prevGroup);
 					}
 				}
-				
+
 				// Add current measurement to Organizer Group
 				tempGroup.measurement.add(labMeasurementAll.get(i));
 				tempGroup.measurementsExt.add(labMeasurementsExtAll.get(i));
 			}
-			
+
 			// Save final Group
 			labObj.group.add(tempGroup);
-			
+
 			// Save Lab Object
 			allLabs.add(labObj);
 		}
-		
+
 		return allLabs;
 	}
-	
+
 	/**
 	 * @param routing
 	 * @param lab_no
@@ -337,86 +337,86 @@ public class PatientExport {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * Section Booleans
 	 */
 	public void setExMedications(boolean rhs) {
 		this.exMedicationsAndTreatments = rhs;
 	}
-	
+
 	public void setExAllergiesAndAdverseReactions(boolean rhs) {
 		this.exAllergiesAndAdverseReactions = rhs;
 	}
-	
+
 	public void setExImmunizations(boolean rhs) {
 		this.exImmunizations = rhs;
 	}
-	
+
 	public void setExProblemList(boolean rhs) {
 		this.exProblemList = rhs;
 	}
-	
+
 	public void setExLaboratoryResults(boolean rhs) {
 		this.exLaboratoryResults = rhs;
 	}
-	
+
 	public void setExRiskFactors(boolean rhs) {
 		this.exRiskFactors = rhs;
 	}
-	
+
 	public void setExPersonalHistory(boolean rhs) {
 		this.exPersonalHistory = rhs;
 	}
-	
+
 	public void setExFamilyHistory(boolean rhs) {
 		this.exFamilyHistory = rhs;
 	}
-	
+
 	public void setExAlertsAndSpecialNeeds(boolean rhs) {
 		this.exAlertsAndSpecialNeeds = rhs;
 	}
-	
+
 	/*
 	 * Demographics
 	 */
 	public Demographic getDemographic() {
 		return demographic;
 	}
-	
+
 	// Output convenience functions
 	public String getBirthDate() {
 		return demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
 	}
-	
+
 	public String getGenderDesc() {
 		if(demographic.getSex().equals("M")) return "Male";
 		else return "Female";
 	}
-	
+
 	/*
 	 * Allergies
 	 */
 	public List<Allergy> getAllergies() {
 		return allergies;
 	}
-	
+
 	public boolean hasAllergies() {
 		return exAllergiesAndAdverseReactions && allergies!=null && !allergies.isEmpty();
 	}
-	
+
 	/*
 	 * Clinical Measured Observations
 	 */
 	public List<Measurement> getMeasurements() {
 		return measurements;
 	}
-	
+
 	// Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
 	public boolean hasMeasurements() {
 		return exLaboratoryResults && measurements!=null && !measurements.isEmpty();
 	}
-	
+
 	public String getTypeDescription(String rhs) {
 		try {
 			List<MeasurementType> measurementType = measurementTypeDao.findByType(rhs);
@@ -428,18 +428,18 @@ public class PatientExport {
 		}
 		return rhs;
 	}
-	
+
 	/*
 	 * Immunizations
 	 */
 	public List<Prevention> getImmunizations() {
 		return preventions;
 	}
-	
+
 	public boolean hasImmunizations() {
 		return exImmunizations && preventions!=null && !preventions.isEmpty();
 	}
-	
+
 	/**
 	 * Function to allow access to PreventionsExt table data based on prevention id
 	 * 
@@ -448,28 +448,28 @@ public class PatientExport {
 	 * @return String containing result, or empty string if not available
 	 */
 	public static String getImmuExtValue(String id, String keyval) {
-    	try {
-    		List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), keyval);
-    		for (PreventionExt preventionExt : preventionExts) {
-    			return preventionExt.getVal();
-    		}
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return "";
-    }
-	
+		try {
+			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), keyval);
+			for (PreventionExt preventionExt : preventionExts) {
+				return preventionExt.getVal();
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return "";
+	}
+
 	/*
 	 * Laboratory Reports
 	 */
 	public List<Lab> getLabs() {
 		return labs;
 	}
-	
+
 	public boolean hasLabs() {
 		return exLaboratoryResults && labs!=null && !labs.isEmpty();
 	}
-	
+
 	/**
 	 * Function to allow access to LabsExt table data based on prevention id (direct version)
 	 * 
@@ -490,7 +490,7 @@ public class PatientExport {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * Function to allow access to LabsExt table data based on prevention id (object version)
 	 * 
@@ -506,7 +506,7 @@ public class PatientExport {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * Handles Other ID field parsing
 	 * 
@@ -522,12 +522,12 @@ public class PatientExport {
 				lhs[i] = Integer.parseInt(temp[i]);
 			}
 		} catch (Exception e) {
-            log.error("parseOtherID - other_id field not in expected format");
-        }
-		
+			log.error("parseOtherID - other_id field not in expected format");
+		}
+
 		return lhs;
 	}
-	
+
 	/**
 	 * Nested Lab Object Model
 	 * 
@@ -537,16 +537,16 @@ public class PatientExport {
 	public static class Lab {
 		public Hl7TextInfo hl7TextInfo;
 		public List<LabGroup> group = new ArrayList<LabGroup>();
-		
+
 		public Hl7TextInfo getHl7TextInfo() {
 			return hl7TextInfo;
 		}
-		
+
 		public List<LabGroup> getGroup() {
 			return group;
 		}
 	}
-	
+
 	/**
 	 * Lab Group Object Model
 	 * 
@@ -557,35 +557,35 @@ public class PatientExport {
 		public int id;
 		public List<Measurement> measurement = new ArrayList<Measurement>();
 		public List<List<MeasurementsExt>> measurementsExt = new ArrayList<List<MeasurementsExt>>();
-		
+
 		public LabGroup(int id) {
 			this.id = id;
 		}
-		
+
 		public int getGroupId() {
 			return id;
 		}
-		
+
 		public List<Measurement> getMeasurement() {
 			return measurement;
 		}
-		
+
 		public List<List<MeasurementsExt>> getMeasurementsExt() {
 			return measurementsExt;
 		}
 	}
-	
+
 	/*
 	 * Medications
 	 */
 	public List<Drug> getMedications() {
 		return drugs;
 	}
-	
+
 	public boolean hasMedications() {
 		return exMedicationsAndTreatments && drugs!=null && !drugs.isEmpty();
 	}
-	
+
 	/**
 	 * Checks if drug is "active" by comparing to current date
 	 * 
@@ -596,7 +596,7 @@ public class PatientExport {
 		if(currentDate.after(rhs)) return false;
 		else return true;
 	}
-	
+
 	/**
 	 * Allows for collection sort by DIN numbers
 	 * 
@@ -614,14 +614,14 @@ public class PatientExport {
 			return answer;
 		}
 	}
-	
+
 	/*
 	 * Problem List
 	 */
 	public List<Dxresearch> getProblems() {
 		return problems;
 	}
-	
+
 	public boolean hasProblems() {
 		return exProblemList && problems!=null && !problems.isEmpty();
 	}
@@ -637,10 +637,10 @@ public class PatientExport {
 		if (result == null || result.isEmpty()) {
 			return "";
 		}
-		
+
 		return result;
-    }
-	
+	}
+
 	/*
 	 * Risk Factors (and Personal History)
 	 * Both sections map into the Risk Factors section of the export
@@ -648,40 +648,40 @@ public class PatientExport {
 	public List<CaseManagementNote> getRiskFactorsandPersonalHistory() {
 		return riskFactors;
 	}
-	
+
 	public boolean hasRiskFactorsandPersonalHistory() {
 		return (exRiskFactors || exPersonalHistory) && riskFactors!=null && !riskFactors.isEmpty();
 	}
-	
+
 	/*
 	 * Family History
 	 */
 	public List<CaseManagementNote> getFamilyHistory() {
 		return familyHistory;
 	}
-	
+
 	public boolean hasFamilyHistory() {
 		return exFamilyHistory && familyHistory!=null && !familyHistory.isEmpty();
 	}
-	
+
 	/*
 	 * Alerts
 	 */
 	public List<CaseManagementNote> getAlerts() {
 		return alerts;
 	}
-	
+
 	public boolean hasAlerts() {
 		return exAlertsAndSpecialNeeds && alerts!=null && !alerts.isEmpty();
 	}
-	
+
 	/*
 	 * Utility
 	 */
 	public Date getCurrentDate() {
 		return currentDate;
 	}
-	
+
 	/**
 	 * Takes in string dates in multiple possible formats and returns a date object of that time
 	 * 
@@ -698,7 +698,7 @@ public class PatientExport {
 		log.warn("stringToDate - Can't parse " + rhs);
 		return new Date();
 	}
-	
+
 	/**
 	 * Check if string is valid numeric
 	 * 
@@ -713,7 +713,7 @@ public class PatientExport {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Remove invalid characters and formatting from strings
 	 * 
@@ -728,7 +728,7 @@ public class PatientExport {
 		str = str.replaceAll("&", "&amp;");
 		return str;
 	}
-	
+
 	/**
 	 * Function to allow access to Casemanagement Note Ext table data based on note id
 	 * 
@@ -743,16 +743,16 @@ public class PatientExport {
 				return entry.getValue();
 			}
 		}
-        return "";
-    }
-	
+		return "";
+	}
+
 	public String getAuthorId() {
 		if (authorId.length() < 1 || authorId == null) {
 			return "0";
 		}
 		return authorId;
 	}
-	
+
 	/**
 	 * Get Provider's First Name based on provider number
 	 * 
@@ -770,7 +770,7 @@ public class PatientExport {
 		}
 		return name;
 	}
-	
+
 	/**
 	 * Get Provider's Last Name based on provider number
 	 * 

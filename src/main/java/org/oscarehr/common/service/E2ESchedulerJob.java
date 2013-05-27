@@ -33,13 +33,13 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.export.E2EVelocityTemplate;
+import org.oscarehr.export.PatientExport;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDemographic.pageUtil.E2EVelocityTemplate;
-import oscar.oscarDemographic.pageUtil.PatientExport;
 
 public class E2ESchedulerJob extends TimerTask {
 

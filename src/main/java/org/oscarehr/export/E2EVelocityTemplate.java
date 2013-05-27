@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package oscar.oscarDemographic.pageUtil;
+package org.oscarehr.export;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -53,12 +53,12 @@ public class E2EVelocityTemplate {
 	protected static Map<String,String> formCodes = null;
 	private Clinic clinic = clinicDao.getClinic();
 	private VelocityContext context;
-	
+
 	public E2EVelocityTemplate() {
 		loadTemplate();
 		loadFormCode();
 	}
-	
+
 	/**
 	 * Loads the velocity template
 	 */
@@ -70,17 +70,17 @@ public class E2EVelocityTemplate {
 				template = IOUtils.toString(is);
 				log.info("Loaded E2E Velocity Template");
 			} catch (Exception e) {
-		        log.error(e.getMessage(), e);
-		    } finally {
-		    	try {
-		    		is.close();
-		    	} catch (Exception e) {
-		    		log.error(e.getMessage(), e);
-		    	}
-		    }
+				log.error(e.getMessage(), e);
+			} finally {
+				try {
+					is.close();
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			}
 		}
 	}
-	
+
 	/**
 	 * Loads the formcode mapping
 	 */
@@ -90,7 +90,7 @@ public class E2EVelocityTemplate {
 			try {
 				is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_FORMCODE_FILE);
 				BufferedReader br = new BufferedReader(new InputStreamReader(is));
-				
+
 				formCodes = new HashMap<String,String>();
 				String line = null;
 				String[] content = null;
@@ -98,20 +98,20 @@ public class E2EVelocityTemplate {
 					content = line.split("\\t");
 					formCodes.put(content[0],content[1]);
 				}
-				
+
 				log.info("Loaded E2E Form Code Mapping");
 			} catch (Exception e) {
-		        log.error(e.getMessage(), e);
-		    } finally {
-		    	try {
-		    		is.close();
-		    	} catch (Exception e) {
-		    		log.error(e.getMessage(), e);
-		    	}
-		    }
+				log.error(e.getMessage(), e);
+			} finally {
+				try {
+					is.close();
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			}
 		}
 	}
-	
+
 	/**
 	 * Assembles the data model & predefined velocity template to yield an E2E document
 	 * 
@@ -120,19 +120,19 @@ public class E2EVelocityTemplate {
 	 */
 	public String export(PatientExport record) {
 		E2EResources e2eResources = new E2EResources();
-		
+
 		// Create Data Model
 		context = VelocityUtils.createVelocityContextWithTools();
 		context.put("patient", record);
 		context.put("e2e", e2eResources);
 		context.put("custodian", clinic);
-		
+
 		context.put("authorIdRoot", "DCCD2C68-389B-44C4-AD99-B8FB2DAD1493");
 		context.put("custodianIdRoot", "7EEF0BCC-F03E-4742-A736-8BAC57180C5F");
-		
+
 		// Merge Template & Data Model
 		String result = VelocityUtils.velocityEvaluate(context, template);
-		
+
 		// Check for Validity
 		if(result.contains("$")) {
 			log.warn("[Demo: "+record.getDemographic().getDemographicNo()+"] Export contains '$' - may contain errors");
@@ -140,10 +140,10 @@ public class E2EVelocityTemplate {
 		if(!E2EExportValidator.isValidXML(result)) {
 			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export failed E2E XSD validation");
 		}
-		
+
 		return result;
 	}
-	
+
 	public class E2EResources {
 		/**
 		 * Takes in a formcode string and returns the E2E Form Code result if available
@@ -155,7 +155,7 @@ public class E2EVelocityTemplate {
 			if(formCodes.containsKey(rhs)) {
 				return formCodes.get(rhs);
 			}
-			
+
 			return null;
 		}
 	}

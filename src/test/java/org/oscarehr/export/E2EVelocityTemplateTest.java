@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package oscar.oscarDemographic.pageUtil;
+package org.oscarehr.export;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -37,35 +37,34 @@ import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.export.E2EExportValidator;
+import org.oscarehr.export.E2EVelocityTemplate;
+import org.oscarehr.export.PatientExport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
+ * This test class tests the validity of EMR2EMR documents generated from a Velocity template.
  * 
  * @author Raymond Rusk
- *  This test class tests the validity of EMR2EMR documents
- *  generated from a Velocity template.
  */
 public class E2EVelocityTemplateTest extends DaoTestFixtures {
-	
 	private static Logger logger = MiscUtils.getLogger();
-    private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-    private static ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
-    private static Integer demographicNo;
-    
+	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private static ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+	private static Integer demographicNo;
+	private static String[] tables = {"allergies", "casemgmt_issue", "clinic", "demographic",
+		"drugs", "dxresearch", "icd9", "issue", "measurementMap", "measurementType", "measurements",
+		"measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
+
 	@BeforeClass
 	public static void onlyOnce() throws Exception {
-		SchemaUtils.restoreTable("demographicSets", "lst_gender", "demographic_merged",
-				"admission", "program", "health_safety", "demographic", "provider",
-				"allergies", "drugs", "preventions", "dxresearch", "patientLabRouting",
-				"icd9", "casemgmt_issue", "clinic", "issue", "measurements", "measurementsExt", "measurementMap", "measurementType");
+		SchemaUtils.restoreTable(tables);
 		Demographic entity = new Demographic();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDemographicNo(null);
-		// Ugly hack to ensure that oscar_test has valid numeric
-		// data for the year, month and day in demographic table.
-		// Without this fix, birthDate ends up being "yearmoda"
-		// which causes an XML schema validation error.
+		// Ugly hack to ensure that oscar_test has valid numeric data for the year, month and day in demographic table.
+		// Without this fix, birthDate ends up being "yearmoda" which causes an XML schema validation error.
 		if (entity.getYearOfBirth().toLowerCase().contains("year")) {
 			entity.setYearOfBirth("1940");
 		}
@@ -93,34 +92,31 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		assertNotNull(p);
 		String s = null;
 		try {
-	        s = e2etemplate.export(p);
-        } catch (Exception e) {
-        	logger.error("VALIDATION ERROR: (template export failed) ", e);
-        	fail();
-        }
-		
+			s = e2etemplate.export(p);
+		} catch (Exception e) {
+			logger.error("VALIDATION ERROR: (template export failed) ", e);
+			fail();
+		}
+
 		assertNotNull(s);
 		assertFalse("XML document unexpectedly empty", s.isEmpty());
 		// should be no $ variables in output
 		assertFalse("XML document unexpectedly contains '$'", s.contains("$"));
-		
+
 		// check output is well-formed
 		assertTrue("XML unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
 		logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
-		assertFalse("XML well-formed, expected not well-formed",
-				E2EExportValidator.isWellFormedXML(s.replace("</ClinicalDocument>",
-				"</clinicalDocument>")));
-		
+		assertFalse("XML well-formed, expected not well-formed", E2EExportValidator.isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>")));
+
 		// validate against XML schema
 		assertTrue("XML document unexpectedly not valid", E2EExportValidator.isValidXML(s));
 		logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
 		assertFalse("XML valid, expected not valid", E2EExportValidator.isValidXML(s.replace("DOCSECT", "DOXSECT")));
 	}
-	
-	/*
-	@Test
+
+/*	@Test
 	public void tortureTest() {
 		long startTime = System.nanoTime();
 		System.out.println("TortureTest start time = "+startTime);
@@ -136,17 +132,15 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 			String s = null;
 			try {
 				E2EVelocityTemplate e2etemplate = new E2EVelocityTemplate();
-		        s = e2etemplate.export(p);
-	        } catch (Exception e) {
-	        	logger.error(e.getMessage());
-	        	fail();
-	        }
+				s = e2etemplate.export(p);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				fail();
+			}
 			assertTrue(E2EExportValidator.isValidXML(s));
 		}
 		long stopTime = System.nanoTime();
 		System.out.println("TortureTest stop time = "+stopTime);
 		System.out.println("Total time (sec) = " + (stopTime-startTime)/1000000000.0);
-	}
-	*/
-	
+	}*/
 }
