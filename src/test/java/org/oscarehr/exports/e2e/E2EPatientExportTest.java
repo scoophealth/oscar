@@ -21,13 +21,14 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package oscar.oscarDemographic.pageUtil;
+package org.oscarehr.exports.e2e;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,101 +44,175 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.exports.PatientExport;
+import org.oscarehr.exports.PatientExport.sortByDin;
+import org.oscarehr.exports.e2e.E2EPatientExport;
+import org.oscarehr.exports.e2e.E2EPatientExport.Lab;
+import org.oscarehr.exports.e2e.E2EPatientExport.LabGroup;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDemographic.pageUtil.PatientExport.Lab;
-
 /**
+ * This class tests the model used for patient data export
  * 
  * @author Raymond Rusk
- * This class tests the model used for patient data export
  */
-public class PatientExportTest extends DaoTestFixtures {
-	
-    private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-    private static ProviderDataDao providerDataDao = (ProviderDataDao)SpringUtils.getBean("providerDataDao");
-    private static Integer demographicNo;
+public class E2EPatientExportTest extends DaoTestFixtures {
+	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	private static ProviderDataDao providerDataDao = (ProviderDataDao)SpringUtils.getBean("providerDataDao");
+	private static Integer demographicNo;
+	private static String[] tables = {"admission", "allergies", "casemgmt_note_ext", "casemgmt_issue",
+		"clinic", "demographic", "demographicSets", "demographic_merged", "drugs", "dxresearch",
+		"health_safety", "icd9", "issue", "lst_gender", "measurementMap", "measurementType", "measurements",
+		"measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
 
-    @BeforeClass
+	@BeforeClass
 	public static void onlyOnce() throws Exception {
-		SchemaUtils.restoreTable("demographicSets", "lst_gender", "demographic_merged",
-				"admission", "program", "health_safety", "demographic", "provider",
-				"allergies", "drugs", "preventions", "dxresearch", "patientLabRouting",
-				"icd9", "casemgmt_issue", "clinic", "issue", "measurements", "measurementsExt", "measurementMap", "measurementType");
-    	Demographic entity = new Demographic();
+		SchemaUtils.restoreTable(tables);
+		Demographic entity = new Demographic();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDemographicNo(null);
 		demographicDao.save(entity);
 		demographicNo = entity.getDemographicNo();
 	}
-    
-    // Testing constructors
 
-    @Test
-    public void testPatientExport0() {
-    	// very little can be done with default constructor
-    	assertNotNull("PatientExport default constructor failed",new PatientExport());
-    }
-
-    @Test
-	public void testPatientExport1() {
-    	assertNotNull(demographicNo);
+	// Testing constructors
+	@Test
+	public void testPatientExport() {
+		assertNotNull(demographicNo);
 		assertNotNull(demographicDao.getDemographic(demographicNo.toString()));
 		assertNotNull(demographicDao.getDemographicById(demographicNo));
 		assertNotNull(demographicDao.getClientByDemographicNo(demographicNo));
 		
-		PatientExport p = new PatientExport(demographicNo.toString());
-		assertNotNull("PatientExport object unexpectedly null",p);
-		assertEquals("Unexpected demographic number",p.getDemographic().getDemographicNo(),demographicNo);
+		E2EPatientExport p = new E2EPatientExport();
+		assertNotNull("PatientExport object unexpectedly null", p);
+		assertFalse("PatientExport isLoaded flag unexpectedly true", p.isLoaded());
+		if(p.loadPatient(demographicNo.toString())) {
+			assertEquals("Unexpected demographic number",p.getDemographic().getDemographicNo(),demographicNo);
+			assertTrue("PatientExport isLoaded flag unexpectedly false", p.isLoaded());
+		}
 	}
-    
-    // Testing utility methods that are used in other tests
-    @Test
-    public void testGetCurrentDate() {
-    	assertNotNull((new PatientExport()).getCurrentDate());
-    }
-    
-    @Test
-    public void testStringToDate() {
-    	assertNotNull((new PatientExport()).stringToDate("2013-03-07 15:30:00"));
-    }
-    
-    // Testing booleans is done within other tests below
-    
-    // Testing Demographics
+
+	// Testing utility methods
+	@Test
+	public void testGetCurrentDate() {
+		assertNotNull((new E2EPatientExport()).getCurrentDate());
+	}
+
+	@Test
+	public void testIsLoaded() {
+		assertFalse((new E2EPatientExport()).isLoaded());
+	}
+
+	@Test
+	public void testStringToDate() {
+		assertNotNull(E2EPatientExport.stringToDate("2013-03-07 15:30:00"));
+	}
+
+	@Test
+	public void testIsNumeric() {
+		assertTrue(E2EPatientExport.isNumeric("42"));
+		assertFalse(E2EPatientExport.isNumeric("<42"));
+	}
+
+	@Test
+	public void testCleanString() {
+		assertNotNull(E2EPatientExport.cleanString(" "));
+	}
+
+	@Test
+	public void testGetAuthorId() {
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+		assertNotNull(p.getAuthorId());
+	}
+
+	@Test
+	public void testGetProviderFirstName() {
+		PatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+
+		String provider = p.getProviderFirstName(list.get(0).getId());
+		assertNotNull(provider);
+		assertFalse(provider.isEmpty());
+		assertTrue(provider.equals(list.get(0).getFirstName()));
+	}
+
+	@Test
+	public void testGetProviderLastName() {
+		PatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+
+		String provider = p.getProviderLastName(list.get(0).getId());
+		assertNotNull(provider);
+		assertFalse(provider.isEmpty());
+		assertTrue(provider.equals(list.get(0).getLastName()));
+	}
+
+	// Testing booleans
+	@Test
+	public void testSetExAllTrue() {
+		PatientExport p = new E2EPatientExport();
+		p.setExAllTrue();
+		p.loadPatient(demographicNo.toString());
+		assertTrue("PatientExport isLoaded flag unexpectedly false", p.isLoaded());
+	}
+
+	// Testing Demographics
 	@Test
 	public void testDemographic() {		
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		assertNotNull(p.getDemographic());
 	}
-	
+
 	// Test convenience methods
 	@Test
 	public void testGetBirthDate() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		String result = p.getBirthDate();
 		assertNotNull("Birth date unexpectedly null", result);
 		assertTrue("Birth date unexpectedly empty", !result.isEmpty());
 	}
-	
+
 	@Test
 	public void testGetGenderDesc() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		String result = p.getBirthDate();
 		assertNotNull("GenderDesc unexpectedly null", result);
 		assertFalse("GenderDesc unexpectedly empty", result.isEmpty());
 	}
-	
+
 	// Test allergies
 	@Test
 	public void testAllergies() {		
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Allergy> list = p.getAllergies();
 		if (p.hasAllergies()) {
-			// exAllergiesAndAdverseReachtions must be true
+			// exAllergiesAndAdverseReactions must be true
 			assertNotNull(list);
 			p.setExAllergiesAndAdverseReactions(false);
 			assertFalse(p.hasAllergies());
@@ -146,7 +221,7 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertTrue(p.hasAllergies());
 		}
 		if (!p.hasAllergies() && list!=null && !list.isEmpty()) {
-			// exAllergiesAndAdverseReachtions must be false
+			// exAllergiesAndAdverseReactions must be false
 			p.setExAllergiesAndAdverseReactions(true);
 			assertTrue(p.hasAllergies());
 			// put boolean back to original state
@@ -154,11 +229,12 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertFalse(p.hasAllergies());
 		}
 	}
-	
+
 	// Test Clinically Measured Observations
 	@Test
 	public void testMeasurements() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Measurement> list = p.getMeasurements();
 		if (p.hasMeasurements()) {
 			// exImmunizations must be true
@@ -179,16 +255,17 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertFalse(p.hasMeasurements());
 		}
 	}
-	
+
 	@Test
 	public void testGetTypeDescription() {
-		assertNotNull((new PatientExport()).getTypeDescription("test"));
+		assertNotNull((new E2EPatientExport()).getTypeDescription("test"));
 	}
-	
+
 	// Test immunizations
 	@Test
 	public void testImmunizations() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Prevention> list = p.getImmunizations();
 		if (p.hasImmunizations()) {
 			// exImmunizations must be true
@@ -209,13 +286,17 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertFalse(p.hasImmunizations());
 		}
 	}
-	
-	//TODO testGetImmuExtValue()
-	
+
+	@Test
+	public void testGetImmuExtValue() {
+		assertNotNull((E2EPatientExport.getImmuExtValue("1", "route")));
+	}
+
 	// Test laboratory reports
 	@Test
 	public void testLabs() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Lab> list = p.getLabs();
 		if (p.hasLabs()) {
 			// exLaboratoryResults must be true
@@ -237,14 +318,40 @@ public class PatientExportTest extends DaoTestFixtures {
 		}
 	}
 
-	//TODO testGetLabExtValue() (2 versions)
+	@Test
+	public void testGetLabExtValue1() {
+		assertNotNull((E2EPatientExport.getLabExtValue("1", "abnormal")));
+	}
 	
-	//TODO Possibly test classes Lab and LabGroup
+	@Test
+	public void testGetLabExtValue2() {
+		assertNotNull((E2EPatientExport.getLabExtValue(new ArrayList<MeasurementsExt>(), "abnormal")));
+	}
+
+	// Test Nested Lab and Group Object Models
+	@Test
+	public void testLabObject() {
+		Lab l = new Lab();
+		assertNotNull(l);
+		l.hl7TextInfo = new Hl7TextInfo();
+		assertNotNull(l.getHl7TextInfo());
+		assertNotNull(l.getGroup());
+	}
 	
+	@Test
+	public void testLabGroupObject() {
+		LabGroup lg = new LabGroup(1);
+		assertNotNull(lg);
+		assertTrue(lg.getGroupId() == 1);
+		assertNotNull(lg.getMeasurement());
+		assertNotNull(lg.getMeasurementsExt());
+	}
+
 	// Test medications
 	@Test
 	public void testMedications() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Drug> list = p.getMedications();
 		if (p.hasMedications()) {
 			// exMedicationsAndTreatments must be true
@@ -265,23 +372,28 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertFalse("medications unexpectedly not false",p.hasMedications());
 		}
 	}
-	
+
 	@Test
 	public void testIsActiveDrug() {
-		// can get by with no argument constructor here
-		PatientExport p = new PatientExport();
-		Date pastDate = p.stringToDate("2012-01-01 00:00:00");
+		PatientExport p = new E2EPatientExport();
+		Date pastDate = E2EPatientExport.stringToDate("2012-01-01 00:00:00");
 		assertFalse(p.isActiveDrug(pastDate));
-		Date futureDate = p.stringToDate("9999-12-31 23:59:59");
+		Date futureDate = E2EPatientExport.stringToDate("9999-12-31 23:59:59");
 		assertTrue(p.isActiveDrug(futureDate));
 	}
-	
-	// TODO testSortByDin()
+
+	@Test
+	public void testSortByDinCompare() {
+		PatientExport p = new E2EPatientExport();
+		sortByDin sbd = p.new sortByDin();
+		assertNotNull(sbd.compare(new Drug(), new Drug()));
+	}
 
 	// Test problem list
 	@Test
 	public void testProblems() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Dxresearch> list = p.getProblems();
 		if (p.hasProblems()) {
 			// exProblemList must be true
@@ -302,20 +414,27 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertFalse("medications unexpectedly not false",p.hasProblems());
 		}
 	}
-	
+
 	@Test
 	public void testGetICD9Description() {
 		// the test dataset has a row in the icd9
 		// table for icd9 = '001' ("CHOLERA")
-		String desc = PatientExport.getICD9Description("001");
+		String desc = E2EPatientExport.getICD9Description("001");
 		assertNotNull(desc);
 		assertFalse(desc.isEmpty());
 	}
-	
+
+	// Test Case Management Utility Functions
+	@Test
+	public void testGetCMNoteExtValue() {
+		assertNotNull((E2EPatientExport.getCMNoteExtValue("1", "Hide Cpp")));
+	}
+
 	// Test Risk Factors
 	@Test
 	public void testRiskFactors() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<CaseManagementNote> list = p.getRiskFactorsandPersonalHistory();
 		if (p.hasRiskFactorsandPersonalHistory()) {
 			// exRiskFactors or exPersonalHistory must be true
@@ -338,11 +457,12 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertFalse("risk factors unexpectedly not false",p.hasRiskFactorsandPersonalHistory());
 		}
 	}
-	
+
 	// Test Family History
 	@Test
 	public void testFamilyHistory() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<CaseManagementNote> list = p.getFamilyHistory();
 		if (p.hasFamilyHistory()) {
 			// exFamilyHistory must be true
@@ -363,11 +483,12 @@ public class PatientExportTest extends DaoTestFixtures {
 			assertFalse("family history unexpectedly not false",p.hasFamilyHistory());
 		}
 	}
-	
+
 	// Test Alerts
 	@Test
 	public void testAlerts() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<CaseManagementNote> list = p.getAlerts();
 		if (p.hasAlerts()) {
 			// exAlertsAndSpecialNeeds must be true
@@ -387,53 +508,5 @@ public class PatientExportTest extends DaoTestFixtures {
 			p.setExAlertsAndSpecialNeeds(false);
 			assertFalse("alerts unexpectedly not false",p.hasAlerts());
 		}
-	}
-	
-	// Test remaining Utility methods (others tested above)
-	@Test
-	public void testIsNumeric() {
-		assertTrue((new PatientExport()).isNumeric("42"));
-		assertFalse((new PatientExport()).isNumeric("<42"));
-	}
-	
-	@Test
-	public void testCleanString() {
-		assertNotNull((new PatientExport()).cleanString(" "));
-	}
-	
-	@Test
-	public void testGetProviderFirstName() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-
-		assertNotNull(providerDataDao);
-		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
-		assertNotNull(list);
-		assertFalse(list.isEmpty());
-		assertNotNull(list.get(0));
-		assertNotNull(list.get(0).getId());
-		assertFalse(list.get(0).getId().isEmpty());
-		
-		String provider = p.getProviderFirstName(list.get(0).getId());
-		assertNotNull(provider);
-		assertFalse(provider.isEmpty());
-		assertTrue(provider.equals(list.get(0).getFirstName()));
-	}
-	
-	@Test
-	public void testGetProviderLastName() {
-		PatientExport p = new PatientExport(demographicNo.toString());
-
-		assertNotNull(providerDataDao);
-		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
-		assertNotNull(list);
-		assertFalse(list.isEmpty());
-		assertNotNull(list.get(0));
-		assertNotNull(list.get(0).getId());
-		assertFalse(list.get(0).getId().isEmpty());
-		
-		String provider = p.getProviderLastName(list.get(0).getId());
-		assertNotNull(provider);
-		assertFalse(provider.isEmpty());
-		assertTrue(provider.equals(list.get(0).getLastName()));
 	}
 }

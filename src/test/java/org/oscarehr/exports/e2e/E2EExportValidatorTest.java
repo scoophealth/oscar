@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package oscar.oscarDemographic.pageUtil;
+package org.oscarehr.exports.e2e;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,47 +33,45 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.exports.e2e.E2EExportValidator;
 import org.oscarehr.util.MiscUtils;
 
 /**
+ * This test class tests that the E2E XML Schema validator is functioning correctly.
  * 
  * @author Raymond Rusk
- * This test class tests that the E2E XML Schema validator is functioning correctly.
  */
 public class E2EExportValidatorTest {
-
 	private static Logger logger = MiscUtils.getLogger();
 	private static String s = null;
-	
+
 	@BeforeClass
 	public static void onlyOnce() throws IOException {
 		// load string s with valid XML file
-		String filename = System.getProperty("basedir")+
-				"/src/test/resources/e2e/validatorTest.xml";
+		String filename = System.getProperty("basedir")+"/src/test/resources/e2e/validatorTest.xml";
 		s = readFile(filename);
 	}
-	
+
 	@Test
 	public void testIsWellFormedXML() {
 		assertFalse(s==null || s.isEmpty());
 		// check output is well-formed
-		assertTrue("XML document unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
+		assertTrue("XML document is unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
 	}
-	
+
 	@Test
 	public void testIsWellFormedXMLOnNonWellFormedDocument() {
 		logger.warn("There should be one VALIDATION ERROR warning below.");
 		// string substitution below should cause error
-		assertFalse("XML documented expected not well-formed but was found well-formed", E2EExportValidator.isWellFormedXML(s.replace("</ClinicalDocument>",
-				"</clinicalDocument>")));
+		assertFalse("XML documented expected not well-formed but was found well-formed", E2EExportValidator.isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>")));
 	}
-	
+
 	@Test
 	public void testIsValidXML() {
 		// validate against XML schema
 		assertTrue("XML document expected valid but was not", E2EExportValidator.isValidXML(s));
 	}
-	
+
 	@Test
 	public void testIsValidXMLOnNonValidDocument() {
 		logger.warn("There should be one VALIDATION ERROR warning below.");
@@ -83,9 +81,9 @@ public class E2EExportValidatorTest {
 
 	private static String readFile( String file ) throws IOException {
 		BufferedReader reader = new BufferedReader( new FileReader (file));
-		String         line = null;
-		StringBuilder  stringBuilder = new StringBuilder();
-		String         ls = System.getProperty("line.separator");
+		String line = null;
+		StringBuilder stringBuilder = new StringBuilder();
+		String ls = System.getProperty("line.separator");
 
 		while( ( line = reader.readLine() ) != null ) {
 			stringBuilder.append( line );
