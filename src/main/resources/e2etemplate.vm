@@ -187,7 +187,7 @@ Allergies and Intolerances - (Reaction List)
 						<observation classCode="OBS" moodCode="EVN">
 							<id extension="$allergy.id" root="2.16.840.1.113883.3.1818.10.2.10.1"/>
 							<code nullFlavor='NA'/>
-#*    *##if ( $allergy.archived == 0 )
+#*    *##if ( !$allergy.archived )
 							<statusCode code="active"/>
 #*    *##else
 							<statusCode code="completed"/>
@@ -603,7 +603,7 @@ Laboratory Results & Results
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
-#*    *##if ( $patient.stringToDate($lab.hl7TextInfo.getObrDate()) )
+#*    *##if ( $lab.hl7TextInfo.getObrDate() )
 								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 #*    *##else
 								<time nullFlavor="UNK"/>
@@ -657,7 +657,11 @@ Laboratory Results & Results
 #*            *##else
 											<statusCode code="final"/>
 #*            *##end
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "datetime")} )
 											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+#*            *##else
+											<effectiveTime nullFlavor="UNK"/>
+#*            *##end
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" && $patient.isNumeric($labEntry.dataField) )
 											<value xsi:type="PQ" value="$patient.cleanString($labEntry.dataField)" unit="${patient.getLabExtValue("$labEntry.id", "unit")}"/>
 #*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" )
@@ -674,7 +678,11 @@ Laboratory Results & Results
 											<performer typeCode="PRF">
 												<templateId root="2.16.840.1.113883.3.1818.10.4.19"/>
 												<!--Performer Participation-->
+#*                *##if ( ${patient.getLabExtValue("$labEntry.id", "datetime")} )
 												<time value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+#*                *##else
+												<time nullFlavor="UNK"/>
+#*                *##end
 												<assignedEntity>
 													<id extension="TBD" root="TBD"/>
 													<representedOrganization classCode="ORG" determinerCode="INSTANCE">
@@ -790,10 +798,14 @@ Medications and Prescriptions - Medication List
 										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
 #*            *##end
 #*        *##end
-#*        *##if ( $med.regionalIdentifier && $med.regionalIdentifier != "" && $med.atc && $med.atc != "" )
+#*        *##if ( !( $med.regionalIdentifier && $med.regionalIdentifier != "" ) && !( $med.atc && $med.atc != "" ) )
 										<code nullFlavor="UNK"/>
 #*        *##end
+#*        *##if ( $med.brandName )
 										<name>$!med.brandName</name>
+#*        *##else
+										<name>$!med.genericName</name>
+#*        *##end
 										<e2e:desc nullFlavor="UNK"/>
 ## Temporary solution until next E2E specification is released
 #*        *##if ( $med.dosage && $med.dosage != "" && $med.unit && $med.unit != "" )
@@ -849,7 +861,11 @@ Medications and Prescriptions - Medication List
 										<!--Medication Identification-->
 										<manufacturedProduct classCode="MANU">
 											<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+#*        *##if ( $med.genericName )
+												<name>$!med.genericName</name>
+#*        *##else
 												<name>$!med.brandName</name>
+#*        *##end
 											</manufacturedMaterial>
 										</manufacturedProduct>
 									</consumable>
@@ -952,7 +968,11 @@ Medications and Prescriptions - Medication List
 												<!--Medication Identification-->
 												<manufacturedProduct classCode="MANU">
 													<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+#*        *##if ( $med.genericName )
+														<name>$!med.genericName</name>
+#*        *##else
 														<name>$!med.brandName</name>
+#*        *##end
 													</manufacturedMaterial>
 												</manufacturedProduct>
 											</consumable>
