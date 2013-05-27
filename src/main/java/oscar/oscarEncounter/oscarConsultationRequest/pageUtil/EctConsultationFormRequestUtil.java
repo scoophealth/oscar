@@ -245,6 +245,9 @@ public class EctConsultationFormRequestUtil {
 	                    if (h > 12) {
 	                        appointmentPm = "PM";
 	                        appointmentHour = Integer.toString(h - 12);
+	                    } else if (h==12){
+	                    	appointmentPm = "PM";
+	                        appointmentHour = Integer.toString(h);
 	                    } else {
 	                        appointmentPm = "AM";
 	                        appointmentHour = Integer.toString(h);
