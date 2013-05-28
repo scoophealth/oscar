@@ -681,8 +681,9 @@ if (bMultisites) { %>
         <li class="weak row">
             <div class="label"><bean:message key="Appointment.formLastCreator" />:</div>
             <div class="input">
-		<% String lastCreatorNo = appt.get("lastUpdateUser")==null?(String)appt.get("creator"):providerDao.getProvider((String)appt.get("lastUpdateUser")).getFormattedName(); %>
-                <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
+		<% String lastCreatorNo = bFirstDisp?(String)appt.get("creator"):request.getParameter("user_id"); %>
+
+            <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
             </div>
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formLastTime" />:</div>
