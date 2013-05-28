@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.time.DateUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
   if (session.getAttribute("user") == null){
@@ -5,10 +6,14 @@
   }
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.start_time") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,org.oscarehr.common.model.*,org.apache.commons.lang.time.*" errorPage="../appointment/errorpage.jsp"%>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <% 
+	org.oscarehr.common.model.ProviderPreference providerPreference=org.oscarehr.web.admin.ProviderPreferencesUIBean.updateOrCreateProviderPreferences(request);
+	int endHour = providerPreference.getEndHour();
+	int startHour = providerPreference.getStartHour();
+	
   String [][] dbQueries=new String[][] { 
 	{"search_daysheetall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no, d.phone, d.date_of_birth, d.month_of_birth, d.year_of_birth, d.hin from appointment a,demographic d,provider p, mygroup m where a.appointment_date=? and  m.mygroup_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no AND p.provider_no=m.provider_no order by p.provider_no, a.appointment_date, "+orderby }, 
 	{"search_daysheetsingleall", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no, d.phone, d.date_of_birth, d.month_of_birth, d.year_of_birth, d.hin from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
@@ -26,8 +31,8 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR - <bean:message key="report.tabulardaysheetreport.title"/>=</title>
-<link rel="stylesheet" href="../media/css/oscar.css">
-<link rel="stylesheet" href="../media/css/reporting.css">
+<link rel="stylesheet" href="../share/css/oscar.css">
+<link rel="stylesheet" href="../share/css/reporting.css">
 <link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
@@ -48,92 +53,14 @@ function setfocus() {
 			size="3"><bean:message key="report.tabulardaysheetreport.msgTitle"/> (<%=createtime%>)</font></font></b></font></p>
 		</td>
 		<td><input type="button" name="Button" value="<bean:message key="report.tabulardaysheetreport.btnPrint"/>" onClick="window.print()">
-                    <input type="button" name="Button" value=" <bean:message key="report.tabulardaysheetreport.btnExit"/> " onClick="window.close()">
-                </td>
-    
+            <input type="button" name="Button" value=" <bean:message key="report.tabulardaysheetreport.btnExit"/> " onClick="window.close()">
+        </td>
 	</tr>
 </table>
-<%
-	boolean bFistL = true;
-	String strTemp = "";
-	if ((5 >= provider_no.length()) || (5 < provider_no.length()) && !(provider_no.substring(0, 5).compareTo("_grp_") == 0))
-	{
-		rsdemo = daySheetBean.queryResults(new String[] {date, provider_no}, "search_daysheetsingleall");
-	}
-	else
-	{
-		rsdemo = daySheetBean.queryResults(new String[] {date, provider_no.substring(5, provider_no.length())}, "search_daysheetall");
-    }
-	boolean veryFirst = true;
-	int hour = 8;
-	int min = 0;
-	String time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ?
-		Integer.toString(min) : "0" + Integer.toString(min));
-	String appTime;
-	String lastwritten = "";
-	while (rsdemo.next())
-	{
-		if(!strTemp.equals(rsdemo.getString("a.provider_no")) )
-		{
-			strTemp = rsdemo.getString("a.provider_no") ;
-			bFistL = true;
-			time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ?
-				Integer.toString(min) : "0" + Integer.toString(min));
-			if (!(veryFirst))
-			{
-				while (18 > hour && 60 > min)
-				{
-					time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ?
-						Integer.toString(min) : "0" + Integer.toString(min));
-%>
-<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
-	<td class="items"><%=time%></td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-	<td class="items">&nbsp;</td>
-</tr>
-<%
-					bodd = !(bodd);
-					if (45 == min)
-					{
-						min = 0;
-						hour += 1;
-					}
-					else
-					{
-						min += 15;
-					}
-				}
-				hour = 8;
-				min = 0;
-				time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ? Integer.toString(min) : "0" + Integer.toString(min));
-			}
-			else
-			{
-				veryFirst = false;
-			}
-%>
-</table>
-<p>
-<%
-			hour = 8;
-			min = 0;
-		}
-		if(bFistL)
-		{
-			bFistL = bodd = false;
-%>
-
 <table width="100%" border="0" cellspacing="0" cellpadding="1"
 	class="smallerTable">
 	<tr>
-		<td><font size=4><b><%=providerBean.getProperty(rsdemo.getString("a.provider_no")) + "</b>  (" + date + ")"%><font></td>
+		<td><font size=4><b><%=providerBean.getProperty(request.getParameter("provider_no")) + "</b>  (" + date + ")"%><font></td>
 		<td align="right"></td>
 	</tr>
 </table>
@@ -151,112 +78,67 @@ function setfocus() {
 		<td class="items" align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag3"/></b></td>
 		<td class="items"><b><bean:message key="report.tabulardaysheetreport.msgDescription"/></b></td>
 	</tr>
-	<%
-    	}
-		appTime = rsdemo.getString("a.start_time");
-		String endTime = rsdemo.getString("a.end_time");
-		bodd = !(bodd);
-		if (!(appTime.equals(time)))
-		{
-			while ((18 != hour) && !(appTime.equals(time + ":00")))
-			{
-				if (!(time.equalsIgnoreCase(lastwritten)))
-				{
-%>
-	<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
-		<td class="items"><%=time%></td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-	</tr>
-	<%
-				bodd = !(bodd);
+<%
+	boolean bFistL = true;
+	if ((5 >= provider_no.length()) || (5 < provider_no.length()) && !(provider_no.substring(0, 5).compareTo("_grp_") == 0)) {
+		rsdemo = daySheetBean.queryResults(new String[] {date, provider_no}, "search_daysheetsingleall");
+	} else {
+		rsdemo = daySheetBean.queryResults(new String[] {date, provider_no.substring(5, provider_no.length())}, "search_daysheetall");
+    }
+		
+	java.util.Date indexDate = DateUtils.parseDate(date + " " + startHour + ":00", new String[]{"yyyy-mm-dd HH:mm"});;
+	java.util.Date endDate = DateUtils.parseDate(date + " " + endHour + ":00", new String[]{"yyyy-mm-dd HH:mm"});
+	SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+	java.util.Date previousEndDate = null;
+	
+	while (indexDate.before(endDate)) {
+		if (rsdemo.next()) {
+			java.util.Date currentEndDate = DateUtils.parseDate(rsdemo.getString("a.appointment_date") + " " + rsdemo.getString("a.end_time"), new String[]{"yyyy-mm-dd HH:mm:ss"});
+			java.util.Date appointmentDate = DateUtils.parseDate(rsdemo.getString("a.appointment_date") + " " + rsdemo.getString("a.start_time"), new String[]{"yyyy-mm-dd HH:mm:ss"});
+			while (DateUtils.addMinutes(indexDate, 14).before(appointmentDate)) {
+				if (previousEndDate == null || previousEndDate.before(indexDate)) {
+					bodd = !bodd;
 				}
-				if (45 == min)
-				{
-					min = 0;
-					hour += 1;
-				}
-				else
-				{
-					min += 15;
-				}
-				time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ? Integer.toString(min) : "0" + Integer.toString(min));
-			}
-		}
-		int t =	Integer.parseInt(time.split(":")[0]) * 60 + Integer.parseInt(time.split(":")[1]);
-		int st =  Integer.parseInt(appTime.split(":")[0]) * 120 + Integer.parseInt(appTime.split(":")[1]) * 60 + Integer.parseInt(appTime.split(":")[2]);
-		if (t <= st)
-		{
 %>
-	<tr bgcolor="<%=((bodd)?"#F6F6F6":"#FFFFFF")%>">
-		<td class="items"><%=time%></td>
-		<td class="items"><%=rsdemo.getString("d.chart_no")%></td>
-		<td class="items"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name")) + ", " + Misc.toUpperLowerCase(rsdemo.getString("d.first_name")) + " Ph:" + rsdemo.getString("d.phone")%></td>
-		<td class="items"><%=rsdemo.getString("d.date_of_birth") + "-" + rsdemo.getString("d.month_of_birth") + "-" + rsdemo.getString("d.year_of_birth")%></td>
-		<td class="items"><%=rsdemo.getString("d.hin")%></td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items">&nbsp;</td>
-		<td class="items"><%=rsdemo.getString("a.reason")%>&nbsp;</td>
-		<%
-			bodd = !(bodd);
-			String[] ets = endTime.split(":");
-			int m = Integer.parseInt(ets[1]) + 1;
-			if (t <= st)
-			{
-				lastwritten = time;
+				<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
+					<td class="items"><%=formatter.format(indexDate)%></td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+				</tr>
+<%			
+				indexDate = DateUtils.addMinutes(indexDate, 15);			
 			}
-			else if (60 == m)
-			{
-				hour += 1;
-				min = 0;
-				time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ? Integer.toString(min) : "0" + Integer.toString(min));
-			}
-			else
-			{
-				hour = (m <= min) ? hour + 1 : hour;
-				min = m;
-				time = ets[0] + ":" + ((10 <= m) ? Integer.toString(m) : "0" + Integer.toString(m));
-			}
-		}
-	}
-
-	while (18 > hour)
-	{
-		if (veryFirst)
-		{
-			veryFirst = false;
+			bodd = !bodd;
 %>
-		<table width="100%" border="0" bgcolor="#ffffff" cellspacing="0"
-			cellpadding="0">
-			<tr>
-				<td><b><bean:message key="report.tabulardaysheetreport.msgTime"/></b></td>
-				<td><b><bean:message key="report.tabulardaysheetreport.msgChart"/></b></td>
-				<td><b><bean:message key="report.tabulardaysheetreport.msgName"/></b></td>
-				<td align="center" width="79"><b><bean:message key="report.tabulardaysheetreport.msgDoB"/></b></td>
-				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgPHN"/></b></td>
-				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgFee1"/></b></td>
-				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag1"/></b></td>
-				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag2"/></b></td>
-				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag3"/></b></td>
-				<td><b><bean:message key="report.tabulardaysheetreport.msgDescription"/></b></td>
-			</tr>
-			<%
-		}
-		time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ? Integer.toString(min) : "0" + Integer.toString(min));
-		if (!(time.equalsIgnoreCase(lastwritten)))
-		{
+				<tr bgcolor="<%=((bodd)?"#F6F6F6":"#FFFFFF")%>">
+					<td class="items"><%=formatter.format(indexDate)%></td>
+					<td class="items"><%=rsdemo.getString("d.chart_no")%></td>
+					<td class="items"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name")) + ", " + Misc.toUpperLowerCase(rsdemo.getString("d.first_name")) + " Ph:" + rsdemo.getString("d.phone")%></td>
+					<td class="items"><%=rsdemo.getString("d.date_of_birth") + "-" + rsdemo.getString("d.month_of_birth") + "-" + rsdemo.getString("d.year_of_birth")%></td>
+					<td class="items"><%=rsdemo.getString("d.hin")%></td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items">&nbsp;</td>
+					<td class="items"><%=rsdemo.getString("a.reason")%>&nbsp;</td>
+				</tr>
+<%
+			previousEndDate = currentEndDate;
+			indexDate = DateUtils.addMinutes(indexDate, 15);
+		} else {
+			if (previousEndDate == null || previousEndDate.before(indexDate)) {
+				bodd = !bodd;
+			}
 %>
 			<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
-				<td class="items"><%=time%></td>
+				<td class="items"><%=formatter.format(indexDate)%></td>
 				<td class="items">&nbsp;</td>
 				<td class="items">&nbsp;</td>
 				<td class="items">&nbsp;</td>
@@ -267,21 +149,11 @@ function setfocus() {
 				<td class="items">&nbsp;</td>
 				<td class="items">&nbsp;</td>
 			</tr>
-			<%
-  		bodd = !(bodd);
+<%					
+			indexDate = DateUtils.addMinutes(indexDate, 15);
 		}
-		if (45 == min)
-		{
-			min = 0;
-			hour += 1;
-		}
-		else
-		{
-			min += 15;
-		}
-		time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ? Integer.toString(min) : "0" + Integer.toString(min));
 	}
 %>
-		</table>
+</table>
 </body>
 </html>
