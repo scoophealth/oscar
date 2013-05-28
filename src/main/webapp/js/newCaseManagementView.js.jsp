@@ -661,7 +661,7 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
    		coords = Position.positionedOffset($("cppBoxes"));
     }
 
-    var top = coords[1];
+    var top = Math.max(coords[1], 0);
     var right = Math.round(coords[0]/0.66);
     var height = $("showEditNote").getHeight();
     var gutterMargin = 150;
