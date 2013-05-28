@@ -2012,14 +2012,12 @@ public class DemographicExportAction4 extends Action {
 						exportError.add("Error! No Demographic Number");
 						continue;
 					}
-					
-					// Create Patient
-					PatientExport patient = new PatientExport(demoNo);
-					
-					// Create Template View
+
+					// Select Template
 					E2EVelocityTemplate t = new E2EVelocityTemplate();
-					
-					// Call Template Export & add to ArrayList
+
+					// Create and select patient data
+					PatientExport patient = new PatientExport();
 					patient.setExMedications(exMedicationsAndTreatments);
 					patient.setExAllergiesAndAdverseReactions(exAllergiesAndAdverseReactions);
 					patient.setExImmunizations(exImmunizations);
@@ -2029,15 +2027,23 @@ public class DemographicExportAction4 extends Action {
 					patient.setExPersonalHistory(exPersonalHistory);
 					patient.setExFamilyHistory(exFamilyHistory);
 					patient.setExAlertsAndSpecialNeeds(exAlertsAndSpecialNeeds);
-					String output = t.export(patient);
-					
+
+					// Load patient data and merge to template
+					String output = "";
+					if(patient.loadPatient(demoNo)) {
+						output = t.export(patient);
+					} else {
+						logger.error("Failed to load patient " + demoNo);
+						continue;
+					}
+
 					//export file to temp directory
 					try{
 						File directory = new File(tmpDir);
 						if(!directory.exists()){
 							throw new Exception("Temporary Export Directory does not exist!");
 						}
-		
+
 						//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
 						String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName();
 						expFile += "_"+demoNo;
@@ -2051,14 +2057,14 @@ public class DemographicExportAction4 extends Action {
 						out.write(output);
 						out.close();
 					} catch (IOException ex) {logger.error("Error", ex);
-						throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
+					throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
 					}
 				}
-		
+
 				//create ReadMe.txt & ExportEvent.log
 				//files.add(makeReadMe(files));
 				//files.add(makeExportLog(files.get(0).getParentFile()));
-		
+
 				//zip all export files
 				String zipName = files.get(0).getName().replace(".xml", ".zip");
 				if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".zip";
@@ -2066,7 +2072,7 @@ public class DemographicExportAction4 extends Action {
 				if (!Util.zipFiles(files, zipName, tmpDir)) {
 					logger.debug("Error! Failed to zip export files");
 				}
-		
+
 				if (pgpReady.equals("Yes")) {
 					//PGP encrypt zip file
 					PGPEncrypt pgp = new PGPEncrypt();
@@ -2082,8 +2088,8 @@ public class DemographicExportAction4 extends Action {
 					Util.downloadFile(zipName, tmpDir, response);
 					ffwd = "success";
 				}
-		
-		
+
+
 				//Remove zip & export files from temp dir
 				Util.cleanFile(zipName, tmpDir);
 				Util.cleanFiles(files);

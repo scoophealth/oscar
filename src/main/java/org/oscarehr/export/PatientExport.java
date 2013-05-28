@@ -116,6 +116,7 @@ public class PatientExport {
 	private List<CaseManagementNote> alerts = null;
 	private List<Measurement> measurements = null;
 
+	private boolean isLoaded = false;
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
 	private boolean exImmunizations = false;
@@ -126,37 +127,67 @@ public class PatientExport {
 	private boolean exFamilyHistory = false;
 	private boolean exAlertsAndSpecialNeeds = false;
 
-	protected PatientExport() {
-	}
+	/**
+	 * Constructs an empty Patient Export object
+	 */
+	public PatientExport() {}
 
 	/**
-	 * @param demoNo
+	 * Attempts to load the specified patient.
+	 * This function must be called AFTER the sections are set AND before exporting
+	 * 
+	 * @param demoNo as String
+	 * @return True if successful, else false
 	 */
-	public PatientExport(String demoNo) {
+	public boolean loadPatient(String demoNo) {
+		if(isLoaded) {
+			log.error("PatientExport object is already loaded with a patient");
+			return false;
+		}
+
 		this.demographicNo = new Integer(demoNo);
 		this.demographic = demographicDao.getDemographic(demoNo);
 		this.authorId = demographic.getProviderNo();
-		log.debug("Demo: " + demographicNo.toString());
 
-		this.allergies = allergyDao.findAllergies(demographicNo);
-		this.drugs = drugDao.findByDemographicId(demographicNo);
+		if(exAllergiesAndAdverseReactions) {
+			this.allergies = allergyDao.findAllergies(demographicNo);
+		}
 
-		// Sort drugs by reverse chronological order & group by DIN by sorting
-		Collections.reverse(drugs);
-		Collections.sort(drugs, new sortByDin());
+		if(exMedicationsAndTreatments) {
+			this.drugs = drugDao.findByDemographicId(demographicNo);
 
-		this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
-		List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
-		problems = new ArrayList<Dxresearch>();
-		for(Dxresearch problem : tempProblems) {
-			if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
-				this.problems.add(problem);
+			// Sort drugs by reverse chronological order & group by DIN by sorting
+			Collections.reverse(drugs);
+			Collections.sort(drugs, new sortByDin());
+		}
+
+		if(exImmunizations) {
+			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+		}
+
+		if(exProblemList) {
+			List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
+			this.problems = new ArrayList<Dxresearch>();
+			for(Dxresearch problem : tempProblems) {
+				if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
+					this.problems.add(problem);
+				}
 			}
 		}
 
-		this.labs = assembleLabs();
-		parseCaseManagement();
-		this.measurements = parseMeasurements();
+		//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
+		if(exLaboratoryResults) {
+			this.labs = assembleLabs();
+			this.measurements = parseMeasurements();
+		}
+
+		if(exRiskFactors || exPersonalHistory || exFamilyHistory || exAlertsAndSpecialNeeds) {
+			parseCaseManagement();
+		}
+
+		this.isLoaded = true;
+		log.debug("Loaded Demo: " + demographicNo.toString());
+		return true;
 	}
 
 	/**
@@ -195,43 +226,52 @@ public class PatientExport {
 		List<String> cmAlertsIssues = new ArrayList<String>();
 
 		for(CaseManagementIssue entry : caseManagementIssues) {
-			if(entry.getIssue_id() == RISKFACTORS || entry.getIssue_id() == SOCIALHISTORY) {
+			if(exRiskFactors && entry.getIssue_id() == RISKFACTORS) {
 				cmRiskFactorIssues.add(entry.getId().toString());
 			}
-			if(entry.getIssue_id() == FAMILYHISTORY) {
+			else if(exPersonalHistory && entry.getIssue_id() == SOCIALHISTORY) {
+				cmRiskFactorIssues.add(entry.getId().toString());
+			}
+			else if(exFamilyHistory && entry.getIssue_id() == FAMILYHISTORY) {
 				cmFamilyHistoryIssues.add(entry.getId().toString());
 			}
-			if(entry.getIssue_id() == REMINDERS) {
+			else if(exAlertsAndSpecialNeeds && entry.getIssue_id() == REMINDERS) {
 				cmAlertsIssues.add(entry.getId().toString());
 			}
 		}
 
-		List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
-		List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
-		if(cmRiskFactorNotes != null) {
-			for(Integer i : cmRiskFactorNotes) {
-				cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+		if(exRiskFactors || exPersonalHistory) {
+			List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
+			List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
+			if(cmRiskFactorNotes != null) {
+				for(Integer i : cmRiskFactorNotes) {
+					cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+				}
 			}
+			this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
 		}
-		this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
 
-		List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
-		List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
-		if(cmFamilyHistoryNotes != null) {
-			for(Integer i : cmFamilyHistoryNotes) {
-				cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+		if(exFamilyHistory) {
+			List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
+			List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
+			if(cmFamilyHistoryNotes != null) {
+				for(Integer i : cmFamilyHistoryNotes) {
+					cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+				}
 			}
+			this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
 		}
-		this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
 
-		List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
-		List<Long> cmAlertsNotesLong = new ArrayList<Long>();
-		if(cmAlertsNotes != null) {
-			for(Integer i : cmAlertsNotes) {
-				cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+		if(exAlertsAndSpecialNeeds) {
+			List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
+			List<Long> cmAlertsNotesLong = new ArrayList<Long>();
+			if(cmAlertsNotes != null) {
+				for(Integer i : cmAlertsNotes) {
+					cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+				}
 			}
+			this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 		}
-		this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 	}
 
 	private List<Lab> assembleLabs() {
@@ -377,6 +417,18 @@ public class PatientExport {
 		this.exAlertsAndSpecialNeeds = rhs;
 	}
 
+	public void setExAllTrue() {
+		this.exMedicationsAndTreatments = true;
+		this.exAllergiesAndAdverseReactions = true;
+		this.exImmunizations = true;
+		this.exProblemList = true;
+		this.exLaboratoryResults = true;
+		this.exRiskFactors = true;
+		this.exPersonalHistory = true;
+		this.exFamilyHistory = true;
+		this.exAlertsAndSpecialNeeds = true;
+	}
+
 	/*
 	 * Demographics
 	 */
@@ -412,7 +464,7 @@ public class PatientExport {
 		return measurements;
 	}
 
-	// Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
+	//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
 	public boolean hasMeasurements() {
 		return exLaboratoryResults && measurements!=null && !measurements.isEmpty();
 	}
@@ -680,6 +732,15 @@ public class PatientExport {
 	 */
 	public Date getCurrentDate() {
 		return currentDate;
+	}
+
+	/**
+	 * Checks if this object is loaded with patient data
+	 * 
+	 * @return True if loaded, else false
+	 */
+	public boolean isLoaded() {
+		return this.isLoaded;
 	}
 
 	/**

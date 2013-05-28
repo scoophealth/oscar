@@ -119,6 +119,11 @@ public class E2EVelocityTemplate {
 	 * @return String representing E2E export from template
 	 */
 	public String export(PatientExport record) {
+		if(record.isLoaded() == false) {
+			log.error("PatientExport object is not loaded with a patient");
+			return "";
+		}
+
 		E2EResources e2eResources = new E2EResources();
 
 		// Create Data Model
