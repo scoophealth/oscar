@@ -1,0 +1,2 @@
+INSERT INTO icd9 (id, icd9, description) VALUES (15362,'338','PAIN NOT ELSEWHERE CLASSIFIED');
+INSERT INTO icd9 (id, icd9, description) VALUES (15363,'338.2','CHRONIC PAIN');
