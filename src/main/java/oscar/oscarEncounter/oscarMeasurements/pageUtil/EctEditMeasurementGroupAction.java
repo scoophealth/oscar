@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -79,8 +80,9 @@ public class EctEditMeasurementGroupAction extends Action {
                 if(selectedDeleteTypes != null){
                     for(int i=0; i<selectedDeleteTypes.length; i++){
                         MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
-                        dao.remove(dao.findByNameAndTypeDisplayName(groupName, selectedDeleteTypes[i]));
-                                                     
+                        List<MeasurementGroup> mgList = dao.findByNameAndTypeDisplayName(groupName, selectedDeleteTypes[i]);
+                        if(mgList != null && mgList.size()==1)
+                        	dao.remove(mgList.get(0).getId());
                     }
                 }
             }
