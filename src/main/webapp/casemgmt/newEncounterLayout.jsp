@@ -328,7 +328,6 @@ li.cpp {
 	font-family: arial, sans-serif;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	margin-bottom: 1.2em;
 }
 
 /*Note format */
