@@ -88,8 +88,9 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	public void testExport() {
 		E2EVelocityTemplate e2etemplate = new E2EVelocityTemplate();
 		assertNotNull(e2etemplate);
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
 		assertNotNull(p);
+		p.loadPatient(demographicNo.toString());
 		String s = null;
 		try {
 			s = e2etemplate.export(p);

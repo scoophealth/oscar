@@ -87,8 +87,9 @@ public class PatientExportTest extends DaoTestFixtures {
 		assertNotNull(demographicDao.getDemographicById(demographicNo));
 		assertNotNull(demographicDao.getClientByDemographicNo(demographicNo));
 
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
 		assertNotNull("PatientExport object unexpectedly null",p);
+		p.loadPatient(demographicNo.toString());
 		assertEquals("Unexpected demographic number",p.getDemographic().getDemographicNo(),demographicNo);
 	}
 
@@ -108,14 +109,16 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Testing Demographics
 	@Test
 	public void testDemographic() {		
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		assertNotNull(p.getDemographic());
 	}
 
 	// Test convenience methods
 	@Test
 	public void testGetBirthDate() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		String result = p.getBirthDate();
 		assertNotNull("Birth date unexpectedly null", result);
 		assertTrue("Birth date unexpectedly empty", !result.isEmpty());
@@ -123,7 +126,8 @@ public class PatientExportTest extends DaoTestFixtures {
 
 	@Test
 	public void testGetGenderDesc() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		String result = p.getBirthDate();
 		assertNotNull("GenderDesc unexpectedly null", result);
 		assertFalse("GenderDesc unexpectedly empty", result.isEmpty());
@@ -132,7 +136,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test allergies
 	@Test
 	public void testAllergies() {		
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Allergy> list = p.getAllergies();
 		if (p.hasAllergies()) {
 			// exAllergiesAndAdverseReachtions must be true
@@ -156,7 +161,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test Clinically Measured Observations
 	@Test
 	public void testMeasurements() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Measurement> list = p.getMeasurements();
 		if (p.hasMeasurements()) {
 			// exImmunizations must be true
@@ -186,7 +192,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test immunizations
 	@Test
 	public void testImmunizations() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Prevention> list = p.getImmunizations();
 		if (p.hasImmunizations()) {
 			// exImmunizations must be true
@@ -213,7 +220,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test laboratory reports
 	@Test
 	public void testLabs() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Lab> list = p.getLabs();
 		if (p.hasLabs()) {
 			// exLaboratoryResults must be true
@@ -242,7 +250,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test medications
 	@Test
 	public void testMedications() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Drug> list = p.getMedications();
 		if (p.hasMedications()) {
 			// exMedicationsAndTreatments must be true
@@ -279,7 +288,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test problem list
 	@Test
 	public void testProblems() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<Dxresearch> list = p.getProblems();
 		if (p.hasProblems()) {
 			// exProblemList must be true
@@ -313,7 +323,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test Risk Factors
 	@Test
 	public void testRiskFactors() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<CaseManagementNote> list = p.getRiskFactorsandPersonalHistory();
 		if (p.hasRiskFactorsandPersonalHistory()) {
 			// exRiskFactors or exPersonalHistory must be true
@@ -340,7 +351,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test Family History
 	@Test
 	public void testFamilyHistory() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<CaseManagementNote> list = p.getFamilyHistory();
 		if (p.hasFamilyHistory()) {
 			// exFamilyHistory must be true
@@ -365,7 +377,8 @@ public class PatientExportTest extends DaoTestFixtures {
 	// Test Alerts
 	@Test
 	public void testAlerts() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 		List<CaseManagementNote> list = p.getAlerts();
 		if (p.hasAlerts()) {
 			// exAlertsAndSpecialNeeds must be true
@@ -401,7 +414,8 @@ public class PatientExportTest extends DaoTestFixtures {
 
 	@Test
 	public void testGetProviderFirstName() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 
 		assertNotNull(providerDataDao);
 		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
@@ -419,7 +433,8 @@ public class PatientExportTest extends DaoTestFixtures {
 
 	@Test
 	public void testGetProviderLastName() {
-		PatientExport p = new PatientExport(demographicNo.toString());
+		PatientExport p = new PatientExport();
+		p.loadPatient(demographicNo.toString());
 
 		assertNotNull(providerDataDao);
 		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
