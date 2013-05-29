@@ -72,8 +72,7 @@ opener.document.EctConsultationFormRequestForm.appointmentDay.options.selectedIn
 	<tr>
 		<td BGCOLOR="#bbbbff" width="50%" align="center"><a
 			href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>">
-		&nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9"
-			BORDER="0"
+		<img src="<%= request.getContextPath() %>/images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0"
 			ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVLastMonth"/>"
 			vspace="2"> <bean:message
 			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgLastMonth" />&nbsp;&nbsp;
@@ -81,9 +80,9 @@ opener.document.EctConsultationFormRequestForm.appointmentDay.options.selectedIn
 			href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>">
 		&nbsp;&nbsp;<bean:message
 			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgNextMonth" />
-		<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+		<img src="<%= request.getContextPath() %>/images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
 			ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVNextMonth"/>"
-			vspace="2">&nbsp;&nbsp;</a></td>
+			vspace="2"></a></td>
 	</TR>
 </table>
 <p>
