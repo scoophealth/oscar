@@ -1074,7 +1074,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                                	String obxName = handler.getOBXName(j, k);
                                
-                               	boolean isDocument = false;
+                               	boolean isUnstructuredDoc = false;
                                	
 
 
@@ -1314,10 +1314,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     			 x++;
                                     		}//end of while loop
                                     		if(y>=obxCount){
-                                    			isDocument = true;
+                                    			isUnstructuredDoc = true;
                                     		}
                                     	}//end of PATHL7 Doc check
-                                   		if(isDocument){%>
+                                   		if(isUnstructuredDoc){%>
                                    			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>"><% 
                                    			if(handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)){%>
                                    				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=""%></a><%
@@ -1343,7 +1343,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 			                                             </a>
 			                                         </td>
 			                                </tr>	
-                                   			<%}//end of isDocument
+                                   			<%}//end of isUnstructuredDoc
                                    			
                                    			else{//if it isn't an PATHL7 doc%>
 
