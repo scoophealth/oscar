@@ -438,7 +438,11 @@ public class PatientExport {
 
 	// Output convenience functions
 	public String getBirthDate() {
-		return demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
+		String out = demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
+		if(isNumeric(out)) {
+			return out;
+		}
+		return "00000000";
 	}
 
 	public String getGenderDesc() {
@@ -784,9 +788,9 @@ public class PatientExport {
 	public String cleanString(String rhs) {
 		String eol = System.getProperty("line.separator");
 		String str = rhs.replaceAll("<br( )+/>", eol);
+		str = str.replaceAll("&", "&amp;");
 		str = str.replaceAll("<", "&lt;");
 		str = str.replaceAll(">", "&gt;");
-		str = str.replaceAll("&", "&amp;");
 		return str;
 	}
 
