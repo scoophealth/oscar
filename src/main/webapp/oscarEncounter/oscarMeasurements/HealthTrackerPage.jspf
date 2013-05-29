@@ -257,15 +257,12 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
 	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/Oscar.js"></script>
 	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>        
     <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
-    
-    
-	<script type="text/javascript" src="<%=request.getContextPath() %>/share/calendar/calendar.js" ></script>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/share/calendar/calendar-setup.js" ></script>  	
-    	    
+        	    
 	<oscar:customInterface section="health_tracker"/>
     <!-- Le styles -->
     <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
+     
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -399,8 +396,7 @@ max-height:200px;
 overflow-y:scroll;
 }
 
-
-    </style>
+</style>
 		
     <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -416,10 +412,7 @@ overflow-y:scroll;
                     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
                                    <link rel="shortcut icon" href="ico/favicon.png">
                 
-         
-    <link rel="stylesheet" type="text/css" media="all" href="<%=request.getContextPath() %>/share/calendar/calendar.css" title="win2k-cold-1" />
-         
-                                   
+                        
     <script type="text/javascript">
         function getDemographicNo() {
                 return '<%=demographic_no%>';
@@ -620,7 +613,7 @@ function fsPopup(width,height,url,window) {
 						if(btnSelected){ isSelected=" active"; }
 					%>
 						
-						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=btnState%> <%=isSelected%>" title="<%=flowSheetGroups.getDisplayName()%> <%=dxCodeQueryString%>" id="group-btn" data-loading-text="Loading...">
+						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=btnState%> <%=isSelected%>" title="<%=flowSheetGroups.getDisplayName()%> <%=dxCodeQueryString%>" id="group-btn">
 						
 						
 						
@@ -657,15 +650,7 @@ function fsPopup(width,height,url,window) {
     <div id="dxAlert" class="alert" <%=dxAlert%>>
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
-    You are using the <b><%=dxAlertfs%></b> without a diagnosis. <!-- <a href="javascript:void(0);" onclick="javascript:popup(600,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=999998&quickList=')"><b>Add Diagnosis</b> </a>-->
-    <!-- <form action="<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/dxResearch.do" method="get" name="dxResearchForm">
-    <input type="hidden" name="selectedCodingSystem" value="icd9">
-    <input type="hidden" name="forward" value="401" >
-    <input type="hidden" name="providerNo" value="<%=providerNo%>" >
-    <input type="hidden" name="demographicNo" value="<%=demographic_no%>">
-    <input type="submit" class="btn btn-primary">
-    </form> -->
-    To add a diagnosis use one of the available codes: 
+    You are using the <b><%=dxAlertfs%></b> without a diagnosis. To add a diagnosis use one of the available codes: 
     <%=dxCodeQueryString %>
     </div>
    
@@ -674,11 +659,10 @@ function fsPopup(width,height,url,window) {
 <!-- Modal -->
 <div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">\D7</button>
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 <h3 id="myModalLabel"></h3>
 </div>
 <div class="modal-body" style="text-align:center">
- <form name="EctDeleteDataForm" method="post" action="/oscar_master/oscarEncounter/oscarMeasurements/DeleteData2.do" id="measurementForm">
 
                <input type="hidden" name="value(numType)" value="<%=demographic_no%>"/>
                <input type="hidden" name="template"  id="deleteTemplate" value="<%=temp%>"/>
@@ -696,9 +680,8 @@ function fsPopup(width,height,url,window) {
 <div class="modal-footer">
 <input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Close">
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-<input type="submit" class="btn btn-danger" name="delete" id="deleteButton" value="Delete" disabled> 
+<input type="button" class="btn btn-danger" name="delete" id="deleteButton" value="Delete" disabled> 
 </security:oscarSec>
-</form>
 </div>
 </div>
 <!-- modal end -->
@@ -934,9 +917,11 @@ function fsPopup(width,height,url,window) {
 
 </span>
 
-<span style="float:right;display:inline;margin:0px;padding:0px">
-	<a id="date<%=iDate%>"><i class="icon-calendar"></i></a>
-   <input type="text" class="input-small" name="<%=name%>_date" id="prevDate<%=iDate%>" value="<%=date%>">	
+<span style="float:right;display:inline;margin:0px;padding:0px">  
+     <div class="input-append date" id="dp-<%=iDate%>" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
+				<input style="width:90px" name="<%=name%>_date" size="16" type="text" value="<%=date%>">
+				<span class="add-on"><i class="icon-calendar"></i></span>
+	 </div>
 
 <%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
                                 
@@ -1038,8 +1023,9 @@ function fsPopup(width,height,url,window) {
     <%if(mdb.getRemoteFacility() == null){ %>
     style="cursor: hand; cursor: pointer;"
     href="#deleteModal" role="button" data-toggle="modal"
-    onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=com%>','<%=hdata.get("id")%>')" 
+    onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=hdata.get("id")%>')" 
     <%}%> >
+	<input type="hidden" id="<%=hdata.get("id")%>-comment-html" value="<%=com%>">
 
 <span rel="popover" data-container="body" data-html="true" data-content="Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>"  data-trigger="hover">     
 	<p style="line-height:90%;font-size:18px"  ><%=hdata.get("age")%></p>
@@ -1238,7 +1224,7 @@ function createAddAll(d,t){
 					
 					
 				<%}else{%>
-					No medications
+					No Active Medications
 				<%}%>
 
                </div>
@@ -1350,16 +1336,10 @@ function createAddAll(d,t){
  <!-- pain  start-->
    <div class="tabbable">
            <ul class="nav nav-tabs">
-              <li class="active"><a href="#pain" data-toggle="tab">Pain</a></li>
+              <li class="active"><a href="#pain" data-toggle="tab">Pain Toolkit</a></li>
            </ul>
-               <div id="pain" class="tab-pane active well well-small">
-               <span class="label label-inverse" id="pain-next-steps">Next Steps</span><br>
-               N/A
-               
-               <br><br>
-               
-               <span class="label label-info" id="pain-resources">Resources</span><br>
-               <!-- testing <a href="#" onclick="eform();">Lower Back Pain</a> -->   
+               <div id="pain" class="tab-pane active well well-small">              
+               <span class="label label-info" id="pain-resources">Resources</span><br> 
 <!-- eform as resource -->
 <%
 	String groupToView = temp.toLowerCase(); 
@@ -1436,8 +1416,8 @@ function createAddAll(d,t){
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     
-	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
-
+	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
+	<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
 
 <script>
 
@@ -1449,19 +1429,11 @@ $(".preventionSection").hover(function(){
 
 $(function (){ 
 	$("[rel=popover]").popover({});  
+	$('[id^=dp-]').datepicker();
 });  
 
 $(document).ready(function () {
     $("[rel=tooltip]").tooltip();
-
-   /* $('#group-btn')
-    .click(function () {
-        var btn = $(this)
-        btn.button('loading')
-        setTimeout(function () {
-            btn.button('reset')
-        }, 3000)
-    }); */
 
     $("[id^=dxlink]").click(function(){
         var link = "<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/dxResearch.do";
@@ -1475,9 +1447,34 @@ $(document).ready(function () {
             }
         });
 
-    });    
+    });
+
+    $("#deleteButton").click(function(){
+        var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/DeleteData2.do";
+        var deletevalue = "id="+$("#deleteId").val()+"&deleteCheckbox="+$("#deleteCheck").val();
+        $.ajax({
+            url: link,
+            method: 'POST',
+            data: deletevalue,
+            success: function(returnData){
+            	window.location.reload();
+            }
+        });
+
+    }); 
+        
 	
  });
+
+//clear modal when closing
+$('#deleteModal').on('hidden', function () {
+	$("#myModalLabel").html("");
+	$("#deleteMeas").html("");
+	$("#deleteId").val("");
+	$("#deleteCheck").val("");
+	$("#deleteObsDate").html("");
+	$("#deleteComment").html("");
+});
 
 $("#expand_all").click(function(){
 	$("[id^=add-box-]").slideDown("slow"); 
@@ -1508,22 +1505,17 @@ $('.carousel').carousel({
     })
     
 
-<% 
 
-for (int i=1; i < iDate+1; i++){ %>
-Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "date<%=i%>", singleClick : true, step : 1 } );
-<%}%>
-
-
-function deleteMeasurement(type,enteredBy,value,date,comment,id){   
+function deleteMeasurement(type,enteredBy,value,date,id){   
 
 	document.getElementById('myModalLabel').innerHTML= type;
     document.getElementById('deleteMeas').innerHTML = value;
     document.getElementById('deleteObsDate').innerHTML = enteredBy + "<br>" + "Date: " + date;
 
-	if(comment){
-    document.getElementById('deleteComment').innerHTML = "<hr>" + comment;
-	}
+    $('#deleteModal').on('show', function () {
+    	var xcomment = $("#"+id+"-comment-html").val();
+    	$("#deleteComment").html("<hr>Comment: "+xcomment);
+    });
 	
     document.getElementById('deleteId').value=id;
     document.getElementById('deleteCheck').value=id;
