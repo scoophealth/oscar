@@ -72,4 +72,10 @@
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
      	
+	<jaxws:endpoint implementor="#preventionWs" address="/PreventionService" >
+		<jaxws:inInterceptors>
+			<ref bean="authenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+
 </beans>
