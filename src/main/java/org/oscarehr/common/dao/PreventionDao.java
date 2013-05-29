@@ -37,7 +37,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	}
 
 	public List<Prevention> findByDemographicId(Integer demographicId) {
-		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1");
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where demographicId=?1");
 		query.setParameter(1, demographicId);
 
 		List<Prevention> results = query.getResultList();
@@ -50,7 +50,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
 	 */
     public List<Prevention> findByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
-    	String sql = "select x from Prevention x where x.id>=?1 ";
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 ";
     	if (archived!=null)	sql=sql+"and x.deleted=?2 ";
     	sql=sql+"order by x.id";
     	
@@ -66,7 +66,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
     }
     
     public List<Prevention> findByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
-		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate>=?2");
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where demographicId=?1 and lastUpdateDate>=?2");
 		query.setParameter(1, demographicId);
 		query.setParameter(2, dateTime);
 
@@ -76,7 +76,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	}
 
 	public List<Prevention> findNotDeletedByDemographicId(Integer demographicId) {
-		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and deleted=?2");
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where demographicId=?1 and deleted=?2");
 		query.setParameter(1, demographicId);
 		query.setParameter(2, '0');
 
@@ -86,7 +86,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	}
 
 	public List<Prevention> findByTypeAndDate(String preventionType, Date startDate, Date endDate) {
-		Query query = entityManager.createQuery("select x from Prevention x where preventionType=?1 and preventionDate>=?2 and preventionDate<=?3 and deleted='0' and refused='0' order by preventionDate");
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where preventionType=?1 and preventionDate>=?2 and preventionDate<=?3 and deleted='0' and refused='0' order by preventionDate");
 		query.setParameter(1, preventionType);
 		query.setParameter(2, startDate);
 		query.setParameter(3, endDate);
@@ -97,7 +97,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	}
 
 	public List<Prevention> findByTypeAndDemoNo(String preventionType, Integer demoNo) {
-		Query query = entityManager.createQuery("select x from Prevention x where preventionType=?1 and demographicId=?2 and deleted='0' order by preventionDate");
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where preventionType=?1 and demographicId=?2 and deleted='0' order by preventionDate");
 		query.setParameter(1, preventionType);
 		query.setParameter(2, demoNo);
 		List<Prevention> results = query.getResultList();
