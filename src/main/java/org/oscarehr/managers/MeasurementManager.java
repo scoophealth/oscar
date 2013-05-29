@@ -26,54 +26,53 @@ package org.oscarehr.managers;
 
 import java.util.List;
 
-import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementMapDao;
+import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import oscar.log.LogAction;
 
 @Service
-public class ProgramManager2 {
+public class MeasurementManager {
 	@Autowired
-	private ProgramDao programDao;
-
+	private MeasurementDao measurementDao;
+	
 	@Autowired
-	private ProgramProviderDAO programProviderDAO;
+	private MeasurementMapDao measurementMapDao;
 
-	public Program getProgram(Integer programId) {
-		Program result = programDao.getProgram(programId);
-
-		//--- log action ---
-		LogAction.addLogSynchronous("ProgramManager2.getPrograms" , "id:"+result.getId());
-
-		return (result);
-	}
-
-
-	public List<Program> getAllPrograms() {
-		List<Program> results = programDao.findAll();
+	public List<Measurement> getMeasurementsByIdStart(Integer startIdInclusive, int itemsToReturn) {
+		List<Measurement> results = measurementDao.findByIdStart(startIdInclusive, itemsToReturn);
 
 		//--- log action ---
 		if (results.size()>0) {
-			String resultIds=Program.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("ProgramManager2.getAllPrograms", "ids returned=" + resultIds);
+			String resultIds=Measurement.getIdsAsStringList(results);
+			LogAction.addLogSynchronous("MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
-
-	public List<ProgramProvider> getAllProgramProviders() {
-		List<ProgramProvider> results = programProviderDAO.getAllProgramProviders();
-
+	
+	public Measurement getMeasurement(Integer id)
+	{
+		Measurement result=measurementDao.find(id);
+		
 		//--- log action ---
-		if (results.size()>0) {
-			String resultIds=ProgramProvider.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("ProgramManager2.getAllProgramProviders", "ids returned=" + resultIds);
+		if (result != null) {
+			LogAction.addLogSynchronous("MeasurementManager.getMeasurement", "id=" + id);
 		}
 
-		return (results);
+		return(result);
 	}
+	
+	public List<MeasurementMap> getMeasurementMaps() {
+		// should be safe to get all as they're a defined set of loinic codes or huma entered entries
+		List<MeasurementMap> results = measurementMapDao.getAllMaps();
+
+		// not logging the read, this is not medicalData
+		
+		return (results);
+	}	
 }

@@ -24,6 +24,7 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.oscarehr.common.model.Provider;
 
@@ -223,4 +224,15 @@ public class ProgramProvider implements Serializable {
     public String toString () {
         return super.toString();
     }
+
+	public static String getIdsAsStringList(List<ProgramProvider> results) {
+		StringBuilder sb = new StringBuilder();
+
+		for (ProgramProvider model : results) {
+			sb.append(model.getId().toString());
+			sb.append(',');
+		}
+
+		return (sb.toString());
+	}
 }
