@@ -339,63 +339,23 @@ background-color: #FFFFAA; /*#f5f5f5;*/
 	padding:0px;
 }
 
-#black_wrapper{
-	display: none;
-	position: fixed;
-	top: 80px;
-	/*right:0px;*/
-	width: 100%; /*890px*/
-	height: 100%;
-}
-
-#close-link{
-	position:absolute;
-	top:0px;
-	right:5px;
-	z-index:1006;
-}
-
-
-#close-link:hover{
-	-moz-opacity: .4;
-	opacity:.40;
-	filter:alpha(opacity=40); /* For IE8 and earlier */
-}
-
-div.black_overlay{
-	position: fixed;
-	top: 80px;
-	width: 100%;
-	height: 100%;
-	background-color: black;
-	z-index:1002;
-	-moz-opacity: 0.4;
-	opacity:.40;
-	filter: alpha(opacity=40);
-} 
-
- 
-#light {
-	position: fixed;
-	top: 84px;
-	width: 880px;
-	height: 460px;
-	padding: 0px;
-	
-	z-index:1003;
-	display: block;	
-	left: 50%;
-	margin-left: -440px;
-	text-align:center;
-}
-
-
 .tab-pane{
 font-size:12px;
 max-height:200px;
 overflow-y:scroll;
 }
 
+#graphModal{
+width:900px;
+height:500px;
+margin-left: -450px;
+}
+
+.inlinesparkline:hover{
+cursor: hand; cursor: pointer;
+}
+
+.btn-underline{text-decoration:underline;font-weight:bold}
 </style>
 		
     <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
@@ -495,12 +455,14 @@ overflow-y:scroll;
     }
     
 
-	function newSite(s) {
+	function newSite(s,d) {
 		var url = "<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type="+s;
-	
+		$("#graphModalLabel").html(d);
+		$('#graphModal').modal('show');
 		document.getElementById('gFrame').src = url;
 		document.getElementById('gFrame').style.display='block';
-		document.getElementById('black_wrapper').style.display='block';
+		
+		//document.getElementById('black_wrapper').style.display='block';
 	}
 	
 	function addMeas(s,t) {
@@ -610,7 +572,7 @@ function fsPopup(width,height,url,window) {
 								dxCodeQueryString=flowSheetGroups.getDxTriggersQueryBuilder(demographic_no,providerNo);
 						}
 						
-						if(btnSelected){ isSelected=" active"; }
+						if(btnSelected){isSelected="btn-underline active"; }
 					%>
 						
 						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=btnState%> <%=isSelected%>" title="<%=flowSheetGroups.getDisplayName()%> <%=dxCodeQueryString%>" id="group-btn">
@@ -618,7 +580,7 @@ function fsPopup(width,height,url,window) {
 						
 						
 						<%
-						if(btnSelected){out.print("*");}
+						
 								
 						if(flowSheetGroups.getName().toUpperCase().equals("DIAB2")){
 							out.print("DIAB");
@@ -685,7 +647,24 @@ function fsPopup(width,height,url,window) {
 </div>
 </div>
 <!-- modal end -->
-   
+
+<!-- Modal -->
+<div id="graphModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="graphModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<h3 id="graphModalLabel">Graph</h3>
+</div>
+<div class="modal-body" style="text-align:center">
+
+<iframe id="gFrame" src="about:blank" width="820px" height="460px" frameborder="0" align="center" style="display:none;"></iframe>
+               
+          
+</div>
+<div class="modal-footer">
+<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Close">
+</div>
+</div>
+<!-- modal end -->   
 
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 		
@@ -830,12 +809,9 @@ function fsPopup(width,height,url,window) {
 </security:oscarSec>
 
 <span rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
-<%if(mi.getWarning(measure)!=null){%>
-<span style="color:red;padding-left:5px;"><%=mi.getWarning(measure)%></span>
-<%}else{%>
+
 <span style="padding-left:5px;"><%=h2.get("display_name")%></span>
 
-<%}%>
 </span>
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
@@ -860,7 +836,7 @@ function fsPopup(width,height,url,window) {
 			            <%if (alist != null && alist.size() > 1) {
 			            boolean sep = false;
 			            %>
-			               	<a href = "javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="inlinesparkline" title="<%=measure%> Graph" values="
+			               	<a onclick = "newSite('<%=measure%>','<%=h2.get("display_name").toString()%>');"><span class="inlinesparkline" title="<%=measure%> Graph" values="
 			               	 <%=alist.get(alist.size()-1).getDataField()%>
 			               	 <%for (int x=alist.size()-2; x>=0; x--){
 			               	 %>
@@ -898,7 +874,7 @@ function fsPopup(width,height,url,window) {
 		           					second.add("null");
 		           				}
 		           			} %>
-		           			<a href="javascript:void(0)" onclick = "newSite('<%=measure%>');"><span class="bpline" title="<%=measure%> Graph"></span></a>
+		           			<a href="javascript:void(0)" onclick = "newSite('<%=measure%>','<%=h2.get("display_name").toString()%>');"><span class="bpline" title="<%=measure%> Graph"></span></a>
 		           			<script type="text/javascript">
 		           				var first = new Array();
 		           				var second = new Array();
@@ -945,7 +921,7 @@ function fsPopup(width,height,url,window) {
                             
   <%}else{ %>
   <!-- placeholder="<%=mtypeBean.getValidationName()%>"-->
-  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<%=mtypeBean.getValidationName()%>" > 
+  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<%=mtypeBean.getValidationName()%>" placeholder="Enter Data" > 
   <%} %>
 <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
 </span>
@@ -958,6 +934,10 @@ function fsPopup(width,height,url,window) {
    <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" style="float:right"> 
   
 </div>
+
+<%if(mi.getWarning(measure)!=null){%>
+<div class="alert alert-error" > <button type="button" class="close" data-dismiss="alert">&times;</button><%=mi.getWarning(measure)%></div>
+<%}%>
 
     <div id="myCarousel<%=measure%>" class="carousel slide" style="height:50px;padding:0px;margin:0px;">
       <div class="carousel-inner">
@@ -1044,12 +1024,12 @@ function fsPopup(width,height,url,window) {
         <br>
         <p width="16px" <%=indColour%> ></p>
         <%=indText%>
-        
     </div><!-- prevention procedure -->
-   
    <%if(setx==6){ out.print("</div> <!--item split -->");  } //splitting for carousel effect%> 
   
     <%}%>
+    
+ <%if(setx==0){ out.print("<span style='color:#999;padding-left:20px;'>No Data</span>");  }%>
  
  <%if(setx<1){%>
  <!-- still display if now items -->
@@ -1162,8 +1142,6 @@ function createAddAll(d,t){
    				}%>';
 
 	//return fsPopup(760,670,'AddMeasurementData.jsp?demographic_no='+d+'&template='+t+newMtype,'addMeasurementData'+h);
-
-	
 	return addMeas(newMtype,t);
 	document.getElementById('black_wrapper').style.display='block';
 	
@@ -1203,6 +1181,7 @@ function createAddAll(d,t){
         </p>
     </div>
     <%}%> 
+     
 </div>
 <%}%>		    
 		    </div>
@@ -1217,6 +1196,7 @@ function createAddAll(d,t){
            </ul>
            <div class="tab-content">
                <div id="tab1" class="tab-pane active well well-small">
+                <p><strong>Module:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/choosePatient.do?providerNo=<%=providerNo%>&demographicNo=<%=demographic_no%>')" title="Go to the Medications module">Medications</a></p>
 				 <%if(medicationsResult.size()>=1){%>
 				
 									
@@ -1230,6 +1210,7 @@ function createAddAll(d,t){
                </div>
                
                <div id="tab2" class="tab-pane well well-small">
+               <p> <strong>Module:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>')" title="Go to the Allergies module">Allergies</a></p>
 				   <%
 				List<Allergy> allergies = allergyDao.findActiveAllergiesOrderByDescription(Integer.parseInt(demographic_no));
 				String allergiesList="";
@@ -1396,21 +1377,6 @@ function createAddAll(d,t){
 </fieldset>		    
 </form>
 </div>
-
-<div id="black_wrapper">
-
-	<div id="fade" class="black_overlay"></div>
-	<div id="light" class="white_content" >
-	<iframe id="eFrame" src="about:blank" width="820px" height="800px" frameborder="0" align="center" style="display:none;"></iframe>
-	<iframe id="gFrame" src="about:blank" width="820px" height="460px" frameborder="0" align="center" style="display:none;"></iframe>
-	<a id="close-link" href = "javascript:void(0)" onclick = "closeAll();"> 
-	<img src="<%=request.getContextPath()%>/images/close.png" title="Close"></img>
-	</a>
-	</div>
-	
-<div>
-
-
 
     <!-- Le javascript
     ================================================== -->
