@@ -223,7 +223,10 @@ function checkAll(formId){
                             <!-- end edit 2006-0811-01 by wreby -->
                         </td>
                         <td style="text-align:right">
-                                <oscar:help keywords="message" key="app.top1"/> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
+                        		<span class="HelpAboutLogout">
+									<oscar:help keywords="&Title=Messenger&portal_type%3Alist=Document" key="app.top1" style="color:white; font-size:10px;font-style:normal;"/>&nbsp;|
+        							<a style="color:white; font-size:10px;font-style:normal;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new"><bean:message key="global.about" /></a>
+								</span>
                         </td>
                     </tr>
                 </table>
