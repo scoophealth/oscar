@@ -783,13 +783,14 @@ public class ManageDocumentAction extends DispatchAction {
 
 			File file = new File(documentDir, d.getDocfilename());
 			filename = d.getDocfilename();
-
-			if (file.exists()) {
-				contentBytes = FileUtils.readFileToByteArray(file);
-			} else {
-				throw new IllegalStateException("Local document doesn't exist for eDoc (ID " + d.getId() + "): " + file.getAbsolutePath());
-			}
-
+                        
+                        if (contentType != null && !contentType.trim().equals("text/html")) {
+                            if (file.exists()) {
+                            	contentBytes = FileUtils.readFileToByteArray(file);
+                            } else {
+                            	throw new IllegalStateException("Local document doesn't exist for eDoc (ID " + d.getId() + "): " + file.getAbsolutePath());
+                            }
+                        }
 		} else // remote document
 		{
 			FacilityIdIntegerCompositePk remotePk = new FacilityIdIntegerCompositePk();
