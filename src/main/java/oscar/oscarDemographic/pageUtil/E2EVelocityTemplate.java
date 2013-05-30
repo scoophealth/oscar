@@ -39,8 +39,9 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
 
 /**
+ * Creates the data models of the E2E document in velocity format for E2E Template Exporting
+ * 
  * @author Jeremy Ho
- * This class is creates the data models of the E2E document in velocity format for E2E Template Exporting
  */
 
 public class E2EVelocityTemplate {
@@ -58,7 +59,9 @@ public class E2EVelocityTemplate {
 		loadFormCode();
 	}
 	
-	// Loads the velocity template
+	/**
+	 * Loads the velocity template
+	 */
 	private void loadTemplate() {
 		if(template == null) {
 			InputStream is = null;
@@ -78,7 +81,9 @@ public class E2EVelocityTemplate {
 		}
 	}
 	
-	// Loads the formcode mapping
+	/**
+	 * Loads the formcode mapping
+	 */
 	private void loadFormCode() {
 		if(formCodes == null) {
 			InputStream is = null;
@@ -107,7 +112,12 @@ public class E2EVelocityTemplate {
 		}
 	}
 	
-	// Assembles the data model & predefined velocity template to yield an E2E document
+	/**
+	 * Assembles the data model & predefined velocity template to yield an E2E document
+	 * 
+	 * @param record
+	 * @return String representing E2E export from template
+	 */
 	public String export(PatientExport record) {
 		E2EResources e2eResources = new E2EResources();
 		
@@ -125,7 +135,7 @@ public class E2EVelocityTemplate {
 		
 		// Check for Validity
 		if(result.contains("$")) {
-			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export contains '$' - may contain errors");
+			log.warn("[Demo: "+record.getDemographic().getDemographicNo()+"] Export contains '$' - may contain errors");
 		}
 		if(!E2EExportValidator.isValidXML(result)) {
 			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export failed E2E XSD validation");
@@ -135,6 +145,12 @@ public class E2EVelocityTemplate {
 	}
 	
 	public class E2EResources {
+		/**
+		 * Takes in a formcode string and returns the E2E Form Code result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
 		public String formCodeMap(String rhs) {
 			if(formCodes.containsKey(rhs)) {
 				return formCodes.get(rhs);
