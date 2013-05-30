@@ -25,6 +25,7 @@ package org.oscarehr.export;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -39,6 +40,7 @@ import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.export.E2EExportValidator;
 import org.oscarehr.export.E2EVelocityTemplate;
+import org.oscarehr.export.E2EVelocityTemplate.E2EResources;
 import org.oscarehr.export.PatientExport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -53,9 +55,9 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private static ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
 	private static Integer demographicNo;
-	private static String[] tables = {"allergies", "casemgmt_issue", "clinic", "demographic",
-		"drugs", "dxresearch", "icd9", "issue", "measurementMap", "measurementType", "measurements",
-		"measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
+	private static String[] tables = {"allergies", "casemgmt_note_ext", "casemgmt_issue", "clinic",
+		"demographic", "drugs", "dxresearch", "icd9", "issue", "measurementMap", "measurementType",
+		"measurements", "measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
 
 	@BeforeClass
 	public static void onlyOnce() throws Exception {
@@ -63,17 +65,6 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		Demographic entity = new Demographic();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDemographicNo(null);
-		// Ugly hack to ensure that oscar_test has valid numeric data for the year, month and day in demographic table.
-		// Without this fix, birthDate ends up being "yearmoda" which causes an XML schema validation error.
-		if (entity.getYearOfBirth().toLowerCase().contains("year")) {
-			entity.setYearOfBirth("1940");
-		}
-		if (entity.getMonthOfBirth().toLowerCase().contains("mo")) {
-			entity.setMonthOfBirth("09");
-		}
-		if (entity.getDateOfBirth().toLowerCase().contains("da")) {
-			entity.setDateOfBirth("25");
-		}
 		entity.setProviderNo(providerDataDao.getLastId().toString());
 		demographicDao.save(entity);
 		demographicNo = entity.getDemographicNo();
@@ -115,6 +106,12 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
 		assertFalse("XML valid, expected not valid", E2EExportValidator.isValidXML(s.replace("DOCSECT", "DOXSECT")));
+	}
+
+	@Test
+	public void testFormCodeMap() {
+		assertTrue("Tablet mapping didn't return TAB", E2EResources.formCodeMap("TABLET").equals("TAB"));
+		assertNull("Empty formcode map didn't return null", E2EResources.formCodeMap(""));
 	}
 
 /*	@Test

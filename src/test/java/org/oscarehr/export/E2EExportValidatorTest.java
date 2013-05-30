@@ -56,7 +56,7 @@ public class E2EExportValidatorTest {
 	public void testIsWellFormedXML() {
 		assertFalse(s==null || s.isEmpty());
 		// check output is well-formed
-		assertTrue("XML document unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
+		assertTrue("XML document is unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
 	}
 
 	@Test

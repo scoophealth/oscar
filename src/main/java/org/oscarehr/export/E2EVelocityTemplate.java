@@ -149,14 +149,14 @@ public class E2EVelocityTemplate {
 		return result;
 	}
 
-	public class E2EResources {
+	public static class E2EResources {
 		/**
 		 * Takes in a formcode string and returns the E2E Form Code result if available
 		 * 
 		 * @param rhs
 		 * @return String if applicable, else null
 		 */
-		public String formCodeMap(String rhs) {
+		public static String formCodeMap(String rhs) {
 			if(formCodes.containsKey(rhs)) {
 				return formCodes.get(rhs);
 			}

@@ -588,7 +588,6 @@ public class PatientExport {
 	 * Nested Lab Object Model
 	 * 
 	 * @author Jeremy Ho
-	 * 
 	 */
 	public static class Lab {
 		public Hl7TextInfo hl7TextInfo;
@@ -607,7 +606,6 @@ public class PatientExport {
 	 * Lab Group Object Model
 	 * 
 	 * @author Jeremy Ho
-	 *
 	 */
 	public static class LabGroup {
 		public int id;
@@ -698,6 +696,26 @@ public class PatientExport {
 	}
 
 	/*
+	 * Case Management Utility Functions
+	 */
+	/**
+	 * Function to allow access to Casemanagement Note Ext table data based on note id
+	 * 
+	 * @param id
+	 * @param keyval
+	 * @return String of result if available, otherwise empty string
+	 */
+	public static String getCMNoteExtValue(String id, String keyval) {
+		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
+		for(CaseManagementNoteExt entry : cmNoteExts) {
+			if(entry.getKeyVal().equals(keyval)) {
+				return entry.getValue();
+			}
+		}
+		return "";
+	}
+
+	/* 
 	 * Risk Factors (and Personal History)
 	 * Both sections map into the Risk Factors section of the export
 	 */
@@ -753,7 +771,7 @@ public class PatientExport {
 	 * @param rhs
 	 * @return Date represented by the string if possible, else return current time
 	 */
-	public Date stringToDate(String rhs) {
+	public static Date stringToDate(String rhs) {
 		String[] formatStrings = {"yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm", "yyyy-MM-dd"};
 		for(String format : formatStrings) {
 			try {
@@ -770,7 +788,7 @@ public class PatientExport {
 	 * @param rhs
 	 * @return True if rhs is a number, else false
 	 */
-	public boolean isNumeric(String rhs) {
+	public static boolean isNumeric(String rhs) {
 		try {
 			Double.parseDouble(rhs);
 		} catch (Exception e) {
@@ -785,30 +803,13 @@ public class PatientExport {
 	 * @param rhs
 	 * @return String without invalid characters
 	 */
-	public String cleanString(String rhs) {
+	public static String cleanString(String rhs) {
 		String eol = System.getProperty("line.separator");
 		String str = rhs.replaceAll("<br( )+/>", eol);
 		str = str.replaceAll("&", "&amp;");
 		str = str.replaceAll("<", "&lt;");
 		str = str.replaceAll(">", "&gt;");
 		return str;
-	}
-
-	/**
-	 * Function to allow access to Casemanagement Note Ext table data based on note id
-	 * 
-	 * @param id
-	 * @param keyval
-	 * @return String of result if available, otherwise empty string
-	 */
-	public static String getCMNoteExtValue(String id, String keyval) {
-		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
-		for(CaseManagementNoteExt entry : cmNoteExts) {
-			if(entry.getKeyVal().equals(keyval)) {
-				return entry.getValue();
-			}
-		}
-		return "";
 	}
 
 	public String getAuthorId() {
