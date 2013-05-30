@@ -462,10 +462,16 @@ var beginD = "1900-01-01"
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000">
     <td height="40" width="10%"><input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()' class="sbttn"></td>
-    <td width="90%" align="left">
+    <td width="80%" align="left">
       <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="tickler.ticklerMain.msgTickler"/></font></b></font>
       </p>
     </td>
+	<td align = right>
+		<span class="HelpAboutLogout">
+			<oscar:help keywords="&Title=Tickler&portal_type%3Alist=Document" key="app.top1" style="color:white; font-size:10px;font-style:normal;"/>&nbsp;|
+        		<a style="color:white; font-size:10px;font-style:normal;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new"><bean:message key="global.about" /></a>
+		</span>                        
+	</td>
   </tr>        
 </table>
              

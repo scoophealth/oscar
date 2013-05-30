@@ -32,6 +32,7 @@
  <%@ page import="org.oscarehr.util.MiscUtils"%>
  <%@ page import="java.net.URLEncoder"%>
  <%@ page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager, org.oscarehr.util.LoggedInInfo, org.oscarehr.common.model.Facility" %>
+ <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
@@ -84,6 +85,9 @@
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
     
 <div style="float:left; width: 100%; padding-left:2px; text-align:left; font-size: 12px; color:<%=inverseUserColour%>; background-color:<%=userColour%>" id="encounterHeader">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td>
     <security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.doctorName" rights="r">
     <span style="border-bottom: medium solid <%=famDocColour%>"><bean:message key="oscarEncounter.Index.msgMRP"/>&nbsp;&nbsp;
     <%=famDocName.toUpperCase()%> <%=famDocSurname.toUpperCase()%>  </span>
@@ -144,6 +148,15 @@
 	    	<%}%>
 	  <%}%>    
    </span>
+</td>
+<td align=right>
+	<span class="HelpAboutLogout">
+	<oscar:help keywords="&Title=Chart+Interface&portal_type%3Alist=Document" key="app.top1" style="font-size:10px;font-style:normal;"/>&nbsp;|
+	<a style="font-size:10px;font-style:normal;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new"><bean:message key="global.about" /></a>
+	</span>
+</td>
+</tr>
+</table>
 </div>
 
 <%!
