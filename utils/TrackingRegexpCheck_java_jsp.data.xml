@@ -754,6 +754,8 @@
         <ViolationValue>/src/main/java/org/caisi/dao/BedProgramDao.java:public class BedProgramDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/CustomFilterDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/CustomFilterDAO.java:public class CustomFilterDAO extends HibernateDaoSupport {</ViolationValue>
+        <ViolationValue>/src/main/java/org/caisi/dao/IssueAdminDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
+        <ViolationValue>/src/main/java/org/caisi/dao/IssueAdminDAO.java:public class IssueAdminDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/ProviderDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/ProviderDAO.java:public class ProviderDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/TicklerDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
