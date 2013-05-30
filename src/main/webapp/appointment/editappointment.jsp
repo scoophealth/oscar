@@ -363,7 +363,10 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 			return;
 		} else {
 			appt = resultList.get(0);
+			session.setAttribute("appt", appt);
 		}
+	} else {
+	    appt = (Map) session.getAttribute("appt");
 	}
 
 
