@@ -1523,7 +1523,7 @@ function updateFaxButton() {
 																minuteOfhour = "0" + minuteOfhour;
 															}
 										%>
-										<html:option value="<%=minuteOfhour%>"><%=minuteOfhour%></html:option>
+										<html:option value="<%=String.valueOf(i)%>"><%=minuteOfhour%></html:option>
 										<%
 											}
 										%>
