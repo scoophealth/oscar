@@ -666,8 +666,12 @@ public class RxUtil {
 					Pattern p2 = Pattern.compile(method + "\\s*\\d*\\.*\\d+\\s+");
 					Matcher m2 = p2.matcher(instructions);
 
+					Pattern pF1 = Pattern.compile(method + "\\s*\\d*\\/*\\d+\\s+");
+					Matcher mF1 = pF1.matcher(instructions);
+
 					Pattern p4 = Pattern.compile(method + "\\s*\\d*\\.*\\d+-\\s*\\d*\\.*\\d+\\s+");
 					Matcher m4 = p4.matcher(instructions);
+					
 					//since "\\s+[0-9]+-[0-9]+\\s+" is a case in "\\s+[0-9]+\\s+", check the latter regex first.
 					if (m4.find()) {
 						p("else if 1");
@@ -691,7 +695,21 @@ public class RxUtil {
 							amountMethod = str.substring(m3.start(), m3.end());
 							//      p("amountMethod", amountMethod);
 						}
-					} else {
+					} else if(mF1.find()) {
+						String partInstructions = instructions.substring(mF1.start(), mF1.end());
+						Pattern pF2 = Pattern.compile("\\d*\\/*\\d+");
+						Matcher mF2 = pF2.matcher(partInstructions);
+						
+						if(mF2.find()) {
+							String fraction = partInstructions.substring(mF2.start(), mF2.end());
+							amountFrequency = "0";
+							if(fraction.equals("1/2"))
+								amountFrequency = "0.5";
+							else if(fraction.equals("1/4"))
+								amountFrequency = "0.25";
+						}
+					}
+					else {
 						p("word amount");
 						for (String word : zeroToTen) {
 							String r1 = method + "\\s+" + word + "\\s";
