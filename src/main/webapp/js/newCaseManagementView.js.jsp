@@ -2025,6 +2025,17 @@ function issueIsAssigned() {
 
 var filterError;
 
+function resetInputElements(element) {
+	if (Object.prototype.toString.call(element) == "[object NodeList]") {
+		var size = element.length;
+		for (var i = 0; i < size; i++) {
+			element[i].checked = false;
+		}
+	} else {
+		element.checked = false;
+	}
+}
+
 function filter(reset) {
     var url = ctx + "/CaseManagementEntry.do";
     var params = "ajaxview=ajaxView&fullChart=" + fullChart;
@@ -2037,6 +2048,13 @@ function filter(reset) {
     document.forms["caseManagementViewForm"].method.value = "view";
     document.forms["caseManagementViewForm"].resetFilter.value = reset;
 
+	if (reset) {
+		resetInputElements(document.forms["caseManagementViewForm"].filter_providers);
+		resetInputElements(document.forms["caseManagementViewForm"].filter_roles);
+		resetInputElements(document.forms["caseManagementViewForm"].note_sort);
+		resetInputElements(document.forms["caseManagementViewForm"].issues);
+	}
+	
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     var caseMgtViewfrm = document.forms["caseManagementViewForm"];
     params +=  "&" + Form.serialize(caseMgtEntryfrm);
