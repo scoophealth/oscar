@@ -39,7 +39,6 @@
 <!--
 function CodeAttach(File0, File1, File2) {
       
-      self.close();
 <% 
 if(request.getParameter("nameF") != null) {
 		out.println("self.opener." + request.getParameter("nameF") + " = File0;");
@@ -49,6 +48,7 @@ if(request.getParameter("nameF") != null) {
       self.opener.document.serviceform.xml_other2.value = File1;
       self.opener.document.serviceform.xml_other3.value = File2;
 <% } %>
+      self.close();
 }
 -->
 </script>
