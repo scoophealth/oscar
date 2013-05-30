@@ -430,7 +430,7 @@ public class BioTestHandler implements MessageHandler {
     /**
      *  Methods to get information from observation notes
      */
-    public int getOBXCommentCount(int i, int j){
+   /* public int getOBXCommentCount(int i, int j){
         int count = 0;
         try{
             String comment = "";
@@ -464,6 +464,34 @@ public class BioTestHandler implements MessageHandler {
             logger.error("Cannot return comment", e);
         }
         return comment.replaceAll("\\\\\\.br\\\\", "<br />");
+    }*/
+    
+    public int getOBXCommentCount(int i, int j){
+    	 int count = 0;
+         try {
+             count = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTEReps();
+
+             // a bug in getNTEReps() causes it to return 1 instead of 0 so we check to make
+             // sure there actually is a comment there
+             if (count == 1){
+                 String comment = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE().getComment(0).getValue();
+                 if (comment == null)
+                     count = 0;
+             }
+
+         } catch (Exception e) {
+             logger.error("Error retrieving obx comment count", e);
+         }
+         return count;
+    }
+
+    public String getOBXComment(int i, int j, int k){
+    	try {
+            //int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k).getComment(0).getValue()));
+        } catch (Exception e) {
+            return("");
+        }
     }
 
 
