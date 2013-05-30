@@ -193,15 +193,9 @@
 			<option value="">-- select one --</option>
 <%
 	List<Map<String,Object>> resultList ;
-    if (isSiteAccessPrivacy) {
-    	Object[] param =new Object[1];
-    	param[0] = curProvider_no;
-    	resultList = oscarSuperManager.find("adminDao", "site_provider_search_providerno", param);
-    }
-    else {
-    	resultList = oscarSuperManager.find("adminDao", "provider_search_providerno", new Object[] {});
-    }
-	for (Map provider : resultList) {
+    resultList = oscarSuperManager.find("adminDao", "provider_search_providerno", new Object[] {});
+	
+    for (Map provider : resultList) {
 %>
 			<option value="<%=provider.get("provider_no")%>"><%=provider.get("last_name")+", "+provider.get("first_name")%></option>
 <%
