@@ -56,7 +56,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
     	
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1, startIdInclusive);
-    	if (archived!=null)	query.setParameter(2, archived?'0':'1');
+    	if (archived!=null)	query.setParameter(2, archived?'1':'0');
     	
     	setLimit(query, itemsToReturn);
 

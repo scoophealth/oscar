@@ -27,7 +27,9 @@ package org.oscarehr.managers;
 import java.util.List;
 
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.PreventionExt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,9 @@ import oscar.log.LogAction;
 public class PreventionManager {
 	@Autowired
 	private PreventionDao preventionDao;
+
+	@Autowired
+	private PreventionExtDao preventionExtDao;
 
 	public List<Prevention> getPreventionsByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
@@ -60,5 +65,18 @@ public class PreventionManager {
 		}
 
 		return(result);
+	}
+
+	public List<PreventionExt> getPreventionExtByPrevention(Integer preventionId)
+	{
+		List<PreventionExt> results=preventionExtDao.findByPreventionId(preventionId);
+		
+		//--- log action ---
+		if (results.size()>0) {
+			String resultIds=PreventionExt.getIdsAsStringList(results);
+			LogAction.addLogSynchronous("PreventionManager.getPreventionExtByPrevention", "ids returned=" + resultIds);
+		}
+
+		return(results);
 	}
 }
