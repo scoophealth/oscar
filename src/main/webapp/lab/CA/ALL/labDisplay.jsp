@@ -988,6 +988,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                         ArrayList headers = handler.getHeaders();
                         int OBRCount = handler.getOBRCount();
+                       	boolean isUnstructuredDoc = false;
+                       	//Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is
+                    	if(handler.getMsgType().equals("PATHL7")){
+                    		for(i=0; i<headers.size(); i++){
+                    			if(headers.get(i).equals("DIAG IMAGE")){
+                    				isUnstructuredDoc = true;
+                    			}
+                    		}
+                    	}//end of PATHL7 Doc check
 
                         if (handler.getMsgType().equals("MEDVUE")) { %>
                         <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -1035,7 +1044,33 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                       for(i=0;i<headers.size();i++){
                            linenum=0;
-                       %>
+                       	if(isUnstructuredDoc){%>
+		                       <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
+	                           <tr>
+	                               <td colspan="4" height="7">&nbsp;</td>
+	                           </tr>
+	                           <tr>
+	                               <td bgcolor="#FFCC00" width="300" valign="bottom">
+	                                   <div class="Title2">
+	                                       <%=headers.get(i)%>
+	                                   </div>
+	                               </td>
+	                               <%--<td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>--%>
+	                               <td width="9">&nbsp;</td>
+	                               <td width="9">&nbsp;</td>
+	                               <td width="*">&nbsp;</td>
+	                           </tr>
+	                       </table>
+
+	                       <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
+	                           <tr class="Field2">
+	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
+	                               <td width="50%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+	                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+	                               <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
+	                          	   <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
+	                           </tr><%
+						} else {%>
                        <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
                            <tr>
                                <td colspan="4" height="7">&nbsp;</td>
@@ -1064,7 +1099,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                           	   <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
                            </tr>
-                           <%
+                           <%}
                            
                            for ( j=0; j < OBRCount; j++){
 
@@ -1073,11 +1108,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                for (k=0; k < obxCount; k++){
 
                                	String obxName = handler.getOBXName(j, k);
-                               
-                               	boolean isUnstructuredDoc = false;
-                               	
-
-
                                    boolean b1=false, b2=false, b3=false;
 
                                    boolean fail = true;
@@ -1304,19 +1334,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
                                     } else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) )  {
-                                    	if(handler.getMsgType().equals("PATHL7")){
-                                    		int x=0;
-                                    		int y = 0;
-                                    		while(x<=obxCount){
-                                    			 if((handler.getOBXAbnormalFlag(j, k).equals("")) && (handler.getOBXReferenceRange(j, k).equals("")) && (handler.getOBXUnits(j, k).equals(""))){ //if the Abn, RR and Units fields are empty
-                                    				y++;
-                                    			}
-                                    			 x++;
-                                    		}//end of while loop
-                                    		if(y>=obxCount){
-                                    			isUnstructuredDoc = true;
-                                    		}
-                                    	}//end of PATHL7 Doc check
+
                                    		if(isUnstructuredDoc){%>
                                    			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>"><% 
                                    			if(handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)){%>
@@ -1328,9 +1346,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                               	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
                                               	<%}%>  </td>
                                            	<td align="left"><%= handler.getOBXResult( j, k) %></td>
-                                           	<td align="center"> <%= handler.getOBXAbnormalFlag(j, k)%> </td>
-	                                        <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
-	                                        <td align="left"><%=handler.getOBXUnits( j, k) %></td>
 	                                        <%if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
                                         			%><td align="center"><%= "" %></td><%}
                                         		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td> <%}
