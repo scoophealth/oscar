@@ -58,7 +58,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("demographicSets", "lst_gender", "demographic_merged",
 				"admission", "program", "health_safety", "demographic", "provider",
 				"allergies", "drugs", "preventions", "dxresearch", "patientLabRouting",
-				"icd9", "casemgmt_issue", "clinic", "issue","measurements");
+				"icd9", "casemgmt_issue", "clinic", "issue", "measurements", "measurementsExt", "measurementMap", "measurementType");
 		Demographic entity = new Demographic();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDemographicNo(null);
