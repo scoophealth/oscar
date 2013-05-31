@@ -442,7 +442,7 @@ public class PatientExport {
 		if(isNumeric(out)) {
 			return out;
 		}
-		return "00000000";
+		return "00010101";
 	}
 
 	public String getGenderDesc() {
