@@ -992,7 +992,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                        	//Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is
                     	if(handler.getMsgType().equals("PATHL7")){
                     		for(i=0; i<headers.size(); i++){
-                    			if(headers.get(i).equals("DIAG IMAGE")){
+                    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSVCH"))){
                     				isUnstructuredDoc = true;
                     			}
                     		}
@@ -1108,6 +1108,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                for (k=0; k < obxCount; k++){
 
                                	String obxName = handler.getOBXName(j, k);
+                                                         	
                                    boolean b1=false, b2=false, b3=false;
 
                                    boolean fail = true;

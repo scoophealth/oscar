@@ -134,7 +134,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
     		int i=0;
 
     		for(i=0; i<headers.size(); i++){
-    			if(headers.get(i).equals("DIAG IMAGE")){
+    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSVCH"))){
     				isUnstructuredDoc = true;
     			}
     		}
@@ -204,18 +204,21 @@ public class LabPDFCreator extends PdfPageEventHelper{
 	 */
 	private void addLabCategory(String header) throws DocumentException {
 		unstructuredDocCheck();
+		
 		float[] mainTableWidths;
 		if(isUnstructuredDoc){
 			mainTableWidths = new float[] { 5f, 9f, 4f, 2f };
 		}else{
 			mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
 		}
+		
 		PdfPTable table = new PdfPTable(mainTableWidths);
 		table.setHeaderRows(3);
 		table.setWidthPercentage(100);
 
 		PdfPCell cell = new PdfPCell();
 		// category name
+		if(!isUnstructuredDoc){
 		cell.setPadding(3);
 		cell.setPhrase(new Phrase("  "));
 		cell.setBorder(0);
@@ -230,7 +233,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		cell.setPhrase(new Phrase("  "));
 		cell.setBorder(0);
 		cell.setColspan(5);
-		table.addCell(cell);
+		table.addCell(cell);}
 
 		// table headers
 		if(isUnstructuredDoc){
