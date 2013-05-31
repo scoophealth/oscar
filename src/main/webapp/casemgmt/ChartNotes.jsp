@@ -351,12 +351,14 @@ try
 				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.calculators" rights="r" reverse="false">
 					<%@include file="calculatorsSelectList.jspf" %>
 				</security:oscarSec>
-				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false">
+				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r">
 					<select onchange="javascript:popupPage(700,700,'Templates',this.value);">
-						<option><bean:message key="oscarEncounter.Header.Templates"/></option>
-						<option>------------------</option>
-						<option value="<%=request.getContextPath()%>/admin/providertemplate.jsp">New Template</option>
-						<option>------------------</option>
+						<option value="-1"><bean:message key="oscarEncounter.Header.Templates"/></option>
+						<option value="-1">------------------</option>
+						<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="w">
+						<option value="<%=request.getContextPath()%>/admin/providertemplate.jsp">New / Edit Template</option>
+						<option value="-1">------------------</option>
+						</security:oscarSec>
 						<%
 							EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
 							List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
