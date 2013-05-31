@@ -3272,6 +3272,12 @@ function autoCompleteShowMenuCPP(element, update) {
         //$("notes2print").value = "";
 
 		// load all notes before printing
+		var container = $('encMainDiv');		
+		if (container.hasChildNodes()) {
+    		while (container.childNodes.length >= 1) {
+        		container.removeChild(container.firstChild);
+        	}
+        }
 		var demographicNo = $("demographicNo").value;
 		notesLoader(0, 9999, demographicNo);
 		var size = $("encMainDiv").children.length;
