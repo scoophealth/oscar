@@ -42,7 +42,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
 	 * It is an efficient method for iterating through all Allergies (more efficient than using a startIndex).
 	 */
     public List<Allergy> findAllergiesByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
-    	String sql = "select x from Allergy x where x.id>=?1 ";
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 ";
     	if (archived!=null)	sql=sql+"and x.archived=?2 ";
     	sql=sql+"order by x.id";
     	
@@ -58,7 +58,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
     }
     
     public List<Allergy> findAllergies(Integer demographic_no) {
-    	String sql = "select x from Allergy x where x.demographicNo=?1 order by x.archived,x.severityOfReaction desc";
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 order by x.archived,x.severityOfReaction desc";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,demographic_no);
 
@@ -68,7 +68,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
     }
 
     public List<Allergy> findActiveAllergies(Integer demographic_no) {
-    	String sql = "select x from Allergy x where x.demographicNo=?1 and x.archived = 0 order by x.position, x.severityOfReaction";
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.archived = 0 order by x.position, x.severityOfReaction";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,demographic_no);
 
@@ -78,7 +78,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
     }
 
     public List<Allergy> findActiveAllergiesOrderByDescription(Integer demographic_no) {
-    	String sql = "select x from Allergy x where x.demographicNo=?2 and x.archived = 0 order by x.description";
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?2 and x.archived = 0 order by x.description";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(2,demographic_no);
 
@@ -88,7 +88,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
     }
 
 	public List<Allergy> findByDemographicIdUpdatedAfterDate(Integer demographicId, Date updatedAfterThisDate) {
-		String sqlCommand = "select x from Allergy x where x.demographicNo=?1 and x.lastUpdateDate>?2";
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.lastUpdateDate>?2";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);

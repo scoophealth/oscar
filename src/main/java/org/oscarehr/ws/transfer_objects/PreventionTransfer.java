@@ -153,7 +153,7 @@ public final class PreventionTransfer {
 	}
 
 	/**
-	 * both preventions and exts are required, null is not allowed.
+	 * both preventionsExts are required, null is not allowed, pass in empty list for no ext's
 	 */
 	public static PreventionTransfer toTransfer(Prevention prevention, List<PreventionExt> preventionExts) {
 		if (prevention == null) return (null);
