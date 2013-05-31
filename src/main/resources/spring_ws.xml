@@ -78,4 +78,10 @@
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
 
+	<jaxws:endpoint implementor="#measurementWs" address="/MeasurementService" >
+		<jaxws:inInterceptors>
+			<ref bean="authenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+
 </beans>
