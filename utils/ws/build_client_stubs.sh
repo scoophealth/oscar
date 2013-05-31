@@ -11,7 +11,7 @@ done
 
 ant -f build_client_stubs.xml compile_client_stubs
 
-VERSION=2013.05.29
+VERSION=2013.05.31
 
 
 mvn install:install-file -DgroupId=org.oscarehr.oscar -DartifactId=oscar_client_stubs -Dversion=${VERSION} -Dpackaging=jar -Dfile=../../target/oscar_client_stubs.jar -DcreateChecksum=true -DgeneratePom=true

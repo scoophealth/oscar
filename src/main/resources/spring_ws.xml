@@ -84,4 +84,10 @@
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
 
+	<jaxws:endpoint implementor="#documentWs" address="/DocumentService" >
+		<jaxws:inInterceptors>
+			<ref bean="authenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+
 </beans>

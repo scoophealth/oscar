@@ -28,6 +28,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+
 @Embeddable
 public class CtlDocumentPK implements Serializable{
 
@@ -78,5 +80,9 @@ public class CtlDocumentPK implements Serializable{
 		this.documentNo = documentNo;
 	}
 	
-	
+	@Override
+	public String toString()
+	{
+		return(ReflectionToStringBuilder.toString(this));
+	}
 }
