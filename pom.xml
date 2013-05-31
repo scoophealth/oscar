@@ -52,13 +52,23 @@
 			<name>HAPI Sourceforge Repository</name>
 			<url>http://hl7api.sourceforge.net/m2</url>
 		</repository>
+
+		<repository>
+			<id>oscar_repo</id>
+			<url>http://oscarmcmaster.sourceforge.net/m2</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
-        	<pluginRepository>
+       	<pluginRepository>
 			<id>local_repo</id>
 			<url>file://${basedir}/local_repo</url>
-        	</pluginRepository>
+       	</pluginRepository>
+
+		<pluginRepository>
+			<id>oscar_repo</id>
+			<url>http://oscarmcmaster.sourceforge.net/m2</url>
+		</pluginRepository>
 	</pluginRepositories>
 
 	<dependencies>
