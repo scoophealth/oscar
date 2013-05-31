@@ -504,7 +504,73 @@ function fsPopup(width,height,url,window) {
 	return popup(width,height,url,window);
 	<%}%>
 }
+    function isNumber(ss){
+	var s = ss.value;
+        var i;
+        for (i = 0; i < s.length; i++){
+            // Check that current character is number.
+            var c = s.charAt(i);
+			if (c == '.') {
+				continue;
+			} else if (((c < "0") || (c > "9"))) {
+                alert('Invalid '+s+' in field ' + ss.name);
+                ss.focus();
+                return false;
+			}
+        }
+        // All characters are numbers.
+        return true;
+    }
+	
+    function wtEnglish2Metric(obj) {
+		if(isNumber(obj) ) {
+			weight = obj.value;
+			weightM = Math.round(weight * 10 * 0.4536) / 10 ;
+			if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
+				obj.value = weightM;
+			}
+		}
+    }
+
+
+    function htEnglish2Metric(obj) {
+		height = obj.value;
+		if(height.length > 1 && height.indexOf("'") > 0 ) {
+			feet = height.substring(0, height.indexOf("'"));
+			inch = height.substring(height.indexOf("'"));
+			if(inch.length == 1) {
+				inch = 0;
+			} else {
+				inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
+				inch = inch.substring(1);
+			}
+			height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10 ;
+			if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
+				obj.value = height;
+			}
+		}
+    }
+
+    function calcBMI() {
+    	if (isNumber(document.getElementById("Weightkg")) && isNumber(document.getElementById("Heightcm"))) {
+    		if (document.getElementById("Heightcm").value > 0) {
+    			document.getElementById("BMI").value = (document.getElementById("Weightkg").value/Math.pow(document.getElementById("Heightcm").value/100,2)).toFixed(1);
+    		}
+    	}
+    }
+
+    function calcWeeklyDose(obj) {
+	if(isNumber(obj) ) {
+		dose = obj.value;
+		weekly = Math.round((dose) * 7 * 10 )/10 ;
+		if(confirm("Are you sure you want to change " + dose + "mg daily to " + weekly +"mg weekly?") ) {
+			obj.value = weekly;
+		}
+	}
+    }
+
 	</script>
+
 
 		
   </head>
@@ -921,7 +987,12 @@ function fsPopup(width,height,url,window) {
                             
   <%}else{ %>
   <!-- placeholder="<%=mtypeBean.getValidationName()%>"-->
-  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<%=mtypeBean.getValidationName()%>" placeholder="Enter Data" > 
+  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
+	                       	<% if (name.equals("Weightkg") || name.equals("Heightcm") ){ %> onchange="calcBMI();"<%}%>
+	                       	<% if (name.equals("Weightkg")){ %> onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
+	                       	<% if (name.equals("Heightcm")){ %> onDblClick="htEnglish2Metric(this); calcBMI();"<%}%>
+	                       	<% if (name.equals("BMI")){ %> onDblClick="calcBMI();"<%}%>
+	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%>	 placeholder="Enter Data"> 
   <%} %>
 <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
 </span>
