@@ -48,6 +48,8 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	/**
 	 * This method will return a list of items starting from the provided ID.
 	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
+
+	 * @param archived can be null for all deleted and non-deleted items 
 	 */
     public List<Prevention> findByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
     	String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 ";
