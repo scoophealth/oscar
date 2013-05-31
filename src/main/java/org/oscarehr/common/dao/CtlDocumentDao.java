@@ -37,30 +37,20 @@ public class CtlDocumentDao extends AbstractDao<CtlDocument>{
 		super(CtlDocument.class);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public CtlDocument getCtrlDocument(Integer docId) {
 		Query query = entityManager.createQuery("select x from CtlDocument x where x.id.documentNo=?");
 		query.setParameter(1, docId);
 		
-		List<CtlDocument> cList = query.getResultList();
-		
-
-		if (cList != null && cList.size() > 0) {
-			return cList.get(0);
-		} else {
-			return null;
-		}
+		return(getSingleResultOrNull(query));
 	}
 
-
-	@SuppressWarnings("unchecked")
     public List<CtlDocument> findByDocumentNoAndModule(Integer ctlDocNo, String module) {
 		Query query = entityManager.createQuery("select x from CtlDocument x where x.id.documentNo=? and x.id.module = ?");
 		query.setParameter(1, ctlDocNo);
 		query.setParameter(2, module);
 		
-		List<CtlDocument> cList = query.getResultList();
-		
+		@SuppressWarnings("unchecked")
+        List<CtlDocument> cList = query.getResultList();
 		return cList;
     }
 }

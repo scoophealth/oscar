@@ -8,3 +8,4 @@ ProgramService
 AllergyService
 PreventionService
 MeasurementService
+DocumentService

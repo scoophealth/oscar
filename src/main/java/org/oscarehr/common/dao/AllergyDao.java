@@ -40,6 +40,8 @@ public class AllergyDao extends AbstractDao<Allergy> {
 	/**
 	 * This method will return a list of allergies starting from the provided ID.
 	 * It is an efficient method for iterating through all Allergies (more efficient than using a startIndex).
+	 *
+	 * @param archived can be null for all deleted and non-deleted items 
 	 */
     public List<Allergy> findAllergiesByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
     	String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 ";

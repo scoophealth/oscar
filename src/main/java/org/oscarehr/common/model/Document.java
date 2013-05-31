@@ -30,6 +30,8 @@
 
 package org.oscarehr.common.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -45,6 +47,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -74,6 +78,8 @@ import javax.persistence.TemporalType;
 public class Document extends AbstractModel<Integer> implements Serializable {
     private static final long serialVersionUID = 1L;
    
+    public static final char STATUS_ACTIVE='A';
+    public static final char STATUS_DELETED='D';
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -327,6 +333,17 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     	this.sourceFacility = sourceFacility;
     }
 
-
-
+	/**
+	 * @returns a string representing the path of the file on disk, i.e. document_dir+'/'+filename
+	 */
+	public String getDocumentFileFullPath()
+	{
+		String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+		return(docDir+'/'+docfilename);
+	}
+	
+	public byte[] getDocumentFileContentsAsBytes() throws IOException
+	{
+		return(FileUtils.readFileToByteArray(new File(getDocumentFileFullPath())));
+	}
 }
