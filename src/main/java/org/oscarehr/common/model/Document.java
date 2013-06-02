@@ -63,6 +63,7 @@ import org.apache.commons.io.FileUtils;
     @NamedQuery(name = "Document.findByDocdesc", query = "SELECT d FROM Document d WHERE d.docdesc = :docdesc"),
     @NamedQuery(name = "Document.findByDocfilename", query = "SELECT d FROM Document d WHERE d.docfilename = :docfilename"),
     @NamedQuery(name = "Document.findByDoccreator", query = "SELECT d FROM Document d WHERE d.doccreator = :doccreator"),
+    @NamedQuery(name = "Document.findByContentdatetime", query = "SELECT d FROM Document d WHERE d.contentdatetime = :contentdatetime"),
     @NamedQuery(name = "Document.findByResponsible", query = "SELECT d FROM Document d WHERE d.responsible = :responsible"),
     @NamedQuery(name = "Document.findBySource", query = "SELECT d FROM Document d WHERE d.source = :source"),
     @NamedQuery(name = "Document.findByProgramId", query = "SELECT d FROM Document d WHERE d.programId = :programId"),
@@ -124,6 +125,9 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     @Basic(optional = false)
     @Column(name = "contenttype")
     private String contenttype;
+    @Column(name = "contentdatetime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date contentdatetime;    
     @Basic(optional = false)
     @Column(name = "public1")
     private int public1;
@@ -212,7 +216,15 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     public void setDoccreator(String doccreator) {
         this.doccreator = doccreator;
     }
+    
+    public Date getContentdatetime() {
+        return contentdatetime;
+    }
 
+    public void setContentdatetime(Date contentdatetime) {
+        this.contentdatetime = contentdatetime;
+    }
+    
     public String getResponsible() {
         return responsible;
     }

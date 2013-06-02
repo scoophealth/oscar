@@ -67,6 +67,7 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	private String moduleId = "";
 	private String docPublic = "0";
 	private String contentType = "";
+        private Date contentDateTime=null;
 	private String observationDate = "";
 	private String reviewerId = "";
 	private String reviewDateTime = null;
@@ -162,6 +163,7 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	private void preliminaryProcessing() {
 		this.dateTimeStamp = EDocUtil.getDmsDateTime();
 		this.setDateTimeStampAsDate(EDocUtil.getDmsDateTimeAsDate());
+                this.setContentDateTime(EDocUtil.getDmsDateTimeAsDate());
 		if (fileName.length() != 0) {
 			String filenamePrefix = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyyMMdd") + UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HHmmss");
 			this.fileName = filenamePrefix + fileName;
@@ -253,7 +255,15 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	public void setDateTimeStamp(String dateTimeStamp) {
 		this.dateTimeStamp = dateTimeStamp;
 	}
+        
+        public Date getContentDateTime() {
+		return (contentDateTime);
+	}
 
+	public void setContentDateTime(Date contentDateTime) {
+		this.contentDateTime = contentDateTime;
+	}
+        
 	public String getModule() {
 		return module;
 	}
