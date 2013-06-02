@@ -239,11 +239,11 @@
 			<form-property name="installDate" type="java.lang.String" />
 		</form-bean>
 		<form-bean name="ticklerForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="tickler" type="org.caisi.model.Tickler" />
-			<form-property name="filter" type="org.caisi.model.CustomFilter" />
+			<form-property name="tickler" type="org.oscarehr.common.model.Tickler" />
+			<form-property name="filter" type="org.oscarehr.common.model.CustomFilter" />
 		</form-bean>
 		<form-bean name="customFilterForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="filter" type="org.caisi.model.CustomFilter" />
+			<form-property name="filter" type="org.oscarehr.common.model.CustomFilter" />
 		</form-bean>
 		<form-bean name="unreadTicklerForm" type="org.apache.struts.validator.LazyValidatorForm" />
 		<form-bean name="editProviderFaxForm" type="org.apache.struts.action.DynaActionForm">
@@ -595,16 +595,16 @@
 		<action input="/oscarMDS/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction">
 			<forward name="complete" path="/oscarMDS/SegmentDisplay.jsp" />
 		</action>
-		<action path="/MeasurementHL7Uploader" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="newLabUploadForm" validate="false">
+		<action path="/MeasurementHL7Uploader" type="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" parameter="method" scope="request" name="newLabUploadForm" validate="false">
 
 		</action>
 
-		<action path="/Home" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
+		<action path="/Home" type="org.oscarehr.PMmodule.web.HomeAction" parameter="method" scope="request" validate="false">
 			<forward name="home" path="page.home" />
 		</action>
 
 		<!-- caisi core action -->
-		<action path="/Admin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
+		<action path="/Admin" type="com.quatro.web.admin.AdminAction" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
 			<forward name="list" path="page.admin.list" />
 		</action>
 		<action path="/SystemMessage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/caisicore/SystemMessageForm.jsp" validate="false">
@@ -636,9 +636,9 @@
 			<forward name="shelterSelection" path="/shelterSelection.do" redirect="true" />
 			<forward name="LoginTest" path="/login/LoginTest.jsp" redirect="true" />
 		</action>
-		<action input="/login/loginTest.jsp" path="/login/recordLogin" scope="request" type="org.springframework.web.struts.DelegatingActionProxy"></action>
+		<action input="/login/loginTest.jsp" path="/login/recordLogin" scope="request" type="oscar.login.LoginAgreementAction"></action>
 
-		<action path="/shelterSelection" scope="request" type="org.springframework.web.struts.DelegatingActionProxy" validate="true" parameter="method">
+		<action path="/shelterSelection" scope="request" type="oscar.login.ShelterSelectionAction" validate="true" parameter="method">
 			<forward name="shelterSelection" path="page.pmm.shelterSelection" />
 			<forward name="home" path="/Home.do" redirect="true" />
 			<forward name="login" path="/index.jsp" />
@@ -1908,7 +1908,7 @@
 			<forward name="customFilterList" path="/ticklerPlus/customFilterList.jsp" />
 			<forward name="customFilterForm" path="/ticklerPlus/customFilterForm.jsp" />
 		</action>
-		<action path="/UnreadTickler" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="unreadTicklerForm" input="/ticklerPlus/loginUnreadTickler.jsp" validate="false">
+		<action path="/UnreadTickler" type="org.caisi.tickler.web.UnreadTicklerAction" parameter="method" scope="request" name="unreadTicklerForm" input="/ticklerPlus/loginUnreadTickler.jsp" validate="false">
 			<forward name="error" path="/loginfailed.jsp" />
 			<forward name="view" path="/ticklerPlus/viewUnreadTicklers.jsp" />
 			<forward name="login" path="/ticklerPlus/loginUnreadTicklers.jsp" />
@@ -2300,12 +2300,12 @@
 		</action>
 
 
-		<action path="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+		<action path="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" name="FrmForm" type="org.oscarehr.common.web.FlowSheetCustomAction" parameter="method" scope="request">
 			<forward name="success" path="/oscarEncounter/oscarMeasurements/adminFlowsheet/EditFlowsheet.jsp" />
 			<forward name="newflowsheet" path="/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp" />
 		</action>
 
-		<action path="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+		<action path="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" name="FrmForm" type="org.oscarehr.common.web.FlowSheetDrugAction" parameter="method" scope="request">
 			<forward name="success" path="/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp" />
 		</action>
 

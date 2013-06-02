@@ -480,6 +480,7 @@ CREATE TABLE `custom_filter` (
   `programId` varchar(10) default '',
   `name` varchar(255) NOT NULL default '',
   `shortcut` tinyint(1) default '0',
+  `message` varchar(255),
   PRIMARY KEY  (`id`)
 );
 

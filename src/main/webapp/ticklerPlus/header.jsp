@@ -29,8 +29,13 @@
 <%@page import="oscar.OscarProperties"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page
-	import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*"%>
+	import="org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*"%>
 <%@ page import="java.util.Date"%>
+
+<%@page import="org.oscarehr.common.model.Tickler" %>
+<%@page import="org.oscarehr.common.model.TicklerComment" %>
+<%@page import="org.oscarehr.common.model.TicklerUpdate" %>
+<%@page import="org.oscarehr.common.model.CustomFilter" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%

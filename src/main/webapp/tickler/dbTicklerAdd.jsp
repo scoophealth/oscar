@@ -24,24 +24,25 @@
 
 --%>
 
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,org.caisi.model.*,org.caisi.dao.*,oscar.util.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"  %>
 
-
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Tickler" %>
+<%@ page import="org.oscarehr.common.model.TicklerLink" %>
+<%@ page import="org.oscarehr.common.dao.TicklerLinkDao" %>
+<%@ page import="oscar.util.UtilDateUtilities" %>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.TicklerManager" %>
 
 <%
+	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+%>
 
-//GregorianCalendar now=new GregorianCalendar();
-//  int curYear = now.get(Calendar.YEAR);
-//  int curMonth = (now.get(Calendar.MONTH)+1);
-//  int curDay = now.get(Calendar.DAY_OF_MONTH);
-
- // String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
-
-String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="", docpriority="", docassigned="";
+<%
+	String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="", docpriority="", docassigned="";
 module_id = request.getParameter("demographic_no");
 doccreator = request.getParameter("user_no");
 docdate = request.getParameter("xml_appointment_date");
@@ -55,31 +56,33 @@ String docId = request.getParameter("docId");
 
 
 Tickler tickler = new Tickler();
-    tickler.setDemographic_no(module_id);
-    tickler.setStatus('A');
-    tickler.setUpdate_date(new java.util.Date());
-    tickler.setPriority(docpriority);
-    tickler.setTask_assigned_to(docassigned);
+    tickler.setDemographicNo(Integer.parseInt(module_id));
+    tickler.setUpdateDate(new java.util.Date());
+    if(docpriority != null && docpriority.equalsIgnoreCase("High")) {
+   	 tickler.setPriority(Tickler.PRIORITY.High);
+    }
+    if(docpriority != null && docpriority.equalsIgnoreCase("Low")) {
+      	 tickler.setPriority(Tickler.PRIORITY.Low);
+    }
+    tickler.setTaskAssignedTo(docassigned);
     tickler.setCreator(doccreator);
     tickler.setMessage(docfilename);
-    tickler.setService_date(UtilDateUtilities.StringToDate(docdate));
+    tickler.setServiceDate(UtilDateUtilities.StringToDate(docdate));
 
 
-   WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-   TicklerDAO ticklerDAO = (TicklerDAO) ctx.getBean("ticklerDAOT");
-   ticklerDAO.saveTickler(tickler);
+   ticklerManager.addTickler(tickler);
 
 
    if (docType != null && docId != null && !docType.trim().equals("") && !docId.trim().equals("") && !docId.equalsIgnoreCase("null") ){
 
-      long ticklerNo = tickler.getTickler_no();
+      int ticklerNo = tickler.getId();
       if (ticklerNo > 0){
           try{
              TicklerLink tLink = new TicklerLink();
              tLink.setTableId(Long.parseLong(docId));
              tLink.setTableName(docType);
              tLink.setTicklerNo(new Long(ticklerNo).intValue());
-             TicklerLinkDao ticklerLinkDao = (TicklerLinkDao) ctx.getBean("ticklerLinkDao");
+             TicklerLinkDao ticklerLinkDao = (TicklerLinkDao) SpringUtils.getBean("ticklerLinkDao");
              ticklerLinkDao.save(tLink);
              }catch(Exception e){
             	 MiscUtils.getLogger().error("No link with this tickler", e);

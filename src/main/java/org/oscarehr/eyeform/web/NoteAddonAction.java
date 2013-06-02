@@ -37,10 +37,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.model.Tickler;
-import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Tickler;
 import org.oscarehr.eyeform.dao.EyeFormDao;
 import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
 import org.oscarehr.eyeform.dao.EyeformProcedureBookDao;
@@ -49,6 +48,7 @@ import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.EyeformProcedureBook;
 import org.oscarehr.eyeform.model.EyeformTestBook;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -60,6 +60,8 @@ public class NoteAddonAction extends DispatchAction {
 	protected EyeformProcedureBookDao procedureBookDao = SpringUtils.getBean(EyeformProcedureBookDao.class);
 	protected EyeformTestBookDao testDao = SpringUtils.getBean(EyeformTestBookDao.class);
 	protected EyeFormDao eyeformDao = SpringUtils.getBean(EyeFormDao.class);
+	protected TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	
 	
 	public ActionForward getCurrentNoteData(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String demographicNo = request.getParameter("demographicNo");
@@ -179,20 +181,15 @@ public class NoteAddonAction extends DispatchAction {
 		Tickler t = new Tickler();
 		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		t.setAssignee(providerDao.getProvider(recipient));
-		//t.setDemographic(demographic)
-		t.setDemographic_no(demographicNo);
+		t.setDemographicNo(Integer.parseInt(demographicNo));
 		t.setMessage(text);
-		t.setPriority("Normal");
-		t.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider);
-		//t.setProgram(program);
-		t.setProgram_id(Integer.valueOf((String)request.getSession().getAttribute("programId_oscarView")));
-		t.setService_date(new Date());
-		t.setStatus('A');
-		t.setTask_assigned_to(recipient);
-		t.setUpdate_date(new Date());
 		
-		TicklerManager ticklerMgr = (TicklerManager)SpringUtils.getBean("ticklerManagerT");
-		ticklerMgr.addTickler(t);
+		t.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider);
+		t.setProgramId(Integer.valueOf((String)request.getSession().getAttribute("programId_oscarView")));
+		
+		t.setTaskAssignedTo(recipient);
+		
+		ticklerManager.addTickler(t);
 		
 		
 		

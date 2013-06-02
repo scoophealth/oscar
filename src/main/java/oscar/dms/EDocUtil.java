@@ -41,8 +41,6 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -68,7 +66,9 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerLink;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -136,7 +136,7 @@ public final class EDocUtil {
 	private static CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
         private static CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
         private static TicklerLinkDao ticklerLinkDao = (TicklerLinkDao) SpringUtils.getBean("ticklerLinkDao");
-        private static TicklerDAO ticklerDAO = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
+        private static TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -918,7 +918,7 @@ public final class EDocUtil {
             if (linkList != null){
                 for(TicklerLink tl : linkList){
                     ticklerNo = tl.getTicklerNo();
-                    Tickler t = ticklerDAO.getTickler(ticklerNo.longValue());
+                    Tickler t = ticklerManager.getTickler(ticklerNo.intValue());
                       if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {  
                         HtmlTickler+="<br><a href='#' onclick=\"window.open('../Tickler.do?method=view&id="+ticklerNo.toString()+"','viewtickler"+ticklerNo.toString()+"','height=700,width=600,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0');\" >"+t.getMessage()+"</a>";
                      } else

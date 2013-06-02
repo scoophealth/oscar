@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,8 +62,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -106,6 +106,7 @@ import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderDefaultProgram;
+import org.oscarehr.common.model.Tickler;
 import org.oscarehr.eyeform.dao.EyeFormDao;
 import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
 import org.oscarehr.eyeform.dao.EyeformTestBookDao;
@@ -117,6 +118,7 @@ import org.oscarehr.eyeform.model.Macro;
 import org.oscarehr.eyeform.web.FollowUpAction;
 import org.oscarehr.eyeform.web.ProcedureBookAction;
 import org.oscarehr.eyeform.web.TestBookAction;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -146,8 +148,6 @@ import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
 import com.quatro.model.security.Secrole;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
@@ -164,6 +164,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	private CasemgmtNoteLockDao casemgmtNoteLockDao = SpringUtils.getBean(CasemgmtNoteLockDao.class);
 	private NoteService noteService = SpringUtils.getBean(NoteService.class);
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return edit(mapping, form, request, response);
@@ -3294,17 +3295,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 			// send tickler
 			if (macro.getTicklerRecipient() != null && macro.getTicklerRecipient().length() > 0) {
-				TicklerDAO ticklerDao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
 				Tickler t = new Tickler();
 				t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getPractitionerNo());
-				t.setDemographic_no(cform.getDemographicNo());
+				t.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 				t.setMessage(getMacroTicklerText(Integer.parseInt(cform.getAppointmentNo())));
-				t.setPriority("Normal");
-				t.setService_date(new Date());
-				t.setStatus('A');
-				t.setTask_assigned_to(macro.getTicklerRecipient());
-				t.setUpdate_date(new Date());
-				ticklerDao.saveTickler(t);
+				t.setTaskAssignedTo(macro.getTicklerRecipient());
+				ticklerManager.addTickler(t);
 			}
 
 			// billing

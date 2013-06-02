@@ -24,17 +24,16 @@
 
 package oscar.oscarTickler;
 
-import java.util.Date;
 import java.util.List;
 
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.CustomFilter;
-import org.caisi.model.Tickler;
+import org.oscarehr.common.model.CustomFilter;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.SpringUtils;
 
 
 public class TicklerCreator {
-	TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class); 
 	
 	
   public TicklerCreator() {
@@ -50,15 +49,11 @@ public class TicklerCreator {
   public void createTickler(String demoNo, String provNo, String message) {
     if (!ticklerExists(demoNo, message)) {
     	Tickler t = new Tickler();
-    	t.setDemographic_no(demoNo);
+    	t.setDemographicNo(Integer.parseInt(demoNo));
     	t.setMessage(message);
-    	t.setStatus('A');
-    	t.setUpdate_date(new Date());
-    	t.setService_date(new Date());
     	t.setCreator(provNo);
-    	t.setPriority("4");
-    	t.setTask_assigned_to(provNo);
-    	dao.saveTickler(t);
+    	t.setTaskAssignedTo(provNo);
+    	ticklerManager.addTickler(t);
     	
 
     }
@@ -67,15 +62,11 @@ public class TicklerCreator {
   
   public void createTickler(String demoNo, String provNo, String message, String assignedTo) {
 	   Tickler t = new Tickler();
-    	t.setDemographic_no(demoNo);
+	   t.setDemographicNo(Integer.parseInt(demoNo));
     	t.setMessage(message);
-    	t.setStatus('A');
-    	t.setUpdate_date(new Date());
-    	t.setService_date(new Date());
     	t.setCreator(provNo);
-    	t.setPriority("4");
-    	t.setTask_assigned_to(assignedTo);
-    	dao.saveTickler(t);
+    	t.setTaskAssignedTo(assignedTo);
+    	ticklerManager.addTickler(t);
 	  }
   
  
@@ -87,12 +78,11 @@ public class TicklerCreator {
    * @return boolean
    */
   public boolean ticklerExists(String demoNo, String message) {
-	  org.oscarehr.casemgmt.dao.TicklerDAO dao = SpringUtils.getBean(org.oscarehr.casemgmt.dao.TicklerDAO.class);
-	  CustomFilter filter=  new CustomFilter();
-	  filter.setDemographic_no(demoNo);
+	  CustomFilter filter = new CustomFilter();
+	  filter.setDemographicNo(demoNo);
 	  filter.setMessage(message);
 	  filter.setStatus("A");
-	  List<Tickler> ticklers = dao.getTicklers(filter);
+	  List<Tickler> ticklers = ticklerManager.getTicklers(filter);
 	  return !ticklers.isEmpty();
   }
 
@@ -102,7 +92,7 @@ public class TicklerCreator {
    * @param cdmPatientNos Vector (strings)
    * @param remString String
    */
-  public void resolveTicklers(List cdmPatientNos, String remString) {
-	  dao.deleteTicklers(cdmPatientNos, remString);  
+  public void resolveTicklers(List<String> cdmPatientNos, String remString) {
+	  ticklerManager.resolveTicklers(cdmPatientNos, remString);  
   }
 }

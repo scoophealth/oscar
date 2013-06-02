@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,32 +15,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This software was written for
- * Centre for Research on Inner City Health, St. Michael's Hospital,
- * Toronto, Ontario, Canada
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
+package org.oscarehr.common.dao;
 
-package org.oscarehr.casemgmt.service;
+import org.oscarehr.common.model.TicklerComment;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public class TicklerCommentDao extends AbstractDao<TicklerComment>{
 
-import org.caisi.model.CustomFilter;
-import org.oscarehr.casemgmt.dao.TicklerDAO;
-import org.springframework.transaction.annotation.Transactional;
-
-/**
- */
-@Transactional
-public class TicklerManager {
-
-    private TicklerDAO ticklerDAO = null;
-
-    public void setTicklerDAO(TicklerDAO ticklerDAO) {
-        this.ticklerDAO = ticklerDAO;
-    }
-
-    public List getTicklers(CustomFilter filter) {
-        return ticklerDAO.getTicklers(filter);
-    }
-
+	public TicklerCommentDao() {
+		super(TicklerComment.class);
+	}
+	
 }

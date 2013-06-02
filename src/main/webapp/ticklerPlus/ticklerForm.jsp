@@ -44,7 +44,7 @@
 	<script type="text/javascript" src="../js/checkDate.js"></script>
 	<script type="text/javascript">
 		function check_tickler_service_date() {
-			return check_date('tickler.serviceDate');
+			return check_date('tickler.serviceDateWeb');
 		}
 
 <%--
@@ -62,16 +62,16 @@
 		function search_provider() {
 			url = '<c:out value="${ctx}"/>/provider/receptionistfindprovider.jsp';
 			url += '?caisi=true&pyear=<%=curYear%>&pmonth=<%=curMonth%>&pday=<%=curDay%>&providername=';
-			var popup = window.open(url + document.ticklerForm.elements['tickler.task_assigned_to_name'].value,'provider_search');
+			var popup = window.open(url + document.ticklerForm.elements['tickler.taskAssignedToName'].value,'provider_search');
 		}
 --%>		
 		function validateTicklerForm(form) {
-			if (form.elements['tickler.task_assigned_to'].value == 'none') {
+			if (form.elements['tickler.taskAssignedTo'].value == 'none') {
 				alert('You must assign the task to a valid provider');
 				return false;
 			}
 			
-			if (form.elements['tickler.serviceDate'].value == '') {
+			if (form.elements['tickler.serviceDateWeb'].value == '') {
 				alert('You must provide a valid service date');
 				return false;
 			}
@@ -93,18 +93,18 @@
 <%@ include file="/common/messages.jsp"%>
 
 <table width="60%" border="0" cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
-	<html:form action="/Tickler" focus="tickler.demographic_no" onsubmit="return validateTicklerForm(this);">
+	<html:form action="/Tickler" focus="tickler.demographicNo" onsubmit="return validateTicklerForm(this);">
 	
 		<input type="hidden" name="method" value="save" />
 		<html:hidden property="tickler.creator" value='<%=(String) session.getAttribute("user")%>' />
-		<html:hidden property="tickler.tickler_no" />
+		<html:hidden property="tickler.id" />
 		
 		<tr>
 			<td class="fieldTitle">
 				Demographic:
 			</td>
 			<td class="fieldValue">
-				<html:hidden property="tickler.demographic_no" />
+				<html:hidden property="tickler.demographicNo" />
 				<%=request.getParameter("tickler.demographic_webName")%>
 			</td>
 		</tr>
@@ -122,8 +122,8 @@
 				String formattedDate = year + "-" + month + "-" + day;
 			%>
 			<td class="fieldValue">
-				<html:text property="tickler.serviceDate" value="<%=formattedDate%>" maxlength="10"/>
-				<span onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=tickler.serviceDate&amp;year=<%=year%>&amp;month=<%=month%>','','width=300,height=300')">
+				<html:text property="tickler.serviceDateWeb" value="<%=formattedDate%>" maxlength="10"/>
+				<span onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=tickler.serviceDateWeb&amp;year=<%=year%>&amp;month=<%=month%>','','width=300,height=300')">
 					<img border="0" src="images/calendar.jpg" />
 				</span>
 			</td>
@@ -186,7 +186,7 @@
 				Priority:
 			</td>
 			<td class="fieldValue">
-				<html:select property="tickler.priority">
+				<html:select property="tickler.priorityWeb">
 					<option value="Normal">Normal</option>
 					<option value="High">High</option>
 					<option value="Low">Low</option>
@@ -198,13 +198,13 @@
 				Task Assigned To:
 			</td>
 			<td class="fieldValue">
-				<html:hidden property="tickler.task_assigned_to_name" />
-	            <html:select property="tickler.task_assigned_to" value="none">
+				<html:hidden property="tickler.taskAssignedToName" />
+	            <html:select property="tickler.taskAssignedTo" value="none">
         		    <option value="none">- select -</option>
         		    <html:options collection="providers" property="providerNo" labelProperty="formattedName"/>
             	</html:select>
-				<%--html:hidden property="tickler.task_assigned_to" />
-				<html:text property="tickler.task_assigned_to_name" />
+				<%--html:hidden property="tickler.taskAssignedTo" />
+				<html:text property="tickler.taskAssignedToName" />
 				<input type="button" value="Search" onclick="search_provider();" /--%>
 			</td>
 		</tr>
@@ -213,7 +213,7 @@
 				Status:
 			</td>
 			<td class="fieldValue">
-				<html:select property="tickler.status">
+				<html:select property="tickler.statusWeb">
 					<option value="A">Active</option>
 					<option value="C">Completed</option>
 					<option value="D">Deleted</option>

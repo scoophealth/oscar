@@ -23,8 +23,8 @@
     Ontario, Canada
 
 --%>
-<%    
-  String user_no = (String) session.getAttribute("user");
+<%
+	String user_no = (String) session.getAttribute("user");
   int  nItems=0;
      String strLimit1="0";
     String strLimit2="5"; 
@@ -45,44 +45,44 @@ String updateParent;
 if( request.getParameter("updateParent") != null )
     updateParent = request.getParameter("updateParent");
 else
-    updateParent = "false";    
+    updateParent = "false";
 %>
-<%@ page import="java.util.*, java.sql.*,java.text.*, oscar.*, java.net.*"%>
+<%@ page import="java.util.*,java.text.*, oscar.*"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Provider" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
-<%@page import="org.caisi.dao.TicklerDAO" %>
-<%@page import="org.caisi.model.Tickler" %>
-<%@page import="org.caisi.model.TicklerComment"%>
 <%@page import="oscar.util.ConversionUtils" %>
 <%@page import="org.oscarehr.common.model.Demographic" %>
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.common.model.Tickler" %>
+<%@ page import="org.oscarehr.common.model.TicklerComment" %>
+<%@ page import="org.oscarehr.common.model.TicklerUpdate" %>
+<%@ page import="org.oscarehr.managers.TicklerManager" %>
 
 <%
+	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
-	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 %>
 
 
 <%
-String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
+	String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
 if(labReqVer.equals("")) {labReqVer="07";}
 %>
 
 <%
-GregorianCalendar now=new GregorianCalendar();
+	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
-  
-  
-  %>
-<% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
+%>
+<%
+	//String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
   String ticklerview=request.getParameter("ticklerview")==null?"A":request.getParameter("ticklerview");
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"8888-12-31":request.getParameter("xml_appointment_date");
@@ -96,7 +96,7 @@ GregorianCalendar now=new GregorianCalendar();
     <script>
         jQuery.noConflict();
     </script>   
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="tickler.ticklerDemoMain.title" /></title>
 <script language="JavaScript">
 <!--
@@ -355,7 +355,7 @@ function generateRenalLabReq(demographicNo) {
 </style>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/print.css"  />
-<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
 <script>
 jQuery.noConflict();
 </script>
@@ -461,95 +461,95 @@ jQuery.noConflict();
 					key="tickler.ticklerMain.msgMessage" /></B></FONT></TD>
 			</TR>
 			<%
-String vGrantdate = "1980-01-07 00:00:00.0";
-DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
- 
+				String vGrantdate = "1980-01-07 00:00:00.0";
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
+				 
 
-String dateBegin = xml_vdate;
-String dateEnd = xml_appointment_date;
-String provider = "";
-String taskAssignedTo = "";
+				String dateBegin = xml_vdate;
+				String dateEnd = xml_appointment_date;
+				String provider = "";
+				String taskAssignedTo = "";
 
-if (dateEnd.compareTo("") == 0) dateEnd = "8888-12-31";
-if (dateBegin.compareTo("") == 0) dateBegin="1900-01-01";
+				if (dateEnd.compareTo("") == 0) dateEnd = "8888-12-31";
+				if (dateBegin.compareTo("") == 0) dateBegin="1900-01-01";
 
-List<Tickler> ticklers = ticklerDao.search_tickler_bydemo(request.getParameter("demoview")==null?"": request.getParameter("demoview"),ticklerview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
-String rowColour = "lilac";
-for (Tickler t:ticklers) {
-    Demographic d = demographicDao.getDemographic(t.getDemographic_no());
-    Provider p = null;
-    Provider assignedP = null;
+				List<Tickler> ticklers = ticklerManager.search_tickler_bydemo(request.getParameter("demoview")==null?null: Integer.parseInt(request.getParameter("demoview")),ticklerview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
+				String rowColour = "lilac";
+				for (Tickler t:ticklers) {
+				    Demographic d = demographicDao.getDemographicById(t.getDemographicNo());
+				    Provider p = null;
+				    Provider assignedP = null;
 
-    if(d != null && d.getProviderNo().length()>0)
-            p = providerDao.getProvider(d.getProviderNo());
-    if(t.getTask_assigned_to().length()>0)
-            assignedP = providerDao.getProvider(t.getTask_assigned_to());
+				    if(d != null && d.getProviderNo().length()>0)
+				            p = providerDao.getProvider(d.getProviderNo());
+				    if(t.getTaskAssignedTo().length()>0)
+				            assignedP = providerDao.getProvider(t.getTaskAssignedTo());
 
-    nItems = nItems +1;     
-    if (p == null){
-      provider = "";
-    }
-    else{
-      provider = p.getFormattedName();
-    }
-    if (assignedP == null){
-      taskAssignedTo = "";
-    }
-    else{
-      taskAssignedTo = assignedP.getFormattedName();
-    }
+				    nItems = nItems +1;     
+				    if (p == null){
+				      provider = "";
+				    }
+				    else{
+				      provider = p.getFormattedName();
+				    }
+				    if (assignedP == null){
+				      taskAssignedTo = "";
+				    }
+				    else{
+				      taskAssignedTo = assignedP.getFormattedName();
+				    }
 
-    vGrantdate = t.getServiceDate() + " 00:00:00.0";
-    java.util.Date grantdate = dateFormat.parse(vGrantdate);
-    java.util.Date toDate = new java.util.Date();
-    long millisDifference = toDate.getTime() - grantdate.getTime();
+				    vGrantdate = t.getServiceDate() + " 00:00:00.0";
+				    java.util.Date grantdate = dateFormat.parse(vGrantdate);
+				    java.util.Date toDate = new java.util.Date();
+				    long millisDifference = toDate.getTime() - grantdate.getTime();
 
-    long ONE_DAY_IN_MS = (1000 * 60 * 60 * 24);                                                      
-    long daysDifference = millisDifference / (ONE_DAY_IN_MS);
+				    long ONE_DAY_IN_MS = (1000 * 60 * 60 * 24);                                                      
+				    long daysDifference = millisDifference / (ONE_DAY_IN_MS);
 
-    String numDaysUntilWarn = OscarProperties.getInstance().getProperty("tickler_warn_period");
-    long ticklerWarnDays = Long.parseLong(numDaysUntilWarn);
-    boolean ignoreWarning = (ticklerWarnDays < 0);
+				    String numDaysUntilWarn = OscarProperties.getInstance().getProperty("tickler_warn_period");
+				    long ticklerWarnDays = Long.parseLong(numDaysUntilWarn);
+				    boolean ignoreWarning = (ticklerWarnDays < 0);
 
 
-    //Set the colour of the table cell 
-    String warnColour = "";
-    if (!ignoreWarning && (daysDifference >= ticklerWarnDays)){
-       warnColour = "Red";
-    }
+				    //Set the colour of the table cell 
+				    String warnColour = "";
+				    if (!ignoreWarning && (daysDifference >= ticklerWarnDays)){
+				       warnColour = "Red";
+				    }
 
-    if (rowColour.equals("lilac")){
-       rowColour = "white";
-    }else {
-       rowColour = "lilac";
-    }
+				    if (rowColour.equals("lilac")){
+				       rowColour = "white";
+				    }else {
+				       rowColour = "lilac";
+				    }
 
-    String cellColour = rowColour + warnColour;                
-%>
+				    String cellColour = rowColour + warnColour;
+			%>
 
 			<tr>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><input
 					type="checkbox" name="checkbox"
-					value="<%=t.getTickler_no()%>"></TD>
+					value="<%=t.getId()%>"></TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><a
 					href=#
-					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=t.getDemographic_no()%>&displaymode=edit&dboperation=search_detail')"><%=d.getLastName()%>,<%=d.getFirstName()%></a></TD>
+					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=t.getDemographicNo()%>&displaymode=edit&dboperation=search_detail')"><%=d.getLastName()%>,<%=d.getFirstName()%></a></TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><%=provider%></TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>">
 				<%
-		java.util.Date service_date = t.getService_date();
-		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-		String service_date_str = dateFormat2.format(service_date);
-		out.print(service_date_str);
-	%>
+					java.util.Date service_date = t.getServiceDate();
+						SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+						String service_date_str = dateFormat2.format(service_date);
+						out.print(service_date_str);
+				%>
 				</TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>">
 				<%
-		service_date = t.getUpdate_date();
-		dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-		service_date_str = dateFormat2.format(service_date);
-		out.print(service_date_str);
-	%>
+					service_date = t.getUpdateDate();
+						dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+						service_date_str = dateFormat2.format(service_date);
+						out.print(service_date_str);
+				%>
 				</TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getPriority()%></TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><%=taskAssignedTo%></TD>
@@ -557,11 +557,10 @@ for (Tickler t:ticklers) {
 				<TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getMessage()%></TD>
 			</tr>
         <%
-
-                boolean ticklerEditEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("tickler_edit_enabled")); 
-                Set<TicklerComment> tcomments = t.getComments();
-                if (ticklerEditEnabled && !tcomments.isEmpty()) {
-                    for (TicklerComment tc : tcomments) {
+        	boolean ticklerEditEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("tickler_edit_enabled")); 
+                        Set<TicklerComment> tcomments = t.getComments();
+                        if (ticklerEditEnabled && !tcomments.isEmpty()) {
+                            for (TicklerComment tc : tcomments) {
         %>
                         <tr>
                             <td width="3%" ROWSPAN="1" class="<%=cellColour%>"></td>

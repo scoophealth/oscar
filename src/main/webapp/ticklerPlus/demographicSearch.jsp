@@ -36,7 +36,7 @@
 	String elementId=request.getParameter("elementId");
 	formName=(formName!=null)?formName:"ticklerForm";
 	elementName=(elementName!=null)?elementName:"tickler.demographic_webName";
-	elementId=(elementId!=null)?elementId:"tickler.demographic_no";
+	elementId=(elementId!=null)?elementId:"tickler.demographicNo";
 %>
 </head>
 <body onload="document.ADDAPPT.submit();">

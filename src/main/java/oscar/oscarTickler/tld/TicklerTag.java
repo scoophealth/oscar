@@ -29,8 +29,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.oscarehr.util.SpringUtils;
 
 
 /**
@@ -46,10 +47,8 @@ public class TicklerTag extends TagSupport {
 
    public int doStartTag() throws JspException    {
 	    if(providerNo!=null){
-	       org.caisi.service.TicklerManager tcm = (org.caisi.service.TicklerManager) WebApplicationContextUtils.getWebApplicationContext(
-     		 pageContext.getServletContext()).getBean("ticklerManagerT");
-	       
-	       numNewLabs= tcm.getActiveTicklerCount(providerNo);
+	    	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	       numNewLabs = ticklerManager.getActiveTicklerCount(providerNo);
 	    }  
 	   
         try        {

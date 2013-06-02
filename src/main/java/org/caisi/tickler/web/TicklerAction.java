@@ -39,35 +39,34 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.model.CustomFilter;
-import org.caisi.model.Tickler;
 import org.caisi.service.DemographicManagerTickler;
-import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.EChartDao;
+import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
 public class TicklerAction extends DispatchAction {
     private static Logger log = MiscUtils.getLogger();
-    private TicklerManager ticklerMgr = null;
+    private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
     private ProviderManager providerMgr = null;
     private PreparedTicklerManager preparedTicklerMgr = null;
     private DemographicManagerTickler demographicMgr = null;
     private EChartDao echartDao = null;
     private ProgramManager programMgr = null;
 
-    public void setTicklerManager(TicklerManager ticklerManager) {
-        this.ticklerMgr = ticklerManager;
-    }
+
 
     public void setDemographicManager(DemographicManagerTickler demographicManager) {
         this.demographicMgr = demographicManager;
@@ -108,11 +107,16 @@ public class TicklerAction extends DispatchAction {
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         log.debug("view");
         String tickler_id = request.getParameter("id");
-        Tickler tickler = ticklerMgr.getTickler(tickler_id);
+        Tickler tickler = ticklerManager.getTickler(tickler_id);
         request.setAttribute("tickler", tickler);
+        
+        
         // only active providers listed in the program stuff can be assigned
-        if (tickler.getProgram_id()!=null) request.setAttribute("providers", providerMgr.getActiveProviders(null, tickler.getProgram_id().toString()));
-        else request.setAttribute("providers", providerMgr.getActiveProviders());
+        if (tickler.getProgramId()!=null) 
+        	request.setAttribute("providers", providerMgr.getActiveProviders(null, tickler.getProgramId().toString()));
+        else 
+        	request.setAttribute("providers", providerMgr.getActiveProviders());
+        
         request.setAttribute("from", getFrom(request));
 
         return mapping.findForward("view");
@@ -126,7 +130,7 @@ public class TicklerAction extends DispatchAction {
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
 
         //view tickler from CME
-        String filter_clientId = filter.getDemographic_no();
+        String filter_clientId = filter.getDemographicNo();
         String filter_clientName = filter.getDemographic_webName();
         if (filter_clientId != null && !"".equals(filter_clientId)) {
         	if (filter_clientName == null || "".equals(filter_clientName)) {
@@ -143,19 +147,14 @@ public class TicklerAction extends DispatchAction {
         List<Program> programs=programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true);
         request.setAttribute("programs", programs);
 
-        // if program selected default to first
-        //if (filter.getProgramId()==null || filter.getProgramId().length()==0)
-        //{
-        //    if (programs.size()>0) filter.setProgramId(String.valueOf(programs.get(0).getId()));
-        //}
 
-        List<Tickler> ticklers = ticklerMgr.getTicklers(filter,providerId, programId);
+        List<Tickler> ticklers = ticklerManager.getTicklers(filter,providerId, programId);
 
-        List cf = ticklerMgr.getCustomFilters(this.getProviderNo(request));
+        List<CustomFilter> cf = ticklerManager.getCustomFilters(this.getProviderNo(request));
         // make my tickler filter
         boolean myticklerexisted = false;
         for (int i = 0; i < cf.size(); i++) {
-            if ((((CustomFilter) (cf.get(i))).getName()).equals("*Myticklers*")) {
+            if ((cf.get(i).getName()).equals("*Myticklers*")) {
                 myticklerexisted = true;
             }
         }
@@ -163,18 +162,18 @@ public class TicklerAction extends DispatchAction {
 
             CustomFilter myfilter = new CustomFilter();
             myfilter.setName("*Myticklers*");
-            myfilter.setStartDate("");
+            myfilter.setStartDateWeb("");
             // myfilter.setEnd_date(new Date(System.currentTimeMillis()));
-            myfilter.setEndDate("");
+            myfilter.setEndDateWeb("");
             myfilter.setProviderNo(this.getProviderNo(request));
             myfilter.setStatus("A");
             myfilter.setPriority("");
             myfilter.setClient("");
             myfilter.setAssignee((String) request.getSession().getAttribute("user"));
             myfilter.setDemographic_webName("");
-            myfilter.setDemographic_no("");
+            myfilter.setDemographicNo("");
             myfilter.setProgramId("");
-            ticklerMgr.saveCustomFilter(myfilter);
+            ticklerManager.saveCustomFilter(myfilter);
         }
 
         String filter_order = (String) request.getSession().getAttribute("filter_order");
@@ -184,7 +183,7 @@ public class TicklerAction extends DispatchAction {
             request.setAttribute("demographics", demographicMgr.getDemographics());
         }
 
-		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
+		request.setAttribute("customFilters", ticklerManager.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));
         request.getSession().setAttribute("filter_order", filter_order);
         return mapping.findForward("list");
@@ -197,7 +196,7 @@ public class TicklerAction extends DispatchAction {
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
         filter.setStartDate(null);
-        filter.setEnd_date(new Date(System.currentTimeMillis()));
+        filter.setEndDate(new Date(System.currentTimeMillis()));
         filter.setProvider(null);
         filter.setStatus("A");
         filter.setPriority(null);
@@ -207,7 +206,7 @@ public class TicklerAction extends DispatchAction {
         filter.setProgramId(null);
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
-        List<Tickler> ticklers = ticklerMgr.getTicklers(filter,providerId,programId);
+        List<Tickler> ticklers = ticklerManager.getTicklers(filter,providerId,programId);
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         if( OscarProperties.getInstance().getBooleanProperty("clientdropbox","on") ) {
@@ -216,7 +215,7 @@ public class TicklerAction extends DispatchAction {
 
 		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true));
 
-		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
+		request.setAttribute("customFilters", ticklerManager.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));
         return mapping.findForward("list");
     }
@@ -227,7 +226,7 @@ public class TicklerAction extends DispatchAction {
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
         String name = filter.getName();
         // CustomFilter newFilter = ticklerMgr.getCustomFilter(name);
-        CustomFilter newFilter = ticklerMgr.getCustomFilter(name, this.getProviderNo(request));
+        CustomFilter newFilter = ticklerManager.getCustomFilter(name, this.getProviderNo(request));
 
         /*
          * String filterId = Long.toString(filter.getId()); CustomFilter newFilter = ticklerMgr.getCustomFilterById(Integer.valueOf(filterId));
@@ -244,10 +243,10 @@ public class TicklerAction extends DispatchAction {
         log.debug("reassign");
 
         String id = request.getParameter("id");
-        String reassignee = request.getParameter("tickler.task_assigned_to");
+        String reassignee = request.getParameter("tickler.taskAssignedTo");
         log.debug("reassign by" + id);
 
-        ticklerMgr.reassign(id, getProviderNo(request), reassignee);
+        ticklerManager.reassign(Integer.parseInt(id), getProviderNo(request), reassignee);
 
         DynaActionForm ticklerForm = (DynaActionForm) form;
         ticklerForm.set("tickler", new Tickler());
@@ -261,7 +260,7 @@ public class TicklerAction extends DispatchAction {
         String[] checks = request.getParameterValues("checkbox");
 
         for (int x = 0; x < checks.length; x++) {
-            ticklerMgr.deleteTickler(checks[x], getProviderNo(request));
+        	ticklerManager.deleteTickler(Integer.parseInt(checks[x]), getProviderNo(request));
         }
         return filter(mapping, form, request, response);
     }
@@ -274,7 +273,7 @@ public class TicklerAction extends DispatchAction {
         String message = request.getParameter("comment");
         log.debug("add_comment:" + id + "," + message);
 
-        ticklerMgr.addComment(id, getProviderNo(request), message);
+        ticklerManager.addComment(Integer.parseInt(id), getProviderNo(request), message);
 
         return view(mapping, form, request, response);
     }
@@ -285,7 +284,7 @@ public class TicklerAction extends DispatchAction {
         String[] checks = request.getParameterValues("checkbox");
 
         for (int x = 0; x < checks.length; x++) {
-            ticklerMgr.completeTickler(checks[x], getProviderNo(request));
+        	ticklerManager.completeTickler(Integer.parseInt(checks[x]), getProviderNo(request));
         }
         return filter(mapping, form, request, response);
     }
@@ -312,7 +311,7 @@ public class TicklerAction extends DispatchAction {
 
         // set the program which the tickler was written in if there is a program.
         String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
-        if (programIdStr != null) tickler.setProgram_id(Integer.valueOf(programIdStr));
+        if (programIdStr != null) tickler.setProgramId(Integer.valueOf(programIdStr));
 
         /* get service time */
         String service_hour = request.getParameter("tickler.service_hour");
@@ -320,19 +319,19 @@ public class TicklerAction extends DispatchAction {
         String service_ampm = request.getParameter("tickler.service_ampm");
         tickler.setServiceTime(service_hour + ":" + service_minute + " " + service_ampm);
 
-        tickler.setUpdate_date(new java.util.Date());
+        tickler.setUpdateDate(new java.util.Date());
 
-        ticklerMgr.addTickler(tickler);
+        ticklerManager.addTickler(tickler);
 
         String echart = request.getParameter("echart");
         if (echart != null && echart.equals("true")) {
-            Provider assignee = providerMgr.getProvider(tickler.getTask_assigned_to());
+            Provider assignee = providerMgr.getProvider(tickler.getTaskAssignedTo());
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yy : hh:mm a");
 
             /* get current chart */
-            EChart tempChart = echartDao.getLatestChart(Integer.parseInt(tickler.getDemographic_no()));
+            EChart tempChart = echartDao.getLatestChart(tickler.getDemographicNo());
             String postedDate = "";
             if (tempChart != null) {
                 postedDate = formatter.format(tempChart.getTimestamp());
@@ -363,7 +362,7 @@ public class TicklerAction extends DispatchAction {
                 buf.append("[" + today + " .: ]");
                 buf.append("\n");
             }
-            buf.append("Message from  [" + user.getFormattedName() + "] to [" + assignee.getFormattedName() + "] [assigned " + formatter2.format(tickler.getUpdate_date()) + "]\n");
+            buf.append("Message from  [" + user.getFormattedName() + "] to [" + assignee.getFormattedName() + "] [assigned " + formatter2.format(tickler.getUpdateDate()) + "]\n");
             buf.append("'" + tickler.getMessage() + "'");
             chart.setEncounter(buf.toString());
             chart.setId(null);
@@ -375,15 +374,15 @@ public class TicklerAction extends DispatchAction {
         saveMessages(request, messages);
 
 		CustomFilter filter = new CustomFilter();
-        filter.setDemographic_no(tickler.getDemographic_no());
+        filter.setDemographicNo(tickler.getDemographicNo().toString());
         filter.setDemographic_webName(tickler.getDemographic_webName());
-        filter.setEnd_date(null);
+        filter.setEndDate(null);
 		ticklerForm.set("filter", filter);
 		ticklerForm.set("tickler", new Tickler());
       //  return filter(mapping, form, request, response);
         ActionForward af = new ActionForward();
         af.setRedirect(true);
-        af.setPath("/Tickler.do?tickler.demographic_webName="+tickler.getDemographic_webName()+"&tickler.demographic_no="+tickler.getDemographic_no());
+        af.setPath("/Tickler.do?tickler.demographic_webName="+tickler.getDemographic_webName()+"&tickler.demographicNo="+tickler.getDemographicNo());
         return af;
 
     }
@@ -405,7 +404,7 @@ public class TicklerAction extends DispatchAction {
         PreparedTickler pt = preparedTicklerMgr.getTickler(name);
 
         if (pt != null) {
-            pt.setDependency("ticklerManager", ticklerMgr);
+            pt.setDependency("ticklerManager", ticklerManager);
             pt.setDependency("providerManager", providerMgr);
             ActionForward af = pt.execute(mapping, form, request, response);
             if (af != null) {
@@ -425,13 +424,13 @@ public class TicklerAction extends DispatchAction {
 
         switch (status) {
             case 'A':
-                ticklerMgr.activateTickler(id, getProviderNo(request));
+                ticklerManager.activateTickler(Integer.parseInt(id), getProviderNo(request));
                 break;
             case 'C':
-                ticklerMgr.completeTickler(id, getProviderNo(request));
+            	ticklerManager.completeTickler(Integer.parseInt(id), getProviderNo(request));
                 break;
             case 'D':
-                ticklerMgr.deleteTickler(id, getProviderNo(request));
+            	ticklerManager.deleteTickler(Integer.parseInt(id), getProviderNo(request));
                 break;
         }
         return this.view(mapping, form, request, response);

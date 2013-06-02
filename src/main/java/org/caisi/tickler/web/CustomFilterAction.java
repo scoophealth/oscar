@@ -37,30 +37,27 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.model.CustomFilter;
 import org.caisi.service.DemographicManagerTickler;
-import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 public class CustomFilterAction extends DispatchAction {
 
 	private static Logger log = MiscUtils.getLogger();
-	private TicklerManager ticklerMgr = null;
 	private ProviderManager providerMgr = null;
 	private DemographicManagerTickler demographicMgr = null;
 	private ProgramManager programMgr = null;
-
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	
 
 	public void setProgramManager(ProgramManager programMgr) {
 		this.programMgr = programMgr;
-	}
-
-	public void setTicklerManager(TicklerManager ticklerManager) {
-		this.ticklerMgr = ticklerManager;
 	}
 
 	public void setDemographicManager(DemographicManagerTickler demographicManager) {
@@ -94,55 +91,22 @@ public class CustomFilterAction extends DispatchAction {
 			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("list");
 
-		request.setAttribute("custom_filters",ticklerMgr.getCustomFilters(this.getProviderNo(request)));
+		request.setAttribute("custom_filters",ticklerManager.getCustomFilters(this.getProviderNo(request)));
 		return mapping.findForward("customFilterList");
 	}
-/*
-	public ActionForward edit(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		log.debug("edit");
 
-		String name = request.getParameter("name");
-		if(name != null && !name.equals("")) {
-			CustomFilter filter = ticklerMgr.getCustomFilter(name);
-			// get the demographic
-			String demo_no=filter.getDemographic_no();
-			if(!(demo_no.equals(""))&&demo_no!=null)
-			{
-			Demographic demographic = demographicMgr.getDemographic(demo_no);
-			if(demographic != null) {
-				filter.setDemographic_webName(demographic.getFormattedName());
-			}}
-			else
-				filter.setDemographic_webName("");
-
-			DynaActionForm filterForm = (DynaActionForm)form;
-			filterForm.set("filter",filter);
-			request.setAttribute("customFilterForm",filterForm);
-			request.setAttribute("custom_filter",filter);
-			request.setAttribute("me_no",(String)request.getSession().getAttribute("user"));
-			request.setAttribute("me",providerMgr.getProvider((String)request.getSession().getAttribute("user")).getFormattedName());
-		}
-
-		request.setAttribute("providers",providerMgr.getProviders());
-		request.setAttribute("priorityList",CustomFilter.priorityList);
-		request.setAttribute("statusList",CustomFilter.statusList);
-
-		return mapping.findForward("customFilterForm");
-	}
-*/
 
         public ActionForward changeShortCutStatus(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
             log.debug("changeShortCutStatus");
             String id = request.getParameter("id");
             if(id != null && !id.equals("")) {
-                CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
+                CustomFilter filter = ticklerManager.getCustomFilterById(Integer.valueOf(id));
                 filter.setShortcut(!filter.isShortcut());
-                ticklerMgr.saveCustomFilter(filter);
+                ticklerManager.saveCustomFilter(filter);
                 log.debug("Filter :"+filter.getName()+" shortcut now set to "+filter.isShortcut());
             }
-            request.setAttribute("custom_filters",ticklerMgr.getCustomFilters(this.getProviderNo(request)));
+            request.setAttribute("custom_filters",ticklerManager.getCustomFilters(this.getProviderNo(request)));
             return mapping.findForward("customFilterList");
         }
 
@@ -152,9 +116,9 @@ public class CustomFilterAction extends DispatchAction {
 
 		String id = request.getParameter("id");
 		if(id != null && !id.equals("")) {
-			CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
+			CustomFilter filter = ticklerManager.getCustomFilterById(Integer.valueOf(id));
 			/* get the demographic */
-			String demo_no=filter.getDemographic_no();
+			String demo_no=filter.getDemographicNo();
 
 			if(!("".equals(demo_no))&&demo_no!=null)
 			{
@@ -197,7 +161,7 @@ public class CustomFilterAction extends DispatchAction {
         CustomFilter filter = (CustomFilter)filterForm.get("filter");
 
         if("".equals(filter.getDemographic_webName())) {
-        	filter.setDemographic_no("");
+        	filter.setDemographicNo("");
         }
         String[] providers = request.getParameterValues("provider");
         if(providers != null) {
@@ -221,7 +185,7 @@ public class CustomFilterAction extends DispatchAction {
         if("All Programs".equals(filter.getProgramId())) {
         	filter.setProgramId("");
         }
-        ticklerMgr.saveCustomFilter(filter);
+        ticklerManager.saveCustomFilter(filter);
 
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("filter.saved"));
@@ -239,7 +203,7 @@ public class CustomFilterAction extends DispatchAction {
 
 		for(int x=0;x<checks.length;x++) {
 			//ticklerMgr.deleteCustomFilter(checks[x]);
-			ticklerMgr.deleteCustomFilterById(Integer.valueOf(checks[x]));
+			ticklerManager.deleteCustomFilterById(Integer.valueOf(checks[x]));
 
 		}
 		return list(mapping,form,request,response);

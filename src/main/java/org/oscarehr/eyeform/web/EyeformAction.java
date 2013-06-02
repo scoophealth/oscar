@@ -46,8 +46,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -85,6 +83,7 @@ import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
+import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.service.PdfRecordPrinter;
 import org.oscarehr.common.web.ContactAction;
 import org.oscarehr.eyeform.MeasurementFormatter;
@@ -103,6 +102,7 @@ import org.oscarehr.eyeform.model.EyeformProcedureBook;
 import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.eyeform.model.SatelliteClinic;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -140,10 +140,10 @@ public class EyeformAction extends DispatchAction {
 	BillingreferralDao billingreferralDao = (BillingreferralDao) SpringUtils.getBean("billingreferralDao");
 	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
-	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
 	CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-
+	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	
 	   public ActionForward getConReqCC(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		   String requestId = request.getParameter("requestId");
 		   ConsultationRequestExtDao dao = (ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
@@ -1283,13 +1283,8 @@ public class EyeformAction extends DispatchAction {
 			Date now = new Date();
 
 			tkl.setCreator(providerNo);
-			tkl.setDemographic_no(demoNo);
-			tkl.setPriority("Normal");
-			tkl.setService_date(now);
-			tkl.setStatus('A');
-			tkl.setTask_assigned_to(providerNo);
-			tkl.setUpdate_date(now);
-
+			tkl.setDemographicNo(Integer.parseInt(demoNo));
+			tkl.setTaskAssignedTo(providerNo);
 			StringBuilder mes = new StringBuilder();
 			mes.append("Remember to <a href=\"javascript:void(0)\" onclick=\"window.open(\'");
 			String[] slist = bsurl.trim().split("/");
@@ -1308,19 +1303,15 @@ public class EyeformAction extends DispatchAction {
 			}
 			mes.append("</a>");
 			tkl.setMessage(mes.toString());
-			ticklerDao.saveTickler(tkl);
+			ticklerManager.addTickler(tkl);
 		}
 
 		public void sendFrontTickler(String flag, String demoNo, String providerNo, String creator, String bsurl) {
 			Tickler tkl = new Tickler();
-			Date now = new Date();
 			tkl.setCreator(creator);
-			tkl.setDemographic_no(demoNo);
-			tkl.setPriority("Normal");
-			tkl.setService_date(now);
-			tkl.setStatus('A');
-			tkl.setTask_assigned_to(providerNo);
-			tkl.setUpdate_date(now);
+			tkl.setDemographicNo(Integer.parseInt(demoNo));
+			tkl.setTaskAssignedTo(providerNo);
+			
 			StringBuilder mes = new StringBuilder();
 			mes.append("Arrange <a href=\"javascript:void(0)\" onclick=\"window.open(\'");
 			String[] slist = bsurl.trim().split("/");
@@ -1334,7 +1325,7 @@ public class EyeformAction extends DispatchAction {
 			}
 			mes.append("</a>");
 			tkl.setMessage(mes.toString());
-			ticklerDao.saveTickler(tkl);
+			ticklerManager.addTickler(tkl);
 		}
 
 		public String wrap(String in,int len) {

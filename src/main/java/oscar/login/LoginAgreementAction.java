@@ -39,6 +39,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.service.AcceptableUseAgreementManager;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -50,16 +51,8 @@ import oscar.log.LogConst;
 public class LoginAgreementAction extends DispatchAction {
     private static final Logger _logger = Logger.getLogger(LoginAgreementAction.class);
 
-    private ProviderDao providerDao;
-
-    public void setProviderDao(ProviderDao providerDao) {
-        this.providerDao = providerDao;
-    }
-
-    public ProviderDao getProviderDao() {
-        return this.providerDao;
-    }
-
+    private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
         String userAgreement = request.getParameter("submit");

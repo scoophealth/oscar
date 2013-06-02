@@ -48,8 +48,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.CriteriaDao;
 import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDao;
@@ -91,6 +89,8 @@ import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.FunctionalCentre;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.match.IMatchManager;
 import org.oscarehr.match.MatchManager;
 import org.oscarehr.match.MatchManagerException;
@@ -124,6 +124,8 @@ public class ProgramManagerAction extends DispatchAction {
 	//private static CriteriaTypeDao criteriaTypeDAO = SpringUtils.getBean(CriteriaTypeDao.class);
 	private static CriteriaTypeOptionDao criteriaTypeOptionDAO = SpringUtils.getBean(CriteriaTypeOptionDao.class);
 	//private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean(CriteriaSelectionOptionDao.class);
+	
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 	
 	private IMatchManager matchManager = new MatchManager();
 	
@@ -957,34 +959,28 @@ public class ProgramManagerAction extends DispatchAction {
     private void createWaitlistWithdrawnNotificationTickler(Facility facility, Vacancy vacancy) {
         Tickler t = new Tickler();
         t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-        t.setDemographic_no(facility.getVacancyWithdrawnTicklerDemographic().toString());
-        t.setMessage("vacancy=["+vacancy.getName()+"] withdrawn");
-        t.setPriority("Normal");
-        t.setProgram_id(vacancy.getWlProgramId());
-        t.setService_date(new Date());
-        t.setStatus('A');
-        t.setTask_assigned_to(facility.getVacancyWithdrawnTicklerProvider());
-        t.setUpdate_date(new Date());
-        
-        TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
-        dao.saveTickler(t);
+        t.setDemographicNo(facility.getVacancyWithdrawnTicklerDemographic());
+        t.setMessage("vacancy=["+vacancy.getName()+"] withdrawn");      
+        t.setProgramId(vacancy.getWlProgramId());
+        t.setServiceDate(new Date());     
+        t.setTaskAssignedTo(facility.getVacancyWithdrawnTicklerProvider());
+        t.setUpdateDate(new Date());
+     
+        ticklerManager.addTickler(t);
     }
 
 	
 	private void createWaitlistNotificationTickler(Facility facility, Vacancy vacancy) {
 		Tickler t = new Tickler();
 		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-		t.setDemographic_no(facility.getAssignNewVacancyTicklerDemographic().toString());
+		t.setDemographicNo(facility.getAssignNewVacancyTicklerDemographic());
 		t.setMessage("New vacancy=["+vacancy.getName()+"]");
-		t.setPriority("Normal");
-		t.setProgram_id(vacancy.getWlProgramId());
-		t.setService_date(new Date());
-		t.setStatus('A');
-		t.setTask_assigned_to(facility.getAssignNewVacancyTicklerProvider());
-		t.setUpdate_date(new Date());
+		t.setProgramId(vacancy.getWlProgramId());
+		t.setServiceDate(new Date());
+		t.setTaskAssignedTo(facility.getAssignNewVacancyTicklerProvider());
+		t.setUpdateDate(new Date());
 		
-		TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
-		dao.saveTickler(t);
+		ticklerManager.addTickler(t);
 	}
 	
 	public ActionForward save_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

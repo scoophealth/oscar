@@ -22,19 +22,18 @@
     Toronto, Ontario, Canada
 
 --%>
-<%-- Updated by Eugene Petruhin on 11 dec 2008 while fixing #2356548 & #2393547 --%>
-<%-- Updated by Eugene Petruhin on 19 dec 2008 while fixing #2422864 & #2317933 & #2379840 --%>
-<%-- Updated by Eugene Petruhin on 22 dec 2008 while fixing #2455143 --%>
-<%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
+
 
 <%@ include file="/ticklerPlus/header.jsp"%>
 
+<%@ page import="org.oscarehr.common.model.Tickler" %>
+
 <%@ page import="java.util.Calendar"%>
-			<%
-			Calendar now = Calendar.getInstance();
-			int curYear = now.get(Calendar.YEAR);
-			int curMonth = now.get(Calendar.MONTH) + 1;
-			%>
+<%
+	Calendar now = Calendar.getInstance();
+int curYear = now.get(Calendar.YEAR);
+int curMonth = now.get(Calendar.MONTH) + 1;
+%>
 
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../js/checkDate.js"></script>
@@ -42,12 +41,12 @@
 <script>
 	//filter for client - will work for other dropdowns as well
 	function filter(term, _id, cellNr) {
-
 		var suche = term.toLowerCase();
+		
 		//suche = trimAll(suche);
-		//alert(suche.length + suche  + _id + cellNr);
-
+		
 		var table = document.getElementById(_id);
+
 
 		if (suche.length < 2) {
 			for (var r = 1; r < table.rows.length; r++)
@@ -57,13 +56,18 @@
 
 		var ele;
 		for (var r = 1; r < table.rows.length - 1; r++){
-			//alert(table.rows.length +  table.rows[0].cells[2].innerHTML);
 			ele = table.rows[r].cells[cellNr].innerHTML.replace(/<[^>]+>/g,"");
-
-			if (ele.toLowerCase().indexOf(suche)>=0 )
+			
+			if (ele.toLowerCase().indexOf(suche)>=0 ) {
+				//alert('found-'+ele);
 				table.rows[r].style.display = '';
-			else table.rows[r].style.display = 'none';
+			}
+			else { 
+				//alert('not found-'+ele);
+				table.rows[r].style.display = 'none';
+			}
 		}
+		
 	}
 
 	function batch_operation(method) {
@@ -87,10 +91,10 @@
 
 	function checkTicklerDate() {
 		//2007-10-05
-		var startDate = document.ticklerForm.elements['filter.startDate'].value;
-		var endDate = document.ticklerForm.elements['filter.endDate'].value;
+		var startDate = document.ticklerForm.elements['filter.startDateWeb'].value;
+		var endDate = document.ticklerForm.elements['filter.endDateWeb'].value;
 
-		if(check_date('filter.startDate') && check_date('filter.endDate')) {
+		if(check_date('filter.startDateWeb') && check_date('filter.endDateWeb')) {
 
 		  var sArray1=startDate.split("-");
 		  var sArray2=endDate.split("-");
@@ -134,8 +138,8 @@
         function search_demographic() {
                 var url = '<c:out value="${ctx}"/>/ticklerPlus/demographicSearch2.jsp?query=' + document.ticklerForm.elements['filter.demographic_webName'].value;
                 var popup = window.open(url,'demographic_search');
-                demo_no_orig = document.ticklerForm.elements['filter.demographic_no'].value;
-                check_demo_no = setInterval("if (demo_no_orig != document.ticklerForm.elements['filter.demographic_no'].value) updTklrList()",100);
+                demo_no_orig = document.ticklerForm.elements['filter.demographicNo'].value;
+                check_demo_no = setInterval("if (demo_no_orig != document.ticklerForm.elements['filter.demographicNo'].value) updTklrList()",100);
 
        			if (popup != null) {
     				if (popup.opener == null) {
@@ -152,7 +156,7 @@
         }
 
         function clearClientFilter() {
-            document.ticklerForm.elements['filter.demographic_no'].value = "";
+            document.ticklerForm.elements['filter.demographicNo'].value = "";
             document.ticklerForm.elements['filter.demographic_webName'].value = "";
             showClearButton();
             createReport();
@@ -199,12 +203,12 @@
 			<html:option value="D">Deleted</html:option>
 		</html:select></td>
 		<td class="blueText" width="30%"><span style="text-decoration:underline"
-			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDate&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin&nbsp;Date:</span>
-			<html:text property="filter.startDate" maxlength="10" /></td>
+			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDateWeb&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin&nbsp;Date:</span>
+			<html:text property="filter.startDateWeb" maxlength="10" /></td>
 
 		<td class="blueText" width="30%"><span style="text-decoration:underline"
-			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End&nbsp;Date:</span>
-			<html:text property="filter.endDate" maxlength="10"/>
+			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDateWeb&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End&nbsp;Date:</span>
+			<html:text property="filter.endDateWeb" maxlength="10"/>
 		</td>
 
 		<td width="10%">&nbsp;</td>
@@ -237,7 +241,7 @@
 		<td class="blueText" colspan="2">Client:
 
 		<oscar:oscarPropertiesCheck property="clientdropbox" value="on">
-		    <html:select property="filter.demographic_no"
+		    <html:select property="filter.demographicNo"
 			onchange="return checkTicklerDate();">
 			<option value="All Clients">All Clients</option>
 			<html:options collection="demographics" property="demographicNo" labelProperty="formattedName" />
@@ -245,7 +249,7 @@
 		</oscar:oscarPropertiesCheck>
 
 		<oscar:oscarPropertiesCheck property="clientdropbox" value="off" defaultVal="true">
-		    <html:hidden property="filter.demographic_no"/>
+		    <html:hidden property="filter.demographicNo"/>
 		    <html:text property="filter.demographic_webName" onkeyup="filter(this.value, 'ticklersTbl', 2)" size="15"/>
 		    <span id="clear_button"><input type="button" value="Clear" onclick="clearClientFilter();" /></span>
 		    <script language="JavaScript">showClearButton();</script>
@@ -270,7 +274,7 @@
 </table>
 
 <%
-	 //colour codes - html
+	//colour codes - html
 	 String[] ColourCodesArray=new String[3];
 	 ColourCodesArray[1]="red"; //red - High
 	 ColourCodesArray[2]="black"; //normal or low
@@ -289,7 +293,7 @@
 
 	 	for (int iLegend = 1; iLegend < 3; iLegend++){
 
-			legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><td> </td></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
+	legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><td> </td></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
 
 		}
 
@@ -309,17 +313,20 @@
 			<th class=noprint>Provider Name</th>
 
 			<%
-			String click_order = (String)session.getAttribute( "filter_order" );
+				String click_order = (String)session.getAttribute( "filter_order" );
 
-			if(click_order=="DESC") {%>
+				if(click_order=="DESC") {
+			%>
 				<input type="hidden" name="filter.sort_order" value="ASC" />
 				<%
-				session.setAttribute( "filter_order", "ASC" );
-			} else {%>
+					session.setAttribute( "filter_order", "ASC" );
+					} else {
+				%>
 				<input type="hidden" name="filter.sort_order" value="DESC" />
-				<% session.setAttribute( "filter_order", "DESC");
-			}
-			%>
+				<%
+					session.setAttribute( "filter_order", "DESC");
+					}
+				%>
 
 			<th class=noprint><a href="javascript:sortByDate();" class=noprint>Date</a></th>
 			<th class=noprint>Priority</th>
@@ -330,76 +337,73 @@
 		</tr>
 
 			<%
-			int index = 0;
-			String bgcolor;
-			String view_image;
+				int index = 0;
+				String bgcolor;
+				String view_image;
 			%>
 			<c:forEach var="tickler" items="${ticklers}">
 			<%
-			if (index++ % 2 != 0) {
-				bgcolor = "white";
-				view_image = "details.gif";
-			} else {
-				bgcolor = "#EEEEFF";
-				view_image = "details2.gif";
-			}
+				if (index++ % 2 != 0) {
+					bgcolor = "white";
+					view_image = "details.gif";
+				} else {
+					bgcolor = "#EEEEFF";
+					view_image = "details2.gif";
+				}
 			%>
-				<tr bgcolor="<%=bgcolor %>" align="center">
+				<tr bgcolor="<%=bgcolor%>" align="center">
 			<%
-			String demographic_name = "";
-			String provider_name = "";
-			String assignee_name = "";
-			String program_name = "";
-			String status = "Active";
-			String late_status = "b";
-			Tickler temp = (Tickler) pageContext.getAttribute("tickler");
-			if (temp != null) {
-				org.oscarehr.common.model.Demographic demographic = (org.oscarehr.common.model.Demographic) temp.getDemographic();
-				if (demographic != null) {
-					demographic_name = demographic.getLastName() + ","
-							+ demographic.getFirstName();
-				}
-				org.oscarehr.common.model.Provider provider = (org.oscarehr.common.model.Provider) temp.getProvider();
-				if (provider != null) {
-					provider_name = provider.getLastName() + ","
-							+ provider.getFirstName();
-				}
-				org.oscarehr.common.model.Provider assignee = (org.oscarehr.common.model.Provider) temp.getAssignee();
-				if (assignee != null) {
-					assignee_name = assignee.getLastName() + ","
-							+ assignee.getFirstName();
-				}
+				String demographic_name = "";
+				String provider_name = "";
+				String assignee_name = "";
+				String program_name = "";
+				String status = "Active";
+				String late_status = "b";
+				Tickler temp = (Tickler) pageContext.getAttribute("tickler");
+				if (temp != null) {
+					org.oscarehr.common.model.Demographic demographic = temp.getDemographic();
+					if (demographic != null) {
+						demographic_name = demographic.getLastName() + ","
+								+ demographic.getFirstName();
+					}
+					org.oscarehr.common.model.Provider provider = temp.getProvider();
+					if (provider != null) {
+						provider_name = provider.getLastName() + ","
+								+ provider.getFirstName();
+					}
+					org.oscarehr.common.model.Provider assignee = temp.getAssignee();
+					if (assignee != null) {
+						assignee_name = assignee.getLastName() + ","
+								+ assignee.getFirstName();
+					}
 
-				Program program = (Program) temp.getProgram();
-				if (program != null) {
-					program_name = program.getName();
-				}
-
-				switch (temp.getStatus()) {
-				case 'A':
+					Program program = temp.getProgram();
+					if (program != null) {
+						program_name = program.getName();
+					}
+					
 					status = "Active";
-					break;
-				case 'D':
-					status = "Deleted";
-					break;
-				case 'C':
-					status = "Completed";
-					break;
-				}
-				// add by PINE_SOFT
-				// get system date
-				Date sysdate = new java.util.Date();
-				Date service_date = (Date) temp.getService_date();
+					if(temp.getStatus().equals(Tickler.STATUS.C)) {
+						status = "Completed";
+					}
+					if(temp.getStatus().equals(Tickler.STATUS.D)) {
+						status = "Deleted";
+					}
 
-				if (!sysdate.before(service_date)) {
-					late_status = "a";
-				}
-			}
+					
+					// add by PINE_SOFT
+					// get system date
+					Date sysdate = new java.util.Date();
+					Date service_date = temp.getServiceDate();
 
+					if (!sysdate.before(service_date)) {
+						late_status = "a";
+					}
+				}
 			%>
 					<td ><input type="checkbox" name="checkbox"
-						value="<c:out value="${tickler.tickler_no}"/>" /></td>
-					<td><a href="../Tickler.do?method=view&id=<c:out value="${tickler.tickler_no}"/>"><img
+						value="<c:out value="${tickler.id}"/>" /></td>
+					<td><a href="../Tickler.do?method=view&id=<c:out value="${tickler.id}"/>"><img
 						align="right" src="<c:out value="${ctx}"/>/ticklerPlus/images/<%=view_image %>" border="0" />
 					</a></td>
 
@@ -413,7 +417,7 @@
 					<td style="<%=style%>"><%=demographic_name%></td>
 					<td style="<%=style%>" class=noprint><%=provider_name%></td>
 					<td style="<%=style%>" class=noprint><fmt:formatDate pattern="MM/dd/yy : hh:mm a"
-						value="${tickler.service_date}" /></td>
+						value="${tickler.serviceDate}" /></td>
 					<td style="<%=style%>" class=noprint><c:out value="${tickler.priority}" /></td>
 					<td style="<%=style%>" class=noprint><%=assignee_name%></td>
 					<td style="<%=style%>" class=noprint><%=status%></td>

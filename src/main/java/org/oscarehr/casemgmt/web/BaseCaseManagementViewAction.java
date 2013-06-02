@@ -39,7 +39,6 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.ClientImageManager;
-import org.oscarehr.casemgmt.service.TicklerManager;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -49,7 +48,6 @@ import com.quatro.service.security.RolesManager;
 public class BaseCaseManagementViewAction extends DispatchAction {
 
 	protected CaseManagementManager caseManagementMgr;
-	protected TicklerManager ticklerManager;
 	protected ClientImageManager clientImageMgr;
 	protected RolesManager roleMgr;
 	protected ProgramManager programMgr;
@@ -71,10 +69,6 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 
 	public void setCaseManagementManager(CaseManagementManager caseManagementMgr) {
 		this.caseManagementMgr = caseManagementMgr;
-	}
-
-	public void setTicklerManager(TicklerManager mgr) {
-		this.ticklerManager = mgr;
 	}
 
 	public void setClientImageManager(ClientImageManager mgr) {

@@ -105,8 +105,8 @@ function selectProvider(p,pn) {
 }
 
 function selectProviderCaisi(p,pn) {	
-	opener.document.ticklerForm.elements['tickler.task_assigned_to_name'].value=pn;
-	opener.document.ticklerForm.elements['tickler.task_assigned_to'].value=p;
+	opener.document.ticklerForm.elements['tickler.taskAssignedToName'].value=pn;
+	opener.document.ticklerForm.elements['tickler.taskAssignedTo'].value=p;
 	self.close();
 }
 

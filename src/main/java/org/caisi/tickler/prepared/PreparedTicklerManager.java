@@ -71,7 +71,7 @@ public class PreparedTicklerManager {
 		return pt;
 	}
 
-	public List getTicklers() {
+	public List<PreparedTickler> getTicklers() {
 		return ticklers;
 	}
 
