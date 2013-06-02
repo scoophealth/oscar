@@ -29,7 +29,6 @@
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_tasks"
@@ -73,50 +72,45 @@
 		<c:forEach var="tickler" items="${ticklers}">
 			<tr align="center">
 				<%
-			String demographic_name = "";
-			String provider_name = "";
-			String assignee_name = "";
-			String status = "Active";
-			String late_status = "b";			
-			Tickler temp = (Tickler) pageContext.getAttribute("tickler");
-			if (temp != null) {
-				Demographic demographic = (Demographic) temp.getDemographic();
-				if (demographic != null) {
-					demographic_name = demographic.getLastName() + ","
-							+ demographic.getFirstName();
-				}
-				Provider provider = (Provider) temp.getProvider();
-				if (provider != null) {
-					provider_name = provider.getLastName() + ","
-							+ provider.getFirstName();
-				}
-				Provider assignee = (Provider) temp.getAssignee();
-				if (assignee != null) {
-					assignee_name = assignee.getLastName() + ","
-							+ assignee.getFirstName();
-				}
-				switch (temp.getStatus()) {
-				case 'A':
-					status = "Active";
-					break;
-				case 'D':
-					status = "Deleted";
-					break;
-				case 'C':
-					status = "Completed";
-					break;
-				}
-				// add by PINE_SOFT
-				// get system date
-				Date sysdate = new java.util.Date();
-				Date service_date = (Date) temp.getService_date();
+					String demographic_name = "";
+					String provider_name = "";
+					String assignee_name = "";
+					String status = "Active";
+					String late_status = "b";			
+					Tickler temp = (Tickler) pageContext.getAttribute("tickler");
+					if (temp != null) {
+						Demographic demographic = temp.getDemographic();
+						if (demographic != null) {
+							demographic_name = demographic.getLastName() + ","
+									+ demographic.getFirstName();
+						}
+						Provider provider = temp.getProvider();
+						if (provider != null) {
+							provider_name = provider.getLastName() + ","
+									+ provider.getFirstName();
+						}
+						Provider assignee = temp.getAssignee();
+						if (assignee != null) {
+							assignee_name = assignee.getLastName() + ","
+									+ assignee.getFirstName();
+						}
+						status = "Active";
+						if(temp.getStatus().equals(Tickler.STATUS.C))
+							status="Completed";
+						if(temp.getStatus().equals(Tickler.STATUS.D))
+							status="Deleted";
+						
+						
+						// add by PINE_SOFT
+						// get system date
+						Date sysdate = new java.util.Date();
+						Date service_date = temp.getServiceDate();
 
-				if (!sysdate.before(service_date)) {
-					late_status = "a";
-				}
-			}
-
-			%>
+						if (!sysdate.before(service_date)) {
+							late_status = "a";
+						}
+					}
+				%>
 
 				<td><%=demographic_name%></td>
 				<td><%=provider_name%></td>

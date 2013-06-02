@@ -32,6 +32,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarTickler.TicklerData;
 
@@ -41,6 +44,8 @@ import oscar.oscarTickler.TicklerData;
  */
 public class AddTicklerAction extends Action {
    
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	
    public AddTicklerAction() {
    }
                    
@@ -58,12 +63,27 @@ public class AddTicklerAction extends Action {
       if (service_date == null) { service_date = "now()"; }
       if (priority == null) { priority = TicklerData.NORMAL;}
       if (task_assigned_to == null){ task_assigned_to = creator; }
-                  
-      TicklerData td = new TicklerData();                        
+            
+      Tickler.STATUS tStatus = Tickler.STATUS.A;
+      if(status.equals(TicklerData.COMPLETED)) {
+    	  tStatus = Tickler.STATUS.C;
+      }
+      if(status.equals(TicklerData.DELETED)) {
+    	  tStatus = Tickler.STATUS.D;
+      }
+      
+      Tickler.PRIORITY tPriority = Tickler.PRIORITY.Normal;
+      if(priority.equals(TicklerData.HIGH)) {
+    	  tPriority = Tickler.PRIORITY.High;
+      }
+      if(priority.equals(TicklerData.LOW)) {
+    	  tPriority = Tickler.PRIORITY.Low;
+      }
+      
       if (demos != null){
          for ( int i = 0; i < demos.length ; i++){
 
-            td.addTickler(demos[i],message,status,service_date,creator,priority,task_assigned_to);
+        	 ticklerManager.addTickler(demos[i],message,tStatus,service_date,creator,tPriority,task_assigned_to);
          }
       }         
       return mapping.findForward("close");                                    

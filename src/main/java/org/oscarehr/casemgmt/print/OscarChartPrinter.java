@@ -39,9 +39,6 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.CustomFilter;
-import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
@@ -59,12 +56,15 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -123,6 +123,8 @@ public class OscarChartPrinter {
     private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
     private PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean("preventionDao");
     private DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+    private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+    
 
 	public OscarChartPrinter(HttpServletRequest request, OutputStream os) throws DocumentException,IOException {
 		this.request = request;
@@ -653,10 +655,9 @@ public class OscarChartPrinter {
     }
 
     public void printTicklers() throws DocumentException {
-    	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
     	CustomFilter filter = new CustomFilter();
-    	filter.setDemographic_no(String.valueOf(demographic.getDemographicNo()));
-    	List<Tickler> ticklers = ticklerDao.getTicklers(filter);
+    	filter.setDemographicNo(String.valueOf(demographic.getDemographicNo()));
+    	List<Tickler> ticklers = ticklerManager.getTicklers(filter);
 
     	if(ticklers.size()==0) {
     		return;
@@ -673,9 +674,9 @@ public class OscarChartPrinter {
         for(Tickler tickler:ticklers) {
         	String providerName = tickler.getProvider().getFormattedName();
         	String assigneeName = tickler.getAssignee().getFormattedName();
-        	String serviceDate = tickler.getServiceDate();
-        	String priority = tickler.getPriority();
-        	char status = tickler.getStatus();
+        	String serviceDate = tickler.getServiceDateWeb();
+        	String priority = tickler.getPriority().toString();
+        	char status = tickler.getStatus().toString().charAt(0);
         	String message = tickler.getMessage();
 
 

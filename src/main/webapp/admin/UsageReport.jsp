@@ -39,8 +39,8 @@
 <%@page import="org.oscarehr.common.dao.DrugDao" %>
 <%@page import="org.oscarehr.common.dao.ProviderInboxRoutingDao" %>
 <%@page import="org.oscarehr.common.model.ProviderInboxItem" %>
-<%@page import="org.oscarehr.casemgmt.dao.TicklerDAO" %>
-<%@page import="org.caisi.model.CustomFilter" %>
+<%@page import="org.oscarehr.managers.TicklerManager" %>
+<%@page import="org.oscarehr.common.model.CustomFilter" %>
 <%@page import="org.oscarehr.common.dao.DocumentDao" %>
 <%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao" %>
 <%
@@ -52,12 +52,11 @@ CaseManagementNoteDAO caseManagementNoteDao 	=(CaseManagementNoteDAO)SpringUtils
 BillingDao billingDAO 							=(BillingDao)SpringUtils.getBean("billingDao");
 DrugDao drugDao 								= (DrugDao) SpringUtils.getBean("drugDao");
 ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) SpringUtils.getBean("providerInboxRoutingDAO");
-TicklerDAO ticklerDAO 							= (TicklerDAO) SpringUtils.getBean("ticklerDAO");
+TicklerManager ticklerManager					= SpringUtils.getBean(TicklerManager.class);
 DocumentDao documentDao							=(DocumentDao) SpringUtils.getBean("documentDao");
 ProviderDao providerDao 						= (ProviderDao)SpringUtils.getBean("providerDao");
 
 List<Provider> providers = providerDao.getActiveProviders();
-
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -94,14 +93,14 @@ List<Provider> providers = providerDao.getActiveProviders();
 					<label>Provider:</label>
 						<select name="providerNo">
 						<%
-						for(Provider provider:providers) {
-							String selected = new String();
-							if(providerNo != null && providerNo.equals(provider.getProviderNo())) {
-								selected=" selected=\"selected\" ";
+							for(Provider provider:providers) {
+											String selected = new String();
+											if(providerNo != null && providerNo.equals(provider.getProviderNo())) {
+												selected=" selected=\"selected\" ";
+											}
+						%><option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%></option><%
 							}
-							%><option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%></option><%
-						}
-					%>
+						%>
 						</select>
 
 					<label>Start Date</label><input type="text" name="startDate"   value="<%=request.getParameter("startDate")%>"/>
@@ -111,87 +110,85 @@ List<Provider> providers = providerDao.getActiveProviders();
 
 
             		<%
+            			if(providerNo != null){
+            						 DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+            						 List<Demographic> demoList = demographicDao.getDemographicByProvider( providerNo);
 
-					 if(providerNo != null){
-						 DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-						 List<Demographic> demoList = demographicDao.getDemographicByProvider( providerNo);
+            						 int total = demoList.size();
+            						 int a0to19  = 0;
+            						 int a0to19m  = 0;
+            						 int a0to19f  = 0;
 
-						 int total = demoList.size();
-						 int a0to19  = 0;
-						 int a0to19m  = 0;
-						 int a0to19f  = 0;
+            						 int a20to44 = 0;
+            						 int a20to44m = 0;
+            						 int a20to44f = 0;
 
-						 int a20to44 = 0;
-						 int a20to44m = 0;
-						 int a20to44f = 0;
+            						 int a45to64 = 0;
+            						 int a45to64m = 0;
+            						 int a45to64f = 0;
 
-						 int a45to64 = 0;
-						 int a45to64m = 0;
-						 int a45to64f = 0;
+            						 int a65to84 = 0;
+            						 int a65to84m = 0;
+            						 int a65to84f = 0;
 
-						 int a65to84 = 0;
-						 int a65to84m = 0;
-						 int a65to84f = 0;
+            						 int a85plus = 0;
+            						 int a85plusm = 0;
+            						 int a85plusf = 0;
 
-						 int a85plus = 0;
-						 int a85plusm = 0;
-						 int a85plusf = 0;
+            						 for(Demographic demo:demoList){
+            							 int age = demo.getAgeInYears();
+            							 String sex = demo.getSex();
 
-						 for(Demographic demo:demoList){
-							 int age = demo.getAgeInYears();
-							 String sex = demo.getSex();
-
-							 if(age <= 19){
-								 a0to19++;
-								 a0to19m = checkMale(sex,a0to19m);
-								 a0to19f = checkFemale(sex,a0to19f);
-							 }else if (age >= 20 && age <= 44){
-								 a20to44++;
-								 a20to44m = checkMale(sex,a20to44m);
-								 a20to44f = checkFemale(sex,a20to44f);
-							 }else if (age >= 45 && age <=64){
-								 a45to64++;
-								 a45to64m = checkMale(sex,a45to64m);
-								 a45to64f = checkFemale(sex,a45to64f);
-							 }else if (age >=65 && age <= 84){
-								 a65to84++;
-								 a65to84m = checkMale(sex,a65to84m);
-								 a65to84f = checkFemale(sex,a65to84f);
-							 }else{
-								 a85plus++;
-								 a85plusm = checkMale(sex,a85plusm);
-								 a85plusf = checkFemale(sex,a85plusf);
-							 }
-						 }
+            							 if(age <= 19){
+            								 a0to19++;
+            								 a0to19m = checkMale(sex,a0to19m);
+            								 a0to19f = checkFemale(sex,a0to19f);
+            							 }else if (age >= 20 && age <= 44){
+            								 a20to44++;
+            								 a20to44m = checkMale(sex,a20to44m);
+            								 a20to44f = checkFemale(sex,a20to44f);
+            							 }else if (age >= 45 && age <=64){
+            								 a45to64++;
+            								 a45to64m = checkMale(sex,a45to64m);
+            								 a45to64f = checkFemale(sex,a45to64f);
+            							 }else if (age >=65 && age <= 84){
+            								 a65to84++;
+            								 a65to84m = checkMale(sex,a65to84m);
+            								 a65to84f = checkFemale(sex,a65to84f);
+            							 }else{
+            								 a85plus++;
+            								 a85plusm = checkMale(sex,a85plusm);
+            								 a85plusf = checkFemale(sex,a85plusf);
+            							 }
+            						 }
 
 
-						 Date startDate = null;
-						 Date endDate   = null;
+            						 Date startDate = null;
+            						 Date endDate   = null;
 
-						 try{
-						 	startDate = UtilDateUtilities.StringToDate(request.getParameter("startDate"));
-						 	endDate   = UtilDateUtilities.StringToDate(request.getParameter("endDate"));
-						 }catch(Exception e){
-					 		startDate = null;
-					 		endDate   = null;
-						 }
+            						 try{
+            						 	startDate = UtilDateUtilities.StringToDate(request.getParameter("startDate"));
+            						 	endDate   = UtilDateUtilities.StringToDate(request.getParameter("endDate"));
+            						 }catch(Exception e){
+            					 		startDate = null;
+            					 		endDate   = null;
+            						 }
 
-						 int scheduledAppts       = appointmentDao.findByDateRangeAndProvider(startDate, endDate, providerNo).size();
-						 int billing              = billingONCHeader1Dao.getNumberOfDemographicsWithInvoicesForProvider(providerNo,startDate, endDate,true);
-						 int encounterNote        = caseManagementNoteDao.getNoteCountForProviderForDateRange(providerNo,startDate,endDate);
-						 int problemList          = caseManagementNoteDao.getNoteCountForProviderForDateRangeWithIssueId(providerNo,startDate,endDate,"Concerns");
-						 int storedDocuments      = documentDao.getNumberOfDocumentsAttachedToAProviderDemographics(providerNo, startDate, endDate);
-						 int rxNewRenewals        = drugDao.getNumberOfDemographicsWithRxForProvider(providerNo,startDate, endDate,true);
-						 int useOfRemindersAlerts = caseManagementNoteDao.getNoteCountForProviderForDateRangeWithIssueId(providerNo,startDate,endDate,"Reminders");
-						 	CustomFilter customFilter = new CustomFilter();
-						 	customFilter.setProvider(providerNo);
-						 	customFilter.setStart_date(startDate);
-						 	customFilter.setEnd_date(endDate);
-						 	useOfRemindersAlerts += ticklerDAO.getTicklers(customFilter).size();
+            						 int scheduledAppts       = appointmentDao.findByDateRangeAndProvider(startDate, endDate, providerNo).size();
+            						 int billing              = billingONCHeader1Dao.getNumberOfDemographicsWithInvoicesForProvider(providerNo,startDate, endDate,true);
+            						 int encounterNote        = caseManagementNoteDao.getNoteCountForProviderForDateRange(providerNo,startDate,endDate);
+            						 int problemList          = caseManagementNoteDao.getNoteCountForProviderForDateRangeWithIssueId(providerNo,startDate,endDate,"Concerns");
+            						 int storedDocuments      = documentDao.getNumberOfDocumentsAttachedToAProviderDemographics(providerNo, startDate, endDate);
+            						 int rxNewRenewals        = drugDao.getNumberOfDemographicsWithRxForProvider(providerNo,startDate, endDate,true);
+            						 int useOfRemindersAlerts = caseManagementNoteDao.getNoteCountForProviderForDateRangeWithIssueId(providerNo,startDate,endDate,"Reminders");
+            						 	CustomFilter customFilter = new CustomFilter();
+            						 	customFilter.setProvider(providerNo);
+            						 	customFilter.setStartDate(startDate);
+            						 	customFilter.setEndDate(endDate);
+            						 	useOfRemindersAlerts += ticklerManager.getTicklers(customFilter).size();
 
-						 int labs                 = providerInboxRoutingDao.howManyDocumentsLinkedWithAProvider(providerNo);
-
-					%>
+            						 int labs                 = providerInboxRoutingDao.howManyDocumentsLinkedWithAProvider(providerNo);
+            		%>
 
 					<div>
 					<h2>Practice Profile</h2>
@@ -281,8 +278,7 @@ List<Provider> providers = providerDao.getActiveProviders();
 	</body>
 </html>
 
-<%!
-String divide(int total, int count){
+<%!String divide(int total, int count){
 	double val = (float)count/total;
 	if(Double.isNaN(val)){
 		return "---";
@@ -303,5 +299,4 @@ int checkFemale(String sex,int count){
 		return (1+count);
 	}
 	return count;
-}
-%>
+}%>

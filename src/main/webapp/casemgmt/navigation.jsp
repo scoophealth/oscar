@@ -254,7 +254,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 
 <!-- add tickler -->
 <caisirole:SecurityAccess accessName="Write Ticklers" accessType="Action" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-    <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/Tickler.do?method=edit&tickler.demographic_webName=<%=StringEscapeUtils.escapeJavaScript(bean.getPatientLastName() +"," + bean.getPatientFirstName())%>&tickler.demographic_no=<%=bean.demographicNo%>');return false;">Add Tickler</a></td></tr>
+    <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/Tickler.do?method=edit&tickler.demographic_webName=<%=StringEscapeUtils.escapeJavaScript(bean.getPatientLastName() +"," + bean.getPatientFirstName())%>&tickler.demographicNo=<%=bean.demographicNo%>');return false;">Add Tickler</a></td></tr>
 </caisirole:SecurityAccess>
 
 <caisirole:SecurityAccess accessName="medical form" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">

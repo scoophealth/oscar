@@ -42,8 +42,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.VacancyDao;
@@ -78,6 +76,8 @@ import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.JointAdmission;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -99,6 +99,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 	private ProgramManagerAction programManagerAction;
 	private ProgramQueueManager programQueueManager;	
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -597,17 +598,14 @@ public class ProgramManagerViewAction extends DispatchAction {
 		Demographic d = demographicDao.getDemographic(clientId);
 		Tickler t = new Tickler();
 		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-		t.setDemographic_no(clientId);
+		t.setDemographicNo(Integer.parseInt(clientId));
 		t.setMessage("Client=["+d.getFormattedName()+"] rejected from vacancy=["+vacancy.getName()+"]");
-		t.setPriority("Normal");
-		t.setProgram_id(vacancy.getWlProgramId());
-		t.setService_date(new Date());
-		t.setStatus('A');
-		t.setTask_assigned_to(facility.getAssignRejectedVacancyApplicant());
-		t.setUpdate_date(new Date());
+		t.setProgramId(vacancy.getWlProgramId());
+		t.setServiceDate(new Date());
+		t.setTaskAssignedTo(facility.getAssignRejectedVacancyApplicant());
+		t.setUpdateDate(new Date());
 		
-		TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
-		dao.saveTickler(t);
+		ticklerManager.addTickler(t);
 	}
 
 	public ActionForward reject_from_queue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

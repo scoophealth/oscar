@@ -57,7 +57,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
-import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
@@ -93,6 +92,7 @@ import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.CaseManagementTmpSave;
+import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
@@ -106,12 +106,11 @@ import org.oscarehr.eyeform.dao.MacroDao;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.eyeform.model.Macro;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.provider.web.CppPreferencesUIBean;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import com.quatro.model.security.Secrole;
 
 import oscar.OscarProperties;
 import oscar.eform.EFormUtil;
@@ -120,6 +119,8 @@ import oscar.oscarEncounter.data.EctFormData.PatientForm;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 import oscar.util.ConversionUtils;
 import oscar.util.OscarRoleObjectPrivilege;
+
+import com.quatro.model.security.Secrole;
 
 /*
  * Updated by Eugene Petruhin on 21 jan 2009 while fixing missing "New Note" link
@@ -137,6 +138,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao) SpringUtils.getBean("caseManagementIssueNotesDao");
 	private BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
 	private NoteService noteService = SpringUtils.getBean(NoteService.class);
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 
 	static {
 		//temporary..need something generic;
@@ -444,7 +446,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		/* tickler */
 		if (tab != null && tab.equalsIgnoreCase("Ticklers")) {
 			CustomFilter cf = new CustomFilter();
-			cf.setDemographic_no(this.getDemographicNo(request));
+			cf.setDemographicNo(this.getDemographicNo(request));
 			cf.setStatus("A");
 			request.setAttribute("ticklers", ticklerManager.getTicklers(cf));
 		}

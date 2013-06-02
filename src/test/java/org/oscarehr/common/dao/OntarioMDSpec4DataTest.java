@@ -59,8 +59,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.Tickler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,6 +96,8 @@ import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -680,13 +680,14 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
 		ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 		PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
-		TicklerDAO ticklerDao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
 		MeasurementDao measurementsDao = SpringUtils.getBean(MeasurementDao.class);
 		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
 		SecUserRoleDao secuserroleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 		AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
 		DocumentDao documentDao = (DocumentDao) SpringUtils.getBean("documentDao");
 		CtlDocumentDao ctlDocumentDao = (CtlDocumentDao) SpringUtils.getBean("ctlDocumentDao");
+		TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+		
 
 		oscarProgramID = programDao.getProgramIdByProgramName("OSCAR");
 
@@ -1211,15 +1212,14 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
         //Overdue Preventive Care: Overdue for annual physical
         Tickler tickler = new Tickler();
-        tickler.setDemographic_no(""+juneElder.getDemographicNo());
+        tickler.setDemographicNo(juneElder.getDemographicNo());
         tickler.setCreator(drw.getProviderNo());
         tickler.setAssignee(drw);
         tickler.setMessage("Needs Annual Physical");
-        tickler.setProgram_id(oscarProgramID);
-        tickler.setStatus('A');
-        tickler.setService_date(lastWeek);
-        tickler.setUpdate_date(lastWeek);
-        ticklerDao.saveTickler(tickler);
+        tickler.setProgramId(oscarProgramID);
+        tickler.setServiceDate(lastWeek);
+        tickler.setUpdateDate(lastWeek);
+        ticklerManager.addTickler(tickler);
 
         //TODO:  Overdue Referral: Geriatrician
 

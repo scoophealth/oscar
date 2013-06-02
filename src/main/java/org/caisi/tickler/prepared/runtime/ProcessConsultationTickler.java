@@ -33,8 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.caisi.model.Tickler;
-import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.seaton.consultation.ConsultationConfiguration;
 import org.caisi.tickler.prepared.seaton.consultation.ConsultationsConfigBean;
@@ -43,6 +41,8 @@ import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.SpringUtils;
 
 public class ProcessConsultationTickler extends AbstractPreparedTickler implements PreparedTickler {
@@ -98,13 +98,10 @@ public class ProcessConsultationTickler extends AbstractPreparedTickler implemen
 			//Provider provider = providerMgr
 			//create a tickler here
 			Tickler tickler = new Tickler();
-			tickler.setStatus('A');
 			tickler.setCreator(providerNo);
-			tickler.setDemographic_no(formBean.getDemographic_no());
-			tickler.setPriority("Normal");
-			tickler.setService_date(new Date());
-			tickler.setTask_assigned_to(configBean.getProcessrequest().getRecipient());
-			tickler.setUpdate_date(new Date());
+			tickler.setDemographicNo(Integer.parseInt(formBean.getDemographic_no()));
+			tickler.setServiceDate(new Date());
+			tickler.setTaskAssignedTo(configBean.getProcessrequest().getRecipient());
 			String contextName = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath().substring(0, request.getContextPath().indexOf("/", 1));
 			tickler.setMessage("A consultation request has been made for <br/>" + formBean.getDemographic_name() + "<br/>to<br/>" + spec.getFirstName() + " " + spec.getLastName() + " <br/>ADDRESS:" + spec.getStreetAddress() + " <br/>PHONE:" + spec.getPhoneNumber() + " <br/>FAX:" + spec.getFaxNumber() + "<br/>Reason: " + consultation.getReasonForReferral() + "<br/><br/>" + "Please obtain an appointment, and enter the information into the consultation form, and update" + " the status to 'Nothing'." + "<br/>"
 			        + "<br/><a target=\"consultation\" href=\"" + contextName + "/oscarEncounter/ViewRequest.do?requestId=" + consultation.getId() + "\">Link to consultation</a>" + "<br/><a target=\"demographic\" href=\"" + contextName + "/demographic/demographiccontrol.jsp?displaymode=edit&demographic_no=" + formBean.getDemographic_no() + "&dboperation=search_detail\">Link to patient</a>");

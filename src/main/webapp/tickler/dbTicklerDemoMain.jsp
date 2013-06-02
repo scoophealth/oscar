@@ -27,13 +27,15 @@
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
 
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.caisi.model.Tickler" %>
-<%@ page import="org.caisi.dao.TicklerDAO" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.common.model.Tickler" %>
+<%@ page import="org.oscarehr.managers.TicklerManager" %>
+
 <%
-	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 %>
 <%
- String demoview = request.getParameter("demoview")==null?"all":request.getParameter("demoview") ;
+	String demoview = request.getParameter("demoview")==null?"all":request.getParameter("demoview") ;
  String parentAjaxId = request.getParameter("parentAjaxId")==null?"":request.getParameter("parentAjaxId");
  String updateParent = request.getParameter("updateParent")==null?"false":request.getParameter("updateParent");
 
@@ -46,19 +48,26 @@ if (temp== null){
          <jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
          <jsp:param name="updateParent" value="<%=updateParent%>" />
 </jsp:forward>
-<%}else{
+<%
+	}else{
 	for (int i=0; i<temp.length; i++){
 		param[0] = request.getParameter("submit_form").substring(0,1);
 		param[1] = temp[i];
-		Tickler t = ticklerDao.getTickler(Long.parseLong(temp[i]));
+		Tickler t = ticklerManager.getTickler(Integer.parseInt(temp[i]));
 		if(t != null) {
-			t.setStatus(request.getParameter("submit_form").toCharArray()[0]);
-			ticklerDao.saveTickler(t);
+	Tickler.STATUS status = Tickler.STATUS.A;
+        	char tmp = request.getParameter("submit_form").toCharArray()[0];
+        	if(tmp == 'C' || tmp == 'c') {
+        		status = Tickler.STATUS.C;
+        	}
+        	if(tmp == 'D' || tmp == 'd') {
+        		status = Tickler.STATUS.D;
+        	}
+        	ticklerManager.updateStatus(t.getId(),LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),status);
 		}
 
 	} //end for
 }
-
 %>
 <jsp:forward page='ticklerDemoMain.jsp'>
     <jsp:param name="demoview" value='<%=demoview%>' />

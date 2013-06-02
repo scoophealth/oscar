@@ -36,10 +36,11 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
-import org.caisi.model.Tickler;
+import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarTickler.TicklerData;
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
@@ -63,8 +64,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     String winName = "ViewTickler" + bean.demographicNo;
     String pathview, pathedit;
     if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
-    	pathview = request.getContextPath() + "/Tickler.do?filter.demographic_webName="+ encode(bean) +"&filter.demographic_no=" + bean.demographicNo +"&filter.assignee=";
-    	pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+ encode(bean) +"&tickler.demographic_no=" + bean.demographicNo;
+    	pathview = request.getContextPath() + "/Tickler.do?filter.demographic_webName="+ encode(bean) +"&filter.demographicNo=" + bean.demographicNo +"&filter.assignee=";
+    	pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+ encode(bean) +"&tickler.demographicNo=" + bean.demographicNo;
     }
     else {
         pathview = request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd;
@@ -84,8 +85,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     String dateBegin = "1900-01-01";
     String dateEnd = "8888-12-31";
 
-    TicklerData tickler = new TicklerData();
-    List<Tickler> ticklers = tickler.listTickler(bean.demographicNo, dateBegin, dateEnd);
+    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+    List<Tickler> ticklers = ticklerManager.findActiveByDemographicNo(Integer.parseInt(bean.demographicNo));
 
     Date serviceDate;
     Date today = new Date(System.currentTimeMillis());
@@ -94,7 +95,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     long days;
     for(Tickler t : ticklers) {
         NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
-        serviceDate = t.getService_date();
+        serviceDate = t.getServiceDate();
         item.setDate(serviceDate);
         days = (today.getTime() - serviceDate.getTime())/(1000*60*60*24);
         if( days > 0 )
@@ -107,7 +108,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         winName = StringUtils.maxLenString(t.getMessage(), MAX_LEN_TITLE, MAX_LEN_TITLE, "");
         hash = Math.abs(winName.hashCode());
         if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
-        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/Tickler.do?method=view&id="+t.getTickler_no()+"'); return false;";
+        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/Tickler.do?method=view&id="+t.getId()+"'); return false;";
         } else {
         	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";
         }

@@ -26,8 +26,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.dao.TicklerDAO;
-import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -42,7 +40,9 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DiagnosticCode;
 import org.oscarehr.common.model.EyeformMacro;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Tickler;
 import org.oscarehr.eyeform.model.EyeformMacroBillingItem;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -51,6 +51,8 @@ import oscar.util.StringUtils;
 
 public class EyeformUtilAction extends DispatchAction {
 
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	
 	public ActionForward getProviders(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 		List<Provider> activeProviders = providerDao.getActiveProviders();
@@ -69,14 +71,13 @@ public class EyeformUtilAction extends DispatchAction {
 
 
 	public ActionForward getTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		TicklerDAO ticklerDao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
-		Tickler t = ticklerDao.getTickler(Long.parseLong(request.getParameter("tickler_no")));
+		Tickler t = ticklerManager.getTickler(Integer.parseInt(request.getParameter("tickler_no")));
 
 		HashMap<String, HashMap<String, Object>> hashMap = new HashMap<String, HashMap<String, Object>>();
 		HashMap<String, Object> ticklerMap = new HashMap<String, Object>();
 
 		ticklerMap.put("message", t.getMessage());
-		ticklerMap.put("updateDate", t.getUpdate_date());
+		ticklerMap.put("updateDate", t.getUpdateDate());
 		ticklerMap.put("provider", t.getProvider().getFormattedName());
 		ticklerMap.put("providerNo", t.getProvider().getProviderNo());
 		ticklerMap.put("toProvider", t.getAssignee().getFormattedName());

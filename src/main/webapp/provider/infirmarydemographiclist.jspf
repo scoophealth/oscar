@@ -64,8 +64,8 @@ String demographic_name=de.getLabel();
 %><c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}"><%
 tickler_no = "";
 tickler_note="";
-for(Tickler t: ticklerDao.search_tickler(String.valueOf(demographic_no),MyDateFormat.getSysDate(strDate))) {
-	tickler_no = t.getTickler_no().toString();
+for(Tickler t: ticklerManager.search_tickler(demographic_no,MyDateFormat.getSysDate(strDate))) {
+	tickler_no = t.getId().toString();
     tickler_note = t.getMessage()==null?tickler_note:tickler_note + "\n" + t.getMessage();
 }
 

@@ -2,62 +2,45 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
         "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean name="/shelterSelection" class="oscar.login.ShelterSelectionAction" singleton="false" autowire="byName" />
-
-	<bean name="/login/recordLogin" class="oscar.login.LoginAgreementAction" singleton="false">
-		<property name="providerDao" ref="providerDao" />
-	</bean>
-
-	<bean name="/Home" class="org.oscarehr.PMmodule.web.HomeAction" singleton="false" autowire="byName" />
-
-
-	
+		
 	<bean name="/dms/inboxManage" class="oscar.dms.actions.DmsInboxManageAction">
 		<property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
 		<property name="queueDocumentLinkDAO" ref="queueDocumentLinkDAO" />
 		<property name="secObjectNameDao" ref="secObjectNameDao" />
 	</bean>
 
-	<bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction" autowire="byName">
-	</bean>
-
-	<bean name="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" class="org.oscarehr.common.web.FlowSheetDrugAction" autowire="byName">
-	</bean>
-
-	<bean name="/MeasurementHL7Uploader" class="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" autowire="byName" />
-
-	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true" />
 	<bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">
-		<property name="ticklerManager" ref="ticklerManagerT" />
 		<property name="demographicManager" ref="demographicManagerT" />
 		<property name="providerManager" ref="providerManager" />
 		<property name="preparedTicklerManager" ref="preparedTicklerManagerT" />
 		<property name="programManager" ref="programManager" />
 	</bean>
+
 	<bean name="/CustomFilter" class="org.caisi.tickler.web.CustomFilterAction" singleton="false">
-		<property name="ticklerManager" ref="ticklerManagerT" />
 		<property name="demographicManager" ref="demographicManagerT" />
 		<property name="providerManager" ref="providerManager" />
 		<property name="programManager" ref="programManager" />
 	</bean>
-	<bean name="/UnreadTickler" class="org.caisi.tickler.web.UnreadTicklerAction" singleton="false">
-		<property name="ticklerManager" ref="ticklerManagerT" />
-	</bean>
+
 	<bean name="/SystemMessage" class="org.caisi.core.web.SystemMessageAction" singleton="false" autowire="byName" />
 	<bean name="/FacilityMessage" class="org.caisi.core.web.FacilityMessageAction" singleton="false" autowire="byName" />
 	<bean name="/DefaultEncounterIssue" class="org.caisi.core.web.DefaultEncounterIssueAction" singleton="false" autowire="byName" />
 	<bean name="/issueAdmin" class="org.caisi.core.web.IssueAdminAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ClientSearch2" class="org.oscarehr.PMmodule.web.ClientSearchAction2" singleton="false" autowire="byName" />
+
 	<bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false" autowire="byName">
 		<property name="caseManagementManager" ref="caseManagementManager" />
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
+
 	<bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ProgramManager" class="org.oscarehr.PMmodule.web.admin.ProgramManagerAction" singleton="false" autowire="byName" />
+
 	<bean name="/PMmodule/ProgramManagerView" class="org.oscarehr.PMmodule.web.admin.ProgramManagerViewAction" singleton="false" autowire="byName">
 		<property name="caseManagementManager" ref="caseManagementManager" />
 		<property name="programManagerAction" ref="/PMmodule/ProgramManager" />
 	</bean>
+
 	<bean name="/PMmodule/AllVacancies" class="org.oscarehr.PMmodule.web.AllWaitingListAction" singleton="false" autowire="byName"/>
 	<bean name="/PMmodule/VacancyClientMatch" class="org.oscarehr.PMmodule.web.VacancyClientMatchAction" singleton="false" autowire="byName"/>
 	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false" autowire="byName" />

@@ -33,12 +33,11 @@
 <%@ page import="org.oscarehr.common.model.Provider"%>
 
 <%
- 	Calendar rightNow = Calendar.getInstance();              
+	Calendar rightNow = Calendar.getInstance();              
  	int year = rightNow.get(Calendar.YEAR);
  	int month = rightNow.get(Calendar.MONTH)+1;
  	int day = rightNow.get(Calendar.DAY_OF_MONTH);
- 	String formattedDate = year + "-" + month + "-" + day; 	
- 
+ 	String formattedDate = year + "-" + month + "-" + day;
 %>
 <script type="text/javascript" src="../js/checkDate.js"></script>
 <script>	
@@ -135,14 +134,14 @@
 			<td class="fieldTitle">Start Date:</td>
 			<td class="fieldValue"><html:text property="filter.startDate"
 				maxlength="10" /> <span
-				onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=customFilterForm&amp;openerElement=filter.startDate&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img
+				onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=customFilterForm&amp;openerElement=filter.startDate&amp;year=<%=year%>&amp;month=<%=month%>','','width=300,height=300')"><img
 				border="0" src="images/calendar.jpg" /></span></td>
 		</tr>
 		<tr>
 			<td class="fieldTitle">End Date:</td>
 			<td class="fieldValue"><html:text property="filter.endDate"
 				maxlength="10" /> <span
-				onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=customFilterForm&amp;openerElement=filter.endDate&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img
+				onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=customFilterForm&amp;openerElement=filter.endDate&amp;year=<%=year%>&amp;month=<%=month%>','','width=300,height=300')"><img
 				border="0" src="images/calendar.jpg" /></span></td>
 		</tr>
 		<tr>
@@ -176,16 +175,16 @@
 			<td class="fieldValue"><c:forEach var="provider"
 				items="${providers}">
 				<%
-                      				String checked="";
-                    				Provider p = (Provider)pageContext.getAttribute("provider");
-		                      		CustomFilter filter = (CustomFilter)request.getAttribute("custom_filter");
-		                      		if(filter != null) {
-			                      		Set providerList = filter.getProviders();
-			                      		if(providerList.contains(p)){
-	    	                  				checked="checked";
-		    	                  		}
-		                      		}
-                      		%>
+					String checked="";
+				                    				Provider p = (Provider)pageContext.getAttribute("provider");
+						                      		CustomFilter filter = (CustomFilter)request.getAttribute("custom_filter");
+						                      		if(filter != null) {
+					                      		Set providerList = filter.getProviders();
+					                      		if(providerList.contains(p)){
+					    	                  				checked="checked";
+						    	                  		}
+						                      		}
+				%>
 				<input type="checkbox" name="provider" <%=checked %>
 					value="<c:out value="${provider.providerNo}"/>" />
 				<c:out value="${provider.lastName}" />,<c:out
@@ -198,14 +197,14 @@
 			<td class="fieldValue"><c:forEach var="provider"
 				items="${providers}">
 				<%
-                      				String checked="";
-                    				Provider p = (Provider)pageContext.getAttribute("provider");
-		                      		CustomFilter filter = (CustomFilter)request.getAttribute("custom_filter");
-		                      		if(filter != null) {
-			                      		Set providerList = filter.getAssignees();
-			                      		if(providerList.contains(p)){
-	    	                  				checked="checked";
-	    	                  				%>
+					String checked="";
+				                    				Provider p = (Provider)pageContext.getAttribute("provider");
+						                      		CustomFilter filter = (CustomFilter)request.getAttribute("custom_filter");
+						                      		if(filter != null) {
+					                      		Set providerList = filter.getAssignees();
+					                      		if(providerList.contains(p)){
+					    	                  				checked="checked";
+				%>
 				<!--  	<input name="assignee" type="hidden" value="<c:out value='${provider.provider_no}'/>"/>
 	    	                  			-->
 				<%

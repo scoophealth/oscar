@@ -34,23 +34,20 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.LazyValidatorForm;
-import org.caisi.model.CustomFilter;
-import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.login.LoginCheckLogin;
 
 public class UnreadTicklerAction extends DispatchAction {
-
-	private TicklerManager ticklerMgr = null;
 	
-	public void setTicklerManager(TicklerManager ticklerManager) {
-		this.ticklerMgr = ticklerManager;
-	}
+	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -80,9 +77,9 @@ public class UnreadTicklerAction extends DispatchAction {
 			oldNum = ((Integer)request.getSession().getAttribute("num_ticklers")).intValue();
 		}
         CustomFilter filter = new CustomFilter();
-        filter.setAssignee(prov.getProviderNo());
+        filter.getAssignees().add(new Provider(prov.getProviderNo()));
         String programId = "";
-        Collection coll = ticklerMgr.getTicklers(filter, prov.getProviderNo(), programId);
+        Collection<Tickler> coll = ticklerManager.getTicklers(filter, prov.getProviderNo(), programId);
         if(oldNum != -1 && (coll.size() > oldNum)) {
         	request.setAttribute("difference",new Integer(coll.size() - oldNum));
         }
