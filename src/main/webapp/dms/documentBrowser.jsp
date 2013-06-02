@@ -37,6 +37,7 @@
 
 <%@page import="java.net.URLDecoder, java.net.URLEncoder,java.util.Date, java.util.List"%>
 <%@page import="oscar.dms.EDocUtil,oscar.dms.EDoc"%>
+<%@page import="oscar.util.UtilDateUtilities"%>
 
 
 <%
@@ -111,9 +112,14 @@
     if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Observation")) {
     	sort = EDocUtil.EDocSort.OBSERVATIONDATE;
         sortorder="Observation";
-    } else  {
+    }
+    else if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Upload")) {
     	sort = EDocUtil.EDocSort.DATE;
         sortorder="Upload";
+    }
+    else  {
+    	sort = EDocUtil.EDocSort.CONTENTDATE;
+        sortorder="Content";
     }
    
     if (categoryKey.indexOf("Private") >= 0) {
@@ -385,6 +391,8 @@ Remote documents not supported
                         <bean:message key="dms.documentBrowser.msgSortDate"/>
                         <select id="selsortorder" name="selsortorder"
 				style="text-size: 8px; margin-bottom: -4px;" onchange="ReLoadDoc()">
+                            <option value="Content"
+                                    <%=sortorder.equalsIgnoreCase("Content") ? "selected":""%>><bean:message key="dms.documentBrowser.msgContent"/></option>
                             <option value="Observation"
                                     <%=sortorder.equalsIgnoreCase("Observation") ? "selected":""%>><bean:message key="dms.documentBrowser.msgObservation"/></option>
                             <option value="Upload"
@@ -404,13 +412,18 @@ Remote documents not supported
                             <%}%> 
                         </fieldset>
 
-                        <fieldset> <legend><bean:message key="dms.documentBrowser.UploadObservationTypeDescription"/></legend>
+                        <fieldset>
+                            <legend><%
+                        if(sortorder.equals("Content")) { %>
+                        <bean:message key="dms.documentBrowser.msgContent"/><%} else {%>
+                        <bean:message key="dms.documentBrowser.msgUpload"/> <%}%>
+                        <bean:message key="dms.documentBrowser.ObservationTypeDescription"/></legend>                            
                             <SELECT MULTIPLE SIZE=15 id="doclist" onchange="getDoc();">
                                 <%
                                     for (int i2 = 0; i2 < docs.size(); i2++) {
                                         EDoc cmicurdoc = (EDoc) docs.get(i2);
                                 %>
-                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>"><%=cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=cmicurdoc.getDescription()%>
+                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>"><%=sortorder.equals("Content")?UtilDateUtilities.DateToString(cmicurdoc.getContentDateTime(),"yyyy-MM-dd"):cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=cmicurdoc.getDescription()%>
                                 </option> <%}%>
                             </SELECT>
                         </fieldset>

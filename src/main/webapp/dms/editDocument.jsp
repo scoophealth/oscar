@@ -80,6 +80,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setSourceFacility(currentDoc.getSourceFacility());
     formdata.setReviewerId(currentDoc.getReviewerId());
     formdata.setReviewDateTime(currentDoc.getReviewDateTime());
+    formdata.setContentDateTime(UtilDateUtilities.DateToString(currentDoc.getContentDateTime(),EDocUtil.CONTENT_DATETIME_FORMAT));
     lastUpdate = currentDoc.getDateTimeStamp();
     fileName = currentDoc.getFileName();
 }
@@ -278,6 +279,10 @@ for (String reportClass : reportClasses) {
 		<tr>
 			<td>Date Added/Updated:</td>
 			<td><%=lastUpdate%></td>
+		</tr>
+                <tr>
+			<td><bean:message key="dms.addDocument.formContentAddedUpdated"/>:</td>
+			<td><%=formdata.getContentDateTime()%></td>
 		</tr>
 		<tr>
 			<td>Source Author:</td>

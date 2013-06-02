@@ -23,6 +23,7 @@
 
 --%>
 
+<%@page import="oscar.util.UtilDateUtilities"%>
 <%@page import="java.util.Collections"%>
 <%@page import="oscar.MyDateFormat"%>
 <%@page import="oscar.util.DateUtils"%>
@@ -97,9 +98,12 @@
     if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Observation")) {
     	sort = EDocUtil.EDocSort.OBSERVATIONDATE;
         sortorder="Observation";
-    } else  {
-    	sort = EDocUtil.EDocSort.DATE;
+    } else  if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Upload")) {
+        sort = EDocUtil.EDocSort.DATE;
         sortorder="Upload";
+    } else {
+    	sort = EDocUtil.EDocSort.CONTENTDATE;
+        sortorder="Content";
     }
     docs = EDocUtil.listDocs(module, demographicID, view, EDocUtil.PRIVATE, sort, viewstatus);
     
@@ -441,6 +445,8 @@
 
                         <bean:message key="oscarEncounter.noteBrowser.msgSortDate"/>
                         <select id="selsortorder" name="selsortorder" onchange="ReLoadDoc()">
+                            <option value="Content"
+                                    <%=sortorder.equalsIgnoreCase("Content") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgContent"/></option>
                             <option value="Observation"
                                     <%=sortorder.equalsIgnoreCase("Observation") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgObservation"/></option>
                             <option value="Upload"
@@ -474,13 +480,17 @@
                         <div id="docinfo"></div>
                         <div id="printnotesbutton"><input type='image' src="../oscarEncounter/graphics/document-print.png" onclick="PrintEncounter();" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter"></div>  
                     </td><td valign="top">
-                        <fieldset><legend><bean:message key="oscarEncounter.noteBrowser.UploadObservationTypeDescription"/></legend>
+                        <fieldset><legend><%
+                        if(sortorder.equals("Content")) { %>
+                        <bean:message key="oscarEncounter.noteBrowser.msgContent"/><%} else {%>
+                        <bean:message key="oscarEncounter.noteBrowser.msgUpload"/> <%}%>
+                        <bean:message key="oscarEncounter.noteBrowser.ObservationTypeDescription"/></legend>
                             <SELECT MULTIPLE SIZE=5 id="doclist" onchange="getDoc();">
                                 <%
                                     for (int i2 = 0; i2 < docs.size(); i2++) {
                                         EDoc cmicurdoc = docs.get(i2);
                                 %>
-                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>" title="<%=cmicurdoc.getDescription()%>"><%=cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=(cmicurdoc.getDescription().length()<30?cmicurdoc.getDescription():cmicurdoc.getDescription().substring(0,30)+"...")%>
+                                <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>" title="<%=cmicurdoc.getDescription()%>"><%=sortorder.equals("Content")?UtilDateUtilities.DateToString(cmicurdoc.getContentDateTime(),"yyyy-MM-dd"):cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=(cmicurdoc.getDescription().length()<30?cmicurdoc.getDescription():cmicurdoc.getDescription().substring(0,30)+"...")%>
                                 </option> <%}%>
                             </SELECT>
                         </fieldset>

@@ -906,6 +906,7 @@ public class ManageDocumentAction extends DispatchAction {
                     EDoc curDoc= EDocUtil.getDoc(doc_no);
                     ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
                     out.println("<br>"+props.getString("dms.documentBrowser.DocumentUpdated")+": "+curDoc.getDateTimeStamp());
+                    out.println("<br>"+props.getString("dms.documentBrowser.ContentUpdated")+": "+curDoc.getContentDateTime());
                     out.println("<br>"+props.getString("dms.documentBrowser.ObservationDate")+": "+curDoc.getObservationDate());
                     out.println("<br>"+props.getString("dms.documentBrowser.Type")+": "+curDoc.getType());
                     out.println("<br>"+props.getString("dms.documentBrowser.Class")+": "+curDoc.getDocClass());

@@ -419,6 +419,7 @@ public class PHRUserManagementAction extends DispatchAction {
 			document.setStatus('A');
 			document.setObservationdate(registrationDate);
 			document.setUpdatedatetime(registrationDate);
+                        document.setContentdatetime(registrationDate);
 			document.setDoctype("others");
 
 			DocumentDao documentDAO = (DocumentDao) SpringUtils.getBean("documentDao");
