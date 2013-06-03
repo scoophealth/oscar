@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package org.oscarehr.export;
+package org.oscarehr.exports.e2e;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -49,10 +49,10 @@ import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.ProviderData;
-import org.oscarehr.export.PatientExport;
-import org.oscarehr.export.PatientExport.Lab;
-import org.oscarehr.export.PatientExport.LabGroup;
-import org.oscarehr.export.PatientExport.sortByDin;
+import org.oscarehr.exports.e2e.PatientExport;
+import org.oscarehr.exports.e2e.PatientExport.Lab;
+import org.oscarehr.exports.e2e.PatientExport.LabGroup;
+import org.oscarehr.exports.e2e.PatientExport.sortByDin;
 import org.oscarehr.util.SpringUtils;
 
 /**

@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package org.oscarehr.export;
+package org.oscarehr.exports.e2e;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.oscarehr.export.E2EExportValidator;
+import org.oscarehr.exports.e2e.E2EExportValidator;
 import org.oscarehr.util.MiscUtils;
 
 /**

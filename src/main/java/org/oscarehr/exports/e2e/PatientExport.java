@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package org.oscarehr.export;
+package org.oscarehr.exports.e2e;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

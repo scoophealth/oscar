@@ -33,8 +33,8 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.export.E2EVelocityTemplate;
-import org.oscarehr.export.PatientExport;
+import org.oscarehr.exports.e2e.E2EVelocityTemplate;
+import org.oscarehr.exports.e2e.PatientExport;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;

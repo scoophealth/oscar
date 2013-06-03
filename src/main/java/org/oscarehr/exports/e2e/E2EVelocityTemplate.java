@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package org.oscarehr.export;
+package org.oscarehr.exports.e2e;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

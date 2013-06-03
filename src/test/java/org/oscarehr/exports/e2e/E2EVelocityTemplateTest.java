@@ -21,7 +21,7 @@
  * University of British Columbia
  * Vancouver, Canada
  */
-package org.oscarehr.export;
+package org.oscarehr.exports.e2e;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -38,10 +38,10 @@ import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.export.E2EExportValidator;
-import org.oscarehr.export.E2EVelocityTemplate;
-import org.oscarehr.export.E2EVelocityTemplate.E2EResources;
-import org.oscarehr.export.PatientExport;
+import org.oscarehr.exports.e2e.E2EExportValidator;
+import org.oscarehr.exports.e2e.E2EVelocityTemplate;
+import org.oscarehr.exports.e2e.PatientExport;
+import org.oscarehr.exports.e2e.E2EVelocityTemplate.E2EResources;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
