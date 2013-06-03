@@ -64,9 +64,10 @@ public class PatientExportTest extends DaoTestFixtures {
 	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	private static ProviderDataDao providerDataDao = (ProviderDataDao)SpringUtils.getBean("providerDataDao");
 	private static Integer demographicNo;
-	private static String[] tables = {"allergies", "casemgmt_note_ext", "casemgmt_issue", "clinic",
-		"demographic", "drugs", "dxresearch", "icd9", "issue", "measurementMap", "measurementType",
-		"measurements", "measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
+	private static String[] tables = {"admission", "allergies", "casemgmt_note_ext", "casemgmt_issue",
+		"clinic", "demographic", "demographicSets", "demographic_merged", "drugs", "dxresearch",
+		"health_safety", "icd9", "issue", "lst_gender", "measurementMap", "measurementType", "measurements",
+		"measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
 
 	@BeforeClass
 	public static void onlyOnce() throws Exception {
