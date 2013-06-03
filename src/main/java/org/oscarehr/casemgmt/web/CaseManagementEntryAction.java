@@ -582,8 +582,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String sessionId = request.getRequestedSessionId();
 		
 		logger.info("WEB isNoteEdited CALLED");
-		CasemgmtNoteLock casemgmtNoteLock = isNoteEdited(Long.parseLong(noteId), Integer.parseInt(demoNo), providerNo, ipAddress, sessionId);
-		request.getSession().setAttribute("casemgmtNoteLock"+demoNo, casemgmtNoteLock);
+		CasemgmtNoteLock casemgmtNoteLock = isNoteEdited(Long.parseLong(noteId), Integer.parseInt(demoNo), providerNo, ipAddress, sessionId);		
 		
 		String ret = "unlocked";
 		if( casemgmtNoteLock.isLocked() ) {
@@ -591,6 +590,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		else if( casemgmtNoteLock.isLockedBySameUser() ) {
 			ret = "user";
+		}
+		else {
+			request.getSession().setAttribute("casemgmtNoteLock"+demoNo, casemgmtNoteLock);
 		}
 		
 		Map<String,String>jsonMap = new HashMap<String,String>();
@@ -2083,7 +2085,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			CasemgmtNoteLock casemgmtNoteLockSession = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demoNo);
 			//If browser is exiting check to see if we should release lock.  It may be held by same user in another window so we check			
-			if( request.getRequestedSessionId().equals(casemgmtNoteLockSession.getSessionId()) ) {
+			if( request.getRequestedSessionId().equals(casemgmtNoteLockSession.getSessionId()) && casemgmtNoteLockSession.getNoteId() == Long.parseLong(noteId) ) {
 				releaseNoteLock(providerNo, Integer.parseInt(demoNo), Long.parseLong(noteId));
 				session.removeAttribute("casemgmtNoteLock"+demoNo);
 			}
