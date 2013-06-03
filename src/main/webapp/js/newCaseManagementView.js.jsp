@@ -58,6 +58,9 @@
         var calendar;
 
         function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
+		  if (varpage == null || varpage == -1) {
+		  	return false;
+		  }
           if( varpage.indexOf("..") == 0 ) {
             varpage = ctx + varpage.substr(2);
           }
