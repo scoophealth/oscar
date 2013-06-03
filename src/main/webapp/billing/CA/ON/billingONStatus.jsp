@@ -636,7 +636,17 @@ if(statusType.equals("_")) { %>
     			<td><%=bObj.getAdmitted_date() %></td>
     			<td><%=bObj.getClaim_error() %></td>
     			<td><%=bObj.getCode() %></td>
-    			<td align="right"><%=ch2StdCurrFromNoDot(""+Integer.parseInt(bObj.getFee())) %></td>
+    			<%
+    				String formattedFee = null;
+    				try {
+    				    formattedFee = String.valueOf(Integer.parseInt(bObj.getFee()));
+    				    
+    				}
+    				catch( NumberFormatException e ) {
+    				    formattedFee = "N/A";
+    				}
+    			%>
+    			<td align="right"><%=ch2StdCurrFromNoDot(formattedFee)%></td>
     			<td align="right"><%=bObj.getUnit() %></td>
     			<td><font size="-1"><%=bObj.getCode_date() %></font></td>
     			<td><%=bObj.getDx() %></td>
