@@ -797,7 +797,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 		<div id="n<%=savedId%>" style="line-height: 1.1em;">
 			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=cform.getCaseNote_note() %></textarea>
 			<div class="sig" id="sig<%=savedId%>">
-				<%--@ include file="noteIssueList.jsp"--%>
+				<%@ include file="noteIssueList.jsp"%>
 			</div> <!-- end of div sig<%=savedId%> -->
 
 			<c:if test="${sessionScope.passwordEnabled=='true'}">
