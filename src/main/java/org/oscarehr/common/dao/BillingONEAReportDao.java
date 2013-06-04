@@ -100,7 +100,11 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
 		appender.and("b.specialty = :specialtyCode", "specialtyCode", specialtyCode);
 		appender.and("b.codeDate >= :fromDate", "fromDate", fromDate);
 		appender.and("b.codeDate <= :toDate", "toDate", toDate);
-		appender.and("b.reportName = :reportName", "reportName", reportName);
+		
+		if( reportName != null && !"".equals(reportName)) {
+			appender.and("b.reportName = :reportName", "reportName", reportName);
+		}
+		
 		appender.addOrder("b.codeDate");
 		
 		Query query = entityManager.createQuery(appender.toString());
