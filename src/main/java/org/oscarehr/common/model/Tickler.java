@@ -55,17 +55,17 @@ import org.oscarehr.util.LocaleUtils;
 @Table(name="tickler")
 public class Tickler extends AbstractModel<Integer> {
 
-	public static String ACTIVE  = "A";
-	public static String COMPLETED = "C";
-	public static String DELETED = "D";
+	//These fields can be phased out in favor for the enums
+	public static final String ACTIVE  = "A";
+	public static final String COMPLETED = "C";
+	public static final String DELETED = "D";
 	      
-	public static String HIGH = "High";
-	public static String NORMAL = "Normal";
-	public static String LOW = "Low";
+	public static final String HIGH = "High";
+	public static final String NORMAL = "Normal";
+	public static final String LOW = "Low";
 	
 	public static enum STATUS {
-        A, C, D;
-        
+        A, C, D
 	}
 	
 	public static enum PRIORITY {
