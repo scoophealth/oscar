@@ -9,3 +9,4 @@ AllergyService
 PreventionService
 MeasurementService
 DocumentService
+PrescriptionService
