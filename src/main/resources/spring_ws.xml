@@ -90,4 +90,10 @@
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
 
+	<jaxws:endpoint implementor="#prescriptionWs" address="/PrescriptionService" >
+		<jaxws:inInterceptors>
+			<ref bean="authenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
+
 </beans>

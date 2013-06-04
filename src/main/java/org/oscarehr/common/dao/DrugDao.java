@@ -82,6 +82,20 @@ public class DrugDao extends AbstractDao<Drug> {
 		return (results);
 	}
 
+	public List<Drug> findByScriptNo(Integer scriptNo, Boolean archived) {
+
+		String sqlCommand = "select x from Drug x where x.scriptNo=?1" + (archived == null ? "" : " and x.archived=?2");
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, scriptNo);
+		if (archived != null) query.setParameter(2, archived);
+		
+
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+		return (results);
+	}
+
 	/**
 	 * @deprecated ordering should be done after in java not on the db when all items are returns, use the findByDemographicId() instead.
 	 * @param archived can be null for both archived and non archived entries
