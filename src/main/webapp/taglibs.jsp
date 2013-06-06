@@ -24,7 +24,7 @@
 --%>
 <%@ page errorPage="/common/error.jsp"%>
 
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el"%>
@@ -42,3 +42,4 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="http://struts-menu.sf.net/tag" prefix="menu"%>
 <%@ taglib uri="http://struts-menu.sf.net/tag-el" prefix="menu-el"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>

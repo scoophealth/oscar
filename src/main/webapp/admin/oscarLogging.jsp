@@ -23,139 +23,113 @@
     Ontario, Canada
 
 --%>
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+
 
 <%@page import="java.io.File"%>
 <%@page import="org.apache.commons.io.FileUtils"%>
 <%@page import="oscar.util.*, oscar.*, java.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+
+<div class="page-header">
+	<h4>
+		<bean:message key="admin.admin.serverLog" />
+	</h4>
+</div>
 
 <%
-  
+	String reportDate = request.getParameter("reportDate");
+	String reportType = request.getParameter("reportType");
+	boolean runReport;
+	if (reportDate == null) {
+		reportDate = UtilDateUtilities.getToday("yyyy-MM-dd");
+		runReport = false;
+	} else {
+		runReport = true;
+	}
+	if (reportType == null) {
+		reportType = "general";
+	}
+%>
+<form id="logForm" action="${ctx}/admin/oscarLogging.jsp" class="well form-horizontal">
+
+	<fieldset>
+		<h4>
+			View Server Log <br>
+			<small>Please select the date to view report on and log type.</small>
+		</h4>
+				<div class="control-group">
+					<label class="control-label">Date</label>
+					<div class="controls">
+						<input type="text" id="reportDate" name="reportDate" class="span3"
+							size="10" value="<%=reportDate%>">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Select Report to view</label>
+					<div class="controls">
+						<select name="reportType" id="reportType" class="span3">
+							<option value="general" <%if (reportType.equals("general")) {%>
+								selected <%}%>>General Report</option>
+							<option value="mysql" <%if (reportType.equals("mysql")) {%>
+								selected <%}%>>MySQL Transaction Report</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+				<div class="controls">
+					<button type="submit" class="btn btn-primary">
+						<i class="icon-download-alt icon-white"></i> Get Report
+					</button>
+				</div>
+			</div>
+	</fieldset>
+</form>
+
+<%
+	if (runReport) {
+		Properties pr = OscarProperties.getInstance();
+		String path = pr.getProperty("LOGGING_PATH");
+		String suffix = reportDate.replaceAll("-", "");
+		String fileName = "";
+		String contentString = "";
+
+		if (reportType.equals("general")) {
+			fileName = path + "report" + suffix + ".html";
+		} else if (reportType.equals("mysql")) {
+			fileName = path + "reportmysql" + suffix + ".html";
+		}
+
+		String temp = FileUtils.readFileToString(new File(fileName),
+				"UTF-8");
+		out.write("<pre id=\"log-results\">"+temp+"</pre>");
+	}
 %>
 
-<html>
-
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>oscarLogging</title>
-<script src="../share/javascript/Oscar.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all"
-	href="../share/calendar/calendar.css" title="win2k-cold-1" />
-
-<script type="text/javascript" src="../share/calendar/calendar.js"></script>
-<script type="text/javascript"
-	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-
-<SCRIPT LANGUAGE="JavaScript">
-        function CheckData() {
-        var Date = document.report.reportDate.value;
-        if (Date == "") {
-        alert("Fill in the date");
-        return(false);
-        }
-        return(true);
-        }
-    </SCRIPT>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-</head>
-
-<body class="BodyStyle" vlink="#0000FF">
-<!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="100">oscarLogging</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>OSCAR Logging</td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="1.6.11" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><<bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
-		<td valign="top" class="MainTableRightColumn">
-		<% 
-            String reportDate = request.getParameter("reportDate");
-            String reportType = request.getParameter("reportType");
-            boolean runReport;
-            if (reportDate == null) {
-                reportDate = UtilDateUtilities.getToday("yyyy-MM-dd");
-                runReport = false;
-            }
-            else {
-                runReport = true;
-            }
-            if (reportType == null) {
-                reportType = "general";
-            }
-            %>
-		<form name="report" id="report" action="oscarLogging.jsp"
-			onsubmit="return CheckData();">
-		<table border="0">
-			<tr>
-				<td>Enter Date to view report for (yyyy-mm-dd)</td>
-				<td><input type="text" id="reportDate" name="reportDate"
-					size="10" value="<%= reportDate %>"> <%--<html:text property="reportDate" size="9" styleId="reportDate" />--%>
-				<a id="date"><img title="Calendar" src="../images/cal.gif"
-					alt="Calendar" border="0" /></a>
-			</tr>
-			<tr>
-				<td>Enter Report to view:</td>
-				<td>
-				<center><select name="reportType">
-					<option value="general" <% if (reportType.equals("general")) { %>
-						selected <% } %>>General Report</option>
-					<option value="mysql" <% if (reportType.equals("mysql")) { %>
-						selected <% } %>>MySQL Transaction Report</option></center>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><input type="submit" value="Get Report"></td>
-		</table>
-		</form>
-		<br>
-		<hr>
-		<%
-            if (runReport) {
-                Properties pr = OscarProperties.getInstance();
-                String path = pr.getProperty("LOGGING_PATH");
-                String suffix = reportDate.replaceAll("-", "");
-                String fileName = "";
-                String contentString = "";
-                
-                if (reportType.equals("general")) { 
-                    fileName = path + "report" + suffix + ".html";
-                }
-                else if (reportType.equals("mysql")) {
-                    fileName = path + "reportmysql" + suffix + ".html";
-                }
-                
-                String temp=FileUtils.readFileToString(new File(fileName), "UTF-8");
-                out.write(temp);
-             } %>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
-	</tr>
-</table>
-<script type="text/javascript">
-    Calendar.setup( { inputField : "reportDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
-    </script>
-
-</body>
-</html>
+<script>
+	var startDt = $("#reportDate").datepicker({
+		format : "yyyy-mm-dd"
+	});
+	
+	var endDt = $("#endDate").datepicker({
+		format : "mm/yyyy",
+		viewMode : "months",
+		minViewMode : "months"
+	});
+	
+	$(document).ready(function() {
+		 $('#logForm').validate(
+		 {
+		  	rules: { 
+		  		reportDate: { 
+			  		required: true,
+			  		oscarDate: true
+		 		}  
+		  }
+		 });
+	});
+	
+	registerFormSubmit('logForm', 'dynamic-content');
+	
+</script>

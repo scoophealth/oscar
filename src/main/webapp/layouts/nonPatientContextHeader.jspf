@@ -41,7 +41,6 @@
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 
-
 <% 
 UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
     		
@@ -66,107 +65,63 @@ int curMonth = (cal.get(Calendar.MONTH)+1);
 int curDay = cal.get(Calendar.DAY_OF_MONTH);
 %>
 
-
-
 <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/datepicker.css">
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/DT_bootstrap.css">
 <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
 
-
-<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/prototype.js"></script><!-- needed for tabalerts -->
-<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script> 
-
-
-<script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
-
-<oscar:customInterface section="main"/>
-
-<script>
-window.onload=function(){
-
-	refreshAllTabAlerts();
-}
-
-//TODO: get rid of these multiple popup scripts
-function popupOscarRx(vheight,vwidth,varpage) {
-	var page = varpage;
-	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-	var popup=window.open(varpage, "<bean:message key="global.oscarRx"/>_appt", windowprops);
-	if (popup != null) {
-	if (popup.opener == null) {
-	popup.opener = self;
-	}
-	popup.focus();
-	}
-}
-
-function popupInboxManager(varpage){
-    var page = "" + varpage;
-    var windowname="apptProviderInbox";
-    windowprops = "height=700,width=1215,location=no,"
-    + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
-    var popup = window.open(page, windowname, windowprops);
-    if (popup != null) {
-        if (popup.opener == null) {
-            popup.opener = self;
-        }
-        popup.focus();
-    }
-}
-
-function popupPage2(varpage) {
-	popupPage2(varpage, "apptProviderSearch");
-	}
-
-	function popupPage2(varpage, windowname) {
-	popupPage2(varpage, windowname, 700, 1024);
-	}
-
-	function popupPage2(varpage, windowname, vheight, vwidth) {
-	// Provide default values for windowname, vheight, and vwidth incase popupPage2
-	// is called with only 1 or 2 arguments (must always specify varpage)
-	windowname  = typeof(windowname)!= 'undefined' ? windowname : 'apptProviderSearch';
-	vheight     = typeof(vheight)   != 'undefined' ? vheight : '700px';
-	vwidth      = typeof(vwidth)    != 'undefined' ? vwidth : '1024px';
-	var page = "" + varpage;
-	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-	var popup = window.open(page, windowname, windowprops);
-	if (popup != null) {
-		if (popup.opener == null) {
-	  		popup.opener = self;
-		}
-		popup.focus();
-		}
-	}
-
-	<%-- Refresh tab alerts --%>
-	function refreshAllTabAlerts() {
-	refreshTabAlerts("oscar_new_lab");
-	refreshTabAlerts("oscar_new_msg");
-	refreshTabAlerts("oscar_new_tickler");
-	refreshTabAlerts("oscar_aged_consults");
-	refreshTabAlerts("oscar_scratch");
-	}
-
-	function callRefreshTabAlerts(id) {
-	setTimeout("refreshTabAlerts('"+id+"')", 10);
-	}
-
-	function refreshTabAlerts(id) {
-	var url = "../provider/tabAlertsRefresh.jsp";
-	var pars = "id=" + id;
-
-	var myAjax = new Ajax.Updater(id, url, {method: 'get', parameters: pars});
-	}	
-</script>
-   <script>
-     jQuery.noConflict();
-   </script>
-
 <style>
+body{background-color: #f3f3f3;}
+
 sup{  
 color:#000;
 font-weight:bold;
-}    
+}  
+
+.accordion-heading{background-color:#fff;border-bottom:thin solid #C6C6C6;}
+
+#side{
+border-right:thin solid #C6C6C6;
+padding-right:10px;
+}
+
+.icon-chevron-right{float:right;}  
+
+#adminNav ul{
+	padding: 0px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+label.valid {
+	width: 24px;
+	height: 24px;
+	background: url(<%=request.getContextPath() %>/images/icons/valid.png) center center no-repeat;
+	display: inline-block;
+	text-indent: -9999px;
+}
+
+label.error {
+	font-weight: bold;
+	color: red;
+	padding: 2px 8px;
+	margin-top: 2px;
+	font-size: 13px;
+	display: inline;
+}
+
+.visible-print {
+  display: none !important;
+}
+
+@media print {
+  .visible-print {
+    display: inherit !important;
+  }
+  .hidden-print {
+    display: none !important;
+  }
+}
 </style>
 
 <div class="navbar navbar-fixed-top">

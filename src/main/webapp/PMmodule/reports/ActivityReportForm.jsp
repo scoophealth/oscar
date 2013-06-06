@@ -27,68 +27,43 @@
 
 
 <%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 
-<html:html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/checkDate.js"></script>
-<script type="text/javascript">
-	function validateDates() {
-		var sdate = document.getElementById('sdate').value;
-		var edate = document.getElementById('edate').value;
-		if(checkAndValidateDate(sdate)) {
-			if(checkAndValidateDate(edate)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-</script>
-<title>Program Activity Report Generator</title>
-</head>
+<div class="page-header">
+	<h4>Program Activity Report Generator</h4>
+</div>
 
-<body>
-<Br />
-<br />
-<html:form action="/PMmodule/Reports/ProgramActivityReport" onsubmit="return validateDates();">
+<html:form action="/PMmodule/Reports/ProgramActivityReport"
+	styleId="actForm" styleClass="well form-inline">
 	<input type="hidden" name="method" value="generate" />
-	<div id="projecthome" class="app"><br />
-	<div class="h4">
-	<h5>Enter Report Criteria</h5>
-	</div>
-	<div class="axial">
-	<table border="0" cellspacing="2" cellpadding="3">
-		<tr>
-			<th>Start Date</th>
-			<td><html:text styleId="sdate" property="form.startDate" size="15" />
-			(yyyy-mm-dd)</td>
-		</tr>
-		<tr>
-			<th>End Date</th>
-			<td><html:text styleId="edate" property="form.endDate" size="15" />
-			(yyyy-mm-dd)</td>
-		</tr>
-		<!-- 
-			<tr>
-				<th>Program</th>
-				<td>
-					<html:select property="form.programId">
-						<html:options collection="programs"  property="id" labelProperty="name"/>
-					</html:select>
-				</td>
-			</tr>
-			-->
-		<tr>
-			<td align="center" colspan="2"><html:submit	value="Generate Report"/></td>
-		</tr>
-	</table>
-	</div>
-	</div>
+	<html:text styleId="sdate" property="form.startDate" size="15"/>
+	<html:text styleId="edate" property="form.endDate" size="15"/>
+	<html:submit value="Generate Report" styleClass="btn btn-primary" />
 </html:form>
 
-</body>
+<script>
+	var startDt = $("#sdate").datepicker({
+		format : "yyyy-mm-dd"
+	});
 
-</html:html>
+	var endDt = $("#edate").datepicker({
+		format : "yyyy-mm-dd"
+	});
+	$(document).ready(function() {
+		$('#actForm').validate({
+			rules : {
+				sdate : {
+					required : true,
+					oscarDate : true
+				},
+				edate : {
+					required : true,
+					oscarDate : true
+				}
+			}
+		});
+	});
+
+	registerFormSubmit('actForm', 'dynamic-content');
+</script>

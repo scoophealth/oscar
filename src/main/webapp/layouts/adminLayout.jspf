@@ -26,6 +26,15 @@
 
 <%@ include file="/taglibs.jsp"%>
 
-<tiles:insert definition="administration" >
-	<tiles:put name="body" value="" />
-</tiles:insert>
+
+<tiles:insert name="/administration/leftNav.jspf"></tiles:insert>
+
+  <div class="span10 well" id="dynamic-content" style="background-color:#fff;">
+    
+    <!-- ****DYNAMIC CONTENT**** -->
+
+    <!-- ****DYNAMIC CONTENT END**** -->
+    
+    </div><!-- span8 end -->
+
+

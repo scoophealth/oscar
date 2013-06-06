@@ -1,0 +1,353 @@
+<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<%
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
+
+
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
+
+    <div class="span2" id="side">
+   
+    <!--Sidebar content-->
+    
+  
+		<div class="accordion" id="adminNav">
+		
+			<div class="accordion-group nav nav-tabs">
+			
+			<div class="accordion-heading well-small" style="margin-bottom:0px;">
+			<i class="icon-cog"></i> <bean:message key="admin.admin.page.title" />
+			</div>
+
+<%
+int fileIndex=0;
+if(request.getParameter("index")!=null){
+	fileIndex=Integer.parseInt(request.getParameter("index"));
+}
+%>
+
+<!-- #USER MANAGEMENT -->
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.userAdmin,_admin.torontoRfq,_admin.provider"
+	rights="r" reverse="<%=false%>">			
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseOne">
+				<bean:message key="admin.admin.UserManagement" />
+				<i class="icon-chevron-right"></i> 
+				</a>
+				
+				</div>
+				
+				<div id="collapseOne" class="accordion-body collapse <%=fileIndex==1?"in":""%>">
+				<div class="accordion-inner">
+				<a href="?index=1">Create Provider</a>
+				</div>
+				</div>
+</security:oscarSec>
+<!-- #USER MANAGEMENT END -->
+
+<!-- #BILLING -->
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.invoices,_admin,_admin.billing" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseTwo">
+				<bean:message key="admin.admin.billing" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseTwo" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+</security:oscarSec>
+<!-- #BILLING END-->
+
+<!-- #LABS/INBOX -->
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin," rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThree">
+				<bean:message key="admin.admin.LabsInbox" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				
+				<div id="collapseThree" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+</security:oscarSec>
+<!-- #LABS/INBOX END -->	
+
+<!--  #FORMS/EFORMS -->	
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFour">
+				<bean:message key="admin.admin.FormsEforms" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseFour" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+</security:oscarSec>
+<!--  #FORMS/EFORMS END-->	
+
+<!-- #REPORTS-->
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFive">
+				<bean:message key="admin.admin.oscarReport" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				
+				<div id="collapseFive" class="accordion-body collapse">
+				<div class="accordion-inner">
+			
+				<ul>
+				<!-- 
+					<li><html:link action="/oscarReport/RptByExample" styleClass="contentLink"><bean:message key="admin.admin.btnQueryByExample" /></html:link></li>
+					<li><html:link page="/oscarReport/reportByTemplate/homePage.jsp" styleClass="contentLink"><bean:message key="admin.admin.rptbyTemplate" /></html:link></li>
+
+					<li><a href="Reports/" class="contentLink"><bean:message
+								key="admin.admin.btnAgeSexReport" /></a>
+					</li>
+					 -->
+					<li><a href="${ctx}/oscarReport/oscarReportVisitControl.jsp" 
+						class="contentLink"><bean:message
+								key="admin.admin.btnVisitReport" /></a></li>
+					<li><a href="${ctx}/oscarReport/oscarReportCatchment.jsp"
+						class="contentLink">PCN</a></li>
+					<li><a href="${ctx}/oscarReport/FluBilling.do?orderby="
+						class="contentLink"><bean:message
+								key="admin.admin.btnFluBillingReport" /></a></li>
+					<li><a href="${ctx}/oscarReport/obec.jsp" class="contentLink">Overnight
+							Batch</a></li>
+					<li><a href="${ctx}/oscarSurveillance/ReportSurveillance.jsp"
+						class="contentLink"><bean:message
+								key="admin.admin.report.SurveillanceReport" /></a></li>
+					<li><a href="${ctx}/oscarReport/oscarReportRehabStudy.jsp" class="contentLink"><bean:message
+								key="admin.admin.rehabStudy" /></a></li>
+								
+					<caisi:isModuleLoad moduleName="caisi">		
+						<li><html:link action="/PMmodule/Reports/ProgramActivityReport" styleClass="contentLink"><bean:message key="admin.admin.activityRpt" /></html:link></li>
+					</caisi:isModuleLoad>			
+								
+					<li><a href="${ctx}/oscarReport/patientlist.jsp"
+						class="contentLink"><bean:message
+								key="admin.admin.exportPatientbyAppt" /></a></li>
+					<li><a
+						href="${ctx}/oscarReport/provider_service_report_form.jsp"
+						class="contentLink"><bean:message
+								key="admin.admin.providerServiceRpt" /></a></li>
+					<caisi:isModuleLoad moduleName="caisi">
+						<li><html:link page="/PopulationReport.do"
+								styleClass="contentLink">
+								<bean:message key="admin.admin.popRpt" />
+							</html:link></li>
+					</caisi:isModuleLoad>
+					<li><a href="${ctx}/oscarReport/cds_4_report_form.jsp"
+						class="contentLink"><bean:message key="admin.admin.cdsRpt" /></a></li>
+					<li><a href="${ctx}/oscarReport/mis_report_form.jsp"
+						class="contentLink"><bean:message key="admin.admin.misRpt" /></a></li>
+					<li><a href="${ctx}/oscarReport/ocan_report_form.jsp"
+						class="contentLink"><bean:message key="admin.admin.ocanRpt" /></a></li>
+					<li><a href="${ctx}/oscarReport/ocan_iar.jsp"
+						class="contentLink"><bean:message key="admin.admin.ocanIarRpt" /></a></li>
+					<li><html:link page="/oscarReport/ocan_reporting.jsp" styleClass="contentLink"><bean:message key="admin.admin.ocanReporting"/></html:link></li>
+					<li><a href="${ctx}/admin/UsageReport.jsp" class="contentLink"><bean:message
+								key="admin.admin.usageRpt" /></a></li>
+					<oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
+						<li><html:link page="/admin/oscarLogging.jsp" styleClass="contentLink"><bean:message key="admin.admin.serverLog" /></html:link></li>
+					</oscar:oscarPropertiesCheck>
+					<li><a href="Reports/" class="contentLink"><bean:message
+								key="admin.admin.DiseaseRegistry" /></a></li>
+				</ul>
+
+				</div>
+				</div>
+	</security:oscarSec>
+</caisi:isModuleLoad>
+<!-- #REPORTS END -->	
+
+<!-- #ECHART -->
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSix">
+				<bean:message key="admin.admin.eChart" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseSix" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+</caisi:isModuleLoad>
+<!-- #ECHART END-->	
+
+
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<!-- #Schedule Management -->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSeven">
+				<bean:message key="admin.admin.ScheduleManagement" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				
+				<div id="collapseSeven" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+<!-- #Schedule Management END-->
+
+<!-- #SYSTEM Management-->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseEight">
+				<bean:message key="admin.admin.SystemManagement" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseEight" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+<!-- #SYSTEM Management END-->
+
+<!-- #SYSTEM REPORTS-->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseNine">
+				<bean:message key="admin.admin.SystemReports" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				
+				<div id="collapseNine" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+<!-- #SYSTEM REPORTS END-->
+
+
+<!-- #INTEGRATION-->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseTen">
+				<bean:message key="admin.admin.Integration" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseTen" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+<!-- #INTEGRATION END -->
+
+<!-- #STATUS-->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseEleven">
+				<bean:message key="admin.admin.Status" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				
+				<div id="collapseEleven" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+<!-- #STATUS END -->
+	
+<!-- #Data Management -->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseTwelve">
+				<bean:message key="admin.admin.DataManagement" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseTwelve" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+<!-- #Data Management END-->
+
+
+
+<oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThirteen">
+				<bean:message key="admin.admin.learning" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseThirteen" class="accordion-body collapse">
+				<div class="accordion-inner">
+				Anim pariatur cliche...
+				</div>
+				</div>
+	</security:oscarSec>
+</oscar:oscarPropertiesCheck>
+
+
+</caisi:isModuleLoad>
+		</div> <!-- ACCORDION GROUP END -->	
+		</div> <!-- ACCORDION END -->
+	
+    </div>
+
+

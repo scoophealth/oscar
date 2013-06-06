@@ -27,6 +27,7 @@ package oscar.oscarReport.pageUtil;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -55,17 +56,16 @@ public class RptRehabStudyAction extends Action {
 		String formName = frm.getFormName();
 		String startDate = frm.getStartDate();
 		String endDate = frm.getEndDate();
-		StringBuilder results = new StringBuilder("<table>");
 		FormsDao dao = SpringUtils.getBean(FormsDao.class);
+		List<String> headers = new ArrayList<String>();
+		List<Object[]> rows = null;
 		
 		try {
             String sql = "select * from " + formName + " limit 1"; 
             ResultSet rs = null;
             try {
 	            rs = DBHandler.GetSQL(sql);
-	            if(rs.next()) {
-	                results.append(getHeadingStructure(rs));
-	            }
+            	headers = getHeaders(rs);
             } finally {
             	if (rs != null) {
             		rs.close();
@@ -73,65 +73,36 @@ public class RptRehabStudyAction extends Action {
             }
 
 			sql = "select max(formEdited) as formEdited, demographic_no from " + formName + " where formEdited > '" + startDate + "' and formEdited < '" + endDate + "' group by demographic_no";
+			rows = new ArrayList<Object[]>();
 			for(Object[] o : dao.runNativeQuery(sql)) {
 				String formEdited = String.valueOf(o[0]);
 				String demographic_no = String.valueOf(o[1]);
 				
 				String sqlDemo = "SELECT * FROM " + formName + " where demographic_no='" + demographic_no + "' AND formEdited='" + formEdited + "'";
 				List<Object[]> fs = dao.runNativeQuery(sqlDemo);
-				for(Object[] f : fs) {        
-					results.append(getStructure(f));
-				}
+				rows.addAll(fs);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
 		}
 
-		results.append("</table>");
-		request.setAttribute("results", results.toString());
+		request.setAttribute("headers", headers);
+		request.setAttribute("rows", rows);
 		request.setAttribute("formName", formName);
 
 		return mapping.findForward("success");
 	}
 
-	public String getHeadingStructure(ResultSet rs) throws Exception {
-		// assuming  multiple rows in rs
-		StringBuilder sb = new StringBuilder();
+	public List<String> getHeaders(ResultSet rs) throws Exception {
+		List<String> headers = new ArrayList<String>();
 
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columns = rsmd.getColumnCount();
 		String[] columnNames = new String[columns];
-		for (int i = 0; i < columns; i++) { // for each column in result set
+		for (int i = 0; i < columns; i++) { 
 			columnNames[i] = rsmd.getColumnName(i + 1);
-			// put names in array
-			// use i+1 or else you're going to get an exception
-			// insert headings for table
-			sb.append("<th class='headerColor'>");
-			sb.append(columnNames[i]);
-			sb.append("</th>");
+			headers.add(columnNames[i]);
 		}
-		return sb.toString();
+		return headers;
 	}
-
-	public String getStructure(Object[] os) throws Exception {
-		if (os == null) {
-			return "";
-		}
-		
-		// assuming  multiple rows in rs
-		StringBuilder sb = new StringBuilder();
-		int columns = os.length;
-		for(Object o : os) {
-			sb.append("<tr>");
-			
-			for (int j = 0; j < columns; j++) {
-				sb.append("<td>");
-				sb.append(o);
-				sb.append("</td>");
-			}
-			sb.append("</tr>");
-		}
-		return sb.toString();
-	}
-
 }
