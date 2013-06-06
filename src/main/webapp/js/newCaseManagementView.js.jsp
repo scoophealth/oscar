@@ -1289,7 +1289,7 @@ function removeLock(id) {
 	var regEx = /\d+/;
     var nId = regEx.exec(id);
 	var url = ctx + "/CaseManagementEntry.do";
-	params = "method=releaseNoteLock&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&noteId=" + nId;
+	params = "method=releaseNoteLock&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&noteId=" + nId + "&force=true";
 	
 	new Ajax.Request(
 		url,
@@ -2529,6 +2529,9 @@ function savePage(method, chain) {
     tmpSaveNeeded = false;
     if( method == "saveAndExit" ) {
     	needToReleaseLock = false;
+    }
+    else {
+    	needToReleaseLock = true;
     }
 
     caseMgtEntryfrm.submit();
