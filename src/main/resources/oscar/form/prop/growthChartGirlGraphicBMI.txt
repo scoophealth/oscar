@@ -41,13 +41,13 @@ age_40	:	bmi_40
 age_41	:	bmi_41
 age_42	:	bmi_42
 
-__origX		:	82
-__origY		:	692
-__nMaxPixX	:	440
-__nMaxPixY	:	614
+__origX		:	112
+__origY		:	698
+__nMaxPixX	:	418
+__nMaxPixY	:	590
 __fStartX	:	2
-__fEndX		:	20
-__fStartY	:	10
-__fEndY		:	37
+__fEndX		:	19
+__fStartY	:	11
+__fEndY		:	42
 
 __className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
