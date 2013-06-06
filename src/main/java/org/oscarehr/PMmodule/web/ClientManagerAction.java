@@ -64,8 +64,6 @@ import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.PMmodule.model.Bed;
-import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Intake;
@@ -73,12 +71,8 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
-import org.oscarehr.PMmodule.model.Room;
-import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.BedDemographicManager;
-import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
@@ -87,8 +81,6 @@ import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
@@ -112,6 +104,8 @@ import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.dao.RemoteReferralDao;
 import org.oscarehr.common.model.Admission;
+import org.oscarehr.common.model.Bed;
+import org.oscarehr.common.model.BedDemographic;
 import org.oscarehr.common.model.CaisiFormInstance;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.Demographic;
@@ -122,6 +116,12 @@ import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteReferral;
+import org.oscarehr.common.model.Room;
+import org.oscarehr.common.model.RoomDemographic;
+import org.oscarehr.managers.BedManager;
+import org.oscarehr.managers.BedDemographicManager;
+import org.oscarehr.managers.RoomManager;
+import org.oscarehr.managers.RoomDemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -143,8 +143,8 @@ public class ClientManagerAction extends DispatchAction {
 	private CaseManagementManager caseManagementManager;
 	private AdmissionManager admissionManager;
 	private GenericIntakeManager genericIntakeManager;
-	private BedDemographicManager bedDemographicManager;
-	private BedManager bedManager;
+	private BedDemographicManager bedDemographicManager = SpringUtils.getBean(BedDemographicManager.class);
+	private BedManager bedManager = SpringUtils.getBean(BedManager.class);
 	private ClientManager clientManager;
 	private LogManager logManager;
 	private ProgramManager programManager;
@@ -160,8 +160,8 @@ public class ClientManagerAction extends DispatchAction {
     private VacancyTemplateDao vacancyTemplateDao = (VacancyTemplateDao) SpringUtils.getBean(VacancyTemplateDao.class);
 	private MatchingManager matchingManager = new MatchingManager();
 	
-	private RoomDemographicManager roomDemographicManager = (RoomDemographicManager) SpringUtils.getBean("roomDemographicManager");
-	private RoomManager roomManager = (RoomManager) SpringUtils.getBean("roomManager");
+	private RoomDemographicManager roomDemographicManager = SpringUtils.getBean(RoomDemographicManager.class);
+	private RoomManager roomManager = SpringUtils.getBean(RoomManager.class);
 	
 
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
@@ -1443,6 +1443,7 @@ public class ClientManagerAction extends DispatchAction {
 		return false;
 	}
 
+	/*
     private Program getMatchVacancy(Program p){
 
         List<VacancyDisplayBO> vacancyDisplayBOs = matchingManager.listNoOfVacanciesForWaitListProgram();
@@ -1467,6 +1468,7 @@ public class ClientManagerAction extends DispatchAction {
         }
         return program;
     }
+    */
 
 	private void setEditAttributes(ActionForm form, HttpServletRequest request, String demographicNo) {
 		DynaActionForm clientForm = (DynaActionForm) form;

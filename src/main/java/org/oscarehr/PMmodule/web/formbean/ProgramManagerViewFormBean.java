@@ -24,8 +24,8 @@
 package org.oscarehr.PMmodule.web.formbean;
 
 import org.apache.struts.action.ActionForm;
-import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
+import org.oscarehr.common.model.Bed;
 
 public class ProgramManagerViewFormBean extends ActionForm {
 
