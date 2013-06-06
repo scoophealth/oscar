@@ -30,11 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.model.Clinic;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.exports.VelocityTemplate;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
 
@@ -43,26 +41,23 @@ import org.oscarehr.util.VelocityUtils;
  * 
  * @author Jeremy Ho
  */
-
-public class E2EVelocityTemplate {
-	private static Logger log = MiscUtils.getLogger();
-	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
+public class E2EVelocityTemplate extends VelocityTemplate {
 	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2etemplate.vm";
-	private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2eformcode.csv";
-	private static String template = null;
-	protected static Map<String,String> formCodes = null;
+	private static E2EResources e2eResources = null;
+	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private Clinic clinic = clinicDao.getClinic();
-	private VelocityContext context;
 
 	public E2EVelocityTemplate() {
 		loadTemplate();
-		loadFormCode();
+		if(e2eResources == null) {
+			e2eResources = new E2EResources();
+		}
 	}
 
 	/**
 	 * Loads the velocity template
 	 */
-	private void loadTemplate() {
+	protected void loadTemplate() {
 		if(template == null) {
 			InputStream is = null;
 			try {
@@ -82,52 +77,22 @@ public class E2EVelocityTemplate {
 	}
 
 	/**
-	 * Loads the formcode mapping
-	 */
-	private void loadFormCode() {
-		if(formCodes == null) {
-			InputStream is = null;
-			try {
-				is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_FORMCODE_FILE);
-				BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-				formCodes = new HashMap<String,String>();
-				String line = null;
-				String[] content = null;
-				while((line = br.readLine()) != null) {
-					content = line.split("\\t");
-					formCodes.put(content[0],content[1]);
-				}
-
-				log.info("Loaded E2E Form Code Mapping");
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			} finally {
-				try {
-					is.close();
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Assembles the data model & predefined velocity template to yield an E2E document
 	 * 
 	 * @param record
 	 * @return String representing E2E export from template
 	 */
-	public String export(PatientExport record) {
+	public String export(E2EPatientExport record) {
 		if(record.isLoaded() == false) {
 			log.error("PatientExport object is not loaded with a patient");
 			return "";
 		}
-
-		E2EResources e2eResources = new E2EResources();
+		else if(template == null) {
+			log.error("E2EVelocityTemplate is not loaded with a template");
+			return "";
+		}
 
 		// Create Data Model
-		context = VelocityUtils.createVelocityContextWithTools();
 		context.put("patient", record);
 		context.put("e2e", e2eResources);
 		context.put("custodian", clinic);
@@ -149,7 +114,50 @@ public class E2EVelocityTemplate {
 		return result;
 	}
 
+	/**
+	 * Contains E2E specific resources necessary for export generation
+	 * 
+	 * @author Jeremy Ho
+	 */
 	public static class E2EResources {
+		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2eformcode.csv";
+		private static Map<String,String> formCodes = null;
+		
+		public E2EResources() {
+			loadFormCode();
+		}
+		
+		/**
+		 * Loads the formcode mapping
+		 */
+		private void loadFormCode() {
+			if(formCodes == null) {
+				InputStream is = null;
+				try {
+					is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_FORMCODE_FILE);
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+					formCodes = new HashMap<String,String>();
+					String line = null;
+					String[] content = null;
+					while((line = br.readLine()) != null) {
+						content = line.split("\\t");
+						formCodes.put(content[0],content[1]);
+					}
+
+					log.info("Loaded E2E Form Code Mapping");
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+		
 		/**
 		 * Takes in a formcode string and returns the E2E Form Code result if available
 		 * 

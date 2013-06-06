@@ -72,7 +72,7 @@ import org.oscarehr.util.SpringUtils;
  * 
  * @author Jeremy Ho
  */
-public class PatientExport {
+public class E2EPatientExport {
 	private static Logger log = MiscUtils.getLogger();
 	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private static AllergyDao allergyDao = SpringUtils.getBean(AllergyDao.class);
@@ -130,7 +130,7 @@ public class PatientExport {
 	/**
 	 * Constructs an empty Patient Export object
 	 */
-	public PatientExport() {}
+	public E2EPatientExport() {}
 
 	/**
 	 * Attempts to load the specified patient.

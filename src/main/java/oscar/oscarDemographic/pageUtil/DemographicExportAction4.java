@@ -67,7 +67,7 @@ import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.exports.e2e.E2EVelocityTemplate;
-import org.oscarehr.exports.e2e.PatientExport;
+import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -2017,7 +2017,7 @@ public class DemographicExportAction4 extends Action {
 					E2EVelocityTemplate t = new E2EVelocityTemplate();
 
 					// Create and select patient data
-					PatientExport patient = new PatientExport();
+					E2EPatientExport patient = new E2EPatientExport();
 					patient.setExMedications(exMedicationsAndTreatments);
 					patient.setExAllergiesAndAdverseReactions(exAllergiesAndAdverseReactions);
 					patient.setExImmunizations(exImmunizations);

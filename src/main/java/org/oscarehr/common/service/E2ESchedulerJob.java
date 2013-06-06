@@ -34,7 +34,7 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.exports.e2e.E2EVelocityTemplate;
-import org.oscarehr.exports.e2e.PatientExport;
+import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -60,7 +60,7 @@ public class E2ESchedulerJob extends TimerTask {
 				E2EVelocityTemplate t = new E2EVelocityTemplate();
 
 				// Create and load Patient data
-				PatientExport patient = new PatientExport();
+				E2EPatientExport patient = new E2EPatientExport();
 				patient.setExAllTrue();
 
 				// Load patient data and merge to template

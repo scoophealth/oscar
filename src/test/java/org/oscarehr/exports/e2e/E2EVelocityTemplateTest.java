@@ -40,7 +40,7 @@ import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.exports.e2e.E2EExportValidator;
 import org.oscarehr.exports.e2e.E2EVelocityTemplate;
-import org.oscarehr.exports.e2e.PatientExport;
+import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.exports.e2e.E2EVelocityTemplate.E2EResources;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -80,7 +80,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	public void testExport() {
 		E2EVelocityTemplate e2etemplate = new E2EVelocityTemplate();
 		assertNotNull(e2etemplate);
-		PatientExport p = new PatientExport();
+		E2EPatientExport p = new E2EPatientExport();
 		assertNotNull(p);
 		p.loadPatient(demographicNo.toString());
 		String s = null;
