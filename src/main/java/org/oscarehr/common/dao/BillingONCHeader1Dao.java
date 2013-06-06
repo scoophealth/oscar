@@ -601,7 +601,10 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		app.and("h.providerNo = :providerNo", "providerNo", providerNo);
 		app.and("h.billingDate >= :startDate", "startDate", startDate);
 		app.and("h.billingDate <= :endDate", "endDate", endDate);
-		app.and("h.demographicNo = :demographicNo", "demographicNo", demoNo);
+		
+		if( demoNo != null ) {
+			app.and("h.demographicNo = :demographicNo", "demographicNo", demoNo);
+		}
         app.addOrder("h.billingDate, h.billingTime");
         
 		Query query = entityManager.createQuery(app.toString());
