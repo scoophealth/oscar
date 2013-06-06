@@ -57,7 +57,6 @@ import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.VacancyTemplateManager;
@@ -74,14 +73,16 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.common.model.RoomDemographic;
 import org.oscarehr.common.model.Tickler;
-import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.BedDemographicManager;
+import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.RoomDemographicManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Required;
+
+import oscar.log.LogAction;
 
 public class ProgramManagerViewAction extends DispatchAction {
 
@@ -94,7 +95,6 @@ public class ProgramManagerViewAction extends DispatchAction {
 	private BedDemographicManager bedDemographicManager;
 	private BedManager bedManager;
 	private ClientManager clientManager;
-	private LogManager logManager;
 	private ProgramManager programManager;
 	private ProgramManagerAction programManagerAction;
 	private ProgramQueueManager programQueueManager;	
@@ -315,7 +315,7 @@ public class ProgramManagerViewAction extends DispatchAction {
             request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
         }
 
-        logManager.log("view", "program", programId, request);
+        LogAction.log("view", "program", programId, request);
 
         request.setAttribute("id", programId);
 
@@ -411,7 +411,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 			return mapping.findForward("service_restriction_error");
 		}
 
-		logManager.log("view", "admit to program", clientId, request);
+		LogAction.log("view", "admit to program", clientId, request);
 
 		return view(mapping, form, request, response);
 	}
@@ -452,9 +452,9 @@ public class ProgramManagerViewAction extends DispatchAction {
 			throw new RuntimeException(e);
 		}
 
-		logManager.log("view", "override service restriction", clientId, request);
+		LogAction.log("view", "override service restriction", clientId, request);
 
-		logManager.log("view", "admit to program", clientId, request);
+		LogAction.log("view", "admit to program", clientId, request);
 
 		return view(mapping, form, request, response);
 	}
@@ -473,7 +473,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - assign client to team", "", request);
+		LogAction.log("write", "edit program - assign client to team", "", request);
 		return view(mapping, form, request, response);
 	}
 
@@ -491,7 +491,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - assign client to status", "", request);
+		LogAction.log("write", "edit program - assign client to status", "", request);
 		return view(mapping, form, request, response);
 	}
 
@@ -985,10 +985,6 @@ public class ProgramManagerViewAction extends DispatchAction {
 
 	public void setClientManager(ClientManager mgr) {
 		this.clientManager = mgr;
-	}
-
-	public void setLogManager(LogManager mgr) {
-		this.logManager = mgr;
 	}
 
 	public void setProgramManager(ProgramManager mgr) {

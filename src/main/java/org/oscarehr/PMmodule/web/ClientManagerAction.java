@@ -77,7 +77,6 @@ import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.HealthSafetyManager;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
@@ -118,16 +117,17 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteReferral;
 import org.oscarehr.common.model.Room;
 import org.oscarehr.common.model.RoomDemographic;
-import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.BedDemographicManager;
-import org.oscarehr.managers.RoomManager;
+import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.RoomDemographicManager;
+import org.oscarehr.managers.RoomManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 import org.springframework.beans.factory.annotation.Required;
 
+import oscar.log.LogAction;
 import oscar.oscarDemographic.data.DemographicRelationship;
 
 import com.quatro.service.LookupManager;
@@ -146,7 +146,6 @@ public class ClientManagerAction extends DispatchAction {
 	private BedDemographicManager bedDemographicManager = SpringUtils.getBean(BedDemographicManager.class);
 	private BedManager bedManager = SpringUtils.getBean(BedManager.class);
 	private ClientManager clientManager;
-	private LogManager logManager;
 	private ProgramManager programManager;
 	private ProviderManager providerManager;
 	private ProgramQueueManager programQueueManager;
@@ -205,7 +204,7 @@ public class ClientManagerAction extends DispatchAction {
 			saveMessages(request, messages);
 		}
 
-		logManager.log("write", "admit", demographicNo, request);
+		LogAction.log("write", "admit", demographicNo, request);
 
 		setEditAttributes(form, request, demographicNo);
 		return mapping.findForward("edit");
@@ -268,7 +267,7 @@ public class ClientManagerAction extends DispatchAction {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
-			logManager.log("write", "discharge", id, request);
+			LogAction.log("write", "discharge", id, request);
 		}
 
 		setEditAttributes(form, request, id);
@@ -289,7 +288,7 @@ public class ClientManagerAction extends DispatchAction {
 
 		try {
 			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents);
-			logManager.log("write", "discharge", clientId, request);
+			LogAction.log("write", "discharge", clientId, request);
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
@@ -362,7 +361,7 @@ public class ClientManagerAction extends DispatchAction {
 
 		setEditAttributes(form, request, id);
 
-		logManager.log("read", "pmm client record", id, request);
+		LogAction.log("read", "pmm client record", id, request);
 
 		String roles = (String) request.getSession().getAttribute("userrole");
 
@@ -540,7 +539,7 @@ public class ClientManagerAction extends DispatchAction {
 			saveMessages(request, messages);
 		}
 
-		logManager.log("write", "referral", String.valueOf(referral.getClientId()), request);
+		LogAction.log("write", "referral", String.valueOf(referral.getClientId()), request);
 	}
 
 	public ActionForward refer_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -675,7 +674,7 @@ public class ClientManagerAction extends DispatchAction {
 		}
 
 		setEditAttributes(form, request, id);
-		logManager.log("write", "service_restriction", id, request);
+		LogAction.log("write", "service_restriction", id, request);
 
 		return mapping.findForward("edit");
 	}
@@ -748,7 +747,7 @@ public class ClientManagerAction extends DispatchAction {
 		clientForm.set("program", new Program());
 		clientForm.set("referral", new ClientReferral());
 		setEditAttributes(form, request, "" + referral.getClientId());
-		logManager.log("write", "referral", "" + referral.getClientId(), request);
+		LogAction.log("write", "referral", "" + referral.getClientId(), request);
 
 		return mapping.findForward("edit");
 	}
@@ -2087,10 +2086,6 @@ public class ClientManagerAction extends DispatchAction {
 
 	public void setClientManager(ClientManager mgr) {
 		this.clientManager = mgr;
-	}
-
-	public void setLogManager(LogManager mgr) {
-		this.logManager = mgr;
 	}
 
 	public void setProgramManager(ProgramManager mgr) {

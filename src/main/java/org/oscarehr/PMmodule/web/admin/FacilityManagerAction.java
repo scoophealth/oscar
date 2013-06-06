@@ -39,7 +39,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.FacilityDischargedClients;
 import org.oscarehr.common.dao.AdmissionDao;
@@ -54,6 +53,8 @@ import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
+import oscar.log.LogAction;
+
 import com.quatro.service.LookupManager;
 
 /**
@@ -64,8 +65,7 @@ public class FacilityManagerAction extends DispatchAction {
 	private DemographicDao demographicDao;
 	private ProgramManager programManager;
 	private LookupManager lookupManager;
-	private LogManager logManager;
-
+	
 	private FacilityDao facilityDao;
     private EFormDao eFormDao = (EFormDao) SpringUtils.getBean("EFormDao");
 
@@ -253,7 +253,7 @@ public class FacilityManagerAction extends DispatchAction {
 
 			request.setAttribute("id", facility.getId());
 
-			logManager.log("write", "facility", facility.getId().toString(), request);
+			LogAction.log("write", "facility", facility.getId().toString(), request);
 
 			return list(mapping, form, request, response);
 		} catch (Exception e) {
@@ -275,10 +275,6 @@ public class FacilityManagerAction extends DispatchAction {
 
 	public void setLookupManager(LookupManager lookupManager) {
 		this.lookupManager = lookupManager;
-	}
-
-	public void setLogManager(LogManager mgr) {
-		this.logManager = mgr;
 	}
 
 	public void setProgramManager(ProgramManager mgr) {

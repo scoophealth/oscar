@@ -70,7 +70,6 @@ import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
@@ -100,6 +99,8 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import oscar.log.LogAction;
+
 import com.quatro.service.security.RolesManager;
 
 public class ProgramManagerAction extends DispatchAction {
@@ -110,7 +111,6 @@ public class ProgramManagerAction extends DispatchAction {
 	private FacilityDao facilityDao = null;
 	private AdmissionManager admissionManager;
 	private BedCheckTimeManager bedCheckTimeManager;
-	private LogManager logManager;
 	private ProgramManager programManager;
 	private ProviderManager providerManager;
 	private ProgramQueueManager programQueueManager;
@@ -173,7 +173,7 @@ public class ProgramManagerAction extends DispatchAction {
 		programForm.set("searchType", searchType);
 		programForm.set("searchFacilityId", searchFacilityId);
 
-		logManager.log("read", "full program list", "", request);
+		LogAction.log("read", "full program list", "", request);
 
 		return mapping.findForward("list");
 	}
@@ -275,7 +275,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - assign role", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - assign role", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -302,7 +302,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - assign team", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - assign team", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -325,7 +325,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - assign client to team", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - assign client to team", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -374,7 +374,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.deleted", name));
 		saveMessages(request, messages);
 
-		logManager.log("write", "delete program", String.valueOf(program.getId()), request);
+		LogAction.log("write", "delete program", String.valueOf(program.getId()), request);
 
 		return list(mapping, form, request, response);
 	}
@@ -390,7 +390,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - delete access", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - delete access", String.valueOf(program.getId()), request);
 
 		this.setEditAttributes(request, String.valueOf(program.getId()));
 		programForm.set("access", new ProgramAccess());
@@ -409,7 +409,7 @@ public class ProgramManagerAction extends DispatchAction {
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
-		logManager.log("write", "edit program - delete function user", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - delete function user", String.valueOf(program.getId()), request);
 
 		this.setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -428,7 +428,7 @@ public class ProgramManagerAction extends DispatchAction {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 			saveMessages(request, messages);
 
-			logManager.log("write", "edit program - delete provider", String.valueOf(program.getId()), request);
+			LogAction.log("write", "edit program - delete provider", String.valueOf(program.getId()), request);
 		}
 		this.setEditAttributes(request, String.valueOf(program.getId()));
 		programForm.set("provider", new ProgramProvider());
@@ -525,7 +525,7 @@ public class ProgramManagerAction extends DispatchAction {
 		programForm.set("provider", pp);
 		request.setAttribute("providerName", pp.getProvider().getFormattedName());
 
-		logManager.log("write", "edit program - edit provider", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - edit provider", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -570,7 +570,7 @@ public class ProgramManagerAction extends DispatchAction {
 		fullQueue.setStatus(ProgramQueue.STATUS_REMOVED);
 		programQueueManager.saveProgramQueue(fullQueue);
 
-		logManager.log("write", "edit program - queue removal", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - queue removal", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -624,7 +624,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - assign team (removal)", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - assign team (removal)", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -680,7 +680,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -766,7 +766,7 @@ public class ProgramManagerAction extends DispatchAction {
 
 		ProgramAccessCache.setAccessMap(program.getId());
 		
-		logManager.log("write", "edit program", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -1134,7 +1134,7 @@ public class ProgramManagerAction extends DispatchAction {
 
 		programManager.saveProgramAccess(access);
 
-		logManager.log("write", "access", String.valueOf(program.getId()), request);
+		LogAction.log("write", "access", String.valueOf(program.getId()), request);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -1173,7 +1173,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - save function user", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - save function user", String.valueOf(program.getId()), request);
 
 		programForm.set("function", new ProgramFunctionalUser());
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -1206,7 +1206,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - save provider", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - save provider", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -1234,7 +1234,7 @@ public class ProgramManagerAction extends DispatchAction {
 
 		programManager.saveProgramTeam(team);
 
-		logManager.log("write", "edit program - save team", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - save team", String.valueOf(program.getId()), request);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -1427,7 +1427,7 @@ public class ProgramManagerAction extends DispatchAction {
 
 		programManager.saveProgramClientStatus(status);
 
-		logManager.log("write", "edit program - save status", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - save status", String.valueOf(program.getId()), request);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -1453,7 +1453,7 @@ public class ProgramManagerAction extends DispatchAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log("write", "edit program - assign client to status", String.valueOf(program.getId()), request);
+		LogAction.log("write", "edit program - assign client to status", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -1617,10 +1617,6 @@ public class ProgramManagerAction extends DispatchAction {
 
 	public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
 		this.bedCheckTimeManager = bedCheckTimeManager;
-	}
-
-	public void setLogManager(LogManager mgr) {
-		this.logManager = mgr;
 	}
 
 	public void setProgramManager(ProgramManager mgr) {
