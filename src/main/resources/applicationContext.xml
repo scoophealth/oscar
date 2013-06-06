@@ -39,14 +39,10 @@
 	<bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName" />
 	<bean id="agencyDao" class="org.oscarehr.PMmodule.dao.AgencyDao" autowire="byName" />
 	<!-- bean id="admissionDao" class="org.oscarehr.common.dao.AdmissionDao" autowire="byName" /-->
-	<bean id="bedDemographicDao" class="org.oscarehr.PMmodule.dao.BedDemographicDao" autowire="byName" />
-	<bean id="roomDemographicDao" class="org.oscarehr.PMmodule.dao.RoomDemographicDao" autowire="byName" />
 	<bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
-	<bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName" />
 	<bean id="streetHealthDao" class="org.oscarehr.PMmodule.dao.StreetHealthDao" autowire="byName" />
 	<bean id="otherIdDao" class="org.oscarehr.common.dao.OtherIdDAO" autowire="byName" />
 
-	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
 	<bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
 	<bean id="caseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
 	<bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName" />
@@ -163,18 +159,8 @@
 
 	<!-- Manager classes -->
 	<bean id="programQueueManager" class="org.oscarehr.PMmodule.service.ProgramQueueManager" autowire="byName" />
-	<bean id="admissionManager" class="org.oscarehr.PMmodule.service.AdmissionManager" autowire="byName" />
-	<bean id="bedDemographicManager" class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl">
-		<property name="bedDemographicDao" ref="bedDemographicDao" />
-		<property name="providerDAO" ref="providerDao" />
-		<property name="bedDAO" ref="bedDAO" />
-		<property name="demographicDao" ref="demographicDao" />
-		<property name="roomDAO" ref="roomDAO" />
-		<property name="programDAO" ref="programDao" />
-	</bean>
-	<bean id="roomDemographicManager" class="org.oscarehr.PMmodule.service.impl.RoomDemographicManagerImpl" autowire="byName" />
-	<bean id="roomManager" class="org.oscarehr.PMmodule.service.RoomManager" autowire="byName" />
-	<bean id="bedManager" class="org.oscarehr.PMmodule.service.BedManager" autowire="byName" />
+	<bean id="admissionManager" class="org.oscarehr.PMmodule.service.AdmissionManager" autowire="byType" />
+	
 	<bean id="caseManagementManager" class="org.oscarehr.casemgmt.service.CaseManagementManager" autowire="byName">
 		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />

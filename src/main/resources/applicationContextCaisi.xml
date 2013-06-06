@@ -31,7 +31,6 @@
 	</bean>
 
 	<!-- DAO -->
-	<bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.BedCheckTimeDAO" autowire="byName" />
 	<bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO" autowire="byName" />
 	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeDAO" autowire="byName" />
 	<bean id="healthSafetyDao" class="org.oscarehr.PMmodule.dao.HealthSafetyDao" autowire="byName" />
@@ -43,7 +42,6 @@
 	<!-- managers  -->
 	<bean id="issueAdminManager" class="org.caisi.service.IssueAdminManager" autowire="byName" />
 
-	<bean id="bedCheckTimeManager" class="org.oscarehr.PMmodule.service.impl.BedCheckTimeManagerImpl" autowire="byName" />
 	<!-- Generic Intake -->
 	<bean id="genericIntakeManager" class="org.oscarehr.PMmodule.service.GenericIntakeManager" autowire="byName" />
 	<bean id="streetHealthReportManager" class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl">
@@ -66,10 +64,8 @@
 	<!-- ========================= SCHEDULED JOBS ========================= -->
 	<bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
-			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask">
+			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask" autowire="byType">
 				<property name="programManager" ref="programManager" />
-				<property name="bedManager" ref="bedManager" />
-				<property name="bedDemographicManager" ref="bedDemographicManager" />
 			</bean>
 		</property>
 		<property name="delay" value="120000" />

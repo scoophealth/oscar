@@ -41,17 +41,17 @@ import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.DuplicateBedNameException;
 import org.oscarehr.PMmodule.exception.DuplicateRoomNameException;
 import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
-import org.oscarehr.PMmodule.model.Bed;
-import org.oscarehr.PMmodule.model.BedDemographic;
-import org.oscarehr.PMmodule.model.Room;
-import org.oscarehr.PMmodule.model.RoomDemographic;
-import org.oscarehr.PMmodule.service.BedDemographicManager;
-import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Bed;
+import org.oscarehr.common.model.BedDemographic;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.Room;
+import org.oscarehr.common.model.RoomDemographic;
+import org.oscarehr.managers.BedManager;
+import org.oscarehr.managers.BedDemographicManager;
+import org.oscarehr.managers.RoomManager;
+import org.oscarehr.managers.RoomDemographicManager;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -61,16 +61,16 @@ public class BedManagerAction extends DispatchAction {
 
     private static final String FORWARD_MANAGE = "manage";
 
-    private BedManager bedManager;
+    private BedManager bedManager = SpringUtils.getBean(BedManager.class);
 
     private ProgramManager programManager;
 
-    private RoomManager roomManager;
+    private RoomManager roomManager = SpringUtils.getBean(RoomManager.class);
 
     private FacilityDao facilityDao;
 
-    private BedDemographicManager bedDemographicManager = (BedDemographicManager) SpringUtils.getBean("bedDemographicManager");
-    private RoomDemographicManager roomDemographicManager = (RoomDemographicManager) SpringUtils.getBean("roomDemographicManager");
+    private BedDemographicManager bedDemographicManager = SpringUtils.getBean(BedDemographicManager.class);
+    private RoomDemographicManager roomDemographicManager =SpringUtils.getBean(RoomDemographicManager.class);
     
     public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;

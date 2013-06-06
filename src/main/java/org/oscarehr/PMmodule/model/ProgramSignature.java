@@ -85,9 +85,9 @@ public class ProgramSignature implements Serializable {
 	
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
-		if (!(obj instanceof org.oscarehr.PMmodule.model.Bed)) return false;
+		if (!(obj instanceof ProgramSignature)) return false;
 		else {
-			org.oscarehr.PMmodule.model.Bed bed = (org.oscarehr.PMmodule.model.Bed) obj;
+			ProgramSignature bed = (ProgramSignature) obj;
 			if (null == this.getId() || null == bed.getId()) return false;
 			else return (this.getId().equals(bed.getId()));
 		}
