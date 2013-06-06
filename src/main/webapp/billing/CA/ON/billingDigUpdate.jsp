@@ -22,6 +22,8 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
 <%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+<%@ page import="org.oscarehr.util.MiscUtils" %>
+
 <%
 	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 %>
@@ -39,8 +41,10 @@
     }
     //-->
 </script>
+
 </head>
 <body onload="start()">
+
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
 	<tr bgcolor="#486ebd">
@@ -49,32 +53,35 @@
 	</tr>
 </table>
 <%
-
-
-
+  boolean error = false;
   String code = request.getParameter("update");
   code = code.substring(code.length()-3);
 
+  try {
   	 List<DiagnosticCode> dcodes = diagnosticCodeDao.findByDiagnosticCode(code);
   	 for(DiagnosticCode dcode:dcodes) {
   		 dcode.setDescription(request.getParameter(code));
   		diagnosticCodeDao.merge(dcode);
   	 }
+  }
+  catch(Exception ex) {
+	  error = true;
+	  MiscUtils.getLogger().error("Error", ex);
+  }
+%> 
 
-%> <%
+<%
+if(!error) {
 %>
-<p>
-<h1>Successful Addition of a billing Record.</h1>
-</p>
-<script LANGUAGE="JavaScript">
-    history.go(-1);return false;
-    self.opener.refresh();
-</script>
-
-<p>
-<h1>Sorry, addition has failed.</h1>
-</p>
-
+	<p><h1>Successful Addition of a billing Record.</h1></p>
+<%
+}
+else {
+%>
+	<p><h1>Sorry, addition has failed.</h1></p>
+<%
+}
+%>
 <p></p>
 <hr width="90%"></hr>
 <form><input type="button" value="Close this window"
