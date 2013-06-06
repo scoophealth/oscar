@@ -25,136 +25,134 @@
 --%>
 
 <%@ page
-	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.util.DateUtils, java.net.*"
-	errorPage="errorpage.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<link rel="stylesheet" type="text/css"
-	href="../oscarEncounter/encounterStyles.css">
-<%       
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no; 
-  user_no = (String) session.getAttribute("user");
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.util.DateUtils, java.net.*"%>
+<%
+	if (session.getValue("user") == null)
+		response.sendRedirect("../logout.jsp");
+	String user_no;
+	user_no = (String) session.getAttribute("user");
+%>
 
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+
+<%
+	GregorianCalendar now = new GregorianCalendar();
+	int curYear = now.get(Calendar.YEAR);
+	int curMonth = (now.get(Calendar.MONTH) + 1);
+	int curDay = now.get(Calendar.DAY_OF_MONTH);
+	DateUtils dateUtils = new DateUtils();
+	String tomorrowDate = dateUtils.NextDay(curDay, curMonth, curYear);
+	String clinic = "";
+	Properties proppies = oscar.OscarProperties.getInstance();
+	String homepath = proppies.getProperty("DOCUMENT_DIR");
+	session.setAttribute("obecdownload", homepath);
 %>
 <%
-  GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  DateUtils dateUtils = new DateUtils();
-  String tomorrowDate = dateUtils.NextDay(curDay, curMonth, curYear);
-  String clinic="";
-  Properties proppies = oscar.OscarProperties.getInstance(); 
-  String homepath = proppies.getProperty("DOCUMENT_DIR");
-  session.setAttribute("obecdownload", homepath);
-  
-  
-  %>
-<% 
-    int flag = 0, rowCount=0;
-    String obectxt=(String) request.getAttribute("obectxt") == null?"":(String)request.getAttribute("obectxt");
-    String xml_vdate=request.getParameter("xml_vdate") == null?tomorrowDate:request.getParameter("xml_vdate");
-    String numDays = request.getParameter("numDays")==null?"4":request.getParameter("numDays");
+	int flag = 0, rowCount = 0;
+	String obectxt = (String) request.getAttribute("obectxt") == null
+			? ""
+			: (String) request.getAttribute("obectxt");
+	String xml_vdate = request.getParameter("xml_vdate") == null
+			? tomorrowDate
+			: request.getParameter("xml_vdate");
+	String numDays = request.getParameter("numDays") == null
+			? "4"
+			: request.getParameter("numDays");
 %>
-<html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>oscarReport - OBEC Report</title>
-<link rel="stylesheet" href="oscarReport.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="JavaScript">
-<!-- 
-
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function MM_openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
-
-function refresh() {
-  var u = self.location.href;
-  if(u.lastIndexOf("view=1") > 0) {
-    self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-    history.go(0);
-  }
-}
-//-->
-</script>
 
 
-</head>
-
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
-	topmargin="5">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#FFFFFF">
-		<div align="right"></div>
-	</tr>
-</table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#000000">
-		<td height="40" width="10%"><input type='button' name='print'
-			value='Print' onClick='window.print()'></td>
-		<td width="90%" align="left">
-		<p><font face="Verdana, Arial, Helvetica, sans-serif"
-			color="#FFFFFF"><b><font
-			face="Arial, Helvetica, sans-serif" size="4">oscar<font
-			size="3">Report - Overnight Batch Eligibility Checking</font></font></b></font></p>
-		</td>
-	</tr>
-</table>
-
-<table width="100%" border="0" bgcolor="#EEEEFF">
-	<html:errors />
-	<form name="serviceform" method="get" action="obec.do">
-	<tr>
-		<td width="50%" align="left"><font size="1" color="#333333"
-			face="Verdana, Arial, Helvetica, sans-serif"></td>
-		<td width="40%"></td>
-		<td width="10%"><font color="#333333" size="1"
-			face="Verdana, Arial, Helvetica, sans-serif"> </font></td>
-	</tr>
-	<tr>
-		<td width="50%">
-		<div align="left"><font color="#003366"><font
-			face="Verdana, Arial, Helvetica, sans-serif" size="1"><b>
-
-		<font color="#333333">Service Date-Range</font></b></font></font> &nbsp; &nbsp; <font
-			size="1" face="Arial, Helvetica, sans-serif"><a href="#"
-			onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin
-		Date:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-
+<div class="page-header">
+	<h4>
+		Overnight Batch Eligibility Checking Report
+		<div class="pull-right">
+			<button name="print" onclick="window.print()" class="btn">
+				<i class="icon-print icon-black"></i>
+				<bean:message key="global.btnPrint" />
+			</button>
 		</div>
-		</td>
-		<td colspan='2'>
-		<div align="left"><font size="1"
-			face="Arial, Helvetica, sans-serif">Number of Days:</font> <input
-			type="text" name="numDays" value="<%=numDays%>"> <input
-			type="submit" name="Submit" value="Create Report"></div>
-		</td>
-	</tr>
-	</form>
-</table>
-<pre>
-<% if (obectxt.compareTo("0")!=0 && obectxt.compareTo("")!=0 ){ %>
+	</h4>
+</div>
 
-<a
-	href="../servlet/OscarDownload?homepath=obecdownload&filename=<%=obectxt%>"
-	target="_blank">File Created <%=obectxt%></a>
-<%}
-    else{%>
-        <font size="1" color="#333333"
-	face="Verdana, Arial, Helvetica, sans-serif">File not created!</font>
-<%}%>
-</pre>
-<%@ include file="../demographic/zfooterbackclose.jsp"%>
 
-</body>
-</html>
+<form action="${ctx}/oscarReport/obec.do" class="well form-horizontal"
+	id="obecForm">
+	<fieldset>
+		<h4>
+			OBEC Report <br> <small>Please select the service begin
+				date and number of days.</small>
+		</h4>
+		<div class="row-fluid">
+			<div class="control-group">
+				<label class="control-label">Begin Date</label>
+				<div class="controls">
+
+					<input id="xml_vdate" type="text" name="xml_vdate"
+						value="<%=xml_vdate%>" placeholder="Service Begin Date">
+				</div>
+			</div>
+			<div class="control-group" id="providerDiv">
+				<label class="control-label">Days</label>
+
+				<div class="controls">
+
+					<input type="text" id="numDays" name="numDays" value="<%=numDays%>"
+						class="input-mini">
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input type="submit" name="Submit" value="Create Report"
+						class="btn btn-primary">
+				</div>
+			</div>
+		</div>
+
+	</fieldset>
+</form>
+
+<%
+	if (request.getAttribute("obectxt") != null)
+		if (obectxt.compareTo("0") != 0 && obectxt.compareTo("") != 0) {
+%>
+<div class="alert alert-success">
+	<h4>Success!</h4>
+	<a
+		href="${ctx}/servlet/OscarDownload?homepath=obecdownload&filename=<%=obectxt%>">File
+		Created <%=obectxt%></a>
+</div>
+<%
+	} else {
+%>
+<div class="alert alert-block">
+	<h4>Warning!</h4>
+	File not created!
+</div>
+<%
+	}
+%>
+
+
+<script>
+	var startDt = $("#xml_vdate").datepicker({
+		format : "yyyy-mm-dd"
+	});
+
+	$(document).ready(function() {
+		$('#obecForm').validate({
+			rules : {
+				xml_vdate : {
+					required : true,
+					oscarDate : true
+				},
+				numDays : {
+					required : true,
+					number : true
+				}
+			}
+		});
+	});
+
+	registerFormSubmit('obecForm', 'dynamic-content');
+</script>

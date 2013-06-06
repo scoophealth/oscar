@@ -33,6 +33,10 @@
 <%@page import="java.text.DateFormatSymbols"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+
 <%
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
 	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
@@ -41,108 +45,93 @@
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
 %>
 
-<%@include file="/layouts/caisi_html_top.jspf"%>
+<div class="page-header">
+	<h4>CDS Reports</h4>
+</div>
 
-<h1>CDS Reports</h1>
-				
-<script type="text/javascript">
-	function validate(form)
-	{
-		var fields = form.elements;
+<form class="well form-horizontal" action="cds_4_report_results.jsp"
+	id="cdsForm">
+	<fieldset>
 
-		if (fields.functionalCentreId.value==null||fields.functionalCentreId.value=="")
-		{
-			alert('Please select a functional centre.');
-			return(false);
-		}
-	}
-</script>
+		<!-- Form Name -->
+		<legend>CDS-MH 4.05</legend>
 
-<form method="post" action="cds_4_report_results.jsp" onsubmit="return(validate(this))">
-	<table class="borderedTableAndCells">
-		<tr>
-			<td colspan="2">CDS-MH 4.05</td>
-		</tr>
-		<tr>
-			<td>Functional Centre to report on</td>
-			<td>
-				<select name="functionalCentreId">
+		<div class="control-group">
+			<label class="control-label">Functional Centre</label>
+			<div class="controls">
+				<select id="functionalCentreId" name="functionalCentreId" class="input-large">
 					<%
 						for (FunctionalCentre functionalCentre : functionalCentres)
-						{
-							%>
-								<option value="<%=functionalCentre.getAccountId()%>"><%=functionalCentre.getAccountId()+", "+functionalCentre.getDescription()%></option>
-							<%
+									{
+					%>
+					<option value="<%=functionalCentre.getAccountId()%>"><%=functionalCentre.getAccountId()+", "+functionalCentre.getDescription()%></option>
+					<%
 						}
 					%>
 				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>Date Range Start</td>
-			<td>
-				<select name="startYear">
-				<%
-					GregorianCalendar cal=new GregorianCalendar();
-					int year=cal.get(GregorianCalendar.YEAR);
-					for (int i=0; i<10; i++)
-					{
-						%>
-							<option value="<%=year-i%>"><%=year-i%></option>
-						<%
-					}
-				%>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Date Start</label>
+			<div class="controls">
+				<select name="startYear" class="input-medium">
+					<%
+						GregorianCalendar cal=new GregorianCalendar();
+								int year=cal.get(GregorianCalendar.YEAR);
+								for (int i=0; i<10; i++)
+								{
+					%>
+					<option value="<%=year-i%>"><%=year-i%></option>
+					<%
+						}
+					%>
+				</select> <select name="startMonth" class="input-mini">
+					<%
+						DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
+								String[] months=dateFormatSymbols.getShortMonths();
+								
+								for (int i=1; i<13; i++)
+								{
+					%>
+					<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
+					<%
+						}
+					%>
 				</select>
-				-
-				<select name="startMonth">
-				<%
-					DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
-					String[] months=dateFormatSymbols.getShortMonths();
-					
-					for (int i=1; i<13; i++)
-					{
-						%>
-							<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
-						<%
-					}
-				%>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Date End (inclusive)</label>
+			<div class="controls">
+				<select name="endYear" class="input-medium">
+					<%
+						for (int i=0; i<10; i++)
+								{
+					%>
+					<option value="<%=year-i%>"><%=year-i%></option>
+					<%
+						}
+					%>
+				</select> <select name="endMonth" class="input-mini">
+					<%
+						for (int i=1; i<13; i++)
+								{
+					%>
+					<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
+					<%
+						}
+					%>
 				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>Date Range End (inclusive)</td>
-			<td>
-				<select name="endYear">
-				<%
-					for (int i=0; i<10; i++)
-					{
-						%>
-							<option value="<%=year-i%>"><%=year-i%></option>
-						<%
-					}
-				%>
-				</select>
-				-
-				<select name="endMonth">
-				<%
-					for (int i=1; i<13; i++)
-					{
-						%>
-							<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
-						<%
-					}
-				%>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Providers to include
-				<div style="font-size:smaller">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Providers to include
+				<small>
 					(leave blank to report on all providers, multi select is allowed)
-				</div>
-			<td>
-				<select multiple="multiple" name="providerIds">
+				</small>
+			</label>
+			<div class="controls">
+				<select name="providerIds" class="input-medium" multiple="multiple">
 					<%
 						// null for both active and inactive because the report might be for a provider who's just left in the current reporting period.
 						List<Provider> providers=providerManager.getProviders(null);
@@ -158,14 +147,30 @@
 						}
 					%>
 				</select>
-			</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><input type="submit" value="Download Report" /></td>
-		</tr>
-	</table>	
+			</div>
+		</div>
+
+
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn btn-primary">View Report</button>
+			</div>
+		</div>
+
+	</fieldset>
 </form>
 
+<div id="cds-results"></div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#cdsForm').validate({
+			rules : {
+				functionalCentreId : {
+					required : true
+				}
+			}
+		});
+	});
 
-<%@include file="/layouts/caisi_html_bottom.jspf"%>
+	registerFormSubmit('cdsForm', 'cds-results');
+</script>

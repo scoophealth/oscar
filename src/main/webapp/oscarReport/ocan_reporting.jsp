@@ -36,7 +36,6 @@
 <%@page import="org.oscarehr.common.model.Demographic" %>
 
 <%@ include file="/taglibs.jsp"%>
-<%@include file="/layouts/caisi_html_top.jspf"%>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
@@ -50,7 +49,7 @@
 	var ctx = '<%=request.getContextPath()%>';
 </script>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
 <script>
 	function generateIndividualNeedRatingOverTimeReport() {
 		//check to make sure a client is selected
@@ -414,4 +413,3 @@
 </form>
 
 
-<%@include file="/layouts/caisi_html_bottom.jspf"%>

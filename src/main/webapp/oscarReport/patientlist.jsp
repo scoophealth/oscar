@@ -1,80 +1,103 @@
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	if (session.getAttribute("userrole") == null)
+		response.sendRedirect("../logout.jsp");
+	String roleName$ = (String) session.getAttribute("userrole") + ","
+			+ (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin.reporting" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
-</security:oscarSec>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ page import="oscar.oscarReport.data.DoctorList"%>
 <%@ page import="oscar.oscarProvider.bean.ProviderNameBean"%>
 <%@ page import="java.util.ArrayList"%>
-<% ArrayList dnl = new DoctorList().getDoctorNameList();%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>PatientList</title>
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-<!-- main calendar program -->
-<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 
-<!-- language for the calendar -->
-<script type="text/javascript"
-	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin.reporting" rights="r" reverse="<%=true%>">
+	<%
+		response.sendRedirect("../logout.jsp");
+	%>
+</security:oscarSec>
 
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-<link rel="stylesheet" href="../web.css">
-</head>
-<body>
-    <form action="../patientlistbyappt" method="get" target="_blank">
-<table width="525">
-	<tr>
-		<td>Select a Doctor</td>
-		<td><select name="provider_no">
-			<option value="all">All Doctors</option>
-			<%      
- 	for (int i = 0; i < dnl.size(); i++){
-            ProviderNameBean pb = (ProviderNameBean)dnl.get(i);
-%>
-			<option value="<%=pb.getProviderID()%>"><%=pb.getProviderName()%></option>
-			<%
- 	 }
+<div class="page-header">
+	<h4>Patient List</h4>
+</div>
 
-%>
-		</select></td>
-	<tr>
-		<td width="20%">Appointment Date From:</td>
-		<td width="20%"><input type="text" name="date_from"
-			id="date_from" value="" size="10" readonly /> <img
-			src="../images/cal.gif" id="date_from" /></td>
-		<td width="20%">To:</td>
-		<td width="20%"><input type="text" name="date_to" id="date_to"
-			value="" size="10" readonly /> <img src="../images/cal.gif"
-			id="date_to" /></td>
-	</tr>
-	<tr>
-		<td><input type="submit" name="Submit" value="Submit" /></td>
-	</tr>
-</table>
+<form id="plForm" action="${ctx}/patientlistbyappt" class="well form-horizontal">
 
+	<fieldset>
+		<h4>
+			<bean:message key="admin.admin.exportPatientbyAppt"/> <br> <small>Please select
+				the provider and appointment date from &amp; to.</small>
+		</h4>
+		<div class="row-fluid">
+			<div class="control-group">
+				<label class="control-label">Doctor</label>
+				<div class="controls">
+					<select name="provider_no" class="span3">
+						<option value="all">All Doctors</option>
+						<%
+							ArrayList<ProviderNameBean> dnl = new DoctorList().getDoctorNameList();
+							for (int i = 0; i < dnl.size(); i++) {
+								ProviderNameBean pb = (ProviderNameBean) dnl.get(i);
+						%>
+						<option value="<%=pb.getProviderID()%>"><%=pb.getProviderName()%></option>
+						<%
+							}
+						%>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Date From</label>
+				<div class="controls">
+					<input id="date_from" name="date_from" size="10"
+						type="text" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Date To</label>
+				<div class="controls">
+					<input id="date_to" name="date_to" size="10"
+						type="text" />
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<button type="submit" class="btn btn-primary">
+						<i class="icon-download-alt icon-white"></i>Export
+					</button>
+				</div>
+			</div>
+		</div>
+	</fieldset>
 </form>
 
-</body>
-</html>
+<script>
+	var startDt = $("#date_from").datepicker({
+		format : "yyyy-mm-dd"
+	});
 
-<script type="text/javascript">
-Calendar.setup({ inputField : "date_from", ifFormat : "%Y-%m-%d", showsTime :false, button : "date_from" });
-</script>
+	var endDt = $("#date_to").datepicker({
+		format : "yyyy-mm-dd"
+	});
 
-<script type="text/javascript">
-Calendar.setup({ inputField : "date_to", ifFormat : "%Y-%m-%d", showsTime :false, button : "date_to" });
+	$(document).ready(function() {
+		$('#plForm').validate({
+			rules : {
+				date_from : {
+					required : true,
+					oscarDate : true
+				},
+				date_to : {
+					required : true,
+					oscarDate : true
+				}
+			},
+			submitHandler: function(form) {
+				form.submit();
+		  	}
+		});
+	});
 </script>
