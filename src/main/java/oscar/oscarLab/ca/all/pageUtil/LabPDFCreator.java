@@ -134,7 +134,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
     		int i=0;
 
     		for(i=0; i<headers.size(); i++){
-    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSVCH"))){
+    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))|| (headers.get(i).equals("CELLPATHR"))){
     				isUnstructuredDoc = true;
     			}
     		}
@@ -207,7 +207,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		
 		float[] mainTableWidths;
 		if(isUnstructuredDoc){
-			mainTableWidths = new float[] { 5f, 9f, 4f, 2f };
+			mainTableWidths = new float[] { 5f, 12f, 3f};
 		}else{
 			mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
 		}
@@ -247,8 +247,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 			table.addCell(cell);
 			cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
 			table.addCell(cell);
-			cell.setPhrase(new Phrase("Status", boldFont));
-			table.addCell(cell); 
 		} else{
 		cell.setColspan(1);
 		cell.setBorder(15);
@@ -268,6 +266,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		table.addCell(cell);
 		cell.setPhrase(new Phrase("Status", boldFont));
 		table.addCell(cell); }
+
 
 		// add test results
 		int obrCount = handler.getOBRCount();
@@ -349,14 +348,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									table.addCell(cell); 
 								}else {
 									cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));		
-									table.addCell(cell);
-								}
-								//if there are duplicate results, display only the first 
-								if(handler.getOBXResultStatus(j, k).equals(handler.getOBXResultStatus(j, k-1)) && (obxCount>1)){
-									cell.setPhrase(new Phrase("", lineFont));		
-									table.addCell(cell);
-								}else{
-									cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));		
 									table.addCell(cell);
 								}
 							} else{

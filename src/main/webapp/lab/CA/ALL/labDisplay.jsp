@@ -1,3 +1,4 @@
+
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -992,7 +993,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                        	//Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is
                     	if(handler.getMsgType().equals("PATHL7")){
                     		for(i=0; i<headers.size(); i++){
-                    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSVCH"))){
+                    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))|| (headers.get(i).equals("CELLPATHR"))){
                     				isUnstructuredDoc = true;
                     			}
                     		}
@@ -1065,10 +1066,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                       <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
 	                           <tr class="Field2">
 	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
-	                               <td width="50%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
-	                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
-	                               <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
-	                          	   <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
+	                               <td width="60%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
 	                           </tr><%
 						} else {%>
                        <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -1337,31 +1336,19 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     } else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) )  {
 
                                    		if(isUnstructuredDoc){%>
-                                   			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>"><% 
+                                   			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>"><% 
                                    			if(handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)){%>
                                    				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=""%></a><%
                                    				}
                                    			else{%> <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a><%}%>
-                                  				
-                                  				&nbsp;<%if(loincCode != null){ %>
-                                              	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
-                                              	<%}%>  </td>
+
                                            	<td align="left"><%= handler.getOBXResult( j, k) %></td>
-	                                        <%if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
+                                           	<%if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
                                         			%><td align="center"><%= "" %></td><%}
-                                        		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td> <%}
-                                          	   	if(handler.getOBXResultStatus(j, k).equals(handler.getOBXResultStatus(j, k-1)) && (obxCount>1)){
-                                        			%><td align="center"><%= "" %></td><%}
-                                          	   	else{ %> <td align="center"><%= handler.getOBXResultStatus( j, k) %></td> <%}%>
-                                          	 	<td align="center" valign="top">
-			                                             <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
-			                                             	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
-			                                             </a>
-			                                         </td>
-			                                </tr>	
-                                   			<%}//end of isUnstructuredDoc
+                                        		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td><%}
+                                   			}//end of isUnstructuredDoc
                                    			
-                                   			else{//if it isn't an PATHL7 doc%>
+                                   			else{//if it isn't a PATHL7 doc%>
 
                                		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a>
@@ -1383,7 +1370,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                                                </a>
                                                 </td>
                                        </tr>
+
 										<%}
+
                                        for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
