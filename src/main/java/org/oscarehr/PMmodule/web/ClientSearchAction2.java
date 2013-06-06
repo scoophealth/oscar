@@ -36,12 +36,13 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ClientManager;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.log.LogAction;
 
 import com.quatro.service.LookupManager;
 
@@ -49,7 +50,6 @@ public class ClientSearchAction2 extends DispatchAction {
 	
 	private LookupManager lookupManager;
     private ClientManager clientManager;
-    private LogManager logManager;
     private ProgramManager programManager;
 
     private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
@@ -134,7 +134,7 @@ public class ClientSearchAction2 extends DispatchAction {
 		request.setAttribute("clients",clientManager.search(formBean));		
 
 		if(formBean.isSearchOutsideDomain()) {
-			logManager.log("read","out of domain client search","",request);
+			LogAction.log("read","out of domain client search","",request);
 		}
 		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
 				
@@ -160,7 +160,7 @@ public class ClientSearchAction2 extends DispatchAction {
         request.setAttribute("clients",clientManager.search(formBean));
 
         if(formBean.isSearchOutsideDomain()) {
-            logManager.log("read","out of domain client search","",request);
+            LogAction.log("read","out of domain client search","",request);
         }
         request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
 
@@ -174,10 +174,6 @@ public class ClientSearchAction2 extends DispatchAction {
 
     public void setClientManager(ClientManager mgr) {
     	this.clientManager = mgr;
-    }
-
-    public void setLogManager(LogManager mgr) {
-    	this.logManager = mgr;
     }
 
     public void setProgramManager(ProgramManager mgr) {

@@ -44,7 +44,6 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.formbean.StaffEditProgramContainer;
@@ -56,6 +55,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.log.LogAction;
+
 public class StaffManagerAction extends DispatchAction {
 	private static Logger log = MiscUtils.getLogger();
 	
@@ -63,8 +64,6 @@ public class StaffManagerAction extends DispatchAction {
     
 
 	private FacilityDao facilityDao=null;
-
-    private LogManager logManager;
 
     private ProgramManager programManager;
 
@@ -167,7 +166,7 @@ public class StaffManagerAction extends DispatchAction {
         //show programs which can be assigned to the provider
         request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", 0));
 
-		logManager.log("read","full provider list","",request);
+		LogAction.log("read","full provider list","",request);
 		return mapping.findForward("list");
 	}
 
@@ -188,7 +187,7 @@ public class StaffManagerAction extends DispatchAction {
 
 		request.setAttribute("providers",providerManager.getActiveProviders(facilityId, programId));
 
-		logManager.log("read","full provider list","",request);
+		LogAction.log("read","full provider list","",request);
 		return mapping.findForward("list");
 	}
 
@@ -296,10 +295,6 @@ public class StaffManagerAction extends DispatchAction {
 		providerForm.set("program_provider",new ProgramProvider());
 		return mapping.findForward("edit");
 	}
-
-    public void setLogManager(LogManager mgr) {
-    	this.logManager = mgr;
-    }
 
     public void setProgramManager(ProgramManager mgr) {
     	this.programManager = mgr;

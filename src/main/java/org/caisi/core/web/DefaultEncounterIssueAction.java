@@ -38,12 +38,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.caisi.dao.DefaultIssueDao;
 import org.caisi.model.DefaultIssue;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.log.LogAction;
 
 /**
  * @author Administrator
@@ -51,7 +52,6 @@ import org.oscarehr.util.SpringUtils;
  */
 public class DefaultEncounterIssueAction extends DispatchAction {
 	
-	private LogManager logManager;
 	
 	public ActionForward unspecified(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping,form,request,response);
@@ -130,7 +130,7 @@ public class DefaultEncounterIssueAction extends DispatchAction {
 		}
 		strIds.deleteCharAt(strIds.length() - 1);
 		
-		logManager.log("write", "assign default issues", strIds.toString(), request);
+		LogAction.log("write", "assign default issues", strIds.toString(), request);
 		
 		saveDefaultIssuesToDb(strIds.toString());
 		
@@ -198,14 +198,11 @@ public class DefaultEncounterIssueAction extends DispatchAction {
 		
 		idSb.deleteCharAt(idSb.length() - 1);
 		
-		logManager.log("remove", "remove default issues", idSb.toString(), request);
+		LogAction.log("remove", "remove default issues", idSb.toString(), request);
 		
 		removeDefaultIssues(issueIdSet);
 		
 		return list(mapping,form,request,response);
 	}
 	
-	public void setLogManager(LogManager mgr) {
-    	this.logManager = mgr;
-    }
 }

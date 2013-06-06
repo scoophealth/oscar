@@ -28,10 +28,13 @@ package oscar.log;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DeamonThreadFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -124,5 +127,22 @@ public class LogAction {
 			logger.error("Error logging entry : " + oscarLog);
 		}
 	}
-
+	
+	
+	/**
+	 * ported from the old caisi pmm_log
+	 */
+	public static void log(String accessType, String entity, String entityId, HttpServletRequest request) {		
+		OscarLog log = new OscarLog();
+		
+		Provider provider=(Provider) request.getSession().getAttribute("provider");
+		if (provider!=null) log.setProviderNo(provider.getProviderNo());
+		
+		log.setAction(accessType);
+		log.setContent(entity);
+		log.setContentId(entityId);
+		log.setIp(request.getRemoteAddr());
+	
+		oscarLogDao.persist(log);
+	}
 }
