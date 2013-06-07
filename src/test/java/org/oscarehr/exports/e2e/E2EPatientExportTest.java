@@ -49,10 +49,11 @@ import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.exports.PatientExport;
+import org.oscarehr.exports.PatientExport.sortByDin;
 import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.exports.e2e.E2EPatientExport.Lab;
 import org.oscarehr.exports.e2e.E2EPatientExport.LabGroup;
-import org.oscarehr.exports.e2e.E2EPatientExport.sortByDin;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -132,7 +133,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 
 	@Test
 	public void testGetProviderFirstName() {
-		E2EPatientExport p = new E2EPatientExport();
+		PatientExport p = new E2EPatientExport();
 		p.loadPatient(demographicNo.toString());
 
 		assertNotNull(providerDataDao);
@@ -151,7 +152,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 
 	@Test
 	public void testGetProviderLastName() {
-		E2EPatientExport p = new E2EPatientExport();
+		PatientExport p = new E2EPatientExport();
 		p.loadPatient(demographicNo.toString());
 
 		assertNotNull(providerDataDao);
@@ -171,7 +172,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 	// Testing booleans
 	@Test
 	public void testSetExAllTrue() {
-		E2EPatientExport p = new E2EPatientExport();
+		PatientExport p = new E2EPatientExport();
 		p.setExAllTrue();
 		p.loadPatient(demographicNo.toString());
 		assertTrue("PatientExport isLoaded flag unexpectedly false", p.isLoaded());
@@ -374,7 +375,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 
 	@Test
 	public void testIsActiveDrug() {
-		E2EPatientExport p = new E2EPatientExport();
+		PatientExport p = new E2EPatientExport();
 		Date pastDate = E2EPatientExport.stringToDate("2012-01-01 00:00:00");
 		assertFalse(p.isActiveDrug(pastDate));
 		Date futureDate = E2EPatientExport.stringToDate("9999-12-31 23:59:59");
@@ -383,7 +384,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 
 	@Test
 	public void testSortByDinCompare() {
-		E2EPatientExport p = new E2EPatientExport();
+		PatientExport p = new E2EPatientExport();
 		sortByDin sbd = p.new sortByDin();
 		assertNotNull(sbd.compare(new Drug(), new Drug()));
 	}

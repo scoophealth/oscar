@@ -25,7 +25,6 @@ package org.oscarehr.exports;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.VelocityUtils;
 
@@ -36,20 +35,23 @@ import org.oscarehr.util.VelocityUtils;
  */
 public abstract class VelocityTemplate {
 	protected static Logger log = MiscUtils.getLogger();
-	protected static String template = null;
 	protected VelocityContext context = VelocityUtils.createVelocityContextWithTools();
-	
+
+	public VelocityTemplate() {
+		super();
+	}
+
 	/**
 	 * This function populates the template string with the desired template.
 	 * It should be called in the constructor of the object and definitely before export.
 	 */
 	protected abstract void loadTemplate();
-	
+
 	/**
 	 * Assembles the data model & predefined velocity template to yield an output string
 	 * 
-	 * @param record PatientExport object model
+	 * @param p PatientExport object model
 	 * @return String of the merged output if successful. Otherwise an empty string is returned.
 	 */
-	public abstract String export(E2EPatientExport record);
+	public abstract String export(PatientExport p);
 }

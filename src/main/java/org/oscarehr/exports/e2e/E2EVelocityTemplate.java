@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.model.Clinic;
+import org.oscarehr.exports.PatientExport;
 import org.oscarehr.exports.VelocityTemplate;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
@@ -43,6 +44,7 @@ import org.oscarehr.util.VelocityUtils;
  */
 public class E2EVelocityTemplate extends VelocityTemplate {
 	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2etemplate.vm";
+	private static String template = null;
 	private static E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private Clinic clinic = clinicDao.getClinic();
@@ -82,7 +84,8 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	 * @param record
 	 * @return String representing E2E export from template
 	 */
-	public String export(E2EPatientExport record) {
+	public String export(PatientExport p) {
+		E2EPatientExport record = (E2EPatientExport) p;
 		if(record.isLoaded() == false) {
 			log.error("PatientExport object is not loaded with a patient");
 			return "";
@@ -122,11 +125,11 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	public static class E2EResources {
 		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2eformcode.csv";
 		private static Map<String,String> formCodes = null;
-		
+
 		public E2EResources() {
 			loadFormCode();
 		}
-		
+
 		/**
 		 * Loads the formcode mapping
 		 */
@@ -157,14 +160,14 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 				}
 			}
 		}
-		
+
 		/**
 		 * Takes in a formcode string and returns the E2E Form Code result if available
 		 * 
 		 * @param rhs
 		 * @return String if applicable, else null
 		 */
-		public static String formCodeMap(String rhs) {
+		public String formCodeMap(String rhs) {
 			if(formCodes.containsKey(rhs)) {
 				return formCodes.get(rhs);
 			}

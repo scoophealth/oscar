@@ -38,6 +38,8 @@ import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.exports.PatientExport;
+import org.oscarehr.exports.VelocityTemplate;
 import org.oscarehr.exports.e2e.E2EExportValidator;
 import org.oscarehr.exports.e2e.E2EVelocityTemplate;
 import org.oscarehr.exports.e2e.E2EPatientExport;
@@ -78,9 +80,9 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 
 	@Test
 	public void testExport() {
-		E2EVelocityTemplate e2etemplate = new E2EVelocityTemplate();
+		VelocityTemplate e2etemplate = new E2EVelocityTemplate();
 		assertNotNull(e2etemplate);
-		E2EPatientExport p = new E2EPatientExport();
+		PatientExport p = new E2EPatientExport();
 		assertNotNull(p);
 		p.loadPatient(demographicNo.toString());
 		String s = null;
@@ -111,8 +113,9 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 
 	@Test
 	public void testFormCodeMap() {
-		assertTrue("Tablet mapping didn't return TAB", E2EResources.formCodeMap("TABLET").equals("TAB"));
-		assertNull("Empty formcode map didn't return null", E2EResources.formCodeMap(""));
+		E2EResources e = new E2EResources();
+		assertTrue("Tablet mapping didn't return TAB", e.formCodeMap("TABLET").equals("TAB"));
+		assertNull("Empty formcode map didn't return null", e.formCodeMap(""));
 	}
 
 /*	@Test

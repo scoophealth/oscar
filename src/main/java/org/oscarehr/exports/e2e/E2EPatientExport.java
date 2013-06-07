@@ -23,88 +23,32 @@
  */
 package org.oscarehr.exports.e2e;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
-import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
-import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
-import org.oscarehr.common.dao.AllergyDao;
-import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.DrugDao;
-import org.oscarehr.common.dao.DxresearchDAO;
-import org.oscarehr.common.dao.Hl7TextInfoDao;
-import org.oscarehr.common.dao.Icd9Dao;
-import org.oscarehr.common.dao.MeasurementDao;
-import org.oscarehr.common.dao.MeasurementTypeDao;
-import org.oscarehr.common.dao.MeasurementsExtDao;
-import org.oscarehr.common.dao.PatientLabRoutingDao;
-import org.oscarehr.common.dao.PreventionDao;
-import org.oscarehr.common.dao.PreventionExtDao;
-import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Measurement;
-import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
-import org.oscarehr.common.model.ProviderData;
-import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
+import org.oscarehr.exports.PatientExport;
 
 /**
  * Models a "patient" which bundles all data required to define a "patient" for export
  * 
  * @author Jeremy Ho
  */
-public class E2EPatientExport {
-	private static Logger log = MiscUtils.getLogger();
-	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-	private static AllergyDao allergyDao = SpringUtils.getBean(AllergyDao.class);
-	private static DrugDao drugDao = SpringUtils.getBean(DrugDao.class);
-	private static PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
-	private static PreventionExtDao preventionExtDao = SpringUtils.getBean(PreventionExtDao.class);
-	private static ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
-	private static DxresearchDAO dxResearchDao = SpringUtils.getBean(DxresearchDAO.class);
-	private static Icd9Dao icd9Dao = SpringUtils.getBean(Icd9Dao.class);
-	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
-	private static Hl7TextInfoDao hl7TextInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
-	private static IssueDAO issueDao = SpringUtils.getBean(IssueDAO.class);
-	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
-	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
-	private static MeasurementTypeDao measurementTypeDao = SpringUtils.getBean(MeasurementTypeDao.class);
-	private static CaseManagementIssueDAO caseManagementIssueDao = SpringUtils.getBean(CaseManagementIssueDAO.class);
-	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao = SpringUtils.getBean(CaseManagementIssueNotesDao.class);
-	private static CaseManagementNoteDAO caseManagementNoteDao = SpringUtils.getBean(CaseManagementNoteDAO.class);
-	private static CaseManagementNoteExtDAO caseManagementNoteExtDao = SpringUtils.getBean(CaseManagementNoteExtDAO.class);
-
-	//private static final long OTHERMEDS = getIssueID("OMeds");
-	private static final long SOCIALHISTORY = getIssueID("SocHistory");
-	//private static final long MEDICALHISTORY = getIssueID("MedHistory");
-	//private static final long ONGOINGCONCERNS = getIssueID("Concerns");
-	private static final long REMINDERS = getIssueID("Reminders");
-	private static final long FAMILYHISTORY = getIssueID("FamHistory");
-	private static final long RISKFACTORS = getIssueID("RiskFactors");
-
-	private Date currentDate = new Date();
+public class E2EPatientExport extends PatientExport {
 	//private String authorId = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 	private String authorId = null;
-	private Integer demographicNo = null;
 	private Demographic demographic = null;
 	private List<Drug> drugs = null;
 	private List<Allergy> allergies = null;
@@ -115,17 +59,6 @@ public class E2EPatientExport {
 	private List<CaseManagementNote> familyHistory = null;
 	private List<CaseManagementNote> alerts = null;
 	private List<Measurement> measurements = null;
-
-	private boolean isLoaded = false;
-	private boolean exMedicationsAndTreatments = false;
-	private boolean exAllergiesAndAdverseReactions = false;
-	private boolean exImmunizations = false;
-	private boolean exProblemList = false;
-	private boolean exLaboratoryResults = false;
-	private boolean exRiskFactors = false;
-	private boolean exPersonalHistory = false;
-	private boolean exFamilyHistory = false;
-	private boolean exAlertsAndSpecialNeeds = false;
 
 	/**
 	 * Constructs an empty Patient Export object
@@ -188,21 +121,6 @@ public class E2EPatientExport {
 		this.isLoaded = true;
 		log.debug("Loaded Demo: " + demographicNo.toString());
 		return true;
-	}
-
-	/**
-	 * @param rhs
-	 * @return issueID as long
-	 */
-	private static long getIssueID(String rhs) {
-		long answer;
-		try {
-			answer = issueDao.findIssueByCode(rhs).getId();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			answer = 0;
-		}
-		return answer;
 	}
 
 	private List<Measurement> parseMeasurements() {
@@ -379,57 +297,6 @@ public class E2EPatientExport {
 	}
 
 	/*
-	 * Section Booleans
-	 */
-	public void setExMedications(boolean rhs) {
-		this.exMedicationsAndTreatments = rhs;
-	}
-
-	public void setExAllergiesAndAdverseReactions(boolean rhs) {
-		this.exAllergiesAndAdverseReactions = rhs;
-	}
-
-	public void setExImmunizations(boolean rhs) {
-		this.exImmunizations = rhs;
-	}
-
-	public void setExProblemList(boolean rhs) {
-		this.exProblemList = rhs;
-	}
-
-	public void setExLaboratoryResults(boolean rhs) {
-		this.exLaboratoryResults = rhs;
-	}
-
-	public void setExRiskFactors(boolean rhs) {
-		this.exRiskFactors = rhs;
-	}
-
-	public void setExPersonalHistory(boolean rhs) {
-		this.exPersonalHistory = rhs;
-	}
-
-	public void setExFamilyHistory(boolean rhs) {
-		this.exFamilyHistory = rhs;
-	}
-
-	public void setExAlertsAndSpecialNeeds(boolean rhs) {
-		this.exAlertsAndSpecialNeeds = rhs;
-	}
-
-	public void setExAllTrue() {
-		this.exMedicationsAndTreatments = true;
-		this.exAllergiesAndAdverseReactions = true;
-		this.exImmunizations = true;
-		this.exProblemList = true;
-		this.exLaboratoryResults = true;
-		this.exRiskFactors = true;
-		this.exPersonalHistory = true;
-		this.exFamilyHistory = true;
-		this.exAlertsAndSpecialNeeds = true;
-	}
-
-	/*
 	 * Demographics
 	 */
 	public Demographic getDemographic() {
@@ -471,18 +338,6 @@ public class E2EPatientExport {
 	//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
 	public boolean hasMeasurements() {
 		return exLaboratoryResults && measurements!=null && !measurements.isEmpty();
-	}
-
-	public String getTypeDescription(String rhs) {
-		try {
-			List<MeasurementType> measurementType = measurementTypeDao.findByType(rhs);
-			for(MeasurementType entry : measurementType) {
-				return entry.getTypeDescription();
-			}
-		} catch (Exception e) {
-			log.warn("getTypeDescription - Type description not found");
-		}
-		return rhs;
 	}
 
 	/*
@@ -640,35 +495,6 @@ public class E2EPatientExport {
 		return exMedicationsAndTreatments && drugs!=null && !drugs.isEmpty();
 	}
 
-	/**
-	 * Checks if drug is "active" by comparing to current date
-	 * 
-	 * @param rhs
-	 * @return True if active, false if not
-	 */
-	public boolean isActiveDrug(Date rhs) {
-		if(currentDate.after(rhs)) return false;
-		else return true;
-	}
-
-	/**
-	 * Allows for collection sort by DIN numbers
-	 * 
-	 * @author Jeremy Ho
-	 *
-	 */
-	public class sortByDin implements Comparator<Drug> {
-		public int compare(Drug one, Drug two) {
-			int answer;
-			try {
-				answer = Integer.parseInt(one.getRegionalIdentifier()) - Integer.parseInt(two.getRegionalIdentifier());
-			} catch (Exception e){
-				answer = 0;
-			}
-			return answer;
-		}
-	}
-
 	/*
 	 * Problem List
 	 */
@@ -678,41 +504,6 @@ public class E2EPatientExport {
 
 	public boolean hasProblems() {
 		return exProblemList && problems!=null && !problems.isEmpty();
-	}
-
-	/**
-	 * Function to allow access to ICD9 Description table data based on ICD9 code
-	 * 
-	 * @param code
-	 * @return String representing the ICD9 Code's description
-	 */
-	public static String getICD9Description(String code) {
-		String result = icd9Dao.findByCode(code).getDescription();
-		if (result == null || result.isEmpty()) {
-			return "";
-		}
-
-		return result;
-	}
-
-	/*
-	 * Case Management Utility Functions
-	 */
-	/**
-	 * Function to allow access to Casemanagement Note Ext table data based on note id
-	 * 
-	 * @param id
-	 * @param keyval
-	 * @return String of result if available, otherwise empty string
-	 */
-	public static String getCMNoteExtValue(String id, String keyval) {
-		List<CaseManagementNoteExt> cmNoteExts = caseManagementNoteExtDao.getExtByNote(Long.valueOf(id));
-		for(CaseManagementNoteExt entry : cmNoteExts) {
-			if(entry.getKeyVal().equals(keyval)) {
-				return entry.getValue();
-			}
-		}
-		return "";
 	}
 
 	/* 
@@ -749,109 +540,10 @@ public class E2EPatientExport {
 		return exAlertsAndSpecialNeeds && alerts!=null && !alerts.isEmpty();
 	}
 
-	/*
-	 * Utility
-	 */
-	public Date getCurrentDate() {
-		return currentDate;
-	}
-
-	/**
-	 * Checks if this object is loaded with patient data
-	 * 
-	 * @return True if loaded, else false
-	 */
-	public boolean isLoaded() {
-		return this.isLoaded;
-	}
-
-	/**
-	 * Takes in string dates in multiple possible formats and returns a date object of that time
-	 * 
-	 * @param rhs
-	 * @return Date represented by the string if possible, else return current time
-	 */
-	public static Date stringToDate(String rhs) {
-		String[] formatStrings = {"yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm", "yyyy-MM-dd"};
-		for(String format : formatStrings) {
-			try {
-				return new SimpleDateFormat(format).parse(rhs);
-			} catch (Exception e) {}
-		}
-		log.warn("stringToDate - Can't parse " + rhs);
-		return new Date();
-	}
-
-	/**
-	 * Check if string is valid numeric
-	 * 
-	 * @param rhs
-	 * @return True if rhs is a number, else false
-	 */
-	public static boolean isNumeric(String rhs) {
-		try {
-			Double.parseDouble(rhs);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Remove invalid characters and formatting from strings
-	 * 
-	 * @param rhs
-	 * @return String without invalid characters
-	 */
-	public static String cleanString(String rhs) {
-		String eol = System.getProperty("line.separator");
-		String str = rhs.replaceAll("<br( )+/>", eol);
-		str = str.replaceAll("&", "&amp;");
-		str = str.replaceAll("<", "&lt;");
-		str = str.replaceAll(">", "&gt;");
-		return str;
-	}
-
 	public String getAuthorId() {
 		if (authorId.length() < 1 || authorId == null) {
 			return "0";
 		}
 		return authorId;
-	}
-
-	/**
-	 * Get Provider's First Name based on provider number
-	 * 
-	 * @param providerNo
-	 * @return String of name if available, else empty string
-	 */
-	public String getProviderFirstName(String providerNo) {
-		String name;
-		try {
-			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
-			name = providerData.getFirstName();
-		} catch (Exception e) {
-			log.warn("getProviderFirstName - Provider not found");
-			name = "";
-		}
-		return name;
-	}
-
-	/**
-	 * Get Provider's Last Name based on provider number
-	 * 
-	 * @param providerNo
-	 * @return String of name if available, else empty string
-	 */
-	public String getProviderLastName(String providerNo) {
-		String name;
-		try {
-			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
-			name = providerData.getLastName();
-		} catch (Exception e) {
-			log.warn("getProviderLastName - Provider not found");
-			name = "";
-		}
-		return name;
 	}
 }
