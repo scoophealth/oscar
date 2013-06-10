@@ -603,7 +603,7 @@ Laboratory Results & Results
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
-#*    *##if ( $patient.stringToDate($lab.hl7TextInfo.getObrDate()) )
+#*    *##if ( $lab.hl7TextInfo.getObrDate() )
 								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 #*    *##else
 								<time nullFlavor="UNK"/>
@@ -657,7 +657,11 @@ Laboratory Results & Results
 #*            *##else
 											<statusCode code="final"/>
 #*            *##end
+#*            *##if ( ${patient.getLabExtValue("$labEntry.id", "datetime")} )
 											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+#*            *##else
+											<effectiveTime nullFlavor="UNK"/>
+#*            *##end
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" && $patient.isNumeric($labEntry.dataField) )
 											<value xsi:type="PQ" value="$patient.cleanString($labEntry.dataField)" unit="${patient.getLabExtValue("$labEntry.id", "unit")}"/>
 #*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "unit")} != "" )
@@ -674,7 +678,11 @@ Laboratory Results & Results
 											<performer typeCode="PRF">
 												<templateId root="2.16.840.1.113883.3.1818.10.4.19"/>
 												<!--Performer Participation-->
+#*                *##if ( ${patient.getLabExtValue("$labEntry.id", "datetime")} )
 												<time value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+#*                *##else
+												<time nullFlavor="UNK"/>
+#*                *##end
 												<assignedEntity>
 													<id extension="TBD" root="TBD"/>
 													<representedOrganization classCode="ORG" determinerCode="INSTANCE">
