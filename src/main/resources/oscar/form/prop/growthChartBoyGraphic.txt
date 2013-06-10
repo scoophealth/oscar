@@ -41,13 +41,13 @@ age_40	:	stature_40
 age_41	:	stature_41
 age_42	:	stature_42
 
-__origX		:	110
-__origY		:	583
-__nMaxPixX	:	386
-__nMaxPixY	:	464
+__origX		:	112
+__origY		:	609
+__nMaxPixX	:	422
+__nMaxPixY	:	508
 __fStartX	:	2
-__fEndX		:	20
-__fStartY	:	75
-__fEndY		:	190
+__fEndX		:	19
+__fStartY	:	76
+__fEndY		:	207
 
 __className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
