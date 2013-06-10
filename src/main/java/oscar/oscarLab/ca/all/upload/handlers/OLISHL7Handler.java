@@ -15,14 +15,12 @@
 package oscar.oscarLab.ca.all.upload.handlers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
-import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.olis.OLISUtils;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -62,7 +60,7 @@ public class OLISHL7Handler implements MessageHandler {
 				
 				lastTimeStampAccessed = getLastUpdateInOLIS(msg) ;
 				
-				if(isDuplicate(msg)) {
+				if(OLISUtils.isDuplicate(msg)) {
 					continue; 
 				}
 				MessageUploader.routeReport(serviceName,"OLIS_HL7", msg.replace("\\E\\", "\\SLASHHACK\\").replace("µ", "\\MUHACK\\").replace("\\H\\", "\\.H\\").replace("\\N\\", "\\.N\\"), fileId, results);
@@ -91,73 +89,5 @@ public class OLISHL7Handler implements MessageHandler {
 	private String getLastUpdateInOLIS(String msg) {
 		oscar.oscarLab.ca.all.parsers.OLISHL7Handler h = (oscar.oscarLab.ca.all.parsers.OLISHL7Handler) Factory.getHandler("OLIS_HL7", msg);
 		return h.getLastUpdateInOLISUnformated();	
-	}
-	private boolean isDuplicate(String msg) {
-		
-		
-		//OLIS requirements - need to see if this is a duplicate
-		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("OLIS_HL7", msg);
-		//if final
-//		if(h.getOrderStatus().equals("F")) {
-			String acc = h.getAccessionNum();
-			
-			//CML
-			if(acc.length()>5 && acc.charAt(acc.length()-5) == '-') {
-				List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc.split("-")[0]);
-				for(Hl7TextInfo dupResult:dupResults) {
-					if(dupResult.getAccessionNumber().indexOf("-")!=-1) {
-						//olis
-						//if(dupResult.getAccessionNumber().equals(acc)) {
-						//	return true;
-						//}
-					} else {
-						//direct
-						if(dupResult.getAccessionNumber().substring(3).equals(acc.split("-")[0])) {
-							//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-								OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
-								return true;
-							//}
-						}
-					}
-				}		
-			}
-			//GDML
-			if(acc.length() == 14 && acc.indexOf("-") == -1) {
-				List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc.substring(6));
-				String directAcc = acc.substring(4);
-				directAcc = directAcc.substring(0,2) + "-" + directAcc.substring(2);
-				for(Hl7TextInfo dupResult:dupResults) {
-					//if(dupResult.getAccessionNumber().equals(directAcc)) {
-					//	return true;
-					//}
-
-
-					// Note: The following line may need to replace the line below it for real life usage, for right now though, just using acc is what makes it work
-					//if(dupResult.getAccessionNumber().equals(directAcc)) {
-					if(dupResult.getAccessionNumber().equals(acc)) {
-						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-							OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
-							return true;
-						//}
-					}
-				}		
-			}
-			//LL
-			if(acc.length() > 5 && acc.charAt(4) == '-') {
-				List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc.substring(6));
-				for(Hl7TextInfo dupResult:dupResults) {
-					//if(dupResult.getAccessionNumber().equals(acc)) {
-					//	return true;
-					//}
-					if(dupResult.getAccessionNumber().equals(acc.substring(5))) {
-						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-							OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
-							return true;
-						//}
-					}
-				}		
-			}
-	//	}
-		return false;	
 	}
 }

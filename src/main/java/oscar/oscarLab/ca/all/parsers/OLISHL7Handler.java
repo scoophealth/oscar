@@ -376,7 +376,36 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 		return result;
 	}
+	
+	
+	/*
+	Return the sending lab in the format of 2.16.840.1.113883.3.59.1:9999 where 9999 is the lab identifier
+	
+	 5047 Canadian Medical Laboratories
+	 5552 Gamma Dynacare
+	 5687 LifeLabs
+	 5254 Alpha Laboratories
+	 */
+	public String getPlacerGroupNumber(){
+		try {
+			String value = getString(terser.get("/.ORC-4-3"));
+			return value;
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("OLIS HL7 Error", e);
+		}
+		return null;
+	}
 
+	public String getPerformingFacilityNameOnly() {
+		try {
+			String value = getString(terser.get("/.ZBR-6-1"));
+			return value;
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("OLIS HL7 Error", e);
+		}
+		return "";
+	}
+	
 	public String getPerformingFacilityName() {
 		try {
 			String key = "", value = "", ident = "";
@@ -1296,14 +1325,16 @@ public class OLISHL7Handler implements MessageHandler {
 
 	@Override
 	public String getMsgDate() {
-
-		try {
+		return getCollectionDateTime(0);
+		//Temporary fix until we change how the MessageUploader grabs the observation date.
+		
+		/*try {
 			String date = getString(terser.get("/.MSH-7-1"));
 			String dateString = formatDateTime(date);
 			return dateString.substring(0, 19);
 		} catch (Exception e) {
 			return ("");
-		}
+		}*/
 
 	}
 
