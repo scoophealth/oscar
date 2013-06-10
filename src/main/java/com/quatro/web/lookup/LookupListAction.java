@@ -30,11 +30,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
-import com.quatro.common.KeyConstants;
 import com.quatro.model.LookupTableDefValue;
 import com.quatro.model.security.NoAccessException;
 import com.quatro.service.LookupManager;
-import com.quatro.service.security.SecurityManager;
 import com.quatro.util.Utility;
 
 public class LookupListAction extends DispatchAction {
@@ -51,14 +49,7 @@ public class LookupListAction extends DispatchAction {
 	private ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws NoAccessException{
         String tableId=request.getParameter("tableId");
 		if("PRP,SIT,LKT,QGV,RPG".indexOf(tableId)> 0) throw new NoAccessException();
-		if(tableId.equals("FUN"))
-			getAccess(request, KeyConstants.FUN_ADMIN_ROLE);
-		if(tableId.equals("ROL"))
-			getAccess(request,KeyConstants.FUN_ADMIN_USER);
-		if(tableId.equals("USR"))
-			getAccess(request, KeyConstants.FUN_PROGRAM_STAFF);
-		if(tableId.equals("CLN"))
-			getAccess(request, KeyConstants.FUN_CLIENT);
+		
         String parentCode =request.getParameter("parentCode");
         request.setAttribute("parentCode",parentCode);
        
@@ -72,8 +63,7 @@ public class LookupListAction extends DispatchAction {
 		return mapping.findForward("list");
 	}
 	
-	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws NoAccessException{
-		getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP);
+	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		LookupListForm qform = (LookupListForm) form;
         String tableId=request.getParameter("tableId");
         String parentCode =request.getParameter("parentCode");
@@ -86,30 +76,10 @@ public class LookupListAction extends DispatchAction {
 		return mapping.findForward("list");
 	}
 	
-	protected String getAccess(HttpServletRequest request,String functionName) throws NoAccessException
-	{
-		SecurityManager sec = (SecurityManager) request.getSession()
-				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
-		String acc = sec.GetAccess(functionName, "");
-		if (acc.equals(KeyConstants.ACCESS_NONE)) throw new NoAccessException();
-		return acc;
-	}
-	protected String getAccess(HttpServletRequest request,String functionName, String rights) throws NoAccessException
-	{
-		SecurityManager sec = (SecurityManager) request.getSession()
-				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
-		String acc = sec.GetAccess(functionName, "");
-		if (acc.compareTo(rights) < 0) throw new NoAccessException();
-		return acc;
-	}
-	public boolean isReadOnly(HttpServletRequest request,String funName) throws NoAccessException{
+	
+	public boolean isReadOnly(HttpServletRequest request,String funName){
 		boolean readOnly =false;
 		
-		SecurityManager sec = (SecurityManager) request.getSession()
-				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
-		String r = sec.GetAccess(funName, null); 
-		if (r.compareTo(KeyConstants.ACCESS_READ) < 0) throw new NoAccessException(); 
-		if (r.compareTo(KeyConstants.ACCESS_READ) == 0) readOnly=true;
 		return readOnly;
 	}
 	

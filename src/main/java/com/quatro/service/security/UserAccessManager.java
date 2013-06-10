@@ -35,8 +35,7 @@ public class UserAccessManager
     {
     	// _list is ordered by Function, privilege (desc) and the org
     	SecurityManager secManager = new SecurityManager();
-    	secManager.setLookupManager(lkManager);
-
+    	
     	Hashtable functionList = new Hashtable();
         List list = _dao.GetUserAccessList(providerNo,shelterId);
     	if (list.size()>0) {
