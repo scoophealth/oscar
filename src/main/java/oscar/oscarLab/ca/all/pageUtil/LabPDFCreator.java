@@ -128,17 +128,18 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
     }
     // Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is 
-    public void unstructuredDocCheck(){
+    public boolean unstructuredDocCheck(){
     	if(handler.getMsgType().equals("PATHL7")){
     		ArrayList <String> headers = handler.getHeaders();
     		int i=0;
 
     		for(i=0; i<headers.size(); i++){
     			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))|| (headers.get(i).equals("CELLPATHR"))){
-    				isUnstructuredDoc = true;
+    				//isUnstructuredDoc = true;
+    				return true;
     			}
     		}
-    	} 
+    	} return false;
     }
     
     public void printPdf() throws IOException, DocumentException{
@@ -203,7 +204,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 	 * header, the test result headers and the test results for that category.
 	 */
 	private void addLabCategory(String header) throws DocumentException {
-		unstructuredDocCheck();
+		this.isUnstructuredDoc = unstructuredDocCheck();
 		
 		float[] mainTableWidths;
 		if(isUnstructuredDoc){
@@ -447,8 +448,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								cell.setColspan(1);
 							}
 						}
-					} 
-					else {
+					}else {
 						if (handler.getOBXCommentCount(j, k) > 0) {
 							// cell.setBackgroundColor(getHighlightColor(linenum));
 							linenum++;
