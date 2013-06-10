@@ -301,7 +301,7 @@
 			<form-property name="view" type="org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean" />
 			<form-property name="access" type="org.oscarehr.PMmodule.model.ProgramAccess" />
 			<form-property name="admission" type="org.oscarehr.common.model.Admission" />
-			<form-property name="bedCheckTimes" type="org.oscarehr.common.model.BedCheckTime2[]" />
+			<form-property name="bedCheckTimes" type="org.oscarehr.common.model.BedCheckTime[]" />
 			<form-property name="addTime" type="java.lang.String" />
 			<form-property name="removeId" type="java.lang.String" />
 			<form-property name="function" type="org.oscarehr.PMmodule.model.ProgramFunctionalUser" />
@@ -328,10 +328,10 @@
 			<form-property name="agency" type="org.oscarehr.PMmodule.model.Agency" />
 			<form-property name="numRooms" type="java.lang.Integer" />
 			<form-property name="numBeds" type="java.lang.Integer" />
-			<form-property name="rooms" type="org.oscarehr.common.model.Room2[]" />
-			<form-property name="roomTypes" type="org.oscarehr.common.model.RoomType2[]" />
-			<form-property name="beds" type="org.oscarehr.common.model.Bed2[]" />
-			<form-property name="bedTypes" type="org.oscarehr.common.model.BedType2[]" />
+			<form-property name="rooms" type="org.oscarehr.common.model.Room[]" />
+			<form-property name="roomTypes" type="org.oscarehr.common.model.RoomType[]" />
+			<form-property name="beds" type="org.oscarehr.common.model.Bed[]" />
+			<form-property name="bedTypes" type="org.oscarehr.common.model.BedType[]" />
 			<form-property name="programs" type="org.oscarehr.PMmodule.model.Program[]" />
 		</form-bean>
 		<form-bean name="bedManagerForm" type="org.oscarehr.PMmodule.web.admin.BedManagerForm" />
@@ -343,14 +343,14 @@
 		<form-bean name="clientManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="view" type="org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean" />
 			<form-property name="admission" type="org.oscarehr.common.model.Admission" />
-			<form-property name="bedDemographic" type="org.oscarehr.common.model.BedDemographic2" />
+			<form-property name="bedDemographic" type="org.oscarehr.common.model.BedDemographic" />
 			<form-property name="client" type="org.oscarehr.common.model.Demographic" />
 			<form-property name="erconsent" type="org.oscarehr.PMmodule.web.formbean.ErConsentFormBean" />
 			<form-property name="form" type="org.oscarehr.common.model.CaisiFormInstance" />
 			<form-property name="program" type="org.oscarehr.PMmodule.model.Program" />
 			<form-property name="referral" type="org.oscarehr.PMmodule.model.ClientReferral" />
-			<form-property name="unreservedBeds" type="org.oscarehr.common.model.Bed2[]" />
-			<form-property name="bedDemographicStatuses" type="org.oscarehr.common.model.BedDemographicStatus2[]" />
+			<form-property name="unreservedBeds" type="org.oscarehr.common.model.Bed[]" />
+			<form-property name="bedDemographicStatuses" type="org.oscarehr.common.model.BedDemographicStatus[]" />
 			<form-property name="agency" type="org.oscarehr.PMmodule.model.Agency" />
 			<form-property name="provider" type="org.oscarehr.common.model.Provider" />
 			<form-property name="programWithIntakeId" type="java.lang.String" />
