@@ -1,3 +1,4 @@
+<!doctype html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -23,9 +24,19 @@
     Ontario, Canada
 
 --%>
-
 <%@ include file="/taglibs.jsp"%>
 
-<tiles:insert definition="administration" >
-	<tiles:put name="body" value="" />
-</tiles:insert>
+<tiles:get name="header" />
+
+<div class="container-fluid" style="margin-top:70px;">
+	<div class="row-fluid">
+		
+	<tiles:get name="content" /><!--secondary layout-->
+
+	</div><!--row-fluid-->
+</div><!--container-fluid-->
+
+<tiles:get name="footer" />
+
+</body>
+</html>

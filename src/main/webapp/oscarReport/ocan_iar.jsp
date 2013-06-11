@@ -34,7 +34,10 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.web.*"%>
 
-<%@include file="/layouts/caisi_html_top.jspf"%>
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+
 
 <%
 	List<OcanSubmissionLog> submissions = OcanReportUIBean.getAllSubmissions();
@@ -42,151 +45,152 @@
 	
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
 	java.text.SimpleDateFormat formatter2 = new java.text.SimpleDateFormat("yyyy-MM-dd");
-	
 %>
 
-<h1>OCAN IAR Report - v2.0.6</h1>
-
-<script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
-<script>
-
-$(function () {
-
-    $("#checkA").bind("click", function () {
-        $("[name = test1]:checkbox").attr("checked", this.checked);
-	
-    });
+<div class="page-header">
+	<h4>OCAN IAR Report - v2.0.6</h4>
+</div>
 
 
-    $("[name = test1]:checkbox").bind("click", function () {
-        var $chk = $("[name = test1]:checkbox");	
-        $("#checkA").attr("checked", $chk.length == $chk.filter(":checked").length);
-		  if($(this).attr("checked"))
-   		  {
-			$(this).attr("checked",true);
-		  }
-		  else
-		  {
-		    $(this).attr("checked",false);
-		  }
-			
-		
-    })
-});
-	function submitIAR() {
-		document.getElementById("ocanForm").action="ocan_report_export_iar.jsp";
-	}
-
-	function popup(url) {
-		var vheight=500;
-		var vwidth=600;
-		var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-		var popup=window.open(url, "ocan_iar", windowprops);
-		if (popup != null) {
-			if (popup.opener == null) {
-				popup.opener = self;
-			}
-			popup.focus();
-		}
-	}
-
-	function submitPending() {
-		var ctx = '<%=request.getContextPath()%>';
-		$("#subPending").val("Please Wait");
-		$("#SubPending").attr('disabled','true');
-				
-
-	    var arrChk1=$("input[name=test1][checked]");
-	   
-		var fieldList = [];
-	    for (var i=0;i<arrChk1.length;i++)
-	    {
-			
-			 fieldList.push(arrChk1[i].value);
-			 
-	    }		
-	    jQuery.ajax({url:ctx+"/OcanIarSubmit.do?method=submit&account="+fieldList+"",dataType:"html",success: function(data) {
-            location.href=ctx+'/oscarReport/ocan_iar.jsp?assessmentIds='+fieldList;		    
-		},error: function() {
-			alert('An error occurred');
-			$("#subPending").val("Submit Pending Records");
-			$("#SubPending").attr('disabled','false');
-			
-
-		}});
-
-	}
-
-
-	function submitManual() {
-		var ctx = '<%=request.getContextPath()%>';
-		
-	    var arrChk1=$("input[name=test1][checked]");
-	    //checkbox value1
-		var fieldList = [];
-	    for (var i=0;i<arrChk1.length;i++)
-	    {
-			
-			 fieldList.push(arrChk1[i].value);
-			 
-	    }		
-		document.getElementById('ocanForm').action='ocan_report_export_iar_manual.jsp?assessmentIds='+fieldList;
-		document.getElementById('ocanForm').submit();
-		
-	}
-</script>
-				
-<form method="post" id="ocanForm" action="ocan_report_export_iar.jsp">
-	<table class="borderedTableAndCells">
-		<tr>
-			<td colspan="4" align="center">IAR Submissions</td>
-		</tr>
-		<tr>
-			<td>Submission Id</td>
-			<td>Submission Date</td>
-			<td># of Records</td>			
-			<td>Result</td>
-		</tr>
-		<%for(OcanSubmissionLog submission:submissions) { %>
+<form method="post" id="ocanForm" action="${ctx}/oscarReport/ocan_report_export_iar.jsp">
+	<h5>IAR Submissions</h5>
+	<table class="table table-bordered table-striped table-hover">
+		<thead>
 			<tr>
-				<td><a href="#" onclick="popup('ocan_iar_detail.jsp?submissionId=<%=submission.getId()%>');return false;"><%=submission.getId()%></a></td>
-				<td><%=formatter.format(submission.getSubmitDateTime())%></td>
-				<td>
-					<%=submission.getRecords().size() %>
-				</td>				
-				<td><%=submission.getResult()%></td>
+				<th>Submission Id</th>
+				<th>Submission Date</th>
+				<th># of Records</th>
+				<th>Result</th>
 			</tr>
-		<% } %>		
-	</table>	
-	
-	<br/><br/>
-	
-	<table class="borderedTableAndCells">
+		</thead>
+		<%
+			for(OcanSubmissionLog submission:submissions) {
+		%>
 		<tr>
-			<td colspan="6" align="center">Pending OCAN Forms</td>
+			<td><a href="#"
+				onclick="popup('ocan_iar_detail.jsp?submissionId=<%=submission.getId()%>');return false;"><%=submission.getId()%></a></td>
+			<td><%=formatter.format(submission.getSubmitDateTime())%></td>
+			<td><%=submission.getRecords().size()%></td>
+			<td><%=submission.getResult()%></td>
 		</tr>
-		<tr><td> <input type="checkbox" name="checkAll2" id="checkA" />All</td>
-			<td>Form Id</td>
-			<td>Date Started</td>
-			<td>Date Completed</td>
-			<td>Client</td>
-			<td>Provider</td>			
-		</tr>
-		<%for(OcanStaffForm form:unsentForms) { %>
-			<tr><td><input type="checkbox" name="test1" value="<%=form.getAssessmentId()%>"></td>
-				<td><%=form.getId()%></td>
-				<td><%=formatter2.format(form.getStartDate()) %></td>
-				<td><%=formatter2.format(form.getCompletionDate()) %></td>
-				<td><%=form.getClientId() %></td>
-				<td><%=form.getProviderName()%></td>
+		<%
+			}
+		%>
+	</table>
+
+	<h5>Pending OCAN Forms</h5>
+	<table class="table table-bordered table-striped table-hover">
+		<thead>
+			<tr>
+				<th>
+					<label class="checkbox inline">
+						<input type="checkbox" name="checkAll2" id="checkA" />All
+					</label>
+				</th>
+				<th>Form Id</th>
+				<th>Date Started</th>
+				<th>Date Completed</th>
+				<th>Client</th>
+				<th>Provider</th>
 			</tr>
-		<%} %>
-	</table>	
-	<br/>
-	<input type="button" value="Submit Pending Records" id="subPending" onclick="submitPending();return false;"/>
-	&nbsp;&nbsp;
-	<input type="button" value="Generate Manual File" id="subManual" onclick="submitManual();return false;"/>
+		</thead>
+		<%
+			for(OcanStaffForm form:unsentForms) {
+		%>
+		<tr>
+			<td>
+				<label class="checkbox inline">
+				<input type="checkbox" name="test1"
+				value="<%=form.getAssessmentId()%>">
+				</label>
+				</td>
+			<td><%=form.getId()%></td>
+			<td><%=formatter2.format(form.getStartDate())%></td>
+			<td><%=formatter2.format(form.getCompletionDate())%></td>
+			<td><%=form.getClientId()%></td>
+			<td><%=form.getProviderName()%></td>
+		</tr>
+		<%
+			}
+		%>
+	</table>
+	<div class="control-group">
+	<div class="controls">
+		<button id="subPending" onclick="submitPending();return false;"
+			class="btn btn-primary">Submit Pending Records</button>
+		<button id="subPending" onclick="submitManual();return false;"
+			class="btn">Generate Manual File</button>
+	</div>
+	</div>
 </form>
 
+<script>
+	$(function() {
 
-<%@include file="/layouts/caisi_html_bottom.jspf"%>
+		$("#checkA").bind("click", function() {
+			$("[name = test1]:checkbox").attr("checked", this.checked);
+
+		});
+
+		$("[name = test1]:checkbox").bind(
+				"click",
+				function() {
+					var $chk = $("[name = test1]:checkbox");
+					$("#checkA").attr("checked",
+							$chk.length == $chk.filter(":checked").length);
+					if ($(this).attr("checked")) {
+						$(this).attr("checked", true);
+					} else {
+						$(this).attr("checked", false);
+					}
+
+				})
+	});
+
+	function submitPending() {
+		$("#subPending").val("Please Wait");
+		$("#SubPending").attr('disabled', 'true');
+
+		var arrChk1 = $("input[name=test1][checked]");
+
+		var fieldList = [];
+		for ( var i = 0; i < arrChk1.length; i++) {
+
+			fieldList.push(arrChk1[i].value);
+
+		}
+		jQuery
+				.ajax({
+					url : "${ctx}/OcanIarSubmit.do?method=submit&account="
+							+ fieldList + "",
+					dataType : "html",
+					success : function(data) {
+						$('#ocanForm').action = '${ctx}/oscarReport/ocan_iar.jsp?assessmentIds='
+								+ fieldList;
+						submitForm('ocanForm', 'dynamic-content');
+					},
+					error : function() {
+						alert('An error occurred');
+						$("#subPending").val("Submit Pending Records");
+						$("#SubPending").attr('disabled', 'false');
+
+					}
+				});
+
+	}
+
+	function submitManual() {
+		var arrChk1 = $("input[name=test1][checked]");
+		//checkbox value1
+		var fieldList = [];
+		for ( var i = 0; i < arrChk1.length; i++) {
+
+			fieldList.push(arrChk1[i].value);
+
+		}
+		$('#ocanForm').action = '${ctx}/oscarReport/ocan_report_export_iar_manual.jsp?assessmentIds='
+				+ fieldList;
+		$('#ocanForm').submit();
+
+	}
+</script>

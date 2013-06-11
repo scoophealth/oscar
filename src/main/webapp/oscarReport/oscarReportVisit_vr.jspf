@@ -27,22 +27,23 @@
 <%@page import="org.oscarehr.common.model.ReportProvider" %>
 
 
-<table width="75%" border="0" cellpadding="2">
-	<tr>
-		<td bgcolor="#CCCCFF">Provider</td>
-		<td bgcolor="#CCCCFF">&nbsp;</td>
-		<td bgcolor="#CCCCFF">Clinic</td>
-		<td bgcolor="#CCCCFF">Outpatient</td>
-		<td bgcolor="#CCCCFF">Hospital</td>
-		<td bgcolor="#CCCCFF">ER</td>
-		<td bgcolor="#CCCCFF">Nursing Home</td>
-		<td bgcolor="#CCCCFF">Home</td>
-		<td bgcolor="#FFCC00">Clinic</td>
-		<td bgcolor="#FFCC00">Outpatient</td>
-		<td bgcolor="#FFCC00">Hospital</td>
-		<td bgcolor="#FFCC00">ER</td>
-		<td bgcolor="#FFCC00">Nursing Home</td>
-		<td bgcolor="#FFCC00">Home</td>
+<table class="table table-bordered table-striped table-hover table-condensed" style="font-size:12px;">
+	<thead>
+		<tr>
+		<th bgcolor="#CCCCFF">Provider</th>
+		<th bgcolor="#CCCCFF">&nbsp;</th>
+		<th bgcolor="#CCCCFF">Clinic</th>
+		<th bgcolor="#CCCCFF">Outpatient</th>
+		<th bgcolor="#CCCCFF">Hospital</th>
+		<th bgcolor="#CCCCFF">ER</th>
+		<th bgcolor="#CCCCFF">Nursing Home</th>
+		<th bgcolor="#CCCCFF">Home</th>
+		<th bgcolor="#FFCC00">Clinic</th>
+		<th bgcolor="#FFCC00">Outpatient</th>
+		<th bgcolor="#FFCC00">Hospital</th>
+		<th bgcolor="#FFCC00">ER</th>
+		<th bgcolor="#FFCC00">Nursing Home</th>
+		<th bgcolor="#FFCC00">Home</th>
 	</tr>
 
 	<%

@@ -24,84 +24,68 @@
 
 --%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@page import="oscar.oscarSurveillance.*,java.util.*"%>
 
 
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+
+<div class="page-header">
+	<h4>
+		<bean:message key="oscarSurveillance.Surveillance.msgSurveillance" />
+	</h4>
+</div>
 
 <%
-SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
-
+	SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
 %>
 
-<html:html locale="true">
+<h4>
+	Current Surveys:
+	<span class="badge badge-info">
+		<%=SurveillanceMaster.numSurveys()%>
+	</span>
+</h4>
 
+<div class="row">
+	<div class='span3'>
+		<ul class="nav nav-tabs nav-stacked">
+			<%
+				ArrayList<Survey> list = sMaster.getCurrentSurveys();
+					int spanItemCount = (int)Math.ceil(list.size());
+					for (int i = 0; i < list.size(); i++) {
+				Survey survey = (Survey) list.get(i);
+				
+				if(i!=0 && i%spanItemCount==0)
+					out.println("</ul></div><div class='span3'><ul class='nav nav-tabs nav-stacked'>");
+			%>
+			<li><a
+				href="${ctx}/oscarSurveillance/ReportSurvey.jsp?surveyId=<%=survey.getSurveyId()%>"><%=survey.getSurveyTitle()%></a>
+			</li>
+			<%
+				}
+			%>
+		</ul>
+	</div>
+</div>
 
+<div id="survey-content"></div>
 
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<html:base />
-<title><bean:message key="oscarSurveillance.Surveillance.title" />
-</title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
-
-
-
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-</head>
-
-<body class="BodyStyle" vlink="#0000FF">
-<!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn"><bean:message
-			key="oscarSurveillance.Surveillance.msgSurveillance" /></td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>Current Surveys: <%=sMaster.numSurveys()%></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="survey" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
-		<td class="MainTableRightColumn">
-		<table>
-			<tr>
-				<td style="text-align: center">Current surveys: <br />
-				<% ArrayList list = sMaster.getCurrentSurveys();
-                 for (int i = 0; i < list.size() ; i++){ 
-                    Survey survey = (Survey) list.get(i);%> <a
-					href="ReportSurvey.jsp?surveyId=<%=survey.getSurveyId()%>"> <%=survey.getSurveyTitle()%>
-				</a> &nbsp; </br>
-
-				<%}%>
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align: center">&nbsp;</td>
-			</tr>
-			<tr>
-				<td style="text-align: center">&nbsp;</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn"></td>
-		<td class="MainTableBottomRowRightColumn"></td>
-	</tr>
-</table>
-</body>
-
-
-</html:html>
+<script>
+	$(document).ready(function() {
+		$("a.surveyLink").click(function(e) {
+			//alert('link click')
+			e.preventDefault();
+			//alert("You clicked the link");
+			$("#survey-content").load($(this).attr("href"), 
+				function(response, status, xhr) {
+			  		if (status == "error") {
+				    	var msg = "Sorry but there was an error: ";
+				    	$("#survey-content").html(msg + xhr.status + " " + xhr.statusText);
+					}
+				}
+			);
+		});
+	});
+</script>

@@ -29,42 +29,79 @@
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 
-<%
-%>
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 
-<%@include file="/layouts/caisi_html_top.jspf"%>
+<div class="page-header">
+	<h4>Provider Service Report Form</h4>
+</div>
 
+<form action="${ctx}/oscarReport/provider_service_report_export.jsp"
+	class="well form-horizontal" id="psrForm">
 
-<h1>Provider Service Report Form</h1>
-
-<h2>Export to csv</h2>
-(This will provide a break down of all unique encounters of a
-demographic to a provider, broken down by month and for the entire
-interval as well. This only does the numbers for a program of type bed
-or service)
-
-<form method="post" action="provider_service_report_export.jsp">
-<table>
-	<tr>
-		<td>Start Date</td>
-		<td>EndDate (inclusive)</td>
-	</tr>
-	<tr>
-		<td><input type="text" name="startDate" /></td>
-
-		<td><input type="text" name="endDate" /></td>
-	</tr>
-
-	<tr>
-		<td>(YYYY-MM)</td>
-		<td>(YYYY-MM)</td>
-	</tr>
-
-	<tr>
-		<td></td>
-		<td><input type="submit" value="export" /></td>
-	</tr>
-</table>
+	<fieldset>
+		<h4>
+			Export to csv <br>
+			<small>This will provide a break down of all unique
+				encounters of a demographic to a provider, broken down by month and
+				for the entire interval as well. This only does the numbers for a
+				program of type bed or service.</small>
+		</h4>
+		<div class="row-fluid">
+			<div class="control-group">
+				<label class="control-label">Start Date</label>
+				<div class="controls">
+					<input id="startDate" name="startDate" class="input-mini" size="7"
+						type="text" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">EndDate (inclusive)</label>
+				<div class="controls">
+					<input id="endDate" name="endDate" class="input-mini" size="7"
+						type="text" />
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<button type="submit" class="btn btn-primary">
+						<i class="icon-download-alt icon-white"></i> Export
+					</button>
+				</div>
+			</div>
+		</div>
+	</fieldset>
 </form>
 
-<%@include file="/layouts/caisi_html_bottom.jspf"%>
+<script>
+	var startDt = $("#startDate").datepicker({
+		format : "mm/yyyy",
+		viewMode : "months",
+		minViewMode : "months"
+	});
+
+	var endDt = $("#endDate").datepicker({
+		format : "mm/yyyy",
+		viewMode : "months",
+		minViewMode : "months"
+	});
+
+	$(document).ready(function() {
+		$('#psrForm').validate({
+			rules : {
+				startDate : {
+					required : true,
+					oscarMonth : true
+				},
+				endDate : {
+					required : true,
+					oscarMonth : true
+				}
+			},
+			submitHandler : function(form) {
+				form.submit();
+			}
+		});
+	});
+</script>
