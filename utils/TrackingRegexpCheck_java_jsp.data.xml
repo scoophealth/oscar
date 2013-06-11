@@ -6,13 +6,6 @@
         <ViolationValue>/src/main/java/com/quatro/service/security/UserAccessManager.java:Hashtable functionList = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/service/security/UserAccessManager.java:List orgList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/util/Utility.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/TicklerDAO.java:ArrayList paramList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/model/CustomFilter.java:assignees = new HashSet();</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/model/CustomFilter.java:providers = new HashSet();</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/model/Tickler.java:private Set comments = new HashSet();</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/model/Tickler.java:private Set updates = new HashSet();</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/service/TicklerManager.java:List ppList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/service/TicklerManager.java:List ppList2 = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/tickler/web/CustomFilterAction.java:Set sAssignees = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/tickler/web/CustomFilterAction.java:Set sProviders = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramClientStatusDAO.java:List teams = new ArrayList();</ViolationValue>
@@ -752,14 +745,8 @@
         <ViolationValue>/src/main/java/com/quatro/dao/security/UserAccessDao.java:public class UserAccessDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/BedProgramDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/BedProgramDao.java:public class BedProgramDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/CustomFilterDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/CustomFilterDAO.java:public class CustomFilterDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/IssueAdminDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/IssueAdminDAO.java:public class IssueAdminDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/ProviderDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/ProviderDAO.java:public class ProviderDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/TicklerDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/TicklerDAO.java:public class TicklerDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/AgencyDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/AgencyDao.java:public class AgencyDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/BedCheckTimeDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -828,10 +815,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/IssueDAO.java:public class IssueDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/RoleProgramAccessDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/RoleProgramAccessDAO.java:public class RoleProgramAccessDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/TicklerDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/TicklerDAO.java:public class TicklerDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/DemographicDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/DemographicDao.java:public class DemographicDao extends HibernateDaoSupport {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/dao/DemographicDao.java:public class DemographicDao extends HibernateDaoSupport implements ApplicationEventPublisherAware {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PopulationReportDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PopulationReportDao.java:public class PopulationReportDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java:* using OSCAR Forms...so DBHelp it is.</ViolationValue>
@@ -2674,7 +2659,7 @@
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:List&lt;Hashtable&gt; queues=queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
-        <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:for (Hashtable ht : queues) {</ViolationValue>        
+        <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromProvider.jsp:Hashtable providerDocs=(Hashtable)request.getSession().getAttribute("providerDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromQueue.jsp:Hashtable queueDocs=(Hashtable)request.getSession().getAttribute("queueDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/eform/efmSendform.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%&gt;&lt;%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%&gt;&lt;%</ViolationValue>
