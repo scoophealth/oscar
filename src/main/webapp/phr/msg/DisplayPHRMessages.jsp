@@ -377,7 +377,14 @@ request.setAttribute("pageMethod",pageMethod);
                                     %>
                                 </tr>
                             </table><!--cell spacing=3-->
-                           	<button style="float:right" onclick="window.open('<%=request.getContextPath()%>/myoscar/myoscar_page_link_action.jsp?redirectPage=/messages/messaging_preferences.jsf');">MyOscar Message Settings</button>
+                            <%
+                            	if (MyOscarUtils.isMyOscarEnabled() && myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
+                            	{
+                            		%>
+                           				<button style="float:right" onclick="window.open('<%=request.getContextPath()%>/myoscar/myoscar_page_link_action.jsp?redirectPage=/messages/messaging_preferences.jsf');">MyOscar Message Settings</button>
+                           			<%
+                           		}
+                           	%>
                         </td>
                     </tr>
                 </table><!--table width="100%">-->
