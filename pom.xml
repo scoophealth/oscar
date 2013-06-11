@@ -856,6 +856,18 @@
 			<artifactId>myoscar_client_utils</artifactId>
 			<version>2013.05.03</version>
 		</dependency>
+		
+        <dependency>
+                <groupId>org.marc.everest</groupId>
+                <artifactId>everest-core</artifactId>
+                <version>1.0</version>
+        </dependency>
+                
+        <dependency>
+                <groupId>org.marc.everest</groupId>
+                <artifactId>everest-rmim-ca-r02-04-03</artifactId>
+                <version>1.0</version>
+        </dependency>
 	</dependencies>
 
 	<build>
