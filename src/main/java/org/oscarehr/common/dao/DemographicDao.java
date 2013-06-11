@@ -61,9 +61,13 @@ import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.event.DemographicCreateEvent;
+import org.oscarehr.event.DemographicUpdateEvent;
 import org.oscarehr.integration.hl7.generators.HL7A04Generator;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -73,11 +77,14 @@ import oscar.util.SqlUtils;
 
 /**
  */
-public class DemographicDao extends HibernateDaoSupport {
+public class DemographicDao extends HibernateDaoSupport implements ApplicationEventPublisherAware {
 
 	private static final int MAX_SELECT_SIZE = 500;
 	
 	static Logger log = MiscUtils.getLogger();
+	
+	private ApplicationEventPublisher publisher;
+    
 
 	/**
 	 * Finds merged demographic IDs for the specified demographic.
@@ -922,6 +929,14 @@ public class DemographicDao extends HibernateDaoSupport {
 		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && !objExists) {
 			(new HL7A04Generator()).generateHL7A04(demographic);
 		}
+		
+		//the new way
+		if(objExists == false) {
+			publisher.publishEvent(new DemographicCreateEvent(demographic,demographic.getDemographicNo()));
+		} else {
+			publisher.publishEvent(new DemographicUpdateEvent(demographic,demographic.getDemographicNo()));	
+		}
+		
 	}
 
 	public static List<Integer> getDemographicIdsAlteredSinceTime(Date value) {
@@ -1366,6 +1381,13 @@ public class DemographicDao extends HibernateDaoSupport {
 
 		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && !objExists) (new HL7A04Generator()).generateHL7A04(client);
 
+		//the new way
+		if(objExists == false) {
+			publisher.publishEvent(new DemographicCreateEvent(client,client.getDemographicNo()));
+		} else {
+			publisher.publishEvent(new DemographicUpdateEvent(client,client.getDemographicNo()));	
+		}
+				
 		if (log.isDebugEnabled()) {
 			log.debug("saveClient: id=" + client.getDemographicNo());
 		}
@@ -1821,4 +1843,9 @@ public class DemographicDao extends HibernateDaoSupport {
 			this.patientStatus = patientStatus;
 		}
 	}
+	
+	
+    public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
+    }
 }
