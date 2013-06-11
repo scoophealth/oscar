@@ -127,7 +127,8 @@ public final class PrescriptionTransfer {
 	}
 
 	/**
-	 * both preventionsExts are required, null is not allowed, pass in empty list for no ext's
+	 * If prescription is null, then null is returned.
+	 * If prescription is not null, then drugs must not be null, it should at least be an empty list to signify no drugs.
 	 */
 	public static PrescriptionTransfer toTransfer(Prescription prescription, List<Drug> drugs) {
 		if (prescription == null) return (null);
