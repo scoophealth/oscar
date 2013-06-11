@@ -233,6 +233,7 @@
 		<put name="navigation" value="/casemgmt/navigation.jsp" />
 		<put name="body" value="/casemgmt/CaseManagementView.jsp" />
 	</definition>
+	
 	<!--
 		<definition name="page.customreport.list" path="/PMmodule/layout.jsp">
 		<put name="navigation" value="/PMmodule/navigation.jsp" /> <put
@@ -247,4 +248,25 @@
 
 		<put name="body" value="/PMmodule/Admin/Organization/ORGTree.jsp" />
 	</definition>
+	
+	<definition name="nonPatientContext" path="/layouts/nonPatientContext.jspf">
+		<put name="header" value="/layouts/nonPatientContextHeader.jspf" />
+		<put name="footer" value="/layouts/nonPatientContextFooter.jspf" />
+	</definition>
+	
+	<definition name="administration" extends="nonPatientContext">
+		<put name="content" value="/layouts/adminLayout.jspf" />
+	</definition>
+	
+
+	<!-- admin defs 
+	<definition name=".layout.admin.main" path="/layouts/administrationMain.jsp">
+		<put name="title" value="title.key" />
+		<put name="header" value="/administration/header.jsp" />
+		<put name="footer" value="/administration/footer.jsp" />
+		<put name="leftNav" value="/administration/leftNav.jsp" />
+		<put name="body" value="" />
+	</definition>
+	-->
+	
 </tiles-definitions>

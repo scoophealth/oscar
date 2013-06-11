@@ -34,7 +34,8 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.web.*"%>
 
-<%@include file="/layouts/caisi_html_top.jspf"%>
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
 	String submissionId = request.getParameter("submissionId");
@@ -49,44 +50,33 @@
 	
 %>
 
-<h1>OCAN IAR Detail Report</h1>
+	<div class="page-header">
+		<h4>OCAN IAR Detail Report</h4>
+	</div>
 
-				
-	<table class="borderedTableAndCells">
-		<tr>
-			<td colspan="2" align="center">IAR Submission</td>
+	<h5>IAR Submission</h5>
+	<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>				
+			<th>Submission Id</th>
+			<th>Submission Date</th>
+			<th>Transaction ID</th>
+			<th>Result</th>
+			<th>Result Message</th>
 		</tr>
+	</thead>		
 		<tr>
-			<td>Submission Id</td>
 			<td><%=log.getId() %></td>
-		</tr>
-		
-		<tr>
-			<td>Submission Date</td>
 			<td><%=formatter.format(log.getSubmitDateTime())%></td>
-		</tr>			
-		
-		<tr>
-			<td>Transaction ID</td>
 			<td><%=log.getTransactionId()%></td>
-		</tr>
-		
-		<tr>
-			<td>Result</td>
 			<td><%=log.getResult() %></td>
-		</tr>
-		
-		<tr>
-			<td>Result Message</td>
 			<td><%=log.getResultMessage()%></td>
-		</tr>
-		
+		</tr>			
 	</table>	
 
-	<table class="borderedTableAndCells">
-		<tr>
-			<td colspan="5" align="center">Records</td>
-		</tr>
+	<h5>Records</h5>
+	<table class="table table-bordered table-striped table-hover">
+	<thead>
 		<tr>
 			<td>Form Id</td>
 			<td>Date Started</td>
@@ -94,6 +84,7 @@
 			<td>Client</td>
 			<td>Provider</td>			
 		</tr>
+	</thead>
 		<%for(OcanStaffForm form:log.getRecords()) { %>
 			<tr>
 				<td><%=form.getId()%></td>
@@ -104,8 +95,3 @@
 			</tr>
 		<%} %>
 	</table>
-	<br/><br/>
-	
-	
-
-<%@include file="/layouts/caisi_html_bottom.jspf"%>

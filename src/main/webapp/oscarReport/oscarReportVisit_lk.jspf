@@ -25,96 +25,80 @@
 -->
 
 <%
-String cTotal="0",hTotal="0",oTotal="0", mNum="", fNum="";
- String dateBegin = request.getParameter("xml_vdate");
-   String dateEnd = request.getParameter("xml_appointment_date");
-   if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-   if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // set to any early date to start search from beginning
+	String cTotal = "0", hTotal = "0", oTotal = "0", mNum = "", fNum = "";
+	String dateBegin = request.getParameter("xml_vdate");
+	String dateEnd = request.getParameter("xml_appointment_date");
+	if (dateEnd.compareTo("") == 0)
+		dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth,
+				curDay);
+	if (dateBegin.compareTo("") == 0)
+		dateBegin = "1950-01-01"; // set to any early date to start search from beginning
 
+	String[] param3 = new String[7];
 
-String[] param3 = new String[7];
+	param3[0] = clinicview;
+	param3[1] = "1972";
+	param3[2] = "1982";
+	param3[3] = "1983";
+	param3[4] = "1994";
+	param3[5] = dateBegin;
+	param3[6] = dateEnd;
 
-param3[0] = clinicview;
-param3[1] = "1972";
-param3[2] = "1982";
-param3[3] = "1983";
-param3[4] = "1994";
-param3[5] = dateBegin;
-param3[6] = dateEnd ;
+	for (Long i : billingOnCHeaderDao.count_larrykain_clinic(
+			clinicview, ConversionUtils.fromDateString(dateBegin),
+			ConversionUtils.fromDateString(dateEnd))) {
+		cTotal = String.valueOf(i);
+	}
 
-for(Long i: billingOnCHeaderDao.count_larrykain_clinic(clinicview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
-	cTotal = String.valueOf(i);
-}
+	for (Long i : billingOnCHeaderDao.count_larrykain_hospital("1972",
+			"1982", "1983", "1994",
+			ConversionUtils.fromDateString(dateBegin),
+			ConversionUtils.fromDateString(dateEnd))) {
+		hTotal = String.valueOf(i);
+	}
 
+	for (Long i : billingOnCHeaderDao.count_larrykain_other(clinicview,
+			"1972", "1982", "1983", "1994",
+			ConversionUtils.fromDateString(dateBegin),
+			ConversionUtils.fromDateString(dateEnd))) {
+		oTotal = String.valueOf(i);
+	}
 
-for(Long i: billingOnCHeaderDao.count_larrykain_hospital("1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
-	hTotal = String.valueOf(i);
-}
+	BigDecimal ccTotal = new BigDecimal(Integer.parseInt(cTotal))
+			.setScale(0, BigDecimal.ROUND_HALF_UP);
+	BigDecimal hhTotal = new BigDecimal(Integer.parseInt(hTotal))
+			.setScale(0, BigDecimal.ROUND_HALF_UP);
+	BigDecimal BigTotal = new BigDecimal(0).setScale(0,
+			BigDecimal.ROUND_HALF_UP);
 
-for(Long i: billingOnCHeaderDao.count_larrykain_other(clinicview,"1972","1982","1983","1994",ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd))) {
-	oTotal = String.valueOf(i);
-}
+	BigDecimal ooTotal = new BigDecimal(Integer.parseInt(oTotal))
+			.setScale(0, BigDecimal.ROUND_HALF_UP);
 
-
- 
-    BigDecimal ccTotal = new BigDecimal(Integer.parseInt(cTotal)).setScale(0, BigDecimal.ROUND_HALF_UP);
-    BigDecimal hhTotal= new BigDecimal(Integer.parseInt(hTotal)).setScale(0, BigDecimal.ROUND_HALF_UP);
-    BigDecimal BigTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   
-   BigDecimal ooTotal= new BigDecimal(Integer.parseInt(oTotal)).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   
-   
-   BigTotal = BigTotal.add(ccTotal);
-   BigTotal = BigTotal.add(hhTotal);
-   BigTotal = BigTotal.add(ooTotal);
-   %>
-<p></p>
-<table width="60%" border="0" cellspacing="0" cellpadding="2"
-	align="center">
-	<tr bgcolor="#CCCCFF">
-		<td colspan="2"><font size="2"
-			face="Arial, Helvetica, sans-serif"><b>Encounter
-		Statistics - Larry Kain Report</b></font></td>
-	</tr>
-	<tr bgcolor="#F1E9FE">
-		<td><font size="2" face="Arial, Helvetica, sans-serif"><%=clinic%></font></td>
-		<td><font size="2" face="Arial, Helvetica, sans-serif">Run
-		on <%=MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay)%></font></td>
-	</tr>
-	<tr bgcolor="#F1E9FE">
-		<td colspan="2"><font size="2"
-			face="Arial, Helvetica, sans-serif">Visits between <%=dateBegin%>
-		and <%=dateEnd%></font></td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td><font size="2" face="Arial, Helvetica, sans-serif">Clinic
-		visits</font></td>
-		<td align="right"><font size="2"
-			face="Arial, Helvetica, sans-serif"><%=cTotal%></font></td>
-	</tr>
-	<tr>
-		<td><font size="2" face="Arial, Helvetica, sans-serif">HHS
-		visits</font></td>
-		<td align="right"><font size="2"
-			face="Arial, Helvetica, sans-serif"><%=hTotal%></font></td>
-	</tr>
-	<tr>
-		<td><font size="2" face="Arial, Helvetica, sans-serif">All
-		other visits</font></td>
-		<td align="right"><font size="2"
-			face="Arial, Helvetica, sans-serif"><%=oTotal%></font></td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr bgcolor="#CCCCFF">
-		<td><font size="2" face="Arial, Helvetica, sans-serif"><b>Total</b></font></td>
-		<td align="right"><font size="2"
-			face="Arial, Helvetica, sans-serif"><b><%=BigTotal%><b></font></td>
-	</tr>
-</table>
+	BigTotal = BigTotal.add(ccTotal);
+	BigTotal = BigTotal.add(hhTotal);
+	BigTotal = BigTotal.add(ooTotal);
+%>
+<h4>Encounter Statistics - Larry Kain Report</h4>
+<div class="well">
+	<dl class="dl-horizontal">
+		<dt>Clinic</dt>
+		<dd><%=clinic%></dd>
+		<dt>Visits Between</dt>
+		<dd><%=dateBegin%>
+			and
+			<%=dateEnd%></dd>
+		<dt>Run on</dt>
+		<dd><%=MyDateFormat.getMysqlStandardDate(curYear, curMonth,
+					curDay)%></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt>Clinic Visits</dt>
+		<dd><span class="badge"><%=cTotal%></span></dd>
+		<dt>HHS Visits</dt>
+		<dd><span class="badge"><%=hTotal%></span></dd>
+		<dt>All Other Visists</dt>
+		<dd><span class="badge"><%=oTotal%></span></dd>
+		<dt>Total</dt>
+		<dd><span class="badge badge-success"><%=BigTotal%></span></dd>
+	</dl>
+</div>

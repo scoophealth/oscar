@@ -24,7 +24,7 @@
 
 --%>
 <%
-  String user_no = (String) session.getAttribute("user");
+	String user_no = (String) session.getAttribute("user");
   int  nItems=0;
   String strLimit1="0";
   String strLimit2="5";
@@ -32,20 +32,25 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"%>
+
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+
 <%@ include file="../admin/dbconnection.jsp"%>
 
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
-<%@page import="org.oscarehr.common.model.ClinicLocation" %>
-<%@page import="org.oscarehr.common.dao.ReportProviderDao" %>
-<%@page import="org.oscarehr.common.model.ReportProvider" %>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
-<%@page import="org.oscarehr.common.model.Provider" %>
-<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao" %>
-<%@page import="org.oscarehr.common.model.BillingONCHeader1" %>
-<%@page import="oscar.util.ConversionUtils" %>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao"%>
+<%@page import="org.oscarehr.common.model.ClinicLocation"%>
+<%@page import="org.oscarehr.common.dao.ReportProviderDao"%>
+<%@page import="org.oscarehr.common.model.ReportProvider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao"%>
+<%@page import="org.oscarehr.common.model.BillingONCHeader1"%>
+<%@page import="oscar.util.ConversionUtils"%>
 <%
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
 	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
@@ -53,7 +58,7 @@
 	BillingONCHeader1Dao billingOnCHeaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 %>
 <%
-GregorianCalendar now=new GregorianCalendar();
+	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
@@ -70,137 +75,149 @@ GregorianCalendar now=new GregorianCalendar();
   String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
-<html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message
-	key="oscarReport.oscarReportVisitControl.title" /></title>
-<link rel="stylesheet" href="oscarReport.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="JavaScript">
-<!--
 
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function MM_openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
+<div class="page-header">
+	<h4>
+		<bean:message key="oscarReport.oscarReportVisitControl.title" />
+		<div class="pull-right">
+			<button name="print" onclick="window.print()" class="btn">
+				<i class="icon-print icon-black"></i>
+				<bean:message key="global.btnPrint" />
+			</button>
+		</div>
+	</h4>
+</div>
 
-function refresh() {
-  var u = self.location.href;
-  if(u.lastIndexOf("view=1") > 0) {
-    self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-    history.go(0);
-  }
-}
-//-->
-</script>
+<form action="${ctx}/oscarReport/oscarReportVisitControl.jsp"
+	class="well form-horizontal" id="visitForm">
+	<fieldset>
+		<h4>
+			<bean:message key="oscarReport.oscarReportVisitControl.title" />
+			<br> <small>Please select the report type, provider and
+				service begin and end dates.</small>
+		</h4>
+		<div class="control-group">
+			<label class="control-label">Select Report</label>
+			<div class="controls">
+				<label class="radio inline"> <input type="radio"
+					name="reportAction" onClick="toggleDivs();" value="lk"
+					<%=reportAction.equals("lk")?"checked":""%>> <bean:message
+						key="oscarReport.oscarReportVisitControl.msgLarryKainReport" />
+				</label> <label class="radio inline"> <input type="radio"
+					name="reportAction" onClick="toggleDivs();" value="vr"
+					<%=reportAction.equals("vr") || reportAction.equals("")?"checked":""%>>
+					<bean:message
+						key="oscarReport.oscarReportVisitControl.msgVisitReport" />
+				</label>
+			</div>
+		</div>
+		<div class="control-group" id="providerDiv">
+			<label class="control-label">Provider</label>
 
+			<div class="controls">
+				<select id="providerview" name="providerview"
+					<%=reportAction.equals("lk")?"disabled":""%>>
+					<option value="%">
+						<bean:message
+							key="oscarReport.oscarReportVisitControl.msgSelectProviderAll" />
+					</option>
+					<%
+						String proFirst="";
+																								            String proLast="";
+																								            String proOHIP="";
+																								            for(ReportProvider rps : reportProviderDao.findByAction("visitreport")) {
+																								            	Provider p = providerDao.getProvider(rps.getProviderNo());
+																								          
+																								                proFirst = p.getFirstName();
+																								                proLast = p.getLastName();
+																								                proOHIP = p.getProviderNo();
+					%>
+					<option value="<%=proOHIP%>"><%=proLast%>,
+						<%=proFirst%></option>
+					<%
+						}
+					%>
+				</select>
+			</div>
+		</div>
 
-</head>
+		</div>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
-	topmargin="5">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#FFFFFF">
-		<div align="right"><a
-			href="manageProvider.jsp?action=visitreport" target="_blank"><font
-			face="Arial, Helvetica, sans-serif" size="1"><bean:message
-			key="oscarReport.oscarReportVisitControl.btnManageProviderList" /></font></a></div>
-	</tr>
-</table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#000000">
-		<td height="40" width="10%"><input type='button' name='print'
-			value='<bean:message key="global.btnPrint"/>'
-			onClick='window.print()'></td>
-		<td width="90%" align="left">
-		<p><font face="Verdana, Arial, Helvetica, sans-serif"
-			color="#FFFFFF"><b><font
-			face="Arial, Helvetica, sans-serif" size="4">oscar<font
-			size="3">&nbsp;<bean:message
-			key="oscarReport.oscarReportVisitControl.msgTitle" /></font></font></b></font></p>
-		</td>
-	</tr>
-</table>
+		<div class="control-group">
+			<label class="control-label">Service Date Begin</label>
+			<div class="controls">
+				<input type="text" id="xml_vdate" name="xml_vdate"
+					value="<%=xml_vdate%>">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Service Date End</label>
+			<div class="controls">
 
-<table width="100%" border="0" bgcolor="#EEEEFF">
-	<form name="serviceform" method="get"
-		action="oscarReportVisitControl.jsp">
-	<tr>
-		<td width="30%" align="left"><font size="1" color="#333333"
-			face="Verdana, Arial, Helvetica, sans-serif"> <input
-			type="radio" name="reportAction"
-			onClick="document.serviceform.providerview.disabled=true" value="lk"
-			<%=reportAction.equals("lk")?"checked":""%>> <bean:message
-			key="oscarReport.oscarReportVisitControl.msgLarryKainReport" /> <input
-			type="radio" name="reportAction"
-			onClick="document.serviceform.providerview.disabled=false" value="vr"
-			<%=reportAction.equals("vr")?"checked":""%>> <bean:message
-			key="oscarReport.oscarReportVisitControl.msgVisitReport" /></font></td>
-		<td width="60%" align="left"><font
-			face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b><bean:message
-			key="oscarReport.oscarReportVisitControl.msgSelectProvider" /> </b></font> <select
-			name="providerview" <%=reportAction.equals("lk")?"disabled":""%>>
-			<option value="%"><bean:message
-				key="oscarReport.oscarReportVisitControl.msgSelectProviderAll" /></option>
-			<% String proFirst="";
-            String proLast="";
-            String proOHIP="";
-            for(ReportProvider rps : reportProviderDao.findByAction("visitreport")) {
-            	Provider p = providerDao.getProvider(rps.getProviderNo());
-          
-                proFirst = p.getFirstName();
-                proLast = p.getLastName();
-                proOHIP = p.getProviderNo();
-               %>
-			<option value="<%=proOHIP%>"><%=proLast%>, <%=proFirst%></option>
-			<% } %>
-		</select></td>
-		<td width="10%"><font color="#333333" size="1"
-			face="Verdana, Arial, Helvetica, sans-serif"> <input
-			type="submit" name="Submit"
-			value="<bean:message key="oscarReport.oscarReportVisitControl.btnCreateReport"/>">
-		</font></td>
-	</tr>
-	<tr>
-		<td colspan="2">
-		<div align="left"><font color="#003366"><font
-			face="Verdana, Arial, Helvetica, sans-serif" size="1"><b>
-		<font color="#333333"> <bean:message
-			key="oscarReport.oscarReportVisitControl.msgServiceDateRange" /></font></b></font></font>
-		&nbsp; &nbsp; <font size="1" face="Arial, Helvetica, sans-serif">
-		<a href="#"
-			onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
-			key="oscarReport.oscarReportVisitControl.msgBeginDate" />:</a></font> <input
-			type="text" name="xml_vdate" value="<%=xml_vdate%>"> <font
-			size="1" face="Arial, Helvetica, sans-serif"><a href="#"
-			onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
-			key="oscarReport.oscarReportVisitControl.msgEndDate" />:</a></font> <input
-			type="text" name="xml_appointment_date"
-			value="<%=xml_appointment_date%>"></div>
-		</td>
-	</tr>
-	</form>
-</table>
-<% if (reportAction.compareTo("") == 0 || reportAction == null) { %>
+				<input type="text" id="xml_appointment_date"
+					name="xml_appointment_date" value="<%=xml_appointment_date%>">
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn btn-primary">
+					<bean:message
+						key="oscarReport.oscarReportVisitControl.btnCreateReport" />
+				</button>
+			</div>
+		</div>
+	</fieldset>
+</form>
+<%
+	if (reportAction.compareTo("") == 0 || reportAction == null) {
+%>
 <p>&nbsp;</p>
-<% } else {
-       if (reportAction.compareTo("lk") == 0) { %>
+<%
+	} else {
+       if (reportAction.compareTo("lk") == 0) {
+%>
 <%@ include file="oscarReportVisit_lk.jspf"%>
-<%     }
-       if (reportAction.compareTo("vr") == 0) { %>
-		<%@ include file="oscarReportVisit_vr.jspf"%>
-	<%  }
+<%
+	}
+       if (reportAction.compareTo("vr") == 0) {
+%>
+<%@ include file="oscarReportVisit_vr.jspf"%>
+<%
+	}
 
    }
 %>
 
-<%@ include file="../demographic/zfooterbackclose.jsp"%>
+<script>
+	var startDt = $("#xml_vdate").datepicker({
+		format : "yyyy-mm-dd"
+	});
 
-</body>
-</html>
+	var endDt = $("#xml_appointment_date").datepicker({
+		format : "yyyy-mm-dd"
+	});
+
+	$(document).ready(function() {
+		$('#visitform').validate({
+			rules : {
+				xml_vdate : {
+					required : false,
+					oscarDate : true
+				},
+				xml_appointment_date : {
+					required : false,
+					oscarDate : true
+				}
+			}
+		});
+	});
+
+	registerFormSubmit('visitForm', 'dynamic-content');
+
+	function toggleDivs() {
+		if ($('input[name=reportAction]:checked').val() == 'vr')
+			$("#providerview").removeAttr('disabled');
+		else
+			$("#providerview").attr('disabled', 'disabled');
+	}
+</script>

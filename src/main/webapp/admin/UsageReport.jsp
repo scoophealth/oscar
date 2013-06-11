@@ -26,8 +26,8 @@
 
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@ page import="org.oscarehr.common.model.Provider" %>
-<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
@@ -41,11 +41,19 @@
 <%@page import="org.oscarehr.common.model.ProviderInboxItem" %>
 <%@page import="org.oscarehr.managers.TicklerManager" %>
 <%@page import="org.oscarehr.common.model.CustomFilter" %>
-<%@page import="org.oscarehr.common.dao.DocumentDao" %>
+<%@page import="org.oscarehr.common.dao.DocumentDao"%>
 <%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao" %>
+
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"	scope="request" />
+
+<div class="page-header">
+	<h4>EMR Usage Report</h4>
+</div>
+
 <%
 	BillingONCHeader1Dao billingONCHeader1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
-String providerNo = request.getParameter("providerNo");
+	String providerNo = request.getParameter("providerNo");
 
 OscarAppointmentDao appointmentDao          	=(OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 CaseManagementNoteDAO caseManagementNoteDao 	=(CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
@@ -54,125 +62,126 @@ DrugDao drugDao 								= (DrugDao) SpringUtils.getBean("drugDao");
 ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) SpringUtils.getBean("providerInboxRoutingDAO");
 TicklerManager ticklerManager					= SpringUtils.getBean(TicklerManager.class);
 DocumentDao documentDao							=(DocumentDao) SpringUtils.getBean("documentDao");
-ProviderDao providerDao 						= (ProviderDao)SpringUtils.getBean("providerDao");
+ProviderDao providerDao	                        = (ProviderDao)SpringUtils.getBean("providerDao");
 
-List<Provider> providers = providerDao.getActiveProviders();
+	List<Provider> providers = providerDao.getActiveProviders();
 %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
-<html>
-    <head>
-     	<title>EMR Usage Report</title>
-     	<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+<form class="well form-horizontal" action="${ctx}/admin/UsageReport.jsp"
+	id="usageForm">
+	<fieldset>
+		<h4>
+			Usage Report <br> <small>Please select the provider,
+				service begin and end dates.</small>
+		</h4>
+			<div class="control-group">
+				<label class="control-label">Provider</label>
+				<div class="controls">
 
-    </head>
-    <body class="mainbody">
-         <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">
-            <tr class="topbar">
-                <td class="MainTableTopRowLeftColumn" width="60px">Report</td>
-                <td class="MainTableTopRowRightColumn">
-                    <table class="TopStatusBar">
-                        <tr>
-                            <td>EMR Usage Report</td>
-                            <td style="text-align: right;"  >
-                                    <oscar:help keywords="1.6.11" key="app.top1"/> |
-                                    <a href="javascript: popupStart(300, 400, 'About.jsp')">About</a> |
-                                    <a href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-            	<td class="MainTableLeftColumn">&nbsp;</td>
-            	<td class="MainTableRightColumn">
-
-
-					<form action="UsageReport.jsp">
-					<label>Provider:</label>
-						<select name="providerNo">
+					<select name="providerNo">
 						<%
-							for(Provider provider:providers) {
-											String selected = new String();
-											if(providerNo != null && providerNo.equals(provider.getProviderNo())) {
-												selected=" selected=\"selected\" ";
-											}
-						%><option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%></option><%
+							for (Provider provider : providers) {
+																		String selected = new String();
+																		if (providerNo != null
+																				&& providerNo.equals(provider.getProviderNo())) {
+																			selected = " selected=\"selected\" ";
+																		}
+						%><option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%></option>
+						<%
 							}
 						%>
-						</select>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Start Date</label>
+				<div class="controls">
+					<input type="text" id="startDate" name="startDate"
+						value="<%=request.getParameter("startDate") != null ? request
+					.getParameter("startDate") : ""%>" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">End Date</label>
+				<div class="controls">
+					<input type="text" id="endDate" name="endDate"
+						value="<%=request.getParameter("endDate") != null ? request
+					.getParameter("endDate") : ""%>" />
+				</div>
+			</div>
+			<div class="control-group">
+				<hr>
+				<div class="controls">
+					<button type="submit" class="btn btn-primary">Run Report</button>
+				</div>
+			</div>
+	</fieldset>
+</form>
 
-					<label>Start Date</label><input type="text" name="startDate"   value="<%=request.getParameter("startDate")%>"/>
-					<label>End Date</label><input type="text" name="endDate" value="<%=request.getParameter("endDate")%>"/>
-					<input type="submit" value="Run Report"/>
-					</form>
+<%
+	if (providerNo != null) {
+		DemographicDao demographicDao = (DemographicDao) SpringUtils
+		.getBean("demographicDao");
+		List<Demographic> demoList = demographicDao
+		.getDemographicByProvider(providerNo);
 
+		int total = demoList.size();
+		int a0to19 = 0;
+		int a0to19m = 0;
+		int a0to19f = 0;
 
-            		<%
-            			if(providerNo != null){
-            						 DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-            						 List<Demographic> demoList = demographicDao.getDemographicByProvider( providerNo);
+		int a20to44 = 0;
+		int a20to44m = 0;
+		int a20to44f = 0;
 
-            						 int total = demoList.size();
-            						 int a0to19  = 0;
-            						 int a0to19m  = 0;
-            						 int a0to19f  = 0;
+		int a45to64 = 0;
+		int a45to64m = 0;
+		int a45to64f = 0;
 
-            						 int a20to44 = 0;
-            						 int a20to44m = 0;
-            						 int a20to44f = 0;
+		int a65to84 = 0;
+		int a65to84m = 0;
+		int a65to84f = 0;
 
-            						 int a45to64 = 0;
-            						 int a45to64m = 0;
-            						 int a45to64f = 0;
+		int a85plus = 0;
+		int a85plusm = 0;
+		int a85plusf = 0;
 
-            						 int a65to84 = 0;
-            						 int a65to84m = 0;
-            						 int a65to84f = 0;
+		for (Demographic demo : demoList) {
+	int age = demo.getAgeInYears();
+	String sex = demo.getSex();
 
-            						 int a85plus = 0;
-            						 int a85plusm = 0;
-            						 int a85plusf = 0;
+	if (age <= 19) {
+		a0to19++;
+		a0to19m = checkMale(sex, a0to19m);
+		a0to19f = checkFemale(sex, a0to19f);
+	} else if (age >= 20 && age <= 44) {
+		a20to44++;
+		a20to44m = checkMale(sex, a20to44m);
+		a20to44f = checkFemale(sex, a20to44f);
+	} else if (age >= 45 && age <= 64) {
+		a45to64++;
+		a45to64m = checkMale(sex, a45to64m);
+		a45to64f = checkFemale(sex, a45to64f);
+	} else if (age >= 65 && age <= 84) {
+		a65to84++;
+		a65to84m = checkMale(sex, a65to84m);
+		a65to84f = checkFemale(sex, a65to84f);
+	} else {
+		a85plus++;
+		a85plusm = checkMale(sex, a85plusm);
+		a85plusf = checkFemale(sex, a85plusf);
+	}
+		}
 
-            						 for(Demographic demo:demoList){
-            							 int age = demo.getAgeInYears();
-            							 String sex = demo.getSex();
+		Date startDate = null;
+		Date endDate = null;
 
-            							 if(age <= 19){
-            								 a0to19++;
-            								 a0to19m = checkMale(sex,a0to19m);
-            								 a0to19f = checkFemale(sex,a0to19f);
-            							 }else if (age >= 20 && age <= 44){
-            								 a20to44++;
-            								 a20to44m = checkMale(sex,a20to44m);
-            								 a20to44f = checkFemale(sex,a20to44f);
-            							 }else if (age >= 45 && age <=64){
-            								 a45to64++;
-            								 a45to64m = checkMale(sex,a45to64m);
-            								 a45to64f = checkFemale(sex,a45to64f);
-            							 }else if (age >=65 && age <= 84){
-            								 a65to84++;
-            								 a65to84m = checkMale(sex,a65to84m);
-            								 a65to84f = checkFemale(sex,a65to84f);
-            							 }else{
-            								 a85plus++;
-            								 a85plusm = checkMale(sex,a85plusm);
-            								 a85plusf = checkFemale(sex,a85plusf);
-            							 }
-            						 }
-
-
-            						 Date startDate = null;
-            						 Date endDate   = null;
-
-            						 try{
-            						 	startDate = UtilDateUtilities.StringToDate(request.getParameter("startDate"));
-            						 	endDate   = UtilDateUtilities.StringToDate(request.getParameter("endDate"));
-            						 }catch(Exception e){
-            					 		startDate = null;
-            					 		endDate   = null;
-            						 }
+		try {
+	     startDate = UtilDateUtilities.StringToDate(request.getParameter("startDate"));
+	     endDate = UtilDateUtilities.StringToDate(request.getParameter("endDate"));
+		} catch (Exception e) {
+	     startDate = null;
+	     endDate = null;
+		}
 
             						 int scheduledAppts       = appointmentDao.findByDateRangeAndProvider(startDate, endDate, providerNo).size();
             						 int billing              = billingONCHeader1Dao.getNumberOfDemographicsWithInvoicesForProvider(providerNo,startDate, endDate,true);
@@ -187,116 +196,160 @@ List<Provider> providers = providerDao.getActiveProviders();
             						 	customFilter.setEndDate(endDate);
             						 	useOfRemindersAlerts += ticklerManager.getTicklers(customFilter).size();
 
-            						 int labs                 = providerInboxRoutingDao.howManyDocumentsLinkedWithAProvider(providerNo);
-            		%>
+		int labs = providerInboxRoutingDao.howManyDocumentsLinkedWithAProvider(providerNo);
+%>
 
-					<div>
-					<h2>Practice Profile</h2>
+<fieldset>
+	<legend>Practice Profile</legend>
 
-					Practice Size: <%=demoList.size() %>
+	<dl class="dl-horizontal">
+		<dt>Practice Size</dt>
+		<dd>
+			<span class="badge"><%=demoList.size()%></span>
+		</dd>
+	</dl>
 
-					<h2>Age and Gender Distribution</h2>
-					<table border=1 >
-						<tr>
-							<th>Age Group - Years</th>
-							<th>Percentage</th>
-							<th>Male</th>
-							<th>Female</th>
-						</tr>
-						<tr>
-							<td>0 -19</td>
-							<td><%=divide(total,a0to19) %>%</td>
-							<td><%=divide(a0to19,a0to19m) %>%</td>
-							<td><%=divide(a0to19,a0to19f) %>%</td>
-						</tr>
-						<tr>
-							<td>20-44</td>
-							<td><%=divide(total,a20to44) %>%</td>
-							<td><%=divide(a20to44,a20to44m) %>%</td>
-							<td><%=divide(a20to44,a20to44f) %>%</td>
-						</tr>
-						<tr>
-							<td>45-64</td>
-							<td><%=divide(total,a45to64) %>%</td>
-							<td><%=divide(a45to64,a45to64m) %>%</td>
-							<td><%=divide(a45to64,a45to64f) %>%</td>
-						</tr>
-						<tr>
-							<td>65-84</td>
-							<td><%=divide(total,a65to84) %>%</td>
-							<td><%=divide(a65to84,a65to84m) %>%</td>
-							<td><%=divide(a65to84,a65to84f) %>%</td>
-						</tr>
-						<tr>
-							<td>85+</td>
-							<td><%=divide(total,a85plus) %>%</td>
-							<td><%=divide(a85plus,a85plusm) %>%</td>
-							<td><%=divide(a85plus,a85plusf) %>%</td>
-						</tr>
-
-					</table>
-
-					<br><br><br>
-
-
-					<table border=1>
-						<tr>
-							<th>Scheduled Appts</th>
-							<th title="Bill for services  includes OHIP, WSIB, other Provincial plans, private insurance and uninsured (self pay, third parties) invoicing">Billing</th>
-							<th title="Enter encounter notes for patients seen  progress note entry associated with a kept patient office visit">Encounter Note</th>
-							<th title="Enter problem lists for patients seen  presence of CPP problem list entry. If an application allows for none in the CPP category of Problem List/Ongoing Problems this is an
-					acceptable entry.">Problem List</th>
-							<th title="Store documents not originated from an EMR  includes any scanned documents or external documents delivered through an electronic interface e.g. through Hospital Report
-					Manager.">Stored Documents</th>
-					 		<th>Rx new/renewals</th>
-							<th title="Generate automated alerts or  reminders to support care delivery includes medication alerts (drug-drug, drug-allergy, drug-condition); preventive care and chronic disease
-					management reminders">Use of reminders/alerts</th>
-							<th title="Receive lab results electronically, directly into the EMR from private labs  includes electronic interfaces with hospital labs.">Labs</th>
-						</tr>
-						<tr>
-							<td><%=scheduledAppts%></td>
-							<td><%=billing%></td>
-							<td><%=encounterNote%></td>
-							<td><%=problemList%></td>
-							<td><%=storedDocuments%></td>
-							<td><%=rxNewRenewals%></td>
-							<td><%=useOfRemindersAlerts%></td>
-							<td><%=labs%></td>
-						</tr>
-					</table>
-					</div>
-
-					<%}%>
-
-            	</td>
-            </tr>
-            <tr>
-				<td class="MainTableBottomRowLeftColumn"></td>
-				<td class="MainTableBottomRowRightColumn"></td>
+	<h5>Age and Gender Distribution</h5>
+	<table class="table table-bordered table-striped table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Age Group - Years</th>
+				<th>Percentage</th>
+				<th>Male</th>
+				<th>Female</th>
 			</tr>
-         </table>
-	</body>
-</html>
+		</thead>
+		<tbody>
+			<tr>
+				<td>0 -19</td>
+				<td><%=divide(total, a0to19)%>%</td>
+				<td><%=divide(a0to19, a0to19m)%>%</td>
+				<td><%=divide(a0to19, a0to19f)%>%</td>
+			</tr>
+			<tr>
+				<td>20-44</td>
+				<td><%=divide(total, a20to44)%>%</td>
+				<td><%=divide(a20to44, a20to44m)%>%</td>
+				<td><%=divide(a20to44, a20to44f)%>%</td>
+			</tr>
+			<tr>
+				<td>45-64</td>
+				<td><%=divide(total, a45to64)%>%</td>
+				<td><%=divide(a45to64, a45to64m)%>%</td>
+				<td><%=divide(a45to64, a45to64f)%>%</td>
+			</tr>
+			<tr>
+				<td>65-84</td>
+				<td><%=divide(total, a65to84)%>%</td>
+				<td><%=divide(a65to84, a65to84m)%>%</td>
+				<td><%=divide(a65to84, a65to84f)%>%</td>
+			</tr>
+			<tr>
+				<td>85+</td>
+				<td><%=divide(total, a85plus)%>%</td>
+				<td><%=divide(a85plus, a85plusm)%>%</td>
+				<td><%=divide(a85plus, a85plusf)%>%</td>
+			</tr>
+		</tbody>
+	</table>
 
-<%!String divide(int total, int count){
-	double val = (float)count/total;
-	if(Double.isNaN(val)){
-		return "---";
+
+	<h5>Scheduled Appts</h5>
+	
+	<table class="table table-bordered table-striped table-condensed table-hover tooltips">
+		<thead>
+			<tr>
+				<th>Scheduled Appts</th>
+				<th><a data-toggle="tooltip"
+					data-original-title="Bill for services  includes OHIP, WSIB, other Provincial plans, private insurance and uninsured (self pay, third parties) invoicing">Billing</a></th>
+				<th><a data-toggle="tooltip"
+					data-original-title="Enter encounter notes for patients seen  progress note entry associated with a kept patient office visit">Encounter
+						Note</a></th>
+				<th><a data-toggle="tooltip"
+					data-original-title="Enter problem lists for patients seen  presence of CPP problem list entry. If an application allows for none in the CPP category of Problem List/Ongoing Problems this is an
+					acceptable entry.">Problem
+						List</a></th>
+				<th><a data-toggle="tooltip"
+					data-original-title="Store documents not originated from an EMR  includes any scanned documents or external documents delivered through an electronic interface e.g. through Hospital Report
+					Manager.">Stored
+						Documents</a></th>
+				<th>Rx new/renewals</th>
+				<th><a data-toggle="tooltip"
+					data-original-title="Generate automated alerts or  reminders to support care delivery includes medication alerts (drug-drug, drug-allergy, drug-condition); preventive care and chronic disease
+					management reminders">Use
+						of reminders/alerts</a></th>
+				<th><a data-toggle="tooltip"
+					data-original-title="Receive lab results electronically, directly into the EMR from private labs  includes electronic interfaces with hospital labs.">Labs</a></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><%=scheduledAppts%></td>
+				<td><%=billing%></td>
+				<td><%=encounterNote%></td>
+				<td><%=problemList%></td>
+				<td><%=storedDocuments%></td>
+				<td><%=rxNewRenewals%></td>
+				<td><%=useOfRemindersAlerts%></td>
+				<td><%=labs%></td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>
+
+<%
 	}
-	return ""+val * 100;
-}
+%>
 
+<script>
+	var startDt = $("#startDate").datepicker({
+		format : "yyyy-mm-dd"
+	});
 
-int checkMale(String sex,int count){
-	if("M".equalsIgnoreCase(sex)){
-		return (1+count);
+	var endDt = $("#endDate").datepicker({
+		format : "yyyy-mm-dd"
+	});
+	$(document).ready(function() {
+		$('#usageForm').validate({
+			rules : {
+				startDate : {
+					required : true,
+					oscarDate : true
+				},
+				endDate : {
+					required : true,
+					oscarDate : true
+				}
+			}
+		});
+	});
+
+	// initialiaze toolstips
+	$('.tooltips').tooltip({
+      selector: "a[data-toggle=tooltip]"
+    });
+
+	registerFormSubmit('usageForm', 'dynamic-content');
+</script>
+
+<%!String divide(int total, int count) {
+		double val = (float) count / total;
+		if (Double.isNaN(val)) {
+			return "---";
+		}
+		return "" + val * 100;
 	}
-	return count;
-}
 
-int checkFemale(String sex,int count){
-	if("F".equalsIgnoreCase(sex)){
-		return (1+count);
+	int checkMale(String sex, int count) {
+		if ("M".equalsIgnoreCase(sex)) {
+			return (1 + count);
+		}
+		return count;
 	}
-	return count;
-}%>
+
+	int checkFemale(String sex, int count) {
+		if ("F".equalsIgnoreCase(sex)) {
+			return (1 + count);
+		}
+		return count;
+	}%>

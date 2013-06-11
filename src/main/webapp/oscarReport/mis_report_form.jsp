@@ -22,6 +22,8 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.oscarehr.web.MisReportUIBean"%>
 <%@page import="org.oscarehr.common.dao.FunctionalCentreDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.List"%>
@@ -42,170 +44,233 @@
 	List<Program> programs=programDao.getProgramsByFacilityId(loggedInInfo.currentFacility.getId());
 %>
 
-<%@include file="/layouts/caisi_html_top.jspf"%>
+<%@ include file="/taglibs.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 
-<table style="width:100%">
-	<tr>
-		<td><h2>MIS Reports</h2></td>
-		<td style="text-align:right"><input type="button" value="back" onclick="history.go(-1)" /></td>
-	</tr>
-</table>
-				
-<script type="text/javascript">
-	function validate(form)
-	{
-		var fields = form.elements;
-		var reportBy=getSelectedRadioValue(fields.reportBy);
+<div class="page-header">
+	<h4>MIS Reports</h4>
+</div>
 
-		if (reportBy=="functionalCentre")
-		{
-			if (fields.functionalCentreId.value==null||fields.functionalCentreId.value=="")
-			{
-				alert('Please select a functional centre.');
-				return(false);
-			}
-		}
-		else if (reportBy=="programs")
-		{
-			if (fields.programIds.value==null||fields.programIds.value=="")
-			{
-				alert('Please select one or more programs.');
-				return(false);
-			}
-		}
-		else
-		{
-			alert("error, missed an option : "+reportBy);
-			return(false);
-		}
-	}
-</script>
+<form action="${ctx}/oscarReport/mis_report_form.jsp" class="well form-horizontal" id="misForm">
 
-<form method="post" action="mis_report_results.jsp" onsubmit="return(validate(this))">
-	<table class="borderedTableAndCells">
-		<tr>
-			<td style="vertical-align:top">
-				<script type="text/javascript">
-					function showFunctionalCentreSelectionBlock()
-					{
-						document.getElementById("functionalCentreSelectionBlock").style.display="block";
-						document.getElementById("programsSelectionBlock").style.display="none";
-					}
-
-					function showProgramsSelectionBlock()
-					{
-						document.getElementById("functionalCentreSelectionBlock").style.display="none";
-						document.getElementById("programsSelectionBlock").style.display="block";
-					}
-				</script>
-			
-				Report By
-				<table style="border:none;border-collapse:collapse">
-					<tr>
-						<td style="border:none"><input type="radio" name="reportBy" value="functionalCentre" checked="checked" onclick="showFunctionalCentreSelectionBlock()" /></td>
-						<td style="border:none">Functional Centre</td>
-					</tr>
-					<tr>
-						<td style="border:none"><input type="radio" name="reportBy" value="programs" onclick="showProgramsSelectionBlock()" /></td>
-						<td style="border:none">Programs</td>
-					</tr>
-				</table>
-			</td>
-			<td>
-				<div id="functionalCentreSelectionBlock">
-					<select name="functionalCentreId">
+	<div class="control-group">
+			<label class="control-label">Report By</label> 
+			<div class="controls">
+			<label class="radio inline"> 
+				<input
+				type="radio" id="reportByFn" name="reportBy" value="functionalCentre"
+				checked="checked" onclick="toggleDivs()">
+				Functional Centre
+			</label> 
+			<label class="radio inline"> 
+				<input type="radio" id="reportByPr" name="reportBy"
+				value="programs" onclick="toggleDivs()">
+				Programs
+			</label>
+			</div>
+		</div>
+	<div class="control-group">
+		<label class="control-label"></label> 
+		<div class="controls">
+				<div class="toggleDiv">
+					<select id="functionalCentreId" name="functionalCentreId" class="input-medium">
 						<%
 							for (FunctionalCentre functionalCentre : functionalCentres)
 							{
-								%>
-									<option value="<%=functionalCentre.getAccountId()%>"><%=StringEscapeUtils.escapeHtml(functionalCentre.getAccountId()+", "+functionalCentre.getDescription())%></option>
-								<%
+						%>
+						<option value="<%=functionalCentre.getAccountId()%>"><%=StringEscapeUtils.escapeHtml(functionalCentre.getAccountId()+", "+functionalCentre.getDescription())%></option>
+						<%
 							}
 						%>
 					</select>
 				</div>
-				<div id="programsSelectionBlock" style="display:none">
-					<select name="programIds" multiple='multiple' >
+				<div class="toggleDiv" style="display: none;">
+					<select id="programIds" name="programIds" multiple='multiple' class="input">
 						<%
 							for (Program program : programs)
 							{
 								if (program.isBed() || program.isService())
 								{
-									%>
-										<option value="<%=program.getId()%>"><%=StringEscapeUtils.escapeHtml(program.getName() + " ("+program.getType()+')')%></option>
-									<%
+						%>
+						<option value="<%=program.getId()%>"><%=StringEscapeUtils.escapeHtml(program.getName() + " ("+program.getType()+')')%></option>
+						<%
 								}
 							}
 						%>
 					</select>
-					<br />
-					<input type="checkbox" name="reportProgramsIndividually" /> Report Programs Separately
+					<label class="checkbox"> <input type="checkbox"
+						name="reportProgramsIndividually"> Report Programs
+						Separately
+					</label>
+
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>Date Range Start</td>
-			<td>
-				<select name="startYear">
-				<%
-					GregorianCalendar cal=new GregorianCalendar();
-					int year=cal.get(GregorianCalendar.YEAR);
-					for (int i=0; i<10; i++)
-					{
-						%>
-							<option value="<%=year-i%>"><%=year-i%></option>
-						<%
-					}
-				%>
+		</div>
+	</div>
+	<hr style="border-bottom:1px solid #e5e5e5; width:100%;">
+	<div class="control-group">
+		<label class="control-label">Date Range Start</label>
+			<div class="controls">
+				<select name="startYear" class="input-medium">
+					<%
+						GregorianCalendar cal=new GregorianCalendar();
+						int year=cal.get(GregorianCalendar.YEAR);
+						for (int i=0; i<10; i++)
+						{
+					%>
+					<option value="<%=year-i%>"><%=year-i%></option>
+					<%
+						}
+					%>
 				</select>
-				-
-				<select name="startMonth">
-				<%
-					DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
-					String[] months=dateFormatSymbols.getShortMonths();
-					
-					for (int i=1; i<13; i++)
-					{
-						%>
-							<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
-						<%
-					}
-				%>
+				<select name="startMonth" class="input-mini">
+					<%
+						DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
+						String[] months=dateFormatSymbols.getShortMonths();
+						
+						for (int i=1; i<13; i++)
+						{
+					%>
+					<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
+					<%
+						}
+					%>
 				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>Date Range End (inclusive)</td>
-			<td>
-				<select name="endYear">
-				<%
-					for (int i=0; i<10; i++)
-					{
-						%>
-							<option value="<%=year-i%>"><%=year-i%></option>
-						<%
-					}
-				%>
+			</div>
+	</div>
+	<div class="control-group">
+			<label class="control-label">Date Range End (inclusive)</label>
+			<div class="controls">
+				<select name="endYear" class="input-medium">
+					<%
+						for (int i=0; i<10; i++)
+						{
+					%>
+					<option value="<%=year-i%>"><%=year-i%></option>
+					<%
+						}
+					%>
+				</select> <select name="endMonth" class="input-mini">
+					<%
+						for (int i=1; i<13; i++)
+						{
+					%>
+					<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
+					<%
+						}
+					%>
 				</select>
-				-
-				<select name="endMonth">
-				<%
-					for (int i=1; i<13; i++)
-					{
-						%>
-							<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
-						<%
-					}
-				%>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><input type="submit" value="View Report" /></td>
-		</tr>
-	</table>	
-</form>
+			</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<input type="submit" value="View Report" class="btn btn-primary" />
+		</div>
+	</div>
+</form>	
+	<%
+		if(request.getParameter("reportBy")!=null){
+			int startYear = Integer.parseInt(request.getParameter("startYear"));
+			int startMonth = Integer.parseInt(request.getParameter("startMonth"));
+			int endYear = Integer.parseInt(request.getParameter("endYear"));
+			int endMonth = Integer.parseInt(request.getParameter("endMonth"));
 
+			GregorianCalendar startDate=new GregorianCalendar(startYear, startMonth, 1);
+			GregorianCalendar endDate=new GregorianCalendar(endYear, endMonth, 1);
+			GregorianCalendar actualEndDate=(GregorianCalendar)endDate.clone();
+			actualEndDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive of the 30/31 days of the month
 
-<%@include file="/layouts/caisi_html_bottom.jspf"%>
+			MisReportUIBean misReportUIBean=null;	
+			
+			String reportBy=request.getParameter("reportBy");
+			if ("functionalCentre".equals(reportBy))
+			{
+				String functionalCentreId=request.getParameter("functionalCentreId");
+				misReportUIBean=new MisReportUIBean(functionalCentreId, startDate, actualEndDate);
+			}
+			else if ("programs".equals(reportBy))
+			{
+				String[] programIds=request.getParameterValues("programIds");
+				boolean reportProgramsIndividually=WebUtils.isChecked(request, "reportProgramsIndividually");
+
+				if (!reportProgramsIndividually)
+				{
+					misReportUIBean=new MisReportUIBean(programIds, startDate, actualEndDate);
+				}
+				else
+				{
+					misReportUIBean=MisReportUIBean.getSplitProgramReports(programIds, startDate, actualEndDate);
+				}
+			}
+			else
+			{
+				throw(new IllegalStateException("missed a case : reportBy="+reportBy));
+			}	
+	%>
+<table class="table table-bordered table-striped table-condensed table-hover">
+	<thead>
+		<tr>
+		<%
+			for (String header : misReportUIBean.getHeaderRow())
+			{
+				%>
+					<th><%=header%></th>
+				<%
+			}
+		%>
+	</tr>
+	</thead>
+	<tbody>
+	<%
+		for (MisReportUIBean.DataRow dataRow : misReportUIBean.getDataRows())
+		{
+			%>
+				<tr>
+					<td><%=dataRow.dataReportId%></td>
+					<td><%=dataRow.dataReportDescription%></td>
+					<%
+						for (Integer tempResult : dataRow.dataReportResult)
+						{
+							%>
+								<td><%=tempResult==null?"-":tempResult%></td>
+							<%
+						}
+					%>
+				</tr>
+			<%
+		}
+	%>
+	</tbody>
+</table>
+	
+	<%
+		}
+	%>
+
+	<script type="text/javascript">
+		var oldRadioVal = $("input:radio[name=reportBy]:checked").val();
+		
+		function toggleDivs() {
+			var newVal = $("input:radio[name=reportBy]:checked").val();
+
+			if(oldRadioVal!=newVal)
+				$(".toggleDiv").toggle();
+			
+			oldRadioVal = newVal;
+		}
+
+		$(document).ready(function() {
+			 $('#misForm').validate(
+			 {
+			  rules: { 
+				  		functionalCentreId: { 
+				  			required: function(element){ return $('#reportByFn').prop('checked'); } 
+			 			},
+			 			programIds: { 
+			 				required: function(element){ return $('#reportByPr').prop('checked'); }
+			 			}   
+			  }
+			 });
+		});
+		registerFormSubmit('misForm', 'dynamic-content');
+	</script>

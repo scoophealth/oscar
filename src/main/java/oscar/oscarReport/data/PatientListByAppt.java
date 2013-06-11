@@ -71,8 +71,8 @@ public class PatientListByAppt extends HttpServlet {
 
 		for (Object[] o : dao.findPatientAppointments(drNo, from, to)) {
 			Demographic d = (Demographic) o[0];
-			Appointment a = (Appointment) o[0];
-			Provider p = (Provider) o[0];
+			Appointment a = (Appointment) o[1];
+			Provider p = (Provider) o[2];
 
 			ps.print(d.getLastName() + ",");
 			ps.print(d.getFirstName() + ",");
