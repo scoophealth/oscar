@@ -40,7 +40,6 @@ import oscar.MyDateFormat;
 import com.quatro.common.KeyConstants;
 import com.quatro.model.FieldDefValue;
 import com.quatro.model.LookupTableDefValue;
-import com.quatro.model.security.NoAccessException;
 import com.quatro.service.LookupManager;
 import com.quatro.service.security.SecurityManager;
 import com.quatro.util.Utility;
@@ -61,9 +60,8 @@ public class LookupCodeEditAction extends DispatchAction {
 	}
 	
 	private ActionForward loadCode(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	try {
-    		getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP);
-			String [] codeIds = request.getParameter("id").split(":");
+    	
+    		String [] codeIds = request.getParameter("id").split(":");
 	        String tableId = codeIds[0];
 	        String code = "0";
 	        boolean isNew = true;
@@ -93,16 +91,11 @@ public class LookupCodeEditAction extends DispatchAction {
 			boolean isReadOnly =false;		
 			SecurityManager sec = (SecurityManager) request.getSession()
 			.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);	
-			if (sec.GetAccess(KeyConstants.FUN_ADMIN_LOOKUP, null).compareTo(KeyConstants.ACCESS_READ) <= 0) 
-				isReadOnly=true;
+			
 			if(!editable) isReadOnly = true;
 			if(isReadOnly) request.setAttribute("isReadOnly", Boolean.valueOf(isReadOnly));
 			return mapping.findForward("edit");
-    	}
-    	catch(NoAccessException e)
-    	{
-    		return mapping.findForward("failure");
-    	}
+    	
 	}
 
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception 
@@ -114,21 +107,9 @@ public class LookupCodeEditAction extends DispatchAction {
 		
         ActionMessages messages = new ActionMessages();
 		
-		if(isNew)
-		{
-			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_WRITE);
-		}
-		else
-		{
-			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_UPDATE);
-		}
+		
 		boolean isInActive = false;
 		
-		if(isNew)
-			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_WRITE);
-		else
-			getAccess(request,KeyConstants.FUN_ADMIN_LOOKUP,KeyConstants.ACCESS_UPDATE);
-
 		String  code = "";
 		String providerNo = (String) request.getSession(true).getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
 		Map map=request.getParameterMap();
@@ -227,30 +208,10 @@ public class LookupCodeEditAction extends DispatchAction {
 		}
 	}
 	
-	protected String getAccess(HttpServletRequest request,String functionName) throws NoAccessException
-	{
-		SecurityManager sec = (SecurityManager) request.getSession()
-				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
-		String acc = sec.GetAccess(functionName, "");
-		if (acc.equals(KeyConstants.ACCESS_NONE)) throw new NoAccessException();
-		return acc;
-	}
-	protected String getAccess(HttpServletRequest request,String functionName, String rights) throws NoAccessException
-	{
-		SecurityManager sec = (SecurityManager) request.getSession()
-				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
-		String acc = sec.GetAccess(functionName, "");
-		if (acc.compareTo(rights) < 0) throw new NoAccessException();
-		return acc;
-	}
-	public boolean isReadOnly(HttpServletRequest request,String funName) throws NoAccessException{
+	
+	public boolean isReadOnly(HttpServletRequest request,String funName) {
 		boolean readOnly =false;
 		
-		SecurityManager sec = (SecurityManager) request.getSession()
-				.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
-		String r = sec.GetAccess(funName, null); 
-		if (r.compareTo(KeyConstants.ACCESS_READ) < 0) throw new NoAccessException(); 
-		if (r.compareTo(KeyConstants.ACCESS_READ) == 0) readOnly=true;
 		return readOnly;
 	}
 

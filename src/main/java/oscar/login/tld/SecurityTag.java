@@ -42,7 +42,6 @@ public class SecurityTag implements Tag {
     private PageContext pageContext;
     private Tag parentTag;
     private String roleName;
-    private String orgCd;
     private String objectName;
     private String rights = "r";
     private boolean reverse = false;
@@ -72,11 +71,9 @@ public class SecurityTag implements Tag {
     	/*TODO: temporily allow current security work, the if statement should be removed */
         if (roleName == null) 
         {
-        	if (OscarRoleObjectPrivilege.checkPrivilege(objectName,orgCd, rights)) {
-	            ret = EVAL_BODY_INCLUDE;
-	        }else{
+        	
 	            ret = SKIP_BODY;
-	        }
+	       
         }
         else
         {

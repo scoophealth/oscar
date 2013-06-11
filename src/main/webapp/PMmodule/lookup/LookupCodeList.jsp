@@ -31,7 +31,7 @@
 	<tr>
 		<td align="left" class="buttonBar2">
 		<logic:notEqual value="true" name="lookupCodeListForm" property="tableDef.readonly">
-			<security:oscarSec objectName="<%=KeyConstants.FUN_ADMIN_LOOKUP %>" rights="<%=KeyConstants.ACCESS_WRITE%>">
+			<security:oscarSec roleName="<%=(String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user")%>" objectName="<%=KeyConstants.FUN_ADMIN_LOOKUP %>" rights="<%=KeyConstants.ACCESS_WRITE%>">
 			<html:link  action="/Lookup/LookupCodeEdit.do" paramName="lookupCodeListForm" paramProperty="tableDef.tableId" paramId="id">
 			<img src="../images/New16.png" border="0"/> Add</html:link>&nbsp;|&nbsp;
 			</security:oscarSec>

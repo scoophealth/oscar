@@ -34,7 +34,6 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.SecObjPrivilegeDao;
 import org.oscarehr.common.model.SecObjPrivilege;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -120,18 +119,7 @@ public class OscarRoleObjectPrivilege {
 		return vec;
 	}
 
-	public static boolean checkPrivilege(String objName, String orgCd, String propPrivilege) {
-		try {
-			com.quatro.service.security.SecurityManager secManager = (com.quatro.service.security.SecurityManager) pageContext.getSession().getAttribute("securitymanager");
-			if (orgCd == null) orgCd = "";
-			String x = secManager.GetAccess(objName, orgCd);
-			return x.compareToIgnoreCase(propPrivilege) >= 0;
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-			return (false);
-		}
-	}
-
+	
 	public static boolean checkPrivilege(String roleName, Properties propPrivilege, List<String> roleInObj) {
 		return checkPrivilege(roleName, propPrivilege, roleInObj, rights);
 	}
