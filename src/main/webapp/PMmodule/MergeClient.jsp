@@ -25,14 +25,6 @@
 <%@ include file="/taglibs.jsp"%>
 <%@page import="com.quatro.common.KeyConstants"  %>
 <%
-		if (session.getValue("user") == null)
-		response.sendRedirect("../login.htm");
-	//String curProvider_no;
-	//curProvider_no = (String) session.getAttribute("user");
-	//curProvider_no =  request.getParameter("provider_no");
-
-	//display the main provider page
-	//includeing the provider name and a month calendar
 	String strLimit1 = "0";
 	String strLimit2 = "18";
 	if (request.getParameter("limit1") != null)
@@ -188,7 +180,7 @@
 					<img border=0	src=<html:rewrite page="/images/search16.gif" /> height="16px"	width="16px" />&nbsp;Search Merged Records&nbsp;&nbsp;</a> 
 				<a	style="color:Navy;text-decoration:none;" href="javascript:resetClientFields();"> 
 					<img border=0	src=<html:rewrite page="/images/searchreset.gif" /> height="16px"	width="16px" />&nbsp;Reset&nbsp;&nbsp;|</a>
-				<security:oscarSec objectName="<%=KeyConstants.FUN_ADMIN_MERGECLIENT %>" rights="<%=KeyConstants.ACCESS_WRITE%>">
+				<security:oscarSec roleName="<%=(String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user")%>" objectName="<%=KeyConstants.FUN_ADMIN_MERGECLIENT %>" rights="<%=KeyConstants.ACCESS_WRITE%>">
 				<c:choose>
 					<c:when test="${mergeAction eq 'unmerge'}">				
 						<a	href="javascript:void1();" onclick="this.disabled=true;return deferedSubmit('unmerge')"	style="color:Navy;text-decoration:none;"> 				
