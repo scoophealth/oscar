@@ -202,8 +202,8 @@
 									<td class="fieldName" width="7%">Provider #</td>
 									<td class="fieldName" width="4%">Group#</td>
 									<td class="fieldName" width="7%">Create Date</td>
+									<td class="fieldName" width="5%">Seq#</td>
 									<td class="fieldName" width="7%">Rec Start</td>
-									<td class="fieldName" width="4%">Seq#</td>
 									<td class="fieldName" width="5%">Rec End</td>
 									<td class="fieldName" width="7%">Rec Type</td>
 									<td class="fieldName" width="5%">Claims</td>
@@ -228,7 +228,7 @@
 											name="batchAck" property="batchSequenceNumber" /></td>
 										<td class="dataTable" width="7%"><bean:write
 											name="batchAck" property="microStart" /></td>
-										<td class="dataTable" width="4%"><bean:write
+										<td class="dataTable" width="5%"><bean:write
 											name="batchAck" property="microEnd" /></td>
 										<td class="dataTable" width="7%"><bean:write
 											name="batchAck" property="microType" /></td>
