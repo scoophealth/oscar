@@ -146,10 +146,10 @@ if(currentFacility.isEnableEncounterTime() || (currentProgram != null && current
 <nested:empty name="ajaxsave">
 	<bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;
 	<input type="text" tabindex="11" id="hourOfEncounterTime" name="hourOfEncounterTime" maxlength="2"	
-		style="border: none; width: 20px;" 
-		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime"/>">:
+		style="border: 1px; width: 20px; height:12px" 
+		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime"/>">&nbsp;<b>:</b>&nbsp;
 	<input type="text" tabindex="12" id="minuteOfEncounterTime" name="minuteOfEncounterTime" maxlength="2"	
-		style="border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime"/>">	
+		style="border: 1px; width: 20px; height:12px" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime"/>">	
 </nested:empty>
 </span></div>
 <%}%>
@@ -170,10 +170,10 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 <nested:empty name="ajaxsave">
 	<bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;
 	<input type="text" tabindex="13" id="hourOfEncTransportationTime" name="hourOfEncTransportationTime" 	maxlength="2" 	
-		style="border: none; width: 20px;" 
-		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncTransportationTime"/>">:
+		style="border: 1px; width: 20px; height:12px" 
+		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncTransportationTime"/>">&nbsp;<b>:</b>&nbsp;
 	<input type="text" tabindex="14" id="minuteOfEncTransportationTime" name="minuteOfEncTransportationTime" 	maxlength="2" 	
-		style="border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncTransportationTime"/>">	
+		style="border: 1px; width: 20px; height:12px" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncTransportationTime"/>">	
 </nested:empty>
 </span></div>
 <%}%>

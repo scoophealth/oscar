@@ -189,97 +189,36 @@ Community Program:&nbsp;
 	<br />
 	<br />
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<caisi:isModuleLoad moduleName="ALT_DISCHARGE_REASON" reverse="true">
-			<%if(request.getAttribute("nestedReason")!=null && request.getAttribute("nestedReason").equals("true")){%>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.MEDICAL_NEEDS_EXCEED_PROVISION.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.MEDICAL_NEEDS_EXCEED_PROVISION" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.SOCIAL_BEHAVIOUR_NEEDS_EXCEED_PROVISION.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.SOCIAL_BEHAVIOUR_NEEDS_EXCEED_PROVISION" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.WITHDRAWAL_NEEDS_EXCEED_PROVISION.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.WITHDRAWAL_NEEDS_EXCEED_PROVISION" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.MENTAL_HEALTH_NEEDS_EXCEED_PROVISION.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.MENTAL_HEALTH_NEEDS_EXCEED_PROVISION" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.OTHER_NEEDS_EXCEED_PROVISION.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.OTHER_NEEDS_EXCEED_PROVISION" /></td>
-			</tr>
-			<%}else{ %>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.REQUIRES_ACUTE_CARE.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.REQUIRES_ACUTE_CARE" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.NOT_INTERESTED.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.NOT_INTERESTED" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.DOES_NOT_FIT_CRITERIA.ordinal()%>'
-					onclick="nestedReason()" /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.DOES_NOT_FIT_CRITERIA" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.NO_SPACE_AVAILABLE.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm"
-					key="discharge.reason.NO_SPACE_AVAILABLE" /></td>
-			</tr>
-			<tr>
-				<td width="5%"><html:radio
-					property="admission.radioDischargeReason"
-					value='<%="" + DischargeReason.OTHER.ordinal()%>' /></td>
-				<td><bean:message bundle="pmm" key="discharge.reason.OTHER" /></td>
-			</tr>
-			<%} %>
-		</caisi:isModuleLoad>
-		<caisi:isModuleLoad moduleName="SHERBOURNE_HEALTH_CENTER"
-			reverse="true">
-			<c:forEach var="dischargeReason" items="${dischargeReasons}">
-				<tr>
-					<td width="5%"><html-el:radio
-						property="admission.radioDischargeReason"
-						value="${dischargeReason.code}" /></td>
-					<td><bean:write name="dischargeReason" property="description" /></td>
-				</tr>
-			</c:forEach>
-		</caisi:isModuleLoad>
+		 <tr><td>Discharge Reason</td>
+                        <td><html:select property="admission.radioDischargeReason">
+                                <html:option value='<%="" + DischargeReason.ADMITTED_TO_LTC_FACILITY.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.ADMITTED_TO_LTC_FACILITY" /></html:option>
+                                <html:option value='<%="" + DischargeReason.DOES_NOT_FIT_CRITERIA.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.DOES_NOT_FIT_CRITERIA" /></html:option>
+                                <html:option value='<%="" + DischargeReason.REQUIRES_ACUTE_CARE.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.REQUIRES_ACUTE_CARE" /></html:option>
+                                <html:option value='<%="" + DischargeReason.COMPLETION_WITH_REFERRAL.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.COMPLETION_WITH_REFERRAL" /></html:option>
+                                <html:option value='<%="" + DischargeReason.COMPLETION_WITHOUT_REFERRAL.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.COMPLETION_WITHOUT_REFERRAL" /></html:option>
+                                <html:option value='<%="" + DischargeReason.DEATH.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.DEATH" /></html:option>
+                                <html:option value='<%="" + DischargeReason.NO_SPACE_AVAILABLE.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.NO_SPACE_AVAILABLE" /></html:option>
+                                <html:option value='<%="" + DischargeReason.RELOCATION.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.RELOCATION" /></html:option>
+                                <html:option value='<%="" + DischargeReason.SERVICE_PLAN_COMPLETED.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.SERVICE_PLAN_COMPLETED" /></html:option>
+                                <html:option value='<%="" + DischargeReason.SUICIDE.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.SUICIDE" /></html:option>
+                                <html:option value='<%="" + DischargeReason.WITHDRAWL_CLIENT_PREFERENCE.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.WITHDRAWL_CLIENT_PREFERENCE" /></html:option>
+                                <html:option value='<%="" + DischargeReason.OTHER.ordinal()%>'><bean:message bundle="pmm" key="discharge.reason.OTHER" /></html:option>
+
+                                </html:select>
+                        </td>
+                </tr>
+	
 		<tr class="b">
 			<td width="20%">Discharge Notes:</td>
 			<td><html:textarea cols="50" rows="7"
 				property="admission.dischargeNotes" /></td>
 		</tr>
+		<tr>
+			<td width="20%">Discharge Date:</td>
+			<td><input id="dischargeDate" name="dischargeDate" onfocus="this.blur()" readonly="readonly" type="text" value='<c:out value="${admission.formattedDischargeDate}"/>'> <img title="Calendar" id="cal_dischargeDate" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'dischargeDate',ifFormat :'%Y-%m-%d',button :'cal_dischargeDate',align :'cr',singleClick :true,firstDay :1});</script>
+			</td>
+		</tr>
+
 		<tr class="b">
 			<td colspan="2"><input type="button" value="Process Discharge"
 				onclick="do_discharge();" /> <input type="button" value="Cancel"
