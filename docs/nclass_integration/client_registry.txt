@@ -1,0 +1,43 @@
+Client Registry
+===============
+
+Solution Overview
+-----------------
+Client registry integration components are an entry point for N-class certification program of OSCAR by
+Canada Health Infoway (CHI). Integration components are built using the documentation provided by CHI. 
+Storyboards are the center of the development. Each storyboard scenario is reviewed and a component that 
+fulfils it is developed.
+
+For this implementation, layered design was selected in order to provide maintainable and reusable module.
+Layers were developed to match high-level roles defined by CHI storyboards: placers and fulfillers. Placers
+are the components responsible for placing the query or accessing client registry otherwise. Fulfillers are
+the components responsible for fulfilling the query or access requests by the placers. As of June 2013,
+there is no operational infrastructure available to test either of those components. As an temporary solution,
+OSCAR provides placeholder implementation of the placers and fulfillers along with the unit tests 
+demonstrating their operations.   
+
+Placers are the components that also serve as an entry point for the OSCAR modules. They should be used for
+all requests from OSCAR code. 
+
+ 
+Implementation Details
+----------------------
+
+CHI messaging is based on HL7v3, MR2009 Delta 3 restricted message information model. In order to handle message
+composition and parsing Java-based Everest library was selected. More information can be found here:
+
+	http://everest.marc-hi.ca
+	
+The class hierarchy is displayed in the client_registry.jpg class diagram. The base class that all placers and 
+fulfillers extend is GenericPlaceholder. It contains common high-level information for all sub components (e.g.
+sender & receiver information - the "endpoints"). BasePlacer and BaseFulfillers are the subclasses that contain
+role-specific functionality.
+
+Two entry interfaces defined in the CHI documentation are PersonComprehensivePlacer and PersonQueryPlacer. They
+carry out functions like registry lookups and registry create / update operations. Actual implementing classes
+are PlaceholderPersonComprehensivePlacer and PlaceholderPersonRegistryQueryPlacer.
+
+Configuration
+-------------
+
+At this time, due to mostly placeholder-based components, no additional configuration for the module is necessary.
