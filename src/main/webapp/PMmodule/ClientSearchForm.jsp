@@ -142,9 +142,9 @@
 		<tr>
 			<th>Status</th>
 			<td><html:select property="criteria.active" value="">
+				<html:option value="">ALL</html:option>
 				<html:option value="1">Admitted</html:option>
 				<html:option value="0">Discharged</html:option>
-				<html:option value="">ALL</html:option>
 			</html:select></td>
 		</tr>
 		<tr>

@@ -270,13 +270,13 @@
           gieat.setAdmissionManager(am);
           gieat.setProgramManager(pm);
           String bedP = request.getParameter("rps");
-          gieat.admitBedCommunityProgram(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),Integer.parseInt(bedP),"","");
+          gieat.admitBedCommunityProgram(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),Integer.parseInt(bedP),"","",null);
 
           String[] servP = request.getParameterValues("sp");
           if(servP!=null&&servP.length>0){
 	  Set<Integer> s = new HashSet<Integer>();
             for(String _s:servP) s.add(Integer.parseInt(_s));
-            gieat.admitServicePrograms(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),s,"");
+            gieat.admitServicePrograms(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),s,"",null);
           }
         
 
