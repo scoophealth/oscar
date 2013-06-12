@@ -608,8 +608,9 @@ function popupWithApptNo(vheight,vwidth,varpage,name,apptNo) {
 
 function review(key) {
   if(self.location.href.lastIndexOf("?") > 0) {
-    if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
-    else a = self.location.href;
+	var a = self.location.href;
+    if(a.lastIndexOf("&viewall=") > 0 ) a = a.substring(0,self.location.href.lastIndexOf("&viewall="));
+    if(a.lastIndexOf("&provider_no=") > 0 ) a = a.substring(0,self.location.href.lastIndexOf("&provider_no="));
   } else {
     a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday&site=" + "<%=(selectedSite==null? "none" : selectedSite)%>";
   }
@@ -1183,6 +1184,13 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 <% } %>
 
 </select>
+
+&nbsp;|&nbsp;
+<% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
+         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a>
+<% } else {  %>
+         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a>
+<% } %>
 
 <% } else { %>
 
