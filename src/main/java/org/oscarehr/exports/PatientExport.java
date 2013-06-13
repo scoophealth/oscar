@@ -125,6 +125,9 @@ public abstract class PatientExport {
 		return new Date();
 	}
 
+	/*
+	 * Boolean functions mapping the selections made from the UI
+	 */
 	public void setExMedications(boolean rhs) {
 		this.exMedicationsAndTreatments = rhs;
 	}
@@ -172,7 +175,9 @@ public abstract class PatientExport {
 		this.exFamilyHistory = true;
 		this.exAlertsAndSpecialNeeds = true;
 	}
-
+	/*
+	 * General Utility functions useful for template string manipulation
+	 */
 	public Date getCurrentDate() {
 		return currentDate;
 	}
@@ -186,6 +191,12 @@ public abstract class PatientExport {
 		return this.isLoaded;
 	}
 
+	/**
+	 * Attempts to return the description of measurement type rhs
+	 * 
+	 * @param rhs Type code
+	 * @return Attempts to return string description of input measurement. Otherwise returns rhs
+	 */
 	public String getTypeDescription(String rhs) {
 		try {
 			List<MeasurementType> measurementType = measurementTypeDao.findByType(rhs);

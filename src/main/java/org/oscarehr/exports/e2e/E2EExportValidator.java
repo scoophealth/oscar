@@ -51,7 +51,12 @@ public class E2EExportValidator {
 	private static Logger logger=MiscUtils.getLogger();
 	private E2EExportValidator() {}
 
-	// check input string is well-formed XML
+	/**
+	 * Checks if input string is a well-formed E2E XML document
+	 * 
+	 * @param xmlstring XML Document
+	 * @return True if input is well-formed, else false
+	 */
 	public static boolean isWellFormedXML(String xmlstring) {
 		boolean result = false;
 
@@ -75,6 +80,12 @@ public class E2EExportValidator {
 		return result;
 	}
 
+	/**
+	 * Checks if input string is a valid XML document
+	 * 
+	 * @param xmlstring XML Document
+	 * @return True if input is a valid, else false
+	 */
 	public static boolean isValidXML(String xmlstring) {
 		boolean result = false;
 
@@ -104,6 +115,9 @@ public class E2EExportValidator {
 		return result;
 	}
 
+	/**
+	 * @author Raymond Rusk
+	 */
 	private static class SimpleErrorHandler implements ErrorHandler {
 		public void warning(SAXParseException e) throws SAXException {
 			throw new SAXException("(Parsing Warning) "+e.getMessage());
@@ -118,6 +132,9 @@ public class E2EExportValidator {
 		}
 	}
 
+	/**
+	 * @author Raymond Rusk
+	 */
 	private static class E2EEntityResolver implements EntityResolver {
 		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 			// Grab only the filename part from the full path
