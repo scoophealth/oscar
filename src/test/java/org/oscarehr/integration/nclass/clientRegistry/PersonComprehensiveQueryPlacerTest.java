@@ -23,47 +23,27 @@
  */
 package org.oscarehr.integration.nclass.clientRegistry;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
 import org.junit.Test;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.integration.nclass.clientRegistry.impl.PlaceholderPersonRegistryQueryPlacer;
-import org.oscarehr.integration.nclass.clientRegistry.model.Candidate;
-import org.oscarehr.integration.nclass.clientRegistry.model.PersonDemographics;
+import org.oscarehr.integration.nclass.clientRegistry.impl.PlaceholderPersonComprehensivePlacer;
 
-public class PersonRegistryQueryPlacerTest {
+public class PersonComprehensiveQueryPlacerTest {
 
-	private PersonRegistryQueryPlacer placer = new PlaceholderPersonRegistryQueryPlacer();
+	private PersonComprehensivePlacer personComprehensivePlacer = new PlaceholderPersonComprehensivePlacer();
 
 	@Test
-	public void testFindCandidate() {
+	public void testAddPerson() {
 		Demographic demo = new Demographic();
-		demo.setFirstName("John");
-		demo.setLastName("Doe");
+		demo.setFirstName("Nakatika");
+		demo.setLastName("Poebalu");
 		demo.setBirthDay(Calendar.getInstance());
 
-		Candidate candidate = placer.findCandidate(demo);
-		assertNotNull(candidate);
-		assertNotNull(candidate.getFirst());
-		assertNotNull(candidate.getLast());
-		assertFalse(candidate.getIds().isEmpty());
+		String externalId = personComprehensivePlacer.addPerson(demo);
+		assertNotNull(externalId);
 	}
-	
-	@Test
-	public void testGetPersonDemographics() {
-		Demographic demo = new Demographic();
-		demo.setFirstName("John");
-		demo.setLastName("Doe");
-		demo.setBirthDay(Calendar.getInstance());
-
-		Candidate candidate = placer.findCandidate(demo);
-		PersonDemographics personDemographics = placer.getPersonDemographics(candidate);
-		assertNotNull(personDemographics);
-	}
-	
-	
 
 }
