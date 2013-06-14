@@ -23,6 +23,7 @@
  */
 package org.oscarehr.integration.nclass.clientRegistry.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,16 +36,24 @@ import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.datatypes.generic.CV;
 import org.marc.everest.datatypes.generic.LIST;
+import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101004CA;
+import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101101CA;
+import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101102CA;
 import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101103CA;
 import org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdOrganization;
 import org.marc.everest.rmim.ca.r020403.prpa_mt101103ca.AdministrativeGender;
 import org.marc.everest.rmim.ca.r020403.prpa_mt101103ca.PersonBirthtime;
 import org.marc.everest.rmim.ca.r020403.prpa_mt101103ca.PersonName;
+import org.marc.everest.rmim.ca.r020403.quqi_mt120008ca.QueryByParameter;
 import org.marc.everest.rmim.ca.r020403.vocabulary.AcknowledgementCondition;
 import org.marc.everest.rmim.ca.r020403.vocabulary.ProcessingID;
 import org.marc.everest.rmim.ca.r020403.vocabulary.ResponseMode;
 
+/**
+ * "Dummy" placeholder implementation that should be replaced by the actual registry.
+ *
+ */
 public class PlaceholderPersonRegistryQueryFulfiller extends BaseFulfiller {
 
 	public PRPA_IN101004CA findCandidates(PRPA_IN101103CA query) {
@@ -155,5 +164,113 @@ public class PlaceholderPersonRegistryQueryFulfiller extends BaseFulfiller {
 
 		return person;
 	}
+	 
+	static org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.Person toAnotherIdentifiedPerson(String first, String last, AdministrativeGender gender, PersonBirthtime birthTime) {
+		org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.Person person = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.Person();
+
+		if (gender != null && gender.getValue() != null && gender.getValue().getCode() != null) {
+			person.setAdministrativeGenderCode(new CV<org.marc.everest.rmim.ca.r020403.vocabulary.AdministrativeGender>(gender.getValue().getCode()));
+		}
+		if (birthTime != null && birthTime.getValue() != null) {
+			person.setBirthTime(birthTime.getValue().getDateValue());
+		}
+		
+		LIST<PN> pns = new LIST<PN>();
+		PN pn = PN.fromFamilyGiven(EntityNameUse.Legal, last, first);
+		pns.add(pn);
+		person.setName(pns);
+
+		LIST<AD> addr = new LIST<AD>();
+		AD ad = new AD();
+		ad.getPart().add(new ADXP("1532 Home Street"));
+		ad.getPart().add(new ADXP("Ann Arbor", AddressPartType.City));
+		ad.getPart().add(new ADXP("MI", AddressPartType.State));
+		ad.getPart().add(new ADXP("99999", AddressPartType.PostalCode));
+		addr.add(ad);
+		person.setAddr(addr);
+
+		org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.OtherIDs otherId = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.OtherIDs();
+		// generate dummy UUID
+		otherId.setId(new II("2.16.840.1.113883.4.50", UUID.randomUUID().toString()));
+		otherId.setCode(new CV<String>("DL", "2.16.840.1.113883.2.20.5.2"));
+		IdOrganization idOrganization = new IdOrganization();
+		idOrganization.setName("Department of National Defence");
+		otherId.setAssigningIdOrganization(idOrganization);
+		person.getAsOtherIDs().add(otherId);
+
+		otherId = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.OtherIDs();
+		// generate dummy UUID
+		otherId.setId(new II("2.16.840.1.113883.4.50", UUID.randomUUID().toString()));
+		otherId.setCode(new CV<String>("DL", "2.16.840.1.113883.2.20.5.2"));
+		idOrganization = new IdOrganization();
+		idOrganization.setName("British Columbia Ministry of Transportation");
+		otherId.setAssigningIdOrganization(idOrganization);
+		person.getAsOtherIDs().add(otherId);
+
+		org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.PersonalRelationship personalRelationship = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.PersonalRelationship();
+		personalRelationship.setCode("FTH", "2.16.840.1.113883.5.111");
+		org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.ParentPerson parentPerson = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.ParentPerson();
+		parentPerson.setId(new II("2.16.840.1.113883.4.57", "444111234"));
+		parentPerson.setName(PN.fromFamilyGiven(EntityNameUse.Legal, "Neville", "Johnson"));
+		personalRelationship.setRelationshipHolder(parentPerson);
+		person.getPersonalRelationship().add(personalRelationship);
+
+		personalRelationship = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.PersonalRelationship();
+		personalRelationship.setCode("MTH", "2.16.840.1.113883.5.111");
+		parentPerson = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.ParentPerson();
+		parentPerson.setId(new II("2.16.840.1.113883.4.57", "444112345"));
+		parentPerson.setName(PN.fromFamilyGiven(EntityNameUse.Legal, "Nelda", "Johnson"));
+		personalRelationship.setRelationshipHolder(parentPerson);
+		person.getPersonalRelationship().add(personalRelationship);
+
+		org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.LanguageCommunication lang = new org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.LanguageCommunication(new CV<String>("en", "2.16.840.1.113883.6.121"));
+		person.getLanguageCommunication().add(lang);
+
+		return person;
+	}
+
+	public PRPA_IN101102CA findPersonDemographic(PRPA_IN101101CA request) {
+		PRPA_IN101102CA response = new PRPA_IN101102CA(new II(UUID.randomUUID()), TS.now(), 
+				ResponseMode.Immediate, PRPA_IN101102CA.defaultInteractionId(), PRPA_IN101102CA.defaultProfileId(), 
+				ProcessingID.Training, AcknowledgementCondition.Always);
+		
+		org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.ControlActEvent<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity,org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList>
+			controlActEvent = new org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.ControlActEvent<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity,org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList>();
+		response.setControlActEvent(controlActEvent);
+		
+		org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.Subject2<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity> subject2 = 
+				new org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.Subject2<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity>();
+		controlActEvent.getSubject().add(subject2);
+		
+		org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity identifiedEntity = new 
+				org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity();
+		AdministrativeGender adminGender = new AdministrativeGender();
+		adminGender.setValue(org.marc.everest.rmim.ca.r020403.vocabulary.AdministrativeGender.Undifferentiated);
+		identifiedEntity.setIdentifiedPerson(toAnotherIdentifiedPerson("First", "Last", adminGender, new PersonBirthtime(new TS(Calendar.getInstance()))));
+		identifiedEntity.setId(new SET<II>());
+		// II id = new II(request.getControlActEvent().getId().getRoot(), request.getControlActEvent().getId().getExtension());
+		identifiedEntity.getId().add(request.getControlActEvent().getQueryByParameter().getParameterList().getClientIDBus().getValue());
+		
+		org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.RegistrationEvent<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity> registrationEvent =
+				new org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.RegistrationEvent<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity>();
+		subject2.setRegistrationEvent(registrationEvent);
+		
+		org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.Subject4<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity> subject4 = 
+				new org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.Subject4<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity>();
+		registrationEvent.setSubject(subject4);
+		
+		subject4.setRegisteredRole(identifiedEntity);
+		
+		QueryByParameter<org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList> queryByParameter = 
+				new QueryByParameter<org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList>();
+		controlActEvent.setQueryByParameter(queryByParameter);
+		
+		org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList paramList = new org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList(); 
+		queryByParameter.setParameterList(paramList);
+		
+		
+		paramList.setClientIDBus(request.getControlActEvent().getQueryByParameter().getParameterList().getClientIDBus());		
+		return response;
+    }
 
 }
