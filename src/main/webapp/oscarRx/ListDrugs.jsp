@@ -102,10 +102,15 @@ if (heading != null){
         </tr>
 
         <%
+	        List<Drug> prescriptDrugs = null;
             CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-            List<Drug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
-			if(showall) {
+
+            if(showall) {
+            	prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
             	Collections.sort(prescriptDrugs,new oscar.oscarRx.util.ShowAllSorter());
+            }
+            else {
+                prescriptDrugs = caseManagementManager.getCurrentPrescriptions(patient.getDemographicNo());
             }
 
             DrugReasonDao drugReasonDao  = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
