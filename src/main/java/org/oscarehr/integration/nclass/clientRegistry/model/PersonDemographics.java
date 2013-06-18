@@ -21,36 +21,56 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.integration.nclass.clientRegistry;
+package org.oscarehr.integration.nclass.clientRegistry.model;
 
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.integration.nclass.ReferencedType;
-import org.oscarehr.integration.nclass.Storyboard;
+public class PersonDemographics {
 
-@Storyboard("PRPA_ST101311CA")
-@ReferencedType("PRPA_AR101201CA")
-public interface PersonComprehensivePlacer {
+	private String prefix;
+	private String first;
+	private String last;
+	private String id;
+	
+	public PersonDemographics(String prefix, String first, String last, String id) {
+		super();
+		this.prefix = prefix;
+		this.first = first;
+		this.last = last;
+		this.id = id;
+	}
+	
+	public PersonDemographics() {
+	}
 
-	/**
-	 * Adds specified demographic to the registry.
-	 * 
-	 * @param demographic
-	 * 		New demographic to be added to the registry
-	 * 
-	 * @see PersonRegistryQueryPlacer
-	 * 
-	 * @return
-	 * 		Returns the external ID assigned withing the registry
-	 */
-	public String addPerson(Demographic demographic);
+	public String getPrefix() {
+		return prefix;
+	}
 
-	/**
-	 * Changes the person information in the registry
-	 * 
-	 * @param demographic
-	 * 		Demographic be changed
-	 * 		 
-	 */
-	public void revisePerson(Demographic demographic);
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public String getFirst() {
+		return first;
+	}
+
+	public void setFirst(String first) {
+		this.first = first;
+	}
+
+	public String getLast() {
+		return last;
+	}
+
+	public void setLast(String last) {
+		this.last = last;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 }

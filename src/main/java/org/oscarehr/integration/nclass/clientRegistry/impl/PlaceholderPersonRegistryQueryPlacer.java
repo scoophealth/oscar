@@ -39,6 +39,8 @@ import org.marc.everest.datatypes.generic.LIST;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.rmim.ca.r020403.coct_mt090102ca.AssignedEntity;
 import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101004CA;
+import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101101CA;
+import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101102CA;
 import org.marc.everest.rmim.ca.r020403.interaction.PRPA_IN101103CA;
 import org.marc.everest.rmim.ca.r020403.mcci_mt002200ca.Device1;
 import org.marc.everest.rmim.ca.r020403.mcci_mt002200ca.Device2;
@@ -46,6 +48,7 @@ import org.marc.everest.rmim.ca.r020403.mcci_mt002200ca.Receiver;
 import org.marc.everest.rmim.ca.r020403.mcci_mt002200ca.Sender;
 import org.marc.everest.rmim.ca.r020403.mfmi_mt700751ca.Author;
 import org.marc.everest.rmim.ca.r020403.mfmi_mt700751ca.ControlActEvent;
+import org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ClientIDBus;
 import org.marc.everest.rmim.ca.r020403.prpa_mt101103ca.ParameterList;
 import org.marc.everest.rmim.ca.r020403.prpa_mt101103ca.PersonName;
 import org.marc.everest.rmim.ca.r020403.quqi_mt120008ca.QueryByParameter;
@@ -56,6 +59,7 @@ import org.marc.everest.rmim.ca.r020403.vocabulary.ResponseMode;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.nclass.clientRegistry.PersonRegistryQueryPlacer;
 import org.oscarehr.integration.nclass.clientRegistry.model.Candidate;
+import org.oscarehr.integration.nclass.clientRegistry.model.PersonDemographics;
 
 public class PlaceholderPersonRegistryQueryPlacer extends BasePlacer implements PersonRegistryQueryPlacer {
 
@@ -151,4 +155,39 @@ public class PlaceholderPersonRegistryQueryPlacer extends BasePlacer implements 
 		findCandidates.getControlActEvent().getQueryByParameter().getParameterList().getPersonName().add(new PersonName(PN.fromEN(EN.createEN(EntityNameUse.Search, new ENXP(demographic.getFirstName(), EntityNamePartType.Given), new ENXP(demographic.getLastName(), EntityNamePartType.Family)))));
 		return findCandidates;
 	}
+
+	@Override
+    public PersonDemographics getPersonDemographics(Candidate candidate) {
+		if (candidate.getIds().isEmpty()) {
+			return null;
+		}
+		
+		PRPA_IN101101CA request = new PRPA_IN101101CA(new II(UUID.randomUUID()), // II.TOKEN in pCS
+		        TS.now(), ResponseMode.Immediate, PRPA_IN101101CA.defaultInteractionId(), 
+		        PRPA_IN101101CA.defaultProfileId(), ProcessingID.Training, AcknowledgementCondition.Always);
+		org.marc.everest.rmim.ca.r020403.mfmi_mt700751ca.ControlActEvent<org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList>
+			controlActEvent = new org.marc.everest.rmim.ca.r020403.mfmi_mt700751ca.ControlActEvent<org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList>();
+		request.setControlActEvent(controlActEvent);
+		
+		org.marc.everest.rmim.ca.r020403.quqi_mt120008ca.QueryByParameter<org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList> 
+			queryByParameter = new org.marc.everest.rmim.ca.r020403.quqi_mt120008ca.QueryByParameter<org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList>();
+		controlActEvent.setQueryByParameter(queryByParameter);
+		org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList parameterList = new org.marc.everest.rmim.ca.r020403.prpa_mt101101ca.ParameterList();
+		parameterList.setClientIDBus(new ClientIDBus(new II("2.16.840.1.113883.4.57", candidate.getIds().get(0).getId())));
+		queryByParameter.setParameterList(parameterList);
+		
+		PRPA_IN101102CA personDemographics = placeholderPersonRegistryQueryFulfiller.findPersonDemographic(request);
+		if (personDemographics.getControlActEvent().getSubject().isEmpty()) {
+			return null;
+		}
+		
+		org.marc.everest.rmim.ca.r020403.mfmi_mt700746ca.Subject4<org.marc.everest.rmim.ca.r020403.prpa_mt101102ca.IdentifiedEntity>
+			subject = personDemographics.getControlActEvent().getSubject().get(0).getRegistrationEvent().getSubject();
+		
+		String first = subject.getRegisteredRole().getIdentifiedPerson().getName().get(0).getPart(0).getValue();
+		String last = subject.getRegisteredRole().getIdentifiedPerson().getName().get(0).getPart(1).getValue();
+		String id = subject.getRegisteredRole().getId().get(0).getExtension();
+		
+		return new PersonDemographics(null, first, last, id);
+    }
 }

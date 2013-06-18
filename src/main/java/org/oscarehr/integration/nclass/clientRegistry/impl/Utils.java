@@ -23,7 +23,17 @@
  */
 package org.oscarehr.integration.nclass.clientRegistry.impl;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.UUID;
+
+import org.marc.everest.datatypes.II;
+import org.marc.everest.datatypes.TS;
+import org.marc.everest.datatypes.generic.LIST;
+import org.marc.everest.rmim.ca.r020403.vocabulary.AcknowledgementCondition;
 import org.marc.everest.rmim.ca.r020403.vocabulary.AdministrativeGender;
+import org.marc.everest.rmim.ca.r020403.vocabulary.ProcessingID;
+import org.marc.everest.rmim.ca.r020403.vocabulary.ResponseMode;
 
 public class Utils {
 
@@ -41,6 +51,30 @@ public class Utils {
 		}
 
 		return AdministrativeGender.Undifferentiated;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public static <T> T newInstance(Class<T> type) {
+		Method method = null;
+		try {
+			ResponseMode responseMode = ResponseMode.Immediate;
+			
+	        method = type.getDeclaredMethod("defaultInteractionId", new Class[] {});
+	        II defaultInteractionId = (II) method.invoke(null, (Object[]) new Class[] {});
+	        
+	        method = type.getDeclaredMethod("defaultProfileId", new Class[] {});
+	        LIST<II> defaultProfileId = (LIST<II>) method.invoke(null, (Object[]) new Class[] {});
+	        
+	        ProcessingID processingId = ProcessingID.Training; 
+	        AcknowledgementCondition acknowledgementCondition = AcknowledgementCondition.Always;
+	        
+	        Constructor<T> constructor = 
+	        		type.getConstructor(II.class, TS.class, ResponseMode.class, II.class, LIST.class, ProcessingID.class, AcknowledgementCondition.class);
+	        
+	        return constructor.newInstance(new II(UUID.randomUUID()), TS.now(), responseMode, defaultInteractionId, defaultProfileId, processingId, acknowledgementCondition);
+        } catch (Exception e) {
+        	throw new RuntimeException("Unable to instantiate " + type.getName(), e);
+        }
 	}
 
 }
