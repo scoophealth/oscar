@@ -270,8 +270,7 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
       }
 
    .navbar .nav > li > a {color:white;} 
-   
-   
+  
       #tracker-bar{
       position:fixed;
       top:40px;
@@ -320,7 +319,7 @@ div.preventionSection {
     min-height:50px;
     
     margin-top:5px;
-    float:left;
+    
    
     border: thin solid grey;
     background: #fff;
@@ -356,6 +355,11 @@ cursor: hand; cursor: pointer;
 }
 
 .btn-underline{text-decoration:underline;font-weight:bold}
+
+@media (max-width: 1200px) { 
+/*#right-side{background-color: blue;}*/
+}
+
 </style>
 		
     <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
@@ -406,7 +410,7 @@ cursor: hand; cursor: pointer;
 	}
 
 
-	window.resizeTo(screen.availWidth,screen.availHeight);
+	//window.resizeTo(screen.availWidth,screen.availHeight);
 	window.onload = setScrollPos;
 	window.onscroll = getScrollCoords;
 	window.onkeypress = getScrollCoords;
@@ -866,44 +870,33 @@ function fsPopup(width,height,url,window) {
             //display_name="Autonomic Neuropathy"
             //guideline="Erectile Dysfunction, hastrointestinal disturbance"
             //graphable="no"
-            //value_name="Answer"
-
-	   
+            //value_name="Answer"	   
 %>
-
 
 <div class="preventionSection well-small" >
    
 <div class="well well-small headMtype" >
-<!--mTYPE START-->
-<!-- <div <%=warningIndicator%> > </div>  replace with indicator-->
+<!--mtype START-->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-<a href="javascript:void(0)" style="padding-left:5px;text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')">
+<a href="javascript:void(0)" style="text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')">
 </security:oscarSec>
 
-<span rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
+<div class="span5" style="margin:0px; margin-left:4px" rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
 
-<span style="padding-left:5px;"><%=h2.get("display_name")%></span>
-
-</span>
+<span ><%=h2.get("display_name")%></span>
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 </a>
 </security:oscarSec>
-
-<!-- <small><a href="#" style="padding-left:5px;" onclick="toggle_visibility('add-box-<%=measure%>')">Add</a></small>-->
-<!--mTYPE END-->
-
-<span>
-<!--graphing start-->
-
+<!--mtype end-->
 					<%
 					String name = h2.get("display_name").toString();
 					name = name.replaceAll("\\W","");
 					iDate++;
 					%>
 
-           
+<!--graphing start-->  
+<span>         
 <%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes") && !name.equals("BP")){   %>
 
 			            <%if (alist != null && alist.size() > 1) {
@@ -962,9 +955,11 @@ function fsPopup(width,height,url,window) {
 		           			</script>
 		           		<%}
 		           	} %>           
-<!-- graphing end-->
 
 </span>
+<!-- graphing end-->
+
+</div> <!-- span4 end -->
 
 <span style="float:right;display:inline;margin:0px;padding:0px">  
      <div class="input-append date" id="dp-<%=iDate%>" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
@@ -1262,9 +1257,10 @@ function createAddAll(d,t){
      
 </div>
 <%}%>		    
-		    </div>
+
+</div>
 		    
-		    <div class="span6">
+<div class="span4" id="right-side">
   <div class="tabbable">
            <ul class="nav nav-tabs">
              <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
@@ -1345,8 +1341,7 @@ function createAddAll(d,t){
 				<% for (String warn : recomendations ){%>
 				<li style="color: black;"><%=warn%></li>
 				<%}%>
-				<!--li style="color: red;">6 month TD overdue</li>
-				<li>12 month MMR due in 2 months</li-->
+
 				<% if (dsProblems){ %>
 				<li style="color: red;">Decision Support Had Errors Running.</li>
 				<% }%>
@@ -1416,10 +1411,7 @@ function createAddAll(d,t){
 <%         }
         }
   
-%>                
-               
-               
-                           
+%>                                         
                </div>
   </div> 
  <!-- pain end -->       
@@ -1443,13 +1435,13 @@ function createAddAll(d,t){
 
  
     
-		    </div>
+		    </div><!-- end span6 -->
+		    
 	    </div>
     </div>
 
 <div style="float:left;margin-left:570px;padding-top:50px">
 	<!-- this will have to be visible to user -->
-		<!-- <button type="submit" class="btn btn-primary">Save</button> -->
 		     <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
 <!-- end of form -->
 </fieldset>		    
@@ -1506,7 +1498,29 @@ $(document).ready(function () {
         });
 
     }); 
-        
+
+
+    
+        var $window = $(window);
+
+        // Function to handle changes to style classes based on window width
+        function checkWidth() {
+            if ($window.width() < 1200) {
+                $('#right-side').removeClass('span6').addClass('span4 pull-right');
+                };
+
+            if ($window.width() >= 1200) {
+                $('#right-side').removeClass('span4 pull-right').addClass('span6');
+            }
+        }
+
+        // Execute on load
+        checkWidth();
+
+        // Bind event listener
+        $(window).resize(checkWidth);
+   
+    
 	
  });
 
@@ -1586,10 +1600,7 @@ function toggle_visibility(id) {
        e.style.display = 'block'; */
  }
 
-
-
 </script>
-
 
   </body>
 </html>
