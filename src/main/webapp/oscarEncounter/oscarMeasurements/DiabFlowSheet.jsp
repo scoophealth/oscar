@@ -254,15 +254,20 @@ ArrayList<String> recomendations = mi.getRecommendations();
 	</script>
 
 	<script LANGUAGE="JavaScript">
-
 	<%if (session.getAttribute("textOnEncounter")!=null) {%>
-		if( opener.opener.document.forms["caseManagementEntryForm"] != undefined ){
-	        opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-	    }else if( opener.document.forms["caseManagementEntryForm"] != undefined ){
-	        opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-		}
-	<%}%>
+	
+	if( opener.opener.document.forms["caseManagementEntryForm"] != undefined ){
+        opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
+    }else if( opener.document.forms["caseManagementEntryForm"] != undefined ){
+        opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
+	}
 
+	<%
+			//clear so values don't repeat after added to note
+			session.setAttribute("textOnEncounter", null);
+	
+	}
+	%>	
 	</script>
 
 
