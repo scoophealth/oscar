@@ -27,6 +27,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.nclass.ReferencedType;
 import org.oscarehr.integration.nclass.Storyboard;
 import org.oscarehr.integration.nclass.clientRegistry.model.Candidate;
+import org.oscarehr.integration.nclass.clientRegistry.model.PersonDemographics;
 
 /**
  * Enables the source system to place find candidate requests to the client registry.
@@ -44,5 +45,15 @@ public interface PersonRegistryQueryPlacer {
 	 * 		Returns the list of matching registry entries.
 	 */
 	public Candidate findCandidate(Demographic demographic);
+
+	/**
+	 * Finds person details based on the client ID 
+	 * 
+	 * @param demographic
+	 * 		Demographic to find details for
+	 * @return
+	 * 		Returns the details or null if it's not available
+	 */
+	public PersonDemographics getPersonDemographics(Candidate demographic);
 
 }
