@@ -60,6 +60,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.CxfClientUtilsOld;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -95,9 +96,10 @@ public final class SendingUtils {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo != null) {
-			LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
+			Provider provider = loggedInInfo.loggedInProvider;
+			LogAction.addLog(provider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
 		} else {
-			LogAction.addLog(null, SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
+			throw new IllegalStateException("Unable to post data outside authentication context. Please make sure LoggedInInfo is configured to contain non-null provider.");
 		}
 		
 		return (postData(url, encryptedBytes, encryptedSecretKey, signature, serviceName));

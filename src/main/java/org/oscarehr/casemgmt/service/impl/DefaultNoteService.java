@@ -66,7 +66,7 @@ import oscar.oscarEncounter.data.EctFormData.PatientForm;
 import oscar.util.ConversionUtils;
 
 /**
- * Default implementation of the notes service.
+ * Default implementation of the notes service
  */
 @Component
 public class DefaultNoteService implements NoteService {
@@ -106,8 +106,11 @@ public class DefaultNoteService implements NoteService {
 
 		//This gets rid of old revisions (better than left join on a computed subset of itself
 		for (Map<String, Object> note : notes) {
-			if (filteredNotes.get(note.get("uuid")) != null) continue;
+			if (filteredNotes.get(note.get("uuid")) != null) {
+				continue;
+			}
 			filteredNotes.put((String) note.get("uuid"), true);
+			
 			EChartNoteEntry e = new EChartNoteEntry();
 			e.setId(note.get("id"));
 			e.setDate((Date) note.get("observation_date"));

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.codec.binary.Base64;
@@ -43,6 +44,7 @@ import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.dao.StudyDataDao;
 import org.oscarehr.common.dao.UserDSMessagePrefsDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.StudyData;
 import org.oscarehr.common.model.UserDSMessagePrefs;
@@ -53,6 +55,9 @@ import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarLab.ca.all.parsers.DefaultGenericHandler;
+import oscar.oscarMessenger.data.MsgMessageData;
+import oscar.oscarMessenger.data.MsgProviderData;
+import oscar.oscarMessenger.util.MsgDemoMap;
 import oscar.util.ConversionUtils;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
@@ -99,7 +104,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 
 		// save PDF content out of this message
 		String fileName = savePdfContent(message);
-
+		
 		// pull demographic information from the message
 		String hash = getDemographicHash(message);
 		StudyData studyData = studyDataDao.findSingleByContent(hash);
@@ -110,23 +115,93 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		if (demo == null) {
 			throw new IllegalStateException("Demographic record is not available for " + hash);
 		}
-
+		
 		// create edoc
-		String provider = studyData.getProviderNo();
-		String description = "eAAPs Action plan for " + demo.getFullName();
-		EDoc doc = createEDoc(message, fileName, demo, provider, description);
+		if (fileName != null) {
+			String provider = studyData.getProviderNo();
+			String description = "eAAPs Action plan for " + demo.getFullName();
+			
+			EDoc doc = createEDoc(message, fileName, demo, provider, description);
+			// save edoc
+			int documentId = saveEDoc(provider, doc);
+			// route document to the provider
+			routeDocument(provider, documentId);
+			// and add a case management note so that the AAP can be seen on the eChart
+			addCaseManagementNote(demo, description, CaseManagementNoteLink.DOCUMENT, true);
+			// make sure that notification will be shown for user
+			clearNotifications(hash);
+		}
 
-		// save edoc
-		int documentId = saveEDoc(provider, doc);
+		String recommendations = getRecommendations(message);
+		if (recommendations != null && !recommendations.isEmpty()) {
+			addCaseManagementNote(demo, recommendations, CaseManagementNoteLink.CASEMGMTNOTE, false);
+		}
 
-		// route document to the provider
-		routeDocument(provider, documentId);
+		// make sure we notify the MRP as well
+		notifyMostResponsiblePhysician(message, demo);
+	}
 
-		// and add a case management note so that the AAP can be seen on the eChart
-		addCaseManagementNote(demo, description);
+	private void notifyMostResponsiblePhysician(ORU_R01 hl7Message, Demographic demo) {
+		Provider mrp = demo.getProvider();
+		if (mrp == null) {
+			if (logger.isDebugEnabled()) {
+				logger.info("MRP is not set for " + demo + " - skipping message generation");
+			}
+			return;
+		}
+		
+		String mrpNote = getMostResponsiblePhysicianNote(hl7Message);
+		if (mrpNote == null || mrpNote.isEmpty()) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("MRP note content is null for " + demo + "- skipping message generation");
+			}
+			return;
+		}
+		
+		MsgMessageData message = new MsgMessageData();
+		
+		String[] providerIds = new String[] { mrp.getProviderNo() };
+		ArrayList<MsgProviderData> providerListing = message.getProviderStructure(providerIds);
+		ArrayList<MsgProviderData> remoteProviders = message.getRemoteProvidersStructure();
+		
+		String sentToWho;
+		if (message.isLocals()) {
+			sentToWho = message.createSentToString(providerIds);
+		} else {
+			sentToWho = "";
+		}
 
-		// make sure that notification will be shown for user
-		clearNotifications(hash);
+		if (message.isRemotes()) {
+			sentToWho = sentToWho + " " + message.getRemoteNames(remoteProviders);
+		}
+
+		String subject = "eAAPs: Recommendations ready for " + demo.getFullName();
+		String userName = "eAAPs";
+		String userNo = "N/A";
+		String attachment = null;
+		String pdfAttachment = null;
+		String messageId = message.sendMessage2(mrpNote, subject, userName, sentToWho, userNo, providerListing, attachment, pdfAttachment);
+
+		MsgDemoMap msgDemoMap = new MsgDemoMap();
+		msgDemoMap.linkMsg2Demo(messageId, demo.getDemographicNo().toString());
+	}
+
+	private String getMostResponsiblePhysicianNote(ORU_R01 message) {
+		try {
+			NTE nte = message.getPATIENT_RESULT().getORDER_OBSERVATION().getNTE(2);
+			return nte.getComment(0).getValue();
+		} catch (HL7Exception e) {
+			throw new IllegalStateException("Unable to get comment field from the message", e);
+		}
+	}
+
+	private String getRecommendations(ORU_R01 message) {
+		try {
+			NTE nte = message.getPATIENT_RESULT().getORDER_OBSERVATION().getNTE(1);
+			return nte.getComment(0).getValue();
+		} catch (HL7Exception e) {
+			throw new IllegalStateException("Unable to get comment field from the message", e);
+		}
 	}
 
 	private void clearNotifications(String hash) {
@@ -210,14 +285,14 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		return -1;
 	}
 
-	private void addCaseManagementNote(Demographic demo, String description) {
+	private void addCaseManagementNote(Demographic demo, String description, int noteLink, boolean isSigned) {
 		CaseManagementNote cmn = new CaseManagementNote();
 		cmn.setObservation_date(new Date());
 		cmn.setUpdate_date(new Date());
 		cmn.setDemographic_no("" + demo.getDemographicNo());
 		cmn.setProviderNo("-1");
 		cmn.setNote(description);
-		cmn.setSigned(true);
+		cmn.setSigned(isSigned);
 		cmn.setSigning_provider_no("-1");
 		cmn.setProgram_no("");
 
@@ -233,7 +308,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 
 		// Add a noteLink to casemgmt_note_link
 		CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
-		cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
+		cmnl.setTableName(noteLink);
 		cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
 		cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
 
@@ -243,6 +318,11 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	private String savePdfContent(ORU_R01 message) throws HL7Exception {
 		NTE nte = message.getPATIENT_RESULT().getORDER_OBSERVATION().getNTE();
 		String base64EncodedPdfContent = nte.getComment(0).getValue();
+		// break on empty PDFs
+		if (base64EncodedPdfContent == null || base64EncodedPdfContent.isEmpty()) {
+			return null;
+		}
+		
 		byte[] pdf = Base64.decodeBase64(base64EncodedPdfContent);
 
 		// save eAAP document
@@ -263,7 +343,12 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		if (!(m instanceof ORU_R01)) {
 			throw new HL7Exception("Unsupported message type: " + m.getName() + ". Expected ORU^R01 ver 2.2");
 		}
-		return (ORU_R01) m;
+		ORU_R01 message = (ORU_R01) m;
+		int commentReps = message.getPATIENT_RESULT().getORDER_OBSERVATION().currentReps("NTE");
+		if (commentReps < 2) {
+			throw new HL7Exception("Expected at least 2 comments in the NTE field.");
+		}
+		return message;
 	}
 
 	/**

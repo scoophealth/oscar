@@ -30,6 +30,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -90,14 +91,16 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		Demographic demographic = demographicDao.getDemographic(bean.getDemographicNo());
 		if (demographic == null) {
 			logger.warn("Unable to find Demographic " + bean.getDemographicNo());
-			return false;
+			return true;
 		}
 		
 		EaapsHash hash = new EaapsHash(demographic);
 		StudyData studyData = studyDataDao.findSingleByContent(hash.getHash());
 		if (studyData == null) {
-			logger.debug("Demographic " + demographic + " is not entered for a study");
-			return false;
+			if (logger.isDebugEnabled()) {
+				logger.debug("Demographic " + demographic + " is not entered for a study");
+			}
+			return true;
 		}
 		
 		Dao.setLeftHeading("eAAP");
@@ -111,13 +114,13 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 			EaapsServiceClient client = new EaapsServiceClient();
 	        patientData = client.getPatient(hash.getHash());
         } catch (Exception e) {
-        	logger.error("Unable to retrieve patient data", e);
-        	
-        	request.getSession().removeAttribute("eaapsInfo");
-        	
-        	Dao.addItem(newItem("Web Service Error"));
+        	logger.debug("Unable to retrieve patient data", e);
+        	request.getSession().removeAttribute("eaapsInfo");        	
+        	Dao.addItem(newItem("Unable to retrive patient data"));
         	return true;
         }
+		
+		configureMostResponsiblePhysicianFlag(patientData, demographic);
 		
 		request.getSession().setAttribute("eaapsInfo", patientData);
 		
@@ -140,7 +143,7 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		if (patientData.isRecommendationsAvailable()) {
 			boolean isNotificationRequired = isNotificationRequired(hash.getHash());
 			if (isNotificationRequired) {
-				String js = "<script language=\"javascript\">displayEaapsWindow(\"" +  patientData.getUrl() + "\", \"" + hash.getHash() + "\");</script>";
+				String js = "<script language=\"javascript\">displayEaapsWindow(\"" +  patientData.getUrl() + "\", \"" + hash.getHash() + "\", \"" + StringEscapeUtils.escapeJavaScript(patientData.getMessage()) + "\" );</script>";
 				Dao.setJavaScript(js);
 			}
 			Dao.addItem(newItem("Recommendations are available", getEaapsUrl(patientData.getUrl(), true), null));
@@ -156,6 +159,35 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		
 		return true;
 	}
+
+	/**
+	 * Signal if the MRP is currently looking at the record. 
+	 * 
+	 * @param patientData
+	 * 		Patient data loaded from the web service
+	 * @param demo
+	 * 		Demographic being loaded
+	 */
+	private void configureMostResponsiblePhysicianFlag(EaapsPatientData patientData, Demographic demo) {
+		String url = patientData.getUrl();		
+		if (url == null) {
+			logger.debug("URL is not provided - exiting without replacing");
+			return;
+		}
+		
+	    String loggedInProviderNo = getProviderNo();
+	    String mrpProviderNo = demo.getProviderNo();
+	    boolean isMrpPhysicianLookingAtTheRecord = loggedInProviderNo.equals(mrpProviderNo);
+	    
+	    if (url.contains("?")) {
+	    	url = url.concat("&");
+	    } else {
+	    	url = url.concat("?");
+	    }
+	    url = url.concat("isMrp=" + isMrpPhysicianLookingAtTheRecord);
+	    
+	    patientData.replaceUrl(url);
+    }
 
 	private boolean isNotificationRequired(String hash) {
 		String providerNo = getProviderNo();

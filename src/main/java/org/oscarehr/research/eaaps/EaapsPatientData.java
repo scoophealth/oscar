@@ -47,40 +47,48 @@ public class EaapsPatientData {
 		this.json = json;
 	}
 
-	private JSONObject getStatus() {
+	public JSONObject getStatus() {
 		return getJson().getJSONObject("status");
 	}
-	
+
+	private boolean getBoolean(String statusFieldName) {
+		String fieldValue = getStatus().getString(statusFieldName);
+		if (fieldValue == null || "0".equals(fieldValue) || "-1".equals(fieldValue)) {
+			return false;
+		}
+		return true;
+	}
+
 	public boolean isEligibleForStudy() {
-		return getStatus().getBoolean("eligibleForStudy");
+		return getBoolean("eligibleForStudy");
 	}
 
 	public boolean isQuestionnaireStarted() {
-		return getStatus().getBoolean("questionnaireStarted");
+		return getBoolean("questionnaireStarted");
 	}
 
 	public boolean isQuestionnaireCompleted() {
-		return getStatus().getBoolean("questionnaireCompleted");
+		return getBoolean("questionnaireCompleted");
 	}
 
 	public boolean isMedsConfirmed() {
-		return getStatus().getBoolean("medsConfirmed");
+		return getBoolean("medsConfirmed");
 	}
 
 	public boolean isRecommendationsAvailable() {
-		return getStatus().getBoolean("recommendationsAvailable");
+		return getBoolean("recommendationsAvailable");
 	}
 
 	public boolean isRecommendationsConfirmed() {
-		return getStatus().getBoolean("recommendationsConfirmed");
+		return getBoolean("recommendationsConfirmed");
 	}
 
 	public boolean isAapAvailable() {
-		return getStatus().getBoolean("aapAvailable");
+		return getBoolean("aapAvailable");
 	}
 
 	public boolean isAapConfirmed() {
-		return getStatus().getBoolean("aapConfirmed");
+		return getBoolean("aapConfirmed");
 	}
 
 	public String getUrl() {
@@ -93,6 +101,19 @@ public class EaapsPatientData {
 
 	public String getMessage() {
 		return getStatus().getString("message");
+	}
+
+	/**
+	 * Replaces the response URL with the specified value. Previous URL value is
+	 * kept as "previousUrl" JSON field. 
+	 * 
+	 * @param url
+	 * 		URL to replace the existing URL with.
+	 */
+	public void replaceUrl(String url) {
+		String previousUrl = getUrl();
+		getStatus().put("url", url);
+		getStatus().put("previousUrl", previousUrl);
 	}
 
 }
