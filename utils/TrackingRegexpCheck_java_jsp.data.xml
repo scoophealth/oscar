@@ -2628,6 +2628,9 @@
         <ViolationValue>/src/main/webapp/casemgmt/viewNotes.jsp:StringBuffer editors = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/viewNotes.jsp:StringBuffer strNoteIssues = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/viewNotes.jsp:StringBuffer strcme = new StringBuffer();</ViolationValue>
+        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
+        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:for (Hashtable ht : queues) {</ViolationValue>
+        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:&lt;%@page import="java.util.Hashtable"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/common/OntarioMDRedirect.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%&gt;&lt;%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%&gt;&lt;%</ViolationValue>
         <ViolationValue>/src/main/webapp/common/OntarioMDRedirect.jsp:Hashtable loginCreds = omd.loginToOntarioMD(uname,pword,requestor);</ViolationValue>
         <ViolationValue>/src/main/webapp/common/omdDiseaseList.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable,org.apache.commons.collections.*"%&gt;</ViolationValue>
@@ -2660,6 +2663,9 @@
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:for (Hashtable ht : queues) {</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:for (Hashtable ht : queues) {</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:&lt;%@page import="java.util.Hashtable"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromProvider.jsp:Hashtable providerDocs=(Hashtable)request.getSession().getAttribute("providerDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromQueue.jsp:Hashtable queueDocs=(Hashtable)request.getSession().getAttribute("queueDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/eform/efmSendform.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%&gt;&lt;%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%&gt;&lt;%</ViolationValue>
