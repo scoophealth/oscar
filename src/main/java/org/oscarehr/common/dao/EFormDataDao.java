@@ -214,20 +214,20 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		return(results);
 	}
     
-    public List<EFormData> findByFdids(List<Integer> ids)
+    public List<EFormData> findByFormIdProviderNo(List<String> providerNo, Integer formId)
 	{
-    	if(ids.size()==0)
-    		return new ArrayList<EFormData>();
-    	
-    	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.id in (:ids)");
-		query.setParameter("ids", ids);
-		
+	
+	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formId = ?1 and x.providerNo in (?2) and x.current = 1");
+		//query.setParameter(1,fid);
+		query.setParameter(1,formId);
+		query.setParameter(2,providerNo);
+	
 		@SuppressWarnings("unchecked")
 		List<EFormData> results=query.getResultList();
-		
-		return results;	
+	
+		return results;
 	}
-    
+
 	/**
 	 * Finds form data for the specified demographic record and form name
 	 * 
@@ -261,4 +261,19 @@ public class EFormDataDao extends AbstractDao<EFormData> {
     	
     	return(results);
     }
+
+    public List<EFormData> findByFdids(List<Integer> ids)
+    {
+    	if(ids.size()==0)
+    		return new ArrayList<EFormData>();
+    	
+    	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.id in (:ids)");
+		query.setParameter("ids", ids);
+		
+		@SuppressWarnings("unchecked")
+		List<EFormData> results=query.getResultList();
+		
+		return results;	
+    }
+
 }
