@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="OSCAR - oscardoc refuse AUA">OSCAR - oscardoc refuse AUA</a></td></tr>
+<tr><td><a href="OSCAR - oscardoc agree AUA">OSCAR - oscardoc agree AUA</a></td></tr>
+<tr><td><a href="OSCAR - create myoscar login">OSCAR - create myoscar login</a></td></tr>
+<tr><td><a href="OSCAR - myoscar - disable keep me logged in">OSCAR - myoscar - disable keep me logged in</a></td></tr>
+<tr><td><a href="OSCAR - verify - disable keep me logged in">OSCAR - verify - disable keep me logged in</a></td></tr>
+<tr><td><a href="OSCAR - myoscar - enable keep me logged in">OSCAR - myoscar - enable keep me logged in</a></td></tr>
+<tr><td><a href="OSCAR - verify - enable keep me logged in">OSCAR - verify - enable keep me logged in</a></td></tr>
+<tr><td><a href="OSCAR - enable keep me logged in - MyOSCAR password change">OSCAR - enable keep me logged in - MyOSCAR password change</a></td></tr>
+<tr><td><a href="OSCAR - reset oscardoc MyOSCAR account pass">OSCAR - reset oscardoc MyOSCAR account pass</a></td></tr>
+</tbody></table>
+</body>
+</html>
