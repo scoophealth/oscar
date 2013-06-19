@@ -837,20 +837,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.oscarehr</groupId>
-			<artifactId>util</artifactId>
-			<version>2013.04.24</version>
-		</dependency>
-		<dependency>
 			<groupId>org.oscarehr.myoscar_server</groupId>
 			<artifactId>myoscar_server_client_stubs</artifactId>
 			<version>2013.02-SNAPSHOT</version>
 		</dependency>		
-		<dependency>
-			<groupId>org.oscarehr</groupId>
-			<artifactId>myoscar_client_server_commons</artifactId>
-			<version>2013.03.13</version>
-		</dependency>
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>myoscar_client_utils</artifactId>
