@@ -98,9 +98,9 @@
     if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Observation")) {
     	sort = EDocUtil.EDocSort.OBSERVATIONDATE;
         sortorder="Observation";
-    } else  if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Upload")) {
+    } else  if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Update")) {
         sort = EDocUtil.EDocSort.DATE;
-        sortorder="Upload";
+        sortorder="Update";
     } else {
     	sort = EDocUtil.EDocSort.CONTENTDATE;
         sortorder="Content";
@@ -449,8 +449,8 @@
                                     <%=sortorder.equalsIgnoreCase("Content") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgContent"/></option>
                             <option value="Observation"
                                     <%=sortorder.equalsIgnoreCase("Observation") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgObservation"/></option>
-                            <option value="Upload"
-                                    <%=sortorder.equalsIgnoreCase("Upload") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgUpload"/></option>
+                            <option value="Update"
+                                    <%=sortorder.equalsIgnoreCase("Update") ? "selected":""%>><bean:message key="oscarEncounter.noteBrowser.msgUpdate"/></option>
 				
 			</select>
                         <fieldset><legend><bean:message key="oscarEncounter.noteBrowser.msgView"/>:</legend>      
@@ -483,7 +483,7 @@
                         <fieldset><legend><%
                         if(sortorder.equals("Content")) { %>
                         <bean:message key="oscarEncounter.noteBrowser.msgContent"/><%} else {%>
-                        <bean:message key="oscarEncounter.noteBrowser.msgUpload"/> <%}%>
+                        <bean:message key="oscarEncounter.noteBrowser.msgUpdate"/> <%}%>
                         <bean:message key="oscarEncounter.noteBrowser.ObservationTypeDescription"/></legend>
                             <SELECT MULTIPLE SIZE=5 id="doclist" onchange="getDoc();">
                                 <%

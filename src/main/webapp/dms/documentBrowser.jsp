@@ -74,7 +74,7 @@
     } else if (request.getAttribute("view") != null) {
         view = (String) request.getAttribute("view");
     }
-    view = URLDecoder.decode(view);
+    view = URLDecoder.decode(view,"UTF-8");
     String module = "";
 
     String moduleid = "";
@@ -113,9 +113,9 @@
     	sort = EDocUtil.EDocSort.OBSERVATIONDATE;
         sortorder="Observation";
     }
-    else if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Upload")) {
+    else if (request.getParameter("sortorder") != null && request.getParameter("sortorder").equals("Update")) {
     	sort = EDocUtil.EDocSort.DATE;
-        sortorder="Upload";
+        sortorder="Update";
     }
     else  {
     	sort = EDocUtil.EDocSort.CONTENTDATE;
@@ -212,13 +212,23 @@ Remote documents not supported
                 return myHeight;
             }
             
-            showPageImg=function(curdocid,doctype){
+            showPageImg=function(curdocid){
+                var height=700;
+                if(getHeight()>750) {
+                    height=getHeight()-50;
+                }
+                
+                var width=600;
+                if(getWidth()>1250)
+                {
+                    width=getWidth()-650;
+                }
                 if(curdocid!="0") {
                                     
                    
                     var url2='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=display&doc_no='
                         +curdocid;
-                    document.getElementById('docdisp').innerHTML = '<iframe	src="' +url2 +'"  width="' +(getWidth()-330) +'" height="' +(getHeight()-50) +'"></iframe>';
+                    document.getElementById('docdisp').innerHTML = '<iframe	src="' +url2 +'"  width="' +width +'" height="' +height +'"></iframe>';
                             
                     var url4='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=viewDocumentInfo&doc_no='+curdocid;
                     document.getElementById('docextrainfo').innerHTML = '<object data="' +url4 +'"  height=250px width="100%" type="text/html" ></object>';                    
@@ -233,9 +243,18 @@ Remote documents not supported
                                                   
             }
             showPageCombineImg=function(doclist){
+                var height=700;
+                if(getHeight()>750) {
+                    height=getHeight()-50;
+                }
                 
+                var width=600;
+                if(getWidth()>1250)
+                {
+                    width=getWidth()-650;
+                }
                 var url2='<%=request.getContextPath()%>'+'/dms/combinePDFs.do?ContentDisposition=inline'+doclist;
-                document.getElementById('docdisp').innerHTML = '<object	data="' +url2 +'" type="application/pdf" width="' +(getWidth()-330) +'" height="' +(getHeight()-50) +'"></object>';                    
+                document.getElementById('docdisp').innerHTML = '<object	data="' +url2 +'" type="application/pdf" width="' + width +'" height="' +height +'"></object>';                    
                 document.getElementById('docextrainfo').innerHTML='';
                                                   
             }
@@ -266,7 +285,7 @@ Remote documents not supported
                     var div_ref = document.all("docbuttons");
                     div_ref.style.visibility = "hidden";
                     docid="0";                    
-                    showPageImg(docid,"");
+                    showPageImg(docid);
            
                 }  
                 if(selected.length>=2)
@@ -300,11 +319,8 @@ Remote documents not supported
                 {
                     var docidindexend=selected[0].value.indexOf('-');
                     docid=selected[0].value.substring(0,docidindexend);
-                    doctype=selected[0].value.substring(docidindexend+1,selected[0].value.length);
-                        
-               
-                    
-                    showPageImg(docid,doctype);
+                                        
+                    showPageImg(docid);
                     var div_ref = document.all("docbuttons");                    
                     div_ref.style.visibility = "visible";
                     
@@ -377,9 +393,7 @@ Remote documents not supported
                         <input type="hidden" name="functionid" value="<%=moduleid%>">
                         <input type="hidden" name="categorykey" value="<%=categoryKey%>">
 
-                        <bean:message key="dms.documentBrowser.msgViewStatus"/> <select id="selviewstatus" name="selviewstatus"
-                                style="text-size: 8px; margin-bottom: -4px;"
-                                onchange="ReLoadDoc()">
+                        <bean:message key="dms.documentBrowser.msgViewStatus"/> <select id="selviewstatus" name="selviewstatus" onchange="ReLoadDoc()">
                             <option value="all"
                                     <%=viewstatus.equalsIgnoreCase("all") ? "selected" : ""%>><bean:message key="dms.documentBrowser.msgAll"/></option>
                             <option value="deleted"
@@ -389,14 +403,13 @@ Remote documents not supported
                         </select>
 
                         <bean:message key="dms.documentBrowser.msgSortDate"/>
-                        <select id="selsortorder" name="selsortorder"
-				style="text-size: 8px; margin-bottom: -4px;" onchange="ReLoadDoc()">
+                        <select id="selsortorder" name="selsortorder" onchange="ReLoadDoc()">
                             <option value="Content"
                                     <%=sortorder.equalsIgnoreCase("Content") ? "selected":""%>><bean:message key="dms.documentBrowser.msgContent"/></option>
                             <option value="Observation"
                                     <%=sortorder.equalsIgnoreCase("Observation") ? "selected":""%>><bean:message key="dms.documentBrowser.msgObservation"/></option>
-                            <option value="Upload"
-                                    <%=sortorder.equalsIgnoreCase("Upload") ? "selected":""%>><bean:message key="dms.documentBrowser.msgUpload"/></option>
+                            <option value="Update"
+                                    <%=sortorder.equalsIgnoreCase("Update") ? "selected":""%>><bean:message key="dms.documentBrowser.msgUpdate"/></option>
 				
 			</select>
                         <fieldset><legend><bean:message key="dms.documentBrowser.msgView"/>:</legend>      
@@ -408,7 +421,7 @@ Remote documents not supported
                             <a
                                 href="#" onclick="LoadView('all')" ><%=view.equals("all") ? "<b>":""%>All<%=view.equals("all") ? "</b>":""%></a> <% for (int i3 = 0; i3 < doctypes.size(); i3++) {%>
                             | <a
-                                href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3))%>')"><%=view.equals(URLEncoder.encode((String) doctypes.get(i3))) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals(URLEncoder.encode((String) doctypes.get(i3))) ? "</b>":""%></a>
+                                  href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3),"UTF-8")%>')"><%=view.equals((String) doctypes.get(i3)) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals((String) doctypes.get(i3)) ? "</b>":""%></a>
                             <%}%> 
                         </fieldset>
 
@@ -416,9 +429,9 @@ Remote documents not supported
                             <legend><%
                         if(sortorder.equals("Content")) { %>
                         <bean:message key="dms.documentBrowser.msgContent"/><%} else {%>
-                        <bean:message key="dms.documentBrowser.msgUpload"/> <%}%>
+                        <bean:message key="dms.documentBrowser.msgUpdate"/> <%}%>
                         <bean:message key="dms.documentBrowser.ObservationTypeDescription"/></legend>                            
-                            <SELECT MULTIPLE SIZE=15 id="doclist" onchange="getDoc();">
+                            <SELECT MULTIPLE SIZE=15 id="doclist" onchange="getDoc();" style="width: 400px" >
                                 <%
                                     for (int i2 = 0; i2 < docs.size(); i2++) {
                                         EDoc cmicurdoc = (EDoc) docs.get(i2);
