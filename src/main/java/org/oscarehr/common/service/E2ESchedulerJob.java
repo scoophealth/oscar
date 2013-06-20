@@ -33,51 +33,52 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.exports.e2e.E2EVelocityTemplate;
+import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDemographic.pageUtil.E2EVelocityTemplate;
-import oscar.oscarDemographic.pageUtil.PatientExport;
 
 public class E2ESchedulerJob extends TimerTask {
-
 	private static final Logger logger = MiscUtils.getLogger();
 	String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
-	
-	
+
 	@Override
 	public void run() {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-		
+
 		try {
 			logger.info("starting E2E export job");
-			
+
 			List<Integer> ids = demographicDao.getActiveDemographicIds();
 			ArrayList<File> files = new ArrayList<File>();
-			
+
 			for(Integer id:ids) {
-				PatientExport patient = new PatientExport(id.toString());
+				// Select Template
 				E2EVelocityTemplate t = new E2EVelocityTemplate();
-				patient.setExMedications(true);
-				patient.setExAllergiesAndAdverseReactions(true);
-				patient.setExImmunizations(true);
-				patient.setExProblemList(true);
-				patient.setExLaboratoryResults(true);
-				patient.setExRiskFactors(true);
-				patient.setExPersonalHistory(true);
-				patient.setExFamilyHistory(true);
-				patient.setExAlertsAndSpecialNeeds(true);
-				String output = t.export(patient);
-				
+
+				// Create and load Patient data
+				E2EPatientExport patient = new E2EPatientExport();
+				patient.setExAllTrue();
+
+				// Load patient data and merge to template
+				String output = "";
+				if(patient.loadPatient(id.toString())) {
+					output = t.export(patient);
+				} else {
+					logger.error("Failed to load patient " + id.toString());
+					continue;
+				}
+
 				//export file to temp directory
 				try{
 					File directory = new File(tmpDir);
 					if(!directory.exists()){
 						throw new Exception("Temporary Export Directory does not exist!");
 					}
-	
+
 					//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
 					String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName();
 					expFile += "_"+id;
@@ -90,8 +91,9 @@ public class E2ESchedulerJob extends TimerTask {
 				try {
 					out = new BufferedWriter(new FileWriter(files.get(files.size()-1)));
 					out.write(output);
-					
-				} catch (IOException ex) {logger.error("Error", ex);
+
+				} catch (IOException ex) {
+					logger.error("Error", ex);
 					throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
 				} finally {
 					try {
@@ -101,11 +103,10 @@ public class E2ESchedulerJob extends TimerTask {
 					}
 				}
 			}
-			
-			
+
 			logger.info("done E2E export job");
-			
-		}catch(Throwable e ) {
+
+		} catch(Throwable e ) {
 			logger.error("Error",e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
