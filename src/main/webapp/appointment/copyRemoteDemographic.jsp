@@ -82,12 +82,12 @@
 	admission.setProviderNo(providerNo);
 	admission.setAdmissionDate(oscar.MyDateFormat.getSysDate(admissionDate));
 	admission.setAdmissionStatus("current");
-	admission.setTeamId(0);
+	admission.setTeamId(null);
 	admission.setTemporaryAdmission(false);
 	admission.setAdmissionFromTransfer(false);
 	admission.setDischargeFromTransfer(false);
 	admission.setRadioDischargeReason("0");
-	admission.setClientStatusId(0);
+	admission.setClientStatusId(null);
     admissionDao.saveAdmission(admission);
 
 

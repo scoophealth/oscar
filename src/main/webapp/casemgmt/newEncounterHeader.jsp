@@ -59,7 +59,7 @@
     int inv = ~num;                                                 //get inverse
     inverseUserColour = Integer.toHexString(inv).substring(2);    //strip 2 leading digits as html colour codes are 24bits
 
-    if(bean.familyDoctorNo.equals("")) {
+    if(bean.familyDoctorNo == null || bean.familyDoctorNo.equals("")) {
         famDocName = "";
         famDocSurname = "";
         famDocColour = "";
