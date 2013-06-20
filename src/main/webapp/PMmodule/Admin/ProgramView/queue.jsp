@@ -272,6 +272,13 @@ String reason ="";
 			<td width="20%">Admission Notes:</td>
 			<td><textarea cols="50" rows="7" name="admission.admissionNotes"></textarea></td>
 		</tr>
+		<tr> <td>Admission Date:</td>
+		        <td><input type="text" id="admissionDate" name="admissionDate" value="" readonly ><img titltype="text"e="Calendar" id="cal_admissionDate" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar" border="0">
+			<script type="text/javascript">Calendar.setup({inputField:'admissionDate',ifFormat :'%Y-%m-%d',button :'cal_admissionDate',align :'cr',singleClick :true,firstDay :1});</script>        
+                           
+			</td>
+		</tr>
+
 		<tr class="b">
 			<td colspan="2"><input type="button" value="Process Admission"
 				onclick="do_admission()" /> <input type="button" value="Cancel"

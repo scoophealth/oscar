@@ -346,6 +346,13 @@ public class Admission extends AbstractModel<Integer> implements Serializable {
     	this.dischargeDate = dischargeDate;
     }
 
+    public String getFormattedDischargeDate() {
+	Date d = getDischargeDate();
+	if(d==null) {return "";}
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	return formatter.format(d);
+    }
+
 	/**
      * Set the value related to the column: team_id
      * @param teamId the team_id value
