@@ -106,9 +106,9 @@
         var okToClose = false;
         function onClosing() {
         	
-            for( var idx = 0; idx < measurementWindows.length; ++idx ) {
-                if( !measurementWindows[idx].closed )
-                    measurementWindows[idx].parentChanged = true;
+            for( var name in openWindows ) {
+                if( !openWindows[name].closed )
+                    openWindows[name].close();
             }
 
             //check to see if we need to save
