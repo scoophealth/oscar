@@ -482,6 +482,12 @@ public class CaseManagementManager {
 		}
 		return (drugDao.getUniquePrescriptions(demographic_no));
 	}
+	
+	public List<Drug> getCurrentPrescriptions(int demographic_no) {
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		
+		return (drugDao.findByDemographicIdOrderByPosition(new Integer(demographic_no), false));
+	}
 
 	/**
 	 * This method gets all prescriptions including from integrated facilities. This method will also check to ensure the integrator is enabled for this facility before attemping to add remote drugs. If it's not enabled it will return only local drugs.
