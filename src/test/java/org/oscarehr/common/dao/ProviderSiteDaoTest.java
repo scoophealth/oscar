@@ -47,7 +47,7 @@ public class ProviderSiteDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("providersite");
+		SchemaUtils.restoreTable("providersite", "site");
 	}
 
 	@Test
