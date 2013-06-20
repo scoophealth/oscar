@@ -145,6 +145,15 @@
 		} else {
 			demographic.setEffDate(null);
 		}
+		
+	    year = StringUtils.trimToNull(request.getParameter("hc_renew_date_year"));
+	    month = StringUtils.trimToNull(request.getParameter("hc_renew_date_month"));
+	    day = StringUtils.trimToNull(request.getParameter("hc_renew_date_date"));
+		if (year!=null && month!=null && day!=null) {
+			demographic.setHcRenewDate(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
+		} else {
+			demographic.setHcRenewDate(null);
+		}
 
 		demographic.setPcnIndicator(request.getParameter("pcn_indicator"));
 		demographic.setHcType(request.getParameter("hc_type"));
