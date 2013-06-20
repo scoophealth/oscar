@@ -13153,6 +13153,7 @@ insert into encounterForm values ('Position Hazard', '../form/formPositionHazard
 
 INSERT INTO billing_payment_type (payment_type) VALUES ('ALTERNATE');
 
+insert into billing_on_errorCode values ('ARF', 'Technical service code requires referring physician');
 insert into billing_on_errorCode values ('HCC', 'Not complex/vulnerable');
 insert into billing_on_errorCode values ('AC4', 'unacceptable Ref. #');
 insert into billing_on_errorCode values ('AD3', 'not allowed with visit');

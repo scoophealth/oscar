@@ -17,8 +17,9 @@ INSERT INTO billing_on_errorCode (code, description) VALUES ('ADP','Mutally Excl
 INSERT INTO billing_on_errorCode (code, description) VALUES ('AEV','Visit Only Allowed') ON DUPLICATE KEY UPDATE description='Visit Only Allowed';
 INSERT INTO billing_on_errorCode (code, description) VALUES ('AHA','FSC and Time Period Mismatch') ON DUPLICATE KEY UPDATE description='FSC and Time Period Mismatch';
 INSERT INTO billing_on_errorCode (code, description) VALUES ('AH1','On-call Admit Same Day') ON DUPLICATE KEY UPDATE description='On-call Admit Same Day';
-INSERT INTO billing_on_errorCode (code, description) VALUES ('AH2','Hosp. Assess. Other Phys') ON DUPLICATE KEY UPDATE description='Hosp. Assess. Other Phys
-';
+INSERT INTO billing_on_errorCode (code, description) VALUES ('AH2','Hosp. Assess. Other Phys') ON DUPLICATE KEY UPDATE description='Hosp. Assess. Other Phys';
+INSERT INTO billing_on_errorCode (code, description) VALUES ('ARF', 'Technical service code requires referring physician') ON DUPLICATE KEY UPDATE description='Technical service code requires referring physician';
+
 INSERT INTO billing_on_errorCode (code, description) VALUES ('AH5','Admit Date Mismatch') ON DUPLICATE KEY UPDATE description='Admit Date Mismatch';
 INSERT INTO billing_on_errorCode (code, description) VALUES ('AMM','Max LTC Monthly Fee Apply') ON DUPLICATE KEY UPDATE description='Max LTC Monthly Fee Apply';
 INSERT INTO billing_on_errorCode (code, description) VALUES ('A03','MRP Visit already Pd.') ON DUPLICATE KEY UPDATE description='MRP Visit already Pd.';
