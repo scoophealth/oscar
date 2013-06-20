@@ -842,7 +842,7 @@ public String wrap(String in,int len) {
 		return x + "\n" + wrap(in.substring(in.indexOf("\n") + 1), len);
 	}
 	int place=Math.max(Math.max(in.lastIndexOf(" ",len),in.lastIndexOf("\t",len)),in.lastIndexOf("-",len));
-	if( place == 0 ) {
+	if( place <= 0 ) {
 		place = len;
 	}
 	return in.substring(0,place).trim()+"\n"+wrap(in.substring(place),len);
