@@ -131,6 +131,7 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 <%@ page import="oscar.util.UtilDateUtilities"  %>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 
 <%GregorianCalendar now = new GregorianCalendar();
 			int curYear = now.get(Calendar.YEAR);
@@ -349,7 +350,10 @@ function checkSettle(status) {
 
 				// bFlag - fill in data?
 				boolean bFlag = false;
-				String billNo = request.getParameter("billing_no").trim();
+				String billNo = request.getParameter("billing_no");
+				if (billNo != null)
+					billNo.trim();
+					
                                 String claimNo = request.getParameter("claim_no");
 
                                 if( billNo == null || billNo.length() == 0 ) {
@@ -359,6 +363,7 @@ function checkSettle(status) {
                                     }
 
                                 }
+				
 				if (billNo != null && billNo.length() > 0) {
 					bFlag = true;
 				}
@@ -414,6 +419,10 @@ function checkSettle(status) {
 						roster_status = "";
 						comment = ch1Obj.getComment();
 						//paid = ch1Obj.getPaid();
+						
+						// get ohip claim number
+						claimNo = raObj.getRAClaimNo4BillingNo( billNo );
+						
 					}
 					    else {
 							UpdateDate = "";
@@ -441,11 +450,11 @@ function checkSettle(status) {
 				Billing3rdPartPrep tObj = new Billing3rdPartPrep();
 				
 				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram)
-						|| request.getParameter("billing_no").length() < 1) {
+						|| billNo.length() < 1) {
 					
 					Properties tProp = null;					
-					if( request.getParameter("billing_no").length() > 0 ) {
-						tProp = tObj.get3rdPartBillPropInactive(request.getParameter("billing_no").trim());						
+					if( billNo.length() > 0 ) {
+						tProp = tObj.get3rdPartBillPropInactive(billNo.trim());						
 					}
 					
 					if( tProp == null || tProp.size() == 0 ) {
@@ -468,7 +477,7 @@ function checkSettle(status) {
 					}
 				} else {
 					thirdParty = true;
-					Properties tProp = tObj.get3rdPartBillProp(request.getParameter("billing_no").trim());	
+					Properties tProp = tObj.get3rdPartBillProp(billNo.trim());	
 					htmlPaid = "Paid<br><input type='text' id='payment' name='payment' size=5 value='"
 						+ tProp.getProperty("payment") + "' /><input type='hidden' id='oldPayment' name='oldPayment' value='"
                                                 + tProp.getProperty("payment") + "' /><input type='hidden' id='payDate' name='payDate' value='"
