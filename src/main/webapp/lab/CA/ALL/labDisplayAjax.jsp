@@ -388,6 +388,13 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                         }
                                                     }
                                                 }
+                                                if( multiID.length > 1 ) {
+                                                    if ( searchProviderNo != null ) { // null if we were called from e-chart
+                                                        %><a href="javascript:void(0);" onclick="popup(850, 950, '../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>&searchProviderNo=<%= searchProviderNo %>&all=true', 'labVersion');">All</a>&#160;<%
+                                                    }else{
+                                                        %><a href="javascript:void(0);" onclick="popup(850, 950, '../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>&all=true', 'labVersion');">All</a>&#160;<%
+                                                    }
+                                                }
                                                 %>
                                             </div>
                                         </td>

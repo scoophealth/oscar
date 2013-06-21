@@ -69,6 +69,7 @@ String patientMatched = request.getParameter("patientMatched");
 String remoteFacilityIdString = request.getParameter("remoteFacilityId");
 String remoteLabKey = request.getParameter("remoteLabKey");
 String demographicID = request.getParameter("demographicId");
+String showAllstr = request.getParameter("all");
 UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
 boolean skipComment = false;
@@ -76,13 +77,6 @@ if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
 	skipComment = true;
 }
 
-String ackLabFunc;
-if( skipComment ) {
-	ackLabFunc = "handleLab('acknowledgeForm','" + segmentID + "','ackLab');";
-}
-else {
-	ackLabFunc = "getComment('ackLab');";
-}
 
 //Need date lab was received by OSCAR
 Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
@@ -110,14 +104,19 @@ String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : f
 String formName2 = bShortcutForm ? OscarProperties.getInstance().getProperty("appt_formview_name2", "") : "";
 String formName2Short = formName2.length() > 3 ? (formName2.substring(0,2)+".") : formName2;
 boolean bShortcutForm2 = bShortcutForm && !formName2.equals("");
-
+List<MessageHandler>handlers = new ArrayList<MessageHandler>();
+String []segmentIDs = null;
+Boolean showAll = showAllstr != null && !"null".equalsIgnoreCase(showAllstr);
 
 if (remoteFacilityIdString==null) // local lab
 {
+    
 	Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
 	reqID = reqIDL==null ? "" : reqIDL.toString();
 	reqIDL = LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID));
 	reqTableID = reqIDL==null ? "" : reqIDL.toString();
+	
+	
 
 	PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class); 
 	for(PatientLabRouting r : dao.findByLabNoAndLabType(ConversionUtils.fromIntString(segmentID), "HL7")) {
@@ -131,15 +130,29 @@ if (remoteFacilityIdString==null) // local lab
 	    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
 	}
 
-	ackList = AcknowledgementData.getAcknowledgements(segmentID);
-	multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
-	handler = Factory.getHandler(segmentID);
-	hl7 = Factory.getHL7Body(segmentID);
-	if (handler instanceof OLISHL7Handler) {
-		%>
-		<jsp:forward page="labDisplayOLIS.jsp" />
-		<%
+	
+	if( showAll ) {
+		multiLabId = request.getParameter("multiID");		
+		segmentIDs = multiLabId.split(",");
+		for( int i = 0; i < segmentIDs.length; ++i) {
+		    handlers.add(Factory.getHandler(segmentIDs[i]));
+		}
+		
+		handler = handlers.get(0);
 	}
+	else {
+		multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
+		handler = Factory.getHandler(segmentID);
+		handlers.add(handler);
+		segmentIDs = new String[] {segmentID};
+		hl7 = Factory.getHL7Body(segmentID);
+		if (handler instanceof OLISHL7Handler) {
+			%>
+			<jsp:forward page="labDisplayOLIS.jsp" />
+			<%
+		}
+	}
+    
 }
 else // remote lab
 {
@@ -154,37 +167,16 @@ else // remote lab
 	ackList=LabDisplayHelper.getReportStatus(cachedDemographicLabResultXmlData);
 	multiLabId=LabDisplayHelper.getMultiLabId(cachedDemographicLabResultXmlData);
 	handler=LabDisplayHelper.getMessageHandler(cachedDemographicLabResultXmlData);
+	handlers.add(handler);
+	segmentIDs = new String[] {"0"};  //fake segment ID for the for loop below to execute
 	hl7=LabDisplayHelper.getHl7Body(cachedDemographicLabResultXmlData);
-
+	
 	try {
 		remoteFacilityIdQueryString="&remoteFacilityId="+remoteFacilityIdString+"&remoteLabKey="+URLEncoder.encode(remoteLabKey, "UTF-8");
 	} catch (Exception e) {
 		MiscUtils.getLogger().error("Error", e);
 	}
 }
-
-
-boolean notBeenAcked = ackList.size() == 0;
-boolean ackFlag = false;
-String labStatus = "";
-if (ackList != null){
-    for (int i=0; i < ackList.size(); i++){
-        ReportStatus reportStatus = ackList.get(i);
-        if (reportStatus.getProviderNo() != null && reportStatus.getProviderNo().equals(providerNo) ) {
-        	labStatus = reportStatus.getStatus();
-        	if( labStatus.equals("A") ){
-            	ackFlag = true;//lab has been ack by this provider.
-            	break;
-        	}
-        }
-    }
-}
-
-Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
-int lab_no = Integer.parseInt(segmentID);
-Hl7TextInfo hl7Lab = hl7TextInfoDao.findLabId(lab_no);
-String label = "";
-if (hl7Lab != null && hl7Lab.getLabel()!=null) label = hl7Lab.getLabel();
 
 /********************** Converted to this sport *****************************/
 
@@ -217,6 +209,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
       	<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery.form.js"></script>
+      	
 
        <script  type="text/javascript" charset="utf-8">
 
@@ -226,25 +219,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 	
 	<oscar:customInterface section="labView"/>
 
-		<script>
-
-        jQuery(function() {
-      	  jQuery("#createLabel").click(function() {
-      	    jQuery.ajax( {
-      	      type: "POST",
-      	      url: '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do",
-      	      dataType: "json",
-      	      data: { lab_no: jQuery("#labNum").val(),accessionNum: jQuery("#accNum").val(), label: jQuery("#label").val() }
-
-
-      	    });
-      	  jQuery("#labelspan").children().get(0).innerHTML = "Label: " +  jQuery("#label").val();
-      	  document.forms['acknowledgeForm'].label.value = "";
-
-      	  });
-      });
-
-		</script>
+		
         <script language="javascript" type="text/javascript">
             // alternately refer to this function in oscarMDSindex.js as labDisplayAjax.jsp does
 		function updateLabDemoStatus(labno){
@@ -365,15 +340,17 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         </style>
 
         <script language="JavaScript">
+        var providerNo = '<%=providerNo%>';
         function popupStart(vheight,vwidth,varpage,windowname) {
             var page = varpage;
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
             var popup=window.open(varpage, windowname, windowprops);
         }
-        function getComment(action) {
+        function getComment(action, segmentId) {
+       
             var ret = true;
             var comment = "";
-            var text = $F("providerNo") + "commentText";
+            var text = providerNo + "_" + segmentId + "commentText";
             if( $(text) != null ) {
 	            comment = $(text).innerHTML;
 	            if( comment == null ) {
@@ -386,11 +363,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             	ret = false;
             }
             else if( commentVal != null && commentVal.length > 0 )
-                document.acknowledgeForm.comment.value = commentVal;
+                document.forms['acknowledgeForm_'+ segmentId].comment.value = commentVal;
             else
-            	document.acknowledgeForm.comment.value = comment;
+            	document.forms['acknowledgeForm_'+ segmentId].comment.value = comment;
 
-           if(ret) handleLab('acknowledgeForm','<%=segmentID%>', action);
+           if(ret) handleLab('acknowledgeForm_'+segmentId,segmentId, action);
 
             return false;
         }
@@ -443,7 +420,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         if(success){
                                                                             if(action=='ackLab'){
                                                                                 if(confirmAck()){
-                                                                                	$("labStatus").value = "A";
+                                                                                	$("labStatus_"+labid).value = "A";
                                                                                     updateStatus(formid,labid);
                                                                                 }
                                                                             }else if(action=='msgLab'){
@@ -464,7 +441,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         }else{
                                                                             if(action=='ackLab'){
                                                                                 if(confirmAckUnmatched()) {
-                                                                                	$("labStatus").value = "A";
+                                                                                	$("labStatus_"+labid).value = "A";
                                                                                     updateStatus(formid,labid);
                                                                                 }
                                                                                 else {
@@ -495,20 +472,25 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
         }
         function updateStatus(formid,labid){
+        	
             var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
             var data=$(formid).serialize(true);
 
             new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                 if(labid){
+
+                 
                 	 try {
                     	window.opener.Effect.BlindUp('labdoc_'+labid);
                         window.opener.refreshCategoryList();
                      } catch (e) {
-                    	window.close();
+                    	try {
+                    		Effect.BlindUp("lab_"+labid);
+                    	}
+                    	catch(e) {
+                    		window.close();
+                    	}
                      }
 
-                     window.close();
-                }
         }});
 
         }
@@ -537,22 +519,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
         function addComment(formid,labid) {
         	var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do?method=addComment";
-			if( $F("labStatus") == "" ) {
-				$("labStatus").value = "N";
+			if( $F("labStatus_"+labid) == "" ) {
+				$("labStatus_"+labid).value = "N";
 			}
+			
         	var data=$(formid).serialize(true);
-        	var label = $F("providerNo") + "commentLabel";
-        	var text = $F("providerNo") + "commentText";
-
-            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-
-            	if( $(label) == null || $(text) == null ) {
+        	
+            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){				
             		window.location.reload();
-            	}
-            	else {
-            		$(label).update("comment : ");
-            		$(text).update(document.acknowledgeForm.comment.value);
-            	}
+            	
         }});
         }
 
@@ -568,8 +543,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
     		});
     	}
 
-        function submitLabel(lblval){
-       		document.forms['TDISLabelForm'].label.value = document.forms['acknowledgeForm'].label.value;
+        function submitLabel(lblval, segmentID){
+       		document.forms['TDISLabelForm_'+segmentID].label.value = document.forms['acknowledgeForm_'+segmentID].label.value;
        	}
         </script>
 
@@ -577,21 +552,81 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
     <body onLoad="javascript:matchMe();">
         <!-- form forwarding of the lab -->
-        <form name="reassignForm" method="post" action="Forward.do">
-            <input type="hidden" name="flaggedLabs" value="<%= segmentID %>" />
+        <%        
+        	for( int idx = 0; idx < segmentIDs.length; ++idx ) {
+        		       		
+        		if (remoteFacilityIdString==null) {
+        			ackList = AcknowledgementData.getAcknowledgements(segmentID);
+        			segmentID = segmentIDs[idx];          		
+                	handler = handlers.get(idx);
+        		}
+        		
+        		boolean notBeenAcked = ackList.size() == 0;
+        		boolean ackFlag = false;
+        		String labStatus = "";
+        		if (ackList != null){
+        		    for (int i=0; i < ackList.size(); i++){
+        		        ReportStatus reportStatus = ackList.get(i);
+        		        if (reportStatus.getProviderNo() != null && reportStatus.getProviderNo().equals(providerNo) ) {
+        		        	labStatus = reportStatus.getStatus();
+        		        	if( labStatus.equals("A") ){
+        		            	ackFlag = true;//lab has been ack by this provider.
+        		            	break;
+        		        	}
+        		        }
+        		    }
+        		}
+        		
+        		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+        		int lab_no = Integer.parseInt(segmentID);
+        		Hl7TextInfo hl7Lab = hl7TextInfoDao.findLabId(lab_no);
+        		String label = "";
+        		if (hl7Lab != null && hl7Lab.getLabel()!=null) label = hl7Lab.getLabel();
+        		
+        		String ackLabFunc;
+        		if( skipComment ) {
+        			ackLabFunc = "handleLab('acknowledgeForm_" + segmentID + "','" + segmentID + "','ackLab');";
+        		}
+        		else {
+        			ackLabFunc = "getComment('ackLab', " + segmentID + ");";
+        		}
+
+        %>
+        <script type="text/javascript">
+
+        jQuery(function() {
+      	  jQuery("#createLabel_<%=segmentID%>").click(function() {
+      	    jQuery.ajax( {
+      	      type: "POST",
+      	      url: '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do",
+      	      dataType: "json",
+      	      data: { lab_no: jQuery("#labNum_<%=segmentID%>").val(),accessionNum: jQuery("#accNum").val(), label: jQuery("#label_<%=segmentID%>").val(), ajaxcall: true },
+      	      success: function(result) {alert("label applied");
+      	    	jQuery("#labelspan_<%=segmentID%>").children().get(0).innerHTML = "Label: " +  jQuery("#label_<%=segmentID%>").val();
+        	  	document.forms['acknowledgeForm_<%=segmentID%>'].label.value = "";    
+      	      }
+      	    }
+      	   );
+      	});
+      });
+
+		</script>
+		<div id="lab_<%=segmentID%>">
+        <form name="reassignForm_<%=segmentID%>" method="post" action="Forward.do">
+            <input type="hidden" name="flaggedLabs" value="<%=segmentID%>" />
             <input type="hidden" name="selectedProviders" value="" />
             <input type="hidden" name="favorites" value="" />
             <input type="hidden" name="labType" value="HL7" />
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
-            <input type="hidden" id="providerNo" name="providerNo" value="<%= providerNo %>" />
+            <input type="hidden" id="providerNo_<%=segmentID %>" name="providerNo" value="<%= providerNo %>" />
         </form>
 
-        <form name="TDISLabelForm"  method='POST' action="../../../lab/CA/ALL/createLabelTDIS.do">
-					<input type="hidden" id="labNum" name="lab_no" value="<%=lab_no%>">
-					<input type="hidden" id="label" name="label" value="<%=label%>">
+        <form name="TDISLabelForm_<%=segmentID%>"  method='POST' action="../../../lab/CA/ALL/createLabelTDIS.do">
+					<input type="hidden" id="labNum_<%=segmentID %>" name="lab_no" value="<%=lab_no%>">
+					<input type="hidden" id="label_<%=segmentID %>" name="label" value="<%=label%>">
 		</form>
 
-        <form name="acknowledgeForm" id="acknowledgeForm" method="post" onsubmit="javascript:void(0);" method="post" action="javascript:void(0);" >
+        <form name="acknowledgeForm_<%=segmentID%>" id="acknowledgeForm_<%=segmentID%>" method="post" onsubmit="javascript:void(0);" method="post" action="javascript:void(0);" >
 
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -602,7 +637,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="segmentID" value="<%= segmentID %>"/>
                                     <input type="hidden" name="multiID" value="<%= multiLabId %>" />
                                     <input type="hidden" name="providerNo" id="providerNo" value="<%= providerNo %>"/>
-                                    <input type="hidden" name="status" value="<%=labStatus%>" id="labStatus"/>
+                                    <input type="hidden" name="status" value="<%=labStatus%>" id="labStatus_<%=segmentID%>"/>
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <%
@@ -610,9 +645,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     %>
 
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="<%=ackLabFunc%>" >
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment');">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment',<%=segmentID%>);">
                                     <% } %>
-                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(355, 675, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(355, 675, '../../../oscarMDS/SelectProvider.jsp?docId=<%=segmentID%>&labDisplay=true', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
 
@@ -635,12 +670,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
                                     <% if (!label.equals(null) && !label.equals("")) { %>
-										<button type="button" id="createLabel" value="Label" onclick="submitLabel(this);">Label</button>
+										<button type="button" id="createLabel_<%=segmentID%>" value="Label" onclick="submitLabel(this, '<%=segmentID%>');">Label</button>
 										<%} else { %>
-										<button type="button" id="createLabel" style="background-color:#6699FF" value="Label" onclick="submitLabel(this);">Label</button>
+										<button type="button" id="createLabel_<%=segmentID%>" style="background-color:#6699FF" value="Label" onclick="submitLabel(this, '<%=segmentID%>');">Label</button>
 										<%} %>
-										<input type="hidden" id="labNum" name="lab_no" value="<%=lab_no%>">
-						                <input type="text" id="acklabel" name="label" value=""/>
+										<input type="hidden" id="labNum_<%=segmentID %>" name="lab_no" value="<%=lab_no%>">
+						                <input type="text" id="acklabel_<%=segmentID %>" name="label" value=""/>
 
 						                 <% String labelval="";
 						                 if (label!="" && label!=null) {
@@ -649,7 +684,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 						                	 labelval = "(not set)";
 
 						                 } %>
-					                 <span id="labelspan" class="Field2"><i>Label: <%=labelval %> </i></span>
+					                 <span id="labelspan_<%=segmentID%>" class="Field2"><i>Label: <%=labelval %> </i></span>
 
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
@@ -675,6 +710,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                         }else{
                                                             %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>">v<%= i+1 %></a>&#160;<%
                                                         }
+                                                    }
+                                                }
+                                                if( multiID.length > 1 ) {
+                                                    if ( searchProviderNo != null ) { // null if we were called from e-chart
+                                                        %><a href="labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>&searchProviderNo=<%= searchProviderNo %>&all=true">All</a>&#160;<%
+                                                    }else{
+                                                        %><a href="labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>&all=true">All</a>&#160;<%
                                                     }
                                                 }
                                                 %>
@@ -983,7 +1025,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         <% if ( ackStatus.equals("Acknowledged") ) { %>
                                                                             <%= report.getTimestamp() %>,
                                                                         <% } %>
-                                                                        <span id="<%=report.getProviderNo()%>commentLabel"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="<%=report.getOscarProviderNo()%>commentText"><%=report.getComment()==null ? "" : report.getComment()%></span>
+                                                                        <span id="<%=report.getOscarProviderNo() + "_" + segmentID%>commentLabel"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="<%=report.getOscarProviderNo() + "_" + segmentID%>commentText"><%=report.getComment()==null ? "" : report.getComment()%></span>
                                                                         <br>
                                                                     <% }
                                                                     if (ackList.size() == 0){
@@ -1480,9 +1522,14 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                 </tr>
             </table>
 
-        </form><%String s = ""+System.currentTimeMillis();%>
+        </form>      
+        
+        <%String s = ""+System.currentTimeMillis();%>
         <a style="color:white;" href="javascript: void(0);" onclick="showHideItem('rawhl7<%=s%>');" >show</a>
         <pre id="rawhl7<%=s%>" style="display:none;"><%=hl7%></pre>
+        </div>
+        <%} %>
+        
     </body>
 </html>
 <%!

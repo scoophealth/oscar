@@ -592,8 +592,8 @@
 			<forward name="success" path="/dms/closeWindow.html"></forward>
 		</action>
 
-		<action input="/oscarMDS/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction">
-			<forward name="complete" path="/oscarMDS/SegmentDisplay.jsp" />
+		<action input="/lab/CA/ALL/labDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction">
+			<forward name="complete" path="/lab/CA/ALL/labDisplay.jsp" />
 		</action>
 		<action path="/MeasurementHL7Uploader" type="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" parameter="method" scope="request" name="newLabUploadForm" validate="false">
 
