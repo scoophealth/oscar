@@ -204,7 +204,13 @@ public class DemographicExportAction4 extends Action {
 	String ffwd = "fail";
 	String tmpDir = oscarProperties.getProperty("TMP_DIR");
 	
-	int template = Integer.parseInt(templateOption);
+	int template = 0;
+	try {
+		template = Integer.parseInt(templateOption);
+	}
+	catch(Exception e ) {
+		MiscUtils.getLogger().error("Bad template Option");
+	}
 	
 	switch(template) {
 		case CMS4:
@@ -1429,7 +1435,7 @@ public class DemographicExportAction4 extends Action {
 						else
 							labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no, "CML"));
 
-						String timestamp = (String)labRoutingInfo.get("timestamp");
+						String timestamp = labRoutingInfo.get("timestamp").toString();
 						if (UtilDateUtilities.StringToDate(timestamp,"yyyy-MM-dd HH:mm:ss")!=null) {
 							LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
 							reviewer.addNewDateTimeResultReviewed().setFullDateTime(Util.calDate(timestamp));

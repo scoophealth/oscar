@@ -49,7 +49,7 @@ public class LabRequestReportLink extends AbstractModel<Integer>{
 	private String requestTable;
 
 	@Column(name="request_id")
-	private int requestId;
+	private Integer requestId;
 
 	@Column(name="request_date")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -77,11 +77,11 @@ public class LabRequestReportLink extends AbstractModel<Integer>{
     	this.requestTable = requestTable;
     }
 
-	public int getRequestId() {
+	public Integer getRequestId() {
     	return requestId;
     }
 
-	public void setRequestId(int requestId) {
+	public void setRequestId(Integer requestId) {
     	this.requestId = requestId;
     }
 
