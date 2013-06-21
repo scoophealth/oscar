@@ -628,18 +628,52 @@ import cdsDt.PersonNameStandard.OtherNames;
             demographic.setHin(hin);
             demographic.setVer(versionCode);
             demographic.setRosterStatus(rosterStatus);
-            demographic.setRosterDate(formatter.parse(rosterDate));
-            demographic.setRosterTerminationDate(formatter.parse(termDate));
+            
+            Date dDate;
+            try {
+            	dDate = formatter.parse(rosterDate);
+            }
+            catch( Exception e ) {
+            	dDate = null;
+            }
+            
+            demographic.setRosterDate(dDate);
+            
+            
+            try {
+            	dDate = formatter.parse(termDate);
+            }
+            catch( Exception e ) {
+            	dDate = null;
+            }
+            
+            demographic.setRosterTerminationDate(dDate);
             demographic.setRosterTerminationReason(termReason);
             demographic.setPatientStatus(patient_status);
-            demographic.setPatientStatusDate(formatter.parse(psDate));
+            
+            try {
+            	dDate = formatter.parse(psDate);
+            }
+            catch( Exception e ) {
+            	dDate = null;
+            }
+            
+            demographic.setPatientStatusDate(dDate);
             demographic.setChartNo(chart_no);
             demographic.setOfficialLanguage(official_lang);
             demographic.setSpokenLanguage(spoken_lang);
             demographic.setFamilyDoctor(primaryPhysician);
             demographic.setSex(sex);
             demographic.setHcType(hc_type);
-            demographic.setHcRenewDate(formatter.parse(hc_renew_date));
+            
+            try {
+            	dDate = formatter.parse(hc_renew_date);
+            }
+            catch( Exception e ) {
+            	dDate = null;
+            }
+            
+            demographic.setHcRenewDate(dDate);
             demographic.setSin(sin);
             dd.setDemographic(demographic);
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
@@ -1270,6 +1304,15 @@ import cdsDt.PersonNameStandard.OtherNames;
                                 Util.writeVerified(cmNote);
                             }
                         }
+                        
+                        if( cmNote.getProviderNo() == null ) {
+                        	cmNote.setProviderNo(defaultProviderNo());
+                        }
+                        
+                        if( cmNote.getSigning_provider_no() == null ) {
+                        	cmNote.setSigning_provider_no(defaultProviderNo());
+                        }
+                        
                         caseManagementManager.saveNoteSimple(cmNote);
 
                         //prepare for extra notes
@@ -1531,7 +1574,13 @@ import cdsDt.PersonNameStandard.OtherNames;
                     } else {
                         drug.setProviderNo(admProviderNo);
                     }
+                    
+                    if( drug.getProviderNo() == null ) {
+                    	drug.setProviderNo("-1");
+                    }
+                    
                     drug.setPosition(0);
+                    drug.setDispenseInterval(0);
                     drugDao.persist(drug);
                     addOneEntry(MEDICATION);
 
@@ -1789,6 +1838,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 
                     //save lab result unit
                     meas.setDateEntered(new Date());
+                    meas.setMeasuringInstruction("");
                     ImportExportMeasurements.saveMeasurements(meas);
                     Long measId = meas.getId();
                     saveMeasurementsExt(measId, "unit", unit);
@@ -2051,6 +2101,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                                 String docDesc = repR[i].getSubClass();
                                 if (StringUtils.empty(docDesc)) docDesc = "ImportReport"+(i+1);
                                 FileOutputStream f = new FileOutputStream(docDir + docFileName);
+                                
                                 f.write(b);
                                 f.close();
 
@@ -2848,7 +2899,8 @@ import cdsDt.PersonNameStandard.OtherNames;
 
 	String updateExternalProvider(String firstName, String lastName, String ohipNo, String cpsoNo, ProviderData pd) {
 		// For external provider only
-		if (pd==null || pd.getProviderNo().charAt(0)!='-') return null;
+		if (pd==null) return null; 
+		if( pd.getProviderNo().charAt(0)!='-') return pd.getProviderNo();
 
 		org.oscarehr.common.model.ProviderData newpd = providerDataDao.findByProviderNo(pd.getProviderNo());
 		if (StringUtils.empty(pd.getFirst_name()))
@@ -2870,12 +2922,15 @@ import cdsDt.PersonNameStandard.OtherNames;
 
 	String writeProviderData(String firstName, String lastName, String ohipNo, String cpsoNo) {
 		ProviderData pd = getProviderByOhip(ohipNo);
+		
 		if (pd==null) pd = getProviderByNames(firstName, lastName, matchProviderNames);
+		
 		if (pd!=null) return updateExternalProvider(firstName, lastName, ohipNo, cpsoNo, pd);
 
 		//Write as a new provider
 		if (StringUtils.empty(firstName) && StringUtils.empty(lastName) && StringUtils.empty(ohipNo)) return ""; //no information at all!
 		pd = new ProviderData();
+		MiscUtils.getLogger().info("ADD EXTERNAL");
 		pd.addExternalProvider(firstName, lastName, ohipNo, cpsoNo);
 		return pd.getProviderNo();
 	}
@@ -2899,10 +2954,10 @@ import cdsDt.PersonNameStandard.OtherNames;
 		admission.setAdmissionFromTransfer(false);
 		admission.setDischargeFromTransfer(false);
 		admission.setAdmissionStatus("current");
-		admission.setTeamId(0);
+		admission.setTeamId(null);
 		admission.setTemporaryAdmission(false);
 		admission.setRadioDischargeReason("0");
-		admission.setClientStatusId(0);
+		admission.setClientStatusId(null);
 		admission.setAutomaticDischarge(false);
 
 		admissionDao.saveAdmission(admission);
