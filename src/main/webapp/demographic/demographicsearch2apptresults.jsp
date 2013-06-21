@@ -389,7 +389,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		<td class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></td>
 		<td class="sex"><%=demo.getSex()%></td>
 		<td class="dob"><%=demo.getYearOfBirth() + "-" + demo.getMonthOfBirth() + "-" + demo.getDateOfBirth()%></td>
-        <td class="doctor"><%=providerBean.getProperty(demo.getProviderNo())==null?"":providerBean.getProperty(demo.getProviderNo())%></td>
+        <td class="doctor"><%=providerBean.getProperty(demo.getProviderNo()==null?"":demo.getProviderNo())==null?"":providerBean.getProperty(demo.getProviderNo())%></td>
         </tr>
 
 <%
