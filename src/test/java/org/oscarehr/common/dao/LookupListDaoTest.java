@@ -24,12 +24,20 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.LookupList;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class LookupListDaoTest extends DaoTestFixtures {
@@ -48,5 +56,56 @@ public class LookupListDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindAllActive() throws Exception {
+		
+		String name1 = "alpha";
+		String name2 = "bravo";
+		String name3 = "charlie";
+		
+		boolean isActive =true;
+		
+		LookupList lookupList1 = new LookupList();
+		EntityDataGenerator.generateTestDataForModelClass(lookupList1);
+		lookupList1.setActive(isActive);
+		lookupList1.setName(name2);
+		dao.persist(lookupList1);
+		
+		LookupList lookupList2 = new LookupList();
+		EntityDataGenerator.generateTestDataForModelClass(lookupList2);
+		lookupList2.setActive(!isActive);
+		lookupList2.setName(name2);
+		dao.persist(lookupList2);
+		
+		LookupList lookupList3 = new LookupList();
+		EntityDataGenerator.generateTestDataForModelClass(lookupList3);
+		lookupList3.setActive(isActive);
+		lookupList3.setName(name3);
+		dao.persist(lookupList3);
+		
+		LookupList lookupList4 = new LookupList();
+		EntityDataGenerator.generateTestDataForModelClass(lookupList4);
+		lookupList4.setActive(isActive);
+		lookupList4.setName(name1);
+		dao.persist(lookupList4);
+		
+		List<LookupList> expectedResult = new ArrayList<LookupList>(Arrays.asList(lookupList4, lookupList1, lookupList3));
+		List<LookupList> result = dao.findAllActive();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
