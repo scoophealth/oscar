@@ -351,7 +351,13 @@ public class AddEditDocumentAction extends DispatchAction {
 				throw new Exception();
 			}
 			FormFile docFile = fm.getDocFile();
-			String fileName = docFile.getFileName();
+                        String fileName = ""; 
+                        
+                        if(oscar.OscarProperties.getInstance().getBooleanProperty("ALLOW_UPDATE_DOCUMENT_CONTENT", "true"))
+                        {
+                            fileName=docFile.getFileName();
+                        }
+                        
 			String reviewerId = filled(fm.getReviewerId()) ? fm.getReviewerId() : "";
 			String reviewDateTime = filled(fm.getReviewDateTime()) ? fm.getReviewDateTime() : "";
 
@@ -373,7 +379,7 @@ public class AddEditDocumentAction extends DispatchAction {
                         newDoc.setDocClass(fm.getDocClass());
                         newDoc.setDocSubClass(fm.getDocSubClass());
 			fileName = newDoc.getFileName();
-			if (docFile.getFileSize() != 0) {
+			if (docFile.getFileSize() != 0 && fileName.length()!=0) {
 				// save local file
 				writeLocalFile(docFile, fileName);
 				newDoc.setContentType(docFile.getContentType());

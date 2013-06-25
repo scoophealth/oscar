@@ -296,10 +296,19 @@
                                 </tr>
 
                                 <tr><td></td>
-                                	<td><input onclick="split('<%=docId%>')" type="button" value="<bean:message key="inboxmanager.document.split" />" />
-                                    	<input id="rotate180btn_<%=docId %>" onclick="rotate180('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.rotate180" />" />
-                                    	<input id="rotate90btn_<%=docId %>" onclick="rotate90('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.rotate90" />" />
-                                    	<% if (numOfPage > 1) { %><input id="removeFirstPagebtn_<%=docId %>" onclick="removeFirstPage('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.removeFirstPage" />" /><% } %>
+                                    <td>
+                                        <% boolean updatableContent=true; %>
+                                        <oscar:oscarPropertiesCheck property="ALLOW_UPDATE_DOCUMENT_CONTENT" value="false" defaultVal="false">
+                                            <%
+                                                if(!demographicID.equals("-1")) { updatableContent=false; }
+                                            %>
+                                        </oscar:oscarPropertiesCheck>
+                                        <div style="<%=updatableContent==true?"":"visibility: hidden"%>">
+                                            <input onclick="split('<%=docId%>')" type="button" value="<bean:message key="inboxmanager.document.split" />" />
+                                            <input id="rotate180btn_<%=docId %>" onclick="rotate180('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.rotate180" />" />
+                                            <input id="rotate90btn_<%=docId %>" onclick="rotate90('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.rotate90" />" />
+                                            <% if (numOfPage > 1) { %><input id="removeFirstPagebtn_<%=docId %>" onclick="removeFirstPage('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.removeFirstPage" />" /><% } %>
+                                        </div>
                                     </td>
                                 </tr>
 
