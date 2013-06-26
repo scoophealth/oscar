@@ -64,10 +64,17 @@ public class PrintLabsAction extends Action{
         
         try {
             MessageHandler handler = Factory.getHandler(request.getParameter("segmentID"));
-            response.setContentType("application/pdf");  //octet-stream
-            response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.pdf\"");
-            LabPDFCreator pdf = new LabPDFCreator(request, response.getOutputStream());
-            pdf.printPdf();
+            if(handler.getHeaders().get(0).equals("CELLPATHR")){//if it is a VIHA RTF lab
+                response.setContentType("text/rtf");  //octet-stream
+                response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.rtf\"");
+                LabPDFCreator pdf = new LabPDFCreator(request, response.getOutputStream());
+                pdf.printRtf();
+            } else {
+	            response.setContentType("application/pdf");  //octet-stream
+	            response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.pdf\"");
+	            LabPDFCreator pdf = new LabPDFCreator(request, response.getOutputStream());
+	            pdf.printPdf();
+            }
         }catch(DocumentException de) {
             logger.error("DocumentException occured insided PrintLabsAction", de);
             request.setAttribute("printError", new Boolean(true));
