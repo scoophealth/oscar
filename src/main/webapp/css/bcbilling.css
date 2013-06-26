@@ -1,0 +1,458 @@
+
+<!-- /*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+* {
+
+	color:black;
+	bgcolor:white;
+	margin:0px;
+	padding:0px;
+	font-family:none;	
+}
+
+/* #############   COLORS  ############ */
+
+.bgBlack {
+	background-color:black;
+}
+
+.bgLilac {
+	background-color:#CCCCFF;	
+}
+
+.bgLightLilac {
+	background-color:#EEEEFF;
+}
+
+.bgBurgundy {
+	background-color:#CC0000;
+}
+
+.bgPeaGreen {
+	background-color:#999900;
+}
+
+
+/* ##############   BODY  ############# */
+
+/*
+td, th { 
+	font-family: "Arial", "Helvetica", sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	line-height: 10px;
+}
+
+th { 
+	font-family: "Arial", "Helvetica", sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	line-height: 10px;
+}
+
+tr { 
+	font-family: "Arial", "Helvetica", sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	line-height: 10px;
+	color: grey;
+}
+*/
+
+.odd{
+	background-color:#EEEEFF;
+}
+.even{
+	background-color:#FFFFFF;
+}
+
+.bodytext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #003366;
+	text-decoration: none
+}
+
+a:active {
+	text-decoration: none;
+}
+
+a:link {
+	text-decoration: none;
+	color: #645FCD;
+	font-weight: bold;
+}
+
+a:visited {
+	text-decoration: none;
+	color: #645FCD;
+	font-weight: bold;
+}
+
+a:hover {
+	COLOR: red;
+	font-weight: bold;
+}
+
+
+a#pop1:active {
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+a#pop1:link {
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+a#pop1:visited {
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+a#pop1:hover {
+	text-decoration: none;
+	color: white;
+}
+
+
+.billingHeading {
+    background-color: black;
+   	border-top:white 10px solid;
+   	border-bottom:white 10px solid;
+   	padding:10px;
+}
+
+.billingHeading h2, .billingHeading h1 {
+    	color:white;
+    	margin:0px;
+    	padding:0px;
+}
+
+/*
+.BodyStyle {
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: 0;
+}
+
+.Header {
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	color: #FFFFFF;
+	background-color: #000000;
+	font-size: 14pt;
+	font-weight: bold;
+}
+
+.Header1 {
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	color: #333333;
+	background-color: #EEEEFF;
+	font-size: 12pt;
+	font-weight: bold;
+	line-height: 14px;
+	text-align: center;
+}
+
+.dataTable {
+	border-width: 1;
+	font-size: 9pt;
+	font-weight: normal;
+	line-height: 12px color :   #333333;
+	background-color: #F9F1FE;
+}
+
+.fieldName {
+	font-size: 9pt;
+	color: #333333;
+	background-color: #CCCCFF;
+	font-weight: bold;
+}
+
+*/
+
+/* ##############   billingBC.jsp  ############# */
+
+body#billingBC * {
+	font-family:tahoma,Verdana, Arial, Helvetica,sans-serif; 
+	font-size:10px;
+	margin:0px;
+	padding:0px;
+}
+
+body#billingBC table td {
+	padding:3px 5px;
+}
+
+body#billingBC #topTable .idRow td {	
+	background-color:#CCCCFF;
+}
+
+
+body#billingBC #topTable td {
+	padding:3px;
+}
+
+
+body#billingBC table#dxCodeDisplay {
+border:white thin solid;
+}
+
+body#billingBC h3 ul, body#billingBC h3 font,
+body#billingBC h3 p, body#billingBC h3 ul li,
+body#billingBC h3 {
+	margin-left:40px;
+	margin-top:5px;
+	margin-bottom:5px;
+	color:red;	
+	font-weight:bold;
+}
+
+body#billingBC h1 {
+	font-size:16px;
+	margin-left: 20px;
+	
+}
+
+body#billingBC table#tableOne .bgLightLilac {
+border:#CCCCFF 1px solid;
+}
+
+body#billingBC table {
+	width:100%;
+
+}
+
+body#billingBC table#tableOne tr
+td {
+border:#CCCCFF 1px solid;
+}
+
+body#billingBC table#tableOne 
+table table {
+border:#CCCCFF 1px inset;
+}
+
+
+
+body#billingBC table#tableOne 
+table table tr:first-of-type td:last-of-type{
+border-right:none;
+}
+
+body#billingBC table#tableOne 
+table table {	
+border-collapse:collapse;
+border-bottom:white 2px solid;
+}
+
+
+body#billingBC table#tableOne 
+table table td {
+border-top:#CCCCFF 1px solid;	
+border-right:#CCCCFF 1px inset;
+}
+
+
+body#billingBC table#tableOne 
+table table table td, 
+body#billingBC table#tableOne
+table td,
+body#billingBC table#tableOne 
+table table table,
+body#billingBC table#tableOne 
+#billingNotes td, 
+body#billingBC table#tableOne 
+table table.bgBurgundy tr td,
+body#billingBC table#tableOne 
+table table.bgPeaGreen tr td,
+body#billingBC table#tableOne 
+table table.bgLilac tr td {	
+border:none;
+}
+
+body#billingBC table#tableOne 
+table table.bgBurgundy tr td,
+body#billingBC table#tableOne 
+table table.bgPeaGreen tr td,
+body#billingBC table#tableOne 
+table table.bgLilac tr td {
+border-bottom:white 1px solid;
+}
+
+
+body#billingBC table#tableOne 
+table table tr:last-of-type 
+td table {
+border:white 1px inset;
+}
+
+body#billingBC table#tableOne 
+table table tr:last-of-type 
+td table tr:first-of-type td {
+border-bottom:white 2px solid;
+}
+
+body#billingBC table#tableOne 
+table table tr:first-of-type td{
+border-right:white 1px inset;
+border-bottom:white 1px solid;
+}
+
+
+
+
+body#billingBC table#tableTwo td {
+	background-color:#EEEEFF;
+	padding-left:5px;
+	padding-right:5px;
+	font-weight:bold;
+}
+
+body#billingBC table#billingNotes #bNote td {
+	border-bottom:#CCCCFF thin solid !important;
+	padding:5px;
+
+}
+body#billingBC table#billingNotes #shortClaimNote td{
+	background-color:#EEEEFF;
+}
+
+
+body#billingBC table#billingNotes textarea {
+	margin-top:5px;
+}
+
+
+
+body#billingBC  .popUp{
+	  visibility: hidden;
+	  background-color:#ffffcc;
+  }
+
+
+body#billingBC .popupHeader{
+	  background-color:#ccccff;
+	  font-size:10pt;
+  }
+  
+body#billingBC  #layer2 {
+  	position:absolute; 
+  	left:298px; 
+  	top:26px; 
+  	width:332px; 
+  	height:600px;
+  }
+  
+body#billingBC  #layer1 {
+  	position:absolute; 
+  	left:1px; 
+  	top:159px; 
+  	width:410px; 
+  	height:300px;
+  }
+  
+body#billingBC div#DX_REFERENCE 
+div ul li {
+	margin:2px;
+	padding:2px;
+	list-style-type:none;
+	border:#EEEEFF thin outset;
+}
+
+body#billingBC div#DX_REFERENCE 
+div ul li:hover {
+	margin:2px;
+	padding:2px;
+	list-style-type:none;
+	border:#EEEEFF thin inset;
+
+}
+  
+ body#billingBC  #bottomBar {
+ 	padding:10px;
+ 	padding-right:50px;
+ 	margin-bottom:30px;
+ 	text-align:right;
+ }
+  
+/* ##############   billReceipt.jsp  ############# */ 
+  
+body#billReceipt * {
+	font-family:tahoma,sans-serif; 
+	font-size:12px;
+	margin:0px;
+	padding:0px;
+}
+
+
+
+body#billReceipt table {
+width:100%;
+}
+
+
+body#billReceipt #mainTable {
+	border:black thin solid;
+	width:750px;
+	margin:0 auto;
+}
+ 
+body#billReceipt .style1 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+body#billReceipt .style2 {
+	font-size: 12px;
+}
+
+
+body#billReceipt .detailHeader {
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
+}
+body#billReceipt .payTo{
+	border:solid black 1px;
+}
+body#billReceipt .secHead {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000000;
+    background-color: #FFFFFF;
+    border-top: thin none #000000;
+    border-right: thin none #000000;
+    border-bottom: thin solid #000000;
+    border-left: thin none #000000;
+}
+

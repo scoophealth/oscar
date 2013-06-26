@@ -296,6 +296,14 @@ div.logoutBox {
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.editInvoices"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(200,300,&quot;<html:rewrite page="/billing/CA/BC/settleBG.jsp"/>&quot;);return false;'><bean:message key="admin.admin.settlePaidClaims"/></a></li>
+			
+			<%-- Addition of BC MSP Quick Billing by Dennis Warren - December 2011 --%>
+			<li>
+				<a href="javascript: popupPage( 500, 900,&quot;<html:rewrite page="/quickBillingBC.do" />&quot );" >
+					BC MSP Quick Billing
+				</a>
+			</li>
+			
 			<%
 				}
 								else if (oscarVariables.getProperty("billregion", "").equals("ON"))
