@@ -25,16 +25,16 @@
 --%>
 <!DOCTYPE html>
 <%long startTime = System.currentTimeMillis();%>
-<%@page import="oscar.oscarRx.data.RxPatientData"%>
+<%@ page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ page import="oscar.oscarRx.util.*" %>
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.dao.FlowSheetDxDao,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.CachedMeasurement,org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager,org.oscarehr.util.LoggedInInfo" %>
-<%@page import="oscar.util.UtilDateUtilities" %>
-<%@page import="oscar.OscarProperties"%>
+<%@ page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
+<%@ page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@ page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.dao.FlowSheetDxDao,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
+<%@ page import="org.oscarehr.caisi_integrator.ws.CachedMeasurement,org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager,org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="oscar.util.UtilDateUtilities" %>
+<%@ page import="oscar.OscarProperties"%>
 
 <%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
@@ -43,8 +43,8 @@
 <%@ page import="org.oscarehr.common.dao.FlowsheetDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 
-<%@page import="org.oscarehr.common.dao.AllergyDao"%>
-<%@page import="org.oscarehr.common.model.Allergy"%>
+<%@ page import="org.oscarehr.common.dao.AllergyDao"%>
+<%@ page import="org.oscarehr.common.model.Allergy"%>
 
 <%@ page import="oscar.eform.data.*, oscar.eform.*"%>
 
@@ -57,10 +57,10 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <!-- ADD MEAS -->
-<%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
+<%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization"%>
 
 <%
 	if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
@@ -344,6 +344,10 @@ max-height:200px;
 overflow-y:scroll;
 }
 
+.table tbody tr:hover td, .table tbody tr:hover th {
+    background-color: #FFFFAA;
+}
+
 #graphModal{
 width:900px;
 height:500px;
@@ -410,7 +414,7 @@ cursor: hand; cursor: pointer;
 	}
 
 
-	//window.resizeTo(screen.availWidth,screen.availHeight);
+	window.resizeTo(screen.availWidth,screen.availHeight);
 	window.onload = setScrollPos;
 	window.onscroll = getScrollCoords;
 	window.onkeypress = getScrollCoords;
@@ -652,7 +656,7 @@ function fsPopup(width,height,url,window) {
 						if(btnSelected){isSelected="btn-underline active"; }
 					%>
 						
-						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=btnState%> <%=isSelected%>" title="<%=flowSheetGroups.getDisplayName()%> <%=dxCodeQueryString%>" id="group-btn">
+						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=btnState%> <%=isSelected%>" title="<%=flowSheetGroups.getDisplayName()%> <%=dxCodeQueryString%>" id="group-btn-<%=flowSheetGroups.getName()%>">
 						
 						
 						
@@ -738,7 +742,7 @@ function fsPopup(width,height,url,window) {
           
 </div>
 <div class="modal-footer">
-<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Close">
+<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="<bean:message key='global.close' />">
 </div>
 </div>
 <!-- modal end -->   
@@ -747,14 +751,12 @@ function fsPopup(width,height,url,window) {
 		
 		<span style="padding-left:10px;" id="expand-all">
 		<i class="icon-plus-sign"></i> 
-		<a class="DoNotPrint" id="expand_all" href="javascript:void(0)" TITLE="Expand All">
-		Expand All</a>
+		<a class="DoNotPrint" id="expand_all" href="javascript:void(0)" TITLE="<bean:message key='global.expandall' />"><bean:message key="global.expandall" /></a>
 		</span>
 		
 		<span style="padding-left:10px;display:none" id="collapse-all" >
 		<i class="icon-minus-sign"></i>
-		<a class="DoNotPrint" id="collapse_all" href="javascript:void(0)" TITLE="Collapse All">
-		Collapse All</a>
+		<a class="DoNotPrint" id="collapse_all" href="javascript:void(0)" TITLE="<bean:message key='global.collapseall' />"><bean:message key="global.collapseall" /></a>
 		</span>
 		
 		<!-- 
@@ -1270,7 +1272,7 @@ function createAddAll(d,t){
            </ul>
            <div class="tab-content">
                <div id="tab1" class="tab-pane active well well-small">
-                <p><strong>Module:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/choosePatient.do?providerNo=<%=providerNo%>&demographicNo=<%=demographic_no%>')" title="Go to the Medications module">Medications</a></p>
+                <p><strong><bean:message key="global.module" />:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/choosePatient.do?providerNo=<%=providerNo%>&demographicNo=<%=demographic_no%>')" title="Go to the Medications module">Medications</a></p>
 				 <%if(medicationsResult.size()>=1){%>
 				
 									
@@ -1278,7 +1280,7 @@ function createAddAll(d,t){
 					
 					
 				<%}else{%>
-					No Active Medications
+					<bean:message key='healthtracker.noActiveMeds.warning' />
 				<%}%>
 
                </div>
@@ -1388,32 +1390,77 @@ function createAddAll(d,t){
 <!-- TODO: These pain and topHTMLStream will become tabs where renal is instead of being there own tab set -->
  <%if(temp.toUpperCase().equals("PAIN")){ %>
  <!-- pain  start-->
-   <div class="tabbable">
+   
            <ul class="nav nav-tabs">
-              <li class="active"><a href="#pain" data-toggle="tab">Pain Toolkit</a></li>
+              <li class="active"><a href="#pain">Pain Toolkit</a></li>
            </ul>
-               <div id="pain" class="tab-pane active well well-small">              
-               <span class="label label-info" id="pain-resources">Resources</span><br> 
-<!-- eform as resource -->
+               <div id="pain">   
+    
+    <div class="tabbable">           
+    <ul class="nav nav-pills">
+    	<li class="active"><a href="#completed" data-toggle="tab" title="Completed Resources"><bean:message key="global.completed" /></a></li>
+    	<li><a href="#templates" data-toggle="tab" title="Resource Templates"><bean:message key="global.templates" /></a></li>
+	
+    </ul>
 <%
 	String groupToView = temp.toLowerCase(); 
 	String user = (String) session.getAttribute("user");
 	String roleName = (String)session.getAttribute("userrole") + "," + user;
-	
- 		
-      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms("form_name", EFormUtil.CURRENT, groupToView, roleName);
-      if (eForms.size() > 0) {
-        for (int i=0; i<eForms.size(); i++) {
-        	HashMap<String, ? extends Object> curForm = eForms.get(i);
 %>
-        	<a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>')"><%=curForm.get("formName")%></a><br>
-        	
-<%         }
-        }
-  
-%>                                         
-               </div>
-  </div> 
+    <div class="tab-content">
+		<div id="completed" class="tab-pane active">
+		<table class="table table-striped table-condensed table-hover">
+		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td><td><strong><bean:message key="eform.showmyform.formDate" /></strong></td></tr>   
+		<%
+								ArrayList<HashMap<String,? extends Object>> eFormsCompleted = EFormUtil.listPatientEForms("form_name", EFormUtil.CURRENT, demographic_no, groupToView, roleName);
+														
+								for (int i = 0; i < eFormsCompleted.size(); i++)
+								{
+									HashMap<String,? extends Object> curformCompleted = eFormsCompleted.get(i);
+							%>
+							
+								<tr>
+									<td><a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/eform/efmshowform_data.jsp?fdid=<%=curformCompleted.get("fdid")%>&appointment=', '<%="FormP" + i%>'); return false;"
+									TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
+									onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curformCompleted.get("formName")%></a>
+									</td>
+									<td><%=curformCompleted.get("formSubject")%></td>
+									<td><%=curformCompleted.get("formDate")%></td>
+								</tr>
+						
+							<%
+								}
+							%>  
+		</table> 
+		</div><!-- completed -->
+		
+		    <div id="templates" class="tab-pane">
+		<table class="table table-striped table-condensed table-hover">
+		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td><td><strong><bean:message key="eform.showmyform.formDate" /></strong></td></tr>              
+		 <%		
+		      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms("form_name", EFormUtil.CURRENT, groupToView, roleName);
+		      if (eForms.size() > 0) {
+		        for (int i=0; i<eForms.size(); i++) {
+		        	HashMap<String, ? extends Object> curForm = eForms.get(i);
+		%>
+					<tr>
+		        	 <td><a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>')"><%=curForm.get("formName")%></a></td>
+		        	 <td><%=curForm.get("formSubject")%></td>
+					 <td><%=curForm.get("formDate")%></td>
+					</tr>
+		        	
+		<%         }
+		        }
+		  
+		%>      
+		</table>
+		</div><!-- templates -->
+
+</div><!-- inner tab content -->
+</div><!-- inner tabable -->    
+                           
+               </div><!-- pain wrapper -->
+
  <!-- pain end -->       
 <%} %>   
 
@@ -1583,22 +1630,19 @@ function deleteMeasurement(type,enteredBy,value,date,id){
 }
 
 
-
-function checked_check(el)
-{
-alert("Hello checked! " + el.id);
-}
-
 function toggle_visibility(id) {
     var e = document.getElementById(id);
-
     e.style.display = 'block';
-    /*if(e.style.display == 'block')
-       e.style.display = 'none';
-
-    else
-       e.style.display = 'block'; */
  }
+
+$('[id^=group-btn-]')
+.click(function () {
+    var btn = $(this)
+    btn.button('loading')
+    setTimeout(function () {
+        btn.button('reset')
+    }, 3000)
+})
 
 </script>
 
