@@ -23,13 +23,17 @@
  */
 package org.oscarehr.research.eaaps;
 
+import java.io.Serializable;
+
 import net.sf.json.JSONObject;
 
 /**
  * Encapsulates response of the EAAPS web service.
  */
-public class EaapsPatientData {
+public class EaapsPatientData implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
 	private JSONObject json;
 
 	public EaapsPatientData() {
@@ -79,16 +83,24 @@ public class EaapsPatientData {
 		return getBoolean("recommendationsAvailable");
 	}
 
-	public boolean isRecommendationsConfirmed() {
-		return getBoolean("recommendationsConfirmed");
+	public boolean isRecommendationsReviewStarted() {
+		return getBoolean("recommendationsReviewStarted");
+	}
+	
+	public boolean isRecommendationsReviewCompleted() {
+		return getBoolean("recommendationsReviewCompleted");
 	}
 
 	public boolean isAapAvailable() {
 		return getBoolean("aapAvailable");
 	}
 
-	public boolean isAapConfirmed() {
-		return getBoolean("aapConfirmed");
+	public boolean isAapReviewCompleted() {
+		return getBoolean("aapReviewCompleted");
+	}
+	
+	public boolean isAapReviewStarted() {
+		return getBoolean("aapReviewStarted");
 	}
 
 	public String getUrl() {
@@ -100,7 +112,7 @@ public class EaapsPatientData {
 	}
 
 	public String getMessage() {
-		return getStatus().getString("message");
+		return getStatus().getString("shortMessage");
 	}
 
 	/**
