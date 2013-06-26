@@ -1,0 +1,76 @@
+@CHARSET "UTF-8";
+
+/* ##############   quickBillingBC.jsp  ############# */
+body#quickBilling form {
+	margin: 0px 10px;
+}
+
+body#quickBilling {
+	font-size: 9pt;
+	font-family: verdana, arial, helvetica;
+	color: #000000;
+}
+
+body#quickBilling div {
+	padding: 10px;
+}
+
+body#quickBilling div#inputList {
+	background-color: white;
+	margin: 0px 10px;
+}
+
+body#quickBilling div#heading {
+	margin: 10px;
+}
+
+body#quickBilling ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+body#quickBilling li {
+	display: inline;
+	margin: 10px 10px 0px 0px;
+}
+
+body#quickBilling table {
+	width: 100%;
+	border: #EEEEFF 1px solid;
+	text-align: left;
+	font-size: 9pt;
+	font-family: verdana, arial, helvetica;
+	color: #000000;
+}
+
+body#quickBilling table th {
+	padding: 3px;
+	color: blue;
+}
+
+body#quickBilling table td {
+	padding: 3px;
+	border: #EEEEFF 1px solid;
+}
+
+body#quickBilling #tableName {
+	float: right;
+	clear: both;
+}
+
+body#quickBilling #apeture {
+	border-top: blue 2px solid;
+	border-bottom: blue 2px solid;
+}
+
+body#quickBilling .errorStyle {
+	border:1px red solid;
+	color:red;
+}
+
+body#quickBilling div#saved { 
+	color:green;
+	font-weight:bold;
+	border-bottom: blue 2px solid;
+}

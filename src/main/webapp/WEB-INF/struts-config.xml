@@ -533,6 +533,7 @@
 		<form-bean name="episodeForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="episode" type="org.oscarehr.common.model.Episode"/>
 		</form-bean>
+
                 <form-bean name="groupPreference" type="org.apache.struts.action.DynaActionForm"/>
 
                 <form-bean name="billing3rdPartyPayment" type="org.apache.struts.validator.DynaValidatorForm"/>
@@ -542,7 +543,11 @@
 			<form-property name="fdid" type="java.lang.String"/>
                         <form-property name="appointment" type="java.lang.String"/>
 		</form-bean>
+
+		<form-bean name="quickBillingBC" type="oscar.oscarBilling.ca.bc.quickbilling.QuickBillingBCFormBean" ></form-bean>
+
 		<form-bean name="eaapsExportForm" type="org.oscarehr.research.eaaps.EaapsExportForm" />
+
 	</form-beans>
 
 	<global-forwards>
@@ -553,7 +558,7 @@
 	</global-forwards>
 
 	<action-mappings>
-	
+
         <!-- Notification Mappings -->
         <action path="/notification/create"
                 type="org.oscarehr.common.web.ProviderNotificationAction"
@@ -578,7 +583,24 @@
 		<forward name="create" path="/study/closeWindow.html" />
 		<forward name="update" path="/study/closeWindow.html" />
 	</action>
-	
+
+		<action path="/quickBillingBC"
+    			name="quickBillingBC"
+    			type="oscar.oscarBilling.ca.bc.quickbilling.QuickBillingBCAction"
+    			scope="session" >
+    		<forward name="success" path="/billing/CA/BC/quickBillingBC.jsp" />
+    		<forward name="searchdx" path="billing/CA/BC/billingDigNewSearch.jsp" />
+    		<forward name="error" path="/billing/CA/BC/quickBillingBC.jsp" />
+    	</action>
+    	
+    	<action path="/saveQuickBillingBC"
+    			name="quickBillingBC"
+    			type="oscar.oscarBilling.ca.bc.quickbilling.QuickBillingBCSaveAction"
+    			scope="session" >
+    		<forward name="saved" path="/quickBillingBC.do" />
+    		<forward name="error" path="/billing/CA/BC/quickBillingBC.jsp?saved=false" />
+    	</action>
+
 	<action input="/dms/addNewDocumentCategories.jsp" name="addDocumentType"
 			path="/dms/addDocumentType" type="oscar.dms.actions.AddDocumentTypeAction"
 			parameter="method" scope="request" validate="false">
