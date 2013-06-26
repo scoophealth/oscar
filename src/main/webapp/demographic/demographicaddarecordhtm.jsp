@@ -976,6 +976,7 @@ function autoFillHin(){
                                                 : </b></td>
       <td id="demoDoctorCell" align="left" >
         <select name="staff">
+					<option value=""></option>
           <%
  for(Provider p: providerDao.getActiveProviders()) {
  
