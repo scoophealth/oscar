@@ -32,8 +32,13 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.CtlRelationshipsDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.CtlRelationships;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
 
@@ -43,6 +48,7 @@ import oscar.oscarDemographic.data.DemographicRelationship;
  */
 public class AddDemographicRelationshipAction extends Action {
     
+	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
     
     public AddDemographicRelationshipAction() {
         
@@ -109,74 +115,23 @@ public class AddDemographicRelationshipAction extends Action {
           */
         
         boolean relationset = false;
-//--- Child
-        if ("Mother".equals(relation)) {
-            relation = "Child";
-            relationset = true;
-        } else if ("Father".equals(relation)) {
-            relation = "Child";
-            relationset = true;
-        } else if ("Parent".equals(relation) ) {
-            relation = "Child";
-            relationset = true;
-        }
-//--- Parent
-        else if ("Daughter".equals(relation) ) {
-            relation = "Parent";
-            relationset = true;
-        } else if ("Son".equals(relation) ) {
-            relation = "Parent";
-            relationset = true;
-        } else if ("Child".equals(relation) ) {
-            relation = "Parent";
-            relationset = true;
-        }
-//--- Spouse
-        else if ("Wife".equals(relation) ) {
-            relation = "Spouse";
-            relationset = true;
-        } else if ("Husband".equals(relation) ) {
-            relation = "Spouse";
-            relationset = true;
-        } else if ("Spouse".equals(relation) ) {
-            // relation = "Spouse";
-            relationset = true;
-        }
-//--- Sibling
-        else if ("Brother".equals(relation) ) {
-            relation = "Sibling";
-            relationset = true;
-        } else if ("Sister".equals(relation) ) {
-            relation = "Sibling";
-            relationset = true;
-        }
         
-        else if ("Sibling".equals(relation) ) {
-            // relation = "Sibling";
-            relationset = true;
-        }
-//--- Partner
-        else if ("Partner".equals(relation) ) {
-            // relation = "Parent";
-            relationset = true;
-        }
-//--- Grandparent
-        else if ("Grandfather".equals(relation) ) {
-            relation = "Grandparent";
-            relationset = true;
-        }
-        
-        else if ("Grandmother".equals(relation) ) {
-            relation = "Grandparent";
-            relationset = true;
-        }
-        
-        else if ("Grandparent".equals(relation) ) {
-            // relation = "Grandparent";
-            relationset = true;
-        };
-        
-        
+        CtlRelationshipsDao ctlRelationshipsDao = SpringUtils.getBean(CtlRelationshipsDao.class);
+        CtlRelationships cr = ctlRelationshipsDao.findByValue(relation);
+        if(cr != null && ((cr.getMaleInverse() != null && cr.getMaleInverse().length()>0) || (cr.getFemaleInverse() != null && cr.getFemaleInverse().length()>0)) ) {
+        	//need sex of the relation
+        	Demographic d = demographicDao.getDemographic(origDemo);
+        	if(d != null && d.getSex().equalsIgnoreCase("M")) {
+        		relation = cr.getMaleInverse();
+        		relationset=true;
+        	}
+        	if(d != null && d.getSex().equalsIgnoreCase("F")) {
+        		relation = cr.getFemaleInverse();
+        		relationset=true;
+        	}
+        	
+        }   
+     
         
         if (relationset) {
             // flip the demographics
