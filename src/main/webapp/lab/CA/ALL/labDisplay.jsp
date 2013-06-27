@@ -1,3 +1,4 @@
+
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -988,6 +989,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                         ArrayList headers = handler.getHeaders();
                         int OBRCount = handler.getOBRCount();
+                       	boolean isUnstructuredDoc = false;
+                       	//Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is
+                    	if(handler.getMsgType().equals("PATHL7")){
+                    		for(i=0; i<headers.size(); i++){
+                    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))|| (headers.get(i).equals("CELLPATHR"))){
+                    				isUnstructuredDoc = true;
+                    			}
+                    		}
+                    	}//end of PATHL7 Doc check
 
                         if (handler.getMsgType().equals("MEDVUE")) { %>
                         <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -1035,7 +1045,31 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                       for(i=0;i<headers.size();i++){
                            linenum=0;
-                       %>
+                       	if(isUnstructuredDoc){%>
+		                       <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
+	                           <tr>
+	                               <td colspan="4" height="7">&nbsp;</td>
+	                           </tr>
+	                           <tr>
+	                               <td bgcolor="#FFCC00" width="300" valign="bottom">
+	                                   <div class="Title2">
+	                                       <%=headers.get(i)%>
+	                                   </div>
+	                               </td>
+	                               <%--<td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>--%>
+	                               <td width="9">&nbsp;</td>
+	                               <td width="9">&nbsp;</td>
+	                               <td width="*">&nbsp;</td>
+	                           </tr>
+	                       </table>
+
+	                       <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
+	                           <tr class="Field2">
+	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
+	                               <td width="60%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+	                           </tr><%
+						} else {%>
                        <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
                            <tr>
                                <td colspan="4" height="7">&nbsp;</td>
@@ -1064,7 +1098,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                           	   <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
                            </tr>
-                           <%
+                           <%}
+                           
                            for ( j=0; j < OBRCount; j++){
 
                                boolean obrFlag = false;
@@ -1072,8 +1107,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                for (k=0; k < obxCount; k++){
 
                                	String obxName = handler.getOBXName(j, k);
-
-
+                                                         	
                                    boolean b1=false, b2=false, b3=false;
 
                                    boolean fail = true;
@@ -1299,9 +1333,24 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                        <%}
 
 
-                                    } else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) )  { %>
+                                    } else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) )  {
 
-                                      		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                   		if(isUnstructuredDoc){%>
+                                   			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>"><% 
+                                   			if(handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)){%>
+                                   				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"></a><%
+                                   				}
+                                   			else{%> <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a><%}%>
+
+                                           	<td align="left"><%= handler.getOBXResult( j, k) %></td>
+                                           	<%if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
+                                        			%><td align="center"></td><%}
+                                        		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td><%}
+                                   			}//end of isUnstructuredDoc
+                                   			
+                                   			else{//if it isn't a PATHL7 doc%>
+
+                               		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a>
                                            &nbsp;<%if(loincCode != null){ %>
                                                 	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
@@ -1322,7 +1371,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 </td>
                                        </tr>
 
-                                       <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
+										<%}
+
+                                       for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
                                             </tr>
