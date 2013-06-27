@@ -142,6 +142,8 @@ public class EctDisplayRxAction extends EctDisplayAction {
                 styleColor="style=\"color:orange;font-weight:bold;\"";
             }else if (drug.isCurrent() )  {
                 styleColor="style=\"color:blue;\"";
+            }else if (drug.isLongTerm() )  {
+                styleColor="style=\"color:grey;\"";
             }else
                 continue;
 
