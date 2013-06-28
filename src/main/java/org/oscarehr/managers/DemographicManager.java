@@ -62,10 +62,9 @@ public class DemographicManager {
 	
 	@Autowired
 	private DemographicDao demographicDao;
-	
 	@Autowired
 	private DemographicExtDao demographicExtDao;
-
+	
 	@Autowired
 	private DemographicArchiveDao demographicArchiveDao;
 
@@ -350,5 +349,25 @@ public class DemographicManager {
 		// hard coded to 3 until some one tells me how to configure/check this
 		if (PHR_VERIFICATION_LEVEL_3.equals(level)) return(true);
 		else return(false);		
+	}
+
+	public String getDemographicWorkPhoneAndExtension(Integer demographicNo)
+	{
+		Demographic result=demographicDao.getDemographicById(demographicNo);
+		String workPhone = result.getPhone2();
+		if(workPhone != null && workPhone.length()>0) {
+			String value = demographicExtDao.getValueForDemoKey(demographicNo, "wPhoneExt");
+			if(value != null && value.length()>0) {
+				workPhone += "x" + value;
+			}
+		}
+		
+		//--- log action ---
+		if (result!=null)
+		{
+			LogAction.addLogSynchronous("DemographicManager.getDemographicWorkPhoneAndExtension", "demographicId="+result.getDemographicNo() + "result=" + workPhone);
+		}
+		
+		return(workPhone);
 	}
 }

@@ -148,6 +148,9 @@ public final class ApptStatusData {
     }
 
     private String appendStatus(String status, String s) {
+    	if(status == null || status.length() == 0)
+    		return status;
+    	
         String temp = null;
         if (status.length() == 1) {
             temp = status + s;
