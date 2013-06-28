@@ -308,6 +308,10 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 	public Integer getId() {
 		return id;
 	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {
