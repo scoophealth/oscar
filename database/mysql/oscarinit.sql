@@ -11314,3 +11314,14 @@ create table LookupListItem (
         primary key(id)
 );
 
+
+create table CtlRelationships (
+        id int(11) NOT NULL AUTO_INCREMENT,
+        value varchar(50) NOT NULL,
+        label varchar(255),
+        `active` tinyint(1) not null,
+	maleInverse varchar(50),
+	femaleInverse varchar(50),
+        primary key(id)
+);
+

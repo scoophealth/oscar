@@ -42,10 +42,17 @@
 
 <%@page import="oscar.oscarDemographic.data.*,java.util.*"%>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.common.dao.CtlRelationshipsDao" %>
+<%@page import="org.oscarehr.common.model.CtlRelationships" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
+<%
+	CtlRelationshipsDao ctlRelationshipsDao = SpringUtils.getBean(CtlRelationshipsDao.class);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html:html locale="true">
 
@@ -152,6 +159,16 @@ function newWindow(file,window) {
 			<br />
 
 			<label for="relation">Relationship:</label> <select name="relation">
+			
+			<%
+				List<CtlRelationships> results = ctlRelationshipsDao.findAllActive();
+				for(CtlRelationships t : results) {
+					%>
+						<option value="<%=t.getValue() %>"><%=t.getLabel() %></option>
+					<%
+				}
+			%>
+			<!-- 
 				<option value="Mother">Mother</option>
 				<option value="Father">Father</option>
 				<option value="Father">Parent</option>
@@ -175,6 +192,7 @@ function newWindow(file,window) {
 				<option value="Insurance">Insurance</option>
 				<option value="Guarantor">Guarantor</option>
 				<option value="Other">Other</option>
+				-->
 			</select> <input type="checkbox" name="sdm" value="yes"> Substitute
 			Decision Maker</input> <input type="checkbox" name="emergContact" value="yes">
 			Emergency Contact</input> <br />
