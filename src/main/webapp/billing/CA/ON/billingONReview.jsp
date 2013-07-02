@@ -340,7 +340,7 @@ boolean dupServiceCode = false;
     			}
     		    			
     			updateElement("total", formatTotal(total));    			    			
-    			total += jQuery("#gst").val();    			
+    			total += new Number(jQuery("#gst").val());    			
     			updateElement("gstBilledTotal", formatTotal(total));
     			
     	   }
