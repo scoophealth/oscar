@@ -103,7 +103,7 @@ public class LabRequestReportLink {
 		
 		org.oscarehr.common.model.LabRequestReportLink l = new org.oscarehr.common.model.LabRequestReportLink();
 		l.setRequestTable(requestTable);
-		l.setRequestId(requestId.intValue());
+		l.setRequestId(requestId == null ? null : requestId.intValue());
 		l.setRequestDate(ConversionUtils.fromTimestampString(requestDate));
 		l.setReportTable(reportTable);
 		l.setReportId(reportId.intValue());
