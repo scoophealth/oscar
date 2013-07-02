@@ -76,9 +76,10 @@ function prepSubmit() {
 
 	var isListView = <%=request.getParameter("isListView")%>;
 	var docId = '<%=request.getParameter("docId")%>';
+	var labDisplay = '<%=request.getParameter("labDisplay")%>';
 	var frm = "reassignForm";
 	
-	if( docId != "null" ) {
+	if( docId != "null" && labDisplay == "null" ) {
 		frm += "_" + docId;	
 		self.opener.document.forms[frm].selectedProviders.value = fwdProviders;
 	    self.opener.document.forms[frm].favorites.value = fwdFavorites;
@@ -89,7 +90,8 @@ function prepSubmit() {
     	self.opener.document.forms[frm].favorites.value = fwdFavorites;
     	self.opener.ForwardSelectedRows();
 	}
-	else {
+	else {		
+		frm += "_" + docId;						
 		self.opener.document.forms[frm].selectedProviders.value = fwdProviders;
     	self.opener.document.forms[frm].favorites.value = fwdFavorites;
     	self.opener.document.forms[frm].submit();
