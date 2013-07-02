@@ -31,14 +31,14 @@ public class CreateLabelTDISAction extends Action{
 		String label = frm.getLabel();//request.getParameter("label");
 		logger.info("Label before db insert ="+label);
 		String lab_no = frm.getLab_no();//request.getParameter("lab_no");
-		String accessionNum = frm.getAccessionNum();//request.getParameter("accessionNum");
+		
 		String ajaxcall=request.getParameter("ajaxcall");
 		
 		if (label==null || label.equals("")) {
 			request.setAttribute("error", "Please enter a label");
 			
 		}
-		response.setContentType("application/json");
+		//response.setContentType("application/json");
 		Hl7TextInfoDao hl7dao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
 
 		try {
@@ -57,6 +57,9 @@ public class CreateLabelTDISAction extends Action{
 		
 		logger.info("Label ="+label);
 		label = StringEscapeUtils.escapeJavaScript(label);
+		if( ajaxcall != null && !"null".equalsIgnoreCase(ajaxcall)) {
+			return null;
+		}
 		return mapping.findForward("complete");
 	}
 
