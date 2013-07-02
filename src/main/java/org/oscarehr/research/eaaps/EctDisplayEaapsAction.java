@@ -103,7 +103,7 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 			return true;
 		}
 		
-		Dao.setLeftHeading("eAAP");
+		Dao.setLeftHeading("eAAPs");
 		Dao.setHeadingColour("FF6600"); // orange
 		Dao.setMenuHeader("Menu Header");
 		Dao.setRightURL(getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"));  
@@ -134,11 +134,15 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		}
 		
 		// messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Myoscar")
-        
-		if (patientData.isAapConfirmed()) {
-			Dao.addItem(newItem("eAAP is confirmed", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red"));
+		if (patientData.isAapReviewCompleted()) {
+			Dao.addItem(newItem("AAP delivered", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red"));
 			return true;			
 		}
+        
+		if (patientData.isAapReviewStarted()) {
+			Dao.addItem(newItem("AAP review started", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red"));
+			return true;			
+		}	
 		
 		if (patientData.isRecommendationsAvailable()) {
 			boolean isNotificationRequired = isNotificationRequired(hash.getHash());
@@ -151,9 +155,9 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		
 		NavBarDisplayDAO.Item item;
 		if (patientData.isAapAvailable()) {
-			item = newItem("eAAP is available", getEaapsUrl(patientData.getUrl(), true));
+			item = newItem("AAP is available", getEaapsUrl(patientData.getUrl(), true));
 		} else {
-			item = newItem("eAAP is <b>not</b> available", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red");
+			item = newItem("AAP is <b>not</b> available", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red");
 		}
 		Dao.addItem(item);
 		

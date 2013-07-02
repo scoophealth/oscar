@@ -117,11 +117,14 @@
 					</c:otherwise>
 				</c:choose>
 				<c:choose>
-					<c:when test="${eaapsInfo.recommendationsConfirmed}">
-						<li>Recommendations are confirmed for this patient</li>
+					<c:when test="${eaapsInfo.recommendationsReviewStarted}">
+						<li>Recommendations review completed for this patient</li>
+					</c:when>
+					<c:when test="${eaapsInfo.recommendationsReviewCompleted}">
+						<li>Recommendations review completed for this patient</li>
 					</c:when>
 					<c:otherwise>
-						<li>Recommendations haven't been confirmed for this patient</li>
+						<li>Recommendations review hasn't started for this patient</li>
 					</c:otherwise>
 				</c:choose>
 				<c:choose>
@@ -135,11 +138,14 @@
 					</c:otherwise>
 				</c:choose>
 				<c:choose>
-					<c:when test="${eaapsInfo.aapConfirmed}">
-						<li>Asthma action plan is confirmed for this patient</li>
+					<c:when test="${eaapsInfo.aapReviewStarted}">
+						<li>Asthma action plan review has started for this patient</li>
+					</c:when>
+					<c:when test="${eaapsInfo.aapReviewCompleted}">
+						<li>Asthma action plan review completed for this patient</li>
 					</c:when>
 					<c:otherwise>
-						<li>Asthma action plan hasn't been confirmed for this patient</li>
+						<li>Asthma action plan hasn't been reviewed for this patient</li>
 					</c:otherwise>
 				</c:choose>
 			</ul>
