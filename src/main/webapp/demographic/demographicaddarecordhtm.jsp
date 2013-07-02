@@ -996,6 +996,7 @@ function autoFillHin(){
                                                 : </b></td>
       <td align="left" >
         <select name="staff">
+					<option value=""></option>
           <%
   ResultSet rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) {
