@@ -23,6 +23,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,9 +75,25 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setFirstResult(offset);
 		query.setMaxResults(limit);
 		
-		List<Appointment> rs = query.getResultList();
-
-		return rs;
+		List<Appointment> result = query.getResultList();
+		
+		return result;
+	}
+	
+	public List<AppointmentArchive> getDeletedAppointmentHistory(Integer demographicNo, Integer offset, Integer limit) {
+		
+		List<Object> result = new ArrayList<Object>();
+			
+		String sql2 = "select a from AppointmentArchive a where a.demographicNo=? order by a.appointmentDate DESC, a.startTime DESC, id desc";
+		Query query2 = entityManager.createQuery(sql2);
+		query2.setParameter(1, demographicNo);
+		query2.setFirstResult(offset);
+		query2.setMaxResults(limit);
+		
+		List<AppointmentArchive> results = query2.getResultList();
+		
+		
+		return results;
 	}
 
 	public List<Appointment> getAppointmentHistory(Integer demographicNo) {
