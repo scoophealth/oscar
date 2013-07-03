@@ -23,10 +23,12 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.beanutils.BeanUtils"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*" errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager, org.oscarehr.caisi_integrator.ws.CachedAppointment, org.oscarehr.caisi_integrator.ws.CachedProvider, org.oscarehr.util.LoggedInInfo" %>
@@ -42,6 +44,10 @@
 
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.common.model.AppointmentArchive" %>
+<%@page import="org.oscarehr.common.dao.AppointmentStatusDao" %>
+<%@page import="org.oscarehr.common.model.AppointmentStatus" %>
+
 
 <%@ page import="org.oscarehr.common.model.ProviderData"%>
 <%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
@@ -65,6 +71,8 @@
 <%
 OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
+AppointmentStatusDao appointmentStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
+
 
 
 if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
@@ -79,13 +87,16 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   String curProvider_no = (String) session.getAttribute("user");
   String demographic_no = request.getParameter("demographic_no");
   String strLimit1="0";
-  String strLimit2="25";
+  String strLimit2="50";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   
   String demolastname = request.getParameter("last_name")==null?"":request.getParameter("last_name");
   String demofirstname = request.getParameter("first_name")==null?"":request.getParameter("first_name");
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
+  String showDeleted = request.getParameter("deleted");
+  String orderby="";
+  if(request.getParameter("orderby")!=null) orderby=request.getParameter("orderby");
 %>
 
 
@@ -148,6 +159,24 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 		});
 	}
 
+	function toggleShowDeleted(value) {
+		if(value) {
+			//show deleted
+			//appt_history_w_deleted
+			location.href='<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&last_name=<%=StringEscapeUtils.escapeJavaScript(demolastname)%>&first_name=<%=StringEscapeUtils.escapeJavaScript(demofirstname)%>&orderby=<%=orderby%>&displaymode=appt_history&dboperation=appt_history_w_deleted&limit1=<%=strLimit1%>&limit2=<%=strLimit2%>&deleted=true';
+		} else {
+			//don't show deleted
+			location.href='<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&last_name=<%=StringEscapeUtils.escapeJavaScript(demolastname)%>&first_name=<%=StringEscapeUtils.escapeJavaScript(demofirstname)%>&orderby=<%=orderby%>&displaymode=appt_history&dboperation=appt_history&limit1=<%=strLimit1%>&limit2=<%=strLimit2%>';
+		}
+	}
+	
+	jQuery(document).ready(function(){
+		<%if(showDeleted != null && showDeleted.equals("true")) { %>
+		jQuery("#showDeleted").attr('checked',true);
+		<% } else {%>
+		jQuery("#showDeleted").attr('checked',false);
+		<%} %>
+	});
 </script>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
@@ -175,6 +204,8 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 	<tr>
 		<td class="MainTableLeftColumn" valign="top"><a	href="javascript:history.go(-1)" onMouseOver="self.status=document.referrer;return true">
 			<bean:message key="global.btnBack" /></a> 
+			<br/>
+			<input type="checkbox" name="showDeleted" id="showDeleted" onChange="toggleShowDeleted(this.checked);"/><bean:message key="demographic.demographicappthistory.msgShowDeleted" />
 	    </td>
 		<td class="MainTableRightColumn">
 		<table width="95%" border="0" bgcolor="#ffffff" id="apptHistoryTbl">
@@ -182,6 +213,8 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 				<TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgApptDate" /></b></TH>
 				<TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgFrom" /></b></TH>
 				<TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgTo" /></b></TH>
+				<TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgStatus" /></b></TH>
+				<TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgType" /></b></TH>
 				<TH width="15%"><b><bean:message key="demographic.demographicappthistory.msgReason" /></b></TH>
 				<TH width="15%"><b><bean:message key="demographic.demographicappthistory.msgProvider" /></b></TH>
 				<plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
@@ -201,9 +234,14 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   int iRow=0;
   if(request.getParameter("limit1")!=null) iRSOffSet= Integer.parseInt(request.getParameter("limit1"));
   if(request.getParameter("limit2")!=null) iPageSize = Integer.parseInt(request.getParameter("limit2"));
+  List<Object> appointmentList;
+  org.oscarehr.managers.AppointmentManager appointmentManager = SpringUtils.getBean(org.oscarehr.managers.AppointmentManager.class);
   
-  List<Appointment> appointmentList = appointmentDao.getAppointmentHistory(new Integer(demographic_no), iRSOffSet, iPageSize);
-
+  if(!"true".equals(showDeleted)) {
+  	appointmentList = appointmentManager.getAppointmentHistoryWithoutDeleted(new Integer(demographic_no), iRSOffSet, iPageSize);
+  } else {
+	appointmentList = appointmentManager.getAppointmentHistoryWithDeleted(new Integer(demographic_no), iRSOffSet, iPageSize);
+  }
   boolean bodd=false;
   int nItems=0;
   
@@ -233,11 +271,14 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 		  providerPk.setIntegratorFacilityId(a.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
 		  providerPk.setCaisiItemId(a.getCaisiProviderId());
 		  CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
+		  AppointmentStatus as = appointmentStatusDao.findByStatus(a.getStatus());
 %>
 	<tr bgcolor="<%=bodd?weakColor:"white"%>">
       <td align="center"><%=DateUtils.formatDate(a.getAppointmentDate(), request.getLocale())%></td>
       <td align="center"><%=DateUtils.formatTime(a.getStartTime(), request.getLocale())%></td>
       <td align="center"><%=DateUtils.formatTime(a.getEndTime(), request.getLocale())%></td>
+      <td><%=(as != null)?as.getDescription():"" %></td>
+      <td><%=a.getType() %></td>
       <td><%=StringUtils.trimToEmpty(a.getReason())%></td>
       <td>
       	<%=(p != null ? p.getLastName() +","+ p.getFirstName() : "") %> (remote)</td>
@@ -252,20 +293,34 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
     out.println("failed!!!");
   } 
   else {
-    for(Appointment appointment : appointmentList) {
+    for(Object obj : appointmentList) {
+    	Appointment appointment = null;
+    	AppointmentArchive appointmentArchive = null;
+    	if(obj instanceof Appointment) {
+    		appointment = (Appointment)obj;
+    	}
+    	if(obj instanceof AppointmentArchive) {
+    		appointmentArchive = (AppointmentArchive)obj;
+    		appointment = new Appointment();
+    		
+    		BeanUtils.copyProperties(appointment, appointmentArchive);
+    		appointment.setId(appointmentArchive.getAppointmentNo());
+    	}
       iRow ++;
       if(iRow>iPageSize) break;
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
     		  
     ProviderData provider = providerDao.findByProviderNo(appointment.getProviderNo());
-
+    AppointmentStatus as = appointmentStatusDao.findByStatus(appointment.getStatus());
        
 %> 
 <tr bgcolor="<%=bodd?weakColor:"white"%>" appt_no="<%=appointment.getId().toString()%>" demographic_no="<%=demographic_no%>">	  
       <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.getId().toString()%>&displaymode=edit&dboperation=search');return false;" ><%=appointment.getAppointmentDate()%></a></td>
       <td align="center"><%=appointment.getStartTime()%></td>
       <td align="center"><%=appointment.getEndTime()%></td>
+      <td><%=(as != null)?as.getDescription():"" %></td>
+      <td><%=appointment.getType() %></td>
       <td><%=appointment.getReason()%></td>
       <% if( provider != null ) {%>
       <td><%=(provider.getLastName() == null ? "N/A" : provider.getLastName()) + "," + (provider.getFirstName() == null ? "N/A" : provider.getFirstName())%></td>
