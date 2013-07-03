@@ -21,24 +21,31 @@
  * Hamilton
  * Ontario, Canada
  */
+
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.CtlRelationships;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class CtlRelationshipsDaoTest extends DaoTestFixtures {
 
 	protected CtlRelationshipsDao dao = SpringUtils.getBean(CtlRelationshipsDao.class);
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("CtlRelationships");
+		SchemaUtils.restoreTable(false, "CtlRelationships");
 	}
 
 	@Test
@@ -48,5 +55,75 @@ public class CtlRelationshipsDaoTest extends DaoTestFixtures {
 		entity.setLabel("label");
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindAllActive() throws Exception {
+		
+		boolean isActive = true;
+		
+		CtlRelationships ctlRelation1 = new CtlRelationships();
+		EntityDataGenerator.generateTestDataForModelClass(ctlRelation1);
+		ctlRelation1.setActive(isActive);
+		dao.persist(ctlRelation1);
+		
+		CtlRelationships ctlRelation2 = new CtlRelationships();
+		EntityDataGenerator.generateTestDataForModelClass(ctlRelation2);
+		ctlRelation2.setActive(!isActive);
+		dao.persist(ctlRelation2);
+		
+		CtlRelationships ctlRelation3 = new CtlRelationships();
+		EntityDataGenerator.generateTestDataForModelClass(ctlRelation3);
+		ctlRelation3.setActive(isActive);
+		dao.persist(ctlRelation3);
+		
+		List<CtlRelationships> expectedResult = new ArrayList<CtlRelationships>(Arrays.asList(ctlRelation1, ctlRelation3));
+		List<CtlRelationships> result = dao.findAllActive();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindByValue() throws Exception {
+		
+		boolean isActive = true;
+		
+		String value1 = "alpha";
+		String value2 = "bravo";
+		
+		CtlRelationships ctlRelation1 = new CtlRelationships();
+		EntityDataGenerator.generateTestDataForModelClass(ctlRelation1);
+		ctlRelation1.setActive(!isActive);
+		ctlRelation1.setValue(value1);
+		dao.persist(ctlRelation1);
+		
+		CtlRelationships ctlRelation2 = new CtlRelationships();
+		EntityDataGenerator.generateTestDataForModelClass(ctlRelation2);
+		ctlRelation2.setActive(isActive);
+		ctlRelation2.setValue(value2);
+		dao.persist(ctlRelation2);
+		
+		CtlRelationships ctlRelation3 = new CtlRelationships();
+		EntityDataGenerator.generateTestDataForModelClass(ctlRelation3);
+		ctlRelation3.setActive(isActive);
+		ctlRelation3.setValue(value1);
+		dao.persist(ctlRelation3);
+		
+		CtlRelationships expectedResult = ctlRelation3;
+		CtlRelationships result = dao.findByValue(value1);
+		
+		assertEquals(expectedResult, result);				
 	}
 }

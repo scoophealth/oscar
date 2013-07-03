@@ -21,25 +21,27 @@
  * Hamilton
  * Ontario, Canada
  */
+
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.BedType;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class BedTypeDaoTest extends DaoTestFixtures {
 
 	protected BedTypeDao dao = SpringUtils.getBean(BedTypeDao.class);
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("bed_type");
+		SchemaUtils.restoreTable(false, "bed_type");
 	}
 
 	@Test
@@ -48,5 +50,59 @@ public class BedTypeDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testBedTypeExists() throws Exception {
+				
+		BedType bedType1 = new BedType();
+		EntityDataGenerator.generateTestDataForModelClass(bedType1);
+		dao.saveEntity(bedType1);
+		
+		BedType bedType2 = new BedType();
+		EntityDataGenerator.generateTestDataForModelClass(bedType2);
+		dao.saveEntity(bedType2);
+		
+		boolean result = dao.bedTypeExists(bedType1.getId());
+		boolean expectedResult = true;
+		
+		assertEquals(expectedResult, result);
+	}
+	
+	@Test
+	public void testGetBedTypes() throws Exception {
+		
+		BedType bedType1 = new BedType();
+		EntityDataGenerator.generateTestDataForModelClass(bedType1);
+		dao.saveEntity(bedType1);
+		
+		BedType bedType2 = new BedType();
+		EntityDataGenerator.generateTestDataForModelClass(bedType2);
+		dao.saveEntity(bedType2);
+		
+		BedType bedType3 = new BedType();
+		EntityDataGenerator.generateTestDataForModelClass(bedType3);
+		dao.saveEntity(bedType3);
+		
+		BedType bedType4 = new BedType();
+		EntityDataGenerator.generateTestDataForModelClass(bedType4);
+		dao.saveEntity(bedType4);
+		
+		BedType expectedResult[] = {bedType1, bedType2, bedType3, bedType4};
+		BedType result[] = dao.getBedTypes();
+		
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.length != expectedResult.length) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.length; i++) {
+			if (!expectedResult[i].equals(result[i])){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);		
 	}
 }
