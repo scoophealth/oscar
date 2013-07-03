@@ -75,11 +75,18 @@
 				<c:out value="${eaapsInfo.message}" />
 			</h2>
 
-			<c:if test="${not empty eaapsInfo.url}">
-				<p style="padding: 0 2em;">
-					<a href="${eaapsInfo.url}" target="_blank">${eaapsInfo.url}</a>
-				</p>
-			</c:if>
+			<c:choose>
+				<c:when test="${not empty eaapsInfo.url}">
+					<p style="padding: 0 2em;">
+						<a href="${eaapsInfo.url}" target="_blank">${eaapsInfo.url}</a>
+					</p>
+				</c:when>
+				<c:otherwise>
+					<p style="padding: 0 2em;">
+						URL is not provided by AAP server
+					</p>
+				</c:otherwise>
+			</c:choose>
 
 			<ul>
 				<c:choose>
