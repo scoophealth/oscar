@@ -24,6 +24,7 @@
 package org.oscarehr.research.eaaps;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -128,10 +129,18 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 			logger.debug("Loaded patient data: " + patientData);
 		}
 		
+		// ensure that notification is displayed for each popup, if necessary  
+		boolean isNotificationRequired = isNotificationRequired(hash.getHash(), patientData);
+		if (isNotificationRequired) {
+			String js = "<script language=\"javascript\">displayEaapsWindow(\"" +  patientData.getUrl() + "\", \"" + hash.getHash() + "\", \"" + StringEscapeUtils.escapeJavaScript(patientData.getMessage()) + "\" );</script>";
+			Dao.setJavaScript(js);
+		}
+		
 		if (!patientData.isEligibleForStudy()) {
 			Dao.addItem(newItem("Not eligible", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), null));
 			return true;
 		}
+		
 		
 		// messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Myoscar")
 		if (patientData.isAapReviewCompleted()) {
@@ -145,11 +154,6 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		}	
 		
 		if (patientData.isRecommendationsAvailable()) {
-			boolean isNotificationRequired = isNotificationRequired(hash.getHash());
-			if (isNotificationRequired) {
-				String js = "<script language=\"javascript\">displayEaapsWindow(\"" +  patientData.getUrl() + "\", \"" + hash.getHash() + "\", \"" + StringEscapeUtils.escapeJavaScript(patientData.getMessage()) + "\" );</script>";
-				Dao.setJavaScript(js);
-			}
 			Dao.addItem(newItem("Recommendations are available", getEaapsUrl(patientData.getUrl(), true), null));
 		}
 		
@@ -174,7 +178,7 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	 */
 	private void configureMostResponsiblePhysicianFlag(EaapsPatientData patientData, Demographic demo) {
 		String url = patientData.getUrl();		
-		if (url == null) {
+		if (url == null || url.trim().isEmpty()) {
 			logger.debug("URL is not provided - exiting without replacing");
 			return;
 		}
@@ -193,11 +197,36 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	    patientData.replaceUrl(url);
     }
 
-	private boolean isNotificationRequired(String hash) {
+	private boolean isNotificationRequired(String hash, EaapsPatientData patientData) {
 		String providerNo = getProviderNo();
 		String resourceId = hash;
-		List<UserDSMessagePrefs> pref = userDsMessagePrefsDao.findMessages(providerNo, EAAPS, resourceId, false);
-	    return pref.isEmpty();
+		List<UserDSMessagePrefs> prefs = userDsMessagePrefsDao.findMessages(providerNo, EAAPS, resourceId, false);
+	    // no pref's saved means that this notification hasn't been dismissed yet by this user 
+		if (prefs.isEmpty()) {
+	    	return true;
+	    }
+	    
+		// in case no updated timestamp is available - assume no notification is required
+		Date statusChangeTimestamp = patientData.getUpdatedTimestamp();
+		if (statusChangeTimestamp == null) {
+			return false;
+		}
+		
+		// in case status changed after resource was updated - still display the notification
+		// this takes care of the case when status changed on the eAAPs side, but notification 
+		// has been dismissed
+		for(UserDSMessagePrefs pref : prefs) {
+			if (pref.getResourceUpdatedDate() == null ) {
+				continue;
+			}
+			
+			if (pref.getResourceUpdatedDate().before(statusChangeTimestamp)) {
+				return true;
+			}
+		}
+	
+		// for all other cases, say that notification has been dismissed
+		return false;
     }
 
 	private String getProviderNo() {

@@ -25,6 +25,7 @@ package org.oscarehr.common.web;
 
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +72,7 @@ public class ProviderNotificationAction extends Action {
 		pref.setResourceId(resourceId);
 		pref.setResourceType(resourceType);
 		pref.setArchived(false);
+		pref.setResourceUpdatedDate(new Date());
 
 		userDsMessagePrefsDao.persist(pref);
 

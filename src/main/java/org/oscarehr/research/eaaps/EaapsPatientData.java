@@ -24,7 +24,9 @@
 package org.oscarehr.research.eaaps;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import oscar.util.ConversionUtils;
 import net.sf.json.JSONObject;
 
 /**
@@ -89,6 +91,11 @@ public class EaapsPatientData implements Serializable {
 	
 	public boolean isRecommendationsReviewCompleted() {
 		return getBoolean("recommendationsReviewCompleted");
+	}
+	
+	public Date getUpdatedTimestamp() {
+		String updatedTimestampString = getStatus().getString("updatedTimestamp");
+		return ConversionUtils.fromDateString(updatedTimestampString);
 	}
 
 	public boolean isAapAvailable() {

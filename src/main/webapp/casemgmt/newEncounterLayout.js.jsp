@@ -68,11 +68,19 @@ function dismissHandler(notificationId) {
  * @param message Additional message information
  */
 function showMessenger(url, notificationId, message) {
+	var messageContent = "";
+	// in case URL is specified - make sure it's clickable
+	if (url) {
+		messageContent = "<a style='color: white' href='" + url + "' target='_blank'>" + message + "</a>";
+	} else { // otherwise - just show the message provided
+		messageContent = message;
+	}
+
 	msg = Messenger().post({
 		id: url,
 		singleton: true,
 		type: 'info',
-		message: "<a style='color: white' href='" + url + "' target='_blank'>View eAAP recommendations</a><br/>" + message,
+		message: messageContent,
 		actions: {
 			snooze: {
 				label: 'Snooze',
