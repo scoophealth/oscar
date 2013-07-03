@@ -26,6 +26,8 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -702,7 +704,24 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.outsideProviderOhip = StringUtils.trimToNull(outsideProviderOhip);
 	}
 
-	public boolean isExpired() {
+    public boolean isCurrent() {
+        boolean b = false;
+
+        try {
+            GregorianCalendar cal = new GregorianCalendar(Locale.CANADA);
+            cal.add(GregorianCalendar.DATE, -1);
+
+            if (this.getEndDate().after(cal.getTime())) {
+                b = true;
+            }
+        } catch (Exception e) {
+            b = false;
+        }
+
+        return b;
+    }
+
+    public boolean isExpired() {
 		if (endDate == null) return (false);
 
 		return ((new Date()).after(endDate));
