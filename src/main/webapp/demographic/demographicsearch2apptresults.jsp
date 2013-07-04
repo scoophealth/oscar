@@ -400,6 +400,9 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
   List<MatchingDemographicTransferScore> integratorSearchResults=(List<MatchingDemographicTransferScore>)request.getAttribute("integratorSearchResults");
   if (integratorSearchResults!=null) {
 	  for (MatchingDemographicTransferScore matchingDemographicTransferScore : integratorSearchResults) {
+	      if( isLocal(matchingDemographicTransferScore, demoList)) {
+		  	continue;
+	      }
 		  rowCounter++;
 		  bgColor = rowCounter%2==0?"#EEEEFF":"white";
 		  DemographicTransfer demographicTransfer=matchingDemographicTransferScore.getDemographicTransfer();
@@ -547,3 +550,19 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 </div>
 </body>
 </html>
+<%!
+
+Boolean isLocal(MatchingDemographicTransferScore matchingDemographicTransferScore, List<Demographic> demoList) {
+    String hin = matchingDemographicTransferScore.getDemographicTransfer().getHin(); 
+    for( Demographic demo : demoList ) {
+		
+		if( hin != null && hin.equals(demo.getHin()) ) {
+		    return true;
+		}
+    }
+    
+    return false;
+    
+}
+
+%>
