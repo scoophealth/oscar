@@ -39,6 +39,7 @@ public class HtmlUploadForm extends ActionForm {
     private FormFile formHtml = null;
     private String formName;
     private String subject;
+    private boolean showLatestFormOnly = false;
     private boolean patientIndependent = false;
     private String roleType;
     
@@ -77,7 +78,15 @@ public class HtmlUploadForm extends ActionForm {
         this.subject = subject;
     }
 
-    public boolean getPatientIndependent() {
+    public boolean isShowLatestFormOnly() {
+        return showLatestFormOnly;
+    }
+
+    public void setShowLatestFormOnly(boolean showLatestFormOnly) {
+        this.showLatestFormOnly = showLatestFormOnly;
+    }
+
+    public boolean isPatientIndependent() {
         return patientIndependent;
     }
 

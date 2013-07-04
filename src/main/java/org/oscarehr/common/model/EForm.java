@@ -80,6 +80,8 @@ public class EForm extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "form_html")
 	private String formHtml;
 
+	private boolean showLatestFormOnly;
+
 	@Column(name = "patient_independent")
 	private boolean patientIndependent;
 
@@ -152,6 +154,14 @@ public class EForm extends AbstractModel<Integer> implements Serializable {
 
 	public void setFormHtml(String formHtml) {
 		this.formHtml = formHtml;
+	}
+
+	public boolean isShowLatestFormOnly() {
+		return showLatestFormOnly;
+	}
+
+	public void setShowLatestFormOnly(boolean showLatestFormOnly) {
+		this.showLatestFormOnly = showLatestFormOnly;
 	}
 
 	public boolean isPatientIndependent() {

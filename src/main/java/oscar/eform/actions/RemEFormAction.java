@@ -52,6 +52,10 @@ public class RemEFormAction extends Action {
          {
         	 return mapping.findForward("independent");
          }
+         if ("single".equals(request.getParameter("callpage")))
+         {
+        	 return mapping.findForward("single");
+         }
          return mapping.findForward("success");
     }
     

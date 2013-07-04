@@ -90,7 +90,8 @@ public class EFormExportZip {
             if (eForm.getFormSubject()!=null && !eForm.getFormSubject().equals("")) properties.setProperty("form.details", eForm.getFormSubject());
             if (eForm.getFormCreator()!=null && !eForm.getFormCreator().equals("")) properties.setProperty("form.creator", eForm.getFormCreator());
             if (eForm.getFormDate()!=null && !eForm.getFormDate().equals("")) properties.setProperty("form.date", eForm.getFormDate());
-            if (eForm.getPatientIndependent()==true) properties.setProperty("form.patientIndependent", String.valueOf(eForm.getPatientIndependent()));
+            if (eForm.isShowLatestFormOnly()) properties.setProperty("form.showLatestFormOnly", "true");
+            if (eForm.isPatientIndependent()) properties.setProperty("form.patientIndependent", "true");
 
             //write properties file
             ZipEntry propertiesZipEntry = new ZipEntry(directoryName + "eform.properties");
@@ -275,6 +276,7 @@ public class EFormExportZip {
         eForm.setFormFileName(properties.getProperty("form.htmlFilename"));
         eForm.setFormCreator(properties.getProperty("form.creator"));
         eForm.setFormDate(properties.getProperty("form.date"));
+        eForm.setShowLatestFormOnly(Boolean.valueOf(properties.getProperty("form.showLatestFormOnly")));
 		eForm.setPatientIndependent(Boolean.valueOf(properties.getProperty("form.patientIndependent")));
         return eForm;
     }
