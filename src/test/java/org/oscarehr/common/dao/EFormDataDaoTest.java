@@ -26,8 +26,12 @@ package org.oscarehr.common.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
@@ -113,5 +117,94 @@ public class EFormDataDaoTest extends DaoTestFixtures {
 
 		List<EFormData> data = eFormDataDao.findByDemographicIdAndFormName(8888, "CZEZANAH"); 
 		assertFalse(data.isEmpty()); 
+	}
+	
+	@Test
+	public void testGetFormsSameFidSamePatient() throws Exception {
+		EFormData[] models = {new EFormData(), new EFormData(), new EFormData(), new EFormData()};
+		
+		for (EFormData model : models) {
+			EntityDataGenerator.generateTestDataForModelClass(model);
+			model.setFormId(3842);
+			model.setDemographicId(1974);
+			model.setPatientIndependent(false);
+			eFormDataDao.persist(model);
+		}
+		
+		List<EFormData> eformDatas = eFormDataDao.getFormsSameFidSamePatient(models[0].getId());
+		
+		for (int i=0; i<eformDatas.size(); i++) {
+			for (EFormData model : models) {
+				if (model.getId().equals(eformDatas.get(i).getId())) {
+					assertEquals(model, eformDatas.get(i));
+					eformDatas.set(i, null);
+					break;
+				}
+			}
+		}
+		for (EFormData eformData : eformDatas) {
+			assertNull(eformData);
+		}
+	}
+	
+	@Test
+	public void testIsShowLatestFormOnlyInMany() throws Exception {
+		EFormData[] models = {new EFormData(), new EFormData(), new EFormData(), new EFormData()};
+		
+		for (EFormData model : models) {
+			EntityDataGenerator.generateTestDataForModelClass(model);
+			model.setPatientIndependent(false);
+			model.setFormId(7890);
+			model.setDemographicId(6543);
+			eFormDataDao.persist(model);
+		}
+		for (EFormData model : models) {
+			assertTrue(eFormDataDao.isShowLatestFormOnlyInMany(model.getId()));
+		}
+		
+		models[0].setShowLatestFormOnly(false);
+		eFormDataDao.merge(models[0]);
+		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[0].getId()));
+		models[1].setDemographicId(4365);
+		eFormDataDao.merge(models[1]);
+		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[1].getId()));
+		models[2].setFormId(9078);
+		eFormDataDao.merge(models[2]);
+		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[2].getId()));
+		
+		for (int i=0; i<3; i++) {
+			models[i].setCurrent(false);
+			eFormDataDao.merge(models[i]);
+		}
+		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[3].getId()));
+	}
+	
+	@Test
+	public void testIsLatestPatientForm() throws Exception {
+		EFormData[] models = {new EFormData(), new EFormData(), new EFormData(), new EFormData()};
+		
+		Calendar cal = new GregorianCalendar(2011, 6, 13, 14, 15, 16);
+		Date setupDate = cal.getTime();
+		
+		for (int i=0; i<models.length; i++) {
+			EFormData model = models[i];
+			EntityDataGenerator.generateTestDataForModelClass(model);
+			model.setPatientIndependent(false);
+			model.setFormId(1023);
+			model.setDemographicId(4036);
+			model.setFormDate(setupDate);
+			model.setFormTime(setupDate);
+			eFormDataDao.persist(model);
+		}
+		assertTrue(eFormDataDao.isLatestPatientForm(models[3].getId()));
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		models[0].setFormTime(cal.getTime());
+		eFormDataDao.merge(models[0]);
+		assertTrue(eFormDataDao.isLatestPatientForm(models[0].getId()));
+		
+		models[1].setFormDate(new Date());
+		eFormDataDao.merge(models[1]);
+		assertTrue(eFormDataDao.isLatestPatientForm(models[1].getId()));
 	}
 }

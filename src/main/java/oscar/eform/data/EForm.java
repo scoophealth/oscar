@@ -98,7 +98,8 @@ public class EForm extends EFormBase {
 			this.formSubject = eFormData.getSubject();
 			this.formDate = eFormData.getFormDate().toString();
 			this.formHtml = eFormData.getFormData();
-			this.patientIndependent = eFormData.getPatientIndependent();
+			this.showLatestFormOnly = eFormData.isShowLatestFormOnly();
+			this.patientIndependent = eFormData.isPatientIndependent();
 			this.roleType = eFormData.getRoleType();
 		} 
 	    } else {
@@ -117,7 +118,8 @@ public class EForm extends EFormBase {
 		this.formDate = (String) loaded.get("formDate");
 		this.formFileName = (String) loaded.get("formFileName");
 		this.formCreator = (String) loaded.get("formCreator");
-		this.demographicNo = demographicNo;                
+		this.demographicNo = demographicNo;
+		this.showLatestFormOnly = (Boolean)loaded.get("showLatestFormOnly");
 		this.patientIndependent = (Boolean)loaded.get("patientIndependent");
 		this.roleType = (String) loaded.get("roleType");
 	}

@@ -102,13 +102,15 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	        eForms.clear();
 	
 			EFormDataDao eFormDataDao=(EFormDataDao)SpringUtils.getBean("EFormDataDao");
-			List<EFormData> eFormDatas=eFormDataDao.findByDemographicIdCurrentPatientIndependent(new Integer(bean.demographicNo), true, false);
+			List<EFormData> eFormDatas=eFormDataDao.findByDemographicIdCurrent(new Integer(bean.demographicNo), true);
 			filterRoles(eFormDatas, roleName);
 			Collections.sort(eFormDatas, EFormData.FORM_DATE_COMPARATOR);
 			Collections.reverse(eFormDatas);
 	
 			for (EFormData eFormData : eFormDatas)
 			{
+				if (eFormDataDao.isShowLatestFormOnlyInMany(eFormData.getId()) && !eFormDataDao.isLatestPatientForm(eFormData.getId())) continue;
+				
 				boolean skip=false;
 		        for(int x=0;x<omitTypes.length;x++) {
 		        	if(omitTypes[x].equals(eFormData.getFormName())) {
@@ -120,8 +122,8 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 		        	continue;
 		        
 	            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
-	            winName = eFormData.getFormName() + bean.demographicNo;            
-	            hash = Math.abs(winName.hashCode());            
+	            winName = eFormData.getFormName() + bean.demographicNo;
+	            hash = Math.abs(winName.hashCode());
 	            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+eFormData.getId()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"');";
 	            String formattedDate = DateUtils.formatDate(eFormData.getFormDate(),request.getLocale());
 	            key = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";

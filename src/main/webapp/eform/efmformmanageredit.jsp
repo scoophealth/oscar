@@ -54,8 +54,9 @@ if (request.getAttribute("submitted") != null) {
    }
    if (curform.get("formDate") == null) curform.put("formDate", "--");
    if (curform.get("formTime") == null) curform.put("formTime", "--");
+   
+   if (curform.get("showLatestFormOnly") ==null) curform.put("showLatestFormOnly", false);
    if (curform.get("patientIndependent") ==null) curform.put("patientIndependent", false);
-   boolean patientIndependent = (Boolean) curform.get("patientIndependent");
    
    String formHtmlRaw = (String) curform.get("formHtml");
    String formHtml = "";
@@ -120,7 +121,22 @@ function disablenupload() {
 			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} else if (errors.containsKey("formNameExists")) { %>
 			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} %>
 			</td>
-			<th><bean:message key="eform.uploadhtml.btnRoleType"/></th>
+			<td rowspan="3">
+				<input type="checkbox" name="showLatestFormOnly" value="true" <%= (Boolean)curform.get("showLatestFormOnly")?"checked":"" %> />
+				<bean:message key="eform.uploadhtml.showLatestFormOnly" />
+				<br/>
+				<input type="checkbox" name="patientIndependent" value="true" <%= (Boolean)curform.get("patientIndependent")?"checked":"" %> />
+				<bean:message key="eform.uploadhtml.patientIndependent" />
+			</td>
+		</tr>
+		<tr class="highlight">
+			<th style="text-align: right;"><bean:message
+				key="eform.uploadhtml.formSubject" />:</th>
+            <td><input type="text" name="formSubject"
+				value="<%= curform.get("formSubject") %>" size="30" /></td>
+		</tr>
+		<tr class="highlight">
+			<th style="text-align: right;"><bean:message key="eform.uploadhtml.btnRoleType"/>:</th>
 			<td><select name="roleType">
 				<option value="">- select one -</option>
                 <%  ArrayList roleList = EFormUtil.listSecRole(); 
@@ -136,15 +152,6 @@ function disablenupload() {
                 <%} %>
                 </select>
             </td>
-			<th style="text-align: right;"><bean:message
-				key="eform.uploadhtml.patientIndependent" /><input type="checkbox" name="patientIndependent" value="true"
-                                   <%= patientIndependent?"checked":"" %> /></th>
-		</tr>
-		<tr class="highlight">
-			<th style="text-align: right;"><bean:message
-				key="eform.uploadhtml.formSubject" />:</th>
-                        <td colspan="2"><input type="text" name="formSubject"
-				value="<%= curform.get("formSubject") %>" size="30" /></td>
 		</tr>
 		<tr class="highlight">
 			<th style="text-align: right;"><bean:message key="eform.uploadhtml.formFileName" /> <sup>optional</sup>: </th>
@@ -157,7 +164,7 @@ function disablenupload() {
 		</tr>
 		<tr>
 			<th style="text-align: right;"><bean:message key="eform.edithtml.frmUploadFile" /> <sup>optional</sup>:</th>
-                        <td colspan="2"><input type="file" name="uploadFile" size="40"
+            <td colspan="2"><input type="file" name="uploadFile" size="40"
 				<% if (errors.containsKey("uploadError")) { %> class="warning"
 				<% } %>> <input type="hidden" name="uploadMarker"
 				id="uploadMarker" value="false"> <input type="button"
@@ -185,7 +192,7 @@ function disablenupload() {
 				type="button"
 				value="<bean:message key="eform.edithtml.cancelChanges"/>"
 				onclick="javascript: window.location='efmformmanageredit.jsp?fid=<%= curform.get("fid") %>'">
-			<input type="button"
+				<input type="button"
 				value="<bean:message key="eform.edithtml.msgBackToForms"/>"
 				onclick="javascript: window.location='efmformmanager.jsp'">
 
