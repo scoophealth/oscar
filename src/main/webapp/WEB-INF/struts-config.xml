@@ -1642,7 +1642,7 @@
 		<action name="FrmForm" path="/demographic/SearchDemographic" scope="request" type="org.oscarehr.common.web.SearchDemographicAutoCompleteAction">
 			<forward name="success" path="/demographic/autocomplete.jsp" />
 		</action>
-		<action name="FrmForm" path="/provider/SearchProvider" scope="request" type="org.oscarehr.common.web.SearchProviderAutoCompleteAction">
+		<action name="FrmForm" path="/provider/SearchProvider" scope="request" parameter="method" type="org.oscarehr.common.web.SearchProviderAutoCompleteAction">
 		</action>
 
 		<action input="/demographic/AddAlternateContact.jsp" name="FrmForm" path="/demographic/AddRelation" scope="request" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction">
