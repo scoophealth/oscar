@@ -61,6 +61,7 @@ public class EForm extends EFormBase {
 	private int needValueInForm = 0;
 	private boolean setAP2nd = false;
 
+	private static final String EFORM_DEMOGRAPHIC = "eform_demographic";
 	private static final String VAR_NAME = "var_name";
 	private static final String VAR_VALUE = "var_value";
 	private static final String REF_FID = "fid";
@@ -442,6 +443,10 @@ public class EForm extends EFormBase {
 			String eform_name = EFormUtil.removeQuotes(EFormUtil.getAttribute("eform$name", fieldHeader));
 			String var_value = EFormUtil.removeQuotes(EFormUtil.getAttribute("var$value", fieldHeader));
 			String ref = EFormUtil.removeQuotes(EFormUtil.getAttribute("ref$", fieldHeader, true));
+			
+			String eform_demographic = this.demographicNo;
+			if (this.patientIndependent) eform_demographic = "%";
+			
 			String ref_name = null, ref_value = null, ref_fid = fid;
 			if (!EFormUtil.blank(ref) && ref.contains("=")) {
 				ref_name = ref.substring(4, ref.indexOf("="));
@@ -468,6 +473,7 @@ public class EForm extends EFormBase {
 			EFormLoader.getInstance();
 			curAP = EFormLoader.getAP("_eform_values_" + type);
 			if (curAP != null) {
+				setSqlParams(EFORM_DEMOGRAPHIC, eform_demographic);
 				setSqlParams(VAR_NAME, field);
 				setSqlParams(REF_VAR_NAME, ref_name);
 				setSqlParams(VAR_VALUE, var_value);
@@ -657,6 +663,7 @@ public class EForm extends EFormBase {
 		sql = DatabaseAP.parserReplace("provider", providerNo, sql);
 		sql = DatabaseAP.parserReplace("appt_no", appointment_no, sql);
 
+		sql = DatabaseAP.parserReplace(EFORM_DEMOGRAPHIC, getSqlParams(EFORM_DEMOGRAPHIC), sql);
 		sql = DatabaseAP.parserReplace(REF_FID, getSqlParams(REF_FID), sql);
 		sql = DatabaseAP.parserReplace(VAR_NAME, getSqlParams(VAR_NAME), sql);
 		sql = DatabaseAP.parserReplace(VAR_VALUE, getSqlParams(VAR_VALUE), sql);

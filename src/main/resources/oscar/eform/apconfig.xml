@@ -448,24 +448,28 @@
     <databaseap>
         <ap-name>_eform_values_first</ap-name>
         <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
+                AND demographic_no like '${eform_demographic}'
                 AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id LIMIT 1</ap-sql>
         <ap-output>${var_value}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>_eform_values_last</ap-name>
         <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
+                AND demographic_no like '${eform_demographic}'
                 AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id DESC LIMIT 1</ap-sql>
         <ap-output>${var_value}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>_eform_values_count</ap-name>
         <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}'
+                AND demographic_no like '${eform_demographic}'
                 AND fid=${fid} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)</ap-sql>
         <ap-output>${count(0)}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>_eform_values_countname</ap-name>
         <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
+                AND demographic_no like '${eform_demographic}'
                 AND fid=${fid} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)</ap-sql>
         <ap-output>${count(0)}</ap-output>
     </databaseap>
