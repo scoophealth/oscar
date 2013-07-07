@@ -140,7 +140,7 @@ function submitFaxButtonAjax(save) {
 	}
 	else {
 		var form = $("form[name='RichTextLetter']");
-		if (!save) { form.attr("target", "_blank"); }
+		form.attr("target", "_blank");
 		document.getElementById('Letter').value=editControlContents('edit');
 		
 		$.ajax({
