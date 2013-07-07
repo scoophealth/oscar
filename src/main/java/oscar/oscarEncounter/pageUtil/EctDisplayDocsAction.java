@@ -163,7 +163,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     				isURLjavaScript = true;
     			}
     			else {
-    				url = request.getContextPath() + "/dms/ManageDocument.do?method=display&doc_no=" + dispDocNo + "&providerNo=" + user + (curDoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curDoc.getRemoteFacilityId():"");
+    				url = "popupPage(700,800,'" + hash + "', '" +  request.getContextPath() + "/dms/ManageDocument.do?method=display&doc_no=" + dispDocNo + "&providerNo=" + user + (curDoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curDoc.getRemoteFacilityId():"") + "'); return false;";
     			}
     			
     			item.setLinkTitle(title + serviceDateStr);
@@ -177,7 +177,8 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     			js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
     			javascript.append(js);				
     			item.setURL(url);
-    			item.setURLJavaScript(isURLjavaScript);
+    			item.setURLJavaScript(true);
+    			
     			Dao.addItem(item);
     
     		}
