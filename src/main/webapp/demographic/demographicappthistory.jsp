@@ -294,6 +294,8 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   } 
   else {
     for(Object obj : appointmentList) {
+    	boolean deleted=false;
+    	
     	Appointment appointment = null;
     	AppointmentArchive appointmentArchive = null;
     	if(obj instanceof Appointment) {
@@ -305,6 +307,8 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
     		
     		BeanUtils.copyProperties(appointment, appointmentArchive);
     		appointment.setId(appointmentArchive.getAppointmentNo());
+    		
+    		deleted=true;
     	}
       iRow ++;
       if(iRow>iPageSize) break;
@@ -315,7 +319,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
     AppointmentStatus as = appointmentStatusDao.findByStatus(appointment.getStatus());
        
 %> 
-<tr bgcolor="<%=bodd?weakColor:"white"%>" appt_no="<%=appointment.getId().toString()%>" demographic_no="<%=demographic_no%>">	  
+<tr <%=(deleted)?"style='text-decoration: line-through' ":"" %> bgcolor="<%=bodd?weakColor:"white"%>" appt_no="<%=appointment.getId().toString()%>" demographic_no="<%=demographic_no%>">	  
       <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.getId().toString()%>&displaymode=edit&dboperation=search');return false;" ><%=appointment.getAppointmentDate()%></a></td>
       <td align="center"><%=appointment.getStartTime()%></td>
       <td align="center"><%=appointment.getEndTime()%></td>
