@@ -136,7 +136,7 @@ public class ProviderLabRouting {
         OscarProperties props = OscarProperties.getInstance();
         String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
 
-        ProviderLabRoutingDao providerLabRoutingDao = new ProviderLabRoutingDao();
+	ProviderLabRoutingDao providerLabRoutingDao = org.oscarehr.util.SpringUtils.getBean(ProviderLabRoutingDao.class);
         List<ProviderLabRoutingModel> rs = providerLabRoutingDao.getProviderLabRoutingForLabProviderType(labId, provider_no, labType);
 
         if(!rs.isEmpty()) {
