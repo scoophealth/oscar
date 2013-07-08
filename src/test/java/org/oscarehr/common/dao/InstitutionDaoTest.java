@@ -23,7 +23,6 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -36,44 +35,36 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.BillingPaymentType;
+import org.oscarehr.common.model.Institution;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class BillingPaymentTypeDaoTest extends DaoTestFixtures {
+public class InstitutionDaoTest extends DaoTestFixtures {
 
-	protected BillingPaymentTypeDao dao = SpringUtils.getBean(BillingPaymentTypeDao.class);
-
+	protected InstitutionDao dao = SpringUtils.getBean(InstitutionDao.class);
+	
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(false, "billing_payment_type");
-	}
-
-	@Test
-	public void testCreate() throws Exception {
-		BillingPaymentType entity = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+		SchemaUtils.restoreTable("Institution");
 	}
 	
 	@Test
 	public void testFindAll() throws Exception {
 		
-		BillingPaymentType bPT1 = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(bPT1);
-		dao.persist(bPT1);
+		Institution inst1 = new Institution();
+		EntityDataGenerator.generateTestDataForModelClass(inst1);
+		dao.persist(inst1);
 		
-		BillingPaymentType bPT2 = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(bPT2);
-		dao.persist(bPT2);
+		Institution inst2 = new Institution();
+		EntityDataGenerator.generateTestDataForModelClass(inst2);
+		dao.persist(inst2);
 		
-		BillingPaymentType bPT3 = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(bPT3);
-		dao.persist(bPT3);
+		Institution inst3 = new Institution();
+		EntityDataGenerator.generateTestDataForModelClass(inst3);
+		dao.persist(inst3);
 		
-		List<BillingPaymentType> expectedResult = new ArrayList<BillingPaymentType>(Arrays.asList(bPT1, bPT2, bPT3));
-		List<BillingPaymentType> result = dao.findAll();
+		List<Institution> expectedResult = new ArrayList<Institution>(Arrays.asList(inst1, inst2, inst3));
+		List<Institution> result = dao.findAll();
 
 		Logger logger = MiscUtils.getLogger();
 		
@@ -88,5 +79,5 @@ public class BillingPaymentTypeDaoTest extends DaoTestFixtures {
 			}
 		}
 		assertTrue(true);
-	}	
+	}
 }
