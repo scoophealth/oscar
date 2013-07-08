@@ -25,12 +25,20 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.ScheduleTemplateCode;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ScheduleTemplateCodeDaoTest extends DaoTestFixtures {
@@ -40,23 +48,53 @@ public class ScheduleTemplateCodeDaoTest extends DaoTestFixtures {
 	public ScheduleTemplateCodeDaoTest() {
 	}
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable(false, "scheduletemplatecode");
 	}
 
-        @Test
-        public void testCreate() throws Exception {
-                ScheduleTemplateCode entity = new ScheduleTemplateCode();
-                EntityDataGenerator.generateTestDataForModelClass(entity);
-                entity.setCode('A');
-                dao.persist(entity);
-
-                assertNotNull(entity.getId());
-        }
-
+	@Test
+    public void testCreate() throws Exception {
+		ScheduleTemplateCode entity = new ScheduleTemplateCode();
+        EntityDataGenerator.generateTestDataForModelClass(entity);
+        entity.setCode('A');
+        dao.persist(entity);
+        assertNotNull(entity.getId());
+	}
 	
+	@Test
+	public void testFindAll() throws Exception {
+		
+		ScheduleTemplateCode scheduleTempCode1 = new ScheduleTemplateCode();
+		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode1);
+		dao.persist(scheduleTempCode1);
+		
+		ScheduleTemplateCode scheduleTempCode2 = new ScheduleTemplateCode();
+		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode2);
+		dao.persist(scheduleTempCode2);
+		
+		ScheduleTemplateCode scheduleTempCode3 = new ScheduleTemplateCode();
+		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode3);
+		dao.persist(scheduleTempCode3);
+		
+		List<ScheduleTemplateCode> expectedResult = new ArrayList<ScheduleTemplateCode>(Arrays.asList(scheduleTempCode1, scheduleTempCode2, scheduleTempCode3));
+		List<ScheduleTemplateCode> result = dao.findAll();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);	
+	}
+
 	@Test
 	public void testGetByCode() throws Exception {
 		
@@ -84,4 +122,31 @@ public class ScheduleTemplateCodeDaoTest extends DaoTestFixtures {
 		
 		assertEquals(expectedResult, result);
 	}
+
+	@Test
+	public void testFindByCode() throws Exception {
+		
+		char code1 = 'a', code2 = 'b', code3 = 'c';
+		String code = "b";
+
+		ScheduleTemplateCode scheduleTempCode1 = new ScheduleTemplateCode();
+		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode1);
+		scheduleTempCode1.setCode(code1);
+		dao.persist(scheduleTempCode1);
+		
+		ScheduleTemplateCode scheduleTempCode2 = new ScheduleTemplateCode();
+		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode2);
+		scheduleTempCode2.setCode(code2);
+		dao.persist(scheduleTempCode2);
+		
+		ScheduleTemplateCode scheduleTempCode3 = new ScheduleTemplateCode();
+		EntityDataGenerator.generateTestDataForModelClass(scheduleTempCode3);
+		scheduleTempCode3.setCode(code3);
+		dao.persist(scheduleTempCode3);
+		
+		ScheduleTemplateCode expectedResult = scheduleTempCode2;
+		ScheduleTemplateCode result = dao.findByCode(code);
+		
+		assertEquals(expectedResult, result);	
+	}	
 }

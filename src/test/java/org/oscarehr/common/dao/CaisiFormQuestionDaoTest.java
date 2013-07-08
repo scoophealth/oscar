@@ -21,11 +21,10 @@
  * Hamilton
  * Ontario, Canada
  */
+
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,44 +35,42 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.BillingPaymentType;
+import org.oscarehr.common.model.CaisiFormQuestion;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class BillingPaymentTypeDaoTest extends DaoTestFixtures {
+public class CaisiFormQuestionDaoTest extends DaoTestFixtures {
 
-	protected BillingPaymentTypeDao dao = SpringUtils.getBean(BillingPaymentTypeDao.class);
-
+	public CaisiFormQuestionDao dao = SpringUtils.getBean(CaisiFormQuestionDao.class);
+	
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(false, "billing_payment_type");
-	}
-
-	@Test
-	public void testCreate() throws Exception {
-		BillingPaymentType entity = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+		
+		SchemaUtils.restoreTable("caisi_form_question");
 	}
 	
 	@Test
-	public void testFindAll() throws Exception {
+	public void testFindByFormId() throws Exception {
 		
-		BillingPaymentType bPT1 = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(bPT1);
-		dao.persist(bPT1);
+		int formId1 = 101, formId2 = 202;
 		
-		BillingPaymentType bPT2 = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(bPT2);
-		dao.persist(bPT2);
+		CaisiFormQuestion cFQ1 = new CaisiFormQuestion();
+		EntityDataGenerator.generateTestDataForModelClass(cFQ1);
+		cFQ1.setFormId(formId1);
+		dao.persist(cFQ1);
 		
-		BillingPaymentType bPT3 = new BillingPaymentType();
-		EntityDataGenerator.generateTestDataForModelClass(bPT3);
-		dao.persist(bPT3);
+		CaisiFormQuestion cFQ2 = new CaisiFormQuestion();
+		EntityDataGenerator.generateTestDataForModelClass(cFQ2);
+		cFQ2.setFormId(formId2);
+		dao.persist(cFQ2);
 		
-		List<BillingPaymentType> expectedResult = new ArrayList<BillingPaymentType>(Arrays.asList(bPT1, bPT2, bPT3));
-		List<BillingPaymentType> result = dao.findAll();
+		CaisiFormQuestion cFQ3 = new CaisiFormQuestion();
+		EntityDataGenerator.generateTestDataForModelClass(cFQ3);
+		cFQ3.setFormId(formId1);
+		dao.persist(cFQ3);
+		
+		List<CaisiFormQuestion> expectedResult = new ArrayList<CaisiFormQuestion>(Arrays.asList(cFQ1, cFQ3));
+		List<CaisiFormQuestion> result = dao.findByFormId(formId1);
 
 		Logger logger = MiscUtils.getLogger();
 		
@@ -88,5 +85,5 @@ public class BillingPaymentTypeDaoTest extends DaoTestFixtures {
 			}
 		}
 		assertTrue(true);
-	}	
+	}
 }
