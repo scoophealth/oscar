@@ -432,6 +432,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	}
 
 
+        function extractMeds(){
+            new Ajax.Request('medExtract.jsp',{method: 'post', parameters:handler.getOBXResult(), onSuccess:function(){
+              window.popup(700,960,'medExtract.jsp');
+            }})
+
+        }
         function handleLab(formid,labid,action){
             var url='../../../dms/inboxManage.do';
                                            var data='method=isLabLinkedToDemographic&labid='+labid;
@@ -447,6 +453,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                                 	$("labStatus").value = "A";
                                                                                     updateStatus(formid,labid);
                                                                                 }
+                                                                            }else if(action=='medExtract'){
+                                                                                demoid=json.demoId;
+                                                                                if(demoid!=null && demoid.length>0)
+                                                                                    window.popup(700,960,'medExtract.jsp');
                                                                             }else if(action=='msgLab'){
                                                                                 demoid=json.demoId;
                                                                                 if(demoid!=null && demoid.length>0)
@@ -618,6 +628,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
 
                                     <input type="button" value="Msg" onclick="handleLab('','<%=segmentID%>','msgLab');"/>
+                                    <input type="button" value="medExtract" onclick="handleLab('','<%=segmentID%>','medExtract');"/>
                                     <input type="button" value="Tickler" onclick="handleLab('','<%=segmentID%>','ticklerLab');"/>
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnUnlinkDemo"/>" onclick="handleLab('','<%=segmentID%>','unlinkDemo');"/>
 
