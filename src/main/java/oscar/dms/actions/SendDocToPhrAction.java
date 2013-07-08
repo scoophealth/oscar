@@ -104,6 +104,7 @@ public class SendDocToPhrAction extends Action {
     		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 
     		Long patientMyOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, demo.getMyOscarUserName());
+    		logger.debug("patient userName="+demo.getMyOscarUserName()+", patientPersonId="+patientMyOscarUserId);
     		GregorianCalendar dateOfData=new GregorianCalendar();
     		if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
 
