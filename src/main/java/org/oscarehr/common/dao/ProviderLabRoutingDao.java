@@ -11,8 +11,6 @@ package org.oscarehr.common.dao;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.ProviderLabRoutingModel;
@@ -22,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> {
-
-	@PersistenceContext
-	protected EntityManager entityManager = null;
 
 	public ProviderLabRoutingDao() {
 		super(ProviderLabRoutingModel.class);
