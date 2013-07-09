@@ -277,7 +277,11 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
       <td align="center"><%=DateUtils.formatDate(a.getAppointmentDate(), request.getLocale())%></td>
       <td align="center"><%=DateUtils.formatTime(a.getStartTime(), request.getLocale())%></td>
       <td align="center"><%=DateUtils.formatTime(a.getEndTime(), request.getLocale())%></td>
-      <td><%=(as != null)?as.getDescription():"" %></td>
+      <td align="center">
+      <%if(as != null && as.getDescription() != null) {%>
+		<%=as.getDescription()%>
+	  <% } %>
+	  </td>
       <td><%=a.getType() %></td>
       <td><%=StringUtils.trimToEmpty(a.getReason())%></td>
       <td>
@@ -323,7 +327,11 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
       <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.getId().toString()%>&displaymode=edit&dboperation=search');return false;" ><%=appointment.getAppointmentDate()%></a></td>
       <td align="center"><%=appointment.getStartTime()%></td>
       <td align="center"><%=appointment.getEndTime()%></td>
-      <td><%=(as != null)?as.getDescription():"" %></td>
+      <td align="center">
+      <%if(as != null && as.getDescription() != null) {%>
+		<%=as.getDescription()%>
+	  <% } %>
+	  </td>
       <td><%=appointment.getType() %></td>
       <td><%=appointment.getReason()%></td>
       <% if( provider != null ) {%>
