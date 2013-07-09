@@ -55,15 +55,20 @@ public class AppointmentStatusDao extends AbstractDao<AppointmentStatus> {
     }
     
     public AppointmentStatus findByStatus(String status) {
+    	if(status == null || status.length() == 0){
+    		return null;
+    	}
+    	
     	Query q = entityManager.createQuery("select a from AppointmentStatus a where a.status like ?");
-    	q.setParameter(1, status + "%");
+    	q.setParameter(1, status.substring(0, 1) + "%");
     	
     	@SuppressWarnings("unchecked")
     	List<AppointmentStatus> results = q.getResultList();
     	
-    	for(AppointmentStatus as:results) {
-    		if(as.getStatus().charAt(0) == status.charAt(0)) {
-    			return as;
+		
+    	for(AppointmentStatus r:results) {
+    		if(r.getStatus() != null && r.getStatus().length()>0 && r.getStatus().charAt(0) == status.charAt(0)) {
+    			return r;
     		}
     	}
     	
