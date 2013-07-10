@@ -83,7 +83,10 @@ public class LabUploadAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		LabUploadForm frm = (LabUploadForm) form;
 		FormFile importFile = frm.getImportFile();
-
+		
+		// We don't want a session...
+		request.getSession(false).invalidate();
+		
 		String signature = request.getParameter("signature");
 		String key = request.getParameter("key");
 		String service = request.getParameter("service");
