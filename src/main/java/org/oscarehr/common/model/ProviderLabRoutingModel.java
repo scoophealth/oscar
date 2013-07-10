@@ -60,7 +60,7 @@ public class ProviderLabRoutingModel extends AbstractModel<Integer> implements S
 	}
 	
 	public void setProviderNo(String providerNo) {
-		this.providerNo = StringUtils.trimToNull(providerNo);
+		this.providerNo = StringUtils.trimToEmpty(providerNo);
 	}
 	
 	public Integer getLabNo() {
