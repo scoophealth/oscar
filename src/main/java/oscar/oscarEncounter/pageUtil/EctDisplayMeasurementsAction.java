@@ -124,7 +124,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 	
 				winName = "viewTracker" + bean.demographicNo;
 				hash = Math.abs(winName.hashCode());
-				url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?demographic_no=" + bean.demographicNo + "&template=diab2');return false;";
+				url = "window.open('" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?demographic_no=" + bean.demographicNo + "&template=diab2'," + hash + ",'height=' + screen.height + ',width=' + screen.width +',resizable=yes,scrollbars=yes, fullscreen=yes');return false;";
 				item.setLinkTitle(dispname);
 				dispname = StringUtils.maxLenString(dispname, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 				item.setTitle(dispname);
