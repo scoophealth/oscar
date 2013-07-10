@@ -62,7 +62,7 @@ public class ProviderLabRouting {
 	}
 
 	public void route(String labId, String provider_no, Connection conn, String labType) throws SQLException {
-		route(Integer.parseInt(labId), provider_no, conn, labType);
+		 route(Integer.parseInt(labId), provider_no, conn, labType);
 	}
 
 	public void route(int labId, String provider_no, String labType) throws SQLException {
@@ -145,7 +145,7 @@ public class ProviderLabRouting {
 		OscarProperties props = OscarProperties.getInstance();
 		String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
 
-		ProviderLabRoutingDao providerLabRoutingDao = new ProviderLabRoutingDao();
+		ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 		List<ProviderLabRoutingModel> rs = providerLabRoutingDao.getProviderLabRoutingForLabProviderType(Integer.parseInt(labId), provider_no, labType);
 
 		if (!rs.isEmpty()) {
