@@ -27,16 +27,13 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList"%>
-
-<%
-
-%>
-
-<link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/checkDate.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
 <script type="text/javascript" >
 var readOnly=false;
 function onSubmitCheck(){
@@ -45,17 +42,45 @@ function onSubmitCheck(){
 	}
 	if(!check_date('endDate')){
 		return false;
-	}
+	}	
+	
+	$("#searchFrm").attr("action","../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=" + $("#provfind").val());
+	
 }
+
+$(function() {
+ 
+    $( "#autocompleteprov" ).autocomplete({
+      source: "<%= request.getContextPath() %>/provider/SearchProvider.do?method=labSearch",
+      minLength: 2,  
+      focus: function( event, ui ) {
+    	  $( "#autocompleteprov" ).val( ui.item.label );
+          return false;
+      },
+      select: function(event, ui) {    	  
+    	  $( "#autocompleteprov" ).val(ui.item.label);
+    	  $( "#provfind" ).val(ui.item.value);
+    	  return false;
+      }      
+    })
+  });
 
 </script>
 
+<style type="text/css">
 
+.ui-autocomplete {
+	background-color: #CEF6CE;
+	border: 3px outset #2EFE2E;
+}
+</style>
+
+<link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <title><bean:message key="oscarMDS.search.title" /></title>
 </head>
 
 <body>
-<form method="get" action="../dms/inboxManage.do" onSubmit="return onSubmitCheck();">
+<form id="searchFrm" method="post" action="" onSubmit="return onSubmitCheck();"> 
     <input type="hidden" name="method" value="prepareForIndexPage"/>
 <table width="100%" height="100%" border="0">
 	<tr class="MainTableTopRow">
@@ -93,7 +118,7 @@ function onSubmitCheck(){
 				</td>
 				<td><input type="text" name="hnum" size="15"></td>
 			</tr>
-
+			
 			<tr>
 				<td>Start Date:(yyyy-mm-dd)
 				</td>
@@ -104,40 +129,23 @@ function onSubmitCheck(){
 				</td>
 				<td><input type="text" name="endDate" size="15" id="endDate"></td>
 			</tr>
-
-
-
+			
+			
+			
 			<tr>
 				<td valign="top"><bean:message
 					key="oscarMDS.search.formPhysician" />:</td>
-				<td><select name="searchProviderNo" size="10">
-					<optgroup>
-						<option value="-1"><bean:message
-							key="oscarMDS.search.formPhysicianAll" /></option>
-						<option value="0"><bean:message
-							key="oscarMDS.search.formPhysicianUnclaimed" /></option>
-					</optgroup>
-					<OPTGROUP LABEL="Docs with labs">
-						<% ArrayList providers2 = ProviderData.getProviderListWithLabNo();
-                                               for (int i=0; i < providers2.size(); i++) { %>
-						<option
-							value="<%= (String) ((ArrayList) providers2.get(i)).get(0) %>"
-							<%= ( ((String) ((ArrayList) providers2.get(i)).get(0)).equals(request.getParameter("providerNo")) ? " selected" : "" ) %>><%= (String) ((ArrayList) providers2.get(i)).get(1) %>
-						<%= (String) ((ArrayList) providers2.get(i)).get(2) %></option>
-						<% } %>
-					</optgroup>
-
-					<OPTGROUP LABEL="All Docs">
-						<% ArrayList providers = ProviderData.getProviderList();
-                                               for (int i=0; i < providers.size(); i++) { %>
-						<option
-							value="<%= (String) ((ArrayList) providers.get(i)).get(0) %>"
-							<%= ( ((String) ((ArrayList) providers.get(i)).get(0)).equals(request.getParameter("providerNo")) ? " selected" : "" ) %>><%= (String) ((ArrayList) providers.get(i)).get(1) %>
-						<%= (String) ((ArrayList) providers.get(i)).get(2) %></option>
-						<% } %>
-					</optgroup>
-				</select> <input type="hidden" name="providerNo"
-					value="<%= request.getParameter("providerNo") %>"></td>
+				<td><input type="radio" name="searchProviderAll" value="" ondblclick="this.checked = false;">&nbsp;<bean:message key="oscarMDS.search.formPhysicianAll" />
+					<input type="radio" name="searchProviderAll" value="0" ondblclick="this.checked = false;">&nbsp;<bean:message key="oscarMDS.search.formPhysicianUnclaimed" />
+					<input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>">
+				</td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			<td>
+				<input type="hidden" name="searchProviderNo" id="provfind" />
+                <input type="text" id="autocompleteprov" name="demographicKeyword"/>
+			</td>
 			</tr>
 			<tr>
 				<td colspan="2">
