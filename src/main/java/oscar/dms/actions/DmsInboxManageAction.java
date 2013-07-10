@@ -195,6 +195,7 @@ public class DmsInboxManageAction extends DispatchAction {
 
 		String providerNo = (String) session.getAttribute("user");
 		String searchProviderNo = request.getParameter("searchProviderNo");
+		Boolean searchAll = request.getParameter("searchProviderAll") != null;
 		String status = request.getParameter("status");
 
 		boolean providerSearch = !"-1".equals(searchProviderNo);
@@ -208,10 +209,14 @@ public class DmsInboxManageAction extends DispatchAction {
 		if (providerNo == null) {
 			providerNo = "";
 		}
-		if (searchProviderNo == null) {
+		
+		if( searchAll ) {
+			searchProviderNo = request.getParameter("searchProviderAll");
+		}
+		else if (searchProviderNo == null) {
 			searchProviderNo = providerNo;
 		} // default to current provider
-
+		MiscUtils.getLogger().info("SEARCH " + searchProviderNo);
 		String patientFirstName = request.getParameter("fname");
 		String patientLastName = request.getParameter("lname");
 		String patientHealthNumber = request.getParameter("hnum");
@@ -233,6 +238,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			CategoryData cData = new CategoryData(patientLastName, patientFirstName, patientHealthNumber,
 					patientSearch, providerSearch, searchProviderNo, status);
 			cData.populateCountsAndPatients();
+			MiscUtils.getLogger().info("LABS " + cData.getTotalLabs());
 			request.setAttribute("patientFirstName", patientFirstName);
 			request.setAttribute("patientLastName", patientLastName);
 			request.setAttribute("patientHealthNumber", patientHealthNumber);
