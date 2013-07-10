@@ -96,20 +96,6 @@
 </oscar:oscarPropertiesCheck>
 
 <%
-	if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) {
-
-		if (temp.equals("diab3")) {
-	%>
-		<jsp:forward page="DiabFlowSheet.jsp" />
-	<%
-		} else if (request.getAttribute("temp") != null && request.getAttribute("temp").equals("diab3")) {
-	%>
-		<jsp:forward page="DiabFlowSheet.jsp" />
-	<%
-		}
-
-	}
-
 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
 
 
@@ -160,6 +146,11 @@
     ArrayList<String> measurements = new ArrayList(measurementLs);
     long startTimeToGetM = System.currentTimeMillis();
 
+    Boolean isMeasurements=true;	
+	if(measurements.size()<=0){	
+		isMeasurements=false;	
+	}
+    
     mi.getMeasurements(measurements);
 
     try{
@@ -172,11 +163,8 @@
     ArrayList recList = mi.getList();
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
-    for(int i = 0; i < recList.size(); i++){
-        //recListBuffer.append("&amp;measurement="+response.encodeURL( (String) recList.get(i)));
-        
-        recListBuffer.append("$('[id^=add-box-"+recList.get(i)+"]').toggle('slow');\n" );
-    	
+    for(int i = 0; i < recList.size(); i++){       
+        recListBuffer.append("$('[id^=add-box-"+recList.get(i)+"]').toggle('slow');\n" ); 	
     }
 
 
@@ -283,8 +271,6 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
       padding-bottom:0px;
       }
  
- 	#dxAlert{display:none;}
-      
       #main{
       position:relative;
       top:44px;
@@ -332,7 +318,6 @@ background-color: #FFFFAA; /*#f5f5f5;*/
 
 .headMtype{
 	height:34px;
-	/* background-color: #f5f5f5; *//*#D6D6C2;*/
 	width:100%;
 	margin-bottom:2px;
 	padding:0px;
@@ -354,16 +339,37 @@ height:500px;
 margin-left: -450px;
 }
 
+	#panel{
+	position:absolute;
+	display:none;
+	top:80px;
+	width:100%;
+	z-index:999;
+	}
+	
+	.btn-divider{
+	margin:0 6px 0 6px;
+	padding:0px;
+	}
+
 .inlinesparkline:hover{
 cursor: hand; cursor: pointer;
 }
 
-.btn-underline{text-decoration:underline;font-weight:bold}
-
-@media (max-width: 1200px) { 
-/*#right-side{background-color: blue;}*/
+.input-wrapper{
+float:right;display:inline;margin:0px;padding:0px;
 }
 
+.btn-underline{text-decoration:underline;font-weight:bold}
+
+@media (min-width: 768px) and (max-width: 979px) { 
+#tracker-bar{position:static}
+}
+
+@media (max-width: 768px) { 
+#tracker-bar{position:static;}
+.input-wrapper{margin-top:-30px;} /*TODO*/
+}
 </style>
 		
     <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
@@ -414,7 +420,7 @@ cursor: hand; cursor: pointer;
 	}
 
 
-	window.resizeTo(screen.availWidth,screen.availHeight);
+	//window.resizeTo(screen.availWidth,screen.availHeight);
 	window.onload = setScrollPos;
 	window.onscroll = getScrollCoords;
 	window.onkeypress = getScrollCoords;
@@ -469,16 +475,14 @@ cursor: hand; cursor: pointer;
 		$('#graphModal').modal('show');
 		document.getElementById('gFrame').src = url;
 		document.getElementById('gFrame').style.display='block';
-		
-		//document.getElementById('black_wrapper').style.display='block';
 	}
 	
 	function addMeas(s,t) {
 		var url = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?demographic_no=<%=demographic_no%>&template="+t+s;
 	
-	document.getElementById('gFrame').src = url;
-	document.getElementById('gFrame').style.display='block';
-	document.getElementById('black_wrapper').style.display='block';
+		document.getElementById('gFrame').src = url;
+		document.getElementById('gFrame').style.display='block';
+		document.getElementById('black_wrapper').style.display='block';
 	}
 	
 	function eform() { //testing
@@ -590,20 +594,21 @@ function fsPopup(width,height,url,window) {
 		
   </head>
 
-  <body onload="moveTo(0,0);">
+  <body id="HealthTracker">
     
 
 <%@ include file="/share/templates/patient.jspf"%>
 
 <div id="tracker-bar" class="container-fluid navbar-inner">
+
    		<div class="span12" style="padding-left:0px;margin-left:0px">
 <%
 				boolean btnSelected=false;
-				String btnState = "";
-				String dxAlert="";
-				String dxAlertfs="";
-				String isSelected="";
+				String btnState = "btn";
 				String dxCodeQueryString="";
+				
+				ArrayList<String> diagnosed=new ArrayList<String>(); 
+				ArrayList<String> flowsheetList=new ArrayList<String>();
 								
 				FlowsheetDao flowsheetDao = (FlowsheetDao) SpringUtils.getBean("flowsheetDao");
 				ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
@@ -611,13 +616,14 @@ function fsPopup(width,height,url,window) {
 				Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
 				flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
 			
-				
 				Hashtable<String, String> systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();
-								
+				
+				String displayName= "";
+				
 				for(String name:systemFlowsheets.keySet()) {
-					String displayName = systemFlowsheets.get(name);
-					MeasurementFlowSheet flowSheetGroups = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(name);
+					displayName = systemFlowsheets.get(name);
 					
+					MeasurementFlowSheet flowSheetGroups = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(name);
 					Flowsheet fs = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetSettings().get(flowSheetGroups.getName());
 					
 					boolean enabled=true;
@@ -625,79 +631,157 @@ function fsPopup(width,height,url,window) {
 						enabled = fs.isEnabled();
 					}
 					
-					if(temp.equals(flowSheetGroups.getName())){
-						btnSelected=true;
-					}else{
-						btnSelected=false;
-					}
-					
-
-					
+																
 					if(enabled && flowSheetGroups.isUniversal()!=true) { 
-						
-						btnState = "btn";
+
 						//out.print(flowsheets.size());
 						for (int f = 0; f < flowsheets.size(); f++) {
 							String flowsheetName = flowsheets.get(f);
 							//out.print(flowsheetName);
 							if(flowsheetName.equals(flowSheetGroups.getName())){
-								btnState="btn-success";
-								break;
+						
+								diagnosed.add(flowSheetGroups.getName());
+								break;		
 							}
-						}	
-					
-						//simple alert trigger
-						if(btnSelected && btnState.equals("btn")){
-								dxAlert="style='display:block;'";
-								dxAlertfs=flowSheetGroups.getDisplayName();
-								dxCodeQueryString=flowSheetGroups.getDxTriggersQueryBuilder(demographic_no,providerNo);
 						}
 						
-						if(btnSelected){isSelected="btn-underline active"; }
-					%>
+						flowsheetList.add(flowSheetGroups.getName());
 						
-						<a href="<%=request.getRequestURI()%>?demographic_no=<%=demographic_no%>&template=<%=flowSheetGroups.getName()%>" class="btn <%=btnState%> <%=isSelected%>" title="<%=flowSheetGroups.getDisplayName()%> <%=dxCodeQueryString%>" id="group-btn-<%=flowSheetGroups.getName()%>">
-						
-						
-						
-						<%
-						
-								
-						if(flowSheetGroups.getName().toUpperCase().equals("DIAB2")){
-							out.print("DIAB");
-						}else{
-						
-							out.print(flowSheetGroups.getName().toUpperCase());
-						
-						}
-						
-						isSelected=""; //clear
-						%> 
-						</a>
-					<% 
-										
-					} 
+						if(displayName.equals(flowSheet)){
+							//current flowsheet
+							
+							try{	
+								dxCodeQueryString=flowSheetGroups.getDxTriggersQueryBuilder(demographic_no,providerNo);	
+							}catch(Exception e){	
+								MiscUtils.getLogger().error("Error getting DxTriggers - Health Tracker",e);	
+							}
+							
+						}						
+											
+					}// if enabled and universal 
 					
 				}
-			%>	
-			
+
+     int idx=0;
+	 String btnLabel="";
+	 String Selected="";
+
+     for(idx=0;idx<diagnosed.size();idx++)
+     {
+    	 
+    	if(temp.equals(diagnosed.get(idx).toString().toLowerCase())){Selected="btn-primary active";} 
+    	
+    	btnLabel=diagnosed.get(idx).toString().toUpperCase();
+    	if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
+    	
+      	out.print("<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+diagnosed.get(idx).toString()+"' class='btn "+Selected+"' title='Diagnosed' id='group-btn-"+diagnosed.get(idx)+"'>"+btnLabel+"</a> ");
+      	Selected="";
+     }
+%>	
+
+
+<%
+	String undiagnosed="";
+	String unDxShow="";
+     int iUndx=0;
+     for(iUndx=0;iUndx<flowsheetList.size();iUndx++)
+     {
+    	 if (!diagnosed.contains(flowsheetList.get(iUndx))) {
+    		 
+    		 btnLabel=flowsheetList.get(iUndx).toString().toUpperCase();
+ 	    	 if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
+ 	    	
+    		 if(temp.equals(flowsheetList.get(iUndx).toString())){
+    			 Selected="btn-primary active";
+    			 unDxShow="<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+Selected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
+    		 } 
+    		 
+    	    	undiagnosed = undiagnosed + "<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+Selected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
+      			Selected="";
+    	 }
+     }
+     
+%>
+<span class="btn-divider" title="View undiagnosed flowsheets">| <%=unDxShow %></span>		
+			<a href="#" class="btn" id="MoreDx" title="View undiagnosed flowsheets">More <span class="caret"></span></a>
 		</div>
 </div>
+<div id="panel" class="well well-small">
+<!-- undiagnosed -->
+<%=undiagnosed %>
+</div>
+
 
    <div id="main" class="container-fluid">
    <div class="row-fluid">
   
    	<div class="row-fluid">
    		<div class="span12">
-    
-    <div id="dxAlert" class="alert" <%=dxAlert%>>
+ 
+ <%if (!diagnosed.contains(temp)){ %>  
+ 
+<script type="text/javascript">
+    $(window).load(function(){
+        $('#unDxModal').modal('show');
+    });
+</script> 
+    <div id="dxAlert" class="alert">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
-    You are using the <b><%=dxAlertfs%></b> without a diagnosis. To add a diagnosis use one of the available codes: 
-    <%=dxCodeQueryString %>
+ 	You are using the <b><%=flowSheet%></b> without a diagnosis. 	
+ 	
+		<%if(dxCodeQueryString!=""){ %>	
+			To add a diagnosis use one of the available codes: 	
+			<%	
+			out.print(dxCodeQueryString); 	
+				
+			%>	
+			or go to the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a>. 	
+			<%	
+			}else{	
+			%>	
+			Use the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a> to add a diagnosis.	
+			<%		
+			}	
+			%>
     </div>
-   
-   		<h4 style="display:inline;"><%=flowSheet%></h4>
+ <%} %>
+ 
+
+<h4 style="display:inline;"><%=flowSheet%></h4>
+   		
+<!-- Modal -->
+<div id="unDxModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="unDxModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<h3 id="unDxModalLabel">Warning!</h3>
+</div>
+<div class="modal-body" style="text-align:center;font-size:16px">
+ 	<p>You are using the <b><%=flowSheet%></b> without a diagnosis. </p>	
+ 	
+		<%if(dxCodeQueryString!=""){ %>	
+			To add a diagnosis use one of the available codes: 	
+			<%	
+			out.print(dxCodeQueryString); 	
+				
+			%>	
+			or go to the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a>. 	
+			<%	
+			}else{	
+			%>	
+			Use the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a> to add a diagnosis.	
+			<%		
+			}	
+			%>
+               
+          
+</div>
+<div class="modal-footer">
+<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Continue">
+</div>
+</div>
+<!-- modal end --> 
+
    		   		
 <!-- Modal -->
 <div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -747,6 +831,7 @@ function fsPopup(width,height,url,window) {
 </div>
 <!-- modal end -->   
 
+<%if(isMeasurements){%>
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 		
 		<span style="padding-left:10px;" id="expand-all">
@@ -799,6 +884,7 @@ function fsPopup(width,height,url,window) {
 		-->
 		
 		</security:oscarSec>
+<%} //isMeasurements %>
 		
    		</div>
    	</div>
@@ -807,7 +893,12 @@ function fsPopup(width,height,url,window) {
 	    <div class="row-fluid">
 		    <div class="span6">
 
-              		    
+   <%if(!isMeasurements){ out.print("No measurements! "); 	
+			%>	
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
+			To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%> %>' title='Edit Flowsheet' target='_blank'>Edit Flowsheet</a>.	
+			</security:oscarSec>	
+	<%}%>            		    
 		    
 <!-- start of form -->	
 <form id="mainForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/FormUpdate.do">
@@ -963,7 +1054,7 @@ function fsPopup(width,height,url,window) {
 
 </div> <!-- span4 end -->
 
-<span style="float:right;display:inline;margin:0px;padding:0px">  
+<div class="input-wrapper">  
      <div class="input-append date" id="dp-<%=iDate%>" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
 				<input style="width:90px" name="<%=name%>_date" size="16" type="text" value="<%=date%>">
 				<span class="add-on"><i class="icon-calendar"></i></span>
@@ -999,7 +1090,7 @@ function fsPopup(width,height,url,window) {
 	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%>	 placeholder="Enter Data"> 
   <%} %>
 <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
-</span>
+</div>
 </div>
 
 <!-- hidden fields for form -->
@@ -1267,7 +1358,7 @@ function createAddAll(d,t){
            <ul class="nav nav-tabs">
              <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
              <li><a href="#tab2" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Allergy'/></a></li>
-             <li><a href="#tab3" data-toggle="tab"><bean:message key='oscarEncounter.reminders.title'/></a></li>
+             <!-- hiding for now don't think we want this<li><a href="#tab3" data-toggle="tab"><bean:message key='oscarEncounter.reminders.title'/></a></li>-->
              <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/></a></li>
            </ul>
            <div class="tab-content">
@@ -1487,17 +1578,16 @@ function createAddAll(d,t){
 	    </div>
     </div>
 
-<div style="float:left;margin-left:570px;padding-top:50px">
+<%if(isMeasurements){ %>
+<div style="float:left;margin-left:520px;padding-top:50px;height:70px">
 	<!-- this will have to be visible to user -->
-		     <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
+		    <a href="#HealthTracker" style="padding-right:10px"><i class="icon-arrow-up"></i>Top</a> <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
+</div>
+<%}%>
 <!-- end of form -->
 </fieldset>		    
 </form>
-</div>
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     
 	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
 	<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
@@ -1552,6 +1642,10 @@ $(document).ready(function () {
 
         // Function to handle changes to style classes based on window width
         function checkWidth() {
+            if ($window.width() < 964) {
+                $('#right-side').removeClass('span6').addClass('span2 pull-right');
+                };
+                
             if ($window.width() < 1200) {
                 $('#right-side').removeClass('span6').addClass('span4 pull-right');
                 };
@@ -1559,6 +1653,7 @@ $(document).ready(function () {
             if ($window.width() >= 1200) {
                 $('#right-side').removeClass('span4 pull-right').addClass('span6');
             }
+    
         }
 
         // Execute on load
@@ -1643,6 +1738,10 @@ $('[id^=group-btn-]')
         btn.button('reset')
     }, 3000)
 })
+
+$("#MoreDx").click(function(){
+  $("#panel").slideToggle();
+});
 
 </script>
 
