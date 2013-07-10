@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -433,9 +432,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
         function extractMeds(){
-            new Ajax.Request('medExtract.jsp',{method: 'post', parameters:handler.getOBXResult(), onSuccess:function(){
-              window.popup(700,960,'medExtract.jsp');
-            }})
+            var data='method=execute';
+            new Ajax.Request('../../../dms/medExtractManage.do',{method: 'post', parameters:data, onSuccess:function(target){
+              var d = target.responseText.evalJSON();
+              alert(d.values);
+              window.popup(900,1600,'medExtract.jsp');
+            }});
 
         }
         function handleLab(formid,labid,action){
@@ -443,6 +445,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            var data='method=isLabLinkedToDemographic&labid='+labid;
                                            new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
                                                                     var json=transport.responseText.evalJSON();
+                                                                    alert(json);
                                                                     if(json!=null){
                                                                         var success=json.isLinkedToDemographic;
                                                                         var demoid='';
@@ -628,7 +631,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
 
                                     <input type="button" value="Msg" onclick="handleLab('','<%=segmentID%>','msgLab');"/>
-                                    <input type="button" value="medExtract" onclick="handleLab('','<%=segmentID%>','medExtract');"/>
+                                    <input type="button" value="medExtract" onclick="extractMeds();"/>
                                     <input type="button" value="Tickler" onclick="handleLab('','<%=segmentID%>','ticklerLab');"/>
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnUnlinkDemo"/>" onclick="handleLab('','<%=segmentID%>','unlinkDemo');"/>
 

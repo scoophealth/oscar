@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -24,11 +23,6 @@
     Ontario, Canada
 
 --%>
-<%@page import="org.oscarehr.medextract.MedicationExtractor"%>
-
-<%
-    MedicationExtractor me = new MedicationExtractor("Simon");
-%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -38,6 +32,8 @@
         <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <script type="text/javascript" src="bootstrap/js/jquery-1.8.3.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
         <style type='text/css'>
             .well-bordered {
                 border: 1px solid black;    
@@ -71,7 +67,7 @@
                               <li class='btn btn-small'><a href="#">Forward</a></li>
                               <li class='btn btn-small'><a href="#">Notes</a></li>
                               <li class='btn btn-small'><a href="#">Call Patient</a></li>
-                              <li class='btn btn-small'><a href="#">Sign and Save</a></li>
+                              <li class='btn btn-small'><a href="#SignAndSaveModal" data-toggle='modal' role='button'>Sign and Save</a></li>
                             </ul>
                         </div>
                     </div>
@@ -118,22 +114,25 @@ fever , and Flovent 220 mcg two puffs b.i.d.
                 </div>
                 <div class='span4'>
                     <div class='well well-bordered'>
+                        <a href='#addNewMedModal' data-toggle='modal' role='button' class='btn btn-block btn-primary'>Add New Medication</a>
+                    </div>
+                    <div class='well well-bordered'>
                     <h5>Suggested Medications from Text</h5>
                     <table class='table table-striped'>
                         <tbody>
                         <tr>
-                            <td><a href='#'><span class='btn btn-mini btn-success'>Add</span></a></td>
-                            <td><p>Aspirin 81 mg po bid.</p></td>
+                            <td><a href='#addMed1' data-toggle='modal' role='button'><span class='btn btn-mini btn-success'>Add</span></a></td>
+                            <td><p>Atenolol 25 mg tablet oral daily</p></td>
                             <td><a href='#'><i class='icon-remove-sign'></i></a></td>
                         </tr> 
                         <tr>
-                            <td><a href='#'><span class='btn btn-mini btn-success'>Add</span></a></td>
-                            <td><p>Coumadin 10 mg po bid.</p></td>
+                            <td><a href='#addMed2' data-toggle='modal' role='button'><span class='btn btn-mini btn-success'>Add</span></a></td>
+                            <td><p>Omeprazole 20 mg tablet oral daily</p></td>
                             <td><a href='#'><i class='icon-remove-sign'></i></a></td>
                         </tr> 
                         <tr>
-                            <td><a href='#'><span class='btn btn-mini btn-success'>Add</span></a></td>
-                            <td><p>Lisinopril 50 mg po bid.</p></td>
+                            <td><a href='#addMed3' data-toggle='modal' role='button'><span class='btn btn-mini btn-success'>Add</span></a></td>
+                            <td><p>Nitroglycerin spray sublingual p.r.n<br>take as instructed</p></td>
                             <td><a href='#'><i class='icon-remove-sign'></i></a></td>
                         </tr> 
                         </tbody>
@@ -144,16 +143,16 @@ fever , and Flovent 220 mcg two puffs b.i.d.
                     <table class='table table-striped'>
                         <tbody>
                         <tr>
-                            <td><a href='#'><span class='btn btn-mini btn-primary'>Edit</span></a></td>
-                            <td><p>Aspirin 81 mg po bid.</p></td>
+                            <td><a href="#editMed1" role="button" data-toggle="modal" class='btn btn-mini btn-primary'>Edit</a></td>
+                            <td><p>Aspirin (ASA) 81 mg po bid.</p></td>
                         </tr> 
                         <tr>
-                            <td><a href='#'><span class='btn btn-mini btn-primary'>Edit</span></a></td>
-                            <td><p>Coumadin 10 mg po bid.</p></td>
+                            <td><a href="#editMed2" role="button" data-toggle="modal" class='btn btn-mini btn-primary'>Edit</a></td>
+                            <td><p>Coumadin (WARFARIN) 10 mg tablet oral twice daily</p></td>
                         </tr> 
                         <tr>
-                            <td><a href='#'><span class='btn btn-mini btn-primary'>Edit</span></a></td>
-                            <td><p>Lisinopril 50 mg po bid.</p></td>
+                            <td><a href="#editMed3" role="button" data-toggle="modal" class='btn btn-mini btn-primary'>Edit</a></td>
+                            <td><p>Glucophage (METFORMIN) 500 mg tablet oral twice a day.</p></td>
                         </tr> 
                         </tbody>
                     </table>
@@ -161,5 +160,775 @@ fever , and Flovent 220 mcg two puffs b.i.d.
                 </div>
             </div>
         </div>
+ 
+        <!--Medication Modals -->
+
+        <!----------------------------------------------- ADD MED DEFAULT--------------------------------------------------------->
+        <div id="addNewMedModal" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="myModalLabel">Add Medication:  </h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_name">Medication:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="med1_brandname" id="med1_brandname" value=""/>
+                            <span>(&nbsp</span><input type="text" class='input-medium' name="med1_ingredientname" id="med1_ingredientname" value=""/><span>&nbsp)</span>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="med1_dose" id="med1_dose" maxlength="6" size="6"value=""/>
+                            <select class='input-mini'>
+                                <option>mg</option>
+                                <option>mL</option>
+                                <option>mEq</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='po'>oral</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='none'>-</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='po'>oral</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_freq">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='q.d'>daily</option>
+                                <option value='b.i.d'>twice daily</option>
+                                <option value='t.i.d'>three times daily</option>
+                                <option value='q.i.d'>four times daily</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='p.r.n_pain'>as needed; pain</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="med1_longterm" id="med1_longterm" value='true'>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="med1_externalprovider" id="med1_externalprovider" value='true'>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='med1_instructions' rows="3"></textarea> 
+                        </div>
+                    </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Add Medication to OSACAR</button>
+            <button class="btn btn-primary">Add and Prescribe</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </div>
+        </div>
+
+        <!----------------------------------------------- END ADD MED DEFUALT--------------------------------------------------------->
+        <!----------------------------------------------- ADD MED 1--------------------------------------------------------->
+        <div id="addMed1" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="myModalLabel">Add Medication: Atenolol 25 mg tablet oral daily </h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_name">Medication:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="med1_brandname" id="med1_brandname" value=""/>
+                            <span>(&nbsp</span><input type="text" class='input-medium' name="med1_ingredientname" id="med1_ingredientname" value="Atenolol"/><span>&nbsp)</span>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="med1_dose" id="med1_dose" maxlength="6" size="6"value="25"/>
+                            <select class='input-mini'>
+                                <option>mg</option>
+                                <option>mL</option>
+                                <option>mEq</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='tablet'>tablet</option>
+                                <option value='po'>oral</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='po'>oral</option>
+                                <option value='none'>-</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_freq">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='q.d'>daily</option>
+                                <option value='void'>-</option>
+                                <option value='b.i.d'>twice daily</option>
+                                <option value='t.i.d'>three times daily</option>
+                                <option value='q.i.d'>four times daily</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='p.r.n_pain'>as needed; pain</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="med1_longterm" id="med1_longterm" value='true'>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="med1_externalprovider" id="med1_externalprovider" value='true'>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='med1_instructions' rows="3"></textarea> 
+                        </div>
+                    </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Add Medication to OSACAR</button>
+            <button class="btn btn-primary">Add and Prescribe</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </div>
+        </div>
+
+        <!----------------------------------------------- END ADD MED 1--------------------------------------------------------->
+        <!----------------------------------------------- ADD MED 2--------------------------------------------------------->
+        <div id="addMed2" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="myModalLabel">Add Medication: Omeprazole 20 mg tabel oral daily</h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_name">Medication:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="med2_brandname" id="med2_brandname" value=""/>
+                            <span>(&nbsp</span><input type="text" class='input-medium' name="med2_ingredientname" id="med2_ingredientname" value="Omeprazole"/><span>&nbsp)</span>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="med2_dose" id="med2_dose" maxlength="6" size="6"value="20"/>
+                            <select class='input-mini'>
+                                <option>mg</option>
+                                <option>mL</option>
+                                <option>mEq</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='tablet'>tablet</option>
+                                <option value='po'>oral</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='po'>oral</option>
+                                <option value='none'>-</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_freq">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='q.d'>daily</option>
+                                <option value='void'>-</option>
+                                <option value='b.i.d'>twice daily</option>
+                                <option value='t.i.d'>three times daily</option>
+                                <option value='q.i.d'>four times daily</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='p.r.n_pain'>as needed; pain</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="med2_longterm" id="med2_longterm" value='true'>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="med2_externalprovider" id="med2_externalprovider" value='true'>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='med2_instructions' rows="3"></textarea> 
+                        </div>
+                    </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Add Medication to OSACAR</button>
+            <button class="btn btn-primary">Add and Prescribe</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </div>
+        </div>
+
+        <!----------------------------------------------- END ADD MED 2--------------------------------------------------------->
+        <!----------------------------------------------- ADD MED 3--------------------------------------------------------->
+        <div id="addMed3" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="myModalLabel">Add Medication: Nitroglycerin spray sublingual p.r.n</h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_name">Medication:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="med3_brandname" id="med3_brandname" value=""/>
+                            <span>(&nbsp</span><input type="text" class='input-medium' name="med3_ingredientname" id="med3_ingredientname" value="Nitroglycerin"/><span>&nbsp)</span>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="med3_dose" id="med3_dose" maxlength="6" size="6"value=""/>
+                            <select class='input-mini'>
+                                <option>mg</option>
+                                <option>mL</option>
+                                <option>mEq</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='spray'>spray</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='po'>oral</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='po'>oral</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='other'>other</option>
+                                <option value='none'>-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_freq">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='p.r.n'>as needed (p.r.n)</option>
+                                <option value='q.d'>daily</option>
+                                <option value='b.i.d'>twice daily</option>
+                                <option value='t.i.d'>three times daily</option>
+                                <option value='q.i.d'>four times daily</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                                <option value='void'>-</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='p.r.n_pain'>as needed; pain</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="med3_longterm" id="med3_longterm" value='true'>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="med3_externalprovider" id="med3_externalprovider" value='true'>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='med3_instructions' rows="3">Take as instructed</textarea> 
+                        </div>
+                    </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Add Medication to OSACAR</button>
+            <button class="btn btn-primary">Add and Prescribe</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </div>
+        </div>
+
+        <!----------------------------------------------- END ADD MED 1--------------------------------------------------------->
+        <!----------------------------------------------- EDIT MED 1 --------------------------------------------------------->
+
+        <div id="editMed1" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="myModalLabel">Edit Medication:  Aspirin (ASA) 81 mg po bid</h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_name">Medication:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="med1_brandname" id="med1_brandname" value="Aspirin"/>
+                            <span>(&nbsp</span><input type="text" class='input-medium' name="med1_ingredientname" id="med1_ingredientname" value="ASA"/><span>&nbsp)</span>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="med1_dose" id="med1_dose" maxlength="6" size="6"value="81"/>
+                            <select class='input-mini'>
+                                <option>mg</option>
+                                <option>mL</option>
+                                <option>mEq</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='po'>oral</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='none'>-</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='po'>oral</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_freq">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='q.d'>daily</option>
+                                <option value='b.i.d'>twice daily</option>
+                                <option value='t.i.d'>three times daily</option>
+                                <option value='q.i.d'>four times daily</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='p.r.n_pain'>as needed; pain</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="med1_longterm" id="med1_longterm" value='true'>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="med1_externalprovider" id="med1_externalprovider" value='true'>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med1_instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='med1_instructions' rows="3"></textarea> 
+                        </div>
+                    </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Add Medication to OSACAR</button>
+            <button class="btn btn-danger">Remove from OSCAR</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </div>
+        </div>
+        <!----------------------------------------------- END EDIT MED 1 --------------------------------------------------------->
+        <!-----------------------------------------------  EDIT MED 2 --------------------------------------------------------->
+
+        <div id="editMed2" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="myModalLabel">Edit Medication: Coumadin 10 mg tablet oral twice daily</h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_name">Medication:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="med2_brandname" id="med2_brandname" value="Coumadin"/>
+                            <span>(&nbsp</span><input type="text" class='input-medium' name="med2_ingredientname" id="med2_ingredientname" value="WARFARIN"/><span>&nbsp)</span>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="med2_dose" id="med2_dose" maxlength="6" size="6"value="10"/>
+                            <select class='input-mini'>
+                                <option>mg</option>
+                                <option>mL</option>
+                                <option>mEq</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='po'>oral</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='tablet'>tablet</option>
+                                <option value='none'>-</option>
+                                <option value='spray'>spray</option>
+                                <option value='po'>oral</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_freq">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='b.i.d'>twice daily</option>
+                                <option value='q.d'>daily</option>
+                                <option value='t.i.d'>three times daily</option>
+                                <option value='q.i.d'>four times daily</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='p.r.n_pain'>as needed; pain</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="med2_longterm" id="med2_longterm" value='true'>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="med2_externalprovider" id="med2_externalprovider" value='true'>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med2_instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='med2_instructions' rows="3"></textarea> 
+                        </div>
+                    </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Add Medication to OSACAR</button>
+            <button class="btn btn-danger">Remove from OSCAR</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </div>
+        </div>
+        <!----------------------------------------------- END EDIT MED 2 --------------------------------------------------------->
+        <!----------------------------------------------- EDIT MED 3 --------------------------------------------------------->
+
+        <div id="editMed3" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="myModalLabel">Edit Medication: Glucophage (METFORMIN) 500 mg tablet oral twice daily.</h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_name">Medication:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="med3_brandname" id="med3_brandname" value="Glucophage"/>
+                            <span>(&nbsp</span><input type="text" class='input-medium' name="med3_ingredientname" id="med3_ingredientname" value="METFORMIN"/><span>&nbsp)</span>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="med3_dose" id="med3_dose" maxlength="6" size="6"value="500"/>
+                            <select class='input-mini'>
+                                <option>mg</option>
+                                <option>mL</option>
+                                <option>mEq</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='tablet'>tablet</option>
+                                <option value='po'>oral</option>
+                                <option value='spray'>spray</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='po'>oral</option>
+                                <option value='none'>-</option>
+                                <option value='spray'>spray</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='subq'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='other'>other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_freq">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium'>
+                                <option value='b.i.d'>twice daily</option>
+                                <option value='q.d'>daily</option>
+                                <option value='t.i.d'>three times daily</option>
+                                <option value='q.i.d'>four times daily</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <select class='input-medium'>
+                                <option value='void'>-</option>
+                                <option value='p.r.n_pain'>as needed; pain</option>
+                                <option value='p.r.n'>as needed</option>
+                                <option value='q.4h'>every 4 hours</option>
+                                <option value='q.8h'>every 8 hours</option>
+                                <option value='q.12h'>every 12 hours</option>
+                                <option value='other'>other</option>
+                            </select>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="med3_longterm" id="med3_longterm" value='true'>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="med3_externalprovider" id="med3_externalprovider" value='true'>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="med3_instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='med3_instructions' rows="3"></textarea> 
+                        </div>
+                    </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Add Medication to OSACAR</button>
+            <button class="btn btn-danger">Remove from OSCAR</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </div>
+        </div>
+        <!----------------------------------------------- END EDIT MED 3 --------------------------------------------------------->
+        <!----------------------------------------------- SIGN AND SAVE --------------------------------------------------------->
+       <div id='SignAndSaveModal'class="modal hide fade">
+          <div class="modal-header">
+            <h4>Summary</h4>
+          </div>
+          <div class="modal-body">
+            <p>HART, Gordon's profile will now have the following medications: </p>
+            <ul>
+                <li>Aspirin (ASA) 81 mg po bid.</li>
+                <li>Coumadin (WARFARIN) 10 mg tablet oral twice daily</li> 
+                <li>Glucophage (METFORMIN) 500 mg tablet oral twice a day.</li> 
+            </ul>
+            <p>NOTE:  Alternativly, we could show which medications where removed and which were added.</p>
+          </div>
+          <div class="modal-footer">
+            <a href="#" data-dismiss='modal' class="btn btn-danger">Cancel</a>
+            <a href="#" data-dismiss='modal' class="btn btn-success">Sign and Save</a>
+          </div>
+        </div> 
+        <!----------------------------------------------- END SIGN AND SAVE --------------------------------------------------------->
+            
+        <!-- End Modals -->
     </body>
 </html>

@@ -729,6 +729,10 @@
             <forward name="document_in_queues"  path="/oscarMDS/documentsInQueues.jsp" />
         </action>
 
+        <action path="/dms/medExtractManage" scope="request"  parameter="method" type="org.oscarehr.medextract.MedicationExtractorAction">
+        	<forward name="success" path="/lab/CA/ALL/medExtract.jsp" redirect="true"/>
+        </action>
+
 		<action input="/oscarRx/ChooseDrug.jsp" path="/oscarRx/chooseDrug" scope="request" type="oscar.oscarRx.pageUtil.RxChooseDrugAction">
 			<forward name="success" path="/oscarRx/WriteScript.jsp" />
 		</action>

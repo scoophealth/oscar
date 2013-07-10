@@ -30,16 +30,12 @@ package org.oscarehr.medextract;
  * @author sdiemert
  * @date
  */
-public class MedicationExtractor {
+public class MedicationExtractor{
 
-		String name;
-
-		public MedicationExtractor(String name){
-			this.name = name;
-		}
+		public MedicationExtractor(){}
 
 		public String getName(){
-			return this.name;
+			return "Simon"; 
 		}
 
 }

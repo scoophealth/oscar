@@ -740,6 +740,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		hm.put("demoId", demoId);
 		JSONObject jsonObject = JSONObject.fromObject(hm);
 		try {
+			logger.info("Seeting getOutputStream in isLabLinkedToDemographic");
 			response.getOutputStream().write(jsonObject.toString().getBytes());
 		} catch (java.io.IOException ioe) {
 			logger.error("Error", ioe);
