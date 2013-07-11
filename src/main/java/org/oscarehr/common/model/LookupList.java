@@ -23,12 +23,18 @@
  */
 package org.oscarehr.common.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -52,6 +58,10 @@ public class LookupList extends AbstractModel<Integer> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated = new Date();
 	
+	@OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name="lookupListId", referencedColumnName="id")
+	@OrderBy("displayOrder")
+	private List<LookupListItem> items = new ArrayList<LookupListItem>();
 
 	public Integer getId() {
 		return id;
@@ -107,6 +117,14 @@ public class LookupList extends AbstractModel<Integer> {
 
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+
+	public List<LookupListItem> getItems() {
+		return items;
+	}
+
+	public void setItems(List<LookupListItem> items) {
+		this.items = items;
 	}
 	
 	
