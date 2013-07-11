@@ -13,6 +13,16 @@
 		<param-value>classpath:applicationContext*.xml</param-value>
 	</context-param>
 
+
+    <filter>
+            <filter-name>WebServiceSessionInvalidatingFilter</filter-name>
+            <filter-class>org.oscarehr.ws.WebServiceSessionInvalidatingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+            <filter-name>WebServiceSessionInvalidatingFilter</filter-name>
+            <url-pattern>/ws/*</url-pattern>
+    </filter-mapping>
+ 
 	<filter>
 		<filter-name>ProblemCheckFilter</filter-name>
 		<filter-class>org.oscarehr.util.ProblemCheckFilter</filter-class>
