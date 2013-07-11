@@ -47,4 +47,13 @@ public class LookupListDao extends AbstractDao<LookupList>{
 		
 		return result;
 	}
+	
+	public LookupList findByName(String name) {
+		Query q = entityManager.createQuery("select l from LookupList l where l.name=?");
+		q.setParameter(1,name);
+		
+		LookupList ll = this.getSingleResultOrNull(q);
+		
+		return ll;
+	}
 }
