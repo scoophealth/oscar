@@ -24,12 +24,20 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.BillingCdmServiceCodes;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class BillingCdmServiceCodesDaoTest extends DaoTestFixtures {
@@ -38,7 +46,7 @@ public class BillingCdmServiceCodesDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("ctl_billingservice_age_rules", "billing_cdm_service_codes");
+		SchemaUtils.restoreTable(false, "ctl_billingservice_age_rules", "billing_cdm_service_codes");
 	}
 
 	@Test
@@ -48,5 +56,38 @@ public class BillingCdmServiceCodesDaoTest extends DaoTestFixtures {
 		entity.setId(null);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindAll() throws Exception {
+		
+		BillingCdmServiceCodes bCSC1 = new BillingCdmServiceCodes();
+		EntityDataGenerator.generateTestDataForModelClass(bCSC1);
+		dao.persist(bCSC1);
+		
+		BillingCdmServiceCodes bCSC2 = new BillingCdmServiceCodes();
+		EntityDataGenerator.generateTestDataForModelClass(bCSC2);
+		dao.persist(bCSC2);
+		
+		BillingCdmServiceCodes bCSC3 = new BillingCdmServiceCodes();
+		EntityDataGenerator.generateTestDataForModelClass(bCSC3);
+		dao.persist(bCSC3);
+		
+		List<BillingCdmServiceCodes> expectedResult = new ArrayList<BillingCdmServiceCodes>(Arrays.asList(bCSC1, bCSC2, bCSC3));
+		List<BillingCdmServiceCodes> result = dao.findAll();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
