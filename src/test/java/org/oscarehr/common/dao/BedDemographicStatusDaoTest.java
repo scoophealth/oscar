@@ -21,33 +21,102 @@
  * Hamilton
  * Ontario, Canada
  */
+
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.BedDemographicStatus;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class BedDemographicStatusDaoTest extends DaoTestFixtures {
 
 	protected BedDemographicStatusDao dao = SpringUtils.getBean(BedDemographicStatusDao.class);
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("bed_demographic_status");
+		SchemaUtils.restoreTable(false, "bed_demographic_status");
 	}
 
 	@Test
 	public void testCreate() throws Exception {
+		
 		BedDemographicStatus entity = new BedDemographicStatus();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
-		
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testBedDemographicStatusExists() throws Exception {
+		
+		BedDemographicStatus bDS1 = new BedDemographicStatus();
+		EntityDataGenerator.generateTestDataForModelClass(bDS1);
+		dao.persist(bDS1);
+		
+		BedDemographicStatus bDS2 = new BedDemographicStatus();
+		EntityDataGenerator.generateTestDataForModelClass(bDS2);
+		dao.persist(bDS2);
+		
+		boolean expectedResult = true;
+		boolean result = dao.bedDemographicStatusExists(bDS1.getId());
+		
+		assertEquals(expectedResult, result);
+	}
+	
+	@Test
+	public void testGetBedDemographicStatuses() throws Exception {
+		
+		BedDemographicStatus bDS1 = new BedDemographicStatus();
+		EntityDataGenerator.generateTestDataForModelClass(bDS1);
+		dao.persist(bDS1);
+		
+		BedDemographicStatus bDS2 = new BedDemographicStatus();
+		EntityDataGenerator.generateTestDataForModelClass(bDS2);
+		dao.persist(bDS2);
+		
+		BedDemographicStatus bDS3 = new BedDemographicStatus();
+		EntityDataGenerator.generateTestDataForModelClass(bDS3);
+		dao.persist(bDS3);
+		
+		BedDemographicStatus expectedResult[] = {bDS1, bDS2, bDS3};
+		BedDemographicStatus result[] = dao.getBedDemographicStatuses();
+		
+		Logger logger = MiscUtils.getLogger();
+				
+		if (result.length != expectedResult.length) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.length; i++) {
+			if (!expectedResult[i].equals(result[i])){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testGetBedDemographicStatus() throws Exception {
+		
+		BedDemographicStatus bDS1 = new BedDemographicStatus();
+		EntityDataGenerator.generateTestDataForModelClass(bDS1);
+		dao.persist(bDS1);
+		
+		BedDemographicStatus bDS2 = new BedDemographicStatus();
+		EntityDataGenerator.generateTestDataForModelClass(bDS2);
+		dao.persist(bDS2);
+		
+		BedDemographicStatus expectedResult = bDS1;
+		BedDemographicStatus result = dao.getBedDemographicStatus(bDS1.getId());
+		
+		assertEquals(expectedResult, result);
 	}
 }
