@@ -28,10 +28,8 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 import oscar.util.StringUtils;
@@ -88,14 +86,9 @@ public class DemographicArchiveDao extends AbstractDao<DemographicArchive> {
         return (results);
     }
 
-    public void archiveRecord(Demographic d) {
-    	DemographicArchive da = new DemographicArchive();
-    	try {
-    		BeanUtils.copyProperties(da, d);
-    		persist(da);
-    	}catch(Exception e) {
-    		MiscUtils.getLogger().error("Error",e);
-    	}
-
+    public Long archiveRecord(Demographic d) {
+    	DemographicArchive da = new DemographicArchive(d);
+		persist(da);
+		return da.getId();
     }
 }

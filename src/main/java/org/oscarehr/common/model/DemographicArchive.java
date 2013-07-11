@@ -146,8 +146,56 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	@Temporal(TemporalType.DATE)
 	private Date lastUpdateDate = null;
 
-
 	public DemographicArchive() {}
+	
+	public DemographicArchive(Demographic demographic) {
+		this.address = demographic.getAddress();
+		this.alias = demographic.getAlias();
+		this.anonymous = demographic.getAnonymous();
+		this.chartNo = demographic.getChartNo();
+		this.children = demographic.getChildren();
+		this.citizenship = demographic.getCitizenship();
+		this.city = demographic.getCity();
+		this.countryOfOrigin = demographic.getCountryOfOrigin();
+		this.dateJoined = demographic.getDateJoined();
+		this.dateOfBirth = demographic.getDateOfBirth();
+		this.demographicNo = demographic.getDemographicNo();
+		this.effDate = demographic.getEffDate();
+		this.email = demographic.getEmail();
+		this.endDate = demographic.getEndDate();
+		this.familyDoctor = demographic.getFamilyDoctor();
+		this.firstName = demographic.getFirstName();
+		this.hcRenewDate = demographic.getHcRenewDate();
+		this.hcType = demographic.getHcType();
+		this.hin = demographic.getHin();
+		this.lastName = demographic.getLastName();
+		this.lastUpdateDate = demographic.getLastUpdateDate();
+		this.lastUpdateUser = demographic.getLastUpdateUser();
+		this.monthOfBirth = demographic.getMonthOfBirth();
+		this.myOscarUserName = demographic.getMyOscarUserName();
+		this.newsletter = demographic.getNewsletter();
+		this.officialLanguage = demographic.getOfficialLanguage();
+		this.patientStatus = demographic.getPatientStatus();
+		this.patientStatusDate = demographic.getPatientStatusDate();
+		this.pcnIndicator = demographic.getPcnIndicator();
+		this.phone = demographic.getPhone();
+		this.phone2 = demographic.getPhone2();
+		this.postal = demographic.getPostal();
+		this.previousAddress = demographic.getPreviousAddress();
+		this.providerNo = demographic.getProviderNo();
+		this.province = demographic.getProvince();
+		this.rosterDate = demographic.getRosterDate();
+		this.rosterStatus = demographic.getRosterStatus();
+		this.rosterTerminationDate = demographic.getRosterTerminationDate();
+		this.rosterTerminationReason = demographic.getRosterTerminationReason();
+		this.sex = demographic.getSex();
+		this.sin = demographic.getSin();
+		this.sourceOfIncome = demographic.getSourceOfIncome();
+		this.spokenLanguage = demographic.getSpokenLanguage();
+		this.title = demographic.getTitle();
+		this.ver = demographic.getVer();
+		this.yearOfBirth = demographic.getYearOfBirth();
+	}
 
 	public Integer getDemographicNo() {
 	    return this.demographicNo;

@@ -35,9 +35,10 @@
 <%@page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
 <%@page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
 <%@page import="org.oscarehr.common.dao.WaitingListDao" %>
-
 <%@page import="org.oscarehr.common.dao.WaitingListNameDao" %>
 <%@page import="org.oscarehr.common.model.WaitingListName" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
@@ -1368,6 +1369,15 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						<div class="leftSection">
 						<div class="demographicSection" id="demographic">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgDemographic"/></h3>
+						<%
+							for (String key : demoExt.keySet()) {
+							    if (key.endsWith("_id")) {
+						%>
+						<input type="hidden" name="<%=key%>" value="<%=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demoExt.get(key)))%>"/>
+						<%
+							    }
+							}
+						%>
 						<ul>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formLastName" />:</span>
@@ -2236,7 +2246,6 @@ if ( Dead.equals(PatStat) ) {%>
                                 										key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic" /></option>
                                 								</select></td>
 							</tr>
-							<!--
 							<tr valign="top">
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
@@ -2251,28 +2260,8 @@ if ( Dead.equals(PatStat) ) {%>
 										selected <%}%>>Yes</option>
 						
 								</select>
-								<input type="hidden" name="demo_aboriginalOrig"
+								<input type="hidden" name="aboriginalOrig"
 									value="<%=StringUtils.trimToEmpty(demoExt.get("aboriginal"))%>" />
-								</td>
-								<td align="right"><b>&nbsp;</b></td>
-								<td align="left">&nbsp;</td>
-							</tr>-->
-							<tr valign="top">
-								<td align="right"><b><bean:message
-									key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
-								<td align="left">
-								
-								<select name="aboriginal" <%=getDisabled("aboriginal")%>>
-									<option value="" <%if(aboriginal.equals("")){%>
-										selected <%}%>>Unknown</option>
-									<option value="No" <%if(aboriginal.equals("No")){%> selected
-										<%}%>>No</option>
-									<option value="Yes" <%if(aboriginal.equals("Yes")){%>
-										selected <%}%>>Yes</option>
-						
-								</select>
-								<input type="hidden" name="demo_aboriginalOrig"
-									value="<%=demoExt.get("aboriginal")%>" />
 								</td>
 								<td align="right"><b>&nbsp;</b></td>
 								<td align="left">&nbsp;</td>
