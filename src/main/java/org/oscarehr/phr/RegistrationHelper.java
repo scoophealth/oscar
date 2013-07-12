@@ -43,6 +43,8 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
+import org.oscarehr.myoscar.client.ws_manager.MyOscarLoggedInInfoInterface;
+import org.oscarehr.phr.util.UsernameHelper;
 
 public final class RegistrationHelper {
 	private static final String MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY = "MYOSCAR_REGISTRATION_DEFAULTS";
@@ -54,9 +56,22 @@ public final class RegistrationHelper {
 
 	public static String getDefaultUserName(int demographicId) {
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
-		return ((demographic.getFirstName() + '.' + demographic.getLastName()).toLowerCase());
+		String fn = UsernameHelper.stripName(demographic.getFirstName());
+		String ln = UsernameHelper.stripName(demographic.getLastName());	
+		
+		return (fn + '.' + ln);
 	}
+	
+	public static List<String> getPhrDefaultUserNameList(MyOscarLoggedInInfoInterface user, int demographicId) {
 
+		Demographic demographic = demographicDao.getDemographicById(demographicId);
+		String fn = UsernameHelper.stripName(demographic.getFirstName());
+		String ln = UsernameHelper.stripName(demographic.getLastName());	
+		String email = demographic.getEmail();
+		
+		return UsernameHelper.suggestUsernames(user, fn, ln, email);
+	}
+	
 	/**
 	 * Generate a password of length 12 using numbers and letters. This will ommit i/l/o/1/o to prevent abiguity. Due to the length the permutations are still large, i.e. (24^8 ~= 110 billion) * (8^4 = 4096) ~= 450,868,486,864,896 permutations ~= 450
 	 * trillion

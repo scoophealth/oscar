@@ -27,6 +27,7 @@ package org.oscarehr.phr.web;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -36,6 +37,8 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.soap.SOAPFaultException;
+import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -76,6 +79,8 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
 import oscar.OscarProperties;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.UtilDateUtilities;
 
@@ -203,8 +208,9 @@ public class PHRUserManagementAction extends DispatchAction {
 			props.setProperty("username", "Username: " + username);
 			props.setProperty("password", "Password: " + password);
 			//Temporary - the intro will change to be dynamic
+			
 			props.setProperty("intro", "We are pleased to provide you with a log in and password for your new MyOSCAR Personal Health Record. This account will allow you to connect electronically with our clinic. Please take a few minutes to review the accompanying literature for further information.We look forward to you benefiting from this service.");
-
+			
 			document.addTitle(title);
 			document.addSubject("");
 			document.addKeywords("pdf, itext");
@@ -374,8 +380,12 @@ public class PHRUserManagementAction extends DispatchAction {
 
 	public ActionForward registerUser(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String user = (String) request.getSession().getAttribute("user");
-
+		String email = (String) request.getParameter("email");
+		
+		String demographicNo = request.getParameter("demographicNo");
+		
 		ActionRedirect ar = new ActionRedirect(mapping.findForward("registrationResult").getPath());
+		ar.addParameter("demographicNo", demographicNo);
 
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 		if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn()) {
@@ -391,24 +401,63 @@ public class PHRUserManagementAction extends DispatchAction {
 			else ht.put(param, request.getParameterValues(param));
 		}
 		ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
+		
+		ar.addParameter("username", request.getParameter("username"));
+		ar.addParameter("password", request.getParameter("password"));
+		ar.addParameter("email", request.getParameter("email"));
+		
+		//initialize outside the try/catch block
+		PersonTransfer3 newAccount = null;
+		
+		//Step 1. Add Account
 		try {
-			PersonTransfer3 newAccount = sendUserRegistration(myOscarLoggedInInfo, ht);
-			//if all is well, add the "pin" in the demographic screen
-			String demographicNo = request.getParameter("demographicNo");
-
+			newAccount = sendUserRegistration(myOscarLoggedInInfo, ht);
+		}
+		catch (InvalidRequestException_Exception e) {
+			log.debug("error", e);
+			ar.addParameter("failmessage", "You don't have permissions to perform this action."  + e.getClass().getName() + " - " + e.getMessage());
+			return ar;
+		} catch (SOAPFaultException se){
+			log.debug("error", se);
+			if (se.getMessage().contains("EntityExistsException")) {
+				ar.addParameter("failmessage", "Failed creating user. User already exists.");
+				ar.addParameter("nonUnique", "true");
+			}
+			else {
+				ar.addParameter("failmessage", "Failed creating user.");
+			}			
+			return ar;
+		} catch (Exception e){
+			log.debug("error", e);
+			ar.addParameter("failmessage", "Failed creating MyOscar user."  + e.getClass().getName() + " - " + e.getMessage());
+			return ar;
+		}
+		
+		ByteArrayOutputStream boas = null;
+		FileOutputStream fos = null;
+		
+		//Step 2. Persist acct changes to Oscar		
+		try {
+			
+			//if all is well, add the "pin" in the demographic screen			
 			DemographicData dd = new DemographicData();
 			dd.setDemographicPin(demographicNo, newAccount.getUserName());
+			
+			//... and add the email address, if present
+			if(email != null && !"".equals(email)){
+				dd.setDemographicEmail(demographicNo, email);
+				LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, LogConst.CON_DEMOGRAPHIC,   demographicNo , request.getRemoteAddr(),demographicNo);	
+			}
 			//Then create the record in the demographic file for record.
-			ByteArrayOutputStream boas = generateUserRegistrationLetter(demographicNo, newAccount.getUserName(), request.getParameter("password"));
+			boas = generateUserRegistrationLetter(demographicNo, newAccount.getUserName(), request.getParameter("password"));
 			String docDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 			File docDirectory = new File(docDir);
 			Date registrationDate = new Date();
-			String filename = "MyoscarRegistartionLetter." + demographicNo + "." + registrationDate.getTime() + ".pdf";
+			String filename = "MyoscarRegistrationLetter." + demographicNo + "." + registrationDate.getTime() + ".pdf";
 			File patientRegistrationDocument = new File(docDirectory, filename);
-			FileOutputStream fos = new FileOutputStream(patientRegistrationDocument);
+			fos = new FileOutputStream(patientRegistrationDocument);
 			boas.writeTo(fos);
-			fos.close();
-			boas.close();
+
 
 			org.oscarehr.common.model.Document document = new org.oscarehr.common.model.Document();
 			document.setContenttype("application/pdf");
@@ -417,9 +466,11 @@ public class PHRUserManagementAction extends DispatchAction {
 			document.setDoccreator(user);
 			document.setPublic1(new Byte("0"));
 			document.setStatus('A');
+			document.setNumberofpages(1);
+			document.setResponsible("");
 			document.setObservationdate(registrationDate);
 			document.setUpdatedatetime(registrationDate);
-                        document.setContentdatetime(registrationDate);
+            document.setContentdatetime(registrationDate);
 			document.setDoctype("others");
 
 			DocumentDao documentDAO = (DocumentDao) SpringUtils.getBean("documentDao");
@@ -436,23 +487,39 @@ public class PHRUserManagementAction extends DispatchAction {
 			ctlDocumentDao.persist(ctlDocument);
 
 			ar.addParameter("DocId", "" + document.getId());
-
-			addRelationships(request, newAccount);
-		} catch (InvalidRequestException_Exception e) {
-			log.debug("error", e);
-			ar.addParameter("failmessage", "Error, most likely cause is the username already exists. Check to make sure this person doesn't already have a myoscar user or try a different username.");
+		} catch (PersistenceException pe) {
+			log.error("Failed to persist registration letter", pe);
+			ar.addParameter("failmessage", "Failed saving registration letter:" + pe.getMessage());
+			return ar;
 		} catch (Exception e) {
 			log.error("Failed to register myOSCAR user", e);
-			if (e.getClass().getName().indexOf("ActionNotPerformedException") != -1) {
-				ar.addParameter("failmessage", "Error on the myOSCAR server.  Perhaps the user already exists.");
-			} else if (e.getClass().getName().indexOf("IndivoException") != -1) {
-				ar.addParameter("failmessage", "Error on the myOSCAR server.  Perhaps the user already exists.");
-			} else if (e.getClass().getName().indexOf("JAXBException") != -1) {
-				ar.addParameter("failmessage", "Error: Could not generate sharing permissions (JAXBException)");
-			} else {
-				ar.addParameter("failmessage", "Unknown Error: Check the log file for details.");
+			ar.addParameter("failmessage", "Failed persisting MyOscar user."  + e.getClass().getName() + " - " + e.getMessage());
+			return ar;
+		} finally {
+			try {
+				if (fos != null) fos.close();
+			} catch (IOException ex) {
+				log.error("failed closing file output stream");
 			}
+			
+			try {
+				if (boas != null) boas.close();
+			} catch(IOException ex) {
+				log.error("failed closing Byte Array Output Stream");
+			}
+
 		}
+		
+		
+		try{
+			addRelationships(request, newAccount);
+		} catch (Exception e) {
+			log.debug("error", e);
+			ar.addParameter("failmessage", "Error adding patient relationships." + e.getClass().getName() + " - " + e.getMessage());
+			return ar;
+		}
+		
+		ar.addParameter("success", "success");
 
 		return ar;
 	}
