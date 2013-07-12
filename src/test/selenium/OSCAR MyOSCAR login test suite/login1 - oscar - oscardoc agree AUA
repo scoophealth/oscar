@@ -3,28 +3,33 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://localhost:8090/" />
-<title>MyOSCAR provider confirm access</title>
+<link rel="selenium.base" href="http://localhost:8080/" />
+<title>OSCAR - oscardoc agree AUA</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">MyOSCAR provider confirm access</td></tr>
+<tr><td rowspan="1" colspan="3">OSCAR - oscardoc agree AUA</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/myoscar_client/login.jsf</td>
+	<td>/oscar/index.jsp</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>name=userName</td>
-	<td>aaron</td>
+	<td>name=username</td>
+	<td>oscardoc</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>name=password</td>
-	<td>Tester##22</td>
+	<td>mac2002</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=pin</td>
+	<td>1117</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -32,29 +37,39 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Access and Sharing</td>
+	<td>verifyTextPresent</td>
 	<td></td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>main_content</td>
-	<td></td>
+	<td>Acceptable Use Agreement</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>id=j_id_w:j_id_x:0:j_id_11</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>selectFrame</td>
-	<td>relative=up</td>
+	<td>verifyTextPresent</td>
 	<td></td>
+	<td>Hellodoctor oscardoc</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Sign Out</td>
+	<td>xpath=(//a[contains(text(),'Log Out')])[2]</td>
 	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>User Name:</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>Password:</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>2nd Level Passcode:</td>
 </tr>
 </tbody></table>
 </body>
