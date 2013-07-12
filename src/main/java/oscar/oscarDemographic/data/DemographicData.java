@@ -224,6 +224,12 @@ public class DemographicData {
 		if (dm.getDemographicNo() == null) return;
 		demographicDao.save(dm);
 	}
+	
+	public void setDemographicEmail(String demographicNo, String email) {
+		Demographic d = demographicDao.getDemographic(demographicNo);
+		d.setEmail(email);
+		demographicDao.save(d);
+	}
 
 
 	public static String getAge(Demographic d) {
