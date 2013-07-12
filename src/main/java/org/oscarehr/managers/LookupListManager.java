@@ -28,6 +28,7 @@ import java.util.List;
 import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.LookupListItemDao;
 import org.oscarehr.common.model.LookupList;
+import org.oscarehr.common.model.LookupListItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +38,13 @@ import oscar.log.LogAction;
 public class LookupListManager {
 
 	@Autowired
-	private LookupListDao lookupListdao;
+	private LookupListDao lookupListDao;
 	@Autowired
 	private LookupListItemDao lookupListItemDao;
 	
 	
 	public List<LookupList> findAllActiveLookupLists() {
-		List<LookupList> results = lookupListdao.findAllActive();
+		List<LookupList> results = lookupListDao.findAllActive();
 		
 		//--- log action ---
 		if (results.size()>0) {
@@ -52,6 +53,48 @@ public class LookupListManager {
 		}
 
 		return (results);
+	}
+	
+	public LookupList findLookupListById(int id) {
+		LookupList result = lookupListDao.find(id);
+		
+		//--- log action ---
+		if (result != null) {
+			LogAction.addLogSynchronous("LookupListManager.findLookupListById", "id returned=" + result.getId());
+		}
+
+		return (result);
+		
+	}
+	
+	public LookupList findLookupListByName(String name) {
+		LookupList result = lookupListDao.findByName(name);
+		
+		//--- log action ---
+		if (result != null) {
+			LogAction.addLogSynchronous("LookupListManager.findLookupListByName", "id returned=" + result.getId());
+		}
+
+		return (result);
+		
+	}
+	
+	public LookupList addLookupList(LookupList lookupList) {
+		lookupListDao.persist(lookupList);
+		LogAction.addLogSynchronous("LookupListManager.addLookupList", "id=" + lookupList.getId());
+		
+
+		return (lookupList);
+		
+	}
+	
+	public LookupListItem addLookupListItem(LookupListItem lookupListItem) {
+		lookupListItemDao.persist(lookupListItem);
+		LogAction.addLogSynchronous("LookupListManager.addLookupListItem", "id=" + lookupListItem.getId());
+		
+
+		return (lookupListItem);
+		
 	}
 	
 }
