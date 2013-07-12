@@ -48,7 +48,7 @@
 	<table class="MainTable" id="scrollNumber1" name="encounterTable"
 		style="margin: 0px;">
 		<tr class="topbar">
-			<td class="MainTableTopRowLeftColumn" width="60px">eAAPs</td>
+			<td class="MainTableTopRowLeftColumn" width="60px">eAAPS</td>
 			<td class="MainTableTopRowRightColumn">
 				<table class="TopStatusBar">
 					<tr>
@@ -68,7 +68,7 @@
 
 	<c:choose>
 		<c:when test="${empty eaapsInfo}">
-			<h4>eAAPs information is not available</h4>
+			<h4>eAAPS information is not available</h4>
 		</c:when>
 		<c:otherwise>
 			<h2 style="margin: 1em;">
