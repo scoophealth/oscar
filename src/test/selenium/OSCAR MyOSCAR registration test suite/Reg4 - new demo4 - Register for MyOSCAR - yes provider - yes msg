@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/" />
-<title>OSCAR - enable keep me logged in - MyOSCAR password change</title>
+<title>Reg4 - new demo - Register for MyOSCAR - yes provider - yes msg</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">OSCAR - enable keep me logged in - MyOSCAR password change</td></tr>
+<tr><td rowspan="1" colspan="3">Reg4 - new demo - Register for MyOSCAR - yes provider - yes msg</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -47,13 +47,23 @@
 	<td>30000</td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
+	<td>selectWindow</td>
+	<td>name=INDIVOMESSENGER2999998</td>
 	<td></td>
-	<td>logout</td>
 </tr>
 <tr>
-	<td>selectWindow</td>
-	<td>INDIVOMESSENGER2999998</td>
+	<td>click</td>
+	<td>name=saveMyOscarPassword</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=phrPassword</td>
+	<td>mac2002</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
 	<td></td>
 </tr>
 <tr>
@@ -67,133 +77,123 @@
 	<td></td>
 </tr>
 <tr>
-	<td>open</td>
-	<td>https://localhost:8096/myoscar_client/login.jsf</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=userName</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=password</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>css=input[type=&quot;submit&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>left_menu</td>
-	<td></td>
-</tr>
-<tr>
 	<td>click</td>
-	<td>link=Search / Edit Users</td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>relative=up</td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>main_content</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=j_id_b:j_id_f</td>
-	<td>oscardoc</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>id=j_id_b:j_id_n</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>id=j_id_q:0:j_id_s</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=j_id_b:j_id_f</td>
-	<td>changed</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>id=j_id_b:j_id_1n</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td></td>
-	<td>Changes Saved</td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>relative=up</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Sign Out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>open</td>
-	<td>http://localhost:8080/oscar/index.jsp</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=username</td>
-	<td>oscardoc</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=password</td>
-	<td>mac2002</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=pin</td>
-	<td>1117</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>css=input[type=&quot;submit&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=font</td>
+	<td>link=Search</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForPopUp</td>
-	<td>INDIVOMESSENGER2999998</td>
+	<td>apptProviderSearch</td>
 	<td>30000</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=apptProviderSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=keyword</td>
+	<td>demographic4</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//input[@value='Search'])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=b &gt; font</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=last_name</td>
+	<td>demographic4</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=first_name</td>
+	<td>test4</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=title</td>
+	<td>label=MR</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=year_of_birth</td>
+	<td>1974</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Go to record</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=editBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=sub</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPopUp</td>
+	<td>indivoRegistration</td>
+	<td>30000</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=indivoRegistration</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=enable_primary_relation_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=reverse_relation_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=submitButton</td>
+	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
 	<td></td>
-	<td>Status: Not logged in</td>
+	<td>The user and corresponding permissions have been added</td>
 </tr>
 <tr>
-	<td>selectWindow</td>
-	<td>INDIVOMESSENGER2999998</td>
+	<td>close</td>
+	<td>indivoRegistration</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectPopUp</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Close</td>
 	<td></td>
 </tr>
 <tr>
 	<td>close</td>
-	<td>INDIVOMESSENGER2999998</td>
+	<td>apptProviderSearch</td>
 	<td></td>
 </tr>
 <tr>
