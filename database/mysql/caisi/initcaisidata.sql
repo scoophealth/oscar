@@ -2,7 +2,7 @@
 insert into agency (id) values (0);
 
 -- default facility
-INSERT INTO Facility (name, description, lastUpdated,hic,disabled,orgId,sectorId,integratorEnabled,enableIntegratedReferrals,enableHealthNumberRegistry,allowSims,enableDigitalSignatures,ocanServiceOrgNumber,enableOcanForms,enableAnonymous,enableGroupNotes,enableEncounterTime,enableEncounterTransportationTime,rxInteractionWarningLevel,enablePhoneEncounter) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description', now(),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+INSERT INTO Facility (name, description, lastUpdated,hic,disabled,orgId,sectorId,integratorEnabled,enableIntegratedReferrals,enableHealthNumberRegistry,allowSims,enableDigitalSignatures,ocanServiceOrgNumber,enableOcanForms,enableAnonymous,enableGroupNotes,enableEncounterTime,enableEncounterTransportationTime,rxInteractionWarningLevel,enablePhoneEncounter,displayAllVacancies) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description', now(),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into provider_facility values (999998, (select id from Facility where name='Default Facility' ));
 
