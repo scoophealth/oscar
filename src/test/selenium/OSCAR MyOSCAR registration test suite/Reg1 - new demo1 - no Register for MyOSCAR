@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/" />
-<title>OSCAR - create myoscar login</title>
+<title>OSCAR MyOSCAR create MyOSCAR demographic</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">OSCAR - create myoscar login</td></tr>
+<tr><td rowspan="1" colspan="3">OSCAR MyOSCAR create MyOSCAR demographic</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -38,57 +38,72 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Pref</td>
+	<td>link=Search</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForPopUp</td>
-	<td>apptProvider</td>
+	<td>apptProviderSearch</td>
 	<td>30000</td>
 </tr>
 <tr>
 	<td>selectWindow</td>
-	<td>name=apptProvider</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Set myOscar login ID</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForPopUp</td>
-	<td>Receptmygroup</td>
-	<td>30000</td>
-</tr>
-<tr>
-	<td>selectWindow</td>
-	<td>name=Receptmygroup</td>
+	<td>name=apptProviderSearch</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>name=myOscarLoginId</td>
-	<td>oscardoc</td>
+	<td>name=keyword</td>
+	<td>demographic1</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>css=input[type=&quot;submit&quot;]</td>
+	<td>xpath=(//input[@value='Search'])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=b &gt; font</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=last_name</td>
+	<td>demographic1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=first_name</td>
+	<td>test1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=year_of_birth</td>
+	<td>1971</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=title</td>
+	<td>label=MR</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
 	<td></td>
-	<td>Your login id for myOscar is 'oscardoc'</td>
+	<td>Successful Addition of a Demographic Record</td>
 </tr>
 <tr>
-	<td>close</td>
-	<td>http://localhost:8080/oscar/setMyOscarId.do</td>
+	<td>click</td>
+	<td>link=Close this Window</td>
 	<td></td>
 </tr>
 <tr>
-	<td>close</td>
-	<td>apptProvider</td>
+	<td>selectWindow</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
