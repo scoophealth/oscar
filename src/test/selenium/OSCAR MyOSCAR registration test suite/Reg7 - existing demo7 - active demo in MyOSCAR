@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/" />
+<title>Reg5 - existing demo in MyOSCAR - larry</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Reg5 - existing demo in MyOSCAR - larry</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>https://localhost:8096/myoscar_client/login.jsf</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=userName</td>
+	<td>helpdesk1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>mac2002</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>left_menu</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Create New User</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>main_content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_id_b:j_id_d</td>
+	<td>demographic7</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=j_id_b:j_id_f</td>
+	<td>mac2002</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_id_b:j_id_n</td>
+	<td>test7</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_id_b:j_id_p</td>
+	<td>demographic7</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=j_id_b:j_id_1n</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>Changes Saved</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign Out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>http://localhost:8080/oscar/index.jsp</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=username</td>
+	<td>oscardoc</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=password</td>
+	<td>mac2002</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=pin</td>
+	<td>1117</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=font</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPopUp</td>
+	<td>INDIVOMESSENGER2999998</td>
+	<td>30000</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=INDIVOMESSENGER2999998</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=saveMyOscarPassword</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=phrPassword</td>
+	<td>mac2002</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td>INDIVOMESSENGER2999998</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPopUp</td>
+	<td>apptProviderSearch</td>
+	<td>30000</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=apptProviderSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=keyword</td>
+	<td>demographic7</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//input[@value='Search'])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=b &gt; font</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=last_name</td>
+	<td>demographic7</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=first_name</td>
+	<td>test7</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=title</td>
+	<td>label=MR</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=year_of_birth</td>
+	<td>1977</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Go to record</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=editBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=myOscarUserName</td>
+	<td>demographic6</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=#updateButton &gt; input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td>indivoRegistration</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//a[contains(text(),'Log Out')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>User Name:</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>Password:</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>2nd Level Passcode:</td>
+</tr>
+</tbody></table>
+</body>
+</html>
