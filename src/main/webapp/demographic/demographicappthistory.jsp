@@ -202,7 +202,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 		</td>
 	</tr>
 	<tr>
-		<td class="MainTableLeftColumn" valign="top"><a	href="javascript:history.go(-1)" onMouseOver="self.status=document.referrer;return true">
+		<td class="MainTableLeftColumn" valign="top"><a	href="<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&apptProvider=<%=session.getAttribute("user") %>&displaymode=edit&dboperation=search_detail" onMouseOver="self.status=document.referrer;return true">
 			<bean:message key="global.btnBack" /></a> 
 			<br/>
 			<input type="checkbox" name="showDeleted" id="showDeleted" onChange="toggleShowDeleted(this.checked);"/><bean:message key="demographic.demographicappthistory.msgShowDeleted" />
