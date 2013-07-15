@@ -709,6 +709,13 @@ function autoFillHin(){
 					key="demographic.demographicaddrecordhtm.formPhoneCell" />: </b></td>
 				<td id="phoneCellCell" align="left"><input type="text" name="cellphone"
 					onBlur="formatPhoneNum()"></td>
+				<td align="right"><b><bean:message
+						key="demographic.demographicaddrecordhtm.formPhoneComment" />: </b></td>
+				<td align="left" colspan="3">
+						<textarea rows="2" cols="30" name="phoneComment"></textarea>
+				</td>
+			</tr>
+			<tr valign="top">
 				<td id="newsletterLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formNewsLetter" />: </b></td>
 				<td id="newsletterCell" align="left"><select name="newsletter">
@@ -721,22 +728,15 @@ function autoFillHin(){
 					<option value="Electronic"><bean:message
 						key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic" /></option>
 				</select></td>
-			</tr>
-			<tr valign="top">
 				<td align="right"><b><bean:message
 					key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
 				<td align="left">
-				
 				<select name="aboriginal">
 					<option value="">Unknown</option>
 					<option value="No">No</option>
 					<option value="Yes" >Yes</option>
-		
 				</select>
-				
-				<td align="right"><b>&nbsp;</b></td>
-				<td align="left">&nbsp;</td>
-			</tr>			
+			</tr>
 			<tr valign="top">
 				<td id="emailLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formEMail" />: </b></td>
