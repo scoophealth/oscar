@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-<%@ page import="oscar.OscarProperties"%>
+<%@ page import="oscar.OscarProperties,oscar.log.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%><%
 
@@ -66,8 +66,10 @@
             if ((demographicID != null) && !demographicID.isEmpty() && !demographicID.equals("-1")){
                 DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
                 Demographic demographic = demographicDao.getDemographic(demographicID);  
-		demoName = demographic.getLastName()+","+demographic.getFirstName();
+				demoName = demographic.getLastName()+","+demographic.getFirstName();
+				LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, documentNo, request.getRemoteAddr(),demographicID);
             }
+            
             String docId = curdoc.getDocId();
             
             String ackFunc;
