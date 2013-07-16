@@ -601,7 +601,7 @@ function popupWithApptNo(vheight,vwidth,varpage,name,apptNo) {
 	if (name=='master')
 		popup(vheight,vwidth,varpage,name);
 	else if (name=='encounter')
-		popupPage(vheight, vwidth, varpage);
+		popUpEncounter(vheight, vwidth, varpage);
 	else
 		popupOscarRx(vheight,vwidth,varpage);
 }
