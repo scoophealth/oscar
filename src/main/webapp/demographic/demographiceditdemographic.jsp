@@ -2296,13 +2296,28 @@ if ( Dead.equals(PatStat) ) {%>
 								<td align="left" nowrap><input type="text"
 									name="year_of_birth" <%=getDisabled("year_of_birth")%>
 									value="<%=birthYear%>"
-									size="3" maxlength="4"> <input type="text"
-									name="month_of_birth" <%=getDisabled("month_of_birth")%>
-									value="<%=birthMonth%>"
-									size="2" maxlength="2"> <input type="text"
-									name="date_of_birth" <%=getDisabled("date_of_birth")%>
-									value="<%=birthDate%>"
-									size="2" maxlength="2"> <b>Age: <input type="text"
+									size="3" maxlength="4"> 
+
+									<% 
+									String sbMonth;
+									String sbDay;
+									DecimalFormat dFormat = new DecimalFormat("00");
+									%>
+			                        <select name="month_of_birth" id="month_of_birth">
+									<% for(int i=1; i<=12; i++) {
+										sbMonth = dFormat.format(i); %>
+										<option value="<%=sbMonth%>"<%=birthMonth.equals(sbMonth)?" selected":""%>><%=sbMonth%></option>
+									<%} %>
+									</select>
+									
+			                         <select name="date_of_birth" id="date_of_birth">
+									<% for(int i=1; i<=31; i++) {
+										sbDay = dFormat.format(i); %>
+										<option value="<%=sbDay%>"<%=birthDate.equals(sbDay)?" selected":""%>><%=sbDay%></option>
+									<%} %>
+									</select>			
+									
+									<b>Age: <input type="text"
 									name="age" readonly value="<%=age%>" size="3"> </b></td>
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.formSex" />:</b></td>
