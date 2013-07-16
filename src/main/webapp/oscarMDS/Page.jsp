@@ -213,9 +213,16 @@ String curUser_no = (String) session.getAttribute("user");
                                 }
 
 								String labRead = "";
+								
                                 if(result.isHRM() && !oscarLogDao.hasRead(curUser_no,"hrm",segmentID)){
                                 	labRead = "*";
-                                }else if(!result.isHRM() &&!oscarLogDao.hasRead(curUser_no,"lab",segmentID)){
+                                }
+                                
+                                if( !result.isHRM() && result.isDocument() && !oscarLogDao.hasRead(curUser_no,"document",segmentID) ) {                                    
+                                    labRead = "*";
+                                }
+                                
+                                if(!result.isHRM() && !result.isDocument() && !oscarLogDao.hasRead(curUser_no,"lab",segmentID)){
                                 	labRead = "*";
                                 }
 
@@ -351,7 +358,7 @@ String curUser_no = (String) session.getAttribute("user");
                                     	url.append(StringEscapeUtils.escapeJavaScript(patientName));                                    	                                    	                                    	
                                     %>                                    
                                     
-                                    <a href="javascript:void(0);" onclick="reportWindow('<%=url.toString()%>',screen.availHeight, screen.availWidth); return false;" ><%=StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
+                                    <a href="javascript:void(0);" onclick="reportWindow('<%=url.toString()%>',screen.availHeight, screen.availWidth); return false;" ><%=labRead + StringEscapeUtils.escapeHtml(result.getPatientName())%></a>
                                     
                                     <% }else if(result.isHRM()){
                                     	StringBuilder duplicateLabIds=new StringBuilder();
