@@ -25,13 +25,21 @@ package org.oscarehr.PMmodule.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.PMmodule.model.VacancyClientMatch;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class VacancyClientMatchDaoTest extends DaoTestFixtures {
@@ -53,29 +61,159 @@ public class VacancyClientMatchDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testFindByClientIdAndVacancyId() {
-		assertNotNull(dao.findByClientIdAndVacancyId(1, 1));
-	}
-	
-	@Test
-	public void testFindByClientId() {
-		assertNotNull(dao.findByClientId(1));
-	}
-	
-	@Test
-	public void testFindBystatus() {
-		VacancyClientMatch v = new VacancyClientMatch();
-		v.setClient_id(1);
-		v.setVacancy_id(1);
-		v.setContactAttempts(0);
-		v.setForm_id(1);
-		v.setLast_contact_date(new java.util.Date());
-		v.setMatchPercentage(0);
-		v.setStatus(VacancyClientMatch.ACCEPTED);
-		dao.persist(v);
+	public void testFindByClientIdAndVacancyId() throws Exception {
 		
-		assertNotNull(dao.findBystatus(VacancyClientMatch.ACCEPTED));
-		assertEquals(1,dao.findBystatus(VacancyClientMatch.ACCEPTED).size());
+		int clientId1 = 101, clientId2 = 202;
+		int vacancyId1 = 111, vacancyId2 = 222;
+		
+		VacancyClientMatch vCM1 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM1);
+		vCM1.setClient_id(clientId1);
+		vCM1.setVacancy_id(vacancyId1);
+		dao.persist(vCM1);
+		
+		VacancyClientMatch vCM2 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM2);
+		vCM2.setClient_id(clientId2);
+		vCM2.setVacancy_id(vacancyId1);
+		dao.persist(vCM2);
+		
+		VacancyClientMatch vCM3 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM3);
+		vCM3.setClient_id(clientId1);
+		vCM3.setVacancy_id(vacancyId2);
+		dao.persist(vCM3);
+		
+		VacancyClientMatch vCM4 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM4);
+		vCM4.setClient_id(clientId2);
+		vCM4.setVacancy_id(vacancyId1);
+		dao.persist(vCM4);
+		
+		VacancyClientMatch vCM5 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM5);
+		vCM5.setClient_id(clientId2);
+		vCM5.setVacancy_id(vacancyId2);
+		dao.persist(vCM5);
+		
+		VacancyClientMatch vCM6 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM6);
+		vCM6.setClient_id(clientId2);
+		vCM6.setVacancy_id(vacancyId1);
+		dao.persist(vCM6);
+		
+		List<VacancyClientMatch> expectedResult = new ArrayList<VacancyClientMatch>(Arrays.asList(vCM2, vCM4, vCM6));
+		List<VacancyClientMatch> result = dao.findByClientIdAndVacancyId(clientId2, vacancyId1);
+		
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindByClientId() throws Exception {
+		
+		int clientId1 = 101, clientId2 = 202;
+		
+		VacancyClientMatch vCM1 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM1);
+		vCM1.setClient_id(clientId1);
+		dao.persist(vCM1);
+		
+		VacancyClientMatch vCM2 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM2);
+		vCM2.setClient_id(clientId2);
+		dao.persist(vCM2);
+		
+		VacancyClientMatch vCM3 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM3);
+		vCM3.setClient_id(clientId1);
+		dao.persist(vCM3);
+		
+		VacancyClientMatch vCM4 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM4);
+		vCM4.setClient_id(clientId2);
+		dao.persist(vCM4);
+		
+		VacancyClientMatch vCM5 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM5);
+		vCM5.setClient_id(clientId2);
+		dao.persist(vCM5);
+		
+		List<VacancyClientMatch> expectedResult = new ArrayList<VacancyClientMatch>(Arrays.asList(vCM2, vCM4, vCM5));
+		List<VacancyClientMatch> result = dao.findByClientId(clientId2);
+		
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindBystatus() throws Exception{
+		
+		int clientId1 = 101, clientId2 = 202;
+		
+		VacancyClientMatch vCM1 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM1);
+		vCM1.setClient_id(clientId1);
+		dao.persist(vCM1);
+		
+		VacancyClientMatch vCM2 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM2);
+		vCM2.setClient_id(clientId2);
+		dao.persist(vCM2);
+		
+		VacancyClientMatch vCM3 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM3);
+		vCM3.setClient_id(clientId1);
+		dao.persist(vCM3);
+		
+		VacancyClientMatch vCM4 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM4);
+		vCM4.setClient_id(clientId2);
+		dao.persist(vCM4);
+		
+		VacancyClientMatch vCM5 = new VacancyClientMatch();
+		EntityDataGenerator.generateTestDataForModelClass(vCM5);
+		vCM5.setClient_id(clientId2);
+		dao.persist(vCM5);
+		
+		List<VacancyClientMatch> expectedResult = new ArrayList<VacancyClientMatch>(Arrays.asList(vCM2, vCM4, vCM5));
+		List<VacancyClientMatch> result = dao.findByClientId(clientId2);
+		
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 	
 	@Test
@@ -93,7 +231,5 @@ public class VacancyClientMatchDaoTest extends DaoTestFixtures {
 		dao.updateStatus(VacancyClientMatch.REJECTED, 1, 1);
 		
 		assertEquals(1,dao.findBystatus(VacancyClientMatch.REJECTED).size());
-	}
-	
-	
+	}	
 }

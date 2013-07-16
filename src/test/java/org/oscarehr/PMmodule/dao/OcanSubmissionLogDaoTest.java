@@ -24,13 +24,22 @@
 package org.oscarehr.PMmodule.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.oscarehr.PMmodule.model.CriteriaTypeOption;
 import org.oscarehr.PMmodule.model.OcanSubmissionLog;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class OcanSubmissionLogDaoTest extends DaoTestFixtures {
@@ -49,5 +58,42 @@ public class OcanSubmissionLogDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindAll() throws Exception {
+		
+		OcanSubmissionLog oSL1 = new OcanSubmissionLog();
+		EntityDataGenerator.generateTestDataForModelClass(oSL1);
+		dao.persist(oSL1);
+		
+		OcanSubmissionLog oSL2 = new OcanSubmissionLog();
+		EntityDataGenerator.generateTestDataForModelClass(oSL2);
+		dao.persist(oSL2);
+		
+		OcanSubmissionLog oSL3 = new OcanSubmissionLog();
+		EntityDataGenerator.generateTestDataForModelClass(oSL3);
+		dao.persist(oSL3);
+		
+		OcanSubmissionLog oSL4 = new OcanSubmissionLog();
+		EntityDataGenerator.generateTestDataForModelClass(oSL4);
+		dao.persist(oSL4);
+		
+		List<OcanSubmissionLog> expectedResult = new ArrayList<OcanSubmissionLog>(Arrays.asList(oSL1, oSL2, oSL3, oSL4));
+		List<OcanSubmissionLog> result = dao.findAll();
+		
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
