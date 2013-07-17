@@ -35,12 +35,11 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
-import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.CppUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.util.StringUtils;
 
@@ -49,8 +48,6 @@ import oscar.util.StringUtils;
  */
 public class EctDisplayIssuesAction extends EctDisplayAction {
 	private String cmd = "unresolvedIssues";
-
-	private IssueDAO issueDao=(IssueDAO) SpringUtils.getBean("IssueDAO");
 	
 	private CaseManagementManager caseManagementMgr;
 	private static Logger log = MiscUtils.getLogger();
@@ -82,8 +79,19 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 		List<CaseManagementIssue> issues_unr = new ArrayList<CaseManagementIssue>();
 		//only list unresolved issues				
 		for(CaseManagementIssue issue : issues) {
+			if(containsIssue(CppUtils.cppCodes,issue.getIssue().getCode())) {
+				continue;
+			}
 			if(!issue.isResolved()) {
-				issues_unr.add(issue);
+				boolean dup=false;
+				for(CaseManagementIssue tmp: issues_unr) {
+					if(issue.getIssue_id() == tmp.getIssue_id()) {
+						dup=true;
+						break;
+					}
+				}
+				if(!dup)
+					issues_unr.add(issue);
 			}				
 		}
 		
@@ -213,5 +221,14 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 
 	public String getCmd() {
 		return cmd;
+	}
+	
+	public boolean containsIssue(String[]  issues, String issueCode) {
+		for (String caseManagementIssue : issues) {
+			if (caseManagementIssue.equals(issueCode)) {
+					return(true);
+			}
+		}
+		return false;
 	}
 }
