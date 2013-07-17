@@ -118,8 +118,11 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		
 		// create edoc
 		if (fileName != null) {
-			String provider = studyData.getProviderNo();
-			String description = "eAAPs Action plan for " + demo.getFullName();
+			String provider = demo.getProviderNo();
+			if (provider == null || provider.trim().isEmpty()) {
+				provider = studyData.getProviderNo();
+			}
+			String description = "eAAPS Action plan for " + demo.getFullName();
 			
 			EDoc doc = createEDoc(message, fileName, demo, provider, description);
 			// save edoc
@@ -175,8 +178,8 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 			sentToWho = sentToWho + " " + message.getRemoteNames(remoteProviders);
 		}
 
-		String subject = "eAAPs: Recommendations ready for " + demo.getFullName();
-		String userName = "eAAPs";
+		String subject = "eAAPS: Recommendations ready for " + demo.getFullName();
+		String userName = "eAAPS";
 		String userNo = "N/A";
 		String attachment = null;
 		String pdfAttachment = null;
@@ -253,7 +256,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		String reviewDateTime = "";
 
 		MSH mshSegment = message.getMSH();
-		String source = "eaaps";
+		String source = "eAAPS";
 		String sourceFacility = mshSegment.getSendingApplication().getValue();
 		char status = 'A';
 		String module = "demographic";

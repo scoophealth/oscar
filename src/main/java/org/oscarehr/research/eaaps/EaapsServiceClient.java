@@ -164,7 +164,7 @@ public class EaapsServiceClient {
 			String code = json.getString("code");
 			if (code != null && code.equals("InternalError")) {
 				String message = json.containsKey("message") ? json.getString("message") : "";
-				throw new Exception("eAAPs Web Service Error: " + message);
+				throw new Exception("eAAPS Web Service Error: " + message);
 			}
 		}
 		if (!json.containsKey("status")) {
