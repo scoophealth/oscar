@@ -2347,7 +2347,7 @@
 		</action>
 		 -->
 		<action path="/phr/UserManagement" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
-			<forward name="registrationResult" path="/phr/indivo/RegisterIndivoResult.jsp" />
+			<forward name="registrationResult" path="/phr/indivo/RegisterIndivo.jsp" />
 			<forward name="msgIndex" path="/phr/PhrMessage.do?method=viewMessages" />
 			<forward name="registrationLetter" path="/admin/MyoscarConfiguration.jsp" />
 			<forward name="viewVerification" path="/phr/PHRVerification.jsp" />
