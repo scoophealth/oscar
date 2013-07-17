@@ -79,4 +79,5 @@ public class Colour {
     public  String consultation="6C2DC7";
     public  String episode="CCFF66";
     public  String contacts="CCFF66";
+    public  String ticklerNotes="FF6600";
 }

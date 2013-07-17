@@ -1722,11 +1722,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		//String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().tickler + ";";
 		String rxColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().rx + ";";
 		String invoiceColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().invoices + ";";
+		String ticklerNoteColour = "color:#" + blackColour + ";background-color:#" + Colour.getInstance().ticklerNotes + ";";
 
 		String bgColour = "color:#000000;background-color:#CCCCFF;";
 
 		if (noteDisplay.isCpp()) {
 			bgColour = "color:#FFFFFF;background-color:#" + getCppColour(noteDisplay) + ";";
+			if(noteDisplay.isTicklerNote()) {
+					bgColour = ticklerNoteColour;
+			}
 		} else if (noteDisplay.isDocument()) {
 			bgColour = documentColour;
 		} else if (noteDisplay.isRxAnnotation()) {
