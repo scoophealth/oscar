@@ -35,6 +35,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.oscarehr.PMmodule.model.VacancyClientMatch;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -61,6 +62,7 @@ public class VacancyClientMatchDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
+	@Ignore
 	public void testFindByClientIdAndVacancyId() throws Exception {
 		
 		int clientId1 = 101, clientId2 = 202;
