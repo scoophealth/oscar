@@ -104,7 +104,7 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 			return true;
 		}
 		
-		Dao.setLeftHeading("eAAPs");
+		Dao.setLeftHeading("eAAPS");
 		Dao.setHeadingColour("FF6600"); // orange
 		Dao.setMenuHeader("Menu Header");
 		Dao.setRightURL(getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"));  

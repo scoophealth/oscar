@@ -75,7 +75,7 @@
 	-->
 </script>
 
-<title>EAAPs Form</title>
+<title>eAAPS Form</title>
 
 <html:base />
 </head>
@@ -84,7 +84,7 @@
 	<table class="MainTable" id="scrollNumber1" name="encounterTable"
 		style="margin: 0px;">
 		<tr class="topbar">
-			<td class="MainTableTopRowLeftColumn" width="60px">eAAPs</td>
+			<td class="MainTableTopRowLeftColumn" width="60px">eAAPS</td>
 			<td class="MainTableTopRowRightColumn">
 				<table class="TopStatusBar">
 					<tr>
@@ -108,7 +108,7 @@
 					<c:choose>
 						<c:when test="${not empty eaapsExportForm.studies}">
 							<p style="font-weight: bold;">Please select a demographic
-								study to be exported to eAAPs server:</p>
+								study to be exported to eAAPS server:</p>
 							<html:select styleId="studyId" property="studyId" onchange="updateExport();">
 								<html:option value=""> - Please select a study - </html:option>
 								<c:forEach var="s" items="${eaapsExportForm.studies}">
