@@ -121,6 +121,21 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		assertEquals(0,dao.searchDemographic("Smi,Ja").size());
 	}
 
+         @Test
+        public void testSearchDemographicActive() throws Exception {
+                Demographic entity = new Demographic();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                entity.setDemographicNo(null);
+                entity.setLastName("Smith");
+                entity.setFirstName("John");
+                entity.setPatientStatus("IN");
+                dao.save(entity);
+                assertEquals(0, dao.searchDemographicActive("Smi").size());
+                assertEquals(0, dao.searchDemographicActive("Do").size());
+                assertEquals(0, dao.searchDemographicActive("Smi,Jo").size());
+                assertEquals(1, dao.searchDemographic("Smi").size());
+                assertEquals(0, dao.searchDemographic("Smi,Ja").size());
+	}
 
 	@Test
 	public void testGetRosterStatuses() throws Exception {

@@ -70,7 +70,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
         
         RxProviderData rx = new RxProviderData();
         
-        List<Demographic> list = demographicDao.searchDemographic(searchStr);
+        List<Demographic> list = demographicDao.searchDemographicActive(searchStr);
         List secondList= new ArrayList();
         for(Demographic demo :list){
             Hashtable h = new Hashtable();
