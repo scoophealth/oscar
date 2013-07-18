@@ -69,7 +69,7 @@ public class PATHL7Handler implements MessageHandler {
     public void init(String hl7Body) throws HL7Exception {
         Parser p = new PipeParser();
         p.setValidationContext(new NoValidation());
-        msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
+        msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ).replace("\\.Zt\\", "\t"));
     }
 
     public String getMsgType(){
@@ -201,7 +201,7 @@ public class PATHL7Handler implements MessageHandler {
 
 
                 if(nums.length>1)
-                    return nums[1];
+                    return nums[0]+"-"+nums[1];
                 else
                     return "";
             }
@@ -275,7 +275,24 @@ public class PATHL7Handler implements MessageHandler {
 
     public String getOrderStatus(){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultStatus().getValue()));
+            String orderStatus = getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultStatus().getValue());
+            int obrCount = getOBRCount();
+            int obxCount;
+            int count = 0;
+            for (int i=0; i < obrCount; i++){
+                obxCount = getOBXCount(i);
+                for (int j=0; j < obxCount; j++){
+                    String obxStatus = getOBXResultStatus(i, j);
+                    if (obxStatus.equalsIgnoreCase("C"))
+                        count++;
+                }
+            }
+            if(count >= 1){//if any of the OBX's have been corrected, mark the entire report as corrected
+            	orderStatus = "C";
+            	return orderStatus;
+            }else{
+            	return orderStatus;
+            }
         }catch(Exception e){
             return("");
         }
@@ -621,6 +638,21 @@ public class PATHL7Handler implements MessageHandler {
     public String getNteForOBX(int i, int j){
 
     	return "";
+    }
+    
+    // Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is 
+    public boolean unstructuredDocCheck(){
+
+    		ArrayList <String> headers = this.getHeaders();
+    		int i=0;
+
+    		for(i=0; i<headers.size(); i++){
+    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))){
+    				//isUnstructuredDoc = true;
+    				return true;
+    			}
+    		}
+    	return false;
     }
 
 }
