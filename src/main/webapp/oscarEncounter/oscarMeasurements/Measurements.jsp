@@ -33,6 +33,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasuringInstructionBeanHandler, oscar.oscarEncounter.oscarMeasurements.bean.EctMeasuringInstructionBean"%>
 <%@ page import="java.util.Vector;"%>
 <%
     String demo = (String) request.getAttribute("demographicNo"); //bean.getDemographicNo();
@@ -160,7 +161,7 @@ function check() {
 											name="measurementType" property="typeDisplayName" /></a></td>
 										<td><logic:iterate id="mInstrc"
 											name="<%=\"mInstrcs\"+ ctr%>"
-											property="measuringInstructionVector">
+											property="measuringInstructionList">
 											<input type="radio"
 												name='<%= "value(inputMInstrc-" + ctr + ")" %>'
 												value="<bean:write name="mInstrc" property="measuringInstrc"/>"
@@ -168,8 +169,29 @@ function check() {
 											<bean:write name="mInstrc" property="measuringInstrc" />
 											<br>
 										</logic:iterate></td>
+										<%
+										EctMeasuringInstructionBeanHandler mInstrh = (EctMeasuringInstructionBeanHandler) session.getAttribute("mInstrcs"+i);
+										EctMeasuringInstructionBean mInstrBean = mInstrh.getMeasuringInstructionList().get(0);
+										Integer index;
+										String[] options;
+										String measuringInstruction = mInstrBean.getMeasuringInstrc();
+										if( measuringInstruction.startsWith("Choose radio") ) {
+										   index = 12;
+										   measuringInstruction = measuringInstruction.substring(index);
+										   options = measuringInstruction.split(",");
+										%>
+										<td>
+										<%
+											for( int idx = 0; idx < options.length; ++idx ) {
+										%>	
+										<html:radio property='<%= "value(inputValue-" + ctr + ")" %>' value="<%=options[idx]%>"></html:radio><%=options[idx]%>&nbsp;										
+									
+										<%}%>
+										</td>
+										<%}else { %>
 										<td><html:text
 											property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>
+										<%} %>
 										<td><html:text
 											property='<%= "value(date-" + ctr + ")" %>' size="20" /></td>
 										<td><html:text
