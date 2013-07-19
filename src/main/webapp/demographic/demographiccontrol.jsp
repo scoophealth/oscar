@@ -186,7 +186,7 @@
 	if (searchIntegrator && matchingDemographicParameters!=null && loggedInInfo.currentFacility.isIntegratorEnabled())
 	{
 		try{
-			matchingDemographicParameters.setMaxEntriesToReturn(5);
+			matchingDemographicParameters.setMaxEntriesToReturn(15);
 			matchingDemographicParameters.setMinScore(7);
 			List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(matchingDemographicParameters);
 

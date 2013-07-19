@@ -124,6 +124,7 @@ function searchOutOfDomain() {
 				<INPUT TYPE="button" onclick="searchAll();"
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
 					VALUE="<bean:message key="demographic.search.All"/>">
+				<input type="checkbox" name="includeIntegratedResults" value="true"/>Include Integrator
 					<security:oscarSec roleName="<%=roleName%>" objectName="_search.outofdomain" rights="r">  
 				<INPUT TYPE="button" onclick="searchOutOfDomain();"
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"

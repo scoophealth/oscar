@@ -27,6 +27,16 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -243,6 +253,10 @@
                 </td>
 	</tr>
 	<%
+	
+	 
+	
+	
 	List<Demographic> demoList = null;  
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
@@ -354,6 +368,55 @@
 		else if(orderBy.equals("phone")) {
 			Collections.sort(demoList, Demographic.PhoneComparator);
 		}
+		
+		
+		@SuppressWarnings("unchecked")
+		  List<MatchingDemographicTransferScore> integratorSearchResults=(List<MatchingDemographicTransferScore>)request.getAttribute("integratorSearchResults");
+		  if (integratorSearchResults!=null) {
+			  for (MatchingDemographicTransferScore matchingDemographicTransferScore : integratorSearchResults) {
+			      if( isLocal(matchingDemographicTransferScore, demoList)) {
+				  	continue;
+			      }
+				  
+				  DemographicTransfer demographicTransfer=matchingDemographicTransferScore.getDemographicTransfer();
+		%>
+				   <tr class="<%=toggleLine?"even":"odd"%>">
+				   <td class="demoIdSearch">
+				   	<a title="Import" href="#"  onclick="popup(700,1027,'../appointment/copyRemoteDemographic.jsp?remoteFacilityId=<%=demographicTransfer.getIntegratorFacilityId()%>&demographic_no=<%=String.valueOf(demographicTransfer.getCaisiDemographicId())%>&originalPage=../demographic/demographiceditdemographic.jsp&provider_no=<%=curProvider_no%>')" >Import</a></td>
+				   <td class="links">Remote</td>
+				   <td class="name"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%>, <%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></td>
+				   <td class="chartNo"></td>
+				   <td class="sex"><%=demographicTransfer.getGender()%></td>
+				   <td class="dob"><%=demographicTransfer.getBirthDate() != null ?  DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate()) : ""%></td>
+				   <td class="doctor">
+				   
+		<% 
+		   		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
+		   		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
+		   		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
+		   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+		   		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
+		   		
+		   		String providerName="";
+		   		
+		   		if (cachedProvider!=null)
+		   		{
+		   			providerName=cachedProvider.getLastName()+", "+cachedProvider.getFirstName();
+		   		}
+		%>
+		        	<%=providerName%>
+					</td>
+					<td class="rosterStatus"></td>
+					<td class="patientStatus"></td>
+					<td class="phone"><%=demographicTransfer.getPhone1()%></td>
+				</tr>
+		<%	  
+					toggleLine = !toggleLine;
+					nItems++;
+				}
+		 	}
+		
+		
 
 		DemographicMerged dmDAO = new DemographicMerged();
 
@@ -431,10 +494,10 @@
   nLastPage=Integer.parseInt(strOffset)-Integer.parseInt(strLimit);
   if(nLastPage>=0) {
 %> 
-	<a href="demographiccontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>&ptstatus=<%=ptStatus%>">
+	<a href="demographiccontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>&ptstatus=<%=ptStatus%><%=nLastPage==0?"&includeIntegratedResults=true":""%>">
 	<bean:message key="demographic.demographicsearchresults.btnLastPage" /></a> <%
   }
-  if(nItems==Integer.parseInt(strLimit)) {
+  if(nItems>=Integer.parseInt(strLimit)) {
       if (nLastPage>=0) {
 	%> | <%    } %> 
 	<a href="demographiccontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=<%=orderBy%>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>&ptstatus=<%=ptStatus%>">
@@ -454,3 +517,19 @@
 
 </body>
 </html:html>
+<%!
+
+Boolean isLocal(MatchingDemographicTransferScore matchingDemographicTransferScore, List<Demographic> demoList) {
+    String hin = matchingDemographicTransferScore.getDemographicTransfer().getHin(); 
+    for( Demographic demo : demoList ) {
+		
+		if( hin != null && hin.equals(demo.getHin()) ) {
+		    return true;
+		}
+    }
+    
+    return false;
+    
+}
+
+%>
