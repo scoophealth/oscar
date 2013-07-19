@@ -27,9 +27,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.exports.PatientExport;
@@ -43,14 +48,15 @@ import org.oscarehr.util.VelocityUtils;
  * @author Jeremy Ho
  */
 public class E2EVelocityTemplate extends VelocityTemplate {
-	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2etemplate.vm";
+	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2e/e2etemplate.vm";
 	private static String template = null;
 	private static E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private Clinic clinic = clinicDao.getClinic();
+	private boolean validate = true;
 
 	public E2EVelocityTemplate() {
-		loadTemplate();
+		super();
 		if(e2eResources == null) {
 			e2eResources = new E2EResources();
 		}
@@ -81,7 +87,6 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	/**
 	 * Assembles the data model & predefined velocity template to yield an E2E document
 	 * 
-	 * @param record
 	 * @return String representing E2E export from template
 	 */
 	public String export(PatientExport p) {
@@ -107,14 +112,30 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		String result = VelocityUtils.velocityEvaluate(context, template);
 
 		// Check for Validity
-		if(result.contains("$")) {
-			log.warn("[Demo: "+record.getDemographic().getDemographicNo()+"] Export contains '$' - may contain errors");
-		}
-		if(!E2EExportValidator.isValidXML(result)) {
-			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export failed E2E XSD validation");
+		if(validate) {
+			String demoNo = record.getDemographic().getDemographicNo().toString();
+			if(result.contains("$")) {
+				String msg = "[Demo: ".concat(demoNo).concat("] Export contains '$' - may contain errors");
+				log.warn(msg);
+				addExportLogEntry(msg);
+			}
+			E2EExportValidator v = new E2EExportValidator();
+			if(!v.isValidXML(result)) {
+				String msg = "[Demo: ".concat(demoNo).concat("] Export failed E2E XSD validation");
+				log.error(msg);
+				addExportLogEntry(msg);
+				addExportLogEntry(v.getExportLog());
+			}
 		}
 
 		return result;
+	}
+
+	/**
+	 * Disables validation during export process
+	 */
+	public void disableValidation() {
+		this.validate = false;
 	}
 
 	/**
@@ -123,11 +144,20 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	 * @author Jeremy Ho
 	 */
 	public static class E2EResources {
-		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2eformcode.csv";
+		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2e/e2eformcode.csv";
+		private static final String E2E_VELOCITY_MEASUREMENTCODE_FILE = "/e2e/e2emeasurementcode.csv";
+		private static final String E2E_VELOCITY_PRRCODE_FILE = "/e2e/e2eprrcode.csv";
+		private static final String OSCAR_PREVENTIONITEMS_FILE = "/oscar/oscarPrevention/PreventionItems.xml";
 		private static Map<String,String> formCodes = null;
+		private static Map<String,String> measurementCodes = null;
+		private static Map<String,String> prrCodes = null;
+		private static Map<String,String> preventionTypeCodes = null;
 
 		public E2EResources() {
 			loadFormCode();
+			loadMeasurementCode();
+			loadPRRCode();
+			loadPreventionItems();
 		}
 
 		/**
@@ -162,6 +192,104 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		}
 
 		/**
+		 * Loads the measurementcode mapping
+		 */
+		private void loadMeasurementCode() {
+			if(measurementCodes == null) {
+				InputStream is = null;
+				try {
+					is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_MEASUREMENTCODE_FILE);
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+					measurementCodes = new HashMap<String,String>();
+					String line = null;
+					String[] content = null;
+					while((line = br.readLine()) != null) {
+						content = line.split("\\t");
+						measurementCodes.put(content[0],content[1]);
+					}
+
+					log.info("Loaded E2E Measurement Code Mapping");
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Loads the personal relationship role code mapping
+		 */
+		private void loadPRRCode() {
+			if(prrCodes == null) {
+				InputStream is = null;
+				try {
+					is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_PRRCODE_FILE);
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+					prrCodes = new HashMap<String,String>();
+					String line = null;
+					String[] content = null;
+					while((line = br.readLine()) != null) {
+						content = line.split("\\t");
+						prrCodes.put(content[1].toLowerCase(),content[0]);
+					}
+
+					log.info("Loaded E2E Personal Relationship Role Code Mapping");
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Loads the preventionitems name to atc mapping
+		 */
+		private void loadPreventionItems() {
+			if(preventionTypeCodes == null) {
+				InputStream is = null;
+				try {
+					is = E2EVelocityTemplate.class.getResourceAsStream(OSCAR_PREVENTIONITEMS_FILE);
+
+					preventionTypeCodes = new HashMap<String,String>();
+					SAXBuilder parser = new SAXBuilder();
+					Document doc = parser.build(is);
+					Element root = doc.getRootElement();
+					@SuppressWarnings("unchecked")
+					List<Element> items = root.getChildren("item");
+					for(Element e : items) {
+						Attribute name = e.getAttribute("name");
+						Attribute atc = e.getAttribute("atc");
+						if(atc != null && atc.getValue().length() > 0) {
+							preventionTypeCodes.put(name.getValue(), atc.getValue());
+						}
+					}
+
+					log.info("Loaded OSCAR Prevention Items Code Mapping");
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		/**
 		 * Takes in a formcode string and returns the E2E Form Code result if available
 		 * 
 		 * @param rhs
@@ -170,6 +298,48 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		public String formCodeMap(String rhs) {
 			if(formCodes.containsKey(rhs)) {
 				return formCodes.get(rhs);
+			}
+
+			return null;
+		}
+
+		/**
+		 * Takes in a measurementcode string and returns the E2E Measurement Code result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
+		public String measurementCodeMap(String rhs) {
+			if(measurementCodes.containsKey(rhs)) {
+				return measurementCodes.get(rhs);
+			}
+
+			return null;
+		}
+
+		/**
+		 * Takes in a personal relationship role string and returns the E2E PRR Code result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
+		public String prrCodeMap(String rhs) {
+			if(prrCodes.containsKey(rhs.toLowerCase())) {
+				return prrCodes.get(rhs.toLowerCase());
+			}
+
+			return null;
+		}
+
+		/**
+		 * Takes in a prevention type string and returns the ATC result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
+		public String preventionTypeMap(String rhs) {
+			if(preventionTypeCodes.containsKey(rhs)) {
+				return preventionTypeCodes.get(rhs);
 			}
 
 			return null;

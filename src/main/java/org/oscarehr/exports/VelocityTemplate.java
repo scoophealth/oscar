@@ -36,9 +36,10 @@ import org.oscarehr.util.VelocityUtils;
 public abstract class VelocityTemplate {
 	protected static Logger log = MiscUtils.getLogger();
 	protected VelocityContext context = VelocityUtils.createVelocityContextWithTools();
+	protected StringBuilder exportLog = new StringBuilder();
 
 	public VelocityTemplate() {
-		super();
+		loadTemplate();
 	}
 
 	/**
@@ -54,4 +55,22 @@ public abstract class VelocityTemplate {
 	 * @return String of the merged output if successful. Otherwise an empty string is returned.
 	 */
 	public abstract String export(PatientExport p);
+
+	/**
+	 * Add entry line to the export log
+	 * 
+	 * @param entry
+	 */
+	public void addExportLogEntry(String entry) {
+		exportLog.append(entry.concat(System.getProperty("line.separator")));
+	}
+
+	/**
+	 * Returns the entire export event log string
+	 * 
+	 * @return String of the entire export event log
+	 */
+	public String getExportLog() {
+		return exportLog.toString();
+	}
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  *****************************************************************
+  This specification should in no circumstance be used in the development of, or at runtime
+  by, systems which perform processing of personal or patient data in a clinical or operational
+  setting, or in the provision of medical or therapeutic advice or treatment in a clinical or 
+  operational setting. 
+  *****************************************************************
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:e2e="http://standards.pito.bc.ca/E2E-DTC/cda" xmlns:hl7="urn:hl7-org:v3"
+   targetNamespace="http://standards.pito.bc.ca/E2E-DTC/cda" elementFormDefault="qualified">
+   <xs:include schemaLocation="datatypes.xsd"/>
+   <xs:include schemaLocation="voc.xsd"/>
+   <xs:import namespace="urn:hl7-org:v3" schemaLocation="POCD_MT000040-PITO-E2E.xsd"/>
+   <!-- intendedRecipient.code -->
+   <xs:element name="code" type="hl7:CE"/>
+   <!-- Extension for Drug Information -->
+   <xs:element name="desc" type="hl7:ST"/>
+   <xs:element name="formCode" type="hl7:CE"/>
+   <!-- Extension for Observation level confidentiality code -->
+   <xs:element name="confidentialityCode" type="hl7:CE"/>
+   <xs:element name="ingredient" type="e2e:Ingredient"/>
+   <xs:complexType name="Ingredient">
+      <xs:sequence>
+         <xs:element name="realmCode" type="hl7:CS" minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element name="typeId" type="hl7:POCD_MT000040.InfrastructureRoot.typeId" minOccurs="0"/>
+         <xs:element name="templateId" type="hl7:II" minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element maxOccurs="1" minOccurs="0" name="quantity" type="hl7:PQ"/>
+         <xs:element maxOccurs="1" minOccurs="1" name="ingredient"
+            type="e2e:Substance"> </xs:element>
+      </xs:sequence>
+      <xs:attribute name="nullFlavor" type="hl7:NullFlavor" use="optional"/>
+      <xs:attribute fixed="INGR" name="classCode" type="hl7:RoleClass" use="optional"/>
+      <xs:attribute name="negationInd" type="hl7:bl" use="optional"/>
+   </xs:complexType>
+   <xs:complexType name="Substance">
+      <xs:sequence>
+         <xs:element name="realmCode" type="hl7:CS" minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element name="typeId" type="hl7:POCD_MT000040.InfrastructureRoot.typeId" minOccurs="0"/>
+         <xs:element name="templateId" type="hl7:II" minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element maxOccurs="1" minOccurs="0" name="code" type="hl7:CV"/>         
+         <xs:element maxOccurs="1" minOccurs="0" name="name" type="hl7:ST"/>         
+      </xs:sequence>
+      <xs:attribute name="nullFlavor" type="hl7:NullFlavor" use="optional"/>
+      <xs:attribute fixed="MMAT" name="classCode" type="hl7:EntityClass" use="optional"/>
+      <xs:attribute fixed="KIND" name="determinerCode" type="hl7:EntityDeterminer" use="optional"/>
+   </xs:complexType>
+</xs:schema>
