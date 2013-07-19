@@ -24,17 +24,16 @@
 package org.oscarehr.exports.e2e;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.exports.e2e.E2EExportValidator;
-import org.oscarehr.util.MiscUtils;
 
 /**
  * This test class tests that the E2E XML Schema validator is functioning correctly.
@@ -42,7 +41,6 @@ import org.oscarehr.util.MiscUtils;
  * @author Raymond Rusk
  */
 public class E2EExportValidatorTest {
-	private static Logger logger = MiscUtils.getLogger();
 	private static String s = null;
 
 	@BeforeClass
@@ -53,30 +51,35 @@ public class E2EExportValidatorTest {
 	}
 
 	@Test
+	public void testE2EExportValidator() {
+		assertNotNull(new E2EExportValidator());
+	}
+
+	@Test
 	public void testIsWellFormedXML() {
 		assertFalse(s==null || s.isEmpty());
 		// check output is well-formed
-		assertTrue("XML document is unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
+		assertTrue("XML document is unexpectedly not well-formed", new E2EExportValidator().isWellFormedXML(s));
 	}
 
 	@Test
 	public void testIsWellFormedXMLOnNonWellFormedDocument() {
-		logger.warn("There should be one VALIDATION ERROR warning below.");
-		// string substitution below should cause error
-		assertFalse("XML documented expected not well-formed but was found well-formed", E2EExportValidator.isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>")));
+		// logger.warn("There should be one VALIDATION ERROR warning below.");
+		// string substitution below should cause error (if not suppressed)
+		assertFalse("XML documented expected not well-formed but was found well-formed", new E2EExportValidator().isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>"), true));
 	}
 
 	@Test
 	public void testIsValidXML() {
 		// validate against XML schema
-		assertTrue("XML document expected valid but was not", E2EExportValidator.isValidXML(s));
+		assertTrue("XML document expected valid but was not", new E2EExportValidator().isValidXML(s));
 	}
 
 	@Test
 	public void testIsValidXMLOnNonValidDocument() {
-		logger.warn("There should be one VALIDATION ERROR warning below.");
-		// following statement should cause error
-		assertFalse("XML document expected not valid but found valid", E2EExportValidator.isValidXML(s.replace("DOCSECT", "DOXSECT")));
+		// logger.warn("There should be one VALIDATION ERROR warning below.");
+		// following statement should cause error (if not suppressed)
+		assertFalse("XML document expected not valid but found valid", new E2EExportValidator().isValidXML(s.replace("DOCSECT", "DOXSECT"), true));
 	}
 
 	private static String readFile( String file ) throws IOException {
