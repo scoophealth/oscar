@@ -388,8 +388,8 @@
 				
 				propT = new Properties();
 				propT.setProperty("serviceCode", b.getServiceCode() );
-				propT.setProperty("serviceDesc", b.getDescription());
-				propT.setProperty("serviceDisp", b.getValue());
+				propT.setProperty("serviceDesc", b.getDescription() == null ? "N/A" : b.getDescription());
+				propT.setProperty("serviceDisp", noNull(b.getValue()));
 				propT.setProperty("servicePercentage", noNull(b.getPercentage()));
 				propT.setProperty("serviceType", c.getServiceType());
                 propT.setProperty("serviceTypeName", c.getServiceGroupName());
