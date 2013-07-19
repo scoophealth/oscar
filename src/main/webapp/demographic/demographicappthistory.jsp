@@ -246,7 +246,8 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   int nItems=0;
   
   List<CachedAppointment> cachedAppointments = null;
-  if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()){
+  Boolean showRemote = request.getParameter("showRemote") == null ? true : Boolean.parseBoolean(request.getParameter("showRemote"));
+  if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled() && showRemote ){
 		int demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
 		try {
 			if (!CaisiIntegratorManager.isIntegratorOffline()){
@@ -291,6 +292,8 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 <%
 		  
 	  }
+	  
+	  showRemote = false;
   }
   
   if(appointmentList==null) {
@@ -389,14 +392,22 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nPrevPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nPrevPage>=0) {
+      String showRemoteStr;
+      if( nPrevPage == 0 ) {
+	  	showRemoteStr = "true";
+      }
+      else {
+	  	showRemoteStr = String.valueOf(showRemote);
+      }
 %>
-	<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nPrevPage%>&limit2=<%=strLimit2%>">
+	<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nPrevPage%>&limit2=<%=strLimit2%>&showRemote=<%=showRemoteStr%>">
 		<bean:message key="demographic.demographicappthistory.btnPrevPage" /></a> 
 <%
   }
-  if(nItems==Integer.parseInt(strLimit2)) {
+  
+  if(nItems >=Integer.parseInt(strLimit2)) {
 %> 
-	<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+	<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>&showRemote=<%=showRemote%>"
 		<bean:message key="demographic.demographicappthistory.btnNextPage" /></a>
 <%
 }
