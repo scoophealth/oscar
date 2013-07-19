@@ -58,6 +58,17 @@ public class E2EExportValidator {
 	 * @return True if input is well-formed, else false
 	 */
 	public static boolean isWellFormedXML(String xmlstring) {
+		return isWellFormedXML(xmlstring, false);
+	}
+
+	/**
+	 * Checks if input string is a well-formed E2E XML document
+	 * Supresses Logger output if in test suppress mode
+	 * 
+	 * @param xmlstring XML Document, boolean testSupress
+	 * @return True if input is well-formed, else false
+	 */
+	public static boolean isWellFormedXML(String xmlstring, boolean testSuppress) {
 		boolean result = false;
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -71,11 +82,17 @@ public class E2EExportValidator {
 			reader.parse(new InputSource(new StringReader(xmlstring)));
 			result = true;
 		} catch (ParserConfigurationException e) {
-			logger.error("VALIDATION ERROR: ", e);
+			if(!testSuppress) {
+				logger.error("VALIDATION ERROR: ", e);
+			}
 		} catch (SAXException e) {
-			logger.warn("VALIDATION ERROR: " + e.getMessage());
+			if(!testSuppress) {
+				logger.warn("VALIDATION ERROR: " + e.getMessage());
+			}
 		} catch (IOException e) {
-			logger.error("VALIDATION ERROR: ", e);
+			if(!testSuppress) {
+				logger.error("VALIDATION ERROR: ", e);
+			}
 		}
 		return result;
 	}
@@ -87,6 +104,17 @@ public class E2EExportValidator {
 	 * @return True if input is a valid, else false
 	 */
 	public static boolean isValidXML(String xmlstring) {
+		return isValidXML(xmlstring, false);
+	}
+
+	/**
+	 * Checks if input string is a valid XML document
+	 * Supresses Logger output if in test suppress mode
+	 * 
+	 * @param xmlstring XML Document, boolean testSupress
+	 * @return True if input is a valid, else false
+	 */
+	public static boolean isValidXML(String xmlstring, boolean testSuppress) {
 		boolean result = false;
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -102,15 +130,25 @@ public class E2EExportValidator {
 			reader.parse(new InputSource(new StringReader(xmlstring)));
 			result = true;
 		} catch (ParserConfigurationException e) {
-			logger.error("VALIDATION ERROR: ", e);
+			if(!testSuppress) {
+				logger.error("VALIDATION ERROR: ", e);
+			}
 		} catch (SAXNotRecognizedException e) {
-			logger.error("VALIDATION ERROR: ", e);
+			if(!testSuppress) {
+				logger.error("VALIDATION ERROR: ", e);
+			}
 		} catch (SAXNotSupportedException e) {
-			logger.error("VALIDATION ERROR: ", e);
+			if(!testSuppress) {
+				logger.error("VALIDATION ERROR: ", e);
+			}
 		} catch (SAXException e) {
-			logger.warn("VALIDATION ERROR: " + e.getMessage());
+			if(!testSuppress) {
+				logger.warn("VALIDATION ERROR: " + e.getMessage());
+			}
 		} catch (IOException e) {
-			logger.error("VALIDATION ERROR: ", e);
+			if(!testSuppress) {
+				logger.error("VALIDATION ERROR: ", e);
+			}
 		}
 		return result;
 	}
