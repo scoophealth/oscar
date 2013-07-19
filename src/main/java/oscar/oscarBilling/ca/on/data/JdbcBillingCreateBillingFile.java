@@ -980,7 +980,10 @@ public class JdbcBillingCreateBillingFile {
 		for (int i = 0; i < x; i++) {
 			returnZeroValue += y;
 		}
-		returnZeroValue = z + returnZeroValue.substring(z.length());
+		
+		if( z != null ) {
+			returnZeroValue = z + returnZeroValue.substring(z.length());
+		}
 
 		return (returnZeroValue);
 	}
@@ -991,7 +994,10 @@ public class JdbcBillingCreateBillingFile {
 		for (int i = 0; i < x; i++) {
 			returnZeroValue += y;
 		}
-		returnZeroValue = returnZeroValue.substring(0, x - z.length()) + z;
+		
+		if( z != null ) {
+			returnZeroValue = returnZeroValue.substring(0, x - z.length()) + z;
+		}
 
 		return (returnZeroValue);
 	}
