@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -54,7 +53,6 @@ import org.oscarehr.util.SpringUtils;
 
 public class MeasurementDataAction extends DispatchAction {
 
-	private static Logger logger = MiscUtils.getLogger();
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 

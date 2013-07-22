@@ -28,17 +28,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.CreateAnonymousClientAction;
-import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
-import org.oscarehr.casemgmt.dao.IssueDAO;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.GroupNoteDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.util.MiscUtils;
@@ -49,11 +44,6 @@ public class GroupNoteAction {
 
 	private static Logger logger = MiscUtils.getLogger();
 	
-	private static CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");	  
-	private static CaseManagementNoteDAO caseManagementNoteDao=(CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
-    private static CaseManagementIssueDAO caseManagementIssueDao=(CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
-	private static IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
-	private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
     private static AdmissionManager admissionManager = (AdmissionManager) SpringUtils.getBean("admissionManager");
 	private static GroupNoteDao groupNoteDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao");
 	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");

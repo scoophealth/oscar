@@ -28,15 +28,12 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
 public class DATISAgencyInformation extends AbstractIntakeExporter {
 
 	private static final String FILE_PREFIX = "Agency Information";
-	
-	private static final Logger log = Logger.getLogger(DATISAgencyInformation.class);
 	
 	@Override
 	protected String exportData() throws ExportException {

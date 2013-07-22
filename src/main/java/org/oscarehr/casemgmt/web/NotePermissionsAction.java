@@ -433,21 +433,4 @@ public class NotePermissionsAction extends DispatchAction {
 		}
 		return map;
 	}
-
-	private List<HashMap<String, String>> getDischargedPrograms(String demoNo) {
-		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-		List<Admission> admissions = admissionDao.getDischargedAdmissions(Integer.parseInt(demoNo));
-
-		List<HashMap<String, String>> discharged = new ArrayList<HashMap<String, String>>();
-
-		for (Admission a : admissions) {
-			HashMap<String, String> d = new HashMap<String, String>();
-			d.put("programName", a.getProgramName());
-			d.put("programNo", a.getProgramId() + "");
-
-			discharged.add(d);
-		}
-
-		return discharged;
-	}
 }

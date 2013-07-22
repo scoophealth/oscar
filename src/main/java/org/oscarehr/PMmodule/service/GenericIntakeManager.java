@@ -39,11 +39,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
@@ -55,6 +53,8 @@ import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.ocan.OcanXmlAdapterFactory;
+import org.oscarehr.common.dao.AdmissionDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -481,24 +481,6 @@ public class GenericIntakeManager {
 			}
 		}
 		return questionStatistics;
-	}
-
-	// Private
-
-	private Intake copyIntake(IntakeNode node, Integer clientId,
-			Integer programId, String staffId, Integer facilityId) {
-		Intake source = genericIntakeDAO.getLatestIntake(node, clientId,
-				programId, facilityId);
-		Intake dest = createIntake(node, clientId, programId, staffId);
-
-		if (source != null) {
-			for (IntakeAnswer answer : source.getAnswers()) {
-				dest.getAnswerMapped(answer.getNode().getIdStr()).setValue(
-						answer.getValue());
-			}
-		}
-
-		return dest;
 	}
 
 	private Intake createIntake(IntakeNode node, Integer clientId,

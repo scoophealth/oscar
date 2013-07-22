@@ -461,23 +461,4 @@ public class ExaminationHistoryAction extends DispatchAction {
 		
 		return appointments;
 	}
-	
-	private List<Appointment> getAppointmentsForAngle(String demographicNo, Date startDate, Date endDate) {
-		SortedSet<Integer> appointmentIds = new TreeSet<Integer>();
-		String fields[] = {"od_angle_up","od_angle_middle0","od_angle_middle1","od_angle_middle2","od_angle_down",
-				"os_angle_up","os_angle_middle0","os_angle_middle1","os_angle_middle2","os_angle_down"};
-				
-		for(String f:fields) {
-			Set<Integer> apptNos =null;
-			apptNos = measurementsDao.getAppointmentNosByDemographicNoAndType(Integer.parseInt(demographicNo),f,startDate,endDate);
-			appointmentIds.addAll(apptNos);
-		}
-				
-		List<Appointment> appointments = new ArrayList<Appointment>();		
-		for(Integer id:appointmentIds) {
-			appointments.add(0,appointmentDao.find(id));
-		}
-		
-		return appointments;
-	}
 }

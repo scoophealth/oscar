@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.DynaBean;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -58,7 +57,6 @@ import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
  */
 @Transactional(propagation=Propagation.REQUIRES_NEW)
 public class DxresearchReportAction extends DispatchAction {
-    private static final Logger logger = MiscUtils.getLogger();
     private final static String SUCCESS = "success";
     private final static String EDIT_DESC = "editdesc";
     private DxresearchDAO dxresearchdao ;
