@@ -81,7 +81,7 @@ public class PlaceholderPersonRegistryQueryPlacer extends BasePlacer implements 
 		try {
 			org.marc.everest.rmim.ca.r020403.mfmi_mt700717ca.ControlActEvent<org.marc.everest.rmim.ca.r020403.prpa_mt101002ca.IdentifiedEntity> controlActEvent = response.getControlActEvent();
 
-			org.marc.everest.rmim.ca.r020403.mfmi_mt700717ca.Subject4<org.marc.everest.rmim.ca.r020403.prpa_mt101002ca.IdentifiedEntity> subject = (org.marc.everest.rmim.ca.r020403.mfmi_mt700717ca.Subject4<org.marc.everest.rmim.ca.r020403.prpa_mt101002ca.IdentifiedEntity>) controlActEvent.getSubject().getRegistrationEvent().getSubject();
+			org.marc.everest.rmim.ca.r020403.mfmi_mt700717ca.Subject4<org.marc.everest.rmim.ca.r020403.prpa_mt101002ca.IdentifiedEntity> subject = controlActEvent.getSubject().getRegistrationEvent().getSubject();
 
 			org.marc.everest.rmim.ca.r020403.prpa_mt101001ca.Person person = subject.getRegisteredRole().getIdentifiedPerson();
 			if (person.getName() != null && !person.getName().isEmpty()) {

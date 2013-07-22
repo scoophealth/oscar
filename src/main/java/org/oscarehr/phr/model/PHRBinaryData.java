@@ -54,8 +54,8 @@ import org.indivo.xml.phr.types.AuthorType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.myoscar.commons.MedicalDataType;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
-import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.w3c.dom.Element;
 
 import oscar.dms.EDoc;

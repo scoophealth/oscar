@@ -1289,54 +1289,6 @@ public class PhsStarHandler extends BasePhsStarHandler {
         return null;
 	}
 
-	private String findProgram(String resourceUnit, String procedure) {
-		String filename = OscarProperties.getInstance().getProperty("phs_star.program_file");
-		if(filename == null) {
-        	logger.warn("Cannot lookup program. Config file not found - " + filename);
-        	return null;
-        }
-        InputStream is = null;
-
-        try {
-        	is = new FileInputStream(new File(filename));
-
-	        if(is != null) {
-		        SAXBuilder parser = new SAXBuilder();
-		        Document doc = null;
-		        try {
-		        	doc = parser.build(is);
-		        }catch(Exception e) {
-		        	logger.error("Error",e);
-		        	return null;
-		        }
-
-		        Element root = doc.getRootElement();
-		        @SuppressWarnings("unchecked")
-		        List<Element> items = root.getChildren();
-		        for (int i = 0; i < items.size(); i++){
-		            Element e = items.get(i);
-		            String resUnit = e.getAttributeValue("resUnit");
-		            String serviceCode = e.getAttributeValue("serviceCode");
-		            if(resUnit.equals(resourceUnit) && serviceCode.equals(procedure)) {
-		            	return e.getAttributeValue("programId");
-		            }
-		        }
-	        }
-        }catch(Exception e) {
-        	logger.error("error",e);
-        } finally {
-        	if(is != null) {
-        		try {
-        			is.close();
-        		}catch(IOException e) {
-        			logger.error("error",e);
-        		}
-        	}
-        }
-        return null;
-	}
-
-
 	public String getValueAndTryGroup(String path, String group) {
 		try {
 			String var = this.extractOrEmpty(path);

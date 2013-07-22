@@ -835,16 +835,11 @@
 
 			</exclusions>
 		</dependency>
-
-		<dependency>
-			<groupId>org.oscarehr.myoscar_server</groupId>
-			<artifactId>myoscar_server_client_stubs</artifactId>
-			<version>2013.02-SNAPSHOT</version>
-		</dependency>		
+		
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>myoscar_client_utils</artifactId>
-			<version>2013.07.08</version>
+			<version>2013.07.22</version>
 		</dependency>
 		
         <dependency>

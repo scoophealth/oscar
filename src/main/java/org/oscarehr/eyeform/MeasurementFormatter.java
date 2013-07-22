@@ -1108,10 +1108,4 @@ public class MeasurementFormatter {
 			return true;
 		return false;
 	}
-	
-	private boolean isNegative(String key) {
-		if(mmap.get(key) != null && mmap.get(key).getDataField().startsWith("-"))
-			return true;
-		return false;
-	}
 }

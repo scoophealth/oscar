@@ -35,10 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.soap.SOAPFaultException;
-import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -62,6 +62,7 @@ import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.InvalidRelationshipException_Exception;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
+import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer3;
@@ -380,7 +381,7 @@ public class PHRUserManagementAction extends DispatchAction {
 
 	public ActionForward registerUser(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String user = (String) request.getSession().getAttribute("user");
-		String email = (String) request.getParameter("email");
+		String email =  request.getParameter("email");
 		
 		String demographicNo = request.getParameter("demographicNo");
 		
@@ -417,10 +418,15 @@ public class PHRUserManagementAction extends DispatchAction {
 			log.debug("error", e);
 			ar.addParameter("failmessage", "You don't have permissions to perform this action."  + e.getClass().getName() + " - " + e.getMessage());
 			return ar;
+		} catch (ItemAlreadyExistsException_Exception e) {
+			log.debug("ItemAlreadyExistsException", e);
+			ar.addParameter("failmessage", "Failed creating user. User already exists.");
+			ar.addParameter("nonUnique", "true");
+			return ar;
 		} catch (SOAPFaultException se){
 			log.debug("error", se);
 			if (se.getMessage().contains("EntityExistsException")) {
-				ar.addParameter("failmessage", "Failed creating user. User already exists.");
+				ar.addParameter("failmessage", "Failed creating user. Possibly user already exists. "+se.getMessage());
 				ar.addParameter("nonUnique", "true");
 			}
 			else {

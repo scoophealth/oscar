@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar.commons.MedicalDataType"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
@@ -37,7 +38,6 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.phr.web.MyOscarMessagesHelper"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
-<%@page import="org.oscarehr.myoscar_server.ws.MedicalDataType"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.net.URLEncoder"%>
 
