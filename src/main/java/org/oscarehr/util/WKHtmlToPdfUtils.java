@@ -26,7 +26,6 @@ package org.oscarehr.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -81,14 +80,11 @@ public class WKHtmlToPdfUtils {
 	 */
 	public static void convertToPdf(String sourceUrl, File outputFile) throws IOException {
 		String outputFilename = outputFile.getCanonicalPath();
-
+		logger.info("Creating : "+outputFilename);
 		// example command : wkhtmltopdf-i386 "https://127.0.0.1:8443/oscar/eformViewForPdfGenerationServlet?fdid=2&parentAjaxId=eforms" /tmp/out.pdf
-		ArrayList<String> command = new ArrayList<String>();
-		command.add(CONVERT_COMMAND);
-		command.add(sourceUrl);
-		command.add(outputFilename);
-
-		logger.debug(command);
+		String elements=CONVERT_COMMAND + " " + sourceUrl + " " + outputFilename;
+		String[] command = elements.split(" ");
+		logger.info("Running : "+elements);
 		runtimeExec(command, outputFilename);
 	}
 
@@ -98,9 +94,9 @@ public class WKHtmlToPdfUtils {
 	 * anything is happening. The example is if you're doing image processing and you're scaling an image with say imagemagick it could take 5 minutes to finish. You don't want to set a time out that long, but you don't want to stop if it it's proceeding
 	 * normally. Normal proceeding is defined by the out put file is still changing. If the out put file isn't changing, and it's taking "a while" then we would assume it's failed some how or hung or stalled at which point we'll terminate it.
 	 */
-	private static void runtimeExec(ArrayList<String> command, String outputFilename) throws IOException {
+	private static void runtimeExec(String[] command, String outputFilename) throws IOException {
 		File f = new File(outputFilename);
-		Process process = Runtime.getRuntime().exec(command.toArray(new String[0]));
+		Process process = Runtime.getRuntime().exec(command);
 
 		long previousFileSize = 0;
 		int noFileSizeChangeCounter = 0;
