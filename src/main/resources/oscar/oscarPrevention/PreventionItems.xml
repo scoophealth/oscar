@@ -458,6 +458,22 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Other Layout B" name="OtherB" link="" layout="PAPMAM"
 		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc= "Smoking history"
+		name="Smoking"		
+		layout="history"
+		minAge="13"		
+		showIfMinRecordNum="1" />
+	
+	<item
+		resultDesc=""
+		desc= "Bone Mineral Density"
+		name="BMD"		
+		layout="PAPMAM"
+		minAge="65"		
+		showIfMinRecordNum="1" />
 
 </preventions>
 
