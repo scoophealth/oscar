@@ -79,13 +79,16 @@ public class AddPreventionAction  extends Action {
          
          MiscUtils.getLogger().debug("nextDate "+nextDate+" neverWarn "+neverWarn);
          
-	 String refused = "0";
-	 if (given != null && given.equals("refused")){
-            refused = "1";
+         String refused = "0";
+         if (given != null && given.equals("refused")){
+        	 refused = "1";
          }else if (given != null && given.equals("ineligible")){
-            refused = "2";
+        	 refused = "2";
+         }else if (given != null && given.equals("never")){
+        	 refused = "1";
+         }else if (given != null && given.equals("previous")){
+        	 refused = "2";
          }
-
          
          
          if (neverWarn != null && neverWarn.equals("neverRemind")){

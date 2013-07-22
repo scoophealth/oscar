@@ -814,6 +814,33 @@
               prev.addReminder("Colonoscopy makes FOBT Inelligible");
         </java:consequence>
     </rule>
+    
+    
+    <rule name="Smoking">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 13</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Smoking") == -1</java:condition>
+        <java:consequence>
+              prev.log("Smoking debug");
+              prev.addReminder("Need to ask about Smoking");
+        </java:consequence>
+    </rule>
+    
+    <rule name="Bone Mineral Density">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 65</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("BMD") == -1</java:condition>
+        <java:consequence>
+              prev.log("BMD debug");
+              prev.addReminder("Need Bone Mineral Density Test");
+        </java:consequence>
+    </rule>
+    
+    
 
 <!-- FOBT Rules End-->
 

@@ -506,7 +506,33 @@ clear: left;
                <script type="text/javascript">
                   hideExtraName(document.getElementById('providerDrop'));
                </script>
-               <%}%>
+               <%} else if(layoutType.equals("history")) {%>
+               		 <div class="prevention">
+                   <fieldset>
+                      <legend>Prevention : <%=prevention%></legend>
+                         <div style="float:left;">
+                            <input name="given" type="radio" value="yes"      <%=checked(completed,"0")%>>Yes</input><br/>
+                            <input name="given" type="radio" value="never"    <%=checked(completed,"1")%>>Never</input><br/>
+                            <input name="given" type="radio" value="previous" <%=checked(completed,"2")%>>Previous</input>
+                         </div>
+                         <div style="float:left;margin-left:30px;">
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+                            <label for="provider" class="fields">Provider:</label> <input type="hidden" name="providerName" id="providerName" value="<%=providerName%>"/>
+                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
+                                      <%for (int i=0; i < providers.size(); i++) {
+                                           Map<String,String> h = providers.get(i);%>
+                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
+                                      <%}%>
+                                      <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
+                                  </select>
+                         </div>
+                   </fieldset>
+                   <fieldset >
+                      <legend >Comments</legend>
+                      <textarea name="comments" ><%=str((extraData.get("comments")),"")%></textarea>
+                   </fieldset>
+                   </div>
+               <%} %>
 
 
                <div class="prevention">
