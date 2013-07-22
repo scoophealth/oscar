@@ -24,6 +24,7 @@
 package org.oscarehr.exports.e2e;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -50,30 +51,35 @@ public class E2EExportValidatorTest {
 	}
 
 	@Test
+	public void testE2EExportValidator() {
+		assertNotNull(new E2EExportValidator());
+	}
+
+	@Test
 	public void testIsWellFormedXML() {
 		assertFalse(s==null || s.isEmpty());
 		// check output is well-formed
-		assertTrue("XML document is unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
+		assertTrue("XML document is unexpectedly not well-formed", new E2EExportValidator().isWellFormedXML(s));
 	}
 
 	@Test
 	public void testIsWellFormedXMLOnNonWellFormedDocument() {
 		// logger.warn("There should be one VALIDATION ERROR warning below.");
 		// string substitution below should cause error (if not suppressed)
-		assertFalse("XML documented expected not well-formed but was found well-formed", E2EExportValidator.isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>"), true));
+		assertFalse("XML documented expected not well-formed but was found well-formed", new E2EExportValidator().isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>"), true));
 	}
 
 	@Test
 	public void testIsValidXML() {
 		// validate against XML schema
-		assertTrue("XML document expected valid but was not", E2EExportValidator.isValidXML(s));
+		assertTrue("XML document expected valid but was not", new E2EExportValidator().isValidXML(s));
 	}
 
 	@Test
 	public void testIsValidXMLOnNonValidDocument() {
 		// logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error (if not suppressed)
-		assertFalse("XML document expected not valid but found valid", E2EExportValidator.isValidXML(s.replace("DOCSECT", "DOXSECT"), true));
+		assertFalse("XML document expected not valid but found valid", new E2EExportValidator().isValidXML(s.replace("DOCSECT", "DOXSECT"), true));
 	}
 
 	private static String readFile( String file ) throws IOException {

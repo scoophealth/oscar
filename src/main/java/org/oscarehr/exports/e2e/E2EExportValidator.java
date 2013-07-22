@@ -48,8 +48,11 @@ import org.xml.sax.XMLReader;
  * @author Raymond Rusk
  */
 public class E2EExportValidator {
-	private static Logger logger=MiscUtils.getLogger();
-	private E2EExportValidator() {}
+	private static Logger logger = MiscUtils.getLogger();
+	protected StringBuilder exportLog = new StringBuilder();
+
+	public E2EExportValidator() {
+	}
 
 	/**
 	 * Checks if input string is a well-formed E2E XML document
@@ -57,7 +60,7 @@ public class E2EExportValidator {
 	 * @param xmlstring XML Document
 	 * @return True if input is well-formed, else false
 	 */
-	public static boolean isWellFormedXML(String xmlstring) {
+	public boolean isWellFormedXML(String xmlstring) {
 		return isWellFormedXML(xmlstring, false);
 	}
 
@@ -68,8 +71,9 @@ public class E2EExportValidator {
 	 * @param xmlstring XML Document, boolean testSupress
 	 * @return True if input is well-formed, else false
 	 */
-	public static boolean isWellFormedXML(String xmlstring, boolean testSuppress) {
+	public boolean isWellFormedXML(String xmlstring, boolean testSuppress) {
 		boolean result = false;
+		exportLog = new StringBuilder();
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setValidating(false);
@@ -82,40 +86,44 @@ public class E2EExportValidator {
 			reader.parse(new InputSource(new StringReader(xmlstring)));
 			result = true;
 		} catch (ParserConfigurationException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.error("VALIDATION ERROR: ", e);
+				exportLog.append(e);
 			}
 		} catch (SAXException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.warn("VALIDATION ERROR: " + e.getMessage());
+				exportLog.append(e.getMessage());
 			}
 		} catch (IOException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.error("VALIDATION ERROR: ", e);
+				exportLog.append(e);
 			}
 		}
 		return result;
 	}
 
 	/**
-	 * Checks if input string is a valid XML document
+	 * Checks if input string is a valid E2E XML document
 	 * 
 	 * @param xmlstring XML Document
 	 * @return True if input is a valid, else false
 	 */
-	public static boolean isValidXML(String xmlstring) {
+	public boolean isValidXML(String xmlstring) {
 		return isValidXML(xmlstring, false);
 	}
 
 	/**
-	 * Checks if input string is a valid XML document
+	 * Checks if input string is a valid E2E XML document
 	 * Supresses Logger output if in test suppress mode
 	 * 
 	 * @param xmlstring XML Document, boolean testSupress
 	 * @return True if input is a valid, else false
 	 */
-	public static boolean isValidXML(String xmlstring, boolean testSuppress) {
+	public boolean isValidXML(String xmlstring, boolean testSuppress) {
 		boolean result = false;
+		exportLog = new StringBuilder();
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setValidating(true);
@@ -130,27 +138,41 @@ public class E2EExportValidator {
 			reader.parse(new InputSource(new StringReader(xmlstring)));
 			result = true;
 		} catch (ParserConfigurationException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.error("VALIDATION ERROR: ", e);
+				exportLog.append(e);
 			}
 		} catch (SAXNotRecognizedException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.error("VALIDATION ERROR: ", e);
+				exportLog.append(e);
 			}
 		} catch (SAXNotSupportedException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.error("VALIDATION ERROR: ", e);
+				exportLog.append(e);
 			}
 		} catch (SAXException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.warn("VALIDATION ERROR: " + e.getMessage());
+				exportLog.append(e);
 			}
 		} catch (IOException e) {
-			if(!testSuppress) {
+			if (!testSuppress) {
 				logger.error("VALIDATION ERROR: ", e);
+				exportLog.append(e);
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Returns the entire export event log string
+	 * 
+	 * @return String of the entire export event log
+	 */
+	public String getExportLog() {
+		return exportLog.toString();
 	}
 
 	/**
@@ -158,15 +180,15 @@ public class E2EExportValidator {
 	 */
 	private static class SimpleErrorHandler implements ErrorHandler {
 		public void warning(SAXParseException e) throws SAXException {
-			throw new SAXException("(Parsing Warning) "+e.getMessage());
+			throw new SAXException("(Parsing Warning) " + e.getMessage());
 		}
 
 		public void error(SAXParseException e) throws SAXException {
-			throw new SAXException("(Parsing Error) "+e.getMessage());
+			throw new SAXException("(Parsing Error) " + e.getMessage());
 		}
 
 		public void fatalError(SAXParseException e) throws SAXException {
-			throw new SAXException("(Parsing Fatal Error) "+e.getMessage());
+			throw new SAXException("(Parsing Fatal Error) " + e.getMessage());
 		}
 	}
 
@@ -179,7 +201,7 @@ public class E2EExportValidator {
 			String filename = new File(systemId).getName();
 
 			// Now prepend the correct path
-			String correctedId = E2EExportValidator.class.getResource("/e2e/"+filename).getPath();
+			String correctedId = E2EExportValidator.class.getResource("/e2e/" + filename).getPath();
 
 			InputSource is = new InputSource(ClassLoader.getSystemResourceAsStream(correctedId));
 			is.setSystemId(correctedId);

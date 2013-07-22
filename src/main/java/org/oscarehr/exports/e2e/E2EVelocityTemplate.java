@@ -81,7 +81,6 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	/**
 	 * Assembles the data model & predefined velocity template to yield an E2E document
 	 * 
-	 * @param record
 	 * @return String representing E2E export from template
 	 */
 	public String export(PatientExport p) {
@@ -107,11 +106,18 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		String result = VelocityUtils.velocityEvaluate(context, template);
 
 		// Check for Validity
+		String demoNo = record.getDemographic().getDemographicNo().toString();
 		if(result.contains("$")) {
-			log.warn("[Demo: "+record.getDemographic().getDemographicNo()+"] Export contains '$' - may contain errors");
+			String msg = "[Demo: ".concat(demoNo).concat("] Export contains '$' - may contain errors");
+			log.warn(msg);
+			addExportLogEntry(msg);
 		}
-		if(!E2EExportValidator.isValidXML(result)) {
-			log.error("[Demo: "+record.getDemographic().getDemographicNo()+"] Export failed E2E XSD validation");
+		E2EExportValidator v = new E2EExportValidator();
+		if(!v.isValidXML(result)) {
+			String msg = "[Demo: ".concat(demoNo).concat("] Export failed E2E XSD validation");
+			log.error(msg);
+			addExportLogEntry(msg);
+			addExportLogEntry(v.getExportLog());
 		}
 
 		return result;

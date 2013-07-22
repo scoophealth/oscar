@@ -2012,10 +2012,12 @@ public class DemographicExportAction4 extends Action {
 				logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
 			} else {
 				ArrayList<File> files = new ArrayList<File>();
-				exportError = new ArrayList<String>();
+				StringBuilder exportLog = new StringBuilder();
 				for (String demoNo : list) {
 					if (StringUtils.empty(demoNo)) {
-						exportError.add("Error! No Demographic Number");
+						String msg = "Error! No Demographic Number";
+						logger.error(msg);
+						exportLog.append(msg);
 						continue;
 					}
 
@@ -2039,9 +2041,13 @@ public class DemographicExportAction4 extends Action {
 					if(patient.loadPatient(demoNo)) {
 						output = t.export(patient);
 					} else {
-						logger.error("Failed to load patient " + demoNo);
+						String msg = "Failed to load patient ".concat(demoNo);
+						logger.error(msg);
+						t.addExportLogEntry(msg);
+						exportLog.append(t.getExportLog());
 						continue;
 					}
+					exportLog.append(t.getExportLog());
 
 					//export file to temp directory
 					try{
@@ -2058,20 +2064,45 @@ public class DemographicExportAction4 extends Action {
 					}catch(Exception e){
 						logger.error("Error", e);
 					}
+					BufferedWriter out = null;
 					try {
-						BufferedWriter out = new BufferedWriter(new FileWriter(files.get(files.size()-1)));
+						out = new BufferedWriter(new FileWriter(files.get(files.size()-1)));
 						out.write(output);
-						out.close();
-					} catch (IOException ex) {logger.error("Error", ex);
-					throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
+					} catch (IOException e) {
+						logger.error("Error", e);
+						throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
+					} finally {
+						try {
+							out.close();
+						} catch(Exception e) {
+							//ignore
+						}
 					}
 				}
 
-				//create ReadMe.txt & ExportEvent.log
-				//files.add(makeReadMe(files));
-				//files.add(makeExportLog(files.get(0).getParentFile()));
+				// Create Export Log
+				try {
+					File exportLogFile = new File(files.get(0).getParentFile(), "ExportEvent.log");
+					BufferedWriter out = new BufferedWriter(new FileWriter(exportLogFile));
+					String pidRange = "Patient ID Range: ".concat(getIDInExportFilename(files.get(0).getName()));
+					pidRange = pidRange.concat("-").concat(getIDInExportFilename(files.get(files.size()-1).getName()));
 
-				//zip all export files
+					out.write(pidRange.concat(System.getProperty("line.separator")));
+					out.write(System.getProperty("line.separator"));
+					if(exportLog.toString().length() == 0) {
+						out.write("Export contains no errors".concat(System.getProperty("line.separator")));
+					} else {
+						out.write(exportLog.toString());
+					}
+					out.close();
+
+					files.add(exportLogFile);
+				} catch (IOException e) {
+					logger.error("Error", e);
+					throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
+				}
+
+				// Zip all export files
 				String zipName = files.get(0).getName().replace(".xml", ".zip");
 				if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".zip";
 				//	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".pgp";
@@ -2079,6 +2110,7 @@ public class DemographicExportAction4 extends Action {
 					logger.debug("Error! Failed to zip export files");
 				}
 
+				// Apply PGP if installed
 				if (pgpReady.equals("Yes")) {
 					//PGP encrypt zip file
 					PGPEncrypt pgp = new PGPEncrypt();
@@ -2095,8 +2127,7 @@ public class DemographicExportAction4 extends Action {
 					ffwd = "success";
 				}
 
-
-				//Remove zip & export files from temp dir
+				// Remove zip & export files from temp dir
 				Util.cleanFile(zipName, tmpDir);
 				Util.cleanFiles(files);
 			}
