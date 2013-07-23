@@ -33,6 +33,7 @@
 package oscar.oscarLab.ca.all.pageUtil;
 
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,6 +49,7 @@ import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.Chunk;
@@ -57,6 +59,7 @@ import com.lowagie.text.Element;
 import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
@@ -65,7 +68,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
-
+import com.lowagie.text.rtf.RtfWriter2;
 /**
  *
  * @author wrighd
@@ -87,7 +90,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
     private Font redFont;
     private String dateLabReceived;
 
-    public static byte[] getPdfBytes(String segmentId, String providerNo) throws IOException, DocumentException
+	public static byte[] getPdfBytes(String segmentId, String providerNo) throws IOException, DocumentException
     {
     	ByteArrayOutputStream baos=new ByteArrayOutputStream();
 
@@ -126,22 +129,36 @@ public class LabPDFCreator extends PdfPageEventHelper{
         }
         this.versionNum = i+1;
 
+    } 
+    //Creates an rtf file for viha rtf labs
+    public void printRtf()throws IOException, DocumentException{
+    	//create an input stream from the rtf string bytes
+    	byte[] rtfBytes = handler.getOBXResult(0, 0).getBytes();
+    	ByteArrayInputStream rtfStream = new ByteArrayInputStream(rtfBytes);
+    	
+    	//create & open the document we are going to write to and its writer
+    	document = new Document();
+    	RtfWriter2 writer = RtfWriter2.getInstance(document,os);
+    	document.setPageSize(PageSize.LETTER);
+    	document.addTitle("Title of the Document");
+    	document.addCreator("OSCAR");
+    	document.open();
+    	
+        //Create the fonts that we are going to use
+        bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+        font = new Font(bf, 11, Font.NORMAL);
+        boldFont = new Font(bf, 12, Font.BOLD);
+        redFont = new Font(bf, 11, Font.NORMAL, Color.RED);
+        
+        //add the patient information
+        addRtfPatientInfo();
+        
+        //add the results
+    	writer.importRtfDocument(rtfStream, null);
+    	
+    	document.close();
+    	os.flush();
     }
-    // Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is 
-    public boolean unstructuredDocCheck(){
-    	if(handler.getMsgType().equals("PATHL7")){
-    		ArrayList <String> headers = handler.getHeaders();
-    		int i=0;
-
-    		for(i=0; i<headers.size(); i++){
-    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))){
-    				//isUnstructuredDoc = true;
-    				return true;
-    			}
-    		}
-    	} return false;
-    }
-    
     public void printPdf() throws IOException, DocumentException{
 
         // check that we have data to print
@@ -204,7 +221,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
 	 * header, the test result headers and the test results for that category.
 	 */
 	private void addLabCategory(String header) throws DocumentException {
-		this.isUnstructuredDoc = unstructuredDocCheck();
+		if(handler.getMsgType().equals("PATHL7")){
+			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck();}
 		
 		float[] mainTableWidths;
 		if(isUnstructuredDoc){
@@ -214,7 +232,10 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		}
 		
 		PdfPTable table = new PdfPTable(mainTableWidths);
-		table.setHeaderRows(3);
+		if(isUnstructuredDoc){
+			table.setHeaderRows(1);}
+		else{
+		table.setHeaderRows(3);}
 		table.setWidthPercentage(100);
 
 		PdfPCell cell = new PdfPCell();
@@ -309,7 +330,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								|| (handler.getMsgType().equals("PFHT") && !obxName.equals("") && handler.getObservationHeader(j,k).equals(header))) { // <<-- DNS only needed for
 													// MDS messages
 							String obrName = handler.getOBRName(j);
-
 							// add the obrname if necessary
 							if (!obrFlag
 									&& !obrName.equals("")
@@ -340,7 +360,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									cell.setPhrase(new Phrase((obrFlag ? "   " : "")+ obxName, lineFont));
 									table.addCell(cell);
 								}
-								cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont));				
+								cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));				
 								table.addCell(cell);
 								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 								//if there are duplicate Times, display only the first 
@@ -353,19 +373,29 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								}
 							} else{
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							if(handler.getMsgType().equals("PATHL7") && (obxCount>1) && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
+								cell.setPhrase(new Phrase("", lineFont));
+								table.addCell(cell);}
+							else{
 							cell.setPhrase(new Phrase((obrFlag ? "   " : "")
 									+ obxName, lineFont));
-							table.addCell(cell);
+							table.addCell(cell);}
+							if(handler.getMsgType().equals("PATHL7")){
+								cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
+							}else{
 							cell.setPhrase(new Phrase(handler
 									.getOBXResult(j, k).replaceAll(
-											"<br\\s*/*>", "\n"), lineFont));
+											"<br\\s*/*>", "\n"), lineFont));}
 							cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							table.addCell(cell);
 							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							if(handler.getMsgType().equals("PATHL7")){
+								cell.setPhrase(new Phrase(handler.getOBXAbnormalFlag(j, k), lineFont));
+							}else{
 							cell.setPhrase(new Phrase(
 									(handler.isOBXAbnormal(j, k) ? handler
 											.getOBXAbnormalFlag(j, k) : "N"),
-									lineFont));
+									lineFont));}
 							table.addCell(cell);
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 							cell.setPhrase(new Phrase(handler
@@ -592,8 +622,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
         rInfoTable.addCell(cell);
         cell.setPhrase(new Phrase("Report Status: ", boldFont));
         rInfoTable.addCell(cell);
+        if(handler.getMsgType().equals("PATHL7")){
+        	cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" : "Preliminary")), font));
+        	rInfoTable.addCell(cell);
+        }else{
         cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" : "Partial")), font));
-        rInfoTable.addCell(cell);
+        rInfoTable.addCell(cell);}
         cell.setPhrase(new Phrase("Client Ref. #: ", boldFont));
         rInfoTable.addCell(cell);
         cell.setPhrase(new Phrase(handler.getClientRef(), font));
@@ -644,7 +678,90 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
         document.add(table);
     }
-
+    /**
+     * Since pdfPtable used in createInfotable() is not properly supported in RTF, 
+     * add the patient information to the RTF document using chunks and paragraphs
+     */
+    private void addRtfPatientInfo() throws DocumentException{
+    	Paragraph patientInfo = new Paragraph();
+    	
+    	Phrase clientPhrase = new Phrase();
+    	clientPhrase.add(new Chunk("Patient Name: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getPatientName() +"\t\t\t", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Home Phone: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getHomePhone()+"\n", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Date of Birth: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getDOB()+"\t\t\t\t\t", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Work Phone: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getWorkPhone()+"\n", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Age: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getAge()+"\t\t\t\t\t\t\t", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Sex: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getSex()+"\n", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Health #: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getHealthNum()+"\t\t\t\t\t\t", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Patient Location: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getPatientLocation()+"\n", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Date of Service: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getServiceDate()+"\t\t\t\t", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Date Received: ", boldFont));
+        clientPhrase.add(new Chunk(dateLabReceived+"\n", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Report Status: ", boldFont));
+        clientPhrase.add(new Chunk((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" : "Preliminary"))+"\t\t\t\t\t\t", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Client Ref. #: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getClientRef()+"\n", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Accession #: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getAccessionNum()+"\t\t\t\t\t", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("Requesting Client:  ", boldFont));
+        clientPhrase.add(new Chunk(handler.getDocName()+"\n", font));
+        patientInfo.add(clientPhrase);
+        
+        clientPhrase = new Phrase();
+        clientPhrase.add(new Chunk("cc: Client:  ", boldFont));
+        clientPhrase.add(new Chunk(handler.getCCDocs()+"\n\n", font));
+        patientInfo.add(clientPhrase);
+        
+        document.add(patientInfo);
+    }
     /*
      *  addTableToTable(PdfPTable main, PdfPTable add) adds the table 'add' as
      *  a cell spanning 'colspan' columns to the table main.
