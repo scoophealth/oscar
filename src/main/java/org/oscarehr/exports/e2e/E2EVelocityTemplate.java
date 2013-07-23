@@ -43,7 +43,7 @@ import org.oscarehr.util.VelocityUtils;
  * @author Jeremy Ho
  */
 public class E2EVelocityTemplate extends VelocityTemplate {
-	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2etemplate.vm";
+	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2e/e2etemplate.vm";
 	private static String template = null;
 	private static E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
@@ -129,7 +129,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	 * @author Jeremy Ho
 	 */
 	public static class E2EResources {
-		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2eformcode.csv";
+		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2e/e2eformcode.csv";
 		private static Map<String,String> formCodes = null;
 
 		public E2EResources() {

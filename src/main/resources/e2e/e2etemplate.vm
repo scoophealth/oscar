@@ -809,9 +809,9 @@ Medications and Prescriptions - Medication List
 										<e2e:desc nullFlavor="UNK"/>
 ## Temporary solution until next E2E specification is released
 #*        *##if ( $med.dosage && $med.dosage != "" && $med.unit && $med.unit != "" )
-										<strength>
-											<center value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
-										</strength>
+##										<strength>
+##											<center value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
+##										</strength>
 #*        *##end
 									</manufacturedLabeledDrug>
 								</manufacturedProduct>
