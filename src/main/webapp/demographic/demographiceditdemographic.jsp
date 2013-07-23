@@ -1589,6 +1589,9 @@ if ( Dead.equals(PatStat) ) {%>
                                                             key="demographic.demographiceditdemographic.formPhoneW" />:</span>
                                                         <span class="info"><%=demographic.getPhone2()%> <%=StringUtils.trimToEmpty(demoExt.get("wPhoneExt"))%></span>
 							</li>
+	                        						<li><span class="label"><bean:message
+                                                            key="demographic.demographicaddrecordhtm.formPhoneComment" />:</span>
+                                                        <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("phoneComment"))%></span></li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formPhoneC" />:</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%></span></li>
@@ -2223,30 +2226,37 @@ if ( Dead.equals(PatStat) ) {%>
 								<input type="hidden" name="demo_cellOrig"
 									value="<%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%>" />
 								</td>
-																<td align="right"><b><bean:message
-                                									key="demographic.demographiceditdemographic.formNewsLetter" />:
-                                								</b></td>
-                                								<td align="left">
-                                								<% String newsletter = oscar.util.StringUtils.noNull(demographic.getNewsletter()).trim();
-                                                                     if( newsletter == null || newsletter.equals("")) {
-                                                                        newsletter = "Unknown";
-                                                                     }
-                                                                  %> <select name="newsletter" <%=getDisabled("newsletter")%>>
-                                									<option value="Unknown" <%if(newsletter.equals("Unknown")){%>
-                                										selected <%}%>><bean:message
-                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown" /></option>
-                                									<option value="No" <%if(newsletter.equals("No")){%> selected
-                                										<%}%>><bean:message
-                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optNo" /></option>
-                                									<option value="Paper" <%if(newsletter.equals("Paper")){%>
-                                										selected <%}%>><bean:message
-                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper" /></option>
-                                									<option value="Electronic"
-                                										<%if(newsletter.equals("Electronic")){%> selected <%}%>><bean:message
-                                										key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic" /></option>
-                                								</select></td>
-							</tr>
+								<td align="right"><b><bean:message
+										key="demographic.demographicaddrecordhtm.formPhoneComment" />: </b></td>
+								<td align="left" colspan="3">
+								<input type="hidden" name="phoneCommentOrig"
+									value="<%=StringUtils.trimToEmpty(demoExt.get("phoneComment"))%>" />
+										<textarea rows="2" cols="30" name="phoneComment"><%=StringUtils.trimToEmpty(demoExt.get("phoneComment"))%></textarea>
+								</td>
+							</tr>							
 							<tr valign="top">
+								<td align="right"><b><bean:message
+								    key="demographic.demographiceditdemographic.formNewsLetter" />:
+								</b></td>
+								<td align="left">
+								<% String newsletter = oscar.util.StringUtils.noNull(demographic.getNewsletter()).trim();
+								     if( newsletter == null || newsletter.equals("")) {
+								        newsletter = "Unknown";
+								     }
+								  %> <select name="newsletter" <%=getDisabled("newsletter")%>>
+								    <option value="Unknown" <%if(newsletter.equals("Unknown")){%>
+								        selected <%}%>><bean:message
+								        key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown" /></option>
+								    <option value="No" <%if(newsletter.equals("No")){%> selected
+								        <%}%>><bean:message
+								        key="demographic.demographicaddrecordhtm.formNewsLetter.optNo" /></option>
+								    <option value="Paper" <%if(newsletter.equals("Paper")){%>
+								        selected <%}%>><bean:message
+								        key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper" /></option>
+								    <option value="Electronic"
+								        <%if(newsletter.equals("Electronic")){%> selected <%}%>><bean:message
+								        key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic" /></option>
+								</select></td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
 								<td align="left">
@@ -2263,8 +2273,6 @@ if ( Dead.equals(PatStat) ) {%>
 								<input type="hidden" name="aboriginalOrig"
 									value="<%=StringUtils.trimToEmpty(demoExt.get("aboriginal"))%>" />
 								</td>
-								<td align="right"><b>&nbsp;</b></td>
-								<td align="left">&nbsp;</td>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message
