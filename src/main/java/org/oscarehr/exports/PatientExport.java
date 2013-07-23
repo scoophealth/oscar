@@ -121,7 +121,7 @@ public abstract class PatientExport {
 				return new SimpleDateFormat(format).parse(rhs);
 			} catch (Exception e) {}
 		}
-		log.warn("stringToDate - Can't parse " + rhs);
+		log.warn("stringToDate - Can't parse ".concat(rhs));
 		return new Date();
 	}
 

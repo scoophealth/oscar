@@ -119,7 +119,7 @@ public class E2EPatientExport extends PatientExport {
 		}
 
 		this.isLoaded = true;
-		log.debug("Loaded Demo: " + demographicNo.toString());
+		log.debug("Loaded Demo: ".concat(demographicNo.toString()));
 		return true;
 	}
 
