@@ -202,6 +202,11 @@
         	var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id;
         	popupStart(1100, 1100, loc, "Splitter");
         }
+        
+        function activeOnlyChanged(id) {
+      		var checkBoxState = document.getElementById("activeOnly" + id).checked;
+        	new Ajax.Request(contextpath + "/demographic/SearchDemographic.do", {method: 'post', parameters: "activeState=" + checkBoxState, onSuccess: function(data) {}});
+        }
 
         var _in_window = <%=( "true".equals(request.getParameter("inWindow")) ? "true" : "false" )%>;
         var contextpath = "<%=request.getContextPath()%>";
@@ -351,8 +356,8 @@
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
                                             <%=demoName%><%}else{%>
                                             <input id="saved<%=docId%>" type="hidden" name="saved" value="false"/>
-                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />                                            
-                                            <input type="checkbox" id="activeOnly<%=docId%>" name="activeOnly" value="true" checked>Active Only  
+                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />                                           
+                                            <input type="checkbox" onclick="activeOnlyChanged('<%=docId%>')" id="activeOnly<%=docId%>" name="activeOnly" value="true" checked><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgActiveOnly"/>
                                             <input type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>');" name="demographicKeyword" />
                                             <div id="autocomplete_choices<%=docId%>" class="autocomplete"></div>
                                             
