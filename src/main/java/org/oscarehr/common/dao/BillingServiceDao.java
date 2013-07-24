@@ -72,6 +72,18 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
+
+	public List<BillingService> findByServiceCodeAndDate(String code, Date date) {
+		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ? order by bs.billingserviceDate desc");
+		query.setParameter(1, code);
+		query.setParameter(2, date);
+
+		
+		@SuppressWarnings("unchecked")
+        List<BillingService> list = query.getResultList();
+		return list;
+	}
+	
 	public List<BillingService> findBillingCodesByCode(String code, String region, int order) {
 		return findBillingCodesByCode(code, region, new Date(), order);
 	}
