@@ -48,8 +48,10 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	private static E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private Clinic clinic = clinicDao.getClinic();
+	private boolean validate = true;
 
 	public E2EVelocityTemplate() {
+		super();
 		loadTemplate();
 		if(e2eResources == null) {
 			e2eResources = new E2EResources();
@@ -106,21 +108,30 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		String result = VelocityUtils.velocityEvaluate(context, template);
 
 		// Check for Validity
-		String demoNo = record.getDemographic().getDemographicNo().toString();
-		if(result.contains("$")) {
-			String msg = "[Demo: ".concat(demoNo).concat("] Export contains '$' - may contain errors");
-			log.warn(msg);
-			addExportLogEntry(msg);
-		}
-		E2EExportValidator v = new E2EExportValidator();
-		if(!v.isValidXML(result)) {
-			String msg = "[Demo: ".concat(demoNo).concat("] Export failed E2E XSD validation");
-			log.error(msg);
-			addExportLogEntry(msg);
-			addExportLogEntry(v.getExportLog());
+		if(validate) {
+			String demoNo = record.getDemographic().getDemographicNo().toString();
+			if(result.contains("$")) {
+				String msg = "[Demo: ".concat(demoNo).concat("] Export contains '$' - may contain errors");
+				log.warn(msg);
+				addExportLogEntry(msg);
+			}
+			E2EExportValidator v = new E2EExportValidator();
+			if(!v.isValidXML(result)) {
+				String msg = "[Demo: ".concat(demoNo).concat("] Export failed E2E XSD validation");
+				log.error(msg);
+				addExportLogEntry(msg);
+				addExportLogEntry(v.getExportLog());
+			}
 		}
 
 		return result;
+	}
+
+	/**
+	 * Disables validation during export process
+	 */
+	public void disableValidation() {
+		this.validate = false;
 	}
 
 	/**

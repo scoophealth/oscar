@@ -63,7 +63,9 @@ public class E2EPatientExport extends PatientExport {
 	/**
 	 * Constructs an empty Patient Export object
 	 */
-	public E2EPatientExport() {}
+	public E2EPatientExport() {
+		super();
+	}
 
 	/**
 	 * Attempts to load the specified patient.

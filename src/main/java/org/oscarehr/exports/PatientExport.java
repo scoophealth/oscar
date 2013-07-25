@@ -103,7 +103,6 @@ public abstract class PatientExport {
 	protected boolean exAlertsAndSpecialNeeds = false;
 
 	public PatientExport() {
-		super();
 	}
 
 	public abstract boolean loadPatient(String demoNo);

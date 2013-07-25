@@ -785,15 +785,17 @@ Medications and Prescriptions - Medication List
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
 							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
-							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<code code="DRUG" displayName="Drug Therapy" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act
+Code"/>
 #*        *##if ( $med.longTerm || $patient.isActiveDrug($med.getEndDate()) )
 							<statusCode code="active"/>
 #*        *##else
 							<statusCode code="completed"/>
 #*        *##end
-							<!-- Medication Identification -->
+							<!-- Medication -->
 							<consumable typeCode="CSM">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<!-- Medication Identification -->
 								<manufacturedProduct classCode="MANU">
 									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
 #*        *##if ( $med.regionalIdentifier && $med.regionalIdentifier != "" )
@@ -813,17 +815,31 @@ Medications and Prescriptions - Medication List
 #*        *##if ( !( $med.regionalIdentifier && $med.regionalIdentifier != "" ) && !( $med.atc && $med.atc != "" ) )
 										<code nullFlavor="UNK"/>
 #*        *##end
-#*        *##if ( $med.brandName )
-										<name>$!med.brandName</name>
-#*        *##else
+#*        *##if ( $med.genericName )
 										<name>$!med.genericName</name>
+#*        *##else
+										<name>$!med.brandName</name>
 #*        *##end
-										<e2e:desc nullFlavor="UNK"/>
-## Temporary solution until next E2E specification is released
-#*        *##if ( $med.dosage && $med.dosage != "" && $med.unit && $med.unit != "" )
-##										<strength>
-##											<center value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
-##										</strength>
+#*        *##if ( $med.brandName )
+										<e2e:desc>$!med.brandName</e2e:desc>
+#*        *##end
+#*        *##if( $e2e.formCodeMap($med.drugForm) )
+										<e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*        *##elseif ( $med.drugForm )
+										<e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*        *##end
+#*        *##if ( ( $med.dosage && $med.dosage != "" && $med.unit && $med.unit != "" ) || $med.genericName )
+										<e2e:ingredient classCode="INGR">
+#*            *##if ( $med.dosage && $med.dosage != "" && $med.unit && $med.unit != "" )
+											<e2e:quantity value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
+#*            *##end
+#*            *##if ( $med.genericName )
+											<e2e:ingredient classCode="MMAT" determinerCode="KIND">
+												<e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
+												<e2e:name>$med.genericName</e2e:name>
+											</e2e:ingredient>
+#*            *##end
+										</e2e:ingredient>
 #*        *##end
 									</manufacturedLabeledDrug>
 								</manufacturedProduct>

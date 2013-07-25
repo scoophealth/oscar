@@ -626,7 +626,7 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
 			<xs:element name="typeId" type="POCD_MT000040.InfrastructureRoot.typeId" minOccurs="0"/>
 			<xs:element name="templateId" type="II" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="id" type="II" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="e2e:code"/>
+			<xs:element ref="e2e:code" minOccurs="0" maxOccurs="1"/><!-- Updated 2013-07-17 -->
 			<xs:element name="addr" type="AD" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="telecom" type="TEL" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="informationRecipient" type="POCD_MT000040.Person" minOccurs="0"/>
