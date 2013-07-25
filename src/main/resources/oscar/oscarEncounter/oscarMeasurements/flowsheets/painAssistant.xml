@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. 
+  This software is published under the GPL GNU General Public License.
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version. 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+  
+-->
+<flowsheet name="pain" display_name="Pain Assistant" dxcode_triggers="icd9:7194,icd9:338,icd9:338.2,icd9:7292" ds_rules="" top_HTML=""  warning_colour="#E00000" recommendation_colour="yellow">
+    
+    <indicator key="LOW" colour="#9999FF" />
+    <indicator key="HIGH" colour="orange" />
+    <indicator key="HIGH 1" colour="#E00000" />
+
+<item measurement_type="BPIS" display_name="BPI Pain Severity" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;The higher the Pain Severity score on a scale from 0-10, the more severe pain the patient feels they have." graphable="yes" value_name="BPI Pain Severity" />
+
+<item measurement_type="BPII" display_name="BPI Pain Interference" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;The higher the Pain Interference score on a scale from 0-10, the more the patient feels their pain interferes with their activities of daily living" graphable="yes" value_name="BPI Pain Interference" />
+   	 	 	
+<item measurement_type="DNFS" display_name="DN4 Neuropathic Pain Score" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;This score can be used in daily clinical practice as a screening tool to better detect neuropathic pain." graphable="yes" value_name="DN4 Score for Neuropathic Pain" />
+
+<item measurement_type="KEEL" display_name="Keele STarT Score" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;Use this score to identify patients &lt;i&gt;at risk&lt;/i&gt; of developing persistent symptoms." graphable="yes" value_name="Keele STarT Score for Risk of Back Pain Becoming Chronic">
+	   <ruleset>
+              <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="KEEL" value="&lt;4" />
+              </rule>
+              <rule indicationColor="HIGH 1">
+                <condition type="getDataAsDouble" param="KEEL" value="&gt;3" />
+              </rule>
+       </ruleset>    
+</item> 
+
+<item measurement_type="PHQS" display_name="PHQ-4 Depression/Anxiety Score" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;If the patient score is positive (mild, moderate, or severe) they should be assessed for suicidal ideation.  If the score is positive, use your clinical judgement to indicate if further assessment is warranted to diagnose anxiety or depression." graphable="yes" value_name="PHQ-4 Depression/Anxiety Score" />
+
+<item measurement_type="PSQS" display_name="PSQ-3 Pain and Sleep Score" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;Use this score to monitor the degree of sleep interference and how it changes for the patient over time."  graphable="yes" value_name="PSQ-3 Sleep Score" />
+
+<item measurement_type="PTSD" display_name="PC-PTSD Post-Traumatic Stress Disorder Score" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;Those screening positive should then be assessed with a structured interview for PTSD." graphable="yes" value_name="PC-PTSD Score for Post-Traumatic Stress Disorder" />
+           
+<item measurement_type="WT" display_name="Weight kg" guideline="" graphable="yes" value_name="Weight" />
+
+<item measurement_type="HT" display_name="Height cm" guideline="" graphable="yes" value_name="Height" />
+
+<item measurement_type="BMI" display_name="BMI" guideline="Target: 18.5 - 24.9 (kg/m&lt;sup&gt;2&lt;/sup&gt;)" graphable="yes" value_name="BMI" >
+            <rules>
+              <recommendation strength="recommendation" >
+                <condition type="monthrange" param="BMI" value="3-6" />
+              </recommendation>
+
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="BMI" value="&gt;6" />
+              </recommendation>
+
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="BMI" value="-1" />
+              </recommendation>
+
+            </rules>
+            
+	   <ruleset>
+              <rule indicationColor="LOW">
+                <condition type="getDataAsDouble" param="BMI" value="&lt;18.5" />
+              </rule>
+              <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="BMI" value="&gt;24.9" />
+              </rule>
+           </ruleset>
+          
+</item>
+
+<item measurement_type="DRPW" display_name="Drinks per Week" guideline="" graphable="no" value_name="# drinks per week" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isMale"  value="true" />
+                <condition type="getDataAsDouble" param="DRPW" value="&gt;14" />
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="isFemale"  value="true" />
+                <condition type="getDataAsDouble" param="DRPW" value="&gt;8" />
+            </rule>
+        </ruleset>
+</item>
+    <measurement type="DRPW" typeDesc="Drinks per Week"
+		typeDisplayName="Drinks per Week" measuringInstrc="Number of Drinks per week">
+        <validationRule name="Numeric Value: 0 to 100"
+			maxValue="300" minValue="0" isNumeric="1" />
+    </measurement>
+    
+<item measurement_type="A1C" display_name="A1C" guideline="Target &gt; 7.0%" graphable="yes" value_name="A1C"  >
+            <rules>
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="A1C" value="&gt;3" />
+              </recommendation>
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="A1C" value="-1" />
+              </recommendation>
+            </rules>
+            <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble"  value="&gt; 7"/>
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble"  value="&lt; 2" />
+                <condition type="getDataAsDouble"  value="&gt; 0.07"/>
+            </rule>
+            </ruleset>
+</item>
+  <measurement type="A1C" typeDesc="A1C" typeDisplayName="A1C" measuringInstrc="">
+    <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />    
+  </measurement>
+    
+</flowsheet>
