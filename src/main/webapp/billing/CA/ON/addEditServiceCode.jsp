@@ -167,11 +167,27 @@
 				billingPercLimitDao.persist(bpl);
 			}
 
-			billingServiceDao.persist(bs);
+			// Check that service date is unique for service code
+			List scadList = billingServiceDao.findByServiceCodeAndDate(bs.getServiceCode(), bs.getBillingserviceDate());
+			if(!scadList.isEmpty()) {
+	      		msg = "The selected <font color='red'>Service Code</font> has an entry for this <font color='red'>Issue Date</font>. <br> Select new issue date, or use 'Save' to update the existing entry.";
+                prop.setProperty("service_code", serviceCode);
+                prop.setProperty("description", oscar.util.StringUtils.noNull(bs.getDescription()));
+                prop.setProperty("value", oscar.util.StringUtils.noNull(bs.getValue()));
+                prop.setProperty("percentage", oscar.util.StringUtils.noNull(bs.getPercentage()));
+                prop.setProperty("billingservice_date", oscar.util.StringUtils.noNull(MyDateFormat.getMyStandardDate(bs.getBillingserviceDate())));
+                prop.setProperty("sliFlag", oscar.util.StringUtils.noNull(bs.getSliFlag().toString()));
+                prop.setProperty("termination_date", oscar.util.StringUtils.noNull(MyDateFormat.getMyStandardDate(bs.getTerminationDate())));
+                action = "edit" + serviceCode;
+                action2 = "add" + serviceCode;
+			}
+			else {
+				billingServiceDao.persist(bs);
 
-  			msg = serviceCode + " is added.<br>" + "Type in a service code and search first to see if it is available.";
-  			action = "search";
-		    prop.setProperty("service_code", serviceCode);
+  				msg = serviceCode + " is added.<br>" + "Type in a service code and search first to see if it is available.";
+  				action = "search";
+		    	prop.setProperty("service_code", serviceCode);
+			}
 
 		} else {
       		msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode + ". Please search the service code first.";
