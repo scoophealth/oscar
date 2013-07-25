@@ -334,7 +334,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     String dob = "";
     String demBday = "";
     StringBuffer study_no=null, study_link=null,studyDescription=null;
-	String studySymbol = "#", studyColor = "red";
+	String studySymbol = "\u03A3", studyColor = "red";
 
     String resourcebaseurl =  oscarVariables.getProperty("resource_base_url");
 
