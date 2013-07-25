@@ -11,7 +11,6 @@ package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +41,7 @@ import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
+import oscar.util.ConversionUtils;
 
 import org.apache.log4j.Logger;
 
@@ -93,6 +93,7 @@ public class FormUpdateAction extends Action {
 				MeasurementTemplateFlowSheetConfig.Node child = node.children.get(j);
 				if (child.children == null && child.flowSheetItem != null) {*/
 		
+			
 		for (String measure:measurements){
 			Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
 	        FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
@@ -102,9 +103,6 @@ public class FormUpdateAction extends Action {
 
 					String name = h2.get("display_name").toString().replaceAll("\\W","");
 					
-					log.error("TEST****************** 1" + name);
-
-
 					if (request.getParameter(name) != null && !request.getParameter(name).equals("")) {
 
 						String comment = "";
@@ -114,13 +112,17 @@ public class FormUpdateAction extends Action {
 						
 						if(request.getParameter(name + "_date") !=null && !request.getParameter(name + "_date").equals("")){
 							date=request.getParameter(name + "_date");
+							
+							//2013-07-19 date condition to if date observed is different than today add date to textOnEncounter
 						}
 						
 						valid = doInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), request.getParameter(name), comment, date, apptNo, request);
-
+						
+												
 						if (!valid) {
 							testOutput += name + ": " + request.getParameter(name) + "\n";
 							errorPage = true;
+							log.error("ERROR: " + testOutput);
 						} else {
 							textOnEncounter += name + " " + request.getParameter(name) + "\\n";
 						}
@@ -144,7 +146,9 @@ public class FormUpdateAction extends Action {
 			request.setAttribute("testOutput", testOutput);
 			return mapping.findForward("failure");
 		}
+		
 		session.setAttribute("textOnEncounter", textOnEncounter);
+		
 		if (request.getParameter("submit").equals("Add")) {
 			return mapping.findForward("reload");
 		} else {
@@ -158,13 +162,6 @@ public class FormUpdateAction extends Action {
 		String providerNo = (String) session.getAttribute("user");
 		String comments = comment;
 		
-		
-		String[] dateComp = date.split("-");
-		Date dateObs = new Date();
-		dateObs.setYear(Integer.parseInt(dateComp[0]) - 1900);
-		dateObs.setMonth(Integer.parseInt(dateComp[1]) - 1);
-		dateObs.setDate(Integer.parseInt(dateComp[2]));
-
 		MeasurementDao measurementDao = (MeasurementDao) SpringUtils.getBean("measurementDao");
 
 		Measurement measurement = new Measurement();
@@ -172,7 +169,7 @@ public class FormUpdateAction extends Action {
 		measurement.setDataField("");
 		measurement.setMeasuringInstruction(mInstructions);
 		measurement.setComments(comments);
-		measurement.setDateObserved(dateObs);
+		measurement.setDateObserved(ConversionUtils.fromDateString(date));
 		measurement.setType(inputType);
 		if (apptNo != null) {
 			measurement.setAppointmentNo(Integer.parseInt(apptNo));
@@ -254,12 +251,6 @@ public class FormUpdateAction extends Action {
 			comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
 			if (!GenericValidator.isBlankOrNull(inputValue)) {
 
-				String[] dateComp = date.split("-");
-				Date dateObs = new Date();
-				dateObs.setYear(Integer.parseInt(dateComp[0]) - 1900);
-				dateObs.setMonth(Integer.parseInt(dateComp[1]) - 1);
-				dateObs.setDate(Integer.parseInt(dateComp[2]));
-
 				Measurement measurement = new Measurement();
 				measurement.setDemographicId(Integer.parseInt(demographicNo));
 				measurement.setDataField(inputValue);
@@ -268,7 +259,7 @@ public class FormUpdateAction extends Action {
 					comments = " ";
 				}
 				measurement.setComments(comments);
-				measurement.setDateObserved(dateObs);
+				measurement.setDateObserved(ConversionUtils.fromDateString(dateObserved));
 				measurement.setType(inputType);
 				if (apptNo != null) {
 					measurement.setAppointmentNo(Integer.parseInt(apptNo));
@@ -280,9 +271,9 @@ public class FormUpdateAction extends Action {
 				//Find if the same data has already been entered into the system
 				MeasurementDao measurementDao = (MeasurementDao) SpringUtils.getBean("measurementDao");
 				List<Measurement> measurements = measurementDao.findMatching(measurement);
-
+				
 				if (measurements.size() == 0) {
-					//Write to the Dababase if all input values are valid
+					//Write to the Database if all input values are valid
 					measurementDao.persist(measurement);
 				}
 			}
