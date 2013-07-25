@@ -676,7 +676,7 @@ for(ConsultationRequestExt ext:exts) {
                     &nbsp;<br>
                 </td>
             </tr>
-            <% if(getlen(reqFrm.clinicalInformation) > 1) {%>
+            <% if(getlen(reqFrm.clinicalInformation) > 0) {%>
             <tr>
                 <td class="subTitles">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgClinicalInfom"/>:
@@ -688,7 +688,7 @@ for(ConsultationRequestExt ext:exts) {
                 </td>
             </tr>
             <%}%>
-            <% if(getlen(reqFrm.concurrentProblems) > 1) {%>
+            <% if(getlen(reqFrm.concurrentProblems) > 0) {%>
             <tr>
                 <td class="subTitles">
 	            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) {
@@ -742,7 +742,7 @@ for(ConsultationRequestExt ext:exts) {
 
 
 
-            <% if(getlen(reqFrm.currentMedications) > 1) {%>
+            <% if(getlen(reqFrm.currentMedications) > 0) {%>
             <tr>
                 <td class="subTitles">
 		            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) {
@@ -759,7 +759,7 @@ for(ConsultationRequestExt ext:exts) {
                 </td>
             </tr>
             <%}%>
-            <% if(getlen(reqFrm.allergies) > 1) {%>
+            <% if(getlen(reqFrm.allergies) > 0) {%>
             <tr>
                 <td class="subTitles">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAllergies"/>
