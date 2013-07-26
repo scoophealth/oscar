@@ -58,6 +58,26 @@ import oscar.oscarRx.data.RxProviderData.Provider;
 public class SearchDemographicAutoCompleteAction extends Action {
     
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	boolean activeOnly = false;
+    	String activeState = request.getParameter("activeState");
+    	/*
+    	 *  'Active Only' checkbox is sending ajax post messages to this handler whenever checkbox is clicked
+    	 *  the activeState is used by 'autocomplete' handler to verify if state is 'active only' or not
+    	 */
+    	if (activeState != null) { //sent from checkbox event handler
+    		request.getSession().setAttribute("activeState", activeState);
+    		return null;
+    	}
+    	else {
+    		activeState = (String)request.getSession().getAttribute("activeState");//get 'activeState' from session if it is there
+    		if (activeState != null) {
+    			activeOnly  = (activeState.equals("true")? true:false);
+    		}
+    		else { // otherwise handle from the 'request'
+    			activeOnly = request.getParameter("activeOnly") != null && request.getParameter("activeOnly").equalsIgnoreCase("true");
+    		}
+    	}
+    	
         DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
         String searchStr = request.getParameter("demographicKeyword");
         
@@ -69,8 +89,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
            searchStr = request.getParameter("name");
         }
         
-        boolean activeOnly = false;
-        activeOnly = request.getParameter("activeOnly") != null && request.getParameter("activeOnly").equalsIgnoreCase("true");
+        //activeOnly = request.getParameter("activeOnly") != null && request.getParameter("activeOnly").equalsIgnoreCase("true");
         
         RxProviderData rx = new RxProviderData();
         
