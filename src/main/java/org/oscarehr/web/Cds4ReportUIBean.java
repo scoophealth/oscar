@@ -101,11 +101,12 @@ public final class Cds4ReportUIBean {
 	private GregorianCalendar startDate=null;
 	private GregorianCalendar endDate=null;
 	private HashSet<String> providerIdsToReportOn=null;
+	private HashSet<Integer> programIdsToReportOn=null;
 	
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public Cds4ReportUIBean(String functionalCentreId, int startYear, int startMonth, int endYear, int endMonth, String[] providerIdList) {
+	public Cds4ReportUIBean(String functionalCentreId, int startYear, int startMonth, int endYear, int endMonth, String[] providerIdList, HashSet<Integer> programIds) {
 
 		startDate = new GregorianCalendar(startYear, startMonth, 1);
 		endDate = new GregorianCalendar(endYear, endMonth, 1);
@@ -119,7 +120,9 @@ public final class Cds4ReportUIBean {
 			{
 				providerIdsToReportOn.add(s);
 			}
-		}	
+		}
+		
+		programIdsToReportOn=programIds;
 		
 		functionalCentre=functionalCentreDao.find(functionalCentreId);
 		
@@ -238,13 +241,27 @@ public final class Cds4ReportUIBean {
 			logger.debug("corresponding cds admissions count (before provider filter) :"+admissions.size());
 			
 			for (Admission admission : admissions) {
-				admissionMap.put(admission.getId().intValue(), admission);
+				if (isAdmissionForSelectedProgramOrProviders(admission))
+				{
+					admissionMap.put(admission.getId().intValue(), admission);
+					logger.debug("valid cds admission, id="+admission.getId());
+				}
 			}
 		}
 
 		return admissionMap;
 	}
 	
+	private boolean isAdmissionForSelectedProgramOrProviders(Admission admission)
+	{
+		if (providerIdsToReportOn!=null) return(providerIdsToReportOn.contains(admission.getProviderNo()));
+		
+		if (programIdsToReportOn!=null) return(programIdsToReportOn.contains(admission.getProgramId()));
+
+		// if both are null that means no filter criteria
+		return(true);
+	}
+
 	private static int getCohortBucket(Admission admission) {
 		if (admission==null) return(0);
 		
