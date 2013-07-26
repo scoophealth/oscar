@@ -1223,7 +1223,7 @@
         </action>
         
         <action
-        	path="/oscarEncounter/FormUpdate"
+        	path="/oscarEncounter/TrackerUpdate"
         	name="trackerForm"
         	scope="request"
         	type="oscar.oscarEncounter.oscarMeasurements.pageUtil.FormUpdateAction">
