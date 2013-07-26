@@ -13,15 +13,22 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
   
-	-->
+-->
 <flowsheet name="chf" display_name="Heart Failure Flowsheet" warning_colour="#E00000" recommendation_colour="yellow" top_HTML="" dxcode_triggers="icd9:428">
     <indicator key="HIGH 1" colour="#E00000" />
     <indicator key="HIGH" colour="orange" />
     <indicator key="LOW" colour="#9999FF" />
+
+    <item measurement_type="NYHA" display_name="HYNA Functional Capacity Classification" guideline="Record class 1 - 4" graphable="no" value_name="Class" />
+    <measurement type="NYHA" typeDesc="NYHA Functional Capacity Classification" typeDisplayName="NYHA Functional Capacity Classification" measuringInstrc="">
+        <validationRule name="Numeric Value: 0 to 4" maxValue="4" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+        
     <item measurement_type="Kpl" display_name="Potasium" guideline="" graphable="yes" value_name="Value" />
     <measurement type="Kpl" typeDesc="Potassium" typeDisplayName="Potassium" measuringInstrc="">
         <validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
     </measurement>
+    
     <item measurement_type="Napl" display_name="Sodium" guideline="" graphable="yes" value_name="Value" />
     <measurement type="Napl" typeDesc="Sodium" typeDisplayName="Sodium" measuringInstrc="">
         <validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
@@ -38,9 +45,11 @@
             </rule>
         </ruleset>
     </item>
+    
     <measurement type="SCR" typeDesc="CREATININE" typeDisplayName="CREATININE" measuringInstrc="">
         <validationRule name="Numeric Value: 0 to 1200" maxValue="1200" minValue="0" isDate="0" isNumeric="1" regularExp="" maxLength="0" minLength="0"/>
     </measurement>
+    
     <item measurement_type="EGFR" display_name="EGFR" guideline="" graphable="yes" value_name="EGFR" >
     	<rules>
               <recommendation strength="recommendation" >
@@ -62,18 +71,17 @@
     <measurement type="EGFR" typeDesc="EGFR" typeDisplayName="EGFR" measuringInstrc="">
         <validationRule name="Numeric Value: 0 to 500" maxValue="500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
     </measurement>
-    <item measurement_type="WT" display_name="Weight" guideline="" graphable="yes" value_name="Value" />
-    <measurement type="WT" typeDesc="Weight" typeDisplayName="WT" measuringInstrc="in BMI">
-        <validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
-    </measurement>
+   
     <item measurement_type="SOHF" display_name="Symptoms of Heart Failure" guideline="list signs in comments: Fatigue, Dizziness and/or syncope, Dyspnea on exertion, Dyspnea at rest, Orthopnea, Paroxysmal nocturnal dyspnea" graphable="no" value_name="Reviewed" />
     <measurement type="SOHF" typeDesc="Symptoms of Heart Failure" typeDisplayName="Symptoms of Heart Failure" measuringInstrc="">
         <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
     </measurement>
-    <item measurement_type="NYHA" display_name="HYNA Functional Capacity Classification" guideline="Record class 1 - 4" graphable="no" value_name="Class" />
-    <measurement type="NYHA" typeDesc="NYHA Functional Capacity Classification" typeDisplayName="NYHA Functional Capacity Classification" measuringInstrc="">
-        <validationRule name="Numeric Value: 0 to 4" maxValue="4" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+        
+    <item measurement_type="WT" display_name="Weight" guideline="" graphable="yes" value_name="Value" />
+    <measurement type="WT" typeDesc="Weight" typeDisplayName="WT" measuringInstrc="in BMI">
+        <validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
     </measurement>
+    
     <item measurement_type="HR" display_name="HR" guideline="" graphable="yes" value_name="Heart Rate" />
     <measurement type="HR" typeDesc="Heart Rate" typeDisplayName="P" measuringInstrc="in bpm (nnn) Range:40-180">
         <validationRule name="Numeric Value: 40 to 180" maxValue="180" minValue="40" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />        
@@ -94,31 +102,31 @@
     <measurement type="BP" typeDesc="Blood Pressure" typeDisplayName="BP" measuringInstrc="Sitting Position (nnn/nnn) Target:&lt;130/80 Interval:3mo.">
         <validationRule name="Blood Pressure" maxValue="" minValue="" isDate="" isNumeric="" regularExp="[0-9]{2,3}/{1}[0-9]{2,3}" maxLength="" minLength="" />        
     </measurement>
+    
     <item measurement_type="JVPE" display_name="JVP Elevation" guideline="" graphable="no" value_name="Changed" />
     <measurement type="JVPE" typeDesc="JPV Elevation" typeDisplayName="JPV Elevation" measuringInstrc="">
         <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
     </measurement>
+    
     <item measurement_type="PEDE" display_name="Pitting Edema" guideline="Record where" graphable="no" value_name="Has" />
     <measurement type="PEDE" typeDesc="Pitting Edema" typeDisplayName="Pitting Edema" measuringInstrc="">
         <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
     </measurement>
    
    
-  <!-- ADD PITTING EDEMA LOCATION -->
+  <!--chest assessment-->
+  
     <item measurement_type="LUCR" display_name="Lung Crackles" guideline="" graphable="no" value_name="Has" />
     <measurement type="LUCR" typeDesc="Lung Crackles" typeDisplayName="Lung Crackles" measuringInstrc="">
         <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
     </measurement>
   
-  <!-- ADD LUNG CRACKLES LOCATION -->
-  
-  
-  
-  
+   
   <item measurement_type="PHIN" display_name="Pharmacological Intolerance" guideline="Signs of Pharmacological Intolerance" graphable="no" value_name="Shows signs" />
   <measurement type="PHIN" typeDesc="Pharmacological Intolerance" typeDisplayName="Pharmacological Intolerance" measuringInstrc="">
     <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
   </measurement>
+    
     <item measurement_type="CERV" display_name="# of ER visits for HF" guideline="since last assessment" graphable="yes" value_name="# of visits" >
         <ruleset>
             <rule indicationColor="HIGH">
@@ -126,9 +134,128 @@
             </rule>
         </ruleset>
     </item>
+    
     <measurement type="CERV" typeDesc="ER visits for HF" typeDisplayName="ER visits for HF" measuringInstrc="">
         <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
     </measurement>
+  
+ <!-- NEW MEAS AREA-->
+
+<item measurement_type="DEPR" display_name="Feeling down, depressed or hopeless?" guideline="Yearly or As Needed" graphable="no" value_name="Depressed" />
+ <measurement type="DEPR" typeDesc="Depression" typeDisplayName="Depression">
+    <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+</measurement>
+ 
+  <!-- Alcoholic drinks per week -->
+  <item measurement_type="DRPW" display_name="Drinks per Week"
+		guideline="" graphable="no" value_name="# drinks per week" >
+        <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="isMale"  value="true" />
+                <condition type="getDataAsDouble" param="DRPW" value="&gt;14" />
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="isFemale"  value="true" />
+                <condition type="getDataAsDouble" param="DRPW" value="&gt;8" />
+            </rule>
+        </ruleset>
+    </item>
+     <measurement type="DRPW" typeDesc="Drinks per Week"
+		typeDisplayName="Drinks per Week" measuringInstrc="Number of Drinks per week">
+        <validationRule name="Numeric Value: 0 to 100"
+			maxValue="300" minValue="0" isNumeric="1" />
+    </measurement>  
+  
+ <!--NEW MEAS AREA continue-->
+ 
+ <item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" /> 
+          
+  <item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
+  <item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no" />
+
+  <item measurement_type="HDL" display_name="HDL" guideline="" graphable="yes" value_name="HDL" >
+        <rules>
+          <recommendation strength="warning" >
+            <condition type="monthrange" param="HDL" value="&gt;12" />
+          </recommendation>
+          <recommendation strength="warning" >
+            <condition type="monthrange" param="HDL" value="-1" />
+          </recommendation>
+        </rules>
+   </item>
+   <measurement type="HDL" typeDesc="High Density Lipid" typeDisplayName="HDL" measuringInstrc="in mmol/L (n.n) Range:0.4-4.0">
+    <validationRule name="Numeric Value: 2.0 to 12.0" maxValue="12" minValue="2" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+   </measurement> 
+   
+   <item measurement_type="LDL" display_name="LDL" guideline="LDL &lt; 2.0" graphable="yes" value_name="LDL" >
+           <rules>
+          <recommendation strength="warning" >
+            <condition type="monthrange" param="LDL" value="&gt;12" />
+          </recommendation>
+          <recommendation strength="warning" >
+            <condition type="monthrange" param="LDL" value="-1" />
+          </recommendation>
+        </rules>
+        <ruleset>
+          <rule indicationColor="HIGH">
+            <condition type="getDataAsDouble" param="LDL" value="&gt;2" />
+          </rule>
+        </ruleset>
+   </item>
+  <measurement type="LDL" typeDesc="Low Density Lipid" typeDisplayName="LDL" measuringInstrc="in mmol/L (nn.n) Range:0.5-10  Target:&lt;2.5 Interval:6-12mo.">
+    <validationRule name="Numeric Value: 0.5 to 10" maxValue="10" minValue="0.5" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+  </measurement>
+  
+   <item measurement_type="TG" display_name="Triglycerides" guideline="Target: &lt; 2.0 mmol/L" graphable="yes" value_name="TG" >
+        <rules>
+          <recommendation strength="warning" >
+            <condition type="monthrange" param="TG" value="&gt;12" />
+          </recommendation>
+          <recommendation strength="warning" >
+            <condition type="monthrange" param="TG" value="-1" />
+          </recommendation>
+        </rules>
+        <ruleset>
+          <rule indicationColor="HIGH">
+            <condition type="getDataAsDouble" param="TG" value="&gt;2" />
+          </rule>
+        </ruleset>
+   </item>
+   <measurement type="TG" typeDesc="TG" typeDisplayName="LIPIDS TG" measuringInstrc="monitor every 1-3 year">
+    <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+   </measurement>
+   
+   <item measurement_type="TCHD" display_name="Ratio (TC/HDL)" guideline="Ratio &lt; 4.0" graphable="yes" value_name="TC/HDL" >
+                <rules>
+                  <recommendation strength="warning" >
+                    <condition type="monthrange" param="TCHD" value="&gt;12" />
+                  </recommendation>
+                  <recommendation strength="warning" >
+                    <condition type="monthrange" param="TCHD" value="-1" />
+                  </recommendation>
+                </rules>
+                <ruleset>
+                  <rule indicationColor="HIGH">
+                    <condition type="getDataAsDouble" param="TCHD" value="&gt;4" />
+                  </rule>
+                </ruleset>
+    </item>
+    <measurement type="TCHD" typeDesc="TC/HDL" typeDisplayName="LIPIDS TD/HDL" measuringInstrc="monitor every 1-3 year">
+     <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+    </measurement>
+    
+    <item measurement_type="ECG" display_name="ECG" graphable="no" value_name="ECG" />
+     <measurement
+        type="ECG"
+        typeDesc="ECG"
+        typeDisplayName="ECG">
+        <validationRule
+           name="Yes/No"
+           regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+     </measurement>
+     
+     <!--ECHO-->
+    
     <item measurement_type="CEDM" display_name="Education Patient Med use" guideline="" graphable="yes" value_name="Reviewed" />
     <measurement type="CEDM" typeDesc="Education Patient Meds" typeDisplayName="Education Patient Meds" measuringInstrc="">
         <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
@@ -174,8 +301,7 @@
     <measurement type="HFCS" typeDesc="HF Self Management Challenge" typeDisplayName="HF Self Management Challenge" measuringInstrc="">
         <validationRule name="No Validations" maxValue="" minValue="" isDate="" isNumeric="" regularExp="" maxLength="" minLength="" />
     </measurement>
-    <item measurement_type="CASA" display_name="Consider ASA" guideline="" graphable="no" value_name="Considered" />
-    <measurement type="CASA" typeDesc="Consider ASA" typeDisplayName="Consider ASA" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
+
+    
+ 
 </flowsheet>
