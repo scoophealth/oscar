@@ -22,6 +22,8 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.PMmodule.service.ProgramManager"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.managers.ProviderManager2"%>
 <%@page import="org.oscarehr.common.dao.FunctionalCentreDao"%>
@@ -40,10 +42,13 @@
 <%
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
 	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
+    ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
 	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
 %>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
 
 <div class="page-header">
 	<h4>CDS Reports</h4>
@@ -125,9 +130,51 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">Filter By</label>
+			<div class="controls">
+				<select id="filterCriteriaSelection" onchange="showFilterCriteria()">
+					<option value="">None</option>
+					<option value="PROVIDER">Provider</option>
+					<option value="PROGRAM">Program</option>
+				</select>				
+				<script type="text/javascript">
+					function showFilterCriteria()
+					{
+						var selection=jQuery('#filterCriteriaSelection').val();
+						
+						if (selection == "PROVIDER")
+						{
+							jQuery('#providerText').show();
+							jQuery('#providerOptions').show();
+							jQuery('#programText').hide();
+							jQuery('#programOptions').hide();
+						}
+						else if (selection == "PROGRAM")
+						{
+							jQuery('#providerText').hide();
+							jQuery('#providerOptions').hide();
+							jQuery('#programText').show();
+							jQuery('#programOptions').show();							
+						}
+						else
+						{
+							jQuery('#providerText').hide();
+							jQuery('#providerOptions').hide();
+							jQuery('#programText').hide();
+							jQuery('#programOptions').hide();
+						}
+					}
+					
+					$(document).ready(function(){
+						showFilterCriteria();
+					});
+				</script>
+			</div>
+		</div>
+		<div id="providerOptions" class="control-group">
 			<label class="control-label">Providers to include
 				<small>
-					(leave blank to report on all providers, multi select is allowed)
+					(multi select is allowed)
 				</small>
 			</label>
 			<div class="controls">
@@ -150,6 +197,27 @@
 			</div>
 		</div>
 
+		<div id="programOptions" class="control-group">
+			<label class="control-label">Programs to include
+				<small>
+					(multi select is allowed)
+				</small>
+			</label>
+			<div class="controls">
+				<select name="programIds" class="input-medium" multiple="multiple">
+					<%
+						List<Program> programs=programManager.getPrograms(loggedInInfo.currentFacility.getId());
+					
+						for (Program program : programs)
+						{
+							%>
+								<option value="<%=program.getId()%>"><%=StringEscapeUtils.escapeHtml(program.getName()+" ("+program.getType()+")")%></option>
+							<%
+						}
+					%>
+				</select>
+			</div>
+		</div>
 
 		<div class="control-group">
 			<div class="controls">
