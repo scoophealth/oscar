@@ -12,6 +12,18 @@
         <ap-output>${appointment_date}</ap-output>
     </databaseap>
 
+<!-- Current eform information -->
+    <databaseap>
+        <ap-name>current_form_id</ap-name>
+        <ap-sql>SELECT '${fid}' AS fid</ap-sql>
+        <ap-output>${fid}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_form_data_id</ap-name>
+        <ap-sql>SELECT '${fdid}' AS fdid</ap-sql>
+        <ap-output>${fdid}</ap-output>
+    </databaseap>
+
 <!-- Current user information -->
     <databaseap>
         <ap-name>current_user</ap-name>
@@ -536,6 +548,8 @@
                 AND other_key='${other_key}' AND deleted=false ORDER BY id DESC LIMIT 1</ap-sql>
         <ap-output>${other_id}</ap-output>
     </databaseap>
+<!-- Extended eform tags end -->
+    
     <databaseap>
         <ap-name>dtap_immunization_date</ap-name>
         <ap-sql>select prevention_date from preventions p where p.prevention_type = 'dtap-ipv-hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1

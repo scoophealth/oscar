@@ -1712,9 +1712,12 @@
 			<forward name="fax" path="/eform/efmformfax_send.jsp" />
 			<forward name="print" path="/eform/efmformprint.do" />
 		</action>
-		<action input="/eform/efmformadd_data.jsp" scope="request"
-			path="/eform/efmformprint" type="oscar.eform.actions.PrintAction">
+		<action input="/eform/efmformadd_data.jsp" path="/eform/efmformprint" scope="request" type="oscar.eform.actions.PrintAction">
 			<forward name="close" path="/eform/efmclosewindow.jsp" />
+		</action>
+		<action input="/eform/efmformadd_data.jsp" path="/eform/efmPrintPDF" scope="request" type="oscar.eform.actions.PrintPDFAction">
+			<forward name="printAll" path="/eform/createpdf" />
+			<forward name="graph" path="/eform/createpdf" />
 		</action>
 		<action input="/eform/efmpatientformlist.jsp" path="/eform/removeEForm" scope="request" type="oscar.eform.actions.RemEFormAction">
 			<forward name="success" path="/eform/efmpatientformlist.jsp" />
