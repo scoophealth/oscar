@@ -102,7 +102,6 @@
     int numElementsToShow = 6;
     Date sdate = null;
     Date edate = null;
-    
     /*if ( request.getParameter("numEle") != null ){
         try{
             numElementsToShow = Integer.parseInt(request.getParameter("numEle"));
@@ -316,11 +315,12 @@ div.preventionSection:hover {
 background-color: #FFFFAA; /*#f5f5f5;*/
 }
 
-.headMtype{
-	height:34px;
-	width:100%;
-	margin-bottom:2px;
-	padding:0px;
+.mtype-graph-input{
+min-height:34px;margin:0px;padding:0px;padding-left:4px;margin-bottom:1px;
+}
+
+.mtype-display-name{
+display:inline-block;max-width:260px;padding-bottom:2px;
 }
 
 .tab-pane{
@@ -339,18 +339,18 @@ height:500px;
 margin-left: -450px;
 }
 
-	#panel{
-	position:absolute;
-	display:none;
-	top:80px;
-	width:100%;
-	z-index:999;
-	}
-	
-	.btn-divider{
-	margin:0 6px 0 6px;
-	padding:0px;
-	}
+#panel{
+position:absolute;
+display:none;
+top:80px;
+width:100%;
+z-index:999;
+}
+
+.btn-divider{
+margin:0 6px 0 6px;
+padding:0px;
+}
 
 .inlinesparkline:hover{
 cursor: hand; cursor: pointer;
@@ -360,7 +360,9 @@ cursor: hand; cursor: pointer;
 float:right;display:inline;margin:0px;padding:0px;
 }
 
-.btn-underline{text-decoration:underline;font-weight:bold}
+.btn-underline{
+text-decoration:underline;font-weight:bold;
+}
 
 @media (min-width: 768px) and (max-width: 979px) { 
 #tracker-bar{position:static}
@@ -368,7 +370,6 @@ float:right;display:inline;margin:0px;padding:0px;
 
 @media (max-width: 768px) { 
 #tracker-bar{position:static;}
-.input-wrapper{margin-top:-30px;} /*TODO*/
 }
 </style>
 		
@@ -664,18 +665,18 @@ function fsPopup(width,height,url,window) {
 
      int idx=0;
 	 String btnLabel="";
-	 String Selected="";
+	 String fsSelected="";
 
      for(idx=0;idx<diagnosed.size();idx++)
      {
     	 
-    	if(temp.equals(diagnosed.get(idx).toString().toLowerCase())){Selected="btn-primary active";} 
+    	if(temp.equals(diagnosed.get(idx).toString())){fsSelected="btn-primary active";} 
     	
     	btnLabel=diagnosed.get(idx).toString().toUpperCase();
     	if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
     	
-      	out.print("<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+diagnosed.get(idx).toString()+"' class='btn "+Selected+"' title='Diagnosed' id='group-btn-"+diagnosed.get(idx)+"'>"+btnLabel+"</a> ");
-      	Selected="";
+      	out.print("<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+diagnosed.get(idx).toString()+"' class='btn "+fsSelected+"' title='Diagnosed' id='group-btn-"+diagnosed.get(idx)+"'>"+btnLabel+"</a> ");
+      	fsSelected="";
      }
 %>	
 
@@ -692,12 +693,12 @@ function fsPopup(width,height,url,window) {
  	    	 if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
  	    	
     		 if(temp.equals(flowsheetList.get(iUndx).toString())){
-    			 Selected="btn-primary active";
-    			 unDxShow="<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+Selected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
+    			 fsSelected="btn-primary active";
+    			 unDxShow="<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
     		 } 
     		 
-    	    	undiagnosed = undiagnosed + "<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+Selected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
-      			Selected="";
+    	    	undiagnosed = undiagnosed + "<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
+      			fsSelected="";
     	 }
      }
      
@@ -901,7 +902,7 @@ function fsPopup(width,height,url,window) {
 	<%}%>            		    
 		    
 <!-- start of form -->	
-<form id="mainForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/FormUpdate.do">
+<form id="mainForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/TrackerUpdate.do">
 <fieldset>	
 
 <input type="hidden"  name="ycoord"
@@ -968,19 +969,22 @@ function fsPopup(width,height,url,window) {
 
 <div class="preventionSection well-small" >
    
-<div class="well well-small headMtype" >
 <!--mtype START-->
+
+<div class="well well-small mtype-graph-input">
+
+<div class="mtype-display-name" rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 <a href="javascript:void(0)" style="text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')">
 </security:oscarSec>
 
-<div class="span5" style="margin:0px; margin-left:4px" rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
-
-<span ><%=h2.get("display_name")%></span>
+<%=h2.get("display_name")%>
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 </a>
 </security:oscarSec>
+</div>
+
 <!--mtype end-->
 					<%
 					String name = h2.get("display_name").toString();
@@ -1052,14 +1056,11 @@ function fsPopup(width,height,url,window) {
 </span>
 <!-- graphing end-->
 
-</div> <!-- span4 end -->
-
 <div class="input-wrapper">  
      <div class="input-append date" id="dp-<%=iDate%>" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
 				<input style="width:90px" name="<%=name%>_date" size="16" type="text" value="<%=date%>">
 				<span class="add-on"><i class="icon-calendar"></i></span>
 	 </div>
-
 <%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
                                 
                             <label class="radio inline">
@@ -1090,15 +1091,14 @@ function fsPopup(width,height,url,window) {
 	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%>	 placeholder="Enter Data"> 
   <%} %>
 <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
-</div>
-</div>
+
+</div> <!-- input-wrapper -->
+
+</div><!-- mtype-graph-input -->
 
 <!-- hidden fields for form -->
-<div class="well well-small" id="add-box-<%=measure%>" style="display:none;overflow:visible">
-  
-
+<div class="well well-small" id="add-box-<%=measure%>" style="display:none;margin-bottom:1px;">
    <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" style="float:right"> 
-  
 </div>
 
 <%if(mi.getWarning(measure)!=null){%>
@@ -1234,10 +1234,8 @@ function fsPopup(width,height,url,window) {
 
 <div class="preventionSection well-small" style="<%=hidden%>">
    
-<div class="well well-small headMtype">
+<div class="well well-small mtype-graph-input">
 
-
- 
 <!-- <div style="float:left;padding:1px;width:4px;height:10px;background-color:white;"></div>-->
 
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-content="<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
