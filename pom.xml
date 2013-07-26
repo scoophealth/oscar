@@ -1109,6 +1109,38 @@
 							</tasks>
 						</configuration>
 					</execution>
+					
+					<execution>
+						<id>deploy_local_catalina_base</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<copy todir="catalina_base/webapps/oscar">
+									<fileset dir="target/oscar-1.0-SNAPSHOT" />
+								</copy>
+							</tasks>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>clean_local_catalina_base</id>
+						<phase>clean</phase>
+						<configuration>
+							<tasks>
+								<delete dir="catalina_base/webapps/oscar" />
+								<delete includeemptydirs="true" quiet="true">
+									<fileset dir="catalina_base/logs" excludes=".gitignore" />
+									<fileset dir="catalina_base/work" excludes=".gitignore" />
+								</delete>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 
