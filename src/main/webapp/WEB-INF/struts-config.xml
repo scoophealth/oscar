@@ -278,6 +278,7 @@
             <form-property name="encounterWindowMaximize" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="quickChartSize" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="patientNameLength" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="displayDocumentAsProperty" type="org.oscarehr.common.model.UserProperty"/>
 			<form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
@@ -1482,6 +1483,7 @@
             <forward name="genEDocBrowserInDocumentReport"	path="/provider/setEDocBrowserInDocumentReport.jsp"/>
             <forward name="genEDocBrowserInMasterFile"		path="/provider/setEDocBrowserInMasterFile.jsp"/>
             <forward name="genPatientNameLength" 			path="/provider/setPatientNameLength.jsp"/>
+            <forward name="genDisplayDocumentAs"		path="/provider/setDisplayDocumentAs.jsp"/>
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />

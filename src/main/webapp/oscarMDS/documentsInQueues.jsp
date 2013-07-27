@@ -2061,7 +2061,7 @@ List<String> abnormals=(List<String>)request.getAttribute("abnormals");
                 <th class="Cell" align="left" valign="bottom"  nowrap>Documents</th>
             </tr>
             <tr >
-                <td valign="top"  id="queueNames" width="20%">
+                <td valign="top"  id="queueNames" width="10%">
                     <%
                     while(itr.hasNext()){
                         Integer qId=(Integer)itr.next();
@@ -2074,7 +2074,7 @@ List<String> abnormals=(List<String>)request.getAttribute("abnormals");
 
                 </td>
 
-                <td valign="top" id="docs" width="80%"></td>
+                <td valign="top" id="docs" width="90%"></td>
             </tr>
         </table>
                     <script type="text/javascript">
