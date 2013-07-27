@@ -1991,6 +1991,70 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		return actionmapping.findForward("genPatientNameLength");
 	}
     
+     public ActionForward viewDisplayDocumentAs(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.DISPLAY_DOCUMENT_AS);
+
+         if (prop == null){
+             prop = new UserProperty();
+         }
+
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
+         serviceList.add(new LabelValueBean(UserProperty.PDF, UserProperty.PDF));
+         serviceList.add(new LabelValueBean(UserProperty.IMAGE, UserProperty.IMAGE));
+
+         request.setAttribute("dropOpts",serviceList);
+
+         request.setAttribute("displayDocumentAsProperty",prop);
+
+         request.setAttribute("providertitle","provider.displayDocumentAs.title");
+         request.setAttribute("providermsgPrefs","provider.displayDocumentAs.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.displayDocumentAs.msgProvider");
+         request.setAttribute("providermsgEdit","provider.displayDocumentAs.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.displayDocumentAs.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.displayDocumentAs.msgSuccess");
+         request.setAttribute("method","saveDisplayDocumentAs");
+
+         frm.set("displayDocumentAsProperty", prop);
+         return actionmapping.findForward("genDisplayDocumentAs");
+     }
+
+    public ActionForward saveDisplayDocumentAs(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty prop = (UserProperty)frm.get("displayDocumentAsProperty");
+         String fmt = prop != null ? prop.getValue() : "";
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.DISPLAY_DOCUMENT_AS);
+
+         if( saveProperty == null ) {
+             saveProperty = new UserProperty();
+             saveProperty.setProviderNo(provider);
+             saveProperty.setName(UserProperty.DISPLAY_DOCUMENT_AS);
+         }
+
+         saveProperty.setValue(fmt);
+         this.userPropertyDAO.saveProp(saveProperty);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("providertitle","provider.displayDocumentAs.title");
+         request.setAttribute("providermsgPrefs","provider.displayDocumentAs.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.displayDocumentAs.msgProvider");
+         request.setAttribute("providermsgEdit","provider.displayDocumentAs.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.displayDocumentAs.msgSuccess");
+         request.setAttribute("method","saveDisplayDocumentAs");
+
+         return actionmapping.findForward("genDisplayDocumentAs");
+    }
     /**
      * Creates a new instance of ProviderPropertyAction
      */

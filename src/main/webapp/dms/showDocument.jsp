@@ -46,6 +46,11 @@
             	skipComment = true;
             }
 
+            uProp = userPropertyDAO.getProp(providerNo, UserProperty.DISPLAY_DOCUMENT_AS);
+            String displayDocumentAs=UserProperty.IMAGE;
+            if( uProp != null && uProp.getValue().equals(UserProperty.PDF)) {
+            	displayDocumentAs = UserProperty.PDF;
+            }
             
             String demoName=request.getParameter("demoName");
             String documentNo = request.getParameter("segmentID");
@@ -190,21 +195,7 @@
 			}});
         }
 		        
-        function rotate90(id) {
-        	jQuery("#rotate90btn_" + id).attr('disabled', 'disabled');
 
-        	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=rotate90&document=" + id, onSuccess: function(data) {
-        		jQuery("#rotate90btn_" + id).removeAttr('disabled');
-        		jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=showPage&doc_no=" + id + "&page=1&rand=" + (new Date().getTime()));
-
-        	}});
-        }
-
-        function split(id) {
-        	var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id;
-        	popupStart(1100, 1100, loc, "Splitter");
-        }
-        
         function activeOnlyChanged(id) {
       		var checkBoxState = document.getElementById("activeOnly" + id).checked;
         	new Ajax.Request(contextpath + "/demographic/SearchDemographic.do", {method: 'post', parameters: "activeState=" + checkBoxState, onSuccess: function(data) {}});
@@ -273,15 +264,19 @@
 
                     <td colspan="8">
                         <div style="text-align: right;font-weight: bold">
-                        <% if( numOfPage > 1 ) {%>                        
+                        <% if( numOfPage > 1 && displayDocumentAs.equals(UserProperty.IMAGE) ) {%>
                         	<a id="firstP_<%=docId%>" style="display: none;" href="javascript:void(0);" onclick="firstPage('<%=docId%>','<%=cp%>');">First</a>
                             <a id="prevP_<%=docId%>" style="display: none;"  href="javascript:void(0);" onclick="prevPage('<%=docId%>','<%=cp%>');">Prev</a>
                             <a id="nextP_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>','<%=cp%>');">Next</a>
                             <a id="lastP_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>','<%=cp%>');">Last</a>
                             <%} %>
                         </div>
-                        <a href="<%=url2%>" target="_blank"><img alt="document" id="docImg_<%=docId%>"  src="<%=url%>" /></a></td>
-
+                        <% if (displayDocumentAs.equals(UserProperty.IMAGE)) { %>
+                            <a href="<%=url2%>" target="_blank"><img alt="document" id="docImg_<%=docId%>"  src="<%=url%>" /></a>
+                        <%} else {%>
+                            <div id="docDispPDF_<%=docId%>"></div>
+                        <%}%>
+                    </td>
 
                     <td align="left" valign="top">
                         <fieldset><legend><bean:message key="inboxmanager.document.PatientMsg"/><span id="assignedPId_<%=docId%>"><%=demoName%></span> </legend>
@@ -298,7 +293,9 @@
                                     <td><bean:message key="inboxmanager.document.NumberOfPages"/></td>
                                     <td>
                                     	<input id="shownPage_<%=docId %>" type="hidden" value="1" />
-                                    	<span id="viewedPage_<%=docId%>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>">1</span>&nbsp; of &nbsp;<span id="numPages_<%=docId %>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>"><%=numOfPageStr%></span>
+                                        <%if (displayDocumentAs.equals(UserProperty.IMAGE)) { %>
+                                            <span id="viewedPage_<%=docId%>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>">1</span>&nbsp; of &nbsp;<%}%>
+                                        <span id="numPages_<%=docId %>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>"><%=numOfPageStr%></span>
                                     </td>
                                 </tr>
 
@@ -326,6 +323,7 @@
                                 <input type="hidden" name="documentId" value="<%=docId%>" />
                                 <input type="hidden" name="curPage_<%=docId%>" id="curPage_<%=docId%>" value="1"/>
                                 <input type="hidden" name="totalPage_<%=docId%>" id="totalPage_<%=docId%>" value="<%=numOfPage%>"/>
+                                <input type="hidden" name="displayDocumentAs_<%=docId%>" id="displayDocumentAs_<%=docId%>" value="<%=displayDocumentAs%>">
                                 <table border="0">
                                     <tr>
                                         <td><bean:message key="dms.documentReport.msgDocType" />:</td>
@@ -483,7 +481,7 @@
                 <tr>
                 	<td colspan="8">
                         <div style="text-align: right;font-weight: bold">
-                        <% if( numOfPage > 1 ) {%>                        
+                            <% if( numOfPage > 1 && displayDocumentAs.equals(UserProperty.IMAGE)) {%>
                         	<a id="firstP2_<%=docId%>" style="display: none;" href="javascript:void(0);" onclick="firstPage('<%=docId%>','<%=cp%>');">First</a>
                             <a id="prevP2_<%=docId%>" style="display: none;"  href="javascript:void(0);" onclick="prevPage('<%=docId%>','<%=cp%>');">Prev</a>
                             <a id="nextP2_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>','<%=cp%>');">Next</a>
@@ -500,6 +498,9 @@
 
 //-->
 <script type="text/javascript">
+        if($('displayDocumentAs_<%=docId%>').value=="<%=UserProperty.PDF%>") {
+            showPDF('<%=docId%>',contextpath);
+        }
        renderCalendar=function(id,inputFieldId){
            Calendar.setup({ inputField : inputFieldId, ifFormat : "%Y-%m-%d", showsTime :false, button : id });
            

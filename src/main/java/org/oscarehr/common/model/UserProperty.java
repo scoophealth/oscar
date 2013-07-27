@@ -96,6 +96,9 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String VIEW_DOCUMENT_AS="view_document_as";
     public static final String INCOMING_DOCUMENT_DEFAULT_QUEUE="incoming_document_default_queue";
     public static final String INCOMING_DOCUMENT_ENTRY_MODE="incoming_document_entry_mode";
+    public static final String DISPLAY_DOCUMENT_AS="display_document_as";
+    public static final String PDF="PDF";
+    public static final String IMAGE="Image";
   
 
     public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";

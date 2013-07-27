@@ -305,30 +305,43 @@ function forwardDocument(docId) {
 
 function rotate180(id) {
 	jQuery("#rotate180btn_" + id).attr('disabled', 'disabled');
+        var displayDocumentAs=$('displayDocumentAs_'+id).value;
 
 	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=rotate180&document=" + id, onSuccess: function(data) {
 		jQuery("#rotate180btn_" + id).removeAttr('disabled');
-		jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
-
+                if(displayDocumentAs=="PDF") {
+                    showPDF(id,contextpath);
+                } else {
+                    jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
+                }
 	}});
 }
 
 function rotate90(id) {
 	jQuery("#rotate90btn_" + id).attr('disabled', 'disabled');
+        var displayDocumentAs=$('displayDocumentAs_'+id).value;
 
 	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=rotate90&document=" + id, onSuccess: function(data) {
 		jQuery("#rotate90btn_" + id).removeAttr('disabled');
-		jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
-
+                if(displayDocumentAs=="PDF") {
+                    showPDF(id,contextpath);
+                } else {
+                    jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
+                }
 	}});
 }
 
 function removeFirstPage(id) {
 	jQuery("#removeFirstPagebtn_" + id).attr('disabled', 'disabled');
+        var displayDocumentAs=$('displayDocumentAs_'+id).value;
+
 	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=removeFirstPage&document=" + id, onSuccess: function(data) {
 		jQuery("#removeFirstPagebtn_" + id).removeAttr('disabled');
-		jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
-
+                if(displayDocumentAs=="PDF") {
+                    showPDF(id,contextpath);
+                } else {
+                    jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
+                }
 		var numPages = parseInt(jQuery("#numPages_" + id).text())-1;
 		jQuery("#numPages_" + id).text("" + numPages);
 
@@ -1791,11 +1804,67 @@ function refreshView() {
 	}
 }
 
+function getWidth() {
+    var myWidth = 0;
+    if( typeof( window.innerWidth ) == 'number' ) {
+        //Non-IE
+        myWidth = window.innerWidth;
+    } else if( document.documentElement &&  document.documentElement.clientWidth  ) {
+        //IE 6+ in 'standards compliant mode'
+        myWidth = document.documentElement.clientWidth;
+    } else if( document.body && document.body.clientHeight  ) {
+        //IE 4 compatible
+        myWidth = document.body.clientWidth;
+    }
+    return myWidth;
+}
+
+
+function getHeight() {
+    var myHeight = 0;
+    if( typeof( window.innerHeight ) == 'number' ) {
+        //Non-IE
+        myHeight = window.innerHeight;
+    } else if( document.documentElement && document.documentElement.clientHeight  ) {
+        //IE 6+ in 'standards compliant mode'
+        myHeight = document.documentElement.clientHeight;
+    } else if( document.body && (document.body.clientHeight ) ) {
+        //IE 4 compatible
+        myHeight = document.body.clientHeight;
+    }
+    return myHeight;
+}
+
+function showPDF(docid,cp) {
+
+    var height=700;
+    if(getHeight()>750) {
+        height=getHeight()-50;
+    }
+
+    var width=700;
+    if(getWidth()>1350)
+    {
+        width=getWidth()-650;
+    }
+
+    var url=cp+'/dms/ManageDocument.do?method=display&doc_no='+docid+'&rand='+Math.random()+'#view=fitV&page=1';
+
+    document.getElementById('docDispPDF_'+docid).innerHTML='<object width="'+(width)+'" height="'+(height)+'" type="application/pdf" data="'+url+'" id="docPDF_'+docid+'"></object>';
+}
+
 function showPageImg(docid,pn,cp){
-    if(docid&&pn&&cp){
-        var e=$('docImg_'+docid);
-        var url=cp+'/dms/ManageDocument.do?method=viewDocPage&doc_no='+docid+'&curPage='+pn;
-        e.setAttribute('src',url);
+    var displayDocumentAs=$('displayDocumentAs_'+docid).value;
+    if(displayDocumentAs=="PDF") {
+        showPDF(docid,cp);
+    }
+    else
+    {
+        if(docid&&pn&&cp){
+            var e=$('docImg_'+docid);
+            var url=cp+'/dms/ManageDocument.do?method=viewDocPage&doc_no='+docid+'&curPage='+pn;
+            e.setAttribute('src',url);
+        }
     }
 }
 
