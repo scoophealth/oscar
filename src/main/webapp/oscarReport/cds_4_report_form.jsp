@@ -48,8 +48,6 @@
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
 %>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
-
 <div class="page-header">
 	<h4>CDS Reports</h4>
 </div>
@@ -67,10 +65,10 @@
 				<select id="functionalCentreId" name="functionalCentreId" class="input-large">
 					<%
 						for (FunctionalCentre functionalCentre : functionalCentres)
-									{
-					%>
-					<option value="<%=functionalCentre.getAccountId()%>"><%=functionalCentre.getAccountId()+", "+functionalCentre.getDescription()%></option>
-					<%
+						{
+							%>
+							<option value="<%=functionalCentre.getAccountId()%>"><%=functionalCentre.getAccountId()+", "+functionalCentre.getDescription()%></option>
+							<%
 						}
 					%>
 				</select>
@@ -79,54 +77,36 @@
 		<div class="control-group">
 			<label class="control-label">Date Start</label>
 			<div class="controls">
-				<select name="startYear" class="input-medium">
-					<%
-						GregorianCalendar cal=new GregorianCalendar();
-								int year=cal.get(GregorianCalendar.YEAR);
-								for (int i=0; i<10; i++)
-								{
-					%>
-					<option value="<%=year-i%>"><%=year-i%></option>
-					<%
-						}
-					%>
-				</select> <select name="startMonth" class="input-mini">
-					<%
-						DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
-								String[] months=dateFormatSymbols.getShortMonths();
-								
-								for (int i=1; i<13; i++)
-								{
-					%>
-					<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
-					<%
-						}
-					%>
-				</select>
+				<input type="text" name="startDate" id="startDate" />
+				<script type="text/javascript">
+					jQuery('#startDate').datepicker({ dateFormat: 'yy-mm-dd' });
+					
+					var d=new Date();
+					var month=d.getMonth();
+					if (month>0)
+					{
+						d.setMonth(month-1);
+					}
+					else
+					{
+						d.setMonth(11);
+						d.setYear(d.getYear()-1);
+					}
+					
+					jQuery('#startDate').datepicker("setDate", d);
+					jQuery('#startDate').attr("readonly", true);
+				</script>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">Date End (inclusive)</label>
 			<div class="controls">
-				<select name="endYear" class="input-medium">
-					<%
-						for (int i=0; i<10; i++)
-								{
-					%>
-					<option value="<%=year-i%>"><%=year-i%></option>
-					<%
-						}
-					%>
-				</select> <select name="endMonth" class="input-mini">
-					<%
-						for (int i=1; i<13; i++)
-								{
-					%>
-					<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
-					<%
-						}
-					%>
-				</select>
+				<input type="text" name="endDate" id="endDate" />
+				<script type="text/javascript">
+					jQuery('#endDate').datepicker({ dateFormat: 'yy-mm-dd' });					
+					jQuery('#endDate').datepicker("setDate", new Date());
+					jQuery('#endDate').attr("readonly", true);
+				</script>
 			</div>
 		</div>
 		<div class="control-group">

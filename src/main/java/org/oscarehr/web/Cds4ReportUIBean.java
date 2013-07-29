@@ -98,20 +98,20 @@ public final class Cds4ReportUIBean {
 	private HashMap<Integer, Admission> admissionMap = null;
 	private SingleMultiAdmissions singleMultiAdmissions=null;
 	private FunctionalCentre functionalCentre=null;
-	private GregorianCalendar startDate=null;
-	private GregorianCalendar endDate=null;
+	private GregorianCalendar startDate=new GregorianCalendar();
+	private GregorianCalendar endDateExclusive=new GregorianCalendar();
 	private HashSet<String> providerIdsToReportOn=null;
 	private HashSet<Integer> programIdsToReportOn=null;
 	
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public Cds4ReportUIBean(String functionalCentreId, int startYear, int startMonth, int endYear, int endMonth, String[] providerIdList, HashSet<Integer> programIds) {
+	public Cds4ReportUIBean(String functionalCentreId, Date startDate, Date endDateInclusive, String[] providerIdList, HashSet<Integer> programIds) {
 
-		startDate = new GregorianCalendar(startYear, startMonth, 1);
-		endDate = new GregorianCalendar(endYear, endMonth, 1);
-		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
-
+		this.startDate.setTime(startDate);
+		this.endDateExclusive.setTime(endDateInclusive);
+		this.endDateExclusive.add(GregorianCalendar.DAY_OF_YEAR, 1); // add 1 to make exclusive
+		
 		// put providerId's in a Hash for quicker searches.
 		if (providerIdList!=null)
 		{
@@ -139,8 +139,8 @@ public final class Cds4ReportUIBean {
 	public String getDateRangeForDisplay() 
 	{
 		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-		GregorianCalendar displayEndDate=(GregorianCalendar) endDate.clone();
-		displayEndDate.add(GregorianCalendar.MONTH, -1);
+		GregorianCalendar displayEndDate=(GregorianCalendar) endDateExclusive.clone();
+		displayEndDate.add(GregorianCalendar.DAY_OF_YEAR, -1);
 		return(StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime())+" to "+simpleDateFormat.format(displayEndDate.getTime())+" (inclusive)"));
 	}
 
@@ -153,8 +153,8 @@ public final class Cds4ReportUIBean {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDate.getTime());
-		logger.debug("valid cds form count, "+loggedInInfo.currentFacility.getId()+", 4, "+startDate.getTime()+", "+endDate.getTime()+", "+cdsForms.size());
+		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDateExclusive.getTime());
+		logger.debug("valid cds form count, "+loggedInInfo.currentFacility.getId()+", 4, "+startDate.getTime()+", "+endDateExclusive.getTime()+", "+cdsForms.size());
 		
 		// sort into single and multiple admissions
 		for (CdsClientForm form : cdsForms) {
@@ -236,7 +236,7 @@ public final class Cds4ReportUIBean {
 		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
 		
 		for (Program program : programs) {			
-			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDate.getTime());
+			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDateExclusive.getTime());
 
 			logger.debug("corresponding cds admissions count (before provider filter) :"+admissions.size());
 			
@@ -452,10 +452,10 @@ public final class Cds4ReportUIBean {
 			for (CdsClientForm form : bucket)
 			{
 				Date initialContactDate=form.getInitialContactDate();
-				if (initialContactDate!=null && initialContactDate.before(endDate.getTime()))
+				if (initialContactDate!=null && initialContactDate.before(endDateExclusive.getTime()))
 				{
 					Date assessmentDate=form.getAssessmentDate();
-					if (assessmentDate==null || assessmentDate.after(endDate.getTime())) count++;
+					if (assessmentDate==null || assessmentDate.after(endDateExclusive.getTime())) count++;
 				}
 			}
 		}
@@ -471,13 +471,13 @@ public final class Cds4ReportUIBean {
 			for (CdsClientForm form : bucket)
 			{
 				Date initialContactDate=form.getInitialContactDate();
-				if (initialContactDate!=null && initialContactDate.before(endDate.getTime()))
+				if (initialContactDate!=null && initialContactDate.before(endDateExclusive.getTime()))
 				{
 					Date assessmentDate=form.getAssessmentDate();
 					Date endCountDate=null;
 					
-					if (assessmentDate==null) endCountDate=endDate.getTime();
-					else if (assessmentDate.after(endDate.getTime())) endCountDate=endDate.getTime();
+					if (assessmentDate==null) endCountDate=endDateExclusive.getTime();
+					else if (assessmentDate.after(endDateExclusive.getTime())) endCountDate=endDateExclusive.getTime();
 					else endCountDate=assessmentDate;
 
 					count=count+(int)(DateUtils.getNumberOfDaysBetweenTwoDates(initialContactDate, endCountDate));
@@ -496,11 +496,11 @@ public final class Cds4ReportUIBean {
 			for (CdsClientForm form : bucket)
 			{
 				Date assessmentDate=form.getAssessmentDate();
-				if (assessmentDate!=null && assessmentDate.before(endDate.getTime()))
+				if (assessmentDate!=null && assessmentDate.before(endDateExclusive.getTime()))
 				{
 					Admission admission=admissionMap.get(form.getAdmissionId());
 					
-					if (admission==null || admission.getAdmissionDate().after(endDate.getTime())) count++;
+					if (admission==null || admission.getAdmissionDate().after(endDateExclusive.getTime())) count++;
 				}
 			}
 		}
@@ -516,13 +516,13 @@ public final class Cds4ReportUIBean {
 			for (CdsClientForm form : bucket)
 			{
 				Date assessmentDate=form.getAssessmentDate();
-				if (assessmentDate!=null && assessmentDate.before(endDate.getTime()))
+				if (assessmentDate!=null && assessmentDate.before(endDateExclusive.getTime()))
 				{
 					Admission admission=admissionMap.get(form.getAdmissionId());					
 					Date endCountDate=null;
 					
-					if (admission==null) endCountDate=endDate.getTime();
-					else if (admission.getAdmissionDate().after(endDate.getTime())) endCountDate=endDate.getTime();
+					if (admission==null) endCountDate=endDateExclusive.getTime();
+					else if (admission.getAdmissionDate().after(endDateExclusive.getTime())) endCountDate=endDateExclusive.getTime();
 					else endCountDate=admission.getAdmissionDate();
 
 					count=count+(int)(DateUtils.getNumberOfDaysBetweenTwoDates(assessmentDate, endCountDate));
@@ -767,7 +767,7 @@ public final class Cds4ReportUIBean {
 			
 			if (admission==null) continue;
 			
-			if (startDate.getTime().before(admission.getAdmissionDate()) && endDate.getTime().after(admission.getAdmissionDate()))
+			if (startDate.getTime().before(admission.getAdmissionDate()) && endDateExclusive.getTime().after(admission.getAdmissionDate()))
 			{
 				results.add(form);
 			}
@@ -1077,7 +1077,7 @@ public final class Cds4ReportUIBean {
 				Admission admission=admissionMap.get(form.getAdmissionId());
 				
 				GregorianCalendar endBound=admission.getDischargeCalendar();
-				if (endBound==null) endBound=endDate;
+				if (endBound==null) endBound=endDateExclusive;
 				
 				numberOfDaysInHospital=numberOfDaysInHospital+getTotalDayCount(hospitalisationDays, admission.getAdmissionCalendar(), endBound);
 			}
@@ -1218,6 +1218,6 @@ public final class Cds4ReportUIBean {
 	public Integer getClientAgeAtReportTime(int clientId)
 	{
 		Demographic demographic=demographicDao.getDemographicById(clientId);
-		return(DateUtils.getAge(demographic.getBirthDay(), endDate));
+		return(DateUtils.getAge(demographic.getBirthDay(), endDateExclusive));
 	}
 }
