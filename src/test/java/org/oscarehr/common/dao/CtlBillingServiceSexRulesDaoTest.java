@@ -23,13 +23,19 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.CtlBillingServiceSexRules;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class CtlBillingServiceSexRulesDaoTest extends DaoTestFixtures {
@@ -51,7 +57,45 @@ public class CtlBillingServiceSexRulesDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testFindByServiceCode() {
-		assertNotNull(dao.findByServiceCode("CODE"));
+	public void testFindByServiceCode() throws Exception {
+		
+		String serviceCode1 = "alpha", serviceCode2 = "bravo";
+		
+		CtlBillingServiceSexRules cBSSR1 = new CtlBillingServiceSexRules();
+		EntityDataGenerator.generateTestDataForModelClass(cBSSR1);
+		cBSSR1.setServiceCode(serviceCode1);
+		dao.persist(cBSSR1);
+		
+		CtlBillingServiceSexRules cBSSR2 = new CtlBillingServiceSexRules();
+		EntityDataGenerator.generateTestDataForModelClass(cBSSR2);
+		cBSSR2.setServiceCode(serviceCode1);
+		dao.persist(cBSSR2);
+		
+		CtlBillingServiceSexRules cBSSR3 = new CtlBillingServiceSexRules();
+		EntityDataGenerator.generateTestDataForModelClass(cBSSR3);
+		cBSSR3.setServiceCode(serviceCode2);
+		dao.persist(cBSSR3);
+		
+		CtlBillingServiceSexRules cBSSR4 = new CtlBillingServiceSexRules();
+		EntityDataGenerator.generateTestDataForModelClass(cBSSR4);
+		cBSSR4.setServiceCode(serviceCode1);
+		dao.persist(cBSSR4);
+		
+		List<CtlBillingServiceSexRules> expectedResult = new ArrayList<CtlBillingServiceSexRules>(Arrays.asList(cBSSR1, cBSSR2, cBSSR4));
+		List<CtlBillingServiceSexRules> result = dao.findByServiceCode(serviceCode1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }

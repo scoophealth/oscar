@@ -23,13 +23,19 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.CtlBillingType;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class CtlBillingTypeDaoTest extends DaoTestFixtures {
@@ -50,5 +56,37 @@ public class CtlBillingTypeDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+	
+	@Test
+	public void testFindByServiceType() throws Exception {
+		
+		String id1 = "alpha", id2 = "bravo";
+		
+		CtlBillingType cBT1 = new CtlBillingType();
+		EntityDataGenerator.generateTestDataForModelClass(cBT1);
+		cBT1.setId(id1);
+		dao.persist(cBT1);
+		
+		CtlBillingType cBT2 = new CtlBillingType();
+		EntityDataGenerator.generateTestDataForModelClass(cBT2);
+		cBT2.setId(id2);
+		dao.persist(cBT2);
+		
+		List<CtlBillingType> expectedResult = new ArrayList<CtlBillingType>(Arrays.asList(cBT1));
+		List<CtlBillingType> result = dao.findByServiceType(id1);
 
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
 }
