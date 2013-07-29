@@ -128,6 +128,17 @@ public class ProgramManager {
     public Program getProgram(Long programId) {
         return programDao.getProgram(new Integer(programId.intValue()));
     }
+    
+    public List<Program> getActiveProgramByFacility(String providerNo, Integer facilityId) {
+        List<Program> programs = new ArrayList<Program>();
+        for (ProgramProvider programProvider : programProviderDAO.getProgramDomainByFacility(providerNo, facilityId)) {
+            Program program = this.getProgram(programProvider.getProgramId());
+            if (program.isActive()) {
+                programs.add(program);
+            }
+        }
+        return programs;
+    }
 
     public String getProgramName(String programId) {
         return programDao.getProgramName(Integer.valueOf(programId));

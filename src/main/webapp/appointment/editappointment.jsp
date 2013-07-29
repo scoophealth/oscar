@@ -56,6 +56,14 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.model.Program" %>
+<%@ page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@ page import="org.oscarehr.common.model.Facility" %>
+<%@ page import="org.oscarehr.PMmodule.service.ProviderManager" %>
+<%@ page import="org.oscarehr.PMmodule.service.ProgramManager" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
@@ -64,8 +72,15 @@
     DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
     OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
     SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
-%>
-<%
+	
+    ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
+	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
+	
+	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+	
+    List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
+
   ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
 
   oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
@@ -701,10 +716,19 @@ if (bMultisites) { %>
 <% } else {
 	isSiteSelected = true;
 	// multisites end ==================
-%>
-            <INPUT TYPE="TEXT" NAME="location" tabindex="4"
-					VALUE="<%=bFirstDisp?appt.getLocation():request.getParameter("location")%>"
-					WIDTH="25">
+%>           					
+			<select name="location" >
+                <%
+                String location = bFirstDisp?(appt.getLocation()):request.getParameter("location");
+                if (programs != null && !programs.isEmpty()) {
+			       	for (Program program : programs) {
+			       	    String description = StringUtils.isBlank(program.getLocation()) ? program.getName() : program.getLocation();
+			   	%>
+			        <option value="<%=program.getId()%>" <%=(program.getId().toString().equals(location) ? "selected='selected'" : "") %>><%=StringEscapeUtils.escapeHtml(description)%></option>
+			    <%	}
+                }
+			  	%>
+            </select>
 <% } %>
             </div>
             <div class="space">&nbsp;</div>
