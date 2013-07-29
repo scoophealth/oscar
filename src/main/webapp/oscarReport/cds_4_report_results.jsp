@@ -23,6 +23,8 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -30,23 +32,19 @@
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.managers.ProviderManager2"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.model.CdsFormOption"%>
 <%@page import="org.oscarehr.web.Cds4ReportUIBean"%>
-
-<%@ include file="/taglibs.jsp"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}"
-	scope="request" />
-
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
 	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
 	ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
-	int startYear = Integer.parseInt(request.getParameter("startYear"));
-	int startMonth = Integer.parseInt(request.getParameter("startMonth"));
-	int endYear = Integer.parseInt(request.getParameter("endYear"));
-	int endMonth = Integer.parseInt(request.getParameter("endMonth"));
+    SimpleDateFormat sdf=new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
+	Date startDate=sdf.parse(request.getParameter("startDate"));
+	Date endDateInclusive=sdf.parse(request.getParameter("endDate"));
+
 	
 	String functionalCentreId=request.getParameter("functionalCentreId");
 
@@ -68,7 +66,7 @@
 		}
 	}
 			
-	Cds4ReportUIBean cds4ReportUIBean=new Cds4ReportUIBean(functionalCentreId, startYear, startMonth, endYear, endMonth, providerIdList, programIds);
+	Cds4ReportUIBean cds4ReportUIBean=new Cds4ReportUIBean(functionalCentreId, startDate, endDateInclusive, providerIdList, programIds);
 	
 	List<CdsFormOption> cdsFormOptions=Cds4ReportUIBean.getCdsFormOptions();
 	
