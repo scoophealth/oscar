@@ -44,6 +44,7 @@ package oscar.util;
  */
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -61,12 +62,16 @@ import com.lowagie.text.pdf.SimpleBookmark;
 public class ConcatPDF {
 
 
-    public static void concat (ArrayList<Object> alist,String filename) {
+    public static void concat (ArrayList<Object> alist,String filename) throws IOException {
+        OutputStream os = null;
         try{
-        OutputStream os = new FileOutputStream(filename);
-        concat(alist,os);
+        	os = new FileOutputStream(filename);
+        	concat(alist,os);
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
+        }
+        finally {
+        	os.close();
         }
     }
 
