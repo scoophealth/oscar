@@ -968,6 +968,7 @@ Code"/>
 											<!-- OSCAR Frequency Code $!med.freqCode -->
 											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
 												<frequency>
+## TODO: Compact & Defer logic to Java code
 #*    *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
 													<numerator value="2"/>
 													<denominator value="1" unit="d"/>
@@ -1091,7 +1092,8 @@ Code"/>
 									</entryRelationship>
 									<!-- PRN -->
 									<entryRelationship typeCode="COMP" contextConductionInd="true">
-										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/> <!-- Order Indicator-->
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<!-- Order Indicator-->
 										<observation classCode="OBS" moodCode="EVN">
 											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" displayName="PRN Indicator"/>
 #*    *##if( $med.isPrn() )

@@ -39,6 +39,7 @@ public abstract class VelocityTemplate {
 	protected StringBuilder exportLog = new StringBuilder();
 
 	public VelocityTemplate() {
+		loadTemplate();
 	}
 
 	/**

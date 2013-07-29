@@ -52,7 +52,6 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 
 	public E2EVelocityTemplate() {
 		super();
-		loadTemplate();
 		if(e2eResources == null) {
 			e2eResources = new E2EResources();
 		}
