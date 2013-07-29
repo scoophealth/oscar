@@ -60,7 +60,7 @@ public class EaapsExportAction extends Action {
 
 	private static Logger logger = Logger.getLogger(EaapsExportAction.class);
 
-	private boolean debugEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("eaaps.debug", "true"));
+	private boolean debugEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("eaaps.debug", "false"));
 	
 	private DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
 	
@@ -78,9 +78,21 @@ public class EaapsExportAction extends Action {
 		// build meds exports for all records in the study
 		List<ExportEntry> docs = new ArrayList<ExportEntry>();
 		for(DemographicStudy s : studies) {
+			if (s == null || s.getId() == null) {
+				logger.warn("Invalid study data " + s);
+				continue;
+			}
+			
 			String demoId = "" + s.getId().getDemographicNo();
+			if (logger.isInfoEnabled()) {
+				logger.info("Preparing export data for demographic Id " + demoId);
+			}
 			
 			Demographic demo = demoDao.getDemographic(demoId);
+			if (demo == null) {
+				logger.warn("Unable to find demographic instance for " + demoId);
+				continue;
+			}
 			
 			EaapsHash hash = new EaapsHash(demo); 
 			
@@ -101,16 +113,26 @@ public class EaapsExportAction extends Action {
 				de.setDataType("text");
 			}
 			
-			DemographicExportHelper exportManager = SpringUtils.getBean(DemographicExportHelper.class);
-			exportManager.addMedications(demoId, patientRec);
-	
+			try {
+				DemographicExportHelper exportManager = SpringUtils.getBean(DemographicExportHelper.class);
+				exportManager.addMedications(demoId, patientRec);
+			} catch (Exception e) {
+				// at this point, we still want to continue, ignoring the meds export errors
+				logger.error("Unable to export medications for demographic ID " + demoId 
+						+ ". Skipping export for this demographic number.", e);
+			}
+			
 			String providerNo = demo.getProviderNo();
 			if (providerNo == null) {
 				providerNo = "";
 			}
-			docs.add(new ExportEntry(omdCdsDoc,  s.getId().getDemographicNo(), demoId, hash.getHash(), providerNo));
+			docs.add(new ExportEntry(omdCdsDoc, s.getId().getDemographicNo(), demoId, hash.getHash(), providerNo));
 		}
 
+		if (logger.isInfoEnabled()) {
+			logger.info("Prepared export for push to eaaps server. There is a total of " + docs.size() + " records to be pushed.");
+		}
+		
 		String clinicName = OscarProperties.getInstance().getProperty("eaaps.clinic", "");
 		if (clinicName == null) {
 			clinicName = "";
@@ -126,18 +148,30 @@ public class EaapsExportAction extends Action {
 			handler.connect();
 			for(ExportEntry e : docs) {
 				// make sure we persist hash for further lookup
-				StudyData studyData = getStudyData(e.getDemographicId(), studyId); 
-				studyData.setProviderNo(e.getProviderNo());
-				studyData.setContent(e.getHash());
-				studyDataDao.saveEntity(studyData);
+				StudyData studyData = getStudyData(e.getDemographicId(), studyId);
+				if (studyData != null) {
+					studyData.setProviderNo(e.getProviderNo());
+					studyData.setContent(e.getHash());
+					studyDataDao.saveEntity(studyData);
+				} else {
+					logger.warn("Unable to find study data for " + e.getDemographicId() + " and study Id " + studyId);
+				}
 				
 				//  now save the record to the server
 				String demographicData = e.getDocContent();
 				String fileName = clinicName.concat(String.format("%08d", ConversionUtils.fromIntString(e.getEntryId())) + ".xml");
-				handler.put(demographicData, fileName);
+				try {
+					handler.put(demographicData, fileName);
+				} catch (Exception ee) {
+					logger.error("Unable to export " + fileName, ee);
+				}
 				
 				// finally log the update
 				auditLogger.log("eaaps export", "demographic", e.getDemographicId(), demographicData);
+				
+				if (logger.isInfoEnabled()) {
+					logger.info("Pushed " + e + " to eaaps server successfully.");
+				}
 			}
 			
 			request.setAttribute("message", "Exported study successfully.");
@@ -150,6 +184,11 @@ public class EaapsExportAction extends Action {
 				handler.close();
 			}
 		}
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("Completed EAAPS export successfully.");
+		}
+		
 		return mapping.findForward("status");
 	}
 

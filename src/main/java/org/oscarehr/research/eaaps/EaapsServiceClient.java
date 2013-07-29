@@ -108,7 +108,7 @@ public class EaapsServiceClient {
 		setUserName(user);
 		
 		if (pass == null) {
-			pass = props.getProperty("eeaps.ws.pass", "test");
+			pass = props.getProperty("eaaps.ws.pass", "test");
 		}
 		setPassword(pass);
 	}
