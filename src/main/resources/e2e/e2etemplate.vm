@@ -1148,38 +1148,38 @@ Problems and Conditions - Problem List
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
-					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
 					<title>Problems and Conditions - Problem List [with entries]</title>
 					<text>Problems</text>
 #**##foreach ( $problem in $patient.getProblems() )
+#*    *##if ( $problem.codingSystem == "icd9" )
 					<entry typeCode="COMP" contextConductionInd="true"> 
 						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
 						<!-- Problem List Observation -->
 						<observation classCode="OBS" moodCode="EVN">
 							<id extension="$problem.id" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
-							<code nullFlavor="UNK"/>
-#*    *##if ( $problem.status == "A" )
+							<code code="DX" displayName="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+							<text>${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}</text>
+#*        *##if ( $problem.status == "A" )
 							<statusCode code="active"/>
-#*    *##else
+#*        *##else
 							<statusCode code="completed"/>
-#*    *##end
+#*        *##end
 							<effectiveTime xsi:type="IVL_TS">
 								<low value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
 							</effectiveTime>
-							<value xsi:type="CD" code="OTH" codeSystem="TBD" codeSystemName="TBD" displayName="${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}">
-								<originalText>${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}</originalText>
-							</value>
+							<value xsi:type="CD" code="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
+							<!-- Diagnosing Provider -->
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
-#*    *##if ( $problem.getUpdateDate() )
+#*        *##if ( $problem.getUpdateDate() )
 								<time value="$dateTool.format('yyyyMMdd', $problem.getUpdateDate())"/>
-#*    *##else
+#*        *##else
 								<time nullFlavor="UNK"/>
-#*    *##end
+#*        *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
-									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
 											<given>$patient.getProviderFirstName($demographic.providerNo)</given>
@@ -1188,16 +1188,27 @@ Problems and Conditions - Problem List
 									</assignedPerson>
 								</assignedAuthor>
 							</author>
-							<entryRelationship typeCode="COMP" contextConductionInd="false">
+							<!-- Diagnosis Billing Code -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
+								<!-- Secondary Code (ICD9) -->
+								<observation classCode="OBS" moodCode="EVN"> 
+									<code code="BILLINGCODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<value xsi:type="CD" code="$problem.getDxresearchCode()" displayName="${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9"/>
+								</observation>
+							</entryRelationship>
+							<!-- Diagnosis Date -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
+								<!-- Date Observation -->
 								<observation classCode="OBS" moodCode="EVN">
-									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1"
-									codeSystemName="PITO ObservationType"/>
-									<value xsi:type="CD" code="$problem.getDxresearchCode()" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="${patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")}"/>
+									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<effectiveTime value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
 								</observation>
 							</entryRelationship>
 						</observation>
 					</entry>
+#*    *##end
 #**##end
 				</section>
 			</component>
@@ -1205,7 +1216,7 @@ Problems and Conditions - Problem List
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
-					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems list Reported"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
 					<title>Problems and Conditions - Problem List [without entries]</title>
 					<text>No Problem Entries</text>
 				</section>
