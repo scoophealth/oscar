@@ -174,7 +174,7 @@ public class JdbcBillingReviewImpl {
 				"ch1.status,provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid,clinic," +
 				"bi.fee, bi.service_code, bi.dx " +
 				"FROM billing_on_cheader1 ch1 LEFT JOIN billing_on_item bi ON ch1.id=bi.ch1_id " +
-				"WHERE " + temp + serviceCodes + " and bi.status!='D' " +
+				"WHERE " + temp + serviceCodes + dx + " and bi.status!='D' " +
 				" ORDER BY billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
