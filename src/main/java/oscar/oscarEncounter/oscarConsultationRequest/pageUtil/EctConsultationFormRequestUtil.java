@@ -213,6 +213,11 @@ public class EctConsultationFormRequestUtil {
 			letterheadPhone = cr.getLetterheadPhone();
 			letterheadFax = cr.getLetterheadFax();
 
+			letterheadName = letterheadName == null?"":letterheadName;
+			letterheadAddress = letterheadAddress == null?"":letterheadAddress;
+			letterheadPhone = letterheadPhone == null?"":letterheadPhone;
+			letterheadFax = letterheadFax == null?"":letterheadFax;
+
 			signatureImg = cr.getSignatureImg();
 
 			appointmentNotes = cr.getStatusText();
