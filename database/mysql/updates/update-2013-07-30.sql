@@ -23,3 +23,6 @@ INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, c
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Others'						 , 'Others'						   , 99, 1, 'oscar', CURRENT_TIMESTAMP);
 
 COMMIT;
+
+
+insert into FunctionalCentre values ('725 51 76 11','Peer/Self Help Initiatives');
