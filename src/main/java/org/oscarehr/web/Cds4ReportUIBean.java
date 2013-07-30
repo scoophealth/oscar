@@ -92,6 +92,23 @@ public final class Cds4ReportUIBean {
 
 		// this is a map where key=0-10 representing each cohort bucket., value is a collection of CdsClientForms
 		public MultiValueMap multipleAdmissionCohortBuckets = new MultiValueMap();
+		
+		public void addUniqueCdsProgramFormToMultipleAdmissionsAllForms(CdsClientForm cdsClientForm)
+		{
+			for (CdsClientForm tempForm : multipleAdmissionsAllForms)
+			{
+				if (tempForm.getCdsFormVersion().equals(cdsClientForm.getCdsFormVersion()) && tempForm.getAdmissionId().equals(cdsClientForm.getAdmissionId()))
+				{
+					if (cdsClientForm.getCreated().after(tempForm.getCreated()))
+					{
+						multipleAdmissionsAllForms.remove(tempForm);
+						multipleAdmissionsAllForms.add(cdsClientForm);
+						return;
+					}
+					// else do nothing and keep the old one.
+				}
+			}
+		}
 	}
 
 	/** key=admissionId, value=admission */
@@ -153,7 +170,7 @@ public final class Cds4ReportUIBean {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDateExclusive.getTime());
+		List<CdsClientForm> cdsForms = cdsClientFormDao.findSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDateExclusive.getTime());
 		logger.debug("valid cds form count, "+loggedInInfo.currentFacility.getId()+", 4, "+startDate.getTime()+", "+endDateExclusive.getTime()+", "+cdsForms.size());
 		
 		// sort into single and multiple admissions
@@ -185,19 +202,33 @@ public final class Cds4ReportUIBean {
 			if (existingForm != null) {
 				logger.debug("multiple admissions 3+ forms. formId="+form.getId()+", otherFormId="+existingForm.getId());
 				singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
-				singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
+				singleMultiAdmissions.addUniqueCdsProgramFormToMultipleAdmissionsAllForms(form);
 			} else // this person either has one previous or no previous admissions
 			{
 				existingForm = singleMultiAdmissions.singleAdmissions.get(clientId);
 				// this means we have 1 previous admission
 				if (existingForm != null) {
-					logger.debug("multiple admissions, 2 forms : formId="+form.getId()+", otherFormId="+existingForm.getId());
-
-					singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
-					singleMultiAdmissions.singleAdmissions.remove(clientId);
-
-					singleMultiAdmissions.multipleAdmissionsAllForms.add(existingForm);
-					singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
+					
+					// check that it's actually multiple admission and not just multiple forms for 1 admission
+					
+					// they are the same, just pick the newer form
+					if (existingForm.getAdmissionId().equals(form.getAdmissionId()))
+					{
+						if (form.getCreated().after(existingForm.getCreated()))
+						{
+							singleMultiAdmissions.singleAdmissions.put(clientId, form);
+						}
+					}
+					else
+					{
+						logger.debug("multiple admissions, 2 forms : formId="+form.getId()+", otherFormId="+existingForm.getId());
+						
+						singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
+						singleMultiAdmissions.singleAdmissions.remove(clientId);
+	
+						singleMultiAdmissions.addUniqueCdsProgramFormToMultipleAdmissionsAllForms(existingForm);
+						singleMultiAdmissions.addUniqueCdsProgramFormToMultipleAdmissionsAllForms(form);
+					}
 				} else // we have no previous admission
 				{
 					logger.debug("single admissions : formId="+form.getId());
@@ -235,13 +266,15 @@ public final class Cds4ReportUIBean {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
 		
-		for (Program program : programs) {			
+		for (Program program : programs) {
+			if (programIdsToReportOn!=null && !programIdsToReportOn.contains(program.getId())) continue;
+			
 			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDateExclusive.getTime());
 
 			logger.debug("corresponding cds admissions count (before provider filter) :"+admissions.size());
 			
 			for (Admission admission : admissions) {
-				if (isAdmissionForSelectedProgramOrProviders(admission))
+				if (isAdmissionForSelectedProviders(admission))
 				{
 					admissionMap.put(admission.getId().intValue(), admission);
 					logger.debug("valid cds admission, id="+admission.getId());
@@ -252,14 +285,11 @@ public final class Cds4ReportUIBean {
 		return admissionMap;
 	}
 	
-	private boolean isAdmissionForSelectedProgramOrProviders(Admission admission)
+	private boolean isAdmissionForSelectedProviders(Admission admission)
 	{
-		if (providerIdsToReportOn!=null) return(providerIdsToReportOn.contains(admission.getProviderNo()));
+		if (providerIdsToReportOn==null) return(true);
 		
-		if (programIdsToReportOn!=null) return(programIdsToReportOn.contains(admission.getProgramId()));
-
-		// if both are null that means no filter criteria
-		return(true);
+		return(providerIdsToReportOn.contains(admission.getProviderNo()));
 	}
 
 	private static int getCohortBucket(Admission admission) {

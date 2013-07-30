@@ -82,7 +82,7 @@ public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
 		return (results);
 	}
 
-    public List<CdsClientForm> findLatestSignedCdsForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
+    public List<CdsClientForm> findSignedCdsForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
 		
 		String sqlCommand="select x from CdsClientForm x where x.facilityId=?1 and x.signed=?2 and x.cdsFormVersion=?3 and x.created>=?4 and x.created<?5";
 

@@ -154,7 +154,7 @@ public class CdsClientFormDaoTest extends DaoTestFixtures {
 		dao.persist(clientForm2);
 		dao.persist(clientForm3);
 		
-		List<CdsClientForm> result = dao.findLatestSignedCdsForms(facilityId, formVersion, startDate, endDate);
+		List<CdsClientForm> result = dao.findSignedCdsForms(facilityId, formVersion, startDate, endDate);
 		List<CdsClientForm> expectedResult = new ArrayList<CdsClientForm>(Arrays.asList(
 				clientForm1,
 				clientForm3
