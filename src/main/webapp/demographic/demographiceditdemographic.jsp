@@ -31,6 +31,8 @@
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.DemographicExtArchiveDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
 <%@page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
@@ -52,6 +54,8 @@
     List<CountryCode> countryList = ccDAO.getAllCountryCodes();
 
     DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+    DemographicArchiveDao demographicArchiveDao = SpringUtils.getBean(DemographicArchiveDao.class);
+    DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
     ScheduleTemplateCodeDao scheduleTemplateCodeDao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
     WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
     WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
@@ -751,6 +755,17 @@ function checkRosterStatus2(){
 	return true;
 }
 
+jQuery(document).ready(function($) {
+	jQuery("a.popup").click(function() {
+		var $me = jQuery(this);
+		var name = $me.attr("title");
+		var rel = $me.attr("rel");
+		var content = jQuery("#" + rel).html();
+		var win = window.open(null, name, "height=250,width=600,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes");
+		jQuery(win.document.body).html(content);
+		return false;
+	});
+});
 </script>
 
 <style type="text/css">
@@ -828,6 +843,89 @@ div.demographicWrapper {
 </head>
 <body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();checkRosterStatus2();"
 	topmargin="0" leftmargin="0" rightmargin="0">
+<%
+//---------------------History of phones and address ----------------------------
+	Demographic demographic = demographicDao.getDemographic(demographic_no);
+	List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNo(Integer.parseInt(demographic_no));
+	List<DemographicExtArchive> extArchives = demographicExtArchiveDao.getDemographicExtArchiveByDemoAndKey(Integer.parseInt(demographic_no), "demo_cell");
+	List<String> homePhones = new ArrayList<String>();
+	List<String> workPhones = new ArrayList<String>();
+	List<String> cellPhones = new ArrayList<String>();
+	List<String> addresses = new ArrayList<String>();
+
+	for (DemographicArchive archive : archives) {
+	    String homePhone = archive.getPhone();
+	    String workPhone = archive.getPhone2();
+	    String address = archive.getAddress() + ", " + archive.getCity() + ", " + archive.getProvince() + ", " + archive.getPostal();
+	    
+	   	if (StringUtils.isNotBlank(homePhone) && !homePhones.contains(homePhone)) {
+	   	 	DemographicExtArchive homePhoneExt = demographicExtArchiveDao.getDemographicExtArchiveByArchiveIdAndKey(archive.getId(), "hPhoneExt");
+	   	    homePhones.add(homePhone + (homePhoneExt == null || StringUtils.isBlank(homePhoneExt.getValue()) ? "" : " Ext " + homePhoneExt.getValue()));
+	   	}
+	   	if (StringUtils.isNotBlank(workPhone) && !workPhones.contains(workPhone)) {
+	   	 	DemographicExtArchive workPhoneExt = demographicExtArchiveDao.getDemographicExtArchiveByArchiveIdAndKey(archive.getId(), "wPhoneExt");
+	   	 	workPhones.add(workPhone + (workPhoneExt == null || StringUtils.isBlank(workPhoneExt.getValue()) ? "" : " Ext " + workPhoneExt.getValue()));
+	   	}
+	   	if (StringUtils.isNotBlank(address) && !addresses.contains(address)) {
+	   	 	addresses.add(address);
+	   	}
+	}
+	for (DemographicExtArchive extArchive : extArchives) {
+	    String cellPhone = extArchive.getValue();
+	    if (StringUtils.isNotBlank(cellPhone) && !cellPhones.contains(cellPhone)) {
+	        cellPhones.add(cellPhone);
+	   	}
+	}
+//---------------------History of phones and address ----------------------------
+%>
+<div id="homePhones" style="display:none;">
+	<h2>Home Phone History</h2>
+	<table>
+		<%
+			for (String homePhone : homePhones) {
+		%>
+			<tr><td><%=homePhone %></td></tr>
+		<%
+			}
+		%>
+	</table>
+</div>
+<div id="workPhones" style="display:none;">
+	<h2>Work Phone History</h2>
+	<table>
+		<%
+			for (String workPhone : workPhones) {
+		%>
+			<tr><td><%=workPhone %></td></tr>
+		<%
+			}
+		%>
+	</table>
+</div>
+<div id="cellPhones" style="display:none;">
+	<h2>Cell Phone History</h2>
+	<table>
+		<%
+			for (String cellPhone : cellPhones) {
+		%>
+			<tr><td><%=cellPhone %></td></tr>
+		<%
+			}
+		%>
+	</table>
+</div>
+<div id="addresses" style="display:none;">
+	<h2>Address History</h2>
+	<table>
+		<%
+			for (String address : addresses) {
+		%>
+			<tr><td><%=address %></td></tr>
+		<%
+			}
+		%>
+	</table>
+</div>
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn"><bean:message
@@ -854,7 +952,7 @@ div.demographicWrapper {
                                 	notes = notes==null?"":notes;
                                 }
 
-                                Demographic demographic=demographicDao.getDemographic(demographic_no);
+                                // Demographic demographic=demographicDao.getDemographic(demographic_no);
 
                                 String dateString = curYear+"-"+curMonth+"-"+curDay;
                                 int age=0, dob_year=0, dob_month=0, dob_date=0;
@@ -1582,21 +1680,21 @@ if ( Dead.equals(PatStat) ) {%>
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgContactInfo"/></h3>
 						<ul>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneH" />:</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneH" />(<a class="popup" href="#" rel="homePhones" title="Home Phone History">History</a>):</span>
                                                         <span class="info"><%=demographic.getPhone()%> <%=StringUtils.trimToEmpty(demoExt.get("hPhoneExt"))%></span>
 							</li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneW" />:</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneW" />(<a class="popup" href="#" rel="workPhones" title="Work Phone History">History</a>):</span>
                                                         <span class="info"><%=demographic.getPhone2()%> <%=StringUtils.trimToEmpty(demoExt.get("wPhoneExt"))%></span>
 							</li>
 	                        						<li><span class="label"><bean:message
+                                                            key="demographic.demographiceditdemographic.formPhoneC" />(<a class="popup" href="#" rel="cellPhones" title="Cell Phone History">History</a>):</span>
+                                                        <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%></span></li>
+                                                    <li><span class="label"><bean:message
                                                             key="demographic.demographicaddrecordhtm.formPhoneComment" />:</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("phoneComment"))%></span></li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneC" />:</span>
-                                                        <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%></span></li>
-                                                    <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formAddr" />:</span>
+                                                            key="demographic.demographiceditdemographic.formAddr" />(<a class="popup" href="#" rel="addresses" title="Address History">History</a>):</span>
                                                         <span class="info"><%=demographic.getAddress()%></span>
 							</li>
                                                     <li><span class="label"><bean:message

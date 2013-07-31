@@ -24,6 +24,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.DemographicExtArchive;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +36,23 @@ public class DemographicExtArchiveDao extends AbstractDao<DemographicExtArchive>
 
 	public DemographicExtArchiveDao() {
 		super(DemographicExtArchive.class);
+	}
+
+	public List<DemographicExtArchive> getDemographicExtArchiveByDemoAndKey(Integer demographicNo, String key) {
+		Query query = entityManager.createQuery("SELECT d from DemographicExtArchive d where d.demographicNo=? and d.key = ? order by d.dateCreated DESC");
+		query.setParameter(1, demographicNo);
+		query.setParameter(2, key);
+
+		@SuppressWarnings("unchecked")
+		List<DemographicExtArchive> results = query.getResultList();
+		return results;
+	}
+
+	public DemographicExtArchive getDemographicExtArchiveByArchiveIdAndKey(Long archiveId, String key) {
+		Query query = entityManager.createQuery("SELECT d from DemographicExtArchive d where d.archiveId=? and d.key = ? order by d.dateCreated DESC");
+		query.setParameter(1, archiveId);
+		query.setParameter(2, key);
+
+		return this.getSingleResultOrNull(query);
 	}
 }
