@@ -90,6 +90,7 @@
     	a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
     	a.setCreator(request.getParameter("creator"));
     	a.setCreateDateTime(ConversionUtils.fromDateString(request.getParameter("createdatetime")));
+    	a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
     	appointmentDao.persist(a);
    		rowsAffected=1;
     }
@@ -121,6 +122,7 @@
 	    	appt.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
 	    	appt.setCreator(request.getParameter("creator"));
 	    	appt.setCreateDateTime(ConversionUtils.fromDateString(request.getParameter("createdatetime")));
+	    	appt.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
 	    	appointmentDao.merge(appt);
 	    	rowsAffected=1;
 	    }
