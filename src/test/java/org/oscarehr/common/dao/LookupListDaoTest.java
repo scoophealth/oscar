@@ -92,7 +92,7 @@ public class LookupListDaoTest extends DaoTestFixtures {
 		dao.persist(lookupList4);
 		
 		List<LookupList> expectedResult = new ArrayList<LookupList>(Arrays.asList(lookupList4, lookupList1, lookupList3));
-		List<LookupList> result = dao.findAllActive();
+		List<LookupList> result = dao.findAllActive().subList(0, 3);
 
 		Logger logger = MiscUtils.getLogger();
 		
