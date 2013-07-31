@@ -60,7 +60,7 @@ public class BillingStatusPrep {
 		startDate = startDate == null || startDate.length() == 0 ? "" : " and ch1.billing_date >= '" + startDate + "'";
 		endDate = endDate == null || endDate.length() == 0 ? "" : " and ch1.billing_date <= '" + endDate + "'";
 		demoNo = demoNo == null || demoNo.length() == 0 ? "" : " and ch1.demographic_no=" + demoNo;
-		dx = dx == null || dx.length() < 2 ? "" : " and ch1.dx='" + dx + "'";
+		dx = dx == null || dx.length() < 2 ? "" : " and bi.dx='" + dx + "'";
 		visitType = visitType == null || visitType.length() < 2 ? "" : " and ch1.visittype='" + visitType + "'";
 		serviceCodeParams = serviceCodeParams == null || serviceCodeParams.length() == 0 || serviceCodeParams.equals(ANY_SERVICE_CODE) ? "" : serviceCodeParams.toUpperCase();
 		billingForm = billingForm == null || billingForm.length() == 0 || billingForm.equals(ANY_BILLING_FORM) ? "" : billingForm;
