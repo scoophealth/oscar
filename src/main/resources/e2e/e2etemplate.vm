@@ -41,7 +41,7 @@ CDA Header
 	<id extension="$demographic.demographicNo" root="2.16.840.1.113883.3.933"/>
 	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
 	<title>PITO EMR-2-EMR Record of $demographic.firstName $demographic.lastName</title>
-	<effectiveTime value="$dateTool.get('yyyyMMddhhmm')"/>
+	<effectiveTime value="$dateTool.get('yyyyMMddHHmm')"/>
 	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
 	<!-- 
 	********************************************************
@@ -162,7 +162,7 @@ Alerts
 #*    *##else
 							<statusCode code="complete"/>
 #*    *##end
-							<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $alert.getObservation_date())"/>
+							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $alert.getObservation_date())"/>
 							<e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
 							<value xsi:type="ST">$alert.note</value>
 						</observation>
@@ -385,7 +385,7 @@ Clinically Measured Observation
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
 #*    *##if ( $measurement.getCreateDate() )
-								<time value="$dateTool.format('yyyyMMddhhmmss', $measurement.getCreateDate())"/>
+								<time value="$dateTool.format('yyyyMMddHHmmss', $measurement.getCreateDate())"/>
 #*    *##else
 								<time nullFlavor="UNK"/>
 #*    *##end
@@ -406,7 +406,7 @@ Clinically Measured Observation
 									<code nullFlavor="UNK"/>
 									<!-- OSCAR Type Code: $measurement.type -->
 									<text>${patient.getTypeDescription($measurement.type)}</text>
-									<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $measurement.getDateObserved())"/>
+									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
 									<value xsi:type="ST">$measurement.dataField ($measurement.measuringInstruction)</value>
 								</observation>
 							</component>
@@ -445,7 +445,7 @@ Family History
 							<id extension="$family.Id" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
 							<code code="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code" displayName="Diagnosis"/>
 							<text>$family.note</text>
-							<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $family.getObservation_date())"/>
+							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $family.getObservation_date())"/>
 							<value xsi:type="ST">$family.note</value>
 							<!--Relationship to the patient-->
 							<subject typeCode="SBJ" contextControlCode="OP">
@@ -748,7 +748,7 @@ Laboratory Results & Results
 											<statusCode code="final"/>
 #*            *##end
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "datetime")} )
-											<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+											<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
 #*            *##else
 											<effectiveTime nullFlavor="UNK"/>
 #*            *##end
@@ -769,7 +769,7 @@ Laboratory Results & Results
 												<templateId root="2.16.840.1.113883.3.1818.10.4.19"/>
 												<!--Performer Participation-->
 #*                *##if ( ${patient.getLabExtValue("$labEntry.id", "datetime")} )
-												<time value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
+												<time value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
 #*                *##else
 												<time nullFlavor="UNK"/>
 #*                *##end
@@ -785,7 +785,7 @@ Laboratory Results & Results
 											<entryRelationship typeCode="COMP">
 												<procedure classCode="PROC" moodCode="EVN">
 													<!-- specimen collection date -->
-													<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
+													<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 												</procedure>
 											</entryRelationship>
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "range")} != "" )
@@ -1348,7 +1348,7 @@ Risk Factors
 									<id extension="$risk.Id" root="TBD"/>
 									<code nullFlavor="UNK"/>
 									<text>$risk.note</text>
-									<effectiveTime value="$dateTool.format('yyyyMMddhhmmss', $risk.getObservation_date())"/>
+									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $risk.getObservation_date())"/>
 									<value xsi:type="ST">$risk.note</value>
 								</observation>
 							</component>
