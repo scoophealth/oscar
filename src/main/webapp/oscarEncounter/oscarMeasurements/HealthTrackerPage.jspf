@@ -35,6 +35,7 @@
 <%@ page import="org.oscarehr.caisi_integrator.ws.CachedMeasurement,org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager,org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="oscar.util.UtilDateUtilities" %>
 <%@ page import="oscar.OscarProperties"%>
+<%@ page import="org.oscarehr.common.model.Validations" %>
 
 <%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
@@ -364,6 +365,23 @@ float:right;display:inline;margin:0px;padding:0px;
 text-decoration:underline;font-weight:bold;
 }
 
+.input-error{   
+    border-color: rgba(229, 103, 23, 0.8) !important; 
+    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6) !important; 
+    outline: 0 none !important;
+    
+}
+
+.options-error{
+color:#bd362f;
+}
+
+.input-success{
+    border-color: rgba(98, 196, 98, 0.8) !important; 
+    box-shadow: 0 1px 1px rgba(98, 196, 98, 0.075) inset, 0 0 8px rgba(98, 196, 98, 0.6) !important; 
+    outline: 0 none !important;
+}
+
 @media (min-width: 768px) and (max-width: 979px) { 
 #tracker-bar{position:static}
 }
@@ -510,6 +528,7 @@ text-decoration:underline;font-weight:bold;
 <%
 		//clear so values don't repeat after added to note
 		session.setAttribute("textOnEncounter", null);
+		//session.removeAttribute("textOnEncounter");
 
 }
 %>		
@@ -590,8 +609,6 @@ function fsPopup(width,height,url,window) {
     }
 
 	</script>
-
-
 		
   </head>
 
@@ -699,6 +716,7 @@ function fsPopup(width,height,url,window) {
     		 
     	    	undiagnosed = undiagnosed + "<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
       			fsSelected="";
+      			
     	 }
      }
      
@@ -726,6 +744,9 @@ function fsPopup(width,height,url,window) {
         $('#unDxModal').modal('show');
     });
 </script> 
+
+
+	 
     <div id="dxAlert" class="alert">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
@@ -748,9 +769,27 @@ function fsPopup(width,height,url,window) {
     </div>
  <%} %>
  
-
+ 	
+    <% //This is the server side error handling but hopefully we won't ever see this once I have the client side err handling done
+    String displayError = "display:none;";
+    if(request.getAttribute("testOutput")!=null){ 
+     displayError = "display:block;";
+    } %>
+    
+    <div class="alert alert-error" id="validation-alert" style="position:fixed;width:93%;z-index:999;<%=displayError%>">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+		
+		<% if(request.getAttribute("testOutput")!=null){ %>
+		<strong>The following values were not updated due to an error:</strong> <br>
+		<%=request.getAttribute("testOutput") %>
+		<%}%>
+			
+	</div>
+	
+	
+	
 <h4 style="display:inline;"><%=flowSheet%></h4>
-   		
+   
 <!-- Modal -->
 <div id="unDxModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="unDxModalLabel" aria-hidden="true">
 <div class="modal-header">
@@ -827,6 +866,7 @@ function fsPopup(width,height,url,window) {
           
 </div>
 <div class="modal-footer">
+<a class="btn " href="#" onclick="document.getElementById('gFrame').contentWindow.print();"><i class="icon-print"></i> Print</a>
 <input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="<bean:message key='global.close' />">
 </div>
 </div>
@@ -902,7 +942,7 @@ function fsPopup(width,height,url,window) {
 	<%}%>            		    
 		    
 <!-- start of form -->	
-<form id="mainForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/TrackerUpdate.do">
+<form id="trackerForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerUpdate.do">
 <fieldset>	
 
 <input type="hidden"  name="ycoord"
@@ -931,6 +971,8 @@ function fsPopup(width,height,url,window) {
         Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
 
+        
+        
         String hidden= "";
         if (item.isHide()){
             hidden= "display:none;";
@@ -939,7 +981,7 @@ function fsPopup(width,height,url,window) {
         if (h2.get("measurement_type") != null ){
             Hashtable h = new Hashtable();
             EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measure);//mFlowsheet.getMeasurementInfo(measure);
-
+			
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
                 h.put("desc",mtypeBean.getTypeDesc());
@@ -964,7 +1006,9 @@ function fsPopup(width,height,url,window) {
             //display_name="Autonomic Neuropathy"
             //guideline="Erectile Dysfunction, hastrointestinal disturbance"
             //graphable="no"
-            //value_name="Answer"	   
+            //value_name="Answer"
+            
+            
 %>
 
 <div class="preventionSection well-small" >
@@ -990,6 +1034,7 @@ function fsPopup(width,height,url,window) {
 					String name = h2.get("display_name").toString();
 					name = name.replaceAll("\\W","");
 					iDate++;
+					
 					%>
 
 <!--graphing start-->  
@@ -1058,11 +1103,11 @@ function fsPopup(width,height,url,window) {
 
 <div class="input-wrapper">  
      <div class="input-append date" id="dp-<%=iDate%>" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
-				<input style="width:90px" name="<%=name%>_date" size="16" type="text" value="<%=date%>">
+				<input style="width:90px" name="<%=name%>_date" size="16" type="text" value="<%=date%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$">
 				<span class="add-on"><i class="icon-calendar"></i></span>
 	 </div>
 <%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
-                                
+      <div style="display: inline;margin:0px;padding:0px" id="options-<%=name%>" >                        
                             <label class="radio inline">
 							<input type="radio" name="<%=name%>" id="<%=name%>-YES" value="Yes" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							Yes
@@ -1080,17 +1125,18 @@ function fsPopup(width,height,url,window) {
 							NA
 							</label>
 	<%}%>					 		  
-                            
+     </div>                       
   <%}else{ %>
-  <!-- placeholder="<%=mtypeBean.getValidationName()%>"-->
-  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
+  
+  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else if (name.equals("BP")) {%>00/00 or 000/00 <%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
 	                       	<% if (name.equals("Weightkg") || name.equals("Heightcm") ){ %> onchange="calcBMI();"<%}%>
 	                       	<% if (name.equals("Weightkg")){ %> onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("Heightcm")){ %> onDblClick="htEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("BMI")){ %> onDblClick="calcBMI();"<%}%>
-	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%>	 placeholder="Enter Data"> 
+	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%> placeholder="Enter Data" <%=getPattern(measure, mtypeBean.getMeasuringInstrc())%>> 
   <%} %>
-<input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Add" />
+  
+<input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Save" id="save_<%=name%>"/>
 
 </div> <!-- input-wrapper -->
 
@@ -1623,19 +1669,175 @@ $(document).ready(function () {
     $("#deleteButton").click(function(){
         var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/DeleteData2.do";
         var deletevalue = "id="+$("#deleteId").val()+"&deleteCheckbox="+$("#deleteCheck").val();
+
+    	//get scroll position
+    	var ycoord = $('input[name=ycoord]').val();
+    	
+        //alert(link+deletevalue);
         $.ajax({
             url: link,
             method: 'POST',
             data: deletevalue,
             success: function(returnData){
-            	window.location.reload();
+            	window.location = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?ycoord="+ycoord+"&demographic_no=<%=demographic_no%>&template=<%=temp%>";
             }
         });
 
+    });
+
+    $("input[type='text']").bind('focus keyup', function() {
+		
+    	var error = false;
+		var id=$(this).attr('id');
+    	var value = $(this).val();
+    	value = $.trim(value);
+	
+		var pattern = $(this).attr("pattern");
+    	var reg = new RegExp(pattern);
+
+		var max=$(this).attr("max");
+        var iMax=parseInt(max);
+        var min=$(this).attr("min");
+		var rel=$(this).attr("rel");
+
+		var preVal = $('#trackerForm').find('.input-error').val();
+		var preValId = $('#trackerForm').find('.input-error').attr('id');
+
+		var err1 = $('#trackerForm').find('.input-error').length;
+		if(err1==0){
+			$('#validation-alert').fadeOut("slow");
+			}
+		
+		if(preVal==""){
+			//clear previous click value if no input
+			$("#"+preValId).removeClass('input-error');
+
+			//check and clear alert if triggered because of submit
+			if(err1==1){
+				$('#validation-alert').fadeOut("slow");
+				}
+			}
+		
+        if(pattern!=null){
+			if(!value.match(reg)){
+            error=true;
+			}
+
+            }else if(pattern==null && max!=null){
+				if(value>iMax || !$.isNumeric(value)){
+    			error=true;
+				}
+    			
+                }else if(pattern==null && max==null && !rel=='greaterThanZero'){
+                	if(value==""){
+        			error=true;
+                	}
+          			}else if(rel=='greaterThanZero'){
+        				if(!$.isNumeric(value) && !value>=0){
+        	    			error=true;
+        					}
+              			}
+
+    	if(error){
+    		$(this).addClass('input-error');
+    		$(this).removeClass('input-success');
+
+    		//TODO: when able to save individual measurments 
+    		 //$('#save_'+id).attr('disabled','disabled');
+    		return false;
+    		
+        	}else{
+
+           			$(this).removeClass('input-error');
+                	$(this).addClass('input-success');
+
+            	////TODO: when able to save individual measurments 
+            	//$('#save_'+id).removeAttr('disabled');
+
+            	
+            	}
+
     }); 
+        
+//save - validation
+	$("[id^=save_]").click(function(){
+	var type=$(this).attr('id');
+	var type = type.substring(5, type.length);	
 
+	var inputType = $('input[name='+type+']').attr('type');
 
-    
+	//need to determine input type
+	var value = "";
+	if(inputType=='text'){
+		value = $('input[name='+type+']').val();
+	}else{
+		value = $('input[name='+type+']:checked').val();
+	}
+	
+	var typeDate= type+'_date';
+	var typeDateVal=$('input[name='+typeDate+']').val();
+
+	var typeComments=type+'_comments';
+	var typeCommentsVal=$("#"+typeComments).val();
+
+	//get scroll position
+	var ycoord = $('input[name=ycoord]').val();
+
+	//hidden date to build qs
+	var date = $('input[name=date]').val();	
+	
+	//trim leading and trailing white space
+	value = $.trim(value);
+
+	//input checking
+	if (value==""){
+		if(inputType=='text'){
+			$('#'+type).addClass(' input-error');
+			}else{
+				$("#options-"+type).addClass(' options-error');	
+			}
+	   //alert("input type: "+inputType+" empty" + type + " date:" + typeDate + " comment:" + typeComments + " scrollcords:" + ycoord + " hiddenDate: " + date);
+ 
+	}else{
+		//build
+		var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerUpdate.do";
+		var qs1 = "ycoord="+ycoord+"&date="+date+"&demographic_no=<%=demographic_no%>&template=<%=temp%>";
+		var qs2 = typeDate+"="+typeDateVal+"&"+type+"="+value+"&"+typeComments+"="+typeCommentsVal+"&submit=Add";
+
+		$('#'+type).removeClass(' input-error').addClass(' input-success');
+		
+		//TODO: post single measurments instead of passing complete form
+	 	//alert("input type: "+inputType+" not empty" + type + link+qs1+qs2);
+		/*
+        $.ajax({
+            url: link,
+            method: 'POST',
+            data: qs1 + qs2,
+            success: function(returnData){
+            	window.location.reload();
+            }//do something on failure
+        });*/ 
+	}
+	 
+	});
+
+	$("#trackerForm").submit(function() {
+		var err1 = $('#trackerForm').find('.input-error').length;
+		var err2 = $('#trackerForm').find('.options-error').length;
+
+		var totalErrors=err1+err2;
+
+		if(totalErrors>0){
+			//alert(totalErrors);
+			$('#validation-alert').fadeIn("slow");
+			$('#validation-alert').html("<button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Error!</strong> There was an error saving your data, please review and correct. <br><r>Total Errors: " + totalErrors);
+			return false;
+		}else{
+			$('#validation-alert').hide();
+		}
+			
+	});
+	   
         var $window = $(window);
 
         // Function to handle changes to style classes based on window width
@@ -1659,9 +1861,7 @@ $(document).ready(function () {
 
         // Bind event listener
         $(window).resize(checkWidth);
-   
-    
-	
+
  });
 
 //clear modal when closing
@@ -1780,6 +1980,47 @@ $("#MoreDx").click(function(){
        for (String measurement : measurements){
 
        }
+    }
+    
+    public String getPattern(String inputType, String mInstructions){
+    	String htmlValidation = "";
+    	String pattern = "";
+    	
+    	EctValidation ectValidation = new EctValidation();
+    	
+		String regExp = null;
+		Double dMax = 0.0;
+		Double dMin = 0.0;
+		Integer iMax = 0;
+		Integer iMin = 0;
+		String vName = null;
+		
+    	List<Validations> vs = ectValidation.getValidationType(inputType, mInstructions);
+    	
+    	if (!vs.isEmpty()) {
+			Validations v = vs.iterator().next();		
+			dMax = v.getMaxValue();
+			dMin = v.getMinValue();
+			iMax = v.getMaxLength();
+			iMin = v.getMinLength();
+			regExp = v.getRegularExp();
+			vName = v.getName().toString();
+		}
+    	
+    	
+    	if(regExp==null && dMax>0){
+    		pattern="min='"+dMin+"' max='"+dMax+"'"; 	
+    	}else if(vName.equals("No Validations")){
+    		pattern="rel='noValidation'";
+    	}else if(vName.equals("Numeric Value greater than or equal to 0")){
+    		pattern="min='0' rel='greaterThanZero'";
+    	}else{
+    		pattern="pattern='"+regExp+"' rel='"+vName+"'";
+    	}
+    	
+    	htmlValidation=pattern;
+    	
+    	return(htmlValidation);
     }
     
     
