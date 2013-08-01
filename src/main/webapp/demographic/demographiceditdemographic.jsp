@@ -3102,8 +3102,14 @@ function callEligibilityWebService(url,id){
 
        var ran_number=Math.round(Math.random()*1000000);
        var params = "demographic=<%=demographic_no%>&method=checkElig&rand="+ran_number;  //hack to get around ie caching the page
-       new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true,onComplete:function(request){Element.hide('search_spinner')},onLoading:function(request){Element.show('search_spinner')}});
- }
+       var response;
+        new Ajax.Request(url+'?'+params, {
+           onSuccess: function(response) {
+                document.getElementById(id).innerHTML=response.responseText ;
+                document.getElementById('search_spinner').innerHTML="";
+           }
+        });
+        }
 
 </script>
 </body>
