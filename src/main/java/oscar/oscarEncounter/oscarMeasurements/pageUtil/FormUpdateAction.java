@@ -95,7 +95,7 @@ public class FormUpdateAction extends Action {
 		
 			
 		for (String measure:measurements){
-			Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
+			Map<String, String> h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
 	        FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
 					
 	               mFlowsheet.getMeasurementFlowSheetInfo(measure);
@@ -112,8 +112,6 @@ public class FormUpdateAction extends Action {
 						
 						if(request.getParameter(name + "_date") !=null && !request.getParameter(name + "_date").equals("")){
 							date=request.getParameter(name + "_date");
-							
-							//2013-07-19 date condition to if date observed is different than today add date to textOnEncounter
 						}
 						
 						valid = doInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), request.getParameter(name), comment, date, apptNo, request);
@@ -127,13 +125,16 @@ public class FormUpdateAction extends Action {
 							textOnEncounter += name + " " + request.getParameter(name) + "\\n";
 						}
 
-					} else if (request.getParameter(name) != null && request.getParameter(name + "_comments") != null && !request.getParameter(name + "_comments").equals("")) {
+					}/* why are comments being allowed here with an empty value?
+					
+					else if (request.getParameter(name) != null && request.getParameter(name + "_comments") != null && !request.getParameter(name + "_comments").equals("")) {
 						String comment = request.getParameter(name + "_comments");
 						if(request.getParameter(name + "_date") !=null && !request.getParameter(name + "_date").equals("")){
 							date=request.getParameter(name + "_date");
 						}
+						
 						doCommentInput(item, mtypeBean, mFlowsheet, mtypeBean.getType(), mtypeBean.getMeasuringInstrc(), comment, date, apptNo, request);
-					}
+					}*/
 
 				}
 		
@@ -149,7 +150,7 @@ public class FormUpdateAction extends Action {
 		
 		session.setAttribute("textOnEncounter", textOnEncounter);
 		
-		if (request.getParameter("submit").equals("Add")) {
+		if (request.getParameter("submit").equals("Add") || request.getParameter("submit").equals("Save")) {
 			return mapping.findForward("reload");
 		} else {
 			return mapping.findForward("success");

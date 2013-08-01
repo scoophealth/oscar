@@ -1224,13 +1224,13 @@
         </action>
         
         <action
-        	path="/oscarEncounter/TrackerUpdate"
+        	path="/oscarEncounter/oscarMeasurements/TrackerUpdate"
         	name="trackerForm"
         	scope="request"
         	type="oscar.oscarEncounter.oscarMeasurements.pageUtil.FormUpdateAction">
         	<forward name="success" path="/oscarEncounter/oscarMeasurements/close.jsp" />
-        	<forward name="reload" path="/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf" />
-        	<forward name="failure" path="/oscarEncounter/oscarMeasurements/FlowUpdate.jsp" />
+        	<forward name="reload" path="/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?reload" />
+        	<forward name="failure" path="/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf" />
         </action>
 
 		<action input="/oscarEncounter/oscarMeasurements/Measurements.jsp" name="EctMeasurementsForm" path="/oscarEncounter/Measurements" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctMeasurementsAction">
@@ -1276,6 +1276,7 @@
 		<action name="EctDeleteDataForm" path="/oscarEncounter/oscarMeasurements/DeleteData2" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataAction">
 			<forward name="success" path="/oscarEncounter/oscarMeasurements/close.jsp" />
 		</action>
+		
 		<action path="/oscarEncounter/oscarMeasurements/SetupAddMeasuringInstruction" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasuringInstructionAction">
 			<forward name="continue" path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp" />
 		</action>
