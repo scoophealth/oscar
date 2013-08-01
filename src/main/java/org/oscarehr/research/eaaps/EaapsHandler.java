@@ -94,23 +94,37 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	private UserDSMessagePrefsDao userDsMessagePrefsDao = SpringUtils.getBean(UserDSMessagePrefsDao.class);
 
 	private ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
-	
+
 	private SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
 
 	@Override
 	public void init(String hl7Body) throws HL7Exception {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Starting processing of: " + hl7Body);
+		if (logger.isInfoEnabled()) {
+			logger.info("Started processing of HL7 message.");
 		}
 
-		// parse the message
-		ORU_R01 message = toMessage(hl7Body);
+		ORU_R01 message;
+		try {
+			// parse the message
+			message = toMessage(hl7Body);
+		} catch (HL7Exception e) {
+			logger.warn("Unable to parse HL7 message", e);
+			throw e;
+		}
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Parsed HL7 message successfully");
+		}
 
 		// save PDF content out of this message
 		String fileName = savePdfContent(message);
-		
+
 		// pull demographic information from the message
 		String hash = getDemographicHash(message);
+		if (logger.isInfoEnabled()) {
+			logger.info("Processing hash code " + hash);
+		}
+
 		StudyData studyData = studyDataDao.findSingleByContent(hash);
 		if (studyData == null) {
 			throw new IllegalStateException("Unable to determine demographic info for " + hash);
@@ -119,58 +133,90 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		if (demo == null) {
 			throw new IllegalStateException("Demographic record is not available for " + hash);
 		}
-		
+		if (logger.isInfoEnabled()) {
+			logger.info("Loaded demographic " + demo.getDemographicNo() + " for hash code " + hash);
+		}
+
 		// create edoc
 		if (fileName != null) {
-			String provider = demo.getProviderNo();
-			if (provider == null || provider.trim().isEmpty()) {
-				provider = studyData.getProviderNo();
+			String provider = studyData.getProviderNo();
+			if (provider == null || provider.isEmpty()) {
+				provider = demo.getProviderNo();
+				if (provider == null) {
+					provider = "";
+				}
 			}
-			String description = "eAAPS Action plan for " + demo.getFullName();
-			
+			String description = "eAAPS Action plan for " + demo.getFormattedName();
+
 			EDoc doc = createEDoc(message, fileName, demo, provider, description);
 			// save edoc
 			int documentId = saveEDoc(provider, doc);
+			if (logger.isInfoEnabled()) {
+				logger.info("Saved edoc " + fileName + " for " + demo.getDemographicNo() + " with provider " + provider + " successfully. Doc Id = " + documentId);
+			}
+
 			// route document to the provider
 			routeDocument(provider, documentId);
+			if (logger.isInfoEnabled()) {
+				logger.info("Routed doc " + documentId + " to " + provider + " successfully.");
+			}
+
 			// and add a case management note so that the AAP can be seen on the eChart
 			addCaseManagementNote(demo, description, CaseManagementNoteLink.DOCUMENT, true);
+			if (logger.isInfoEnabled()) {
+				logger.info("Added case management note successfully.");
+			}
+
 			// make sure that notification will be shown for user
 			clearNotifications(hash);
+			if (logger.isInfoEnabled()) {
+				logger.info("Cleared notification settings successfully.");
+			}
 		}
 
 		String recommendations = getRecommendations(message);
 		if (recommendations != null && !recommendations.isEmpty()) {
 			addCaseManagementNote(demo, recommendations, CaseManagementNoteLink.CASEMGMTNOTE, false);
+			if (logger.isInfoEnabled()) {
+				logger.info("Added recommendations successfully.");
+			}
+		} else {
+			if (logger.isInfoEnabled()) {
+				logger.info("Recommendations are not provided - skipping.");
+			}
 		}
 
 		// make sure we notify the MRP as well
 		notifyMostResponsiblePhysician(message, demo);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Completed processing of HL7 message.");
+		}
 	}
 
 	private void notifyMostResponsiblePhysician(ORU_R01 hl7Message, Demographic demo) {
 		Provider mrp = demo.getProvider();
 		if (mrp == null) {
-			if (logger.isDebugEnabled()) {
+			if (logger.isInfoEnabled()) {
 				logger.info("MRP is not set for " + demo + " - skipping message generation");
 			}
 			return;
 		}
-		
+
 		String mrpNote = getMostResponsiblePhysicianNote(hl7Message);
 		if (mrpNote == null || mrpNote.isEmpty()) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("MRP note content is null for " + demo + "- skipping message generation");
+			if (logger.isInfoEnabled()) {
+				logger.info("MRP note content is null for " + demo + "- skipping message generation");
 			}
 			return;
 		}
-		
+
 		MsgMessageData message = new MsgMessageData();
-		
+
 		String[] providerIds = new String[] { mrp.getProviderNo() };
 		ArrayList<MsgProviderData> providerListing = message.getProviderStructure(providerIds);
 		ArrayList<MsgProviderData> remoteProviders = message.getRemoteProvidersStructure();
-		
+
 		String sentToWho;
 		if (message.isLocals()) {
 			sentToWho = message.createSentToString(providerIds);
@@ -182,7 +228,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 			sentToWho = sentToWho + " " + message.getRemoteNames(remoteProviders);
 		}
 
-		String subject = "eAAPS: Recommendations ready for " + demo.getFullName();
+		String subject = "eAAPS: Recommendations ready for " + demo.getFormattedName();
 		String userName = "eAAPS";
 		String userNo = "N/A";
 		String attachment = null;
@@ -196,16 +242,21 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	private String getMostResponsiblePhysicianNote(ORU_R01 message) {
 		try {
 			NTE nte = message.getPATIENT_RESULT().getORDER_OBSERVATION().getNTE(2);
-			return nte.getComment(0).getValue();
+			return decode(nte.getComment(0).getValue());
 		} catch (HL7Exception e) {
 			throw new IllegalStateException("Unable to get comment field from the message", e);
 		}
 	}
 
+	private String decode(String string) {
+		return new Hl7FormattedTextSupport().decode(string);
+	}
+
 	private String getRecommendations(ORU_R01 message) {
 		try {
 			NTE nte = message.getPATIENT_RESULT().getORDER_OBSERVATION().getNTE(1);
-			return nte.getComment(0).getValue();
+			String commentValue = nte.getComment(0).getValue();
+			return decode(commentValue);
 		} catch (HL7Exception e) {
 			throw new IllegalStateException("Unable to get comment field from the message", e);
 		}
@@ -308,7 +359,6 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 			if (logger.isInfoEnabled()) {
 				logger.info("Unable to load OSCAR program", e);
 			}
-			
 			cmn.setProgram_no("");
 		}
 
@@ -339,6 +389,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	    return "";
     }
 
+
 	private String savePdfContent(ORU_R01 message) throws HL7Exception {
 		NTE nte = message.getPATIENT_RESULT().getORDER_OBSERVATION().getNTE();
 		String base64EncodedPdfContent = nte.getComment(0).getValue();
@@ -346,7 +397,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		if (base64EncodedPdfContent == null || base64EncodedPdfContent.isEmpty()) {
 			return null;
 		}
-		
+
 		byte[] pdf = Base64.decodeBase64(base64EncodedPdfContent);
 
 		// save eAAP document

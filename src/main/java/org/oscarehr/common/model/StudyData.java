@@ -48,6 +48,9 @@ public class StudyData extends AbstractModel<Integer> {
 	@Column(name="demographic_no")
 	private int demographicNo;
 
+	@Column(name="deleted")
+    private boolean deleted;
+	
 	@Column(name="study_no")
 	private int studyNo;
 
@@ -126,6 +129,14 @@ public class StudyData extends AbstractModel<Integer> {
 	public void setKey(String key) {
     	this.keyname = key;
     }
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 
 }
