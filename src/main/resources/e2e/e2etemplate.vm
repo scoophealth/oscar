@@ -544,19 +544,25 @@ Immunization List
 #*    *##if ( $immunization.isRefused() || $immunization.isIneligible() )
 						<substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="true">
 #*    *##else
-						<substanceAdministration classCode="SBADM" moodCode="EVN">
+						<substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
 #*    *##end
 							<id extension="BC20120211VAC-145999X" root="2.16.840.1.113883.3.1818.10.10.3"/>
-							<code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" displayName="Immunization"/>
-							<statusCode code="active"/>
+							<code code="IMMUNIZ" displayName="Immunization" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act Code"/>
+							<!-- Immunization Date -->
 							<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
 #*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "route")} != "" )
-							<routeCode code="PO" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration" displayName="${patient.getImmuExtValue("$immunization.getId()", "route")}"/>
+							<routeCode code="${patient.getImmuExtValue("$immunization.getId()", "route")}" displayName="${patient.getImmuExtValue("$immunization.getId()", "route")}" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration"/>
 #*    *##end
+#*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "dose")} != "" )
+							<!-- Dose Quantity and Type-->
+							<!-- OSCAR Dose: $!{patient.getImmuExtValue("$immunization.getId()", "dose")} -->
 							<doseQuantity nullFlavor="UNK"/>
+#*    *##end
+							<!-- Immunization Product (i.e. DIN) -->
 							<consumable typeCode="CSM">
 								<manufacturedProduct classCode="MANU">
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+## TODO: Add ATC codes when available to code field
 										<code nullFlavor='NA'/>
 										<name>$immunization.preventionType</name>
 #*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "lot")} != "" )
@@ -565,6 +571,7 @@ Immunization List
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>
+							<!-- Immunization Administration Provider -->
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
@@ -575,7 +582,6 @@ Immunization List
 #*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
-									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
 											<given>$patient.getProviderFirstName($immunization.providerNo)</given>
@@ -585,17 +591,49 @@ Immunization List
 								</assignedAuthor>
 							</author>
 #*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "location")} != "" )
-							<!-- Location -->
+							<!-- Immunization Administration Location -->
 							<participant typeCode="LOC" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
 								<!-- Location Participation -->
 								<participantRole classCode="SDLOC">
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.22"/>
-									<playingEntity classCode="PLC" determinerCode="INSTANCE">
+									<playingEntity>
 										<name>${patient.getImmuExtValue("$immunization.getId()", "location")}</name>
 									</playingEntity>
 								</participantRole>
 							</participant>
+#*    *##end
+#*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "comments")} != "" )
+							<!-- Immunization Administration Comments -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+								<!-- Comment Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="COMMENT" displayName="Comment Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<text>${patient.getImmuExtValue("$immunization.getId()", "comments")}</text>
+									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getLastUpdateDate())"/>
+									<value xsi:type="ST">${patient.getImmuExtValue("$immunization.getId()", "comments")}</value>
+									<!-- Comment Author -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+#*    *##if ( $immunization.getCreationDate() )
+										<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
+#*    *##else
+										<time nullFlavor="UNK"/>
+#*    *##end
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>$patient.getProviderFirstName($immunization.providerNo)</given>
+													<family>$patient.getProviderLastName($immunization.providerNo)</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+								</observation>         
+							</entryRelationship>
 #*    *##end
 #*    *##if ( $immunizaton.getNextDate() )
 							<!-- Next Immunization Date -->
@@ -603,22 +641,21 @@ Immunization List
 								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
 								<!-- Date Observation -->
 								<observation classCode="OBS" moodCode="EVN">
-									<code code="DTREVIEW" displayName="Date Reviewed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
+									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
 									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunizaton.getNextDate())"/>
 								</observation>
 							</entryRelationship>
 #*    *##end
 #*    *##if ( ( $immunization.isRefused() || $immunization.isIneligible() ) && ${patient.getImmuExtValue("$immunization.getId()", "neverReason")} )
-							<!-- Reason -->
+							<!-- Immunization or Refusal Reason -->
 							<entryRelationship typeCode="RSON" contextConductionInd="true">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.24"/>
 								<!-- Reason Observation -->
 									<observation classCode="OBS" moodCode="EVN">
-										<id extension="12366" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
-										<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
+										<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
 										<text>${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</text>
-										<effectiveTime value="20120201"/>
-										<value xsi:type="CD" code="10144323" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT" displayName="Patient findings pneumonia"/>
+										<value xsi:type="ST">${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</value>
+										<!-- Reason Author -->
 										<author typeCode="AUT" contextControlCode="OP">
 											<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 											<!-- Author Participation -->
@@ -629,27 +666,15 @@ Immunization List
 #*    *##end
 											<assignedAuthor>
 												<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
-												<code nullFlavor='NA'/>
 												<assignedPerson classCode="PSN" determinerCode="INSTANCE">
-												<name use="L">
-													<given>$patient.getProviderFirstName($immunization.providerNo)</given>
-													<family>$patient.getProviderLastName($immunization.providerNo)</family>
-												</name>
+													<name use="L">
+														<given>$patient.getProviderFirstName($immunization.providerNo)</given>
+														<family>$patient.getProviderLastName($immunization.providerNo)</family>
+													</name>
 												</assignedPerson>
 											</assignedAuthor>
 										</author>
 									</observation>
-							</entryRelationship>
-#*    *##end
-#*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "comments")} != "" )
-							<!-- Immunization Administration Comments -->
-							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
-								<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
-								<!-- Comment Observation -->
-								<observation classCode="OBS" moodCode="EVN">
-									<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation Comment"/>
-									<value xsi:type="ST">${patient.getImmuExtValue("$immunization.getId()", "comments")}</value>
-								</observation>
 							</entryRelationship>
 #*    *##end
 						</substanceAdministration>
