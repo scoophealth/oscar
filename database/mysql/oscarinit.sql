@@ -7460,6 +7460,7 @@ CREATE TABLE study (
 CREATE TABLE studydata (
   studydata_no int(10) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL default '0',
+  deleted tinyint not null,
   study_no int(3) NOT NULL default '0',
   provider_no varchar(6) NOT NULL default '',
   timestamp timestamp NOT NULL,
