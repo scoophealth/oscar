@@ -23,19 +23,23 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.MeasurementCSSLocation;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class MeasurementCSSLocationDaoTest extends DaoTestFixtures {
 
 	protected MeasurementCSSLocationDao dao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
-
 
 	@Before
 	public void before() throws Exception {
@@ -48,5 +52,53 @@ public class MeasurementCSSLocationDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindByLocation() throws Exception {
+		
+		String location1 = "alpha", location2 = "bravo";
+		
+		MeasurementCSSLocation mCSSL1 = new MeasurementCSSLocation();
+		EntityDataGenerator.generateTestDataForModelClass(mCSSL1);
+		mCSSL1.setLocation(location2);
+		dao.persist(mCSSL1);
+		
+		MeasurementCSSLocation mCSSL2 = new MeasurementCSSLocation();
+		EntityDataGenerator.generateTestDataForModelClass(mCSSL2);
+		mCSSL2.setLocation(location1);
+		dao.persist(mCSSL2);
+		
+		MeasurementCSSLocation mCSSL3 = new MeasurementCSSLocation();
+		EntityDataGenerator.generateTestDataForModelClass(mCSSL3);
+		mCSSL3.setLocation(location1);
+		dao.persist(mCSSL3);
+		
+		MeasurementCSSLocation mCSSL4 = new MeasurementCSSLocation();
+		EntityDataGenerator.generateTestDataForModelClass(mCSSL4);
+		mCSSL4.setLocation(location2);
+		dao.persist(mCSSL4);
+		
+		MeasurementCSSLocation mCSSL5 = new MeasurementCSSLocation();
+		EntityDataGenerator.generateTestDataForModelClass(mCSSL5);
+		mCSSL5.setLocation(location1);
+		dao.persist(mCSSL5);
+		
+		List<MeasurementCSSLocation> expectedResult = new ArrayList<MeasurementCSSLocation>(Arrays.asList(mCSSL2, mCSSL3, mCSSL5));
+		List<MeasurementCSSLocation> result = dao.findByLocation(location1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);		
 	}
 }

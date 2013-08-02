@@ -23,7 +23,6 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -81,10 +80,90 @@ public class MeasurementGroupStyleDaoTest extends DaoTestFixtures {
 		}
 		assertTrue(true);
 	}
-
+	
 	@Test
-	public void testFindByCssId() {
-		assertNotNull(dao.findByCssId(10));
+	public void testFindByGroupName() throws Exception {
+		
+		String groupName1 = "alpha", groupName2 = "bravo";
+		
+		MeasurementGroupStyle measurementGrpStyle1 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle1);
+		measurementGrpStyle1.setGroupName(groupName1);
+		dao.persist(measurementGrpStyle1);
+
+		MeasurementGroupStyle measurementGrpStyle2 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle2);
+		measurementGrpStyle2.setGroupName(groupName1);
+		dao.persist(measurementGrpStyle2);
+
+		MeasurementGroupStyle measurementGrpStyle3 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle3);
+		measurementGrpStyle3.setGroupName(groupName2);
+		dao.persist(measurementGrpStyle3);
+		
+		MeasurementGroupStyle measurementGrpStyle4 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle4);
+		measurementGrpStyle4.setGroupName(groupName1);
+		dao.persist(measurementGrpStyle4);
+
+		List<MeasurementGroupStyle> expectedResult = new ArrayList<MeasurementGroupStyle>(Arrays.asList(measurementGrpStyle1, measurementGrpStyle2, measurementGrpStyle4));
+		List<MeasurementGroupStyle> result = dao.findByGroupName(groupName1);
+
+		Logger logger = MiscUtils.getLogger();
+
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))) {
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 
+	@Test
+	public void testFindByCssId() throws Exception {
+		
+		int cssId1 = 101, cssId2 = 202;
+		
+		MeasurementGroupStyle measurementGrpStyle1 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle1);
+		measurementGrpStyle1.setCssId(cssId1);
+		dao.persist(measurementGrpStyle1);
+
+		MeasurementGroupStyle measurementGrpStyle2 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle2);
+		measurementGrpStyle2.setCssId(cssId1);
+		dao.persist(measurementGrpStyle2);
+
+		MeasurementGroupStyle measurementGrpStyle3 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle3);
+		measurementGrpStyle3.setCssId(cssId2);
+		dao.persist(measurementGrpStyle3);
+		
+		MeasurementGroupStyle measurementGrpStyle4 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle4);
+		measurementGrpStyle4.setCssId(cssId1);
+		dao.persist(measurementGrpStyle4);
+
+		List<MeasurementGroupStyle> expectedResult = new ArrayList<MeasurementGroupStyle>(Arrays.asList(measurementGrpStyle1, measurementGrpStyle2, measurementGrpStyle4));
+		List<MeasurementGroupStyle> result = dao.findByCssId(cssId1);
+
+		Logger logger = MiscUtils.getLogger();
+
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))) {
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
 }
