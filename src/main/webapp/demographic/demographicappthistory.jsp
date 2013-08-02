@@ -300,6 +300,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
     out.println("failed!!!");
   } 
   else {
+      
     for(Object obj : appointmentList) {
     	boolean deleted=false;
     	
@@ -317,11 +318,12 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
     		
     		deleted=true;
     	}
-      iRow ++;
+      iRow++;
+      
       if(iRow>iPageSize) break;
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-    		  
+     		  
     ProviderData provider = providerDao.findByProviderNo(appointment.getProviderNo());
     AppointmentStatus as = appointmentStatusDao.findByStatus(appointment.getStatus());
        
@@ -407,7 +409,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   
   if(nItems >=Integer.parseInt(strLimit2)) {
 %> 
-	<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>&showRemote=<%=showRemote%>"
+	<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>&showRemote=<%=showRemote%>">
 		<bean:message key="demographic.demographicappthistory.btnNextPage" /></a>
 <%
 }
