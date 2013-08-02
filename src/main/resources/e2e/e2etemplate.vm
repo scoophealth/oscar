@@ -546,7 +546,7 @@ Immunization List
 #*    *##else
 						<substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
 #*    *##end
-							<id extension="BC20120211VAC-145999X" root="2.16.840.1.113883.3.1818.10.10.3"/>
+							<id extension="$immunization.id" root="2.16.840.1.113883.3.1818.10.10.3"/>
 							<code code="IMMUNIZ" displayName="Immunization" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act Code"/>
 							<!-- Immunization Date -->
 							<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
@@ -654,30 +654,30 @@ Immunization List
 							<entryRelationship typeCode="RSON" contextConductionInd="true">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.24"/>
 								<!-- Reason Observation -->
-									<observation classCode="OBS" moodCode="EVN">
-										<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-										<text>${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</text>
-										<value xsi:type="ST">${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</value>
-										<!-- Reason Author -->
-										<author typeCode="AUT" contextControlCode="OP">
-											<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
-											<!-- Author Participation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<text>${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</text>
+									<value xsi:type="ST">${patient.getImmuExtValue("$immunization.getId()", "neverReason")}</value>
+									<!-- Reason Author -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
 #*        *##if ( $immunization.getCreationDate() )
-											<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
+										<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
 #*        *##else
-											<time nullFlavor="UNK"/>
+										<time nullFlavor="UNK"/>
 #*        *##end
-											<assignedAuthor>
-												<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
-												<assignedPerson classCode="PSN" determinerCode="INSTANCE">
-													<name use="L">
-														<given>$patient.getProviderFirstName($immunization.providerNo)</given>
-														<family>$patient.getProviderLastName($immunization.providerNo)</family>
-													</name>
-												</assignedPerson>
-											</assignedAuthor>
-										</author>
-									</observation>
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>$patient.getProviderFirstName($immunization.providerNo)</given>
+													<family>$patient.getProviderLastName($immunization.providerNo)</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+								</observation>
 							</entryRelationship>
 #*    *##end
 						</substanceAdministration>
@@ -704,15 +704,15 @@ Laboratory Results & Results
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
-					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Laboratory Report"/>
+					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
 					<title>Laboratory Results and Reports [with entries]</title>
 					<text>Labs</text>
 #**##foreach( $lab in $patient.getLabs() )
 					<entry typeCode="COMP" contextConductionInd="true">
-						<!-- Laboratory Observation -->
 						<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
-						<observation classCode="OBS" moodCode="RQO">
-							<id extension="$lab.hl7TextInfo.id" root="TBD"/>
+						<!-- Laboratory Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$lab.hl7TextInfo.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
 							<code nullFlavor='UNK'/>
 #*    *##if ( $lab.hl7TextInfo.discipline )
 							<text>$!lab.hl7TextInfo.discipline</text>
@@ -728,9 +728,8 @@ Laboratory Results & Results
 #*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
-									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
-										<name use="L">$patient.cleanString($lab.hl7TextInfo.requestingProvider)</name>
+										<name>$patient.cleanString($lab.hl7TextInfo.requestingProvider)</name>
 									</assignedPerson>
 								</assignedAuthor>
 							</author>
@@ -742,7 +741,6 @@ Laboratory Results & Results
 								<organizer classCode="BATTERY" moodCode="EVN">
 									<id extension="$labGroup.groupId" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
 									<code nullFlavor='UNK'/>
-## ValueSet OID not yet available - using Business Name/Description for now
 ## This status code comes from entire lab report - doesn't represent just this battery group
 #*        *##if ( $lab.hl7TextInfo.reportStatus == "P" )
 									<statusCode code="preliminary"/>
@@ -767,7 +765,6 @@ Laboratory Results & Results
 											<code nullFlavor='UNK'/>
 #*        *##end
 											<text>${patient.getLabExtValue("$labEntry.id", "name")}</text>
-## ValueSet OID not yet available - using Business Name/Description for now
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "olis_status")} == "P" )
 											<statusCode code="preliminary"/>
 #*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "olis_status")} == "C" )
@@ -788,21 +785,22 @@ Laboratory Results & Results
 											<value xsi:type="ST">$patient.cleanString($labEntry.dataField)</value>
 #*            *##end
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "abnormal")} == "A" )
-											<interpretationCode code="A"/>
+											<interpretationCode code="A"  displayName="Abnormal" codeSystem="2.16.840.1.113883.2.20.3.78" codeSystemName="ObservationInterpretation"/>
 #*            *##else
-											<interpretationCode code="N"/>
+											<interpretationCode code="N"  displayName="Normal" codeSystem="2.16.840.1.113883.2.20.3.78" codeSystemName="ObservationInterpretation"/>
 #*            *##end
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "labname")} != "" )
+											<!-- Resulting Organization -->
 											<performer typeCode="PRF">
 												<templateId root="2.16.840.1.113883.3.1818.10.4.19"/>
-												<!--Performer Participation-->
+												<!-- Performer Participation -->
 #*                *##if ( ${patient.getLabExtValue("$labEntry.id", "datetime")} )
 												<time value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate(${patient.getLabExtValue("$labEntry.id", "datetime")}))"/>
 #*                *##else
 												<time nullFlavor="UNK"/>
 #*                *##end
 												<assignedEntity>
-													<id extension="TBD" root="TBD"/>
+													<id extension="TBD" root="2.16.840.1.113883.3.40.2.11" assigningAuthorityName="BCMOH"/>
 													<representedOrganization classCode="ORG" determinerCode="INSTANCE">
 														<id extension="TBD" root="TBD"/>
 														<name>${patient.getLabExtValue("$labEntry.id", "labname")}</name>
@@ -810,16 +808,29 @@ Laboratory Results & Results
 												</assignedEntity>
 											</performer>
 #*            *##end
+											<!--Specimen Collection Information -->
 											<entryRelationship typeCode="COMP">
 												<procedure classCode="PROC" moodCode="EVN">
 													<!-- specimen collection date -->
 													<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 												</procedure>
 											</entryRelationship>
+#*            *##if ( $labEntry.comments != "" )
+											<!-- Result Notes -->
+											<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+												<!-- Comment Observation -->
+												<observation classCode="OBS" moodCode="EVN">
+													<code code="COMMENT" displayName="Comment Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+													<value xsi:type="ST">$labEntry.comments</value>
+												</observation>
+											</entryRelationship>
+#*            *##end
+## Range is more general than Minimum/Maximum - OSCAR only populates Range if it can't determine a min/max
 #*            *##if ( ${patient.getLabExtValue("$labEntry.id", "range")} != "" )
 											<referenceRange typeCode="REFV">
 												<observationRange classCode="OBS" moodCode="EVN.CRT">
-													<code code="$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "identifier")})" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
+													<code code="N" displayName="Normal" codeSystem="2.16.840.1.113883.1.11.10206" codeSystemName="ObservationInterpretationNormality"/>
 													<text>$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "range")})</text>
 													<value xsi:type="ST">$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "range")})</value>
 												</observationRange>
@@ -827,23 +838,25 @@ Laboratory Results & Results
 #*            *##elseif ( ${patient.getLabExtValue("$labEntry.id", "minimum")} != "" || ${patient.getLabExtValue("$labEntry.id", "maximum")} != "" )
 											<referenceRange typeCode="REFV">
 												<observationRange classCode="OBS" moodCode="EVN.CRT">
-													<code code="$patient.cleanString(${patient.getLabExtValue("$labEntry.id", "identifier")})" displayName="${patient.getLabExtValue("$labEntry.id", "name")}" codeSystemName="LOINC"/>
-													<text>${patient.getLabExtValue("$!labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</text>
-													<value xsi:type="ST">$!{patient.getLabExtValue("$labEntry.id", "minimum")}...$!{patient.getLabExtValue("$labEntry.id", "maximum")}</value>
+													<code code="N" displayName="Normal" codeSystem="2.16.840.1.113883.1.11.10206" codeSystemName="ObservationInterpretationNormality"/>
+#*                *##if ( ${patient.getLabExtValue("$labEntry.id", "minimum")} == "" )
+													<text>Normal Reference range is less than $!{patient.getLabExtValue("$labEntry.id", "maximum")}</text>
+#*                *##elseif ( ${patient.getLabExtValue("$labEntry.id", "maximum")} == "" )
+													<text>Normal Reference range is greater than ${patient.getLabExtValue("$!labEntry.id", "minimum")}</text>
+#*                *##else
+													<text>Normal Reference range is between ${patient.getLabExtValue("$!labEntry.id", "minimum")} and $!{patient.getLabExtValue("$labEntry.id", "maximum")}</text>
+#*                *##end
+													<value xsi:type="IVL_REAL">
+#*                *##if ( ${patient.getLabExtValue("$labEntry.id", "minimum")} != "" )
+														<low value="${patient.getLabExtValue("$labEntry.id", "minimum")}"/> 
+#*                *##end
+#*                *##if ( ${patient.getLabExtValue("$labEntry.id", "maximum")} != "" )
+														<high value="${patient.getLabExtValue("$labEntry.id", "maximum")}"/> 
+#*                *##end
+													</value>
 												</observationRange>
 											</referenceRange>
 #*            *##else
-#*            *##end
-#*            *##if ( $labEntry.comments != "" )
-											<!-- Result Notes -->
-											<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
-												<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
-												<!-- Comment Observation -->
-												<observation classCode="OBS" moodCode="EVN">
-													<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation Comment"/>
-													<value xsi:type="ST">$labEntry.comments</value>
-												</observation>
-											</entryRelationship>
 #*            *##end
 										</observation>
 									</component>
@@ -860,7 +873,7 @@ Laboratory Results & Results
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.16"/>
-					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Laboratory Report"/>
+					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
 					<title>Laboratory Results and Reports [without entries]</title>
 					<text>No Laboratory Report Entries</text>
 				</section>
