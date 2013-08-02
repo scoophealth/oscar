@@ -375,9 +375,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             return false;
         }
 
-        function printPDF(){
-            document.acknowledgeForm.action="PrintPDF.do";
-            document.acknowledgeForm.submit();
+        function printPDF(labid){
+        	var frm = "acknowledgeForm_" + labid;
+        	document.forms[frm].action="PrintPDF.do";
+        	document.forms[frm].submit();            
         }
 
 	function linkreq(rptId, reqId) {
@@ -480,20 +481,19 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             var data=$(formid).serialize(true);
 
             new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-
-                 
-                	 try {
-                    	window.opener.Effect.BlindUp('labdoc_'+labid);
-                        window.opener.refreshCategoryList();
-                     } catch (e) {
-                    	try {
-                    		Effect.BlindUp("lab_"+labid);
-                    	}
-                    	catch(e) {
-                    		window.close();
-                    	}
-                     }
-
+            	
+            	if( <%=showAll%> ) {                	
+                	window.location.reload();
+                }
+            	else if( window.opener.document.getElementById('labdoc_'+labid) != null ) {
+                	window.opener.Effect.BlindUp('labdoc_'+labid);
+                    window.opener.refreshCategoryList();  
+                    window.close();
+            	}
+                else {
+                	window.close();
+                }
+                
         }});
 
         }
@@ -652,7 +652,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(355, 675, '../../../oscarMDS/SelectProvider.jsp?docId=<%=segmentID%>&labDisplay=true', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                    <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
+                                    <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF('<%=segmentID%>')">
 
                                     <input type="button" value="Msg" onclick="handleLab('','<%=segmentID%>','msgLab');"/>
                                     <input type="button" value="Tickler" onclick="handleLab('','<%=segmentID%>','ticklerLab');"/>
@@ -1574,7 +1574,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(397, 700, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                    <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
+                                    <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF('<%=segmentID%>')">
                                     <oscarProperties:oscarPropertiesCheck property="MY_OSCAR" value="yes">
                                         <indivo:indivoRegistered demographic="<%=demographicID%>" provider="<%=providerNo%>">
                                         <input type="button" value="<bean:message key="global.btnSendToPHR"/>" onClick="sendToPHR('<%=segmentID%>', '<%=demographicID%>')">
