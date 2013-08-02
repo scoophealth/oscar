@@ -23,9 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +41,6 @@ import org.oscarehr.util.SpringUtils;
 public class LookupListDaoTest extends DaoTestFixtures {
 
 	protected LookupListDao dao = SpringUtils.getBean(LookupListDao.class);
-
 
 	@Before
 	public void before() throws Exception {
@@ -65,7 +62,7 @@ public class LookupListDaoTest extends DaoTestFixtures {
 		String name2 = "bravo";
 		String name3 = "charlie";
 		
-		boolean isActive =true;
+		boolean isActive = true;
 		
 		LookupList lookupList1 = new LookupList();
 		EntityDataGenerator.generateTestDataForModelClass(lookupList1);
@@ -107,5 +104,33 @@ public class LookupListDaoTest extends DaoTestFixtures {
 			}
 		}
 		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindByName() throws Exception {
+		
+		String name1 = "alpha";
+		String name2 = "bravo";
+		String name3 = "charlie";
+		
+		LookupList lookupList1 = new LookupList();
+		EntityDataGenerator.generateTestDataForModelClass(lookupList1);
+		lookupList1.setName(name2);
+		dao.persist(lookupList1);
+		
+		LookupList lookupList2 = new LookupList();
+		EntityDataGenerator.generateTestDataForModelClass(lookupList2);
+		lookupList2.setName(name1);
+		dao.persist(lookupList2);
+		
+		LookupList lookupList3 = new LookupList();
+		EntityDataGenerator.generateTestDataForModelClass(lookupList3);
+		lookupList3.setName(name3);
+		dao.persist(lookupList3);
+		
+		LookupList expectedResult = lookupList2;
+		LookupList result = dao.findByName(name1);
+		
+		assertEquals(expectedResult, result);
 	}
 }

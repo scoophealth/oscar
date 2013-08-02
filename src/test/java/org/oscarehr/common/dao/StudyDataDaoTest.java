@@ -26,9 +26,7 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +47,75 @@ public class StudyDataDaoTest extends DaoTestFixtures {
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("studydata");
+	}
+	
+	@Test
+	public void testFindByContent() throws Exception {
+		
+		String content1 = "alpha", content2 = "bravo";
+		
+		StudyData studyData1 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData1);
+		studyData1.setContent(content1);
+		dao.persist(studyData1);
+		
+		StudyData studyData2 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData2);
+		studyData2.setContent(content2);
+		dao.persist(studyData2);
+		
+		StudyData studyData3 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData3);
+		studyData3.setContent(content1);
+		dao.persist(studyData3);
+		
+		StudyData studyData4 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData4);
+		studyData4.setContent(content1);
+		dao.persist(studyData4);
+		
+		List<StudyData> result = dao.findByContent(content1);
+		List<StudyData> expectedResult = new ArrayList<StudyData>(Arrays.asList(studyData1, studyData3, studyData4));
+		
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items do not match.");
+				fail("Items do not match.");
+			}
+		}
+		assertTrue(true);	
+	}
+	
+	@Test
+	public void testFindSingleByContent() throws Exception {
+		
+		String content1 = "alpha", content2 = "bravo";
+		
+		StudyData studyData1 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData1);
+		studyData1.setContent(content1);
+		dao.persist(studyData1);
+		
+		StudyData studyData2 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData2);
+		studyData2.setContent(content2);
+		dao.persist(studyData2);
+		
+		StudyData studyData3 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData3);
+		studyData3.setContent(content1);
+		dao.persist(studyData3);
+		
+		StudyData expectedResult = studyData2;
+		StudyData result = dao.findSingleByContent(content2);
+		
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
