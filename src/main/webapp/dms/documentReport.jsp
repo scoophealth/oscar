@@ -440,11 +440,13 @@ function popup1(height, width, url, windowName){
                     //content type (take everything following '/')
                     int slash = 0;
                     String contentType = "";
-                    if ((slash = curdoc.getContentType().indexOf('/')) != -1) {
+                    if( curdoc.getContentType() == null ) {
+                		contentType = "N/A";
+                    }else if ((slash = curdoc.getContentType().indexOf('/')) != -1) {
                         contentType = curdoc.getContentType().substring(slash+1);
                     } else {
-			contentType = curdoc.getContentType();
-		    }
+						contentType = curdoc.getContentType();
+		    		}
                     String dStatus = "";
                     if ((curdoc.getStatus() + "").compareTo("H") == 0)
                         dStatus="html";
@@ -469,7 +471,7 @@ function popup1(height, width, url, windowName){
 					%>	<a <%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
 						href="<%=url%>" target="_blank"> <%=curdoc.getDescription()%></a></td>
 					<td><%=contentType%></td>
-					<td><%=curdoc.getType()%></td>
+					<td><%=curdoc.getType()==null ? "N/A" : curdoc.getType()%></td>
 					<td><%=curdoc.getCreatorName()%></td>
 					<td><%=curdoc.getResponsibleName()%></td>
 					<td><%=curdoc.getObservationDate()%></td>
