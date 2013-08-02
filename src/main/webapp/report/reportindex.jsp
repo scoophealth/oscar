@@ -107,9 +107,9 @@ function selectprovider(s) {
 
 function ogo() {
   var region = '<%=billingRegion%>';
-  var s = document.report.startDate.value.replace('/', '-');
+  var s = document.getElementsByName("startDate")[0].value;
   s = s.replace('/', '-');
-  var e = document.report.endDate.value.replace('/', '-');
+  var e = document.getElementsByName("endDate")[0].value;
   e = e.replace('/', '-');
   var u = '';
   if (region == "BC") u = 'reportbcedblist.jsp?startDate=' + s + '&endDate=' + e;
@@ -119,9 +119,9 @@ function ogo() {
 
 function ogo2() {
   var region = '<%=billingRegion%>';  
-  var s = document.report.startDate.value.replace('/', '-');
+  var s = document.getElementsByName("startDate")[0].value;
   s = s.replace('/', '-');
-  var e = document.report.endDate.value.replace('/', '-');
+  var e = document.getElementsByName("endDate")[0].value;
   e = e.replace('/', '-');
   var u = '';
   if (region == "BC") u = 'reportbcedblist2007.jsp?startDate=' + s + '&endDate=' + e;
@@ -140,19 +140,21 @@ function popupPageNew(vheight,vwidth,varpage) {
   }
 }
 
+
+
 function go(r) {
-//s.options[s.selectedIndex].value
-  var s = document.report.provider_no.value ;
-  var t = document.report.sdate.value ;
-  var u = document.report.asdate.value ;
-  var v = document.report.aedate.value ;
-  var y = document.report.sTime.value ;
-  var z = document.report.eTime.value ;  
-  var ro = document.report.rosteredOnly.checked;
+  var s = document.getElementsByName("provider_no")[0].value;
+  var t = document.getElementsByName("sdate")[0].value;
+  var u = document.getElementsByName("asdate")[0].value;
+  var v = document.getElementsByName("aedate")[0].value;
+  var y = document.getElementsByName("sTime")[0].value;
+  var z = document.getElementsByName("eTime")[0].value;
+  var ro = document.getElementById("rosteredOnly").checked;
+  var td = document.getElementsByName("tabDay")[0].value;
   var w = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
   var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z ;
   var x2 = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z + '&rosteredStatus=true';
-  var y2 =  'tabulardaysheetreport.jsp?provider_no=' + s +'&sdate=' + document.report.tabDay.value.replace('/', '-');
+  var y2 =  'tabulardaysheetreport.jsp?provider_no=' + s +'&sdate=' + td.replace('/', '-');
 
 if (r=='tab')
 {
@@ -171,18 +173,20 @@ else if(r=='new') {
 }
 
 function gonew(r) {
-//s.options[s.selectedIndex].value
-var s = document.report.provider_no.value ;
-var t = document.report.sdate.value ;
-var u = document.report.asdate.value ;
-var v = document.report.aedate.value ;
-var y = document.report.sTime.value ;
-var z = document.report.eTime.value ;
-var ro = document.report.rosteredOnly.checked;
+
+var s = document.getElementsByName("provider_no")[0].value;
+var t = document.getElementsByName("sdate")[0].value;
+var u = document.getElementsByName("asdate")[0].value;
+var v = document.getElementsByName("aedate")[0].value;
+var y = document.getElementsByName("sTime")[0].value;
+var z = document.getElementsByName("eTime")[0].value;
+var ro = document.getElementById("rosteredOnly").checked;
+var td = document.getElementsByName("tabDay")[0].value;
+
 var w = 'reportdaysheet2.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
 var x = 'reportdaysheet2.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z ;
 var x2 = 'reportdaysheet2.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z + '&rosteredStatus=true';
-var y2 =  'tabulardaysheetreport.jsp?provider_no=' + s +'&sdate=' + document.report.tabDay.value.replace('/', '-');
+var y2 =  'tabulardaysheetreport.jsp?provider_no=' + s +'&sdate=' + td.replace('/', '-');
 
 if (r=='tab')
  {
@@ -201,32 +205,33 @@ popupPage(600,750,w);
    }
 
 function ggo(r) {
-//s.options[s.selectedIndex].value
-  var s = document.report.pprovider_no.value ;
-  var t = document.report.ssdate.value ;
+  var s = document.getElementsByName("pprovider_no")[0].value;
+  var t = document.getElementsByName("ssdate")[0].value;
+  
   var u = 'reportapptsheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
 	popupPage(600,750,u);
 }
 ONCLICK ="popupPage(600,750,'reportpatientchartlist.jsp')"
 function pcgo() {
-  var s = document.report.pcprovider_no.value ;
+  var s = document.getElementsByName("pcprovider_no")[0].value;
   var u = 'reportpatientchartlist.jsp?provider_no=' + s;
 	popupPage(600,750,u);
 }
 function opcgo() {
-  var s = document.report.opcprovider_no.value ;
-  var a = document.report.age.value ;
+  var s = document.getElementsByName("opcprovider_no")[0].value;
+  var a = document.getElementsByName("age")[0].value;
   var u = 'reportpatientchartlistspecial.jsp?provider_no=' + s + '&age=' + a;
 	popupPage(600,1010,u);
 }
 function nsgo() {
-  var s = document.report.nsprovider_no.value ;
-  var t = document.report.nsdate.value ;
+  var s = document.getElementsByName("nsprovider_no")[0].value;
+  var t = document.getElementsByName("nsdate")[0].value;
   var u = 'reportnoshowapptlist.jsp?provider_no=' + s +'&sdate='+ t;
 	popupPage(600,750,u);
 }
 function popUpWaitingList(vheight,vwidth,varpage) {
-    var page = varpage + document.report.list_id.options[document.report.list_id.selectedIndex].value;
+	var listIdObject = document.getElementsByName("list_id")[0];
+	var page = varpage + listIdObject.options[listIdObject.selectedIndex].value;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
     var popup=window.open(page, "Waiting List", windowprops);
 }
@@ -269,13 +274,13 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 			ONCLICK="ogo2()">05</a> <% } %>
 		</td>
 		<td><a HREF="#"
-			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.startDate.value")%>')">
+			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.getElementsByName('startDate')[0].value")%>')">
 		<bean:message key="report.reportindex.formFrom" /></a> 
 		<%-- any early default start date should suffice for reporting all --%>
 		<INPUT TYPE="text" NAME="startDate" VALUE="<%=today%>" size='10'>
 		</td>
 		<td><a HREF="#"
-			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.endDate.value")%>')">
+			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.getElementsByName('endDate')[0].value")%>')">
 		<bean:message key="report.reportindex.formTo" /></a> <INPUT TYPE="text"
 			NAME="endDate" VALUE="<%=today%>" size='10'></td>
 		<td><INPUT TYPE="button" NAME="button"
@@ -343,11 +348,11 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
                         <sup>*</sup><a HREF="#" ONCLICK="go('all')"><bean:message
 			key="report.reportindex.btnAllAppt" /></a><br>&nbsp;&nbsp; <bean:message key="report.reportindex.chkRostered"/> <input type="checkbox" id="rosteredOnly" value="true"> </td>
 		<td><a HREF="#"
-			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.asdate.value")%>')"><bean:message
+			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.getElementsByName('asdate')[0].value")%>')"><bean:message
 			key="report.reportindex.formFrom" /></a> <input type='text' name="asdate"
 			VALUE="<%=today%>" size=10></td>
 		<td><a HREF="#"
-			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.aedate.value")%>')"><bean:message
+			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.getElementsByName('aedate')[0].value")%>')"><bean:message
 			key="report.reportindex.formTo" /> </a> <input type='text' name="aedate"
 			VALUE="<%=today%>" size=10></td>
 		<td><select name="sTime">
@@ -394,12 +399,12 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     <!-- add lab day sheet -->
         <script type="text/javascript">
         function labgo(s) {
-                var t = document.report.apptDate.value ;
+                var t = document.getElementsByName("apptDate")[0].value;
                 var u = 'printLabDaySheetAction.do?xmlStyle=labDaySheet.xml&input_date=' + t;
                 popupPage(600,1000,u);
         }
         function labgo1(s) {
-                var t = document.report.apptDate1.value ;
+        	var t = document.getElementsByName("apptDate1")[0].value;
                 var u = 'printLabDaySheetAction.do?xmlStyle=billDaySheet.xml&input_date=' + t;
                 popupPage(600,1000,u);
         }
@@ -611,7 +616,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
                 String NoShowEDate = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE);
             	%> <bean:message key="report.reportindex.msgStart"/>: <input name="nsdate" type="input" size="8"
 			id="NoShowDate" <%=NoShowEDate%>> <a HREF="#"
-			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.nsdate.value")%>')"><img
+			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.getElementsByName('nsdate')[0].value")%>')"><img
 			title=Calendar " src="../images/cal.gif" alt="Calendar" border="0"><a>
 
 
