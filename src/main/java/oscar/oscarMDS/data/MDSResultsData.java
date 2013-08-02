@@ -406,9 +406,15 @@ public class MDSResultsData {
                 if(lData.resultStatus == null){
                     lData.resultStatus = "0";
                 }
-                lData.dateTime = ConversionUtils.toDateString(mdsMSHdateTime);
+                lData.dateTime = ConversionUtils.toDateString(mdsMSHdateTime,ConversionUtils.DEFAULT_TS_PATTERN);
+                
+                
                 lData.setDateObj(UtilDateUtilities.getDateFromString(lData.dateTime, "yyyy-MM-dd HH:mm:ss"));
-
+                
+                if( lData.getDateObj() == null ) {                
+                	lData.setDateObj(UtilDateUtilities.getDateFromString(lData.dateTime, "yyyy-MM-dd"));
+                }
+                
                 String quantityTimimg = mdsOBRquantityTiming;
                 if(quantityTimimg != null){
                     switch ( quantityTimimg.charAt(0) ) {
