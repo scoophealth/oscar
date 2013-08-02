@@ -333,9 +333,8 @@ boolean dupServiceCode = false;
     			var idx = 0;
     			var displayTotal = "0.00";
     			
-    			while( (codeFees = document.getElementById("percCodeSubtotal_" + idx)) ) {
-    				unit = document.getElementById("xserviceUnit_"+idx);    			
-    				total += (codeFees.value * unit.value);
+    			while( (codeFees = document.getElementById("percCodeSubtotal_" + idx)) ) {    				    			
+    				total += parseInt(codeFees.value);
     				++idx;
     			}
     		    			
