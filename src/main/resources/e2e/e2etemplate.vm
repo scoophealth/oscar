@@ -562,8 +562,11 @@ Immunization List
 							<consumable typeCode="CSM">
 								<manufacturedProduct classCode="MANU">
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
-## TODO: Add ATC codes when available to code field
-										<code nullFlavor='NA'/>
+#*    *##if ( ${e2e.preventionTypeMap($immunization.preventionType)} )
+										<code code="${e2e.preventionTypeMap($immunization.preventionType)}" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$immunization.preventionType"/>
+#*    *##else
+										<code nullFlavor="UNK"/>
+#*    *##end
 										<name>$immunization.preventionType</name>
 #*    *##if ( ${patient.getImmuExtValue("$immunization.getId()", "lot")} != "" )
 										<lotNumberText>${patient.getImmuExtValue("$immunization.getId()", "lot")}</lotNumberText>
@@ -617,11 +620,11 @@ Immunization List
 									<author typeCode="AUT" contextControlCode="OP">
 										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 										<!-- Author Participation -->
-#*    *##if ( $immunization.getCreationDate() )
+#*        *##if ( $immunization.getCreationDate() )
 										<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
-#*    *##else
+#*        *##else
 										<time nullFlavor="UNK"/>
-#*    *##end
+#*        *##end
 										<assignedAuthor>
 											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
@@ -659,11 +662,11 @@ Immunization List
 										<author typeCode="AUT" contextControlCode="OP">
 											<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 											<!-- Author Participation -->
-#*    *##if ( $immunization.getCreationDate() )
+#*        *##if ( $immunization.getCreationDate() )
 											<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
-#*    *##else
+#*        *##else
 											<time nullFlavor="UNK"/>
-#*    *##end
+#*        *##end
 											<assignedAuthor>
 												<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 												<assignedPerson classCode="PSN" determinerCode="INSTANCE">

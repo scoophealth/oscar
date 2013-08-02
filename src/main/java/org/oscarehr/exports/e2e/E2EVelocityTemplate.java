@@ -27,9 +27,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.exports.PatientExport;
@@ -140,10 +145,13 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	 */
 	public static class E2EResources {
 		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2e/e2eformcode.csv";
+		private static final String OSCAR_PREVENTIONITEMS_FILE = "/oscar/oscarPrevention/PreventionItems.xml";
 		private static Map<String,String> formCodes = null;
+		private static Map<String,String> preventionTypeCodes = null;
 
 		public E2EResources() {
 			loadFormCode();
+			loadPreventionItems();
 		}
 
 		/**
@@ -178,6 +186,42 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		}
 
 		/**
+		 * Loads the preventionitems name to atc mapping
+		 */
+		private void loadPreventionItems() {
+			if(preventionTypeCodes == null) {
+				InputStream is = null;
+				try {
+					is = E2EVelocityTemplate.class.getResourceAsStream(OSCAR_PREVENTIONITEMS_FILE);
+
+					preventionTypeCodes = new HashMap<String,String>();
+					SAXBuilder parser = new SAXBuilder();
+					Document doc = parser.build(is);
+					Element root = doc.getRootElement();
+					@SuppressWarnings("unchecked")
+					List<Element> items = root.getChildren("item");
+					for(Element e : items) {
+						Attribute name = e.getAttribute("name");
+						Attribute atc = e.getAttribute("atc");
+						if(atc != null && atc.getValue().length() > 0) {
+							preventionTypeCodes.put(name.getValue(), atc.getValue());
+						}
+					}
+
+					log.info("Loaded Prevention Items Code Mapping");
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		/**
 		 * Takes in a formcode string and returns the E2E Form Code result if available
 		 * 
 		 * @param rhs
@@ -186,6 +230,20 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		public String formCodeMap(String rhs) {
 			if(formCodes.containsKey(rhs)) {
 				return formCodes.get(rhs);
+			}
+
+			return null;
+		}
+
+		/**
+		 * Takes in a prevention type string and returns the ATC result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
+		public String preventionTypeMap(String rhs) {
+			if(preventionTypeCodes.containsKey(rhs)) {
+				return preventionTypeCodes.get(rhs);
 			}
 
 			return null;

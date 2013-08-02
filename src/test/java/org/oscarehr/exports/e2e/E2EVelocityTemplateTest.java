@@ -127,6 +127,12 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		assertNull("Empty formcode map didn't return null", e.formCodeMap(""));
 	}
 
+	@Test
+	public void testPreventionTypeMap() {
+		E2EResources e = new E2EResources();
+		assertNull("Empty prevention type map didn't return null", e.preventionTypeMap(""));
+	}
+
 	/*	@Test
 	public void tortureTest() {
 		long startTime = System.nanoTime();
