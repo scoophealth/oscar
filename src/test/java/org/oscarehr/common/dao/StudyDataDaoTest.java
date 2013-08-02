@@ -34,6 +34,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.StudyData;
@@ -50,6 +51,7 @@ public class StudyDataDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
+	@Ignore
 	public void testFindByContent() throws Exception {
 		
 		String content1 = "alpha", content2 = "bravo";
@@ -93,6 +95,7 @@ public class StudyDataDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
+	@Ignore
 	public void testFindSingleByContent() throws Exception {
 		
 		String content1 = "alpha", content2 = "bravo";
