@@ -23,8 +23,16 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.BornTransmissionLog;
 import org.springframework.stereotype.Repository;
+
+import oscar.util.UtilDateUtilities;
 
 @Repository
 public class BornTransmissionLogDao extends AbstractDao<BornTransmissionLog>{
@@ -33,4 +41,19 @@ public class BornTransmissionLogDao extends AbstractDao<BornTransmissionLog>{
 		super(BornTransmissionLog.class);
 	}
 	
+	public Long getSeqNoToday(String filenameStart, Integer id) {
+		String today = UtilDateUtilities.getToday("yyyy-MM-dd");
+		Date todayDate = UtilDateUtilities.StringToDate(today, "yyyy-MM-dd");
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.setTime(todayDate);
+		cal.roll(Calendar.DATE, 1);
+		String tomorrow = UtilDateUtilities.DateToString(cal.getTime(), "yyyy-MM-dd");
+		
+		String sql = "select count(*) from BornTransmissionLog b" +
+					 " where b.filename like '" + filenameStart + "%' and b.id < " + id +
+					 " and b.submitDateTime >= '" + today + "' and b.submitDateTime < '" + tomorrow + "'";
+		Query query = entityManager.createQuery(sql);
+
+		return (Long) query.getSingleResult()+1;
+	}
 }
