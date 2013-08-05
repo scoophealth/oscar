@@ -60,10 +60,12 @@ import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.common.model.Tickler;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -99,6 +101,7 @@ public class EFormUtil {
 	private static EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean(EFormValueDao.class);
 	private static EFormGroupDao eFormGroupDao = (EFormGroupDao) SpringUtils.getBean(EFormGroupDao.class);
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean(ProviderDao.class);
+	private static TicklerDao ticklerDao = SpringUtils.getBean(TicklerDao.class);
 
 	private EFormUtil() {
 	}
@@ -740,7 +743,7 @@ public class EFormUtil {
 			if (StringUtils.isBlank(belong)) belong = "provider";
 			String docOwner = getInfo("docowner", template, eForm.getProviderNo());
 			if (belong.equalsIgnoreCase("patient")) docOwner = getInfo("docowner", template, eForm.getDemographicNo());
-			String docText = getContent(template);
+			String docText = getContent("content", template);
 			docText = putTemplateEformHtml(eForm.getFormHtml(), docText);
 
 			if (NumberUtils.isDigits(docOwner)) {
@@ -761,11 +764,27 @@ public class EFormUtil {
 			String[] sentList = getSentList(template);
 			String userNo = eForm.getProviderNo();
 			String userName = providerDao.getProviderName(eForm.getProviderNo());
-			String message = getContent(template);
+			String message = getContent("content", template);
 			message = putTemplateEformHtml(eForm.getFormHtml(), message);
 
 			MsgMessageData msg = new MsgMessageData();
 			msg.sendMessage2(message, subject, userName, sentWho, userNo, msg.getProviderStructure(sentList), null, null);
+		}
+		
+		// write to ticklers
+		templates = getWithin("tickler", text);
+		for (String template : templates) {
+			if (StringUtils.isBlank(template)) continue;
+			
+			String taskAssignedTo = getInfo("taskAssignedTo", template, eForm.getProviderNo());
+			String message = getContent("tickMsg", template);
+			
+			Tickler tickler = new Tickler();
+			tickler.setTaskAssignedTo(taskAssignedTo);
+			tickler.setMessage(message);
+			tickler.setDemographicNo(Integer.valueOf(eForm.getDemographicNo()));
+			tickler.setCreator(eForm.getProviderNo());
+			ticklerDao.persist(tickler);
 		}
 	}
 
@@ -1044,8 +1063,8 @@ public class EFormUtil {
 		return StringUtils.isBlank(info) ? deflt : info;
 	}
 
-	private static String getContent(String template) {
-		ArrayList<String> contents = getWithin("content", template);
+	private static String getContent(String tag, String template) {
+		ArrayList<String> contents = getWithin(tag, template);
 		if (contents.isEmpty()) return "";
 
 		String content = contents.get(0).trim();
