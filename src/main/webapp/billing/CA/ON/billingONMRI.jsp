@@ -144,7 +144,7 @@ function checkSubmit() {
 	return true;   
 }
 function recreate(si) {
-    ret = confirm("Are you sure you want to do the action?");
+    ret = confirm("Are you sure you want to regenerate the file? \n\nWARNING: This should only be performed in very specific circumstances. If you are unsure, consult your OSCAR administrator before using this feature.");
 	if(ret) {
 		ss=document.forms[0].billcenter[document.forms[0].billcenter.selectedIndex].value;
 		var su = document.forms[0].useProviderMOH.checked;
