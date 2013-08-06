@@ -239,7 +239,7 @@
 			name="windowId" id="windowId" value="<%=uuid%>" /> <input
 			type="hidden" name="dirty" value="0" id="dirty" /> <textarea
 			name="scratchpad" id="thetext" style="width: 100%" rows="50"
-			cols="50" onkeypress="javascript: setDirty()"
+			cols="50" onpaste="javascript: setDirty();" onkeypress="javascript: setDirty()"
 			onkeydown="javascript: catchDel(event)"><%=text%></textarea> <textarea
 			style="display: none;" id="log" rows="100" cols="100"></textarea></form>
 		</td>
