@@ -257,7 +257,7 @@ public class E2EPatientExport extends PatientExport {
 			LabGroup tempGroup = new LabGroup(prevGroup);
 			for(int i=0; i < labMeasurementsExtAll.size(); i++) {
 				String temp = getLabExtValue(labMeasurementsExtAll.get(i), "other_id");
-				if(temp != "" && temp != null) {
+				if(temp != null && !temp.isEmpty()) {
 					int currGroup = parseOtherID(temp)[0];
 
 					// Create New Group
