@@ -25,6 +25,7 @@ package org.oscarehr.research.eaaps;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.GregorianCalendar;
 
 import org.oscarehr.common.model.Demographic;
 
@@ -58,7 +59,11 @@ public class EaapsHash {
 		if (d.getLastName() != null) {
 			appender.append(d.getLastName().toUpperCase());
 		}
-		appender.append(ConversionUtils.toDateString(d.getBirthDay().getTime(), "yyyyMMdd"));
+		
+		GregorianCalendar calendar = d.getBirthDay();
+		if (calendar != null) {
+			appender.append(ConversionUtils.toDateString(calendar.getTime(), "yyyyMMdd"));
+		}
 		appender.append(clinic);
 
 		MessageDigest digest;

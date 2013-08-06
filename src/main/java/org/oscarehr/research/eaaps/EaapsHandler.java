@@ -34,6 +34,8 @@ import java.util.Date;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -91,6 +93,8 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 
 	private UserDSMessagePrefsDao userDsMessagePrefsDao = SpringUtils.getBean(UserDSMessagePrefsDao.class);
 
+	private ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
+	
 	private SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
 
 	@Override
@@ -297,7 +301,16 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		cmn.setNote(description);
 		cmn.setSigned(isSigned);
 		cmn.setSigning_provider_no("-1");
-		cmn.setProgram_no("");
+		try {
+			String programNumber = getOscarProgramNumber();
+			cmn.setProgram_no(programNumber);
+		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Unable to load OSCAR program", e);
+			}
+			
+			cmn.setProgram_no("");
+		}
 
 		SecRole doctorRole = secRoleDao.findByName("doctor");
 		cmn.setReporter_caisi_role(doctorRole.getId().toString());
@@ -317,6 +330,14 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 
 		EDocUtil.addCaseMgmtNoteLink(cmnl);
 	}
+
+	private String getOscarProgramNumber() {
+		Program program = programDao.getProgramByName("OSCAR");
+		if (program != null) {
+			return "" + program.getId();
+		}
+	    return "";
+    }
 
 	private String savePdfContent(ORU_R01 message) throws HL7Exception {
 		NTE nte = message.getPATIENT_RESULT().getORDER_OBSERVATION().getNTE();
