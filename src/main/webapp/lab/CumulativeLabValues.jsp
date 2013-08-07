@@ -193,7 +193,7 @@ function addLabToList(req){
 		<div style="background-color: #EEEEFF;">
 		<ul>
 			<%for (int i = 0 ; i < prevList.size(); i++){ 
-                      Hashtable h = (Hashtable) prevList.get(i);
+                      HashMap h = (HashMap) prevList.get(i);
                       String prevName = (String) h.get("testName");
                       String identCode = (String) h.get("identCode");
                       String identCodeEsc = "";

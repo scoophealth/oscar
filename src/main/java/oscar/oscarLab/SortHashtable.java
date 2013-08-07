@@ -28,28 +28,52 @@ package oscar.oscarLab;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
- * Used to sort a list of Lab hashtable objects 
+ * Used to sort a list of Lab hashtable or map objects 
  * @author jay
  */
+@SuppressWarnings("rawtypes")
 public class SortHashtable implements Comparator {
     
-    /** Creates a new instance of SortHashtable */
-    public SortHashtable() {
-    }
-
-    public int compare(Object object, Object object0) {
-        int ret  = 0;
-        
-        Date date1 = (Date) ((Hashtable) object).get("collDateDate");
-        Date date2 = (Date) ((Hashtable) object0).get("collDateDate");;
-        if (date1.after(date2)){
-            ret = -1;
-        }else if(date1.before(date2)){
-            ret = 1;    
-        }
-        return ret;
-    }
-    
+	private static final String COLL_DATE_DATE = "collDateDate";
+	
+	public SortHashtable() {		
+	}
+	
+	public int compare(Object object, Object object0) {
+		int ret = 0;
+		
+		Date date1 = getDate(object);
+		Date date2 = getDate(object0);
+		if (date1.after(date2)) {
+			ret = -1;
+		} else if (date1.before(date2)) {
+			ret = 1;
+		}
+		return ret;	
+	}
+	
+	private Date getDate(Object object) {	
+		Object result = null;	
+		if (Map.class.isAssignableFrom(object.getClass())) {	
+			result = ((Map) object).get(COLL_DATE_DATE);	
+		} else if (Hashtable.class.isAssignableFrom(object.getClass())) {	
+			result = ((Hashtable) object).get(COLL_DATE_DATE);	
+		} else {	
+			throw new IllegalArgumentException("Unsupported map type " + object.getClass().getName());	
+		}	
+			
+		if (result == null) {	
+			return null;	
+		}	
+			
+		if (result instanceof Date) {	
+			return (Date) result;	
+		}	
+			
+		throw new IllegalArgumentException("Invalid value type for value \"" + COLL_DATE_DATE + "\". Expected " 
+				+ Date.class.getName() + " but got " + result.getClass().getName() + " ( with value " + result + ")");
+	}
 }

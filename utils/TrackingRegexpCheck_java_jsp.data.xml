@@ -635,7 +635,7 @@
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONReview.jsp:vecServiceParam[0] = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONReview.jsp:vecServiceParam[1] = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONReview.jsp:vecServiceParam[2] = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/webapp/billing/CA/ON/billingONStatus.jsp:bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new Vector();</ViolationValue>
+		  <ViolationValue>/src/main/webapp/billing/CA/ON/billingONStatus.jsp:bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONStatus.jsp:bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingShortcutPg1.jsp:Vector            vecHist           = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingShortcutPg1.jsp:Vector vecCodeCol1 = new Vector();</ViolationValue>
@@ -722,7 +722,7 @@
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable dateIdHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:LinkedHashMap IdMap = new LinkedHashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:LinkedHashMap nameMap = new LinkedHashMap();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:SortHashtable sorter = new SortHashtable();</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Collections.sort(list,new SortHashtable());</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/encounterCPP.jsp:ArrayList inject = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/newEncounter.jsp:if( newDocArr == null ) newDocArr = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp:Vector vecFaxes  = new Vector();</ViolationValue>
@@ -2834,12 +2834,11 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:Hashtable&lt;String, String&gt; fileInfo = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:public static Hashtable&lt;String, String&gt; getFileInfo(String md5sum) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:/** Creates a new instance of SortHashtable */</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:Date date1 = (Date) ((Hashtable) object).get("collDateDate");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:Date date2 = (Date) ((Hashtable) object0).get("collDateDate");;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:public SortHashtable() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:public class SortHashtable implements Comparator {</ViolationValue>
+	     <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:result = ((Hashtable) object).get(COLL_DATE_DATE);</ViolationValue>
+		  <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:} else if (Hashtable.class.isAssignableFrom(object.getClass())) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:Hashtable&lt;String,Object&gt; info = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:public static Hashtable&lt;String,Object&gt; getInfo(String lab_no) throws SQLException {</ViolationValue>
@@ -3861,6 +3860,7 @@
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable h = (Hashtable) labList.get(j);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable ht = (Hashtable) IdMap.get(IdMap.keySet().iterator().next());</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable ht = (Hashtable) IdMap.get(dateIdHash.get("id"));</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Collections.sort(list,new SortHashtable());</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Hashtable hdata = (Hashtable) list.get(k);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:SortHashtable sorter = new SortHashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; formCreated = new Vector&lt;String&gt;();</ViolationValue>

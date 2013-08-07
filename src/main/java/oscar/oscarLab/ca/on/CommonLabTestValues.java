@@ -32,7 +32,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -75,27 +74,27 @@ public class CommonLabTestValues {
 
 
 
-    public static ArrayList<Hashtable<String, Serializable>> findUniqueLabsForPatient(String demographic){
+    public static ArrayList<HashMap<String, Serializable>> findUniqueLabsForPatient(String demographic){
         OscarProperties op = OscarProperties.getInstance();
         String cml = op.getProperty("CML_LABS");
         String mds = op.getProperty("MDS_LABS");
         String pathnet = op.getProperty("PATHNET_LABS");
         String hl7text = op.getProperty("HL7TEXT_LABS");
-        ArrayList<Hashtable<String, Serializable>> labs = new ArrayList<Hashtable<String, Serializable>>();
+        ArrayList<HashMap<String, Serializable>> labs = new ArrayList<HashMap<String, Serializable>>();
         if( cml != null && cml.trim().equals("yes")){
-            ArrayList<Hashtable<String, Serializable>> cmlLabs = findUniqueLabsForPatientCML(demographic);
+            ArrayList<HashMap<String, Serializable>> cmlLabs = findUniqueLabsForPatientCML(demographic);
             labs.addAll(cmlLabs);
         }
         if (mds != null && mds.trim().equals("yes")){
-            ArrayList<Hashtable<String, Serializable>> mdsLabs = findUniqueLabsForPatientMDS(demographic);
+            ArrayList<HashMap<String, Serializable>> mdsLabs = findUniqueLabsForPatientMDS(demographic);
             labs.addAll(mdsLabs);
         }
         if (pathnet != null && pathnet.trim().equals("yes")){
-            ArrayList<Hashtable<String, Serializable>> pathLabs = findUniqueLabsForPatientExcelleris(demographic);
+            ArrayList<HashMap<String, Serializable>> pathLabs = findUniqueLabsForPatientExcelleris(demographic);
             labs.addAll(pathLabs);
         }
         if (hl7text != null && hl7text.trim().equals("yes")){
-            ArrayList<Hashtable<String, Serializable>> hl7Labs = findUniqueLabsForPatientHL7Text(demographic);
+            ArrayList<HashMap<String, Serializable>> hl7Labs = findUniqueLabsForPatientHL7Text(demographic);
             labs.addAll(hl7Labs);
         }
         return labs;
@@ -103,13 +102,13 @@ public class CommonLabTestValues {
 
     //Method returns unique test names for a patient
     //List is used to compile a cummalitive lab profile
-    //Hashtable return in list
+    //HashMap return in list
     //"testName" : Name of test eg. CHOL/HDL RATIO, CHOLESTEROL, CREATININE
     //"labType" : Vendor of lab eg. MDS, CML, BCP(Excelleris)
     //"title" : Heading of lab group eg. CHEMISTRY, HEMATOLOGY
-    public static ArrayList<Hashtable<String, Serializable>> findUniqueLabsForPatientCML(String demographic){
+    public static ArrayList<HashMap<String, Serializable>> findUniqueLabsForPatientCML(String demographic){
         //Need to check which labs are active
-        ArrayList<Hashtable<String, Serializable>> labList = new ArrayList<Hashtable<String, Serializable>>();
+        ArrayList<HashMap<String, Serializable>> labList = new ArrayList<HashMap<String, Serializable>>();
         String sql = "select  distinct p.lab_type, ltr.title, ltr.test_name "+
                 "from "+
                 "patientLabRouting p , "+
@@ -130,7 +129,7 @@ public class CommonLabTestValues {
                 String testNam = oscar.Misc.getString(rs, "test_name");
                 String labType = oscar.Misc.getString(rs, "lab_type");
                 String title = oscar.Misc.getString(rs, "title");
-                Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                 h.put("testName", testNam);
                 h.put("labType",labType);
                 h.put("title",title);
@@ -146,13 +145,13 @@ public class CommonLabTestValues {
 
     //Method returns unique test names for a patient
     //List is used to compile a cummalitive lab profile
-    //Hashtable return in list
+    //HashMap return in list
     //"testName" : Name of test eg. CHOL/HDL RATIO, CHOLESTEROL, CREATININE
     //"labType" : Vendor of lab eg. MDS, CML, BCP(Excelleris)
     //"title" : Heading of lab group eg. CHEMISTRY, HEMATOLOGY
-    public static ArrayList<Hashtable<String, Serializable>> findUniqueLabsForPatientMDS(String demographic){
+    public static ArrayList<HashMap<String, Serializable>> findUniqueLabsForPatientMDS(String demographic){
         //Need to check which labs are active
-        ArrayList<Hashtable<String, Serializable>> labList = new ArrayList<Hashtable<String, Serializable>>();
+        ArrayList<HashMap<String, Serializable>> labList = new ArrayList<HashMap<String, Serializable>>();
         String sql = "select distinct p.lab_type, x.observationIden, x.observationResultStatus " +
                 "from mdsOBX x, mdsMSH m, patientLabRouting p " +
                 " where p.demographic_no = '"+demographic+"' " +
@@ -184,7 +183,7 @@ public class CommonLabTestValues {
                 }
 
 
-                Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                 h.put("testName", testNam);
                 h.put("labType",labType);
                 h.put("title",title);
@@ -198,8 +197,8 @@ public class CommonLabTestValues {
 
         return labList;
     }
-    public static ArrayList<Hashtable<String, Serializable>> findUniqueLabsForPatientExcelleris(String demographic){
-        ArrayList<Hashtable<String, Serializable>> labList = new ArrayList<Hashtable<String, Serializable>>();
+    public static ArrayList<HashMap<String, Serializable>> findUniqueLabsForPatientExcelleris(String demographic){
+        ArrayList<HashMap<String, Serializable>> labList = new ArrayList<HashMap<String, Serializable>>();
         String sql = "select distinct p.lab_type,x.observation_identifier "+
                 "from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  " +
                 "where p.demographic_no = '"+demographic+"' " +
@@ -217,7 +216,7 @@ public class CommonLabTestValues {
                 String testNam = oscar.Misc.getString(rs, "observation_identifier").substring(1+oscar.Misc.getString(rs, "observation_identifier").indexOf('^'));
                 String labType = oscar.Misc.getString(rs, "lab_type");
                 String title = "";//TODO:oscar.Misc.getString(rs,"title");
-                Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                 h.put("testName", testNam);
                 h.put("labType",labType);
                 h.put("title",title);
@@ -232,8 +231,8 @@ public class CommonLabTestValues {
         return labList;
     }
 
-    public static ArrayList<Hashtable<String, Serializable>> findUniqueLabsForPatientHL7Text(String demographic){
-        ArrayList<Hashtable<String, Serializable>> labList = new ArrayList<Hashtable<String, Serializable>>();
+    public static ArrayList<HashMap<String, Serializable>> findUniqueLabsForPatientHL7Text(String demographic){
+        ArrayList<HashMap<String, Serializable>> labList = new ArrayList<HashMap<String, Serializable>>();
         String sql = "SELECT lab_no FROM patientLabRouting WHERE demographic_no='"+demographic+"' AND lab_type='HL7'";
         logger.info(sql);
         try {
@@ -248,7 +247,7 @@ public class CommonLabTestValues {
                         if (status.equals("DNS") || status.equals("P") || status.equals("Pending"))
                             continue;
 
-                        Hashtable<String, Serializable> t = new Hashtable<String, Serializable>();
+                        HashMap<String, Serializable> t = new HashMap<String, Serializable>();
                         t.put("testName",h.getOBXName(i, j));
                         t.put("labType","HL7");
                         t.put("title", "");//TODO... not sure what title should be
@@ -275,8 +274,8 @@ public class CommonLabTestValues {
      *  //second field is result
      *  //third field is observation date
      */
-    public static ArrayList<Hashtable<String, Serializable>> findValuesByLoinc(String demographicNo, String loincCode){
-        ArrayList<Hashtable<String, Serializable>> labList = new ArrayList<Hashtable<String, Serializable>>();
+    public static ArrayList<HashMap<String, Serializable>> findValuesByLoinc(String demographicNo, String loincCode){
+        ArrayList<HashMap<String, Serializable>> labList = new ArrayList<HashMap<String, Serializable>>();
 
         String sql = "SELECT dataField, dateObserved, e1.val AS lab_no, e3.val AS abnormal FROM measurements m " +
                 "JOIN measurementsExt e1 ON m.id = e1.measurement_id AND e1.keyval='lab_no' " +
@@ -290,7 +289,7 @@ public class CommonLabTestValues {
             ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()){
-            	Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+            	HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                 h.put("lab_no", oscar.Misc.getString(rs,"lab_no"));
                 h.put("result", oscar.Misc.getString(rs,"dataField"));
                 h.put("date", oscar.Misc.getString(rs,"dateObserved"));
@@ -398,7 +397,7 @@ public class CommonLabTestValues {
                         }
                         if (monthsBetween < 4){
                             accessionMap.put(accessionNum, dateB);
-                            Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                            HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                             h.put("testName", testNam);
                             h.put("abn",abn);
                             h.put("result",result);
@@ -447,7 +446,7 @@ public class CommonLabTestValues {
                         continue;
 
                     // Only retieve the latest measurement for each accessionNum
-                    Hashtable<String, Serializable> ht = (Hashtable<String, Serializable>) accessionMap.get(accessionNum);
+                    HashMap<String, Serializable> ht = (HashMap<String, Serializable>) accessionMap.get(accessionNum);
                     if (ht == null || Integer.parseInt((String) ht.get("mapNum")) < Integer.parseInt(version)){
 
                         int monthsBetween = 0;
@@ -461,7 +460,7 @@ public class CommonLabTestValues {
                             }
                         }
                         if (monthsBetween < 4){
-                            ht = new Hashtable<String, Serializable>();
+                            ht = new HashMap<String, Serializable>();
                             ht.put("date", collDate);
                             ht.put("mapNum", version);
                             accessionMap.put(accessionNum, ht);
@@ -473,7 +472,7 @@ public class CommonLabTestValues {
                                 units = rs2.getString("units"); //mdsZMN units
                             }
                             rs2.close();
-                            Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                            HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                             h.put("testName", testNam);
                             h.put("abn",abn);
                             h.put("result",result);
@@ -528,7 +527,7 @@ public class CommonLabTestValues {
                         }
                         if (monthsBetween < 4){
                             accessionMap.put(accessionNum, dateB);
-                            Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                            HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                             h.put("testName", testNam);
                             h.put("abn",abn);
                             h.put("result",result);
@@ -615,8 +614,8 @@ public class CommonLabTestValues {
      * //fifth field is range
      * //sixth field is date : collection Date
      */
-    public static ArrayList<Hashtable<String, Serializable>> findValuesForDemographic(String demographicNo){
-        ArrayList<Hashtable<String, Serializable>> labList = new ArrayList<Hashtable<String, Serializable>>();
+    public static ArrayList<HashMap<String, Serializable>> findValuesForDemographic(String demographicNo){
+        ArrayList<HashMap<String, Serializable>> labList = new ArrayList<HashMap<String, Serializable>>();
 
         String sql = "select p.lab_no , p.lab_type, ltr.id, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, ltr.location_id, ltr.description, lpp.accession_num, lpp.collection_date " +
                 "from patientLabRouting p , labTestResults ltr, labPatientPhysicianInfo lpp " +
@@ -645,7 +644,7 @@ public class CommonLabTestValues {
                 String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "collection_date"),"dd-MMM-yy"),"yyyy-MM-dd");
                 logger.info("This went in "+oscar.Misc.getString(rs, "collection_date")+" this came out "+UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "collection_date"),"dd-MMM-yy"),"yyyy-MM-dd"));
 
-                Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                HashMap<String, Serializable> h = new HashMap<String, Serializable>();
 		h.put("id", id);
                 h.put("testName", testNam);
                 h.put("abn",abn);
@@ -705,7 +704,7 @@ public class CommonLabTestValues {
                     //collDate = rs2.getString("dateTime"); //mdsOBX dateTime
                 }
                 rs2.close();
-                Hashtable<String, Serializable> h = new Hashtable<String, Serializable>();
+                HashMap<String, Serializable> h = new HashMap<String, Serializable>();
                 h.put("testName", testNam);
                 h.put("abn",abn);
                 h.put("result",result);

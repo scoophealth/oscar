@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.io.Serializable"%>
 <%@ page
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*"%>
 <%
@@ -35,10 +36,9 @@
     String testName = request.getParameter("testName");
     String identCode = request.getParameter("identCode");
    
-    ArrayList list   = CommonLabTestValues.findValuesForTest(labType, demoNo, testName, identCode);
+    ArrayList<Map<String, Serializable>> list   = CommonLabTestValues.findValuesForTest(labType, demoNo, testName, identCode);
     
-    SortHashtable sorter = new SortHashtable();
-                      Collections.sort(list,sorter);
+    Collections.sort(list,new SortHashtable());
              
     %>
 <div class="preventionSection" id="preventionSection<%=ran%>">
