@@ -1076,6 +1076,9 @@ public class OcanStaffFormDaoTest extends DaoTestFixtures {
 		
 		int assessmentId1 = 101;
 		int assessmentId2 = 202;
+	
+		int clientId1 = 1;
+		int clientId2 = 2;
 		
 		Date created1 = new Date(dfm.parse("20110110").getTime());
 		Date created2 = new Date(dfm.parse("20131110").getTime());
@@ -1087,6 +1090,7 @@ public class OcanStaffFormDaoTest extends DaoTestFixtures {
 		ocanStaffForm1.setProviderNo(providerNo1);
 		ocanStaffForm1.setAssessmentId(assessmentId1);
 		ocanStaffForm1.setCreated(created1);
+		ocanStaffForm1.setClientId(clientId1);
 		dao.persist(ocanStaffForm1);
 		
 		OcanStaffForm ocanStaffForm2 = new OcanStaffForm();
@@ -1095,6 +1099,7 @@ public class OcanStaffFormDaoTest extends DaoTestFixtures {
 		ocanStaffForm2.setProviderNo(providerNo2);
 		ocanStaffForm2.setAssessmentId(assessmentId2);
 		ocanStaffForm2.setCreated(created2);
+		ocanStaffForm2.setClientId(clientId2);
 		dao.persist(ocanStaffForm2);
 		
 		OcanStaffForm ocanStaffForm3 = new OcanStaffForm();
@@ -1103,6 +1108,7 @@ public class OcanStaffFormDaoTest extends DaoTestFixtures {
 		ocanStaffForm3.setProviderNo(providerNo1);
 		ocanStaffForm3.setAssessmentId(assessmentId1);
 		ocanStaffForm3.setCreated(created3);
+		ocanStaffForm3.setClientId(clientId1);
 		dao.persist(ocanStaffForm3);
 		
 		List<OcanStaffForm> expectedResult = new ArrayList<OcanStaffForm>(Arrays.asList(ocanStaffForm3));

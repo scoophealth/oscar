@@ -396,7 +396,7 @@ public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId
 
     public List<OcanStaffForm> findLatestOcanFormsByStaff(Integer facilityId, String providerNo) {
 
-		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and providerNo=?2 order by x.assessmentId DESC, x.created DESC, x.id DESC";
+		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and providerNo=?2 order by x.clientId DESC, x.assessmentId DESC, x.created DESC, x.id DESC";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
@@ -407,25 +407,22 @@ public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId
 
 		//Because staff could modify completed assessment. So it one assessment ID could have multiple assessment records.
 		//Only export the one with latest update.
+		//And only export one form for each client.
 		List<OcanStaffForm> list = new ArrayList<OcanStaffForm>();
 		int assessmentId_0=0;
+		int clientId_0 = 0;
 		for(OcanStaffForm res:results) {
 			int assessmentId_1 = res.getAssessmentId().intValue();
-			if(assessmentId_0!=assessmentId_1) {
-				assessmentId_0 = assessmentId_1;
-				list.add(res);
+			int clientId_1 = res.getClientId().intValue();
+			if(clientId_0!=clientId_1) {
+				clientId_0=clientId_1;
+				if(assessmentId_0!=assessmentId_1) {
+					assessmentId_0 = assessmentId_1;
+					list.add(res);
+				}
 			}
 		}
-
-		List<OcanStaffForm> filteredList = new ArrayList<OcanStaffForm>();
-		for(OcanStaffForm f:list) {
-			OcanStaffForm tmp = this.findLatestByAssessmentId(facilityId,f.getAssessmentId());
-			if(f.getId().intValue() == tmp.getId().intValue()) {
-				filteredList.add(f);
-			}
-		}
-
-		return filteredList;
+		return list;
 
     }
 

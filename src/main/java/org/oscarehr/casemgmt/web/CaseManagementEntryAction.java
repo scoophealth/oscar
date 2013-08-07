@@ -2457,6 +2457,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String sessionFrmName = "caseManagementEntryForm" + demono;
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
+		if(sessionFrm!=null && cform!=null)	{
+			if(sessionFrm.getCaseNote()!=null)
+				sessionFrm.getCaseNote().setObservation_date(UtilDateUtilities.StringToDate(cform.getObservation_date(), "dd-MMM-yyyy H:mm"));
+			if(cform.getCaseNote()!=null && cform.getCaseNote().getEncounter_type()!=null)
+				sessionFrm.getCaseNote().setEncounter_type(cform.getCaseNote().getEncounter_type());
+			if(cform.getMinuteOfEncounterTime()!=null)
+				sessionFrm.getCaseNote().setMinuteOfEncounterTime(cform.getMinuteOfEncounterTime());
+			if(cform.getHourOfEncounterTime()!=null)
+				sessionFrm.getCaseNote().setHourOfEncounterTime(cform.getHourOfEncounterTime());
+			if(cform.getMinuteOfEncTransportationTime()!=null)
+				sessionFrm.getCaseNote().setMinuteOfEncTransportationTime(cform.getMinuteOfEncTransportationTime());
+			if(cform.getHourOfEncTransportationTime()!=null)
+				sessionFrm.getCaseNote().setHourOfEncTransportationTime(cform.getHourOfEncTransportationTime());
+		}
+
 		// add checked new issues to client's issue list
 		// client's old issues
 		CheckBoxBean[] oldList = sessionFrm.getIssueCheckList();
