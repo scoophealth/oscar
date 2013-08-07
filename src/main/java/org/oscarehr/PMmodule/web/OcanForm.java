@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -357,6 +358,47 @@ public class OcanForm {
 		return(sb.toString());
 	}
 	
+	public static String renderAsNumberOfReferralsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options,  int prepopulationLevel)	
+	{
+		return renderAsNumbersSelectOptions(ocanStaffFormId, question, options, prepopulationLevel);
+	}
+	
+	public static String renderAsMonthsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options,  int prepopulationLevel)	
+	{
+		return renderAsNumbersSelectOptions(ocanStaffFormId, question, options, prepopulationLevel);
+	}
+	
+	public static String renderAsYearsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options,  int prepopulationLevel)	
+	{
+		return renderAsNumbersSelectOptions(ocanStaffFormId, question, options, prepopulationLevel);
+	}
+	
+	public static String renderAsNumberOfCentresSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options,  int prepopulationLevel)	
+	{
+		return renderAsNumbersSelectOptions(ocanStaffFormId, question, options, prepopulationLevel);
+	}
+	
+	public static String renderAsNumbersSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options,  int prepopulationLevel) {
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question ,prepopulationLevel);				
+		Map<Integer , String> optionsMap = new TreeMap<Integer , String>();
+		for (OcanFormOption option : options)
+		{
+			optionsMap.put(Integer.parseInt(option.getOcanDataCategoryValue()), option.getOcanDataCategoryName());
+		}
+		
+		StringBuilder sb=new StringBuilder();
+
+		for ( Integer key : optionsMap.keySet() ) 
+		{
+			String htmlEscapedName=StringEscapeUtils.escapeHtml(optionsMap.get(key));			
+			String selected=(OcanStaffFormData.containsAnswer(existingAnswers, optionsMap.get(key))?"selected=\"selected\"":"");
+
+			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(optionsMap.get(key))+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
+		
+		}
+		
+		return(sb.toString());
+	}
 	
 	
 	public static String renderAsProvinceSelectOptions(OcanStaffForm ocanStaffForm)

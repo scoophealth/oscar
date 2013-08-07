@@ -66,7 +66,11 @@ public class CaseManagementEntryFormBean extends ActionForm  implements java.io.
         private boolean groupNote;
         private String[] groupNoteClientIds;
         private int groupNoteTotalAnonymous;
-        
+   
+        private Integer hourOfEncounterTime;
+        private Integer minuteOfEncounterTime;
+        private Integer hourOfEncTransportationTime;
+        private Integer minuteOfEncTransportationTime;
         
         public CaseManagementEntryFormBean() {
             super();           
@@ -356,4 +360,38 @@ public class CaseManagementEntryFormBean extends ActionForm  implements java.io.
 		public String getTrimmedNoteText() {
 			return org.apache.commons.lang.StringUtils.trimToNull(this.getCaseNote_note());	
 		}
+
+		public Integer getHourOfEncounterTime() {
+        	return hourOfEncounterTime;
+        }
+
+		public void setHourOfEncounterTime(Integer hourOfEncounterTime) {
+        	this.hourOfEncounterTime = hourOfEncounterTime;
+        }
+
+		public Integer getMinuteOfEncounterTime() {
+        	return minuteOfEncounterTime;
+        }
+
+		public void setMinuteOfEncounterTime(Integer minuteOfEncounterTime) {
+        	this.minuteOfEncounterTime = minuteOfEncounterTime;
+        }
+
+		public Integer getHourOfEncTransportationTime() {
+        	return hourOfEncTransportationTime;
+        }
+
+		public void setHourOfEncTransportationTime(Integer hourOfEncTransportationTime) {
+        	this.hourOfEncTransportationTime = hourOfEncTransportationTime;
+        }
+
+		public Integer getMinuteOfEncTransportationTime() {
+        	return minuteOfEncTransportationTime;
+        }
+
+		public void setMinuteOfEncTransportationTime(Integer minuteOfEncTransportationTime) {
+        	this.minuteOfEncTransportationTime = minuteOfEncTransportationTime;
+        }
+		
+		
 }

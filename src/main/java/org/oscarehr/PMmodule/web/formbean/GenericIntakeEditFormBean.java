@@ -54,9 +54,13 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private LabelValueBean[] days;
 	private LabelValueBean[] provinces;
 
-	private List<LabelValueBean> bedCommunityPrograms;
-	private String bedCommunityProgramId;
-	private String bedCommunityProgramLabel;
+	private List<LabelValueBean> bedPrograms;
+	private String bedProgramId;
+	private String bedProgramLabel;
+
+	private List<LabelValueBean> communityPrograms;
+	private String communityProgramId;
+	private String communityProgramLabel;
 
 	private List<LabelValueBean> externalPrograms;
 	private String externalProgramId;
@@ -218,55 +222,91 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	}
 	//---------------------	
 	
-	//	 Bed/Community programs
+	//	 Bed programs
 
-	public List<LabelValueBean> getBedCommunityPrograms() {
-		return bedCommunityPrograms;
+	public List<LabelValueBean> getBedPrograms() {
+		return bedPrograms;
 	}
 
-	public void setBedCommunityPrograms(List<Program> bedPrograms, List<Program> communityPrograms) {
-		setBedCommunityProgramLabel(!bedPrograms.isEmpty(), !communityPrograms.isEmpty());
-		bedCommunityPrograms = convertToLabelValues(bedPrograms, communityPrograms);
+	public void setBedPrograms(List<Program> bedPrograms2) {
+		setBedProgramLabel(!bedPrograms2.isEmpty());
+		bedPrograms = convertToLabelValues2(bedPrograms2);
 	}
 
-	public String getBedCommunityProgramLabel() {
-		return bedCommunityProgramLabel;
+	public String getBedProgramLabel() {
+		return bedProgramLabel;
 	}
 
-	public void setBedCommunityProgramLabel(boolean hasBedPrograms, boolean hasCommunityPrograms) {
+	public void setBedProgramLabel(boolean hasBedPrograms) {
 		StringBuilder buffer = new StringBuilder();
 
 		if (hasBedPrograms) {
 			buffer.append(BED_PROGRAM_LABEL);
 		}
 
-		if (hasBedPrograms && hasCommunityPrograms) {
-			buffer.append(" or ");
-		}
+		bedProgramLabel = buffer.toString();
+	}
+
+	// Selected Bed program id
+
+	public Integer getSelectedBedProgramId() {
+		return convertToInteger(bedProgramId);
+	}
+
+	public void setSelectedBedProgramId(Integer selectedId) {
+		bedProgramId = convertToString(selectedId);
+	}
+
+	public String getBedProgramId() {
+		return bedProgramId;
+	}
+
+	public void setBedProgramId(String bedProgramId) {
+		this.bedProgramId = bedProgramId;
+	}
+	
+	//////////////////////////////////
+	//	 Community programs
+
+	public List<LabelValueBean> getCommunityPrograms() {
+		return communityPrograms;
+	}
+
+	public void setCommunityPrograms(List<Program> communityPrograms2) {
+		setCommunityProgramLabel(!communityPrograms2.isEmpty());
+		communityPrograms = convertToLabelValues2(communityPrograms2);
+	}
+
+	public String getCommunityProgramLabel() {
+		return communityProgramLabel;
+	}
+
+	public void setCommunityProgramLabel(boolean hasCommunityPrograms) {
+		StringBuilder buffer = new StringBuilder();
 
 		if (hasCommunityPrograms) {
 			buffer.append(COMMUNITY_PROGRAM_LABEL);
 		}
 
-		bedCommunityProgramLabel = buffer.toString();
+		communityProgramLabel = buffer.toString();
 	}
 
-	// Selected Bed/Community program id
+	// Selected Community program id
 
-	public Integer getSelectedBedCommunityProgramId() {
-		return convertToInteger(bedCommunityProgramId);
+	public Integer getSelectedCommunityProgramId() {
+		return convertToInteger(communityProgramId);
 	}
 
-	public void setSelectedBedCommunityProgramId(Integer selectedId) {
-		bedCommunityProgramId = convertToString(selectedId);
+	public void setSelectedCommunityProgramId(Integer selectedId) {
+		communityProgramId = convertToString(selectedId);
 	}
 
-	public String getBedCommunityProgramId() {
-		return bedCommunityProgramId;
+	public String getCommunityProgramId() {
+		return communityProgramId;
 	}
 
-	public void setBedCommunityProgramId(String bedCommunityProgramId) {
-		this.bedCommunityProgramId = bedCommunityProgramId;
+	public void setCommunityProgramId(String communityProgramId) {
+		this.communityProgramId = communityProgramId;
 	}
 	
 	// Service programs
@@ -311,7 +351,8 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		setBedCommunityProgramId("");
+		setBedProgramId("");
+		setCommunityProgramId("");
 		setServiceProgramIds(new String[] {});
 
 		if (intake != null) {
@@ -325,12 +366,11 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	// Private
 
-	private List<LabelValueBean> convertToLabelValues(List<Program> primary, List<Program> secondary) {
+	private List<LabelValueBean> convertToLabelValues2(List<Program> primary) {
 		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
 
 		labelValues.add(GenericIntakeConstants.EMPTY);
-		labelValues.addAll(convertToLabelValues(primary));
-		labelValues.addAll(convertToLabelValues(secondary));
+		labelValues.addAll(convertToLabelValues(primary));		
 
 		return labelValues;
 	}
