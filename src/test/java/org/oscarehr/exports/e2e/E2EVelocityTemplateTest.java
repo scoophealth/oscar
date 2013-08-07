@@ -128,6 +128,13 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	}
 
 	@Test
+	public void testMeasurementCodeMap() {
+		E2EResources e = new E2EResources();
+		assertTrue("Weight mapping didn't return 3141-9", e.measurementCodeMap("WT").equals("3141-9"));
+		assertNull("Empty measurementcode map didn't return null", e.measurementCodeMap(""));
+	}
+
+	@Test
 	public void testPreventionTypeMap() {
 		E2EResources e = new E2EResources();
 		assertNull("Empty prevention type map didn't return null", e.preventionTypeMap(""));

@@ -402,11 +402,15 @@ Clinically Measured Observation
 							<component typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
 									<id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
-									<code nullFlavor="UNK"/>
 									<!-- OSCAR Type Code: $measurement.type -->
-									<text>$patient.getTypeDescription($measurement.type)</text>
+#*    *##if ( $e2e.measurementCodeMap($measurement.type) )
+									<code code="$e2e.measurementCodeMap($measurement.type)" displayName="$patient.getTypeDescription($measurement.type)" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
+#*    *##else
+									<code nullFlavor="UNK"/>
+#*    *##end
+									<text>$patient.getTypeDescription($measurement.type) ($measurement.measuringInstruction)</text>
 									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
-									<value xsi:type="ST">$measurement.dataField ($measurement.measuringInstruction)</value>
+									<value xsi:type="ST">$measurement.dataField</value>
 								</observation>
 							</component>
 						</organizer>
@@ -1084,60 +1088,128 @@ Code"/>
 #*    *##end
 											<!-- Frequency -->
 											<!-- OSCAR Frequency Code $!med.freqCode -->
+#*    *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
 											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
 												<frequency>
-## TODO: Compact & Defer logic to Java code
-#*    *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
 													<numerator value="2"/>
 													<denominator value="1" unit="d"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("TID") || $med.freqCode.equalsIgnoreCase("3x day") || $med.freqCode.equalsIgnoreCase("3x daily"))
-													<numerator value="3"/>
-													<denominator value="1" unit="d"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QID") || $med.freqCode.equalsIgnoreCase("4x day") || $med.freqCode.equalsIgnoreCase("4x daily"))
-													<numerator value="4"/>
-													<denominator value="1" unit="d"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1H") || $med.freqCode.equalsIgnoreCase("Q1-2H") )
-													<numerator value="1"/>
-													<denominator value="1" unit="h"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2H") )
-													<numerator value="1"/>
-													<denominator value="2" unit="h"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3-4H") )
-													<numerator value="1"/>
-													<denominator value="3" unit="h"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q4H") || $med.freqCode.equalsIgnoreCase("Q4-6H") )
-													<numerator value="1"/>
-													<denominator value="4" unit="h"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q6H") )
-													<numerator value="1"/>
-													<denominator value="6" unit="h"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q8H") )
-													<numerator value="1"/>
-													<denominator value="8" unit="h"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q12H") )
-													<numerator value="1"/>
-													<denominator value="12" unit="h"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QAM") || $med.freqCode.equalsIgnoreCase("QPM") || $med.freqCode.equalsIgnoreCase("QHS") || $med.freqCode.equalsIgnoreCase("daily") || $med.freqCode.equalsIgnoreCase("once daily") || $med.freqCode.equalsIgnoreCase("OD") )
-													<numerator value="1"/>
-													<denominator value="1" unit="d"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("weekly") || $med.freqCode.equalsIgnoreCase("Q1Week") )
-													<numerator value="1"/>
-													<denominator value="1" unit="w"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2Week") )
-													<numerator value="1"/>
-													<denominator value="2" unit="w"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1Month") || $med.freqCode.equalsIgnoreCase("monthly") )
-													<numerator value="1"/>
-													<denominator value="1" unit="m"/>
-#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3Month") )
-													<numerator value="1"/>
-													<denominator value="3" unit="m"/>
-#*    *##else
-													<numerator nullFlavor="UNK"/>
-													<denominator nullFlavor="UNK"/>
-#*    *##end
 												</frequency>
 											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("TID") || $med.freqCode.equalsIgnoreCase("3x day") || $med.freqCode.equalsIgnoreCase("3x daily"))
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="3"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QID") || $med.freqCode.equalsIgnoreCase("4x day") || $med.freqCode.equalsIgnoreCase("4x daily"))
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="4"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1-2H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<period xsi:type="URG_PQ">
+													<low value="1" unit="h"/>
+													<high value="2" unit="h"/>
+												</period>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="2" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3-4H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<period xsi:type="URG_PQ">
+													<low value="3" unit="h"/>
+													<high value="4" unit="h"/>
+												</period>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q4H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="4" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q4-6H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<period xsi:type="URG_PQ">
+													<low value="4" unit="h"/>
+													<high value="6" unit="h"/>
+												</period>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q6H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="6" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q8H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="8" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q12H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="12" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QAM") || $med.freqCode.equalsIgnoreCase("QPM") || $med.freqCode.equalsIgnoreCase("QHS") || $med.freqCode.equalsIgnoreCase("daily") || $med.freqCode.equalsIgnoreCase("once daily") || $med.freqCode.equalsIgnoreCase("OD") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("weekly") || $med.freqCode.equalsIgnoreCase("Q1Week") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="w"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2Week") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="2" unit="w"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1Month") || $med.freqCode.equalsIgnoreCase("monthly") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="m"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3Month") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="3" unit="m"/>
+												</frequency>
+											</effectiveTime>
+#*    *##else
+											<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 											<!-- Route -->
 #*    *##if ( $med.route && !$med.route.isEmpty() )
 											<routeCode code="$med.route" displayName="$med.route" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration"/>

@@ -145,12 +145,15 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	 */
 	public static class E2EResources {
 		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2e/e2eformcode.csv";
+		private static final String E2E_VELOCITY_MEASUREMENTCODE_FILE = "/e2e/e2emeasurementcode.csv";
 		private static final String OSCAR_PREVENTIONITEMS_FILE = "/oscar/oscarPrevention/PreventionItems.xml";
 		private static Map<String,String> formCodes = null;
+		private static Map<String,String> measurementCodes = null;
 		private static Map<String,String> preventionTypeCodes = null;
 
 		public E2EResources() {
 			loadFormCode();
+			loadMeasurementCode();
 			loadPreventionItems();
 		}
 
@@ -173,6 +176,37 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 					}
 
 					log.info("Loaded E2E Form Code Mapping");
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Loads the measurementcode mapping
+		 */
+		private void loadMeasurementCode() {
+			if(measurementCodes == null) {
+				InputStream is = null;
+				try {
+					is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_MEASUREMENTCODE_FILE);
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+					measurementCodes = new HashMap<String,String>();
+					String line = null;
+					String[] content = null;
+					while((line = br.readLine()) != null) {
+						content = line.split("\\t");
+						measurementCodes.put(content[0],content[1]);
+					}
+
+					log.info("Loaded E2E Measurement Code Mapping");
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				} finally {
@@ -230,6 +264,20 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		public String formCodeMap(String rhs) {
 			if(formCodes.containsKey(rhs)) {
 				return formCodes.get(rhs);
+			}
+
+			return null;
+		}
+
+		/**
+		 * Takes in a measurementcode string and returns the E2E Measurement Code result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
+		public String measurementCodeMap(String rhs) {
+			if(measurementCodes.containsKey(rhs)) {
+				return measurementCodes.get(rhs);
 			}
 
 			return null;
