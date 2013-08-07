@@ -302,7 +302,7 @@ public class InboxResultsDao {
 							// The only time abnormal matters for documents is when we are looking for normal documents since there are no abnormal documents.
 							+ (isAbnormal != null ? "     AND (pl.lab_type = 'DOC' OR (pl.lab_no = info.lab_no AND (info.result_status IS NULL OR info.result_status != 'A'))) "
 									: " AND pl.lab_type = 'DOC' ")
-							+ " 	ORDER BY id DESC "
+							+ " 	ORDER BY pl.id DESC "
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "")
 							+ "     ) AS plr"
 							+ " LEFT JOIN "
