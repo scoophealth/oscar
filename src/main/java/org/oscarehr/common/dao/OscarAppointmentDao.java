@@ -591,5 +591,66 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter("to", to);
 		return query.getResultList();
     }
+
+	/**
+	 * Get billed appointment history. 
+	 * Used if using the Clinicaid billing integration.
+	 */
+	public List<Appointment> findPatientBilledAppointmentsByProviderAndAppointmentDate(
+			String providerNo, 
+			Date startAppointmentDate, 
+			Date endAppointmentDate ) 
+	{
+		String queryString = "FROM Appointment WHERE " +
+			"providerNo = ? AND " +
+			"appointmentDate >= ? AND " +
+			"appointmentDate <= ? AND " +
+			"status = 'B' AND " + 
+			"demographicNo <> 0 " + 
+			"ORDER BY appointmentDate DESC, startTime DESC ";
+
+		Query q = entityManager.createQuery(queryString);
+		q.setParameter(1, providerNo);
+		q.setParameter(2, startAppointmentDate);
+		q.setParameter(3, endAppointmentDate);
+		
+		@SuppressWarnings("unchecked")
+		List<Appointment> results = q.getResultList();
+		
+		return results;
+	}
+	
     
+	/**
+	 * Get unbilled appointment history. 
+	 * Used if using the Clinicaid billing integration.
+	 */
+	public List<Appointment> findPatientUnbilledAppointmentsByProviderAndAppointmentDate(
+			String providerNo, 
+			Date startAppointmentDate, 
+			Date endAppointmentDate ) 
+	{
+
+		String queryString = "FROM Appointment WHERE " +
+			"providerNo = ? AND " +
+			"appointmentDate >= ? AND " +
+			"appointmentDate <= ? AND " + 
+			"status NOT LIKE 'B%' AND " + 
+			"status NOT LIKE 'C%' AND " + 
+			"status NOT LIKE 'N%' AND " + 
+			"status NOT LIKE 'T%' AND " +
+			"status NOT LIKE 't%' AND " + 
+			"demographicNo != 0 " + 
+			"ORDER BY appointmentDate DESC, startTime DESC";
+
+		Query q = entityManager.createQuery(queryString);
+		q.setParameter(1, providerNo);
+		q.setParameter(2, startAppointmentDate);
+		q.setParameter(3, endAppointmentDate);
+		
+		@SuppressWarnings("unchecked")
+		List<Appointment> results = q.getResultList();
+		
+		return results;
+	}
 }
