@@ -250,8 +250,19 @@ div.logoutBox {
 		<ul>
             <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>">
 			<%
-				if (oscarVariables.getProperty("billregion", "").equals("BC"))
-								{
+				// Only show link to Clinicaid admin if Clinicaid Billing is enabled
+				if (oscarVariables.getProperty("billregion", "").equals("CLINICAID"))
+				{ 
+			%>
+					<li>
+					<a href="../billing.do?billRegion=CLINICAID&action=invoice_reports" target="_blank">
+							<bean:message key="admin.admin.invoiceRpts"/>
+						</a>
+					</li>
+			<%
+				}
+				else if (oscarVariables.getProperty("billregion", "").equals("BC"))
+				{
 			%>
 			<li><a href="#"
 				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/manageBillingform.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageBillFrm"/></a></li>
