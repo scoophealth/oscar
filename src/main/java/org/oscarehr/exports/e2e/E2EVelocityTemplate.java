@@ -146,14 +146,17 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	public static class E2EResources {
 		private static final String E2E_VELOCITY_FORMCODE_FILE = "/e2e/e2eformcode.csv";
 		private static final String E2E_VELOCITY_MEASUREMENTCODE_FILE = "/e2e/e2emeasurementcode.csv";
+		private static final String E2E_VELOCITY_PRRCODE_FILE = "/e2e/e2eprrcode.csv";
 		private static final String OSCAR_PREVENTIONITEMS_FILE = "/oscar/oscarPrevention/PreventionItems.xml";
 		private static Map<String,String> formCodes = null;
 		private static Map<String,String> measurementCodes = null;
+		private static Map<String,String> prrCodes = null;
 		private static Map<String,String> preventionTypeCodes = null;
 
 		public E2EResources() {
 			loadFormCode();
 			loadMeasurementCode();
+			loadPRRCode();
 			loadPreventionItems();
 		}
 
@@ -207,6 +210,37 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 					}
 
 					log.info("Loaded E2E Measurement Code Mapping");
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Loads the personal relationship role code mapping
+		 */
+		private void loadPRRCode() {
+			if(prrCodes == null) {
+				InputStream is = null;
+				try {
+					is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_PRRCODE_FILE);
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+					prrCodes = new HashMap<String,String>();
+					String line = null;
+					String[] content = null;
+					while((line = br.readLine()) != null) {
+						content = line.split("\\t");
+						prrCodes.put(content[1].toLowerCase(),content[0]);
+					}
+
+					log.info("Loaded E2E Personal Relationship Role Code Mapping");
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				} finally {
@@ -278,6 +312,20 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		public String measurementCodeMap(String rhs) {
 			if(measurementCodes.containsKey(rhs)) {
 				return measurementCodes.get(rhs);
+			}
+
+			return null;
+		}
+
+		/**
+		 * Takes in a personal relationship role string and returns the E2E PRR Code result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
+		public String prrCodeMap(String rhs) {
+			if(prrCodes.containsKey(rhs.toLowerCase())) {
+				return prrCodes.get(rhs.toLowerCase());
 			}
 
 			return null;

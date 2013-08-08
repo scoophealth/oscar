@@ -135,12 +135,20 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	}
 
 	@Test
+	public void testPRRCodeMap() {
+		E2EResources e = new E2EResources();
+		assertTrue("Father mapping didn't return FTH", e.prrCodeMap("Father").equals("FTH"));
+		assertNull("Empty prrcode map didn't return null", e.prrCodeMap(""));
+	}
+
+	@Test
 	public void testPreventionTypeMap() {
 		E2EResources e = new E2EResources();
 		assertNull("Empty prevention type map didn't return null", e.preventionTypeMap(""));
 	}
 
-	/*	@Test
+	/*
+	@Test
 	public void tortureTest() {
 		long startTime = System.nanoTime();
 		System.out.println("TortureTest start time = "+startTime);
@@ -166,5 +174,6 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		long stopTime = System.nanoTime();
 		System.out.println("TortureTest stop time = "+stopTime);
 		System.out.println("Total time (sec) = " + (stopTime-startTime)/1000000000.0);
-	}*/
+	}
+	*/
 }

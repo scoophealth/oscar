@@ -146,16 +146,16 @@ Alerts
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.3.1"/>
-					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies or Adverse Reactions Doc"/>
+					<code code="ALERTS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Alerts"/>
 					<title>Alerts [with entries]</title>
 					<text>Alerts</text>
 #**##foreach ( $alert in $patient.getAlerts() )
 					<!--Alert Observation-->
 					<entry typeCode="COMP" contextConductionInd="true">
-						<templateId root="2.16.840.1.113883.3.1818.10.3.7"/>
+						<templateId root="2.16.840.1.113883.3.1818.10.3.2"/>
 						<observation classCode="OBS" moodCode="EVN">
-							<id extension="alert.Id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
-							<code code="ALERT" displayName="Alert Observation" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
+							<id extension="$alert.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="OTHERALRT" displayName="Other Alert" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
 							<text>$alert.note</text>
 #*    *##if ( !$alert.isArchived() )
 							<statusCode code="active"/>
@@ -163,8 +163,7 @@ Alerts
 							<statusCode code="complete"/>
 #*    *##end
 							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $alert.getObservation_date())"/>
-							<e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
-							<value xsi:type="ST">$alert.note</value>
+							<e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal"/>
 						</observation>
 					</entry>
 #**##end
@@ -174,7 +173,7 @@ Alerts
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.3"/>
-					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies or Adverse Reactions Doc"/>
+					<code code="ALERTS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Alerts"/>
 					<title>Alerts [without entries]</title>
 					<text>No Alerts</text>
 				</section>
@@ -240,7 +239,6 @@ Allergies and Intolerances - (Reaction List)
 											<value xsi:type="CD" nullFlavor="NI" displayName="No Information"/>
 										</observation>
 									</entryRelationship>
-## Lifestage coding system may not be accurate to E2E specification - cannot find code list
 #*    *##if ( $allergy.lifeStage.equals("N") || $allergy.lifeStage.equals("I") || $allergy.lifeStage.equals("C") || $allergy.lifeStage.equals("T") || $allergy.lifeStage.equals("A") )
 									<!-- Lifestage at Onset -->
 									<entryRelationship typeCode="COMP" contextConductionInd="true">
@@ -249,13 +247,13 @@ Allergies and Intolerances - (Reaction List)
 										<observation classCode="OBS" moodCode="EVN">
 											<code code="LIFEOBS" displayName="Lifestage Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
 #*        *##if ( $allergy.lifeStage.equals("N") )
-											<value xsi:type="CD" code="133936000" displayName="Newborn" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+											<value xsi:type="CD" code="133933007" displayName="Newborn" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $allergy.lifeStage.equals("I") )
-											<value xsi:type="CD" code="133936001" displayName="Infant" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+											<value xsi:type="CD" code="133931009" displayName="Infant" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $allergy.lifeStage.equals("C") )
-											<value xsi:type="CD" code="133936002" displayName="Child" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+											<value xsi:type="CD" code="410601007" displayName="Child" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $allergy.lifeStage.equals("T") )
-											<value xsi:type="CD" code="133936003" displayName="Teenager" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+											<value xsi:type="CD" code="133937008" displayName="Teenager" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##else
 											<value xsi:type="CD" code="133936004" displayName="Adult" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##end
@@ -445,71 +443,75 @@ Family History
 						<templateId root="2.16.840.1.113883.3.1818.10.3.10"/>
 						<!-- Family History Observation -->
 						<observation classCode="OBS" moodCode="EVN">
-							<id extension="$family.Id" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
+							<id extension="$family.id" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
 							<code code="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code" displayName="Diagnosis"/>
 							<text>$family.note</text>
 							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $family.getObservation_date())"/>
-							<value xsi:type="ST">$family.note</value>
-							<!--Relationship to the patient-->
+							<value xsi:type="CD" nullFlavor="NA"/>
+							<!--Relationship to the Patient-->
 							<subject typeCode="SBJ" contextControlCode="OP">
 								<relatedSubject classCode="PRS">
-## Code OTH used in interim - freetext to code translation won't be accurate
 #*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Relationship").isEmpty() )
-									<code codeSystem="2.16.840.1.113883.5.111" code="OTH" displayName="$patient.getCMNoteExtValue("$family.getId()", "Relationship")"/>
+#*        *##if ( $e2e.prrCodeMap($patient.getCMNoteExtValue("$family.getId()", "Relationship")) )
+									<code code="$e2e.prrCodeMap($patient.getCMNoteExtValue("$family.getId()", "Relationship"))" displayName="$patient.getCMNoteExtValue("$family.getId()", "Relationship")" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
+#*        *##else
+									<code code="OTH" displayName="$patient.getCMNoteExtValue("$family.getId()", "Relationship")" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
+#*        *##end
 #*    *##else
-									<code codeSystem="2.16.840.1.113883.5.111" code="UNK" displayName="Unknown"/>
+									<code code="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
 #*    *##end
 								</relatedSubject>
 							</subject>
-#*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Treatment").isEmpty() )
-							<!-- Treatment Comment -->
-							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
-								<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
-								<!-- Comment Observation -->								
-								<observation classCode="OBS" moodCode="EVN">
-									<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation Comment"/>
-									<value xsi:type="ST">$patient.getCMNoteExtValue("$family.getId()", "Treatment")</value>
-								</observation>
-							</entryRelationship>
-#*    *##end
 #*    *##if ( !$family.Billing_code.isEmpty() )
 							<!-- Diagnosis Billing Code -->
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
 								<!-- Secondary Code (ICD9) -->
-								<observation classCode="OBS" moodCode="EVN"> 
-									<code code="SECCODE" displayName="Secondary Code" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType"/>
-									<value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="$patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")"/>								
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="BILLINGCODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="$patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")"/>
 								</observation>
 							</entryRelationship>
 #*    *##end
 #*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Life Stage").isEmpty() )
-							<!-- Lifestage Observation -->
+							<!-- Lifestage at Onset -->
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.12"/>
 								<!-- Lifestage Observation -->
 								<observation classCode="OBS" moodCode="EVN">
 									<code code="LIFEOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Lifestage Observation"/>
 #*        *##if ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "N")
-									<value xsi:type="CD" code="N" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Newborn"/>
+									<value xsi:type="CD" code="133933007" displayName="Newborn" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "I")
-									<value xsi:type="CD" code="I" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Infant"/>
+									<value xsi:type="CD" code="133931009" displayName="Infant" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "C")
-									<value xsi:type="CD" code="C" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Child"/>
+									<value xsi:type="CD" code="410601007" displayName="Child" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "T")
-									<value xsi:type="CD" code="T" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Adolescent"/>
+									<value xsi:type="CD" code="133937008" displayName="Teenager" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##else
-									<value xsi:type="CD" code="A" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="PITO LifestageObservationValueCode" displayName="Adult"/>
+									<value xsi:type="CD" code="133936004" displayName="Adult" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##end
 								</observation>
 							</entryRelationship>
 #*    *##end
 #*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Age at Onset").isEmpty() )
+							<!--Age at Onset-->
 							<entryRelationship typeCode="COMP">
 								<observation classCode="OBS" moodCode="EVN">
-									<!--Age at Onset-->
-									<code code="30972-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Age at onset"/>
+									<code code="30972-4" displayName="Age at onset" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
 									<value xsi:type="INT" value="$patient.getCMNoteExtValue("$family.getId()", "Age at Onset")"/>
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Treatment").isEmpty() )
+							<!-- Treatment Comment -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+								<!-- Comment Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="TRTNOTE" displayName="Treatment Note" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<text>$patient.getCMNoteExtValue("$family.getId()", "Treatment")</text>
+									<value xsi:type="CD" nullFlavor="NA"/>
 								</observation>
 							</entryRelationship>
 #*    *##end
