@@ -276,7 +276,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 						}
 					}
 
-					log.info("Loaded Prevention Items Code Mapping");
+					log.info("Loaded OSCAR Prevention Items Code Mapping");
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				} finally {

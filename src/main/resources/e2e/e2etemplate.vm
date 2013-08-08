@@ -148,7 +148,13 @@ Alerts
 					<templateId root="2.16.840.1.113883.3.1818.10.2.3.1"/>
 					<code code="ALERTS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Alerts"/>
 					<title>Alerts [with entries]</title>
-					<text>Alerts</text>
+					<text>
+						<list>
+#**##foreach ( $alert in $patient.getAlerts() )
+							<item>$!alert.note</item>
+#**##end
+						</list>
+					</text>
 #**##foreach ( $alert in $patient.getAlerts() )
 					<!--Alert Observation-->
 					<entry typeCode="COMP" contextConductionInd="true">
@@ -190,7 +196,13 @@ Allergies and Intolerances - (Reaction List)
 					<templateId root="2.16.840.1.113883.3.1818.10.2.4.1"/>
 					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies andor Adverse Reactions Doc"/>
 					<title>Allergies and Intolerances (Reaction List) [with entries]</title>
-					<text>Allergies</text>
+					<text>
+						<list>
+#**##foreach ( $allergy in $patient.getAllergies() )
+							<item>$!allergy.description</item>
+#**##end
+						</list>
+					</text>
 #**##foreach ( $allergy in $patient.getAllergies() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.3"/>
@@ -370,7 +382,13 @@ Clinically Measured Observation
 					<templateId root="2.16.840.1.113883.3.1818.10.2.8.1"/>
 					<code code="CLINOBS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Clinically Measured Observations"/>
 					<title>Clinical Measured Observations [with entries]</title>
-					<text>Clinical Measured Observations</text>
+					<text>
+						<list>
+#**##foreach ( $measurement in $patient.getMeasurements() )
+							<item>$!patient.getTypeDescription($measurement.type): $!measurement.dataField ($!measurement.measuringInstruction)</item>
+#**##end
+						</list>
+					</text>
 #**##foreach ( $measurement in $patient.getMeasurements() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.7"/>
@@ -437,7 +455,13 @@ Family History
 					<templateId root="2.16.840.1.113883.3.1818.10.2.13.1"/>
 					<code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
 					<title>Family History [with entries]</title>
-					<text>Family History</text>
+					<text>
+						<list>
+#**##foreach ( $family in $patient.getFamilyHistory() )
+							<item>$!family.note</item>
+#**##end
+						</list>
+					</text>
 #**##foreach ( $family in $patient.getFamilyHistory() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.10"/>
@@ -541,7 +565,19 @@ Immunization List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.14.1"/>
 					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
 					<title>Immunizations List [with entries]</title>
-					<text>Immunizations</text>
+					<text>
+						<list>
+#**##foreach( $immunization in $patient.getImmunizations() )
+#*    *##if ( $immunization.isRefused() )
+							<item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Refused</item>
+#*    *##elseif ( $immunization.isIneligible() )
+							<item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Ineligible</item>
+#*    *##else
+							<item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Completed</item>
+#*    *##end
+#**##end
+						</list>
+					</text>
 #**##foreach( $immunization in $patient.getImmunizations() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
@@ -711,7 +747,22 @@ Laboratory Results & Results
 					<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
 					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
 					<title>Laboratory Results and Reports [with entries]</title>
-					<text>Labs</text>
+					<text>
+#**##foreach( $lab in $patient.getLabs() )
+#*    *##foreach( $labGroup in $lab.getGroup() )
+						<list>
+							<item>$!lab.hl7TextInfo.discipline	$!dateTool.format('MMM dd, yyyy', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))</item>
+#*        *##foreach( $labEntry in $labGroup.getMeasurement() )
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() )
+							<item>$!patient.getLabExtValue("$labEntry.id", "name"): $!patient.cleanString($labEntry.dataField) $!patient.getLabExtValue("$labEntry.id", "unit")</item>
+#*            *##else
+							<item>$!patient.getLabExtValue("$labEntry.id", "name"): $!patient.cleanString($labEntry.dataField)</item>
+#*            *##end
+#*        *##end
+						</list>
+#*    *##end
+#**##end
+					</text>
 #**##foreach( $lab in $patient.getLabs() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
@@ -759,16 +810,16 @@ Laboratory Results & Results
 										<templateId root="2.16.840.1.113883.3.1818.10.4.25"/>
 										<!-- Result Component -->
 										<observation classCode="OBS" moodCode="EVN">
-#*        *##if ( !$patient.getLabExtValue("$labEntry.id", "accession").isEmpty() )
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "accession").isEmpty() )
 											<id extension="$patient.getLabExtValue("$labEntry.id", "accession")" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
-#*        *##else
+#*            *##else
 											<id nullFlavor='UNK'/>
-#*        *##end
-#*        *##if ( !$patient.getLabExtValue("$labEntry.id", "identifier").isEmpty() )
+#*            *##end
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "identifier").isEmpty() )
 											<code code="$patient.cleanString($patient.getLabExtValue("$labEntry.id", "identifier"))" displayName="$patient.getLabExtValue("$labEntry.id", "name")" codeSystemName="LOINC"/>
-#*        *##else
+#*            *##else
 											<code nullFlavor='UNK'/>
-#*        *##end
+#*            *##end
 											<text>$patient.getLabExtValue("$labEntry.id", "name")</text>
 #*            *##if ( $patient.getLabExtValue("$labEntry.id", "olis_status") == "P" )
 											<statusCode code="preliminary"/>
@@ -895,6 +946,24 @@ Medications and Prescriptions - Medication List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
 					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $med in $patient.getMedications() )
+#*    *##if( !$previousDin.equals($med.regionalIdentifier) || !$med.regionalIdentifier )
+#*        *##if ( $med.brandName )
+							<item>$!med.brandName $!med.freqCode $!med.duration $!med.durUnit</item>
+#*        *##else
+							<item>$!med.genericName $!med.dosage $!med.freqCode $!med.duration $!med.durUnit</item>
+#*        *##end
+#*        *##if( !$med.regionalIdentifier )
+#*            *##set( $previousDin = "null" )
+#*        *##else
+#*            *##set( $previousDin = $med.regionalIdentifier )
+#*        *##end
+#*    *##end
+#**##end
+						</list>
+					</text>
 #**##set( $previousDin = "0" )
 #**##foreach ( $med in $patient.getMedications() )
 #*    *##if( !$previousDin.equals("0") && ( !$previousDin.equals($med.regionalIdentifier) || !$med.regionalIdentifier ) )
@@ -1342,7 +1411,13 @@ Problems and Conditions - Problem List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
 					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
 					<title>Problems and Conditions - Problem List [with entries]</title>
-					<text>Problems</text>
+					<text>
+						<list>
+#**##foreach ( $problem in $patient.getProblems() )
+							<item>$!patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND") (ICD9: $problem.getDxresearchCode())</item>
+#**##end
+						</list>
+					</text>
 #**##foreach ( $problem in $patient.getProblems() )
 #*    *##if ( $problem.codingSystem == "icd9" )
 					<entry typeCode="COMP" contextConductionInd="true"> 
@@ -1425,7 +1500,13 @@ Risk Factors
 					<templateId root="2.16.840.1.113883.3.1818.10.2.24.1"/>
 					<code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
 					<title>Risk Factors [with entries]</title>
-					<text>Risk Factors</text>
+					<text>
+						<list>
+#**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
+							<item>$!risk.note</item>
+#**##end
+						</list>
+					</text>
 #**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
 					<entry typeCode="COMP" contextConductionInd="true"> 
 						<templateId root="2.16.840.1.113883.3.1818.10.3.17"/>
