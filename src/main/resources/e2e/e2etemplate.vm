@@ -1431,13 +1431,14 @@ Risk Factors
 						<templateId root="2.16.840.1.113883.3.1818.10.3.17"/>
 						<!-- Risk Factors Organizer -->
 						<organizer classCode="CLUSTER" moodCode="EVN">
-							<id extension="$risk.Id" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
-							<code nullFlavor='UNK'/>
+							<id extension="$risk.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="80943009"  displayName="Risk factor (observable entity)" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
 #*    *##if ( !$risk.isArchived() )
 							<statusCode code="active"/>
 #*    *##else
 							<statusCode code="complete"/>
 #*    *##end
+							<!-- Observation Author -->
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
@@ -1448,7 +1449,6 @@ Risk Factors
 #*    *##end
 								<assignedAuthor>
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
-									<code nullFlavor='NA'/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
 											<given>$patient.getProviderFirstName($risk.providerNo)</given>
@@ -1457,13 +1457,14 @@ Risk Factors
 									</assignedPerson>
 								</assignedAuthor>
 							</author>
+							<!-- Component Observation -->
 							<component typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
-									<id extension="$risk.Id" root="TBD"/>
+									<id nullFlavor="NA"/>
 									<code nullFlavor="UNK"/>
 									<text>$risk.note</text>
 									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $risk.getObservation_date())"/>
-									<value xsi:type="ST">$risk.note</value>
+									<value xsi:type="BL" value="true"/>
 								</observation>
 							</component>
 						</organizer>
