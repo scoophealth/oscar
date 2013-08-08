@@ -66,7 +66,7 @@ try{
             LinkedHashMap IdMap = new LinkedHashMap();
             ArrayList labList = CommonLabTestValues.findValuesByLoinc(demographic_no, loinc_code);
             for (int j=0; j < labList.size(); j++){
-                Hashtable h = (Hashtable) labList.get(j);
+                HashMap h = (HashMap) labList.get(j);
                 String date = ( (String) h.get("date") );
                 String id = (String) h.get("lab_no");
                 IdMap.put(id, h);
@@ -74,7 +74,7 @@ try{
                 // check if this lab has already been added
                 if (!idList.contains(id)){
                     idList.add(id);
-                    Hashtable dateIdHash = new Hashtable();
+                    HashMap dateIdHash = new HashMap();
                     dateIdHash.put("date", date);
                     dateIdHash.put("id", id);
                     dateList.add(dateIdHash);
@@ -285,14 +285,14 @@ function reportWindow(page) {
 				<th>Last Done</th>
 				<!-- Dates start here. Need to have all the dates of the different labs -->
 				<%
-                            // use a custom comparator to compare the Hashtables in the array
+                            // use a custom comparator to compare the HashMaps in the array
                             CumulativeLabValuesComparator comp = new CumulativeLabValuesComparator();
                             Collections.sort(dateList, comp);
                             for (int i=0; i < dateList.size(); i++){
-                                Hashtable dateIdHash = (Hashtable) dateList.get(i);
+                                HashMap dateIdHash = (HashMap) dateList.get(i);
                                 String dateString = (String) dateIdHash.get("date");
                                 Date labDate= UtilDateUtilities.StringToDate(dateString, "yyyy-MM-dd HH:mm:ss");
-                                //Hashtable idHash = (Hashtable) dateIdHash.get("idHash");
+                                //HashMap idHash = (HashMap) dateIdHash.get("idHash");
                                 //String lab_no = (String) idHash.get("lab_no");
                                 //String lab_type = (String) idHash.get("lab_type");
                                 String lab_no = (String) dateIdHash.get("id");
@@ -325,7 +325,7 @@ function reportWindow(page) {
                                 String abn = "N";
                                 if (IdMap.size() > 0){
                                     // the latest date will be the first one
-                                    Hashtable ht = (Hashtable) IdMap.get(IdMap.keySet().iterator().next());
+                                    HashMap ht = (HashMap) IdMap.get(IdMap.keySet().iterator().next());
                                     latestVal = (String) ht.get("result");
                                     latestDate = (String) ht.get("date");
                                     abn = (String) ht.get("abn");
@@ -340,11 +340,11 @@ function reportWindow(page) {
 				<%
                             // display all of values from all the labs for the given test
                             for (int i = 0; i < dateList.size(); i++){
-                                    Hashtable dateIdHash = (Hashtable) dateList.get(i);
+                                    HashMap dateIdHash = (HashMap) dateList.get(i);
                                     String labVal = "";
                                     abn = "N";
                                     if (IdMap.size() > 0 ){
-                                        Hashtable ht = (Hashtable) IdMap.get(dateIdHash.get("id"));
+                                        HashMap ht = (HashMap) IdMap.get(dateIdHash.get("id"));
                                         if (ht != null){
                                             labVal = (String) ht.get("result");
                                             abn = (String) ht.get("abn");

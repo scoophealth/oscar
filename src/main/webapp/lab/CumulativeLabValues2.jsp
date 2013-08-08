@@ -189,9 +189,9 @@ function addLabToList(req){
                   <div style="background-color: #EEEEFF;" >
                   <ul >               
                   <%  ArrayList labTestDates = new ArrayList();
-                      Hashtable labsBasedOnName = new Hashtable();
+                      HashMap labsBasedOnName = new HashMap();
                   for (int i = 0 ; i < prevList.size(); i++){ 
-                      Hashtable h = (Hashtable) prevList.get(i);
+                      HashMap h = (HashMap) prevList.get(i);
                       String prevName = (String) h.get("testName");
                       
                       
@@ -199,9 +199,9 @@ function addLabToList(req){
                       String labType = (String) h.get("labType");
    
                       ArrayList list   = CommonLabTestValues.findValuesForTest(labType, demographic_no, prevName);
-                      Hashtable labsBasedOnDate = new Hashtable();
+                      HashMap labsBasedOnDate = new HashMap();
                       for (int g = 0; g < list.size(); g++){
-                          Hashtable hdata = (Hashtable) list.get(g);
+                          HashMap hdata = (HashMap) list.get(g);
                          //String latestDate = (String) hdata.get("collDate");
                          Date latestDate = (Date) hdata.get("collDateDate");
                            
@@ -239,7 +239,7 @@ function addLabToList(req){
 			</tr>
 
 			<%for (int i = 0 ; i < prevList.size(); i++){ 
-                      Hashtable h = (Hashtable) prevList.get(i);
+                      HashMap h = (HashMap) prevList.get(i);
                       String prevName = (String) h.get("testName");
                       String labType = (String) h.get("labType");
                       
@@ -247,10 +247,10 @@ function addLabToList(req){
                       String latestDate = "&nbsp;";
                       String abn = "";
                       
-                      Hashtable dater2 = (Hashtable) labsBasedOnName.get(labType+"|"+prevName);
+                      HashMap dater2 = (HashMap) labsBasedOnName.get(labType+"|"+prevName);
                       for (int h2 = 0; h2 < labTestDates.size(); h2++){  
                          Date labDate= (Date) labTestDates.get(h2);
-                         Hashtable hdata = (Hashtable) dater2.get(labDate);
+                         HashMap hdata = (HashMap) dater2.get(labDate);
                          if (hdata != null){
                             latestVal = (String) hdata.get("result");
                             latestDate = UtilDateUtilities.DateToString( (Date) hdata.get("collDateDate") , "dd-MMM yyyy");
@@ -264,11 +264,11 @@ function addLabToList(req){
 				<td><%=StringUtils.maxLenString(prevName,30,27,"...")%></td>
 				<td <%=abn%>><%=latestVal%></td>
 				<td <%=abn%>><%=latestDate%></td>
-				<%  Hashtable dater = (Hashtable) labsBasedOnName.get(labType+"|"+prevName);
+				<%  HashMap dater = (HashMap) labsBasedOnName.get(labType+"|"+prevName);
                           for (int h2 = 0; h2 < labTestDates.size(); h2++){  
                             //String labDate= (String) labTestDates.get(h2);
                             Date labDate= (Date) labTestDates.get(h2);
-                            Hashtable hdata = (Hashtable) dater.get(labDate);
+                            HashMap hdata = (HashMap) dater.get(labDate);
                             String val = "&nbsp;";
                             String ab2 = "";
                             if (hdata != null){

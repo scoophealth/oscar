@@ -714,12 +714,12 @@
         <ViolationValue>/src/main/webapp/form/formRhImmuneGlobulin.jsp:h = new  Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:&lt;%  ArrayList labTestDates = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable labsBasedOnDate = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable labsBasedOnName = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:HashMap labsBasedOnDate = new HashMap();</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:HashMap labsBasedOnName = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:ArrayList dateList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:ArrayList idList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:HashMap measIdMap = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable dateIdHash = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:HashMap dateIdHash = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:LinkedHashMap IdMap = new LinkedHashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:LinkedHashMap nameMap = new LinkedHashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Collections.sort(list,new SortHashtable());</ViolationValue>
