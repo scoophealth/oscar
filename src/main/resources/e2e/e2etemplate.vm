@@ -38,6 +38,16 @@ CDA Header
 -->
 	<realmCode code="CA" />
 	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+	<!-- Conforms to the BC PITO Standard Header specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.7.1"/>
+	<!-- Conforms to the BC PITO EMR Conversion Document specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.1"/>
+	<!-- Conforms to the BC PITO EMR Generic Episodic Document specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.2"/>
+	<!-- Conforms to the BC PITO EMR Patient Transfer Document specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.3"/>
+	<!-- Conforms to the BC PITO EMR Generic Structured Referal specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.6"/>
 	<id extension="$demographic.demographicNo" root="2.16.840.1.113883.3.933"/>
 	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
 	<title>PITO EMR-2-EMR Record of $demographic.firstName $demographic.lastName</title>
@@ -135,8 +145,24 @@ CDA Header
 e-MS CDA Structured Body
 ********************************************************
 -->
-	<component>
-		<structuredBody>
+	<component typeCode="COMP" contextConductionInd="true">
+		<structuredBody classCode="DOCBODY" moodCode="EVN">
+			<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+			<languageCode code="en-CA"/>
+<!--
+********************************************************
+Advance Directives
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.2"/>
+					<code code="42348-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Advance Directives"/>
+					<title>Advance Directives Section [without entries]</title>
+					<text>No Advance Directives</text>
+				</section>
+			</component>
 <!--
 ********************************************************
 Alerts
@@ -446,6 +472,20 @@ Clinically Measured Observation
 #end
 <!--
 ********************************************************
+Encounter History and Notes
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.22"/>
+					<code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
+					<title>Encounter History and Notes [without entries]</title>
+					<text>No Encounter History</text>
+				</section>
+			</component>
+<!--
+********************************************************
 Family History
 ********************************************************
 -->
@@ -738,6 +778,20 @@ Immunization List
 #end
 <!--
 ********************************************************
+Investigative Procedure History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.15"/>
+					<code code="INVPROC" displayName="Investigative Procedure Section" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" />
+					<title>Investigative Procedure History (without entries)</title>
+					<text>No Investigative Procedure History</text>
+				</section>
+			</component>
+<!--
+********************************************************
 Laboratory Results & Results
 ********************************************************
 -->
@@ -935,6 +989,34 @@ Laboratory Results & Results
 				</section>
 			</component>
 #end
+<!--
+********************************************************
+Medical History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.17"/>
+					<code code="11348-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Past Illness"/>
+					<title>Medical History (without entries)</title>
+					<text>No Medical History</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Medical Imaging History Results & Reports
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.18"/>
+					<code code="55115-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Requested imaging studies information"/>
+					<title>Medical Imaging Results and Reports (without entries)</title>
+					<text>No Medical Imaging Results and Reports</text>
+				</section>
+			</component>
 <!--
 ********************************************************
 Medications and Prescriptions - Medication List
@@ -1402,6 +1484,20 @@ Code"/>
 #end
 <!--
 ********************************************************
+Orders & Requests
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.20"/>
+					<code code="REQS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Problems list Reported"/>
+					<title>Orders and Requests (without entries)</title>
+					<text>No Orders and Requests</text>
+				</section>
+			</component>
+<!--
+********************************************************
 Problems and Conditions - Problem List
 ********************************************************
 -->
@@ -1491,6 +1587,21 @@ Problems and Conditions - Problem List
 #end
 <!--
 ********************************************************
+Purpose
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.22"/>
+					<!-- Purpose Section -->
+					<code code="42349-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Reason For Referral"/>
+					<title>Purpose [without entries]</title>
+					<text>Purpose not defined</text>
+				</section>
+			</component>
+<!--
+********************************************************
 Risk Factors
 ********************************************************
 -->
@@ -1563,6 +1674,34 @@ Risk Factors
 				</section>
 			</component>
 #end
+<!--
+********************************************************
+Surgical Procedure History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.25"/>
+					<code code="10167-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of surgical procedures"/>
+					<title>Care History [without entries]</title>
+					<text>No Care History</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Treatment History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.26"/>
+					<code code="62387-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Interventions "/>
+					<title>Treatment History [without entries]</title>
+					<text>No Treatment History</text>
+				</section>
+			</component>
 		</structuredBody>
 	</component>
 </ClinicalDocument>
