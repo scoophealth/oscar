@@ -46,6 +46,7 @@ public class EFormBase {
     protected String providerNo;
     protected String formDate;
     protected String formTime;
+    protected boolean showLatestFormOnly=false;
     protected boolean patientIndependent=false;
     protected String roleType;
 
@@ -67,12 +68,13 @@ public class EFormBase {
     }
 
     public EFormBase(String fid, String formName, String formSubject,
-            String formFileName, String formHtml, boolean patientIndependent, String roleType) {
+            String formFileName, String formHtml, boolean showLatestFormOnly, boolean patientIndependent, String roleType) {
         this.fid = fid;
         this.formName = formName;
         this.formSubject = formSubject;
         this.formHtml = formHtml;
         this.formFileName = formFileName;
+        this.showLatestFormOnly = showLatestFormOnly;
         this.patientIndependent = patientIndependent;
         this.roleType = roleType;
         dateTimeStamp();
@@ -173,7 +175,15 @@ public class EFormBase {
         return this.formCreator;
     }
 
-    public boolean getPatientIndependent() {
+    public boolean isShowLatestFormOnly() {
+        return this.showLatestFormOnly;
+    }
+
+    public void setShowLatestFormOnly(boolean showLatestFormOnly) {
+        this.showLatestFormOnly = showLatestFormOnly;
+    }
+
+    public boolean isPatientIndependent() {
         return this.patientIndependent;
     }
 
