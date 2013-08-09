@@ -139,23 +139,28 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                                         enctype="multipart/form-data">
                                         <span style="color: red; font-size: 10px;"> <html:errors /> </span>
                                         <tr><td class="fieldLabel"><bean:message key="eform.uploadhtml.formName" /></td><td class="fieldLabel"><bean:message key="eform.uploadhtml.formSubject" /></td></tr>
-                                        <tr><td><input type="text" name="formName" size="30"></td><td><input type="text" name="formSubject" size="30"></td></tr>
+                                        <tr><td><input type="text" name="formName" size="25"></td><td><input type="text" name="formSubject" size="25"></td></tr>
                                         <tr><td colspan="2" style="text-align: left;"><input type="file" name="formHtml" size="50"></td></tr>
                                         
-                                        <tr><td align='left'>eForm role type :</td>
-                                        <td align='right'> <select name="roleType">
-                                        <option value="" >- select one -</option>
-                                       <%  ArrayList roleList = EFormUtil.listSecRole();
-  											for (int i=0; i<roleList.size(); i++) {    
-  										%>  											
-                                        	
-                                        		<option value="<%=roleList.get(i) %>"><%=roleList.get(i) %></option>
-                                        	
-                                        <%} %></select>
-                                        </td></tr>
                                         <tr>
-                                            <td style="text-align: left; font-size: 12px"><input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/></td>
-                                            <td style="text-align: right;"><input type="submit" name="subm" value="<bean:message key="eform.uploadhtml.btnUpload"/>"></td>
+	                                        <td style="text-align: left">
+	                                        	<input type="checkbox" name="showLatestFormOnly" value="true"/><bean:message key="eform.uploadhtml.showLatestFormOnly"/>
+	                                        	&nbsp; &nbsp;
+	                                        	<input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/>
+	                                       	</td>
+	                                       	<td style="text-algin: right">
+	                                       		eForm role type :
+	                                       		<select name="roleType">
+	                                       			<option value="" >- select one -</option>
+	                                       <%  ArrayList roleList = EFormUtil.listSecRole();
+	  											for (int i=0; i<roleList.size(); i++) {    
+	  										%>  											
+	                                       			<option value="<%=roleList.get(i) %>"><%=roleList.get(i) %></option>
+	                                        <%} %></select>
+	                                        </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align: right;"><input type="submit" name="subm" value="<bean:message key="eform.uploadhtml.btnUpload"/>"></td>
                                         </tr>
                                 </html:form>
                         </table>
@@ -163,7 +168,6 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                     </div>
 
                     <div id="importDiv" class="inputDiv" style="display: none;">
-                        <center>
                         <table style="text-align: center; border-collapse: collapse; border: 0px;">
                                 <form action="../eform/manageEForm.do" method="POST" enctype="multipart/form-data">
                                     <input type="hidden" name="method" value="importEForm">
@@ -176,7 +180,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                                                 <%}%>
                                             </td></tr>
                                         <%}%>
-                                        <tr><td class="fieldLabel">Zip File: </td></tr>
+                                        <tr><td class="fieldLabel"><bean:message key="eform.uploadhtml.zipFile" />:</td></tr>
                                         <tr><td colspan="2" style="text-align: left;"><input type="file" name="zippedForm" size="50"></td></tr>
                                         <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="Import" onclick="this.value = 'Importing...'; this.disabled = true;"></td>
                                         </tr>
@@ -184,7 +188,6 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                                         </tr>
                                 </form>
                         </table>
-                        </center>
                     </div>
 
 

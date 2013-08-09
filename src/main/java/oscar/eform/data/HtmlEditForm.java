@@ -35,6 +35,7 @@ public class HtmlEditForm extends ActionForm {
     private String formSubject = "";
     private String formFileName = "";
     private String formHtml = "";
+    private boolean showLatestFormOnly = false;
     private boolean patientIndependent = false;
     private String roleType = "";
     
@@ -97,7 +98,15 @@ public class HtmlEditForm extends ActionForm {
         this.formHtml = formHtml;
     }
     
-    public boolean getPatientIndependent() {
+    public boolean isShowLatestFormOnly() {
+        return showLatestFormOnly;
+    }
+
+    public void setShowLatestFormOnly(boolean showLatestFormOnly) {
+        this.showLatestFormOnly = showLatestFormOnly;
+    }
+    
+    public boolean isPatientIndependent() {
         return patientIndependent;
     }
 
