@@ -1403,7 +1403,8 @@ function createAddAll(d,t){
              <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
              <li><a href="#tab2" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Allergy'/></a></li>
              <!-- hiding for now don't think we want this<li><a href="#tab3" data-toggle="tab"><bean:message key='oscarEncounter.reminders.title'/></a></li>-->
-             <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/></a></li>
+             <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/> (<%=warnings.size() %>)</a></li>
+             <li><a href="#tab5" data-toggle="tab">Recommendations (<%=recomendations.size() %>)</a></li>
            </ul>
            <div class="tab-content">
                <div id="tab1" class="tab-pane active well well-small">
@@ -1467,26 +1468,58 @@ function createAddAll(d,t){
                </div>
                
                <div id="tab4" class="tab-pane well well-small">
-               <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
+               <% if (warnings.size() > 0 || dsProblems) { %>
       
-				<span style="font-size:12px;"><%=flowSheet%> Recommendations</span>
 				
+				<%if (warnings.size() > 0){ //TODO: assess whether warnings needs it's own tab with a tally in tab title%>
+				<span style="font-size:12px;"><%=flowSheet%> Warnings: </span>
 				<ul >
 				<% for (String warn : warnings){ %>
 				<li style="color: red;"><%=warn%></li>
 				<%}%>
-				<% for (String warn : recomendations ){%>
-				<li style="color: black;"><%=warn%></li>
-				<%}%>
-
-				<% if (dsProblems){ %>
-				<li style="color: red;">Decision Support Had Errors Running.</li>
-				<% }%>
 				</ul>
+				<br>
+				<%}%>
+								
+				
+				<% if (dsProblems){ %>
+				<ul>
+				<li style="color: red;">Decision Support Had Errors Running.</li>
+				</ul>
+				<% }%>
+				
 				
 				<% }else{ %>
 				      
 					No Warnings
+				<%}%>
+               </div>
+
+ <div id="tab5" class="tab-pane well well-small">
+               <% if (recomendations.size() > 0  || dsProblems) { %>
+      
+				
+				<%if (recomendations.size() > 0){ //TODO: assess whether recommendations needs it's own tab with a tally in tab title%> 
+				<span style="font-size:12px;"><%=flowSheet%> Recommendations: </span>
+				<ul>
+				<% for (String warn : recomendations ){%>
+				<li style="color: black;"><%=warn%></li>
+				<%}%>
+				</ul>
+				<br>
+				<%}%>
+				
+				
+				<% if (dsProblems){ %>
+				<ul>
+				<li style="color: red;">Decision Support Had Errors Running.</li>
+				</ul>
+				<% }%>
+				
+				
+				<% }else{ %>
+				      
+					No Recommendations
 				<%}%>
                </div>
                
@@ -1522,19 +1555,18 @@ function createAddAll(d,t){
 <%} }%> 
 
 
-<!-- TODO: These pain and topHTMLStream will become tabs where renal is instead of being there own tab set -->
  <%if(temp.toUpperCase().equals("PAIN")){ %>
  <!-- pain  start-->
    
            <ul class="nav nav-tabs">
-              <li class="active"><a href="#pain">Pain Toolkit</a></li>
+              <li class="active"><a href="#toolkit"><%=temp.toUpperCase() %> Toolkit</a></li>
            </ul>
-               <div id="pain">   
+               <div id="toolkit">   
     
     <div class="tabbable">           
     <ul class="nav nav-pills">
-    	<li class="active"><a href="#completed" data-toggle="tab" title="Completed Resources"><bean:message key="global.completed" /></a></li>
-    	<li><a href="#templates" data-toggle="tab" title="Resource Templates"><bean:message key="global.templates" /></a></li>
+    	<li class="active"><a href="#completed" data-toggle="tab" title="forms completed in the past"><bean:message key="global.completed" /></a></li>
+    	<li><a href="#templates" data-toggle="tab" title="new forms to be completed"><bean:message key="global.templates" /></a></li>
 	
     </ul>
 <%
@@ -1545,7 +1577,7 @@ function createAddAll(d,t){
     <div class="tab-content">
 		<div id="completed" class="tab-pane active">
 		<table class="table table-striped table-condensed table-hover">
-		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td><td><strong><bean:message key="eform.showmyform.formDate" /></strong></td></tr>   
+		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td><td><strong>Completed Date</strong></td></tr>   
 		<%
 								ArrayList<HashMap<String,? extends Object>> eFormsCompleted = EFormUtil.listPatientEForms("form_name", EFormUtil.CURRENT, demographic_no, groupToView, roleName);
 														
@@ -1571,7 +1603,7 @@ function createAddAll(d,t){
 		
 		    <div id="templates" class="tab-pane">
 		<table class="table table-striped table-condensed table-hover">
-		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td><td><strong><bean:message key="eform.showmyform.formDate" /></strong></td></tr>              
+		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td></tr>              
 		 <%		
 		      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms("form_name", EFormUtil.CURRENT, groupToView, roleName);
 		      if (eForms.size() > 0) {
@@ -1581,7 +1613,6 @@ function createAddAll(d,t){
 					<tr>
 		        	 <td><a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>')"><%=curForm.get("formName")%></a></td>
 		        	 <td><%=curForm.get("formSubject")%></td>
-					 <td><%=curForm.get("formDate")%></td>
 					</tr>
 		        	
 		<%         }
@@ -1995,28 +2026,33 @@ $("#MoreDx").click(function(){
 		Integer iMin = 0;
 		String vName = null;
 		
-    	List<Validations> vs = ectValidation.getValidationType(inputType, mInstructions);
-    	
-    	if (!vs.isEmpty()) {
-			Validations v = vs.iterator().next();		
-			dMax = v.getMaxValue();
-			dMin = v.getMinValue();
-			iMax = v.getMaxLength();
-			iMin = v.getMinLength();
-			regExp = v.getRegularExp();
-			vName = v.getName().toString();
-		}
-    	
-    	
-    	if(regExp==null && dMax>0){
-    		pattern="min='"+dMin+"' max='"+dMax+"'"; 	
-    	}else if(vName.equals("No Validations")){
-    		pattern="rel='noValidation'";
-    	}else if(vName.equals("Numeric Value greater than or equal to 0")){
-    		pattern="min='0' rel='greaterThanZero'";
-    	}else{
-    		pattern="pattern='"+regExp+"' rel='"+vName+"'";
-    	}
+		 try{
+		    	List<Validations> vs = ectValidation.getValidationType(inputType, mInstructions);
+		    	
+		    	if (!vs.isEmpty()) {
+					Validations v = vs.iterator().next();		
+							dMax = v.getMaxValue();
+							dMin = v.getMinValue();
+							iMax = v.getMaxLength();
+							iMin = v.getMinLength();
+							regExp = v.getRegularExp();
+							vName = v.getName().toString();
+							
+					    	if(regExp==null && dMax>0){
+					    		pattern="min='"+dMin+"' max='"+dMax+"'"; 	
+					    	}else if(vName.equals("No Validations")){
+					    		pattern="rel='noValidation'";
+					    	}else if(vName.equals("Numeric Value greater than or equal to 0")){
+					    		pattern="min='0' rel='greaterThanZero'";
+					    	}else{
+					    		pattern="pattern='"+regExp+"' rel='"+vName+"'";
+					    	}
+
+				}
+		    	
+		    }catch(Exception e){
+		    	MiscUtils.getLogger().error("Error getting validation for Health Tracker "+inputType,e);
+		    }
     	
     	htmlValidation=pattern;
     	
