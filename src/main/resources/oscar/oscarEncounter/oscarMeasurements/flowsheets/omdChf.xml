@@ -302,6 +302,9 @@
         <validationRule name="No Validations" maxValue="" minValue="" isDate="" isNumeric="" regularExp="" maxLength="" minLength="" />
     </measurement>
 
-    
+    <item measurement_type="CASA" display_name="Consider ASA" guideline="" graphable="no" value_name="Considered" />
+    <measurement type="CASA" typeDesc="Consider ASA" typeDisplayName="Consider ASA" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement> 
  
 </flowsheet>
