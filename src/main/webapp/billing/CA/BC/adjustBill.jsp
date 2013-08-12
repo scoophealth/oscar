@@ -722,19 +722,19 @@ if(billService != null){
                 </tr>
                 <tr>
                   <td class="bCellData">
-                    <a href="javascript:ScriptAttach('dx1')">DX 1</a><input type="text" name="dx1" value="<%=allFields.getProperty("dx_code1")%>" size="10">
+                    <a href="javascript:ScriptAttach('dx1')">DX 1</a><input type="text" name="dx1" onClick="checkSubmitType()" value="<%=allFields.getProperty("dx_code1")%>" size="10">
                   </td>
                   <td><%=billform.getDiagDesc(allFields.getProperty("dx_code1"),billRegion)%></td>
                 </tr>
                 <tr>
                   <td   class="bCellData">
-                    <a href="javascript:ScriptAttach('dx2')">DX 2</a><input type="text" name="dx2" value="<%=allFields.getProperty("dx_code2")%>" size="10">
+                    <a href="javascript:ScriptAttach('dx2')">DX 2</a><input type="text" name="dx2" onClick="checkSubmitType()" value="<%=allFields.getProperty("dx_code2")%>" size="10">
                   </td>
                   <td><%=billform.getDiagDesc(allFields.getProperty("dx_code2"),billRegion)%></td>
                 </tr>
                 <tr>
                   <td class="bCellData">
-                    <a href="javascript:ScriptAttach('dx3')">DX 3</a><input type="text" name="dx3" value="<%=allFields.getProperty("dx_code3")%>" size="10">
+                    <a href="javascript:ScriptAttach('dx3')">DX 3</a><input type="text" name="dx3" onClick="checkSubmitType()" value="<%=allFields.getProperty("dx_code3")%>" size="10">
                   </td>
                   <td><%=billform.getDiagDesc(allFields.getProperty("dx_code3"),billRegion)%></td>
                 </tr>
