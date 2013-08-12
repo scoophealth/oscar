@@ -107,7 +107,7 @@
 			
 			a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
 			a.setUrgency(request.getParameter("urgency"));
-			
+			a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
 			appointmentDao.persist(a);
 			
 
@@ -203,7 +203,7 @@
 		}
 
 		if (request.getParameter("groupappt").equals("Group Update")) {
-			Object[] param = new Object[21];
+			Object[] param = new Object[22];
             param[0]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
             param[1]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
             param[2]=request.getParameter("keyword");
@@ -215,8 +215,9 @@
             param[8]=createdDateTime;
             param[9]=userName;
             param[10]=request.getParameter("urgency");
+            param[11]=request.getParameter("reasonCode");
  	        for(int k=0; k<paramE.length; k++) 
- 	        	param[k+11] = paramE[k];
+ 	        	param[k+12] = paramE[k];
 
 			// repeat doing
 			while (true) {
@@ -235,16 +236,17 @@
 					appt.setUpdateDateTime(ConversionUtils.fromTimestampString(createdDateTime));
 					appt.setLastUpdateUser(userName);
 					appt.setUrgency(request.getParameter("urgency"));
+					appt.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
 					appointmentDao.merge(appt);
 					rowsAffected++;
 				}
 				
 				
-				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[11], "yyyy-MM-dd"));
+				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[12], "yyyy-MM-dd"));
 				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
 
 				if (gCalDate.after(gEndDate)) break;
-				else param[11] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
+				else param[12] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
 			}
         	bSucc = true;
 		}
