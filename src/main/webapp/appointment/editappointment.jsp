@@ -63,6 +63,9 @@
 <%@ page import="org.oscarehr.PMmodule.service.ProviderManager" %>
 <%@ page import="org.oscarehr.PMmodule.service.ProgramManager" %>
 <%@ page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.oscarehr.managers.LookupListManager"%>
+<%@ page import="org.oscarehr.common.model.LookupList"%>
+<%@ page import="org.oscarehr.common.model.LookupListItem"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
@@ -81,16 +84,18 @@
 	
     List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
 
-  ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
+    LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+    LookupList reasonCodes = lookupListManager.findLookupListByName("reasonCode");
 
-  oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
-  String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
+    ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
 
-  AppointmentStatusMgr apptStatusMgr =  new AppointmentStatusMgrImpl();
-  List allStatus = apptStatusMgr.getAllActiveStatus();
+    oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+    String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
 
-  Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
+    AppointmentStatusMgr apptStatusMgr =  new AppointmentStatusMgrImpl();
+    List allStatus = apptStatusMgr.getAllActiveStatus();
 
+    Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
  
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
@@ -667,7 +672,24 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
         <li class="row weak">
             <div class="label"><bean:message key="Appointment.formReason" />:</div>
             <div class="input">
-				<textarea name="reason" tabindex="2" rows="2" wrap="virtual"
+				<select name="reasonCode">
+					<%
+					Integer apptReasonCode = bFirstDisp ? (appt.getReasonCode() == null ? 0 : appt.getReasonCode()) : Integer.parseInt(request.getParameter("reasonCode"));
+					if(reasonCodes != null) {
+						for(LookupListItem reasonCode : reasonCodes.getItems()) {
+					%>
+						<option value="<%=reasonCode.getId()%>" <%=apptReasonCode.equals(reasonCode.getId()) ? "selected=\"selected\"" : "" %>><%=StringEscapeUtils.escapeHtml(reasonCode.getValue())%></option>
+					<%
+					 	}
+					} else {
+					%>
+						<option value="-1">Other</option>
+					<%
+					}
+					%>
+				</select>
+ 				</br>
+				<textarea id="reason" name="reason" tabindex="2" rows="2" wrap="virtual"
 					cols="18"><%=bFirstDisp?appt.getReason():request.getParameter("reason")%></textarea>
             </div>
             <div class="space">&nbsp;</div>

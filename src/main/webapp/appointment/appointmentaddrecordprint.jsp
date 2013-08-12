@@ -72,6 +72,7 @@
 	a.setCreateDateTime(new java.util.Date());
 	a.setCreator(request.getParameter("creator"));
 	a.setRemarks(request.getParameter("remarks"));
+	a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
 	//the keyword(name) must match the demographic_no if it has been changed
     demo = null;
 if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
