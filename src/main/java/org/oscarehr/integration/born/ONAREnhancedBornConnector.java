@@ -174,14 +174,13 @@ public class ONAREnhancedBornConnector {
 		File file = new File(tmpPath + File.separator + filename);
 		
 		
-		BornFtpManager ftpManager = new BornFtpManager();
 		String path = file.getPath();
 		if(path.indexOf(File.separator)!=-1)
 			path = path.substring(0,path.lastIndexOf(File.separator));
 		else
 			path="";
 		
-		ftpManager.uploadDataToRepository(path, file.getName());
+		BornFtpManager.uploadONAREnhancedDataToRepository(path, file.getName());
 
 		for(Integer formId:formIdsSent) {
 			updateToSent(formId);
