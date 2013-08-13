@@ -559,6 +559,13 @@
 			<version>0.12-DRAFT</version>
 		</dependency>
 
+		<!-- FOR BORN18MWBV Project - Rourke, NDDS, 18M Summary in XML format -->
+		<dependency>
+			<groupId>ca.bornontario</groupId>
+			<artifactId>x18MEWBV</artifactId>
+			<version>1.6</version>
+		</dependency>
+
         <!-- FOR ORN Project - CKD config in XML format -->
         <dependency>
                 <groupId>org.oscarehr.ckd</groupId>

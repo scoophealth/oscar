@@ -23,7 +23,9 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +50,15 @@ public class BornTransmissionLogDaoTest extends DaoTestFixtures {
 	public void testCreate() throws Exception {
 		BornTransmissionLog entity = new BornTransmissionLog();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
+		
+		entity.setFilename("test01.xml");
+		entity.setSubmitDateTime(new Date());
+		entity.setSuccess(true);
 		dao.persist(entity);
-		assertNotNull(entity.getId());
+		
+		Long expected = 2L;
+		assertEquals(expected, dao.getSeqNoToday("test", 2));
+		expected = 1L;
+		assertEquals(expected, dao.getSeqNoToday("noname", 2));
 	}
 }

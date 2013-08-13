@@ -48,6 +48,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.event.EventService;
 import org.oscarehr.match.IMatchManager;
 import org.oscarehr.match.MatchManager;
 import org.oscarehr.match.MatchManagerException;
@@ -201,13 +202,17 @@ public class AddEFormAction extends Action {
 				sameform = curForm.getFormHtml().equals(prevForm.getFormHtml());
 			}			
 		}
-		if (!sameform) {
+		if (!sameform) { //save eform data
 			EFormDataDao eFormDataDao=(EFormDataDao)SpringUtils.getBean("EFormDataDao");
 			EFormData eFormData=toEFormData(curForm);
 			eFormDataDao.persist(eFormData);
 			String fdid = eFormData.getId().toString();
 
 			EFormUtil.addEFormValues(paramNames, paramValues, new Integer(fdid), new Integer(fid), new Integer(demographic_no)); //adds parsed values
+
+			//publish an EFormDataCreateEvent
+		    EventService eventService = SpringUtils.getBean(EventService.class);
+			eventService.eformDataCreated(this, eFormData.getId(), eFormData.getDemographicId(), eFormData.getFormName());
 
 			//post fdid to {eform_link} attribute
 			if (eform_link!=null) {

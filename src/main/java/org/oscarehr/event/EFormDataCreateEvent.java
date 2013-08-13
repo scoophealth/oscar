@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,34 +21,35 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.event;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+import org.springframework.context.ApplicationEvent;
 
-package org.oscarehr.integration.born;
+public class EFormDataCreateEvent extends ApplicationEvent {
+	Logger logger = MiscUtils.getLogger();
 
-import java.io.File;
+	private Integer eformDataId;
+	private Integer demographicNo;
+	private String eformName;
+	
+	public EFormDataCreateEvent(Object source, Integer fdid, Integer demographicNo, String eformName) {
+		super(source);
+		this.eformDataId = fdid;
+		this.demographicNo = demographicNo;
+		this.eformName = eformName;
+    }
 
-/**
- * This class will determine which ONAREnhanced forms need to be sent to
- * BORN, and perform the transaction.
- *
- * It will also check for any error files, and email any errors
- * to specified administrator
- *
- *
- * @author Marc Dumontier
- *
- */
-public class AR2005BornConnector {
-
-	public AR2005BornConnector() {
-
+	public Integer getEformDataId() {
+		return eformDataId;
 	}
 
-	public void updateBorn() throws Exception {
-		File file = File.createTempFile("born", ".xml");		
-		String path = file.getPath();
-		path = path.substring(0,path.lastIndexOf(File.separator));
-		BornFtpManager.uploadONAREnhancedDataToRepository(path, file.getName());
-	}
+	public String getEformName() {
+	    return eformName;
+    }
 
+	public Integer getDemographicNo() {
+	    return demographicNo;
+    }
 }
