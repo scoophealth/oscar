@@ -799,7 +799,7 @@ Laboratory Results & Results
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
-					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
+					<code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
 					<title>Laboratory Results and Reports [with entries]</title>
 					<text>
 #**##foreach( $lab in $patient.getLabs() )
@@ -888,7 +888,7 @@ Laboratory Results & Results
 											<effectiveTime nullFlavor="UNK"/>
 #*            *##end
 #*            *##if ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() && $patient.isNumeric($labEntry.dataField) )
-											<value xsi:type="PQ" value="$patient.cleanString($labEntry.dataField)" unit="$patient.getLabExtValue("$labEntry.id", "unit")"/>
+											<value xsi:type="PQ" value="$patient.cleanString($labEntry.dataField)" unit="$patient.getLabExtValue("$labEntry.id", "unit").replaceAll("\s","_")"/>
 #*            *##elseif ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() )
 											<value xsi:type="ST">$patient.cleanString($labEntry.dataField) $patient.getLabExtValue("$labEntry.id", "unit")</value>
 #*            *##else
@@ -1100,7 +1100,7 @@ Code"/>
 #*        *##end
 #*        *##if( $e2e.formCodeMap($med.drugForm) )
 										<e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
-#*        *##elseif ( $med.drugForm )
+#*        *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
 										<e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
 #*        *##end
 #*        *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
@@ -1113,6 +1113,8 @@ Code"/>
 												<e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
 												<e2e:name>$med.genericName</e2e:name>
 											</e2e:ingredient>
+#*            *##else
+											<e2e:ingredient nullFlavor="UNK"/>
 #*            *##end
 										</e2e:ingredient>
 #*        *##end
@@ -1186,7 +1188,7 @@ Code"/>
 #*    *##end
 #*    *##if( $e2e.formCodeMap($med.drugForm) )
 												<e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
-#*    *##elseif ( $med.drugForm )
+#*    *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
 												<e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
 #*    *##end
 #*    *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
@@ -1199,6 +1201,8 @@ Code"/>
 														<e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
 														<e2e:name>$med.genericName</e2e:name>
 													</e2e:ingredient>
+#*        *##else
+													<e2e:ingredient nullFlavor="UNK"/>
 #*        *##end
 												</e2e:ingredient>
 #*    *##end
@@ -1412,7 +1416,7 @@ Code"/>
 #*    *##end
 #*    *##if( $e2e.formCodeMap($med.drugForm) )
 														<e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
-#*    *##elseif ( $med.drugForm )
+#*    *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
 														<e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
 #*    *##end
 #*    *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
@@ -1425,6 +1429,8 @@ Code"/>
 																<e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
 																<e2e:name>$med.genericName</e2e:name>
 															</e2e:ingredient>
+#*        *##else
+															<e2e:ingredient nullFlavor="UNK"/>
 #*        *##end
 														</e2e:ingredient>
 #*    *##end

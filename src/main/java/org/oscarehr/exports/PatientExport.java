@@ -231,7 +231,7 @@ public abstract class PatientExport {
 			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
 			name = providerData.getFirstName();
 		} catch (Exception e) {
-			log.warn("getProviderFirstName - Provider not found");
+			log.warn("getProviderFirstName - Provider ".concat(providerNo).concat(" not found"));
 			name = "";
 		}
 		return name;
@@ -249,7 +249,7 @@ public abstract class PatientExport {
 			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
 			name = providerData.getLastName();
 		} catch (Exception e) {
-			log.warn("getProviderLastName - Provider not found");
+			log.warn("getProviderLastName - Provider ".concat(providerNo).concat(" not found"));
 			name = "";
 		}
 		return name;
