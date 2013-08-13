@@ -60,7 +60,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 public final class MiscUtils {
 	
 	public static final String ENCODING = "UTF-8";
-	private static final Base64 base64 = new Base64(0);
 	private static boolean shutdownSignaled = false;
 	private static Thread shutdownHookThread = null;
 
@@ -248,19 +247,19 @@ public final class MiscUtils {
 	}
 	
 	public static String encodeToBase64String(String s) throws UnsupportedEncodingException {
-		return (new String(base64.encode(s.getBytes(ENCODING)), ENCODING));
+		return (new String(new Base64().encode(s.getBytes(ENCODING)), ENCODING));
 	}
 
 	public static String decodeBase64StoString(String s) throws UnsupportedEncodingException {
-		return (new String(base64.decode(s.getBytes(ENCODING)), ENCODING));
+		return (new String(new Base64().decode(s.getBytes(ENCODING)), ENCODING));
 	}
 	
 	public static String encodeToBase64String(byte[] b) throws UnsupportedEncodingException {
-		return (new String(base64.encode(b), ENCODING));
+		return (new String(new Base64().encode(b), ENCODING));
 	}
 
 	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
-		return (base64.decode(s.getBytes(ENCODING)));
+		return (new Base64().decode(s.getBytes(ENCODING)));
 	}
 	
 	public static String getUserNameNoDomain(String s)
