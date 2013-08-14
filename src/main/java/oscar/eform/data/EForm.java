@@ -31,6 +31,8 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sf.json.JSONArray;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -248,27 +250,28 @@ public class EForm extends EFormBase {
 				log.debug("===============START CYCLE===========");
 				String fieldHeader = getFieldHeader(html, markerLoc);
 				String apName = EFormUtil.getAttribute(marker, fieldHeader); // gets varname from oscarDB=varname
-                                String apName0 = EFormUtil.removeQuotes(apName);
 				if (StringUtils.isBlank(apName)) {
 					if (!setAP2nd) saveFieldValue(html, markerLoc);
 					continue;
 				}
+				int apNameLen = apName.length();
+				apName = EFormUtil.removeQuotes(apName);
 
 				log.debug("AP ==== " + apName);
-				if (setAP2nd && !apName0.startsWith("e$")) continue; // ignore non-e$ oscarDB on 2nd run
+				if (setAP2nd && !apName.startsWith("e$")) continue; // ignore non-e$ oscarDB on 2nd run
 
 				int needing = needValueInForm;
 				String fieldType = getFieldType(fieldHeader); // textarea, text, hidden etc..
-				if ((fieldType==null || fieldType.equals("")) || (apName0==null || apName0.equals(""))) continue;
+				if ((fieldType==null || fieldType.equals("")) || (apName==null || apName.equals(""))) continue;
 
 				// sets up the pointer where to write the value
 				int pointer = markerLoc + EFormUtil.getAttributePos(marker,fieldHeader) + marker.length() + 1;
 				if (!fieldType.equals("textarea")) {
-					pointer += apName.length();
+					pointer += apNameLen;
 				}
 				EFormLoader.getInstance();
-				DatabaseAP curAP = EFormLoader.getAP(apName0);
-				if (curAP == null) curAP = getAPExtra(apName0, fieldHeader);
+				DatabaseAP curAP = EFormLoader.getAP(apName);
+				if (curAP == null) curAP = getAPExtra(apName, fieldHeader);
 				if (curAP == null) continue;
 				if (!setAP2nd) { // 1st run
 					html = putValuesFromAP(curAP, fieldType, pointer, html);
@@ -636,12 +639,19 @@ public class EForm extends EFormBase {
 			log.debug("SQL----" + sql);
 			ArrayList<String> names = DatabaseAP.parserGetNames(output); // a list of ${apName} --> apName
 			sql = DatabaseAP.parserClean(sql); // replaces all other ${apName} expressions with 'apName'
-			ArrayList<String> values = EFormUtil.getValues(names, sql);
-			if (values.size() != names.size()) {
-				output = "";
-			} else {
-				for (int i = 0; i < names.size(); i++) {
-					output = DatabaseAP.parserReplace( names.get(i), values.get(i), output);
+			
+			if (ap.isJsonOutput()) {
+				JSONArray values = EFormUtil.getJsonValues(names, sql);
+				output = values.toString(); //in case of JsonOutput, return the whole JSONArray and let the javascript deal with it
+			}
+			else {
+				ArrayList<String> values = EFormUtil.getValues(names, sql);
+				if (values.size() != names.size()) {
+					output = "";
+				} else {
+					for (int i = 0; i < names.size(); i++) {
+						output = DatabaseAP.parserReplace( names.get(i), values.get(i), output);
+					}
 				}
 			}
 		}

@@ -44,6 +44,9 @@ import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -500,6 +503,30 @@ public class EFormUtil {
 			logger.error("Error", sqe);
 		}
 		return (values);
+	}
+	
+	public static JSONArray getJsonValues(ArrayList<String> names, String sql) {
+		// gets the values for each column name in the sql (used by DatabaseAP)
+		ResultSet rs = getSQL(sql);
+		JSONArray values = new JSONArray();
+		try {
+			while (rs.next()) {
+				JSONObject value = new JSONObject();
+				for (int i = 0; i < names.size(); i++) {
+					try {
+						value.element(names.get(i), oscar.Misc.getString(rs, names.get(i)));
+					} catch (Exception sqe) {
+						value.element(names.get(i), "<(" + names.get(i) + ")NotFound>");
+						logger.error("Error", sqe);
+					}
+				}
+				values.add(value);
+			}
+			rs.close();
+		} catch (SQLException sqe) {
+			logger.error("Error", sqe);
+		}
+		return values;
 	}
 
 	// used by addEForm for escaping characters
