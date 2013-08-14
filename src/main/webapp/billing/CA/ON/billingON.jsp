@@ -1549,7 +1549,7 @@ function changeSite(sel) {
           %> <!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
 											<input type="text" name="xml_vdate" id="xml_vdate"
 											value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):admDate%>"
-											size='10' maxlength='10'> <img
+											size='10' maxlength='10' readonly> <img
 											src="../../../images/cal.gif" id="xml_vdate_cal" />
 										</td>
 										<td colspan="2"><a href="#"
