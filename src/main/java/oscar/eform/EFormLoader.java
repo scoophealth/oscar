@@ -160,6 +160,7 @@ public class EFormLoader {
       digester.addBeanPropertySetter("eformap-config/databaseap/ap-output","apOutput");
       digester.addBeanPropertySetter("eformap-config/databaseap/ap-insql", "apInSQL");
       digester.addBeanPropertySetter("eformap-config/databaseap/archive", "archive");
+      digester.addBeanPropertySetter("eformap-config/databaseap/ap-json-output", "apJsonOutput");
       digester.addSetNext("eformap-config/databaseap","addDatabaseAP");
       try {
           Properties op = oscar.OscarProperties.getInstance();

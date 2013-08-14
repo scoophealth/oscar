@@ -34,6 +34,7 @@ public class DatabaseAP {
     private String apSQL = null;
     private String apOutput = null;
     private String apInSQL = null;
+    private boolean apJsonOutput = false;
     private boolean isInputField = false;
     private String archive;
     
@@ -96,6 +97,10 @@ public class DatabaseAP {
 		this.apInSQL = apInSQL;
 	}
 	
+	public void setApJsonOutput(boolean apJsonOutput) {
+		this.apJsonOutput = apJsonOutput;
+	}
+	
 
 	public String getArchive() {
     	return archive;
@@ -107,6 +112,10 @@ public class DatabaseAP {
 
 	public boolean isInputField() {
 		return isInputField;
+	}
+
+	public boolean isJsonOutput() {
+		return apJsonOutput;
 	}
 
     public static String parserReplace(String name, String var, String str) {
