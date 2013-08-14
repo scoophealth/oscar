@@ -1325,16 +1325,15 @@ public class OLISHL7Handler implements MessageHandler {
 
 	@Override
 	public String getMsgDate() {
-		return getCollectionDateTime(0);
+		//return 
 		//Temporary fix until we change how the MessageUploader grabs the observation date.
 		
-		/*try {
-			String date = getString(terser.get("/.MSH-7-1"));
-			String dateString = formatDateTime(date);
+		try {
+			String dateString = getCollectionDateTime(0);
 			return dateString.substring(0, 19);
 		} catch (Exception e) {
 			return ("");
-		}*/
+		}
 
 	}
 
