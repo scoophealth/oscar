@@ -291,7 +291,7 @@ Allergies and Intolerances - (Reaction List)
 #*        *##elseif ( $allergy.lifeStage.equals("C") )
 											<value xsi:type="CD" code="410601007" displayName="Child" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $allergy.lifeStage.equals("T") )
-											<value xsi:type="CD" code="133937008" displayName="Teenager" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+											<value xsi:type="CD" code="133937008" displayName="Adolescent" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##else
 											<value xsi:type="CD" code="133936004" displayName="Adult" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##end
@@ -551,7 +551,7 @@ Family History
 #*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "C")
 									<value xsi:type="CD" code="410601007" displayName="Child" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "T")
-									<value xsi:type="CD" code="133937008" displayName="Teenager" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+									<value xsi:type="CD" code="133937008" displayName="Adolescent" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##else
 									<value xsi:type="CD" code="133936004" displayName="Adult" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
 #*        *##end
