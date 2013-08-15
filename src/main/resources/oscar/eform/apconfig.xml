@@ -697,7 +697,7 @@
         <ap-sql>select s1.note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
                 where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
                 where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='riskfactors' limit 1) limit 1) group by cn.uuid) s2 
-                where s1.note_id = s2.note_id;
+                where s1.note_id = s2.note_id and s1.archived=0;
         </ap-sql>
         <ap-output>${s1.note}</ap-output>
         <ap-json-output>true</ap-json-output>
@@ -707,7 +707,7 @@
         <ap-sql>select s1.note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
                 where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
                 where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='famhistory' limit 1) limit 1) group by cn.uuid) s2 
-                where s1.note_id = s2.note_id;
+                where s1.note_id = s2.note_id and s1.archived=0;
         </ap-sql>
         <ap-output>${s1.note}</ap-output>
         <ap-json-output>true</ap-json-output>
