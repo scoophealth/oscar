@@ -682,6 +682,31 @@ function openSurvey() {
 	</tr>
 
 	<% } %>
+	
+	
+	<%
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableCbiForm())
+		{
+	%>
+	<tr>
+		<td width="20%">CBI Form</td>
+		<c:if test="${cbiForm != null}">
+			<td><c:out value="${cbiForm.created}" /></td>
+			<td><c:out value="${cbiForm.providerName}" /></td>			
+			<td>
+				<input type="button" value="Update" onclick="document.location='ClientManager/cbi_form.jsp?ocanType=CBI&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+			</td>
+		</c:if>
+		<c:if test="${cbiForm == null}">
+			<td><span style="color: red">None found</span></td>
+			<td></td>
+			<td></td>
+			<td>
+				<input type="button" value="New CBI Form" onclick="document.location='ClientManager/cbi_form.jsp?prepopulate=0&ocanType=CBI&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+			</td>			
+		</c:if>
+	</tr>
+	<%} %>
 </table>
 <br />
 
