@@ -118,7 +118,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=font</td>
+	<td>link=MyOSCAR</td>
 	<td></td>
 </tr>
 <tr>
@@ -183,7 +183,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>css=b &gt; font</td>
+	<td>link=Create Demographic</td>
 	<td></td>
 </tr>
 <tr>
@@ -208,7 +208,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>name=submit</td>
+	<td>id=btnAddRecord</td>
 	<td></td>
 </tr>
 <tr>
