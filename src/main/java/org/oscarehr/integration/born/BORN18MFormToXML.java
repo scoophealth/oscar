@@ -108,7 +108,6 @@ public class BORN18MFormToXML {
 		propulatePatientInfoFromDemographic(patientInfo);
 		propulatePatientInfoFromPatientChart(patientInfo);
 		patientInfo.setOrganizationID(OscarProperties.getInstance().getProperty("born18m_orgcode"));
-		patientInfo.setBillingDate(new GregorianCalendar(1,0,1));
 	}
 	
 	private void propulatePatientInfoFromRourke(PatientInfo patientInfo, Integer rourkeFdid) {
