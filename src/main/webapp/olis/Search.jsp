@@ -234,8 +234,8 @@
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 List<Provider> allProvidersList = providerDao.getActiveProviders(); 
 
-DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-List allDemographics = demographicDao.getDemographics();
+//DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+//List allDemographics = demographicDao.getDemographics();
 
 OLISResultNomenclatureDao resultDao = (OLISResultNomenclatureDao) SpringUtils.getBean("OLISResultNomenclatureDao");
 List<OLISResultNomenclature> resultNomenclatureList = resultDao.findAll();
@@ -249,7 +249,7 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 	<select id="queryType" onchange="displaySearch(this)" style="margin-left:30px;">
 		<option value="Z01">Z01 - Retrieve Laboratory Information for Patient</option>
 		<option value="Z02">Z02 - Retrieve Laboratory Information for Order ID</option>
-		<option value="Z04">Z04 - Retrieve Laboratory Information Updates for Practitioner</option>
+		<%-- REMOVED UNTIL IT'S OPERATIONAL, REQUESTED BY ONTARIO MD option value="Z04">Z04 - Retrieve Laboratory Information Updates for Practitioner</option  --%>
 		<option value="Z05">Z05 - Retrieve Laboratory Information Updates for Destination Laboratory</option>
 		<option value="Z06">Z06 - Retrieve Laboratory Information Updates for Ordering Facility</option>
 		<option value="Z07">Z07 - Retrieve Test Results Reportable to Public Health</option>
