@@ -252,7 +252,7 @@
     				</restriction>
     			</simpleType>
 			</element>
-			<element name="ResidentPostalCode">
+			<element name="ResidentPostalCode" minOccurs="0">
     			<simpleType>
     				<restriction base="string">
     					<pattern value="[A-Z][0-9][A-Z][0-9][A-Z][0-9]"></pattern>
@@ -278,7 +278,7 @@
 				</simpleType>
 			</element>
 			<element name="BirthHeadCirc" type="tns:unsignedDecimal21" minOccurs="0"></element>
-			<element name="DischargeWeight" type="tns:unsignedInt5"></element>
+			<element name="DischargeWeight" type="tns:unsignedInt5" minOccurs="0"></element>
 			<element name="ProviderNumber" minOccurs="0">
     			<simpleType>
     				<restriction base="string">
@@ -293,7 +293,7 @@
     				</restriction>
     			</simpleType>
 			</element>
-			<element name="BillingDate" type="date"></element>
+			<element name="BillingDate" type="date" minOccurs="0"></element>
 			<element name="BillingCode" minOccurs="0">
     			<simpleType>
     				<restriction base="string">
