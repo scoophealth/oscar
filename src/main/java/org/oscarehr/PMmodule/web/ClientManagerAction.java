@@ -1571,7 +1571,17 @@ public class ClientManagerAction extends DispatchAction {
 			} else {
 				request.setAttribute("coreOcanStaffForm", null);
 			}
-
+			
+			//CBI form and OCAN forms are stored in same table OcanStaffForm.
+			OcanStaffForm cbiForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId, Integer.valueOf(demographicNo), "CBI");
+			if (cbiForm != null) {
+				if (cbiForm.getAssessmentStatus() != null && cbiForm.getAssessmentStatus().equals("In Progress")) {
+					request.setAttribute("cbiForm", cbiForm);
+				}
+			} else {
+				request.setAttribute("cbiForm", null);
+			}
+			
 			// CDS
 			CdsClientForm cdsClientForm = cdsClientFormDao.findLatestByFacilityClient(facilityId, Integer.valueOf(demographicNo));
 			request.setAttribute("cdsClientForm", cdsClientForm);
