@@ -38,7 +38,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Pref</td>
+	<td>link=Preferences</td>
 	<td></td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Set myOscar login ID</td>
+	<td>link=Set MyOSCAR login ID</td>
 	<td></td>
 </tr>
 <tr>
