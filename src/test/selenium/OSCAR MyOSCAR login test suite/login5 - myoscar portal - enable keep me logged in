@@ -38,7 +38,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=font</td>
+	<td>link=MyOSCAR</td>
 	<td></td>
 </tr>
 <tr>
@@ -75,6 +75,21 @@
 	<td>clickAndWait</td>
 	<td>xpath=(//a[contains(text(),'Log Out')])[2]</td>
 	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>User Name:</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>Password:</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>2nd Level Passcode:</td>
 </tr>
 </tbody></table>
 </body>
