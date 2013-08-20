@@ -24,6 +24,10 @@
 --%>
 <%@ include file="/taglibs.jsp"%>
 
+<%@page import="java.util.List"%>
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
@@ -51,7 +55,6 @@
 
 
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
-<%@page import="org.apache.commons.lang.time.DateUtils"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.ConsentState"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
@@ -531,32 +534,34 @@ function openSurvey() {
 				onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</c:if>
 	</tr>
-	<tr>
-		<td width="20%">CDS</td>
-		<c:set var="cdsClientForm" value="${cdsClientForm}" scope="request" />
-		<%
-			CdsClientForm cdsClientForm=(CdsClientForm)request.getAttribute("cdsClientForm");
-		%>
-		<c:if test="${cdsClientForm != null}">
-			<td><c:out value="${cdsClientForm.created}" /></td>
-			<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsClientForm.getProviderNo())%></td>
-			<td><%=cdsClientForm.isSigned()?"signed":"unsigned"%></td>
-			<td>
-				<input type="button" value="Update" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-				<input type="button" value="Print Preview" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>&print=true'" />
-			</td>
-		</c:if>
-		<c:if test="${cdsClientForm == null}">
-			<td><span style="color: red">None found</span></td>
-			<td></td>
-			<td>
-				<input type="button" value="New Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-			</td>
-		</c:if>
-	</tr>
-
-
 	<%
+		List<CdsClientForm> allLatestCdsForms=(List<CdsClientForm>)request.getAttribute("allLatestCdsForms");
+		if (allLatestCdsForms!=null && allLatestCdsForms.size()>0)
+		{
+			for (CdsClientForm cdsClientForm : allLatestCdsForms)
+			{
+				%>
+					<tr>
+						<td width="20%">CDS : <%=ClientManagerAction.getCdsProgramDisplayString(cdsClientForm)%></td>
+						<td><%=StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(cdsClientForm.getCreated(), request.getLocale()))%></td>
+						<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsClientForm.getProviderNo())%></td>
+						<td><%=cdsClientForm.isSigned()?"signed":"unsigned"%></td>
+						<td>
+							<input type="button" value="Update" onclick="document.location='ClientManager/cds_form_4.jsp?cdsFormId=<%=cdsClientForm.getId()%>'" />
+							<input type="button" value="Print Preview" onclick="document.location='ClientManager/cds_form_4.jsp?cdsFormId=<%=cdsClientForm.getId()%>&print=true'" />
+						</td>
+					</tr>
+				<%				
+			}
+		}
+		%>
+			<tr>
+				<td colspan="5">
+					<input type="button" value="New CDS Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
+				</td>
+			</tr>
+		<%
+
 		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
 		{
 	%>

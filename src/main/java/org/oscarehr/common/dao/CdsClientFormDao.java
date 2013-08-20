@@ -50,6 +50,24 @@ public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
 		return getSingleResultOrNull(query);
 	}
 
+	/**	
+	* will return the latest cds form or null if none match the criteria	
+	* @param signed can be null for either signed or unsigned	
+	*/
+	public CdsClientForm findLatestByFacilityAdmissionId(Integer facilityId, Integer admissionId, Boolean signed) {
+		String sqlCommand = "select x from CdsClientForm x where x.facilityId=?1 and x.admissionId=?2" + (signed != null ? " and signed=?3" : "") + " order by x.created desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, admissionId);
+		if (signed != null) query.setParameter(3, signed);
+
+		@SuppressWarnings("unchecked")
+		List<CdsClientForm> results = query.getResultList();
+		if (results.size() > 0) return (results.get(0));
+		else return (null);
+	}
+	
     public List<CdsClientForm> findByFacilityClient(Integer facilityId, Integer clientId) {
 
 		String sqlCommand = "select x from CdsClientForm x where x.facilityId=?1 and x.clientId=?2 order by x.created desc";

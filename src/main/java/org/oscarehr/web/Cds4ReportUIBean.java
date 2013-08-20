@@ -157,38 +157,49 @@ public final class Cds4ReportUIBean {
 		for (CdsClientForm form : cdsForms) {
 			logger.debug("valid cds form, id="+form.getId());
 			
+			// make sure form is for an admission for which we're interested, i.e. admissions are filtered by program and admission time already
 			Admission admission = admissionMap.get(form.getAdmissionId());
-			if (admission != null) {
-				Integer clientId = form.getClientId();
-
-				CdsClientForm existingForm = singleMultiAdmissions.multipleAdmissionsLatestForms.get(clientId);
-				// if this person already has multiple admissions
-				if (existingForm != null) {
-					logger.debug("multiple admissions 3+ forms. formId="+form.getId()+", otherFormId="+existingForm.getId());
-					singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
-					singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
-				} else // this person either has one previous or no previous admissions
-				{
-					existingForm = singleMultiAdmissions.singleAdmissions.get(clientId);
-					// this means we have 1 previous admission
-					if (existingForm != null) {
-						logger.debug("multiple admissions, 2 forms : formId="+form.getId()+", otherFormId="+existingForm.getId());
-
-						singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
-						singleMultiAdmissions.singleAdmissions.remove(clientId);
-
-						singleMultiAdmissions.multipleAdmissionsAllForms.add(existingForm);
-						singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
-					} else // we have no previous admission
-					{
-						logger.debug("single admissions : formId="+form.getId());
-						singleMultiAdmissions.singleAdmissions.put(clientId, form);
-					}
-				}
+			if (admission == null) {
+				logger.debug("cds form missing admission / or not in admission we're interested in dueto program or time restriction. formId="+form.getId()+", admissionId="+form.getAdmissionId());
+				continue;
 			}
 			else
 			{
-				logger.debug("cds form missing admission. formId="+form.getId()+", admissionId="+form.getAdmissionId());
+				// check if the cds form is signed by a provider we're reporting on.
+				if (providerIdsToReportOn!=null) // if we've been asked to filter
+				{
+					if (!providerIdsToReportOn.contains(form.getProviderNo())) // if the provider isn't in our allowed list
+					{
+						continue;
+					}
+				}
+			}
+			
+			Integer clientId = form.getClientId();
+
+			CdsClientForm existingForm = singleMultiAdmissions.multipleAdmissionsLatestForms.get(clientId);
+			// if this person already has multiple admissions
+			if (existingForm != null) {
+				logger.debug("multiple admissions 3+ forms. formId="+form.getId()+", otherFormId="+existingForm.getId());
+				singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
+				singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
+			} else // this person either has one previous or no previous admissions
+			{
+				existingForm = singleMultiAdmissions.singleAdmissions.get(clientId);
+				// this means we have 1 previous admission
+				if (existingForm != null) {
+					logger.debug("multiple admissions, 2 forms : formId="+form.getId()+", otherFormId="+existingForm.getId());
+
+					singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
+					singleMultiAdmissions.singleAdmissions.remove(clientId);
+
+					singleMultiAdmissions.multipleAdmissionsAllForms.add(existingForm);
+					singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
+				} else // we have no previous admission
+				{
+					logger.debug("single admissions : formId="+form.getId());
+					singleMultiAdmissions.singleAdmissions.put(clientId, form);
+				}
 			}
 		}
 
@@ -227,24 +238,13 @@ public final class Cds4ReportUIBean {
 			logger.debug("corresponding cds admissions count (before provider filter) :"+admissions.size());
 			
 			for (Admission admission : admissions) {
-				if (isAdmissionForSelectedProviders(admission))
-				{
-					admissionMap.put(admission.getId().intValue(), admission);
-					logger.debug("valid cds admission, id="+admission.getId());
-				}
+				admissionMap.put(admission.getId().intValue(), admission);
 			}
 		}
 
 		return admissionMap;
 	}
 	
-	private boolean isAdmissionForSelectedProviders(Admission admission)
-	{
-		if (providerIdsToReportOn==null) return(true);
-		
-		return(providerIdsToReportOn.contains(admission.getProviderNo()));
-	}
-
 	private static int getCohortBucket(Admission admission) {
 		if (admission==null) return(0);
 		
