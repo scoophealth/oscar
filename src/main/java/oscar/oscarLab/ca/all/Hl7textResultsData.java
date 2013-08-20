@@ -151,9 +151,16 @@ public class Hl7textResultsData {
 				m.setProviderNo("0");
 				m.setDataField(result);
 				m.setMeasuringInstruction(measInst);
+				logger.info("DATETIME FOR MEASUREMENT " + datetime);
 				if(datetime != null && datetime.length()>0) {
 					m.setDateObserved(UtilDateUtilities.StringToDate(datetime, "yyyy-MM-dd hh:mm:ss"));
-				} else {
+				} 
+				
+				if( m.getDateObserved() == null && datetime != null && datetime.length() > 0 ) {
+					m.setDateObserved(UtilDateUtilities.StringToDate(datetime, "yyyy-MM-dd"));
+				}
+				
+				if( m.getDateObserved() == null ){
 					m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
 				}
 				m.setAppointmentNo(0);
