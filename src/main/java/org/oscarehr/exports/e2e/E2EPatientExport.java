@@ -63,7 +63,9 @@ public class E2EPatientExport extends PatientExport {
 	/**
 	 * Constructs an empty Patient Export object
 	 */
-	public E2EPatientExport() {}
+	public E2EPatientExport() {
+		super();
+	}
 
 	/**
 	 * Attempts to load the specified patient.
@@ -119,7 +121,7 @@ public class E2EPatientExport extends PatientExport {
 		}
 
 		this.isLoaded = true;
-		log.debug("Loaded Demo: " + demographicNo.toString());
+		log.debug("Loaded Demo: ".concat(demographicNo.toString()));
 		return true;
 	}
 
@@ -255,7 +257,7 @@ public class E2EPatientExport extends PatientExport {
 			LabGroup tempGroup = new LabGroup(prevGroup);
 			for(int i=0; i < labMeasurementsExtAll.size(); i++) {
 				String temp = getLabExtValue(labMeasurementsExtAll.get(i), "other_id");
-				if(temp != "" && temp != null) {
+				if(temp != null && !temp.isEmpty()) {
 					int currGroup = parseOtherID(temp)[0];
 
 					// Create New Group

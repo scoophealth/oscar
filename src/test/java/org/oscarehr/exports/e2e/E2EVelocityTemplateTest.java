@@ -79,6 +79,15 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	}
 
 	@Test
+	public void testExportLog() {
+		E2EVelocityTemplate t = new E2EVelocityTemplate();
+		assertNotNull(t.getExportLog());
+
+		t.addExportLogEntry("test");
+		assertTrue("Export Logging unexpectedly not working", t.getExportLog().trim().equals("test"));
+	}
+
+	@Test
 	public void testExport() {
 		VelocityTemplate e2etemplate = new E2EVelocityTemplate();
 		assertNotNull(e2etemplate);
@@ -99,16 +108,16 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		assertFalse("XML document unexpectedly contains '$'", s.contains("$"));
 
 		// check output is well-formed
-		assertTrue("XML unexpectedly not well-formed", E2EExportValidator.isWellFormedXML(s));
+		assertTrue("XML unexpectedly not well-formed", new E2EExportValidator().isWellFormedXML(s));
 		logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
-		assertFalse("XML well-formed, expected not well-formed", E2EExportValidator.isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>")));
+		assertFalse("XML well-formed, expected not well-formed", new E2EExportValidator().isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>")));
 
 		// validate against XML schema
-		assertTrue("XML document unexpectedly not valid", E2EExportValidator.isValidXML(s));
+		assertTrue("XML document unexpectedly not valid", new E2EExportValidator().isValidXML(s));
 		logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
-		assertFalse("XML valid, expected not valid", E2EExportValidator.isValidXML(s.replace("DOCSECT", "DOXSECT")));
+		assertFalse("XML valid, expected not valid", new E2EExportValidator().isValidXML(s.replace("DOCSECT", "DOXSECT")));
 	}
 
 	@Test
@@ -118,7 +127,28 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		assertNull("Empty formcode map didn't return null", e.formCodeMap(""));
 	}
 
-/*	@Test
+	@Test
+	public void testMeasurementCodeMap() {
+		E2EResources e = new E2EResources();
+		assertTrue("Weight mapping didn't return 3141-9", e.measurementCodeMap("WT").equals("3141-9"));
+		assertNull("Empty measurementcode map didn't return null", e.measurementCodeMap(""));
+	}
+
+	@Test
+	public void testPRRCodeMap() {
+		E2EResources e = new E2EResources();
+		assertTrue("Father mapping didn't return FTH", e.prrCodeMap("Father").equals("FTH"));
+		assertNull("Empty prrcode map didn't return null", e.prrCodeMap(""));
+	}
+
+	@Test
+	public void testPreventionTypeMap() {
+		E2EResources e = new E2EResources();
+		assertNull("Empty prevention type map didn't return null", e.preventionTypeMap(""));
+	}
+
+	/*
+	@Test
 	public void tortureTest() {
 		long startTime = System.nanoTime();
 		System.out.println("TortureTest start time = "+startTime);
@@ -144,5 +174,6 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		long stopTime = System.nanoTime();
 		System.out.println("TortureTest stop time = "+stopTime);
 		System.out.println("Total time (sec) = " + (stopTime-startTime)/1000000000.0);
-	}*/
+	}
+	*/
 }
