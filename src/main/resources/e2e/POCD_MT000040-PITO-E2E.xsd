@@ -39,7 +39,7 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
 	<xs:include schemaLocation="datatypes.xsd"/>
 	<xs:include schemaLocation="voc.xsd"/>
 	<xs:include schemaLocation="NarrativeBlock.xsd"/>
-	<xs:import namespace="http://standards.pito.bc.ca/E2E-DTC/cda" schemaLocation="EXTENSION-V1_0.xsd"/>
+	<xs:import namespace="http://standards.pito.bc.ca/E2E-DTC/cda" schemaLocation="EXTENSION-V2_0.xsd"/>
 	<xs:complexType name="POCD_MT000040.InfrastructureRoot.typeId">
 		<xs:complexContent>
 			<xs:restriction base="II">
@@ -626,7 +626,7 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
 			<xs:element name="typeId" type="POCD_MT000040.InfrastructureRoot.typeId" minOccurs="0"/>
 			<xs:element name="templateId" type="II" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="id" type="II" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="e2e:code"/>
+			<xs:element ref="e2e:code" minOccurs="0" maxOccurs="1"/><!-- Updated 2013-07-17 -->
 			<xs:element name="addr" type="AD" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="telecom" type="TEL" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="informationRecipient" type="POCD_MT000040.Person" minOccurs="0"/>
@@ -640,13 +640,12 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
 			<xs:element name="realmCode" type="CS" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="typeId" type="POCD_MT000040.InfrastructureRoot.typeId" minOccurs="0"/>
 			<xs:element name="templateId" type="II" minOccurs="0" maxOccurs="unbounded"/>
+			<!--<xs:element name="code" type="CE" minOccurs="0"/>-->
 			<xs:element name="code" type="CE" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="name" type="EN" minOccurs="0"/>
-			<xs:element ref="e2e:desc"/>
-			<!-- <xs:element ref="e2e:formCode"/> -->
-			<!-- Temporary Hack -->
-			<xs:element name="strength" type="IVL_PQ" minOccurs="0"/>
-			<!-- End Temporary Hack -->
+			<xs:element ref="e2e:desc" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="e2e:formCode" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="e2e:ingredient"  minOccurs="0" maxOccurs="50"/>
 		</xs:sequence>
 		<xs:attribute name="nullFlavor" type="NullFlavor" use="optional"/>
 		<xs:attribute name="classCode" type="EntityClassManufacturedMaterial" use="optional" fixed="MMAT"/>
@@ -1114,7 +1113,9 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
 			<xs:element name="realmCode" type="CS" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="typeId" type="POCD_MT000040.InfrastructureRoot.typeId" minOccurs="0"/>
 			<xs:element name="templateId" type="II" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="observationRange" type="POCD_MT000040.ObservationRange"/>
+			<!-- <xs:element name="observationRange" type="POCD_MT000040.ObservationRange"/> -->
+			<xs:element name="observationRange" type="POCD_MT000040.ObservationRange"  minOccurs="0" maxOccurs="unbounded"/>
+<!-- Helen -->
 		</xs:sequence>
 		<xs:attribute name="nullFlavor" type="NullFlavor" use="optional"/>
 		<xs:attribute name="typeCode" type="ActRelationshipType" use="optional" fixed="REFV"/>

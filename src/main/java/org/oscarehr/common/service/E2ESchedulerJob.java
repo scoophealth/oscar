@@ -50,10 +50,11 @@ public class E2ESchedulerJob extends TimerTask {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 
 		try {
-			logger.info("starting E2E export job");
+			logger.info("Starting E2E export job");
 
 			List<Integer> ids = demographicDao.getActiveDemographicIds();
 			ArrayList<File> files = new ArrayList<File>();
+			StringBuilder exportLog = new StringBuilder();
 
 			for(Integer id:ids) {
 				// Select Template
@@ -68,9 +69,13 @@ public class E2ESchedulerJob extends TimerTask {
 				if(patient.loadPatient(id.toString())) {
 					output = t.export(patient);
 				} else {
-					logger.error("Failed to load patient " + id.toString());
+					String msg = "Failed to load patient ".concat(id.toString());
+					logger.error(msg);
+					t.addExportLogEntry(msg);
+					exportLog.append(t.getExportLog());
 					continue;
 				}
+				exportLog.append(t.getExportLog());
 
 				//export file to temp directory
 				try{
@@ -87,14 +92,13 @@ public class E2ESchedulerJob extends TimerTask {
 				}catch(Exception e){
 					logger.error("Error", e);
 				}
-				BufferedWriter out  = null;
+				BufferedWriter out = null;
 				try {
 					out = new BufferedWriter(new FileWriter(files.get(files.size()-1)));
 					out.write(output);
-
-				} catch (IOException ex) {
-					logger.error("Error", ex);
-					throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
+				} catch (IOException e) {
+					logger.error("Error", e);
+					throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
 				} finally {
 					try {
 						out.close();
@@ -104,7 +108,24 @@ public class E2ESchedulerJob extends TimerTask {
 				}
 			}
 
-			logger.info("done E2E export job");
+			// Create Export Log
+			/*try {
+				File exportLogFile = new File(files.get(0).getParentFile(), "ExportEvent.log");
+				BufferedWriter out = new BufferedWriter(new FileWriter(exportLogFile));
+				if(exportLog.toString().length() == 0) {
+					out.write("Export contains no errors".concat(System.getProperty("line.separator")));
+				} else {
+					out.write(exportLog.toString());
+				}
+				out.close();
+
+				files.add(exportLogFile);
+			} catch (IOException e) {
+				logger.error("Error", e);
+				throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
+			}*/
+
+			logger.info("Done E2E export job");
 
 		} catch(Throwable e ) {
 			logger.error("Error",e);
