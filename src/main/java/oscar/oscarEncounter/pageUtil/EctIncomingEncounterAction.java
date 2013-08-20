@@ -117,6 +117,7 @@ public class EctIncomingEncounterAction extends Action {
 			bean.status = "";
 			//no date from search screen-keep old date
 			//bean.date="";
+			bean.appointmentNo = "0";
 			bean.check = "myCheck";
 			bean.setUpEncounterPage();
 			request.getSession().setAttribute("EctSessionBean", bean);
@@ -142,13 +143,14 @@ public class EctIncomingEncounterAction extends Action {
 			if (bean.providerNo == null) {
 				bean.providerNo = (String) request.getSession().getAttribute("user");
 			}
-				bean.demographicNo = request.getParameter("demographicNo");
+			
+			bean.demographicNo = request.getParameter("demographicNo");
 			bean.appointmentNo = request.getParameter("appointmentNo");
 			//use this one.
-			if(appointmentNo != null) {
+			if(bean.appointmentNo != null && !bean.appointmentNo.equalsIgnoreCase("null") && !"".equals(bean.appointmentNo) && appointmentNo != null ) {
 				bean.appointmentNo = appointmentNo;
 			}
-
+			
 			bean.curProviderNo = request.getParameter("curProviderNo");
 			Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
 			if (bean.curProviderNo == null || bean.curProviderNo.trim().length() == 0) bean.curProviderNo = provider.getProviderNo();
