@@ -67,35 +67,20 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">Select corresponding admission</td>
 			<td class="genericTableData">
-				<%
-					if (cdsFormId==null)
-					{
-						%>
-							<select name="admissionId">
-								<%
-									for (Admission admission : CdsForm4.getAdmissions(currentDemographicId))
-									{
-										String selected="";
-										
-										if (cdsClientForm.getAdmissionId()!=null && cdsClientForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
-										
-										%>
-											<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
-										<%
-									}
-								%>
-							</select>
-						<%	
-					}
-					else
-					{
-						%>
-							<input type="hidden" name="admissionId" value="<%=cdsClientForm.getAdmissionId()%>" />
-							<%=CdsForm4.getEscapedAdmissionSelectionDisplay(cdsClientForm.getAdmissionId())%>
-						<%	
-					}
-				%>
-			
+				<select name="admissionId">
+					<%
+						for (Admission admission : CdsForm4.getAdmissions(currentDemographicId))
+						{
+							String selected="";
+							
+							if (cdsClientForm.getAdmissionId()!=null && cdsClientForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
+							
+							%>
+								<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
+							<%
+						}
+					%>
+				</select>			
 			</td>
 		</tr>
 		<tr>

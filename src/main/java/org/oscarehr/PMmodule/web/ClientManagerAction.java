@@ -55,6 +55,7 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.VacancyDao;
 import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
@@ -153,6 +154,7 @@ public class ClientManagerAction extends DispatchAction {
 	private CdsClientFormDao cdsClientFormDao;
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private RemoteReferralDao remoteReferralDao = (RemoteReferralDao) SpringUtils.getBean("remoteReferralDao");
     private VacancyDao vacancyDao = (VacancyDao) SpringUtils.getBean(VacancyDao.class);
@@ -1573,8 +1575,7 @@ public class ClientManagerAction extends DispatchAction {
 			}
 
 			// CDS
-			CdsClientForm cdsClientForm = cdsClientFormDao.findLatestByFacilityClient(facilityId, Integer.valueOf(demographicNo));
-			request.setAttribute("cdsClientForm", cdsClientForm);
+			populateCdsData(request, Integer.parseInt(demographicNo), facilityId);
 		}
 
 		/* history */
@@ -2104,5 +2105,26 @@ public class ClientManagerAction extends DispatchAction {
 
 	public void setRoomManager(RoomManager roomManager) {
 		this.roomManager = roomManager;
+	}
+	
+	private void populateCdsData(HttpServletRequest request, Integer demographicNo, Integer facilityId) {
+		List<Admission> admissions = admissionDao.getAdmissions(demographicNo);
+
+		ArrayList<CdsClientForm> allLatestCdsForms = new ArrayList<CdsClientForm>();
+
+		for (Admission admission : admissions) {
+			CdsClientForm cdsClientForm = cdsClientFormDao.findLatestByFacilityAdmissionId(facilityId, admission.getId().intValue(), null);
+			if (cdsClientForm != null) allLatestCdsForms.add(cdsClientForm);
+		}
+
+		request.setAttribute("allLatestCdsForms", allLatestCdsForms);
+	}
+
+	public static String getCdsProgramDisplayString(CdsClientForm cdsClientForm) {
+		Admission admission = admissionDao.getAdmission(cdsClientForm.getAdmissionId());
+		Program program = programDao.getProgram(admission.getProgramId());
+
+		String displayString = program.getName() + " : " + DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate());
+		return (StringEscapeUtils.escapeHtml(displayString));
 	}
 }
