@@ -2038,8 +2038,16 @@ public class DemographicExportAction4 extends Action {
 
 					// Load patient data and merge to template
 					String output = "";
-					if(patient.loadPatient(demoNo)) {
+					boolean loadStatus = patient.loadPatient(demoNo);
+					if(loadStatus && patient.isActive()) {
 						output = t.export(patient);
+						exportLog.append(t.getExportLog());
+					} else if(loadStatus && !patient.isActive()) {
+						String msg = "Patient ".concat(demoNo).concat(" not active - skipping");
+						logger.info(msg);
+						t.addExportLogEntry(msg);
+						exportLog.append(t.getExportLog());
+						continue;
 					} else {
 						String msg = "Failed to load patient ".concat(demoNo);
 						logger.error(msg);
@@ -2047,7 +2055,6 @@ public class DemographicExportAction4 extends Action {
 						exportLog.append(t.getExportLog());
 						continue;
 					}
-					exportLog.append(t.getExportLog());
 
 					//export file to temp directory
 					try{
