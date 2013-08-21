@@ -71,7 +71,8 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	private Integer admissionId=null;
 	private Integer clientAge=null;
 	
-	private String lastName;
+	private String lastName;  //current last name
+	private String lastNameAtBirth="";
 	private String firstName;
 	private String addressLine1="";
 	private String addressLine2="";
@@ -83,6 +84,7 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	private String hcNumber="";
 	private String hcVersion="";
 	private String dateOfBirth;
+	private String estimatedAge="";
 	private String clientDateOfBirth;
 	private String gender;
 	
@@ -236,6 +238,14 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+	public String getLastNameAtBirth() {
+    	return lastNameAtBirth;
+    }
+
+	public void setLastNameAtBirth(String lastNameAtBirth) {
+    	this.lastNameAtBirth = lastNameAtBirth;
+    }
 
 	public String getFirstName() {
 		return firstName;
@@ -332,7 +342,15 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setClientDateOfBirth(String clientDateOfBirth) {
 		this.clientDateOfBirth = clientDateOfBirth;
 	}
-	
+		
+	public String getEstimatedAge() {
+    	return estimatedAge;
+    }
+
+	public void setEstimatedAge(String estimatedAge) {
+    	this.estimatedAge = estimatedAge;
+    }
+
 	public void setCreated(Date created) {
 		this.created = created;
 	}
