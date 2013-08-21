@@ -797,9 +797,10 @@ public class EFormUtil {
 		for (String template : templates) {
 			if (StringUtils.isBlank(template)) continue;
 			
-			String taskAssignedTo = getInfo("taskAssignedTo", template, eForm.getProviderNo());
-			String message = getContent("tickMsg", template);
+			String taskAssignedTo = getInfo("taskAssignedTo", template, null);
+			if (taskAssignedTo==null) continue;
 			
+			String message = getContent("tickMsg", template);
 			Tickler tickler = new Tickler();
 			tickler.setTaskAssignedTo(taskAssignedTo);
 			tickler.setMessage(message);
@@ -991,7 +992,7 @@ public class EFormUtil {
 			if (paramNames.contains(field)) {
 				nwTemplate += paramValues.get(paramNames.indexOf(field));
 			} else {
-				nwTemplate += "{" + field + "}";
+				nwTemplate += "";
 				logger.error("EForm Template Error! Cannot find input name {" + field + "} in eform");
 			}
 		}
