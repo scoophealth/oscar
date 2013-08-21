@@ -189,6 +189,10 @@
 			<td><html:checkbox property="facility.enableOcanForms" /></td>
 		</tr>
 		<tr class="b">
+			<td width="20%">Enable CBI Form:</td>
+			<td><html:checkbox property="facility.enableCbiForm" /></td>
+		</tr>
+		<tr class="b">
 			<td width="20%">Enable Anonymous Clients:</td>
 			<td><html:checkbox property="facility.enableAnonymous" /></td>
 		</tr>
