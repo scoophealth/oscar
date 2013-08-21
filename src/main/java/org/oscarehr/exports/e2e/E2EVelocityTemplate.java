@@ -150,6 +150,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		private static final String OSCAR_PREVENTIONITEMS_FILE = "/oscar/oscarPrevention/PreventionItems.xml";
 		private static Map<String,String> formCodes = null;
 		private static Map<String,String> measurementCodes = null;
+		private static Map<String,String> measurementUnits = null;
 		private static Map<String,String> prrCodes = null;
 		private static Map<String,String> preventionTypeCodes = null;
 
@@ -192,24 +193,26 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		}
 
 		/**
-		 * Loads the measurementcode mapping
+		 * Loads the measurementcode and unit mapping
 		 */
 		private void loadMeasurementCode() {
-			if(measurementCodes == null) {
+			if(measurementCodes == null || measurementUnits == null) {
 				InputStream is = null;
 				try {
 					is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_MEASUREMENTCODE_FILE);
 					BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
 					measurementCodes = new HashMap<String,String>();
+					measurementUnits = new HashMap<String,String>();
 					String line = null;
 					String[] content = null;
 					while((line = br.readLine()) != null) {
 						content = line.split("\\t");
 						measurementCodes.put(content[0],content[1]);
+						measurementUnits.put(content[0],content[2]);
 					}
 
-					log.info("Loaded E2E Measurement Code Mapping");
+					log.info("Loaded E2E Measurement Code/Unit Mapping");
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				} finally {
@@ -304,6 +307,23 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		}
 
 		/**
+		 * Takes in a measurementcode string and returns the E2E Measurement Unit result if available
+		 * 
+		 * @param rhs
+		 * @return String if applicable, else null
+		 */
+		public String measurementUnitMap(String rhs) {
+			if(measurementUnits.containsKey(rhs) && !measurementUnits.get(rhs).equals("UNK")) {
+				return measurementUnits.get(rhs);
+			}
+
+			// Blood Pressure split case
+			if(rhs.equals("SYST") || rhs.equals("DIAS")) return "mm[Hg]";
+
+			return null;
+		}
+
+		/**
 		 * Takes in a measurementcode string and returns the E2E Measurement Code result if available
 		 * 
 		 * @param rhs
@@ -313,6 +333,10 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 			if(measurementCodes.containsKey(rhs)) {
 				return measurementCodes.get(rhs);
 			}
+
+			// Blood Pressure split case
+			if(rhs.equals("SYST")) return "8480-6";
+			if(rhs.equals("DIAS")) return "8462-4";
 
 			return null;
 		}

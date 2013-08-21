@@ -135,6 +135,14 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	}
 
 	@Test
+	public void testMeasurementUnitMap() {
+		E2EResources e = new E2EResources();
+		assertTrue("Weight mapping didn't return kg", e.measurementUnitMap("WT").equals("kg"));
+		assertNull("Empty measurementunit map didn't return null", e.measurementUnitMap("UNK"));
+		assertNull("Empty measurementunit map didn't return null", e.measurementUnitMap(""));
+	}
+
+	@Test
 	public void testPRRCodeMap() {
 		E2EResources e = new E2EResources();
 		assertTrue("Father mapping didn't return FTH", e.prrCodeMap("Father").equals("FTH"));
