@@ -1232,16 +1232,9 @@ Code"/>
 										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
 										<!-- Dose Observation -->
 										<substanceAdministration classCode="SBADM" moodCode="RQO">
-#*    *##if ( $med.takeMin.equals($med.takeMax) )
-											<text>$!med.method $!med.takeMin $!med.drugForm $!med.route $!med.freqCode $!med.duration $!med.durUnit</text>
-#*    *##else
-											<text>$!med.method $!med.takeMin to $!med.takeMax $!med.drugForm $!med.route $!med.freqCode $!med.duration $!med.durUnit</text>
-#*    *##end
 #*    *##if ( $patient.isNumeric($med.duration) && $med.duration != "0" && $med.durUnit )
 											<!-- Duration -->
-											<effectiveTime xsi:type="IVL_TS" operator="I">
-												<width value="$med.duration" unit="$med.durUnit"/>
-											</effectiveTime>
+											<text>$!med.duration $!med.durUnit</text>
 #*    *##end
 											<!-- Frequency -->
 											<!-- OSCAR Frequency Code $!med.freqCode -->
