@@ -158,6 +158,15 @@
 <oscar:customInterface section="addappt"/>
 <script type="text/javascript">
 
+function onAdd() {
+    if (document.ADDAPPT.notes.value.length > 255) {
+      window.alert("<bean:message key="appointment.editappointment.msgNotesTooBig"/>");
+      return false;
+    }
+    return calculateEndTime() ;
+}
+
+
 <!--
 function setfocus() {
 	this.focus();
@@ -752,7 +761,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 <% } %>
 
 <FORM NAME="ADDAPPT" id="addappt" METHOD="post" ACTION="<%=request.getContextPath()%>/appointment/appointmentcontrol.jsp"
-	onsubmit="return(calculateEndTime())"><INPUT TYPE="hidden"
+	onsubmit="return(onAdd())"><INPUT TYPE="hidden"
 	NAME="displaymode" value="">
 	<input type="hidden" name="year" value="<%=request.getParameter("year") %>" >
     <input type="hidden" name="month" value="<%=request.getParameter("month") %>" >
