@@ -133,8 +133,9 @@
       param[1]= ConversionUtils.toDateString(rs1.getsDate());
       edate= ConversionUtils.toDateString(rs1.geteDate());
     }
-
-    List<RSchedule> rsl = rScheduleDao.findByProviderAvailableAndDate(request.getParameter("provider_no"),"1",MyDateFormat.getSysDate(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+    
+     List<RSchedule> rsl = rScheduleDao.findByProviderNoAndDates(request.getParameter("provider_no"),MyDateFormat.getSysDate(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+ 
    	for(RSchedule rs:rsl) {
    		rs.setStatus("D");
    		rScheduleDao.merge(rs);
