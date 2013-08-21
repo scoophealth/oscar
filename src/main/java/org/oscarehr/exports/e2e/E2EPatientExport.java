@@ -23,9 +23,15 @@
  */
 package org.oscarehr.exports.e2e;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -135,7 +141,57 @@ public class E2EPatientExport extends PatientExport {
 				tempMeasurements.add(entry);
 			}
 		}
-		return tempMeasurements;
+
+		return splitBloodPressureMeasurements(tempMeasurements);
+	}
+
+	private List<Measurement> splitBloodPressureMeasurements(List<Measurement> entries) {
+		List<Measurement> output = new ArrayList<Measurement>();
+
+		// For all BP measurements, attempt to split into Systolic and Diastolic
+		// Assumes 2 integer numbers exist in the data - first is systolic, second is diastolic
+		for(Measurement entry : entries) {
+			if(entry.getType().equals("BP")) {
+				Pattern pattern = Pattern.compile("\\d+");
+				Matcher matcher = pattern.matcher(entry.getDataField());
+				List<Integer> values = new ArrayList<Integer>();
+
+				while(matcher.find()) {
+					values.add(Integer.parseInt(matcher.group()));
+				}
+
+				if(values.size() == 2) {
+					Measurement entry2 = null;
+					try {
+						// Make a copy of measurement object
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						ObjectOutputStream out = new ObjectOutputStream(bos);
+						out.writeObject(entry);
+						out.flush();
+						out.close();
+						ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+						entry2 = (Measurement)in.readObject();
+					}
+					catch(Exception e) {
+						log.error(e.getMessage(), e);
+					}
+
+					if(entry2 != null) {
+						// Add split up Systolic/Diastolic values to objects
+						entry.setType("DIAS");
+						entry.setDataField(values.get(1).toString());
+
+						entry2.setType("SYST");
+						entry2.setDataField(values.get(0).toString());
+						output.add(entry2);
+					}
+				}
+			}
+
+			output.add(entry);
+		}
+
+		return output;
 	}
 
 	private void parseCaseManagement() {

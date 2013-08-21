@@ -314,6 +314,10 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 				return measurementCodes.get(rhs);
 			}
 
+			// Blood Pressure split case
+			if(rhs.equals("SYST")) return "8480-6";
+			if(rhs.equals("DIAS")) return "8462-4";
+
 			return null;
 		}
 
