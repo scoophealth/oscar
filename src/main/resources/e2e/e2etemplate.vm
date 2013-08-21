@@ -411,7 +411,7 @@ Clinically Measured Observation
 					<text>
 						<list>
 #**##foreach ( $measurement in $patient.getMeasurements() )
-							<item>$!patient.getTypeDescription($measurement.type): $!measurement.dataField ($!measurement.measuringInstruction)</item>
+							<item>$!patient.getTypeDescription($measurement.type): $!measurement.dataField $!e2e.measurementUnitMap($measurement.type) ($!measurement.measuringInstruction)</item>
 #**##end
 						</list>
 					</text>
@@ -452,7 +452,11 @@ Clinically Measured Observation
 #*    *##end
 									<text>$patient.getTypeDescription($measurement.type) ($measurement.measuringInstruction)</text>
 									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
+#*    *##if ( $e2e.measurementUnitMap($measurement.type) )
+									<value xsi:type="PQ" value="$measurement.dataField" unit="$e2e.measurementUnitMap($measurement.type)"/>
+#*    *##else
 									<value xsi:type="ST">$measurement.dataField</value>
+#*    *##end
 								</observation>
 							</component>
 						</organizer>
