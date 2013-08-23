@@ -50,4 +50,15 @@ public class RScheduleDao extends AbstractDao<RSchedule>{
         List<RSchedule> results = query.getResultList();
 		return results;
 	}
+
+	public List<RSchedule> findByProviderNoAndDates(String providerNo, Date apptDate) {
+		Query query = entityManager.createQuery("select s from RSchedule s where s.providerNo=? and s.sDate <=? and s.eDate >=?");
+		query.setParameter(1, providerNo);
+		query.setParameter(2, apptDate);
+		query.setParameter(3, apptDate);
+
+		@SuppressWarnings("unchecked")
+        	List<RSchedule> results = query.getResultList();
+		return results;
+    	}
 }
