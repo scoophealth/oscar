@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>MyOSCAR create user - provider</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">MyOSCAR create user - provider</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/myoscar_client/frame_layout_with_menus.jsf</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>left_menu</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Create New User</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=up</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>main_content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_id_b:j_id_d</td>
+	<td>oscardoc</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=j_id_b:j_id_f</td>
+	<td>mac2002</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=j_id_b:j_id_h</td>
+	<td>label=Provider</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_id_b:j_id_n</td>
+	<td>oscar</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_id_b:j_id_p</td>
+	<td>doc</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=j_id_b:j_id_1n</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Changes Saved</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
