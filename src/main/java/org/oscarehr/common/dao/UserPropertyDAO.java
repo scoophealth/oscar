@@ -73,6 +73,15 @@ public class UserPropertyDAO extends AbstractDao<UserProperty> {
         }
     }
 
+    public String getStringValue(String provider,String propertyName){
+    	try {
+    		return getProp(provider,propertyName).getValue();
+        } catch (Exception e) {
+        	return null;
+        }
+    }
+    
+    
     public UserProperty getProp(String prov, String name) {
     	Query query = entityManager.createQuery("select p from UserProperty p where p.providerNo = ? and p.name = ?");
     	query.setParameter(1, prov);

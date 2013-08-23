@@ -61,6 +61,10 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     @Transient public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
     @Transient public final static String RX_SHOW_PATIENT_DOB="rx_show_patient_dob";
     @Transient public final static String PATIENT_NAME_LENGTH="patient_name_length";
+    
+    @Transient public final static String OFFICIAL_FIRST_NAME="official_first_name";
+    @Transient public final static String OFFICIAL_SECOND_NAME="official_second_name";
+    @Transient public final static String OFFICIAL_LAST_NAME="official_last_name";
 
     //added to user properties with new interface
     public static final String FAX = "fax";

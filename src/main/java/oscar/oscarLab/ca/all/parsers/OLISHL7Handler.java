@@ -376,6 +376,34 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 		return result;
 	}
+	
+	/*
+	Return the sending lab in the format of 2.16.840.1.113883.3.59.1:9999 where 9999 is the lab identifier
+	
+	5047 Canadian Medical Laboratories
+	5552 Gamma Dynacare
+	5687 LifeLabs
+	5254 Alpha Laboratories
+	*/
+	public String getPlacerGroupNumber(){
+		try {
+			String value = getString(terser.get("/.ORC-4-3"));
+			return value;
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("OLIS HL7 Error", e);
+		}
+		return null;
+	}
+	
+	public String getPerformingFacilityNameOnly() {
+		try {
+			String value = getString(terser.get("/.ZBR-6-1"));
+			return value;
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("OLIS HL7 Error", e);
+		}
+		return "";
+	}
 
 	public String getPerformingFacilityName() {
 		try {
@@ -681,16 +709,33 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 	}
 
-	public String getLastUpdateInOLIS() {
+	public String getLastUpdateInOLISUnformated() {
 		try {
-			String date = getString(terser.get("/.OBR-22-1"));
-			if (date.length() > 0) return formatDateTime(date);
-			return "";
+			String date = null;
+		
+			int obrNum = getOBRCount();
+			Segment obr = null;
+			if (obrNum == 1) {
+				obr = terser.getSegment("/.OBR");
+			} else {
+				obr = (Segment) terser.getFinder().getRoot().get("OBR" + obrNum);
+			}
+			date = Terser.get(obr, 22, 0,1,1);
+		
+			return date;
 		} catch (HL7Exception e) {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
 			return "";
 		}
 	}
+	
+	public String getLastUpdateInOLIS() {
+		String date = getLastUpdateInOLISUnformated();
+		if (date.length() > 0) return formatDateTime(date);
+		return "";
+	}
+	
+	
 
 	public String getOBXCEParentId(int obr, int obx) {
 		return getOBXField(obr, obx, 4, 0, 1);
@@ -1281,8 +1326,7 @@ public class OLISHL7Handler implements MessageHandler {
 	public String getMsgDate() {
 
 		try {
-			String date = getString(terser.get("/.MSH-7-1"));
-			String dateString = formatDateTime(date);
+			String dateString = getCollectionDateTime(0);
 			return dateString.substring(0, 19);
 		} catch (Exception e) {
 			return ("");

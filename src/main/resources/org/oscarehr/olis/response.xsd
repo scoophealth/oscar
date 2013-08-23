@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.ssha.ca/2005/HIAL" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" targetNamespace="http://www.ssha.ca/2005/HIAL" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Response" type="Response" />
+	<xs:complexType name="Response">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="Content" type="xs:string" />
+			<xs:element minOccurs="0" maxOccurs="1" name="Errors" type="ArrayOfError" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ArrayOfError">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="unbounded" name="Error" nillable="true" type="Error" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Error">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="Number" type="xs:int" />
+			<xs:element minOccurs="1" maxOccurs="1" name="Severity" type="xs:string" />
+			<xs:element minOccurs="1" maxOccurs="1" name="Message" type="xs:string" />
+			<xs:element minOccurs="0" maxOccurs="1" name="Details" type="ArrayOfString" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ArrayOfString">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
