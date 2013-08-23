@@ -23,13 +23,18 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.ReportTemplates;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ReportTemplatesDaoTest extends DaoTestFixtures {
@@ -50,7 +55,82 @@ public class ReportTemplatesDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testFindActive() {
-		assertNotNull(dao.findActive());
+	public void testFindAll() throws Exception {
+		
+		ReportTemplates reportTemp1 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp1);
+		dao.persist(reportTemp1);
+		
+		ReportTemplates reportTemp2 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp2);
+		dao.persist(reportTemp2);
+		
+		ReportTemplates reportTemp3 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp3);
+		dao.persist(reportTemp3);
+		
+		ReportTemplates reportTemp4 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp4);
+		dao.persist(reportTemp4);
+		
+		List<ReportTemplates> expectedResult = new ArrayList<ReportTemplates>(Arrays.asList(reportTemp1, reportTemp2, reportTemp3, reportTemp4));
+		List<ReportTemplates> result = dao.findAll();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindActive() throws Exception {
+		
+		int active1 = 1, active2 = 2;
+		
+		ReportTemplates reportTemp1 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp1);
+		reportTemp1.setActive(active1);
+		dao.persist(reportTemp1);
+		
+		ReportTemplates reportTemp2 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp2);
+		reportTemp2.setActive(active2);
+		dao.persist(reportTemp2);
+		
+		ReportTemplates reportTemp3 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp3);
+		reportTemp3.setActive(active1);
+		dao.persist(reportTemp3);
+		
+		ReportTemplates reportTemp4 = new ReportTemplates();
+		EntityDataGenerator.generateTestDataForModelClass(reportTemp4);
+		reportTemp4.setActive(active1);
+		dao.persist(reportTemp4);
+		
+		List<ReportTemplates> expectedResult = new ArrayList<ReportTemplates>(Arrays.asList(reportTemp1, reportTemp3, reportTemp4));
+		List<ReportTemplates> result = dao.findActive();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
