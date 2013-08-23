@@ -62,18 +62,21 @@ public class StudyDataDaoTest extends DaoTestFixtures {
 		
 		StudyData studyData1 = new StudyData();
 		EntityDataGenerator.generateTestDataForModelClass(studyData1);
+		studyData1.setDeleted(false);
 		studyData1.setDemographicNo(demoNo1);
 		studyData1.setStudyNo(studyNo1);
 		dao.persist(studyData1);
 		
 		StudyData studyData2 = new StudyData();
 		EntityDataGenerator.generateTestDataForModelClass(studyData2);
+		studyData2.setDeleted(false);
 		studyData2.setDemographicNo(demoNo2);
 		studyData2.setStudyNo(studyNo2);
 		dao.persist(studyData2);
 		
 		StudyData studyData3 = new StudyData();
 		EntityDataGenerator.generateTestDataForModelClass(studyData3);
+		studyData3.setDeleted(false);
 		studyData3.setDemographicNo(demoNo1);
 		studyData3.setStudyNo(studyNo1);
 		dao.persist(studyData3);

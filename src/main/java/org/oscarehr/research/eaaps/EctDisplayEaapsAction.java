@@ -106,11 +106,10 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		
 		Dao.setLeftHeading("eAAPS");
 		Dao.setHeadingColour("FF6600"); // orange
-		Dao.setMenuHeader("Menu Header");
-		Dao.setRightURL(getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"));  
+		Dao.setMenuHeader("Menu Header");  
         Dao.setRightHeadingID("eaaps");
 		
-		EaapsPatientData patientData; 
+		EaapsPatientData patientData;
 		try {
 			EaapsServiceClient client = new EaapsServiceClient();
 	        patientData = client.getPatient(hash.getHash());
@@ -122,46 +121,48 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
         }
 		
 		configureMostResponsiblePhysicianFlag(patientData, demographic);
-		
-		request.getSession().setAttribute("eaapsInfo", patientData);
-		
+		request.getSession().setAttribute("eaapsInfo", patientData);		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Loaded patient data: " + patientData);
 		}
 		
-		// ensure that notification is displayed for each popup, if necessary  
+		// ensure that notification is displayed for page load, if necessary  
 		boolean isNotificationRequired = isNotificationRequired(hash.getHash(), patientData);
 		if (isNotificationRequired) {
-			String js = "<script language=\"javascript\">displayEaapsWindow(\"" +  patientData.getUrl() + "\", \"" + hash.getHash() + "\", \"" + StringEscapeUtils.escapeJavaScript(patientData.getMessage()) + "\" );</script>";
+			String linkUrl = patientData.isUrlProvided() ? patientData.getUrl() : "";
+			String js = "<script language=\"javascript\">displayEaapsWindow(\"" +  linkUrl + "\", \"" + hash.getHash() + "\", \"" + StringEscapeUtils.escapeJavaScript(patientData.getMessage()) + "\" );</script>";
 			Dao.setJavaScript(js);
 		}
 		
+		String eaapsUrl = null;
+		if (patientData.isUrlProvided()) {
+			eaapsUrl = getEaapsUrl(patientData.getUrl(), true);
+		}
+		
 		if (!patientData.isEligibleForStudy()) {
-			Dao.addItem(newItem("Not eligible", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), null));
+			Dao.addItem(newItem("Not eligible", eaapsUrl, null));
 			return true;
 		}
 		
-		
-		// messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Myoscar")
 		if (patientData.isAapReviewCompleted()) {
-			Dao.addItem(newItem("AAP delivered", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red"));
+			Dao.addItem(newItem("AAP delivered", eaapsUrl, "red"));
 			return true;			
 		}
         
 		if (patientData.isAapReviewStarted()) {
-			Dao.addItem(newItem("AAP review started", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red"));
+			Dao.addItem(newItem("AAP review started", eaapsUrl, "red"));
 			return true;			
 		}	
 		
 		if (patientData.isRecommendationsAvailable()) {
-			Dao.addItem(newItem("Recommendations are available", getEaapsUrl(patientData.getUrl(), true), null));
+			Dao.addItem(newItem("Recommendations are available", eaapsUrl, null));
 		}
 		
 		NavBarDisplayDAO.Item item;
 		if (patientData.isAapAvailable()) {
-			item = newItem("AAP is available", getEaapsUrl(patientData.getUrl(), true));
+			item = newItem("AAP is available", eaapsUrl);
 		} else {
-			item = newItem("AAP is <b>not</b> available", getEaapsUrl(request.getContextPath() + "/eaaps/eaaps.jsp"), "red");
+			item = newItem("AAP is <b>not</b> available", eaapsUrl, "red");
 		}
 		Dao.addItem(item);
 		
@@ -253,17 +254,20 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	private NavBarDisplayDAO.Item newItem(String title, String url, String color) {
 		NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 	    item.setTitle(title);
-	    item.setURL(url);
 	    if (color != null) {
 	    	item.setColour(color);
 	    }
-	    item.setURLJavaScript(true);	    
+	    
+	    if (url != null) {
+	    	item.setURL(url);
+	    } else {
+	    	// for all null urls, make sure we don't allow clicking them
+	    	item.setURL("return false;");
+	    }
+	    item.setURLJavaScript(true);
+	    
 	    return item;
     }
-	
-	private String getEaapsUrl(String url) {
-		return getEaapsUrl(url, false);
-	}
 	
 	private String getEaapsUrl(String url, boolean isNarrow) {
 		int width = isNarrow ? 400 : 1000;

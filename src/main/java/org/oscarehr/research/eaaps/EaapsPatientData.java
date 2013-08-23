@@ -54,10 +54,17 @@ public class EaapsPatientData implements Serializable {
 	}
 
 	public JSONObject getStatus() {
+		if (!getJson().has("status")) {
+			return null;
+		}
 		return getJson().getJSONObject("status");
 	}
 
 	private boolean getBoolean(String statusFieldName) {
+		if (getStatus() == null || !getStatus().has(statusFieldName)) {
+			return false;
+		}
+		
 		String fieldValue = getStatus().getString(statusFieldName);
 		if (fieldValue == null || "0".equals(fieldValue) || "-1".equals(fieldValue)) {
 			return false;
@@ -94,6 +101,9 @@ public class EaapsPatientData implements Serializable {
 	}
 	
 	public Date getUpdatedTimestamp() {
+		if (getStatus() == null || !getStatus().has("updatedTimestamp")) {
+			return null;
+		}
 		String updatedTimestampString = getStatus().getString("updatedTimestamp");
 		return ConversionUtils.fromDateString(updatedTimestampString);
 	}
@@ -111,6 +121,10 @@ public class EaapsPatientData implements Serializable {
 	}
 
 	public String getUrl() {
+		if (getStatus() == null || !getStatus().has("url")) {
+			return null;
+		}
+		
 		String result = getStatus().getString("url");
 		if ("null".equals(result)) {
 			return null;
@@ -134,5 +148,18 @@ public class EaapsPatientData implements Serializable {
 		getStatus().put("url", url);
 		getStatus().put("previousUrl", previousUrl);
 	}
+
+	/**
+	 * Checks if the external URL (the one that should be referred to) is provided.
+	 * 
+	 * @return
+	 * 		Returns true if the URL is provided and false otherwise
+	 */
+	public boolean isUrlProvided() {
+		if (getUrl() == null || getUrl().isEmpty()) {
+			return false;
+		}
+		return true;
+    }
 
 }

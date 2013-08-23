@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.StudyData;
 import org.springframework.stereotype.Repository;
 
@@ -41,19 +42,33 @@ public class StudyDataDao extends AbstractDao<StudyData>{
 
 	@SuppressWarnings("unchecked")
 	public List<StudyData> findByContent(String content) {
-		Query query = createQuery("s", "s.content LIKE :content");
+		Query query = createQuery("s", "s.content LIKE :content AND s.deleted = false");
 		query.setParameter("content", content);
 		return query.getResultList();
 	}
 	
 	public StudyData findSingleByContent(String content) {
-		Query query = createQuery("s", "s.content LIKE :content");
+		Query query = createQuery("s", "s.content LIKE :content AND s.deleted = false");
 		query.setParameter("content", content);
 		return getSingleResultOrNull(query);
 	}
 	
+	public int removeByDemoAndStudy(Integer demographicNo, Integer studyId ) {
+		Query query = entityManager.createQuery("from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
+		query.setParameter("demoNo", demographicNo);
+		query.setParameter("studyId", studyId);
+		
+		int i = 0;
+		for (Object o : query.getResultList()) {
+			StudyData data = (StudyData) o;
+			remove(data);
+			i++;
+		}
+		return i;
+	}
+	
 	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
-		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
+		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId and s.deleted = false");
 		
 		query.setParameter("demoNo", demographicNo);
 		query.setParameter("studyId", studyId);
@@ -63,4 +78,11 @@ public class StudyDataDao extends AbstractDao<StudyData>{
 		
 		return studyDataList;
 	}
+	
+	@Override
+    public void remove(AbstractModel<?> o) {
+		StudyData sd = (StudyData) o;
+		sd.setDeleted(true);
+		entityManager.merge(o);
+    }
 }
