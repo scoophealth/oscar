@@ -8,16 +8,17 @@
 <body>
 <table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
 <tr><td><b>Test Suite</b></td></tr>
-<tr><td><a href="Reg1 - new demo1 - no Register for MyOSCAR">Reg1 - new demo1 - no Register for MyOSCAR</a></td></tr>
-<tr><td><a href="Reg2 - new demo2 - Register for MyOSCAR - no provider">Reg2 - new demo2 - Register for MyOSCAR - no provider</a></td></tr>
-<tr><td><a href="Reg3 - new demo3 - Register for MyOSCAR - yes provider">Reg3 - new demo3 - Register for MyOSCAR - yes provider</a></td></tr>
-<tr><td><a href="Reg4 - new demo4 - Register for MyOSCAR - yes provider - yes msg">Reg4 - new demo4 - Register for MyOSCAR - yes provider - yes msg</a></td></tr>
-<tr><td><a href="Reg5 - new demo5 - Register for MyOSCAR - change default pass">Reg5 - new demo5 - Register for MyOSCAR - change default pass</a></td></tr>
-<tr><td><a href="Reg6 - new demo6 - Register for MyOSCAR - change default username">Reg6 - new demo6 - Register for MyOSCAR - change default username</a></td></tr>
-<tr><td><a href="Reg7 - existing demo7 - active demo in MyOSCAR">Reg7 - existing demo7 - active demo in MyOSCAR</a></td></tr>
-<tr><td><a href="Reg8 - existing demo8 -  inactive demo in MyOSCAR">Reg8 - existing demo8 -  inactive demo in MyOSCAR</a></td></tr>
-<tr><td><a href="Reg9 - existing demo9 -  active wrong type in MyOSCAR">Reg9 - existing demo9 -  active wrong type in MyOSCAR</a></td></tr>
-<tr><td><a href="Reg10 - new demo10 -  Register for MyOSCAR - all fields entered">Reg10 - new demo10 -  Register for MyOSCAR - all fields entered</a></td></tr>
+<tr><td><a href="reg1 - new demo1 - no Register for MyOSCAR">reg1 - new demo1 - no Register for MyOSCAR</a></td></tr>
+<tr><td><a href="reg2 - new demo2 - Register for MyOSCAR - no provider">reg2 - new demo2 - Register for MyOSCAR - no provider</a></td></tr>
+<tr><td><a href="reg3 - new demo3 - Register for MyOSCAR - yes provider">reg3 - new demo3 - Register for MyOSCAR - yes provider</a></td></tr>
+<tr><td><a href="reg4 - confirm access request from demographic 3">reg4 - confirm access request from demographic 3</a></td></tr>
+<tr><td><a href="reg5 - new demo5 - Register for MyOSCAR - yes provider - yes msg">reg5 - new demo5 - Register for MyOSCAR - yes provider - yes msg</a></td></tr>
+<tr><td><a href="reg6 - confirm access request from demographic 5">reg6 - confirm access request from demographic 5</a></td></tr>
+<tr><td><a href="reg7 - new demo7 - Register for MyOSCAR - change default pass">reg7 - new demo7 - Register for MyOSCAR - change default pass</a></td></tr>
+<tr><td><a href="reg8 - new demo8 - Register for MyOSCAR - change default username">reg8 - new demo8 - Register for MyOSCAR - change default username</a></td></tr>
+<tr><td><a href="reg9 - existing demo9 - active demo in MyOSCAR">reg9 - existing demo9 - active demo in MyOSCAR</a></td></tr>
+<tr><td><a href="reg10 - existing demo10 - inactive demo in MyOSCAR">reg10 - existing demo10 - inactive demo in MyOSCAR</a></td></tr>
+<tr><td><a href="reg11 - new demo11 - Register for MyOSCAR - all fields entered">reg11 - new demo11 - Register for MyOSCAR - all fields entered</a></td></tr>
 </tbody></table>
 </body>
 </html>
