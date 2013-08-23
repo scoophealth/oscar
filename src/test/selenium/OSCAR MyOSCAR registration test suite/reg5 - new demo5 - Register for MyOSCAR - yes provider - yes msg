@@ -94,7 +94,7 @@
 <tr>
 	<td>type</td>
 	<td>name=keyword</td>
-	<td>demographic4</td>
+	<td>demographic5</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -109,12 +109,12 @@
 <tr>
 	<td>type</td>
 	<td>id=last_name</td>
-	<td>demographic4</td>
+	<td>demographic5</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=first_name</td>
-	<td>test4</td>
+	<td>test5</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -124,7 +124,7 @@
 <tr>
 	<td>type</td>
 	<td>id=year_of_birth</td>
-	<td>1974</td>
+	<td>1975</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -158,12 +158,12 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>name=enable_primary_relation_45</td>
+	<td>name=enable_primary_relation_41</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>name=reverse_relation_45</td>
+	<td>name=reverse_relation_41</td>
 	<td></td>
 </tr>
 <tr>

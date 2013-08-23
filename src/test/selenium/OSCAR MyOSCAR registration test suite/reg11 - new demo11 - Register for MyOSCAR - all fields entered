@@ -94,7 +94,7 @@
 <tr>
 	<td>type</td>
 	<td>name=keyword</td>
-	<td>demographic10</td>
+	<td>demographic11</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -109,12 +109,12 @@
 <tr>
 	<td>type</td>
 	<td>id=last_name</td>
-	<td>demographic10</td>
+	<td>demographic11</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=first_name</td>
-	<td>test10</td>
+	<td>test11</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -179,7 +179,7 @@
 <tr>
 	<td>type</td>
 	<td>name=email</td>
-	<td>test10.demographic10@gmail.com</td>
+	<td>test11.demographic10@gmail.com</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -264,16 +264,6 @@
 <tr>
 	<td>selectWindow</td>
 	<td>name=indivoRegistration</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>name=enable_primary_relation_45</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>name=reverse_relation_45</td>
 	<td></td>
 </tr>
 <tr>
