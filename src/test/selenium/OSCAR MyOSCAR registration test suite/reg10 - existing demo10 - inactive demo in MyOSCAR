@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/" />
-<title>Reg5 - existing demo in MyOSCAR - larry</title>
+<title>Reg7 - existing inactive demo in MyOSCAR - demo7</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Reg5 - existing demo in MyOSCAR - larry</td></tr>
+<tr><td rowspan="1" colspan="3">Reg7 - existing inactive demo in MyOSCAR - demo7</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -54,7 +54,7 @@
 <tr>
 	<td>type</td>
 	<td>id=j_id_b:j_id_d</td>
-	<td>demographic7</td>
+	<td>demographic10</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -64,12 +64,17 @@
 <tr>
 	<td>type</td>
 	<td>id=j_id_b:j_id_n</td>
-	<td>test7</td>
+	<td>test10</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=j_id_b:j_id_p</td>
-	<td>demographic7</td>
+	<td>demographic10</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=j_id_b:j_id_1l</td>
+	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -174,7 +179,7 @@
 <tr>
 	<td>type</td>
 	<td>name=keyword</td>
-	<td>demographic7</td>
+	<td>demographic10</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -189,12 +194,12 @@
 <tr>
 	<td>type</td>
 	<td>id=last_name</td>
-	<td>demographic7</td>
+	<td>demographic10</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=first_name</td>
-	<td>test7</td>
+	<td>test10</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -204,7 +209,7 @@
 <tr>
 	<td>type</td>
 	<td>id=year_of_birth</td>
-	<td>1977</td>
+	<td>1978</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -224,7 +229,7 @@
 <tr>
 	<td>type</td>
 	<td>name=myOscarUserName</td>
-	<td>demographic6</td>
+	<td>demographic10</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>

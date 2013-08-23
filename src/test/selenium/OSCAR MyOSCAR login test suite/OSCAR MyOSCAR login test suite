@@ -8,14 +8,13 @@
 <body>
 <table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
 <tr><td><b>Test Suite</b></td></tr>
-<tr><td><a href="login1 - oscar - oscardoc agree AUA">login1 - oscar - oscardoc agree AUA</a></td></tr>
-<tr><td><a href="login2 - myoscar portal - create login">login2 - myoscar portal - create login</a></td></tr>
-<tr><td><a href="login3 - myoscar portal - disable keep me logged in">login3 - myoscar portal - disable keep me logged in</a></td></tr>
-<tr><td><a href="login4 - myoscar portal - verify disable keep me logged in">login4 - myoscar portal - verify disable keep me logged in</a></td></tr>
-<tr><td><a href="login5 - myoscar portal - enable keep me logged in">login5 - myoscar portal - enable keep me logged in</a></td></tr>
-<tr><td><a href="login6 - myoscar portal - verify enable keep me logged in">login6 - myoscar portal - verify enable keep me logged in</a></td></tr>
-<tr><td><a href="login7 - myoscar portal - enable keep me logged in - MyOSCAR password change">login7 - myoscar portal - enable keep me logged in - MyOSCAR password change</a></td></tr>
-<tr><td><a href="login8 - myoscar - reset oscardoc MyOSCAR account password">login8 - myoscar - reset oscardoc MyOSCAR account password</a></td></tr>
+<tr><td><a href="login1 - myoscar - create login">login1 - myoscar - create login</a></td></tr>
+<tr><td><a href="login2 - myoscar - disable keep me logged in">login2 - myoscar - disable keep me logged in</a></td></tr>
+<tr><td><a href="login3 - myoscar - verify disable keep me logged in">login3 - myoscar - verify disable keep me logged in</a></td></tr>
+<tr><td><a href="login4 - myoscar - enable keep me logged in">login4 - myoscar - enable keep me logged in</a></td></tr>
+<tr><td><a href="login5 - myoscar - verify enable keep me logged in">login5 - myoscar - verify enable keep me logged in</a></td></tr>
+<tr><td><a href="login6 - myoscar - enable keep me logged in - MyOSCAR password change">login6 - myoscar - enable keep me logged in - MyOSCAR password change</a></td></tr>
+<tr><td><a href="login7 - myoscar - reset oscardoc MyOSCAR account password">login7 - myoscar - reset oscardoc MyOSCAR account password</a></td></tr>
 </tbody></table>
 </body>
 </html>
