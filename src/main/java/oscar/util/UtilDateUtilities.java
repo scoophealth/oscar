@@ -63,7 +63,7 @@ public class UtilDateUtilities {
         return DateToString(date, defaultPattern, locale);
     }
     public static String DateToString(Date date, String spattern)    {
-    	return DateToString(date, spattern, defaultLocale);
+    	return DateUtils.getDate(date, spattern, defaultLocale);
     }
     public static String DateToString(Date date, String spattern, Locale locale)    {
         if(date != null) {
