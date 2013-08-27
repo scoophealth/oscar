@@ -263,4 +263,8 @@ public class NoteDisplayLocal implements NoteDisplay {
 	public boolean isInvoice() {
 	    return false;
     }
+	
+	public boolean isTicklerNote() {
+		return containsIssue("TicklerNote");
+	}
 }

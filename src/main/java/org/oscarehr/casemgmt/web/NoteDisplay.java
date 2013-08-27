@@ -118,6 +118,8 @@ public interface NoteDisplay {
 
 	public boolean isInvoice();
 
+	public boolean isTicklerNote();
+	
 	public CaseManagementNoteLink getNoteLink();
 
 	public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl);

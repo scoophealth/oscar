@@ -33,12 +33,11 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
-import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.CppUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.util.StringUtils;
 
@@ -48,7 +47,6 @@ import oscar.util.StringUtils;
 public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 	private String cmd = "resolvedIssues";
 
-	private IssueDAO issueDao=(IssueDAO) SpringUtils.getBean("IssueDAO");
 	
 	private CaseManagementManager caseManagementMgr;
 	private static Logger log = MiscUtils.getLogger();
@@ -80,6 +78,10 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		List<CaseManagementIssue> issues_unr = new ArrayList<CaseManagementIssue>();
 		//only list resolved issues				
 		for(CaseManagementIssue issue : issues) {
+			if(containsIssue(CppUtils.cppCodes,issue.getIssue().getCode())) {
+				continue;
+			}
+			
 			if(issue.isResolved()) {
 				issues_unr.add(issue);
 			}				
@@ -211,5 +213,13 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 
 	public String getCmd() {
 		return cmd;
+	}
+	public boolean containsIssue(String[]  issues, String issueCode) {
+		for (String caseManagementIssue : issues) {
+			if (caseManagementIssue.equals(issueCode)) {
+					return(true);
+			}
+		}
+		return false;
 	}
 }

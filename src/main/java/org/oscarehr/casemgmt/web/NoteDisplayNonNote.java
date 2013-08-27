@@ -293,5 +293,9 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	public void setInvoice(boolean isInvoice) {
     	this.isInvoice = isInvoice;
     }
+	
+	public boolean isTicklerNote() {
+		return false;
+	}
 
 }
