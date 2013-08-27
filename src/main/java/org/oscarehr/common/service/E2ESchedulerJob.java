@@ -41,6 +41,12 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.oscarDemographic.pageUtil.Util;
 
+/**
+ * An E2E scheduler object for periodically exporting all available patient summaries
+ * This object extends the JDK TimerTask, but applicationContextE2E.xml uses Quartz scheduling instead
+ * 
+ * @author Marc Dumontier, Jeremy Ho
+ */
 public class E2ESchedulerJob extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
 	String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
