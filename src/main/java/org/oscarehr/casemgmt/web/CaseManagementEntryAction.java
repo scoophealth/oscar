@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -53,6 +54,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsDateJsonBeanProcessor;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -77,6 +80,7 @@ import org.oscarehr.casemgmt.common.EChartNoteEntry;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -119,6 +123,7 @@ import org.oscarehr.eyeform.web.FollowUpAction;
 import org.oscarehr.eyeform.web.ProcedureBookAction;
 import org.oscarehr.eyeform.web.TestBookAction;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -792,6 +797,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return null;
 	}
 
+	/*
+	 * value (note)
+	 * appointmentNo
+	 * demographicNo
+	 * noteId
+	 * issueChange
+	 * archived
+	 * 
+	 * session form caseManagementEntryForm + demoNo
+	 * 
+	 */
 	public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String strNote = request.getParameter("value");
 		String appointmentNo = request.getParameter("appointmentNo");
@@ -3725,5 +3741,168 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (s1 == null) s1 = "";
 		if (s2 == null) s2 = "";
 		return s1.trim().equals(s2.trim());
+	}
+	
+	/*
+	 * 1) load existing note if possible
+	 * 1) update/save the note
+	 * 2) save/update link to the tickler (not sure yet)
+	 */
+	public ActionForward ticklerSaveNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String strNote = request.getParameter("value");
+		Date creationDate = new Date();
+		Provider loggedInProvider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+		String demographicNo = request.getParameter("demographicNo");
+		String ticklerNo = request.getParameter("ticklerNo");
+		String noteId = request.getParameter("noteId");
+		String revision = "1";
+		String history = strNote;
+		String uuid = null;
+		
+		if(noteId != null && noteId.length()>0 && !noteId.equals("0")) {
+			CaseManagementNote existingNote = this.caseManagementNoteDao.getNote(Long.valueOf(noteId));
+			
+			revision = String.valueOf(Integer.valueOf(existingNote.getRevision()).intValue() + 1);
+			history = strNote + "\n" + existingNote.getHistory();
+			uuid = existingNote.getUuid();
+		}
+		
+		CaseManagementNote cmn = new CaseManagementNote();
+		cmn.setAppointmentNo(0);
+		cmn.setArchived(false);
+		cmn.setCreate_date(creationDate);
+		cmn.setDemographic_no(demographicNo);
+		cmn.setEncounter_type(EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT.getOldDbValue());
+		cmn.setNote(strNote);
+		cmn.setObservation_date(creationDate);
+		/*
+		String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+		if(programIdStr==null)
+			programIdStr = (String) request.getSession().getAttribute("case_program_id");
+		Integer programId = null;
+		if (programIdStr != null) programId = Integer.valueOf(programIdStr);
+		
+		cmn.setProgram_no(String.valueOf(programId));
+		*/
+		cmn.setProviderNo(loggedInProvider.getProviderNo());
+		cmn.setRevision(revision);
+		cmn.setSigned(true);
+		cmn.setSigning_provider_no(loggedInProvider.getProviderNo());
+		cmn.setUpdate_date(creationDate);
+		cmn.setHistory(history);
+		//just doing this because the other code does it.
+		cmn.setReporter_program_team("null");
+		cmn.setUuid(uuid);
+		
+		
+		String prog_no = new EctProgram(request.getSession()).getProgram(cmn.getProviderNo());
+		cmn.setProgram_no(prog_no);
+		
+		determineNoteRole(cmn,loggedInProvider.getProviderNo(),demographicNo);
+		
+		caseManagementMgr.saveNoteSimple(cmn);
+
+		log.info("note id is " + cmn.getId());
+		
+		
+		//save link, so we know what tickler this note is linked to
+		CaseManagementNoteLink link = new CaseManagementNoteLink();
+		link.setNoteId(cmn.getId());
+		link.setTableId(Long.parseLong(ticklerNo));
+		link.setTableName(CaseManagementNoteLink.TICKLER);
+		
+		CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+		caseManagementNoteLinkDao.save(link);
+		
+		
+		Issue issue = this.issueDao.findIssueByTypeAndCode("system", "TicklerNote");
+		if(issue == null) {
+			logger.warn("missing TicklerNote issue, please run all database updates");
+			return null;
+		}
+		//save issue..this will make it a "cpp looking" issue in the eChart
+		CaseManagementIssue cmi = new CaseManagementIssue();
+		cmi.setAcute(false);
+		cmi.setCertain(false);
+		cmi.setDemographic_no(demographicNo);
+		cmi.setIssue_id(issue.getId());
+		cmi.setMajor(false);
+		cmi.setProgram_id(Integer.parseInt(cmn.getProgram_no()));
+		cmi.setResolved(false);
+		cmi.setType(issue.getRole());
+		cmi.setUpdate_date(creationDate);
+		
+		caseManagementIssueDao.saveIssue(cmi);
+		
+		cmn.getIssues().add(cmi);
+		
+		caseManagementNoteDao.updateNote(cmn);
+		return null;
+	}
+	
+	public ActionForward ticklerGetNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String ticklerNo = request.getParameter("ticklerNo");
+		
+		CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+		CaseManagementNoteLink link = caseManagementNoteLinkDao.getLastLinkByTableId(CaseManagementNoteLink.TICKLER, Long.valueOf(ticklerNo));
+		
+		if(link != null) {
+			Long noteId = link.getNoteId();
+			
+			CaseManagementNote note = this.caseManagementNoteDao.getNote(noteId);
+			
+		
+			if(note != null) {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                JsonConfig config = new JsonConfig();
+                config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());
+
+                Map<String,Serializable> hashMap = new HashMap<String,Serializable>();
+                hashMap.put("noteId",note.getId().toString());
+                hashMap.put("note", note.getNote());
+                hashMap.put("revision", note.getRevision());
+                hashMap.put("obsDate", formatter.format(note.getObservation_date()));
+                hashMap.put("editor", this.providerMgr.getProvider(note.getProviderNo()).getFormattedName());
+                JSONObject json = JSONObject.fromObject(hashMap, config);
+                response.getOutputStream().write(json.toString().getBytes());
+
+
+			}
+		}
+		
+		return null;
+	}
+	
+	private boolean determineNoteRole(CaseManagementNote note, String providerNo, String demographicNo) {
+		// Determines what program & role to assign the note to
+		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
+		ProviderDefaultProgramDao defaultProgramDao = (ProviderDefaultProgramDao) SpringUtils.getBean("providerDefaultProgramDao");
+		boolean programSet = false;
+		
+		if(note.getProgram_no() != null && note.getProgram_no().length()>0 && !"null".equals(note.getProgram_no())) {
+			ProgramProvider pp = programProviderDao.getProgramProvider(note.getProviderNo(), Long.valueOf(note.getProgram_no()));
+			if(pp != null) {
+				note.setReporter_caisi_role(String.valueOf(pp.getRoleId()));
+				programSet=true;
+			}
+		}
+
+		if(!programSet) {
+			List<ProviderDefaultProgram> programs = defaultProgramDao.getProgramByProviderNo(providerNo);
+			HashMap<Program,List<Secrole>> rolesForDemo = NotePermissionsAction.getAllProviderAccessibleRolesForDemo(providerNo, demographicNo);
+			for (ProviderDefaultProgram pdp : programs) {
+				for (Program p : rolesForDemo.keySet()) {
+					if (pdp.getProgramId() == p.getId().intValue()) {
+						List<ProgramProvider> programProviderList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, (long) pdp.getProgramId());
+	
+						note.setProgram_no("" + pdp.getProgramId());
+						note.setReporter_caisi_role("" + programProviderList.get(0).getRoleId());
+	
+						programSet = true;
+					}
+				}
+			}
+		}
+		return programSet;
 	}
 }

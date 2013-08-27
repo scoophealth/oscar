@@ -170,8 +170,82 @@ if(labReqVer.equals("")) {labReqVer="07";}
 <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+
 <script>
 jQuery.noConflict();
+</script>
+<script>
+jQuery(document).ready(function() {
+	jQuery( "#note-form" ).dialog({
+		autoOpen: false,
+		height: 340,
+		width: 450,
+		modal: true,
+		
+		close: function() {
+			
+		}
+	});		
+		
+});
+
+function openNoteDialog(demographicNo, ticklerNo) {
+	jQuery("#tickler_note_demographicNo").val(demographicNo);
+	jQuery("#tickler_note_ticklerNo").val(ticklerNo);
+	
+
+	jQuery("#tickler_note_noteId").val(''');
+	jQuery("#tickler_note").val('');
+	jQuery("#tickler_note_revision").html('');
+	jQuery("#tickler_note_revision_url").attr('onclick','');
+	jQuery("#tickler_note_editor").html('');
+	jQuery("#tickler_note_obsDate").html('');
+		
+	//is there an existing note?
+	jQuery.ajax({url:'../CaseManagementEntry.do',
+		data: { method: "ticklerGetNote", ticklerNo: jQuery('#tickler_note_ticklerNo').val()  },
+		async:false, 
+		dataType: 'json',
+		success:function(data) {
+			if(data != null) {
+				jQuery("#tickler_note_noteId").val(data.noteId);
+				jQuery("#tickler_note").val(data.note);
+				jQuery("#tickler_note_revision").html(data.revision);
+				jQuery("#tickler_note_revision_url").attr('onclick','window.open(\'../CaseManagementEntry.do?method=notehistory&noteId='+data.noteId+'\');return false;');
+				jQuery("#tickler_note_editor").html(data.editor);
+				jQuery("#tickler_note_obsDate").html(data.obsDate);
+			}
+		},
+		error: function(jqXHR, textStatus, errorThrown ) {
+			alert(errorThrown);
+		}
+		});
+	
+	jQuery( "#note-form" ).dialog( "open" );
+}
+function closeNoteDialog() {
+	jQuery( "#note-form" ).dialog( "close" );
+}
+function saveNoteDialog() {
+	//alert('not yet implemented');
+	jQuery.ajax({url:'../CaseManagementEntry.do',
+		data: { method: "ticklerSaveNote", noteId: jQuery("#tickler_note_noteId").val(), value: jQuery('#tickler_note').val(), demographicNo: jQuery('#tickler_note_demographicNo').val(), ticklerNo: jQuery('#tickler_note_ticklerNo').val()  },
+		async:false, 
+		success:function(data) {
+		 // alert('ok');		  
+		},
+		error: function(jqXHR, textStatus, errorThrown ) {
+			alert(errorThrown);
+		}
+		});	
+	
+	jQuery( "#note-form" ).dialog( "close" );
+}
+
+
+
 </script>
 <script language="JavaScript">
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
@@ -648,6 +722,7 @@ function changeSite(sel) {
 
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.msgStatus"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="39%"><bean:message key="tickler.ticklerMain.msgMessage"/></th>
+			<th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;">&nbsp;</th>
         </TR>
     </thead>
     <tfoot>
@@ -810,6 +885,11 @@ function changeSite(sel) {
                                         %>
                                         
                                     </TD>
+                                    <td ROWSPAN="1" class="<%=cellColour%>">
+                                    	<a href="javascript:void(0)" onClick="openNoteDialog('<%=demo.getDemographicNo() %>','<%=t.getId() %>');return false;">
+                                    		<img border="0" src="<%=request.getContextPath()%>/images/notepad.gif"/>
+                                    	</a>
+                                    </td>
                                 </tr>
                                 <%
                                 	Set<TicklerComment> tcomments = t.getComments();
@@ -831,6 +911,7 @@ function changeSite(sel) {
                                         <td ROWSPAN="1" class="<%=cellColour%>"></td>
                                         <td ROWSPAN="1" class="<%=cellColour%>"></td>
                                         <td ROWSPAN="1" class="<%=cellColour%>"><%=tc.getMessage()%></td>
+                                        <td>&nbsp;</td>
                                     </tr>
                                 <%      }                                        
                                     }
@@ -838,7 +919,7 @@ function changeSite(sel) {
 
                             if (ticklers.isEmpty()) {
                             %>
-                            <tr><td colspan="8" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>                                                            
+                            <tr><td colspan="10" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>                                                            
                             <%}%>
                         </tbody>
 
@@ -852,6 +933,43 @@ function changeSite(sel) {
 <p class="yesprint">
 	<%=OscarProperties.getConfidentialityStatement()%>
 </p>
+
+
+
+
+<div id="note-form" title="Tickler Note">
+	<form>
+		
+			<table>
+				<tbody>
+					<textarea id="tickler_note" name="tickler_note" style="width:100%;height:80%"></textarea>		
+					<input type="hidden" name="tickler_note_demographicNo" id="tickler_note_demographicNo" value=""/>	
+					<input type="hidden" name="tickler_note_ticklerNo" id="tickler_note_ticklerNo" value=""/>	
+					<input type="hidden" name="tickler_note_noteId" id="tickler_note_noteId" value=""/>	
+				</tbody>
+			</table>
+			<br/>
+			<table>
+				<tr>
+					<td >
+						<a href="javascript:void()" onclick="saveNoteDialog();return false;">
+							<img src="<%=request.getContextPath()%>/oscarEncounter/graphics/note-save.png"/>
+						</a>
+						<a href="javascript:void()" onclick="closeNoteDialog();return false;">
+							<img src="<%=request.getContextPath()%>/oscarEncounter/graphics/system-log-out.png"/>
+						</a>
+					</td>
+					<td style="width:40%" nowrap="nowrap">
+					Date: <span id="tickler_note_obsDate"></span> rev <a id="tickler_note_revision_url" href="javascript:void(0)" onClick=""><span id="tickler_note_revision"></span></a><br/>
+					Editor: <span id="tickler_note_editor"></span>
+					</td>
+				</tr>
+			
+			</table>
+			
+	</form>	
+</div>
+
 
 </body>
 </html:html>
