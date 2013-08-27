@@ -570,10 +570,9 @@ CREATE TABLE diseases (
 --
 -- Table structure for table `document`
 --
-
 CREATE TABLE document (
   document_no int(20) NOT NULL auto_increment,
-  doctype varchar(20) default NULL,
+  doctype varchar(60),
   docClass varchar(60),
   docSubClass varchar(60),
   docdesc varchar(255) NOT NULL default '',
