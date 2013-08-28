@@ -56,7 +56,7 @@ CREATE TABLE appointment (
   name varchar(50) default NULL,
   demographic_no int(10) default NULL,
   program_id int default 0,
-  notes varchar(80) default NULL,
+  notes varchar(255),
   reason varchar(80) default NULL,
   location varchar(30) default NULL,
   resources varchar(255) default NULL,
