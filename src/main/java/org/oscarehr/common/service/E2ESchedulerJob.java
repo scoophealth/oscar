@@ -31,13 +31,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.exports.e2e.E2EVelocityTemplate;
 import org.oscarehr.exports.e2e.E2EPatientExport;
+import org.oscarehr.exports.e2e.E2EVelocityTemplate;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDemographic.pageUtil.Util;
 
@@ -50,6 +57,7 @@ import oscar.oscarDemographic.pageUtil.Util;
 public class E2ESchedulerJob extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
 	String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
+	String e2eUrl = OscarProperties.getInstance().getProperty("E2E_URL");
 
 	@Override
 	public void run() {
@@ -95,7 +103,7 @@ public class E2ESchedulerJob extends TimerTask {
 					expFile += "_"+id;
 					expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth();
 					files.add(new File(directory, expFile+".xml"));
-				}catch(Exception e){
+				} catch (Exception e){
 					logger.error("Error", e);
 				}
 				BufferedWriter out = null;
@@ -111,6 +119,24 @@ public class E2ESchedulerJob extends TimerTask {
 					} catch(Exception e) {
 						//ignore
 					}
+				}
+
+				try {
+					HttpClient httpclient = new DefaultHttpClient();
+					HttpPost httpPost = new HttpPost(e2eUrl);
+
+					//StringBody data = new StringBody(output);
+					FileBody fileBody = new FileBody(files.get(files.size()-1), "text/xml");
+					MultipartEntity reqEntity = new MultipartEntity();
+					reqEntity.addPart("content", fileBody);
+					httpPost.setEntity(reqEntity);
+
+					HttpResponse response = httpclient.execute(httpPost);
+					if(response != null && response.getStatusLine().getStatusCode() != 201) {
+						logger.error(response);
+					}
+				} catch (Exception e) {
+					logger.error("Error", e);
 				}
 			}
 
