@@ -27,13 +27,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -51,13 +51,14 @@ import oscar.oscarDemographic.pageUtil.Util;
 /**
  * An E2E scheduler object for periodically exporting all available patient summaries
  * This object extends the JDK TimerTask, but applicationContextE2E.xml uses Quartz scheduling instead
+ * It will attempt to send the export via HTTP POST. If it fails, the record is saved in TMP_DIR
  * 
  * @author Marc Dumontier, Jeremy Ho
  */
 public class E2ESchedulerJob extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
-	String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
-	String e2eUrl = OscarProperties.getInstance().getProperty("E2E_URL");
+	private String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
+	private String e2eUrl = OscarProperties.getInstance().getProperty("E2E_URL");
 
 	@Override
 	public void run() {
@@ -65,9 +66,11 @@ public class E2ESchedulerJob extends TimerTask {
 
 		try {
 			logger.info("Starting E2E export job");
+			logger.info("E2E Target URL: ".concat(e2eUrl));
 
+			boolean failedHTTPPOST = false;
 			List<Integer> ids = demographicDao.getActiveDemographicIds();
-			ArrayList<File> files = new ArrayList<File>();
+			//ArrayList<File> files = new ArrayList<File>();
 			StringBuilder exportLog = new StringBuilder();
 
 			for(Integer id:ids) {
@@ -91,7 +94,8 @@ public class E2ESchedulerJob extends TimerTask {
 				}
 				exportLog.append(t.getExportLog());
 
-				//export file to temp directory
+				// Export File to Temp Directory
+				File file = null;
 				try{
 					File directory = new File(tmpDir);
 					if(!directory.exists()){
@@ -99,16 +103,15 @@ public class E2ESchedulerJob extends TimerTask {
 					}
 
 					//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
-					String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName();
-					expFile += "_"+id;
-					expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth();
-					files.add(new File(directory, expFile+".xml"));
+					String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName()+"_"+id;
+					expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth()+".xml";
+					file = new File(directory, expFile);
 				} catch (Exception e){
 					logger.error("Error", e);
 				}
 				BufferedWriter out = null;
 				try {
-					out = new BufferedWriter(new FileWriter(files.get(files.size()-1)));
+					out = new BufferedWriter(new FileWriter(file));
 					out.write(output);
 				} catch (IOException e) {
 					logger.error("Error", e);
@@ -121,22 +124,29 @@ public class E2ESchedulerJob extends TimerTask {
 					}
 				}
 
+				// Attempt to perform HTTP POST request
 				try {
 					HttpClient httpclient = new DefaultHttpClient();
 					HttpPost httpPost = new HttpPost(e2eUrl);
 
-					//StringBody data = new StringBody(output);
-					FileBody fileBody = new FileBody(files.get(files.size()-1), "text/xml");
+					FileBody fileBody = new FileBody(file, "text/xml");
 					MultipartEntity reqEntity = new MultipartEntity();
 					reqEntity.addPart("content", fileBody);
 					httpPost.setEntity(reqEntity);
 
 					HttpResponse response = httpclient.execute(httpPost);
-					if(response != null && response.getStatusLine().getStatusCode() != 201) {
-						logger.error(response);
+					if(response != null && response.getStatusLine().getStatusCode() == 201) {
+						Util.cleanFile(file);
+					} else {
+						logger.error(response.getStatusLine());
+						failedHTTPPOST = true;
 					}
+				} catch (HttpHostConnectException e) {
+					logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
+					failedHTTPPOST = true;
 				} catch (Exception e) {
 					logger.error("Error", e);
+					failedHTTPPOST = true;
 				}
 			}
 
@@ -158,15 +168,16 @@ public class E2ESchedulerJob extends TimerTask {
 			}*/
 
 			// Remove export files from temp dir
-			Util.cleanFiles(files);
+			//Util.cleanFiles(files);
 
+			if(failedHTTPPOST) {
+				logger.info("Check ".concat(tmpDir).concat(" for unsent export files"));
+			}
 			logger.info("Done E2E export job");
-
 		} catch(Throwable e ) {
 			logger.error("Error",e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
 		}
 	}
-
 }
