@@ -401,10 +401,11 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 }
 %>
 
-<div class="createNew"><a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message
-	key="demographic.search.btnCreateNew" /></font></b></a>
-<br>
+<div class="createNew">
+	<a href="demographiccontrol.jsp?displaymode=Create"><b><font size="+1"><bean:message key="demographic.search.btnCreateNew" /></font></b></a>
+	<br>
 </div>
+
 <p><bean:message key="demographic.demographicsearchresults.msgClick" /></p>
 </center>
 </body>
