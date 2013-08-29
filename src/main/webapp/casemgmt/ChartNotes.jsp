@@ -396,19 +396,19 @@ try
 	<html:hidden property="includeIssue" value="off" />
 	<%
 		String apptNo = request.getParameter("appointmentNo");
-		if (apptNo == null || apptNo.equals(""))
+		if (apptNo == null || apptNo.equals("") || apptNo.equals("null"))
 		{
 			apptNo = "0";
 		}
 
 		String apptDate = request.getParameter("appointmentDate");
-		if (apptDate == null || apptDate.equals(""))
+		if (apptDate == null || apptDate.equals("") || apptDate.equals("null"))
 		{
 			apptDate = oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd");
 		}
 
 		String startTime = request.getParameter("start_time");
-		if (startTime == null || startTime.equals(""))
+		if (startTime == null || startTime.equals("") || startTime.equals("null"))
 		{
 			startTime = "00:00:00";
 		}
