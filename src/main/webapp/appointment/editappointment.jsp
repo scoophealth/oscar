@@ -180,6 +180,10 @@ function onSub() {
     }
   }
   if( saveTemp==2 ) {
+     if (document.EDITAPPT.notes.value.length > 255) {
+	window.alert("<bean:message key="appointment.editappointment.msgNotesTooBig"/>");
+	return false;
+     }
     return calculateEndTime() ;
   } else
       return true;
