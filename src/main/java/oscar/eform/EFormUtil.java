@@ -993,7 +993,7 @@ public class EFormUtil {
 				nwTemplate += paramValues.get(paramNames.indexOf(field));
 			} else {
 				nwTemplate += "";
-				logger.error("EForm Template Error! Cannot find input name {" + field + "} in eform");
+				logger.debug("Cannot find input name {" + field + "} in eform");
 			}
 		}
 		nwTemplate += template.substring(pointer, template.length());
@@ -1028,8 +1028,8 @@ public class EFormUtil {
 				}
 			}
 			if (!match) {
-				nwTemplate += "{" + field + "}";
-				logger.error("EForm Template Error! Cannot find input name {" + field + "} in eform");
+				nwTemplate += "";
+				logger.debug("Cannot find input name {" + field + "} in eform");
 			}
 		}
 		nwTemplate += template.substring(pointer, template.length());
