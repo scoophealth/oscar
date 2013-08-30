@@ -55,6 +55,7 @@ import org.oscarehr.exports.PatientExport;
 public class E2EPatientExport extends PatientExport {
 	//private String authorId = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 	private String authorId = null;
+	private String patientStatus = "";
 	private Demographic demographic = null;
 	private List<Drug> drugs = null;
 	private List<Allergy> allergies = null;
@@ -88,6 +89,12 @@ public class E2EPatientExport extends PatientExport {
 
 		this.demographicNo = new Integer(demoNo);
 		this.demographic = demographicDao.getDemographic(demoNo);
+		if(this.demographic == null) {
+			log.error("Demographic ".concat(demoNo).concat(" can't be loaded"));
+			return false;
+		}
+
+		this.patientStatus = demographic.getPatientStatus();
 		this.authorId = demographic.getProviderNo();
 
 		if(exAllergiesAndAdverseReactions) {
@@ -361,6 +368,17 @@ public class E2EPatientExport extends PatientExport {
 		return demographic;
 	}
 
+	public String getAuthorId() {
+		if (authorId.length() < 1 || authorId == null) {
+			return "0";
+		}
+		return authorId;
+	}
+
+	public boolean isActive() {
+		return patientStatus.equals("AC");
+	}
+
 	// Output convenience functions
 	public String getBirthDate() {
 		String out = demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
@@ -596,12 +614,5 @@ public class E2EPatientExport extends PatientExport {
 
 	public boolean hasAlerts() {
 		return exAlertsAndSpecialNeeds && alerts!=null && !alerts.isEmpty();
-	}
-
-	public String getAuthorId() {
-		if (authorId.length() < 1 || authorId == null) {
-			return "0";
-		}
-		return authorId;
 	}
 }

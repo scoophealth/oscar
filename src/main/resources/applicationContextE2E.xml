@@ -15,11 +15,11 @@
 		<property name="targetMethod" value="run" />
 	</bean>
 
-	<!-- Simple Trigger, run every 5 minutes -->
+	<!-- Simple Trigger, run every hour -->
 	<bean id="e2eSimpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="e2eScheduledJob" />
-		<property name="repeatInterval" value="300000" />
-		<property name="startDelay" value="10000" />
+		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="15000" />
 	</bean>
 
 	<!-- Cron Trigger, run every day at midnight -->

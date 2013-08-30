@@ -83,8 +83,16 @@ public class E2ESchedulerJob extends TimerTask {
 
 				// Load patient data and merge to template
 				String output = "";
-				if(patient.loadPatient(id.toString())) {
+				boolean loadStatus = patient.loadPatient(id.toString());
+				if(loadStatus && patient.isActive()) {
 					output = t.export(patient);
+					exportLog.append(t.getExportLog());
+				} else if(loadStatus && !patient.isActive()) {
+					String msg = "Patient ".concat(id.toString()).concat(" not active - skipping");
+					logger.info(msg);
+					t.addExportLogEntry(msg);
+					exportLog.append(t.getExportLog());
+					continue;
 				} else {
 					String msg = "Failed to load patient ".concat(id.toString());
 					logger.error(msg);
@@ -92,7 +100,6 @@ public class E2ESchedulerJob extends TimerTask {
 					exportLog.append(t.getExportLog());
 					continue;
 				}
-				exportLog.append(t.getExportLog());
 
 				// Export File to Temp Directory
 				File file = null;
