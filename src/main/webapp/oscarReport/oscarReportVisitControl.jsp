@@ -75,6 +75,21 @@
   String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
+<html>
+<head>
+<title>Reports</title>
+<script type="text/javascript">
+
+function popupPage(height, width, url) {
+	window.open(url,"manageProviders","height=" + height + ",width=" + width + ",scrollbars=yes");
+	
+}
+</script>
+</head>
+<body>
+<div style="float:right;">	
+	<a style="font-size:10px" href="#" onclick="popupPage(700,720,'manageProvider.jsp?action=visitreport')">Manage Visit Report Providers</a>	
+</div>
 
 <div class="page-header">
 	<h4>
@@ -221,3 +236,5 @@
 			$("#providerview").attr('disabled', 'disabled');
 	}
 </script>
+</body>
+</html>
