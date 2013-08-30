@@ -28,7 +28,7 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>CDC US Growth Charts</title>
+<title>WHO Growth Charts</title>
 <link rel="stylesheet" type="text/css" href="bcArStyle.css">
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
@@ -337,7 +337,7 @@ function calcBMIMetric(source) {
 				bgcolor="<%= bGirl? girlColor:boyColor%>">
 				<tr>
 					<th align="left"><%= bGirl? "GIRLS:" : "BOYS:"%> 2 TO 20 YEARS<br>
-					CDC US GROWTH CHARTS</th>
+					WHO GROWTH CHARTS</th>
 				</tr>
 			</table>
 
