@@ -33,6 +33,7 @@
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*" errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager, org.oscarehr.caisi_integrator.ws.CachedAppointment, org.oscarehr.caisi_integrator.ws.CachedProvider, org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="org.oscarehr.caisi_integrator.ws.*"%>
+<%@ page import="org.oscarehr.common.model.CachedAppointmentComparator" %>
 
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -182,7 +183,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle"	demographic.demographicappthistory.msgTitle=vlink="#0000FF" onLoad="setValues()">
+<body class="BodyStyle"	demographic.demographicappthistory.msgTitle=vlink="#0000FF">
 
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
@@ -263,38 +264,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 		}	
   }
   
-  if (cachedAppointments != null) {
-	  for (CachedAppointment a : cachedAppointments) {
-		  bodd=bodd?false:true;
-		  iRow++;
-		  nItems++;
-		  FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
-		  providerPk.setIntegratorFacilityId(a.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
-		  providerPk.setCaisiItemId(a.getCaisiProviderId());
-		  CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
-		  AppointmentStatus as = appointmentStatusDao.findByStatus(a.getStatus());
-%>
-	<tr bgcolor="<%=bodd?weakColor:"white"%>">
-      <td align="center"><%=DateUtils.formatDate(a.getAppointmentDate(), request.getLocale())%></td>
-      <td align="center"><%=DateUtils.formatTime(a.getStartTime(), request.getLocale())%></td>
-      <td align="center"><%=DateUtils.formatTime(a.getEndTime(), request.getLocale())%></td>
-      <td align="center">
-      <%if(as != null && as.getDescription() != null) {%>
-		<%=as.getDescription()%>
-	  <% } %>
-	  </td>
-      <td><%=a.getType() %></td>
-      <td><%=StringUtils.trimToEmpty(a.getReason())%></td>
-      <td>
-      	<%=(p != null ? p.getLastName() +","+ p.getFirstName() : "") %> (remote)</td>
-      <td>&nbsp;<%=a.getStatus()==null?"":(a.getStatus().contains("N")?"No Show":(a.getStatus().equals("C")?"Cancelled":"") ) %></td>
-	</tr>
-<%
-		  
-	  }
-	  
-	  showRemote = false;
-  }
+  
   
   if(appointmentList==null) {
     out.println("failed!!!");
@@ -385,6 +355,39 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 </tr>
 <%
     }
+  }
+
+
+if (cachedAppointments != null) {
+      Collections.sort(cachedAppointments, new CachedAppointmentComparator());
+	  for (CachedAppointment a : cachedAppointments) {
+		  bodd=bodd?false:true;
+		  FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
+		  providerPk.setIntegratorFacilityId(a.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
+		  providerPk.setCaisiItemId(a.getCaisiProviderId());
+		  CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
+		  AppointmentStatus as = appointmentStatusDao.findByStatus(a.getStatus());
+%>
+	<tr bgcolor="<%=bodd?weakColor:"white"%>">
+      <td align="center"><%=DateUtils.formatDate(a.getAppointmentDate(), request.getLocale())%></td>
+      <td align="center"><%=DateUtils.formatTime(a.getStartTime(), request.getLocale())%></td>
+      <td align="center"><%=DateUtils.formatTime(a.getEndTime(), request.getLocale())%></td>
+      <td align="center">
+      <%if(as != null && as.getDescription() != null) {%>
+		<%=as.getDescription()%>
+	  <% } %>
+	  </td>
+      <td><%=a.getType() %></td>
+      <td><%=StringUtils.trimToEmpty(a.getReason())%></td>
+      <td>
+      	<%=(p != null ? p.getLastName() +","+ p.getFirstName() : "") %> (remote)</td>
+      <td>&nbsp;<%=a.getStatus()==null?"":(a.getStatus().contains("N")?"No Show":(a.getStatus().equals("C")?"Cancelled":"") ) %></td>
+	</tr>
+<%
+		  
+	  }
+	  
+	  showRemote = false;
   }
 %>
 		</table>
