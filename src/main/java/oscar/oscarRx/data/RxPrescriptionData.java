@@ -1500,21 +1500,15 @@ public class RxPrescriptionData {
 			Drug drug = dao.findByEverything(this.getProviderNo(), this.getDemographicNo(), this.getRxDate(), this.getEndDate(), this.getWrittenDate(), this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getUnitName(), this.getRepeat(), this.getLastRefillDate(), this.getNosubs(), this.getPrn(), escapedSpecial, this.getOutsideProviderName(),
 			        this.getOutsideProviderOhip(), this.getCustomInstr(), this.getLongTerm(), this.isCustomNote(), this.getPastMed(), this.getPatientCompliance(), this.getSpecialInstruction(), this.getComment(), this.getStartDateUnknown());
 
-			// if it doesn't already exist add it.
-			if (drug == null) {
-				drug = new Drug();
+			
+			drug = new Drug();
 
-				int position = this.getNextPosition();
-				this.position = position;
-				syncDrug(drug, ConversionUtils.fromIntString(scriptId));
-				dao.persist(drug);
-				drugId = drug.getId();
-			} else { // update the database
-				syncDrug(drug, ConversionUtils.fromIntString(scriptId));
-
-				dao.merge(drug);
-			}
-
+			int position = this.getNextPosition();
+			this.position = position;
+			syncDrug(drug, ConversionUtils.fromIntString(scriptId));
+			dao.persist(drug);
+			drugId = drug.getId();
+			
 			return true;
 		}
 
