@@ -24,6 +24,7 @@
 
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.oscarehr.common.dao.ProviderDataDao"%>
 <%@page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
 <%
   String curProvider_no = request.getParameter("provider_no");
@@ -53,6 +54,7 @@
 <%@ page import="org.oscarehr.common.model.EncounterForm" %>
 <%@ page import="org.oscarehr.common.dao.EncounterFormDao" %>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.common.model.ProviderData"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
@@ -74,6 +76,7 @@
     ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
     DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
     OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+    ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
     SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
 	
     ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
@@ -767,9 +770,9 @@ if (bMultisites) { %>
             </div>
         </li>
         <li class="weak row">
-            <div class="label"><bean:message key="Appointment.formLastCreator" />:</div>
+            <div class="label">Creator:</div>
             <div class="input">
-<% String lastCreatorNo = bFirstDisp?(appt.getCreator()):request.getParameter("user_id"); %>
+            <% String lastCreatorNo = bFirstDisp?(appt.getCreator()):request.getParameter("user_id"); %>
                 <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
             </div>
             <div class="space">&nbsp;</div>
@@ -801,6 +804,31 @@ if (bMultisites) { %>
                 <INPUT TYPE="hidden" NAME="appointment_no" VALUE="<%=appointment_no%>">
             </div>
         </li>
+        <%  lastCreatorNo = request.getParameter("user_id");
+	if( bFirstDisp ) {
+		if( appt.getLastUpdateUser() != null ) {
+	    
+	    	ProviderData provider = providerDao.findByProviderNo(appt.getLastUpdateUser());
+	    	if( provider != null ) {
+			lastCreatorNo = provider.getLastName() + ", " + provider.getFirstName();
+	    	}
+		}
+		else {
+		    lastCreatorNo = appt.getCreator();
+		}
+	}
+%>  
+      <li class="row weak">
+      		<div class="label">&nbsp;</div>
+            <div class="input">&nbsp;</div>
+            <div class="space">&nbsp;</div>
+            <div class="label">Last Editor:</div>
+            <div class="input">
+                <INPUT TYPE="TEXT" readonly
+					VALUE="<%=lastCreatorNo%>" WIDTH="25">
+            </div>           
+        </li>
+          
         <li class="row weak">
             <div class="label">Create Date:</div>
             <div class="input">
