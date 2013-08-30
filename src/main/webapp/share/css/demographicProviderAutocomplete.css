@@ -57,3 +57,15 @@
 	.yui-ac-content li.yui-ac-highlight {
 	    background:#426FD9;color:#FFF;
 	}
+	
+
+	.ui-autocomplete {
+		background-color: #FFFFFF;
+		border: 3px outset #2EFE2E;
+		width:400px;
+	}
+	
+	.ui-menu-item:hover {
+		background-color:#426FD9;
+		color:#FFFFFF;
+	}
