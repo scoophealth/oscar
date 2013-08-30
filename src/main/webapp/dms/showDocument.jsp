@@ -123,15 +123,12 @@
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/controls.js"></script>
 		<!-- jquery -->
-		<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
         <script language="javascript" type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js" ></script>
         
 
-        <script type="text/javascript" src="<%= request.getContextPath() %>/share/yui/js/yahoo-dom-event.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/share/yui/js/connection-min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/share/yui/js/animation-min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/share/yui/js/datasource-min.js"></script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/share/yui/js/autocomplete-min.js"></script>
+        
         <script type="text/javascript" src="<%= request.getContextPath() %>/js/demographicProviderAutocomplete.js"></script>
 
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/oscarMDSIndex.js"></script>
@@ -151,10 +148,16 @@
         	.singlePage {
 
         	}
+        	        	
         </style>
 
         <script type="text/javascript">
         jQuery.noConflict();
+        
+        function renderCalendar(id,inputFieldId){
+            Calendar.setup({ inputField : inputFieldId, ifFormat : "%Y-%m-%d", showsTime :false, button : id });
+            
+   	   }
         
         window.forwardDocument = function(docId) {
         	var frm = "#reassignForm_" + docId;
@@ -194,11 +197,22 @@
                             }
 			}});
         }
-		        
 
-        function activeOnlyChanged(id) {
-      		var checkBoxState = document.getElementById("activeOnly" + id).checked;
-        	new Ajax.Request(contextpath + "/demographic/SearchDemographic.do", {method: 'post', parameters: "activeState=" + checkBoxState, onSuccess: function(data) {}});
+
+        function rotate90(id) {
+        	jQuery("#rotate90btn_" + id).attr('disabled', 'disabled');
+
+        	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=rotate90&document=" + id, onSuccess: function(data) {
+        		jQuery("#rotate90btn_" + id).removeAttr('disabled');
+        		jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=showPage&doc_no=" + id + "&page=1&rand=" + (new Date().getTime()));
+
+        	}});
+        }
+
+
+        function split(id) {
+        	var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id;
+        	popupStart(1100, 1100, loc, "Splitter");
         }
 
         var _in_window = <%=( "true".equals(request.getParameter("inWindow")) ? "true" : "false" )%>;
@@ -356,9 +370,9 @@
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
                                             <%=demoName%><%}else{%>
                                             <input id="saved<%=docId%>" type="hidden" name="saved" value="false"/>
-                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />                                           
-                                            <input type="checkbox" onclick="activeOnlyChanged('<%=docId%>')" id="activeOnly<%=docId%>" name="activeOnly" value="true" checked><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgActiveOnly"/>
-                                            <input type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>');" name="demographicKeyword" />
+                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />                                            
+                                            <input type="checkbox" id="activeOnly<%=docId%>" name="activeOnly" checked="checked" value="true" onclick="setupDemoAutoCompletion()">Active Only<br>  
+                                            <input type="text" style="width:400px;" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>');" name="demographicKeyword" />
                                             <div id="autocomplete_choices<%=docId%>" class="autocomplete"></div>
                                             
                                             <%}%>
@@ -498,119 +512,77 @@
 
 //-->
 <script type="text/javascript">
+
         if($('displayDocumentAs_<%=docId%>').value=="<%=UserProperty.PDF%>") {
             showPDF('<%=docId%>',contextpath);
         }
-       renderCalendar=function(id,inputFieldId){
-           Calendar.setup({ inputField : inputFieldId, ifFormat : "%Y-%m-%d", showsTime :false, button : id });
-           
-  	   }
        
         var tmp;      
         
-        YAHOO.util.Event.onDOMReady(function() {
-                                          if($("autocompletedemo<%=docId%>") && $("autocomplete_choices<%=docId%>")){
-                                                 //oscarLog('in basic remote');
-                                                //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
-                                                var url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?activeOnly=" + $F("activeOnly<%=docId%>");
-                                                var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
-                                                oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
-                                                // Define the schema of the delimited resultsTEST, PATIENT(1985-06-15)
-                                                oDS.responseSchema = {
-                                                    resultsList : "results",
-                                                    fields : ["formattedName","fomattedDob","demographicNo","providerNo","providerName","nextAppointment", "cust1", "cust1Name", "cust2", "cust2Name", "cust4", "cust4Name"]
-                                                };
-                                                // Enable caching
-                                                oDS.maxCacheEntries = 0;
-                                                var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=docId%>","autocomplete_choices<%=docId%>",oDS);
-                                                oAC.queryMatchSubset = true;
-                                                oAC.minQueryLength = 3;
-                                                oAC.maxResultsDisplayed = 25;
-                                                oAC.formatResult = resultFormatter2;
-                                                oAC.width = 70;
-                                                //oAC.typeAhead = true;
-                                                oAC.queryMatchContains = true;
-                                                //oscarLog(oAC);
-                                                //oscarLog(oAC.itemSelectEvent);
-                                                oAC.itemSelectEvent.subscribe(function(type, args) {
-													tmp = args;
-                                                    //oscarLog(args);
-                                                    //oscarLog(args[0].getInputEl().id);
-                                                    var str = args[0].getInputEl().id.replace("autocompletedemo","demofind");
-                                                   //oscarLog(str);
-                                                   $(str).value = args[2][2];//li.id;
+        function setupDemoAutoCompletion() {
+        	if(jQuery("#autocompletedemo<%=docId%>") ){
+        		
+        		var url;
+                if( jQuery("#activeOnly<%=docId%>").is(":checked") ) {
+                	url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=" + jQuery("#activeOnly<%=docId%>").val();
+                }
+                else {
+                	url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true";
+                } 
+                
+	            jQuery( "#autocompletedemo<%=docId%>" ).autocomplete({
+	              source: url,
+	              minLength: 2,  
+	              
+	              focus: function( event, ui ) {
+	            	  jQuery( "#autocompletedemo<%=docId%>" ).val( ui.item.label );	            	 
+	                  return false;
+	              },
+	              select: function(event, ui) {    	  
+	            	  jQuery( "#autocompletedemo<%=docId%>" ).val(ui.item.label);
+	            	  jQuery( "#demofind<%=docId%>").val(ui.item.value);
+	            	  selectedDemos.push(ui.item.label);
+	            	  console.log(ui.item.providerNo);
+	            	  if( ui.item.providerNo != undefined && ui.item.providerNo != null &&ui.item.providerNo != "" && ui.item.providerNo != "null" ) {
+	            		  addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=docId%>");
+	            	  }
+	            	  
+	            	  //enable Save button whenever a selection is made
+	                  jQuery('#save<%=docId%>').removeAttr('disabled');
+	                  jQuery('#saveNext<%=docId%>').removeAttr('disabled');
 
-                                                   args[0].getInputEl().value = args[2][0] + "("+args[2][1]+")";
-                                                   selectedDemos.push(args[0].getInputEl().value);
-                                               	   	if (args[2][3] != undefined) {
-                                                   		addDocToList(args[2][3], args[2][4] + " (MRP)", "<%=docId%>");
-                                               	   	}
-                                                   //enable Save button whenever a selection is made
-                                                   $('save<%=docId%>').enable();
-                                                   $('saveNext<%=docId%>').enable();
-
-                                                   $('nextAppointment_<%=docId%>').innerHTML = args[2][5];
-
-                                                });
-
-
-                                                return {
-                                                    oDS: oDS,
-                                                    oAC: oAC
-                                                };
-                                            }
-                                            });
-
-        YAHOO.util.Event.onDOMReady(function() {
-            var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
-            var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
-            oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
-            // Define the schema of the delimited resultsTEST, PATIENT(1985-06-15)
-            oDS.responseSchema = {
-                resultsList : "results",
-                fields : ["providerNo","firstName","lastName"]
-            };
-            // Enable caching
-            oDS.maxCacheEntries = 0;
-            var oAC = new YAHOO.widget.AutoComplete("autocompleteprov<%=docId%>", "autocomplete_choicesprov<%=docId%>", oDS);
-            oAC.queryMatchSubset = true;
-            oAC.minQueryLength = 3;
-            oAC.maxResultsDisplayed = 25;
-            oAC.formatResult = resultFormatter3;
-            //oAC.typeAhead = true;
-            oAC.queryMatchContains = true;
-            //oscarLog(oAC);
-            //oscarLog(oAC.itemSelectEvent);
-            oAC.itemSelectEvent.subscribe(function(type, args) {
-                //oscarLog(args);
-               tmp = args;
-               var myAC = args[0];
-               var str = myAC.getInputEl().id.replace("autocompleteprov","provfind");
-               //oscarLog(str);
-               //oscarLog(args[2]);
-               var oData=args[2];
-               $(str).value = args[2][0];//li.id;
-               //oscarLog("str value="+$(str).value);
-               //oscarLog(args[2][1]+"--"+args[2][0]);
-               myAC.getInputEl().value = args[2][2] + ","+args[2][1];
-               //oscarLog("--"+args[0].getInputEl().value);
-               //selectedDemos.push(args[0].getInputEl().value);
-
-               //enable Save button whenever a selection is made
-                addDocToList(oData[0], oData[2] + " " +oData[1], "<%=docId%>");
-                $('save<%=docId%>').enable();
-                $('saveNext<%=docId%>').enable();
-
-                myAC.getInputEl().value = '';//;oData.fname + " " + oData.lname ;
-
-            });
-
-
-            return {
-                oDS: oDS,
-                oAC: oAC
-            };
-        });
+	                  return false;
+	              }      
+	            });
+        	}
+          }
+        
+        
+        jQuery(setupDemoAutoCompletion());
+        
+        function setupProviderAutoCompletion() {
+        	var url = "<%= request.getContextPath() %>/provider/SearchProvider.do?method=labSearch";
+        	
+        	jQuery( "#autocompleteprov<%=docId%>" ).autocomplete({
+	              source: url,
+	              minLength: 2,  
+	              
+	              focus: function( event, ui ) {
+	            	  jQuery( "#autocompleteprov<%=docId%>" ).val( ui.item.label );	            	 
+	                  return false;
+	              },
+	              select: function(event, ui) {    	  
+	            	  jQuery( "#autocompleteprov<%=docId%>" ).val("");
+	            	  jQuery( "#provfind<%=docId%>").val(ui.item.value);
+	            	  addDocToList(ui.item.value, ui.item.label, "<%=docId%>");
+	            	  
+	            	  return false;
+	              }      
+	            });
+      	}
+      
+        jQuery(setupProviderAutoCompletion());
+        
 
 </script>
 <% if (request.getParameter("inWindow") != null && request.getParameter("inWindow").equalsIgnoreCase("true")) {  %>
