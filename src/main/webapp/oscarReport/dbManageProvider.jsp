@@ -92,9 +92,9 @@ for(ReportProvider rp:res) {
 	  reportProviderDao.persist(rp);
 %> <%
 }
-%> <script LANGUAGE="JavaScript">
-      self.close();
-      self.opener.refresh();
+%> <script type="text/javascript">      
+      window.opener.location.reload();
+      window.close();
 </script> <%
 %>
 <p></p>
