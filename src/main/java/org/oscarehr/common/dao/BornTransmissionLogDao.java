@@ -46,7 +46,7 @@ public class BornTransmissionLogDao extends AbstractDao<BornTransmissionLog>{
 		Date todayDate = UtilDateUtilities.StringToDate(today, "yyyy-MM-dd");
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.setTime(todayDate);
-		cal.roll(Calendar.DATE, 1);
+		cal.add(Calendar.DATE, 1);
 		String tomorrow = UtilDateUtilities.DateToString(cal.getTime(), "yyyy-MM-dd");
 		
 		String sql = "select count(*) from BornTransmissionLog b" +
