@@ -659,7 +659,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnUnlinkDemo"/>" onclick="handleLab('','<%=segmentID%>','unlinkDemo');"/>
 
                                     <% if ( searchProviderNo != null ) { // null if we were called from e-chart%>
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'encounter_')">
                                     <% } %>
 				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
 
@@ -1581,7 +1581,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         </indivo:indivoRegistered>
                                     </oscarProperties:oscarPropertiesCheck>
                                     <% if ( searchProviderNo != null ) { // we were called from e-chart %>
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'encounter_')">
 
                                     <% } %>
                                 </td>
