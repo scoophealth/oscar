@@ -798,7 +798,8 @@ public class EFormUtil {
 			if (StringUtils.isBlank(template)) continue;
 			
 			String taskAssignedTo = getInfo("taskAssignedTo", template, null);
-			if (taskAssignedTo==null) continue;
+			if (taskAssignedTo==null) continue; //no assignee
+			if (providerDao.getProvider(taskAssignedTo.trim())==null) continue; //assignee provider no not exists
 			
 			String message = getContent("tickMsg", template);
 			Tickler tickler = new Tickler();
