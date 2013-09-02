@@ -45,6 +45,7 @@ public class ProviderDao extends OscarSuperDao {
 
 	private String [][] dbQueries = new String[][] {
 			{"searchappointmentday", "select * from appointment where provider_no=? and appointment_date=? and program_id=? order by start_time, status desc "},
+			{"searchappointmentdaywithlocation", "select * from appointment where provider_no=? and appointment_date=? and program_id=? and location=? order by start_time, status desc "},
 			{"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
 
 			{"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
