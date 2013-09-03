@@ -106,12 +106,12 @@
 			return false;
 		}
 		if($("#startDate").val().length == 0) {
-			alert("Description Required");
+			alert("Start Date Required");
 			return false;
 		}
 		
 		if($("#endDate").val().length == 0 && $('select[name="episode.status"]').val() == 'Completed') {
-			alert("Please select an End Date");
+			alert("End Date Required");
 			return false;
 		}
 		return true;
