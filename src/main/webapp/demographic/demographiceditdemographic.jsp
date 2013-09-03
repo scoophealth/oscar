@@ -34,6 +34,7 @@
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.DemographicExtArchiveDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
 <%@page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
 <%@page import="org.oscarehr.common.dao.WaitingListDao" %>
@@ -43,6 +44,7 @@
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -59,6 +61,8 @@
     ScheduleTemplateCodeDao scheduleTemplateCodeDao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
     WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
     WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
+    String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
+    boolean privateConsentEnabled = privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_demographic"
 	rights="r" reverse="<%=true%>">
@@ -2595,13 +2599,25 @@ if ( Dead.equals(PatStat) ) {%>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>: </b></td>
-								<td align="left"><select name="countryOfOrigin" <%=getDisabled("countryOfOrigin")%>>
+								<td align="left"><select id="countryOfOrigin" name="countryOfOrigin" <%=getDisabled("countryOfOrigin")%>>
 									<option value="-1"><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
 									<%for(CountryCode cc : countryList){ %>
 									<option value="<%=cc.getCountryId()%>"
 										<% if (oscar.util.StringUtils.noNull(demographic.getCountryOfOrigin()).equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
 									<%}%>
 								</select></td>
+								<%
+									String usSigned = StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")));
+								%>
+								<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+								<input type="hidden" name="usSignedOrig" value="<%=usSigned%>" />
+								<td colspan="2">
+									<div id="usSigned">
+										<input type="radio" name="usSigned" value="signed" <%=usSigned.equals("signed") ? "checked" : ""%>>U.S. Resident Consent Form Signed 
+									    <input type="radio" name="usSigned" value="unsigned" <%=usSigned.equals("unsigned") ? "checked" : ""%>>U.S. Resident Consent Form NOT Signed
+								    </div>
+								</td>
+								</oscar:oscarPropertiesCheck>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b>SIN:</b></td>
@@ -2979,7 +2995,23 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								</table>
 								</td>
 							</tr>
-
+							<tr valign="top">
+								<%
+									String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
+									String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
+								%>
+								<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+								<td colspan="2">
+	 								<input type="hidden" name="privacyConsentOrig" value="<%=privacyConsent%>" />
+	 								<input type="hidden" name="informedConsentOrig" value="<%=informedConsent%>" />
+									<br/>
+									<input type="checkbox" name="privacyConsent" value="yes" <%=privacyConsent.equals("yes") ? "checked" : ""%>><b>Privacy Consent (verbal) Obtained</b> 
+									<br/>
+									<input type="checkbox" name="informedConsent" value="yes" <%=informedConsent.equals("yes") ? "checked" : ""%>><b>Informed Consent (verbal) Obtained</b>
+									<br/>
+								</td>
+								</oscar:oscarPropertiesCheck>
+						  	</tr>
 							<tr valign="top">
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.formDateJoined1" />:
@@ -3229,6 +3261,29 @@ function callEligibilityWebService(url,id){
         } );
  }
 
+<%
+if (privateConsentEnabled) {
+%>
+jQuery(document).ready(function(){
+	var countryOfOrigin = jQuery("#countryOfOrigin").val();
+	if("US" != countryOfOrigin) {
+		jQuery("#usSigned").hide();
+	} else {
+		jQuery("#usSigned").show();
+	}
+	
+	jQuery("#countryOfOrigin").change(function () {
+		var countryOfOrigin = jQuery("#countryOfOrigin").val();
+		if("US" == countryOfOrigin){
+		   	jQuery("#usSigned").show();
+		} else {
+			jQuery("#usSigned").hide();
+		}
+	});
+});
+<%
+}
+%>
 </script>
 </body>
 </html:html>
