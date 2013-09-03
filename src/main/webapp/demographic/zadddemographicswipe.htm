@@ -36,10 +36,21 @@ function setfocus() {
   document.swipecard.card_no.select();
 }
 //-->
+
+function validate() {
+	var cardNo = document.swipecard.card_no.value;
+	if (!cardNo) {
+		alert("Incorrect value provided for card number");
+		return false;
+	}
+	else {
+		return true;
+		
+	}
+}
 </script>
 </head>
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
@@ -49,7 +60,7 @@ function setfocus() {
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
 	BGCOLOR="#C4D9E7">
 	<form method="post" name="swipecard"
-		action="addnewdemographicswipe.jsp">
+		action="addnewdemographicswipe.jsp" onsubmit="return validate();">
 	<tr valign="top">
 		<td rowspan="2" ALIGN="right" valign="middle"><font
 			face="Verdana" color="#0000FF"><b><i>Swipe Card </i></b></font></td>
