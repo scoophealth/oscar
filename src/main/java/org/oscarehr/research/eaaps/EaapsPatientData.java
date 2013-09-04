@@ -116,6 +116,10 @@ public class EaapsPatientData implements Serializable {
 		return getBoolean("aapReviewCompleted");
 	}
 	
+	public String getWidgetMessage() {
+		return getStatus().getString("widgetMessage");
+	}
+	
 	public boolean isAapReviewStarted() {
 		return getBoolean("aapReviewStarted");
 	}
