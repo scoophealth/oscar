@@ -17,6 +17,7 @@
 	<handler name="MEDVUE"  className="MEDVUEHandler" />
     <handler name="PFHT"	className="PFHTHandler"/>
     <handler name="Spire"	className="SpireHandler"/>
-    <handler name="BIOTEST"    className="BioTestHandler"/>
-    <handler name="eaaps"       className="org.oscarehr.research.eaaps.EaapsHandler"/>
+    <handler name="BIOTEST" className="BioTestHandler"/>
+    <handler name="eaaps"   className="org.oscarehr.research.eaaps.EaapsHandler"/>
+    <handler name="CLS"		className="oscar.oscarLab.ca.all.parsers.CLSHandler"/>
 </message-configuration>

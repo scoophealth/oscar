@@ -47,14 +47,14 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 	/**
 	 * Public OSCAR key
 	 */
-	private static final String OSCAR_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3twPfm6XhWdcfjA9e0cSwNda2DtQpdNwQ8XBk" + 
+	public static final String OSCAR_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3twPfm6XhWdcfjA9e0cSwNda2DtQpdNwQ8XBk" + 
 			"/s4tSLbcZuNIjuC7AXxqI5SiuYL8AJDx8bqA3Y+egSV2QQJDUkRXDr/XqT5zl9TPQE49gPaLPZv2" + 
 			"m7cBhTy8l5p1wKuvJdhIahx7/Ca3Inj6q2vMUObcOyqhQKOms143StRBFwIDAQAB";
 	
 	/**
 	 * Public client key
 	 */
-	private static final String CLIENT_KEY = 
+	public static final String CLIENT_KEY = 
 			"MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJYYlZ79cV1ijlPohPfvVF14zvTA" + 
 			"TU9v+Z4HUTVlWrb5yboiPBXd2MhYI0iYznvAzlkRBDRueXcRGPUbApN9KYZYF0uBQT4ptXiOD9uj" + 
 			"Ptq26EyrzDyE5km88Ekt/vyZvBQ7O50hXuIr9IU8vhWiZyXAU/v7e3vb8OZreKSm5J4dAgMBAAEC" + 
