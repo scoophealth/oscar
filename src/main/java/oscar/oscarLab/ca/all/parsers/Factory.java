@@ -125,7 +125,7 @@ public final class Factory {
 					
 					// in case we have dots in the handler class name (i.e. package 
 					// is specified), don't assume default package
-					if (className.indexOf("\\.") != -1) {
+					if (className.indexOf(".") != -1) {
 						msgHandler = className;
 					} else {
 						msgHandler = "oscar.oscarLab.ca.all.parsers." + className;
