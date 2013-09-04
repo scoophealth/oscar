@@ -1030,6 +1030,20 @@ public final class EDocUtil {
         	writeContent(file.getAbsolutePath(), content);        	
         }
         
+        /**
+         * Resolves file name for the specified OSCAR file into the absolute path on the file system.
+         * 
+         * @param fileName
+         * 		OSCAR file name.
+         * @return
+         * 		Returns the absolute path on the file system.
+         */
+        public static String resovePath(String fileName) {
+        	String docDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        	File file = new File(docDir, fileName);
+        	return file.getAbsolutePath();
+        }
+        
         public static void writeContent(String fileName, byte[] content) throws IOException {
         	OutputStream os = null;
     		try {
