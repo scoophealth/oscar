@@ -240,6 +240,13 @@
 	      <version>1.2.1</version>
 	    </dependency>
 
+		<!-- Lancet Med Extract -->
+		<dependency>
+			<groupId>edu.uwm</groupId>
+			<artifactId>lancetMedExtractor</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- struts -->
 		<dependency>
 			<groupId>struts</groupId>
@@ -288,12 +295,19 @@
 			<artifactId>itext</artifactId>
 			<version>2.1.7</version>
 		</dependency>
-                <dependency>
-                        <groupId>com.itextpdf</groupId>
-                        <artifactId>itextpdf</artifactId>
-                        <version>5.4.1</version>
-                        <type>jar</type>
-                </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.4.1</version>
+            <type>jar</type>
+        </dependency>
+
+        <!--- Jython -->
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+            <version>2.5.3</version>
+        </dependency>
 
 		<!-- json -->
 		<dependency>

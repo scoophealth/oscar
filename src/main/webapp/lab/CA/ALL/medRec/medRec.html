@@ -1,0 +1,537 @@
+<!--<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <title>MedRec</title>
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
+        <script type="text/javascript" src="bootstrap/js/jquery-1.8.3.js"></script>
+        <!--<script type="text/javascript" src="jquery.autocomplete.js"></script>-->
+        <script src="http://yui.yahooapis.com/3.11.0/build/yui/yui-min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="medRec.js"></script>
+        <style type='text/css'>
+            .well-bordered {
+                border: 1px solid black;    
+            }
+            .btn-wrapper{
+                width:50px;
+            }
+            .hidden {
+                display:none !important;
+            }
+        </style>
+    </head>
+    <body style='background-color:#e5e5e5;'>
+        </div>
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <a class="brand" href="#">MedRec</a>
+                <ul class="nav">
+                    <li><a href="#">HART, Gordon</a></li>
+                </ul>
+                <ul class='pull-right nav'>
+                    <li><button class='btn btn-primary' data-toggle='modal' href='#medicationModal'onclick='pm.clearModalFields();'>Add New Medication</button></li>
+                </ul>
+          </div>
+        </div>
+        <div style=''class="container visible-phone visible-tablet visible-desktop">
+            <div class='row'>
+                <div class='span6'>
+                    <div class='well well-bordered'>
+                        <h5>Suggested Medications</h5>
+                        <table class='table table-striped' id='suggestedMeds'>
+                            <tbody>
+                            </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class='span6'>
+                    <div class='well well-bordered'>
+                        <h5>Current Medications in OSCAR</h5>
+                        <table class='table table-striped' id='currentMeds'>
+                            <tbody>
+                            </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span12' style=''>
+                    <div class='well well-bordered'>
+                        <h5>Your Changes</h5>
+                        <table class='table table-striped' id='changes'>
+                            <tbody>
+                            </tbody>
+                    </table>
+                    <a href='#' class='btn btn-primary'>Sign and Save</a>
+                    <a href='#' class='btn btn-danger'>Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="medicationModal" class="modal fade hide">
+          <div class="modal-header">
+            <h4 id="modal-label"><span id='med-modal-string'></span></h4>
+          </div>
+          <div class="modal-body">
+            <form class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for="brandname">AutoComplete:</label>
+                        <div class="controls">
+                            <input type="text" style="margin-left:20px;"class='input-medium' name="q" id="query" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="brandname">Brand:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="brandname" id="brandname" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="brandname">Generic:</label>
+                        <div class="controls">
+                            <input type="text" class='input-medium' name="genericname" id="genericname" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="form">Form:</label>
+                        <div class="controls">
+                            <select class='input-medium' id='form'>
+                                <option value=''>-</option>
+                                <option value='tablet'>tablet</option>
+                                <option value='capsule'>capsule</option>
+                                <option value='liquid'>liquid</option>
+                                <option value='suspension'>suspension</option>
+                                <option value='spray'>spray</option>
+                                <option value='drops'>drops</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-medium hidden' name="" id="form-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="route">Route:</label>
+                        <div class="controls">
+                            <select class='input-medium' id='route'>
+                                <option value=''>-</option>
+                                <option value='oral'>oral</option>
+                                <option value='subcutaneous'>subcutaneous</option>
+                                <option value='inhale'>inhale</option>
+                                <option value='patch'>patch</option>
+                                <option value='transdermal'>transdermal</option>
+                                <option value='sublingual'>sublingual</option>
+                                <option value='intravitreal'>intravitreal</option>
+                                <option value='topical'>topical</option>
+                                <option value='left eye'>left eye</option>
+                                <option value='right eye'>right eye</option>
+                                <option value='both eyes'>both eye</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-medium hidden' name="" id="route-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="freq1">Frequency:</label>
+                        <div class="controls">
+                            <select class='input-medium' id="freq1">
+                                <option value=''>-</option>
+                                <option value='daily'>daily</option>
+                                <option value='twice daily'>twice daily</option>
+                                <option value='three times daily'>three times daily</option>
+                                <option value='four times daily'>four times daily</option>
+                                <option value='every 4 hours'>every 4 hours</option>
+                                <option value='every 8 hours'>every 8 hours</option>
+                                <option value='every 12 hours'>every 12 hours</option>
+                                <option value='once weekly'>once weekly</option>
+                                <option value='twice weekly'>twice weekly</option>
+                                <option value='three times weekly'>three times weekly</option>
+                                <option value='four times weekly'>four times weekly</option>
+                                <option value='once monthly'>once monthly</option>
+                                <option value='twice monthly'>twice monthly</option>
+                                <option value='once'>once</option>
+                                <option value='as needed'>as needed</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-medium hidden' name="" id="freq1-other" value=""/>
+                            <select class='input-medium' id="freq2">
+                                <option value=''>-</option>
+                                <option value='as needed'>as needed</option>
+                                <option value='as need for pain'>as needed for pain</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-medium hidden' name="" id="freq2-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="min">Min/Max:</label>
+                        <div class="controls">
+                            <select class='input-mini' id="min">
+                                <option value=''>-</option>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                <option value='6'>6</option>
+                                <option value='7'>7</option>
+                                <option value='8'>8</option>
+                                <option value='9'>9</option>
+                                <option value='10'>10</option>
+                                <option value='12'>12</option>
+                                <option value='24'>24</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-mini hidden' name="" id="min-other" value=""/>
+                            <select class='input-mini' id="max">
+                                <option value=''>-</option>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                <option value='6'>6</option>
+                                <option value='7'>7</option>
+                                <option value='8'>8</option>
+                                <option value='9'>9</option>
+                                <option value='10'>10</option>
+                                <option value='12'>12</option>
+                                <option value='24'>24</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-mini hidden' name="" id="max-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="duration">Duration:</label>
+                        <div class="controls">
+                            <select class='input-mini' id="duration">
+                                <option value=''>-</option>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                <option value='6'>6</option>
+                                <option value='7'>7</option>
+                                <option value='8'>8</option>
+                                <option value='9'>9</option>
+                                <option value='10'>10</option>
+                                <option value='12'>12</option>
+                                <option value='24'>24</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-mini hidden' name="" id="duration-other" value=""/>
+                            <select class='input-medium' id="duration-unit">
+                                <option value=''>-</option>
+                                <option value='days'>day(s)</option>
+                                <option value='weeks'>week(s)</option>
+                                <option value='months'>month(s)</option>
+                                <option value='years'>year(s)</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-medium hidden' name="" id="duration-unit-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="quantity">Quantity:</label>
+                        <div class="controls">
+                            <select class='input-mini' id="quantity">
+                                <option value=''>-</option>
+                                <option value='1'>1</option>
+                                <option value='5'>5</option>
+                                <option value='10'>10</option>
+                                <option value='15'>15</option>
+                                <option value='20'>20</option>
+                                <option value='25'>25</option>
+                                <option value='30'>30</option>
+                                <option value='35'>35</option>
+                                <option value='40'>40</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-mini hidden' name="" id="quantity-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="repeats">Repeats:</label>
+                        <div class="controls">
+                            <select class='input-mini' id="repeats">
+                                <option value=''>-</option>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                <option value='10'>10</option>
+                                <option value='15'>15</option>
+                                <option value='20'>20</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-mini hidden' name="" id="repeats-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="dose">Dose:</label>
+                        <div class="controls">
+                            <input type="text" class='input-mini' name="dose" id="dose" maxlength="6" size="6"value=""/>
+                            <select class='input-mini' id='unit'>
+                                <option value="mg">mg</option>
+                                <option value='mcg'>mcg</option>
+                                <option value='mL'>mL</option>
+                                <option value='mEq'>mEq</option>
+                                <option value='drops'>drops</option>
+                                <option value='other'>other</option>
+                            </select>
+                            <input type="text" class='input-mini hidden' name="" id="unit-other" value=""/>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <div class='controls'>
+                          <label class="checkbox">
+                            Long Term Medication <input type="checkbox" name="longterm" id="longterm" value=''>
+                          </label>
+                          <label class="checkbox">
+                            External Provider <input type="checkbox" name="externalprovider" id="externalprovider" value=''>
+                          </label>
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="start-date">Start Date:</label>
+                        <div class="controls">
+                           <input type='text' id='start-date' class='input-medium' placeholder='yyyy-mm-dd'/> 
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="written-date">Written Date:</label>
+                        <div class="controls">
+                           <input type='text' id='written-date' class='input-medium' placeholder='yyyy-mm-dd'/> 
+                        </div>
+                    </div>
+                    <div class='control-group'>
+                        <label class='control-label' for="instructions">Other Instructions:</label>
+                        <div class="controls">
+                           <textarea id='instructions' rows="3"></textarea> 
+                        </div>
+                    </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button id="modal-discontinue-button" data-dismiss="modal" class="btn btn-danger">Discontinue Medication</button>
+            <button id="modal-save-button" data-dismiss="modal" class="btn btn-success">Submit changes to OSCAR</button>
+          </div>
+        </div>
+
+        <! -- Hidden Medication information Forms -->
+        <div id='medForms' class="hidden-desktop">
+            <form id='med-summary_1'>
+                <input type='hidden' id='brandname' value="TENORMIN">
+                <input type='hidden' id='ingredientname' value="Atenolol">
+                <input type='hidden' id='dose' value="50">
+                <input type='hidden' id='unit' value="mg">
+                <input type='hidden' id='route' value="oral">
+                <input type='hidden' id='form' value="tablet">
+                <input type='hidden' id='freq1' value="daily">
+                <input type='hidden' id='freq2' value="">
+                <input type='hidden' class="non-descript" id='externalprovider' value="">
+                <input type='hidden' class="non-descript"id='longterm' value="">
+                <input type='hidden' id='duration' value="12">
+                <input type='hidden' id='duration-unit' value="days">
+                <input type='hidden' class="non-descript"id='instructions' value="">
+                <input type="hidden" id='associatedmed' value="2"> <!-- Notes if this value is null then the associated med becomes ------------ -->
+                <input type='hidden' class="non-descript"id='state' value="new"> <!-- States what kind of medication it is.  Either, "new" or "current" -->
+            </form>
+            <form id='med-summary_2'>
+                <input type='hidden' id='brandname' value="TENORMIN">
+                <input type='hidden' id='ingredientname' value="Atenolol">
+                <input type='hidden' id='dose' value="25">
+                <input type='hidden' id='unit' value="mg">
+                <input type='hidden' id='route' value="oral">
+                <input type='hidden' id='form' value="tablet">
+                <input type='hidden' id='freq1' value="twice daily">
+                <input type='hidden' id='freq2' value="">
+                <input type='hidden' class="non-descript" id='externalprovider' value="">
+                <input type='hidden' id='duration' value="">
+                <input type='hidden' id='duration-unit' value="">
+                <input type='hidden' class="non-descript"id='longterm' value="">
+                <input type='hidden' class="non-descript"id='instructions' value="">
+                <input type="hidden" id='associatedmed' value="1"> <!-- Notes if this value is null then the associated med becomes ------------ -->
+                <input type='hidden' class="non-descript"id='state' value="current"> <!-- States what kind of medication it is.  Either, "new" or "current" -->
+            </form>
+            <form id='med-summary_3'>
+                <input type='hidden' id='brandname' value="Coumadin">
+                <input type='hidden' id='ingredientname' value="Warfarin">
+                <input type='hidden' id='dose' value="10">
+                <input type='hidden' id='unit' value="mg">
+                <input type='hidden' id='route' value="oral">
+                <input type='hidden' id='form' value="tablet">
+                <input type='hidden' id='freq1' value="daily">
+                <input type='hidden' id='freq2' value="">
+                <input type='hidden' class="non-descript" id='externalprovider' value="">
+                <input type='hidden' id='duration' value="">
+                <input type='hidden' id='duration-unit' value="">
+                <input type='hidden' class="non-descript"id='longterm' value="">
+                <input type='hidden' class="non-descript"id='instructions' value="">
+                <input type="hidden" id='associatedmed' value=""> <!-- Notes if this value is null then the associated med becomes ------------ -->
+                <input type='hidden' class="non-descript"id='state' value="new"> <!-- States what kind of medication it is.  Either, "new" or "current" -->
+            </form>
+            <form id='med-summary_4'>
+                <input type='hidden' id='brandname' value="Aspirin">
+                <input type='hidden' id='ingredientname' value="ASA">
+                <input type='hidden' id='dose' value="81">
+                <input type='hidden' id='unit' value="mg">
+                <input type='hidden' id='route' value="oral">
+                <input type='hidden' id='form' value="tablet">
+                <input type='hidden' id='freq1' value="daily">
+                <input type='hidden' id='freq2' value="">
+                <input type='hidden' class="non-descript" id='externalprovider' value="">
+                <input type='hidden' id='duration' value="">
+                <input type='hidden' id='duration-unit' value="">
+                <input type='hidden' class="non-descript"id='longterm' value="true">
+                <input type='hidden' class="non-descript"id='instructions' value="">
+                <input type="hidden" id='associatedmed' value="5"> <!-- Notes if this value is null then the associated med becomes ------------ -->
+                <input type='hidden' class="non-descript"id='state' value="new"> <!-- States what kind of medication it is.  Either, "new" or "current" -->
+            </form>
+            <form id='med-summary_5'>
+                <input type='hidden' id='brandname' value="Aspirin">
+                <input type='hidden' id='ingredientname' value="ASA">
+                <input type='hidden' id='dose' value="10">
+                <input type='hidden' id='unit' value="mg">
+                <input type='hidden' id='route' value="oral">
+                <input type='hidden' id='form' value="tablet">
+                <input type='hidden' id='freq1' value="twice daily">
+                <input type='hidden' id='freq2' value="">
+                <input type='hidden' class="non-descript" id='externalprovider' value="true">
+                <input type='hidden' id='duration' value="">
+                <input type='hidden' id='duration-unit' value="">
+                <input type='hidden' class="non-descript"id='longterm' value="">
+                <input type='hidden' class="non-descript"id='instructions' value="">
+                <input type="hidden" id='associatedmed' value="4"> <!-- Notes if this value is null then the associated med becomes ------------ -->
+                <input type='hidden' class="non-descript"id='state' value="current"> <!-- States what kind of medication it is.  Either, "new" or "current" -->
+            </form>
+            <form id='med-summary_6'>
+                <input type='hidden' id='brandname' value="Deltasone">
+                <input type='hidden' id='ingredientname' value="Predisone">
+                <input type='hidden' id='dose' value="5">
+                <input type='hidden' id='unit' value="mg">
+                <input type='hidden' id='route' value="oral">
+                <input type='hidden' id='form' value="tablet">
+                <input type='hidden' id='freq1' value="twice daily">
+                <input type='hidden' id='freq2' value="">
+                <input type='hidden' class="non-descript" id='externalprovider' value="">
+                <input type='hidden' id='duration' value="">
+                <input type='hidden' id='duration-unit' value="">
+                <input type='hidden' class="non-descript"id='longterm' value="">
+                <input type='hidden' class="non-descript"id='instructions' value="">
+                <input type="hidden" id='associatedmed' value=""> <!-- Notes if this value is null then the associated med becomes ------------ -->
+                <input type='hidden' class="non-descript"id='state' value="new"> <!-- States what kind of medication it is.  Either, "new" or "current" -->
+            </form>
+            <form id='med-summary_7'>
+                <input type='hidden' id='brandname' value="Amoxil">
+                <input type='hidden' id='ingredientname' value="Amoxicillin">
+                <input type='hidden' id='dose' value="100">
+                <input type='hidden' id='unit' value="mg">
+                <input type='hidden' id='route' value="oral">
+                <input type='hidden' id='form' value="tablet">
+                <input type='hidden' id='freq1' value="twice daily">
+                <input type='hidden' id='freq2' value="">
+                <input type='hidden' class="non-descript" id='externalprovider' value="true">
+                <input type='hidden' id='duration' value="">
+                <input type='hidden' id='duration-unit' value="">
+                <input type='hidden' class="non-descript"id='longterm' value="">
+                <input type='hidden' class="non-descript"id='instructions' value="Take with meals">
+                <input type="hidden" id='associatedmed' value=""> <!-- Notes if this value is null then the associated med becomes ------------ -->
+                <input type='hidden' class="non-descript"id='state' value="current"> <!-- States what kind of medication it is.  Either, "new" or "current" -->
+            </form>
+    </body>
+    <script type="text/javascript">
+        var pm = initPageManager();
+        loadContent(pm);
+
+        $(window).resize(function(){
+            pm.resizeTableRows();
+        });
+    </script>
+    <!-- Jquery.autocomplete.js code 
+    <script type='text/javascript'>
+        var options, a;
+        jQuery(function(){
+           options = { serviceUrl:'http://localhost:8081/drugref/DrugrefService' };
+           a = $('#query').autocomplete(options);
+        });
+    </script>-->
+    <script>
+        // Create a new YUI instance and populate it with the required modules.
+        YUI().use('autocomplete','autocomplete-highlighters', function (Y) {
+            // Add the yui3-skin-sam class to the body so the default
+          // AutoComplete widget skin will be applied.
+          Y.one('body').addClass('yui3-skin-sam');
+
+          // The following examples demonstrate some of the different
+          // result sources AutoComplete supports. You only need to
+          // pick one, you don't need them all. Assume the '#ac-input'
+          // element id used in this example refers to an <input>
+          // element on the page.
+
+            /*
+          // Array source. Replace the example array with any array.
+          Y.one('#query').plug(Y.Plugin.AutoComplete, {
+            resultHighlighter: 'phraseMatch',
+            source: ['foo', 'bar', 'baz']
+          });
+
+          /*
+          // YQL source. Leave the {query} placeholder as is; AutoComplete
+          // will replace it automatically.
+          Y.one('#ac-input').plug(Y.Plugin.AutoComplete, {
+            resultHighlighter: 'phraseMatch',
+            source: 'select * from search.suggest where query="{query}"'
+          });*/
+
+          // JSONP URL source. Leave the {query} and {callback} placeholders
+          // as is; AutoComplete will replace them automatically.
+          Y.one('#ac-input').plug(Y.Plugin.AutoComplete, {
+            resultHighlighter: 'phraseMatch',
+            source: 'http://example.com/search.jsonp?q={query}&callback={callback}'
+          });
+
+            /*
+          // XHR URL source (no callback). Leave the {query} placeholder
+          // as is; AutoComplete will replace it automatically.
+          Y.one('#ac-input').plug(Y.Plugin.AutoComplete, {
+            resultHighlighter: 'phraseMatch',
+            source: 'http://example.com/search.json?q={query}'
+          });
+            */
+
+        });
+    </script>
+</html>

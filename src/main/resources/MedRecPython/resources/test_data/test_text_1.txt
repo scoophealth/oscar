@@ -1,0 +1,21 @@
+HOSPITAL COURSE: The patient is a 59-year-old female with multiple medical problems including diabetes mellitus requiring insulin for 26 years, previous MI and coronary artery disease, history of seizure disorder, GERD, bipolar disorder, and anemia. She was admitted due to a seizure and myoclonic jerks as well as hypoglycemia and anemia. Regarding the seizure disorder, Neurology was consulted. Noncontrast CT of the head was negative. Neurology felt that the only necessary intervention at that time would be to increase her Lamictal to 150 mg in the morning and 100 mg in the evening with gradual increase of the dosage until she was on 200 mg b.i.d. Regarding the hypoglycemia, the patient has diabetic gastroparesis and was being fed on J-tube intermittent feedings throughout the night at the rate of 120 an hour. Her insulin pump had a basal rate of roughly three at night during the feedings. While in the hospital, the insulin pump rate was turned down to 1.5 and then subsequently decreased a few other times. She seemed to tolerate the insulin pump rate well throughout her hospital course. There were a few episodes of hypoglycemia as well as hyperglycemia, but the episode seem to be related to the n.p.o. status and the changing rates of tube feedings throughout her hospital course.
+
+At discharge, her endocrinologist was contacted. It was decided to change her insulin pump rate to 3 units per hour from midnight till 6 a.m., from 0.8 units per hour from 6 a.m. until 8 a.m., and then at 0.2 units per hour from 8 a.m. until 6 p.m. The insulin was to be NovoLog. Regarding the anemia, the gastroenterologists were consulted regarding her positive Hemoccult stools. A colonoscopy was performed, which found a mass at the right hepatic flexure. General Surgery was then consulted and a right hemicolectomy was performed on the patient. The patient tolerated the procedure well and tube feeds were slowly restarted following the procedure, and prior to discharge were back at her predischarge rates of 120 per hour. Regarding the cancer itself, it was found that 1 out of 53 nodes were positive for cancer. CT of the abdomen and pelvis revealed no metastasis, a CT of the chest revealed possible lung metastasis. Later in hospital course, the patient developed a septic-like picture likely secondary to hospital-acquired pneumonia. She was treated with Zosyn, Levaquin, and vancomycin, and tolerated the medications well. Her symptoms decreased and serial chest x-rays were followed, which showed some resolution of the illness. The patient was seen by the Infectious Disease specialist. The Infectious Disease specialist recommended vancomycin to cover MRSA bacteria, which was found at the J-tube site. At discharge, the patient was given three additional days of p.o. Levaquin 750 mg as well as three additional days of Bactrim DS every 12 hours. The Bactrim was used to cover the MRSA at the J-tube site. It was found that MRSA was sensitive to Bactrim. Throughout her hospital course, the patient continued to receive Coreg 12.5 mg daily and Lasix 40 mg twice a day for her congestive heart failure, which remains stable. She also received Lipitor for her high cholesterol. Her seizure disorder remained stable and she was discharged on a dose of 100 mg in the morning and 150 mg at night. The dosage increases can begin on an outpatient basis.
+
+DISCHARGE INSTRUCTIONS/MEDICATIONS: The patient was discharged to home. She was told to shy away from strenuous activity. Her discharge diet was to be her usual diet of isotonic fiber feeding through the J-tube at a rate of 120 per hour throughout the night. The discharge medications were as follows:
+1. Coreg 12.5 mg p.o. b.i.d.
+2. Lipitor 10 mg p.o. at bedtime.
+3. Nitro-Dur patch 0.3 mg per hour one patch daily.
+4. Phenergan syrup 6.25 mg p.o. q.4h. p.r.n.
+5. Synthroid 0.175 mg p.o. daily.
+6. Zyrtec 10 mg p.o. daily.
+7. Lamictal 100 mg p.o. daily.
+8. Lamictal 150 mg p.o. at bedtime.
+9. Ferrous sulfate drops 325 mg, PEG tube b.i.d.
+10. Nexium 40 mg p.o. at breakfast.
+11. Neurontin 400 mg p.o. t.i.d.
+12. Lasix 40 mg p.o. b.i.d.
+13. Fentanyl 50 mcg patch transdermal q.72h.
+14. Calcium and vitamin D combination, calcium carbonate 500 mg/vitamin D 200 units one tab p.o. t.i.d.
+15. Bactrim DS 800mg/160 mg tablet one tablet q.12h. x3 days.
+16. Levaquin 750 mg one tablet p.o. x3 days.

@@ -717,6 +717,14 @@
 		<action input="/oscarRx/SearchDrug3.jsp" path="/oscarRx/WriteScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
 			<forward name="newRx" path="/oscarRx/prescribe.jsp" />
 		</action>
+
+
+        <action path="/dms/medRecAction" name="MedRecAction" scope="request" parameter="method" type="org.oscarehr.medextract.MedRecAction">
+            <forward name="success" path="/lab/CA/ALL/labDisplay.jsp" redirect="true"/>
+        </action>
+
+
+
 		<action path="/oscarEncounter/IncomingEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctIncomingEncounterAction">
 			<forward name="failure" path="/oscarEncounter/error.jsp" />
 			<forward name="success" path="/oscarEncounter/Index.jsp" />
@@ -740,6 +748,7 @@
 		<action input="/oscarRx/SearchDrug.jsp" path="/oscarRx/viewScript" scope="request" type="oscar.oscarRx.pageUtil.RxViewScriptAction">
 			<forward name="viewScript" path="/oscarRx/ViewScript.jsp" />
 		</action>
+        <action input="lab/CA/ALL/medRec/medRec.jsp" name="RxWriteScriptForm" path="/oscarRx/writeScript" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxWriteScriptAction"></action>
 		<action input="/oscarRx/WriteScript.jsp" name="RxWriteScriptForm" path="/oscarRx/writeScript" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
 			<forward name="refresh" path="/oscarRx/WriteScript.jsp" />
 			<forward name="addAnother" path="/oscarRx/SearchDrug.jsp" />

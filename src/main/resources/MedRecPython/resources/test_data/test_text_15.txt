@@ -1,0 +1,23 @@
+REASON FOR ADMISSION: Fever of unknown origin.
+
+HISTORY OF PRESENT ILLNESS: The patient is a 39-year-old woman with polymyositis/dermatomyositis on methotrexate once a week. The patient has also been on high-dose prednisone for an urticarial rash. The patient was admitted because of persistent high fevers without a clear-cut source of infection. She had been having temperatures of up to 103 for 8-10 days. She had been seen at Alta View Emergency Department a week prior to admission. A workup there including chest x-ray, blood cultures, and a transthoracic echocardiogram had all remained nondiagnostic, and were normal. Her chest x-ray on that occasion was normal. After the patient was seen in the office on August 10, she persisted with high fevers and was admitted on August 11 to Cottonwood Hospital. Studies done at Cottonwood: CT scan of the chest, abdomen, and pelvis. Results: CT chest showed mild bibasilar pleural-based interstitial changes. These were localized to mid and lower lung zones. The process was not diffuse. There was no ground glass change. CT abdomen and pelvis was normal. Infectious disease consultation was obtained. Dr. XYZ saw the patient. He ordered serologies for CMV including a CMV blood PCR. Next serologies for EBV, Legionella, Chlamydia, Mycoplasma, Coccidioides, and cryptococcal antigen, and a PPD. The CMV serology came back positive for IgM. The IgG was negative. The CMV blood PCR was positive, as well. Other serologies and her PPD stayed negative. Blood cultures stayed negative.
+
+In view of the positive CMV, PCR, and the changes in her CAT scan, the patient was taken for a bronchoscopy. BAL and transbronchial biopsies were performed. The transbronchial biopsies did not show any evidence of pneumocystis, fungal infection, AFB. There was some nonspecific interstitial fibrosis, which was minimal. I spoke with the pathologist, Dr. XYZ and immunopathology was done to look for CMV. The patient had 3 nucleoli on the biopsy specimens that stained positive and were consistent with CMV infection. The patient was started on ganciclovir once her CMV serologies had come back positive. No other antibiotic therapy was prescribed. Next, the patient’s methotrexate was held.
+
+A chest x-ray prior to discharge showed some bibasilar disease, showing interstitial infiltrates. The patient was given ibuprofen and acetaminophen during her hospitalization, and her fever resolved with these measures.
+
+On the BAL fluid cell count, the patient only had 5 WBCs and 5 RBCs on the differential. It showed 43% neutrophils, 45% lymphocytes.
+
+Discussions were held with Dr. XYZ, Dr. XYZ, her rheumatologist, and with pathology.
+
+DISCHARGE DIAGNOSES:
+1. Disseminated CMV infection with possible CMV pneumonitis.
+2. Polymyositis on immunosuppressive therapy (methotrexate and prednisone).
+
+DISCHARGE MEDICATIONS:
+1. The patient is going to go on ganciclovir 275 mg IV q.12 h. for approximately 3 weeks.
+2. Advair 100/50, 1 puff b.i.d.
+3. Ibuprofen p.r.n. and Tylenol p.r.n. for fever, and will continue her folic acid.
+4. The patient will not restart for methotrexate for now.
+
+She is supposed to follow up with me on August 22, 2007 at 1:45 p.m. She is also supposed to see Dr. XYZ in 2 weeks, and Dr. XYZ in 2-3 weeks. She also has an appointment to see an ophthalmologist in about 10 days’ time. This was a prolonged discharge, more than 30 minutes were spent on discharging this patient.

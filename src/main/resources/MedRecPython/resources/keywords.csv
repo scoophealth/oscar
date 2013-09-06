@@ -1,0 +1,3 @@
+ROUTE, p.o, patch, tablet, subcu, subcutaneous, subcutaneously, injection, inject, sublingual, ou, os, po, mouth, topical
+FREQ, b.i.d, daily, t.i.d, q.i.d, hourly, p.r.n, q.12h, q.4h, q.8h, q.24h, q.16h, q.48h, q.72h, bid, tid, q, qd, q.d, qam, qpm, q.am, q.a.m, q.p.m, q.pm, q 4, q d
+TIME, BEDTIME, BREAKFAST, DINNER, LUNCH, MEALS, MEAL, MORNING, EVENING, AM, PM, MID, MIDDAY, HS

@@ -36,6 +36,7 @@
 <%@page import="org.w3c.dom.Document"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
 <%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
+<%@page import="org.oscarehr.medextract.MedicationExtractorAction"%>
 <%@page errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
@@ -185,6 +186,13 @@ int lab_no = Integer.parseInt(segmentID);
 Hl7TextInfo hl7Lab = hl7TextInfoDao.findLabId(lab_no);
 String label = "";
 if (hl7Lab != null && hl7Lab.getLabel()!=null) label = hl7Lab.getLabel();
+
+
+//Calls to MedicationExtractorAction to being processing of text.
+String medextract_string = "";
+for(int i=0; i<handler.getOBXCount(0); i++){
+  medextract_string = medextract_string+handler.getOBXResult(0,i)+"@@@@";
+}
 
 /********************** Converted to this sport *****************************/
 
@@ -432,11 +440,17 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
         function extractMeds(){
-            var data='method=execute';
-            new Ajax.Request('../../../dms/medExtractManage.do',{method: 'post', parameters:data, onSuccess:function(target){
-              var d = target.responseText.evalJSON();
-              alert(d.values);
-              window.popup(900,1600,'medExtract.jsp');
+            window.popup(800,960, 'medRec/medRec.jsp?demoid='+<%out.print(demographicID);%>);
+        }
+        function cantExtractMeds(){
+            alert("Sorry, OSCAR is still processing this document.");
+        }
+
+        function runExtractMeds(){
+            var url="../../../dms/medExtractManage.do?";
+            var data="method=execute&demoid=<%out.print(demographicID);%>&text=<%out.print(medextract_string);%>";
+            new Ajax.Request(url, {method: 'post', parameters:data,onSuccess:function(transport){
+                document.getElementById("medExtractButton").setAttribute("onclick","extractMeds();");                
             }});
 
         }
@@ -459,7 +473,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             }else if(action=='medExtract'){
                                                                                 demoid=json.demoId;
                                                                                 if(demoid!=null && demoid.length>0)
-                                                                                    window.popup(700,960,'medExtract.jsp');
+                                                                                    window.popup(700,960,'medRec/medRec.jsp');
                                                                             }else if(action=='msgLab'){
                                                                                 demoid=json.demoId;
                                                                                 if(demoid!=null && demoid.length>0)
@@ -631,7 +645,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
 
                                     <input type="button" value="Msg" onclick="handleLab('','<%=segmentID%>','msgLab');"/>
-                                    <input type="button" value="medExtract" onclick="extractMeds();"/>
+                                    <input type="button" id="medExtractButton" value="MedRec" onclick="cantExtractMeds();"/>
                                     <input type="button" value="Tickler" onclick="handleLab('','<%=segmentID%>','ticklerLab');"/>
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnUnlinkDemo"/>" onclick="handleLab('','<%=segmentID%>','unlinkDemo');"/>
 
@@ -1549,6 +1563,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         <a style="color:white;" href="javascript: void(0);" onclick="showHideItem('rawhl7<%=s%>');" >show</a>
         <pre id="rawhl7<%=s%>" style="display:none;"><%=hl7%></pre>
     </body>
+    <script type="text/javascript">
+        runExtractMeds();
+    </script>
 </html>
 <%!
     public String[] divideStringAtFirstNewline(String s){

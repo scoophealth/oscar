@@ -1,0 +1,12 @@
+Conclusion test series_8 (up to test 8.5):
+
+Artificially inflating the experimentally determined range provides up to an 8%
+increase in the accuracy, however also increases false positives by up too 40%
+on the last test (8.5) expected that false positives will climb steadily as 
+range continues to be increased.
+
+From the up to 8% increase it can be determined at approx 8% of the possible 
+lines in the lists are on the outer edges of the lists, and are not being
+tagged correctly by the svm or clustered correctly by the dbscan. Note that 5%
+out of the 8% are actually within the first line on either end. 
+This was detected by a 5% increase to the recall/precision rate during test 8.2.

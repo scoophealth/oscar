@@ -105,6 +105,26 @@ public final class RxSearchDrugAction extends DispatchAction {
         jsonArray.write(response.getWriter());
         return null;
     }
+    public ActionForward jsonSearchVerbose(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws Exception, ServletException {
+
+        String searchStr = request.getParameter("query");
+        if (searchStr == null){
+            searchStr = request.getParameter("name");
+        }
+
+        String wildcardRightOnly = OscarProperties.getInstance().getProperty("rx.search_right_wildcard_only", "false");       
+               
+        RxDrugRef drugref = new RxDrugRef();
+        Vector<Hashtable> vec = drugref.list_drug_element3(searchStr,Boolean.valueOf(wildcardRightOnly));
+        
+        Hashtable d = new Hashtable();
+        d.put("results",vec);
+        response.setContentType("text/x-json");
+        
+        JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d );
+        jsonArray.write(response.getWriter());
+        return null;
+    }
 
 
 }

@@ -1,0 +1,36 @@
+DATE OF ADMISSION: MM/DD/YYYY.
+
+DATE OF DISCHARGE: MM/DD/YYYY.
+
+ADMITTING DIAGNOSIS: Peritoneal carcinomatosis from appendiceal primary.
+
+DISCHARGE DIAGNOSIS: Peritoneal carcinomatosis from appendiceal primary.
+
+SECONDARY DIAGNOSIS: Diarrhea.
+
+ATTENDING PHYSICIAN: AB CD, M.D.
+
+SERVICE: General surgery C, Surgery Oncology.
+
+CONSULTING SERVICES: Urology.
+
+PROCEDURES DURING THIS HOSPITALIZATION: On MM/DD/YYYY,
+1. Cystoscopy, bilaterally retrograde pyelograms, insertion of bilateral externalized ureteral stents.
+2. Exploratory laparotomy, right hemicolectomy, cholecystectomy, splenectomy, omentectomy, IPHC with mitomycin-C.
+
+HOSPITAL COURSE: The patient is a pleasant 56-year-old gentleman with no significant past medical history who after an extensive workup for peritoneal carcinomatosis from appendiceal primary was admitted on MM/DD/YYYY. He was admitted to General Surgery C Service for a routine preoperative evaluation including baseline labs, bowel prep, urology consult for ureteral stent placement. The patient was taken to the operative suite on MM/DD/YYYY and was first seen by Urology for a cystoscopy with bilateral ureteral stent placement. Dr. XYZ performed an exploratory laparotomy, right hemicolectomy, cholecystectomy, splenectomy, omentectomy, and IPHC with mitomycin-C. The procedure was without complications. The patient was observed closely in the ICU for one day postoperatively for persistent tachycardia after extubation. He was then transferred to the floor where he has done exceptionally well.
+
+On postoperative day #2, the patient passed flatus and we were able to start a clear liquid diet. We advanced him as tolerated to a regular health select diet by postoperative day #4. His pain was well controlled throughout this hospitalization, initially with a PCA pump, which he very seldomly used. He was then switched over to p.o. pain medicines and has required very little for adequate pain control. By postoperative date #2, the patient had been out of bed and ambulating in the hallways. The patient’s only problem was with some mild diarrhea on postoperative days #3 and 4. This was thought to be a result of his right hemicolectomy. A C. diff toxin was sent and came back negative and he was started on Imodium to manage his diarrhea. His post-splenectomy vaccines including pneumococcal, HiB, and meningococcal vaccines were administered during his hospitalization.
+
+On the day of discharge, the patient was resting comfortably in the bed without complaints. He had been afebrile throughout his hospitalization and his vital signs were stable. Pertinent physical exam findings include that his abdomen was soft, nondistended and nontender with bowel sounds present throughout. His midline incision is clean, dry, and intact and staples are in place. He is just six days postop, he will go home with his staples in place and they will be removed on his follow-up appointment.
+
+CONDITION AT DISCHARGE: The patient was discharged in good and stable condition.
+
+DISCHARGE MEDICATIONS:
+1. Multivitamins daily.
+2. Lovenox 40 mg in 0.4 mL solution inject subcutaneously once daily for 14 days.
+3. Vicodin 5/500 mg and take one tablet by mouth every four hours as needed for pain.
+4. Phenergan 12.5 mg tablets, take one tablet by mouth every six hours p.r.n. for nausea.
+5. Imodium A-D tablets take one tablet by mouth b.i.d. as needed for diarrhea.
+
+DISCHARGE INSTRUCTIONS: The patient was instructed to contact us with any questions or concerns that may arise. In addition, he was instructed to contact us, if he would have fevers greater than 101.4, chills, nausea or vomitting, continuing diarrhea, redness, drainage, or warmth around his incision site. He will be seen in about one week’s time in Dr. XYZ’s clinic and his staples will be removed at that time.

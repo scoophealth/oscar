@@ -1923,12 +1923,12 @@ function removeReRxDrugId(drugId){
 
 //represcribe a drug
 function represcribe(element, toArchive){
-  
+    console.log(data);
     var elemId=element.id;
     var ar=elemId.split("_");
     var drugId=ar[1];
     if(drugId!=null && $("reRxCheckBox_"+drugId).checked==true){
-    	        	
+    	console.log("represcribing: "+drugId);
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribeMultiple&rand="+Math.floor(Math.random()*10001);
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
             insertion: Insertion.Bottom,onSuccess:function(transport){
@@ -2166,11 +2166,14 @@ function updateQty(element){
     		return false;
     	}
 		if(!validateRxDate()) {
+            //var re = new RegExp(find, "g");
     		return false;
     	}
 		
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
+        console.log(data);
+        console.log(url);
         new Ajax.Request(url,
         {method: 'post',postBody:data,asynchronous:false,
             onSuccess:function(transport){

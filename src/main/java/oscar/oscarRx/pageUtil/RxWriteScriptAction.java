@@ -86,6 +86,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 
+        logger.info("RxWriteScriptAction.unspecified()");
 		RxWriteScriptForm frm = (RxWriteScriptForm) form;
 		String fwd = "refresh";
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
@@ -784,31 +785,61 @@ public final class RxWriteScriptAction extends DispatchAction {
 		return null;
 	}
 
+    /*public ActionForward updateFromMedRec(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+
+        RxPrescriptionData.Prescription rx;
+        if(request.getParameter("drugId") != null && !request.getParameter("drugId").equals("")){
+            rx = new RxPrescriptionData.Prescription(Integer.parseInt(request.getParamter("drugId")),request.getParameter("demographicNo"), 0);
+        }else{
+            rx = new RxPrescriptionData.Prescription(0, request.getParameter("demographicNo"), 0);
+        }
+
+        //atcCode=B01AA03&atcCode=B01AA03&drugName_930546=COUMADIN%20TAB%2010MG&instructions_930546=&quantity_930546=0&repeats_930546=0&refillDuration_930546=0&refillQuantity_930546=0&dispenseInterval_930546=0&outsideProviderName_930546=&outsideProviderOhip_930546=&rxDate_930546=2013-08-28&lastRefillDate_930546=&writtenDate_930546=2013-08-28&pickupDate_930546=&pickupTime_930546=&comment_930546=&eTreatmentType_930546=--&rxStatus_930546=--&drugName_343798=TARO-WARFARIN%202MG&instructions_343798=&quantity_343798=0&repeats_343798=0&refillDuration_343798=0&refillQuantity_343798=0&dispenseInterval_343798=0&outsideProviderName_343798=&outsideProviderOhip_343798=&rxDate_343798=2013-08-28&lastRefillDate_343798=&writtenDate_343798=2013-08-28&pickupDate_343798=&pickupTime_343798=&comment_343798=&eTreatmentType_343798=--&rxStatus_343798=--&demographicNo=5&searchString=&search=Search
+
+
+        rx.setBrandName(request.getParameter("drugName"));
+        rx.setAtcCode(request.getParameter("atcCode"));
+        rx.setQuantity(request.getParameter("quantity"));
+        rx.setSpecial(request.getParameter("instructions"));
+        return null;
+    }*/
 	public ActionForward updateSaveAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
+        logger.info("in RxWriteScriptAction.updateSaveAllDrugs(): 788");
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		request.getSession().setAttribute("rePrint", null);// set to print.
 		List<String> paramList = new ArrayList();
 		Enumeration em = request.getParameterNames();
 		List<String> randNum = new ArrayList();
+        logger.info("in RxWriteScriptAction.updateSaveAllDrugs():794 em="+em.toString());
 		while (em.hasMoreElements()) {
 			String ele = em.nextElement().toString();
+            logger.info("INFO: ele="+ele);
 			paramList.add(ele);
 			if (ele.startsWith("drugName_")) {
 				String rNum = ele.substring(9);
 				if (!randNum.contains(rNum)) {
 					randNum.add(rNum);
 				}
+                logger.info("Random num: "+rNum+" was added to list.");
 			}
 		}
 
-		List<Integer> allIndex = new ArrayList();
-		for (int i = 0; i < bean.getStashSize(); i++) {
-			allIndex.add(i);
-		}
+        List<Integer> allIndex = new ArrayList();
+        try{
+            for (int i = 0; i < bean.getStashSize(); i++) {
+                allIndex.add(i);
+            }
+        }catch(Exception exp){
+            logger.error(exp.toString());
+        }
 
 		List<Integer> existingIndex = new ArrayList();
+        logger.info("INFO: randNum list is: "+randNum.toString());
 		for (String num : randNum) {
+            logger.info("in RxWriteScriptAction.updateSaveAllDrugs():816 in for loop with num="+num);
 			int stashIndex = bean.getIndexFromRx(Integer.parseInt(num));
+            logger.info("stash index: "+stashIndex);
 			try {
 				if (stashIndex == -1) {
 					continue;
@@ -830,8 +861,10 @@ public final class RxWriteScriptAction extends DispatchAction {
                     int refillQuantity;
 
 					em = request.getParameterNames();
+                    logger.info("EM in RxWriteSriptAction:833 is "+em.toString());
 					while (em.hasMoreElements()) {
 						String elem = (String) em.nextElement();
+                        logger.info("elem is: "+elem);
 						String val = request.getParameter(elem);
 						val = val.trim();
 						if (elem.startsWith("drugName_" + num)) {
