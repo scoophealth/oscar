@@ -76,7 +76,8 @@ public class Security extends AbstractModel<Integer> {
 	private Integer BRemotelockset;
 
 
-
+	@Column(name="forcePasswordReset")
+	private Boolean forcePasswordReset = true;
 
 	/** default constructor */
 	public Security() {
@@ -92,6 +93,7 @@ public class Security extends AbstractModel<Integer> {
 		setBLocallockset(security.getBLocallockset());
 		setDateExpiredate(security.getDateExpiredate());
 		setBExpireset(security.getBExpireset());
+		setForcePasswordReset(security.isForcePasswordReset());
 //		setLastUpdateUser(security.getLastUpdateUser());
 //		setLastUpdateDate(security.getLastUpdateDate());
 //		setLoginIP(security.getLoginIP());
@@ -100,7 +102,7 @@ public class Security extends AbstractModel<Integer> {
 	}
 
 	/** full constructor */
-	public Security(String userName, String password, String providerNo, String pin, Integer BRemotelockset, Integer BLocallockset, Date dateExpiredate, Integer BExpireset) {
+	public Security(String userName, String password, String providerNo, String pin, Integer BRemotelockset, Integer BLocallockset, Date dateExpiredate, Integer BExpireset, Boolean forcePasswordReset) {
 		this.userName = userName;
 		this.password = password;
 		this.providerNo = providerNo;
@@ -109,6 +111,7 @@ public class Security extends AbstractModel<Integer> {
 		this.BLocallockset = BLocallockset;
 		this.dateExpiredate = dateExpiredate;
 		this.BExpireset = BExpireset;
+		this.forcePasswordReset = forcePasswordReset;
 	}
 
 
@@ -224,6 +227,12 @@ public class Security extends AbstractModel<Integer> {
 	    }
     }
 	
-	
+	public Boolean isForcePasswordReset() {
+		return forcePasswordReset;
+	}
+
+	public void setForcePasswordReset(Boolean forcePasswordReset) {
+		this.forcePasswordReset = forcePasswordReset;
+	} 
 	
 }

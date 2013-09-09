@@ -65,7 +65,6 @@ public class Provider implements Serializable, Comparable<Provider>{
     private String lastUpdateUser;
     private Date lastUpdateDate;
 
-
 	public String getPractitionerNo() {
 		return practitionerNo;
 	}
@@ -123,6 +122,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 		title = provider.title;
 		lastUpdateUser = provider.lastUpdateUser;
 		lastUpdateDate = provider.lastUpdateDate;
+
 	}
 
 	public String getFormattedName() {
@@ -355,4 +355,5 @@ public class Provider implements Serializable, Comparable<Provider>{
 		if (providerNo==null) return(0);
 	    return(providerNo.compareTo(o.providerNo));
     }
+
 }

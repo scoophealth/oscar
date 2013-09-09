@@ -76,6 +76,13 @@
     	if(request.getParameter("pin")==null || !"****".equals(request.getParameter("pin"))) {
     		s.setPin(sPin);
     	}
+    	
+    	if (request.getParameter("forcePasswordReset") != null && request.getParameter("forcePasswordReset").equals("1")) {
+    	    s.setForcePasswordReset(Boolean.TRUE);
+    	} else {
+    		s.setForcePasswordReset(Boolean.FALSE);  
+        }
+    	
     	securityDao.saveEntity(s);
     	rowsAffected=1;
     }

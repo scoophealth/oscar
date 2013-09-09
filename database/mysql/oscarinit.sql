@@ -7407,6 +7407,7 @@ CREATE TABLE security (
   password varchar(80) NOT NULL default '',
   provider_no varchar(6) default NULL,
   pin varchar(6) default NULL,
+  forcePasswordReset tinyint(1),
   PRIMARY KEY  (security_no),
   UNIQUE user_name (user_name)
 ) ;
@@ -11341,4 +11342,6 @@ create table CtlRelationships (
 	femaleInverse varchar(50),
         primary key(id)
 );
+
+
 

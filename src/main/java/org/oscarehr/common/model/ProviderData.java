@@ -98,6 +98,8 @@ public class ProviderData extends AbstractModel<String> implements Serializable 
 	@Temporal(TemporalType.DATE)
 	private Date signedConfidentiality = null;
 	
+
+	
 	public ProviderData() {}
 	
 	public String getId() {
@@ -297,8 +299,6 @@ public class ProviderData extends AbstractModel<String> implements Serializable 
         public int compare(ProviderData pd1, ProviderData pd2) {
         	return pd1.getId().compareTo(pd2.getId());
         }
-    }; 
-	
-	
+    };
 	
 }

@@ -60,6 +60,7 @@ public class LoginFilter implements Filter {
 		"/login.do",
 		"/logout.jsp",
 		"/index.jsp",
+		"/forcepasswordreset.jsp",
 		"/loginfailed.jsp",
 		"/index.html",
 		"/eformViewForPdfGenerationServlet",
