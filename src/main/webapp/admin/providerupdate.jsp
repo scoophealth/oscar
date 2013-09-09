@@ -164,7 +164,9 @@
 		  p.setPractitionerNo(request.getParameter("practitionerNo"));
 		  p.setLastUpdateUser((String)session.getAttribute("user"));
 		  p.setLastUpdateDate(new java.util.Date());
+		  
 		  providerDao.updateProvider(p);
+		  
 		  
 		  UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 		 

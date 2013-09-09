@@ -215,6 +215,25 @@
 			key="admin.securityrecord.formConfirm" />:</td>
 		<td><input type="password" name="conPin" value="****" size="6" maxlength="6" /></td>
 	</tr>
+	
+	<%
+		if (!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false")) {
+	%>		  
+		<tr>		
+			<td align="right"><bean:message key="admin.provider.forcePasswordReset" />:
+			</td>
+			<td>
+					<select name="forcePasswordReset">
+							<option value="1" <% if (security != null && security.isForcePasswordReset()!= null && security.isForcePasswordReset()) { %>
+					                          SELECTED <%}%>>true</option>
+							<option value="0" <% if (security != null && security.isForcePasswordReset()!= null && !security.isForcePasswordReset()) { %>
+					                          SELECTED <%}%>>false</option>
+					</select>	
+			</td>
+		</tr>
+   <%} %>
+	
+	
 	<tr>
 		<td colspan="2" align="center">
 			<input type="hidden" name="security_no" value="<%= security.getSecurityNo() %>">

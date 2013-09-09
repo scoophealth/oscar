@@ -37,6 +37,5 @@
 		<property name="title" />
 		<property name="lastUpdateUser" type="string"/>
 		<property name="lastUpdateDate" type="date" />
-
 	</class>
 </hibernate-mapping>

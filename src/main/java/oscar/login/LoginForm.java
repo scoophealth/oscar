@@ -36,6 +36,11 @@ public final class LoginForm extends ActionForm {
   private String password;
   private String pin;
   private String propname;
+  
+  private String oldPassword;
+  private String newPassword;
+  private String confirmPassword;
+  
 
   //validate the input data, will change based on struts 1.1
   public ActionErrors validate(ActionMapping mapping, HttpServletRequest req) {
@@ -90,5 +95,31 @@ public final class LoginForm extends ActionForm {
     pin = "";
     propname = "";
   }
+
+public String getOldPassword() {
+	return oldPassword;
+}
+
+public void setOldPassword(String oldPassword) {
+	this.oldPassword = oldPassword;
+}
+
+public String getNewPassword() {
+	return newPassword;
+}
+
+public void setNewPassword(String newPassword) {
+	this.newPassword = newPassword;
+}
+
+public String getConfirmPassword() {
+	return confirmPassword;
+}
+
+public void setConfirmPassword(String confirmPassword) {
+	this.confirmPassword = confirmPassword;
+}
+
+
 
 }

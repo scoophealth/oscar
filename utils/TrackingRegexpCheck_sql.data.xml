@@ -4215,7 +4215,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:doccreator varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:docdesc varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:docfilename varchar(255) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:doctype varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:doctype varchar(60) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:document_no int(6) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:doseAdminIM tinyint(1) default NULL,</ViolationValue>
@@ -4602,7 +4601,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:noMessageCodeDescLines varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:nose varchar(80) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:nosubs tinyint(1) NOT NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:notes varchar(80) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:number_of_pages int(6) not null default 0,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:nutrition varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:nutrition varchar(30) default NULL,</ViolationValue>

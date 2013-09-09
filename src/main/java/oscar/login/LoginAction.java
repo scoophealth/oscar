@@ -26,6 +26,7 @@
 package oscar.login;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -47,11 +48,13 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.OcanForm;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
+import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.dao.ServiceRequestTokenDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.ServiceRequestToken;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
@@ -64,6 +67,8 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.quatro.model.security.LdapSecurity;
 
 import oscar.OscarProperties;
 import oscar.log.LogAction;
@@ -81,7 +86,8 @@ public final class LoginAction extends DispatchAction {
 
     private static final Logger logger = MiscUtils.getLogger();
     private static final String LOG_PRE = "Login!@#$: ";
-
+    
+    
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
@@ -90,49 +96,104 @@ public final class LoginAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	boolean ajaxResponse = request.getParameter("ajaxResponse") != null?Boolean.valueOf(request.getParameter("ajaxResponse")):false;
     	
-        String ip = request.getRemoteAddr();
+    	String ip = request.getRemoteAddr();
         Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
-        String nextPage=request.getParameter("nextPage");
-        logger.debug("nextPage: "+nextPage);
-        if (nextPage!=null) {
-        	// set current facility
-            String facilityIdString=request.getParameter(SELECTED_FACILITY_ID);
-            Facility facility=facilityDao.find(Integer.parseInt(facilityIdString));
-            request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
-            String username=(String)request.getSession().getAttribute("user");
-            LogAction.addLog(username, LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIdString, ip);
-            if(facility.isEnableOcanForms()) {
-            	request.getSession().setAttribute("ocanWarningWindow", OcanForm.getOcanWarningMessage(facility.getId()));
-            }
-            return mapping.findForward(nextPage);
-        }
-        
-        String where = "failure";
-        // String userName, password, pin, propName;
-        String userName = ((LoginForm) form).getUsername();
-        String password = ((LoginForm) form).getPassword();
-        String pin = ((LoginForm) form).getPin();
-
+    	
         LoginCheckLogin cl = new LoginCheckLogin();
-        if (cl.isBlock(ip, userName)) {
-        	logger.info(LOG_PRE + " Blocked: " + userName);
-            // return mapping.findForward(where); //go to block page
-            // change to block page
-            String newURL = mapping.findForward("error").getPath();
-            newURL = newURL + "?errormsg=Your account is locked. Please contact your administrator to unlock.";
-            
-            if(ajaxResponse) {
-            	JSONObject json = new JSONObject();
-            	json.put("success", false);
-            	json.put("error", "Your account is locked. Please contact your administrator to unlock.");
-            	response.setContentType("text/x-json");
-            	json.write(response.getWriter());
-            	return null;
-            }
-            
-            return(new ActionForward(newURL));
-        }
-        logger.debug("ip was not blocked: "+ip);
+        
+        String userName = "";
+        String password = "";
+        String pin = "";
+        String nextPage= "";
+        boolean forcedpasswordchange = true;
+        String where = "failure";
+        
+    	if (request.getParameter("forcedpasswordchange") != null && request.getParameter("forcedpasswordchange").equalsIgnoreCase("true")) {
+    		//Coming back from force password change.
+    	    userName = (String) request.getSession().getAttribute("userName");
+    	    password = (String) request.getSession().getAttribute("password");
+    	    pin = (String) request.getSession().getAttribute("pin");
+    	    nextPage = (String) request.getSession().getAttribute("nextPage");
+    	    
+    	    String newPassword = ((LoginForm) form).getNewPassword();
+    	    String confirmPassword = ((LoginForm) form).getConfirmPassword();
+    	    String oldPassword = ((LoginForm) form).getOldPassword();
+    	   
+    	    
+    	    try{
+        	    String errorStr = errorHandling(password, newPassword, confirmPassword, encodePassword(oldPassword), oldPassword);
+        	    
+        	    //Error Handling
+        	    if (errorStr != null && !errorStr.isEmpty()) {
+    	        	String newURL = mapping.findForward("forcepasswordreset").getPath();
+    	        	newURL = newURL + errorStr;  	        	
+    	            return(new ActionForward(newURL));  
+        	    }
+        	   
+        	    persistNewPassword(userName, newPassword);
+        	            	    
+        	    password = newPassword;
+        	            	    
+        	    //Remove the attributes from session
+        	    removeAttributesFromSession(request);
+         	}  
+         	catch (Exception e) {
+         		logger.error("Error", e);
+                String newURL = mapping.findForward("error").getPath();
+                newURL = newURL + "?errormsg=Setting values to the session.";   
+                
+        	    //Remove the attributes from session
+        	    removeAttributesFromSession(request);
+        	    
+                return(new ActionForward(newURL));  
+         	}
+
+    	    //make sure this checking doesn't happen again
+    	    forcedpasswordchange = false;
+    	    
+    	} else {
+    		userName = ((LoginForm) form).getUsername();
+    	    password = ((LoginForm) form).getPassword();
+    	    pin = ((LoginForm) form).getPin();
+    	    nextPage=request.getParameter("nextPage");
+    		        
+	        logger.debug("nextPage: "+nextPage);
+	        if (nextPage!=null) {
+	        	// set current facility
+	            String facilityIdString=request.getParameter(SELECTED_FACILITY_ID);
+	            Facility facility=facilityDao.find(Integer.parseInt(facilityIdString));
+	            request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
+	            String username=(String)request.getSession().getAttribute("user");
+	            LogAction.addLog(username, LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIdString, ip);
+	            if(facility.isEnableOcanForms()) {
+	            	request.getSession().setAttribute("ocanWarningWindow", OcanForm.getOcanWarningMessage(facility.getId()));
+	            }
+	            return mapping.findForward(nextPage);
+	        }
+	        
+	        if (cl.isBlock(ip, userName)) {
+	        	logger.info(LOG_PRE + " Blocked: " + userName);
+	            // return mapping.findForward(where); //go to block page
+	            // change to block page
+	            String newURL = mapping.findForward("error").getPath();
+	            newURL = newURL + "?errormsg=Your account is locked. Please contact your administrator to unlock.";
+	            
+	            if(ajaxResponse) {
+	            	JSONObject json = new JSONObject();
+	            	json.put("success", false);
+	            	json.put("error", "Your account is locked. Please contact your administrator to unlock.");
+	            	response.setContentType("text/x-json");
+	            	json.write(response.getWriter());
+	            	return null;
+	            }
+	            
+	            return(new ActionForward(newURL));
+	        }
+	                
+	        logger.debug("ip was not blocked: "+ip);
+        
+    	}
+        
         String[] strAuth;
         try {
             strAuth = cl.auth(userName, password, pin, ip);
@@ -174,6 +235,27 @@ public final class LoginAction extends DispatchAction {
                 return(new ActionForward(newURL));
             }
             
+            /* 
+             * This section is added for forcing the initial password change.
+             */
+            Security security = getSecurity(userName);
+            if (!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false") && 
+            	security.isForcePasswordReset() != null && security.isForcePasswordReset() && forcedpasswordchange	) {
+            	
+            	String newURL = mapping.findForward("forcepasswordreset").getPath();
+            	
+            	try{
+            	   setUserInfoToSession( request, userName,  password,  pin, nextPage);
+            	}  
+            	catch (Exception e) {
+            		logger.error("Error", e);
+                    newURL = mapping.findForward("error").getPath();
+                    newURL = newURL + "?errormsg=Setting values to the session.";            		
+            	}
+
+                return(new ActionForward(newURL));            	
+            }
+                        
             // invalidate the existing session
             HttpSession session = request.getSession(false);
             if (session != null) {
@@ -383,6 +465,115 @@ public final class LoginAction extends DispatchAction {
         return mapping.findForward(where);
     }
     
+    
+    /**
+     * Removes attributes from session
+     * @param request
+     */
+    private void removeAttributesFromSession(HttpServletRequest request) {
+	    request.getSession().removeAttribute("userName");
+	    request.getSession().removeAttribute("password");
+	    request.getSession().removeAttribute("pin");
+	    request.getSession().removeAttribute("nextPage");
+    }
+    
+    /**
+     * Set user info to session
+     * @param request
+     * @param userName
+     * @param password
+     * @param pin
+     * @param nextPage
+     */
+    private void setUserInfoToSession(HttpServletRequest request,String userName, String password, String pin,String nextPage) throws Exception{
+    	request.getSession().setAttribute("userName", userName);
+    	request.getSession().setAttribute("password", encodePassword(password));
+    	request.getSession().setAttribute("pin", pin);
+    	request.getSession().setAttribute("nextPage", nextPage);
+    
+    }
+    
+     /**
+      * Performs the error handling
+     * @param password
+     * @param newPassword
+     * @param confirmPassword
+     * @param oldPassword
+     * @return
+     */
+    private String errorHandling(String password, String  newPassword, String  confirmPassword, String  encodedOldPassword, String  oldPassword){
+	    
+    	String newURL = "";
+
+	    if (!encodedOldPassword.equals(password)) {
+     	   newURL = newURL + "?errormsg=Your old password, does NOT match the password in the system. Please enter your old password.";  
+     	} else if (!newPassword.equals(confirmPassword)) {
+      	   newURL = newURL + "?errormsg=Your new password, does NOT match the confirmed password. Please try again.";  
+      	} else if (newPassword.equals(oldPassword)) {
+       	   newURL = newURL + "?errormsg=Your new password, is the same as your old password. Please choose a new password.";  
+       	} 
+    	    
+	    return newURL;
+     }
+    
+    
+    /**
+     * This method encodes the password, before setting to session.
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    private String encodePassword(String password) throws Exception{
+
+    	MessageDigest md = MessageDigest.getInstance("SHA");
+    	
+    	StringBuilder sbTemp = new StringBuilder();
+	    byte[] btNewPasswd= md.digest(password.getBytes());
+	    for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
+	
+	    return sbTemp.toString();
+	    
+    }
+    
+    
+    /**
+     * get the security record based on the username
+     * @param username
+     * @return
+     */
+    private Security getSecurity(String username) {
+
+		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
+		List<Security> results = securityDao.findByUserName(username);
+		Security security = null;
+		if (results.size() > 0) security = results.get(0);
+
+		if (security == null) {
+			return null;
+		} else if (OscarProperties.isLdapAuthenticationEnabled()) {
+			security = new LdapSecurity(security);
+		}
+		
+		return security;
+    }	
+    
+    
+    /**
+     * Persists the new password
+     * @param userName
+     * @param newPassword
+     * @return
+     */
+    private void  persistNewPassword(String userName, String newPassword) throws Exception{
+    
+	    Security security = getSecurity(userName);
+	    security.setPassword(encodePassword(newPassword));
+	    security.setForcePasswordReset(Boolean.FALSE);
+	    SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");	    
+	    securityDao.saveEntity(security); 
+		
+    }
+         
 	public ApplicationContext getAppContext() {
 		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
 	}

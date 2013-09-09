@@ -290,6 +290,22 @@
 		</td>
 		<td><input type="password" name="conPin" size="6" maxlength="6" /></td>
 	</tr>
+	
+	<%
+		if (!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false")) {
+	%>		  
+			<tr>		
+				<td align="right"><bean:message key="admin.provider.forcePasswordReset" />:
+				</td>
+				<td>
+						<select name="forcePasswordReset">
+								<option value="1">true</option>
+								<option value="0">false</option>
+						</select>	
+				</td>
+			</tr>
+   <%} %>
+	
 	<tr>
 		<td colspan="2">
 		<div align="center">

@@ -373,6 +373,7 @@ for (int i=0; i<sites.size(); i++) {
 			<td><input type="text" name="status" value='1' maxlength="1">
 			</td>
 		</tr>
+			
 	</caisi:isModuleLoad>
 	<tr>
 		<td colspan="2">

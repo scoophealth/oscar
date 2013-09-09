@@ -1569,7 +1569,7 @@ INSERT INTO scheduletemplatecode (code,description,duration,color,confirm,bookin
 -- Dumping data for table 'security'
 --
 
-INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (128,'oscardoc','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999998','1117');
+INSERT INTO security(security_no,user_name,password,provider_no,pin,forcePasswordReset) VALUES (128,'oscardoc','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999998','1117',1);
 --
 -- Dumping data for table 'serviceSpecialists'
 --
