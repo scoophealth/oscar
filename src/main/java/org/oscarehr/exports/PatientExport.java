@@ -205,6 +205,11 @@ public abstract class PatientExport {
 		} catch (Exception e) {
 			log.warn("getTypeDescription - Type description not found");
 		}
+
+		// Blood Pressure split case
+		if(rhs.equals("SYST")) rhs = "Systolic Blood Pressure";
+		if(rhs.equals("DIAS")) rhs = "Diastolic Blood Pressure";
+
 		return rhs;
 	}
 

@@ -87,7 +87,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 		assertNotNull(demographicDao.getDemographic(demographicNo.toString()));
 		assertNotNull(demographicDao.getDemographicById(demographicNo));
 		assertNotNull(demographicDao.getClientByDemographicNo(demographicNo));
-		
+
 		E2EPatientExport p = new E2EPatientExport();
 		assertNotNull("PatientExport object unexpectedly null", p);
 		assertFalse("PatientExport isLoaded flag unexpectedly true", p.isLoaded());
@@ -129,6 +129,13 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 		E2EPatientExport p = new E2EPatientExport();
 		p.loadPatient(demographicNo.toString());
 		assertNotNull(p.getAuthorId());
+	}
+
+	@Test
+	public void testIsActive() {
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+		assertNotNull(p.isActive());
 	}
 
 	@Test
@@ -322,7 +329,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 	public void testGetLabExtValue1() {
 		assertNotNull((E2EPatientExport.getLabExtValue("1", "abnormal")));
 	}
-	
+
 	@Test
 	public void testGetLabExtValue2() {
 		assertNotNull((E2EPatientExport.getLabExtValue(new ArrayList<MeasurementsExt>(), "abnormal")));
@@ -337,7 +344,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 		assertNotNull(l.getHl7TextInfo());
 		assertNotNull(l.getGroup());
 	}
-	
+
 	@Test
 	public void testLabGroupObject() {
 		LabGroup lg = new LabGroup(1);
