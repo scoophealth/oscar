@@ -217,7 +217,10 @@ if (bMultisites) {
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.net.*,java.sql.*,oscar.*"
 	errorPage="errorpage.jsp"%>
-<% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
+<% 
+	java.util.Properties oscarVariables = OscarProperties.getInstance();
+%>
+	
 <jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"
 	scope="session" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
@@ -490,11 +493,11 @@ function refreshTabAlerts(id) {
 			
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 			<li>
-			<a HREF="#"
-				ONCLICK="popupOscarRx(550,687,'../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;"
-				TITLE='<bean:message key="global.genBillReport"/>'
-				onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message
-				key="global.billing" /></a>
+				<a HREF="#"
+					ONCLICK="popupOscarRx(550,687,'../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;"
+					TITLE='<bean:message key="global.genBillReport"/>'
+					onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message
+					key="global.billing" /></a>
 			</li>
 			</security:oscarSec>
 			

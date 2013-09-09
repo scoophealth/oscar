@@ -32,6 +32,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -508,6 +510,48 @@ public class Demographic implements Serializable {
 	 */
 	public void setFamilyDoctor(String familyDoctor) {
 		this.familyDoctor = familyDoctor;
+	}
+
+	/**
+	 * Return the last name as parsed from column: family_doctor
+	 */
+	public String getFamilyDoctorLastName() {
+		Pattern p = Pattern.compile(".*<rd>([^,]*),.*</rd>.*");
+		Matcher m = p.matcher(familyDoctor);
+
+		if(!m.matches())
+		{
+			return "";
+		}
+		return m.group(1);
+	}
+
+	/**
+	 * Return the first name as parsed from column: family_doctor
+	 */
+	public String getFamilyDoctorFirstName() {
+		Pattern p = Pattern.compile(".*<rd>[^,]*,(.*)</rd>.*");
+		Matcher m = p.matcher(familyDoctor);
+
+		if(!m.matches())
+		{
+			return "";
+		}
+		return m.group(1);
+	}
+
+	/**
+	 * Return the doctor number as parsed from column: family_doctor
+	 */
+	public String getFamilyDoctorNumber() {
+		Pattern p = Pattern.compile("<rdohip>(.*)</rdohip>.*");
+		Matcher m = p.matcher(familyDoctor);
+
+		if(!m.matches())
+		{
+			return "";
+		}
+		return m.group(1);
 	}
 
 	/**
