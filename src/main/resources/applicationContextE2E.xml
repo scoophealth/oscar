@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+	default-autowire="no">
+
+	<!-- Bean References -->
+	<bean id="e2eSchedulerJob" class="org.oscarehr.common.service.E2ESchedulerJob" />
+
+	<!-- Scheduler Job -->
+	<bean id="e2eScheduledJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="e2eSchedulerJob" />
+		<property name="targetMethod" value="run" />
+	</bean>
+
+	<!-- Simple Trigger, run every hour -->
+	<bean id="e2eSimpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="e2eScheduledJob" />
+		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="15000" />
+	</bean>
+
+	<!-- Cron Trigger, run every day at midnight -->
+	<!-- Recommend using http://www.cronmaker.com/ for generating quartz cron expressions -->
+	<bean id="e2eCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="e2eScheduledJob" />
+		<property name="cronExpression" value="0 0 0 * * ? *" />
+	</bean>
+
+	<!-- Scheduler Factory -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+			<list>
+				<ref bean="e2eScheduledJob" />
+			</list>
+		</property>
+		<property name="triggers">
+			<list>
+				<!-- Change between e2eSimpleTrigger or e2eCronTrigger for desired schedule -->
+				<ref bean="e2eCronTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>

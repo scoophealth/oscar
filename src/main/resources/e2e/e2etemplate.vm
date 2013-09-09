@@ -1,0 +1,1710 @@
+#**
+ * Copyright (c) 2013. Department of Family Practice, University of British Columbia. All Rights Reserved.
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * This software was written for the
+ * Department of Family Practice
+ * Faculty of Medicine
+ * University of British Columbia
+ * Vancouver, Canada
+ *
+ * @author Jeremy Ho
+ *
+ *##set( $demographic = $patient.getDemographic() )
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd"
+ xmlns="urn:hl7-org:v3"
+ xmlns:hl7="urn:hl7-org:v3"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:e2e="http://standards.pito.bc.ca/E2E-DTC/cda">
+<!-- 
+********************************************************
+CDA Header
+********************************************************
+-->
+	<realmCode code="CA" />
+	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+	<!-- Conforms to the BC PITO Standard Header specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.7.1"/>
+	<!-- Conforms to the BC PITO EMR Conversion Document specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.1"/>
+	<!-- Conforms to the BC PITO EMR Generic Episodic Document specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.2"/>
+	<!-- Conforms to the BC PITO EMR Patient Transfer Document specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.3"/>
+	<!-- Conforms to the BC PITO EMR Generic Structured Referal specification -->
+	<templateId root="2.16.840.1.113883.3.1818.10.1.6"/>
+	<id extension="$demographic.demographicNo" root="2.16.840.1.113883.3.933"/>
+	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
+	<title>PITO EMR-2-EMR Record of $demographic.firstName $demographic.lastName</title>
+	<effectiveTime value="$dateTool.get('yyyyMMddHHmm')"/>
+	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+	<!-- 
+	********************************************************
+	Record Target
+	********************************************************
+	-->
+	<recordTarget typeCode="RCT" contextControlCode="OP">
+		<patientRole classCode="PAT">
+#if ( !$demographic.hin || $demographic.hin.isEmpty() )
+			<id extension="000000000" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#else
+			<id extension="$demographic.hin" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+#end
+#if ( $demographic.address || $demographic.city || $demographic.province || $demographic.postal )
+			<addr>
+				<streetAddressLine>$!demographic.address</streetAddressLine>
+				<city>$!demographic.city</city>
+				<state>$!demographic.province</state>
+				<postalCode>$!demographic.postal</postalCode>
+			</addr>
+#end
+#if ( !$demographic.phone.isEmpty() )
+			<!-- Home Phone -->
+			<telecom value="tel: $demographic.phone" use="HP"/>
+#end
+#if ( !$demographic.phone2.isEmpty() )
+			<!-- Work Phone -->
+			<telecom value="tel: $demographic.phone2" use="HP"/>
+#end
+			<patient>
+				<name>
+					<given>$demographic.firstName</given>
+					<family>$demographic.lastName</family>
+				</name>
+				<administrativeGenderCode code="$demographic.sex" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
+				<birthTime value="$patient.birthDate"/>
+				<languageCommunication>
+#if ( $demographic.officialLanguage == "English" )
+					<languageCode code="EN"/>
+#else
+					<languageCode code="FR"/>
+#end
+				</languageCommunication>
+			</patient>
+		</patientRole>
+	</recordTarget>
+	<!-- 
+	********************************************************
+	Author
+	********************************************************
+	-->
+	<author typeCode="AUT" contextControlCode="OP">
+		<time value="$dateTool.get('yyyyMMdd')"/>
+		<assignedAuthor>
+			<id extension="$patient.authorId" root="$authorIdRoot"/>
+			<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+				<name use="L">
+					<given>$patient.getProviderFirstName($patient.authorId)</given>
+					<family>$patient.getProviderLastName($patient.authorId)</family>
+				</name>
+			</assignedPerson>
+		</assignedAuthor>
+	</author>
+	<!-- 
+	********************************************************
+	Custodian
+	********************************************************
+	-->
+	<custodian typeCode="CST">
+		<assignedCustodian classCode="ASSIGNED">
+			<representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+				<id extension="$custodian.id" root="$custodianIdRoot"/>
+				<name>$custodian.clinicName</name>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
+	<!--
+	********************************************************
+	Information Recipient
+	********************************************************
+	-->
+	<informationRecipient typeCode="PRCP">
+		<intendedRecipient classCode="ASSIGNED">
+			<id extension="ppump" root="DCCD2C68-389B-44C4-AD99-B8FB2DAD1493"/>
+			<e2e:code code="MD" codeSystem="2.16.840.1.113883.5.111" codeSystemName="RoleCode" displayName="Medical Doctor"/>
+## Addr, telecom, informationRecipient and receivedOrganization omitted - no source to populate from.
+		</intendedRecipient>
+	</informationRecipient>
+<!-- 
+********************************************************
+e-MS CDA Structured Body
+********************************************************
+-->
+	<component typeCode="COMP" contextConductionInd="true">
+		<structuredBody classCode="DOCBODY" moodCode="EVN">
+			<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+			<languageCode code="en-CA"/>
+<!--
+********************************************************
+Advance Directives
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.2"/>
+					<code code="42348-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Advance Directives"/>
+					<title>Advance Directives Section [without entries]</title>
+					<text>No Advance Directives</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Alerts
+********************************************************
+-->
+#if ( $patient.hasAlerts() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.3.1"/>
+					<code code="ALERTS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Alerts"/>
+					<title>Alerts [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $alert in $patient.getAlerts() )
+							<item>$!alert.note</item>
+#**##end
+						</list>
+					</text>
+#**##foreach ( $alert in $patient.getAlerts() )
+					<!--Alert Observation-->
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.2"/>
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$alert.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="OTHERALRT" displayName="Other Alert" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+							<text>$alert.note</text>
+#*    *##if ( !$alert.isArchived() )
+							<statusCode code="active"/>
+#*    *##else
+							<statusCode code="complete"/>
+#*    *##end
+							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $alert.getObservation_date())"/>
+							<e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal"/>
+						</observation>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.3"/>
+					<code code="ALERTS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Alerts"/>
+					<title>Alerts [without entries]</title>
+					<text>No Alerts</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Allergies and Intolerances - (Reaction List)
+********************************************************
+-->
+#if ( $patient.hasAllergies() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.4.1"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies andor Adverse Reactions Doc"/>
+					<title>Allergies and Intolerances (Reaction List) [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $allergy in $patient.getAllergies() )
+							<item>$!allergy.description</item>
+#**##end
+						</list>
+					</text>
+#**##foreach ( $allergy in $patient.getAllergies() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.3"/>
+						<!-- Allergy and Intolerance Observation -->
+						<act classCode="ACT" moodCode="EVN">
+							<id extension="$allergy.id" root="2.16.840.1.113883.3.1818.10.2.10.1"/>
+							<code nullFlavor="NA"/>
+#*    *##if ( !$allergy.archived )
+							<statusCode code="active"/>
+#*    *##else
+							<statusCode code="completed"/>
+#*    *##end
+							<effectiveTime value="$dateTool.format('yyyyMMdd', $allergy.getLastUpdateDate())"/>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+#*    *##if ( $allergy.typeCode == 8 || $allergy.typeCode == 10 || $allergy.typeCode == 11 || $allergy.typeCode == 13 )
+									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+#*    *##elseif ( $allergy.typeCode == 12 || $allergy.typeCode == 14 )
+									<code code="SUB" displayName="Substance" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+#*    *##else
+									<code nullFlavor="UNK"/>
+#*    *##end
+#*    *##if ( $allergy.getStartDate() )
+									<effectiveTime>
+										<low value="$dateTool.format('yyyyMMdd', $allergy.getStartDate())"/>
+									</effectiveTime>
+#*    *##else
+									<effectiveTime nullFlavor="UNK"/>
+#*    *##end
+									<participant typeCode="CSM" contextControlCode="OP">
+										<participantRole classCode="MANU">
+											<playingEntity classCode="MMAT" determinerCode="INSTANCE">
+#*    *##if ( $allergy.regionalIdentifier && $allergy.regionalIdentifier.length() > 0 )
+												<code code="$allergy.regionalIdentifier" displayName="$allergy.description" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN"/>
+#*    *##else
+												<code nullFlavor="NA"/>
+#*    *##end
+												<name>$allergy.description</name>
+											</playingEntity>
+										</participantRole>
+									</participant>
+									<!-- Allergen Group Observation -->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="ALLGRP" displayName="Allergen Group Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" />
+											<value xsi:type="CD" nullFlavor="NI" displayName="No Information"/>
+										</observation>
+									</entryRelationship>
+#*    *##if ( $allergy.lifeStage.equals("N") || $allergy.lifeStage.equals("I") || $allergy.lifeStage.equals("C") || $allergy.lifeStage.equals("T") || $allergy.lifeStage.equals("A") )
+									<!-- Lifestage at Onset -->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.12"/>
+										<!--Lifestage Observation-->
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="LIFEOBS" displayName="Lifestage Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+#*        *##if ( $allergy.lifeStage.equals("N") )
+											<value xsi:type="CD" code="133933007" displayName="Newborn" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##elseif ( $allergy.lifeStage.equals("I") )
+											<value xsi:type="CD" code="133931009" displayName="Infant" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##elseif ( $allergy.lifeStage.equals("C") )
+											<value xsi:type="CD" code="410601007" displayName="Child" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##elseif ( $allergy.lifeStage.equals("T") )
+											<value xsi:type="CD" code="133937008" displayName="Adolescent" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##else
+											<value xsi:type="CD" code="133936004" displayName="Adult" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##end
+										</observation>
+									</entryRelationship>
+#*    *##end
+#*    *##if ( $allergy.reaction )
+									<!-- Reaction -->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.23"/>
+										<!-- Reaction Observation -->
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="REACTOBS" displayName="Reaction Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+											<text>$!allergy.reaction</text>
+#*        *##if ( $allergy.getStartDate() )
+											<effectiveTime>
+												<low value="$dateTool.format('yyyyMMdd', $allergy.getStartDate())"/>
+											</effectiveTime>
+#*        *##else
+											<effectiveTime nullFlavor="UNK"/>
+#*        *##end
+											<value xsi:type="CD" nullFlavor="NI" displayName="No Information"/>
+#*        *##if ( $allergy.providerNo )
+											<!-- Author Participation -->
+											<author typeCode="AUT" contextControlCode="OP">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+												<!-- Author Participation -->
+#*            *##if ( $allergy.getEntryDate() )
+												<time value="$dateTool.format('yyyyMMdd', $allergy.getEntryDate())"/>
+#*            *##else
+												<time nullFlavor="UNK"/>
+#*            *##end
+												<assignedAuthor classCode="ASSIGNED">
+													<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+													<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+														<name use="L">
+															<given>$patient.getProviderFirstName($allergy.providerNo)</given>
+															<family>$patient.getProviderLastName($allergy.providerNo)</family>
+														</name>
+													</assignedPerson>
+												</assignedAuthor>
+											</author>
+#*        *##end
+											<!-- Reaction Severity -->
+											<entryRelationship typeCode="COMP" contextConductionInd="true">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.30"/>
+												<!-- Severity Observation -->
+												<observation classCode="OBS" moodCode="EVN">
+													<code code="SEV" displayName="Severity" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+#*        *##if ( $allergy.severityOfReaction == 1 )
+													<value xsi:type="CD" code="A2" displayName="Mild" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*        *##elseif ( $allergy.severityOfReaction == 2 )
+													<value xsi:type="CD" code="A3" displayName="Moderate" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*        *##elseif ( $allergy.severityOfReaction == 3 )
+													<value xsi:type="CD" code="A4" displayName="Severe" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*        *##else
+													<value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*        *##end
+												</observation>
+											</entryRelationship>
+										</observation>
+									</entryRelationship>
+#*    *##end
+									<!-- Reaction Severity -->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.30"/>
+										<!-- Severity Observation -->
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="SEV" displayName="Severity" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+#*    *##if ( $allergy.severityOfReaction == 1 )
+											<value xsi:type="CD" code="A2" displayName="Mild" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*    *##elseif ( $allergy.severityOfReaction == 2 )
+											<value xsi:type="CD" code="A3" displayName="Moderate" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*    *##elseif ( $allergy.severityOfReaction == 3 )
+											<value xsi:type="CD" code="A4" displayName="Severe" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*    *##else
+											<value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+#*    *##end
+										</observation>
+									</entryRelationship>
+									<!-- Allergy Clinical Status -->
+									<entryRelationship typeCode="SUBJ" contextConductionInd="true">
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="CLINSTAT" displayName="Allergy Clinical Status" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" />
+											<text>Confirmed</text>
+											<value xsi:type="CD" code="C" displayName="Confirmed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.2" codeSystemName="PITO AllergyClinicalStatus"/>
+										</observation>
+									</entryRelationship>
+								</observation>
+							</entryRelationship>
+						</act>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.4"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies andor Adverse Reactions Doc"/>
+					<title>Allergies and Intolerances (Reaction List) [without entries]</title>
+					<text>No Allergy Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Clinically Measured Observation
+********************************************************
+-->
+#if ( $patient.hasMeasurements() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.8.1"/>
+					<code code="CLINOBS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Clinically Measured Observations"/>
+					<title>Clinical Measured Observations [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $measurement in $patient.getMeasurements() )
+							<item>$!patient.getTypeDescription($measurement.type): $!measurement.dataField $!e2e.measurementUnitMap($measurement.type) ($!measurement.measuringInstruction)</item>
+#**##end
+						</list>
+					</text>
+#**##foreach ( $measurement in $patient.getMeasurements() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.7"/>
+						<!-- Clinically Measured Observations Organizer -->
+						<organizer classCode="CLUSTER" moodCode="EVN">
+							<id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="MEAOBSORG" displayName="Measured Observations Organizer" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+							<statusCode code="active"/>
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+#*    *##if ( $measurement.getCreateDate() )
+								<time value="$dateTool.format('yyyyMMddHHmmss', $measurement.getCreateDate())"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($measurement.providerNo)</given>
+											<family>$patient.getProviderLastName($measurement.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<component typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+									<id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+									<!-- OSCAR Type Code: $measurement.type -->
+#*    *##if ( $e2e.measurementCodeMap($measurement.type) )
+									<code code="$e2e.measurementCodeMap($measurement.type)" displayName="$patient.getTypeDescription($measurement.type)" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
+#*    *##else
+									<code nullFlavor="UNK"/>
+#*    *##end
+									<text>$patient.getTypeDescription($measurement.type) ($measurement.measuringInstruction)</text>
+									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
+#*    *##if ( $e2e.measurementUnitMap($measurement.type) )
+									<value xsi:type="PQ" value="$measurement.dataField" unit="$e2e.measurementUnitMap($measurement.type)"/>
+#*    *##else
+									<value xsi:type="ST">$measurement.dataField</value>
+#*    *##end
+								</observation>
+							</component>
+						</organizer>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.8"/>
+					<code code="CLINOBS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Clinically Measured Observations"/>
+					<title>Clinical Measured Observations [without entries]</title>
+					<text>No Clinical Measured Observations</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Encounter History and Notes
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.22"/>
+					<code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
+					<title>Encounter History and Notes [without entries]</title>
+					<text>No Encounter History</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Family History
+********************************************************
+-->
+#if ( $patient.hasFamilyHistory() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.13.1"/>
+					<code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
+					<title>Family History [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $family in $patient.getFamilyHistory() )
+							<item>$!family.note</item>
+#**##end
+						</list>
+					</text>
+#**##foreach ( $family in $patient.getFamilyHistory() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.10"/>
+						<!-- Family History Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$family.id" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
+							<code code="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code" displayName="Diagnosis"/>
+							<text>$family.note</text>
+							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $family.getObservation_date())"/>
+							<value xsi:type="CD" nullFlavor="NA"/>
+							<!--Relationship to the Patient-->
+							<subject typeCode="SBJ" contextControlCode="OP">
+								<relatedSubject classCode="PRS">
+#*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Relationship").isEmpty() )
+#*        *##if ( $e2e.prrCodeMap($patient.getCMNoteExtValue("$family.getId()", "Relationship")) )
+									<code code="$e2e.prrCodeMap($patient.getCMNoteExtValue("$family.getId()", "Relationship"))" displayName="$patient.getCMNoteExtValue("$family.getId()", "Relationship")" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
+#*        *##else
+									<code code="OTH" displayName="$patient.getCMNoteExtValue("$family.getId()", "Relationship")" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
+#*        *##end
+#*    *##else
+									<code code="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
+#*    *##end
+								</relatedSubject>
+							</subject>
+#*    *##if ( !$family.Billing_code.isEmpty() )
+							<!-- Diagnosis Billing Code -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
+								<!-- Secondary Code (ICD9) -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="BILLINGCODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="$patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")"/>
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Life Stage").isEmpty() )
+							<!-- Lifestage at Onset -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.12"/>
+								<!-- Lifestage Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="LIFEOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Lifestage Observation"/>
+#*        *##if ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "N")
+									<value xsi:type="CD" code="133933007" displayName="Newborn" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "I")
+									<value xsi:type="CD" code="133931009" displayName="Infant" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "C")
+									<value xsi:type="CD" code="410601007" displayName="Child" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##elseif ( $patient.getCMNoteExtValue("$family.getId()", "Life Stage") == "T")
+									<value xsi:type="CD" code="133937008" displayName="Adolescent" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##else
+									<value xsi:type="CD" code="133936004" displayName="Adult" codeSystem="2.16.840.1.113883.3.3068.10.8.19" codeSystemName="LifeStageObservationValue-CA-Pending"/>
+#*        *##end
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Age at Onset").isEmpty() )
+							<!--Age at Onset-->
+							<entryRelationship typeCode="COMP">
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="30972-4" displayName="Age at onset" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
+									<value xsi:type="INT" value="$patient.getCMNoteExtValue("$family.getId()", "Age at Onset")"/>
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( !$patient.getCMNoteExtValue("$family.getId()", "Treatment").isEmpty() )
+							<!-- Treatment Comment -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+								<!-- Comment Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="TRTNOTE" displayName="Treatment Note" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<text>$patient.getCMNoteExtValue("$family.getId()", "Treatment")</text>
+									<value xsi:type="CD" nullFlavor="NA"/>
+								</observation>
+							</entryRelationship>
+#*    *##end
+						</observation>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.13"/>
+					<code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
+					<title>Family History [without entries]</title>
+					<text>No Family History</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Immunization List
+********************************************************
+-->
+#if ( $patient.hasImmunizations() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.14.1"/>
+					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
+					<title>Immunizations List [with entries]</title>
+					<text>
+						<list>
+#**##foreach( $immunization in $patient.getImmunizations() )
+#*    *##if ( $immunization.isRefused() )
+							<item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Refused</item>
+#*    *##elseif ( $immunization.isIneligible() )
+							<item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Ineligible</item>
+#*    *##else
+							<item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Completed</item>
+#*    *##end
+#**##end
+						</list>
+					</text>
+#**##foreach( $immunization in $patient.getImmunizations() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
+						<!-- Immunization Observation -->
+#*    *##if ( $immunization.isRefused() || $immunization.isIneligible() )
+						<substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="true">
+#*    *##else
+						<substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
+#*    *##end
+							<id extension="$immunization.id" root="2.16.840.1.113883.3.1818.10.10.3"/>
+							<code code="IMMUNIZ" displayName="Immunization" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act Code"/>
+							<!-- Immunization Date -->
+							<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
+#*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "route").isEmpty() )
+							<routeCode code="$patient.getImmuExtValue("$immunization.getId()", "route")" displayName="$patient.getImmuExtValue("$immunization.getId()", "route")" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration"/>
+#*    *##end
+#*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "dose").isEmpty() )
+							<!-- Dose Quantity and Type-->
+							<!-- OSCAR Dose: $!patient.getImmuExtValue("$immunization.getId()", "dose") -->
+							<doseQuantity nullFlavor="UNK"/>
+#*    *##end
+							<!-- Immunization Product (i.e. DIN) -->
+							<consumable typeCode="CSM">
+								<manufacturedProduct classCode="MANU">
+									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+#*    *##if ( $e2e.preventionTypeMap($immunization.preventionType) )
+										<code code="$e2e.preventionTypeMap($immunization.preventionType)" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$immunization.preventionType"/>
+#*    *##else
+										<code nullFlavor="UNK"/>
+#*    *##end
+										<name>$immunization.preventionType</name>
+#*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "lot").isEmpty() )
+										<lotNumberText>$patient.getImmuExtValue("$immunization.getId()", "lot")</lotNumberText>
+#*    *##end
+									</manufacturedMaterial>
+								</manufacturedProduct>
+							</consumable>
+							<!-- Immunization Administration Provider -->
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+#*    *##if ( $immunization.getCreationDate() )
+								<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($immunization.providerNo)</given>
+											<family>$patient.getProviderLastName($immunization.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+#*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "location").isEmpty() )
+							<!-- Immunization Administration Location -->
+							<participant typeCode="LOC" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
+								<!-- Location Participation -->
+								<participantRole classCode="SDLOC">
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.22"/>
+									<playingEntity>
+										<name>$patient.getImmuExtValue("$immunization.getId()", "location")</name>
+									</playingEntity>
+								</participantRole>
+							</participant>
+#*    *##end
+#*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "comments").isEmpty() )
+							<!-- Immunization Administration Comments -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+								<!-- Comment Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="COMMENT" displayName="Comment Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<text>$patient.getImmuExtValue("$immunization.getId()", "comments")</text>
+									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getLastUpdateDate())"/>
+									<value xsi:type="ST">$patient.getImmuExtValue("$immunization.getId()", "comments")</value>
+									<!-- Comment Author -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+#*        *##if ( $immunization.getCreationDate() )
+										<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
+#*        *##else
+										<time nullFlavor="UNK"/>
+#*        *##end
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>$patient.getProviderFirstName($immunization.providerNo)</given>
+													<family>$patient.getProviderLastName($immunization.providerNo)</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+								</observation>         
+							</entryRelationship>
+#*    *##end
+#*    *##if ( $immunizaton.getNextDate() )
+							<!-- Next Immunization Date -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
+								<!-- Date Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunizaton.getNextDate())"/>
+								</observation>
+							</entryRelationship>
+#*    *##end
+#*    *##if ( ( $immunization.isRefused() || $immunization.isIneligible() ) && $patient.getImmuExtValue("$immunization.getId()", "neverReason") )
+							<!-- Immunization or Refusal Reason -->
+							<entryRelationship typeCode="RSON" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.24"/>
+								<!-- Reason Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<text>$patient.getImmuExtValue("$immunization.getId()", "neverReason")</text>
+									<value xsi:type="ST">$patient.getImmuExtValue("$immunization.getId()", "neverReason")</value>
+									<!-- Reason Author -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+#*        *##if ( $immunization.getCreationDate() )
+										<time value="$dateTool.format('yyyyMMdd', $immunization.getCreationDate())"/>
+#*        *##else
+										<time nullFlavor="UNK"/>
+#*        *##end
+										<assignedAuthor>
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>$patient.getProviderFirstName($immunization.providerNo)</given>
+													<family>$patient.getProviderLastName($immunization.providerNo)</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+								</observation>
+							</entryRelationship>
+#*    *##end
+						</substanceAdministration>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.14"/>
+					<code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
+					<title>Immunizations List [without entries]</title>
+					<text>No Immunization Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Investigative Procedure History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.15"/>
+					<code code="INVPROC" displayName="Investigative Procedure Section" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" />
+					<title>Investigative Procedure History (without entries)</title>
+					<text>No Investigative Procedure History</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Laboratory Results & Results
+********************************************************
+-->
+#if ( $patient.hasLabs() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
+					<code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
+					<title>Laboratory Results and Reports [with entries]</title>
+					<text>
+#**##foreach( $lab in $patient.getLabs() )
+#*    *##foreach( $labGroup in $lab.getGroup() )
+						<list>
+							<item>$!lab.hl7TextInfo.discipline	$!dateTool.format('MMM dd, yyyy', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))</item>
+#*        *##foreach( $labEntry in $labGroup.getMeasurement() )
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() )
+							<item>$!patient.getLabExtValue("$labEntry.id", "name"): $!patient.cleanString($labEntry.dataField) $!patient.getLabExtValue("$labEntry.id", "unit")</item>
+#*            *##else
+							<item>$!patient.getLabExtValue("$labEntry.id", "name"): $!patient.cleanString($labEntry.dataField)</item>
+#*            *##end
+#*        *##end
+						</list>
+#*    *##end
+#**##end
+					</text>
+#**##foreach( $lab in $patient.getLabs() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.2.16.1"/>
+						<!-- Laboratory Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$lab.hl7TextInfo.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code nullFlavor='UNK'/>
+#*    *##if ( $lab.hl7TextInfo.discipline )
+							<text>$!lab.hl7TextInfo.discipline</text>
+#*    *##end
+							<!-- Ordering Provider -->
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+#*    *##if ( $lab.hl7TextInfo.getObrDate() )
+								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name>$patient.cleanString($lab.hl7TextInfo.requestingProvider)</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<!-- Result Organizer -->
+#*    *##foreach( $labGroup in $lab.getGroup() )
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.26"/>
+								<!-- Result Organizer -->
+								<organizer classCode="BATTERY" moodCode="EVN">
+									<id extension="$labGroup.groupId" root="2.16.840.1.113883.3.1818.10.2.10.35"/>
+									<code nullFlavor='UNK'/>
+## This status code comes from entire lab report - doesn't represent just this battery group
+#*        *##if ( $lab.hl7TextInfo.reportStatus == "P" )
+									<statusCode code="preliminary"/>
+#*        *##elseif ( $lab.hl7TextInfo.reportStatus == "C" )
+									<statusCode code="corrected"/>
+#*        *##else
+									<statusCode code="final"/>
+#*        *##end
+#*        *##foreach( $labEntry in $labGroup.getMeasurement() )
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.25"/>
+										<!-- Result Component -->
+										<observation classCode="OBS" moodCode="EVN">
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "accession").isEmpty() )
+											<id extension="$patient.getLabExtValue("$labEntry.id", "accession")" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
+#*            *##else
+											<id nullFlavor='UNK'/>
+#*            *##end
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "identifier").isEmpty() )
+											<code code="$patient.cleanString($patient.getLabExtValue("$labEntry.id", "identifier"))" displayName="$patient.getLabExtValue("$labEntry.id", "name")" codeSystemName="LOINC"/>
+#*            *##else
+											<code nullFlavor='UNK'/>
+#*            *##end
+											<text>$patient.getLabExtValue("$labEntry.id", "name")</text>
+#*            *##if ( $patient.getLabExtValue("$labEntry.id", "olis_status") == "P" )
+											<statusCode code="preliminary"/>
+#*            *##elseif ( $patient.getLabExtValue("$labEntry.id", "olis_status") == "C" )
+											<statusCode code="corrected"/>
+#*            *##else
+											<statusCode code="final"/>
+#*            *##end
+#*            *##if ( $patient.getLabExtValue("$labEntry.id", "datetime") )
+											<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($patient.getLabExtValue("$labEntry.id", "datetime")))"/>
+#*            *##else
+											<effectiveTime nullFlavor="UNK"/>
+#*            *##end
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() && $patient.isNumeric($labEntry.dataField) )
+											<value xsi:type="PQ" value="$patient.cleanString($labEntry.dataField)" unit="$patient.getLabExtValue("$labEntry.id", "unit").replaceAll("\s","_")"/>
+#*            *##elseif ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() )
+											<value xsi:type="ST">$patient.cleanString($labEntry.dataField) $patient.getLabExtValue("$labEntry.id", "unit")</value>
+#*            *##else
+											<value xsi:type="ST">$patient.cleanString($labEntry.dataField)</value>
+#*            *##end
+#*            *##if ( $patient.getLabExtValue("$labEntry.id", "abnormal") == "A" )
+											<interpretationCode code="A"  displayName="Abnormal" codeSystem="2.16.840.1.113883.2.20.3.78" codeSystemName="ObservationInterpretation"/>
+#*            *##else
+											<interpretationCode code="N"  displayName="Normal" codeSystem="2.16.840.1.113883.2.20.3.78" codeSystemName="ObservationInterpretation"/>
+#*            *##end
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "labname").isEmpty() )
+											<!-- Resulting Organization -->
+											<performer typeCode="PRF">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.19"/>
+												<!-- Performer Participation -->
+#*                *##if ( $patient.getLabExtValue("$labEntry.id", "datetime") )
+												<time value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($patient.getLabExtValue("$labEntry.id", "datetime")))"/>
+#*                *##else
+												<time nullFlavor="UNK"/>
+#*                *##end
+												<assignedEntity>
+													<id extension="TBD" root="2.16.840.1.113883.3.40.2.11" assigningAuthorityName="BCMOH"/>
+													<representedOrganization classCode="ORG" determinerCode="INSTANCE">
+														<id extension="TBD" root="TBD"/>
+														<name>$patient.getLabExtValue("$labEntry.id", "labname")</name>
+													</representedOrganization>
+												</assignedEntity>
+											</performer>
+#*            *##end
+											<!--Specimen Collection Information -->
+											<entryRelationship typeCode="COMP">
+												<procedure classCode="PROC" moodCode="EVN">
+													<!-- specimen collection date -->
+													<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
+												</procedure>
+											</entryRelationship>
+#*            *##if ( !$labEntry.comments.isEmpty() )
+											<!-- Result Notes -->
+											<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.3"/>
+												<!-- Comment Observation -->
+												<observation classCode="OBS" moodCode="EVN">
+													<code code="COMMENT" displayName="Comment Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+													<value xsi:type="ST">$labEntry.comments</value>
+												</observation>
+											</entryRelationship>
+#*            *##end
+## Range is more general than Minimum/Maximum - OSCAR only populates Range if it can't determine a min/max
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "range").isEmpty() )
+											<referenceRange typeCode="REFV">
+												<observationRange classCode="OBS" moodCode="EVN.CRT">
+													<code code="N" displayName="Normal" codeSystem="2.16.840.1.113883.1.11.10206" codeSystemName="ObservationInterpretationNormality"/>
+													<text>$patient.cleanString($patient.getLabExtValue("$labEntry.id", "range"))</text>
+													<value xsi:type="ST">$patient.cleanString($patient.getLabExtValue("$labEntry.id", "range"))</value>
+												</observationRange>
+											</referenceRange>
+#*            *##elseif ( !$patient.getLabExtValue("$labEntry.id", "minimum").isEmpty() || !$patient.getLabExtValue("$labEntry.id", "maximum").isEmpty() )
+											<referenceRange typeCode="REFV">
+												<observationRange classCode="OBS" moodCode="EVN.CRT">
+													<code code="N" displayName="Normal" codeSystem="2.16.840.1.113883.1.11.10206" codeSystemName="ObservationInterpretationNormality"/>
+#*                *##if ( $patient.getLabExtValue("$labEntry.id", "minimum").isEmpty() )
+													<text>Normal Reference range is less than $!patient.getLabExtValue("$labEntry.id", "maximum")</text>
+#*                *##elseif ( $patient.getLabExtValue("$labEntry.id", "maximum").isEmpty() )
+													<text>Normal Reference range is greater than $patient.getLabExtValue("$!labEntry.id", "minimum")</text>
+#*                *##else
+													<text>Normal Reference range is between $patient.getLabExtValue("$!labEntry.id", "minimum") and $!patient.getLabExtValue("$labEntry.id", "maximum")</text>
+#*                *##end
+													<value xsi:type="IVL_REAL">
+#*                *##if ( !$patient.getLabExtValue("$labEntry.id", "minimum").isEmpty() )
+														<low value="$patient.getLabExtValue("$labEntry.id", "minimum")"/> 
+#*                *##end
+#*                *##if ( !$patient.getLabExtValue("$labEntry.id", "maximum").isEmpty() )
+														<high value="$patient.getLabExtValue("$labEntry.id", "maximum")"/> 
+#*                *##end
+													</value>
+												</observationRange>
+											</referenceRange>
+#*            *##else
+#*            *##end
+										</observation>
+									</component>
+#*        *##end
+								</organizer>
+							</entryRelationship>
+#*    *##end
+						</observation>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.16"/>
+					<code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
+					<title>Laboratory Results and Reports [without entries]</title>
+					<text>No Laboratory Report Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Medical History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.17"/>
+					<code code="11348-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Past Illness"/>
+					<title>Medical History (without entries)</title>
+					<text>No Medical History</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Medical Imaging History Results & Reports
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.18"/>
+					<code code="55115-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Requested imaging studies information"/>
+					<title>Medical Imaging Results and Reports (without entries)</title>
+					<text>No Medical Imaging Results and Reports</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Medications and Prescriptions - Medication List
+********************************************************
+-->
+#if ( $patient.hasMedications() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
+					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<title>Medications and Prescriptions - Medication List [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $med in $patient.getMedications() )
+#*    *##if( !$previousDin.equals($med.regionalIdentifier) || !$med.regionalIdentifier )
+#*        *##if ( $med.brandName )
+							<item>$!med.brandName $!med.freqCode $!med.duration $!med.durUnit</item>
+#*        *##else
+							<item>$!med.genericName $!med.dosage $!med.freqCode $!med.duration $!med.durUnit</item>
+#*        *##end
+#*        *##if( !$med.regionalIdentifier )
+#*            *##set( $previousDin = "null" )
+#*        *##else
+#*            *##set( $previousDin = $med.regionalIdentifier )
+#*        *##end
+#*    *##end
+#**##end
+						</list>
+					</text>
+#**##set( $previousDin = "0" )
+#**##foreach ( $med in $patient.getMedications() )
+#*    *##if( !$previousDin.equals("0") && ( !$previousDin.equals($med.regionalIdentifier) || !$med.regionalIdentifier ) )
+						</substanceAdministration>
+					</entry>
+#*    *##end
+#*    *##if( !$med.regionalIdentifier )
+#*        *##set( $previousDin = "null" )
+#*    *##end
+#*    *##if( !$previousDin.equals($med.regionalIdentifier) )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="BC20120201RXA-1452388BN" root="2.16.840.1.113883.3.1818.10.10.3" />
+							<code code="DRUG" displayName="Drug Therapy" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act
+Code"/>
+#*        *##if ( $med.longTerm || $patient.isActiveDrug($med.getEndDate()) )
+							<statusCode code="active"/>
+#*        *##else
+							<statusCode code="completed"/>
+#*        *##end
+							<!-- Medication -->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<!-- Medication Identification -->
+								<manufacturedProduct classCode="MANU">
+									<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+#*        *##if ( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() )
+#*            *##if ( $med.genericName )
+										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
+#*            *##else
+										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="Unknown"/>
+#*            *##end
+#*        *##end
+#*        *##if ( $med.atc && !$med.atc.isEmpty() )
+#*            *##if ( $med.genericName )
+										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
+#*            *##else
+										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
+#*            *##end
+#*        *##end
+#*        *##if ( !( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() ) && !( $med.atc && !$med.atc.isEmpty() ) )
+										<code nullFlavor="UNK"/>
+#*        *##end
+#*        *##if ( $med.genericName )
+										<name>$!med.genericName</name>
+#*        *##else
+										<name>$!med.brandName</name>
+#*        *##end
+#*        *##if ( $med.brandName )
+										<e2e:desc>$!med.brandName</e2e:desc>
+#*        *##end
+#*        *##if( $e2e.formCodeMap($med.drugForm) )
+										<e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*        *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
+										<e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*        *##end
+#*        *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
+										<e2e:ingredient classCode="INGR">
+#*            *##if ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() )
+											<e2e:quantity value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
+#*            *##end
+#*            *##if ( $med.genericName )
+											<e2e:ingredient classCode="MMAT" determinerCode="KIND">
+												<e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
+												<e2e:name>$med.genericName</e2e:name>
+											</e2e:ingredient>
+#*            *##else
+											<e2e:ingredient nullFlavor="UNK"/>
+#*            *##end
+										</e2e:ingredient>
+#*        *##end
+									</manufacturedLabeledDrug>
+								</manufacturedProduct>
+							</consumable>
+							<!-- Record Type -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.32"/>
+								<!-- Unbounded Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="UNBOUND" displayName="Unbound Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" />
+#*        *##if ( $med.longTerm )
+									<text>Long Term</text>
+#*        *##else
+									<text>Short Term</text>
+#*        *##end
+								</observation>
+							</entryRelationship>
+							<!-- Last Review Date -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
+								<!-- Date Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<effectiveTime value="$dateTool.format('yyyyMMdd', $med.getLastUpdateDate())"/>
+								</observation>
+							</entryRelationship>
+#*    *##end
+							<!-- Prescription Information -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.20" />
+								<!-- Medication Prescription Event-->
+								<substanceAdministration classCode="SBADM" moodCode="RQO">
+									<id extension="$med.id" root="2.16.840.1.113883.3.1818.10.10.3"/>
+									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+									<!-- Start/Stop Date -->
+									<effectiveTime xsi:type="IVL_TS" operator="I">
+										<low value="$dateTool.format('yyyyMMdd', $med.getRxDate())"/>
+										<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
+									</effectiveTime>
+									<consumable typeCode="CSM">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+										<!-- Medication Identification -->
+										<manufacturedProduct classCode="MANU">
+											<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+#*    *##if ( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() )
+#*        *##if ( $med.genericName )
+												<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
+#*        *##else
+												<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="Unknown"/>
+#*        *##end
+#*    *##end
+#*    *##if ( $med.atc && !$med.atc.isEmpty() )
+#*        *##if ( $med.genericName )
+												<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
+#*        *##else
+												<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
+#*        *##end
+#*    *##end
+#*    *##if ( !( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() ) && !( $med.atc && !$med.atc.isEmpty() ) )
+												<code nullFlavor="UNK"/>
+#*    *##end
+#*    *##if ( $med.genericName )
+												<name>$!med.genericName</name>
+#*    *##else
+												<name>$!med.brandName</name>
+#*    *##end
+#*    *##if ( $med.brandName )
+												<e2e:desc>$!med.brandName</e2e:desc>
+#*    *##end
+#*    *##if( $e2e.formCodeMap($med.drugForm) )
+												<e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*    *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
+												<e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*    *##end
+#*    *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
+												<e2e:ingredient classCode="INGR">
+#*        *##if ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() )
+													<e2e:quantity value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
+#*        *##end
+#*        *##if ( $med.genericName )
+													<e2e:ingredient classCode="MMAT" determinerCode="KIND">
+														<e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
+														<e2e:name>$med.genericName</e2e:name>
+													</e2e:ingredient>
+#*        *##else
+													<e2e:ingredient nullFlavor="UNK"/>
+#*        *##end
+												</e2e:ingredient>
+#*    *##end
+											</manufacturedLabeledDrug>
+										</manufacturedProduct>
+									</consumable>
+									<!-- Prescribing Provider -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+#*    *##if ( $med.getWrittenDate() )
+										<time value="$dateTool.format('yyyyMMdd', $med.getWrittenDate())"/>
+#*    *##else
+										<time nullFlavor="UNK"/>
+#*    *##end
+										<assignedAuthor classCode="ASSIGNED">
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>$patient.getProviderFirstName($med.providerNo)</given>
+													<family>$patient.getProviderLastName($med.providerNo)</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
+										<!-- Dose Observation -->
+										<substanceAdministration classCode="SBADM" moodCode="RQO">
+#*    *##if ( $patient.isNumeric($med.duration) && $med.duration != "0" && $med.durUnit )
+											<!-- Duration -->
+											<text>$!med.duration $!med.durUnit</text>
+#*    *##end
+											<!-- Frequency -->
+											<!-- OSCAR Frequency Code $!med.freqCode -->
+#*    *##if ( $med.freqCode.equalsIgnoreCase("BID") || $med.freqCode.equalsIgnoreCase("twice daily") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="2"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("TID") || $med.freqCode.equalsIgnoreCase("3x day") || $med.freqCode.equalsIgnoreCase("3x daily"))
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="3"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QID") || $med.freqCode.equalsIgnoreCase("4x day") || $med.freqCode.equalsIgnoreCase("4x daily"))
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="4"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1-2H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<period xsi:type="URG_PQ">
+													<low value="1" unit="h"/>
+													<high value="2" unit="h"/>
+												</period>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="2" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3-4H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<period xsi:type="URG_PQ">
+													<low value="3" unit="h"/>
+													<high value="4" unit="h"/>
+												</period>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q4H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="4" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q4-6H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<period xsi:type="URG_PQ">
+													<low value="4" unit="h"/>
+													<high value="6" unit="h"/>
+												</period>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q6H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="6" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q8H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="8" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q12H") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="12" unit="h"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("QAM") || $med.freqCode.equalsIgnoreCase("QPM") || $med.freqCode.equalsIgnoreCase("QHS") || $med.freqCode.equalsIgnoreCase("daily") || $med.freqCode.equalsIgnoreCase("once daily") || $med.freqCode.equalsIgnoreCase("OD") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="d"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("weekly") || $med.freqCode.equalsIgnoreCase("Q1Week") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="w"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q2Week") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="2" unit="w"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q1Month") || $med.freqCode.equalsIgnoreCase("monthly") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="1" unit="m"/>
+												</frequency>
+											</effectiveTime>
+#*    *##elseif ( $med.freqCode.equalsIgnoreCase("Q3Month") )
+											<effectiveTime xsi:type="PIVL_TS" institutionSpecified="true">
+												<frequency>
+													<numerator value="1"/>
+													<denominator value="3" unit="m"/>
+												</frequency>
+											</effectiveTime>
+#*    *##else
+											<effectiveTime nullFlavor="UNK"/>
+#*    *##end
+											<!-- Route -->
+#*    *##if ( $med.route && !$med.route.isEmpty() )
+											<routeCode code="$med.route" displayName="$med.route" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration"/>
+#*    *##end
+											<approachSiteCode nullFlavor="NA"/>
+											<!-- Dose -->
+## OSCAR stores min/max number by pill/unit count, not milligrams
+											<doseQuantity>
+												<low value="$med.takeMin"/>
+												<high value="$med.takeMax"/>
+											</doseQuantity>
+											<!-- Form -->
+#*    *##if( $e2e.formCodeMap($med.drugForm) )
+											<administrationUnitCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.1.11.14570" codeSystemName="AdministerableDrugForm"/>
+#*    *##else
+											<!-- OSCAR Form Code $!med.drugForm -->
+#*    *##end
+											<consumable typeCode="CSM">
+												<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+												<!-- Medication Identification -->
+												<manufacturedProduct classCode="MANU">
+													<manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+#*    *##if ( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() )
+#*        *##if ( $med.genericName )
+														<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
+#*        *##else
+														<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="Unknown"/>
+#*        *##end
+#*    *##end
+#*    *##if ( $med.atc && !$med.atc.isEmpty() )
+#*        *##if ( $med.genericName )
+														<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
+#*        *##else
+														<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
+#*        *##end
+#*    *##end
+#*    *##if ( !( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() ) && !( $med.atc && !$med.atc.isEmpty() ) )
+														<code nullFlavor="UNK"/>
+#*    *##end
+#*    *##if ( $med.genericName )
+														<name>$!med.genericName</name>
+#*    *##else
+														<name>$!med.brandName</name>
+#*    *##end
+#*    *##if ( $med.brandName )
+														<e2e:desc>$!med.brandName</e2e:desc>
+#*    *##end
+#*    *##if( $e2e.formCodeMap($med.drugForm) )
+														<e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*    *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
+														<e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
+#*    *##end
+#*    *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
+														<e2e:ingredient classCode="INGR">
+#*        *##if ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() )
+															<e2e:quantity value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
+#*        *##end
+#*        *##if ( $med.genericName )
+															<e2e:ingredient classCode="MMAT" determinerCode="KIND">
+																<e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
+																<e2e:name>$med.genericName</e2e:name>
+															</e2e:ingredient>
+#*        *##else
+															<e2e:ingredient nullFlavor="UNK"/>
+#*        *##end
+														</e2e:ingredient>
+#*    *##end
+													</manufacturedLabeledDrug>
+												</manufacturedProduct>
+											</consumable>
+										</substanceAdministration>
+									</entryRelationship>
+									<!-- PRN -->
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
+										<!-- Order Indicator-->
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="PRNIND" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" displayName="PRN Indicator"/>
+#*    *##if( $med.isPrn() )
+											<value xsi:type="BL" value="true"/>
+#*    *##else
+											<value xsi:type="BL" value="false"/>
+#*    *##end
+										</observation>
+									</entryRelationship>
+#*    *##if( $med.specialInstruction )
+									<!-- Instructions to Patient -->
+									<entryRelationship typeCode="SUBJ" inversionInd="true">
+										<observation classCode="OBS" moodCode="EVN">
+											<templateId root="2.16.840.1.113883.3.1818.10.4.35"/>
+											<!--Instruction Observation-->
+											<code code="INSTRUCT" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" displayName="Instructions"/>
+											<text>$med.specialInstruction</text>
+											<participant typeCode="PRCP" contextControlCode="OP">
+												<participantRole classCode="PAT"/>
+											</participant>
+										</observation>
+									</entryRelationship>
+#*    *##end
+								</substanceAdministration>
+							</entryRelationship>
+#*    *##if( !$med.regionalIdentifier )
+#*        *##set( $previousDin = "null" )
+#*    *##else
+#*        *##set( $previousDin = $med.regionalIdentifier )
+#*    *##end
+#**##end
+						</substanceAdministration>
+					</entry>
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
+					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<title>Medications and Prescriptions - Medication List [without entries]</title>
+					<text>No Medication Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Orders & Requests
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.20"/>
+					<code code="REQS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Problems list Reported"/>
+					<title>Orders and Requests (without entries)</title>
+					<text>No Orders and Requests</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Problems and Conditions - Problem List
+********************************************************
+-->
+#if ( $patient.hasProblems() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
+					<title>Problems and Conditions - Problem List [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $problem in $patient.getProblems() )
+							<item>$!patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND") (ICD9: $problem.getDxresearchCode())</item>
+#**##end
+						</list>
+					</text>
+#**##foreach ( $problem in $patient.getProblems() )
+#*    *##if ( $problem.codingSystem == "icd9" )
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
+						<!-- Problem List Observation -->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$problem.id" root="2.16.840.1.113883.3.1818.10.2.10.31"/>
+							<code code="DX" displayName="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+							<text>$patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")</text>
+#*        *##if ( $problem.status == "A" )
+							<statusCode code="active"/>
+#*        *##else
+							<statusCode code="completed"/>
+#*        *##end
+							<effectiveTime xsi:type="IVL_TS">
+								<low value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
+							</effectiveTime>
+							<value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
+							<!-- Diagnosing Provider -->
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+#*        *##if ( $problem.getUpdateDate() )
+								<time value="$dateTool.format('yyyyMMdd', $problem.getUpdateDate())"/>
+#*        *##else
+								<time nullFlavor="UNK"/>
+#*        *##end
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($demographic.providerNo)</given>
+											<family>$patient.getProviderLastName($demographic.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<!-- Diagnosis Billing Code -->
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
+								<!-- Secondary Code (ICD9) -->
+								<observation classCode="OBS" moodCode="EVN"> 
+									<code code="BILLINGCODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<value xsi:type="CD" code="$problem.getDxresearchCode()" displayName="$patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9"/>
+								</observation>
+							</entryRelationship>
+							<!-- Diagnosis Date -->
+							<entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
+								<!-- Date Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+									<effectiveTime value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
+								</observation>
+							</entryRelationship>
+						</observation>
+					</entry>
+#*    *##end
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
+					<title>Problems and Conditions - Problem List [without entries]</title>
+					<text>No Problem Entries</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Purpose
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.22"/>
+					<!-- Purpose Section -->
+					<code code="42349-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Reason For Referral"/>
+					<title>Purpose [without entries]</title>
+					<text>Purpose not defined</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Risk Factors
+********************************************************
+-->
+#if ( $patient.hasRiskFactorsandPersonalHistory() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.24.1"/>
+					<code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
+					<title>Risk Factors [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
+							<item>$!risk.note</item>
+#**##end
+						</list>
+					</text>
+#**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
+					<entry typeCode="COMP" contextConductionInd="true"> 
+						<templateId root="2.16.840.1.113883.3.1818.10.3.17"/>
+						<!-- Risk Factors Organizer -->
+						<organizer classCode="CLUSTER" moodCode="EVN">
+							<id extension="$risk.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+							<code code="80943009"  displayName="Risk factor (observable entity)" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
+#*    *##if ( !$risk.isArchived() )
+							<statusCode code="active"/>
+#*    *##else
+							<statusCode code="complete"/>
+#*    *##end
+							<!-- Observation Author -->
+							<author typeCode="AUT" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+								<!-- Author Participation -->
+#*    *##if ( $risk.getUpdate_date() )
+								<time value="$dateTool.format('yyyyMMdd', $risk.getUpdate_date())"/>
+#*    *##else
+								<time nullFlavor="UNK"/>
+#*    *##end
+								<assignedAuthor>
+									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($risk.providerNo)</given>
+											<family>$patient.getProviderLastName($risk.providerNo)</family>
+										</name>
+									</assignedPerson>
+								</assignedAuthor>
+							</author>
+							<!-- Component Observation -->
+							<component typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+									<id nullFlavor="NA"/>
+									<code nullFlavor="UNK"/>
+									<text>$risk.note</text>
+									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $risk.getObservation_date())"/>
+									<value xsi:type="BL" value="true"/>
+								</observation>
+							</component>
+						</organizer>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.24"/>
+					<code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
+					<title>Risk Factors [without entries]</title>
+					<text>No Risk Factors</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
+Surgical Procedure History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.25"/>
+					<code code="10167-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of surgical procedures"/>
+					<title>Care History [without entries]</title>
+					<text>No Care History</text>
+				</section>
+			</component>
+<!--
+********************************************************
+Treatment History
+********************************************************
+-->
+## TODO Populate with data from EMR
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.26"/>
+					<code code="62387-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Interventions "/>
+					<title>Treatment History [without entries]</title>
+					<text>No Treatment History</text>
+				</section>
+			</component>
+		</structuredBody>
+	</component>
+</ClinicalDocument>

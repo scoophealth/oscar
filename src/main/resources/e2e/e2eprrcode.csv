@@ -1,0 +1,79 @@
+AUNT	aunt
+BRO	Brother
+BROINLAW	brother-in-law
+CHLDADOPT	adopted child
+CHLDFOST	foster child
+CHLDINLAW	child in-law
+COUSN	cousin
+DAU	natural daughter
+DAUADOPT	adopted daughter
+DAUC	Daughter
+DAUFOST	foster daughter
+DAUINLAW	daughter in-law
+ECON	emergency contact
+FAMMEMB	Family Member
+CHILD	Child
+EXT	extended family member
+IMED	Immediate family
+PRN	Parent
+SIB	Sibling
+SIGOTHR	significant other
+DOMPART	domestic partner
+SPS	spouse
+FRND	unrelated friend
+FTH	Father
+FTHINLAW	father-in-law
+GGRFTH	great grandfather
+GGRMTH	great grandmother
+GGRPRN	great grandparent
+GRFTH	Grandfather
+GRMTH	Grandmother
+GRNDCHILD	grandchild
+GRNDDAU	granddaughter
+GRNDSON	grandson
+GRPRN	Grandparent
+GUARD	Guardian
+HBRO	half-brother
+HSIB	half-sibling
+HSIS	half-sister
+HUSB	husband
+MTH	Mother
+MTHINLAW	mother-in-law
+NBOR	neighbor
+NBRO	natural brother
+NCHILD	natural child
+NEPHEW	nephew
+NFTH	natural father
+NFTHF	natural father of fetus
+NIECE	niece
+NIENEPH	niece/nephew
+NMTH	natural mother
+NOK	next of kin
+NPRN	natural parent
+NSIB	natural sibling
+NSIS	natural sister
+POWATY	Power of attorney
+POWATYPR	Power of attorney-Personal
+POWATYPT	Power of attorney-Property
+PRNINLAW	parent in-law
+ROOM	Roomate
+SIBINLAW	sibling in-law
+SIS	Sister
+SISINLAW	sister-in-law
+SON	natural son
+SONADOPT	adopted son
+SONC	Son
+SONFOST	foster son
+SONINLAW	son in-law
+STPBRO	stepbrother
+STPCHLD	step child
+STPDAU	stepdaughter
+STPFTH	stepfather
+STPMTH	stepmother
+STPPRN	step parent
+STPSIB	step sibling
+STPSIS	stepsister
+STPSON	stepson
+SUBDM	substitute decision maker
+UNCLE	uncle
+WIFE	wife
