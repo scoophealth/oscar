@@ -30,6 +30,8 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.ProviderData;
 import org.springframework.stereotype.Repository;
 
+import oscar.util.ConversionUtils;
+
 @Repository
 public class ProviderDataDao extends AbstractDao<ProviderData> {
 
@@ -81,4 +83,13 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 
         return results;
     }
+
+	public Integer getLastId() {
+		Query query = entityManager.createQuery("SELECT p.id FROM ProviderData p ORDER BY CAST(p.id AS integer) ASC");
+		query.setMaxResults(1);
+		String result = (String ) query.getSingleResult();
+		if (result == null)
+			return 0;
+		return ConversionUtils.fromIntString(result);
+	}
 }

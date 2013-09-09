@@ -107,4 +107,98 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		Query query = entityManager.createNativeQuery(sqlCommand);
 		return (((Number) query.getSingleResult()).intValue());
 	}
+
+	/**
+	 * Creates new string builder containing the base query with the specified select and alias strings
+	 *
+	 * @param select
+	 * Select clause to be appended to the query. May be null
+	 * @param alias
+	 * Alias to be used for referencing the base entity class
+	 * @return
+	 * Returns the string buffer containing the base query
+	 */
+	protected StringBuilder getBaseQueryBuf(String select, String alias) {
+		StringBuilder buf = new StringBuilder();
+		if (select != null) {
+			buf.append(select);
+			buf.append(" ");
+		}
+		buf.append("FROM ");
+		buf.append(getModelClassName());
+		if (alias != null) buf.append(" AS ").append(alias).append(" ");
+		return buf;
+	}
+
+	public Class<T> getModelClass() {
+		return modelClass;
+	}
+
+	protected Query createQuery(String alias, String whereClause) {
+		return createQuery(null, alias, whereClause);
+	}
+
+	/**
+	 * Creates a query with the specified entity alias and where clause
+	 *
+	 * <p/>
+	 *
+	 * For example, invoking
+	 *
+	 * <pre>
+	 * createQuery("select entity.id" "entity", "entity.propertyName like :propertyValue");
+	 * </pre>
+	 *
+	 * would create query:
+	 *
+	 * <pre>
+	 * SELECT entity.id FROM ModelClass AS entity WHERE entity.propertyName like :propertyValue
+	 * </pre>
+	 *
+	 * @param select
+	 * Select clause to be included in the query
+	 * @param alias
+	 * Alias to be included in the query
+	 * @param whereClause
+	 * Where clause to be included in the query
+	 * @return
+	 * Returns the query
+	 */
+	protected Query createQuery(String select, String alias, String whereClause) {
+		StringBuilder buf = createQueryString(select, alias, whereClause);
+		return entityManager.createQuery(buf.toString());
+	}
+
+	/**
+	 * Creates query string for the specified alias and where clause
+	 *
+	 * @param select
+	 * Select clause
+	 * @param alias
+	 * Alias to be included in the query
+	 * @param whereClause
+	 * Where clause to be included in the query
+	 * @return
+	 * Returns the query string
+	 *
+	 * @see #createQuery(String, String)
+	 */
+	protected StringBuilder createQueryString(String select, String alias, String whereClause) {
+		StringBuilder buf = getBaseQueryBuf(select, alias);
+		if (whereClause != null && !whereClause.isEmpty()) {
+			buf.append("WHERE ");
+			buf.append(whereClause);
+		}
+		return buf;
+	}
+
+	/**
+	 * Gets name of the model class.
+	 *
+	 * @return
+	 * Returns the class name without package prefix
+	 */
+	protected String getModelClassName() {
+		return getModelClass().getSimpleName();
+	}
 }

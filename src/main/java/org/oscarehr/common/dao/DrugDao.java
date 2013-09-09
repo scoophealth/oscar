@@ -64,6 +64,10 @@ public class DrugDao extends AbstractDao<Drug> {
 		return (results);
 	}
 
+	public List<Drug> findByDemographicId(Integer demographicId) {
+		return findByDemographicId(demographicId, null);
+	}
+
 	public List<Drug> findByDemographicId(Integer demographicId, Boolean archived) {
 
 		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2");

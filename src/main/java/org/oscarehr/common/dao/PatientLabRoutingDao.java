@@ -81,4 +81,21 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
     	return q.getResultList();
     }
 
+	/**
+	 * Finds lab routings for the specified demographic and lab type
+	 *
+	 * @param demoNo
+	 * Demographic to find labs for
+	 * @param labType
+	 * Type of the lab to get routings for
+	 * @return
+	 * Returns the routings found.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PatientLabRouting> findByDemographicAndLabType(Integer demoNo, String labType) {
+		Query query = createQuery("r", "r.demographicNo = :demoNo AND r.labType = :labType");
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("labType", labType);
+		return query.getResultList();	
+	}
 }

@@ -70,7 +70,19 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		
 		return results;
 	}
-	
+
+	public List<Measurement> findByDemographicNo(Integer demographicNo) {
+		String sqlCommand = "select x from Measurement x where x.demographicId = ?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicNo);
+
+		@SuppressWarnings("unchecked")
+        List<Measurement> results = query.getResultList();
+
+		return results;
+	}
+
 	public List<Measurement> findByType(Integer demographicId, String type) {
 		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type = ?2 order by x.dateObserved desc";
 		
