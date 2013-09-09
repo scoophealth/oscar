@@ -95,5 +95,4 @@
 			<ref bean="authenticationInWSS4JInterceptor"/>
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
-
 </beans>

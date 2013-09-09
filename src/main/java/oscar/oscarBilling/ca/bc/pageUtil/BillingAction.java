@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.billing.Clinicaid.util.ClinicaidCommunication;
 
 import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines;
@@ -60,6 +61,7 @@ public final class BillingAction extends Action {
     String encounter = request.getAttribute("encounter") != null ?
         (String) request.getAttribute("encounter") : "";
     String region = request.getParameter("billRegion");
+
     if ("ON".equals(region)) {
       String newURL = mapping.findForward("ON").getPath();
       newURL = newURL + "?" + request.getQueryString();
@@ -67,6 +69,28 @@ public final class BillingAction extends Action {
       ON.setPath(newURL);
       ON.setRedirect(true);
       return ON;
+    }
+	else if ("CLINICAID".equals(region)) {
+
+	  ClinicaidCommunication clinicaid_communicator 
+		  = new ClinicaidCommunication();
+
+	  String action = "";
+	  if( request.getParameter("action") != null) {
+		  action = request.getParameter("action");
+	  }
+	  else {
+		  action = "create_invoice";
+	  }
+
+	  String clinicaidURL = clinicaid_communicator.buildClinicaidURL(request, action);
+      String newURL = mapping.findForward("CLINICAID").getPath();
+      newURL = newURL + "?" + request.getQueryString();
+      ActionForward Clinicaid = new ActionForward();
+      Clinicaid.setPath(clinicaidURL);
+
+      Clinicaid.setRedirect(true);
+      return Clinicaid;
     }
     else {
       BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
