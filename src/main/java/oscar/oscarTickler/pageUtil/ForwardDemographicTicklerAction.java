@@ -48,7 +48,7 @@ public class ForwardDemographicTicklerAction extends Action {
     
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
        String demoNo = request.getParameter("demographic_no");
-       if ( demoNo != null ){
+       if ( demoNo != null  && new Integer(demoNo) >= 0){
           Hashtable h = DemographicNameAgeString.getInstance().getNameAgeSexHashtable(demoNo);
           request.setAttribute("demographic_no", demoNo);
           request.setAttribute("demoName", ""+h.get("lastName")+", "+h.get("firstName"));
