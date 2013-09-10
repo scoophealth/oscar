@@ -707,6 +707,9 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewPatientNameLength');return false;"><bean:message key="provider.btnEditSetPatientNameLength"/></a></td>
       </tr>
+       <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../admin/displayDocumentDescriptionTemplate.jsp');return false;"><bean:message key="provider.btnSetDocumentDescriptionTemplate"/></a></td>
+      </tr>
 	  <tr>
           <td align="center"><a href=# onClick ="popupPage(500,900,'clients.jsp');return false;"><bean:message key="provider.btnEditClients"/></a></td>
       </tr>
