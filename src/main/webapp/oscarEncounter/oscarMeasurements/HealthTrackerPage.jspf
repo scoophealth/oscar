@@ -103,12 +103,14 @@
     int numElementsToShow = 6;
     Date sdate = null;
     Date edate = null;
-    /*if ( request.getParameter("numEle") != null ){
+    
+    if (request.getParameter("numEle") != null ){
         try{
             numElementsToShow = Integer.parseInt(request.getParameter("numEle"));
         }catch(Exception e){}
     }
-
+	
+    
     if (request.getParameter("sdate") != null){
         try{
            sdate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("sdate"));
@@ -119,7 +121,7 @@
         try{
            edate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("edate"));
         }catch(Exception e){edate = null;}
-    }*/
+    }
 
 
     long startTimeToGetP = System.currentTimeMillis();
@@ -382,12 +384,19 @@ color:#bd362f;
     outline: 0 none !important;
 }
 
+.print{display:none;}
+
 @media (min-width: 768px) and (max-width: 979px) { 
 #tracker-bar{position:static}
 }
 
 @media (max-width: 768px) { 
 #tracker-bar{position:static;}
+}
+
+@media print{
+.DoNotPrint{display: none}
+.print{display:block}
 }
 </style>
 		
@@ -461,17 +470,17 @@ color:#bd362f;
     
    function loadDifferentElements(){
        //console.log("hapy");
-        var numEle = $('numEle').value;
-        var sdate = $('flowsheetStartDate').value;
-        var edate = $('flowsheetEndDate').value;
-        if( !numEle.blank()){
-            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+numEle;
-            //console.log("one");
-        }else if (!sdate.blank() && !edate.blank()){
-            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
+       
+        
+	    var sdate = $('#flowsheetStartDate').val();
+        var edate = $('#flowsheetEndDate').val();
+        
+      
+      if (sdate && edate){
+            window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
             //console.log("two");
         }else{
-            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';
+            window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>';
         }
 
     }
@@ -617,7 +626,7 @@ function fsPopup(width,height,url,window) {
 
 <%@ include file="/share/templates/patient.jspf"%>
 
-<div id="tracker-bar" class="container-fluid navbar-inner">
+<div id="tracker-bar" class="container-fluid navbar-inner DoNotPrint">
 
    		<div class="span12" style="padding-left:0px;margin-left:0px">
 <%
@@ -745,8 +754,7 @@ function fsPopup(width,height,url,window) {
     });
 </script> 
 
-
-	 
+ 
     <div id="dxAlert" class="alert">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
@@ -786,8 +794,6 @@ function fsPopup(width,height,url,window) {
 			
 	</div>
 	
-	
-	
 <h4 style="display:inline;"><%=flowSheet%></h4>
    
 <!-- Modal -->
@@ -813,8 +819,7 @@ function fsPopup(width,height,url,window) {
 			<%		
 			}	
 			%>
-               
-          
+       
 </div>
 <div class="modal-footer">
 <input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Continue">
@@ -875,14 +880,20 @@ function fsPopup(width,height,url,window) {
 <%if(isMeasurements){%>
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 		
-		<span style="padding-left:10px;" id="expand-all">
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
+		<span class="DoNotPrint" style="padding-left:10px;" id="edit-flowsheet">
+		<i class="icon-pencil"></i> <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" title="Edit Flowsheet">Edit</a>   
+		</span>
+		</security:oscarSec>
+		
+		<span class="DoNotPrint" style="padding-left:10px;" id="expand-all">
 		<i class="icon-plus-sign"></i> 
-		<a class="DoNotPrint" id="expand_all" href="javascript:void(0)" TITLE="<bean:message key='global.expandall' />"><bean:message key="global.expandall" /></a>
+		<a id="expand_all" href="javascript:void(0)" TITLE="<bean:message key='global.expandall' />"><bean:message key="global.expandall" /></a>
 		</span>
 		
-		<span style="padding-left:10px;display:none" id="collapse-all" >
+		<span class="DoNotPrint" style="padding-left:10px;display:none" id="collapse-all" >
 		<i class="icon-minus-sign"></i>
-		<a class="DoNotPrint" id="collapse_all" href="javascript:void(0)" TITLE="<bean:message key='global.collapseall' />"><bean:message key="global.collapseall" /></a>
+		<a id="collapse_all" href="javascript:void(0)" TITLE="<bean:message key='global.collapseall' />"><bean:message key="global.collapseall" /></a>
 		</span>
 		
 		<!-- 
@@ -892,9 +903,9 @@ function fsPopup(width,height,url,window) {
 		</span>
 		-->
 		<%if (recList.size() > 0){ %>
-		<span style="padding-left:10px;">
+		<span class="DoNotPrint" style="padding-left:10px;">
 		<i id="plus-overdue" class="icon-plus-sign"></i> <i id="minus-overdue" class="icon-minus-sign" style="display:none"></i>
-		<a class="DoNotPrint" href="javascript:void(0)" id="add_overdue" TITLE="Add all overdue measurements">
+		<a href="javascript:void(0)" id="add_overdue" TITLE="Add all overdue measurements">
 		<bean:message key="oscarencounter.templateflowsheet.addoverdue" /></a>
 		</span>
 		<%}%>
@@ -903,27 +914,71 @@ function fsPopup(width,height,url,window) {
 		 if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){
 		%>
 		
-		<span style="padding-left:10px;" id="add-renal">
+		<span class="DoNotPrint" style="padding-left:10px;" id="add-renal">
 		<i id="plus-renal" class="icon-plus-sign"></i> <i id="minus-renal" class="icon-minus-sign" style="display:none"></i>
-		<a class="DoNotPrint" href="javascript:void(0)" id="add_renal" TITLE="Add Renal">
+		<a href="javascript:void(0)" id="add_renal" TITLE="Add Renal">
 		Add Renal</a>
 		</span>
 	 	<%} }%>
-	 	
+	
+	<!--  	
+	 	<span class="DoNotPrint" style="padding-left:10px;" id="flowsheet-print">
+	 	<i class="icon-print"></i> 
+	 	<a href="javascript:void(0)" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet" onclick="javascript:window.print()">Print</a>
+	 	</span>
+	--> 	
 		<!-- 
 		<span>
 			<a class="DoNotPrint" href="#"  title="Tracker Graph">Tracker Graph</a>
 		</span>
-				
-		<span>
-			<a class="DoNotPrint" href="#"  title="Search">Filter Results</a>
-		</span>
-		
-		<span>
-			<a class="DoNotPrint" href="#"  title="Print Flowsheet">Print</a> 
-		</span>
 		-->
 		
+		<span class="DoNotPrint">
+		<br>
+		<%
+		String numDisplay="0";
+		
+		if(request.getParameter("numEle")!=null){
+			numDisplay=request.getParameter("numEle");
+		}
+		%>
+
+	 	Display: <select name="numEleSel" id="numEle" style="width:120px">
+	 	<option value="All">All</option>
+	 	<option value="1" <%if(numDisplay.equals("1")){out.print("selected");} %>>Last 1</option>
+	 	<option value="2" <%if(numDisplay.equals("2")){out.print("selected");} %>>Last 2</option>
+	 	<option value="3" <%if(numDisplay.equals("3")){out.print("selected");} %>>Last 3</option>
+	 	<option value="4" <%if(numDisplay.equals("4")){out.print("selected");} %>>Last 4</option>
+	 	<option value="5" <%if(numDisplay.equals("5")){out.print("selected");} %>>Last 5</option>
+	 	<option value="outOfRange" <%if(request.getParameter("show")!=null){out.print("selected");} %>>Out of Range</option>
+	 	<option value="dateRange" <%if(request.getParameter("sdate")!=null){out.print("selected");} %>>Date Range</option>
+	 	</select>
+	 	
+		               		
+                    <!-- #Of Elements <input type="text" size="3" id="numEle"/>-->
+					<span id="date-filter" style="display:<%if(request.getParameter("sdate")!=null){out.print("inline-block");}else{out.print("none");} %>">
+                    Start:
+					<div class="input-append date" id="dp-flowsheetStartDate" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
+					<input style="width:90px" name="flowsheetStartDate" id="flowsheetStartDate" size="16" type="text" value="<%if(sdate!=null){out.print(request.getParameter("sdate"));}%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly>
+							<span class="add-on"><i class="icon-calendar"></i></span>
+					</div>
+	 
+                    End:
+                    <div class="input-append date" id="dp-flowsheetEndDate" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
+					<input  style="width:90px" name="flowsheetEndDate"  id="flowsheetEndDate" size="16" type="text" value="<%if(edate!=null){out.print(request.getParameter("edate"));}%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly>
+							<span class="add-on"><i class="icon-calendar"></i></span>
+					</div>
+					
+					<input type="button" class="btn" value="go" style="margin-bottom:10px" onclick="javascript: loadDifferentElements()"/>
+                    </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    </span>
 		</security:oscarSec>
 <%} //isMeasurements %>
 		
@@ -1155,9 +1210,11 @@ function fsPopup(width,height,url,window) {
       <div class="carousel-inner">
     <%  int k = 0;
     	int setx = 0;
+    	if(numElementsToShow>6){numElementsToShow=6;}
+    	int num = numElementsToShow;
+    	
         for (EctMeasurementsDataBean mdb:alist){
-            k++;
-            setx++;
+
             mFlowsheet.runRulesForMeasurement(mdb);
             Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
             hdata.put("age",mdb.getDataField());
@@ -1173,7 +1230,7 @@ function fsPopup(width,height,url,window) {
             }
             String hider = "";
 
-            int num =numElementsToShow;
+            
             
             /*if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
@@ -1196,22 +1253,34 @@ function fsPopup(width,height,url,window) {
                 indText="<font color='"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"' size='3'>"+indText+"</font>";
             }
 
-       /*     if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
+        /*
+            if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
                 hider = "style=\"display:none;\"";
-            } */
+            }*/
             
+	//if(sdate != null && edate != null){
+    Date itDate = mdb.getDateObservedAsDate();
             
+	if ( (sdate != null && edate != null) && (itDate.before(sdate) || itDate.after(edate)) ){
+	                    //do nothing here
+
+    } else if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
+			//do nothing 
+	}else{
+            
+	k++;
+	setx++;
+                
 	out.print("<!-- setx:"+ setx +" -->");
     if(setx==1){ out.print("<div class='item active'>"); 
-    } else if(setx==7){
+    } else if(setx==num+1){
     	setx=1;//start a new set
     	out.print("<div class='item'>");  
     }
     
     %>
-     
       
-    <div class="preventionProcedure"  
+    <div class="preventionProcedure" 
     <%if(mdb.getRemoteFacility() == null){ %>
     style="cursor: hand; cursor: pointer;"
     href="#deleteModal" role="button" data-toggle="modal"
@@ -1219,13 +1288,13 @@ function fsPopup(width,height,url,window) {
     <%}%> >
 	<input type="hidden" id="<%=hdata.get("id")%>-comment-html" value="<%=com%>">
 
-<span rel="popover" data-container="body" data-html="true" data-content="Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>"  data-trigger="hover">     
-	<p style="line-height:90%;font-size:18px"  ><%=hdata.get("age")%></p>
-	
-	<span style="line-height:60%;font-size:10px;"><%=hdata.get("prevention_date")%>&nbsp;
-	<i title="<%=mdb.getNumMonthSinceObserved()%> Months since last observed."><%=mdb.getNumMonthSinceObserved()%>M</i>
-	</span> 
-</span>
+		<span rel="popover" data-container="body" data-html="true" data-content="Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>"  data-trigger="hover">     
+			<p style="line-height:90%;font-size:18px"  ><%=hdata.get("age")%></p>
+			
+			<span style="line-height:60%;font-size:10px;"><%=hdata.get("prevention_date")%>&nbsp;
+			<i title="<%=mdb.getNumMonthSinceObserved()%> Months since last observed."><%=mdb.getNumMonthSinceObserved()%>M</i>
+			</span> 
+		</span>
 
             <%if (comb) {%>
              <a  rel="tooltip" title="<b>Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><i class="icon-comment" ></i></a>
@@ -1237,7 +1306,9 @@ function fsPopup(width,height,url,window) {
         <p width="16px" <%=indColour%> ></p>
         <%=indText%>
     </div><!-- prevention procedure -->
-   <%if(setx==6){ out.print("</div> <!--item split -->");  } //splitting for carousel effect%> 
+    <%} %>
+    
+   <%if(setx==num){ out.print("</div> <!--item split -->");  } //splitting for carousel effect%> 
   
     <%}%>
     
@@ -1251,11 +1322,11 @@ function fsPopup(width,height,url,window) {
 </div><!-- prevention procedure --> 
 <%}%> 
  
-      <%if(setx<6){ out.print("</div> <!--end of items-->"); }%>
+      <%if(setx<num){ out.print("</div> <!--end of items-->"); }%>
       
 </div><!-- carousel-inner -->
 
-<%if(k>6){ %>
+<%if(k>num){ %>
     <a class="carousel-control left" href="#myCarousel<%=measure%>" data-slide="prev" id="prev_<%=measure%>" style="display:none;margin-left:-35px">&lsaquo;</a>
     <a class="carousel-control right" href="#myCarousel<%=measure%>" data-slide="next" style="display:none;margin-right:-35px" title="Click to see more values">&rsaquo;</a>
 <%}else{%> 
@@ -1398,7 +1469,7 @@ function createAddAll(d,t){
 </div>
 		    
 <div class="span4" id="right-side">
-  <div class="tabbable">
+  <div class="tabbable DoNotPrint">
            <ul class="nav nav-tabs">
              <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
              <li><a href="#tab2" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Allergy'/></a></li>
@@ -1531,7 +1602,7 @@ function createAddAll(d,t){
  if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){
  %>
  <!-- renal  start-->
-   <div class="tabbable">
+   <div class="tabbable DoNotPrint">
            <ul class="nav nav-tabs">
              <li class="active"><a href="#ckd" data-toggle="tab" >Renal</a></li>
            </ul>
@@ -1558,12 +1629,12 @@ function createAddAll(d,t){
  <%if(temp.toUpperCase().equals("PAIN")){ %>
  <!-- pain  start-->
    
-           <ul class="nav nav-tabs">
+           <ul class="nav nav-tabs DoNotPrint">
               <li class="active"><a href="#toolkit"><%=temp.toUpperCase() %> Toolkit</a></li>
            </ul>
                <div id="toolkit">   
     
-    <div class="tabbable">           
+    <div class="tabbable DoNotPrint">           
     <ul class="nav nav-pills">
     	<li class="active"><a href="#completed" data-toggle="tab" title="forms completed in the past"><bean:message key="global.completed" /></a></li>
     	<li><a href="#templates" data-toggle="tab" title="new forms to be completed"><bean:message key="global.templates" /></a></li>
@@ -1633,7 +1704,7 @@ function createAddAll(d,t){
 
  <%if(mFlowsheet.getTopHTMLStream().length()>1){ %>
  <!-- TopHTMLStream  start-->
-   <div class="tabbable">
+   <div class="tabbable DoNotPrint">
            <ul class="nav nav-tabs">
               <li class="active"><a href="#TopHTMLStream" data-toggle="tab">Other</a></li>
            </ul>
@@ -1654,7 +1725,7 @@ function createAddAll(d,t){
     </div>
 
 <%if(isMeasurements){ %>
-<div style="float:left;margin-left:520px;padding-top:50px;height:70px">
+<div class="DoNotPrint" style="float:left;margin-left:520px;padding-top:50px;height:70px">
 	<!-- this will have to be visible to user -->
 		    <a href="#HealthTracker" style="padding-right:10px"><i class="icon-arrow-up"></i>Top</a> <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
 </div>
@@ -1697,6 +1768,20 @@ $(document).ready(function () {
 
     });
 
+    $("#numEle").change(function(){
+		var v=$(this).val();
+		
+		  if(v=="All"){
+	          window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>';  
+		  }else if (v=="outOfRange"){
+			  window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&show='+v;
+		  }else if(v=="dateRange"){
+			  $("#date-filter").toggle();
+		  }else{
+			  window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+v;
+		  } 
+    });    
+    
     $("#deleteButton").click(function(){
         var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/DeleteData2.do";
         var deletevalue = "id="+$("#deleteId").val()+"&deleteCheckbox="+$("#deleteCheck").val();
