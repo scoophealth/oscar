@@ -155,6 +155,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
 		rs.setAvailHourB(scheduleRscheduleBean.avail_hourB);
 		rs.setAvailHour(scheduleRscheduleBean.avail_hour);
 		rs.setCreator(scheduleRscheduleBean.creator);
+		rs.setStatus(scheduleRscheduleBean.active);
 		rScheduleDao.merge(rs);
 	}
   }
