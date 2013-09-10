@@ -60,7 +60,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetCondition;
 public class FlowSheetCustomAction extends DispatchAction {
     private static final Logger logger = MiscUtils.getLogger();
 
-    private FlowSheetCustomizationDao flowSheetCustomizationDao;
+    private FlowSheetCustomizationDao flowSheetCustomizationDao =  (FlowSheetCustomizationDao) SpringUtils.getBean("flowSheetCustomizationDao");
     private FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
 
     public void setFlowSheetCustomizationDao(FlowSheetCustomizationDao flowSheetCustomizationDao) {
@@ -100,18 +100,22 @@ public class FlowSheetCustomAction extends DispatchAction {
 
             @SuppressWarnings("unchecked")
             Enumeration<String> en = request.getParameterNames();
-
+                        
             List<Recommendation> ds = new ArrayList<Recommendation>();
             while (en.hasMoreElements()) {
                 String s = en.nextElement();
                 if (s.startsWith("monthrange")) {
                     String extrachar = s.replaceAll("monthrange", "").trim();
                     logger.debug("EXTRA CAH " + extrachar);
+                    
+                    if(request.getParameter("monthrange" + extrachar) != null){
                     String mRange = request.getParameter("monthrange" + extrachar);
                     String strn = request.getParameter("strength" + extrachar);
                     String dsText = request.getParameter("text" + extrachar);
+                                        
                     if (!mRange.trim().equals("")){
                        ds.add(new Recommendation("" + h.get("measurement_type"), mRange, strn, dsText));
+                    }
                     }
                 }
             }
