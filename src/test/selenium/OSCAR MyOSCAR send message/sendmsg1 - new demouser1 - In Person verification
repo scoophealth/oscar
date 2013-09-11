@@ -179,7 +179,7 @@
 <tr>
 	<td>waitForPopUp</td>
 	<td>Encounter</td>
-	<td>15000</td>
+	<td></td>
 </tr>
 <tr>
 	<td>selectWindow</td>
@@ -239,7 +239,7 @@
 <tr>
 	<td>waitForPopUp</td>
 	<td>Encounter</td>
-	<td>15000</td>
+	<td>30000</td>
 </tr>
 <tr>
 	<td>selectWindow</td>
