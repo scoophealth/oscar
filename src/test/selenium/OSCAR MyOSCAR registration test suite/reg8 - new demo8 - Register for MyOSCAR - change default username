@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/" />
-<title>Reg4 - new demo - Register for MyOSCAR - yes provider - yes msg</title>
+<title>Reg6 - new demo6 - Register for MyOSCAR - change default username</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Reg4 - new demo - Register for MyOSCAR - yes provider - yes msg</td></tr>
+<tr><td rowspan="1" colspan="3">Reg6 - new demo6 - Register for MyOSCAR - change default username</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -94,7 +94,7 @@
 <tr>
 	<td>type</td>
 	<td>name=keyword</td>
-	<td>demographic4</td>
+	<td>demographic8</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -109,12 +109,12 @@
 <tr>
 	<td>type</td>
 	<td>id=last_name</td>
-	<td>demographic4</td>
+	<td>demographic8</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=first_name</td>
-	<td>test4</td>
+	<td>test8</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -124,7 +124,7 @@
 <tr>
 	<td>type</td>
 	<td>id=year_of_birth</td>
-	<td>1974</td>
+	<td>1978</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -157,14 +157,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>name=enable_primary_relation_45</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>name=reverse_relation_45</td>
-	<td></td>
+	<td>type</td>
+	<td>id=username</td>
+	<td>new_username</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>

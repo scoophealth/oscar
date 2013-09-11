@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/" />
-<title>Reg10 - new demo10 -  Register for MyOSCAR - all fields entered</title>
+<title>Reg5 - new demo5 - Register for MyOSCAR - change default pass</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Reg10 - new demo10 -  Register for MyOSCAR - all fields entered</td></tr>
+<tr><td rowspan="1" colspan="3">Reg5 - new demo5 - Register for MyOSCAR - change default pass</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -94,7 +94,7 @@
 <tr>
 	<td>type</td>
 	<td>name=keyword</td>
-	<td>demographic10</td>
+	<td>demographic7</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -109,132 +109,22 @@
 <tr>
 	<td>type</td>
 	<td>id=last_name</td>
-	<td>demographic10</td>
+	<td>demographic7</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=first_name</td>
-	<td>test10</td>
+	<td>test7</td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>name=title</td>
-	<td>label=MRS</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>name=official_lang</td>
-	<td>French</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>name=spoken_lang</td>
-	<td>Hungarian</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=address</td>
-	<td>250 Sussex Drive</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=city</td>
-	<td>Vancouver</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=postal</td>
-	<td>L3L2B2</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=phone</td>
-	<td>613 222 4444</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=hPhoneExt</td>
-	<td>223</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=phone2</td>
-	<td>613 333 5555</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=wPhoneExt</td>
-	<td>332</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=cellphone</td>
-	<td>613 555 2542</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>name=newsletter</td>
-	<td>Electronic</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=email</td>
-	<td>test10.demographic10@gmail.com</td>
+	<td>label=MR</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=year_of_birth</td>
-	<td>1980</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=hin</td>
-	<td>2222222222</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=ver</td>
-	<td>ON</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=eff_date_year</td>
-	<td>1980</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=eff_date_month</td>
-	<td>06</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=eff_date_date</td>
-	<td>15</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=hc_renew_date_year</td>
-	<td>1981</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=hc_renew_date_month</td>
-	<td>06</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=hc_renew_date_date</td>
-	<td>15</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=sin</td>
-	<td>500 666 222</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=cytolNum</td>
-	<td>123456923</td>
+	<td>1977</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -267,14 +157,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>name=enable_primary_relation_45</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>name=reverse_relation_45</td>
-	<td></td>
+	<td>type</td>
+	<td>id=password</td>
+	<td>new_password</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
