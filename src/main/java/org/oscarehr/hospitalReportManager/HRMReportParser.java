@@ -147,7 +147,7 @@ public class HRMReportParser {
 				Boolean routeSuccess = HRMReportParser.routeReportToProvider(report, document.getId());
 				if (!routeSuccess) {
 					// Add the provider name to the list of unidentified providers for this report
-					document.setUnmatchedProviders((document.getUnmatchedProviders() != null ? document.getUnmatchedProviders() : "") + "|" + report.getDeliverToUserIdLastName() + ", " + report.getDeliverToUserIdFirstName() + " (" + report.getDeliverToUserId() + ")");
+					document.setUnmatchedProviders((document.getUnmatchedProviders() != null ? document.getUnmatchedProviders() : "") + "|" + ((report.getDeliverToUserIdLastName()!=null)?report.getDeliverToUserIdLastName() + ", " + report.getDeliverToUserIdFirstName():report.getDeliverToUserId()) + " (" + report.getDeliverToUserId() + ")");
 					hrmDocumentDao.merge(document);
 					// Route this report to the "system" user so that a search for "all" in the inbox will come up with them
 					HRMReportParser.routeReportToProvider(document.getId().toString(), "-1");
