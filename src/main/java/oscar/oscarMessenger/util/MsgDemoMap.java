@@ -88,10 +88,8 @@ public class MsgDemoMap {
     
     public void unlinkMsg (String demographic_no, String messageID){        
         MiscUtils.getLogger().debug("input msgId: " + messageID + "  input demographic_no: " + demographic_no);
-        
-        org.oscarehr.common.model.MsgDemoMap mdm = new org.oscarehr.common.model.MsgDemoMap();
-    	mdm.setId(new MsgDemoMapPK(Integer.parseInt(messageID),Integer.parseInt(demographic_no)));
-    	dao.remove(mdm);
+                
+    	dao.remove(new MsgDemoMapPK(Integer.parseInt(messageID),Integer.parseInt(demographic_no)));
        
     }
 }
