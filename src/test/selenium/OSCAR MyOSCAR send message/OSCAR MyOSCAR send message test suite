@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="sendmsg1 - new demouser1 - In Person verification">sendmsg1 - new demouser1 - In Person verification</a></td></tr>
+<tr><td><a href="sendmsg2 - confirm access request from demouser1">sendmsg2 - confirm access request from demouser1</a></td></tr>
+<tr><td><a href="sendmsg3 - MyOSCAR - create demouser1 ">sendmsg3 - MyOSCAR - create demouser1 </a></td></tr>
+<tr><td><a href="sendmsg4 - MyOSCAR - first login - demouser1 - TAC">sendmsg4 - MyOSCAR - first login - demouser1 - TAC</a></td></tr>
+<tr><td><a href="sendmsg5 - request patient access from demouser1">sendmsg5 - request patient access from demouser1</a></td></tr>
+<tr><td><a href="sendmsg6 - confirm access request from oscardoc">sendmsg6 - confirm access request from oscardoc</a></td></tr>
+<tr><td><a href="sendmsg7 - demouser1 send 1st message to oscardoc">sendmsg7 - demouser1 send 1st message to oscardoc</a></td></tr>
+<tr><td><a href="sendmsg8 - oscardoc send 1st message from MyOSCAR">sendmsg8 - oscardoc send 1st message from MyOSCAR</a></td></tr>
+<tr><td><a href="sendmsg9 - demouser1 send 2nd message to oscardoc">sendmsg9 - demouser1 send 2nd message to oscardoc</a></td></tr>
+<tr><td><a href="sendmsg10 - oscardoc send 2nd message from OSCAR">sendmsg10 - oscardoc reply 2nd message from OSCAR</a></td></tr>
+</tbody></table>
+</body>
+</html>
