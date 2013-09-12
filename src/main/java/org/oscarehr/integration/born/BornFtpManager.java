@@ -54,7 +54,7 @@ public class BornFtpManager {
 	}
 	
 	public static boolean upload18MEWBVDataToRepository(byte[] xmlFile, String filename) {
-		String remotePath = OscarProperties.getInstance().getProperty("born_ftps_remote_dir","");
+		String remotePath = OscarProperties.getInstance().getProperty("born18m_ftps_remote_dir","");
 		DefaultFtpsSessionFactory ftpFactory = (DefaultFtpsSessionFactory)SpringUtils.getBean("ftpClientFactoryBORN18M");		
 		Session<FTPFile> session = null;
 		
