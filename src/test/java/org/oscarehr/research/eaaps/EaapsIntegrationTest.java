@@ -50,6 +50,7 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 	 * Public OSCAR key
 	 */
 	private static final String OSCAR_KEY = "";
+
 	
 	/**
 	 * Public client key
@@ -86,28 +87,58 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 		
 	static final String TIMESTAMP_STRING = ConversionUtils.toDateString(new Date(), "yyyyMMddHHmmss");
 	
-	static final String HL7 = 
+	static final String JUST_PDF_NTE1 = 
 			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".001-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" + 
+			"NTE|1|eaaps_" + HASH + "_" + System.currentTimeMillis() + ".pdf|" + PDF + "\r" +
+			"NTE|2|\r";
+	
+	static final String JUST_CHART_NOTE_NTE2 = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".002-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" + 
+			"NTE|1||\r" +
+			"NTE|2||CHART NOTE ONLY - " + HASH + " - " + TIMESTAMP_STRING + "\r";
+	
+	static final String JUST_MRP_NTE3 = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".003-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" + 
+			"NTE|1||\r" +
+			"NTE|2||\r" +
+			"NTE|3||MRP ONLY " + HASH + " - " + TIMESTAMP_STRING + "\r";
+	
+	static final String PDF_AND_CHART_NOTE_NTE1AND2 = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".004-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" + 
+			"NTE|1|eaaps_" + HASH + "_" + System.currentTimeMillis() + ".pdf|" + PDF + "\r" +
+			"NTE|2||PDF AND CHART NOTE FOR " + HASH + "\r";
+	
+	static final String PDF_AND_MRP_NTE1AND3 = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".005-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" + 
+			"NTE|1|eaaps_" + HASH + "_" + System.currentTimeMillis() + ".pdf|" + PDF + "\r" +
+			"NTE|2||\r" +
+			"NTE|3||PDF AND MRP MESSAGE ONLY " + HASH + "\r";
+	
+	static final String CHART_NOTE_AND_MRP_NTE2AND3 = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".006-0400||ORU^R01|2501|01|2.2|1\r" + 
+			"PID||" + HASH + "\r" + 
+			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" + 
+			"NTE|1||\r" +
+			"NTE|2||NOTE AND MRP " + HASH + "\r" +
+			"NTE|3||NOTE AND MRP " + HASH + "\r";
+	
+	static final String HL7 = 
+			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".007-0400||ORU^R01|2501|01|2.2|1\r" + 
 			"PID||" + HASH + "\r" + 
 			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" + 
 			"NTE|1|eaaps_" + HASH + "_" + System.currentTimeMillis() + ".pdf|" + PDF + "\r" +
 			"NTE|2||Note comment for message with the AAP attachment " + HASH + "\r" +
 			"NTE|3||MRP message for message with the AAP attachment " + HASH + "\r";
-	
-	static final String HL7_EMPTY_MESSAGE = 
-			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".002-0400||ORU^R01|2501|01|2.2|1\r" + 
-			"PID||" + HASH + "\r" + 
-			"OBR||||SERVICE ID: EAAPS||||||||||||" + PROVIDER_ID + "\r" +
-			"NTE|1|eaaps_" + HASH + "_" + (System.currentTimeMillis() + 1) + ".pdf|" + PDF + "\r" +
-			"NTE|2||Note comment for the message without MRP note " + HASH + "\r";
-	
-	static final String HL7_EMPTY_PDF = 
-			"MSH|^~\\&|SENDING APP||||" + TIMESTAMP_STRING + ".003-0400||ORU^R01|2501|01|2.2|1\r" + 
-			"PID||" + HASH + "\r" + 
-			"OBR||||SERVICE ID: EAAPS||||||||||||999998\r" + 
-			"NTE|1||\r" +
-			"NTE|2||\r" +
-			"NTE|3||MRP message only without AAP attachment " + HASH + "\r";
 	
 	@BeforeClass
 	public static void init() throws Exception {
@@ -122,7 +153,7 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 		demo.setLastName("Doe");
 		demo.setDateOfBirth("23");
 		demo.setMonthOfBirth("12");
-		demo.setYearOfBirth("1983");
+ 		demo.setYearOfBirth("1983");
 		
 		EaapsHash hash = new EaapsHash(demo, "Stonechurch");
 		assertEquals("JOEDOE19831223Stonechurch", hash.getKey());
@@ -142,13 +173,11 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 		PublicKey publicOscarKey = SendingUtils.getPublicOscarKey(publicOscarKeyString); 
 		PrivateKey publicServiceKey = SendingUtils.getPublicServiceKey(publicServiceKeyString);
 		
-		for(String messageText : new String[] {HL7, HL7_EMPTY_PDF, HL7_EMPTY_MESSAGE}) {
+		for(String messageText : new String[] {CHART_NOTE_AND_MRP_NTE2AND3, HL7, JUST_CHART_NOTE_NTE2, JUST_MRP_NTE3, JUST_PDF_NTE1, PDF_AND_CHART_NOTE_NTE1AND2, PDF_AND_MRP_NTE1AND3 }) {
 			byte[] bytes = messageText.getBytes(); 
 			int statusCode = SendingUtils.send(bytes, url, publicOscarKey, publicServiceKey, "eaaps");
 			logger.info("Completed EAAPS call with status " + statusCode);
 			assertEquals(200, statusCode);
-			
-			break;
 		}
 		
 	}
