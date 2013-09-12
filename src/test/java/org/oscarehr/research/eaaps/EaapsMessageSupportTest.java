@@ -55,7 +55,7 @@ public class EaapsMessageSupportTest {
 		assertEquals("SENDING APP", support.getSourceFacility());
 		
 		support = new EaapsMessageSupport();
-		support.init(EaapsIntegrationTest.HL7_EMPTY_MESSAGE);
+		support.init(EaapsIntegrationTest.PDF_AND_MRP_NTE1AND3);
 		if (EaapsIntegrationTest.HASH == null || EaapsIntegrationTest.HASH.isEmpty()) {
 			assertEquals(null, support.getDemographicHash());
 		} else {
@@ -69,24 +69,26 @@ public class EaapsMessageSupportTest {
 		assertNotNull(support.getPdf());
 		assertTrue(support.getPdfFileName().startsWith("eaaps_"));
 		providerNote = support.getProviderNote(); 
-		assertTrue(providerNote == null);
+		assertTrue(providerNote.equals("PDF AND MRP MESSAGE ONLY "));
 		recs = support.getRecommendations();
-		assertTrue(recs.startsWith("Note comment for the message without MRP note"));
+		assertEquals(null, recs);
 		assertEquals("SENDING APP", support.getSourceFacility());
 		
 		support = new EaapsMessageSupport();
-		support.init(EaapsIntegrationTest.HL7_EMPTY_PDF);
+		support.init(EaapsIntegrationTest.CHART_NOTE_AND_MRP_NTE2AND3);
 		if (EaapsIntegrationTest.HASH == null || EaapsIntegrationTest.HASH.isEmpty()) {
 			assertEquals(null, support.getDemographicHash());
 		} else {
 			assertEquals(EaapsIntegrationTest.HASH, support.getDemographicHash());
 		}
-		assertEquals("999998", support.getOrderingProvider());
+		if (!EaapsIntegrationTest.PROVIDER_ID.isEmpty()) {
+			assertEquals(EaapsIntegrationTest.PROVIDER_ID, support.getOrderingProvider());
+		}
 		assertTrue(support.getPdf() == null);
 		assertTrue(support.getPdfFileName() == null);
 		providerNote = support.getProviderNote(); 
-		assertTrue(providerNote.startsWith("MRP message only without AAP attachment"));
-		assertTrue(support.getRecommendations() == null);
+		assertTrue(providerNote.startsWith("NOTE AND MRP"));
+		assertTrue(support.getRecommendations().startsWith("NOTE AND MRP"));
 		assertEquals("SENDING APP", support.getSourceFacility());
 	}
 	
