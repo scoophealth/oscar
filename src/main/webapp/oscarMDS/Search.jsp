@@ -72,7 +72,14 @@ $(function() {
 .ui-autocomplete {
 	background-color: #CEF6CE;
 	border: 3px outset #2EFE2E;
+	width:300px;
 }
+
+.ui-menu-item:hover {
+		background-color:#426FD9;
+		color:#FFFFFF;
+}
+
 </style>
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
