@@ -111,7 +111,7 @@ if (wPhoneExt != null)
 	            } 
 	            
 	            if(!error) {
-	            	var usernameRegex = /^[a-zA-Z0-9.]+$/;
+	            	var usernameRegex = /^[a-zA-Z0-9._]+$/;
 		            if (!usernameRegex.test($("#username").val())) {
 		            	$("#username-group").addClass('error');
 		            	$("#username-invalid").show();
@@ -131,7 +131,7 @@ if (wPhoneExt != null)
 
                 //if everything is cool:
                 document.getElementById("submitButton").disabled = true;
-                document.getElementById("closeButton").disabled = true;
+                document.getElementById("closeButton").disabled = false;
                 document.getElementById("submitButton").value = "Creating user...";
                 document.getElementById("registrationForm").submit();
             }
@@ -145,7 +145,7 @@ if (wPhoneExt != null)
                     formElements[i].disabled = true;
                 }
                 document.getElementById("submitButton").disabled = true;
-                document.getElementById("closeButton").disabled = true;
+                document.getElementById("closeButton").disabled = false;
             }
             
             <%if(request.getParameter("success") != null) {%>
@@ -172,40 +172,48 @@ if (wPhoneExt != null)
 	    	String dispDocNo = request.getParameter("DocId");
 	    	String user = (String) session.getAttribute("user");
 	    	
-	    	String password;	    	
+	    	String password = null;;	    	
 	    	List<String> ulist;
+	    	boolean emailEmpty = false;
+	    	ulist = new ArrayList<String>();
 	    	
 	    	//flag for if the error message coming back is that the username already exists
 	    	boolean usernameNotUnique=false;	 
-				    			
-	        //if there is a success or failure message, that means the page has been redirected
-	        //to itself, so we load the parameters that were sent on the last submit
-	    	if (request.getParameter("success") != null || request.getParameter("failmessage") != null) {
-	    		password = request.getParameter("password");
-	    		String un = request.getParameter("username");
-	    		ulist = new ArrayList<String>();
-	    		ulist.add(un);
-	    		String fail = request.getParameter("nonUnique");
-	    		if(fail != null && fail.equals("true")) {
-	    			//this flag will tell the jsp not to display the serverside error, but to display an inline error
-	    			usernameNotUnique=true;
-	    			
-	    			//we still want to display the username suggestions on a failure
-	    			ulist.addAll(RegistrationHelper.getPhrDefaultUserNameList(myOscarLoggedInInfo, demographicId));
-	    		}
-	    		
-	    		
-	    	} else {
-		    	ulist = RegistrationHelper.getPhrDefaultUserNameList(myOscarLoggedInInfo, demographicId);
-		    	password = RegistrationHelper.getNewRandomPassword();
+			
+	    	if (myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()) {
+		        //if there is a success or failure message, that means the page has been redirected
+		        //to itself, so we load the parameters that were sent on the last submit
+		    	if (request.getParameter("success") != null || request.getParameter("failmessage") != null) {
+		    		password = request.getParameter("password");
+		    		String un = request.getParameter("username");
+		    		
+		    		ulist.add(un);
+		    		String fail = request.getParameter("nonUnique");
+		    		if(fail != null && fail.equals("true")) {
+		    			//this flag will tell the jsp not to display the serverside error, but to display an inline error
+		    			usernameNotUnique=true;
+		    			
+		    			//we still want to display the username suggestions on a failure
+		    			ulist.addAll(RegistrationHelper.getPhrDefaultUserNameList(myOscarLoggedInInfo, demographicId));
+		    		}
+		    		
+		    		
+		    	} else {
+			    	ulist = RegistrationHelper.getPhrDefaultUserNameList(myOscarLoggedInInfo, demographicId);
+			    	password = RegistrationHelper.getNewRandomPassword();
+		    	}
+		    	
+		        
+		        //evaluate the email address. if empty, set flag to true
+		        if (demographic.getEmail() == null || demographic.getEmail().trim().equals("")) {
+		        	emailEmpty=true;
+		        }
 	    	}
 	    	
-	        
-	        //evaluate the email address. if empty, set flag to true
-	        boolean emailEmpty = false;
-	        if (demographic.getEmail() == null || demographic.getEmail().trim().equals("")) {
-	        	emailEmpty=true;
-	        }
+	    	if(ulist.isEmpty()){
+	    		ulist.add("");
+	    	}
+	    		
 
 		%>
 	   
@@ -332,50 +340,59 @@ if (wPhoneExt != null)
                 		
                 		//isolate the currently-logged-in Provider, in order to display this user 
                 		//in the first row
-	            		Long curProviderID = myOscarLoggedInInfo.getLoggedInPersonId();
-	            		String curProviderUserName = myOscarLoggedInInfo.getLoggedInPerson().getUserName();
-                		Provider curProvider = myOscarProviders.get(curProviderUserName);
+	            		Long curProviderID = null;
+	            		String curProviderUserName = "";
                 		
-                		//the display row for the current Provider
-		                %><tr>
-	                		<%if (curProviderID != null){ %>
-	                		<td>
-	                			<input type="checkbox" name="enable_primary_relation_<%=curProviderID%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+curProviderID)%> />
-	                			<strong><%=StringEscapeUtils.escapeHtml(curProviderUserName+" ("+curProvider.getFormattedName()+')')%></strong>
-	                		</td>
-	                		<td><%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+curProviderID)%></td>
-	                        <td align="center"><input type="checkbox" name="reverse_relation_<%=curProviderID%>" value="PATIENT" <%=RegistrationHelper.getCheckedStringWithValueString(session, "reverse_relation_"+curProviderID,"PATIENT")%> ></td>
-	                        <%}else{ %>
-	                		<td>&nbsp</td>
-	                        <td class="error" ><%=StringEscapeUtils.escapeHtml(curProviderUserName+" ("+curProvider.getFormattedName()+')')%></td>
-	                		<td class="error">Not Found on Server</td>
-	                		<%} %>
-	                	</tr><%
                 		
-                		//Iterate through the rest of the Providers, display a row for each
-                		for (Map.Entry<String, Provider> entry : myOscarProviders.entrySet())
-                		{
-                			Long providerMyOscarId=MyOscarUtils.getMyOscarUserIdFromOscarProviderNo(myOscarLoggedInInfo, entry.getValue().getProviderNo());
-                			//We've already displayed the current Provider's row, so omit this user subsequently
-                			if(providerMyOscarId != curProviderID){
-			                	%>
-			                	<tr>
-			                		
-			                		<%if (providerMyOscarId != null){ %>
-			                		<td>
-			                			<input type="checkbox" name="enable_primary_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+providerMyOscarId)%> />
-			                			<strong><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></strong>
-			                		</td>
-			                		<td><%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+providerMyOscarId)%></td>
-			                        <td align="center"><input type="checkbox" name="reverse_relation_<%=providerMyOscarId%>" value="PATIENT" <%=RegistrationHelper.getCheckedStringWithValueString(session, "reverse_relation_"+providerMyOscarId,"PATIENT")%> ></td>
-			                        <%}else{ %>
-			                		<td>&nbsp</td>
-			                        <td class="error" ><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></td>
-			                		<td class="error">Not Found on Server</td>
-			                		<%} %>
-			                	</tr>
-			                    <%
-                			}
+                		if (myOscarLoggedInInfo != null) {
+                			curProviderID= myOscarLoggedInInfo.getLoggedInPersonId();
+                			curProviderUserName = myOscarLoggedInInfo.getLoggedInPerson().getUserName();
+                   		
+                		
+	                		Provider curProvider = myOscarProviders.get(curProviderUserName);
+	                		
+	                		//the display row for the current Provider
+			                %><tr>
+		                		<%if (curProviderID != null && curProvider != null){ %>
+		                		<td>
+		                			<input type="checkbox" name="enable_primary_relation_<%=curProviderID%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+curProviderID)%> />
+		                			<strong><%=StringEscapeUtils.escapeHtml(curProviderUserName+" ("+curProvider.getFormattedName()+')')%></strong>
+		                		</td>
+		                		<td><%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+curProviderID)%></td>
+		                        <td align="center"><input type="checkbox" name="reverse_relation_<%=curProviderID%>" value="PATIENT" <%=RegistrationHelper.getCheckedStringWithValueString(session, "reverse_relation_"+curProviderID,"PATIENT")%> ></td>
+		                        <%}else{ %>
+		                		<td>&nbsp</td>
+		                        <td class="error" ><!--  %=StringEscapeUtils.escapeHtml(curProviderUserName+" ("+curProvider.getFormattedName()+')')%>--></td>
+		                		<td class="error">Not Found on Server</td>
+		                		<%} %>
+		                	</tr><%
+	                		
+	                		
+		                	//Iterate through the rest of the Providers, display a row for each
+	                		for (Map.Entry<String, Provider> entry : myOscarProviders.entrySet())
+	                		{
+	                			Long providerMyOscarId=MyOscarUtils.getMyOscarUserIdFromOscarProviderNo(myOscarLoggedInInfo, entry.getValue().getProviderNo());
+	                			//We've already displayed the current Provider's row, so omit this user subsequently
+	                			if(providerMyOscarId != curProviderID){
+				                	%>
+				                	<tr>
+				                		
+				                		<%if (providerMyOscarId != null){ %>
+				                		<td>
+				                			<input type="checkbox" name="enable_primary_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+providerMyOscarId)%> />
+				                			<strong><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></strong>
+				                		</td>
+				                		<td><%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+providerMyOscarId)%></td>
+				                        <td align="center"><input type="checkbox" name="reverse_relation_<%=providerMyOscarId%>" value="PATIENT" <%=RegistrationHelper.getCheckedStringWithValueString(session, "reverse_relation_"+providerMyOscarId,"PATIENT")%> ></td>
+				                        <%}else{ %>
+				                		<td>&nbsp</td>
+				                        <td class="error" ><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></td>
+				                		<td class="error">Not Found on Server</td>
+				                		<%} %>
+				                	</tr>
+				                    <%
+	                			}
+	                		}
                 		}
                     %>					
 				
