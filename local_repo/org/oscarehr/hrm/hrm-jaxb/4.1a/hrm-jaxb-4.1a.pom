@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.oscarehr.hrm</groupId>
+  <artifactId>hrm-jaxb</artifactId>
+  <version>4.1a</version>
+  <name>HRM 4.1a</name>
+  <description>JAXB of HRM schema</description>
+
+<distributionManagement>
+  <repository>
+    <id>local_repo</id>
+    <name>Repository Name</name>
+    <url>file:///home/marc/workspaces/review/oscar/local_repo</url>
+  </repository>
+</distributionManagement>
+
+
+
+
+  <build>
+	<plugins>
+        <plugin>
+                <groupId>com.sun.tools.xjc.maven2</groupId>
+                <artifactId>maven-jaxb-plugin</artifactId>
+                <executions>
+                        <execution>
+                                <goals>
+                                        <goal>generate</goal>
+                                </goals>
+                        </execution>
+                </executions>
+                <configuration>
+                        <generatePackage>org.oscarehr.hospitalReportManager.xsd</generatePackage>
+                        <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
+                        <includeSchemas>
+                                <includeSchema>report_manager_cds.xsd</includeSchema>
+				<includeSchema>report_manager_dt.xsd</includeSchema>
+                        </includeSchemas>
+                        <strict>true</strict>
+                        <verbose>true</verbose>
+                </configuration>
+        </plugin>
+
+	</plugins>
+  </build>
+</project>
