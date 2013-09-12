@@ -18,7 +18,7 @@ is hosted in an IFrame and that the IFrame's parent window implements signatureH
 <%@ page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 
 <!DOCTYPE html> 
-<html lang="en" manifest="cache.manifest"> 
+<html lang="en"> 
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Signature Pad</title>
