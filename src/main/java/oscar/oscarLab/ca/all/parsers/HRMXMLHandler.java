@@ -81,7 +81,7 @@ public class HRMXMLHandler implements MessageHandler {
 			Source schemaFile = new StreamSource(new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
 			Schema schema = factory.newSchema(schemaFile); //new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
 
-			JAXBContext jc = JAXBContext.newInstance("oscar.hospitalReportManager.xsd");
+			JAXBContext jc = JAXBContext.newInstance("org.oscarehr.hospitalReportManager.xsd");
 			Unmarshaller u = jc.createUnmarshaller();
 			root = (OmdCds) u.unmarshal(byeArrayInputStream);
 			pr = root.getPatientRecord();

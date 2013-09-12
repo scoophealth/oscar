@@ -425,6 +425,13 @@
 			<version>1.0</version>
 		</dependency>
 
+		<!-- HRM module -->
+		<dependency>
+			<groupId>org.oscarehr.hrm</groupId>
+			<artifactId>hrm-jaxb</artifactId>
+			<version>4.1a</version>
+		</dependency>
+
 		<!-- hsfo -->
 		<dependency>
 			<groupId>hsfo</groupId>
