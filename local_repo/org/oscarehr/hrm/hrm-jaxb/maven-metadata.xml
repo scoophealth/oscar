@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.oscarehr.hrm</groupId>
+  <artifactId>hrm-jaxb</artifactId>
+  <versioning>
+    <release>4.1a</release>
+    <versions>
+      <version>4.1a</version>
+    </versions>
+    <lastUpdated>20130912145858</lastUpdated>
+  </versioning>
+</metadata>
