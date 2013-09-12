@@ -564,7 +564,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 	</tr>
   <tr>
 
-    <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp;</td>
+    <TD align="center"><a href=# onClick ="popupPage(370,700,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp;</td>
   </tr>
   <tr>
       <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultSex');return false;"><bean:message key="provider.btnSetDefaultSex" /></a></td>

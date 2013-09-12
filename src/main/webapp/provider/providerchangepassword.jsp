@@ -23,10 +23,26 @@
     Ontario, Canada
 
 --%>
-
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Security" %>
+<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 <%
   if(session.getValue("user") == null )
     response.sendRedirect("../logout.jsp");
+    		
+  String errormsg = "";
+  if (request.getParameter("errormsg") != null) {
+		   errormsg = request.getParameter("errormsg") ;
+  }     
+  
+  String curUser_no = (String) session.getAttribute("user");
+  SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+  List<Security> ss = securityDao.findByProviderNo(curUser_no);
+  
+  Security s = ss.get(0);
+  
+  Integer BLocallockset = s.getBLocallockset();
+  Integer BRemotelockset = 	s.getBRemotelockset();	  
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -51,22 +67,70 @@ function setfocus(el) {
 	document.updatepassword.elements[el].select();
 }
 function checkPwdPolicy() {
-	if (document.updatepassword.oldpassword.value == "") {
-		alert ('<bean:message key="provider.providerchangepassword.msgOldPasswordError"/>');
-		setfocus('oldpassword');
-		return false;
-	}
+	
 	var pwd1=document.updatepassword.mypassword.value;
 	var pwd2=document.updatepassword.confirmpassword.value;
-	if (!validatePassword(pwd1)) {
+
+	var pin1 = null;
+	var pin2 = null;
+	
+	var jsLocallockset = '<%=BLocallockset%>'; 
+	var jsRemotelockset = '<%=BRemotelockset%>';
+	
+	if (jsLocallockset == '1' || jsRemotelockset == '1') {
+		 pin1=document.updatepassword.newpin.value;
+		 pin2=document.updatepassword.confirmpin.value;
+	}
+	
+	if (pwd1 == '' && (pin1 == null || pin1 == '')) {
+		alert ('<bean:message key="provider.providerchangepassword.msgPasswordAndPINBlank"/>');
 		setfocus('mypassword');
 		return false;
 	}
-	if (pwd1 != pwd2) {
-		alert ('<bean:message key="provider.providerchangepassword.msgPasswordConfirmError"/>');
-		setfocus('confirmpassword');
-		return false;
+	
+	if (pwd1 != "") {
+		if (document.updatepassword.oldpassword.value == "") {
+			alert ('<bean:message key="provider.providerchangepassword.msgCurrPasswordError"/>');
+			setfocus('oldpassword');
+			return false;
+		}
+		if (!validatePassword(pwd1)) {
+			setfocus('mypassword');
+			return false;
+		}
+		if (pwd1 != pwd2) {
+			alert ('<bean:message key="provider.providerchangepassword.msgPasswordConfirmError"/>');
+			setfocus('confirmpassword');
+			return false;
+		}
+    }
+
+	if (jsLocallockset == '0' && jsRemotelockset == '0') {
+		return true;
 	}
+
+	if (pin1 != "") {
+		if (document.updatepassword.pin.value == "") {
+			alert ('<bean:message key="provider.providerchangepassword.msgCurrPinError"/>');
+			setfocus('pin');
+			return false;
+		}
+		
+		var pin_min_length = <%=op.getProperty("password_pin_min_length")%>;
+		
+		if (pin1.length < pin_min_length) {
+			alert('<bean:message key="password.policy.violation.msgPinLengthError"/> ' +
+					pin_min_length + ' <bean:message key="password.policy.violation.msgDigits"/>');
+			return false;
+		}
+		
+		if (pin1 != pin2) {
+			alert ('<bean:message key="provider.providerchangepassword.msgPinConfirmError"/>');
+			setfocus('confirmpin');
+			return false;
+		}
+	}
+	
 	return true;
 }
 </script>
@@ -82,6 +146,8 @@ function checkPwdPolicy() {
 	</tr>
 </table>
 
+<p><b><font color='red'><%=errormsg%></font></b>
+
 <table width="100%" border="0" cellpadding="2" bgcolor="#eeeeee">
 	<tr>
 		<td><font face="arial" size="2"><bean:message
@@ -95,14 +161,14 @@ function checkPwdPolicy() {
 <table border="0" width="100%" cellpadding="4" cellspacing="0">
 	<tr>
 		<td align="right" width="50%"><font face="arial"><bean:message
-			key="provider.providerchangepassword.msgEnterOld" />&nbsp;<b><bean:message
-			key="provider.pref.changepw.current" />:</b></font></td>
+			key="provider.providerchangepassword.msgEnterOld" /> &nbsp;<b><bean:message
+			key="provider.providerchangepassword.formCurrPassword" />:</b></font></td>
 		<td><input type=password name="oldpassword" value="" size=20
 			maxlength=32></td>
 	</tr>
 	<tr>
 		<td width="50%" align="right"><font face="arial"><bean:message
-			key="provider.providerchangepassword.msgChooseNew" />&nbsp;<b><bean:message
+			key="provider.providerchangepassword.msgChooseNew" /> &nbsp;<b><bean:message
 			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
 		<td><input type=password name="mypassword" value="" size=20
 			maxlength=32> <font size="-2">(<bean:message
@@ -112,7 +178,7 @@ function checkPwdPolicy() {
 	</tr>
 	<tr>
 		<td width="50%" align="right"><font face="arial"><bean:message
-			key="provider.providerchangepassword.msgConfirm" />&nbsp;<b><bean:message
+			key="provider.providerchangepassword.msgConfirm" /> &nbsp;<b><bean:message
 			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
 		<td><input type=password name="confirmpassword" value="" size=20
 			maxlength=32> <font size="-2">(<bean:message
@@ -121,37 +187,37 @@ function checkPwdPolicy() {
 			key="provider.providerchangepassword.msgSymbols" />)</font></td>
 	</tr>
 	
+	<% if ( BLocallockset != null && BRemotelockset != null && (BLocallockset.intValue() == 1 || BRemotelockset.intValue() == 1)) { %>
 	
-	<tr>
-		<td align="right" width="50%"><font face="arial"><bean:message
-			key="provider.providerchangepassword.msgEnterOld" />&nbsp;<b><bean:message
-			key="provider.providerchangepassword.currentPIN" />:</b></font></td>
-		<td><input type=password name="pin" value="" size=20
-			maxlength=32></td>
-	</tr>
 		<tr>
-		<td width="50%" align="right"><font face="arial"><bean:message
-			key="provider.providerchangepassword.msgChooseNew" />&nbsp;<b><bean:message
-			key="provider.providerchangepassword.newPIN" />:</b></font></td>
-		<td><input type=password name="newpin" value="" size=20
-			maxlength=32> <font size="-2">(<bean:message
-			key="provider.providerchangepassword.msgAtLeast" />
-			<%=op.getProperty("password_pin_min_length")%> <bean:message
-			key="provider.providerchangepassword.msgSymbols" />)</font></td>
-	</tr>
-	<tr>
-		<td width="50%" align="right"><font face="arial"><bean:message
-			key="provider.providerchangepassword.msgConfirm" />&nbsp;<b><bean:message
-			key="provider.providerchangepassword.confNewPIN" />:</b></font></td>
-		<td><input type=password name="confirmpin" value="" size=20
-			maxlength=32> <font size="-2">(<bean:message
-			key="provider.providerchangepassword.msgAtLeast" />
-			<%=op.getProperty("password_pin_min_length")%> <bean:message
-			key="provider.providerchangepassword.msgSymbols" />)</font></td>
-	</tr>
-	
-	
-	
+			<td align="right" width="50%"><font face="arial"><bean:message
+				key="provider.providerchangepassword.msgEnterOld" />&nbsp;<b><bean:message
+				key="provider.providerchangepassword.currentPIN" />:</b></font></td>
+			<td><input type=password name="pin" value="" size=20
+				maxlength=32></td>
+		</tr>
+			<tr>
+			<td width="50%" align="right"><font face="arial"><bean:message
+				key="provider.providerchangepassword.msgChooseNew" />&nbsp;<b><bean:message
+				key="provider.providerchangepassword.newPIN" />:</b></font></td>
+			<td><input type=password name="newpin" value="" size=20
+				maxlength=32> <font size="-2">(<bean:message
+				key="provider.providerchangepassword.msgAtLeast" />
+				<%=op.getProperty("password_pin_min_length")%> <bean:message
+				key="provider.providerchangepassword.msgSymbols" />)</font></td>
+		</tr>
+		<tr>
+			<td width="50%" align="right"><font face="arial"><bean:message
+				key="provider.providerchangepassword.msgConfirm" />&nbsp;<b><bean:message
+				key="provider.providerchangepassword.newPIN" />:</b></font></td>
+			<td><input type=password name="confirmpin" value="" size=20
+				maxlength=32> <font size="-2">(<bean:message
+				key="provider.providerchangepassword.msgAtLeast" />
+				<%=op.getProperty("password_pin_min_length")%> <bean:message
+				key="provider.providerchangepassword.msgSymbols" />)</font></td>
+		</tr>
+	<% } %>
+
 </table>
 </center>
 <table width="100%" border="0" cellpadding="4" cellspacing="0"
