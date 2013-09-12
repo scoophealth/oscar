@@ -177,6 +177,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>setImplicitWaitLocator</td>
+	<td>5000</td>
+	<td>Register for MyOSCAR</td>
+</tr>
+<tr>
 	<td>waitForPopUp</td>
 	<td>Encounter</td>
 	<td></td>
@@ -235,6 +240,11 @@
 	<td>click</td>
 	<td>link=E</td>
 	<td></td>
+</tr>
+<tr>
+	<td>setImplicitWaitLocator</td>
+	<td>5000</td>
+	<td>MyOSCAR</td>
 </tr>
 <tr>
 	<td>waitForPopUp</td>
