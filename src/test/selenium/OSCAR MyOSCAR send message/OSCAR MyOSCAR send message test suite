@@ -14,8 +14,10 @@
 <tr><td><a href="sendmsg4 - MyOSCAR - first login - demouser1 - TAC">sendmsg4 - MyOSCAR - first login - demouser1 - TAC</a></td></tr>
 <tr><td><a href="sendmsg5 - request patient access from demouser1">sendmsg5 - request patient access from demouser1</a></td></tr>
 <tr><td><a href="sendmsg6 - confirm access request from oscardoc">sendmsg6 - confirm access request from oscardoc</a></td></tr>
-<tr><td><a href="sendmsg7 - demouser1 send message to oscardoc">sendmsg7 - demouser1 send message to oscardoc</a></td></tr>
-<tr><td><a href="sendmsg8 - oscardoc send message to demouser1">sendmsg8 - oscardoc send message to demouser1</a></td></tr>
+<tr><td><a href="sendmsg7 - demouser1 send 1st message to oscardoc">sendmsg7 - demouser1 send 1st message to oscardoc</a></td></tr>
+<tr><td><a href="sendmsg8 - oscardoc send 1st message from MyOSCAR">sendmsg8 - oscardoc send 1st message from MyOSCAR</a></td></tr>
+<tr><td><a href="sendmsg9 - demouser1 send 2nd message to oscardoc">sendmsg9 - demouser1 send 2nd message to oscardoc</a></td></tr>
+<tr><td><a href="sendmsg10 - oscardoc send 2nd message from OSCAR">sendmsg10 - oscardoc reply 2nd message from OSCAR</a></td></tr>
 </tbody></table>
 </body>
 </html>
