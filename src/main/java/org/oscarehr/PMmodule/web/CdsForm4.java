@@ -31,6 +31,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.CdsClientFormDao;
@@ -55,20 +57,66 @@ public class CdsForm4 {
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 	private static CdsHospitalisationDaysDao cdsHospitalisationDaysDao = (CdsHospitalisationDaysDao) SpringUtils.getBean("cdsHospitalisationDaysDao");
+	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 
 	private static final int MAX_DISPLAY_NAME_LENGTH = 60;
 
 	public static CdsClientForm getCdsClientFormByClientId(Integer clientId) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
-		CdsClientForm cdsClientForm = cdsClientFormDao.findLatestByFacilityClient(loggedInInfo.currentFacility.getId(), clientId);
-
-		if (cdsClientForm == null) {
-			cdsClientForm = new CdsClientForm();
-
+		List<Admission> admissions=admissionDao.getCurrentAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId());
+		
+		Admission admission=null;
+		// find service program
+		for (Admission temp : admissions)
+		{
+			Program program=programDao.getProgram(temp.getProgramId());
+			if (program.isService())
+			{
+				admission=temp;
+				break;
+			}
 		}
-
-		return (cdsClientForm);
+		
+		// find bed program
+		if (admission==null)
+		{
+			for (Admission temp : admissions)
+			{
+				Program program=programDao.getProgram(temp.getProgramId());
+				if (program.isService())
+				{
+					admission=temp;
+					break;
+				}
+			}
+		}
+		
+		if (admission==null)
+		{
+			admissions=admissionDao.getAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId());
+			if (admissions.size()>0) admission=admissions.get(0);
+		}
+			
+		if (admission!=null)
+		{
+			// at this point we're in a program, try to find existing cds form.
+			List<CdsClientForm> cdsClientForms = cdsClientFormDao.findByFacilityClient(loggedInInfo.currentFacility.getId(), clientId);
+	
+			for (CdsClientForm cdsClientForm : cdsClientForms)
+			{
+				if (cdsClientForm.getAdmissionId()==null) continue;
+					
+				if (admission.getId().intValue()==cdsClientForm.getAdmissionId().intValue())
+				{
+					return(cdsClientForm);
+				}
+			}
+		}
+		
+		CdsClientForm newForm=new CdsClientForm();
+		if (admission!=null) newForm.setAdmissionId(admission.getId().intValue());
+		return (newForm);
 	}
 
 	public static CdsClientForm getCdsClientFormByCdsFormId(Integer cdsFormId) {
