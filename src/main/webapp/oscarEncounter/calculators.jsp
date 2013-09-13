@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.util.StringUtils"%>
 <%@ page
 	import="oscar.oscarDemographic.data.*, org.oscarehr.common.model.Demographic"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -35,12 +36,11 @@ String age=request.getParameter("age");
 String demo=request.getParameter("demo");
 
 
-if(demo != null){
+if(!StringUtils.isNullOrEmpty(demo)){
     DemographicData dd = new DemographicData();
-    Demographic d =dd.getDemographic(demo);  
+    Demographic d = dd.getDemographic(demo);  
     sex = d.getSex();
     age = d.getAge();
-    
 }
 %>
 
