@@ -96,8 +96,8 @@
     %>
 <script type="text/javascript">
 var privateConsentEnabled = <%=privateConsentEnabled%>;
-var showPopup = <%=showPopup%>;
-if(privateConsentEnabled && showPopup) {
+var newEctHeader_showPopup = <%=showPopup%>;
+if(privateConsentEnabled && newEctHeader_showPopup) {
 	alert("Please ensure that Informed Consent has been obtained!");
 }
 </script>
