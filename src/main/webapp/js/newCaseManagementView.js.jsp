@@ -111,8 +111,11 @@
                     openWindows[name].close();
             }
 
+            
+            
+            
             //check to see if we need to save
-            if( $(caseNote) != null && tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) ) {
+            if( $(caseNote) != null && tmpSaveNeeded || ( (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) )) {
                 tmpSaveNeeded = false;
                 //autoSave(false);
                 document.forms['caseManagementEntryForm'].sign.value='persist';
