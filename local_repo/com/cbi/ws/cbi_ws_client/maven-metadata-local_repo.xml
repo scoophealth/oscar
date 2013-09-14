@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.cbi.ws</groupId>
+  <artifactId>cbi_ws_client</artifactId>
+  <version>1.0</version>
+  <versioning>
+    <versions>
+      <version>1.0</version>
+    </versions>
+    <lastUpdated>20130914094411</lastUpdated>
+  </versioning>
+</metadata>
