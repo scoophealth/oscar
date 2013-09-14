@@ -23,6 +23,7 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -45,6 +46,14 @@ public class OcanSubmissionLogDao extends AbstractDao<OcanSubmissionLog> {
 	
 	public List<OcanSubmissionLog> findAll() {
 		Query query = entityManager.createQuery("select l from OcanSubmissionLog l order by l.submitDateTime DESC");
+		@SuppressWarnings("unchecked")
+		List<OcanSubmissionLog> results = query.getResultList();
+		return results;
+	}
+	
+	public List<OcanSubmissionLog> findBySubmissionDate(Date submissionDate) {
+		Query query = entityManager.createQuery("select l from OcanSubmissionLog l where date(l.submitDateTime)=?  order by l.submitDateTime DESC");
+		query.setParameter(1, submissionDate);
 		@SuppressWarnings("unchecked")
 		List<OcanSubmissionLog> results = query.getResultList();
 		return results;
