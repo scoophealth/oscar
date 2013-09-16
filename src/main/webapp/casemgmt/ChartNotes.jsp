@@ -61,10 +61,22 @@
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%>
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.common.model.DemographicExt" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="oscar.OscarProperties" %>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
+String demoNo = (String) request.getParameter("demographicNo");
+String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
+boolean privateConsentEnabled = privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true");
+DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+DemographicExt infoExt = demographicExtDao.getDemographicExt(Integer.parseInt(demoNo), "informedConsent");
+boolean showPopup = infoExt == null || StringUtils.isBlank(infoExt.getValue());
+
 try
 {
 	Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
@@ -333,17 +345,28 @@ try
 
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-				<select id="channel">
-					<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search?query="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
-					<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
-					<option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed" /></option>
-					<option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus" /></option>
-                    <option value="tripsearch.jsp?searchterm=">Trip Database</option>
-                    <option value="macplussearch.jsp?searchterm=">MacPlus Database</option>
-    	        </select>
-
-				<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)">
-				<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
+				<div style="display:inline-block; text-align: left;">
+				<%
+					if (privateConsentEnabled && showPopup) {
+				%>				
+				<div style="background-color: orange; padding: 5px; font-weight: bold;">
+					Please ensure that Informed Consent has been obtained!
+				</div>
+				<%
+					}
+				%>
+				<div>
+					<select id="channel">
+						<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
+						<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
+						<option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed" /></option>
+						<option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus" /></option>
+	                    <option value="tripsearch.jsp?searchterm=">Trip Database</option>
+	                    <option value="macplussearch.jsp?searchterm=">MacPlus Database</option>
+	    	        </select>
+					<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)">
+					<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
+				</div>
 			</div>
 			&nbsp;&nbsp;
 			<div style="display:inline-block;text-align: left;" id="toolbar">
