@@ -574,6 +574,7 @@ public class SFTPConnector {
 		return decrypt;
 	}
 
+
 	public static synchronized void startAutoFetch() {
 
 		if (!isAutoFetchRunning) {
