@@ -552,7 +552,7 @@ public class SFTPConnector {
 		return SFTPConnector.isAutoFetchRunning;
 	}
 
-	public static void startAutoFetch() {
+	public static synchronized void startAutoFetch() {
 
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
