@@ -558,7 +558,7 @@ public class SFTPConnector {
 			SFTPConnector.isAutoFetchRunning = true;
 			logger.debug("Going into OMD to fetch auto data");
 
-			String remoteDir = OscarProperties.getInstance().getProperty("SFTP_CONNECTOR_REMOTE_DIR");
+			String remoteDir = OscarProperties.getInstance().getProperty("OMD_HRM_REMOTE_DIR");
 			
 			if (remoteDir == null || remoteDir.isEmpty()) {
 				remoteDir = TEST_DIRECTORY;

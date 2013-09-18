@@ -104,6 +104,11 @@ public class HRMReportParser {
 
 	public static void addReportToInbox(HRMReport report) {
 		
+		if(report == null) {
+			logger.info("addReportToInbox cannot continue, report parameter is null");
+			return;
+		}
+
 		logger.info("Adding Report to Inbox, for file:"+report.getFileLocation());
 		
 		HRMDocument document = new HRMDocument();
@@ -178,6 +183,12 @@ public class HRMReportParser {
 
 	private static void routeReportToDemographic(HRMReport report, HRMDocument mergedDocument) {
 		
+		if(report == null) {
+			logger.info("routeReportToDemographic cannot continue, report parameter is null");
+			return;
+		}
+		
+
 		logger.info("Routing Report To Demographic, for file:"+report.getFileLocation());
 		
 		// Search the demographics on the system for a likely match and route it to them automatically
@@ -212,6 +223,10 @@ public class HRMReportParser {
 	}
 	private static void doSimilarReportCheck(HRMReport report, HRMDocument mergedDocument) {
 		
+		if(report == null) {
+			logger.info("doSimilarReportCheck cannot continue, report parameter is null");
+			return;
+		}
 		logger.info("Identifying if this is a report that we received before, but was sent to the wrong demographic, for file:"+report.getFileLocation());
 		
 		HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
@@ -304,6 +319,10 @@ public class HRMReportParser {
 
 
 	public static void routeReportToSubClass(HRMReport report, Integer reportId) {
+		if(report == null) {
+			logger.info("routeReportToSubClass cannot continue, report parameter is null");
+			return;
+		}
 		
 		logger.info("Routing Report To SubClass, for file:"+report.getFileLocation());
 		
@@ -345,6 +364,10 @@ public class HRMReportParser {
 	}
 
 	public static boolean routeReportToProvider(HRMReport report, Integer reportId) {
+		if(report == null) {
+			logger.info("routeReportToProvider cannot continue, report parameter is null");
+			return false;
+		}
 		
 		logger.info("Routing Report to Provider, for file:"+report.getFileLocation());
 		
