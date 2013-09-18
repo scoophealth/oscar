@@ -49,6 +49,8 @@ public class SFTPConnector {
 	private Session sess;
 	private Logger fLogger; //file logger
 
+	private static final String TEST_DIRECTORY = "Test";
+	
 	private static final String OMD_HRM_USER = OscarProperties.getInstance().getProperty("OMD_HRM_USER");
 	private static final String OMD_HRM_IP = OscarProperties.getInstance().getProperty("OMD_HRM_IP");
 	private static final int OMD_HRM_PORT = Integer.parseInt(OscarProperties.getInstance().getProperty("OMD_HRM_PORT"));
@@ -547,7 +549,15 @@ public class SFTPConnector {
 			SFTPConnector.isAutoFetchRunning = true;
 			logger.debug("Going into OMD to fetch auto data");
 
-			String remoteDir = "Test";
+			String remoteDir = OscarProperties.getInstance().getProperty("SFTP_CONNECTOR_REMOTE_DIR");
+			
+			if (remoteDir == null || remoteDir.isEmpty()) {
+				remoteDir = TEST_DIRECTORY;
+			} 
+			
+			logger.info("SFTPConnector, remoteDir:"+remoteDir);
+			
+			
 			try {
 				logger.debug("Instantiating a new SFTP connection.");
 				SFTPConnector sftp = new SFTPConnector();
