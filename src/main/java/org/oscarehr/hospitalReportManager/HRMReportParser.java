@@ -203,6 +203,13 @@ public class HRMReportParser {
 	}
 
 
+	private static boolean hasSameStatus(HRMReport report, HRMReport loadedReport) {
+		if(report.getResultStatus() != null) {
+			return report.getResultStatus().equalsIgnoreCase(loadedReport.getResultStatus());
+		}
+		 
+		return true;
+	}
 	private static void doSimilarReportCheck(HRMReport report, HRMDocument mergedDocument) {
 		
 		logger.info("Identifying if this is a report that we received before, but was sent to the wrong demographic, for file:"+report.getFileLocation());
@@ -226,7 +233,7 @@ public class HRMReportParser {
 
 		for (HRMReport loadedReport : thisDemoHrmReportList) {
 			boolean hasSameReportContent = report.getFirstReportTextContent().equalsIgnoreCase(loadedReport.getFirstReportTextContent());
-			boolean hasSameStatus = report.getResultStatus().equalsIgnoreCase(loadedReport.getResultStatus());
+			boolean hasSameStatus = hasSameStatus(report,loadedReport);
 			boolean hasSameClass = report.getFirstReportClass().equalsIgnoreCase(loadedReport.getFirstReportClass());
 			boolean hasSameDate = false;
 
