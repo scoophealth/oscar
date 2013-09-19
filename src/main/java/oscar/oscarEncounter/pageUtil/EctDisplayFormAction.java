@@ -52,6 +52,8 @@ import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
+import oscar.OscarProperties;
+
 public class EctDisplayFormAction extends EctDisplayAction {
 
 	private static Logger logger=MiscUtils.getLogger();
@@ -98,6 +100,17 @@ public class EctDisplayFormAction extends EctDisplayAction {
 				
 				String BGCOLOUR = request.getParameter("hC");
 				for (EncounterForm encounterForm : encounterForms) {
+					if (encounterForm.getFormName().equalsIgnoreCase("Discharge Summary")) {
+						String caisiProperty = OscarProperties.getInstance().getProperty("caisi");
+						if (caisiProperty != null && (caisiProperty.equalsIgnoreCase("yes")
+								||caisiProperty.equalsIgnoreCase("true")
+								||caisiProperty.equalsIgnoreCase("on"))) {
+							; // form in
+						}
+						else {	
+							continue; //form out
+						}
+					}
 					winName = encounterForm.getFormName() + bean.demographicNo;
 
 					String table = encounterForm.getFormTable();
