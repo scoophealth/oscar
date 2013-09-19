@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.codec.binary.Base64;
 import org.oscarehr.hospitalReportManager.xsd.DateFullOrPartial;
 import org.oscarehr.hospitalReportManager.xsd.Demographics;
 import org.oscarehr.hospitalReportManager.xsd.OmdCds;
@@ -164,9 +165,20 @@ public class HRMReport {
 		return demographics.getPersonStatusCode().value();
 	}
 
+	public boolean isBinary() {
+		if(hrmReport.getPatientRecord().getReportsReceived().get(0).getFormat() == ReportFormat.BINARY) {
+			return true;
+		}
+		return false;
+	}
+	
+	public String getFileExtension() {
+		return hrmReport.getPatientRecord().getReportsReceived().get(0).getFileExtensionAndVersion();
+	}
+	
 	public String getFirstReportTextContent() {
 		if(hrmReport.getPatientRecord().getReportsReceived().get(0).getFormat() == ReportFormat.BINARY) {
-			return getBinaryContent();
+			return new Base64().encodeToString(getBinaryContent());
 		}
 		String result = null;
 		try {
@@ -178,16 +190,15 @@ public class HRMReport {
 	}
 	
 	//this is actually BASE64, so using as ASCII ok.
-	public String getBinaryContent() {
+	public byte[] getBinaryContent() {
 		
-		String result = null;
 		try {
 			byte[] tmp =hrmReport.getPatientRecord().getReportsReceived().get(0).getContent().getMedia();
-			result = new String(tmp);
+			return tmp;
 		}catch(Exception e) {
 			MiscUtils.getLogger().error("error",e);
 		}
-		return result;
+		return null;
 	}
 	
 	public String getFirstReportClass() {
