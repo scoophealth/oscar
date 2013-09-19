@@ -22,6 +22,7 @@ import org.oscarehr.hospitalReportManager.xsd.Demographics;
 import org.oscarehr.hospitalReportManager.xsd.OmdCds;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard.LegalName.OtherName;
+import org.oscarehr.hospitalReportManager.xsd.ReportFormat;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived.OBRContent;
 import org.oscarehr.util.MiscUtils;
 
@@ -164,9 +165,25 @@ public class HRMReport {
 	}
 
 	public String getFirstReportTextContent() {
+		if(hrmReport.getPatientRecord().getReportsReceived().get(0).getFormat() == ReportFormat.BINARY) {
+			return getBinaryContent();
+		}
 		String result = null;
 		try {
 			result = hrmReport.getPatientRecord().getReportsReceived().get(0).getContent().getTextContent();
+		}catch(Exception e) {
+			MiscUtils.getLogger().error("error",e);
+		}
+		return result;
+	}
+	
+	//this is actually BASE64, so using as ASCII ok.
+	public String getBinaryContent() {
+		
+		String result = null;
+		try {
+			byte[] tmp =hrmReport.getPatientRecord().getReportsReceived().get(0).getContent().getMedia();
+			result = new String(tmp);
 		}catch(Exception e) {
 			MiscUtils.getLogger().error("error",e);
 		}
