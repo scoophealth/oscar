@@ -218,18 +218,27 @@
 <!-- Patient medical information -->
     <databaseap>
         <ap-name>social_family_history</ap-name>
-        <ap-sql>SELECT socialHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${socialHistory}</ap-output>
+        <ap-sql>SELECT GROUP_CONCAT(t.socialHistory SEPARATOR ', ') as socialHistories FROM( SELECT notes.note as socialHistory FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='SocHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${socialHistories}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>other_medications_history</ap-name>
-        <ap-sql>SELECT familyHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${familyHistory}</ap-output>
+        <ap-sql>SELECT GROUP_CONCAT(t.omed SEPARATOR ', ') as omeds FROM( SELECT notes.note as omed FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='OMeds' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${omeds}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>medical_history</ap-name>
-        <ap-sql>SELECT medicalHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${medicalHistory}</ap-output>
+        <ap-sql>SELECT GROUP_CONCAT(t.medicalHistory SEPARATOR ', ') as medicalHistories FROM( SELECT notes.note as medicalHistory FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='MedHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${medicalHistories}</ap-output>
     </databaseap>
     <databaseap>
     	<ap-name>dxregistry</ap-name>
