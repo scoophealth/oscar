@@ -315,6 +315,21 @@ public class PreventionData {
 		}
 		return comment;
 	}
+	
+	public static oscar.oscarPrevention.Prevention getLocalandRemotePreventions(Integer demographicId) {
+		oscar.oscarPrevention.Prevention prevention = getPrevention(demographicId);
+		
+		List<CachedDemographicPrevention>cachedPreventions = getRemotePreventions(demographicId);
+		
+		if( cachedPreventions != null ) {
+			for( CachedDemographicPrevention cdp : cachedPreventions) {
+				PreventionItem pi = new PreventionItem(cdp);
+				prevention.addPreventionItem(pi);
+			}
+		}
+		
+		return prevention;
+	}
 
 	public static oscar.oscarPrevention.Prevention getPrevention(Integer demoNo) {
 		DemographicDao demographicDao=SpringUtils.getBean(DemographicDao.class);
