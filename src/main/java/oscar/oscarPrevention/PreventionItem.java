@@ -26,6 +26,7 @@ package oscar.oscarPrevention;
 
 import java.util.Date;
 
+import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.common.model.Prevention;
 
 import oscar.util.ConversionUtils;
@@ -75,6 +76,14 @@ public class PreventionItem {
 		this.nextDate = pp.getNextDate();
 		this.refused = pp.isRefused();
     }
+	
+	public PreventionItem(CachedDemographicPrevention pp) {
+		this.name = pp.getPreventionType();
+		this.datePreformed = pp.getPreventionDate().getTime();
+		this.never = ConversionUtils.toBoolString(pp.isNever());
+		this.nextDate = pp.getNextDate().getTime();
+		this.refused = pp.isRefused();
+	}
 
 	public boolean getNeverVal() {
 		boolean ret = false;

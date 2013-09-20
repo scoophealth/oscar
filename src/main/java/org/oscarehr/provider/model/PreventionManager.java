@@ -72,7 +72,7 @@ public class PreventionManager {
         if( ret == null ) {
                 try {
 
-                	Prevention prev = PreventionData.getPrevention(Integer.valueOf(demo));
+                	Prevention prev = PreventionData.getLocalandRemotePreventions(Integer.parseInt(demo));
                     pf.getMessages(prev);
                     
                     @SuppressWarnings("unchecked")
