@@ -157,10 +157,12 @@ public class ScheduleOfBenefits {
 		if (oldPricingInfo != null && addChangedCodes && !feeChanged) { return null; }
 		
 		// Check for date change
-		String oldServiceDate = (String)oldPricingInfo.get("billingservice_date");
-		oldServiceDate = oldServiceDate.replace("-",  "");
-		String newServiceDate = (String)newPricingInfo.get("effectiveDate");
-		if(oldServiceDate.equals(newServiceDate)) {return null; }
+		if (oldPricingInfo != null) {
+			String oldServiceDate = (String)oldPricingInfo.get("billingservice_date");
+			oldServiceDate = oldServiceDate.replace("-",  "");
+			String newServiceDate = (String)newPricingInfo.get("effectiveDate");
+			if(oldServiceDate.equals(newServiceDate)) {return null; }
+		}
 
 		change.put("newprice", fee);
 		change.put("feeCode", newPricingInfo.get("feeCode") + feeType);
