@@ -234,38 +234,73 @@
 
 <!-- Patient medical information -->
     <databaseap>
-        <ap-name>social_family_history</ap-name>
-        <ap-sql>SELECT socialHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${socialHistory}</ap-output>
+        <ap-name>medical_history</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(t.medicalHistory SEPARATOR ', ') as medicalHistories FROM( SELECT notes.note as medicalHistory FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='MedHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${medicalHistories}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>other_medications_history</ap-name>
-        <ap-sql>SELECT familyHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${familyHistory}</ap-output>
+        <ap-sql>SELECT GROUP_CONCAT(t.omed SEPARATOR ', ') as omeds FROM( SELECT notes.note as omed FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='OMeds' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${omeds}</ap-output>
     </databaseap>
     <databaseap>
-        <ap-name>medical_history</ap-name>
-        <ap-sql>SELECT medicalHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${medicalHistory}</ap-output>
+        <ap-name>social_family_historyc</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(t.socialHistory SEPARATOR ', ') as socialHistories FROM( SELECT notes.note as socialHistory FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='SocHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${socialHistories}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ongoingconcerns</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(t.concern SEPARATOR ', ') as concerns FROM( SELECT notes.note as concern FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='Concerns' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${concerns}</ap-output>
+    </databaseap>
+        <ap-name>reminders</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(t.reminder SEPARATOR ', ') as reminders FROM( SELECT notes.note as reminder FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='Reminders' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${reminders}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>risk_factors</ap-name>
+        <ap-sql>select s1.note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
+                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
+                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='riskfactors' limit 1) limit 1) group by cn.uuid) s2 
+                where s1.note_id = s2.note_id and s1.archived=0;
+        </ap-sql>
+        <ap-output>${s1.note}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>family_history</ap-name>
+        <ap-sql>select s1.note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
+                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
+                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='famhistory' limit 1) limit 1) group by cn.uuid) s2 
+                where s1.note_id = s2.note_id and s1.archived=0;
+        </ap-sql>
+        <ap-output>${s1.note}</ap-output>
+        <ap-json-output>true</ap-json-output>
     </databaseap>
     <databaseap>
     	<ap-name>dxregistry</ap-name>
     	<ap-sql>SELECT GROUP_CONCAT(icd9.description SEPARATOR ', ') AS dxlist FROM icd9, dxresearch WHERE status='A' AND coding_system='icd9' AND icd9.icd9=dxresearch.dxresearch_code AND demographic_no=${demographic};</ap-sql>
-    	<ap-output>${dxlist}</ap-output></databaseap>
-    <databaseap>
-    	<ap-name>OHIPdxCode</ap-name>
-
-    	<ap-sql>SELECT GROUP_CONCAT(DISTINCT billing_on_item.dx) AS ohipdxc FROM billing_on_item, billing_on_cheader1 WHERE billing_on_cheader1.id=billing_on_item.ch1_id AND billing_on_cheader1.demographic_no=${demographic};</ap-sql>
-    	<ap-output>${ohipdxc}</ap-output></databaseap>
-    <databaseap>
-        <ap-name>ongoingconcerns</ap-name>
-        <ap-sql>SELECT ongoingConcerns FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${ongoingConcerns}</ap-output>
+    	<ap-output>${dxlist}</ap-output>
     </databaseap>
     <databaseap>
-        <ap-name>reminders</ap-name>
-        <ap-sql>SELECT reminders FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-        <ap-output>${reminders}</ap-output>
+    	<ap-name>OHIPdxCode</ap-name>
+    	<ap-sql>SELECT GROUP_CONCAT(DISTINCT billing_on_item.dx) AS ohipdxc FROM billing_on_item, billing_on_cheader1 WHERE billing_on_cheader1.id=billing_on_item.ch1_id AND billing_on_cheader1.demographic_no=${demographic};</ap-sql>
+    	<ap-output>${ohipdxc}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>allergies_des</ap-name>
@@ -280,7 +315,7 @@
 		<ap-sql>SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ')as allergy FROM allergies, demographic
 				WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1</ap-sql>
 		<ap-output>${allergy}</ap-output>
-	</databaseap>
+    </databaseap>
     <databaseap>
         <ap-name>recent_rx</ap-name>
         <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),' \n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} </ap-sql>
@@ -309,6 +344,8 @@
                 FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
         <ap-output>${rxlist}</ap-output>
     </databaseap>
+
+<!-- Prenatal information -->
     <databaseap>
         <ap-name>onGTPAL</ap-name>
         <ap-sql>SELECT  CONCAT('G',c_gravida,' T', c_term,' P' , c_prem,' A', c_abort ,' L', c_living) as onGTPAL FROM formONAREnhanced f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
@@ -691,25 +728,5 @@
         <ap-sql>select GROUP_CONCAT(format(fee,2) SEPARATOR '<![CDATA[<br/>]]>') as billing_fee from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
         </ap-sql>
         <ap-output>${billing_fee}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>risk_factors</ap-name>
-        <ap-sql>select s1.note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
-                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
-                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='riskfactors' limit 1) limit 1) group by cn.uuid) s2 
-                where s1.note_id = s2.note_id and s1.archived=0;
-        </ap-sql>
-        <ap-output>${s1.note}</ap-output>
-        <ap-json-output>true</ap-json-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>family_history</ap-name>
-        <ap-sql>select s1.note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
-                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
-                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='famhistory' limit 1) limit 1) group by cn.uuid) s2 
-                where s1.note_id = s2.note_id and s1.archived=0;
-        </ap-sql>
-        <ap-output>${s1.note}</ap-output>
-        <ap-json-output>true</ap-json-output>
     </databaseap>
 </eformap-config>
