@@ -40,9 +40,6 @@ import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.exports.PatientExport;
 import org.oscarehr.exports.VelocityTemplate;
-import org.oscarehr.exports.e2e.E2EExportValidator;
-import org.oscarehr.exports.e2e.E2EVelocityTemplate;
-import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.exports.e2e.E2EVelocityTemplate.E2EResources;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -60,7 +57,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 	private static String[] tables = {"admission", "allergies", "casemgmt_note_ext", "casemgmt_issue",
 		"clinic", "demographic", "demographicSets", "demographic_merged", "drugs", "dxresearch",
 		"health_safety", "icd9", "issue", "lst_gender", "measurementMap", "measurementType", "measurements",
-		"measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
+		"measurementsExt", "patientLabRouting", "preventions", "preventionsExt", "program", "provider"};
 
 	@BeforeClass
 	public static void onlyOnce() throws Exception {
@@ -109,15 +106,15 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 
 		// check output is well-formed
 		assertTrue("XML unexpectedly not well-formed", new E2EExportValidator().isWellFormedXML(s));
-		logger.warn("There should be one VALIDATION ERROR warning below.");
+		//logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
-		assertFalse("XML well-formed, expected not well-formed", new E2EExportValidator().isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>")));
+		assertFalse("XML well-formed, expected not well-formed", new E2EExportValidator().isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>"), true));
 
 		// validate against XML schema
 		assertTrue("XML document unexpectedly not valid", new E2EExportValidator().isValidXML(s));
-		logger.warn("There should be one VALIDATION ERROR warning below.");
+		//logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
-		assertFalse("XML valid, expected not valid", new E2EExportValidator().isValidXML(s.replace("DOCSECT", "DOXSECT")));
+		assertFalse("XML valid, expected not valid", new E2EExportValidator().isValidXML(s.replace("DOCSECT", "DOXSECT"), true));
 	}
 
 	@Test

@@ -33,7 +33,6 @@ import java.io.IOException;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.oscarehr.exports.e2e.E2EExportValidator;
 
 /**
  * This test class tests that the E2E XML Schema validator is functioning correctly.
