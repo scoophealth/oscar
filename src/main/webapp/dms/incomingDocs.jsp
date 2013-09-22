@@ -24,6 +24,9 @@
 --%>
     
     
+<%@page import="org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@page import="oscar.util.UtilDateUtilities"%>
 <%@page import="java.io.File"%>
 <%@ page import="oscar.dms.*,java.util.*" %>
@@ -89,7 +92,13 @@
     String imageType = IncomingDocUtil.getAndSetViewDocumentAs(user_no, request.getParameter("imageType"));
     String queueIdStr = IncomingDocUtil.getAndSetIncomingDocQueue(user_no, request.getParameter("defaultQueue"));
     String entryMode = IncomingDocUtil.getAndSetEntryMode(user_no, request.getParameter("entryMode"));
-        
+
+    UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+    UserProperty uProp = userPropertyDAO.getProp(user_no, UserProperty.DOCUMENT_DESCRIPTION_TEMPLATE);                        
+    String useDocumentDescriptionTemplateType=UserProperty.CLINIC;
+    if( uProp != null && uProp.getValue().equals(UserProperty.USER)) {
+        useDocumentDescriptionTemplateType=UserProperty.USER;
+    }           
         
     // add to most recent patient list
     int listsize = LastPatientsBean.size();
@@ -542,6 +551,7 @@
             function selectDocType(num) {
                 var selObj = document.getElementById('docType');
                 selObj.selectedIndex = num;
+                addDocumentDescriptionTemplateButton();
             }    
                 
             
@@ -693,6 +703,36 @@
                     }
                 }
             }
+            
+            function addDocumentDescriptionTemplateButton() {
+                if(document.PdfInfoForm.entryMode.value=="Fast") {   
+                    var bdoc;
+                    var docDescriptionList;
+                    var docType=document.getElementById('docType').options[document.getElementById('docType').selectedIndex].value;
+
+                    docDescriptionList = $('docDescriptionList');
+                    while( docDescriptionList.hasChildNodes() ) { docDescriptionList.removeChild( docDescriptionList.lastChild ); }
+                
+                    var url="<%=request.getContextPath()%>/DocumentDescriptionTemplate.do";
+                    var data='method=getDocumentDescriptionFromDocType&doctype='+docType+"&providerNo=<%=user_no%>&useDocumentDescriptionTemplateType=<%=useDocumentDescriptionTemplateType%>";
+                    new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                        var json=transport.responseText.evalJSON();
+                        if(json!=null ){
+                            for (var i = 0; i < json.documentDescriptionTemplate.length; i++) {
+                                
+                                bdoc = document.createElement('input');
+                                bdoc.setAttribute("type", "button");
+                                bdoc.setAttribute("value", json.documentDescriptionTemplate[i].descriptionShortcut);
+                                bdoc.setAttribute("title", json.documentDescriptionTemplate[i].description);
+                                bdoc.setAttribute("onclick", "selectDocDesc('"+json.documentDescriptionTemplate[i].description+"');");
+
+                                docDescriptionList = $('docDescriptionList');
+                                docDescriptionList.appendChild(bdoc);
+                            }
+                        }
+                    }});
+                }
+            }
         </script>
     </head>
     <body> 
@@ -808,6 +848,7 @@
                             <input type="hidden" name="queue" value="1">
                             <input type="hidden" name="pdfAction" value="">
                             <input type="hidden" name="lastdemographic_no" id="lastdemographic_no" value="">
+                            <input type="hidden" name="entryMode" value="<%=entryMode%>">
                             <table border="0" width="350">
                                 <% if (entryMode.equals("Fast")) {%>
                                 <tr><td colspan="2" width="350">
@@ -819,7 +860,7 @@
                                 <tr>
                                     <td><bean:message key="dms.incomingDocs.type" />:</td>
                                     <td>
-                                        <select tabIndex="<%=tabIndex++%>" name ="docType" id="docType">
+                                        <select tabIndex="<%=tabIndex++%>" name ="docType" id="docType" onchange="addDocumentDescriptionTemplateButton()">
                                             <option value=""><bean:message key="dms.incomingDocs.selectType" /></option>
                                             <%for (int j = 0; j < docTypes.size(); j++) {
                                                     String docType = (String) docTypes.get(j);%>
@@ -853,6 +894,7 @@
                                         <div class="autocomplete_style" id="docSubClass_list"></div>
                                     </td>
                                 </tr>
+                                <tr><td colspan="2"><div id="docDescriptionList"></div></td></tr>
                                 <tr><td colspan="2"><bean:message key="dms.incomingDocs.description" />:</td></tr>
                                 <tr>
                                     <td colspan="2"><input tabIndex="<%=tabIndex++%>"  type="text" style="width:100%;" id="documentDescription" name="documentDescription" value=""  onfocus="setDescriptionIfEmpty();" /></td>

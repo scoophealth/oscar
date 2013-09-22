@@ -11343,5 +11343,13 @@ create table CtlRelationships (
         primary key(id)
 );
 
-
+CREATE TABLE  documentDescriptionTemplate (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  doctype varchar(60) NOT NULL,
+  description varchar(255) NOT NULL,
+  descriptionShortcut varchar(20) NOT NULL,
+  provider_no varchar(6),
+  lastUpdated timestamp NOT NULL,
+  PRIMARY KEY (id)
+);
 

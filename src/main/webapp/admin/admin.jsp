@@ -690,7 +690,10 @@ div.logoutBox {
 		
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/displayDocumentCategories.jsp"/>&quot;);return false;'><bean:message key="admin.admin.DocumentCategories"/></a></li>
-
+                        
+                        <li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/displayDocumentDescriptionTemplate.jsp?setDefault=true"/>&quot;);return false;'><bean:message key="admin.admin.DocumentDescriptionTemplate"/></a></li>
+                                
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'><bean:message key="admin.admin.clinicAdmin"/></a></li>
 			<%
