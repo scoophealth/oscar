@@ -45,6 +45,8 @@ import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
+
 import oscar.oscarEncounter.data.EctFormData;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.util.DateUtils;
@@ -104,6 +106,17 @@ public class EctDisplayFormAction extends EctDisplayAction {
 				
 				String BGCOLOUR = request.getParameter("hC");
 				for (EncounterForm encounterForm : encounterForms) {
+					if (encounterForm.getFormName().equalsIgnoreCase("Discharge Summary")) {
+						String caisiProperty = OscarProperties.getInstance().getProperty("caisi");
+						if (caisiProperty != null && (caisiProperty.equalsIgnoreCase("yes")
+								||caisiProperty.equalsIgnoreCase("true")
+								||caisiProperty.equalsIgnoreCase("on"))) {
+							; // form in
+						}
+						else {	
+							continue; //form out
+						}
+					}
 					winName = encounterForm.getFormName() + bean.demographicNo;
 
 					String table = encounterForm.getFormTable();

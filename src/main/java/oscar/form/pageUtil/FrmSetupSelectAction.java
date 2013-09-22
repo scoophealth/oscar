@@ -43,6 +43,8 @@ import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
+
 public class FrmSetupSelectAction extends Action {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
@@ -55,7 +57,17 @@ public class FrmSetupSelectAction extends Action {
     	ArrayList<EncounterForm> formHiddenVector=new ArrayList<EncounterForm>();
     	
     	for (EncounterForm encounterForm : forms)
-    	{
+    	{	if (encounterForm.getFormName().equalsIgnoreCase("Discharge Summary")) {
+			String caisiProperty = OscarProperties.getInstance().getProperty("caisi");
+			if (caisiProperty != null && (caisiProperty.equalsIgnoreCase("yes")
+					||caisiProperty.equalsIgnoreCase("true")
+					||caisiProperty.equalsIgnoreCase("on"))) {
+				; // form in
+			}
+			else {	
+				continue; //form out
+			}
+		}
     		if (encounterForm.isHidden()) formHiddenVector.add(encounterForm);
     		else formShownVector.put(encounterForm.getDisplayOrder(),encounterForm);
     	}
