@@ -51,7 +51,6 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.ProviderData;
 import org.oscarehr.exports.PatientExport;
 import org.oscarehr.exports.PatientExport.sortByDin;
-import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.exports.e2e.E2EPatientExport.Lab;
 import org.oscarehr.exports.e2e.E2EPatientExport.LabGroup;
 import org.oscarehr.util.SpringUtils;
@@ -68,7 +67,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 	private static String[] tables = {"admission", "allergies", "casemgmt_note_ext", "casemgmt_issue",
 		"clinic", "demographic", "demographicSets", "demographic_merged", "drugs", "dxresearch",
 		"health_safety", "icd9", "issue", "lst_gender", "measurementMap", "measurementType", "measurements",
-		"measurementsExt", "patientLabRouting", "preventions", "program", "provider"};
+		"measurementsExt", "patientLabRouting", "preventions", "preventionsExt", "program", "provider"};
 
 	@BeforeClass
 	public static void onlyOnce() throws Exception {
