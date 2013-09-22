@@ -92,7 +92,7 @@
 					{
 						%>
 						&nbsp;
-						<a target="_blank" href="../../../admin/viewIntegratedCommunity.jsp?facilityId=<c:out value="${requestScope.id}" />">
+						<a target="_blank" href="<%= request.getContextPath() %>/admin/viewIntegratedCommunity.jsp?facilityId=<c:out value="${requestScope.id}" />">
 							View Integrated Facilities Community
 						</a>
 						<%

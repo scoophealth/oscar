@@ -288,7 +288,8 @@ $("document").ready(function() {
 		$("#summary_of_actions_block").innerHTML='';
 		var count=0;
 		var domains = '';
-		
+		var actionsArray =[];
+		actionsArray.push("");
 		for(var x=1;x<=24;x++) {
 			var actionVal = $("#"+x+"_actions").val();			
 			if(actionVal.length > 0) {
@@ -298,7 +299,12 @@ $("document").ready(function() {
 				} 	
 				domains += x;
 			}
+			actionsArray.push(actionVal);
 		}		
+		
+		var less = false;
+		if($("#summary_of_actions_count").val() > count)
+			less=true;
 		$("#summary_of_actions_count").val(count);
 		$("#summary_of_actions_domains").val(domains);
 		var demographicId='<%=currentDemographicId%>';
@@ -306,16 +312,30 @@ $("document").ready(function() {
 		var ocanStaffFormId = '<%=ocanStaffFormId%>';
 		var prepopulate = '<%=prepopulate%>';
 		
-		//Remove old actions generated last time
-		for(var x=1;x<=25;x++) {			
+		if(typeof $("#"+count+"_summary_of_actions_domain").val() === 'undefined' || less==true) {
+			//Remove old actions generated last time
+			for(var x=1;x<=25;x++) {			
 				$("#summary_of_actions_"+x).remove();			
+			}
+
+			//Append new generatedactions 
+			$.get('ocan_form_summary_of_actions.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
+			  $("#summary_of_actions_block").append(data);			  
+			});	
+			
 		}
-
-		//Append new generatedactions 
-		$.get('ocan_form_summary_of_actions.jsp?prepopulate='+prepopulate+'&ocanStaffFormId='+ocanStaffFormId+'&ocanType='+ocanType+'&demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
-			  $("#summary_of_actions_block").append(data);					 
-			});		
-
+		//after append(date), some div are not in place undefined but the following script will still be executed.
+		//need to double click the button...
+		var index = 0;
+		for(var y=0; y<count; y++) {	
+			index ++;
+			var actionOptionValue = $("#"+ index + "_summary_of_actions_domain").val();			
+			if (typeof actionOptionValue === 'undefined') {
+				continue;
+			}
+			
+			$("#" + index + "_summary_of_actions_action").val(actionsArray[actionOptionValue]);	
+		}			
 		
 	});
 	
@@ -814,8 +834,8 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 		<tr>
 			<td class="genericTableHeader">Number of Mental Health Functional Centres?</td>
 			<td class="genericTableData">
-				<select name="center_count" id="center_count" onchange="changeNumberOfcentres();" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "center_count", OcanForm.getOcanFormOptions("Number Of Centres"),prepopulationLevel)%>
+				<select name="center_count" id="center_count" onchange="changeNumberOfcentres();" class="{validate: {required:true}}">					
+					<%=OcanForm.renderAsNumberOfCentresSelectOptions(ocanStaffForm.getId(), "center_count", OcanForm.getOcanFormOptions("Number Of Centres"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
@@ -1788,12 +1808,12 @@ Client date of birth : <%=ocanStaffForm.getClientDateOfBirth()%>
 			<td class="genericTableData">
 			Years: 
 				<select name="years_in_canada">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "years_in_canada", OcanForm.getOcanFormOptions("Years in Canada"),prepopulationLevel)%>
+					<%=OcanForm.renderAsYearsSelectOptions(ocanStaffForm.getId(), "years_in_canada", OcanForm.getOcanFormOptions("Years in Canada"),prepopulationLevel)%>
 				</select>
 			&nbsp;&nbsp;
 			Months:
 				<select name="months_in_canada">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "months_in_canada", OcanForm.getOcanFormOptions("Months in Canada"),prepopulationLevel)%>
+					<%=OcanForm.renderAsMonthsSelectOptions(ocanStaffForm.getId(), "months_in_canada", OcanForm.getOcanFormOptions("Months in Canada"),prepopulationLevel)%>
 				</select>		
 			</td>
 		</tr>
@@ -4029,7 +4049,7 @@ This information is collected from a variety of sources, including self-report, 
 			<td class="genericTableHeader">Number of Referrals?</td>
 			<td class="genericTableData">
 				<select name="referrals_count" id="referrals_count" onchange="changeNumberOfReferrals();">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(),"referrals_count", OcanForm.getOcanFormOptions("Years in Canada"),String.valueOf(referralCount),prepopulationLevel)%>
+					<%=OcanForm.renderAsNumberOfReferralsSelectOptions(ocanStaffForm.getId(),"referrals_count", OcanForm.getOcanFormOptions("Years in Canada"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>													

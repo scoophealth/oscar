@@ -26,7 +26,6 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class OcanWorkloadAction extends DispatchAction {
 			List<Admission> currentAdmissions = admissionDao.getCurrentAdmissions(demographicNo);
 			boolean admit=true;
 			for(Admission adm:currentAdmissions) {
-				if(adm.getProgramType().equals("community")) {
+				/*if(adm.getProgramType().equals("community")) {  //Being in community program does not mean the clients are discharged.
 					//discharged
 					Calendar now = Calendar.getInstance();
 					Calendar then = Calendar.getInstance();
@@ -85,6 +84,10 @@ public class OcanWorkloadAction extends DispatchAction {
 						admit=false;
 					}
 				}
+				*/
+				//If the client is not in any bed or service program, means he's discharged. Then don't list this client's OCAN form.
+				if(adm.getProgramType().equalsIgnoreCase("bed") || adm.getProgramType().equalsIgnoreCase("service"))
+					admit = true;
 			}
 			if(admit)
 				filteredOcanForms.add(ocan);
