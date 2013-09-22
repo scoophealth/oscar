@@ -38,9 +38,9 @@ public class Agency implements Serializable {
 
 	private Long id;// fields
 	private Integer intakeQuick;
-	private String intakeQuickState;
+	private String intakeQuickState="HSC";
 	private Integer intakeIndepth;
-	private String intakeIndepthState;
+	private String intakeIndepthState="HSC";
 
 	public static Agency getLocalAgency() {
 		return localAgency;
@@ -63,6 +63,24 @@ public class Agency implements Serializable {
 		// do nothing
 	}
 
+	/**
+	 * Constructor for primary key
+	 */
+	public Agency(Long id) {
+		this.setId(id);
+	}
+
+	/**
+	 * Constructor for required fields
+	 */
+	public Agency(Long id, Integer intakeQuick, String intakeQuickState, String intakeIndepthState) {
+
+		this.setId(id);
+		this.setIntakeQuick(intakeQuick);
+		this.setIntakeQuickState(intakeQuickState);
+		this.setIntakeIndepthState(intakeIndepthState);
+	}
+
 	public boolean areHousingProgramsVisible(String intakeType) {
 		boolean visible = false;
 
@@ -76,6 +94,19 @@ public class Agency implements Serializable {
 		return visible;
 	}
 
+	public boolean areCommunityProgramsVisible(String intakeType) {
+		boolean visible = false;
+
+		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeQuickState().contains("C");
+		}
+		else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeIndepthState().contains("C");
+		}
+
+		return visible;
+	}
+	
 	public boolean areServiceProgramsVisible(String intakeType) {
 		boolean visible = false;
 
