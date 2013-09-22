@@ -2598,3 +2598,10 @@ INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, c
 
 insert into issue (code,description,role,update_date,type) values ('TicklerNote','Tickler Note', 'nurse',now(),'system');
 
+insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('lab','Hematology','Hema',NULL);
+insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('lab','Biochemistry','Bio',NULL);
+insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('lab','ECG','ECG',NULL);
+insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('radiology','Ultrasound','US',NULL);
+insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('radiology','MRI','MRI',NULL);
+insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('radiology','CT-SCAN','Scan',NULL);
+insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('radiology','X-Ray','XRay',NULL);

@@ -2348,6 +2348,9 @@
                         <forward name="nextIncomingDoc" path="/dms/incomingDocs.jsp" />
 		</action>
 		
+                <action path="/DocumentDescriptionTemplate" name="FrmForm" type="org.oscarehr.provider.web.DocumentDescriptionTemplateAction" parameter="method" scope="request">
+		</action>
+                
 		<action path="/dms/SplitDocument" name="FrmForm" type="org.oscarehr.document.web.SplitDocumentAction" parameter="method" scope="request">
         	<forward name="success" path="/oscarMDS/Splitclose.jsp" />
         </action>

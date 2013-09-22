@@ -79,5 +79,7 @@ public class LogConst {
     public static final String CON_SECURITY = "securityRecord";
     public static final String CON_ANNOTATION = "annotation";
     public static final String CON_PHR  = "phr";
+    public static final String CON_DOCUMENTDESCRIPTIONTEMPLATE = "documentDescriptionTemplate";
+    public static final String CON_DOCUMENTDESCRIPTIONTEMPLATEPREFERENCE = "documentDescriptionTemplatePreference";
     
 }
