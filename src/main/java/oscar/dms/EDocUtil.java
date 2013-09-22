@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import org.apache.commons.io.FileUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -676,6 +677,33 @@ public final class EDocUtil {
 			documentDao.merge(d);
 		}
 	}
+
+       public static void refileDocument(String documentNo, String queueId) throws Exception {
+
+            String sourceDocDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+            Document d = documentDao.find(Integer.parseInt(documentNo));
+            File sourceFile = new File(sourceDocDir, d.getDocfilename());
+
+            String destFileName = sourceFile.getName();
+            if (destFileName.length() > 18) {
+                destFileName = destFileName.substring(14, destFileName.length());
+            }
+
+            String destPath = IncomingDocUtil.getIncomingDocumentFilePath(queueId, "Refile");
+            File destFile = new File(destPath, "R" + destFileName);
+
+            try {
+                if (destFile.exists()) {
+                    throw new IOException("Cannot refile document #"+documentNo+ " "+d.getDocdesc()+". Destination File " + destFile.getAbsolutePath() + " already exists");
+                } else {
+                    FileUtils.copyFile(sourceFile, destFile);
+                    EDocUtil.deleteDocument(documentNo);
+                }
+            } catch (IOException e) {
+                logger.error("Error", e);
+                throw new Exception(e);
+            }
+        }
 
 	public static String getDmsDateTime() {
 		String nowDateR = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd");
