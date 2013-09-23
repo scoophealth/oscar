@@ -25,6 +25,7 @@
 	String date = request.getParameter("sdate");
   	String provider_no = request.getParameter("provider_no");
   	boolean bodd = false;
+  	boolean printed = false;
   	ResultSet rsdemo = null;
 %>
 <html>
@@ -95,10 +96,12 @@ function setfocus() {
 		if (rsdemo.next()) {
 			java.util.Date currentEndDate = DateUtils.parseDate(rsdemo.getString("a.appointment_date") + " " + rsdemo.getString("a.end_time"), new String[]{"yyyy-mm-dd HH:mm:ss"});
 			java.util.Date appointmentDate = DateUtils.parseDate(rsdemo.getString("a.appointment_date") + " " + rsdemo.getString("a.start_time"), new String[]{"yyyy-mm-dd HH:mm:ss"});
-			while (DateUtils.addMinutes(indexDate, 14).before(appointmentDate)) {
-				if (previousEndDate == null || previousEndDate.before(indexDate)) {
-					bodd = !bodd;
-				}
+			while ((!printed && DateUtils.addMinutes(indexDate, 14).before(appointmentDate)) || (printed && DateUtils.addMinutes(indexDate, 29).before(appointmentDate))) {
+			    if (printed) {
+			        indexDate = DateUtils.addMinutes(indexDate, 15);
+			        printed = false;
+			    }
+				bodd = !bodd;
 %>
 				<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
 					<td class="items"><%=formatter.format(indexDate)%></td>
@@ -113,16 +116,19 @@ function setfocus() {
 					<td class="items">&nbsp;</td>
 				</tr>
 <%			
-				indexDate = DateUtils.addMinutes(indexDate, 15);			
+				indexDate = DateUtils.addMinutes(indexDate, 15);
 			}
 			bodd = !bodd;
+			if (DateUtils.addMinutes(indexDate, 14).before(appointmentDate)) {
+			    indexDate = DateUtils.addMinutes(indexDate, 15);
+			}
 %>
 				<tr bgcolor="<%=((bodd)?"#F6F6F6":"#FFFFFF")%>">
-					<td class="items"><%=formatter.format(indexDate)%></td>
-					<td class="items"><%=rsdemo.getString("d.chart_no")%></td>
-					<td class="items"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name")) + ", " + Misc.toUpperLowerCase(rsdemo.getString("d.first_name")) + " Ph:" + rsdemo.getString("d.phone")%></td>
-					<td class="items"><%=rsdemo.getString("d.date_of_birth") + "-" + rsdemo.getString("d.month_of_birth") + "-" + rsdemo.getString("d.year_of_birth")%></td>
-					<td class="items"><%=rsdemo.getString("d.hin")%></td>
+					<td class="items"><%=formatter.format(indexDate)%>&nbsp;</td>
+					<td class="items"><%=rsdemo.getString("d.chart_no")%>&nbsp;</td>
+					<td class="items"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name")) + ", " + Misc.toUpperLowerCase(rsdemo.getString("d.first_name")) + " Ph:" + rsdemo.getString("d.phone")%>&nbsp;</td>
+					<td class="items"><%=rsdemo.getString("d.date_of_birth") + "-" + rsdemo.getString("d.month_of_birth") + "-" + rsdemo.getString("d.year_of_birth")%>&nbsp;</td>
+					<td class="items"><%=rsdemo.getString("d.hin")%>&nbsp;</td>
 					<td class="items">&nbsp;</td>
 					<td class="items">&nbsp;</td>
 					<td class="items">&nbsp;</td>
@@ -131,11 +137,11 @@ function setfocus() {
 				</tr>
 <%
 			previousEndDate = currentEndDate;
-			indexDate = DateUtils.addMinutes(indexDate, 15);
+			printed = true;
+			// indexDate = DateUtils.addMinutes(indexDate, 15);
 		} else {
-			if (previousEndDate == null || previousEndDate.before(indexDate)) {
-				bodd = !bodd;
-			}
+			bodd = !bodd;
+			indexDate = DateUtils.addMinutes(indexDate, 15);
 %>
 			<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
 				<td class="items"><%=formatter.format(indexDate)%></td>
@@ -150,7 +156,6 @@ function setfocus() {
 				<td class="items">&nbsp;</td>
 			</tr>
 <%					
-			indexDate = DateUtils.addMinutes(indexDate, 15);
 		}
 	}
 %>
