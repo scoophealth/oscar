@@ -96,7 +96,7 @@ if(demographicLink != null){
 	background-color: red;
 }
 
-#metadataBox, #commentBox {
+#commentBox {
 	clear: both;
 	border: 1px solid black;
 	margin: 20px;
@@ -454,7 +454,7 @@ if (documentComments != null) {
 </div>
 
 <div id="metadataBox">
-	<table>
+	<table style="border: 1px solid black;margin: 20px;">
 		<tr>
 			<th>Message Unique ID</th>
 			<td><%=hrmReport.getMessageUniqueId() %></td>
