@@ -50,17 +50,18 @@ import org.xml.sax.SAXException;
 public class HRMReportParser {
 
 	private static Logger logger = MiscUtils.getLogger();
-	private static OmdCds root = null;
-
+	
 	private HRMReportParser() {}
 
 
 	public static HRMReport parseReport(String hrmReportFileLocation) {
-
+		OmdCds root = null;
+		
 		logger.info("Parsing the Report in the location:"+hrmReportFileLocation);
 		
 		String fileData = null;
 		if (hrmReportFileLocation != null) {
+			
 			try {
 				//a lot of the parsers need to refer to a file and even when they provide functions like parse(String text)
 				//it will not parse the same way because it will treat the text as a URL
@@ -82,6 +83,8 @@ public class HRMReportParser {
 
 				JAXBContext jc = JAXBContext.newInstance("org.oscarehr.hospitalReportManager.xsd");
 				Unmarshaller u = jc.createUnmarshaller();
+				u.setSchema(schema);
+				
 				root = (OmdCds) u.unmarshal(tmpXMLholder);
 
 				tmpXMLholder = null;
