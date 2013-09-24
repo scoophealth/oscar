@@ -47,9 +47,7 @@
                         oscar.OscarProperties oscarVariables = oscar.OscarProperties.getInstance();
 
 			String user_no = (String) session.getAttribute("user");
-			String providerview = request.getParameter("providerview") == null ? "" : request
-					.getParameter("providerview");
-			providerview = providerview.equals("1") ? user_no : providerview;
+			String providerview = request.getParameter("providerview") == null ? "" : request.getParameter("providerview");
 			String asstProvider_no = "", color = "", premiumFlag = "", service_form = "";
 			String sql = null;
 			ResultSet rs = null;
