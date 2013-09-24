@@ -115,7 +115,15 @@ public class SFTPConnector {
 		}
 
 		//fetch all files from remote dir
-		downloadDirectoryContents(remoteDir);
+		String[] localFilePaths = downloadDirectoryContents(remoteDir);
+		
+		String[] paths = null;
+		if(doDecrypt()) {
+			paths = decryptFiles(localFilePaths);
+		} else {
+			paths = localFilePaths;
+		}
+		
 		//delete all files from remote dir
 		deleteDirectoryContents(remoteDir, files);
 
@@ -135,9 +143,7 @@ public class SFTPConnector {
 	public SFTPConnector(String host, int port, String user, String keyLocation) throws Exception {
 
 		logger.debug("Host "+host+" port "+port+" user "+user+" keyLocation "+keyLocation);	
-		//decryption key
-		decryptionKey = SFTPAuthKeys.OMDdecryptionKey2;
-
+		
 		//daily log file name follows "day month year . log" (with no spaces)
 		String logName = SFTPConnector.getDayMonthYearTimestamp() + ".log";
 		String fullLogPath = this.logDirectory + logName;
@@ -416,6 +422,10 @@ public class SFTPConnector {
 	            out = new BufferedWriter(handler);
 	            out.write(decryptedContent);
 	            decryptedFilePaths[x] = newFullPath;
+			} catch(Exception e) {
+				//Don't want this to fail on all other files in the directory just because one doesn't decrypt;
+				logger.error("Error decrypting file - " + sfile);
+				decryptedFilePaths[x] = null;
             } finally {
 	            if (out!=null) out.close();
 	            if (handler!=null) handler.close();
@@ -551,6 +561,16 @@ public class SFTPConnector {
 	public static boolean isFetchRunning() {
 		return SFTPConnector.isAutoFetchRunning;
 	}
+	
+	public static boolean doDecrypt() {
+		boolean decrypt = false;
+		String decryptionKey = OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY");
+		
+		if (StringUtils.isNotEmpty(decryptionKey)) {
+			decrypt=true;
+		} 
+		return decrypt;
+	}
 
 	public static synchronized void startAutoFetch() {
 
@@ -580,16 +600,10 @@ public class SFTPConnector {
     				sftp.close();
                 }
 
-				//decrypt?
-				boolean decrypt = false;
-				String decryptionKey = OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY");
 				
-				if (StringUtils.isNotEmpty(decryptionKey)) {
-					decrypt=true;
-				} 
 				
 				String[] paths = null;
-				if(decrypt) {
+				if(doDecrypt()) {
 					paths = decryptFiles(localFilePaths);
 				} else {
 					paths = localFilePaths;
