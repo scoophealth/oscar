@@ -631,7 +631,7 @@ public class SFTPConnector {
 	}
 	
 
-	private static void notifyHrmError(String errorMsg) {
+	protected static void notifyHrmError(String errorMsg) {
 	    HashSet<String> sendToProviderList = new HashSet<String>();
 
     	String providerNoTemp="999998";
