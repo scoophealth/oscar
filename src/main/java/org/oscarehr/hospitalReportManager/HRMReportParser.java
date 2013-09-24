@@ -397,13 +397,18 @@ public class HRMReportParser {
 		//		}
 
 		for (Provider p : sendToProviderList) {
-			HRMDocumentToProvider providerRouting = new HRMDocumentToProvider();
-			providerRouting.setHrmDocumentId(reportId.toString());
-
-			providerRouting.setProviderNo(p.getProviderNo());
-			providerRouting.setSignedOff(0);
-
-			hrmDocumentToProviderDao.merge(providerRouting);
+						
+			List<HRMDocumentToProvider> existingHRMDocumentToProviders =  hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNoList(reportId.toString(), p.getProviderNo());
+			
+			if (existingHRMDocumentToProviders == null || existingHRMDocumentToProviders.size() == 0) {	
+				HRMDocumentToProvider providerRouting = new HRMDocumentToProvider();
+				providerRouting.setHrmDocumentId(reportId.toString());
+	
+				providerRouting.setProviderNo(p.getProviderNo());
+				providerRouting.setSignedOff(0);
+	
+				hrmDocumentToProviderDao.merge(providerRouting);
+			}	
 		}
 
 		return sendToProviderList.size() > 0;
