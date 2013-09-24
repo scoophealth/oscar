@@ -44,7 +44,8 @@ int curDay = cal.get(Calendar.DAY_OF_MONTH);
 function popupPage(vheight,vwidth,varpage) { 
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-  var popup=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
+  //var popup=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
+  var popup=window.open(page, "encounter", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self; 
