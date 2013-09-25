@@ -62,10 +62,20 @@
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%>
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
-
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
+String demoNo = request.getParameter("demographicNo");
+String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
+boolean privateConsentEnabled = privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true");
+DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+DemographicExt infoExt = demographicExtDao.getDemographicExt(Integer.parseInt(demoNo), "informedConsent");
+boolean showPopup = false;
+if(infoExt == null || !"yes".equalsIgnoreCase(infoExt.getValue())) {
+	showPopup=true;
+}
+
 try
 {
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -331,7 +341,25 @@ try
 
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-				<select id="channel">
+
+				
+
+				<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)">
+				<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
+
+				<div style="display:inline-block; text-align: left;">
+					<%
+						if (privateConsentEnabled && showPopup) {
+					%>				
+					<div id="informedConsentDiv" style="background-color: orange; padding: 5px; font-weight: bold;">
+						<input type="checkbox" value="ic" name="informedConsentCheck" id="informedConsentCheck" onClick="return doInformedConsent('<%=demoNo%>');"/>&nbsp;Please ensure that Informed Consent has been obtained!
+					</div>
+					<%
+						}
+					%>
+					
+					<!-- channel -->
+					<select id="channel">
 					<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search?query="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
 					<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
 					<option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed" /></option>
@@ -339,9 +367,8 @@ try
                     <option value="tripsearch.jsp?searchterm=">Trip Database</option>
                     <option value="macplussearch.jsp?searchterm=">MacPlus Database</option>
     	        </select>
+				</div>				
 
-				<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)">
-				<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
 			</div>
 			&nbsp;&nbsp;
 			<div style="display:inline-block;text-align: left;" id="toolbar">
@@ -426,7 +453,7 @@ try
 	<html:hidden property="appointmentNo" value="<%=apptNo%>" />
 	<html:hidden property="appointmentDate" value="<%=apptDate%>" />
 	<html:hidden property="start_time" value="<%=startTime%>" />
-	<html:hidden property="billRegion" value="<%=((String )OscarProperties.getInstance().getProperty(\"billregion\",\"\")).trim().toUpperCase()%>" />
+	<html:hidden property="billRegion" value="<%=(OscarProperties.getInstance().getProperty(\"billregion\",\"\")).trim().toUpperCase()%>" />
 	<html:hidden property="apptProvider" value="<%=apptProv%>" />
 	<html:hidden property="providerview" value="<%=provView%>" />
 	<input type="hidden" name="toBill" id="toBill" value="false">

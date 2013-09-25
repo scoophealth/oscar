@@ -3794,3 +3794,21 @@ function assignNoteAjax(method, chain,programId,demographicNo) {
 }
 
 
+	
+	function doInformedConsent(demographicNo) {
+		var checked = jQuery("#informedConsentCheck").attr("checked");
+		if(checked) {
+			var forSure = window.confirm("Are you sure you would like to indicate that Informed Consent has been collected?");
+			if(forSure) {
+				        jQuery.getJSON(ctx+"/DemographicExtService.do?method=saveNewValue&demographicNo="+demographicNo + "&key=informedConsent&value=yes",
+			                function(data,textStatus){
+			                  if(data != undefined && parseInt(data.value) > 0) {
+			                  	jQuery("#informedConsentDiv").remove();
+			                  }
+      				  });
+				
+			} else {
+				jQuery("#informedConsentCheck").attr("checked",false);
+			}
+		}
+	}
