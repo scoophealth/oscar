@@ -24,10 +24,11 @@
 
 --%>
 <% long startTime = System.currentTimeMillis(); %><%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.model.FlowSheetDrug"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
+<%@ page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@ page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.model.FlowSheetDrug"%>
+<%@ page import="oscar.util.UtilDateUtilities" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -46,10 +47,23 @@
 <% response.sendRedirect("../../noRights.html"); %>
 </security:oscarSec>
 
+
+
+<!--*************************************************************************************
+NOTES:
+This is all you need to print a single meas
+TemplateFlowSheetPrint.jsp?demographic_no=1&template=diab2&printView=true&printHP=LDL&printStyleLDL=all&numEleLDL=&sDateLDL=&eDateLDL=
+
+maybe use jquery/ajax to post this data instead of submitting a form to send ALL data???
+
+*************************************************************************************-->
+
+
 <%
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     boolean printView = false;
+    String date = UtilDateUtilities.getToday("yyyy-MM-dd");
 
     //preset for patient handout
     ArrayList<String> phandout = new ArrayList<String>();
@@ -143,15 +157,31 @@
     ArrayList comments = new ArrayList();
 
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html:html locale="true">
 
 <head>
-<title><%=flowSheet%> - <oscar:nameage demographicNo="<%=demographic_no%>"/></title><!--I18n-->
-<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css" />
-<script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
-<script type="text/javascript" src="../../share/javascript/prototype.js"></script>
+<title>Custom Print for <%=flowSheet%> - <oscar:nameage demographicNo="<%=demographic_no%>"/></title><!--I18n-->
+
+<meta name="viewport" content="width=device-width, user-scalable=false;">
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="<%=request.getContextPath() %>/js/html5.js"></script>
+<![endif]-->
+
+<!-- Fav and touch icons -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+                <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+                               <link rel="shortcut icon" href="ico/favicon.png">
+                                   
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/DT_bootstrap.css">
 
 <style type="text/css">
     div.ImmSet { background-color: #ffffff;clear:left;margin-top:10px;}
@@ -162,71 +192,39 @@
     div.ImmSet li a { text-decoration:none; color:blue;}
     div.ImmSet li a:hover { text-decoration:none; color:red; }
     div.ImmSet li a:visited { text-decoration:none; color:blue;}
-
-    /*h3{font-size: 100%;margin:0 0 10px;padding: 2px 0;color: #497B7B;text-align: center}*/
-
 </style>
-
-<style type="text/css" media="print">
-.DoNotPrint {
-	display: none;
-}
-
-div.headPrevention {
-    position:relative;
-    margin-left:1px;
-    width:22em;
-    /*height:2.9em;*/
-}
-
-div.headPrevention a:active { color:black; }
-div.headPrevention a:hover { color:black; }
-div.headPrevention a:link { color:black; }
-div.headPrevention a:visited { color:black; }
-</style>
-<style type="text/css" media="screen">
-    .DoNotScreen{ display:none;}
-
-    div.headPrevention {
-    position:relative;
-    float:left;
-    width:12em;
-    /*height:2.9em;*/
-}
-
-
-div.headPrevention a:active { color:blue; }
-div.headPrevention a:hover { color:blue; }
-div.headPrevention a:link { color:blue; }
-div.headPrevention a:visited { color:blue; }
-</style>
-
-<link rel="stylesheet" type="text/css" href="../../share/css/niftyCorners.css" />
-<link rel="stylesheet" type="text/css" href="../../share/css/niftyPrint.css" media="print" />
-<script type="text/javascript" src="../../share/javascript/nifty.js"></script>
-
-<script type="text/javascript">
-    window.onload=function(){
-        if(!NiftyCheck())
-            return;
-
-//Rounded("div.news","all","transparent","#FFF","small border #999");
-        <%if(!printView){%>
-        Rounded("div.headPrevention","all","#CCF","#efeadc","small border blue");
-        Rounded("div.preventionProcedure","all","transparent","#F0F0E7","small border #999");
-        <%}%>
-//Rounded("span.footnote","all","transparent","#F0F0E7","small border #999");
-
-        Rounded("div.leftBox","top","transparent","#CCCCFF","small border #ccccff");
-        Rounded("div.leftBox","bottom","transparent","#EEEEFF","small border #ccccff");
-
-    }
-</script>
-
 
 <style type="text/css">
 body {font-size:100%}
 
+input[type=checkbox].css-checkbox {
+position: absolute; 
+overflow: hidden; 
+clip: rect(0 0 0 0); 
+height:1px; 
+width:1px; 
+margin:-1px; 
+padding:0;
+border:0;
+}
+
+input[type=checkbox].css-checkbox + label.css-label {
+padding-left:20px;
+height:15px; 
+display:inline-block;
+line-height:15px;
+background-repeat:no-repeat;
+background-position: 0 0;
+font-size:15px;
+vertical-align:middle;
+cursor:pointer;
+}
+
+input[type=checkbox].css-checkbox:checked + label.css-label {
+background-position: 0 -15px;
+}
+
+.css-label{ background-image:url(<%=request.getContextPath()%>/images/dark-check-green.png); }
 
 div.leftBox{
     width:90%;
@@ -244,7 +242,6 @@ span.footnote {
 
 div.leftBox h3 {
     background-color: #ccccff;
-/*font-size: 1.25em;*/
     font-size: 8pt;
     font-variant:small-caps;
     font-weight:bold;
@@ -255,8 +252,6 @@ div.leftBox h3 {
 }
 
 div.leftBox ul{
-/*border-top: 1px solid #F11;*/
-/*border-bottom: 1px solid #F11;*/
     font-size: 1.0em;
     list-style:none;
     list-style-type:none;
@@ -274,51 +269,53 @@ div.leftBox li {
     white-space: nowrap;
 }
 
+.DoNotScreen{ display:none;}
 
-
+div.headPrevention {
+vertical-align:top;
+display:inline-block;
+width:20%;
+}
 
 div.headPrevention p {
-    background: #ddddff;
-    font-family: verdana,tahoma,sans-serif;
+    display:inline;
     margin:0;
-
     padding: 4px 4px;
-    line-height: 1.2;
-/*text-align: justify;*/
-    /*height:2em;*/
-    font-family: sans-serif;
+    line-height: 1.2;  
+  
 }
 
 div.headPrevention a {
     text-decoration:none;
 }
 
-
-
+.inner{
+display:inline-block;
+width:70%;
+}
 
 div.preventionProcedure{
+display:inline-block;
     width:9em;
-    float:left;
     margin-left:3px;
     margin-bottom:3px;
 }
 
+
 div.preventionProcedure p {
+vertical-align: top;
     font-size: 0.8em;
     font-family: verdana,tahoma,sans-serif;
     background: #F0F0E7;
     margin:0;
     padding: 1px 2px;
-/*line-height: 1.3;*/
-/*text-align: justify*/
 }
 
 div.preventionSection {
-    width: 100%;
     position:relative;
+    width: 100%;
     margin-top:5px;
-    float:left;
-    clear:left;
+    border-bottom:thin solid #c6c6c6;  
 }
 
 div.preventionSet {
@@ -340,80 +337,127 @@ div.recommendations ul{
     padding-bottom:0px;
 }
 
-div.recommendations li{
+.module-block{
+position:absolute;top:0;left:0px;background-color:#333;color:#fff;font-size:20px;padding:6px;padding-right:20px;
+}
+
+.module-block a{
+text-decoration:none;
+color:#fff;
+}
+
+.controls{
+display:inline-block;
+padding-right:20px;
 
 }
 
+#scrollToTop{
+Position:fixed;
+display:none;
+bottom:30px;
+right:15px;
+}
+
+.input-error{   
+    border-color: rgba(229, 103, 23, 0.8) !important; 
+    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6) !important; 
+    outline: 0 none !important;
+    
+}
+
+</style> 
 
 
+<!--PRINT CSS-->
+<style type="text/css" media="print">
+.DoNotPrint {
+	display: none;
+}
+
+.inner{
+display:inline-block;
+width:100%;
+}
+
+
+div.headPrevention a:active { color:black; }
+div.headPrevention a:hover { color:black; }
+div.headPrevention a:link { color:black; }
+div.headPrevention a:visited { color:black; }
 </style>
+
 
 </head>
 
-<body class="BodyStyle" >
-<!--  -->
-<form action="TemplateFlowSheetPrint.jsp" method="post">
-<table  class="MainTable" id="scrollNumber1" >
-<tr class="MainTableTopRow">
-    <td class="MainTableTopRowLeftColumn"  >
-        <%=flowSheet%> <span class="DoNotScreen"> --- <oscar:nameage demographicNo="<%=demographic_no%>"/></span>
-    </td>
-    <td class="MainTableTopRowRightColumn DoNotPrint">
-        <table class="TopStatusBar">
-            <tr>
-                <td >
-                    <oscar:nameage demographicNo="<%=demographic_no%>"/>
-                    &nbsp;
-                    <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=lastOnly">Last Only</a>
-                    &nbsp;
-                    <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=outOfRange">Only out of Range</a>
-                    &nbsp;
-                    <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">All</a>
-                </td>
-                <td  >&nbsp;
-
-                </td>
-                <td style="text-align:right">
-                    <oscar:help keywords="measurement" key="app.top1"/> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
-<tr>
-<td class="MainTableLeftColumn DoNotPrint" valign="top">
-   &nbsp;
+<body class="BodyStyle" id="printFlowsheetBody">
 
 
-</td>
+<div class="module-block DoNotPrint">
+<%if (!printView){%>
+<a href="JavaScript:void(0);" class="back" title="go back to <%=flowSheet%>"><< <%=flowSheet%></a>
+<%}else{%>
+<a href="JavaScript:void(0);" class="back" title="go back to custom print"> << <%=flowSheet%> - Print</a>
+<%}%>
 
-<td valign="top" class="MainTableRightColumn">
-<% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
-<div class="recommendations DoNotPrint" >
-    <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
-    <a href="#" onclick="Element.toggle('recomList'); return false;" style="font-size:x-small;" >show/hide</a>
-    <ul id="recomList" style="display:none;">
-        <% for (String warn : warnings){ %>
-        <li style="color: red;"><%=warn%></li>
-        <%}%>
-        <% for (String warn : recomendations ){%>
-        <li style="color: black;"><%=warn%></li>
-        <%}%>
-        <!--li style="color: red;">6 month TD overdue</li>
-  <li>12 month MMR due in 2 months</li-->
-        <% if (dsProblems){ %>
-        <li style="color: red;">Decision Support Had Errors Running.</li>
-        <% } %>
-    </ul>
-        <% if( !printView ) {%>
-    <br>
-    <input type="submit" value="Print Preview" class="DoNotPrint"/>&nbsp;<input type="button" onclick="history.go(-1);" value="Back">
-        <%}%>
 </div>
-<% } %>
-<%=mFlowsheet.getTopHTMLStream() %>
 
-<div >
+<div class="well" style="padding-bottom:0px;margin-bottom:0px;">
+	<h3><oscar:nameage demographicNo="<%=demographic_no%>"/></h3>				
+</div>
+
+<!--<oscar:help keywords="measurement" key="app.top1"/> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>-->
+                                  
+<form action="TemplateFlowSheetPrint.jsp" id="flowsheetPrintForm" method="post" class="form-inline">
+    <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
+    <input type="hidden" name="template" value="<%=temp%>"/>
+    <input type="hidden" name="printView" value="true"/>
+
+<!-- VIEW CONTROL -->
+<div class="well DoNotPrint" style="margin:0px;padding-top:2px;padding-bottom:2px;background-color:#c6c6c6;overflow: hidden">
+
+<%if (!printView){%>
+<div class="controls">
+	<input type="checkbox" name="select-all-chk" id="select-all-chk" class="css-checkbox"  value="select-all"/>
+	<label for="select-all-chk" name="select-all-lbl" class="css-label">Select All</label>
+</div>
+	
+<div class="controls">
+		<input type="checkbox" name="print-comments-chk" id="print-comments-chk" class="css-checkbox"  value="print"/>
+		<label for="print-comments-chk" name="print-comments-lbl" class="css-label">Print Comments <a href="#comments-list"><span class="label label-info">view</span></a></label>
+</div>
+
+<div class="controls">
+		<input  type="checkbox" name="print-recommendation-chk" id="print-recommendation-chk" class="css-checkbox"  value="print"/>
+		<label for="print-recommendation-chk" name="print-recommendation-lbl" class="css-label">Print Recommendations <a href="#recommendations-list"><span class="label label-info">view</span></a></label>
+</div>
+<%}%>
+	
+
+	<div class="controls DoNotPrint" style="float:right">
+
+		<%if (printView){%>
+		<a href="JavaScript:void(0);" class="btn btn-small back loading" title="Cancel" data-loading-text="cancelling...">Cancel</a>			
+		<button type="button" class="btn btn-small btn-success DoNotPrint" onclick="javascript:window.print();"><i class="icon-print icon-white"></i> Print</button>	
+		<%}else{%>
+
+view:
+		<div class="btn-group">
+		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>" id="all-btn" class="btn btn-small loading" data-loading-text="Loading...">All</a>
+		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=lastOnly" id="lastOnly-btn" class="btn btn-small loading" data-loading-text="Loading...">Last Only</a>
+		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=outOfRange" id="outOfRange-btn" class="btn btn-small loading" data-loading-text="Loading...">Out of Range</a>
+		</div>
+
+			<button type="submit" class="btn btn-small DoNotPrint loading-print" data-loading-text="Loading..."><i class="icon-print"></i> Preview</button>
+
+		<%}%>
+	</div>
+</div>
+
+
+<!--MEASUREMENTS SELECTION LIST  overflow: hidden;-->
+<div class="well" style="position:relative;padding-top:2px;">
+
 <%
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
@@ -444,46 +488,87 @@ div.recommendations li{
             }else if(mi.hasWarning(measure)){
                 extraColour = "style=\"background-color: "+mFlowsheet.getWarningColour()+"\" ";
             }
-
-
 %>
-    <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
-    <input type="hidden" name="template" value="<%=temp%>"/>
-    <input type="hidden" name="printView" value="true"/>
-<div class="preventionSection"  style="<%=hidden%>" nowrap>
+
+<!--MEASUREMENTS ROW-->
+<div class="preventionSection"  style="<%=hidden%>">
+
     <%if (!printView){%>
     <div style="position: relative; float: left; padding-right: 10px;" class="DoNotPrint">
-       <input  type="checkbox" name="printHP"   value="<%=measure%>"  <%=setToPrint ? "checked" : ""%>/>
-       <input type="radio" name="printStyle<%=measure%>" value="all" checked >ALL</input><br>
-       <input type="radio" name="printStyle<%=measure%>" value="num" ># Elements</input>
-       <input type="text" name="numEle<%=measure%>" size="3"/>    <br>
-       <input type="radio" name="printStyle<%=measure%>"  value="range">Range</input>
-       <input type="text" size="10" name="sDate<%=measure%>"/> <input type="text" name="eDate<%=measure%>" size="10"/>
+	
+	<input type="checkbox" name="printHP" id="printHP<%=measure%>" class="css-checkbox"  value="<%=measure%>"  <%=setToPrint ? "checked" : ""%>/>
+	<label for="printHP<%=measure%>" name="printHP<%=measure%>" class="css-label"></label><!--needed for chkbox effect-->
+
     </div>
     <%}%>
+
+
+
+<!--MEASUREMENT TITLE-->
     <div class="headPrevention">
 
-        <p <%=extraColour%> title="fade=[on] header=[<%=item.getDisplayName()%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=item.getGuideline()%>]"   >
-            <%if(item.isGraphable()){%>
+        <p <%//=extraColour%> title="fade=[on] header=[<%=item.getDisplayName()%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=item.getGuideline()%>]"   >
+
+           <!-- <%if(item.isGraphable()){%>
                <%if (alist != null && alist.size() > 1) { %>
                   <img class="DoNotPrint" src="img/chart.gif" alt="Plot"  onclick="window.open('../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=<%=measure%>');"/>
                <%}else{%>
                   <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
                <%}%>
-            <%}%>
-            <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( item.getItemName().hashCode() ) %>')">
-            </security:oscarSec>
-
-                <span  style="font-weight:bold;"><%=item.getDisplayName()%></span>
+            <%}%>-->
 
             <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-            </a>
-			</security:oscarSec>
-        </p>
 
-    </div>
+<!--don't need to add from print            
+<a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( item.getItemName().hashCode() ) %>')">
+</security:oscarSec>
 
+<span  style="font-weight:bold;"><%=item.getDisplayName()%></span>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+</a>
+</security:oscarSec>
+-->
+
+<span  style=""><%=item.getDisplayName()%></span>
+<br/>
+
+</p>
+
+<div id="refine-results-<%=measure%>" style="display:none;position:relative;">
+
+<select name="printStyle<%=measure%>" id="refineSelect-<%=measure%>" style="width:110px" rel="<%=measure%>">
+	<option value="all" selected>all <%=measure%></option>
+	<option value="num"># Elements</option>
+	<option value="range">date range</option>
+</select>
+
+
+<input type="text" name="numEle<%=measure%>" class="num-<%=measure%>" style="display:none;width:20px" placeholder=""/>      
+
+
+<div class="range-<%=measure%>" style="display:none">
+	<div class="input-append date" id="dp-startDate" data-date="<%=date%>" data-date-format="yyyy-mm-dd" title="Start Date">
+	<input style="width:90px" name="sDate<%=measure%>" id="sDate-<%=measure%>" size="16" type="text" value="" placeholder="start" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$">
+	<span class="add-on"><i class="icon-calendar"></i></span>
+	</div>
+
+	<div class="input-append date" id="dp-endDate" data-date="<%=date%>" data-date-format="yyyy-mm-dd" title="End Date">
+	<input style="width:90px" name="eDate<%=measure%>" id="eDate-<%=measure%>" size="16" type="text" value="" placeholder="end" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$">
+	<span class="add-on"><i class="icon-calendar"></i></span>
+	</div>
+</div><!--range container-->
+
+ 
+
+</div><!--refine-results-->
+
+
+</div><!--headPrevention-->
+
+
+
+<div class="inner">
     <%  int k = 0;
         for (EctMeasurementsDataBean mdb:alist){
             k++;
@@ -532,9 +617,6 @@ div.recommendations li{
                 hider = "style=\"display:none;\"";
             }
 
-
-
-
             String indColour = "";
             if ( mdb.getIndicationColour() != null ){
                 indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
@@ -555,35 +637,37 @@ div.recommendations li{
     </div>
     <%}%>
 </div>
+</div>
+
+<!--PREVENTIONS -->
 <%}else{
+
+
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
     ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.valueOf(demographic_no));
 %>
 
-
-<div class="preventionSection" style="<%=hidden%>" >
+<div class="preventionSection" style="<%=hidden%>">
     <%if (!printView){%>
     <div style="position: relative; float: left; padding-right: 10px;" class="DoNotPrint">
-       <input  type="checkbox" name="printHP"   value="<%=measure%>" />
-       <input type="radio" name="printStyle<%=measure%>" value="all" checked >ALL</input><br>
-       <input type="radio" name="printStyle<%=measure%>" value="num" ># Elements</input>
-       <input type="text" name="numEle<%=measure%>" size="3"/>    <br>
-       <input type="radio" name="printStyle<%=measure%>"  value="range">Range</input>
-       <input type="text" size="10" name="sDate<%=measure%>"/> <input type="text" name="eDate<%=measure%>" size="10"/>
+       	<input  type="checkbox" name="printHP" id="printHP<%=measure%>" class="css-checkbox"  value="<%=measure%>"  <%=setToPrint ? "checked" : ""%>/>
+	<label for="printHP<%=measure%>" name="printHP<%=measure%>" class="css-label"></label><!--needed for chkbox effect-->
     </div>
     <%}%>
 
     <div class="headPrevention">
         <p title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
+
+<!--
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
                 <span title="<%=h2.get("guideline")%>" style="font-weight:bold;"><%=h2.get("display_name")%></span>
             </a>
-            &nbsp;
+-->
 
-            <br/>
+           <span title="<%=h2.get("guideline")%>"><%=h2.get("display_name")%></span>
         </p>
-    </div>
+    </div><!--headPrevention-->
     <%
         out.flush();
         for (int k = 0; k < alist.size(); k++){
@@ -596,8 +680,6 @@ div.recommendations li{
             }else{
                 com ="";
             }
-
-
 
             ///////PREV
             String hider = "";
@@ -632,13 +714,7 @@ div.recommendations li{
                 hider = "style=\"display:none;\"";
             }
 
-
-
             //////PREV END
-
-
-
-
     %>
     <div class="preventionProcedure" <%=hider%> onclick="javascript:popup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
         <p <%=r(hdata.get("refused"))%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>]" >Age: <%=hdata.get("age")%> <br/>
@@ -647,9 +723,10 @@ div.recommendations li{
             <span class="footnote"><%=comments.size()%></span>
             <%}%>
         </p>
-    </div>
+    </div><!--preventionProcedure-->
     <%}%>
-</div>
+
+</div> <!--preventionSection-->
 
 <%
 }
@@ -667,31 +744,33 @@ div.recommendations li{
         if (forPrint.get(measure) == null && printView  ){
             hidden= "display:none;";
         }
-
-
 %>
 
 <div class="preventionSection" style="<%=hidden%>" >
     <%if (!printView){%>
     <div style="position: relative; float: left; padding-right: 10px;" class="DoNotPrint">
-       <input  type="checkbox" name="printHP"   value="<%=fsd.getAtcCode()%>" />
+
+	<input  type="checkbox" name="printHP" id="printHP<%=fsd.getAtcCode()%>" class="css-checkbox"  value="<%=fsd.getAtcCode()%>"/>
+	<label for="printHP<%=measure%>" name="printHP<%=measure%>" class="css-label"></label><!--needed for chkbox effect-->
+
+<!--
        <input type="radio" name="printStyle<%=fsd.getAtcCode()%>" value="all" checked >ALL</input><br>
        <input type="radio" name="printStyle<%=fsd.getAtcCode()%>" value="num" ># Elements</input>
        <input type="text" name="numEle<%=fsd.getAtcCode()%>" size="3"/>    <br>
        <input type="radio" name="printStyle<%=fsd.getAtcCode()%>"  value="range">Range</input>
        <input type="text" size="10" name="sDate<%=fsd.getAtcCode()%>"/> <input type="text" name="eDate<%=fsd.getAtcCode()%>" size="10"/>
+-->
     </div>
     <%}%>
+
     <div class="headPrevention">
-        <p title="fade=[on] header=[ddddd] body=[ddddddddsdfsdf]">
-            <!-- a href="javascript: function myFunction() {return false; }"  -->
-                <span title="dd" style="font-weight:bold;"><%=arr[0].getGenericName()%></span>
-            <!-- /a -->
-            &nbsp;
+        <p title="">
+		<span title=""><%=arr[0].getGenericName()%></span>
             <br/>
         </p>
-    </div>
-    <%
+    </div> <!--headPrevention-->
+   
+ <%
         out.flush();
         int k = 0;
         for (oscar.oscarRx.data.RxPrescriptionData.Prescription pres : arr){
@@ -738,34 +817,49 @@ div.recommendations li{
             <span class="footnote"><%=comments.size()%></span>
             <%} --%>
         </p>
-    </div>
+    </div> <!--preventionProcedure-->
     <%k++;}%>
-</div>
+
+</div> <!--preventionSection drugs-->
 
 <%}%>
 
 
-
-
-
-
-
-<%if (printView){%>
-   <input type="button" class="DoNotPrint" value="Print" onclick="javascript:window.print()">
-   <input type="button" class="DoNotPrint" value="Back" onclick="javascript:history.go(-1);">
-<%}else{%>
-<input type="submit" value="Print Preview" class="DoNotPrint"/>
-<%}%>
+</div><!--MEASUREMENTS SELECTION LIST END-->
 </form>
 
 
+<%
+String noPrintStyle = "style='display:none;'";
+String noPrint1 = "";
+String noPrint2 = "";
+
+ if(printView){
+
+		if(request.getParameter("print-comments-chk")!=null && request.getParameter("print-comments-chk").equals("print")){
+
+		noPrint1="";
+
+		}else{
+		noPrint1=noPrintStyle;
+		}
 
 
-</div>
+		if(request.getParameter("print-recommendation-chk")!=null && request.getParameter("print-recommendation-chk").equals("print")){
+		 noPrint2="";
+		}else{
+		 noPrint2=noPrintStyle;
+		}
 
-<br style="clear:left;"/>
-<div style="margin-top: 20px;">
-    <h3>Comments</h3>
+}//if printView
+%>
+
+
+
+<!--COMMENTS-->
+
+<div class="well" id="comments-list"  <%=noPrint1%>  >
+    <h4>Comments</h4>
     <ol>
         <% for (int i = 0; i < comments.size(); i++){
             String str = (String) comments.get(i);
@@ -773,19 +867,190 @@ div.recommendations li{
         <li><%=str%></li>
         <% }%>
     </ol>
+</div> <!--COMMENTS END-->
+
+
+<!--RECOMMENDATIONS-->
+<% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
+<div class="well" id="recommendations-list" <%=noPrint2%> >
+   
+ <h4><%=flowSheet%> Recommendations</h4>
+   
+    <ul id="recomList">
+        <% for (String warn : warnings){ %>
+        <li><%=warn%></li>
+        <%}%>
+        <% for (String warn : recomendations ){%>
+        <li><%=warn%></li>
+        <%}%>
+        <!--li style="color: red;">6 month TD overdue</li>
+  <li>12 month MMR due in 2 months</li-->
+        <% if (dsProblems){ %>
+        <li>Decision Support Had Errors Running.</li>
+        <% } %>
+    </ul><!--RECOMMENDATIONS END-->
+        
 </div>
-</td>
-</tr>
-<tr>
-    <td class="MainTableBottomRowLeftColumn DoNotPrint">
-        &nbsp;
-    </td>
-    <td class="MainTableBottomRowRightColumn DoNotPrint" valign="top">
-        &nbsp;
-    </td>
-</tr>
-</table>
-<script type="text/javascript" src="../../share/javascript/boxover.js"></script>
+<% } %>
+
+
+
+
+<div id="scrollToTop" class="DoNotPrint"><a href="#printFlowsheetBody" class="DoNotPrint"><i class="icon-arrow-up"></i>Top</a></div>
+
+<script src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script> 
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>	
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script> 
+
+<script src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
+
+<script type="text/javascript">
+
+$(function (){ 
+	$('[id^=dp-]').datepicker();
+});
+
+$(document).ready(function () {
+
+	$(document).scroll(function () {
+	    var y = $(this).scrollTop();
+	    if (y > 60) {
+	        $('#scrollToTop').fadeIn();
+	    } else {
+	        $('#scrollToTop').fadeOut();
+	    }
+	});
+
+$('.loading').click(function(){
+	$(this).button('loading');
+});
+
+$('a.back').click(function(){
+	parent.history.back();
+	return false;
+});
+
+
+$("[id$=-btn]").removeClass("btn-primary active");
+<%if (request.getParameter("show") !=null ){%>
+	$('#<%=request.getParameter("show")%>-btn').addClass("btn-primary active");
+<%}else{%>
+	$('#all-btn').addClass("btn-primary active");
+<%}%>
+
+$('#select-all-chk').click(function(){
+
+	if($('#select-all-chk').is(':checked')){
+	$("[id^=printHP]").attr ( "checked" ,"checked" );
+	$("[id^=refine-results-]").show();
+	}
+	else
+	{
+	$("[id^=printHP]").removeAttr('checked');
+	$("[id^=refine-results-]").hide();
+	}
+
+});
+
+
+$("[id^=refineSelect]").change(function(){
+	var v = $(this).val();
+	var m = $(this).attr("rel");
+	
+	if(v=="num"){
+		$("."+v+"-"+m).toggle();
+		
+		$(".range-"+m).hide();
+
+	}else if(v=="range"){
+		$("."+v+"-"+m).toggle();
+		$(".num-"+m).hide();
+	}else{
+		$(".range-"+m).hide();
+		$(".num-"+m).hide();
+	}
+});
+
+
+
+$("[id^=printHP]").click(function(){
+	
+var v = $(this).val();
+
+if($(this).is(':checked')){
+$("#refine-results-"+v).show();
+}else{
+$("#refine-results-"+v).hide();
+}
+
+});
+
+
+$("#flowsheetPrintForm").submit(function(){
+
+	var error=false;
+
+	$("[id^=printHP]").each(function(){
+		
+
+		if($(this).is(':checked')){
+
+			var v = $(this).val();
+
+			var x = $("#refineSelect-"+v).val();	
+
+					
+			if(x=="num" && $(".num-"+v).val()==""){
+				
+				$(".num-"+v).addClass("input-error");
+				error=true;
+
+			}else{
+
+				$(".num-"+v).removeClass("input-error");
+				
+			} 
+
+
+
+			if(x=="range" && $("#sDate-"+v).val()=="" ){
+				$("#sDate-"+v).addClass("input-error");
+				error=true;
+
+		 	}else{
+				$("#sDate-"+v).removeClass("input-error");
+
+			} 
+
+
+			if(x=="range" && $("#eDate-"+v).val()==""){
+				$("#eDate-"+v).addClass("input-error");
+				error=true;
+
+			}else{
+				$("#eDate-"+v).removeClass("input-error");
+			}
+
+		}
+	});
+     
+
+	if(error==true){
+	return false;
+	}else{
+	$(".loading-print").button('loading');
+	return true;
+	}
+
+
+});
+
+});
+</script>
+
+
 </body>
 </html:html>
 <%!
