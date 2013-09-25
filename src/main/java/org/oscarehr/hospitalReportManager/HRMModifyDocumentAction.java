@@ -146,6 +146,13 @@ public class HRMModifyDocumentAction extends DispatchAction {
 
 			hrmDocumentToProviderDao.merge(providerMapping);
 
+			
+			//we want to remove any unmatched entries when we do a manual match like this. -1 means unclaimed in this table.
+			HRMDocumentToProvider existingUnmatched = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(hrmDocumentId, "-1");
+			if(existingUnmatched != null) {
+				hrmDocumentToProviderDao.remove(existingUnmatched.getId());
+			}
+			
 			request.setAttribute("success", true);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Tried to assign HRM document to provider but failed.", e); 
