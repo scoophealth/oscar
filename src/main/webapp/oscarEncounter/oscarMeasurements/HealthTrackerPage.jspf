@@ -27,7 +27,7 @@
 <%long startTime = System.currentTimeMillis();%>
 <%@ page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ page import="oscar.oscarRx.util.*" %>
-<%@ page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
+<%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@ page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
@@ -376,6 +376,13 @@ text-decoration:underline;font-weight:bold;
 
 .options-error{
 color:#bd362f;
+}
+
+#scrollToTop{
+Position:fixed;
+display:none;
+bottom:30px;
+right:15px;
 }
 
 .input-success{
@@ -921,12 +928,11 @@ function fsPopup(width,height,url,window) {
 		</span>
 	 	<%} }%>
 	
-	<!--  	
-	 	<span class="DoNotPrint" style="padding-left:10px;" id="flowsheet-print">
+		<span class="DoNotPrint" style="padding-left:10px;" id="flowsheet-print">
 	 	<i class="icon-print"></i> 
-	 	<a href="javascript:void(0)" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet" onclick="javascript:window.print()">Print</a>
-	 	</span>
-	--> 	
+	 	<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet">Custom Print</a>
+	 	</span>	
+	 	
 		<!-- 
 		<span>
 			<a class="DoNotPrint" href="#"  title="Tracker Graph">Tracker Graph</a>
@@ -1727,13 +1733,15 @@ function createAddAll(d,t){
 <%if(isMeasurements){ %>
 <div class="DoNotPrint" style="float:left;margin-left:520px;padding-top:50px;height:70px">
 	<!-- this will have to be visible to user -->
-		    <a href="#HealthTracker" style="padding-right:10px"><i class="icon-arrow-up"></i>Top</a> <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
+		    <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
 </div>
 <%}%>
 <!-- end of form -->
 </fieldset>		    
 </form>
 
+ <div id="scrollToTop"><a href="#HealthTracker"><i class="icon-arrow-up"></i>Top</a></div>
+ 
     
 	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
 	<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
@@ -1752,6 +1760,16 @@ $(function (){
 });  
 
 $(document).ready(function () {
+	
+	$(document).scroll(function () {
+	    var y = $(this).scrollTop();
+	    if (y > 60) {
+	        $('#scrollToTop').fadeIn();
+	    } else {
+	        $('#scrollToTop').fadeOut();
+	    }
+	});
+	
     $("[rel=tooltip]").tooltip();
 
     $("[id^=dxlink]").click(function(){

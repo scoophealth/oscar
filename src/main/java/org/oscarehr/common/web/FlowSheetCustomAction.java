@@ -323,7 +323,6 @@ public class FlowSheetCustomAction extends DispatchAction {
         String demographicNo = request.getParameter("demographic");
 
         FlowSheetCustomization cust = new FlowSheetCustomization();
-
         cust.setAction(FlowSheetCustomization.DELETE);
         cust.setFlowsheet(flowsheet);
         cust.setMeasurement(measurement);
