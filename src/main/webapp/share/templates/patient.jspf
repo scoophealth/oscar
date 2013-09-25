@@ -31,12 +31,24 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
-<%
-String d = request.getParameter("demographic_no") ;
-if(d==null){
-	d = request.getParameter("demo"); //TODO: fix me
-	
+<style>
+.print{display:none;}
+
+@media print{
+.DoNotPrint{display: none}
+.print{display:block}
 }
+</style>
+<%
+String d = null;
+if(request.getParameter("demographic_no")!=null){
+	d = request.getParameter("demographic_no");	
+}else if(request.getParameter("demo")!=null){
+	d = request.getParameter("demo"); 
+}else{
+	d = request.getParameter("demographic");
+}
+
 DemographicDao demographicDao_header = SpringUtils.getBean(DemographicDao.class); 
 Demographic demographic_header=demographicDao_header.getDemographic(d);
  
