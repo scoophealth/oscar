@@ -867,6 +867,13 @@
                 <artifactId>everest-rmim-ca-r02-04-03</artifactId>
                 <version>1.0</version>
         </dependency>
+
+		<dependency>
+				 <groupId>com.cbi.ws</groupId>
+				 <artifactId>cbi_ws_client</artifactId>
+				 <version>1.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
