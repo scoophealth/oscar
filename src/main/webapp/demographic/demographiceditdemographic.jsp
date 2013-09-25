@@ -1830,7 +1830,7 @@ if ( Dead.equals(PatStat) ) {%>
 						</div>
 						
 						<!-- end of consent -->
-						
+
 						</div>
 						<div class="rightSection">
 						<div class="demographicSection" id="contactInformation">
