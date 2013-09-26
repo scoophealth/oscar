@@ -22,13 +22,11 @@ import org.oscarehr.common.dao.BillingONErrorCodeDao;
 import org.oscarehr.common.model.BillingONErrorCode;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.util.ConversionUtils;
-
 public class JdbcBillingErrorCodeImpl {
 
 	public String getCodeDesc(String strServiceCode) {
 		BillingONErrorCodeDao dao = SpringUtils.getBean(BillingONErrorCodeDao.class);
-		BillingONErrorCode code = dao.find(ConversionUtils.fromIntString(strServiceCode));
+		BillingONErrorCode code = dao.find(strServiceCode);
 		if (code != null) {
 			return code.getDescription();
 		}
