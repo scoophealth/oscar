@@ -9,11 +9,15 @@
 
 package org.oscarehr.hospitalReportManager;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -121,6 +125,23 @@ public class HRMDisplayReportAction extends DispatchAction {
 
                             String confidentialityStatement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInProviderNo);
                             request.setAttribute("confidentialityStatement", confidentialityStatement);
+                            
+                            String duplicateLabIdsString=StringUtils.trimToNull(request.getParameter("duplicateLabIds"));
+                            Map<Integer,Date> dupReportDates = new HashMap<Integer,Date>();
+                            Map<Integer,Date> dupTimeReceived = new HashMap<Integer,Date>();
+                            
+                            if (duplicateLabIdsString!=null) {
+                            	String[] duplicateLabIdsStringSplit=duplicateLabIdsString.split(",");
+                            	for (String tempId : duplicateLabIdsStringSplit) {
+                            		HRMDocument doc = hrmDocumentDao.find(Integer.parseInt(tempId));
+                            		dupReportDates.put(Integer.parseInt(tempId),doc.getReportDate());
+                            		dupTimeReceived.put(Integer.parseInt(tempId),doc.getTimeReceived());
+                            	}
+                            
+                            }
+                            
+                            request.setAttribute("dupReportDates",dupReportDates);
+                            request.setAttribute("dupTimeReceived", dupTimeReceived);
                         }
                     }
 			
