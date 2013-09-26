@@ -109,6 +109,7 @@ if(demographicLink != null){
 	margin: 10px;
 }
 
+
 #metadataBox th {
 	text-align: right;
 }
@@ -117,6 +118,9 @@ if(demographicLink != null){
 	#infoBox {
 		display: none;
 	}
+	.boxButton {
+	  display: none;
+    }
 }
 </style>
 
@@ -273,7 +277,9 @@ function revokeSignOffHrm(reportId) {
 		<% 	seenBefore.add(relationshipDocument.getId().intValue());
 			}
 		} %>
-		 <input type="button" onClick="makeIndependent('<%=hrmReportId %>')" value="Make Independent" />
+		 <div class="boxButton">
+		   <input type="button" onClick="makeIndependent('<%=hrmReportId %>')" value="Make Independent" />
+		 </div>  
 	<% } %>
 	</div>
 
@@ -457,8 +463,10 @@ function revokeSignOffHrm(reportId) {
 <div id="commentBox">
 Add a comment to this report:<br />
 <textarea rows="10" cols="50" id="commentField_<%=hrmReportId %>_hrm"></textarea><br />
-<input type="button" onClick="addComment('<%=hrmReportId %>')" value="Add Comment" /><span id="commentstatus<%=hrmReportId %>"></span><br /><br />
 
+ <div class="boxButton">
+   <input type="button" onClick="addComment('<%=hrmReportId %>')" value="Add Comment" /><span id="commentstatus<%=hrmReportId %>"></span><br /><br />
+ </div>
 <%
 List<HRMDocumentComment> documentComments = (List<HRMDocumentComment>) request.getAttribute("hrmDocumentComments");
 
@@ -613,7 +621,7 @@ if (duplicateLabIdsString!=null)
 				<td><%=tempId %></td>
 				<td><%=formatter.format(dupReportDates.get(Integer.parseInt(tempId))) %></td>
 				<td><%=formatter.format(dupTimeReceived.get(Integer.parseInt(tempId))) %></td>
-				<td><input type="button" value="Open Report" onclick="window.open('?id=<%=tempId%>&segmentId=<%=tempId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>&demoName=<%=StringEscapeUtils.escapeHtml(request.getParameter("demoName"))%>', null)" /> </td>
+			    <td><input type="button" value="Open Report" onclick="window.open('?id=<%=tempId%>&segmentId=<%=tempId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>&demoName=<%=StringEscapeUtils.escapeHtml(request.getParameter("demoName"))%>', null)" /> </td> 
 			</tr>
 			
 		<%
