@@ -58,9 +58,11 @@ public class StudyDataDao extends AbstractDao<StudyData>{
 		query.setParameter("demoNo", demographicNo);
 		query.setParameter("studyId", studyId);
 		
+		@SuppressWarnings("unchecked")
+        List<StudyData> resultList = query.getResultList();
+		
 		int i = 0;
-		for (Object o : query.getResultList()) {
-			StudyData data = (StudyData) o;
+		for ( StudyData data: resultList) {			
 			remove(data);
 			i++;
 		}
