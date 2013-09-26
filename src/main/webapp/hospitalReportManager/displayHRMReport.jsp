@@ -10,6 +10,8 @@
 --%>
 <%@page import="org.apache.commons.lang.StringUtils,oscar.log.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <%@ page language="java" contentType="text/html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -587,21 +589,43 @@ YAHOO.example.BasicRemote = function() {
 String duplicateLabIdsString=StringUtils.trimToNull(request.getParameter("duplicateLabIds"));
 if (duplicateLabIdsString!=null)
 {
+	Map<Integer,Date> dupReportDates = (Map<Integer,Date>)request.getAttribute("dupReportDates");
+	Map<Integer,Date> dupTimeReceived = (Map<Integer,Date>)request.getAttribute("dupTimeReceived");
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 	%>
 		<hr />
-		Duplicate Labs found : <br />
+		Report History:<br />
+		
+		<table border="1">
+			<tr>
+				<th>ID</th>
+				<th>Report Date</th>
+				<th>Date Received</th>
+				<th></th>
+			</tr>
 	<%
+	//need datetime of report.
 	String[] duplicateLabIdsStringSplit=duplicateLabIdsString.split(",");
 	for (String tempId : duplicateLabIdsStringSplit)
 	{
 		%>
-			<input type="button" value="View labId=<%=tempId%>" onclick="window.open('?id=<%=tempId%>&segmentId=<%=tempId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>&demoName=<%=StringEscapeUtils.escapeHtml(request.getParameter("demoName"))%>', null)" /> 
-			<br />
+			<tr>
+				<td><%=tempId %></td>
+				<td><%=formatter.format(dupReportDates.get(Integer.parseInt(tempId))) %></td>
+				<td><%=formatter.format(dupTimeReceived.get(Integer.parseInt(tempId))) %></td>
+				<td><input type="button" value="Open Report" onclick="window.open('?id=<%=tempId%>&segmentId=<%=tempId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>&demoName=<%=StringEscapeUtils.escapeHtml(request.getParameter("demoName"))%>', null)" /> </td>
+			</tr>
+			
 		<%
 	}
+	
+	%></table><%
 }
 %>
 
+<br/>
+
+Duplicates of this report have been received <%=request.getAttribute("hrmDuplicateNum")!=null?request.getAttribute("hrmDuplicateNum"):"0"%> time(s).
 
 </body>
 </html>
