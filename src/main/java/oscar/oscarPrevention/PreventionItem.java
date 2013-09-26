@@ -81,7 +81,7 @@ public class PreventionItem {
 		this.name = pp.getPreventionType();
 		this.datePreformed = pp.getPreventionDate().getTime();
 		this.never = ConversionUtils.toBoolString(pp.isNever());
-		this.nextDate = pp.getNextDate().getTime();
+		this.nextDate = pp.getNextDate() == null ? null : pp.getNextDate().getTime();
 		this.refused = pp.isRefused();
 	}
 
