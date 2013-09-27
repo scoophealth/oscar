@@ -99,7 +99,11 @@
     List allStatus = apptStatusMgr.getAllActiveStatus();
 
     Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
- 
+    
+    String useProgramLocation = OscarProperties.getInstance().getProperty("useProgramLocation");
+    String moduleNames = OscarProperties.getInstance().getProperty("ModuleNames");
+    boolean caisiEnabled = moduleNames != null && org.apache.commons.lang.StringUtils.containsIgnoreCase(moduleNames, "Caisi");
+    boolean locationEnabled = caisiEnabled && (useProgramLocation != null && useProgramLocation.equals("true"));
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
@@ -745,19 +749,23 @@ if (bMultisites) { %>
 <% } else {
 	isSiteSelected = true;
 	// multisites end ==================
+	if (locationEnabled) {
 %>           					
-			<select name="location" >
-                <%
-                String location = bFirstDisp?(appt.getLocation()):request.getParameter("location");
-                if (programs != null && !programs.isEmpty()) {
-			       	for (Program program : programs) {
-			       	    String description = StringUtils.isBlank(program.getLocation()) ? program.getName() : program.getLocation();
-			   	%>
-			        <option value="<%=program.getId()%>" <%=(program.getId().toString().equals(location) ? "selected='selected'" : "") %>><%=StringEscapeUtils.escapeHtml(description)%></option>
-			    <%	}
-                }
-			  	%>
-            </select>
+		<select name="location" >
+               <%
+               String location = bFirstDisp?(appt.getLocation()):request.getParameter("location");
+               if (programs != null && !programs.isEmpty()) {
+		       	for (Program program : programs) {
+		       	    String description = StringUtils.isBlank(program.getLocation()) ? program.getName() : program.getLocation();
+		   	%>
+		        <option value="<%=program.getId()%>" <%=(program.getId().toString().equals(location) ? "selected='selected'" : "") %>><%=StringEscapeUtils.escapeHtml(description)%></option>
+		    <%	}
+               }
+		  	%>
+           </select>
+	<% } else { %>
+		<INPUT TYPE="TEXT" NAME="location" tabindex="4" VALUE="<%=bFirstDisp?appt.getLocation():request.getParameter("location")%>" WIDTH="25">
+	<% } %>           
 <% } %>
             </div>
             <div class="space">&nbsp;</div>
