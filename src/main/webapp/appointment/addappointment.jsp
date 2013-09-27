@@ -129,6 +129,11 @@
 
     AppointmentStatusMgr apptStatusMgr = new AppointmentStatusMgrImpl();
     List<AppointmentStatus> allStatus = apptStatusMgr.getAllActiveStatus();
+    
+    String useProgramLocation = OscarProperties.getInstance().getProperty("useProgramLocation");
+    String moduleNames = OscarProperties.getInstance().getProperty("ModuleNames");
+    boolean caisiEnabled = moduleNames != null && org.apache.commons.lang.StringUtils.containsIgnoreCase(moduleNames, "Caisi");
+    boolean locationEnabled = caisiEnabled && (useProgramLocation != null && useProgramLocation.equals("true"));
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.Site"%>
@@ -943,13 +948,14 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="input">
 		<% // multisites start ==================
 		if (bMultisites) { %>
-		                <select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
-		                <% for (Site s:sites) { %>
-		                        <option value="<%=s.getName()%>" style="background-color: <%=s.getBgColor()%>" <%=s.getName().equals(loc)?"selected":"" %>><%=s.getName()%></option>
-		                <% } %>
-		                </select>
+	        <select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
+	        <% for (Site s:sites) { %>
+	                <option value="<%=s.getName()%>" style="background-color: <%=s.getBgColor()%>" <%=s.getName().equals(loc)?"selected":"" %>><%=s.getName()%></option>
+	        <% } %>
+	        </select>
 		<% } else {
 			// multisites end ==================
+			if (locationEnabled) {
 		%>
 			<select name="location" >
                 <%
@@ -963,6 +969,9 @@ function pasteAppt(multipleSameDayGroupAppt) {
                 }
 			  	%>
             </select>
+        	<% } else { %>
+        	<input type="TEXT" name="location" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2">	
+        	<% } %>
 		<% } %>
             </div>
             <div class="space">&nbsp;</div>
