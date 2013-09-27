@@ -246,9 +246,30 @@ public class HRMModifyDocumentAction extends DispatchAction {
 	public ActionForward removeProvider(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String providerMappingId = request.getParameter("providerMappingId");
 
+		String hrmDocumentId = null;
+		
 		try {
+
+			hrmDocumentId = hrmDocumentToProviderDao.find(Integer.parseInt(providerMappingId)).getHrmDocumentId();
+			
 			hrmDocumentToProviderDao.remove(Integer.parseInt(providerMappingId));
 
+			
+			if(hrmDocumentId != null) {
+				//we want to add an unclaimed if no one owns it now 
+				List<HRMDocumentToProvider> existing = hrmDocumentToProviderDao.findByHrmDocumentId(hrmDocumentId);
+				if(existing.size() == 0) {
+					HRMDocumentToProvider providerMapping = new HRMDocumentToProvider();
+
+					providerMapping.setHrmDocumentId(hrmDocumentId);
+					providerMapping.setProviderNo("-1");
+					providerMapping.setSignedOff(0);
+
+					hrmDocumentToProviderDao.persist(providerMapping);
+				}
+				
+			}
+			
 			request.setAttribute("success", true);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Tried to remove provider from HRM document but failed.", e); 
