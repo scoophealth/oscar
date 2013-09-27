@@ -108,31 +108,32 @@
 			</tr>
 
 			<% 
-	
-	List<CtlBillingService> cbss1 = ctlBillingServiceDao.findByServiceTypeId("%");
-	
+		
+	List<Object[]> uniqueServiceTypeList =  ctlBillingServiceDao.getUniqueServiceTypes();		
+			
 	int rCount = 0;
 	boolean bodd=false;
 
-	if(cbss1==null) {
+	if(uniqueServiceTypeList == null) {
 		out.println("failed!!!"); 
 	} else {
-		for (CtlBillingService cbs:cbss1) {
-%>
+	    for(Object[] service : uniqueServiceTypeList)
+	    {
+	      
+	    	%>
 
-			<tr>
-				<td width="30%" valign="top" class="black"><a href=#
-					onClick='manageType("<%=cbs.getServiceType()%>","<%=cbs.getServiceTypeName()%>");return false;'
-					title="Manage Billing Form"><%=cbs.getServiceType()%></a> <!--		<a href=# onClick='onUnbilled("dbManageBillingform_delete.jsp?servicetype=<%=cbs.getServiceType()%>");return false;' title="Delete Billing Form"><%=cbs.getServiceType()%></a> -->
-				</td>
-				<td class="black"><a href=#
-					onClick='manageType("<%=cbs.getServiceType()%>","<%=cbs.getServiceTypeName()%>");return false;'
-					title="Manage Billing Form"><%=cbs.getServiceTypeName()%></a>
-				<!--		<a href=# onClick='onUnbilled("dbManageBillingform_delete.jsp?servicetype=<%=cbs.getServiceType()%>");return false;' title="Delete Billing Form"><%=cbs.getServiceTypeName()%></a> -->
-				</td>
-			</tr>
-			<%
-	}
+	    				<tr>
+	    					<td width="30%" valign="top" class="black"><a href=#
+	    						onClick='manageType("<%=service[0]%>","<%=service[1]%>");return false;'
+	    						title="Manage Billing Form"><%=service[0]%></a> 
+	    					</td>
+	    					<td class="black"><a href=#
+	    						onClick='manageType("<%=service[0]%>","<%=service[1]%>");return false;'
+	    						title="Manage Billing Form"><%=service[1]%></a>
+	    					</td>
+	    				</tr>
+	    				<%
+	   }
 }
 %>
 
