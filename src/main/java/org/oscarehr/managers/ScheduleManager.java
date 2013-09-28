@@ -78,6 +78,18 @@ public class ScheduleManager {
 	@Autowired
 	private AppointmentTypeDao appointmentTypeDao;
 
+	/*Right now the date object passed is converted to a local time.  
+	*
+	* As in, if the server's timezone is set to EST and the method is called with two data objects set to
+	*
+	* 2011-11-11 2:01 TZ america/new york
+	* 2011-11-10 23:01 TZ america/los angeles
+	* 
+	* They will both return the DayWorkSchedule for November 11 2011;
+	* 
+	* The DayWorkSchedule returned will be in the server's local timezone.
+	*
+	*/
 	public DayWorkSchedule getDayWorkSchedule(String providerNo, Calendar date) {
 		// algorithm
 		//----------
@@ -121,6 +133,9 @@ public class ScheduleManager {
 			
 			// sort out designated timeslots and their purpose
 			Calendar timeSlot=(Calendar) date.clone();
+			
+			//make sure the appts returned are in local time. 
+			timeSlot.setTimeZone(Calendar.getInstance().getTimeZone());
 			DateUtils.zeroTimeFields(timeSlot);
 			TreeMap<Calendar, Character> allTimeSlots=dayWorkSchedule.getTimeSlots();
 			
