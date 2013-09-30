@@ -86,10 +86,15 @@ function validateServiceType() {
 	if (document.servicetypeform.typeid.value == "MFP") {
 		alert("<bean:message key="billing.manageBillingform.msgIDExists"/>");
 		return false;
-	} else{
-		return true;
-	} 
+	}
+	
+	if (document.servicetypeform.typeid.value == '') {
+		alert("<bean:message key="billing.manageBillingform.btnManage.msgRequiredField"/>");
+		return false;
+	}
+	return true;
 }
+
 function refresh() {
   var u = self.location.href;
   if(u.lastIndexOf("view=1") > 0) {
