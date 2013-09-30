@@ -30,11 +30,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
@@ -50,11 +54,15 @@ public class MeasurementInfo {
     Hashtable<String,String> warningHash = new Hashtable<String,String>();
     ArrayList<String> recommendations = null;
     Hashtable<String,String> recommendationHash = new Hashtable<String,String>();
+    HashMap<String,Boolean> hiddens = new HashMap<String,Boolean>();
 
     ArrayList measurementList = new ArrayList();
     Hashtable measurementHash = new Hashtable();
     ArrayList itemList = new ArrayList();
     String demographicNo = "";
+    
+    DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+    
     /** Creates a new instance of MeasurementInfo */
     public MeasurementInfo(String demographic) {
         demographicNo = demographic;
@@ -92,6 +100,11 @@ public class MeasurementInfo {
            recommendations = new ArrayList();
         }
         return recommendations;
+    }
+    
+    public boolean getHidden(String measurement){
+    	if (hiddens.get(measurement) == null) return false;
+    	return hiddens.get(measurement);
     }
 
     public void setDemographic(String demographic){
@@ -133,6 +146,10 @@ public class MeasurementInfo {
         warningHash.put(measurement,warningMessage);
         warning.add(warningMessage);
     }
+    
+    public void addHidden(String measurement, boolean hidden) {
+    	hiddens.put(measurement, hidden);
+    }
 
 
     public boolean hasWarning(String measurement){
@@ -170,7 +187,6 @@ public class MeasurementInfo {
 //    }
 
     public int getLastDateRecordedInMonths(String measurement){
-
         int numMonths = -1;
         ArrayList list = getMeasurementData(measurement);
         Hashtable h =  null;
@@ -191,7 +207,6 @@ public class MeasurementInfo {
     }
     
     public String getLastDateRecordedInMonthsMsg (String measurement){
-
         String message = "";
         int numMonths = -1;
         ArrayList list = getMeasurementData(measurement);
@@ -230,6 +245,19 @@ public class MeasurementInfo {
         log.debug("Returning the number of months "+value);
         return value;
     }
+    
+    public boolean getGender(String sex){
+    	if (sex==null) return false;
+    	
+    	Demographic d = demographicDao.getDemographic(demographicNo);
+    	return (sex.trim().equals(d.getSex()));
+    }
+    
+    public int getAge(){
+    	Demographic d = demographicDao.getDemographic(demographicNo);
+    	return d.getAgeInYears();
+    }
+    
 
 
     private int getNumMonths(Date dStart, Date dEnd) {
@@ -245,11 +273,4 @@ public class MeasurementInfo {
         if (i < 0) { i = 0; }
         return i;
    }
-
-
-    private void debug(String s){
-        log.debug(s);
-    }
-
-
 }
