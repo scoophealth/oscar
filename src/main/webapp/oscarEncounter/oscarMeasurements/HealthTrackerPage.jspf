@@ -253,83 +253,80 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
     <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
     <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
      
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
+<style type="text/css">
+body {
+   padding-top: 60px;
+   padding-bottom: 40px;
+}
 
-   .navbar .nav > li > a {color:white;} 
-  
-      #tracker-bar{
-      position:fixed;
-      top:40px;
-      /*border-bottom:thin solid grey;*/
-      z-index:9;
-      background-color:white;
-      width:100%;
-      padding-top:8px;
-      padding-left:15px;
-      padding-bottom:0px;
-      }
- 
-      #main{
-      position:relative;
-      top:44px;
-      }
-       
-       .item{
-       margin-top:5px;
-       height:50px;
-       }
-            
-		div.preventionProcedure{
-		    width:9em;
-		    float:left;
-		    margin-left:3px;
-		    margin-bottom:3px;
-		    text-align:center;
-		    width:100px;
-		}
-		
-			
-		div.preventionProcedure p {
-		    font-size: 0.8em;
-		    font-family: verdana,tahoma,sans-serif;
-		    margin:0;
-		    padding: 1px 2px;
-		}
-		
+.navbar .nav > li > a {color:white;} 
+
+#tracker-bar{
+   position:fixed;
+   top:40px;
+   z-index:9;
+   background-color:white;
+   width:100%;
+   padding-top:8px;
+   padding-left:15px;
+   padding-bottom:0px;
+}
+
+#main{
+   position:relative;
+   top:44px;
+}
+
+.item{
+   margin-top:5px;
+   height:50px;
+}
+
 div.preventionSection {
     position:relative;
-    
     width: 620px;
     min-height:50px;
-    
     margin-top:5px;
-    
-   
     border: thin solid grey;
     background: #fff;
     padding:0px 2px 8px 0px;
 }
 
 div.preventionSection:hover {
-background-color: #FFFFAA; /*#f5f5f5;*/
+   background-color: #FFFFAA; 
+}
+            
+div.preventionProcedure{
+    float:left;
+    margin-left:3px;
+    margin-bottom:3px;
+    text-align:center;
+    width:100px;
 }
 
+	
+div.preventionProcedure p {
+    font-size: 0.8em;
+    font-family: verdana,tahoma,sans-serif;
+    margin:0;
+    padding: 1px 2px;
+}
+
+.carousel {padding:0px;margin:0px;}
+
+		
 .mtype-graph-input{
-min-height:34px;margin:0px;padding:0px;padding-left:4px;margin-bottom:1px;
+   min-height:34px;margin:0px;padding:0px;padding-left:4px;margin-bottom:1px;
 }
 
 .mtype-display-name{
-display:inline-block;max-width:260px;padding-bottom:2px;
+   display:inline-block;max-width:260px;padding-bottom:2px;
 }
 
 .tab-pane{
-font-size:12px;
-max-height:200px;
-overflow-y:scroll;
+   font-size:12px;
+   max-height:200px;
+   overflow-y:scroll;
 }
 
 .table tbody tr:hover td, .table tbody tr:hover th {
@@ -337,34 +334,34 @@ overflow-y:scroll;
 }
 
 #graphModal{
-width:900px;
-height:500px;
-margin-left: -450px;
+   width:900px;
+   height:500px;
+   margin-left: -450px;
 }
 
 #panel{
-position:absolute;
-display:none;
-top:80px;
-width:100%;
-z-index:999;
+   position:absolute;
+   display:none;
+   top:80px;
+   width:100%;
+   z-index:999;
 }
 
 .btn-divider{
-margin:0 6px 0 6px;
-padding:0px;
+   margin:0 6px 0 6px;
+   padding:0px;
 }
 
 .inlinesparkline:hover{
-cursor: hand; cursor: pointer;
+   cursor: hand; cursor: pointer;
 }
 
 .input-wrapper{
-float:right;display:inline;margin:0px;padding:0px;
+   float:right;display:inline;margin:0px;padding:0px;
 }
 
 .btn-underline{
-text-decoration:underline;font-weight:bold;
+   text-decoration:underline;font-weight:bold;
 }
 
 .input-error{   
@@ -375,14 +372,14 @@ text-decoration:underline;font-weight:bold;
 }
 
 .options-error{
-color:#bd362f;
+   color:#bd362f;
 }
 
 #scrollToTop{
-Position:fixed;
-display:none;
-bottom:30px;
-right:15px;
+   position:fixed;
+   display:none;
+   bottom:30px;
+   right:15px;
 }
 
 .input-success{
@@ -1212,7 +1209,7 @@ function fsPopup(width,height,url,window) {
 <div class="alert alert-error" > <button type="button" class="close" data-dismiss="alert">&times;</button><%=mi.getWarning(measure)%></div>
 <%}%>
 
-    <div id="myCarousel<%=measure%>" class="carousel slide" style="height:50px;padding:0px;margin:0px;">
+    <div id="myCarousel<%=measure%>" class="carousel slide"> 
       <div class="carousel-inner">
     <%  int k = 0;
     	int setx = 0;
@@ -1236,20 +1233,6 @@ function fsPopup(width,height,url,window) {
             }
             String hider = "";
 
-            
-            
-            /*if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
-                num =1;
-            }
-            if(sdate != null && edate != null){
-                Date itDate = mdb.getDateObservedAsDate();
-                if (itDate.before(sdate) || itDate.after(edate)){
-                        hider = "style=\"display:none\"";
-                }
-            }else if ( k > num){
-                hider = "style=\"display:none;\"";
-            }*/
-
             String indColour = "";
             String indText = "";
             if ( mdb.getIndicationColour() != null ){
@@ -1258,12 +1241,7 @@ function fsPopup(width,height,url,window) {
                 if( mFlowsheet.getIndicatorColour(mdb.getIndicationColour()).equals("orange")){ indText="HIGH";}
                 indText="<font color='"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"' size='3'>"+indText+"</font>";
             }
-
-        /*
-            if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
-                hider = "style=\"display:none;\"";
-            }*/
-            
+   
 	//if(sdate != null && edate != null){
     Date itDate = mdb.getDateObservedAsDate();
             
@@ -1294,7 +1272,7 @@ function fsPopup(width,height,url,window) {
     <%}%> >
 	<input type="hidden" id="<%=hdata.get("id")%>-comment-html" value="<%=com%>">
 
-		<span rel="popover" data-container="body" data-html="true" data-content="Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>"  data-trigger="hover">     
+		<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%> <br> <small><%=getFromFacilityMsg(mdb) %></small>'  data-trigger="hover">     
 			<p style="line-height:90%;font-size:18px"  ><%=hdata.get("age")%></p>
 			
 			<span style="line-height:60%;font-size:10px;"><%=hdata.get("prevention_date")%>&nbsp;
@@ -1306,11 +1284,11 @@ function fsPopup(width,height,url,window) {
              <a  rel="tooltip" title="<b>Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><i class="icon-comment" ></i></a>
             <%}%>
            
-            
-           <%=getFromFacilityMsg(mdb) %> 
-        <br>
+
         <p width="16px" <%=indColour%> ></p>
         <%=indText%>
+
+
     </div><!-- prevention procedure -->
     <%} %>
     
@@ -1318,11 +1296,11 @@ function fsPopup(width,height,url,window) {
   
     <%}%>
     
- <%if(setx==0){ out.print("<span style='color:#999;padding-left:20px;'>No Data</span>");  }%>
+<%if(setx==0){ out.print("<span style='color:#999;padding-left:20px;'>No Data</span>");  }%>
  
- <%if(setx<1){%>
- <!-- still display if now items -->
- <div class='item active'>
+<%if(setx<1){%>
+ <!-- still display if no items -->
+<div class='item active'>
 <div class="preventionProcedure">
 
 </div><!-- prevention procedure --> 
@@ -1340,8 +1318,9 @@ function fsPopup(width,height,url,window) {
 <a class="carousel-control right" href="#myCarousel<%=measure%>" data-slide="next" style="display:none;margin-right:-35px; background-color:#ccc" title="All values are visible.">&times;</a>
 <%} %>	
 
-   
+ 
     </div><!-- /.carousel -->
+
 </div><!-- prevention section -->
 <%
 	//creating add all link array
