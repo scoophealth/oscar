@@ -831,7 +831,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 		response.setContentType(contentType);
 		response.setContentLength(contentBytes.length);
-		response.setHeader("Content-Disposition", "inline; filename=" + filename);
+		response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
 		log.debug("about to Print to stream");
 		ServletOutputStream outs = response.getOutputStream();
 		outs.write(contentBytes);
