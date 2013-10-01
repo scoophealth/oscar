@@ -33,6 +33,7 @@
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="oscar.util.DateUtils"%>
+<%@page import="oscar.oscarDemographic.data.DemographicMerged"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -322,6 +323,16 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 	%>
 	<%@ include file="../demographic/zzdemographicsearchresult.jspf"%>
 	<%
+	
+	DemographicMerged dmDAO = new DemographicMerged();
+    String dem_no = apptMainBean.getString(rs,"demographic_no");
+    String head = dmDAO.getHead(dem_no);
+
+    if(head != null && !head.equals(dem_no)) {
+    	//skip non head records
+    	continue;
+    }
+
 		rowCounter++;
 	  String bgColor = rowCounter%2==0?"#EEEEFF":"white";
 %>
