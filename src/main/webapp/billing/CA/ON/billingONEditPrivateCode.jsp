@@ -326,8 +326,7 @@
 	<tr>
 		<td align="right"><b>Description</b></td>
 		<td><input type="text" name="description"
-			value="<%=prop.getProperty("description", "")%>" size='50'
-			maxlength='50'> (50 letters)</td>
+			value="<%=prop.getProperty("description", "")%>" size='50'></td>
 	</tr>
 	<tr class="myGreen">
 		<td align="right"><b>Fee</b></td>
