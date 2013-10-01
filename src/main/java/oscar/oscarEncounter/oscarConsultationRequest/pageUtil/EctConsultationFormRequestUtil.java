@@ -261,9 +261,11 @@ public class EctConsultationFormRequestUtil {
 						appointmentPm = "PM";
 						appointmentHour = Integer.toString(h);
 					}else {
-					
-						appointmentPm = "AM";
-						appointmentHour = Integer.toString(h);
+                        appointmentPm = "AM";
+                        if(h == 0)
+                        	appointmentHour = Integer.toString(12);
+                        else
+                        	appointmentHour = Integer.toString(h);
 					}
 				}
 			}
