@@ -119,6 +119,13 @@ public final class IncomingDocUtil {
         return filePathName;
     }
 
+        public static String getAndCreateIncomingDocumentFilePathName(String queueId, String pdfDir, String pdfName) {
+        String filePathName = getAndCreateIncomingDocumentFilePath(queueId, pdfDir);
+        filePathName += File.separator + pdfName;
+
+        return filePathName;
+    }
+
     public static String getIncomingDocumentDeletedFilePath(String queueId, String pdfDir) {
         String filePath;
 
@@ -163,6 +170,16 @@ public final class IncomingDocUtil {
 
         return filePath;
     }
+
+    public static String getAndCreateIncomingDocumentFilePath(String queueId, String pdfDir) {
+        String filePath=getIncomingDocumentFilePath( queueId, pdfDir);
+        File filePathDir = new File(filePath);
+
+        if (!filePathDir.exists()) {
+            filePathDir.mkdir();
+        }
+        return filePath;
+        }
 
     public static void rotatePage(String queueId, String myPdfDir, String myPdfName, String MyPdfPageNumber, int degrees) throws Exception 
     {
