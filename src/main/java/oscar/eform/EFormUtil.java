@@ -1233,10 +1233,12 @@ public class EFormUtil {
 		String sentWho = "";
 		for (String sent : sentList) {
 			sent = providerDao.getProviderName(sent);
-			if (!StringUtils.isBlank(sentWho) && !StringUtils.isBlank(sent)) {
-				sentWho += ", " + sent;
-			} else {
-				sentWho += sent;
+			if( !StringUtils.isBlank(sent) ) {
+				if (!StringUtils.isBlank(sentWho) ) {
+					sentWho += ", " + sent;
+				} else {
+					sentWho += sent;
+				}
 			}
 		}
 		return sentWho;

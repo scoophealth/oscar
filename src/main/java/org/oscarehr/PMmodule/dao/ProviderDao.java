@@ -73,10 +73,7 @@ public class ProviderDao extends HibernateDaoSupport {
 		return provider;
 	}
 
-	public String getProviderName(String providerNo) {
-		if (providerNo == null || providerNo.length() <= 0) {
-			throw new IllegalArgumentException();
-		}
+	public String getProviderName(String providerNo) {	
 
 		String providerName = "";
 		Provider provider = getProvider(providerNo);
