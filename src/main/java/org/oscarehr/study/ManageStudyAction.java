@@ -187,10 +187,11 @@ public class ManageStudyAction extends DispatchAction {
 				demographicStudyPK.setDemographicNo(demoIdAsInt);
 				demographicStudyPK.setStudyNo(studyIdAsInt);
 				
-				demographicStudyDao.remove(demographicStudyPK);
+				if( demographicStudyDao.remove(demographicStudyPK) ) {
 				
-				studyDataDao.removeByDemoAndStudy(demoIdAsInt, studyIdAsInt);
-				auditLogger.log("study", "demographic", demoIdAsInt, "removed demographic from study #" + studyId);
+					studyDataDao.removeByDemoAndStudy(demoIdAsInt, studyIdAsInt);
+					auditLogger.log("study", "demographic", demoIdAsInt, "removed demographic from study #" + studyId);
+				}
 			}			
 		}
 		else if( removeType.equals("Remove Provider") ) {
