@@ -23,6 +23,7 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -80,6 +81,15 @@ public class SecUserRoleDao extends HibernateDaoSupport {
     }
 
     public void save(SecUserRole sur) {
+    	sur.setLastUpdateDate(new Date());
     	this.getHibernateTemplate().save(sur);
     }
+    
+    public List<String> getRecordsAddedAndUpdatedSinceTime(Date date) {
+		@SuppressWarnings("unchecked")
+		List<String> records = getHibernateTemplate().find("select p.ProviderNo From SecUserRole p WHERE p.lastUpdateDate > ?",date);
+		
+		return records;
+	}
+    
 }

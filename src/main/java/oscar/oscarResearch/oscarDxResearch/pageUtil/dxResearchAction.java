@@ -53,6 +53,8 @@ public class dxResearchAction extends Action {
         dxResearchForm frm = (dxResearchForm) form; 
         request.getSession().setAttribute("dxResearchForm", frm);
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+        String updateDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss"); 
+        
         String codingSystem = frm.getSelectedCodingSystem();        
         String demographicNo = frm.getDemographicNo();
         String providerNo = frm.getProviderNo();
@@ -109,7 +111,7 @@ public class dxResearchAction extends Action {
                         if(rsdemo2!=null){
                             while(rsdemo2.next()){
                                     Count = Count +1;
-                                    sql = "update dxresearch set update_date='"+nowDate+"', status='A' where dxresearch_no='"+rsdemo2.getString("dxresearch_no")+"'";
+                                    sql = "update dxresearch set update_date='"+updateDate+"', status='A' where dxresearch_no='"+rsdemo2.getString("dxresearch_no")+"'";
                                     DBHandler.RunSQL(sql);                                        
 
                             } 
@@ -129,7 +131,7 @@ public class dxResearchAction extends Action {
                                 }
                                 else{
                                     sql = "insert into dxresearch (demographic_no, start_date, update_date, status, dxresearch_code, coding_system) values('"
-                                            + demographicNo +"','" + nowDate + "','" + nowDate + "', 'A','" + xml_research[i]+ "','"+codingSystem+"')";
+                                            + demographicNo +"','" + nowDate + "','" + updateDate + "', 'A','" + xml_research[i]+ "','"+codingSystem+"')";
 
                                     DBHandler.RunSQL(sql);                                                                     
                                 }

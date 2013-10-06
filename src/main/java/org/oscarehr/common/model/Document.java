@@ -42,6 +42,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -326,5 +328,10 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     }
 
 
+	@PrePersist
+	@PreUpdate
+	protected void jpaUpdateDate() {
+		this.updatedatetime = new Date();
+	}
 
 }

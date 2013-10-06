@@ -823,7 +823,7 @@ public class ProviderData {
             write_rec.setString(i + 20, email);
             write_rec.setString(i + 21, title);
             write_rec.setString(i + 22, lastUpdateUser);
-            write_rec.setString(i + 23, lastUpdateDate);
+            write_rec.setString(i + 23, "now()");
             write_rec.setString(i + 24, signed_confidentiality);
             if (update) {
                 write_rec.setString(i + 25, provider_no);

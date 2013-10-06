@@ -22,7 +22,7 @@
 		<property name="doccreator" column="doccreator" type="string"
 			not-null="true" length="30" />
 		<property name="updatedatetime" column="updatedatetime" type="timestamp"
-			not-null="false" length="19" />
+			not-null="false"  />
 		<property name="status" column="status" type="string"
 			not-null="true" length="1" />
 		<property name="contenttype" column="contenttype" type="string"

@@ -25,12 +25,18 @@
 
 package org.oscarehr.common.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="labPatientPhysicianInfo")
@@ -104,6 +110,9 @@ public class LabPatientPhysicianInfo extends AbstractModel<Integer> {
 	@Column(name="collection_date")
 	private String collectionDate;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdateDate;
+	
 	public Integer getId() {
     	return id;
     }
@@ -288,5 +297,19 @@ public class LabPatientPhysicianInfo extends AbstractModel<Integer> {
     	this.collectionDate = collectionDate;
     }
 
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	
+	@PrePersist
+	@PreUpdate
+	protected void jpaUpdateLastDate() {
+		this.lastUpdateDate = new Date();
+	}
 
 }

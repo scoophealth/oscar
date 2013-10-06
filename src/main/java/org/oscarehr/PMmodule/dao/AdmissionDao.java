@@ -183,6 +183,39 @@ public class AdmissionDao extends HibernateDaoSupport {
         return rs;
     }
    
+   /**
+    * results are ordered by admission date descending
+    */
+   public List<Admission> getAdmissionsByFacilitySince(Integer demographicNo, Integer facilityId,Date lastUpdateDate) {
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
+           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) and a.lastUpdateDate > ? ORDER BY a.AdmissionDate DESC";
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, facilityId, lastUpdateDate });
+
+        if (log.isDebugEnabled()) {
+            log.debug("getAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
+        }
+
+        return rs;
+    }
+   
+   /**
+    * for integrator
+    */
+   public List<Integer> getAdmissionsByFacilitySince(Integer facilityId,Date lastUpdateDate) {
+       
+        String queryStr = "select a.ClientId FROM Admission a WHERE a.ProgramId in " +
+           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) and a.lastUpdateDate > ? ORDER BY a.AdmissionDate DESC";
+        @SuppressWarnings("unchecked")
+        List<Integer> rs = getHibernateTemplate().find(queryStr, new Object[] { facilityId, lastUpdateDate });
+
+        return rs;
+    }
+   
    
    
     public List<Admission> getAdmissionsByProgramId(Integer programId, Boolean automaticDischarge, Integer days) {
@@ -478,7 +511,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         if (admission == null) {
             throw new IllegalArgumentException();
         }
-
+        admission.setLastUpdateDate(new Date());
         getHibernateTemplate().saveOrUpdate(admission);
         getHibernateTemplate().flush();
 

@@ -68,5 +68,6 @@
 			formula="(select p.name from program p where p.id = program_id)" />
 		<property name="programType" type="string"
 			formula="(select p.type from program p where p.id = program_id)" />
+		<property name="lastUpdateDate" type="timestamp" />
 	</class>
 </hibernate-mapping>

@@ -36,7 +36,7 @@
 		<property column="practitionerNo" length="20" name="practitionerNo" not-null="false" type="string" />
 		<property name="title" />
 		<property name="lastUpdateUser" type="string"/>
-		<property name="lastUpdateDate" type="date" />
+		<property name="lastUpdateDate" type="timestamp" />
 
 	</class>
 </hibernate-mapping>

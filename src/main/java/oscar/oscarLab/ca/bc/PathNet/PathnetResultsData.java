@@ -26,6 +26,7 @@
 package oscar.oscarLab.ca.bc.PathNet;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -99,7 +100,7 @@ public class PathnetResultsData {
         return labResults;
     }
     /////
-    public ArrayList<LabResultData> populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
         if ( patientLastName == null) { patientLastName = ""; }
@@ -111,6 +112,13 @@ public class PathnetResultsData {
         String sql = "";
         try {
 
+        	if(labNo != null && labNo.intValue()>0) {
+        		 sql= "select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat "+
+                         "from hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr "+
+                         "where pid.message_id  = "+labNo+" and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and msh.message_id = pid.message_id "+
+                         " group by pid.message_id";
+        	}
+        	
             if ( demographicNo == null) {
 
                 sql  ="select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat, providerLabRouting.status " +
@@ -130,7 +138,7 @@ public class PathnetResultsData {
                         " group by pid.message_id";
             }
 
-            logger.info("s: "+sql);
+            logger.debug("s: "+sql);
             ResultSet rs = DBHandler.GetSQL(sql);
             logger.debug("after sql statement");
             while(rs.next()){
@@ -139,7 +147,12 @@ public class PathnetResultsData {
                 lbData.segmentID = oscar.Misc.getString(rs, "message_id");
 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
+                	try {
+						lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
+					}catch(SQLException e) {
+						//the load by labNo version doesn't care about inbox status.
+						lbData.acknowledgedStatus ="U";
+					}
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }

@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -86,6 +87,7 @@ public class Admission implements Serializable {
 	private boolean dischargeFromTransfer=false;
 	private boolean admissionFromTransfer=false;
 	private boolean automaticDischarge=false;
+	private Date lastUpdateDate = null;
 	
 	public boolean isDischargeFromTransfer() {
         return dischargeFromTransfer;
@@ -486,5 +488,15 @@ public class Admission implements Serializable {
     public String toString() {
     	return super.toString();
     }
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+	
+	
 
 }

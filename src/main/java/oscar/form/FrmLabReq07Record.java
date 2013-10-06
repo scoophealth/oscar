@@ -29,6 +29,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -253,6 +255,18 @@ public class FrmLabReq07Record extends FrmRecord {
     public static List<Properties> getPrintRecords(int demographicNo) throws SQLException {
         String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo;
         return ((new FrmRecordHelp()).getPrintRecords(sql));
+    }
+    
+    public static List<Properties> getPrintRecordsSince(int demographicNo, Date lastUpdateDate) throws SQLException {
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " and formEdited > '" + formatter.format(lastUpdateDate) + "'";
+        return ((new FrmRecordHelp()).getPrintRecords(sql));
+    }
+
+    public static List<Integer> getDemogaphicIdsSince(Date lastUpdateDate) throws SQLException {
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sql = "SELECT demographic_no FROM formLabReq07 WHERE formEdited > '" + formatter.format(lastUpdateDate) + "'";
+        return ((new FrmRecordHelp()).getDemographicIds(sql));
     }
 
     public String findActionValue(String submit) throws SQLException {

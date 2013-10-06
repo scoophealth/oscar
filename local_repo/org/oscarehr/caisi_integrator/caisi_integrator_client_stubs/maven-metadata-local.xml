@@ -3,9 +3,10 @@
   <groupId>org.oscarehr.caisi_integrator</groupId>
   <artifactId>caisi_integrator_client_stubs</artifactId>
   <versioning>
+    <release>1.0</release>
     <versions>
-      <version>SNAPSHOT</version>
+      <version>1.0</version>
     </versions>
-    <lastUpdated>20120612175425</lastUpdated>
+    <lastUpdated>20131016215436</lastUpdated>
   </versioning>
 </metadata>

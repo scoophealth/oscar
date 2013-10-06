@@ -32,6 +32,7 @@ CREATE TABLE `admission` (
   `radioDischargeReason` varchar(10) default '0',
   `clientstatus_id` bigint(20) DEFAULT 0,
   `automatic_discharge` tinyint(1) default 0,
+  lastUpdateDate datetime not null,
   PRIMARY KEY  (`am_id`),
   KEY `FK1A21809DAA8624B` (`team_id`),
 	index (program_id),

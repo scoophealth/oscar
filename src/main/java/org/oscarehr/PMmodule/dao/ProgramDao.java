@@ -23,6 +23,7 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -380,6 +381,7 @@ public class ProgramDao extends HibernateDaoSupport {
         if (program == null) {
             throw new IllegalArgumentException();
         }
+        program.setLastUpdateDate(new Date());
         getHibernateTemplate().saveOrUpdate(program);
 
         if (log.isDebugEnabled()) {
@@ -641,4 +643,18 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return result;
     }
+    
+    public List<Integer> getRecordsAddedAndUpdatedSinceTime(Integer facilityId, Date date) {
+		@SuppressWarnings("unchecked")
+		List<Integer> programs = getHibernateTemplate().find("select distinct p.id From Program p where p.facilityId = ? and p.lastUpdateDate > ?  ",facilityId, date);
+		
+		return programs;
+	}
+    
+    public List<Integer> getRecordsByFacilityId(Integer facilityId) {
+		@SuppressWarnings("unchecked")
+		List<Integer> programs = getHibernateTemplate().find("select distinct p.id From Program p where p.facilityId = ? ",facilityId);
+		
+		return programs;
+	}
 }

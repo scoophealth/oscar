@@ -24,10 +24,12 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.springframework.stereotype.Repository;
 
@@ -78,6 +80,35 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
     	q.setParameter(1, Integer.parseInt(docNum));
     	q.setParameter(2, "DOC");
 
+    	return q.getResultList();
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public List<PatientLabRouting> findLabNosByDemographic(Integer demographicNo, String[] labTypes) {
+    	
+    	StringBuilder sb = new StringBuilder();
+    	for(String t:labTypes) {
+    		sb.append("'" + StringEscapeUtils.escapeSql(t) + "'");
+    	}
+
+    	String query = "select x from " + modelClass.getName() + " x where x.labNo=? and x.labType in ("+sb.toString()+")";
+    	Query q = entityManager.createQuery(query);
+
+    	q.setParameter(1, demographicNo);
+    	
+    	return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Integer> findDemographicIdsSince(Date date) {
+    	
+    	
+    	String query = "select x.demographicNo from " + modelClass.getName() + " x where x.created > ?1)";
+    	Query q = entityManager.createQuery(query);
+
+    	q.setParameter(1, date);
+    	
     	return q.getResultList();
     }
 

@@ -57,6 +57,8 @@ public class dxResearchUpdateAction extends Action {
         String providerNo = request.getParameter("providerNo");
         String startDate = request.getParameter("startdate");
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+        String updateDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss"); 
+        
 
         partialDateDao.setPartialDate(startDate, PartialDate.DXRESEARCH, Integer.valueOf(did), PartialDate.DXRESEARCH_STARTDATE);
         startDate = partialDateDao.getFullDate(startDate);
@@ -65,15 +67,15 @@ public class dxResearchUpdateAction extends Action {
                         
             String sql = "";
             if (status.equals("C")){
-                sql = "update dxresearch set update_date='"+nowDate + "', status='C' where dxresearch_no='"+did+"'";
+                sql = "update dxresearch set update_date='"+updateDate + "', status='C' where dxresearch_no='"+did+"'";
                 DBHandler.RunSQL(sql);
             }
             else if (status.equals("D")){
-                sql = "update dxresearch set update_date='"+nowDate + "', status='D' where dxresearch_no='"+did+"'";
+                sql = "update dxresearch set update_date='"+updateDate + "', status='D' where dxresearch_no='"+did+"'";
                 DBHandler.RunSQL(sql);
             }
             else if (status.equals("A") && startDate!=null){
-                sql = "update dxresearch set update_datpartialDatee='"+nowDate+"', start_date='"+startDate+"' where dxresearch_no='"+did+"'";
+                sql = "update dxresearch set update_date='"+updateDate+"', start_date='"+startDate+"' where dxresearch_no='"+did+"'";
                 DBHandler.RunSQL(sql);
             }
         }

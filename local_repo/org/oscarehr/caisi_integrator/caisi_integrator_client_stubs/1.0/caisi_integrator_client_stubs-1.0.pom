@@ -4,6 +4,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.oscarehr.caisi_integrator</groupId>
   <artifactId>caisi_integrator_client_stubs</artifactId>
-  <version>SNAPSHOT</version>
+  <version>1.0</version>
   <description>POM was created from install:install-file</description>
 </project>

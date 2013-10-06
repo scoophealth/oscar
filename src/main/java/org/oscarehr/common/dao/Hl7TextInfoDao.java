@@ -144,4 +144,5 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     	query.setParameter(2, lab_no);
     	query.executeUpdate();
     }
+    
 }

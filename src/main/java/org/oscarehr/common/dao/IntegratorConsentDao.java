@@ -22,6 +22,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -60,6 +61,32 @@ public class IntegratorConsentDao extends AbstractDao<IntegratorConsent> {
 
 	    @SuppressWarnings("unchecked")
 		List<IntegratorConsent> results=query.getResultList();
+		
+		return(results);
+    }
+
+	public List<IntegratorConsent> findByFacilityAndDemographicSince(int facilityId, int demographicId, Date lastDataUpdated) {
+		Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 and x.createdDate > ?3 order by x.createdDate desc");
+		query.setParameter(1, facilityId);
+		query.setParameter(2, demographicId);
+		query.setParameter(3, lastDataUpdated);
+
+	    @SuppressWarnings("unchecked")
+		List<IntegratorConsent> results=query.getResultList();
+		
+		return(results);
+    }
+
+	/**
+	 * This is for the Integrator.
+	 */
+	public List<Integer> findDemographicIdsByFacilitySince(int facilityId, Date lastDataUpdated) {
+		Query query = entityManager.createQuery("select distinct x.demographicId from IntegratorConsent x where x.facilityId=?1 and x.createdDate > ?3 order by x.createdDate desc");
+		query.setParameter(1, facilityId);
+		query.setParameter(2, lastDataUpdated);
+
+	    @SuppressWarnings("unchecked")
+		List<Integer> results=query.getResultList();
 		
 		return(results);
     }

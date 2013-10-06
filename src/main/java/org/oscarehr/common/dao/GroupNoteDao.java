@@ -23,6 +23,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -42,6 +43,19 @@ public class GroupNoteDao extends AbstractDao<GroupNoteLink> {
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, demographicNo);
+		
+		@SuppressWarnings("unchecked")
+		List<GroupNoteLink> results=query.getResultList();
+	
+		return (results);
+	}
+	
+	public List<GroupNoteLink> findLinksByDemographicSince(Integer demographicNo, Date lastDateUpdated) {
+		String sqlCommand = "select * from GroupNoteLink where demographicNo=?1 and active=true and created > ?2";
+
+		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+		query.setParameter(1, demographicNo);
+		query.setParameter(2,lastDateUpdated);
 		
 		@SuppressWarnings("unchecked")
 		List<GroupNoteLink> results=query.getResultList();

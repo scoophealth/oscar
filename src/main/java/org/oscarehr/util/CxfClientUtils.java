@@ -44,6 +44,9 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.service.factory.ServiceConstructionException;
+import org.apache.cxf.transport.common.gzip.GZIPFeature;
+import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
+import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
@@ -111,6 +114,21 @@ public class CxfClientUtils
 
 		configureSsl(httpConduit);
 		configureTimeout(httpConduit);
+		
+		if(OscarProperties.getInstance().getProperty("INTEGRATOR_COMPRESSION_ENABLED","false").equals("true")) {
+			configureGZIP(cxfClient);
+		}
+	
+		if(OscarProperties.getInstance().getProperty("INTEGRATOR_LOGGING_ENABLED","false").equals("true")) {
+			configureLogging(cxfClient,true);
+		}
+
+	}
+	
+	public static void configureLogging(Client cxfClient,boolean x)
+	{
+		cxfClient.getEndpoint().getOutInterceptors().add(new LoggingOutInterceptor());
+		cxfClient.getEndpoint().getInFaultInterceptors().add(new LoggingInInterceptor());
 	}
 
 	public static void configureLogging(Object wsPort)
@@ -120,6 +138,13 @@ public class CxfClientUtils
 		cxfClient.getEndpoint().getInFaultInterceptors().add(new LoggingInInterceptor());
 	}
 
+	private static void configureGZIP(Client client)
+	{
+		client.getInInterceptors().add(new GZIPInInterceptor());
+		client.getOutInterceptors().add(new GZIPOutInterceptor());
+		client.getBus().getFeatures().add(new GZIPFeature());
+	}
+	
 	public static void configureWSSecurity(Object wsPort, String user, String password)
 	{
 		configureWSSecurity(wsPort, user, new GenericPasswordCallbackHandler(password));

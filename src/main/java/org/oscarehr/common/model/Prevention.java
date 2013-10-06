@@ -171,6 +171,10 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	public Date getCreationDate() {
 		return creationDate;
 	}
+	
+	public String getDeletedRawValue() {
+		return String.valueOf(deleted);
+	}
 
 	@PreUpdate
 	@PrePersist

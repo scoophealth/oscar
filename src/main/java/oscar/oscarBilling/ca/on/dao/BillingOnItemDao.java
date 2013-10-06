@@ -25,6 +25,7 @@
 
 package oscar.oscarBilling.ca.on.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -61,6 +62,24 @@ public class BillingOnItemDao extends HibernateDaoSupport {
 
             @SuppressWarnings("unchecked")
             List<BillingOnCHeader1> rs = getHibernateTemplate().find(queryStr);
+
+            return rs;
+        }
+        
+        public List<BillingOnCHeader1> getCh1ByDemographicNoSince(Integer demographic_no, Date lastUpdateDate) {
+            String queryStr = "FROM BillingOnCHeader1 b WHERE b.demographic_no = "+demographic_no+" and b.timestamp1 > ? ORDER BY b.id";
+
+            @SuppressWarnings("unchecked")
+            List<BillingOnCHeader1> rs = getHibernateTemplate().find(queryStr,lastUpdateDate);
+
+            return rs;
+        }
+        
+        public List<Integer> getDemographicNoSince(Date lastUpdateDate) {
+            String queryStr = "FROM BillingOnCHeader1 b.demographic_no WHERE b.timestamp1 > ? ORDER BY b.id";
+
+            @SuppressWarnings("unchecked")
+            List<Integer> rs = getHibernateTemplate().find(queryStr,lastUpdateDate);
 
             return rs;
         }

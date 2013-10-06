@@ -28,6 +28,7 @@ package oscar.oscarLab.ca.on;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,11 +36,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
+import org.oscarehr.billing.CA.BC.dao.Hl7MshDao;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.DocumentResultsDao;
+import org.oscarehr.common.dao.Hl7TextMessageDao;
+import org.oscarehr.common.dao.LabPatientPhysicianInfoDao;
+import org.oscarehr.common.dao.MdsMSHDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.labs.LabIdAndType;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -74,6 +80,79 @@ public class CommonLabResultData {
 	public static String[] getLabTypes() {
 		return new String[] { "MDS", "CML", "BCP", "HL7", "DOC", "Epsilon" };
 	}
+	
+	public LabResultData getLab(LabIdAndType labIdAndType) {
+		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
+		PathnetResultsData pathData = new PathnetResultsData();
+		List<LabResultData> resultsList = new ArrayList<LabResultData>();
+		
+		if("Epsilon".equals(labIdAndType.getLabType())) {
+			resultsList.addAll(mDSData.populateEpsilonResultsData(null, null, null, null, null, null,labIdAndType.getLabId()));
+		} else if("CML".equals(labIdAndType.getLabType())) {
+			resultsList.addAll(mDSData.populateCMLResultsData(null, null, null, null, null, null,labIdAndType.getLabId()));
+		} else if("BCP".equals(labIdAndType.getLabType())) {
+			resultsList.addAll(pathData.populatePathnetResultsData(null, null, null, null, null, null, labIdAndType.getLabId()));
+		} else if("MDS".equals(labIdAndType.getLabType())) {
+			resultsList.addAll(mDSData.populateMDSResultsData2(null, null, null, null, null, null,labIdAndType.getLabId()));
+		} else if("HL7".equals(labIdAndType.getLabType())) {
+			resultsList.addAll(Hl7textResultsData.populateHl7ResultsData(null, null, null, null, null, null,labIdAndType.getLabId()));   
+		}
+		if(!resultsList.isEmpty()) {
+			return resultsList.get(0);
+		}
+		return null;
+	}
+	
+	public List<LabIdAndType> getCmlAndEpsilonLabResultsSince(Integer demographicNo, Date updateDate) {
+		LabPatientPhysicianInfoDao labPatientPhysicianInfoDao = (LabPatientPhysicianInfoDao) SpringUtils.getBean("labPatientPhysicianInfoDao");
+		
+		//This case handles Epsilon and the old CML data
+		List<Integer> ids = labPatientPhysicianInfoDao.getLabResultsSince(demographicNo,updateDate);
+		List<LabIdAndType> results = new ArrayList<LabIdAndType>();
+		
+		for(Integer id:ids) {
+			results.add(new LabIdAndType(id,"CML"));
+		}
+		return results;
+	}
+	
+	public List<LabIdAndType> getMdsLabResultsSince(Integer demographicNo, Date updateDate) {
+		MdsMSHDao mdsMSHDao = SpringUtils.getBean(MdsMSHDao.class);
+		
+		//This case handles old MDS data
+		List<Integer> ids = mdsMSHDao.getLabResultsSince(demographicNo,updateDate);
+		List<LabIdAndType> results = new ArrayList<LabIdAndType>();
+		
+		for(Integer id:ids) {
+			results.add(new LabIdAndType(id,"MDS"));
+		}
+		return results;
+	}
+
+	public List<LabIdAndType> getPathnetResultsSince(Integer demographicNo, Date updateDate) {
+		Hl7MshDao hl7MshDao = SpringUtils.getBean(Hl7MshDao.class);
+		
+		List<Integer> ids = hl7MshDao.getLabResultsSince(demographicNo,updateDate);
+		List<LabIdAndType> results = new ArrayList<LabIdAndType>();
+		
+		for(Integer id:ids) {
+			results.add(new LabIdAndType(id,"BCP"));
+		}
+		return results;
+	}
+	
+	public List<LabIdAndType> getHl7ResultsSince(Integer demographicNo, Date updateDate) {
+		Hl7TextMessageDao hl7TextMessageDao = SpringUtils.getBean(Hl7TextMessageDao.class);
+		
+		List<Integer> ids = hl7TextMessageDao.getLabResultsSince(demographicNo,updateDate);
+		List<LabIdAndType> results = new ArrayList<LabIdAndType>();
+		
+		for(Integer id:ids) {
+			results.add(new LabIdAndType(id,"HL7"));
+		}
+		return results;
+	}
+	
 
 	public ArrayList<LabResultData> populateLabResultsData(String demographicNo, String reqId, boolean attach) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
@@ -128,18 +207,18 @@ public class CommonLabResultData {
 
 
     		if(!isPaged && cml != null && cml.trim().equals("yes")){
-    			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
     			labs.addAll(cmlLabs);
     		}
 
     		if (!isPaged && mds != null && mds.trim().equals("yes")){
-    			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
     			labs.addAll(mdsLabs);
 
     		}
     		if (!isPaged && pathnet != null && pathnet.trim().equals("yes")){
     			PathnetResultsData pathData = new PathnetResultsData();
-    			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
     			labs.addAll(pathLabs);
     		}
 
@@ -150,7 +229,7 @@ public class CommonLabResultData {
     		        labs.addAll(hl7Labs);
                 }
                 else {
-                	ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+                	ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
     		        labs.addAll(hl7Labs);
                 }
 
@@ -165,6 +244,7 @@ public class CommonLabResultData {
 	public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
 		return populateLabResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, "I");
 	}
+	
 
 	public ArrayList<LabResultData> populateLabResultsDataInboxIndexPage(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
@@ -181,26 +261,26 @@ public class CommonLabResultData {
 		if (scannedDocStatus != null && (scannedDocStatus.equals("N") || scannedDocStatus.equals("I") || scannedDocStatus.equals(""))) {
 
 			if (epsilon != null && epsilon.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(cmlLabs);
 			}
 
 			if (cml != null && cml.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(cmlLabs);
 			}
 			if (mds != null && mds.trim().equals("yes")) {
-				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(mdsLabs);
 			}
 			if (pathnet != null && pathnet.trim().equals("yes")) {
 				PathnetResultsData pathData = new PathnetResultsData();
-				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(pathLabs);
 			}
 			if (hl7text != null && hl7text.trim().equals("yes")) {
 
-				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(hl7Labs);
 			}
 		}
@@ -260,26 +340,26 @@ public class CommonLabResultData {
 		if (scannedDocStatus != null && (scannedDocStatus.equals("N") || scannedDocStatus.equals("I") || scannedDocStatus.equals(""))) {
 
 			if (epsilon != null && epsilon.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(cmlLabs);
 			}
 
 			if (cml != null && cml.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(cmlLabs);
 			}
 			if (mds != null && mds.trim().equals("yes")) {
-				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(mdsLabs);
 			}
 			if (pathnet != null && pathnet.trim().equals("yes")) {
 				PathnetResultsData pathData = new PathnetResultsData();
-				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(pathLabs);
 			}
 			if (hl7text != null && hl7text.trim().equals("yes")) {
 
-				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(hl7Labs);
 			}
 			
@@ -406,7 +486,7 @@ public class CommonLabResultData {
 				result = DBHandler.RunSQL(sql);
 
 				// add new entries
-				sql = "insert into patientLabRouting (lab_no, demographic_no,lab_type) values ('" + labArray[i] + "', '" + demographicNo + "','" + labType + "')";
+				sql = "insert into patientLabRouting (lab_no, demographic_no,lab_type,created) values ('" + labArray[i] + "', '" + demographicNo + "','" + labType + "',now())";
 				result = DBHandler.RunSQL(sql);
 
 				// add labs to measurements table

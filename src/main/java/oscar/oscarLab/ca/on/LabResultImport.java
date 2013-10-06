@@ -51,8 +51,8 @@ public class LabResultImport {
     
     public static String saveLabPatientPhysicianInfo(String labReportInfo_id, String accession_num, String collDate, String firstname, String lastname, String sex, String hin, String birthdate, String phone) throws SQLException {
 	String id = "";
-	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, service_date, lab_status)" +
-						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'F')";
+	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, service_date, lab_status, lastUpdateDate)" +
+						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'F',now())";
 	
 	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -125,7 +125,7 @@ public class LabResultImport {
     
     public static Long savePatientLabRouting(String demo_no, String lab_no) throws SQLException {
 	Long id = null;
-	String sql = "INSERT INTO patientLabRouting (demographic_no, lab_no, lab_type) values (?, ?, 'CML')";
+	String sql = "INSERT INTO patientLabRouting (demographic_no, lab_no, lab_type,created) values (?, ?, 'CML',now())";
 	
 	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);

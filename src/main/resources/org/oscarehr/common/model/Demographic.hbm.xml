@@ -75,7 +75,7 @@
 			lazy="false" />
 
 		<property column="lastUpdateUser" name="lastUpdateUser" />
-		<property column="lastUpdateDate" name="lastUpdateDate" type="date" />
+		<property column="lastUpdateDate" name="lastUpdateDate" type="timestamp" />
 
 		<property column="newsletter" name="newsletter" type="string" />
 		<property column="country_of_origin" name="countryOfOrigin" type="string" />

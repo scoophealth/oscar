@@ -238,6 +238,17 @@ public class FrmRecordHelp {
 
         return results;
     }
+    
+    public List<Integer> getDemographicIds(String sql) throws SQLException {
+        List<Integer> results=new ArrayList<Integer>();
+
+        ResultSet rs = DBHandler.GetSQL(sql);
+        while (rs.next()) {
+        	results.add(Integer.parseInt(rs.getString("demographic_no")));
+        }
+
+        return results;
+    }
 
     private Properties getResultsAsProperties(ResultSet rs) throws SQLException
     {
