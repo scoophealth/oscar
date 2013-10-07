@@ -10797,6 +10797,10 @@ CREATE TABLE formONAREnhanced(
   pg2_formDate date default NULL,
   pg2_signature2 varchar(50) default NULL,
   pg2_formDate2 date default NULL,
+  pg1_geneticA_riskLevel varchar(25),
+  pg1_geneticB_riskLevel varchar(25),
+  pg1_geneticC_riskLevel varchar(25),
+  pg1_labCustom3Result_riskLevel varchar(25),
   PRIMARY KEY (ID)
 ) ENGINE=MyISAM CHARSET=latin1;
 
