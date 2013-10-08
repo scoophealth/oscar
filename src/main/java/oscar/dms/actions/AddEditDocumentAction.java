@@ -139,6 +139,10 @@ public class AddEditDocumentAction extends DispatchAction {
 
 		int numOfPage = 0;
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+                if (!docdownload.endsWith(File.separator))
+                {
+                    docdownload += File.separator; 
+                }
 		String filePath = docdownload + fileName;
 
 		try {
@@ -169,6 +173,11 @@ public class AddEditDocumentAction extends DispatchAction {
 		}
 		writeLocalFile(docFile, fileName);
 		newDoc.setContentType(docFile.getContentType());
+                if (fileName.toLowerCase().endsWith(".pdf")) {
+                    newDoc.setContentType("application/pdf");
+                    int numberOfPages = countNumOfPages(fileName);
+                    newDoc.setNumberOfPages(numberOfPages);                        
+                }
 
 		EDocUtil.addDocumentSQL(newDoc);
 
@@ -250,7 +259,12 @@ public class AddEditDocumentAction extends DispatchAction {
 			// save local file
 			File file = writeLocalFile(docFile, fileName2);
 			newDoc.setContentType(docFile.getContentType());
-
+                        if (fileName2.toLowerCase().endsWith(".pdf")) {
+                            newDoc.setContentType("application/pdf");
+                            int numberOfPages = countNumOfPages(fileName2);
+                            newDoc.setNumberOfPages(numberOfPages);                        
+                        }
+		
 
 			// if the document was added in the context of a program
 			String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
@@ -383,6 +397,11 @@ public class AddEditDocumentAction extends DispatchAction {
 				// save local file
 				writeLocalFile(docFile, fileName);
 				newDoc.setContentType(docFile.getContentType());
+                                if (fileName.toLowerCase().endsWith(".pdf")) {
+                                    newDoc.setContentType("application/pdf");
+                                    int numberOfPages = countNumOfPages(fileName);
+                                    newDoc.setNumberOfPages(numberOfPages);                        
+                                }
 				// ---
 			} else if (docFile.getFileName().length() != 0) {
 				errors.put("uploaderror", "dms.error.uploadError");
