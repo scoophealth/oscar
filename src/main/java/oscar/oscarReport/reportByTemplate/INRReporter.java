@@ -31,10 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.util.ConversionUtils;
 
 /**
@@ -83,7 +83,7 @@ public class INRReporter implements Reporter {
             csvHeader.append("Last Name,First Name,DOB,MRP,INR,Observation Date,Dx Code");
             for(Object[] o : dao.getDataForInrReport(ConversionUtils.fromDateString(fromDate), ConversionUtils.fromDateString(toDate))) {
             	Demographic d = (Demographic) o[0];
-            	Measurements m = (Measurements) o[1];
+            	Measurement m = (Measurement) o[1];
             	Dxresearch dx = (Dxresearch) o[2];
             	
             	if( demographicNo == d.getDemographicNo().longValue() ) {
