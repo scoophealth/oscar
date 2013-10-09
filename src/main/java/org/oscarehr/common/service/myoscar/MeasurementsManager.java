@@ -26,6 +26,7 @@
 package org.oscarehr.common.service.myoscar;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +57,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public final class MeasurementsManager {
+	private static final int[] DATASETS_ADAPTIVE_SIZES = {1000, 10000, 100000, 1000000, 10000000, 100000000};
+	
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final String OSCAR_MEASUREMENTS_DATA_TYPE = "MEASUREMENT";
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
@@ -92,6 +95,68 @@ public final class MeasurementsManager {
 			else return (null);
 		}
 	}
+
+	public static Map<MedicalDataType, List<Measurement>> getMeasurementsFromMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demoId, MedicalDataType ... types) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Loading MyOSCAR measurements for " + demoId);
+			}
+
+			Long myOscarDemoId = null;
+			try {
+				myOscarDemoId = MyOscarUtils.getMyOscarUserIdFromOscarDemographicId(myOscarLoggedInInfo, demoId);
+			} catch (Exception e) {
+				logger.error("Unable to translate demo id", e);
+				return null;
+			}
+
+			Map<MedicalDataType, List<Measurement>> result = new HashMap<MedicalDataType, List<Measurement>>();
+			for (MedicalDataType type : types) {
+				String typeName = type.name();
+
+				List<MedicalDataTransfer4> medData = null;
+				try {
+					medData = getMeasurementsFromMyOscar(myOscarLoggedInInfo, myOscarDemoId, typeName);
+				} catch (Exception e) {
+					logger.error("Unable to pull med data for " + demoId + "/" + myOscarDemoId + " of type " + typeName, e);
+					result.put(type, null);
+					continue;
+				}
+				
+				List<Measurement> oscarMeasurements = new ArrayList<Measurement>();
+				for(MedicalDataTransfer4 mdt : medData) {
+					oscarMeasurements.add(toMeasurement(mdt));
+				}
+
+				result.put(type, oscarMeasurements);
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Retrived MyOSCAR measurements for " + demoId + ": " + result);
+			}
+
+			return result;
+	}
+
+	private static List<MedicalDataTransfer4> getMeasurementsFromMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Long myOscarDemoId, String typeName) {
+	    List<MedicalDataTransfer4> medData = null;
+	    for(int size : DATASETS_ADAPTIVE_SIZES) {
+	    	medData = MyOscarMedicalDataManagerUtils.getMedicalData(myOscarLoggedInInfo, myOscarDemoId, typeName, true, 0, size);
+	    	if (medData.size() < size) {
+	    		return medData;
+	    	}
+	    }
+	    return medData;
+    }
+	
+	private static Measurement toMeasurement(MedicalDataTransfer4 mdt) {
+	    Measurement measurement = new Measurement();
+	    measurement.setDataField(mdt.getData());
+	    if (mdt.getDateOfData() != null) {
+	    	measurement.setDateObserved(mdt.getDateOfData().getTime());
+	    }
+	    measurement.setType(mdt.getMedicalDataType());
+	    return measurement;
+    }
 
 	public static void sendMeasurementsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException {
 		// get last synced info
