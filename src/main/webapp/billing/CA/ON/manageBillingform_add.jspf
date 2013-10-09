@@ -24,8 +24,10 @@
  */
 --%>
 
+<% String errorMessage = request.getParameter("errorMessage"); %>
+
 <form name="servicetypeform" method="post">
-<table width="90%" border="0" height="285">
+<table width="92%" border="0" height="285">
 	<tr>
 		<td width="5%">&nbsp;</td>
 		<td width="30%" valign="top">
@@ -33,10 +35,12 @@
 			<tr>
 				<th colspan="2" class="white"><bean:message
 					key="billing.manageBillingform_add.msgAdd" /></th>
-			</tr>
+			</tr>			
 			<tr>
-				<td width="50%" class="white"><bean:message
-					key="billing.manageBillingform_add.formServiceID" /> :</td>
+				<td width="50%" class="white">			
+				<font color="red">
+				<bean:message
+					key="billing.manageBillingform_add.formServiceID" /> : </font></td>
 				<td width="50%" class="white"><input type="text" name="typeid"
 					maxlength="3"></td>
 			</tr>
@@ -93,6 +97,22 @@
 					onClick="valid(this.form)"></td>
 				<td class="white">&nbsp;</td>
 			</tr>
+			
+			<% 			
+			 if (errorMessage != null && errorMessage.length() > 0) {
+			%>
+				<tr>
+				    <td class="white">&nbsp;</td>
+					<td width="50%" class="white">			
+					<font color="red" size="2"> <%= errorMessage %>
+					</font></td>
+					
+				</tr>				
+			</tr>
+				
+			<% }
+			%>
+			
 		</table>
 		</td>
 
