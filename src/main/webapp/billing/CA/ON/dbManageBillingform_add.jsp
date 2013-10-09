@@ -46,21 +46,43 @@ group2 = request.getParameter("group2");
 group3 = request.getParameter("group3");
 billtype = request.getParameter("billtype");
 
+String errMessage = null;
+
 if (type.compareTo("") == 0 || group1.compareTo("") == 0 || group2.compareTo("") == 0 || group3.compareTo("") == 0) {
-	String errormsg = "Error: Type Description, Groups Descrption must be entered.";
+	errMessage = "Error: Type Description, Groups Descrption must be entered.";
 %>
 
-<jsp:forward page='../../../dms/errorpage.jsp'>
-	<jsp:param name="msg" value='<%=errormsg%>' />
-	<jsp:param name="type" value='<%=type%>' />
-	<jsp:param name="typeid" value='<%=typeid%>' />
-	<jsp:param name="group1" value='<%=group1%>' />
-	<jsp:param name="group2" value='<%=group2%>' />
-	<jsp:param name="group3" value='<%=group3%>' />
-</jsp:forward>
+<jsp:forward page='manageBillingform.jsp'>
+			<jsp:param name="errorMessage" value='<%=errMessage%>' />
+			<jsp:param name="type" value='<%=type%>' />
+			<jsp:param name="typeid" value='<%=typeid%>' />
+			<jsp:param name="group1" value='<%=group1%>' />
+			<jsp:param name="group2" value='<%=group2%>' />
+			<jsp:param name="group3" value='<%=group3%>' />
+			<jsp:param name="billingform" value='000' />
+		</jsp:forward>
 
 <%
 } else {
+	
+	if (ctlBillingServiceDao.findByServiceTypeId(typeid).size() > 0) {
+		errMessage = "Error: Service Type ID '"+typeid+"' already exists.";
+		%>
+
+		<jsp:forward page='manageBillingform.jsp'>
+			<jsp:param name="errorMessage" value='<%=errMessage%>' />
+			<jsp:param name="type" value='<%=type%>' />
+			<jsp:param name="typeid" value='<%=typeid%>' />
+			<jsp:param name="group1" value='<%=group1%>' />
+			<jsp:param name="group2" value='<%=group2%>' />
+			<jsp:param name="group3" value='<%=group3%>' />
+			<jsp:param name="billingform" value='000' />
+		</jsp:forward>
+
+		<%
+	}
+	
+	
 	CtlBillingService cbs = new CtlBillingService();
 	cbs.setServiceTypeName(type);
 	cbs.setServiceType(typeid);
