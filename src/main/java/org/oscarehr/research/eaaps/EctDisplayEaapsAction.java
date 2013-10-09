@@ -43,7 +43,6 @@ import org.oscarehr.common.dao.UserDSMessagePrefsDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.StudyData;
 import org.oscarehr.common.model.UserDSMessagePrefs;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -61,8 +60,6 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	private static final String EAAPS_ERROR_MESSAGE = "Patient not found in eAAPS database";
 
 	private static Logger logger = Logger.getLogger(EctDisplayEaapsAction.class);
-	
-	private boolean enabled;
 	
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	
@@ -212,45 +209,6 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		// for all other cases, say that notification has been dismissed
 		return false;
     }
-
-	private String getProviderNo() {
-		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
-		if (info == null) {
-			return null;
-		}
-		
-		if (info.loggedInProvider == null) {
-			return null;
-		}
-			
-		return info.loggedInProvider.getProviderNo();
-    }
-
-	private NavBarDisplayDAO.Item newItem(String title) {
-		return newItem(title, null);
-	}
-	
-	private NavBarDisplayDAO.Item newItem(String title, String color) {
-		return newItem(title, "return false;", color);
-	}
-	
-	private NavBarDisplayDAO.Item newItem(String title, String url, String color) {
-		NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
-	    item.setTitle(title);
-	    if (color != null) {
-	    	item.setColour(color);
-	    }
-	    
-	    if (url != null) {
-	    	item.setURL(url);
-	    } else {
-	    	// for all null urls, make sure we don't allow clicking them
-	    	item.setURL("return false;");
-	    }
-	    item.setURLJavaScript(true);
-	    
-	    return item;
-    }
 	
 	private String getEaapsUrl(String url, boolean isNarrow) {
 		int width = isNarrow ? 400 : 1000;
@@ -260,16 +218,6 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	@Override
 	public String getCmd() {
 		return "eaaps";
-	}
-
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
 	}
 
 }
