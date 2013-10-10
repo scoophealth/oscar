@@ -40,20 +40,61 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 
 import com.lowagie.text.pdf.PdfReader;
+import java.io.File;
+import java.util.ResourceBundle;
+import org.apache.commons.io.IOUtils;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.SpringUtils;
+import oscar.dms.IncomingDocUtil;
 
 public class DocumentUploadAction extends DispatchAction {
 	
 	private static Logger logger = MiscUtils.getLogger();
 	
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+	public ActionForward executeUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 								 HttpServletResponse response) throws Exception {
 		DocumentUploadForm fm = (DocumentUploadForm) form;
 
 		HashMap<String,Object>map = new HashMap<String,Object>();
 		FormFile docFile = fm.getFiledata();
+                String destination=request.getParameter("destination");
+                java.util.Locale locale = (java.util.Locale) request.getSession().getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+                ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
 		if (docFile == null) { 
 			map.put("error", 4);
 		}
+                else if(destination!=null && destination.equals("incomingDocs"))
+                {
+                    String fileName = docFile.getFileName();
+                    if (!fileName.toLowerCase().endsWith(".pdf")) {
+                        map.put("error", props.getString("dms.documentUpload.onlyPdf"));
+                    } else if (docFile.getFileSize() == 0) {
+                        map.put("error", 4);
+                        throw new FileNotFoundException();
+                    } else {
+
+                        String queueId = request.getParameter("queue");
+                        String destFolder = request.getParameter("destFolder");
+
+                        File f = new File(IncomingDocUtil.getAndCreateIncomingDocumentFilePathName(queueId, destFolder, fileName));
+                        if(f.exists()) {
+                            map.put("error",fileName+ " "+props.getString("dms.documentUpload.alreadyExists"));
+
+                        } else
+                        {
+                            writeToIncomingDocs(docFile, queueId, destFolder, fileName);
+                            map.put("name", docFile.getFileName());
+                            map.put("size", docFile.getFileSize());
+                        }
+                        request.getSession().setAttribute("preferredQueue", queueId);
+                        if (docFile != null) {
+                            docFile.destroy();
+                            docFile = null;
+                        }
+
+                    }
+                }
 		else {
 			int numberOfPages = 0;
 			String fileName = docFile.getFileName();
@@ -160,4 +201,66 @@ public class DocumentUploadAction extends DispatchAction {
 				fos.close();
 		}
 	}
+        private void writeToIncomingDocs(FormFile docFile, String queueId, String PdfDir, String fileName) throws Exception {
+		InputStream fis = null;
+		FileOutputStream fos = null;
+		try {
+			fis = docFile.getInputStream();
+			String savePath = IncomingDocUtil.getAndCreateIncomingDocumentFilePathName(queueId, PdfDir, fileName);
+			fos = new FileOutputStream(savePath);
+                        IOUtils.copy(fis, fos);
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		} finally {
+			if (fis != null)
+                        {
+				fis.close();
+                        }
+			if (fos != null)
+                        {
+				fos.close();
+                        }
+		}
+	}
+
+        public ActionForward setUploadDestination(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+								 HttpServletResponse response) {
+
+        String user_no = (String) request.getSession().getAttribute("user");
+        String destination=request.getParameter("destination");
+        UserPropertyDAO pref = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+        UserProperty up = pref.getProp(user_no, UserProperty.UPLOAD_DOCUMENT_DESTINATION);
+
+        if (up == null) {
+            up = new UserProperty();
+            up.setName(UserProperty.UPLOAD_DOCUMENT_DESTINATION);
+            up.setProviderNo(user_no);
+        }
+
+        if (up.getValue() == null || !(up.getValue().equals(destination))) {
+            up.setValue(destination);
+            pref.saveProp(up);
+        }
+        return null;
+    }
+        public ActionForward setUploadIncomingDocumentFolder(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+								 HttpServletResponse response) throws Exception {
+
+        String user_no = (String) request.getSession().getAttribute("user");
+        String destFolder=request.getParameter("destFolder");
+        UserPropertyDAO pref = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+        UserProperty up = pref.getProp(user_no, UserProperty.UPLOAD_INCOMING_DOCUMENT_FOLDER);
+
+        if (up == null) {
+            up = new UserProperty();
+            up.setName(UserProperty.UPLOAD_INCOMING_DOCUMENT_FOLDER);
+            up.setProviderNo(user_no);
+        }
+
+        if (up.getValue() == null || !(up.getValue().equals(destFolder))) {
+            up.setValue(destFolder);
+            pref.saveProp(up);
+        }
+        return null;
+    }
 }
