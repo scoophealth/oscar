@@ -78,7 +78,7 @@ public class FormUpdateAction extends Action {
 
 	    FlowSheetItem item;
 	    String measure;
-
+	    boolean hasComments = false;
 	    for (int i = 0; i < nodes.size(); i++) {
 	    	MeasurementTemplateFlowSheetConfig.Node node = nodes.get(i);
 
@@ -105,6 +105,7 @@ public class FormUpdateAction extends Action {
 	    					testOutput += child.flowSheetItem.getDisplayName() + ": " + request.getParameter(name) + "\n";
 	    					errorPage = true;
 	    				} else {
+	    					hasComments = true;
 	    					textOnEncounter += name + " " + request.getParameter(name) + "\\n";
 	    				}
 
@@ -122,7 +123,7 @@ public class FormUpdateAction extends Action {
 	    	request.setAttribute("testOutput",testOutput);
 	    	return mapping.findForward("failure");
 	    }
-	    session.setAttribute("textOnEncounter",textOnEncounter);
+	    session.setAttribute("textOnEncounter", hasComments ? textOnEncounter : "");
 	    if (request.getParameter("submit").equals("Update")) {
 	    	return mapping.findForward("reload");
 	    } else {
