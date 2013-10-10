@@ -23,7 +23,8 @@
     Ontario, Canada
 
 --%>
-<% long startTime = System.currentTimeMillis(); %><%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
+<% long startTime = System.currentTimeMillis(); %>
+<%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
@@ -36,7 +37,6 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-    //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
@@ -46,7 +46,6 @@
 "You have no right to access this page!"
 <% response.sendRedirect("../../noRights.html"); %>
 </security:oscarSec>
-
 
 
 <!--*************************************************************************************
@@ -140,8 +139,11 @@ maybe use jquery/ajax to post this data instead of submitting a form to send ALL
 
     mi.getMeasurements(measurements);
 
-    mFlowsheet.getMessages(mi);
-
+	try{
+	    mFlowsheet.getMessages(mi);
+	}catch(Exception e){
+	//do nothing
+	}
     ArrayList recList = mi.getList();
 
     mFlowsheet.sortToCurrentOrder(recList);
@@ -507,29 +509,7 @@ view:
 <!--MEASUREMENT TITLE-->
     <div class="headPrevention">
 
-        <p <%//=extraColour%> title="fade=[on] header=[<%=item.getDisplayName()%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=item.getGuideline()%>]"   >
-
-           <!-- <%if(item.isGraphable()){%>
-               <%if (alist != null && alist.size() > 1) { %>
-                  <img class="DoNotPrint" src="img/chart.gif" alt="Plot"  onclick="window.open('../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=<%=measure%>');"/>
-               <%}else{%>
-                  <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
-               <%}%>
-            <%}%>-->
-
-            <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-
-<!--don't need to add from print            
-<a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( item.getItemName().hashCode() ) %>')">
-</security:oscarSec>
-
-<span  style="font-weight:bold;"><%=item.getDisplayName()%></span>
-
-<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-</a>
-</security:oscarSec>
--->
-
+<p>
 <span  style=""><%=item.getDisplayName()%></span>
 <br/>
 
@@ -628,11 +608,14 @@ view:
 
     %>
     <div class="preventionProcedure" <%=hider%>  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
-        <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
+
+	<p <%=indColour%> title="Entered By: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>">
+	<%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
             <%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
             <%if (comb) {%>
             <span class="footnote"><%=comments.size()%></span>
             <%}%>
+
         </p>
     </div>
     <%}%>
@@ -657,14 +640,7 @@ view:
     <%}%>
 
     <div class="headPrevention">
-        <p title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
-
-<!--
-            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
-                <span title="<%=h2.get("guideline")%>" style="font-weight:bold;"><%=h2.get("display_name")%></span>
-            </a>
--->
-
+        <p title="<%=h2.get("display_name")%>">
            <span title="<%=h2.get("guideline")%>"><%=h2.get("display_name")%></span>
         </p>
     </div><!--headPrevention-->
@@ -732,7 +708,6 @@ view:
 }
 }
 
-
     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
     oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
 
@@ -753,13 +728,7 @@ view:
 	<input  type="checkbox" name="printHP" id="printHP<%=fsd.getAtcCode()%>" class="css-checkbox"  value="<%=fsd.getAtcCode()%>"/>
 	<label for="printHP<%=measure%>" name="printHP<%=measure%>" class="css-label"></label><!--needed for chkbox effect-->
 
-<!--
-       <input type="radio" name="printStyle<%=fsd.getAtcCode()%>" value="all" checked >ALL</input><br>
-       <input type="radio" name="printStyle<%=fsd.getAtcCode()%>" value="num" ># Elements</input>
-       <input type="text" name="numEle<%=fsd.getAtcCode()%>" size="3"/>    <br>
-       <input type="radio" name="printStyle<%=fsd.getAtcCode()%>"  value="range">Range</input>
-       <input type="text" size="10" name="sDate<%=fsd.getAtcCode()%>"/> <input type="text" name="eDate<%=fsd.getAtcCode()%>" size="10"/>
--->
+
     </div>
     <%}%>
 
@@ -892,8 +861,6 @@ String noPrint2 = "";
         
 </div>
 <% } %>
-
-
 
 
 <div id="scrollToTop" class="DoNotPrint"><a href="#printFlowsheetBody" class="DoNotPrint"><i class="icon-arrow-up"></i>Top</a></div>
