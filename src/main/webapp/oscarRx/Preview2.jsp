@@ -460,7 +460,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
 																	%>
 																	<input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />	
 
-																	<img id="signature" style="width:200px; height:100px" src="<%=startimageUrl%>" alt="digital_signature" />
+																	<img id="signature" style="width:300px; height:60px" src="<%=startimageUrl%>" alt="digital_signature" />
 				 													<input type="hidden" name="imgFile" id="imgFile" value="" />
 																	<script type="text/javascript">
 																		var POLL_TIME=2500;
