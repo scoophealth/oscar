@@ -265,6 +265,7 @@
 		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
         <ap-output>${concerns}</ap-output>
     </databaseap>
+    <databaseap>
         <ap-name>reminders</ap-name>
         <ap-sql>SELECT GROUP_CONCAT(t.reminder SEPARATOR ', ') as reminders FROM( SELECT notes.note as reminder FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
 		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
