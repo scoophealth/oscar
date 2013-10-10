@@ -57,7 +57,7 @@ String resourcePath = context + "/share/documentUploader/";
 <div id="fileupload">
 
     <div class="file_upload_buttons fileupload-buttonbar ui-widget-header ui-corner-top">
-	    <form action="<%=context%>/dms/documentUpload.do" method="POST" enctype="multipart/form-data">
+	    <form action="<%=context%>/dms/documentUpload.do?method=executeUpload" method="POST" enctype="multipart/form-data">
 	        <input type="hidden" id="provider" name="provider" value="<%=provider%>" />
 			<input type="hidden" name="queue" value="<%=queueId%>"/>
 	        <input type="file" name="filedata" multiple>

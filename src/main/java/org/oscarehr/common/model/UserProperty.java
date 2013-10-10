@@ -102,6 +102,10 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String DOCUMENT_DESCRIPTION_TEMPLATE="document_description_template";
     public static final String CLINIC="Clinic";
     public static final String USER="User";
+    public static final String UPLOAD_DOCUMENT_DESTINATION="upload_document_destination";
+    public static final String INCOMINGDOCS="incomingDocs";
+    public static final String PENDINGDOCS="pendingDocs";
+    public static final String UPLOAD_INCOMING_DOCUMENT_FOLDER="upload_incoming_document_folder";
 
     public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";
     public static final String INTEGRATOR_DEMOGRAPHIC_ISSUES = "integrator_demographic_issues";
