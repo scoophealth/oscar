@@ -477,7 +477,7 @@ public final class MessageUploader {
 				Hl7textResultsData.populateMeasurementsTable("" + labId, result.getDemographicNo().toString());
 			}
 
-			sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('" + ((result.getDemographicNo()!=null)?result.getDemographicNo().toString():"0") + "', '" + labId + "','HL7')";
+			sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('" + ((result != null && result.getDemographicNo()!=null)?result.getDemographicNo().toString():"0") + "', '" + labId + "','HL7')";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 
