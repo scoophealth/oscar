@@ -1883,7 +1883,7 @@ function editNote(e) {
 				data: params
 			});
     		    		
-    		params = "method=updateNoteLock&demographicNo=" + demographicNo;
+    		params = "method=updateNoteLock&demographicNo=" + demographicNo + "&noteId=" + nId;
 			jQuery.ajax({
 				type: "POST",
 				url:  ctx + "/CaseManagementEntry.do",
