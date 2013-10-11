@@ -198,16 +198,16 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 </table>
     <ul bgcolor="#ffffff">
         <li class="tableHeadings deep">
-		<% if ( fromMessenger ) {%>
-		<! -- leave blank -->
-		<%} else {%>
+
                 <div class="demoIdSearch">
                     <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>"><bean:message
                         key="demographic.demographicsearchresults.btnDemoNo" /></a>
                 </div>
-		<div class="links">&nbsp;<!-- b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">Links<sup>*</sup></a></b --></div>
+		<% if(!fromMessenger)  { %>
+		<div class="links">
+			<a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">&nbsp Links<sup>*</sup></a></div>
+		<% } %>
 
-		<%}%>
 		<div class="name"><a
                     href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>"><bean:message
                     key="demographic.demographicsearchresults.btnDemoName"/><sup>1</sup></a>
