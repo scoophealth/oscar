@@ -255,7 +255,10 @@ public class EctConsultationFormRequestUtil {
 	                        appointmentHour = Integer.toString(h);
 	                    } else {
 	                        appointmentPm = "AM";
-	                        appointmentHour = Integer.toString(h);
+	                        if(h == 0)
+	                        	appointmentHour = Integer.toString(12);
+	                        else
+	                        	appointmentHour = Integer.toString(h);
 	                    }
 	                }
                 }
