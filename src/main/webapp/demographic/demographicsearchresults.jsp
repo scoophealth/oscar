@@ -24,6 +24,7 @@
 
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.jpedal.fonts.tt.FirstPoint"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -334,6 +335,7 @@
 	
 
 	boolean toggleLine = false;
+	boolean firstPageShowIntegratedResults = request.getParameter("firstPageShowIntegratedResults") != null && "true".equals(request.getParameter("firstPageShowIntegratedResults"));
 	int nItems=0;
 
 	if(demoList==null) {
@@ -372,7 +374,10 @@
 		
 		@SuppressWarnings("unchecked")
 		  List<MatchingDemographicTransferScore> integratorSearchResults=(List<MatchingDemographicTransferScore>)request.getAttribute("integratorSearchResults");
+		  
+		  
 		  if (integratorSearchResults!=null) {
+		      firstPageShowIntegratedResults = true;
 			  for (MatchingDemographicTransferScore matchingDemographicTransferScore : integratorSearchResults) {
 			      if( isLocal(matchingDemographicTransferScore, demoList)) {
 				  	continue;
@@ -489,18 +494,20 @@
 %>
 </table>
 <%
+
+  
   int nLastPage=0,nNextPage=0;
   nNextPage=Integer.parseInt(strLimit)+Integer.parseInt(strOffset);
   nLastPage=Integer.parseInt(strOffset)-Integer.parseInt(strLimit);
   if(nLastPage>=0) {
 %> 
-	<a href="demographiccontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>&ptstatus=<%=ptStatus%><%=nLastPage==0?"&includeIntegratedResults=true":""%>">
+	<a href="demographiccontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>&ptstatus=<%=ptStatus%>&firstPageShowIntegratedResults=<%=firstPageShowIntegratedResults%><%=nLastPage==0 && firstPageShowIntegratedResults?"&includeIntegratedResults=true":""%>">
 	<bean:message key="demographic.demographicsearchresults.btnLastPage" /></a> <%
   }
   if(nItems>=Integer.parseInt(strLimit)) {
       if (nLastPage>=0) {
 	%> | <%    } %> 
-	<a href="demographiccontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=<%=orderBy%>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>&ptstatus=<%=ptStatus%>">
+	<a href="demographiccontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=<%=orderBy%>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>&ptstatus=<%=ptStatus%>&firstPageShowIntegratedResults=<%=firstPageShowIntegratedResults%>">
 	<bean:message key="demographic.demographicsearchresults.btnNextPage" /></a>
 <%
 }
