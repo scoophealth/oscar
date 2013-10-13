@@ -143,8 +143,6 @@ public class SFTPConnector {
 	public SFTPConnector(String host, int port, String user, String keyLocation) throws Exception {
 
 		logger.debug("Host "+host+" port "+port+" user "+user+" keyLocation "+keyLocation);	
-		//decryption key
-		//decryptionKey = SFTPAuthKeys.OMDdecryptionKey2;
 
 		//daily log file name follows "day month year . log" (with no spaces)
 		String logName = SFTPConnector.getDayMonthYearTimestamp() + ".log";
@@ -563,7 +561,7 @@ public class SFTPConnector {
 	public static boolean isFetchRunning() {
 		return SFTPConnector.isAutoFetchRunning;
 	}
-
+	
 	public static boolean doDecrypt() {
 		boolean decrypt = false;
 		String decryptionKey = OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY");
@@ -573,7 +571,6 @@ public class SFTPConnector {
 		} 
 		return decrypt;
 	}
-
 
 	public static synchronized void startAutoFetch() {
 
