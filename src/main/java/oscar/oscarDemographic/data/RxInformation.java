@@ -52,7 +52,7 @@ public class RxInformation {
 	public String getAllergies(String demographic_no) {
 		oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(Integer.parseInt(demographic_no));
 		Allergy[] allergies = {};
-		allergies = patient.getAllergies();
+		allergies = patient.getActiveAllergies();
 		StringBuilder stringBuffer = new StringBuilder();
 		for (int i = 0; i < allergies.length; i++) {
 			Allergy allerg = allergies[i];
