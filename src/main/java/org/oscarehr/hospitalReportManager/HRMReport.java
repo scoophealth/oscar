@@ -253,10 +253,14 @@ public class HRMReport {
 	}
 	
 	public String getDeliverToUserIdFirstName() {
+		if(hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider() == null)
+			return null;
 		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider().getFirstName();
 	}
 	
 	public String getDeliverToUserIdLastName() {
+		if(hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider() == null)
+			return null;
 		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider().getLastName();
 	}
 
