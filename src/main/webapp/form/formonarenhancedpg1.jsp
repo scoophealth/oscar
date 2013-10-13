@@ -89,6 +89,24 @@
 
 <script>
 
+function bornResourcesDisplay(selected) {
+		
+	var url = '';
+	if (selected.selectedIndex == 1) {
+		url = 'http://sogc.org/wp-content/uploads/2013/01/gui261CPG1107E.pdf';
+ 	} else if (selected.selectedIndex == 2) {
+ 		url = 'http://sogc.org/wp-content/uploads/2013/01/gui217CPG0810.pdf';
+ 	} else if (selected.selectedIndex == 3) {
+ 		url = 'http://sogc.org/wp-content/uploads/2013/01/gui239ECPG1002.pdf';
+ 	}
+
+	if (url != '') {
+		var win=window.open(url, '_blank');
+		win.focus();
+    }	
+}
+
+
 function loadCytologyForms() {
 <%
 	if(cytologyForms != null) {
@@ -302,7 +320,10 @@ width: 100%;
 		$("select[name='pg1_labSickle']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labSickle", "")) %>');
 		$("select[name='pg1_labRubella']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labRubella", "")) %>');
 	
-
+		$("select[name='pg1_geneticA_riskLevel']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticA_riskLevel", "")) %>');
+		$("select[name='pg1_geneticB_riskLevel']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticB_riskLevel", "")) %>');
+		$("select[name='pg1_geneticC_riskLevel']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticC_riskLevel", "")) %>');
+		$("select[name='pg1_labCustom3Result_riskLevel']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Result_riskLevel", "")) %>');
 
 		
 		rhWarning();
@@ -3359,12 +3380,11 @@ $(document).ready(function(){
 			</table>
 			<br/>
 			
-			
-			<br>
 			<table width="100%" border="1" cellspacing="0" cellpadding="0">
 				<tr>
 					<th><u>Prenatal Genetic Investigations</u></th>
 					<th>Result</th>
+					<th>Risk Level</th>
 				</tr>
 				<tr>
 					<td>a) All ages-MSS, IPS, FTS</td>
@@ -3372,24 +3392,61 @@ $(document).ready(function(){
 						maxlength="20"
 						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticA", "")) %>"></td>
 					</td>
+					
+					<!-- Added for the item-35 in the  BORN-RFP-->
+					<td>
+						<select name="pg1_geneticA_riskLevel">
+							<option value=""></option>
+							<option value="NORMAL">Normal</option>
+							<option value="HIGH-RISK">High Risk</option>
+						</select>					
+					</td>
 				</tr>
 				<tr>
 					<td>b) Age &gt;= 35 at EDB-CVS/amnio</td>
 					<td><input type="text" name="pg1_geneticB" size="10"
 						maxlength="20"
-						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticB", "")) %>"></td>
+						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticB", "")) %>">
+					</td>
+					
+					<!-- Added for the item-35 in the  BORN-RFP-->
+					<td>
+						<select name="pg1_geneticB_riskLevel">
+							<option value=""></option>
+							<option value="NORMAL">Normal</option>
+							<option value="HIGH-RISK">High Risk</option>
+						</select>					
 					</td>
 				</tr>
 				<tr>
 					<td>c) If a or b declined, or twins, then MSAFP</td>
 					<td><input type="text" name="pg1_geneticC" size="10"
 						maxlength="20"
-						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticC", "")) %>"></td>
+						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticC", "")) %>">
 					</td>
+					
+					<!-- Added for the item-35 in the  BORN-RFP-->
+					<td>
+						<select name="pg1_geneticC_riskLevel">
+							<option value=""></option>
+							<option value="NORMAL">Normal</option>
+							<option value="HIGH-RISK">High Risk</option>
+						</select>					
+					</td>	
 				</tr>
 				<tr>
 					<td><input type="text" size="10" name="pg1_labCustom3Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Label", "")) %>"/></td>
-					<td><input type="text"  size="10" name="pg1_labCustom3Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Result", "")) %>"/></td>					
+					<td><input type="text"  size="10" name="pg1_labCustom3Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Result", "")) %>"/></td>
+					
+					<!-- Added for the item-35 in the  BORN-RFP-->
+					<td>
+						<select name="pg1_labCustom3Result_riskLevel">
+							<option value=""></option>
+							<option value="NORMAL">Normal</option>
+							<option value="HIGH-RISK">High Risk</option>
+						</select>					
+					</td>
+										
 				</tr>
 				
 				<tr>
@@ -3398,13 +3455,35 @@ $(document).ready(function(){
 						<input type="hidden" name="pg1_geneticD" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticD", "")) %>"/>
 						<input type="checkbox" name="pg1_geneticD1" <%= props.getProperty("pg1_geneticD1", "") %>>
 					</td>
+					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td>d) test declined, or too late</td>
 					<td align="center">
 						<input type="checkbox" name="pg1_geneticD2" <%= props.getProperty("pg1_geneticD2", "") %>>
 					</td>
+					<td>&nbsp;</td>
 				</tr>
+				
+			    <tr>
+			    	<td>
+					   e) Born Resources
+					</td>
+			    
+					<td>
+			            <select name="bornresources" onchange="bornResourcesDisplay(this);">
+							<option value=""></option>
+							<option value="A">Fetal Aneuploidy</option>
+							<option value="B">Obstetrical Complications</option>
+							<option value="C">Obesity in Pregnancy</option>
+						</select>	
+			        </td>
+			
+
+					<td>&nbsp;</td>
+				</tr>				
+			
+				
 			</table>
 
 			</td>
