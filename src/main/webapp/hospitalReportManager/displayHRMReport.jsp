@@ -275,7 +275,20 @@ function revokeSignOffHrm(reportId) {
 	<% } %>
 	</div>
 
+<%
+	if(hrmReport.isBinary()) {
+		String reportFileData = hrmReport.getFileData();
+		String noMessageIdFileData = reportFileData.replaceAll("<MessageUniqueID>.*?</MessageUniqueID>", "<MessageUniqueID></MessageUniqueID>");
+		String noMessageIdHash = org.apache.commons.codec.digest.DigestUtils.md5Hex(noMessageIdFileData);
+		
+		%><a href="<%=request.getContextPath() %>/hospitalReportManager/HRMDownloadFile.do?hash=<%=noMessageIdHash%>"><%=(hrmReport.getLegalLastName() + "-" + hrmReport.getLegalFirstName() + "-" +  hrmReport.getFirstReportClass() + hrmReport.getFileExtension()).replaceAll("\\s", "_") %></a><%	
+	} else {
+
+%>
 	<%=hrmReport.getFirstReportTextContent().replaceAll("\n", "<br />") %>
+	
+	<% } %>
+	
 	<%
 	String confidentialityStatement = (String) request.getAttribute("confidentialityStatement");
 	if (confidentialityStatement != null && confidentialityStatement.trim().length() > 0) {
