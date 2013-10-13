@@ -10,6 +10,8 @@
 --%>
 <%@page import="org.apache.commons.lang.StringUtils,oscar.log.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <%@ page language="java" contentType="text/html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -40,8 +42,8 @@ if(demographicLink != null){
 <html>
 <head>
 <title>HRM Report</title>
-<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui-1.8.18.custom.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-1.7.3.custom.min.js"></script>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../share/javascript/effects.js"></script>
@@ -107,6 +109,7 @@ if(demographicLink != null){
 	margin: 10px;
 }
 
+
 #metadataBox th {
 	text-align: right;
 }
@@ -115,6 +118,9 @@ if(demographicLink != null){
 	#infoBox {
 		display: none;
 	}
+	.boxButton {
+	  display: none;
+    }
 }
 </style>
 
@@ -271,7 +277,9 @@ function revokeSignOffHrm(reportId) {
 		<% 	seenBefore.add(relationshipDocument.getId().intValue());
 			}
 		} %>
-		 <input type="button" onClick="makeIndependent('<%=hrmReportId %>')" value="Make Independent" />
+		 <div class="boxButton">
+		   <input type="button" onClick="makeIndependent('<%=hrmReportId %>')" value="Make Independent" />
+		 </div>  
 	<% } %>
 	</div>
 
@@ -281,7 +289,25 @@ function revokeSignOffHrm(reportId) {
 		String noMessageIdFileData = reportFileData.replaceAll("<MessageUniqueID>.*?</MessageUniqueID>", "<MessageUniqueID></MessageUniqueID>");
 		String noMessageIdHash = org.apache.commons.codec.digest.DigestUtils.md5Hex(noMessageIdFileData);
 		
-		%><a href="<%=request.getContextPath() %>/hospitalReportManager/HRMDownloadFile.do?hash=<%=noMessageIdHash%>"><%=(hrmReport.getLegalLastName() + "-" + hrmReport.getLegalFirstName() + "-" +  hrmReport.getFirstReportClass() + hrmReport.getFileExtension()).replaceAll("\\s", "_") %></a><%	
+		if(hrmReport.getFileExtension() != null && (".gif".equals(hrmReport.getFileExtension()) || ".jpg".equals(hrmReport.getFileExtension()) || ".png".equals(hrmReport.getFileExtension()))) {
+			%><img src="<%=request.getContextPath() %>/hospitalReportManager/HRMDownloadFile.do?hash=<%=noMessageIdHash%>"/><br/><%	
+		}
+		%><a href="<%=request.getContextPath() %>/hospitalReportManager/HRMDownloadFile.do?hash=<%=noMessageIdHash%>"><%=(hrmReport.getLegalLastName() + "-" + hrmReport.getLegalFirstName() + "-" +  hrmReport.getFirstReportClass() + hrmReport.getFileExtension()).replaceAll("\\s", "_") %></a>&nbsp;&nbsp;
+		<br/>
+		<%
+		if(hrmReport.getFileExtension() != null && (".gif".equals(hrmReport.getFileExtension()) || ".jpg".equals(hrmReport.getFileExtension()) || ".png".equals(hrmReport.getFileExtension()))) {
+			%>
+		<span>(Please use the link above to download the attachement.)</span>
+		<%
+		}
+		
+		else {
+		%>
+		<span style="color:red">(This report contains an attachment which cannot be viewed in your browser. Please use the link above to view/download the content contained within.)</span>
+		<%
+		}
+		
+		
 	} else {
 
 %>
@@ -437,8 +463,10 @@ function revokeSignOffHrm(reportId) {
 <div id="commentBox">
 Add a comment to this report:<br />
 <textarea rows="10" cols="50" id="commentField_<%=hrmReportId %>_hrm"></textarea><br />
-<input type="button" onClick="addComment('<%=hrmReportId %>')" value="Add Comment" /><span id="commentstatus<%=hrmReportId %>"></span><br /><br />
 
+ <div class="boxButton">
+   <input type="button" onClick="addComment('<%=hrmReportId %>')" value="Add Comment" /><span id="commentstatus<%=hrmReportId %>"></span><br /><br />
+ </div>
 <%
 List<HRMDocumentComment> documentComments = (List<HRMDocumentComment>) request.getAttribute("hrmDocumentComments");
 
@@ -569,21 +597,43 @@ YAHOO.example.BasicRemote = function() {
 String duplicateLabIdsString=StringUtils.trimToNull(request.getParameter("duplicateLabIds"));
 if (duplicateLabIdsString!=null)
 {
+	Map<Integer,Date> dupReportDates = (Map<Integer,Date>)request.getAttribute("dupReportDates");
+	Map<Integer,Date> dupTimeReceived = (Map<Integer,Date>)request.getAttribute("dupTimeReceived");
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 	%>
 		<hr />
-		Duplicate Labs found : <br />
+		Report History:<br />
+		
+		<table border="1">
+			<tr>
+				<th>ID</th>
+				<th>Report Date</th>
+				<th>Date Received</th>
+				<th></th>
+			</tr>
 	<%
+	//need datetime of report.
 	String[] duplicateLabIdsStringSplit=duplicateLabIdsString.split(",");
 	for (String tempId : duplicateLabIdsStringSplit)
 	{
 		%>
-			<input type="button" value="View labId=<%=tempId%>" onclick="window.open('?id=<%=tempId%>&segmentId=<%=tempId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>&demoName=<%=StringEscapeUtils.escapeHtml(request.getParameter("demoName"))%>', null)" /> 
-			<br />
+			<tr>
+				<td><%=tempId %></td>
+				<td><%=formatter.format(dupReportDates.get(Integer.parseInt(tempId))) %></td>
+				<td><%=formatter.format(dupTimeReceived.get(Integer.parseInt(tempId))) %></td>
+			    <td><input type="button" value="Open Report" onclick="window.open('?id=<%=tempId%>&segmentId=<%=tempId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>&demoName=<%=StringEscapeUtils.escapeHtml(request.getParameter("demoName"))%>', null)" /> </td> 
+			</tr>
+			
 		<%
 	}
+	
+	%></table><%
 }
 %>
 
+<br/>
+
+Duplicates of this report have been received <%=request.getAttribute("hrmDuplicateNum")!=null?request.getAttribute("hrmDuplicateNum"):"0"%> time(s).
 
 </body>
 </html>
