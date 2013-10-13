@@ -9,20 +9,20 @@
 
 package org.oscarehr.hospitalReportManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.oscarehr.hospitalReportManager.xsd.DateFullOrPartial;
 import org.oscarehr.hospitalReportManager.xsd.Demographics;
 import org.oscarehr.hospitalReportManager.xsd.OmdCds;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard;
 import org.oscarehr.hospitalReportManager.xsd.PersonNameStandard.LegalName.OtherName;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived.OBRContent;
-import org.oscarehr.hospitalReportManager.xsd.DateFullOrPartial;
 import org.oscarehr.util.MiscUtils;
 
 public class HRMReport {
@@ -253,11 +253,11 @@ public class HRMReport {
 	}
 	
 	public String getDeliverToUserIdFirstName() {
-		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getPhysician().getFirstName();
+		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider().getFirstName();
 	}
 	
 	public String getDeliverToUserIdLastName() {
-		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getPhysician().getLastName();
+		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider().getLastName();
 	}
 
 	public Integer getHrmDocumentId() {

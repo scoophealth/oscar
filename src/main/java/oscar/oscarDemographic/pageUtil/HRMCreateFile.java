@@ -31,16 +31,16 @@
 package oscar.oscarDemographic.pageUtil;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.List;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import cds.DemographicsDocument;
-import cds.ReportsReceivedDocument;
-import java.util.Calendar;
-import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.oscarehr.hospitalReportManager.xsd.DateFullOrPartial;
 import org.oscarehr.hospitalReportManager.xsd.Demographics;
 import org.oscarehr.hospitalReportManager.xsd.Gender;
@@ -59,6 +59,9 @@ import org.oscarehr.hospitalReportManager.xsd.ReportContent;
 import org.oscarehr.hospitalReportManager.xsd.ReportFormat;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived;
 import org.oscarehr.hospitalReportManager.xsd.TransactionInformation;
+
+import cds.DemographicsDocument;
+import cds.ReportsReceivedDocument;
 
 /**
  *
@@ -272,7 +275,7 @@ public class HRMCreateFile {
             transactionInfo.setMessageUniqueID(report.getMessageUniqueID());
             transactionInfo.setDeliverToUserID("");
             PersonNameSimple physician = new PersonNameSimple();
-            transactionInfo.setPhysician(physician);
+            transactionInfo.setProvider(physician);
         }
     }
 
