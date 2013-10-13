@@ -1,0 +1,43 @@
+MSH|^~\&|Epsilon-System||||201204041604||ORU^R01|201204041604|P|2.3|||||||
+PID|1||1120301349|2222222222^AA|SMITH^JANE||19540323|F|||19 SMITH RD^^TORONTO^ON||4164970509||||||||||||||||||
+OBR|1||||R|201204030004||||||||201204030004||011111^SMITH^DR. JOHN|416 555 2000||||||||F|||||||||||||||||||
+OBX|1|FT|FOBT (ColonCancerCheck)^FOB3^Fecal Occult Blood Testing (Flap3)|1|Negative||||||F||||||
+OBX|2|FT|FOBT (ColonCancerCheck)^FOB2^Fecal Occult Blood Testing (Flap2)|2|Negative||||||F||||||
+OBX|3|FT|FOBT (ColonCancerCheck)^FOB1^Fecal Occult Blood Testing (Flap1)|3|Negative||||||F||||||
+PID|2||1120301871|8424860263|MCDONNELL^KERRY ANN||19540114|F|||600 BREAD STREET^^MISSISSAUGA^ON||9054611033||||||||||||||||||
+OBR|1||||R|201204030004||||||||201204030004||011111^SMITH^DR. JOHN|416 555 2000||||||||F|||||||||||||||||||
+OBX|1|NM|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|1|4.2||||||F||||||
+OBX|2|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|2|10 Year Risk Category Target Lipid Values||||||F||||||
+OBX|3|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|3|LDL-C mmol/L T Chol/HDL ratio||||||F||||||
+OBX|4|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|4|High: (>=20% or history of||||||F||||||
+OBX|5|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|5|diabetes mellitus or||||||F||||||
+OBX|6|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|6|any atherosclerotic < 2.0 and < 4.0||||||F||||||
+OBX|7|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|7|disease)||||||F||||||
+OBX|8|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|8|Moderate: (10-19%) < 3.5 and < 5.0||||||F||||||
+OBX|9|FT|GENERAL CHEMISTRY^C/H^Total Cholesterol: HDL Ratio|9|Low: (<10%) < 5.0 and < 6.0||||||F||||||
+OBX|10|NM|GENERAL CHEMISTRY^LDL^LDL Cholesterol||2.59|mmol/L|< 3.36||||F||||||
+OBX|11|NM|GENERAL CHEMISTRY^HDL^HDL Cholesterol||1.24|mmol/L|0.75-1.85||||F||||||
+OBX|12|NM|GENERAL CHEMISTRY^TRI^Triglycerides||3.03|mmol/L|< 1.50|H|||F||||||
+OBX|13|NM|GENERAL CHEMISTRY^CHO^Cholesterol||5.21|mmol/L|< 5.20|H|||F||||||
+OBX|14|NM|GENERAL CHEMISTRY^A1c^Hb A1C||0.108||0.040-0.060|H|||F||||||
+OBX|15|NM|GENERAL CHEMISTRY^BSF^Glucose Fasting||15.3|mmol/L|3.6-5.8|H|||F||||||
+PID|3||1120301873|2023110212^AB|RICHARDS^JADEN||19591122|F|||355 BROADWAY AVENUE^^BURLINGTON^ON||9054502100||||||||||||||||||
+OBR|1||||R|201204030004||||||||201204030004||011111^SMITH^DR. JOHN|416 555 2000||||||||F|||||||||||||||||||
+OBX|1|ST|URINALYSIS^NIT^Nitrite||Negative||||||F||||||
+OBX|2|ST|URINALYSIS^LEU^Leukocytes||Negative||||||F||||||
+OBX|3|ST|URINALYSIS^BLD^Blood||Negative||||||F||||||
+OBX|4|ST|URINALYSIS^KET^Ketone||Negative||||||F||||||
+OBX|5|ST|URINALYSIS^PRTN^Protein (Urine)||Negative||||||F||||||
+OBX|6|ST|URINALYSIS^SUG^Sugar||Negative||||||F||||||
+OBX|7|NM|URINALYSIS^PH^pH||6.0||5.5-8.0||||F||||||
+OBX|8|SN|URINALYSIS^S.G^Specific Gravity||>=1.030||1.010-1.030||||F||||||
+PID|4||1120301353|1311209470|SMITH^RENEE||19450319|F|||100 SLICK RD^^BRAMPTON^ON||9058747191||||||||||||||||||
+OBR|1||||R|201204030004||||||||201204030004||011111^SMITH^DR. JOHN|416 555 2000||||||||F|||||||||||||||||||
+OBX|1|FT|FOBT (ColonCancerCheck)^FOB3^Fecal Occult Blood Testing (Flap3)|1|Negative||||||F||||||
+OBX|2|FT|FOBT (ColonCancerCheck)^FOB2^Fecal Occult Blood Testing (Flap2)|2|Negative||||||F||||||
+OBX|3|FT|FOBT (ColonCancerCheck)^FOB1^Fecal Occult Blood Testing (Flap1)|3|Negative||||||F||||||
+PID|5||1120301343|1025727361^JA|LOPEZ^JENN||19590122|F|||90 WINDMILL BLVD^^PICKERING^ON||9055502990||||||||||||||||||
+OBR|1||||R|201204030004||||||||201204030004||011111^SMITH^DR. JOHN|416 555 2000||||||||F|||||||||||||||||||
+OBX|1|FT|FOBT (ColonCancerCheck)^FOB3^Fecal Occult Blood Testing (Flap3)|1|Negative||||||F||||||
+OBX|2|FT|FOBT (ColonCancerCheck)^FOB2^Fecal Occult Blood Testing (Flap2)|2|Negative||||||F||||||
+OBX|3|FT|FOBT (ColonCancerCheck)^FOB1^Fecal Occult Blood Testing (Flap1)|3|Negative||||||F||||||
