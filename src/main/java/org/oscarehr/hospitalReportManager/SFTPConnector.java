@@ -50,6 +50,8 @@ public class SFTPConnector {
 	private Session sess;
 	private Logger fLogger; //file logger
 
+	private static final String TEST_DIRECTORY = "Test";
+
 	private static final String OMD_HRM_USER = OscarProperties.getInstance().getProperty("OMD_HRM_USER");
 	private static final String OMD_HRM_IP = OscarProperties.getInstance().getProperty("OMD_HRM_IP");
 	private static final int OMD_HRM_PORT = Integer.parseInt(OscarProperties.getInstance().getProperty("OMD_HRM_PORT"));
@@ -113,7 +115,15 @@ public class SFTPConnector {
 		}
 
 		//fetch all files from remote dir
-		downloadDirectoryContents(remoteDir);
+		String[] localFilePaths = downloadDirectoryContents(remoteDir);
+		
+		String[] paths = null;
+		if(doDecrypt()) {
+			paths = decryptFiles(localFilePaths);
+		} else {
+			paths = localFilePaths;
+		}
+
 		//delete all files from remote dir
 		deleteDirectoryContents(remoteDir, files);
 
@@ -134,7 +144,7 @@ public class SFTPConnector {
 
 		logger.debug("Host "+host+" port "+port+" user "+user+" keyLocation "+keyLocation);	
 		//decryption key
-		decryptionKey = SFTPAuthKeys.OMDdecryptionKey2;
+		//decryptionKey = SFTPAuthKeys.OMDdecryptionKey2;
 
 		//daily log file name follows "day month year . log" (with no spaces)
 		String logName = SFTPConnector.getDayMonthYearTimestamp() + ".log";
@@ -236,6 +246,7 @@ public class SFTPConnector {
 	 * Issue an 'ls' command and return the objects in an array
 	 * 
 	 * @param folder
+	 * @return
 	 * @throws SftpException
 	 */
 	public String[] ls(String folder) throws SftpException {
@@ -248,6 +259,7 @@ public class SFTPConnector {
 	 * @param folder
 	 *            to issue the 'ls' command on
 	 * @param printInfo
+	 * @return
 	 * @throws SftpException
 	 */
 	public String[] ls(String folder, boolean printInfo) throws SftpException {
@@ -292,6 +304,8 @@ public class SFTPConnector {
 	 * 
 	 * @param serverDirectory
 	 *            directory on server side to fetch contents
+	 * @param localDownloadFolder
+	 *            name of folder to place downloaded files. This folder is placed under the tmp folder specified at
 	 * @throws Exception
 	 *             custom error messages if Java is unable to create a folder in /tmp/oscar-sftp and parent dirs
 	 * @return array of full path filenames
@@ -410,6 +424,10 @@ public class SFTPConnector {
 	            out = new BufferedWriter(handler);
 	            out.write(decryptedContent);
 	            decryptedFilePaths[x] = newFullPath;
+			} catch(Exception e) {
+				//Don't want this to fail on all other files in the directory just because one doesn't decrypt;
+				logger.error("Error decrypting file - " + sfile);
+				decryptedFilePaths[x] = null;
             } finally {
 	            if (out!=null) out.close();
 	            if (handler!=null) handler.close();
@@ -424,6 +442,7 @@ public class SFTPConnector {
 	 * string value of the decrypted file.
 	 * 
 	 * @param fullPath
+	 * @return
 	 * @throws Exception
 	 */
 	public static String decryptFile(String fullPath) throws Exception {
@@ -545,13 +564,30 @@ public class SFTPConnector {
 		return SFTPConnector.isAutoFetchRunning;
 	}
 
-	public static void startAutoFetch() {
+	public static boolean doDecrypt() {
+		boolean decrypt = false;
+		String decryptionKey = OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY");
+		
+		if (StringUtils.isNotEmpty(decryptionKey)) {
+			decrypt=true;
+		} 
+		return decrypt;
+	}
+
+	public static synchronized void startAutoFetch() {
 
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
 			logger.debug("Going into OMD to fetch auto data");
 
-			String remoteDir = "Test";
+			String remoteDir = OscarProperties.getInstance().getProperty("OMD_HRM_REMOTE_DIR");
+			
+			if (remoteDir == null || remoteDir.isEmpty()) {
+				remoteDir = TEST_DIRECTORY;
+			} 
+			
+			logger.info("SFTPConnector, remoteDir:"+remoteDir);
+			
 			try {
 				logger.debug("Instantiating a new SFTP connection.");
 				SFTPConnector sftp = new SFTPConnector();
@@ -560,21 +596,13 @@ public class SFTPConnector {
 				String[] localFilePaths =null;
 				
 				try {
-	                localFilePaths=sftp.downloadDirectoryContents(remoteDir);
-                } finally {
-    				sftp.close();
-                }
-
-				//decrypt?
-				boolean decrypt = false;
-				String decryptionKey = OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY");
-				
-				if (StringUtils.isNotEmpty(decryptionKey)) {
-					decrypt=true;
-				} 
+			            localFilePaths=sftp.downloadDirectoryContents(remoteDir);
+				} finally {
+		    		    sftp.close();
+				}
 				
 				String[] paths = null;
-				if(decrypt) {
+				if(doDecrypt()) {
 					paths = decryptFiles(localFilePaths);
 				} else {
 					paths = localFilePaths;
@@ -602,7 +630,7 @@ public class SFTPConnector {
 	}
 	
 
-	private static void notifyHrmError(String errorMsg) {
+	protected static void notifyHrmError(String errorMsg) {
 	    HashSet<String> sendToProviderList = new HashSet<String>();
 
     	String providerNoTemp="999998";
