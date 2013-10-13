@@ -25,10 +25,10 @@
 --%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="java.util.*,java.io.*,oscar.oscarLab.ca.all.util.KeyPairGen"%>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <% 
 String name = request.getParameter("name");
 String type = request.getParameter("type");
@@ -181,8 +181,13 @@ if (message != null){
 					<option value="ALPHA">ALPHA</option>
 					<option value="CML">CML</option>
 					<option value="EPSILON">EPSILON/MHL</option>
+
 					<option value="PATHL7"
-					<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
+					<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">
+					selected
+					</oscar:oscarPropertiesCheck> 
+					>EXCELLERIS</option>
+
 					<option value="GDML">GDML</option>
 					<option value="HHSEMR">HHSEMR</option>
 					<option value="HRMXML">HRM XML</option>
