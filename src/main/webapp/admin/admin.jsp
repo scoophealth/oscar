@@ -842,6 +842,16 @@ div.logoutBox {
             <li><a href="#" onclick='popupPage(600, 800,&quot;<html:rewrite page="/admin/faxStatus.do" />&quot;);return false;'><bean:message key="admin.faxStatus.faxStatus" /></a></li>
             <% } %>
 			<li><a href="#" onclick='popupPage(800, 800,&quot;<html:rewrite page="/admin/oscarStatus.do" />&quot;);return false;'><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
+	    
+	    <security:oscarSec roleName="<%=roleName$%>"
+                  objectName="_admin,_admin.traceability" rights="r">
+                  <li><a href="#"
+                           onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/traceReport.jsp"/>?keyword=admin&quot;);return false'>
+                    <bean:message key="admin.admin.traceabilityReport"/></a>
+                  </li>
+            </security:oscarSec>
+
+
 
             <oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
             <li><a href="#"

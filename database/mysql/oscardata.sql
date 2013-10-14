@@ -1884,7 +1884,10 @@ insert into `secObjPrivilege` values('admin','_pmm_agencyList','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.apptHistory','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.doctorName','x',0,'999998');
 
+insert into `secObjPrivilege` values('doctor','_admin.traceability','x',0,'999998');	
+insert into `secObjPrivilege` values('admin','_admin.traceability','x',0,'999998');	
 
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values ('_admin.traceability', 'Right to generate trace and run traceability report',0);
 
 -- for defaultqueue
 insert into queue values(1,'default');
