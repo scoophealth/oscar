@@ -1,0 +1,91 @@
+MSH|^~\&|MDH CYTO||||1556||ORU^R01|1615957370|P|2.3|||||||
+PID||8421989107|C12-05298|8421989107^AA^ON|SAMSON^SAM||19430210|F|||^^^ON^^||2 752 4538|||||||||||||||||
+OBR|1||C12-05298|CYT^CYTOLOGY||||||||||201203200905|CVX^VAGINAL SWAB|011111^KEY, ANNA|||||||||||201203241600^R||||||||||||||||||
+OBX|1|TX|CYT^CYTOLOGY|1|Type of Specimen: Cervicovaginal brush for liquid based cytology||||||||||||
+OBX|2|TX|CYT^CYTOLOGY|1|Clinical History: ||||||||||||
+OBX|3|TX|CYT^CYTOLOGY|1|LMP  26 FEB, 2012||||||||||||
+OBX|7|TX|CYT^CYTOLOGY|1|Comment:||||||||||||
+OBX|8|TX|CYT^CYTOLOGY|1|Satisfactory for evaluation.||||||||||||
+OBX|9|TX|CYT^CYTOLOGY|1|Transformation zone component not present.||||||||||||
+OBX|10|TX|CYT^CYTOLOGY|1|Microscopic Findings:||||||||||||
+OBX|11|TX|CYT^CYTOLOGY|1|Abundant neutrophils present.||||||||||||
+OBX|12|TX|CYT^CYTOLOGY|1|Diagnosis:||||||||||||
+OBX|13|TX|CYT^CYTOLOGY|1|Negative for intraepithelial lesion or malignancy.||||||||||||
+OBX|15|TX|CYT^CYTOLOGY|1|Final Findings Signed:  D. J    Ch.B, Ph.D, FRCPC||||||||||||
+PID||6357804522|C12-05299|6357804522^AA^ON|SMITH^SANDRA||19750313|F|||^^^ON^^||4-846-1480|||||||||||||||||
+OBR|1||C12-05299|CYT^CYTOLOGY||||||||||201203200907|CVX^VAGINAL SWAB|011111^KEY, ANNA|||||||||||201203241600^R||||||||||||||||||
+OBX|1|TX|CYT^CYTOLOGY|1|Type of Specimen: Cervicovaginal brush for liquid based cytology||||||||||||
+OBX|2|TX|CYT^CYTOLOGY|1|Clinical History: ||||||||||||
+OBX|3|TX|CYT^CYTOLOGY|1|Prev. No  C10-12151||||||||||||
+OBX|4|TX|CYT^CYTOLOGY|1|Prev.Date  19 Jun 2010||||||||||||
+OBX|5|TX|CYT^CYTOLOGY|1|LMP  19 FEB 2012||||||||||||
+OBX|9|TX|CYT^CYTOLOGY|1|Comment:||||||||||||
+OBX|10|TX|CYT^CYTOLOGY|1|Satisfactory for evaluation.||||||||||||
+OBX|11|TX|CYT^CYTOLOGY|1|Transformation zone component not present.||||||||||||
+OBX|12|TX|CYT^CYTOLOGY|1|Microscopic Findings:||||||||||||
+OBX|13|TX|CYT^CYTOLOGY|1|Trichomonas vaginalis present.||||||||||||
+OBX|14|TX|CYT^CYTOLOGY|1|Abundant neutrophils present.||||||||||||
+OBX|15|TX|CYT^CYTOLOGY|1|Diagnosis:||||||||||||
+OBX|16|TX|CYT^CYTOLOGY|1|Negative for intraepithelial lesion or malignancy.||||||||||||
+OBX|17|TX|CYT^CYTOLOGY|1|Reactive cellular changes associated with inflammation.          ||||||||||||
+OBX|19|TX|CYT^CYTOLOGY|1|Final Findings Signed:  D. G    MB. Ch.B, Ph.D, FRCPC||||||||||||
+PID||5523289048|C12-05526|5523289048^AA^ON|LABA^RONNA||19951104|F|||^^^ON^^||6-625-8331|||||||||||||||||
+OBR|1||C12-05526|CYT^CYTOLOGY||||||||||201203221915|CVX^VAGINAL SWAB|011111^KEY, ANNA|||||||||||201203241600^R||||||||||||||||||
+OBX|1|TX|CYT^CYTOLOGY|1|Type of Specimen: Cervicovaginal brush for liquid based cytology||||||||||||
+OBX|2|TX|CYT^CYTOLOGY|1|Clinical History: ||||||||||||
+OBX|3|TX|CYT^CYTOLOGY|1|Prev. No  C11-07141||||||||||||
+OBX|4|TX|CYT^CYTOLOGY|1|Prev.Date  12 Apr 2011||||||||||||
+OBX|5|TX|CYT^CYTOLOGY|1|LMP  07 MAR'12||||||||||||
+OBX|9|TX|CYT^CYTOLOGY|1|Comment:||||||||||||
+OBX|10|TX|CYT^CYTOLOGY|1|Satisfactory for evaluation.||||||||||||
+OBX|11|TX|CYT^CYTOLOGY|1|Transformation zone component present (endocervical cells).||||||||||||
+OBX|12|TX|CYT^CYTOLOGY|1|Diagnosis:||||||||||||
+OBX|13|TX|CYT^CYTOLOGY|1|Negative for intraepithelial lesion or malignancy.||||||||||||
+OBX|15|TX|CYT^CYTOLOGY|1|Final Findings Signed:  D. G    MB. Ch.B, Ph.D, FRCPC||||||||||||
+PID||5648958089|C12-05527|5648958089^AA^ON|LOPEZ^RANA||19730921|F|||^^^ON^^||6-403-0667|||||||||||||||||
+OBR|1||C12-05527|CYT^CYTOLOGY||||||||||201203221916|CVX^VAGINAL SWAB|011111^KEY, ANNA|||||||||||201203241600^R||||||||||||||||||
+OBX|1|TX|CYT^CYTOLOGY|1|Type of Specimen: Cervicovaginal brush for liquid based cytology||||||||||||
+OBX|2|TX|CYT^CYTOLOGY|1|Clinical History: ||||||||||||
+OBX|3|TX|CYT^CYTOLOGY|1|LMP  06 MAR'12||||||||||||
+OBX|7|TX|CYT^CYTOLOGY|1|Comment:||||||||||||
+OBX|8|TX|CYT^CYTOLOGY|1|Satisfactory for evaluation.||||||||||||
+OBX|9|TX|CYT^CYTOLOGY|1|Transformation zone component present (endocervical cells).||||||||||||
+OBX|10|TX|CYT^CYTOLOGY|1|Diagnosis:||||||||||||
+OBX|11|TX|CYT^CYTOLOGY|1|Negative for intraepithelial lesion or malignancy.||||||||||||
+OBX|13|TX|CYT^CYTOLOGY|1|Final Findings Signed:  D. G    MB. Ch.B, Ph.D, FRCPC||||||||||||
+PID||4240462988|C12-05528|4240462988^AA^ON|CAREV^CASEY||19841121|F|||^^^ON^^||2 752 6260|||||||||||||||||
+OBR|1||C12-05528|CYT^CYTOLOGY||||||||||201203221917|CVX^VAGINAL SWAB|011111^KEY, ANNA|||||||||||201203241600^R||||||||||||||||||
+OBX|1|TX|CYT^CYTOLOGY|1|Type of Specimen: Cervicovaginal brush for liquid based cytology||||||||||||
+OBX|2|TX|CYT^CYTOLOGY|1|Clinical History: ||||||||||||
+OBX|3|TX|CYT^CYTOLOGY|1|Prev. No  C10-17631||||||||||||
+OBX|4|TX|CYT^CYTOLOGY|1|Prev.Date  08 Sep 2010||||||||||||
+OBX|8|TX|CYT^CYTOLOGY|1|Comment:||||||||||||
+OBX|9|TX|CYT^CYTOLOGY|1|Satisfactory for evaluation.||||||||||||
+OBX|10|TX|CYT^CYTOLOGY|1|Transformation zone component present (endocervical cells).||||||||||||
+OBX|11|TX|CYT^CYTOLOGY|1|Diagnosis:||||||||||||
+OBX|12|TX|CYT^CYTOLOGY|1|Negative for intraepithelial lesion or malignancy.||||||||||||
+OBX|14|TX|CYT^CYTOLOGY|1|Final Findings Signed:  D. G    MB. Ch.B, Ph.D, FRCPC||||||||||||
+PID||9660777104|C12-05529|9660777104^AA^ON|RAJU^PAWANDEEP KAUR||19800105|F|||^^^ON^^||9 499 5880|||||||||||||||||
+OBR|1||C12-05529|CYT^CYTOLOGY||||||||||201203221918|CVX^VAGINAL SWAB|011111^KEY, ANNA|||||||||||201203241600^R||||||||||||||||||
+OBX|1|TX|CYT^CYTOLOGY|1|Type of Specimen: Cervicovaginal brush for liquid based cytology||||||||||||
+OBX|2|TX|CYT^CYTOLOGY|1|Clinical History: ||||||||||||
+OBX|3|TX|CYT^CYTOLOGY|1|Prev. No  C09-23955||||||||||||
+OBX|4|TX|CYT^CYTOLOGY|1|Prev.Date  15 Dec 2009||||||||||||
+OBX|5|TX|CYT^CYTOLOGY|1|LMP  04 MAR'12||||||||||||
+OBX|9|TX|CYT^CYTOLOGY|1|Comment:||||||||||||
+OBX|10|TX|CYT^CYTOLOGY|1|Satisfactory for evaluation.||||||||||||
+OBX|11|TX|CYT^CYTOLOGY|1|Transformation zone component present (endocervical cells).||||||||||||
+OBX|12|TX|CYT^CYTOLOGY|1|Diagnosis:||||||||||||
+OBX|13|TX|CYT^CYTOLOGY|1|Negative for intraepithelial lesion or malignancy.||||||||||||
+OBX|15|TX|CYT^CYTOLOGY|1|Final Findings Signed:  D. G    MB. Ch.B, Ph.D, FRCPC||||||||||||
+PID||3940770120|C12-05600|3940770120^AA^ON|ZIA^SAMINA||19660729|F|||^^^ON^^||9-497-9244|||||||||||||||||
+OBR|1||C12-05600|CYT^CYTOLOGY||||||||||201203222132|CVX^VAGINAL SWAB|011111^KEY, ANNA|||||||||||201203241600^R||||||||||||||||||
+OBX|1|TX|CYT^CYTOLOGY|1|Type of Specimen: Cervicovaginal brush for liquid based cytology||||||||||||
+OBX|2|TX|CYT^CYTOLOGY|1|Clinical History: ||||||||||||
+OBX|3|TX|CYT^CYTOLOGY|1|LMP  27 FEB'12||||||||||||
+OBX|7|TX|CYT^CYTOLOGY|1|Comment:||||||||||||
+OBX|8|TX|CYT^CYTOLOGY|1|Satisfactory for evaluation.||||||||||||
+OBX|9|TX|CYT^CYTOLOGY|1|Transformation zone component not present.||||||||||||
+OBX|10|TX|CYT^CYTOLOGY|1|Diagnosis:||||||||||||
+OBX|11|TX|CYT^CYTOLOGY|1|Negative for intraepithelial lesion or malignancy.||||||||||||
+OBX|13|TX|CYT^CYTOLOGY|1|Final Findings Signed:  D. G    MB. Ch.B, Ph.D, FRCPC||||||||||||
