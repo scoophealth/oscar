@@ -922,7 +922,7 @@ function onPrint2() {
         	return false;
         <% } %>
     }
-    function popupPage(varpage) {
+    function popupRequisitionPage(varpage) {
         windowprops = "height=700,width=960"+
             ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
         var popup = window.open(varpage, "ar1", windowprops);
@@ -1413,7 +1413,7 @@ $(document).ready(function(){
 				var user = '<%=session.getAttribute("user")%>';
 				url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer %>.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
 				jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createGBSLabReq&demographicNo='+demographic + '&penicillin='+penicillin,async:false, success:function(data) {
-					popupPage(url);
+					popupRequisitionPage(url);
 				}});								
 			},
 			Cancel: function() {
@@ -1641,7 +1641,7 @@ $(document).ready(function(){
 					url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
 					var pregUrl = '<%=request.getContextPath()%>/Pregnancy.do?method=createGCTLabReq&demographicNo=<%=demoNo%>&hb='+gct_hb+'&urine='+gct_urine+'&antibody='+gct_ab+'&glucose='+gct_glu;
 					jQuery.ajax({url:pregUrl,async:false, success:function(data) {
-						popupPage(url);
+						popupRequisitionPage(url);
 					}});
 				},
 				Cancel: function() {
@@ -1666,7 +1666,7 @@ $(document).ready(function(){
 					url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
 					var pregUrl = '<%=request.getContextPath()%>/Pregnancy.do?method=createGTTLabReq&demographicNo=<%=demoNo%>&glucose='+gtt_glu;
 					jQuery.ajax({url:pregUrl,async:false, success:function(data) {
-						popupPage(url);
+						popupRequisitionPage(url);
 					}});
 				},
 				Cancel: function() {
