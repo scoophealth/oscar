@@ -21,35 +21,37 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.event;
+package org.oscarehr.common.service;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.integration.born.BORN18MConnector;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.context.ApplicationEvent;
+import oscar.OscarProperties;
 
-public class EFormDataCreateEvent extends ApplicationEvent {
-	Logger logger = MiscUtils.getLogger();
+public class BORN18MSchedulerJob extends TimerTask {
 
-	private Integer eformDataId;
-	private Integer demographicNo;
-	private String eformName;
+	private static final OscarProperties oscarProperties = OscarProperties.getInstance();
 	
-	public EFormDataCreateEvent(Object source, Integer fdid, Integer demographicNo, String eformName) {
-		super(source);
-		this.eformDataId = fdid;
-		this.demographicNo = demographicNo;
-		this.eformName = eformName;
-    }
+	private static final String uploadHour = oscarProperties.getProperty("born18m_upload_hour", "01");
+	private static final Logger logger = MiscUtils.getLogger();
 
-	public Integer getEformDataId() {
-		return eformDataId;
+	
+	@Override
+	public void run() {
+		
+    	Calendar cal = Calendar.getInstance();
+    	SimpleDateFormat sdf = new SimpleDateFormat("HH");
+    	if (!sdf.format(cal.getTime()).equals(uploadHour)) return;
+		
+		logger.info("starting BORN18M upload job");
+		
+		BORN18MConnector c = new BORN18MConnector();
+        c.updateBorn();
+        
+		logger.info("done BORN18M upload job");
 	}
-
-	public String getEformName() {
-	    return eformName;
-    }
-
-	public Integer getDemographicNo() {
-	    return demographicNo;
-    }
 }

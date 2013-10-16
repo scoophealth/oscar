@@ -60,12 +60,4 @@ public class EventService implements ApplicationEventPublisherAware {
 	public void appointmentCreated(Object source,String appointment_no,String provider_no){
 		applicationEventPublisher.publishEvent(new AppointmentCreatedEvent(source,appointment_no, provider_no));
 	}
-	
-	/*
-	 * Event is fired:
-    	src/main/java/oscar/eform/actions/AddEFormAction.java
- 	*/	
-	public void eformDataCreated(Object source, Integer fdid, Integer demographicNo, String eformName) {
-		applicationEventPublisher.publishEvent(new EFormDataCreateEvent(source, fdid, demographicNo, eformName));
-	}
 }
