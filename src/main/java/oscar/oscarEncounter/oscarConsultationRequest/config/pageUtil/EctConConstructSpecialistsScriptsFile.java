@@ -69,7 +69,7 @@ public class EctConConstructSpecialistsScriptsFile
             fileWriter.write("{K(-1,\"----All Services-------\");D(-1,\"--------All Specialists-----\");}\n");
             try
             {
-            	List<ConsultationServices> services = consultationServiceDao.findAll();
+            	List<ConsultationServices> services = consultationServiceDao.findActive();
             	for(ConsultationServices cs:services) {
             		serviceId.add(String.valueOf(cs.getServiceId()));
             		serviceDesc.add(cs.getServiceDesc());
