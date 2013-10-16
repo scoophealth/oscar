@@ -81,12 +81,13 @@ public class BORN18MFormToXML {
 		
 		RBR rourke = patientInfo.addNewRBR();
 		NDDS ndds = patientInfo.addNewNDDS();
-		M18MARKERS m18Markers = patientInfo.addNewM18MARKERS();
 		
 		propulatePatientInfo(patientInfo, rourkeFdid);
 		propulateNdds(ndds, nddsFdid); //propulate Ndds must go before propulateRourke or Rourke18M will not be complete
 		propulateRourke(rourke, rourkeFdid);
-		propulateM18Markers(m18Markers, report18mFdid);
+		if (report18mFdid!=null) {
+			propulateM18Markers(patientInfo.addNewM18MARKERS(), report18mFdid);
+		}
 
 		XmlOptions m_validationOptions = new XmlOptions();		
 		ArrayList<Object> validationErrors = new ArrayList<Object>();

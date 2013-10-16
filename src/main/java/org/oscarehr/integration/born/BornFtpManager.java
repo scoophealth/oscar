@@ -33,6 +33,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.integration.file.remote.session.Session;
 import org.springframework.integration.ftp.session.DefaultFtpsSessionFactory;
+import org.springframework.integration.sftp.session.DefaultSftpSessionFactory;
 
 import oscar.OscarProperties;
 
@@ -54,9 +55,9 @@ public class BornFtpManager {
 	}
 	
 	public static boolean upload18MEWBVDataToRepository(byte[] xmlFile, String filename) {
-		String remotePath = OscarProperties.getInstance().getProperty("born18m_ftps_remote_dir","");
-		DefaultFtpsSessionFactory ftpFactory = (DefaultFtpsSessionFactory)SpringUtils.getBean("ftpClientFactoryBORN18M");		
-		Session<FTPFile> session = null;
+		String remotePath = OscarProperties.getInstance().getProperty("born18m_sftp_remote_dir","");
+		DefaultSftpSessionFactory ftpFactory = (DefaultSftpSessionFactory)SpringUtils.getBean("ftpClientFactoryBORN18M");		
+		Session session = null;
 		
 		boolean success = false;
 		try {

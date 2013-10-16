@@ -188,6 +188,18 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		return(results);
 	}
     
+    public List<EFormData> findByFormId(Integer formId)
+	{
+	
+	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formId = ?1 and x.current = 1");
+		query.setParameter(1,formId);
+	
+		@SuppressWarnings("unchecked")
+		List<EFormData> results=query.getResultList();
+	
+		return results;
+	}
+    
     public List<EFormData> findByFormIdProviderNo(List<String> providerNo, Integer formId)
 	{
 	
