@@ -54,9 +54,10 @@ public class EctConAddServiceAction extends Action
         cs.setActive("1");
         cs.setServiceDesc(service);
         consultationServiceDao.persist(cs);
-
-
         request.setAttribute("SERVADD", service);
+
+        EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
+        constructSpecialistsScriptsFile.makeString(request.getLocale());
         return mapping.findForward("success");
     }
 }
