@@ -24,7 +24,9 @@
 
 
 package oscar.oscarMessenger.pageUtil;
+
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +36,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarMessenger.data.MsgProviderData;
 import oscar.oscarMessenger.util.MsgDemoMap;
-
 public class MsgCreateMessageAction extends Action {
 
 
@@ -50,14 +52,21 @@ public class MsgCreateMessageAction extends Action {
             // Extract attributes we will need
             oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
             bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
-                String userNo   = bean.getProviderNo();
-                String userName = bean.getUserName();
-                String att      = bean.getAttachment();
-                String pdfAtt      = bean.getPDFAttachment();
-                bean.nullAttachment();
+            String userNo   = bean.getProviderNo();
+            String userName = bean.getUserName();
+            String att      = bean.getAttachment();
+            String pdfAtt      = bean.getPDFAttachment();
+            bean.nullAttachment();
             String message      = ((MsgCreateMessageForm)form).getMessage();
             String[] providers  = ((MsgCreateMessageForm)form).getProvider();
             String subject      = ((MsgCreateMessageForm)form).getSubject();
+	    bean.setMessage(null);
+            bean.setSubject(null);
+            
+            MiscUtils.getLogger().info("Providers: " + Arrays.toString(providers));
+            MiscUtils.getLogger().info("Subject: " + subject);
+            MiscUtils.getLogger().info("Message: " + message);
+            
             String sentToWho    = null;
             String currLoco     = null;
             String messageId    = null;
