@@ -453,8 +453,9 @@ function checkAll(formId){
 
                                     </td>
                                     <td bgcolor="#EEEEFF">
-                                    <%= dm.thedate  %>
-                                    <%= dm.theime %>
+                                    	<%= dm.thedate %>
+                                    	&nbsp;&nbsp;
+                                    	<%= dm.theime %>
                                     </td>
                                     <td bgcolor="#EEEEFF">
                                     <%if(dm.demographic_no != null  && !dm.demographic_no.equalsIgnoreCase("null")) {%>
