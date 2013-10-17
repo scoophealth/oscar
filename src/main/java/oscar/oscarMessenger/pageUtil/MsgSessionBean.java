@@ -40,6 +40,25 @@ public class MsgSessionBean implements java.io.Serializable {
 	private String demographic_no = null;
 	private int totalAttachmentCount = 0;
 	private int currentAttachmentCount = 0;
+        private String message;
+	private String subject;
+	
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
 
 	public String getProviderNo() {
 		return this.providerNo;
