@@ -57,9 +57,9 @@ public class EctConDeleteServicesAction extends Action {
     			  consultationServiceDao.merge(cs);
     		  }
     	  }
-
-
       }
+      EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
+      constructSpecialistsScriptsFile.makeString(request.getLocale());
       return mapping.findForward("success");
    }
 }
