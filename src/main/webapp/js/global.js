@@ -48,6 +48,18 @@ function popupFocusPage(vheight,vwidth,varpage,pageTitle){
                         popup.focus();
             }
 }
+//open a new echart or focus the already open echart window
+function popupEChart(vheight,vwidth,varpage) { //open a new popup window
+	var page = "" + varpage;
+	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
+	var popup=window.open(page, "encounter", windowprops);
+	if (popup != null) {
+		if (popup.opener == null) {
+			popup.opener = self;
+		}
+		popup.focus();
+	}
+} 
 // Prompt user if exiting without saving
 function onExit() {
     if(confirm("Are you sure you wish to exit without saving your changes?")==true)
