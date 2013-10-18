@@ -1032,7 +1032,7 @@ function fsPopup(width,height,url,window) {
         
         
         String hidden= "";
-        if (item.isHide()){
+        if (item.isHide() || mi.getHidden(measure)){
             hidden= "display:none;";
         }
 
@@ -1069,7 +1069,7 @@ function fsPopup(width,height,url,window) {
             
 %>
 
-<div class="preventionSection well-small" >
+<div class="preventionSection well-small" style="<%=hidden%>">
    
 <!--mtype START-->
 
@@ -1283,11 +1283,9 @@ function fsPopup(width,height,url,window) {
             <%if (comb) {%>
              <a  rel="tooltip" title="<b>Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><i class="icon-comment" ></i></a>
             <%}%>
-           
-
+          
         <p width="16px" <%=indColour%> ></p>
         <%=indText%>
-
 
     </div><!-- prevention procedure -->
     <%} %>

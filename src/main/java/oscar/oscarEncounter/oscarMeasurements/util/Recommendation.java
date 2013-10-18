@@ -97,35 +97,35 @@ public class Recommendation {
     }
 
     public Element getRuleBaseElement(String ruleName,String measurement){
-
+    	
         log.debug("LOADING RULES - getRuleBaseElement"+measurement);
         ArrayList<DSCondition> list = new ArrayList<DSCondition>();
-        //String toParse = monthrange;
-        String consequenceType = "Recommendation";
-        if( strength != null){
-            if ("warning".equals(strength)){
-                consequenceType = "Warning";
-            }
-        }
-        String consequence = "";
-
-        String NUMMONTHS = "\"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\"";
-
         
         for(RecommendationCondition cond: getRecommendationCondition()){
-             cond.getRuleBaseElement(list,measurement);
+            cond.getRuleBaseElement(list,measurement);
         }
+        
+        String consequence = "";
+        if( strength != null){
+        	if ("hidden".equals(strength)){
+        		consequence = "m.addHidden(\""+measurement+"\",true);";
+        	}else{
+                String consequenceType = "Recommendation";
+	            if ("warning".equals(strength)){
+	                consequenceType = "Warning";
+	            }
+	            if (text == null || text.trim().equals("")){
+	                consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"  \"+m.getLastDateRecordedInMonthsMsg(\""+measurement+"\")+\" \");";
+	            }else if( text != null){
+	               String txt = text;
+	               String NUMMONTHS = "\"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\"";
+	               log.debug("TRY TO REPLACE $NUMMONTHS:"+txt.indexOf("$NUMMONTHS")+" WITH "+NUMMONTHS+  " "+txt);
 
-        ////////88888
-        if (text == null || text.trim().equals("")){
-             consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+  "  \"+m.getLastDateRecordedInMonthsMsg(\""+measurement+"\")+\" \");";
-        }else if( text != null){
-            String txt = text;
-            log.debug("TRY TO REPLACE $NUMMONTHS:"+txt.indexOf("$NUMMONTHS")+" WITH "+NUMMONTHS+  " "+txt);
-
-            txt = txt.replaceAll("\\$NUMMONTHS", NUMMONTHS);
-            log.debug("TEXT "+txt);
-            consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+txt+"\");";
+	               txt = txt.replaceAll("\\$NUMMONTHS", NUMMONTHS);
+	               log.debug("TEXT "+txt);
+	               consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+txt+"\");";
+	           }
+        	}
         }
 
         RuleBaseCreator rcb = new RuleBaseCreator();
