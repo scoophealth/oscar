@@ -680,6 +680,19 @@ function popup(location) {
     }
 }
 
+function popup( height, width, url, windowName){
+  var page = url;
+  windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+  var popup=window.open(url, windowName, windowprops);
+  if (popup != null){
+    if (popup.opener == null){
+      popup.opener = self;
+    }
+  }
+  popup.focus();
+  return false;
+}
+
 function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=20,left=20";
@@ -691,6 +704,8 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
+
+
 
 function checkForm(submissionVal,formName){
     //if document attach to consultation is still active user needs to close before submitting
@@ -1581,7 +1596,7 @@ function updateFaxButton() {
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatient" />:
 							</td>
-							<td class="tite1"><%=thisForm.getPatientName()%></td>
+                                                        <td class="tite1"><a href="javascript:void();" onClick="popup(600,900,'<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=demo%>&displaymode=edit&dboperation=search_detail')"><%=thisForm.getPatientName()%></a></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message
