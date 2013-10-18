@@ -493,31 +493,39 @@ public class Util {
     
     static private HashMap<String,String> preventionToImmunizationType = new HashMap<String,String>(); 
     static private HashMap<String,String> immunizationToPreventionType = new HashMap<String,String>();
+    static private ArrayList<String> nonImmunizationPreventionType = new ArrayList<String>();
     
-    static private void set_p_i_types() {
-    	if (!preventionToImmunizationType.isEmpty() && !immunizationToPreventionType.isEmpty()) return;
+    static private void setPreventionTypes() {
+    	if (!preventionToImmunizationType.isEmpty() && !immunizationToPreventionType.isEmpty() && !nonImmunizationPreventionType.isEmpty()) return;
     	
         PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
+        ArrayList<HashMap<String,String>> prevTypeList = pdc.getPreventions();
         
-        for (int k =0 ; k < prevList.size(); k++){
-            HashMap<String,String> a = new HashMap<String,String>();
-            a.putAll(prevList.get(k));
-            if (a != null && a.get("layout") != null &&  a.get("layout").equals("injection")){
-            	preventionToImmunizationType.put(a.get("name"), a.get("healthCanadaType"));
-            	immunizationToPreventionType.put(a.get("healthCanadaType"), a.get("name"));
+        for (HashMap<String,String> prevTypeHash : prevTypeList) {
+            if (prevTypeHash != null && StringUtils.filled(prevTypeHash.get("layout"))) {
+            	if (prevTypeHash.get("layout").equals("injection")) {
+	            	preventionToImmunizationType.put(prevTypeHash.get("name"), prevTypeHash.get("healthCanadaType"));
+	            	immunizationToPreventionType.put(prevTypeHash.get("healthCanadaType"), prevTypeHash.get("name"));
+            	} else {
+            		nonImmunizationPreventionType.add(prevTypeHash.get("name"));
+            	}
             }
         }
     }
     
     static public String getImmunizationType(String preventionType) {
-    	if (preventionToImmunizationType.isEmpty()) set_p_i_types();
+    	if (preventionToImmunizationType.isEmpty()) setPreventionTypes();
     	return preventionToImmunizationType.get(preventionType);
     }
     
     static public String getPreventionType(String immunizationType) {
-    	if (immunizationToPreventionType.isEmpty()) set_p_i_types();
+    	if (immunizationToPreventionType.isEmpty()) setPreventionTypes();
     	return immunizationToPreventionType.get(immunizationType);
+    }
+
+    static public boolean isNonImmunizationPrevention(String type) {
+    	if (nonImmunizationPreventionType.isEmpty()) setPreventionTypes();
+    	return nonImmunizationPreventionType.contains(type);
     }
     
     static public String replaceTags(String s) {
