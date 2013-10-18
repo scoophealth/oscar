@@ -12,6 +12,8 @@
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@page import="org.oscarehr.common.model.UserProperty" %>
+<%@page import="org.oscarehr.admin.traceability.BuildNumberPropertiesFileReader" %>
+
 
 <%
 String curUser_no;
@@ -134,7 +136,13 @@ onLoad="setTimeout('doDocuments()',3000);"
 					</div>
 				<%} %>
 				
-				
+				<!-- Used to display the git sha1 id for this build from the code repository
+				 
+				-->
+				<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px; max-height:200px; overflow:auto;">
+					Build ID:
+					<pre>Git SHA-1: <%=BuildNumberPropertiesFileReader.getGitSha1()%></pre>
+				</div>
 			</div>
 		</td>
 	</tr>
