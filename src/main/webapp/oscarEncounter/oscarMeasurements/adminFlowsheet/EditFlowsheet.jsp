@@ -42,14 +42,16 @@
 
 <%
     long startTimeToGetP = System.currentTimeMillis();
-    //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
 
-    String temp = "diab2";//"physFunction";  //
+    String temp = "";
     if (request.getParameter("flowsheet") != null) {
         temp = request.getParameter("flowsheet");
+    }else{
+	temp = "tracker";
     }
+
     String flowsheet = temp;
     String demographic = request.getParameter("demographic");
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
@@ -184,11 +186,21 @@ width:100px !important;
 
 <div class="container-fluid main-container">
 <div class="row-fluid">
+
+<%if(flowsheet.equals("tracker")){%> 
+<a href="../HealthTrackerPage.jspf?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Health Tracker</a> <br/>
+<%}%>
+
 <h3 style="display:inline;">Edit Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span> </h3>
 
 		  <span class="mode-toggle">
 		            <% if (demographic!=null) { %>
-		             Individual Patient | <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
+		             Individual Patient 
+
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
+					| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
+				</security:oscarSec>
+
 		            <%}else{%>
 		                All Patients
 		            <%}%>
@@ -204,9 +216,9 @@ width:100px !important;
 		<tr>
 		<th style="width:80px"></th>
 		<th style="width:80px">Position</th>
-		<th style="width:110px">Measurement</th>
-		<th>Display Name</th>
-		<th>Guideline</th>
+		<th style="width:120px">Measurement</th>
+		<th style="width:140px">Display Name</th>
+		<th style="width:500px">Guideline</th>
 		</tr>
 		</thead>
 		
@@ -447,6 +459,10 @@ width:100px !important;
 
 <script>
 $(document).ready(function () {
+
+<%if(request.getParameter("add")!=null){%>
+$('#addModal').modal('show');
+<%}%>
 	
 	$(document).scroll(function () {
 	    var y = $(this).scrollTop();
