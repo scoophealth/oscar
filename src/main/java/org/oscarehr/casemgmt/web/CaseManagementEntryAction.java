@@ -553,7 +553,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					casemgmtNoteLock.setLocked(true);
 				}
 				else if( note_id == 0 ){
-					logger.info("STATIC isNoteEdited CREATING LOCK NOTE ID 0");
+					logger.info("STATIC isNoteEdited CREATING LOCK NOTE ID 0 DEMO: " + demographicNo + " PROVIDER: " + providerNo);
 					casemgmtNoteLock = new CasemgmtNoteLock();
 					casemgmtNoteLock.setDemographicNo(demographicNo);
 					casemgmtNoteLock.setIpAddress(ipAddress);
@@ -565,7 +565,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				}
 		}
 		else {
-			logger.info("STATIC isNoteEdited CREATING NEW LOCK");
+			logger.info("STATIC isNoteEdited CREATING NEW LOCK DEMO: " + demographicNo + " PROVIDER: " + providerNo);
 			casemgmtNoteLock = new CasemgmtNoteLock();
 			casemgmtNoteLock.setDemographicNo(demographicNo);
 			casemgmtNoteLock.setIpAddress(ipAddress);
@@ -610,9 +610,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	//Change IP Address and Session Id of note lock
 	public ActionForward updateNoteLock(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String demoNo = getDemographicNo(request);
+		String noteId = request.getParameter("noteId");
 		HttpSession session = request.getSession();
 		
-		CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demoNo);
+		CasemgmtNoteLock casemgmtNoteLock = null;
+		if( noteId != null && !"null".equalsIgnoreCase(noteId)) {
+			casemgmtNoteLock = casemgmtNoteLockDao.findByNoteDemo(Integer.parseInt(demoNo), Long.parseLong(noteId));
+		}
+		else {
+			casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demoNo);
+		}
+		
 		casemgmtNoteLock.setIpAddress(request.getRemoteAddr());
 		casemgmtNoteLock.setSessionId(request.getRequestedSessionId());
 		logger.info("UPDATING LOCK SESSION " + casemgmtNoteLock.getSessionId() + " LOCK IP " + casemgmtNoteLock.getIpAddress());
