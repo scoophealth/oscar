@@ -52,14 +52,16 @@ public class MsgCreateMessageAction extends Action {
             // Extract attributes we will need
             oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
             bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
-                String userNo   = bean.getProviderNo();
-                String userName = bean.getUserName();
-                String att      = bean.getAttachment();
-                String pdfAtt      = bean.getPDFAttachment();
-                bean.nullAttachment();
+            String userNo   = bean.getProviderNo();
+            String userName = bean.getUserName();
+            String att      = bean.getAttachment();
+            String pdfAtt      = bean.getPDFAttachment();
+            bean.nullAttachment();
             String message      = ((MsgCreateMessageForm)form).getMessage();
             String[] providers  = ((MsgCreateMessageForm)form).getProvider();
             String subject      = ((MsgCreateMessageForm)form).getSubject();
+	    bean.setMessage(null);
+            bean.setSubject(null);
             
             MiscUtils.getLogger().info("Providers: " + Arrays.toString(providers));
             MiscUtils.getLogger().info("Subject: " + subject);
