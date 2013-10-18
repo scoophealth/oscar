@@ -1902,6 +1902,9 @@ insert into `secObjPrivilege` values('admin','_pmm_agencyList','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.apptHistory','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.doctorName','x',0,'999998');
 
+insert into `secObjPrivilege` values('doctor','_admin.traceability','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.traceability','x',0,'999998');
+
 
 
 -- for defaultqueue
@@ -2517,6 +2520,10 @@ INSERT INTO secObjectName VALUES('_caseload.LastEncounterDate',NULL,0);
 INSERT INTO secObjectName VALUES('_caseload.LastEncounterType',NULL,0);
 INSERT INTO secObjectName VALUES('_caseload.CashAdmissionDate',NULL,0);
 INSERT INTO secObjectName VALUES('_caseload.Access1AdmissionDate',NULL,0);
+
+insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values ('_admin.traceability', 'Right to generate trace and run traceability report',0);
+
+
 
 INSERT INTO secObjPrivilege VALUES('doctor','_caseload.DisplayMode','x',0,'999998');
 INSERT INTO secObjPrivilege VALUES('doctor','_caseload.Age','x',0,'999998');

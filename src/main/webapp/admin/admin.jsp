@@ -793,7 +793,14 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/logReport.jsp"/>?keyword=admin&quot;);return false;'>
 			<bean:message key="admin.admin.securityLogReport"/></a></li>
-		</security:oscarSec>		
+		</security:oscarSec>
+		<security:oscarSec roleName="<%=roleName$%>"
+			objectName="_admin, _admin.traceability" rights="r">
+			<li><a href="#"
+				onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/traceReport.jsp"/>?keyword=admin&quot;);return false;'>
+			<bean:message key="admin.admin.traceabilityReport"/></a></li>
+		</security:oscarSec>
+				
 					
 		</ul>
 		</div>
