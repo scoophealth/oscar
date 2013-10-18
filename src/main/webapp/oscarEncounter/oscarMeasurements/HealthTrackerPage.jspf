@@ -720,15 +720,27 @@ function fsPopup(width,height,url,window) {
     	 if (!diagnosed.contains(flowsheetList.get(iUndx))) {
     		 
     		 btnLabel=flowsheetList.get(iUndx).toString().toUpperCase();
+
+if(btnLabel.equals("PHV")){ 
+if(temp.equals(flowsheetList.get(iUndx).toString())){ fsSelected="btn-primary active";} 
+
+out.print(" <a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='no diagnosis needed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ");
+
+fsSelected="";
+}
+
  	    	 if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
  	    	
-    		 if(temp.equals(flowsheetList.get(iUndx).toString())){
+    		 if(temp.equals(flowsheetList.get(iUndx).toString()) && !temp.equals("phv") ){
     			 fsSelected="btn-primary active";
     			 unDxShow="<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
     		 } 
-    		 
+
+
+if(!btnLabel.equals("PHV")){     		 
     	    	undiagnosed = undiagnosed + "<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
       			fsSelected="";
+}
       			
     	 }
      }
@@ -750,7 +762,7 @@ function fsPopup(width,height,url,window) {
    	<div class="row-fluid">
    		<div class="span12">
  
- <%if (!diagnosed.contains(temp)){ %>  
+ <%if (!diagnosed.contains(temp) && !temp.equals("phv")){ %>  
  
 <script type="text/javascript">
     $(window).load(function(){
