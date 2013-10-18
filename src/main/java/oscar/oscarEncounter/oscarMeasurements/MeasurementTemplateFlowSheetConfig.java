@@ -414,13 +414,12 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             }
             else if( e.getName().equalsIgnoreCase("item") ) {
 
-                if (h.get("measurement_type") != null) {
+            	String item_type = h.get("measurement_type");
+            	if (item_type==null) item_type = h.get("prevention_type");
+            	
+                if (item_type != null) {
 
-                    log.debug("ADDING " + h.get("measurement_type"));
-                    //d.addMeasurement("" + h.get("measurement_type"));
-                    //d.addMeasurementInfo("" + h.get("measurement_type"), mType.getMeasurementType("" + h.get("measurement_type")));
-                    //d.addMeasurementFlowSheetInfo("" + h.get("measurement_type"), h);
-
+                    log.debug("ADDING " + item_type);
 
                     int ruleCount = 0;
                     Element rules  = e.getChild("rules");
@@ -429,12 +428,9 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                        List<Recommendation> ds = new ArrayList<Recommendation>();
                        for(Element reco: recomends){
                            ruleCount++;
-                           //Hashtable recoHash =  getRecommendationHash( reco);
-                            //ds.add(getRuleBaseElement("" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type"), recoHash));
-                            ds.add(new Recommendation(reco,"" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type")));
+                            ds.add(new Recommendation(reco, item_type+ruleCount, item_type));
                        }
-                       MiscUtils.getLogger().debug(""+ h.get("measurement_type")+ " adding ds  "+ds);
-                       //d.addDSElement(""+ h.get("measurement_type"),ds);
+                       MiscUtils.getLogger().debug(""+ item_type+ " adding ds  "+ds);
                        item.setRecommendations(ds);
                     }
                     //<rules>
@@ -467,7 +463,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
                     }
 
-                    log.debug(" meas "+h.get("measurement_type")+"  size "+rs.size());
+                    log.debug(" meas "+item_type+"  size "+rs.size());
 
                     if (rs.size() > 0){
                         item.setTargetColour(rs);
