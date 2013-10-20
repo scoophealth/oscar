@@ -525,7 +525,7 @@ function checkServiceDate(s) {
 		bWrongDate = true;
 	}
 	if(bWrongDate) {
-		alert("You may have a wrong Service/admission Date!" + " Wrong " + sMsg);
+		alert("Warning - Service/Admission Date is future dated!");
 		return false;
 	} else {
 		return true;
@@ -1284,15 +1284,13 @@ ctlCount = 0;
     // the default multiple dates selected, first time the calendar is instantiated
     var MA = [];
     function closed(cal) {
-      //var el = document.getElementById("output");
       var el = document.titlesearch.billDate;
       // reset initial content.
-      el.innerHTML = "";
+      el.value ="";
       MA.length = 0;
       for (var i in cal.multiple) {
         var d = cal.multiple[i];
         if (d) {
-          //el.innerHTML += d.print("%Y-%m-%d") + "<br />";
           el.value += d.print("%Y-%m-%d") + "\n";
           MA[MA.length] = d;
         }
