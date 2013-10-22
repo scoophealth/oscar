@@ -31,6 +31,7 @@
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.common.dao.WaitingListDao" %>
 <%@page import="oscar.util.ConversionUtils" %>
+<%@page import="oscar.util.UtilDateUtilities"%>
 <%@ page import="org.oscarehr.event.EventService"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -51,6 +52,7 @@
 OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
 
+String createDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
 
 String[] param = new String[20];
 param[0]=request.getParameter("provider_no");
@@ -80,7 +82,7 @@ param[9]=request.getParameter("type");
 param[10]=request.getParameter("style");
 param[11]=request.getParameter("billing");
 param[12]=request.getParameter("status");
-param[13]=request.getParameter("createdatetime");
+param[13]=createDateTime;
 param[14]=request.getParameter("creator");
 param[15]=request.getParameter("remarks");
 param[17]=(String)request.getSession().getAttribute("programId_oscarView");
@@ -101,7 +103,7 @@ param[19]=request.getParameter("reasonCode");
 	a.setStyle(request.getParameter("style"));
 	a.setBilling(request.getParameter("billing"));
 	a.setStatus(request.getParameter("status"));
-	a.setCreateDateTime(new java.util.Date());
+	a.setCreateDateTime(ConversionUtils.fromTimestampString(createDateTime));
 	a.setCreator(request.getParameter("creator"));
 	a.setRemarks(request.getParameter("remarks"));
 	a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
@@ -132,7 +134,7 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
                 try{
                    
                    Appointment aa =  appointmentDao.search_appt_no(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("appointment_date")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")),
-                    			ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), ConversionUtils.fromTimestampString(request.getParameter("createdatetime")), request.getParameter("creator"), Integer.parseInt(param[16]));
+                    			ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), ConversionUtils.fromTimestampString(createDateTime), request.getParameter("creator"), Integer.parseInt(param[16]));
 		   
                     if (aa != null) {
 						Integer apptNo = aa.getId();
@@ -193,12 +195,12 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 
 <script LANGUAGE="JavaScript">
 	self.opener.refresh();
-	self.close();
+	//self.close();
 </script>
 
 <%
 		 Appointment aa =  appointmentDao.search_appt_no(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("appointment_date")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")),
-     			ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), ConversionUtils.fromTimestampString(request.getParameter("createdatetime")), request.getParameter("creator"), Integer.parseInt(param[16]));
+     			ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), ConversionUtils.fromTimestampString(createDateTime), request.getParameter("creator"), Integer.parseInt(param[16]));
 
 		
 		
