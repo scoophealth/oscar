@@ -843,10 +843,14 @@ public class MeasurementGraphAction2 extends Action {
             TimeSeries systolic = new TimeSeries("Systolic", Day.class);
             TimeSeries diastolic = new TimeSeries("Diastolic", Day.class);
             for (EctMeasurementsDataBean mdb : list) { // dataVector) {
-                String[] str = mdb.getDataField().split("/");
-
-                systolic.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(str[0]));
-                diastolic.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(str[1]));
+            	if(!mdb.getDataField().equals("")){
+	                String[] str = mdb.getDataField().split("/");
+	
+	                systolic.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(str[0]));
+	                diastolic.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(str[1]));
+            	}else{
+            		log.debug("Error passing measurement value to chart. DataField is empty for ID:" + mdb.getId());
+            	}
             }
             dataset.addSeries(diastolic);
             dataset.addSeries(systolic);
@@ -860,7 +864,12 @@ public class MeasurementGraphAction2 extends Action {
 
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
             for (EctMeasurementsDataBean mdb : list) { //dataVector) {
-                newSeries.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(mdb.getDataField()));
+            	
+            	if(!mdb.getDataField().equals("")){
+            		newSeries.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(mdb.getDataField()));
+            	}else{
+            		log.debug("Error passing measurement value to chart. DataField is empty for ID:" + mdb.getId());
+            	}
             }
             dataset.addSeries(newSeries);
         }
@@ -874,14 +883,18 @@ public class MeasurementGraphAction2 extends Action {
             org.jfree.data.time.TimeSeriesCollection dataset2 = new org.jfree.data.time.TimeSeriesCollection();
 
             log.debug("list2 " + list2);
-
+            
             EctMeasurementsDataBean sampleLine2 = list2.get(0);
             String typeLegendName = sampleLine2.getTypeDisplayName();
             String typeYAxisName2 = sampleLine2.getTypeDescription(); // this should be the type of measurement
 
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
             for (EctMeasurementsDataBean mdb : list2) { //dataVector) {
-                newSeries.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(mdb.getDataField()));
+            	if(!mdb.getDataField().equals("")){
+            		newSeries.addOrUpdate(new Day(mdb.getDateObservedAsDate()), Double.parseDouble(mdb.getDataField()));
+	            }else{
+	        		log.debug("Error passing measurement value to chart. DataField is empty for ID:" + mdb.getId());
+	            }
             }
             dataset2.addSeries(newSeries);
 
