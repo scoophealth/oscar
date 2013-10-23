@@ -254,6 +254,11 @@
 			<artifactId>itext</artifactId>
 			<version>2.1.7</version>
 		</dependency>
+		<dependency>
+      			<groupId>com.itextpdf.tool</groupId>
+      			<artifactId>xmlworker</artifactId>
+      			<version>1.2.1</version>
+    		</dependency>
 
 		<!-- rtf / lowagie -->
 		<dependency>
