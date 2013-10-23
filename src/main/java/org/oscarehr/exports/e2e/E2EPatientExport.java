@@ -47,6 +47,8 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.exports.PatientExport;
 
+import oscar.util.StringUtils;
+
 /**
  * Models a "patient" which bundles all data required to define a "patient" for export
  * 
@@ -65,6 +67,7 @@ public class E2EPatientExport extends PatientExport {
 	private List<CaseManagementNote> riskFactors = null;
 	private List<CaseManagementNote> familyHistory = null;
 	private List<CaseManagementNote> alerts = null;
+	private List<CaseManagementNote> encounters = null;
 	private List<Measurement> measurements = null;
 
 	/**
@@ -98,35 +101,76 @@ public class E2EPatientExport extends PatientExport {
 		this.authorId = demographic.getProviderNo();
 
 		if(exAllergiesAndAdverseReactions) {
-			this.allergies = allergyDao.findAllergies(demographicNo);
-		}
-
-		if(exMedicationsAndTreatments) {
-			this.drugs = drugDao.findByDemographicId(demographicNo);
-
-			// Sort drugs by reverse chronological order & group by DIN by sorting
-			Collections.reverse(drugs);
-			Collections.sort(drugs, new sortByDin());
-		}
-
-		if(exImmunizations) {
-			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
-		}
-
-		if(exProblemList) {
-			List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
-			this.problems = new ArrayList<Dxresearch>();
-			for(Dxresearch problem : tempProblems) {
-				if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
-					this.problems.add(problem);
-				}
+			try {
+				this.allergies = allergyDao.findAllergies(demographicNo);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Allergies", e);
+				this.allergies = null;
 			}
 		}
 
-		//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
+		if(exMedicationsAndTreatments) {
+			try {
+				this.drugs = drugDao.findByDemographicId(demographicNo, false);
+
+				// Sort drugs by reverse chronological order & group by DIN by sorting
+				Collections.reverse(drugs);
+				Collections.sort(drugs, new sortByDin());
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Medications", e);
+				this.drugs = null;
+			}
+		}
+
+		if(exImmunizations) {
+			try {
+				this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Immunizations", e);
+				this.preventions = null;
+			}
+		}
+
+		if(exProblemList) {
+			try {
+				List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
+				this.problems = new ArrayList<Dxresearch>();
+				for(Dxresearch problem : tempProblems) {
+					if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
+						this.problems.add(problem);
+					}
+				}
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Problems", e);
+				this.problems = null;
+			}
+		}
+
 		if(exLaboratoryResults) {
-			this.labs = assembleLabs();
-			this.measurements = parseMeasurements();
+			try {
+				this.labs = assembleLabs();
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Labs", e);
+				this.labs = null;
+			}
+		}
+
+		if(exCareElements) {
+			try {
+				this.measurements = parseMeasurements();
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Measurements", e);
+				this.measurements = null;
+			}
+		}
+
+		if(exClinicalNotes) {
+			try {
+				this.encounters = caseManagementNoteDao.getNotesByDemographic(demographicNo.toString());
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Encounters", e);
+				this.encounters = null;
+			}
 		}
 
 		if(exRiskFactors || exPersonalHistory || exFamilyHistory || exAlertsAndSpecialNeeds) {
@@ -224,36 +268,51 @@ public class E2EPatientExport extends PatientExport {
 		}
 
 		if(exRiskFactors || exPersonalHistory) {
-			List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
-			List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
-			if(cmRiskFactorNotes != null) {
-				for(Integer i : cmRiskFactorNotes) {
-					cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+			try {
+				List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
+				List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
+				if(cmRiskFactorNotes != null) {
+					for(Integer i : cmRiskFactorNotes) {
+						cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+					}
 				}
+				this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Risk Factors/Personal History", e);
+				this.riskFactors = null;
 			}
-			this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
 		}
 
 		if(exFamilyHistory) {
-			List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
-			List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
-			if(cmFamilyHistoryNotes != null) {
-				for(Integer i : cmFamilyHistoryNotes) {
-					cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+			try {
+				List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
+				List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
+				if(cmFamilyHistoryNotes != null) {
+					for(Integer i : cmFamilyHistoryNotes) {
+						cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+					}
 				}
+				this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Family History", e);
+				this.familyHistory = null;
 			}
-			this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
 		}
 
 		if(exAlertsAndSpecialNeeds) {
-			List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
-			List<Long> cmAlertsNotesLong = new ArrayList<Long>();
-			if(cmAlertsNotes != null) {
-				for(Integer i : cmAlertsNotes) {
-					cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+			try {
+				List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
+				List<Long> cmAlertsNotesLong = new ArrayList<Long>();
+				if(cmAlertsNotes != null) {
+					for(Integer i : cmAlertsNotes) {
+						cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+					}
 				}
+				this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Alerts", e);
+				this.alerts = null;
 			}
-			this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 		}
 	}
 
@@ -382,15 +441,16 @@ public class E2EPatientExport extends PatientExport {
 	// Output convenience functions
 	public String getBirthDate() {
 		String out = demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
-		if(isNumeric(out)) {
+		if(StringUtils.isNumeric(out)) {
 			return out;
 		}
 		return "00010101";
 	}
 
 	public String getGenderDesc() {
-		if(demographic.getSex().equals("M")) return "Male";
-		else return "Female";
+		if(demographic.getSex().equalsIgnoreCase("M")) return "Male";
+		else if(demographic.getSex().equalsIgnoreCase("F")) return "Female";
+		else return "Undifferentiated";
 	}
 
 	/*
@@ -411,9 +471,19 @@ public class E2EPatientExport extends PatientExport {
 		return measurements;
 	}
 
-	//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
 	public boolean hasMeasurements() {
-		return exLaboratoryResults && measurements!=null && !measurements.isEmpty();
+		return exCareElements && measurements!=null && !measurements.isEmpty();
+	}
+
+	/*
+	 * Encounters
+	 */
+	public List<CaseManagementNote> getEncounters() {
+		return encounters;
+	}
+
+	public boolean hasEncounters() {
+		return exClinicalNotes && encounters!=null && !encounters.isEmpty();
 	}
 
 	/*

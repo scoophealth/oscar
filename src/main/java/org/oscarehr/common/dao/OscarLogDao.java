@@ -23,6 +23,8 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -95,4 +97,16 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		return(results);
     }
 
+	public List<Integer> getDemographicIdsOpenedSinceTime(Date value) {
+		String sqlCommand="select distinct demographicId from "+modelClass.getSimpleName()+" where dateTime >= ?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, value);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> results=query.getResultList();
+		results.removeAll(Collections.singleton(null));
+
+		return(results);
+	}
 }
