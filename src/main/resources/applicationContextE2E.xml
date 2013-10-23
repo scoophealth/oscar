@@ -15,10 +15,10 @@
 		<property name="targetMethod" value="run" />
 	</bean>
 
-	<!-- Simple Trigger, run every hour -->
+	<!-- Simple Trigger, run every 24 hours -->
 	<bean id="e2eSimpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="e2eScheduledJob" />
-		<property name="repeatInterval" value="3600000" />
+		<property name="repeatInterval" value="86400000" />
 		<property name="startDelay" value="15000" />
 	</bean>
 
@@ -39,7 +39,7 @@
 		<property name="triggers">
 			<list>
 				<!-- Change between e2eSimpleTrigger or e2eCronTrigger for desired schedule -->
-				<ref bean="e2eCronTrigger" />
+				<ref bean="e2eSimpleTrigger" />
 			</list>
 		</property>
 	</bean>

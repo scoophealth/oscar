@@ -68,7 +68,6 @@ public class E2ESchedulerJob extends TimerTask {
 			logger.info("Starting E2E export job");
 			logger.info("E2E Target URL: ".concat(e2eUrl));
 
-			boolean failedHTTPPOST = false;
 			List<Integer> ids = demographicDao.getActiveDemographicIds();
 			//ArrayList<File> files = new ArrayList<File>();
 			StringBuilder exportLog = new StringBuilder();
@@ -143,18 +142,17 @@ public class E2ESchedulerJob extends TimerTask {
 
 					HttpResponse response = httpclient.execute(httpPost);
 					if(response != null && response.getStatusLine().getStatusCode() == 201) {
-						Util.cleanFile(file);
+						// Success - no log event
 					} else {
 						logger.error(response.getStatusLine());
-						failedHTTPPOST = true;
 					}
 				} catch (HttpHostConnectException e) {
 					logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
-					failedHTTPPOST = true;
 				} catch (Exception e) {
 					logger.error("Error", e);
-					failedHTTPPOST = true;
 				}
+
+				Util.cleanFile(file);
 			}
 
 			// Create Export Log
@@ -177,12 +175,9 @@ public class E2ESchedulerJob extends TimerTask {
 			// Remove export files from temp dir
 			//Util.cleanFiles(files);
 
-			if(failedHTTPPOST) {
-				logger.info("Check ".concat(tmpDir).concat(" for unsent export files"));
-			}
 			logger.info("Done E2E export job");
-		} catch(Throwable e ) {
-			logger.error("Error",e);
+		} catch(Throwable e) {
+			logger.error("Error", e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
 		}
