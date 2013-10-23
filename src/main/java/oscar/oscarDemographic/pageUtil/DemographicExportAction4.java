@@ -2008,25 +2008,28 @@ public class DemographicExportAction4 extends Action {
 					patient.setExImmunizations(exImmunizations);
 					patient.setExProblemList(exProblemList);
 					patient.setExLaboratoryResults(exLaboratoryResults);
+					patient.setExCareElements(exCareElements);
 					patient.setExRiskFactors(exRiskFactors);
 					patient.setExPersonalHistory(exPersonalHistory);
 					patient.setExFamilyHistory(exFamilyHistory);
 					patient.setExAlertsAndSpecialNeeds(exAlertsAndSpecialNeeds);
+					patient.setExClinicalNotes(exClinicalNotes);
 
 					// Load patient data and merge to template
 					String output = "";
-					boolean loadStatus = patient.loadPatient(demoNo);
-					if(loadStatus && patient.isActive()) {
-						output = t.export(patient);
-						exportLog.append(t.getExportLog());
-					} else if(loadStatus && !patient.isActive()) {
-						String msg = "Patient ".concat(demoNo).concat(" not active - skipping");
-						logger.info(msg);
-						t.addExportLogEntry(msg);
-						exportLog.append(t.getExportLog());
-						continue;
+					if(patient.loadPatient(demoNo)) {
+						if(patient.isActive()) {
+							output = t.export(patient);
+							exportLog.append(t.getExportLog());
+						} else {
+							String msg = "[Demo ".concat(demoNo).concat("] Not active - skipped");
+							logger.info(msg);
+							t.addExportLogEntry(msg);
+							exportLog.append(t.getExportLog());
+							continue;
+						}
 					} else {
-						String msg = "Failed to load patient ".concat(demoNo);
+						String msg = "[Demo ".concat(demoNo).concat("] Failed to load");
 						logger.error(msg);
 						t.addExportLogEntry(msg);
 						exportLog.append(t.getExportLog());

@@ -61,6 +61,7 @@ import org.oscarehr.util.SpringUtils;
  */
 public abstract class PatientExport {
 	protected static Logger log = MiscUtils.getLogger();
+	protected static String eol = System.getProperty("line.separator");
 
 	protected static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	protected static AllergyDao allergyDao = SpringUtils.getBean(AllergyDao.class);
@@ -97,10 +98,12 @@ public abstract class PatientExport {
 	protected boolean exImmunizations = false;
 	protected boolean exProblemList = false;
 	protected boolean exLaboratoryResults = false;
+	protected boolean exCareElements = false;
 	protected boolean exRiskFactors = false;
 	protected boolean exPersonalHistory = false;
 	protected boolean exFamilyHistory = false;
 	protected boolean exAlertsAndSpecialNeeds = false;
+	protected boolean exClinicalNotes = false;
 
 	public PatientExport() {
 	}
@@ -120,7 +123,7 @@ public abstract class PatientExport {
 				return new SimpleDateFormat(format).parse(rhs);
 			} catch (Exception e) {}
 		}
-		log.warn("stringToDate - Can't parse ".concat(rhs));
+		if(rhs != null && !rhs.isEmpty()) log.warn("stringToDate - Can't parse ".concat(rhs));
 		return new Date();
 	}
 
@@ -147,6 +150,10 @@ public abstract class PatientExport {
 		this.exLaboratoryResults = rhs;
 	}
 
+	public void setExCareElements(boolean rhs) {
+		this.exCareElements = rhs;
+	}
+
 	public void setExRiskFactors(boolean rhs) {
 		this.exRiskFactors = rhs;
 	}
@@ -163,16 +170,22 @@ public abstract class PatientExport {
 		this.exAlertsAndSpecialNeeds = rhs;
 	}
 
+	public void setExClinicalNotes(boolean rhs) {
+		this.exClinicalNotes = rhs;
+	}
+
 	public void setExAllTrue() {
 		this.exMedicationsAndTreatments = true;
 		this.exAllergiesAndAdverseReactions = true;
 		this.exImmunizations = true;
 		this.exProblemList = true;
 		this.exLaboratoryResults = true;
+		this.exCareElements = true;
 		this.exRiskFactors = true;
 		this.exPersonalHistory = true;
 		this.exFamilyHistory = true;
 		this.exAlertsAndSpecialNeeds = true;
+		this.exClinicalNotes = true;
 	}
 	/*
 	 * General Utility functions useful for template string manipulation
@@ -271,26 +284,21 @@ public abstract class PatientExport {
 			int answer;
 			try {
 				answer = Integer.parseInt(one.getRegionalIdentifier()) - Integer.parseInt(two.getRegionalIdentifier());
-			} catch (Exception e){
-				answer = 0;
+			} catch (Exception e) {
+				answer = getDrugName(one).compareTo(getDrugName(two));
 			}
 			return answer;
 		}
-	}
 
-	/**
-	 * Check if string is valid numeric
-	 * 
-	 * @param rhs
-	 * @return True if rhs is a number, else false
-	 */
-	public static boolean isNumeric(String rhs) {
-		try {
-			Double.parseDouble(rhs);
-		} catch (Exception e) {
-			return false;
+		private String getDrugName(Drug drug) {
+			if(drug.getBrandName() != null) {
+				return drug.getBrandName();
+			} else if(drug.getGenericName() != null) {
+				return drug.getGenericName();
+			} else {
+				return "";
+			}
 		}
-		return true;
 	}
 
 	/**
@@ -300,12 +308,24 @@ public abstract class PatientExport {
 	 * @return String representing the ICD9 Code's description
 	 */
 	public static String getICD9Description(String code) {
-		String result = icd9Dao.findByCode(code).getDescription();
-		if (result == null || result.isEmpty()) {
-			return "";
+		try {
+			String result = icd9Dao.findByCode(code).getDescription();
+			if (result == null || result.isEmpty()) {
+				if (code == null || code.isEmpty()) {
+					return "";
+				} else {
+					return code;
+				}
+			}
+			return result;
+		} catch (Exception E) {
+			log.error("getICD9Description - code '".concat(code).concat("' missing description"));
+			if (code == null || code.isEmpty()) {
+				return "";
+			} else {
+				return code;
+			}
 		}
-
-		return result;
 	}
 
 	/**
@@ -332,7 +352,7 @@ public abstract class PatientExport {
 	 * @return String without invalid characters
 	 */
 	public static String cleanString(String rhs) {
-		String eol = System.getProperty("line.separator");
+		if(rhs == null || rhs.isEmpty()) return rhs;
 		String str = rhs.replaceAll("<br( )+/>", eol);
 		str = str.replaceAll("&", "&amp;");
 		str = str.replaceAll("<", "&lt;");
