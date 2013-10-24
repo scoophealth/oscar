@@ -252,6 +252,7 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
     <!-- Le styles -->
     <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
     <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
      
 <style type="text/css">
 body {
@@ -345,6 +346,7 @@ div.preventionProcedure p {
    top:80px;
    width:100%;
    z-index:999;
+   background-color:#333;
 }
 
 .btn-divider{
@@ -382,10 +384,55 @@ div.preventionProcedure p {
    right:15px;
 }
 
+#scrollToTop a{
+text-decoration:none;
+color:#333;
+opacity:0.6;
+filter:alpha(opacity=60); /* For IE8 and earlier */
+}
+
+#scrollToTop a:hover{
+text-decoration:none;
+opacity:1.0;
+filter:alpha(opacity=100); /* For IE8 and earlier */
+}
+
 .input-success{
     border-color: rgba(98, 196, 98, 0.8) !important; 
     box-shadow: 0 1px 1px rgba(98, 196, 98, 0.075) inset, 0 0 8px rgba(98, 196, 98, 0.6) !important; 
     outline: 0 none !important;
+}
+
+#health-tracker-title{
+display:inline-block;
+padding-right:20px
+}
+
+#health-tracker-title h4{
+padding:0;
+padding-top:8px;
+margin:0;
+}
+
+#health-tracker-title a{
+color:#333;
+text-decoration:none;
+}
+
+#health-tracker-title a:hover{
+color:#0088cc;
+text-decoration:none;
+}
+
+#health-tracker-add{
+text-align:center;
+}
+
+.save-all{
+float:left;
+margin-left:560px;
+padding-top:50px;
+height:70px;
 }
 
 .print{display:none;}
@@ -633,6 +680,13 @@ function fsPopup(width,height,url,window) {
 <div id="tracker-bar" class="container-fluid navbar-inner DoNotPrint">
 
    		<div class="span12" style="padding-left:0px;margin-left:0px">
+<!--
+<div id="health-tracker-title"><a href="?demographic_no=<%=demographic_no%>&template=tracker"><i class="icon-home icon-3x"></i></a></div>
+-->
+
+<a href="?demographic_no=<%=demographic_no%>&template=tracker" class="btn <%if(temp.equals("tracker")){ out.print("btn-primary active");} %>"><i class="icon-home icon-large"></i></a>
+
+
 <%
 				boolean btnSelected=false;
 				String btnState = "btn";
@@ -717,9 +771,12 @@ function fsPopup(width,height,url,window) {
      int iUndx=0;
      for(iUndx=0;iUndx<flowsheetList.size();iUndx++)
      {
-    	 if (!diagnosed.contains(flowsheetList.get(iUndx))) {
+
+	btnLabel=flowsheetList.get(iUndx).toString().toUpperCase();
+
+    	if (!diagnosed.contains(flowsheetList.get(iUndx)) && !btnLabel.equals("TRACKER")) {
     		 
-    		 btnLabel=flowsheetList.get(iUndx).toString().toUpperCase();
+    		 
 
 if(btnLabel.equals("PHV")){ 
 if(temp.equals(flowsheetList.get(iUndx).toString())){ fsSelected="btn-primary active";} 
@@ -747,7 +804,7 @@ if(!btnLabel.equals("PHV")){
      
 %>
 <span class="btn-divider" title="View undiagnosed flowsheets">| <%=unDxShow %></span>		
-			<a href="#" class="btn" id="MoreDx" title="View undiagnosed flowsheets">More <span class="caret"></span></a>
+			<a href="#" class="btn" id="MoreDx" title="View undiagnosed flowsheets"><i class="icon-chevron-sign-down icon-large"></i></a>
 		</div>
 </div>
 <div id="panel" class="well well-small">
@@ -762,7 +819,7 @@ if(!btnLabel.equals("PHV")){
    	<div class="row-fluid">
    		<div class="span12">
  
- <%if (!diagnosed.contains(temp) && !temp.equals("phv")){ %>  
+ <%if (!diagnosed.contains(temp) && !temp.equals("phv") && !temp.equals("tracker")){ %>  
  
 <script type="text/javascript">
     $(window).load(function(){
@@ -810,7 +867,6 @@ if(!btnLabel.equals("PHV")){
 			
 	</div>
 	
-<h4 style="display:inline;"><%=flowSheet%></h4>
    
 <!-- Modal -->
 <div id="unDxModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="unDxModalLabel" aria-hidden="true">
@@ -892,6 +948,12 @@ if(!btnLabel.equals("PHV")){
 </div>
 </div>
 <!-- modal end -->   
+
+<%if(!temp.equals("tracker")){%>
+<h4 style="display:inline;"><%=flowSheet%></h4>
+<%}else if(isMeasurements && temp.equals("tracker")){ 	%>
+<h4 style="display:inline;">Tracker Flowsheet</h4>
+<%}%>
 
 <%if(isMeasurements){%>
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
@@ -1004,12 +1066,22 @@ if(!btnLabel.equals("PHV")){
 	    <div class="row-fluid">
 		    <div class="span6">
 
-   <%if(!isMeasurements){ out.print("No measurements! "); 	
-			%>	
-			<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
-			To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%> %>' title='Edit Flowsheet' target='_blank'>Edit Flowsheet</a>.	
-			</security:oscarSec>	
-	<%}%>            		    
+<%if(!isMeasurements && !temp.equals("tracker")){ out.print("No measurements! "); 	
+		%>	
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
+		To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>' title='Edit Flowsheet'>Edit Flowsheet</a>.	
+		</security:oscarSec>	
+<%}else if(!isMeasurements && temp.equals("tracker")){%>            		    
+
+<div class="well" id="health-tracker-add">
+<p class="lead muted">It looks like you are not tracking any measurements! </p>
+
+<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&add" class="btn btn-large"><i class="icon-plus-sign icon-large"></i> Add Measurements</a>
+
+</div>
+
+
+<%}%>           		    
 		    
 <!-- start of form -->	
 <form id="trackerForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerUpdate.do">
@@ -1720,7 +1792,7 @@ function createAddAll(d,t){
     </div>
 
 <%if(isMeasurements){ %>
-<div class="DoNotPrint" style="float:left;margin-left:520px;padding-top:50px;height:70px">
+<div class="DoNotPrint save-all">
 	<!-- this will have to be visible to user -->
 		    <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
 </div>
@@ -1729,7 +1801,7 @@ function createAddAll(d,t){
 </fieldset>		    
 </form>
 
- <div id="scrollToTop"><a href="#HealthTracker"><i class="icon-arrow-up"></i>Top</a></div>
+ <div id="scrollToTop"><a href="#HealthTracker"><i class="icon-circle-arrow-up icon-3x"></i></a></div>
  
     
 	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
@@ -2061,7 +2133,7 @@ $('[id^=group-btn-]')
 })
 
 $("#MoreDx").click(function(){
-  $("#panel").slideToggle();
+  $("#panel").slideToggle('fast');
 });
 
 </script>
