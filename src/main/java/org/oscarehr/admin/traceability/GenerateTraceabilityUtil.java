@@ -43,6 +43,11 @@ import org.apache.commons.io.FileUtils;
 
 import oscar.util.OscarRoleObjectPrivilege;
 
+/**
+ * Utilities for traceability
+ * @author oscar
+ *
+ */
 public class GenerateTraceabilityUtil {
 	private GenerateTraceabilityUtil() {}
 	public static Map<String, String> buildTraceMap(HttpServletRequest request) throws Exception {	
