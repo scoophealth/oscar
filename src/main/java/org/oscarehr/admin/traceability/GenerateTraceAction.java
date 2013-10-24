@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -24,14 +23,12 @@
  */
 package org.oscarehr.admin.traceability;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.InetAddress;
-import java.util.Date;
-import java.util.Map;
-import java.util.zip.GZIPOutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,41 +38,52 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.MiscUtils;
+
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
+/**
+ * Make use of pipe implementation
+ * Produce compressed trace data
+ * Pipe it to another process that decorates it and sends to client in form of a binary file
+ * @author oscar
+ *
+ */
 public class GenerateTraceAction extends DispatchAction {
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public static int BUFFER_SIZE = 8192;
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String userName = (String) request.getSession().getAttribute("user");
-		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + userName;
+		String roleName$ = (String) request.getSession().getAttribute("userrole") + "," + userName;
 		if (!GenerateTraceabilityUtil.hasPrivilege("_admin, _admin.traceability", roleName$)) {
-			request.setAttribute("exception", "Access Denied");
-			return mapping.findForward("failure");
+			MiscUtils.getLogger().error("Access denied: " + userName);
+			return null;
 		}
-		String downloadFile = "trace_" + InetAddress.getLocalHost().getHostName().replace(' ', '_') + ".bin";
+		PipedInputStream pipedInputStream = null;
+		PipedOutputStream pipedOutputStream = null;
+		ExecutorService executor = null;
+		Future<String> futureTRP = null;
+		Future<String> futureTRC = null;
 		try {
-			Map<String, String> traceMap = GenerateTraceabilityUtil.buildTraceMap(request);
-			traceMap.put("origin_date", new Date().toString());
-			traceMap.put("git_sha", BuildNumberPropertiesFileReader.getGitSha1());
-			File outputFile = new File(downloadFile);
-			if (!outputFile.exists()) {
-				outputFile.createNewFile();
-			}
-			FileOutputStream fos = new FileOutputStream(outputFile);
-			GZIPOutputStream gz = new GZIPOutputStream(fos);
-			ObjectOutputStream oos = new ObjectOutputStream(gz);
-			oos.writeObject(traceMap);
-			oos.close();
-		} catch (IOException e) {
+			pipedInputStream = new PipedInputStream(BUFFER_SIZE);
+			pipedOutputStream = new PipedOutputStream(pipedInputStream);
+			
+			executor = Executors.newFixedThreadPool(2);
+	        TraceDataProcessor traceDataProcessor = new TraceDataProcessor(pipedOutputStream, request);
+			TraceDataConsumer traceDataConsumer = new TraceDataConsumer(pipedInputStream, response);
+			
+			futureTRP = executor.submit(traceDataProcessor);
+			futureTRC = executor.submit(traceDataConsumer);
+
+            MiscUtils.getLogger().debug(new java.util.Date() + " " + futureTRP.get());
+            MiscUtils.getLogger().debug(new java.util.Date() + " " + futureTRC.get());
+            LogAction.addLog(userName, LogConst.ADD, "traceability downloaded", "trace_" + InetAddress.getLocalHost().getHostName().replace(' ', '_') + ".bin");
+			executor.shutdown();
+		} catch (Exception e) {
 			MiscUtils.getLogger().error("Not able to create", e);
-			request.setAttribute("exception", "Not able to create traceability file");
-			return mapping.findForward("failure");
 		}
-		try {
-			GenerateTraceabilityUtil.download(response, downloadFile, "application/octet-stream");
-			LogAction.addLog(userName, LogConst.ADD, "traceability downloaded", downloadFile);
-		} catch (IOException e) {
-			MiscUtils.getLogger().error("Not able to create response", e);
+		finally {
+			pipedInputStream.close();
+			pipedOutputStream.close();
 		}
 		return null;
 	}
