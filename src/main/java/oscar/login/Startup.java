@@ -136,6 +136,19 @@ public class Startup implements ServletContextListener {
 
 			// CHECK FOR DEFAULT PROPERTIES
 			String baseDocumentDir = p.getProperty("BASE_DOCUMENT_DIR");
+			
+			if (baseDocumentDir == null) {
+				//Calculate it based on the "DOCUMENT_DIR"
+				String docDirectory = p.getProperty("DOCUMENT_DIR");
+				if (docDirectory != null) {
+				   String[] arrOfFolders = docDirectory.split("/");
+				   baseDocumentDir = "";
+				   for (int i = 0; i < arrOfFolders.length -2 ; i++) {
+					   baseDocumentDir = baseDocumentDir + arrOfFolders[i] + "/";
+				   } 
+				}  
+			}
+			
 			if (baseDocumentDir != null) {
 				logger.info("Found Base Document Dir: " + baseDocumentDir);
 				checkAndSetProperty(baseDocumentDir, contextPath, "HOME_DIR", "/billing/download/");
