@@ -196,9 +196,9 @@ public class EctMeasurementsDataBeanHandler {
         data.put("value", m.getDataField());
         data.put("measuringInstruction", m.getMeasuringInstruction());
         data.put("comments", m.getComments());
-        data.put("dateObserved", ConversionUtils.toDateString(m.getDateObserved()));
+        data.put("dateObserved", ConversionUtils.toTimestampString(m.getDateObserved()));
         data.put("dateObserved_date", m.getDateObserved());
-        data.put("dateEntered", ConversionUtils.toDateString(m.getCreateDate()));
+        data.put("dateEntered", ConversionUtils.toTimestampString(m.getCreateDate()));
         data.put("dateEntered_date", m.getCreateDate());
         data.put("provider_first", p.getFirstName());
         data.put("provider_last", p.getLastName());
