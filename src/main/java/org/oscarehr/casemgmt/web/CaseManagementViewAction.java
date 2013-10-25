@@ -66,6 +66,7 @@ import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.CodeType;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.common.Colour;
@@ -681,7 +682,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		// deal with remote notes
 		startTime = System.currentTimeMillis();
-		addRemoteNotes(notesToDisplay, demographicNo, checkedCodeList, programId);
+		List<Issue>issueList = issueDao.findIssueByCode(checkedCodeList.toArray(new String[0]));
+		addRemoteNotes(notesToDisplay, demographicNo, issueList, programId);
 		addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
 		logger.debug("Get remote notes. time=" + (System.currentTimeMillis() - startTime));
 
@@ -1038,7 +1040,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	}
 
-	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay, String programId) {
+	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, List<Issue> issueCodesToDisplay, String programId) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
@@ -1057,6 +1059,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		if (linkedNotes == null) return;
+		
 		for (CachedDemographicNote cachedDemographicNote : linkedNotes) {
 			try {
 
@@ -1074,14 +1077,30 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	}
 
-	private boolean hasIssueToBeDisplayed(CachedDemographicNote cachedDemographicNote, ArrayList<String> issueCodesToDisplay) {
+	private boolean hasIssueToBeDisplayed(CachedDemographicNote cachedDemographicNote, List<Issue> issueCodesToDisplay) {
 		// no issue selected means display all
 		if (issueCodesToDisplay == null || issueCodesToDisplay.size() == 0) return (true);
-
+		
+				
 		for (NoteIssue noteIssue : cachedDemographicNote.getIssues()) {
-			// yes I know this is flawed in that it's ignoreing the code type.
-			// right now we don't support code type properly on the caisi side.
-			if (issueCodesToDisplay.contains(noteIssue.getIssueCode())) return (true);
+			for( Issue issue : issueCodesToDisplay ) {				
+				logger.info("Comparing " + noteIssue.getIssueCode() + " type:" + noteIssue.getCodeType() + " TO " + issue.getCode() + " type:" + issue.getType());
+				if( Issue.CUSTOM_ISSUE.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.CUSTOM_ISSUE  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) )  {
+					return true;
+				}
+				else if( Issue.SYSTEM.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SYSTEM  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+					return true;
+				}
+				else if( Issue.ICD_9.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.ICD_9  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+					return true;
+				}
+				else if( Issue.ICD_10.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.ICD_10  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+					return true;
+				}
+				else if( Issue.SNOMED.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SNOMED  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+					return true;
+				}
+			}
 		}
 
 		return (false);
@@ -1365,6 +1384,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		request.setAttribute("NoteExts", lcme);
 		request.setAttribute("Notes", notes);
+		
+		ArrayList<NoteDisplay>remoteNotes = new ArrayList<NoteDisplay>();
+		ArrayList<String>issueCodes =  new ArrayList<String>(Arrays.asList(codes));
+		addRemoteNotes(remoteNotes, Integer.parseInt(demoNo), issues, programId);
+		
+		if( remoteNotes.size() > 0 ) {
+			request.setAttribute("remoteNotes", remoteNotes);
+		}
+		
+		
 		/*
 		 * oscar.OscarProperties p = oscar.OscarProperties.getInstance(); String noteSort = p.getProperty("CMESort", ""); if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sortNotes(notes, "observation_date_asc")); else
 		 * request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));

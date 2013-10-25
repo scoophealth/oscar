@@ -24,6 +24,8 @@
 
 --%>
 
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="org.oscarehr.casemgmt.web.NoteDisplay"%>
 <%  long start = System.currentTimeMillis(); %><%@include file="/casemgmt/taglibs.jsp"%>
 <%@page
 	import="java.util.List, java.util.Set, java.util.Iterator, org.oscarehr.casemgmt.model.CaseManagementIssue, org.oscarehr.casemgmt.model.CaseManagementNoteExt"%>
@@ -140,6 +142,39 @@
 			<%=htmlNoteTxt%></a>
 		</span></li>
 	</nested:iterate>
+	<%
+		
+		List<NoteDisplay>remoteNotes = (List<NoteDisplay>)request.getAttribute("remoteNotes");
+		String htmlText;
+		int noteIdx = 0;
+		if( remoteNotes != null ) {
+		    for( NoteDisplay remoteNote : remoteNotes) {
+				htmlText = remoteNote.getNote();
+				htmlText = htmlText.replaceAll("\n", "<br>");
+				if( noteIdx % 2 == 0 ) {
+				%>				
+				<li class="cpp"
+					style="clear: both; whitespace: nowrap; background-color: #FFCCCC;">
+				<%
+				}
+				else {
+				    %>
+				    <li class="cpp"
+					style="clear: both; whitespace: nowrap; background-color: #CCA3A3">
+				    <%
+				}
+				%>
+					<a class="links" onmouseover="this.className='linkhover'"	onmouseout="this.className='links'" title="<%=remoteNote.getLocation()%> by <%=remoteNote.getProviderName()%> on <%=ConversionUtils.toTimestampString(remoteNote.getObservationDate())%>" href="javascript:return false;">					
+					<%=htmlText%>
+					</a>
+				</li>
+				<%
+		    }
+		    
+		}
+	
+	
+	%>
 </ul>
 </div>
 <input type="hidden" id="<c:out value="${param.cmd}"/>num"

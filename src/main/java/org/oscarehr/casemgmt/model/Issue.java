@@ -29,6 +29,12 @@ import org.caisi.model.BaseObject;
 import org.oscarehr.util.MiscUtils;
 
 public class Issue extends BaseObject {
+	public static String CUSTOM_ISSUE = "userDefined";
+	public static String SYSTEM = "system";
+	public static String ICD_9 = "ICD9";
+	public static String ICD_10 = "ICD10";
+	public static String SNOMED = "SNOMED";
+	
 	  
 	private java.text.DateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
