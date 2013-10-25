@@ -19,8 +19,7 @@
     Description:
         Define Periodic Health Visit flowsheet
 -->
-<flowsheet name="phv"
-	display_name="Periodic Health Visit" warning_colour="#E00000" recommendation_colour="yellow" top_HTML="">
+<flowsheet name="phv" display_name="Periodic Health Visit" warning_colour="#E00000" recommendation_colour="yellow" top_HTML="">
 	
 	<indicator key="HIGH" colour="orange" />
 	<indicator key="LOW" colour="#9999FF" />
@@ -78,22 +77,81 @@
 	</header>
 	
 	<header display_name="Immunizations">
-		<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
-		<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no"/>
+
+		<item prevention_type="DTaP" display_name="Adacel (tdaP)" guideline="every 10 years" graphable="no">
+			<rules>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="&gt;120" />
+				</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+		
+		<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no">
+			<rules>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="&gt;12" />
+				</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
+		<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no">
+			<rules>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;65" />
+			       	</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>		
+		</item>
+
+		<item prevention_type="VZ" display_name="Zoster vaccine" guideline="" graphable="no">
+			<rules>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;60" />
+			       	</recommendation>
+			</rules>		
+		</item>
+
+		<item prevention_type="HPV Vaccine" display_name="HPV Vaccine" guideline="" graphable="no">
+			<rules>
+				<recommendation strength="hidden">
+					<condition type="isMale" />
+			       	</recommendation>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;9" />
+				</recommendation>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&gt;26" />
+			       	</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>		
+		</item>
+
+
+		<item prevention_type="MMRV" display_name="Rubella and Varicella" guideline="" graphable="no"/>
 	</header>
 	
 	<header display_name="Prevention Interventions">
 		<item prevention_type="PAP" display_name="PAP" guideline="for women; every 3 years; ages 21 to 69" graphable="no" >
 			<rules>
-                <recommendation strength="hidden">
-                	<condition type="isMale" />
-               	</recommendation>
-               	<recommendation strength="hidden">
-                	<condition type="patientAge" value="&lt;21" />
-               	</recommendation>
-               	<recommendation strength="hidden">
-                	<condition type="patientAge" value="&gt;69" />
-                </recommendation>
+				<recommendation strength="hidden">
+					<condition type="isMale" />
+			       	</recommendation>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;21" />
+			       	</recommendation>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&gt;69" />
+				</recommendation>
 			
 				<recommendation strength="warning" >
 					<condition type="monthrange" value="&gt;36" />
@@ -103,10 +161,70 @@
 				</recommendation>
 			</rules>
 		</item>
+
+		<item prevention_type="MAM" display_name="Mammography" guideline="" graphable="no" >
+			<rules>
+				<recommendation strength="hidden">
+					<condition type="isMale" />
+			       	</recommendation>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;50" />
+			       	</recommendation>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&gt;74" />
+				</recommendation>
+			
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="&gt;24" />
+				</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
+		<item prevention_type="COLONOSCOPY" display_name="Colonoscopy" guideline="" graphable="no" >
+			<rules>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;50" />
+			       	</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
+		<item prevention_type="FOBT" display_name="FOBT" guideline="" graphable="no" >
+			<rules>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;50" />
+			       	</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="&gt;24" />
+				</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
+		<item prevention_type="BMD" display_name="Bone Mineral Density" guideline="" graphable="no" >
+			<rules>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;65" />
+			       	</recommendation>
+
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
 	</header>
 	
 	<header display_name="Lifestyle/Habits">
 	
+		<item measurement_type="IBPL" display_name="Income below poverty line" guideline="" graphable="no" value_name="Income below poverty line" />
 		<item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />
 		<item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day" />
 		<item measurement_type="MCCS" display_name="Smoking Cessation (Program)" guideline="" graphable="no" value_name="Completed" >
@@ -122,6 +240,19 @@
 				</recommendation>
 			</rules>
 		</item>
+
+		<item measurement_type="DRPW" display_name="Drinks per Week" guideline="" graphable="no" value_name="# drinks per week" >
+			<ruleset>
+			    <rule indicationColor="HIGH">
+				<condition type="isMale"  value="true" />
+				<condition type="getDataAsDouble" param="DRPW" value="&gt;14" />
+			    </rule>
+			    <rule indicationColor="HIGH">
+				<condition type="isFemale"  value="true" />
+				<condition type="getDataAsDouble" param="DRPW" value="&gt;8" />
+			    </rule>
+			</ruleset>
+		</item>
 		
 		<item measurement_type="BCTR" display_name="Family Planning/contraception" guideline="below age 50" graphable="no" value_name="Birth Control">
 			<rules>
@@ -130,18 +261,65 @@
 				</recommendation>
 			</rules>
 		</item>
-		
+
+		<item measurement_type="FAS" display_name="Folic Acid Supplementation" guideline="for women; below age 50" graphable="no" value_name="Folic Acid Supplementation"  >
+			<rules>
+				<recommendation strength="hidden">
+					<condition type="isMale" />
+			       	</recommendation>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&gt;49" />
+				</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
 		<item measurement_type="DEPR" display_name="Feeling down, depressed or hopeless?" guideline="Yearly or As Needed" graphable="no" value_name="Depressed" />
 		<item measurement_type="LETH" display_name="Little interest or pleasure in doing things?" guideline="Yearly or As Needed" graphable="no" value_name="Lethargic" />
-		
+		<item measurement_type="COGA" display_name="Cognitive Assessment" guideline="ages 65 and older" graphable="no" value_name="Cognitive Assessment"  >
+			<rules>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;65" />
+			       	</recommendation>
+			
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
 	</header>
 
 	<header display_name="Safety">
-	
+
+		<item measurement_type="HPNP" display_name="Hearing protection/Noise control programs" guideline="" graphable="no" value_name="Hearing protection/Noise control programs" />
+
+		<item measurement_type="SBLT" display_name="Seat belts" guideline="" graphable="no" value_name="Seat belts" />
+		<item measurement_type="SDET" display_name="Smoke detector that works" guideline="" graphable="no" value_name="Smoke detector that works" />
+		<item measurement_type="PWC" display_name="Parents with children" guideline="" graphable="no" value_name="Parents with children" />
+
+
+	    	<item measurement_type="FAHS" display_name="Risk Of Falling" guideline="Has Fallen or has risk factors for Falling" graphable="no" value_name="Risk of Falling">        
+			 <rules> 
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&lt;65" />
+			       	</recommendation>
+ 
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
+		<item measurement_type="SUNP" display_name="Sun protection" guideline="" graphable="no" value_name="Sun protection" />
 	</header>
 	
 	<header display_name="Oral Hygiene">
-	
+		<item measurement_type="BTFT" display_name="Brush teeth with fluoride toothpaste" guideline="" graphable="no" value_name="Brush teeth with fluoride toothpaste" />
+		<item measurement_type="FLOS" display_name="Floss" guideline="" graphable="no" value_name="Floss" />
+		<item measurement_type="DILY" display_name="Dentist in the last year" guideline="" graphable="no" value_name="Dentist in the last year" />		
 	</header>
 	
 	<header display_name="Vision and Hearing">
@@ -149,6 +327,60 @@
 	</header>
 	
 	<header display_name="Labs">
+	<item measurement_type="A1C" display_name="A1C" guideline="Target &gt; 7.0%" graphable="yes" value_name="A1C"  >
+            <rules>
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="A1C" value="&gt;3" />
+              </recommendation>
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="A1C" value="-1" />
+              </recommendation>
+            </rules>
+            <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble"  value="&gt; 7"/>
+            </rule>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble"  value="&lt; 2" />
+                <condition type="getDataAsDouble"  value="&gt; 0.07"/>
+            </rule>
+            </ruleset>
+          </item>
+
+	<item measurement_type="FBS" display_name="Fasting Plasma Glucose" guideline="" graphable="yes" value_name="Fasting Plasma Glucose">
+            <rules>
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="FBS" value="&gt;3" />
+              </recommendation>
+              <recommendation strength="warning" >
+                <condition type="monthrange" param="FBS" value="-1" />
+              </recommendation>
+            </rules>
+            <ruleset>
+              <rule indicationColor="LOW">
+                <condition type="getDataAsDouble" param="FBS" value="&lt;4" />
+              </rule>
+              <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble" param="FBS" value="&gt;7" />
+              </rule>
+            </ruleset>
+          </item>
+
+              <item measurement_type="TCHD" display_name="Ratio (TC/HDL)" guideline="Ratio &lt; 4.0" graphable="yes" value_name="TC/HDL" >
+                <rules>
+                  <recommendation strength="warning" >
+                    <condition type="monthrange" param="TCHD" value="&gt;12" />
+                  </recommendation>
+                  <recommendation strength="warning" >
+                    <condition type="monthrange" param="TCHD" value="-1" />
+                  </recommendation>
+                </rules>
+                <ruleset>
+                  <rule indicationColor="HIGH">
+                    <condition type="getDataAsDouble" param="TCHD" value="&gt;4" />
+                  </rule>
+                </ruleset>
+              </item>
 	
 	</header>
 	
@@ -160,6 +392,9 @@
 	</measurement>
 	<measurement type="DEPR" typeDesc="Depression" typeDisplayName="Depression">
 		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+	</measurement>
+	<measurement type="FAHS" typeDesc="Risk of Falling" typeDisplayName="Risk of Falling" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength=""/>
 	</measurement>
 	<measurement type="BP" typeDesc="Blood Pressure" typeDisplayName="BP" measuringInstrc="Sitting Position (nnn/nnn) Target:&lt;130/80 Interval:3mo.">
 		<validationRule name="Blood Pressure" maxValue="" minValue="" isDate="" isNumeric="" regularExp="[0-9]{2,3}/{1}[0-9]{2,3}" maxLength="" minLength="" />
@@ -178,9 +413,54 @@
 	</measurement>
 	<measurement type="SKST" typeDesc="Smoking Status" typeDisplayName="Smoking Status" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-	</measurement> 
+	</measurement>
+	<measurement type="IBPL" typeDesc="Income below poverty line" typeDisplayName="Income below poverty line" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FAS" typeDesc="Folic Acid supplementation" typeDisplayName="Folic Acid supplementation" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="COGA" typeDesc="Cognitive Assessment" typeDisplayName="Cognitive Assessment" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="HPNP" typeDesc="Hearing protection/Noise control programs" typeDisplayName="Hearing protection/Noise control programs" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="SBLT" typeDesc="Seat belts" typeDisplayName="Seat belts" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="SDET" typeDesc="Smoke detector that works" typeDisplayName="Smoke detector that works" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="PWC" typeDesc="Parents with children" typeDisplayName="Parents with children" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="SUNP" typeDesc="Sun protection" typeDisplayName="Sun protection" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="BTFT" typeDesc="Brush teeth with fluoride toothpaste" typeDisplayName="Brush teeth with fluoride toothpaste" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FLOS" typeDesc="Floss" typeDisplayName="Floss" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="DILY" typeDesc="Dentist in the last year" typeDisplayName="Dentist in the last year" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
 	<measurement type="POSK" typeDesc="Smoking" typeDisplayName="Packs of Cigarettes per day" measuringInstrc="Packs per day">
 		<validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
 	</measurement>
-  
+	<measurement type="DRPW" typeDesc="Drinks per Week"	typeDisplayName="Drinks per Week" measuringInstrc="Number of Drinks per week">
+		<validationRule name="Numeric Value: 0 to 100" maxValue="300" minValue="0" isNumeric="1" />
+	</measurement>
+
+	<measurement type="A1C" typeDesc="A1C" typeDisplayName="A1C" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />    
+	</measurement>
+	<measurement type="FBS" typeDesc="Glucose FBS" typeDisplayName="FBS" measuringInstrc="FBS">
+		<validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
+	</measurement>
+	<measurement type="TCHD" typeDesc="TC/HDL" typeDisplayName="LIPIDS TD/HDL" measuringInstrc="monitor every 1-3 year">
+		<validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>  
 </flowsheet>
