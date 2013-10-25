@@ -1246,6 +1246,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		//compare locks and see if they are the same
 		CasemgmtNoteLock casemgmtNoteLockSession = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demo);
 		
+		if(casemgmtNoteLockSession == null) {
+			return -2;
+		}
+		
 		try {
 			CasemgmtNoteLock casemgmtNoteLock = casemgmtNoteLockDao.find(casemgmtNoteLockSession.getId());
 			//if other window has acquired lock we reject save									
@@ -2154,6 +2158,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;	
 		Long noteId = noteSave(cform, request);
+		if (noteId == -2){
+			return mapping.findForward("windowClose");
+		}
 		session.removeAttribute("casemgmtNoteLock"+demoNo);
 		if (noteId == -1) {
 			return mapping.findForward("windowCloseError");
