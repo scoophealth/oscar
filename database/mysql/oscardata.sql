@@ -2248,7 +2248,7 @@ insert into issue (code,description,role,update_date,priority,type,sortOrderId) 
 insert into issue (code,description,role,update_date,priority,type,sortOrderId) values ('DiagnosticNotes','Diagnostic Notes','nurse',now(),NULL,'system',0);
 insert into issue (code,description,role,update_date,priority,type,sortOrderId) values ('OcularMedication','Ocular Medication','nurse',now(),NULL,'system',0);
 insert into issue (code,description,role,update_date,priority,type,sortOrderId) values ('PatientLog','Patient Log','nurse',now(),NULL,'system',0);
-insert into issue (`code`,`description`,`role`,`update_date`,sortOrderId) Values('CurrentHistory','Current History', 'nurse', now(),0);
+insert into issue (`code`,`description`,`role`,`update_date`,type,sortOrderId) Values('CurrentHistory','Current History', 'nurse', now(),'system',0);
 
 INSERT INTO `issue` (`code`, `description`, `role`, `update_date`, `priority`, `type`,sortOrderId)
 VALUES

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>org.oscarehr.caisi_integrator</groupId>
+  <artifactId>caisi_integrator_client_stubs</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20131021170138</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.1-SNAPSHOT</value>
+        <updated>20131021170138</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.1-SNAPSHOT</value>
+        <updated>20131021170138</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>

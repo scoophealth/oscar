@@ -598,6 +598,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
 		StringBuilder sentIds = new StringBuilder();
 		if (caseManagementIssues.size() == 0) return;
+		
+		Properties prop = OscarProperties.getInstance();
 
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
 			// don't send issue if it is not in our facility.
@@ -610,7 +612,26 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
 			facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
-			facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD_10); // temporary hard code hack till we sort this out
+			if( Issue.CUSTOM_ISSUE.equalsIgnoreCase(issue.getType()) ) {
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.CUSTOM_ISSUE); 
+			}
+			else if( Issue.SYSTEM.equalsIgnoreCase(issue.getType()) ){
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.SYSTEM);
+			}
+			else if( Issue.ICD_9.equalsIgnoreCase(issue.getType()) ) {
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD_9);
+			}
+			else if( Issue.ICD_10.equalsIgnoreCase(issue.getType()) ) {
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD_10);
+			}
+			else if( Issue.SNOMED.equalsIgnoreCase(issue.getType()) ) {
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.SNOMED);
+			}
+			else {
+				logger.warn("UNKNOWN ISSUE TYPE. " + issue.getType() + " ID:" + issue.getId() + " SKIPPING...");
+				continue;
+			}
+			
 			facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
 			cachedDemographicIssue.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
 
