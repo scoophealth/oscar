@@ -321,7 +321,9 @@ div.preventionProcedure p {
 }
 
 .mtype-display-name{
-   display:inline-block;max-width:260px;padding-bottom:2px;
+   display:inline-block;
+   max-width:250px;
+   padding-bottom:2px;
 }
 
 .tab-pane{
