@@ -467,7 +467,7 @@ SPAN.bold {
 					face="Verdana, Arial, Helvetica, sans-serif" size="1"
 					color="#000000">Billing Provider <select name="provider">
 					<option value=""
-						<%=request.getParameter("creator").equals("")?"selected":""%>>Select
+						<%=request.getParameter("mrp").equals("")?"selected":""%>>Select
 					Provider</option>
 					<%
 					String proFirst="";
@@ -480,7 +480,7 @@ SPAN.bold {
 						String proName = (String)billingProvider.get(i+2);
 				%>
 					<option value="<%=proOHIP%>|<%=specialty_code%>"
-						<%=(request.getParameter("creator").equals(specialty_code)||billingProvider.size()==3)?"selected":""%>><%=proName%></option>
+						<%=(request.getParameter("mrp").equals(specialty_code)||billingProvider.size()==3)?"selected":""%>><%=proName%></option>
 					<%	} %>
 
 				</select> </font></td>
