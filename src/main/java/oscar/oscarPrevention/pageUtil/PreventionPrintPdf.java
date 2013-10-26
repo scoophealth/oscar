@@ -34,6 +34,8 @@ package oscar.oscarPrevention.pageUtil;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,8 +79,13 @@ public class PreventionPrintPdf {
     private final int LINESPACING = 1;
     private final float LEADING = 12;
     
+    private final Map<String,String> readableStatuses = new HashMap<String,String>();
+    
     /** Creates a new instance of PreventionPrintPdf */
     public PreventionPrintPdf() {
+    	readableStatuses.put("0","Completed or Normal");
+    	readableStatuses.put("1","Refused");
+    	readableStatuses.put("2","Ineligible");
     }
     
     public void printPdf(HttpServletRequest request, HttpServletResponse response) throws IOException, DocumentException {
@@ -157,7 +164,7 @@ public class PreventionPrintPdf {
         upperYcoord = document.top() - header.getHeight() -(clinicParagraph.getLeading()*4f) - font.getCalculatedLeading(LINESPACING);
         
         int subIdx;
-        String preventionHeader, procedureAge, procedureDate;
+        String preventionHeader, procedureAge, procedureDate, procedureStatus;
         
         //1 - obtain number of lines of incoming prevention data
         boolean showComments = OscarProperties.getInstance().getBooleanProperty("prevention_show_comments", "true");        
@@ -192,6 +199,8 @@ public class PreventionPrintPdf {
            
             while( (procedureAge = request.getParameter("preventProcedureAge" + headerIds[idx] + "-" + subIdx)) != null ) {
                 procedureDate = request.getParameter("preventProcedureDate" + headerIds[idx] + "-" + subIdx);
+                procedureStatus = request.getParameter("preventProcedureStatus" + headerIds[idx] + "-" + subIdx);
+                procedureStatus = readableStatuses.get(procedureStatus);              
               
                 //Age                
                 Phrase procedure = new Phrase(LEADING, "Age:", FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL, Color.BLACK));
@@ -201,6 +210,11 @@ public class PreventionPrintPdf {
                 //Date
                 procedure.add("Date:");
                 procedure.add(new Chunk(procedureDate, FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL, Color.BLACK)));
+                procedure.add(Chunk.NEWLINE);
+                
+                //Status
+                procedure.add("Status:");
+                procedure.add(new Chunk(procedureStatus, FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL, Color.BLACK)));
                 procedure.add(Chunk.NEWLINE);
                 
                 String procedureComments = null;
