@@ -744,6 +744,9 @@ text-align:left;
 		            for (int k = 0; k < alist.size(); k++){
 		            	Map<String,Object> hdata = alist.get(k);
 		    %>
+		<input type="hidden" id="preventProcedureStatus<%=i%>-<%=k%>"
+			name="preventProcedureStatus<%=i%>-<%=k%>"
+			value="<%=hdata.get("refused")%>">
 		<input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>"
 			name="preventProcedureAge<%=i%>-<%=k%>"
 			value="Age: <%=hdata.get("age")%>">
