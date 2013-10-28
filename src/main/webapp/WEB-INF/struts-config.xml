@@ -1745,6 +1745,8 @@
 			<forward name="printAll" path="/eform/createpdf" />
 			<forward name="graph" path="/eform/createpdf" />
 		</action>
+		<action path="/eform/efmOpenEformByName" scope="request" type="oscar.eform.actions.OpenEFormByNameAction">
+		</action>
 		<action input="/eform/efmpatientformlist.jsp" path="/eform/removeEForm" scope="request" type="oscar.eform.actions.RemEFormAction">
 			<forward name="success" path="/eform/efmpatientformlist.jsp" />
 			<forward name="single" path="/eform/efmpatientformlistsingle.jsp" />
