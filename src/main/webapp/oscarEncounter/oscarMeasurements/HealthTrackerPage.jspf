@@ -1543,8 +1543,8 @@ function createAddAll(d,t){
              <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
              <li><a href="#tab2" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Allergy'/></a></li>
              <!-- hiding for now don't think we want this<li><a href="#tab3" data-toggle="tab"><bean:message key='oscarEncounter.reminders.title'/></a></li>-->
-             <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/> (<%=warnings.size() %>)</a></li>
-             <li><a href="#tab5" data-toggle="tab">Recommendations (<%=recomendations.size() %>)</a></li>
+             <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/> <span class="badge"><%=warnings.size() %></span></a></li>
+             <li><a href="#tab5" data-toggle="tab">Recommendations <span class="badge"><%=recomendations.size() %></span></a></li>
            </ul>
            <div class="tab-content">
                <div id="tab1" class="tab-pane active well well-small">
