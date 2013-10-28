@@ -2015,16 +2015,17 @@ public class DemographicExportAction4 extends Action {
 
 					// Load patient data and merge to template
 					String output = "";
-					boolean loadStatus = patient.loadPatient(demoNo);
-					if(loadStatus && patient.isActive()) {
-						output = t.export(patient);
-						exportLog.append(t.getExportLog());
-					} else if(loadStatus && !patient.isActive()) {
-						String msg = "Patient ".concat(demoNo).concat(" not active - skipping");
-						logger.info(msg);
-						t.addExportLogEntry(msg);
-						exportLog.append(t.getExportLog());
-						continue;
+					if(patient.loadPatient(demoNo)) {
+						if(patient.isActive()) {
+							output = t.export(patient);
+							exportLog.append(t.getExportLog());
+						} else {
+							String msg = "Patient ".concat(demoNo).concat(" not active - skipping");
+							logger.info(msg);
+							t.addExportLogEntry(msg);
+							exportLog.append(t.getExportLog());
+							continue;
+						}
 					} else {
 						String msg = "Failed to load patient ".concat(demoNo);
 						logger.error(msg);

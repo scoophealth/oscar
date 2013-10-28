@@ -23,10 +23,6 @@
  */
 package org.oscarehr.common.service;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -35,7 +31,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
@@ -46,18 +42,15 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDemographic.pageUtil.Util;
 
 /**
- * An E2E scheduler object for periodically exporting all available patient summaries
+ * An E2E scheduler object for periodically exporting all available patient summaries via HTTP POST
  * This object extends the JDK TimerTask, but applicationContextE2E.xml uses Quartz scheduling instead
- * It will attempt to send the export via HTTP POST. If it fails, the record is saved in TMP_DIR
  * 
  * @author Marc Dumontier, Jeremy Ho
  */
 public class E2ESchedulerJob extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
-	private String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
 	private String e2eUrl = OscarProperties.getInstance().getProperty("E2E_URL");
 
 	@Override
@@ -65,12 +58,10 @@ public class E2ESchedulerJob extends TimerTask {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 
 		try {
-			logger.info("Starting E2E export job");
-			logger.info("E2E Target URL: ".concat(e2eUrl));
-
+			Integer success = 0;
 			List<Integer> ids = demographicDao.getActiveDemographicIds();
-			//ArrayList<File> files = new ArrayList<File>();
-			StringBuilder exportLog = new StringBuilder();
+
+			logger.info("Starting E2E export job\nE2E Target URL: ".concat(e2eUrl).concat("\n").concat(Integer.toString(ids.size())).concat(" records pending"));
 
 			for(Integer id:ids) {
 				// Select Template
@@ -82,52 +73,16 @@ public class E2ESchedulerJob extends TimerTask {
 
 				// Load patient data and merge to template
 				String output = "";
-				boolean loadStatus = patient.loadPatient(id.toString());
-				if(loadStatus && patient.isActive()) {
-					output = t.export(patient);
-					exportLog.append(t.getExportLog());
-				} else if(loadStatus && !patient.isActive()) {
-					String msg = "Patient ".concat(id.toString()).concat(" not active - skipping");
-					logger.info(msg);
-					t.addExportLogEntry(msg);
-					exportLog.append(t.getExportLog());
-					continue;
+				if(patient.loadPatient(id.toString())) {
+					if(patient.isActive()) {
+						output = t.export(patient);
+					} else {
+						logger.info("Patient ".concat(id.toString()).concat(" not active - skipping"));
+						continue;
+					}
 				} else {
-					String msg = "Failed to load patient ".concat(id.toString());
-					logger.error(msg);
-					t.addExportLogEntry(msg);
-					exportLog.append(t.getExportLog());
+					logger.error("Failed to load patient ".concat(id.toString()));
 					continue;
-				}
-
-				// Export File to Temp Directory
-				File file = null;
-				try{
-					File directory = new File(tmpDir);
-					if(!directory.exists()){
-						throw new Exception("Temporary Export Directory does not exist!");
-					}
-
-					//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
-					String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName()+"_"+id;
-					expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth()+".xml";
-					file = new File(directory, expFile);
-				} catch (Exception e){
-					logger.error("Error", e);
-				}
-				BufferedWriter out = null;
-				try {
-					out = new BufferedWriter(new FileWriter(file));
-					out.write(output);
-				} catch (IOException e) {
-					logger.error("Error", e);
-					throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
-				} finally {
-					try {
-						out.close();
-					} catch(Exception e) {
-						//ignore
-					}
 				}
 
 				// Attempt to perform HTTP POST request
@@ -135,14 +90,20 @@ public class E2ESchedulerJob extends TimerTask {
 					HttpClient httpclient = new DefaultHttpClient();
 					HttpPost httpPost = new HttpPost(e2eUrl);
 
-					FileBody fileBody = new FileBody(file, "text/xml");
+					// Create Filename
+					String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName()+"_"+id;
+					expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth()+".xml";
+
+					// Assemble Multi-part Request
+					ByteArrayBody body = new ByteArrayBody(output.getBytes(), "text/xml", expFile);
 					MultipartEntity reqEntity = new MultipartEntity();
-					reqEntity.addPart("content", fileBody);
+					reqEntity.addPart("content", body);
 					httpPost.setEntity(reqEntity);
 
+					// Send HTTP POST request
 					HttpResponse response = httpclient.execute(httpPost);
 					if(response != null && response.getStatusLine().getStatusCode() == 201) {
-						// Success - no log event
+						success++;
 					} else {
 						logger.error(response.getStatusLine());
 					}
@@ -151,31 +112,9 @@ public class E2ESchedulerJob extends TimerTask {
 				} catch (Exception e) {
 					logger.error("Error", e);
 				}
-
-				Util.cleanFile(file);
 			}
 
-			// Create Export Log
-			/*try {
-				File exportLogFile = new File(files.get(0).getParentFile(), "ExportEvent.log");
-				BufferedWriter out = new BufferedWriter(new FileWriter(exportLogFile));
-				if(exportLog.toString().length() == 0) {
-					out.write("Export contains no errors".concat(System.getProperty("line.separator")));
-				} else {
-					out.write(exportLog.toString());
-				}
-				out.close();
-
-				files.add(exportLogFile);
-			} catch (IOException e) {
-				logger.error("Error", e);
-				throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
-			}*/
-
-			// Remove export files from temp dir
-			//Util.cleanFiles(files);
-
-			logger.info("Done E2E export job");
+			logger.info("Done E2E export job\n".concat(success.toString()).concat(" records processed"));
 		} catch(Throwable e) {
 			logger.error("Error", e);
 		} finally {
