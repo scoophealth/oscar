@@ -104,21 +104,19 @@
         }
 
         var okToClose = false;
-        function onClosing() {
-        	
-            for( var name in openWindows ) {
-                if( !openWindows[name].closed )
-                    openWindows[name].close();
-            }
 
-            
-            
+            function onClosing() {
+                 for( var idx = 0; idx < measurementWindows.length; ++idx ) {
+                     if( !measurementWindows[idx].closed )
+                         measurementWindows[idx].parentChanged = true;
+                 }
             
             //check to see if we need to save
             if( $(caseNote) != null && tmpSaveNeeded || ( (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) )) {
                 tmpSaveNeeded = false;
                 //autoSave(false);
-                document.forms['caseManagementEntryForm'].sign.value='persist';
+                //document.forms['caseManagementEntryForm'].sign.value='persist';
+                document.forms['caseManagementEntryForm'].sign.value='on';
                 document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
                 document.forms["caseManagementEntryForm"].ajax.value = false;
                 document.forms["caseManagementEntryForm"].chain.value = "";
