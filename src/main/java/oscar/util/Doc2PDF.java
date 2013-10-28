@@ -40,18 +40,16 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.tidy.Tidy;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.html.SAXmyHtmlHandler;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
 
 /**
  *
@@ -249,26 +247,16 @@ public class Doc2PDF {
     }
 
     public static String GetPDFBin(HttpServletResponse response, String docText) {
-        // step 1: creation of a document-object
         Document document = new Document(PageSize.A4, 36, 36, 36, 36);
-        // Document document = new Document(PageSize.A4.rotate());
-
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter.getInstance(document, baos);
-
-            // step 3: we create a parser and set the document handler
-            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-
-            // step 4: we parse the document
-            // use input stream  
-            parser.parse(new ByteArrayInputStream(docText.getBytes()), new SAXmyHtmlHandler(document));
-
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+            InputStream is = new ByteArrayInputStream(docText.getBytes());
+            XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
             document.close();
-
             return(new String(Base64.encodeBase64(baos.toByteArray())));
         }
-
         catch (Exception e) {
         	logger.error("Unexpected error", e);
         }
@@ -326,41 +314,23 @@ public class Doc2PDF {
         catch (Exception e) {
         	logger.error("Unexpected error", e);
         }
-
     }
 
     public static void PrintPDFFromHTMLString(HttpServletResponse response, String docText) {
-
-        // step 1: creation of a document-object
         Document document = new Document(PageSize.A4, 36, 36, 36, 36);
-        //Document document = new Document(PageSize.A4.rotate());
-
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter.getInstance(document, baos);
-
-            // step 3: we create a parser and set the document handler
-            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-
-            // step 4: we parse the document
-            // use input stream        
-            parser.parse(new ByteArrayInputStream(docText.getBytes()), new SAXmyHtmlHandler(document));
-
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+            InputStream is = new ByteArrayInputStream(docText.getBytes());
+            XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
             document.close();
-
-            // String yourString = new String(theBytesOfYourString, "UTF-8");
-            // byte[] theBytesOfYourString = yourString.getBytes("UTF-8");
-
             byte[] binArray = baos.toByteArray();
-
             PrintPDFFromBytes(response, binArray);
-
         }
-
         catch (Exception e) {
         	logger.error("Unexpected error", e);
         }
-
     }
 
     public static String AddAbsoluteTag(HttpServletRequest request, String docText, String uri) {
@@ -379,10 +349,8 @@ public class Doc2PDF {
         }
 
         absolutePath += request.getRemoteHost() + ":" + request.getServerPort() + "" + request.getContextPath() + "/";
-
         docText = docText.replaceAll("src='", "src='" + absolutePath);
         docText = docText.replaceAll("src=\"", "src=\"" + absolutePath);
-
         return docText;
     }
 

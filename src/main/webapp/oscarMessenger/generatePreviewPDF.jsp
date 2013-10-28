@@ -114,7 +114,6 @@ request.getSession().setAttribute("EctSessionBean",bean);
         setTimeout("GetBottomSRC()", 1000);
         timerID = setInterval("CheckSrcText()", 1000);
         timerRunning = true;        
-        
     }  
     
     function testing(){
@@ -269,7 +268,7 @@ request.getSession().setAttribute("EctSessionBean",bean);
 							<td><%=demoName%> Information</td>
 							<td>
 							<% if ( request.getParameter("isAttaching") == null ) { %> <input
-								type=button value=Preview onclick=PreviewPDF( '<%=currentURI%>') />
+								type="button" value="Preview" onclick="PreviewPDF( '<%=currentURI%>')" />
 							<% } %> &nbsp;</td>
 						</tr>
 
@@ -302,7 +301,7 @@ request.getSession().setAttribute("EctSessionBean",bean);
 							<td><%=rsdemo.getString("timeStamp")%></td>
 							<td>
 							<% if ( request.getParameter("isAttaching") == null ) { %> <input
-								type=button value=Preview onclick=PreviewPDF( '<%=currentURI%>') />
+								type="button" value="Preview" onclick="PreviewPDF( '<%=currentURI%>')" />
 							<% } %> &nbsp;</td>
 						</tr>
 
@@ -352,7 +351,7 @@ request.getSession().setAttribute("EctSessionBean",bean);
 							<td>Current prescriptions</td>
 							<td>
 							<% if ( request.getParameter("isAttaching") == null ) { %> <input
-								type=button value=Preview onclick=PreviewPDF( '<%=currentURI%>') />
+								type="button" value="Preview" onclick="PreviewPDF( '<%=currentURI%>')" />
 							<% } %> &nbsp;</td>
 						</tr>
 
