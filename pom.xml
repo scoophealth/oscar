@@ -1326,6 +1326,8 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
+					<minmemory>128m</minmemory>
+          			<maxmemory>1g</maxmemory>
 					<tags>
 						<tag>
 							<name>todo</name>
