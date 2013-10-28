@@ -2553,10 +2553,8 @@
 			
 		</action>
 		<action path="/admin/GenerateTraceAction" type="org.oscarehr.admin.traceability.GenerateTraceAction">
-			<forward name="failure" path="/traceReport.jsp" />
         </action>
 		<action path="/admin/GenerateTraceabilityReportAction" type="org.oscarehr.admin.traceability.GenerateTraceabilityReportAction">
-			<forward name="failure" path="/traceReport.jsp" />
         </action>
 
 		
