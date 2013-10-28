@@ -450,8 +450,9 @@ function checkAll(formId){
 
                                     </td>
                                     <td bgcolor="#EEEEFF">
-                                    <%= dm.thedate  %>
-                                    <%= dm.theime %>
+                                    	<%= dm.thedate %>
+                                    	&nbsp;&nbsp;
+                                    	<%= dm.theime %>
                                     </td>
                                     <td bgcolor="#EEEEFF">
                                         <oscar:nameage demographicNo="<%=dm.demographic_no%>"></oscar:nameage>
