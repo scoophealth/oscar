@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -96,7 +97,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
         for(Demographic demo :list){
             HashMap<String,String> h = new HashMap<String,String>();
              h.put("fomattedDob",demo.getFormattedDob());
-             h.put("formattedName",demo.getFormattedName());
+             h.put("formattedName",StringEscapeUtils.escapeJavaScript(demo.getFormattedName()));
              h.put("demographicNo",String.valueOf(demo.getDemographicNo()));
              h.put("status",demo.getPatientStatus());
              
