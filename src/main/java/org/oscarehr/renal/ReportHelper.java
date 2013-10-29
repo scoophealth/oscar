@@ -147,16 +147,22 @@ public class ReportHelper {
 				continue;
 			}
 			String[] bp = m.getDataField().split("/");
-			if(Integer.parseInt(bp[0]) > 140 || Integer.parseInt(bp[1]) > 90) {
-				Demographic demo = demographicDao.getDemographic(String.valueOf(m.getDemographicId()));
-				if(!demo.isActive()) {
-					continue;
+			try {
+				if(Integer.parseInt(bp[0]) > 140 || Integer.parseInt(bp[1]) > 90) {
+					Demographic demo = demographicDao.getDemographic(String.valueOf(m.getDemographicId()));
+					if( demo == null || !demo.isActive()) {
+						continue;
+					}
+					boolean diab = dxDao.entryExists(demo.getDemographicNo(), "icd9", "250");
+					boolean hyp = dxDao.entryExists(demo.getDemographicNo(), "icd9", "401");
+					if(!diab && !hyp) {
+						bpCount++;
+					}
+				
 				}
-				boolean diab = dxDao.entryExists(demo.getDemographicNo(), "icd9", "250");
-				boolean hyp = dxDao.entryExists(demo.getDemographicNo(), "icd9", "401");
-				if(!diab && !hyp) {
-					bpCount++;
-				}
+			}
+			catch( NumberFormatException e ) {
+				//ignore
 			}
 		}
 		r.setTotalBp(bpCount);
@@ -191,7 +197,7 @@ public class ReportHelper {
 		for(Dxresearch d:diabetics) {
 			Integer demographicNo = d.getDemographicNo();
 			Demographic demo = demographicDao.getDemographic(String.valueOf(demographicNo));
-			if(demo.isActive() && patientScreenedInLastYear(demo.getDemographicNo())) {
+			if(demo != null && demo.isActive() && patientScreenedInLastYear(demo.getDemographicNo())) {
 				diabeticCount++;
 			}
 		}
@@ -201,7 +207,7 @@ public class ReportHelper {
 		for(Dxresearch d:hypertensives) {
 			Integer demographicNo = d.getDemographicNo();
 			Demographic demo = demographicDao.getDemographic(String.valueOf(demographicNo));
-			if(demo.isActive() && patientScreenedInLastYear(demo.getDemographicNo())) {
+			if(demo != null && demo.isActive() && patientScreenedInLastYear(demo.getDemographicNo())) {
 				hypertensiveCount++;
 			}
 		}
@@ -216,14 +222,18 @@ public class ReportHelper {
 			}
 			String[] bp = m.getDataField().split("/");
 			
-			
-			if(Integer.parseInt(bp[0]) > 140 || Integer.parseInt(bp[1]) > 90) {
-				bpPatients.put(m.getDemographicId(), true);
+			try {
+				if(Integer.parseInt(bp[0]) > 140 || Integer.parseInt(bp[1]) > 90) {
+					bpPatients.put(m.getDemographicId(), true);
+				}
+			}
+			catch( NumberFormatException e ) {
+				//ignore
 			}
 		}
 		for(Integer demographicNo:bpPatients.keySet()) {
 			Demographic d = demographicDao.getDemographicById(demographicNo);
-			if(d.isActive() && patientScreenedInLastYear(demographicNo)) {
+			if(d != null && d.isActive() && patientScreenedInLastYear(demographicNo)) {
 				bpCount++;
 			}
 		}
@@ -296,14 +306,18 @@ public class ReportHelper {
 			}
 			String[] bp = m.getDataField().split("/");
 			
-			
-			if(Integer.parseInt(bp[0]) > 140 || Integer.parseInt(bp[1]) > 90) {
-				bpPatients.put(m.getDemographicId(), true);
+			try {
+				if(Integer.parseInt(bp[0]) > 140 || Integer.parseInt(bp[1]) > 90) {
+					bpPatients.put(m.getDemographicId(), true);
+				}
+			}
+			catch( NumberFormatException e ) {
+				//ignore
 			}
 		}
 		for(Integer demographicNo:bpPatients.keySet()) {
 			Demographic d = demographicDao.getDemographicById(demographicNo);
-			if(d.isActive() && patientScreened(demographicNo)) {
+			if(d != null && d.isActive() && patientScreened(demographicNo)) {
 				bpCount++;
 			}
 		}
@@ -375,12 +389,20 @@ public class ReportHelper {
 		for(MeasurementMap map:maps) {
 			idents.add(map.getIdentCode());
 		}
+		
+		Double val;
 		List<Integer> demoIds = measurementDao.findDemographicIdsByType(idents);
 		for(Integer demoId:demoIds) {
 			List<Measurement> ms = measurementDao.findByType(demoId, idents);
 			if(ms.size()>0) {
 				Measurement m = ms.get(0);
-				double val = Double.valueOf(m.getDataField());
+				try {
+					val = Double.valueOf(m.getDataField());
+				}
+				catch( NumberFormatException e ) {
+					continue;
+				}
+				
 				if(val >= 90) {
 					r.setCkdStage1(r.getCkdStage1()+1);
 				}
@@ -456,8 +478,13 @@ public class ReportHelper {
 			for(Measurement dbp:dbps) {
 				if(dbp.getDataField().indexOf("/")!=-1) {
 					String[] parts = dbp.getDataField().split("/");
-					if(Integer.parseInt(parts[0]) >= 140 || Integer.parseInt(parts[1]) >= 90) {
-						r.setBpAndDrugs(r.getBpAndDrugs()+1);
+					try {
+						if(Integer.parseInt(parts[0]) >= 140 || Integer.parseInt(parts[1]) >= 90) {
+							r.setBpAndDrugs(r.getBpAndDrugs()+1);
+						}
+					}
+					catch( NumberFormatException e ) {
+						//ignore
 					}
 				}
 			}
@@ -471,11 +498,19 @@ public class ReportHelper {
 			boolean metTarget=false;
 			for(Measurement m:measurementDao.findByType(dn, "BP")) {
 				String bp = m.getDataField();
-				String[] parts = bp.split("/");
-				if(Integer.parseInt(parts[0]) <= 130 && Integer.parseInt(parts[1]) <= 80) {
-					metTarget=true;
+				if( bp.indexOf("/") != -1 ) {
+					String[] parts = bp.split("/");
+					try {
+						if(Integer.parseInt(parts[0]) <= 130 && Integer.parseInt(parts[1]) <= 80) {
+							metTarget=true;
+							break;
+						}
+					}
+					catch( NumberFormatException e ) {
+						//Ignore
+					}
 				}
-				break;
+				
 			}
 			
 			if(metTarget) {
