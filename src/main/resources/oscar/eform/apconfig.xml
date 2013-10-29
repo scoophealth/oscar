@@ -52,8 +52,8 @@
     </databaseap>
     <databaseap>
         <ap-name>current_user_id</ap-name>
-        <ap-sql>SELECT '${provider}' AS id</ap-sql>
-        <ap-output>${id}</ap-output>
+        <ap-sql>SELECT '${provider}' AS providerId</ap-sql>
+        <ap-output>${providerId}</ap-output>
     </databaseap>
 
 <!-- Patient demographic information -->
@@ -83,8 +83,8 @@
     </databaseap>
     <databaseap>
         <ap-name>patient_id</ap-name>
-        <ap-sql>SELECT '${demographic}' AS id</ap-sql>
-        <ap-output>${id}</ap-output>
+        <ap-sql>SELECT '${demographic}' AS demographicId</ap-sql>
+        <ap-output>${demographicId}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>label</ap-name>
