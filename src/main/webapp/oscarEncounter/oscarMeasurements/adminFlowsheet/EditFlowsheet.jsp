@@ -187,7 +187,7 @@ width:100px !important;
 <div class="container-fluid main-container">
 <div class="row-fluid">
 
-<%if(flowsheet.equals("tracker")){%> 
+<%if (request.getParameter("ht") != null && request.getParameter("demographic")!=null) {%> 
 <a href="../HealthTrackerPage.jspf?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Health Tracker</a> <br/>
 <%}%>
 
@@ -197,9 +197,9 @@ width:100px !important;
 		            <% if (demographic!=null) { %>
 		             Individual Patient 
 
-				<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
-					| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
-				</security:oscarSec>
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
+						| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
+					</security:oscarSec>
 
 		            <%}else{%>
 		                All Patients
@@ -308,7 +308,14 @@ width:100px !important;
 		       <%}else{ %>
 		       <td><%=cust.getMeasurement()%></td> 
 		       <%} %>
-		       <td><%=cust.getProviderNo()%> </td> <td> <a href="<%=request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic=<%=cust.getDemographicNo()%>&displaymode=edit&dboperation=search_detail&appointment=" target="_blank"><%=cust.getDemographicNo()%></a></td></tr>
+		       <td><%=cust.getProviderNo()%> </td> <td> 
+		       
+		       <%if(cust.getDemographicNo().equals("0")){ %>
+		       All Patients
+		       <%}else{ %>
+		       <a href="<%=request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=cust.getDemographicNo()%>&displaymode=edit&dboperation=search_detail" target="_blank"><%=cust.getDemographicNo()%></a>
+		       <%} %>
+		       </td></tr>
 		    <%
 		    	}
 		    %>

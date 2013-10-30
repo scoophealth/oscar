@@ -163,7 +163,7 @@ maybe use jquery/ajax to post this data instead of submitting a form to send ALL
 <html:html locale="true">
 
 <head>
-<title>Custom Print for <%=flowSheet%> - <oscar:nameage demographicNo="<%=demographic_no%>"/></title><!--I18n-->
+<title><oscar:nameage demographicNo="<%=demographic_no%>"/> - <%=flowSheet%> Custom Print</title><!--I18n-->
 
 <meta name="viewport" content="width=device-width, user-scalable=false;">
 
@@ -355,7 +355,7 @@ padding-right:20px;
 }
 
 #scrollToTop{
-Position:fixed;
+position:fixed;
 display:none;
 bottom:30px;
 right:15px;
@@ -366,6 +366,29 @@ right:15px;
     box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6) !important; 
     outline: 0 none !important;
     
+}
+
+#wrapper-header{
+padding:0px;
+margin:0px;
+}
+
+#wrapper-content{
+position:relative;
+width:100%;
+
+}
+
+#mtype-list{
+padding-top:2px;
+}
+
+.alert{
+display:none;
+position:absolute;
+top:40px;
+right:4px;
+z-index:999;
 }
 
 </style> 
@@ -382,7 +405,6 @@ display:inline-block;
 width:100%;
 }
 
-
 div.headPrevention a:active { color:black; }
 div.headPrevention a:hover { color:black; }
 div.headPrevention a:link { color:black; }
@@ -394,27 +416,32 @@ div.headPrevention a:visited { color:black; }
 
 <body class="BodyStyle" id="printFlowsheetBody">
 
-
-<div class="module-block DoNotPrint">
-<%if (!printView){%>
-<a href="JavaScript:void(0);" class="back" title="go back to <%=flowSheet%>"><< <%=flowSheet%></a>
-<%}else{%>
-<a href="JavaScript:void(0);" class="back" title="go back to custom print"> << <%=flowSheet%> - Print</a>
-<%}%>
-
-</div>
-
-<div class="well" style="padding-bottom:0px;margin-bottom:0px;">
-	<h3><oscar:nameage demographicNo="<%=demographic_no%>"/></h3>				
-</div>
-
-<!--<oscar:help keywords="measurement" key="app.top1"/> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>-->
-                                  
 <form action="TemplateFlowSheetPrint.jsp" id="flowsheetPrintForm" method="post" class="form-inline">
     <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
     <input type="hidden" name="template" value="<%=temp%>"/>
     <input type="hidden" name="printView" value="true"/>
+    
+<div id="wrapper-header">
 
+<div class="module-block DoNotPrint">
+<%if (!printView){%>
+	<%if (request.getParameter("ht") != null) {%> 
+	<a href="HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>" title="go back to <%=temp%>"><< <%=flowSheet%></a> <br/>
+	<%}else{%>
+	<a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>" title="go back to <%=temp%>"><< <%=flowSheet%></a> <br/>
+	<%} %>
+<a href="JavaScript:void(0);" class="back" title="go back to <%=flowSheet%>"></a>
+
+<%}else{%>
+<a href="JavaScript:void(0);" class="back" title="go back to custom print"> << <%=flowSheet%> - Print</a>
+<%}%>
+
+</div><!-- module-block -->
+
+<div class="well" style="padding-bottom:0px;margin-bottom:0px;">
+	<h3><oscar:nameage demographicNo="<%=demographic_no%>"/></h3>				
+</div>
+                               
 <!-- VIEW CONTROL -->
 <div class="well DoNotPrint" style="margin:0px;padding-top:2px;padding-bottom:2px;background-color:#c6c6c6;overflow: hidden">
 
@@ -450,15 +477,16 @@ view:
 		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=outOfRange" id="outOfRange-btn" class="btn btn-small loading" data-loading-text="Loading...">Out of Range</a>
 		</div>
 
-			<button type="submit" class="btn btn-small DoNotPrint loading-print" data-loading-text="Loading..."><i class="icon-print"></i> Preview</button>
+			<button type="submit" class="btn btn-small DoNotPrint loading-print preview" data-loading-text="Loading..."><i class="icon-print"></i> Preview</button>
 
 		<%}%>
-	</div>
-</div>
+	</div><!-- controls -->
+</div><!-- VIEW CONTROL -->
+</div><!-- wrapper-header-->
 
-
+<div id="wrapper-content">
 <!--MEASUREMENTS SELECTION LIST  overflow: hidden;-->
-<div class="well" style="position:relative;padding-top:2px;">
+<div class="well" id="mtype-list">
 
 <%
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
@@ -634,7 +662,7 @@ view:
 <div class="preventionSection" style="<%=hidden%>">
     <%if (!printView){%>
     <div style="position: relative; float: left; padding-right: 10px;" class="DoNotPrint">
-       	<input  type="checkbox" name="printHP" id="printHP<%=measure%>" class="css-checkbox"  value="<%=measure%>"  <%=setToPrint ? "checked" : ""%>/>
+       	<input type="checkbox" name="printHP" id="printHP<%=measure%>" class="css-checkbox"  value="<%=measure%>"  <%=setToPrint ? "checked" : ""%>/>
 	<label for="printHP<%=measure%>" name="printHP<%=measure%>" class="css-label"></label><!--needed for chkbox effect-->
     </div>
     <%}%>
@@ -862,8 +890,14 @@ String noPrint2 = "";
 </div>
 <% } %>
 
+</div> <!-- wrapper-content -->
 
 <div id="scrollToTop" class="DoNotPrint"><a href="#printFlowsheetBody" class="DoNotPrint"><i class="icon-arrow-up"></i>Top</a></div>
+
+    <div class="alert">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Oops!</strong> You need to make a selection before you can generate a print preview.
+    </div>
 
 <script src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script> 
 <script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
@@ -874,6 +908,19 @@ String noPrint2 = "";
 <script src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
 
 <script type="text/javascript">
+
+$(".preview").click(function() {
+
+	if ($('#flowsheetPrintForm :checkbox:checked').length > 0){
+			$(".alert").fadeOut('slow');
+			return true;
+	  }
+	  else{
+		  $(".alert").fadeIn('slow');
+			return false;
+	  }
+
+});
 
 $(function (){ 
 	$('[id^=dp-]').datepicker();
