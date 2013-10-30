@@ -76,7 +76,10 @@ public class FlowSheetCustomAction extends DispatchAction {
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String flowsheet = request.getParameter("flowsheet");
-        String demographicNo = request.getParameter("demographic");
+        String demographicNo = "0";
+        if (request.getParameter("demographic")!=null){
+        	demographicNo = request.getParameter("demographic");
+        }
 
         MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
         MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(flowsheet);
@@ -134,10 +137,6 @@ public class FlowSheetCustomAction extends DispatchAction {
                 cust.setFlowsheet(flowsheet);
                 cust.setMeasurement(prevItem);//THIS THE MEASUREMENT TO SET THIS AFTER!
                 cust.setProviderNo((String) request.getSession().getAttribute("user"));
-                if (demographicNo==null){
-                	demographicNo = "0";
-
-                }
                 cust.setDemographicNo(demographicNo);
                 cust.setCreateDate(new Date());
 
@@ -156,7 +155,10 @@ public class FlowSheetCustomAction extends DispatchAction {
         MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
         String flowsheet = request.getParameter("flowsheet");
-        String demographicNo = request.getParameter("demographic");
+        String demographicNo = "0";
+        if (request.getParameter("demographic")!=null){
+        	demographicNo = request.getParameter("demographic");
+        }
 
         logger.debug("UPDATING FOR demographic "+demographicNo);
 
@@ -219,11 +221,9 @@ public class FlowSheetCustomAction extends DispatchAction {
                     */
                     //////
 
-
-
-
-
-
+                    
+                    
+                    
 //                    String mRange = request.getParameter("monthrange" + extrachar);
 //                    String strn = request.getParameter("strength" + extrachar);
 //                    String dsText = request.getParameter("text" + extrachar);
@@ -320,7 +320,10 @@ public class FlowSheetCustomAction extends DispatchAction {
         logger.debug("IN DELETE");
         String flowsheet = request.getParameter("flowsheet");
         String measurement = request.getParameter("measurement");
-        String demographicNo = request.getParameter("demographic");
+        String demographicNo = "0";
+        if (request.getParameter("demographic")!=null){
+        	demographicNo = request.getParameter("demographic");
+        }
 
         FlowSheetCustomization cust = new FlowSheetCustomization();
         cust.setAction(FlowSheetCustomization.DELETE);
