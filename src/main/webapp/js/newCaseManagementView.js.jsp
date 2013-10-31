@@ -130,8 +130,7 @@
             if (noteNotNull && notesChanged && tmpSaveNeeded || datesChanged) {
                 tmpSaveNeeded = false;
                 //autoSave(false);
-                //document.forms['caseManagementEntryForm'].sign.value='persist';
-                document.forms['caseManagementEntryForm'].sign.value='off';
+                document.forms['caseManagementEntryForm'].sign.value='persist';
                 document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
                 document.forms["caseManagementEntryForm"].ajax.value = false;
                 document.forms["caseManagementEntryForm"].chain.value = "";
@@ -2479,7 +2478,7 @@ function saveNoteAjax(method, chain) {
                             }
 
                       );
-
+    tmpSaveNeeded = true;
     return false;
 }
 
