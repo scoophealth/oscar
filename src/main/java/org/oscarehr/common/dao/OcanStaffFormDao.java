@@ -126,6 +126,46 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		query.setMaxResults(1);
 		
 		return getSingleResultOrNull(query);
+	}	
+	
+	public OcanStaffForm findByProviderAndSubmissionId(String providerNo, Integer submissionId, String type )
+	{
+		String sqlCommand = "select x from OcanStaffForm x where x.submissionId=?1 and x.ocanType=?3 and x.providerNo=?2 order by x.created desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		
+		query.setParameter(1, submissionId);		
+		query.setParameter(2, providerNo);
+		query.setParameter(3, type);
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
+	}
+	
+	public OcanStaffForm findLatestCbiFormsByFacilityAdmissionId(Integer facilityId, Integer admissionId, Boolean signed)
+	{
+		String sqlCommand = "select x from OcanStaffForm x where x.facilityId=?1 and x.admissionId=?2 and x.ocanType='CBI' "+(signed!=null?" and signed=?3":"")+" order by x.created desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, admissionId);		
+		if (signed!=null) query.setParameter(3, signed);
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
+	}
+	
+	
+	public List<OcanStaffForm> getLatestCbiFormsByGroupOfAdmissionId() {
+			//Get latest CBI form for each group of admissionId
+			
+			String sqlCommand = "select x1 from OcanStaffForm x1 where x1.id = (select max(x2.id) from OcanStaffForm x2 where x2.admissionId!=null and x2.admissionId=x1.admissionId and x2.ocanType=?) ";
+			
+			Query query = entityManager.createQuery(sqlCommand);		
+			query.setParameter(1, "CBI");			
+						
+			@SuppressWarnings("unchecked")
+			List<OcanStaffForm> results=query.getResultList();
+			
+			return (results);
 	}
 	
 	public List<Integer> findClientsWithOcan(Integer facilityId) {
@@ -297,7 +337,7 @@ public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId
 
     public List<OcanStaffForm> findUnsubmittedOcanForms(Integer facilityId) {
 		
-		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.submissionId=0 order by x.clientId ASC, x.assessmentId DESC, x.created DESC, x.id DESC";
+		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.submissionId=0 and x.ocanType!='CBI' order by x.clientId ASC, x.assessmentId DESC, x.created DESC, x.id DESC";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);

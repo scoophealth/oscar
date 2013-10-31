@@ -40,7 +40,7 @@
 
 
 <%
-	List<OcanSubmissionLog> submissions = OcanReportUIBean.getAllSubmissions();
+	List<OcanSubmissionLog> submissions = OcanReportUIBean.getAllOcanSubmissions();
 	List<OcanStaffForm> unsentForms = OcanReportUIBean.getAllUnsubmittedOcanForms();
 	
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
