@@ -280,6 +280,7 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     String default_pmm=null;
     String programId_oscarView=null;
 	String ocanWarningWindow=null;
+	String cbiReminderWindow=null;
 	String caisiBillingPreferenceNotDelete = null;
 	String tklerProviderNo = null;
 	
@@ -293,6 +294,10 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 	
 	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.propertiesOn("OCAN_warning_window") ) {
         ocanWarningWindow = (String)session.getAttribute("ocanWarningWindow");
+	}
+	
+	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.propertiesOn("CBI_REMINDER_WINDOW") ) {
+        cbiReminderWindow = (String)session.getAttribute("cbiReminderWindow");
 	}
 
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
@@ -730,9 +735,15 @@ function goSearchView(s) {
 //popup a new tickler warning window
 function load() {
 	var ocan = "<%=ocanWarningWindow%>";
-	if(ocan!="null") {
+	if(ocan!="null" && cbi!="") {
 		alert(ocan);
 	}
+	var cbi = "<%=cbiReminderWindow%>";
+	if(cbi!="null" && cbi!="") {
+		alert(cbi);
+		<%request.getSession().setAttribute("cbiReminderWindow", "null");%>
+	}
+	
 	if ("<%=newticklerwarningwindow%>"=="enabled") {
 		if (IsPopupBlocker()) {
 		    alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");

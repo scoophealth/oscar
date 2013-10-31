@@ -31,12 +31,27 @@
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 
+<%@page import="org.oscarehr.PMmodule.service.ProgramManager"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.managers.ProviderManager2"%>
+<%@page import="org.oscarehr.common.dao.FunctionalCentreDao"%>
+<%@page import="org.oscarehr.common.model.FunctionalCentre"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+
+
 <%
 	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
 	
 	List<Program> allPrograms=programDao.getAllActivePrograms();
 	List<SecRole> allRoles=secRoleDao.findAll();
+	
+	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
+    ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
+    ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
@@ -45,14 +60,27 @@
 
 <form method="post" action="activity_report.jsp">
 <table>
-	<tr>
-		<td>Program</td>
-		<td>Start Date</td>
-		<td>End Date</td>
-	</tr>
 
 	<tr style="vertical-align:top">
-		<td><select name="programId">
+		<td>Functional Centre :
+		<select name="functionalCentreId">
+			<option value=""></option>
+					<%
+						for (FunctionalCentre functionalCentre : functionalCentres)
+						{
+							%>
+								<option value="<%=functionalCentre.getAccountId()%>"><%=functionalCentre.getAccountId()+", "+StringEscapeUtils.escapeHtml(functionalCentre.getDescription())%></option>
+							<%
+						}
+					%>
+				
+		</select></td>
+	</tr>
+	<tr><td>Or </td></tr>
+	<tr>
+		<td>Program :
+		<select name="programId">
+			<option value="0"></option>
 			<%
 				for (Program program : allPrograms)
 				{
@@ -65,15 +93,15 @@
 				}
 			%>
 		</select></td>
-
-		<td><input type="text" name="startDate" /><br />(YYYY-MM)</td>
-
-		<td><input type="text" name="endDate" /><br />(YYYY-MM)</td>
 	</tr>
-
 	<tr>
-		<td></td>
-		<td></td>
+		<td>Start Date (YYYY-MM): <input type="text" name="startDate" /><br /></td>
+	</tr>
+	<tr>
+		<td>End Date (YYYY-MM):<input type="text" name="endDate" /><br /></td>	
+	</tr>	
+
+	<tr>		
 		<td><input type="submit" /></td>
 	</tr>
 </table>
@@ -112,6 +140,26 @@ month.)
 
 <form method="post" action="activity_report_export_program_role.jsp">
 <table>
+	<tr>
+		<td colspan=4>Functional Centre :
+		</td>
+	</tr>
+	<tr>
+		<td colspan=4>
+		<select name="functionalCentreIds" multiple="multiple" style="width:40em;height:6em">
+			<option value=""></option>
+					<%
+						for (FunctionalCentre functionalCentre : functionalCentres)
+						{
+							%>
+								<option value="<%=functionalCentre.getAccountId()%>"><%=functionalCentre.getAccountId()+", "+functionalCentre.getDescription()%></option>
+							<%
+						}
+					%>
+				
+		</select></td>
+		
+	</tr>
 	<tr>
 		<td>Programs</td>
 		<td>Roles</td>

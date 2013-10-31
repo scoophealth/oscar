@@ -75,6 +75,7 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarSecurity.CRHelper;
 import oscar.util.AlertTimer;
+import oscar.util.CBIUtil;
 
 public final class LoginAction extends DispatchAction {
 	
@@ -384,6 +385,9 @@ public final class LoginAction extends DispatchAction {
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
                 if(facility.isEnableOcanForms()) {
                 	request.getSession().setAttribute("ocanWarningWindow", OcanForm.getOcanWarningMessage(facility.getId()));
+                }
+                if(facility.isEnableCbiForm()) {
+                	request.getSession().setAttribute("cbiReminderWindow", CBIUtil.getCbiSubmissionFailureWarningMessage(facility.getId(),provider.getProviderNo() ));
                 }
             }
             else {

@@ -51,7 +51,7 @@ if(request.getParameter("date")!=null && request.getParameter("date").trim().len
 	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	Date dateObj = dateFormat.parse(dateStr);
 	
-	submissionLogList = cbiUtil.getSubmissionLogRecords(dateObj);
+	submissionLogList = cbiUtil.getCbiSubmissionLogRecords(dateObj);
 }
 
 int totalCount = 0, successCount = 0, failureCount = 0;
@@ -128,11 +128,8 @@ if(submissionLogList!=null)
 								OcanStaffForm ocanStaffForm = cbiUtil.getCBIFormDataBySubmissionId(ocanSubmissionLog.getId());
 								
 								if(ocanStaffForm!=null)
-								{
-									List<Admission> admissionList = admissionDao.getAdmissions(ocanStaffForm.getClientId());
-									Admission admission = null;
-									if(admissionList!=null && admissionList.size()>0)
-										admission = admissionList.get(0);
+								{									
+									Admission admission = admissionDao.getAdmission(ocanStaffForm.getAdmissionId());
 									
 									String admissionDate = "", functionalCentre = "";
 									if(admission!=null)

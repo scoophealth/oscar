@@ -194,6 +194,33 @@ public class ClientReferralDAO extends HibernateDaoSupport {
         return results;
     }
 
+    @SuppressWarnings("unchecked")
+    public List<ClientReferral> getActiveReferralsByClientAndProgram(Long clientId, Long programId) {
+        if (clientId == null || clientId.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (programId == null || programId.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+        
+        List<ClientReferral> results;
+        
+        ArrayList<Object> paramList = new ArrayList<Object>();
+        String sSQL="from ClientReferral cr where cr.ClientId = ? and cr.ProgramId=? and (cr.Status = '" + ClientReferral.STATUS_ACTIVE+"' or cr.Status = '" +
+        			ClientReferral.STATUS_CURRENT + "') order by cr.ReferralDate DESC" ;
+        paramList.add(clientId);
+        paramList.add(programId);
+          
+        Object params[] = paramList.toArray(new Object[paramList.size()]);
+        results = getHibernateTemplate().find(sSQL, params);        
+
+        if (log.isDebugEnabled()) {
+            log.debug("getActiveReferralsByClientAndProgram: clientId=" + clientId + "programId " + programId +", # of results=" + results.size());
+        }
+
+        return results;
+    }
+    
     public ClientReferral getClientReferral(Long id) {
         if (id == null || id.longValue() <= 0) {
             throw new IllegalArgumentException();

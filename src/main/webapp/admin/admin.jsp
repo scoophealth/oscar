@@ -498,9 +498,9 @@ div.logoutBox {
 			<li><html:link page="/oscarReport/ocan_report_form.jsp"><bean:message key="admin.admin.ocanRpt"/></html:link></li>
 			<li><html:link page="/oscarReport/ocan_iar.jsp"><bean:message key="admin.admin.ocanIarRpt"/></html:link></li>
 			<li><html:link page="/oscarReport/ocan_reporting.jsp"><bean:message key="admin.admin.ocanReporting"/></html:link></li>
-
+			<li><html:link page="/oscarReport/cbi_submit_form.jsp"><bean:message key="admin.admin.cbiSubmit"/></html:link></li>
 			<li><html:link page="/admin/cbiAdmin.jsp"><bean:message key="admin.admin.cbi.reportlink"/></html:link></li>
-
+			<li><html:link page="/oscarReport/cbi_report_form.jsp"><bean:message key="admin.admin.cbiRpt"/></html:link></li>
 			<li><html:link page="/admin/UsageReport.jsp"><bean:message key="admin.admin.usageRpt"/></html:link></li>
 			<oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
 				<li><a href="#"

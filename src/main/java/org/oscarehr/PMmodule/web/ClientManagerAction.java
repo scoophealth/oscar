@@ -55,6 +55,7 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
+import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.VacancyDao;
@@ -65,6 +66,7 @@ import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Intake;
@@ -97,13 +99,11 @@ import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.dao.RemoteReferralDao;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Bed;
 import org.oscarehr.common.model.BedDemographic;
 import org.oscarehr.common.model.CaisiFormInstance;
@@ -1575,14 +1575,7 @@ public class ClientManagerAction extends DispatchAction {
 			}
 			
 			//CBI form and OCAN forms are stored in same table OcanStaffForm.
-			OcanStaffForm cbiForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId, Integer.valueOf(demographicNo), "CBI");
-			if (cbiForm != null) {
-				if (cbiForm.getAssessmentStatus() != null && cbiForm.getAssessmentStatus().equals("In Progress")) {
-					request.setAttribute("cbiForm", cbiForm);
-				}
-			} else {
-				request.setAttribute("cbiForm", null);
-			}
+			populateCbiData(request, Integer.parseInt(demographicNo), facilityId);
 			
 			// CDS
 			populateCdsData(request, Integer.parseInt(demographicNo), facilityId);
@@ -1941,6 +1934,20 @@ public class ClientManagerAction extends DispatchAction {
 		}
 	}
 
+	private void populateCbiData(HttpServletRequest request, Integer demographicNo, Integer facilityId) {
+		List<Admission> admissions=admissionDao.getAdmissions(demographicNo);
+		
+		ArrayList<OcanStaffForm> allLatestCbiForms=new ArrayList<OcanStaffForm>();
+		
+		for (Admission admission : admissions)
+		{
+			OcanStaffForm cbiForm=ocanStaffFormDao.findLatestCbiFormsByFacilityAdmissionId(facilityId, admission.getId().intValue(), null);
+			if (cbiForm!=null) allLatestCbiForms.add(cbiForm);
+		}
+	
+	    request.setAttribute("allLatestCbiForms", allLatestCbiForms);
+    }
+	
 	private void addRemoteAdmissions(ArrayList<AdmissionForDisplay> admissionsForDisplay, Integer demographicId) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
@@ -2136,5 +2143,14 @@ public class ClientManagerAction extends DispatchAction {
 
 		String displayString = program.getName() + " : " + DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate());
 		return (StringEscapeUtils.escapeHtml(displayString));
+	}
+	
+	public static String getCbiProgramDisplayString(OcanStaffForm ocanStaffForm)
+	{
+		Admission admission=admissionDao.getAdmission(ocanStaffForm.getAdmissionId());
+		Program program=programDao.getProgram(admission.getProgramId());
+		
+		String displayString=program.getName()+" : "+DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate());
+		return(StringEscapeUtils.escapeHtml(displayString));
 	}
 }

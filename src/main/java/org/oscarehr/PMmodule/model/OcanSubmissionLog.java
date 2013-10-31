@@ -59,6 +59,8 @@ public class OcanSubmissionLog extends AbstractModel<Integer> {
 	
 	private String transactionId;
 	
+	private String submissionType;
+	
 	@Transient
 	private List<OcanStaffForm> records = new ArrayList<OcanStaffForm>();
 	
@@ -113,6 +115,14 @@ public class OcanSubmissionLog extends AbstractModel<Integer> {
 	public void setResultMessage(String resultMessage) {
 		this.resultMessage = resultMessage;
 	}
+
+	public String getSubmissionType() {
+    	return submissionType;
+    }
+
+	public void setSubmissionType(String submissionType) {
+    	this.submissionType = submissionType;
+    }
 	
 	
 	
