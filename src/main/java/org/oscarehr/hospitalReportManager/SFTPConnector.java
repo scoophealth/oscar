@@ -339,6 +339,10 @@ public class SFTPConnector {
 				fullPathFilenames[i++] = fullFilePath;
 				fLogger.info("Downloaded File: " + fullFilePath);
 				logger.debug("SFTP::Downloaded file: " + fullFilePath);
+				
+				if(OscarProperties.getInstance().getProperty("OMD_HRM_DELETE_FROM_SERVER_AFTER_DOWNLOAD", "true").equals("true")) {
+					cmd.rm(file);
+				}
 			}
 		}
 
