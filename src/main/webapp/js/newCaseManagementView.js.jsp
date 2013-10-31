@@ -112,11 +112,26 @@
                  }
             
             //check to see if we need to save
-            if( $(caseNote) != null && tmpSaveNeeded || ( (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) )) {
+            var noteNotNull = false;
+            var notesChanged = false;
+            var datesChanged = false;
+            
+            if($(caseNote) != null) {
+            	noteNotNull = true;
+            }
+            
+            if (origCaseNote != $(caseNote).value) {
+            	notesChanged = true;
+            }
+            if (origObservationDate != $("observationDate").value) {
+            	datesChanged = true;
+            }
+            	
+            if (noteNotNull && notesChanged && tmpSaveNeeded || datesChanged) {
                 tmpSaveNeeded = false;
                 //autoSave(false);
                 //document.forms['caseManagementEntryForm'].sign.value='persist';
-                document.forms['caseManagementEntryForm'].sign.value='on';
+                document.forms['caseManagementEntryForm'].sign.value='off';
                 document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
                 document.forms["caseManagementEntryForm"].ajax.value = false;
                 document.forms["caseManagementEntryForm"].chain.value = "";
@@ -1978,9 +1993,13 @@ function editNote(e) {
         origCaseNote = $F(caseNote);
         
         //If we're editing a note started in another window force save on exit
+        //(not required anymore, second window is not allowed if first one is not closed
+
+        /*
         if( tmpSaveNeeded ) {
         	origCaseNote += ".";
         }
+        */
     }
     else {
         fetchNote(nId);
