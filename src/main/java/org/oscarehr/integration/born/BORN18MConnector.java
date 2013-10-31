@@ -65,7 +65,7 @@ public class BORN18MConnector {
 	private final Logger logger = MiscUtils.getLogger();
 	
 	private final OscarProperties oscarProperties = OscarProperties.getInstance();
-	private final String filenameStart = "BORN_" + oscarProperties.getProperty("born18m_orgcode", "") + "_18MWB_" + oscarProperties.getProperty("born18m_env", "T");
+	private final String filenameStart = "BORN_" + oscarProperties.getProperty("born18m_orgcode", "") + "_18MEWBV_" + oscarProperties.getProperty("born18m_env", "T");
 	private final boolean ignoreReport18m = oscarProperties.isPropertyActive("born18m_ignore_report18m");
 
 	private Integer demographicNo;
