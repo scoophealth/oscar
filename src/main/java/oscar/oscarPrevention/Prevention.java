@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -354,19 +353,12 @@ public class Prevention {
         try{
         long timeDiff = dStart.getTime() - dEnd.getTime();
         diffDays = timeDiff/(24*60*60*1000);
-        }catch(Exception e){}
+        }catch(Exception e){
+        	//nothing
+        }
         return new Long(diffDays).intValue();
    }
 
-   public static void main(String[] args){
-      Calendar date1 = new GregorianCalendar(1980, Calendar.JANUARY, 31);
-      Date d1 = date1.getTime();
-      Calendar date2= new GregorianCalendar(1980, Calendar.MARCH, 1);
-      Date d2 = date2.getTime();
-      Prevention p = new Prevention();
-      log.debug(p.getNumMonths(date1,date2));
-
-   }
 
    /**
     * Getter for property DOB.

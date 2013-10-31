@@ -25,6 +25,9 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Hl7TextMessage;
@@ -44,5 +47,17 @@ public class Hl7TextMessageDao extends AbstractDao<Hl7TextMessage> {
 		query.setParameter(3, id);
 		
 		query.executeUpdate();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getLabResultsSince(Integer demographicNo, Date updateDate) {
+		String query = "select m.id from Hl7TextMessage m, PatientLabRouting p WHERE m.id = p.labNo and p.labType='HL7' and p.demographicNo = ?1 and (m.created > ?2 or p.created > ?3) ";
+		Query q = entityManager.createQuery(query);
+		
+		q.setParameter(1, demographicNo);
+		q.setParameter(2, updateDate);
+		q.setParameter(3,updateDate);
+		
+		return q.getResultList();    
 	}
 }

@@ -49,6 +49,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.common.model.Provider;
@@ -198,6 +199,28 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
 		}
 	}
+	
+	public List<CaseManagementNote> getNotesByDemographicSince(String demographic_no,Date date) {
+		
+		String hql = "select cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.update_date > ? and cmn.locked != '1' and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date";
+		return getHibernateTemplate().find(hql, demographic_no,date);
+
+
+		
+	}
+	
+	public List<Integer> getNotesByFacilitySince(Date date, List<Program> programs) {		
+		StringBuilder sb = new StringBuilder();
+    	int i=0;
+    	for(Program p:programs) {
+    		if(i++ > 0)
+    			sb.append(",");
+    		sb.append(p.getId());
+    	}
+		String hql = "select cmn.demographic_no from CaseManagementNote cmn where cmn.program_no in ("+sb.toString()+") and cmn.update_date > ? and cmn.locked != '1' and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date";
+		return getHibernateTemplate().find(hql,date);
+	}
+	
 	
 		@SuppressWarnings("unchecked")
 	    public List<Object[]> getRawNoteInfoByDemographic(String demographic_no) {
@@ -431,6 +454,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			UUID uuid = UUID.randomUUID();
 			note.setUuid(uuid.toString());
 		}
+		note.setUpdate_date(new Date());
 		this.getHibernateTemplate().save(note);
 	}
 
@@ -439,7 +463,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			UUID uuid = UUID.randomUUID();
 			note.setUuid(uuid.toString());
 		}
-
+		note.setUpdate_date(new Date());
 		return this.getHibernateTemplate().save(note);
 	}
 

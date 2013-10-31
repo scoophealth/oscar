@@ -30,7 +30,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -56,6 +58,12 @@ public class GroupNoteLink extends AbstractModel<Integer> implements Serializabl
 	@Override
     public int hashCode() {
 		return (id != null ? id.hashCode() : 0);
+	}
+	
+	@PreUpdate
+	@PrePersist
+	protected void jpaUpdateDate() {
+		created = new Date();
 	}
 	
 	@PreRemove

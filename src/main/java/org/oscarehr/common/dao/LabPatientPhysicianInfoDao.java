@@ -25,6 +25,11 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.LabPatientPhysicianInfo;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +38,21 @@ public class LabPatientPhysicianInfoDao extends AbstractDao<LabPatientPhysicianI
 
 	public LabPatientPhysicianInfoDao() {
 		super(LabPatientPhysicianInfo.class);
+	}
+	
+	/*
+	 * We have to do a join with the patientLabRouting table to get the current links.
+	 */
+	public List<Integer> getLabResultsSince(Integer demographicNo, Date updateDate) {
+		String sql = "select lpp.id from LabPatientPhysicianInfo lpp, PatientLabRouting plr WHERE plr.labNo = lpp.id and plr.demographicNo = ?1 and (lpp.lastUpdateDate > ?2 or plr.created > ?3) AND plr.labType IN ('Epsilon','CML')";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);
+		query.setParameter(2, updateDate);
+		query.setParameter(3, updateDate);
+		
+		@SuppressWarnings("unchecked")
+        List<Integer> results = query.getResultList();
+		return results;
+		
 	}
 }

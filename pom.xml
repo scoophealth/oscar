@@ -197,6 +197,18 @@
 			</exclusions>
 		</dependency>
 
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-frontend-jaxws</artifactId>
+    <version>2.6.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-transports-http</artifactId>
+    <version>2.6.0</version>
+</dependency>
+
+
 		<!-- pdf / jpedal -->
 		<dependency>
   			<groupId>org</groupId>
@@ -312,7 +324,7 @@
 		<dependency>
 			<groupId>org.oscarehr.caisi_integrator</groupId>
 			<artifactId>caisi_integrator_client_stubs</artifactId>
-			<version>SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 
 		<!-- macplus -->

@@ -420,6 +420,12 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus) {
+		return listDocsSince(module,moduleid,docType,publicDoc,sort,viewstatus,null);
+	}
+	
+	public static ArrayList<EDoc> listDocsSince(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus, Date since) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 		// sort must be not null
 		// docType = null or = "all" to show all doctypes
 		// select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
@@ -438,6 +444,10 @@ public final class EDocUtil extends SqlUtilBaseS {
 			sql += " AND d.status = 'D'";
 		} else if (viewstatus.equals("active")) {
 			sql += " AND d.status != 'D'";
+		}
+		
+		if(since != null) {
+			sql += " AND d.updatedatetime > '" +  formatter.format(since) + "' ";
 		}
 
 		sql = sql + " ORDER BY " + sort;
@@ -479,6 +489,30 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
 			resultDocs = documentFacilityFiltering(resultDocs);
+		}
+
+		return resultDocs;
+	}
+	
+	public static ArrayList<Integer> listDemographicIdsSince(Date since) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		
+		String sql = "SELECT DISTINCT c.module_id " + "FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic'";
+		
+		if(since != null) {
+			sql += " AND d.updatedatetime > '" +  formatter.format(since) + "' ";
+		}
+
+		ResultSet rs = getSQL(sql);
+		ArrayList<Integer> resultDocs = new ArrayList<Integer>();
+		try {
+			while (rs.next()) {
+				resultDocs.add(Integer.parseInt(rsGetString(rs, "module_id")));
+			}
+			rs.close();
+		} catch (SQLException sqe) {
+			logger.error("Error", sqe);
 		}
 
 		return resultDocs;

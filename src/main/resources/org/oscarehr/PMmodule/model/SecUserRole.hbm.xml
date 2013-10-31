@@ -28,5 +28,6 @@
 			<key-property name="active" column="activeyn"/>
 		</composite-id>
 		<property name="orgCd" column="orgcd" type="string"/>
+		<property name="lastUpdateDate" type="timestamp"/>
 	</class>
 </hibernate-mapping>

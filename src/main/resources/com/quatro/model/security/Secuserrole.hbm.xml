@@ -24,8 +24,10 @@
 
 	    <property name="providerLName" formula="(select p.last_name from provider p where p.provider_no=provider_no)"></property>
 	    <property name="providerFName" formula="(select p.first_name from provider p where p.provider_no=provider_no)"></property>
+	    
+	    <property name="lastUpdateDate" type="timestamp"/>
 	    <!--
-	    <property name="lastUpdateDate" column="lastupdatedate"></property>
+	    
 		<property name="lastUpdateUser" column="lastupdateuser"></property>
 		-->
     </class>

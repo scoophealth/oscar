@@ -24,6 +24,7 @@
 package org.oscarehr.PMmodule.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -355,5 +356,12 @@ public class ProviderDao extends HibernateDaoSupport {
 		List<String> providerList = getHibernateTemplate().find("select distinct p.Team From Provider p");
 
 		return providerList;
+	}
+	
+	public List<String> getRecordsAddedAndUpdatedSinceTime(Date date) {
+		@SuppressWarnings("unchecked")
+		List<String> providers = getHibernateTemplate().find("select distinct p.ProviderNo From Provider p where p.lastUpdateDate > ? ",date);
+		
+		return providers;
 	}
 }

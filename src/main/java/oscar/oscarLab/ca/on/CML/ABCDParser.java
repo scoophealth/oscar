@@ -167,7 +167,7 @@ public class ABCDParser {
                demo = "0";
                logger.info("Could not find patient for lab: "+labId+ "# of possible matches :"+count);
             }
-            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+demo+"', '"+labId+"','CML')";
+            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,created) values ('"+demo+"', '"+labId+"','CML',now())";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
             pstmt.close();
@@ -342,7 +342,7 @@ public class ABCDParser {
 
         String sql = "insert into labPatientPhysicianInfo (labReportInfo_id,accession_num,physician_account_num,service_date,patient_first_name,patient_last_name,"
         + " patient_sex,patient_health_num,patient_dob,lab_status,doc_num,doc_name,doc_addr1,doc_addr2,doc_addr3,doc_postal,doc_route,comment1,comment2,patient_phone,"
-        + "doc_phone,collection_date) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        + "doc_phone,collection_date,updateDate) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,id); // location_id
@@ -367,7 +367,7 @@ public class ABCDParser {
             pstmt.setString(20,this.pPhone);
             pstmt.setString(21,this.docPhone);
             pstmt.setString(22,this.collectionDate);
-
+          
             pstmt.executeUpdate();
 
             ResultSet rs = pstmt.getGeneratedKeys();

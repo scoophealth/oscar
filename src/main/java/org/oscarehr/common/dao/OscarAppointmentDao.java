@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.Facility;
@@ -88,6 +89,35 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 		@SuppressWarnings("unchecked")
 		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+	
+	public List<Appointment> getAllByDemographicNoSince(Integer demographicNo,Date lastUpdateDate ) {
+		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = " + demographicNo + " and a.updateDateTime > ? ORDER BY a.id";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, lastUpdateDate);
+
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+	
+	public List<Integer> getAllDemographicNoSince(Date lastUpdateDate, List<Program> programs ) {
+		StringBuilder sb = new StringBuilder();
+    	int i=0;
+    	for(Program p:programs) {
+    		if(i++ > 0)
+    			sb.append(",");
+    		sb.append(p.getId());
+    	}
+		String sql = "select a.demographicNo SELECT a FROM Appointment a WHERE a.updateDateTime > ? and program_id in ("+sb.toString()+") ORDER BY a.id";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, lastUpdateDate);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> rs = query.getResultList();
 
 		return rs;
 	}

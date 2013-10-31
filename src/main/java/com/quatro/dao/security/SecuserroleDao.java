@@ -21,6 +21,7 @@
 
 package com.quatro.dao.security;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -59,7 +60,7 @@ public class SecuserroleDao extends HibernateDaoSupport {
 		try {
 			for(int i =0; i< list.size(); i++){
 				Secuserrole obj = (Secuserrole)list.get(i);
-
+				obj.setLastUpdateDate(new Date());
 				int rowcount = update(obj);
 
 				if(rowcount <= 0){
@@ -77,6 +78,7 @@ public class SecuserroleDao extends HibernateDaoSupport {
 	public void save(Secuserrole transientInstance) {
 		logger.debug("saving Secuserrole instance");
 		try {
+			transientInstance.setLastUpdateDate(new Date());
 			getSession().saveOrUpdate(transientInstance);
 			logger.debug("save successful");
 		} catch (RuntimeException re) {
@@ -89,6 +91,7 @@ public class SecuserroleDao extends HibernateDaoSupport {
 		Secuserrole sur = this.getHibernateTemplate().get(Secuserrole.class, id);
 		if(sur != null) {
 			sur.setRoleName(roleName);
+			sur.setLastUpdateDate(new Date());
 			this.getHibernateTemplate().update(sur);
 		}
 	}
@@ -140,7 +143,7 @@ public class SecuserroleDao extends HibernateDaoSupport {
 	public int update(Secuserrole instance) {
 		logger.debug("Update Secuserrole instance");
 		try {
-			String queryString = "update Secuserrole as model set model.activeyn ='" + instance.getActiveyn() + "'"
+			String queryString = "update Secuserrole as model set model.activeyn ='" + instance.getActiveyn() + "' , lastUpdateDate=now() "
 				+ " where model.providerNo ='" + instance.getProviderNo() + "'"
 				+ " and model.roleName ='" + instance.getRoleName() + "'"
 				+ " and model.orgcd ='" + instance.getOrgcd() + "'";
@@ -291,6 +294,7 @@ public class SecuserroleDao extends HibernateDaoSupport {
 	public Secuserrole merge(Secuserrole detachedInstance) {
 		logger.debug("merging Secuserrole instance");
 		try {
+			detachedInstance.setLastUpdateDate(new Date());
 			Secuserrole result = (Secuserrole) getSession().merge(
 					detachedInstance);
 			logger.debug("merge successful");
@@ -304,6 +308,7 @@ public class SecuserroleDao extends HibernateDaoSupport {
 	public void attachDirty(Secuserrole instance) {
 		logger.debug("attaching dirty Secuserrole instance");
 		try {
+			instance.setLastUpdateDate(new Date());
 			getSession().saveOrUpdate(instance);
 			logger.debug("attach successful");
 		} catch (RuntimeException re) {

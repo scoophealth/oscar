@@ -2,11 +2,10 @@
 <metadata>
   <groupId>org.oscarehr.caisi_integrator</groupId>
   <artifactId>caisi_integrator_client_stubs</artifactId>
-  <version>SNAPSHOT</version>
   <versioning>
     <versions>
       <version>SNAPSHOT</version>
     </versions>
-    <lastUpdated>20120714143403</lastUpdated>
+    <lastUpdated>20131007042144</lastUpdated>
   </versioning>
 </metadata>

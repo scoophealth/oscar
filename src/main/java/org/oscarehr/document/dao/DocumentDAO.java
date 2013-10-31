@@ -59,6 +59,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     }
 
     public void save(Document document){
+    	document.setUpdatedatetime(new Date());
         getHibernateTemplate().saveOrUpdate(document);
     }
 

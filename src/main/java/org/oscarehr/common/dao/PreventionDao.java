@@ -48,7 +48,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	}
 
 	public List<Prevention> findByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
-		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate>=?2");
+		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate>=?2 and deleted='0'");
 		query.setParameter(1, demographicId);
 		query.setParameter(2, dateTime);
 
@@ -57,6 +57,41 @@ public class PreventionDao extends AbstractDao<Prevention> {
 
 		return (results);
 	}
+	
+	/*
+	 * for integrator
+	 */
+	public List<Integer> findDemographicIdsAfterDatetime(Date dateTime) {
+		Query query = entityManager.createQuery("select x.demographicId from Prevention x where lastUpdateDate > ?1");
+		query.setParameter(1, dateTime);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<Prevention> findNotDeletedByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
+		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate> ?2");
+		query.setParameter(1, demographicId);
+		query.setParameter(2, dateTime);
+
+		@SuppressWarnings("unchecked")
+		List<Prevention> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<Integer> findNonDeletedIdsByDemographic(Integer demographicId) {
+		Query query = entityManager.createQuery("select x.id from Prevention x where demographicId=?1 and deleted='0'");
+		query.setParameter(1, demographicId);
+	
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+
+		return (results);
+	}
+	
 	
 	public List<Prevention> findNotDeletedByDemographicId(Integer demographicId) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and deleted=?2");

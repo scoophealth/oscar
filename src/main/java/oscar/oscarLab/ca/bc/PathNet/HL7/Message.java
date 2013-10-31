@@ -271,9 +271,9 @@ public class Message {
                   ResultSet rs2 = DBHandler.GetSQL(sql);
                   if ( rs2.next() ) {
                      demoNo = rs2.getString("demographic_no");
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs2.getString("demographic_no")+"', '"+segmentID+"','BCP')";
+                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,created) values ('"+rs2.getString("demographic_no")+"', '"+segmentID+"','BCP',now())";
                   } else {
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";
+                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,created) values ('0', '"+segmentID+"','BCP',now())";
                   }
                   DBHandler.RunSQL(sql);
                } else {
@@ -286,9 +286,9 @@ public class Message {
                   ResultSet rs3 = DBHandler.GetSQL(sql);
                   if ( rs3.next() ) {
                      demoNo = rs3.getString("demographic_no");
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs3.getString("demographic_no")+"', '"+segmentID+"','BCP')";
+                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,created) values ('"+rs3.getString("demographic_no")+"', '"+segmentID+"','BCP',now())";
                   } else {
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";
+                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,created) values ('0', '"+segmentID+"','BCP',now())";
                   }
                   DBHandler.RunSQL(sql);
                }
@@ -304,7 +304,7 @@ public class Message {
          } catch (Exception e) {
             MiscUtils.getLogger().debug("Error in patientRouteReport:"+e);
             MiscUtils.getLogger().error("Error", e);
-            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";
+            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,created) values ('0', '"+segmentID+"','BCP',now())";
             DBHandler.RunSQL(sql);
          }
       } catch (Exception e) {

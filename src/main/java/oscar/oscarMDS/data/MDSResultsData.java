@@ -26,6 +26,7 @@
 package oscar.oscarMDS.data;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -116,7 +117,7 @@ public class MDSResultsData {
     }
 
 
- public ArrayList<LabResultData> populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+ public ArrayList<LabResultData> populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
         //logger.info("populateCMLResultsData getting called now");
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -129,20 +130,24 @@ public class MDSResultsData {
         String sql = "";
         try {
 
-            if ( demographicNo == null) {
-                 sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num, providerLabRouting.status "
-                        +" from labPatientPhysicianInfo lpp, providerLabRouting "
-                        +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'"
-                        +" AND providerLabRouting.lab_type = 'Epsilon' "
-                        +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
-            } else {
+        	if(labNo != null && labNo.intValue()>0) {
+        		sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num from labPatientPhysicianInfo lpp where lpp.id = " + labNo;
+        	} else {
+	            if ( demographicNo == null) {
+	                 sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num, providerLabRouting.status "
+	                        +" from labPatientPhysicianInfo lpp, providerLabRouting "
+	                        +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'"
+	                        +" AND providerLabRouting.lab_type = 'Epsilon' "
+	                        +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
+	            } else {
+	
+	                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num "
+	                        +" from labPatientPhysicianInfo lpp, patientLabRouting "
+	                        +" where patientLabRouting.lab_type = 'Epsilon' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
+	            }
+        	}
 
-                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num "
-                        +" from labPatientPhysicianInfo lpp, patientLabRouting "
-                        +" where patientLabRouting.lab_type = 'Epsilon' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
-            }
-
-            logger.info(sql);
+            logger.debug(sql);
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                 LabResultData lbData = new LabResultData(LabResultData.CML);
@@ -152,7 +157,12 @@ public class MDSResultsData {
                 lbData.segmentID = oscar.Misc.getString(rs,"id");
 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = oscar.Misc.getString(rs,"status");
+                	try {
+						lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
+					}catch(SQLException e) {
+						//the load by labNo version doesn't care about inbox status.
+						lbData.acknowledgedStatus ="U";
+					}
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
@@ -197,7 +207,7 @@ public class MDSResultsData {
 
 }
 
-    public ArrayList<LabResultData> populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
         //logger.info("populateCMLResultsData getting called now");
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -207,33 +217,32 @@ public class MDSResultsData {
 
 
         labResults =  new ArrayList<LabResultData>();
-        // select lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name), lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status from labPatientPhysicianInfo lpp;
         String sql = "";
         try {
 
-            if ( demographicNo == null) {
-                // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
-                // for the provider number if unable to find correct provider
+        	if(labNo != null && labNo.intValue()>0) {
+        		sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num from labPatientPhysicianInfo lpp where lpp.id = " + labNo;
+        	} else {
+	            if ( demographicNo == null) {
+	                // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+	                // for the provider number if unable to find correct provider
+	
+	              
+	                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num, providerLabRouting.status "
+	                        +" from labPatientPhysicianInfo lpp, providerLabRouting "
+	                        +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'"
+	                        +" AND providerLabRouting.lab_type = 'CML' "
+	                        +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
+	            } else {
+	
+	                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num "
+	                        +" from labPatientPhysicianInfo lpp, patientLabRouting "
+	                        +" where patientLabRouting.lab_type = 'CML' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
+	            }
+        	}
 
-                //sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, providerLabRouting.status "
-                //+" from labPatientPhysicianInfo lpp, providerLabRouting "
-                //+"where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
-                //"AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like  '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' "; //group by mdsMSH.segmentID";
 
-                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num, providerLabRouting.status "
-                        +" from labPatientPhysicianInfo lpp, providerLabRouting "
-                        +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'"
-                        +" AND providerLabRouting.lab_type = 'CML' "
-                        +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
-            } else {
-
-                sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, lpp.accession_num "
-                        +" from labPatientPhysicianInfo lpp, patientLabRouting "
-                        +" where patientLabRouting.lab_type = 'CML' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
-            }
-
-
-            logger.info(sql);
+            logger.debug(sql);
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                 LabResultData lbData = new LabResultData(LabResultData.CML);
@@ -243,7 +252,12 @@ public class MDSResultsData {
                 lbData.segmentID = oscar.Misc.getString(rs, "id");
 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
+                	try {
+						lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
+					}catch(SQLException e) {
+						//the load by labNo version doesn't care about inbox status.
+						lbData.acknowledgedStatus ="U";
+					}
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
@@ -466,7 +480,7 @@ public class MDSResultsData {
     }
     //////
 
-    public ArrayList<LabResultData> populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
 
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -480,27 +494,9 @@ public class MDSResultsData {
 
         try {
 
-
-            if ( demographicNo == null) {
-                // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
-                // for the provider number if unable to find correct provider
-                sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
-                        "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
-                        "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
-                        "FROM " +
-                        "providerLabRouting "+
-                        "LEFT JOIN mdsMSH on providerLabRouting.lab_no = mdsMSH.segmentID "+
-                        "LEFT JOIN mdsPID on providerLabRouting.lab_no = mdsPID.segmentID "+
-                        "LEFT JOIN mdsPV1 on providerLabRouting.lab_no = mdsPV1.segmentID "+
-                        "LEFT JOIN mdsZFR on providerLabRouting.lab_no = mdsZFR.segmentID "+
-                        "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+
-                        "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
-                        "WHERE " +
-                        "providerLabRouting.lab_type = 'MDS' " +
-                        "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"' " +
-                        "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
-            } else {
-                sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, mdsPID.patientName, mdsPID.healthNumber, " +
+        	if(labNo != null && labNo.intValue()>0) {
+        		//i know this SQL is kinda dumb, but really, I'm not messing with all the joins..just adding a condition on the primaryKey of mdsMSH
+        		sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, mdsPID.patientName, mdsPID.healthNumber, " +
                         "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
                         "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
                         "FROM patientLabRouting "+
@@ -512,11 +508,46 @@ public class MDSResultsData {
                         "LEFT JOIN mdsZRG on patientLabRouting.lab_no = mdsZRG.segmentID "+
                         "WHERE " +
                         "patientLabRouting.lab_type = 'MDS' " +
-                        "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
+                        "AND patientLabRouting.demographic_no='"+demographicNo+"' and mdsMSH.segmentID="+labNo+" group by mdsMSH.segmentID";
+        	} else {
 
-            }
-
-            logger.info("sql "+sql);
+	            if ( demographicNo == null) {
+	                // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+	                // for the provider number if unable to find correct provider
+	                sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
+	                        "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+	                        "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+	                        "FROM " +
+	                        "providerLabRouting "+
+	                        "LEFT JOIN mdsMSH on providerLabRouting.lab_no = mdsMSH.segmentID "+
+	                        "LEFT JOIN mdsPID on providerLabRouting.lab_no = mdsPID.segmentID "+
+	                        "LEFT JOIN mdsPV1 on providerLabRouting.lab_no = mdsPV1.segmentID "+
+	                        "LEFT JOIN mdsZFR on providerLabRouting.lab_no = mdsZFR.segmentID "+
+	                        "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+
+	                        "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
+	                        "WHERE " +
+	                        "providerLabRouting.lab_type = 'MDS' " +
+	                        "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"' " +
+	                        "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
+	            } else {
+	                sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, mdsPID.patientName, mdsPID.healthNumber, " +
+	                        "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+	                        "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+	                        "FROM patientLabRouting "+
+	                        "LEFT JOIN mdsMSH on patientLabRouting.lab_no = mdsMSH.segmentID "+
+	                        "LEFT JOIN mdsPID on patientLabRouting.lab_no = mdsPID.segmentID "+
+	                        "LEFT JOIN mdsPV1 on patientLabRouting.lab_no = mdsPV1.segmentID "+
+	                        "LEFT JOIN mdsZFR on patientLabRouting.lab_no = mdsZFR.segmentID "+
+	                        "LEFT JOIN mdsOBR on patientLabRouting.lab_no = mdsOBR.segmentID "+
+	                        "LEFT JOIN mdsZRG on patientLabRouting.lab_no = mdsZRG.segmentID "+
+	                        "WHERE " +
+	                        "patientLabRouting.lab_type = 'MDS' " +
+	                        "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
+	
+	            }
+        	}
+        	
+            logger.debug("sql "+sql);
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                 LabResultData lData = new LabResultData(LabResultData.MDS);
@@ -809,7 +840,7 @@ public class MDSResultsData {
             result = DBHandler.RunSQL(sql);
 
             // add new entries
-            sql = "insert into patientLabRouting (lab_no, demographic_no) values ('"+labNo+"', '"+demographicNo+"')";
+            sql = "insert into patientLabRouting (lab_no, demographic_no,created) values ('"+labNo+"', '"+demographicNo+"',now())";
             result = DBHandler.RunSQL(sql);
             return result;
         }catch(Exception e){
