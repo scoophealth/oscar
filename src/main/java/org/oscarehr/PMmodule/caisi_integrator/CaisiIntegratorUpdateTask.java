@@ -893,9 +893,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		List<CaseManagementNote> localNotes = caseManagementNoteDAO.getNotesByDemographic(demographicId.toString());
 
-		String issueType = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
-		if (issueType != null) issueType = issueType.toUpperCase();
-
 		StringBuilder sentIds = new StringBuilder();
 
 		for (CaseManagementNote localNote : localNotes) {	
@@ -906,7 +903,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				// note hasn't changed since last sync
 				if (localNote.getUpdate_date() != null && localNote.getUpdate_date().before(lastDataUpdated)) continue;
 
-				CachedDemographicNote noteToSend = makeRemoteNote(localNote, issueType);
+				CachedDemographicNote noteToSend = makeRemoteNote(localNote);
 				ArrayList<CachedDemographicNote> notesToSend = new ArrayList<CachedDemographicNote>();
 				notesToSend.add(noteToSend);
 				service.setCachedDemographicNotes(notesToSend);
@@ -933,7 +930,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				// if it's locked or if it's not in this facility ignore it.
 				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
 
-				CachedDemographicNote noteToSend = makeRemoteNote(localNote, issueType);
+				CachedDemographicNote noteToSend = makeRemoteNote(localNote);
 				ArrayList<CachedDemographicNote> notesToSend = new ArrayList<CachedDemographicNote>();
 				notesToSend.add(noteToSend);
 				service.setCachedDemographicNotes(notesToSend);
@@ -951,7 +948,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		throttleAndChecks();
 	}
 
-	private CachedDemographicNote makeRemoteNote(CaseManagementNote localNote, String issueType) {
+	private CachedDemographicNote makeRemoteNote(CaseManagementNote localNote) {
 
 		CachedDemographicNote note = new CachedDemographicNote();
 
@@ -971,12 +968,32 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		List<NoteIssue> issues = note.getIssues();
 		List<CaseManagementIssue> localIssues = caseManagementIssueNotesDao.getNoteIssues(localNote.getId().intValue());
+		String issueCodeType;
 		for (CaseManagementIssue caseManagementIssue : localIssues) {
 			long issueId = caseManagementIssue.getIssue_id();
 			Issue localIssue = issueDao.getIssue(issueId);
+			issueCodeType = localIssue.getType();
 
 			NoteIssue noteIssue = new NoteIssue();
-			if ("ICD10".equalsIgnoreCase(issueType)) noteIssue.setCodeType(CodeType.ICD_10); // temporary hard code hack till we sort this out
+			if( Issue.CUSTOM_ISSUE.equalsIgnoreCase(issueCodeType) ) { 
+				noteIssue.setCodeType(CodeType.CUSTOM_ISSUE);
+			}
+			else if( Issue.ICD_10.equalsIgnoreCase(issueCodeType) ) { 
+				noteIssue.setCodeType(CodeType.ICD_10);
+			}
+			else if( Issue.ICD_9.equalsIgnoreCase(issueCodeType) ) {
+				noteIssue.setCodeType(CodeType.ICD_9);
+			}
+			else if( Issue.SNOMED.equalsIgnoreCase(issueCodeType) ) {
+				noteIssue.setCodeType(CodeType.SNOMED);
+			}
+			else if( Issue.SYSTEM.equalsIgnoreCase(issueCodeType) ) {
+				noteIssue.setCodeType(CodeType.SYSTEM);
+			}
+			else {
+				continue;
+			}
+						
 			noteIssue.setIssueCode(localIssue.getCode());
 			issues.add(noteIssue);
 		}
