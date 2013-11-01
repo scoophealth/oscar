@@ -29,11 +29,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -143,7 +143,7 @@ public class BORN18MFormToXML {
 		Demographic demographic = demographicDao.getDemographic(demographicNo);
 		if (StringUtils.filled(demographic.getFirstName())) patientInfo.setFirstName(demographic.getFirstName());
 		if (StringUtils.filled(demographic.getLastName())) patientInfo.setLastName(demographic.getLastName());
-		if (demographic.getBirthDay()!=null) patientInfo.setDOB(demographic.getBirthDay());
+		if (demographic.getBirthDay()!=null) patientInfo.setDOB(new XmlCalendar(demographic.getBirthDayAsString()));
 		
 		if (StringUtils.filled(demographic.getChartNo())) patientInfo.setChartNumber(demographic.getChartNo());
 		else patientInfo.setChartNumber("0");
@@ -186,9 +186,9 @@ public class BORN18MFormToXML {
 			else patientInfo.setGender(Gender.U);
 		}
 		
-		patientInfo.setProviderNumber(demographic.getProviderNo());
 		Provider provider = providerDao.getProvider(demographic.getProviderNo());
 		if (provider!=null && StringUtils.filled(provider.getPractitionerNo())) {
+			patientInfo.setProviderNumber(demographic.getProviderNo());
 			patientInfo.setCPSONumber(provider.getPractitionerNo());
 		}
 	}
@@ -222,7 +222,7 @@ public class BORN18MFormToXML {
 		}
 		if (riskFactors!=null) {
 			if (riskFactors.length()>250) riskFactors = riskFactors.substring(0, 250);
-			patientInfo.setPartProblemsRiskFactor(riskFactors);
+			patientInfo.setPastProblemsRiskFactor(riskFactors);
 		}
 	}
 	
@@ -341,8 +341,8 @@ public class BORN18MFormToXML {
 			else if (name.equals("dental_18m_x")) rbrm18.setEducationAdviceOtherDentalCare(2);
 			else if (name.equals("reading_18m_o")) rbrm18.setEducationAdviceOtherEncourageReading(1);
 			else if (name.equals("reading_18m_x")) rbrm18.setEducationAdviceOtherEncourageReading(2);
-			else if (name.equals("socializing_18m_o")) rbrm18.setEducationAdviceOtherSocializin(1);
-			else if (name.equals("socializing_18m_x")) rbrm18.setEducationAdviceOtherSocializin(2);
+			else if (name.equals("socializing_18m_o")) rbrm18.setEducationAdviceOtherSocializing(1);
+			else if (name.equals("socializing_18m_x")) rbrm18.setEducationAdviceOtherSocializing(2);
 			else if (name.equals("toiletlearning_18m_o")) rbrm18.setEducationAdviceOtherToiletLearning(1);
 			else if (name.equals("toiletlearning_18m_x")) rbrm18.setEducationAdviceOtherToiletLearning(2);
 			else if (name.equals("weanpacifier_18m_o")) rbrm18.setEducationAdviceOtherWeanFromPacifier(1);
@@ -500,14 +500,17 @@ public class BORN18MFormToXML {
 		return dateToCal(formDateTime);
 	}
 	
-	private Calendar dateToCal(Date d) {
-		if (d==null) return null;
-		
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(d);
-		
-		return cal;
-	}
+	private Calendar dateToCal(Date inDate) {
+		String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
+		String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");
+		try {
+			XmlCalendar x = new XmlCalendar(date+"T"+time);
+			return x;
+		} catch (Exception ex) {
+			XmlCalendar x = new XmlCalendar("0001-01-01T00:00:00");
+			return x;
+		}
+    }
 	
 	private Date stringToDate(String date) {
 		return UtilDateUtilities.StringToDate(date, "yyyy-MM-dd");
