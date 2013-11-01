@@ -260,7 +260,7 @@
     			</simpleType>
 			</element>
 			<element name="ResidentCountryProvince" type="tns:CountryProvince" minOccurs="0"></element>
-			<element name="PartProblemsRiskFactor" type="tns:string250" minOccurs="0"></element>
+			<element name="PastProblemsRiskFactor" type="tns:string250" minOccurs="0"></element>
 			<element name="FamilyHistory" type="tns:string250" minOccurs="0"></element>
 			<element name="GestationalAge" minOccurs="0">
 				<simpleType>
@@ -795,7 +795,7 @@
 			<element name="EducationAdviceBehaviourParentChildInteraction" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceFamilyParentalFatigueStress" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceFamilyHighRiskChildren" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
-			<element name="EducationAdviceOtherSocializin" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceOtherSocializing" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceOtherDentalCare" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceOtherToiletLearning" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceOtherWeanFromPacifier" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
