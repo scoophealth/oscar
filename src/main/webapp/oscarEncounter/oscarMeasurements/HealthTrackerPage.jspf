@@ -962,7 +962,7 @@ if(!btnLabel.equals("PHV")){
 		
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
 		<span class="DoNotPrint" style="padding-left:10px;" id="edit-flowsheet">
-		<i class="icon-pencil"></i> <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" title="Edit Flowsheet">Edit</a>   
+		<i class="icon-pencil"></i> <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&ht" title="Edit Flowsheet">Edit</a>   
 		</span>
 		</security:oscarSec>
 		
@@ -1003,7 +1003,7 @@ if(!btnLabel.equals("PHV")){
 	
 		<span class="DoNotPrint" style="padding-left:10px;" id="flowsheet-print">
 	 	<i class="icon-print"></i> 
-	 	<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet">Custom Print</a>
+	 	<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&ht" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet">Custom Print</a>
 	 	</span>	
 	 	
 		<!-- 
@@ -1114,8 +1114,6 @@ if(!btnLabel.equals("PHV")){
     for (String measure:measurements){
         Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
-
-        
         
         String hidden= "";
         if (item.isHide() || mi.getHidden(measure)){
