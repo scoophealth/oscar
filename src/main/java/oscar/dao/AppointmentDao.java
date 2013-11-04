@@ -153,7 +153,7 @@ public class AppointmentDao extends OscarSuperDao {
             
             {"search_appt_data", "select app.*, prov.first_name, prov.last_name, prov.ohip_no, adm.program_id as adm_program_id from provider prov, appointment app left join admission adm on app.demographic_no = adm.client_id where app.provider_no = prov.provider_no and app.provider_no=? and app.appointment_date=? and app.start_time=? and app.end_time=? and app.createdatetime=? and app.creator=? and app.demographic_no=? order by app.appointment_no desc limit 1"},
 
-            {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id,urgency) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)" },
+            {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id,urgency,updatedatetime) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)" },
             {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
             {"appendremarks", "update appointment set remarks=CONCAT(remarks,?) where appointment_no=?"},
             {"updatestatusc", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=?"},
