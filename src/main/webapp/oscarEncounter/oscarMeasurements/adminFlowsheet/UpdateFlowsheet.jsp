@@ -281,8 +281,6 @@ div.recommendations li{
 </tr>
 <tr>
 <td class="MainTableLeftColumn" valign="top">
-   sdfsdf
-
 
 </td>
 
@@ -302,7 +300,7 @@ div.recommendations li{
                 Graphable: <select name="graphable"   >
                     <option  value="yes" <%=sel(""+h2.get("graphable"),"yes")%> >YES</option>
                     <option  value="no"  <%=sel(""+h2.get("graphable"),"no")%> >NO</option>
-                </select>><br>
+                </select><br>
                 Value Name:<input type="text" name="value_name"   value="<%=h2.get("value_name")%>"    /><br>
                 <div>
                     <h3>Rule</h3>
@@ -476,7 +474,7 @@ div.recommendations li{
                     </div>
                 </div>
 
-                <input type="submit" value="Update" />
+               <input type="button" value="Cancel" onclick="javascript:history.go(-1)">  <input type="submit" value="Update">
             </fieldset>
         </form>
 
