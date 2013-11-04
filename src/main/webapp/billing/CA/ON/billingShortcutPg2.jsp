@@ -465,11 +465,11 @@
 <script language="JavaScript">
 	<!--
 	    function onSave() {
-	        //document.forms[0].submit.value="save";
+	        var submitTypeString = document.forms[0].submitType.value;
 	        var ret = true;
 	        if(ret==true)
 	        {
-	            ret = confirm("Are you sure you want to do the action?");
+	            ret = confirm("Are you sure you want to " + submitTypeString + "?");
 	        }
 	        return ret;
 	    }
@@ -481,8 +481,8 @@
 
 <table border="0" cellpadding="0" cellspacing="2" width="100%"
 	bgcolor="#CCCCFF">
-	<form method="post" name="titlesearch" action="billingShortcutPg2.jsp"
-		onsubmit="return onSave();">
+	<form method="post" name="titlesearch" action="billingShortcutPg2.jsp" onsubmit="return onSave();">
+	<input type="hidden" value="" name="submitType" />
 	<tr>
 		<td>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -592,11 +592,10 @@
 
 			<tr>
 
-				<td colspan='2' align='center' bgcolor="silver"><input
-					type="submit" name="button" value="Back to Edit"
-					style="width: 120px;" /> <input type="submit" name="submit"
-					value="Save" style="width: 120px;" /> <input type="submit"
-					name="submit" value="Save and Back" style="width: 120px;" /></td>
+				<td colspan='2' align='center' bgcolor="silver">
+				<input type="submit" name="button" value="Back to Edit"	onclick="document.forms[0].submitType.value='Back to Edit'"  style="width: 120px;" /> 
+				<input type="submit" name="button" value="Save" onclick="document.forms[0].submitType.value='Save'"style="width: 120px;" /> 
+				<input type="submit" name="button" value="Save and Back" onclick="document.forms[0].submitType.value='Save and Back'"style="width: 120px;" /></td>
 			</tr>
 		</table>
 		</td>
