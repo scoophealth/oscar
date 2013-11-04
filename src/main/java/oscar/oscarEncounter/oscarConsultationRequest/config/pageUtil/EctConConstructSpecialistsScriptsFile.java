@@ -27,7 +27,6 @@ package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -108,31 +107,25 @@ public class EctConConstructSpecialistsScriptsFile {
 	public void makeString(Locale locale) {
 		serviceId = new Vector<String>();
 		serviceDesc = new Vector<String>();
-		ArrayList<String> serviceActive = new ArrayList<String>();
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
 		StringBuilder stringBuffer = new StringBuilder();
 		stringBuffer.append("function makeSpecialistslist(dec){\n");
 		stringBuffer.append(" if(dec=='1') \n");
-		stringBuffer.append("{K(-1,\"----" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optChooseServ") + "-------\",\"1\");D(-1,\"--------" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optChooseSpec") + "-----\");}\n");
+		stringBuffer.append("{K(-1,\"----" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optChooseServ") + "-------\");D(-1,\"--------" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optChooseSpec") + "-----\");}\n");
 		stringBuffer.append("else\n");
-		stringBuffer.append("{K(-1,\"----" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllServices") + "-------\",\"1\");D(-1,\"--------" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllSpecs") + "-----\");}\n");
+		stringBuffer.append("{K(-1,\"----" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllServices") + "-------\");D(-1,\"--------" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllSpecs") + "-----\");}\n");
 	
-		//List<ConsultationServices> services = consultationServiceDao.findActive();
-		
-		List<ConsultationServices> services = consultationServiceDao.findAll();
-		
+		List<ConsultationServices> services = consultationServiceDao.findActive();
 		for (ConsultationServices cs : services) {
 			serviceId.add(String.valueOf(cs.getServiceId()));
 			serviceDesc.add(cs.getServiceDesc());
-			serviceActive.add(cs.getActive());
 		}
 
 		ServiceSpecialistsDao dao = SpringUtils.getBean(ServiceSpecialistsDao.class);
 		for (int i = 0; i < serviceId.size(); i++) {
 			String servId = serviceId.elementAt(i);
 			String servDesc = serviceDesc.elementAt(i);
-			String servActive = serviceActive.get(i);
-			stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder("K(")).append(servId).append(",\"").append(servDesc).append("\",\"").append(servActive).append("\");\n"))));
+			stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder("K(")).append(servId).append(",\"").append(servDesc).append("\");\n"))));
 
 			for (Object[] o : dao.findSpecialists(ConversionUtils.fromIntString(servId))) {
 				ServiceSpecialists ser = (ServiceSpecialists) o[0];
