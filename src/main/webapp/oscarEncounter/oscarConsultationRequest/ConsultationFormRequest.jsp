@@ -279,10 +279,6 @@ text-align: right;
 
 var servicesName = new Object();   		// used as a cross reference table for name and number
 var services = new Array();				// the following are used as a 2D table for makes and models
-
-var servicesNameInactive = new Object();   		// used as a cross reference table for name and number for Inactive services
-var servicesInactive = new Array();				// the following are used as a 2D table for makes and models for Inactive services
-
 var specialists = new Array();
 var specialistFaxNumber = "";
 <%oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData configScript;
@@ -298,16 +294,11 @@ function initMaster() {
 /////////////////////////////////////////////////////////////////////
 // create car make objects and fill arrays
 //==========
-function K( serviceNumber, service, active  ){
+function K( serviceNumber, service ){
 
 	//servicesName[service] = new ServicesName(serviceNumber);
-    
-    if (active == "1")	{
-		servicesName[service] = serviceNumber;		
-    } else {
-    	servicesNameInactive[service] = serviceNumber;
-    }	
-	services[serviceNumber] = new Service( );	
+        servicesName[service] = serviceNumber;
+	services[serviceNumber] = new Service( );
 }
 //-------------------------------------------------------------------
 
@@ -525,15 +516,6 @@ function initService(ser){
 	var isSel = 0;
 	var strSer = new String(ser);
 
-    $H(servicesNameInactive).each(function(pair2){
-        var pair2Key = pair2.key;
-        var pair2Value = new String(pair2.value);
-    	
-    	if( pair2.value == strSer ) {
-    		servicesName[pair2.key] = pair2.value;
-        }	    	
-   });
-	
         $H(servicesName).each(function(pair){
               var opt = new Option( pair.key, pair.value );
               if( pair.value == strSer ) {
