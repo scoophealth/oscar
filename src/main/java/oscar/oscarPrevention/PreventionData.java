@@ -474,7 +474,6 @@ public class PreventionData {
 				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
 				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd");
 
-
 				addToHashIfNotNull(h, "id", prevention.getId().toString());
 				addToHashIfNotNull(h, "demographicNo", prevention.getDemographicId().toString());
 				addToHashIfNotNull(h, "provider_no", prevention.getProviderNo());
@@ -488,42 +487,45 @@ public class PreventionData {
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "never", prevention.isNever()?"1":"0");
 
-				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate + "\n";
+				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				Map<String,String> ext = getPreventionKeyValues(prevention.getId().toString());
-				if (ext.containsKey("result")) {
-					summary += "Result: " + ext.get("result");
+				
+				if (ext.containsKey("result")) { //This is a preventive Test
+					addToHashIfNotNull(h, "result",  ext.get("result"));
+					summary += "\nResult: " + ext.get("result");
 					if (ext.containsKey("reason") && !ext.get("reason").equals("")) {
+						addToHashIfNotNull(h, "reason",  ext.get("reason"));
 						summary += "\nReason: " + ext.get("reason");
 					}
-				} else {
+				} else { //This is an immunization
 					if (ext.containsKey("name") && !ext.get("name").equals("")) {
 						addToHashIfNotNull(h, "name",  ext.get("name"));
-						summary += "Name: " + ext.get("name") + "\n";
+						summary += "\nName: " + ext.get("name");
 					}
 					if (ext.containsKey("location") && !ext.get("location").equals("")) {
 						addToHashIfNotNull(h, "location",  ext.get("location"));
-						summary += "Location: " + ext.get("location") + "\n";
+						summary += "\nLocation: " + ext.get("location");
 					}
 					if (ext.containsKey("route") && !ext.get("route").equals("")) {
 						addToHashIfNotNull(h, "route",  ext.get("route"));
-						summary += "Route: " + ext.get("route") + "\n";
+						summary += "\nRoute: " + ext.get("route");
 					}
 					if (ext.containsKey("dose") && !ext.get("dose").equals("")) {
 						addToHashIfNotNull(h, "dose",  ext.get("dose"));
-						summary += "Dose: " + ext.get("dose") + "\n";
+						summary += "\nDose: " + ext.get("dose");
 					}
 					if (ext.containsKey("lot") && !ext.get("lot").equals("")) {
 						addToHashIfNotNull(h, "lot",  ext.get("lot"));
-						summary += "Lot: " + ext.get("lot") + "\n";
+						summary += "\nLot: " + ext.get("lot");
 					}
 					if (ext.containsKey("manufacture") && !ext.get("manufacture").equals("")) {
 						addToHashIfNotNull(h, "manufacture",  ext.get("manufacture"));
-						summary += "Manufacturer: " + ext.get("manufacture") + "\n";
+						summary += "\nManufacturer: " + ext.get("manufacture");
 					}
-					if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
-						addToHashIfNotNull(h, "comments",  ext.get("comments"));
-						summary += "Comments: " + ext.get("comments");
-					}
+				}
+				if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
+					addToHashIfNotNull(h, "comments",  ext.get("comments"));
+					summary += "\nComments: " + ext.get("comments");
 				}
 				addToHashIfNotNull(h, "summary", summary);
 				log.debug("1" + h.get("preventionType") + " " + h.size());
