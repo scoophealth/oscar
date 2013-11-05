@@ -23,6 +23,9 @@
  */
 package org.oscarehr.renal;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "PreImplementationReport")
 public class ReportDataContainer {
 
 	private int totalDiabetic;

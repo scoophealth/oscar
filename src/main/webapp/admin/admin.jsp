@@ -539,7 +539,7 @@ div.logoutBox {
 				</a>
 			</li>	
 			<li>
-				<a href="#" onclick='popupPage(550,800,&quot;<html:rewrite page="/renal/preImplementationReport.jsp"/>&quot;);return false;'>
+				<a href="#" onclick='popupPage(550,800,&quot;<html:rewrite page="/renal/preImplementationSubmit.jsp"/>&quot;);return false;'>
 					Pre-Implementation Report
 				</a>
 			</li>
