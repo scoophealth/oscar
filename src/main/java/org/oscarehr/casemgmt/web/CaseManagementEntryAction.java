@@ -623,7 +623,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		
 		casemgmtNoteLock.setIpAddress(request.getRemoteAddr());
 		casemgmtNoteLock.setSessionId(request.getRequestedSessionId());
-		logger.info("UPDATING LOCK SESSION " + casemgmtNoteLock.getSessionId() + " LOCK IP " + casemgmtNoteLock.getIpAddress());
+		logger.info("UPDATING LOCK DEMO " + demoNo + " SESSION " + casemgmtNoteLock.getSessionId() + " LOCK IP " + casemgmtNoteLock.getIpAddress());
 		casemgmtNoteLockDao.merge(casemgmtNoteLock);
 		
 		session.setAttribute("casemgmtNoteLock"+demoNo, casemgmtNoteLock);
@@ -1244,23 +1244,24 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 		
 		//compare locks and see if they are the same
-		CasemgmtNoteLock casemgmtNoteLockSession = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demo);
-		
-		if(casemgmtNoteLockSession == null) {
-			return -2;
-		}
+		CasemgmtNoteLock casemgmtNoteLockSession = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demo);				
 		
 		try {
+			
+			if(casemgmtNoteLockSession == null) {
+				throw new Exception("SESSION CASEMANAGEMENT NOTE LOCK OBJECT IS NULL");
+			}
+			
 			CasemgmtNoteLock casemgmtNoteLock = casemgmtNoteLockDao.find(casemgmtNoteLockSession.getId());
 			//if other window has acquired lock we reject save									
 			if( !casemgmtNoteLock.getSessionId().equals(casemgmtNoteLockSession.getSessionId()) || !request.getRequestedSessionId().equals(casemgmtNoteLockSession.getSessionId()) ) {
-				logger.info("DO NOT HAVE LOCK TO CONTINUE SAVING LOCAL SESSION " + request.getRequestedSessionId() + " LOCAL IP " + request.getRemoteAddr() + " LOCK SESSION " + casemgmtNoteLockSession.getSessionId() + " LOCK IP " + casemgmtNoteLockSession.getIpAddress());
+				logger.info("DO NOT HAVE LOCK FOR " + demo + " PROVIDER " + providerNo + " CONTINUE SAVING LOCAL SESSION " + request.getRequestedSessionId() + " LOCAL IP " + request.getRemoteAddr() + " LOCK SESSION " + casemgmtNoteLockSession.getSessionId() + " LOCK IP " + casemgmtNoteLockSession.getIpAddress());
 				return -1L;
 			}
 		}
 		catch(Exception e ) {
 			//Exception thrown if other window has saved and exited so lock is gone
-			logger.error("Lock not found", e);
+			logger.error("Lock not found for " + demo + " provider " + providerNo + " IP " + request.getRemoteAddr(), e);
 			return -1L;
 		}
 				
@@ -2157,11 +2158,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		saveMessages(request, messages);
 				
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;	
-		Long noteId = noteSave(cform, request);
-		if (noteId == -2){
-			return mapping.findForward("windowClose");
-		}
+		Long noteId = noteSave(cform, request);		
 		session.removeAttribute("casemgmtNoteLock"+demoNo);
+		
 		if (noteId == -1) {
 			return mapping.findForward("windowCloseError");
 		}
