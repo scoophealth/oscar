@@ -399,13 +399,13 @@
                 <ap-output>${fax}</ap-output>
 	</databaseap>
 	<databaseap>
-		<ap-name>bc_referral_no</ap-name>
-		<ap-sql>SELECT billingreferral.referral_no
+		<ap-name>bc_referral_name</ap-name>
+		<ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
 				FROM billingreferral, demographic
 				WHERE demographic.demographic_no=${demographic}
 				AND LENGTH(billingreferral.referral_no) > 0
 				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-		<ap-output>${referral_no}</ap-output>
+		<ap-output>${last_name}, ${first_name}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>bc_referral_address</ap-name>
