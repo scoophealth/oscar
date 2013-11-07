@@ -799,7 +799,12 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
     </tr>
-        
+     <tr>
+	<td width="2"><%=j%><%j++;%></td>
+	<td width="1"></td>
+	<td width="300"><a title="Report that is based off of a Hamilton Public Health eForm for One Time Consults" href="../oscarReport/CDSOneTimeConsultReport.jsp" target="_blank"><bean:message key="report.reportindex.btnCDSOneTimeConsultReport"/></a></td>
+
+     </tr>   
      <tr></tr>  
      <tr></tr>
      
