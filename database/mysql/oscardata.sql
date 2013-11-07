@@ -2614,7 +2614,7 @@ INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, c
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Therapeutic Abortion Follow-Up', 'Therapeutic Abortion Follow-Up', 16, 1, 'oscar', CURRENT_TIMESTAMP);
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Others'						 , 'Others'						   , 99, 1, 'oscar', CURRENT_TIMESTAMP);
 
-insert into issue (code,description,role,update_date,type) values ('TicklerNote','Tickler Note', 'nurse',now(),'system');
+insert into issue (code,description,role,update_date,type,sortOrderId) values ('TicklerNote','Tickler Note', 'nurse',now(),'system', 0);
 
 insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('lab','Hematology','Hema',NULL);
 insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('lab','Biochemistry','Bio',NULL);
