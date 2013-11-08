@@ -48,8 +48,10 @@ CDA Header
 	<templateId root="2.16.840.1.113883.3.1818.10.1.3"/>
 	<!-- Conforms to the BC PITO EMR Generic Structured Referal specification -->
 	<templateId root="2.16.840.1.113883.3.1818.10.1.6"/>
-	<id extension="$demographic.demographicNo" root="2.16.840.1.113883.3.933"/>
-	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
+	<id root="$randDocGUID"/>
+	<code code="11503-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" codeSystemVersion="2.44" displayName="Medical Records">
+		<originalText representation="TXT" mediaType="text/plain"/>
+	</code>
 	<title>PITO EMR-2-EMR Record of $demographic.firstName $demographic.lastName</title>
 	<effectiveTime value="$dateTool.get('yyyyMMddHHmm')"/>
 	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
@@ -82,7 +84,7 @@ CDA Header
 			<telecom value="tel: $demographic.phone2" use="HP"/>
 #end
 			<patient>
-				<name>
+				<name use="L">
 					<given>$demographic.firstName</given>
 					<family>$demographic.lastName</family>
 				</name>
