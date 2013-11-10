@@ -24,6 +24,7 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -153,10 +154,12 @@ MeasurementMapConfig mmc = new MeasurementMapConfig();
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" class="Cell" align="center">NOTE: <a
-					href="javascript:newWindow('http://www.regenstrief.org/medinformatics/loinc/relma','RELMA')">It
-				is suggested that you use the RELMA application to help determine
-				correct loinc codes.</a></td>
+				<td colspan="2" class="Cell" align="center">NOTE: It
+				is suggested that you refer to approrpiate referece material to determine
+				correct loinc codes.
+				<span class="HelpAboutLogout"><oscar:help keywords="&Title=Measurements+Admin&portal_type%3Alist=Document" key="app.top1" style="color:blue; font-size:10px;font-style:normal;"/>&nbsp;
+				</span>
+				</td>
 			</tr>
 		</table>
 		</center>
