@@ -817,16 +817,34 @@
           		</resource>
         	</resources>	
 	<plugins>
-	<plugin>
-        	<groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                	<execution>
-                        	<phase>validate</phase>
-                            	<goals>
-                              		<goal>create</goal>
-                            	</goals>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <nonFilteredFileExtensions>
+            <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+            <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+            <nonFilteredFileExtension>xls</nonFilteredFileExtension>
+            <nonFilteredFileExtension>dat</nonFilteredFileExtension>
+            <nonFilteredFileExtension>xsd</nonFilteredFileExtension>
+            <nonFilteredFileExtension>jasper</nonFilteredFileExtension>
+            <nonFilteredFileExtension>doc</nonFilteredFileExtension>
+          </nonFilteredFileExtensions>
+        </configuration>
+      </plugin>
+
+		 <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>1.1</version>
+                      <executions>
+                        <execution>
+                          <phase>validate</phase>
+                            <goals>
+                              <goal>create</goal>
+                            </goals>
                         </execution>
                      </executions>
                  </plugin>
@@ -1043,6 +1061,7 @@
                            			<filtering>true</filtering>
                          		</webResource>
                        		</webResources>
+
 			    </configuration>
 			</plugin>	
 
