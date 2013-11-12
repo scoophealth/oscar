@@ -97,7 +97,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
         for(Demographic demo :list){
             HashMap<String,String> h = new HashMap<String,String>();
              h.put("fomattedDob",demo.getFormattedDob());
-             h.put("formattedName",StringEscapeUtils.escapeJavaScript(demo.getFormattedName()));
+             h.put("formattedName",StringEscapeUtils.escapeJava(demo.getFormattedName().replaceAll("\"", "\\\"")));
              h.put("demographicNo",String.valueOf(demo.getDemographicNo()));
              h.put("status",demo.getPatientStatus());
              
