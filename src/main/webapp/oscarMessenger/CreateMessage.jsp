@@ -56,16 +56,26 @@ boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 
 String demographic_no = (String) request.getAttribute("demographic_no");
+
 String subjectText = request.getParameter("subject");
-if (subjectText != null) {
+if(subjectText == null) {
+	if (request.getAttribute("ReSubject") != null){
+		bean.setSubject((String)request.getAttribute("ReSubject"));
+	}
+}
+else if (subjectText != null) {
 	bean.setSubject(subjectText);
 }
 
 String messageText = request.getParameter("message");
-if (messageText != null){
+if(messageText == null) {
+	if (request.getAttribute("ReText") != null){
+		bean.setMessage((String)request.getAttribute("ReText"));
+	}
+}
+else if (messageText != null) {
 	bean.setMessage(messageText);
 }
-
 %>
 
 
@@ -549,7 +559,10 @@ function popupAttachDemo(demographic){ // open a new popup window
 							<br>
 							<bean:message key="oscarMessenger.CreateMessage.msgAttachments" />
 
-							<% }
+							<% 
+							bean.setSubject(null);
+							bean.setMessage(null);
+							}
 
                                                 %>
 							</td>
