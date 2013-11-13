@@ -56,9 +56,9 @@ public class E2ESchedulerJob extends TimerTask {
 	@Override
 	public void run() {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+		Integer success = 0;
 
 		try {
-			Integer success = 0;
 			List<Integer> ids = demographicDao.getActiveDemographicIds();
 
 			logger.info("Starting E2E export job\nE2E Target URL: ".concat(e2eUrl).concat("\n").concat(Integer.toString(ids.size())).concat(" records pending"));
@@ -68,6 +68,7 @@ public class E2ESchedulerJob extends TimerTask {
 				E2EVelocityTemplate t = new E2EVelocityTemplate();
 
 				// Create and load Patient data
+				logger.info("[Demo: ".concat(id.toString()).concat("]"));
 				E2EPatientExport patient = new E2EPatientExport();
 				patient.setExAllTrue();
 
@@ -117,6 +118,7 @@ public class E2ESchedulerJob extends TimerTask {
 			logger.info("Done E2E export job\n".concat(success.toString()).concat(" records processed"));
 		} catch(Throwable e) {
 			logger.error("Error", e);
+			logger.info("E2E export job aborted\n".concat(success.toString()).concat(" records processed"));
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
 		}
