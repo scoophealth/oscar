@@ -123,7 +123,7 @@ public abstract class PatientExport {
 				// ignore
 			}
 		}
-		log.warn("stringToDate - Can't parse ".concat(rhs));
+		if(rhs != null && !rhs.isEmpty()) log.warn("stringToDate - Can't parse ".concat(rhs));
 		return new Date();
 	}
 

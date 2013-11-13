@@ -99,35 +99,65 @@ public class E2EPatientExport extends PatientExport {
 		this.authorId = demographic.getProviderNo();
 
 		if(exAllergiesAndAdverseReactions) {
-			this.allergies = allergyDao.findAllergies(demographicNo);
+			try {
+				this.allergies = allergyDao.findAllergies(demographicNo);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Allergies");
+				this.allergies = null;
+			}
 		}
 
 		if(exMedicationsAndTreatments) {
-			this.drugs = drugDao.findByDemographicId(demographicNo);
+			try {
+				this.drugs = drugDao.findByDemographicId(demographicNo);
 
-			// Sort drugs by reverse chronological order & group by DIN by sorting
-			Collections.reverse(drugs);
-			Collections.sort(drugs, new sortByDin());
+				// Sort drugs by reverse chronological order & group by DIN by sorting
+				Collections.reverse(drugs);
+				Collections.sort(drugs, new sortByDin());
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Medications");
+				this.drugs = null;
+			}
 		}
 
 		if(exImmunizations) {
-			this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+			try {
+				this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Immunizations");
+				this.preventions = null;
+			}
 		}
 
 		if(exProblemList) {
-			List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
-			this.problems = new ArrayList<Dxresearch>();
-			for(Dxresearch problem : tempProblems) {
-				if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
-					this.problems.add(problem);
+			try {
+				List <Dxresearch> tempProblems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
+				this.problems = new ArrayList<Dxresearch>();
+				for(Dxresearch problem : tempProblems) {
+					if(problem.getStatus() != 'D' && problem.getCodingSystem().equals("icd9")) {
+						this.problems.add(problem);
+					}
 				}
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Problems");
+				this.problems = null;
 			}
 		}
 
 		//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
 		if(exLaboratoryResults) {
-			this.labs = assembleLabs();
-			this.measurements = parseMeasurements();
+			try {
+				this.labs = assembleLabs();
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Labs");
+				this.labs = null;
+			}
+			try {
+				this.measurements = parseMeasurements();
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Measurements");
+				this.measurements = null;
+			}
 		}
 
 		if(exRiskFactors || exPersonalHistory || exFamilyHistory || exAlertsAndSpecialNeeds) {
@@ -225,36 +255,51 @@ public class E2EPatientExport extends PatientExport {
 		}
 
 		if(exRiskFactors || exPersonalHistory) {
-			List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
-			List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
-			if(cmRiskFactorNotes != null) {
-				for(Integer i : cmRiskFactorNotes) {
-					cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+			try {
+				List<Integer> cmRiskFactorNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmRiskFactorIssues.toArray(new String[cmRiskFactorIssues.size()]));
+				List<Long> cmRiskFactorNotesLong = new ArrayList<Long>();
+				if(cmRiskFactorNotes != null) {
+					for(Integer i : cmRiskFactorNotes) {
+						cmRiskFactorNotesLong.add(Long.parseLong(String.valueOf(i)));
+					}
 				}
+				this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Risk Factors/Personal History");
+				this.riskFactors = null;
 			}
-			this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
 		}
 
 		if(exFamilyHistory) {
-			List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
-			List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
-			if(cmFamilyHistoryNotes != null) {
-				for(Integer i : cmFamilyHistoryNotes) {
-					cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+			try {
+				List<Integer> cmFamilyHistoryNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmFamilyHistoryIssues.toArray(new String[cmFamilyHistoryIssues.size()]));
+				List<Long> cmFamilyHistoryNotesLong = new ArrayList<Long>();
+				if(cmFamilyHistoryNotes != null) {
+					for(Integer i : cmFamilyHistoryNotes) {
+						cmFamilyHistoryNotesLong.add(Long.parseLong(String.valueOf(i)));
+					}
 				}
+				this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Family History");
+				this.familyHistory = null;
 			}
-			this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
 		}
 
 		if(exAlertsAndSpecialNeeds) {
-			List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
-			List<Long> cmAlertsNotesLong = new ArrayList<Long>();
-			if(cmAlertsNotes != null) {
-				for(Integer i : cmAlertsNotes) {
-					cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+			try {
+				List<Integer> cmAlertsNotes = caseManagementIssueNotesDao.getNoteIdsWhichHaveIssues(cmAlertsIssues.toArray(new String[cmAlertsIssues.size()]));
+				List<Long> cmAlertsNotesLong = new ArrayList<Long>();
+				if(cmAlertsNotes != null) {
+					for(Integer i : cmAlertsNotes) {
+						cmAlertsNotesLong.add(Long.parseLong(String.valueOf(i)));
+					}
 				}
+				this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Alerts");
+				this.alerts = null;
 			}
-			this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 		}
 	}
 
