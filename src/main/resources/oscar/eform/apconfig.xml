@@ -330,19 +330,19 @@
     <databaseap>
         <ap-name>druglist_generic</ap-name>
         <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ' \n' ) AS rxgen
-                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK) AND d.archived='0';</ap-sql>
         <ap-output>${rxgen}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>druglist_trade</ap-name>
         <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, BN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ' \n' ) AS rxlist
-                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK) AND d.archived='0';</ap-sql>
         <ap-output>${rxlist}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>druglist_line</ap-name>
         <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, CONCAT(UCASE(SUBSTRING(d.BN, 1, 1)),LOWER(SUBSTRING(d.BN, 2))), d.customName) , IF(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , IF(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ', ' ) AS rxlist
-                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK) AND d.archived='0';</ap-sql>
         <ap-output>${rxlist}</ap-output>
     </databaseap>
 
@@ -470,13 +470,13 @@
                 <ap-output>${fax}</ap-output>
 	</databaseap>
 	<databaseap>
-		<ap-name>bc_referral_no</ap-name>
-		<ap-sql>SELECT billingreferral.referral_no
+		<ap-name>bc_referral_name</ap-name>
+		<ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
 				FROM billingreferral, demographic
 				WHERE demographic.demographic_no=${demographic}
 				AND LENGTH(billingreferral.referral_no) > 0
 				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-		<ap-output>${referral_no}</ap-output>
+		<ap-output>${last_name}, ${first_name}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>bc_referral_address</ap-name>
