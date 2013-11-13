@@ -300,12 +300,24 @@ public abstract class PatientExport {
 	 * @return String representing the ICD9 Code's description
 	 */
 	public static String getICD9Description(String code) {
-		String result = icd9Dao.findByCode(code).getDescription();
-		if (result == null || result.isEmpty()) {
-			return "";
+		try {
+			String result = icd9Dao.findByCode(code).getDescription();
+			if (result == null || result.isEmpty()) {
+				if (code == null || code.isEmpty()) {
+					return "";
+				} else {
+					return code;
+				}
+			}
+			return result;
+		} catch (Exception E) {
+			log.error("getICD9Description - code '".concat(code).concat("' missing description"));
+			if (code == null || code.isEmpty()) {
+				return "";
+			} else {
+				return code;
+			}
 		}
-
-		return result;
 	}
 
 	/**
