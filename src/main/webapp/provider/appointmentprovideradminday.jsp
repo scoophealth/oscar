@@ -1289,7 +1289,10 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </caisi:isModuleLoad>
 
 <%
-	boolean anonymousEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isEnableAnonymous();
+	boolean anonymousEnabled = false;
+	if (LoggedInInfo.loggedInInfo.get().currentFacility != null) {
+		anonymousEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isEnableAnonymous();
+	}
 	if(anonymousEnabled) {
 %>
 &nbsp;&nbsp;(<a href="#" onclick="popupPage(710, 1024,'<html:rewrite page="/PMmodule/createAnonymousClient.jsp"/>?programId=<%=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)%>');return false;">New Anon Client</a>)
@@ -1297,7 +1300,10 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 	}
 %>
 <%
-	boolean epe = LoggedInInfo.loggedInInfo.get().currentFacility.isEnablePhoneEncounter();
+	boolean epe = false;
+	if (LoggedInInfo.loggedInInfo.get().currentFacility != null) {
+		epe = LoggedInInfo.loggedInInfo.get().currentFacility.isEnablePhoneEncounter();
+	}
 	if(epe) {
 %>
 &nbsp;&nbsp;(<a href="#" onclick="popupPage(710, 1024,'<html:rewrite page="/PMmodule/createPEClient.jsp"/>?programId=<%=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)%>');return false;">Phone Encounter</a>)
