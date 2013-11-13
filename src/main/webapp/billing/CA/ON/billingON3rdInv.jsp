@@ -107,12 +107,11 @@
         }
                    
         BillingONExt billToBillExt = billExtDao.getBillTo(bCh1);
+        //BillingONExt useBillToExt = billExtDao.getUseBillTo(bCh1);
         
         String useDemoClinicInfoOnInvoice = props.getProperty("useDemoClinicInfoOnInvoice","");
         if (!useDemoClinicInfoOnInvoice.isEmpty() && useDemoClinicInfoOnInvoice.equals("true")) { 
-            BillingONExt useBillToExt = billExtDao.getUseBillTo(bCh1);
-            if (useBillToExt != null && billToBillExt != null 
-                    && useBillToExt.getValue().equalsIgnoreCase("on")) {  
+            if (billToBillExt != null) {  
                 billTo = billToBillExt.getValue();                                    
             } else {
                 StringBuilder buildBillTo = new StringBuilder();
