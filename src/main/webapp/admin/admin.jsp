@@ -561,9 +561,12 @@ div.logoutBox {
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.eChart" /></h3>
 		<ul>
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.templates" rights="w" reverse="<%=false%>">
 			<li><a href="#"
-				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/providertemplate.jsp"/>&quot;);return false;'><bean:message
-				key="admin.admin.btnInsertTemplate" /></a></li>
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/providertemplate.jsp"/>&quot;);return false;'>
+				<bean:message key="admin.admin.btnInsertTemplate" /></a>
+			</li>
+			</security:oscarSec>
 		</ul>
 		</div>
 	</security:oscarSec>
