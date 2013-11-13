@@ -1051,8 +1051,6 @@ public class DemographicExportAction4 extends Action {
 					if (exPastHealth) {
 						phSummary = null;
 						PastHealth pHealth = patientRec.addNewPastHealth();
-						pHealth.setPastHealthProblemDescriptionOrProcedures(prevType);
-						phSummary = Util.addSummary("Procedure", prevType);
 						
 						String preventionDate = (String) prevMap.get("prevention_date");
 						if (UtilDateUtilities.StringToDate(preventionDate)!=null) {
@@ -1060,36 +1058,33 @@ public class DemographicExportAction4 extends Action {
 							phSummary = Util.addSummary(phSummary, "Date", preventionDate);
 						}
 						
-						String phNotes = null;
+						String description = prevType;
+						phSummary = Util.addSummary("Procedure", prevType);
+						
 						String refused = (String) prevMap.get("refused");
-						if (StringUtils.filled(refused)) {
+						if (StringUtils.filled(refused) && !refused.equals("0")) {
 							if (refused.equals("1")) refused = "Refused";
 							if (refused.equals("2")) refused = "Ineligible";
-							phNotes = Util.addLine(phNotes, refused);
+							description = Util.addLine(description, refused);
 						}
 						
 						String extra = (String)extraData.get("result");
 						if (StringUtils.filled(extra)) {
-							phNotes = Util.addLine(phNotes, "Result", extra);
+							description = Util.addLine(description, "Result:", extra);
 							phSummary = Util.addSummary(phSummary, "Result", extra);
 						}
 						extra = (String)extraData.get("reason");
 						if (StringUtils.filled(extra)) {
-							phNotes = Util.addLine(phNotes, "Reason", extra);
+							description = Util.addLine(description, "Reason:", extra);
 							phSummary = Util.addSummary(phSummary, "Reason", extra);
 						}
+						pHealth.setPastHealthProblemDescriptionOrProcedures(description);
+						
 						extra = (String)extraData.get("comments");
 						if (StringUtils.filled(extra)) {
-							phNotes = Util.addLine(phNotes, "Comments", extra);
+							pHealth.setNotes(extra);
 							phSummary = Util.addSummary(phSummary, "Comments", extra);
 						}
-						extra = (String)extraData.get("neverReason");
-						if (StringUtils.filled(extra)) {
-							phNotes = Util.addLine(phNotes, "Never Remind Reason", extra);
-							phSummary = Util.addSummary(phSummary, "Never Remind Reason", extra);
-						}
-	
-						pHealth.setNotes(phNotes);
 						pHealth.setCategorySummaryLine(phSummary);
 					}
 				} else if (exImmunizations) {
