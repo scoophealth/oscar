@@ -25,6 +25,7 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Properties;
 
@@ -96,7 +97,7 @@ public abstract class FrmRecord {
         demoProps.setProperty("c_postal", demographic.getPostal());
         demoProps.setProperty("c_phn", demographic.getHin());
         demoProps.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, dateFormat));
-        demoProps.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
+        demoProps.setProperty("pg1_age", String.valueOf(UtilDateUtilities.getNumYears(date, GregorianCalendar.getInstance().getTime())));
         demoProps.setProperty("c_phone", demographic.getPhone());
         demoProps.setProperty("c_phoneAlt1", demographic.getPhone2());
         
