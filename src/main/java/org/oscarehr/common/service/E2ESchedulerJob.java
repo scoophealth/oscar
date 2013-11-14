@@ -91,12 +91,8 @@ public class E2ESchedulerJob extends TimerTask {
 					HttpClient httpclient = new DefaultHttpClient();
 					HttpPost httpPost = new HttpPost(e2eUrl);
 
-					// Create Filename
-					String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName()+"_"+id;
-					expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth()+".xml";
-
 					// Assemble Multi-part Request
-					ByteArrayBody body = new ByteArrayBody(output.getBytes(), "text/xml", expFile);
+					ByteArrayBody body = new ByteArrayBody(output.getBytes(), "text/xml", "output_".concat(id.toString()).concat(".xml"));
 					MultipartEntity reqEntity = new MultipartEntity();
 					reqEntity.addPart("content", body);
 					httpPost.setEntity(reqEntity);
@@ -106,7 +102,7 @@ public class E2ESchedulerJob extends TimerTask {
 					if(response != null && response.getStatusLine().getStatusCode() == 201) {
 						success++;
 					} else {
-						logger.error(response.getStatusLine());
+						logger.warn(response.getStatusLine());
 					}
 				} catch (HttpHostConnectException e) {
 					logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
