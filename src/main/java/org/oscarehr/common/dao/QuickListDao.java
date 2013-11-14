@@ -48,6 +48,12 @@ public class QuickListDao extends AbstractDao<QuickList>{
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<Object> findDistinct() {
+    	Query query = entityManager.createQuery("select distinct ql.quickListName from QuickList ql");
+    	return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
     public List<QuickList> findByNameResearchCodeAndCodingSystem(String quickListName, String researchCode, String codingSystem) {
 	    Query query = entityManager.createQuery("from QuickList q where q.quickListName = :qlName AND q.dxResearchCode = :rc AND q.codingSystem = :cs");
 	    query.setParameter("qlName", quickListName);
