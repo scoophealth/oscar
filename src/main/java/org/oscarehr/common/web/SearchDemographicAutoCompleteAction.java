@@ -35,18 +35,19 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.util.AppointmentUtil;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import org.oscarehr.common.model.DemographicCust;
-import org.oscarehr.common.dao.DemographicCustDao;
 import oscar.oscarRx.data.RxProviderData;
 import oscar.oscarRx.data.RxProviderData.Provider;
 
@@ -79,7 +80,8 @@ public class SearchDemographicAutoCompleteAction extends Action {
              h.put("demographicNo",demo.getDemographicNo());
              h.put("status",demo.getPatientStatus());
              
-             if (OscarProperties.getInstance().isPropertyActive("workflow_enhance")) {
+             
+             if (OscarProperties.getInstance().isPropertyActive("workflow_enhance") && !StringUtils.isBlank(demo.getProviderNo())) {
             	 Provider p = rx.getProvider(demo.getProviderNo());
             	 h.put("providerNo", demo.getProviderNo());
             	 h.put("providerName", p.getSurname() + ", " + p.getFirstName());
