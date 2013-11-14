@@ -68,7 +68,9 @@ public class E2ESchedulerJob extends TimerTask {
 				E2EVelocityTemplate t = new E2EVelocityTemplate();
 
 				// Create and load Patient data
-				logger.info("[Demo: ".concat(id.toString()).concat("]"));
+				//logger.info("[Demo: ".concat(id.toString()).concat("]"));
+				long startLoad = System.currentTimeMillis();
+				long endLoad = startLoad;
 				E2EPatientExport patient = new E2EPatientExport();
 				patient.setExAllTrue();
 
@@ -77,6 +79,7 @@ public class E2ESchedulerJob extends TimerTask {
 				if(patient.loadPatient(id.toString())) {
 					if(patient.isActive()) {
 						output = t.export(patient);
+						endLoad = System.currentTimeMillis();
 					} else {
 						logger.info("Patient ".concat(id.toString()).concat(" not active - skipping"));
 						continue;
@@ -85,6 +88,9 @@ public class E2ESchedulerJob extends TimerTask {
 					logger.error("Failed to load patient ".concat(id.toString()));
 					continue;
 				}
+
+				long startPost = System.currentTimeMillis();
+				long endPost = startPost;
 
 				// Attempt to perform HTTP POST request
 				try {
@@ -108,7 +114,13 @@ public class E2ESchedulerJob extends TimerTask {
 					logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
 				} catch (Exception e) {
 					logger.error("Error", e);
+				} finally {
+					endPost = System.currentTimeMillis();
 				}
+
+				double diffLoad = (endLoad - startLoad)/1000.0;
+				double diffPost = (endPost - startPost)/1000.0;
+				logger.info("[Demo: ".concat(id.toString()).concat("] L:").concat(Double.toString(diffLoad)).concat(" P:").concat(Double.toString(diffPost)));
 			}
 
 			logger.info("Done E2E export job\n".concat(success.toString()).concat(" records processed"));
