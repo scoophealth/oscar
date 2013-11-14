@@ -82,8 +82,8 @@ public class dxQuickListBeanHandler {
 
 	public boolean init() {
 		QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
-		for (QuickList ql : dao.findAll()) {
-			dxQuickListBean bean = new dxQuickListBean(ql.getQuickListName());
+		for (Object qlName : dao.findDistinct()) {
+			dxQuickListBean bean = new dxQuickListBean((String)qlName);
 			dxQuickListBeanVector.add(bean);
 		}
 		return true;
