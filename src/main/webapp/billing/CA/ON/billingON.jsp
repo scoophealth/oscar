@@ -1527,6 +1527,10 @@ function changeSite(sel) {
 													<bean:message
 														key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" />
 												</option>
+												<option value="PDF">
+													<bean:message
+														key="oscar.billing.CA.ON.billingON.OB.SLIcode.PDF" />
+												</option>
 										</select></td>
 									</tr>
 									<tr>
