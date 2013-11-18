@@ -142,7 +142,7 @@ if (heading != null){
 
                 if (request.getParameter("status") != null) { //TODO: Redo this in a better way
                     String stat = request.getParameter("status");
-                    if (stat.equals("active") && !prescriptDrug.isCurrent()) {
+                    if (stat.equals("active") && !prescriptDrug.isLongTerm() && !prescriptDrug.isCurrent()) {
                         continue;
                     } else if (stat.equals("inactive") && prescriptDrug.isCurrent()) {
                         continue;
@@ -390,11 +390,11 @@ String getName(Drug prescriptDrug){
     String getClassColour(Drug drug, long referenceTime, long durationToSoon){
         StringBuffer sb = new StringBuffer("class=\"");
 
-        if (drug.isCurrent() && drug.getEndDate()!=null && (drug.getEndDate().getTime() - referenceTime <= durationToSoon)) {  // ref = now and duration will be a month
+        if (!drug.isLongTerm() && (drug.isCurrent() && drug.getEndDate() != null && (drug.getEndDate().getTime() - referenceTime <= durationToSoon))) {
             sb.append("expireInReference ");
         }
 
-        if (drug.isCurrent() && !drug.isArchived()) {
+        if ((drug.isCurrent() && !drug.isArchived()) || drug.isLongTerm()) {
             sb.append("currentDrug ");
         }
 
@@ -402,7 +402,7 @@ String getName(Drug prescriptDrug){
             sb.append("archivedDrug ");
         }
 
-        if(!drug.isCurrent()) {
+        if(!drug.isLongTerm() && !drug.isCurrent()) {
             sb.append("expiredDrug ");
         }
 
