@@ -444,7 +444,7 @@ CREATE TABLE demographic (
   last_name varchar(30) NOT NULL default '',
   first_name varchar(30) NOT NULL default '',
   address varchar(60),
-  city varchar(20),
+  city varchar(50),
   province varchar(20),
   postal varchar(9),
   phone varchar(20),
