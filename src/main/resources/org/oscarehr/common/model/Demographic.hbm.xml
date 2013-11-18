@@ -22,7 +22,7 @@
 		<property column="date_of_birth" length="2" name="DateOfBirth" type="string" />
 		<property column="year_of_birth" length="4" name="YearOfBirth" type="string" />
 		<property column="address" length="60" name="Address" type="string" />
-		<property column="city" length="20" name="City" type="string" />
+		<property column="city" length="50" name="City" type="string" />
 		<property column="province" length="20" name="Province" type="string" />
 		<property column="postal" length="9" name="Postal" type="string" />
 		<property column="email" length="100" name="Email" type="string" />
