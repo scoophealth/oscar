@@ -64,9 +64,9 @@ CDA Header
 	<recordTarget typeCode="RCT" contextControlCode="OP">
 		<patientRole classCode="PAT">
 #if ( !$demographic.hin || $demographic.hin.isEmpty() )
-			<id extension="000000000" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+			<id extension="000000000" root="2.16.840.1.113883.4.50" assigningAuthorityName="BC-PHN"/>
 #else
-			<id extension="$demographic.hin" root="2BFBA1E9-79C2-4BBB-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+			<id extension="$demographic.hin" root="2.16.840.1.113883.4.50" assigningAuthorityName="BC-PHN"/>
 #end
 #if ( $demographic.address || $demographic.city || $demographic.province || $demographic.postal )
 			<addr>
@@ -866,7 +866,7 @@ Laboratory Results & Results
 							<author typeCode="AUT" contextControlCode="OP">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
 								<!-- Author Participation -->
-#*    *##if ( $lab.hl7TextInfo.getObrDate() )
+#*    *##if ( $lab.hl7TextInfo.getObrDate() && !$lab.hl7TextInfo.getObrDate().isEmpty() )
 								<time value="$dateTool.format('yyyyMMdd', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 #*    *##else
 								<time nullFlavor="UNK"/>
@@ -917,7 +917,7 @@ Laboratory Results & Results
 #*            *##else
 											<statusCode code="final"/>
 #*            *##end
-#*            *##if ( $patient.getLabExtValue("$labEntry.id", "datetime") )
+#*            *##if ( $patient.getLabExtValue("$labEntry.id", "datetime") && !$patient.getLabExtValue("$labEntry.id", "datetime").isEmpty() )
 											<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($patient.getLabExtValue("$labEntry.id", "datetime")))"/>
 #*            *##else
 											<effectiveTime nullFlavor="UNK"/>
@@ -939,7 +939,7 @@ Laboratory Results & Results
 											<performer typeCode="PRF">
 												<templateId root="2.16.840.1.113883.3.1818.10.4.19"/>
 												<!-- Performer Participation -->
-#*                *##if ( $patient.getLabExtValue("$labEntry.id", "datetime") )
+#*                *##if ( $patient.getLabExtValue("$labEntry.id", "datetime") && !$patient.getLabExtValue("$labEntry.id", "datetime").isEmpty() )
 												<time value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($patient.getLabExtValue("$labEntry.id", "datetime")))"/>
 #*                *##else
 												<time nullFlavor="UNK"/>
@@ -957,7 +957,7 @@ Laboratory Results & Results
 											<entryRelationship typeCode="COMP">
 												<procedure classCode="PROC" moodCode="EVN">
 													<!-- specimen collection date -->
-#*            *##if ( $lab.hl7TextInfo.getObrDate() )
+#*            *##if ( $lab.hl7TextInfo.getObrDate() && !$lab.hl7TextInfo.getObrDate().isEmpty() )
 													<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
 #*            *##else
 													<effectiveTime nullFlavor="UNK"/>
