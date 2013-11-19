@@ -32,7 +32,7 @@
  xmlns:hl7="urn:hl7-org:v3"
  xmlns:xs="http://www.w3.org/2001/XMLSchema"
  xmlns:e2e="http://standards.pito.bc.ca/E2E-DTC/cda">
-<!-- 
+<!--
 ********************************************************
 CDA Header
 ********************************************************
@@ -56,7 +56,7 @@ CDA Header
 	<title>PITO EMR-2-EMR Record of $demographic.firstName $demographic.lastName</title>
 	<effectiveTime value="$dateTool.get('yyyyMMddHHmm')"/>
 	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
-	<!-- 
+	<!--
 	********************************************************
 	Record Target
 	********************************************************
@@ -101,7 +101,7 @@ CDA Header
 			</patient>
 		</patientRole>
 	</recordTarget>
-	<!-- 
+	<!--
 	********************************************************
 	Author
 	********************************************************
@@ -118,7 +118,7 @@ CDA Header
 			</assignedPerson>
 		</assignedAuthor>
 	</author>
-	<!-- 
+	<!--
 	********************************************************
 	Custodian
 	********************************************************
@@ -143,7 +143,7 @@ CDA Header
 ## Addr, telecom, informationRecipient and receivedOrganization omitted - no source to populate from.
 		</intendedRecipient>
 	</informationRecipient>
-<!-- 
+<!--
 ********************************************************
 e-MS CDA Structured Body
 ********************************************************
@@ -197,7 +197,11 @@ Alerts
 #*    *##else
 							<statusCode code="complete"/>
 #*    *##end
+#*    *##if ( $alert.getObservation_date() )
 							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $alert.getObservation_date())"/>
+#*    *##else
+							<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 							<e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal"/>
 						</observation>
 					</entry>
@@ -244,7 +248,11 @@ Allergies and Intolerances - (Reaction List)
 #*    *##else
 							<statusCode code="completed"/>
 #*    *##end
+#*    *##if ( $allergy.getLastUpdateDate() )
 							<effectiveTime value="$dateTool.format('yyyyMMdd', $allergy.getLastUpdateDate())"/>
+#*    *##else
+							<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
 #*    *##if ( $allergy.typeCode == 8 || $allergy.typeCode == 10 || $allergy.typeCode == 11 || $allergy.typeCode == 13 )
@@ -454,7 +462,11 @@ Clinically Measured Observation
 									<code nullFlavor="UNK"/>
 #*    *##end
 									<text>$patient.getTypeDescription($measurement.type) ($measurement.measuringInstruction)</text>
+#*    *##if ( $measurement.getDateObserved() )
 									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
+#*    *##else
+									<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 #*    *##if ( $e2e.measurementUnitMap($measurement.type) )
 									<value xsi:type="PQ" value="$measurement.dataField" unit="$e2e.measurementUnitMap($measurement.type)"/>
 #*    *##else
@@ -517,7 +529,11 @@ Family History
 							<id extension="$family.id" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
 							<code code="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code" displayName="Diagnosis"/>
 							<text>$family.note</text>
+#*    *##if ( $family.getObservation_date() )
 							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $family.getObservation_date())"/>
+#*    *##else
+							<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 							<value xsi:type="CD" nullFlavor="NA"/>
 							<!--Relationship to the Patient-->
 							<subject typeCode="SBJ" contextControlCode="OP">
@@ -637,7 +653,11 @@ Immunization List
 							<id extension="$immunization.id" root="2.16.840.1.113883.3.1818.10.10.3"/>
 							<code code="IMMUNIZ" displayName="Immunization" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act Code"/>
 							<!-- Immunization Date -->
+#*    *##if ( $immunization.getPreventionDate() )
 							<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
+#*    *##else
+							<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 #*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "route").isEmpty() )
 							<routeCode code="$patient.getImmuExtValue("$immunization.getId()", "route")" displayName="$patient.getImmuExtValue("$immunization.getId()", "route")" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration"/>
 #*    *##end
@@ -702,7 +722,11 @@ Immunization List
 								<observation classCode="OBS" moodCode="EVN">
 									<code code="COMMENT" displayName="Comment Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
 									<text>$patient.getImmuExtValue("$immunization.getId()", "comments")</text>
+#*        *##if ( $immunization.getLastUpdateDate() )
 									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getLastUpdateDate())"/>
+#*        *##else
+									<effectiveTime nullFlavor"UNK"/>
+#*        *##end
 									<value xsi:type="ST">$patient.getImmuExtValue("$immunization.getId()", "comments")</value>
 									<!-- Comment Author -->
 									<author typeCode="AUT" contextControlCode="OP">
@@ -723,7 +747,7 @@ Immunization List
 											</assignedPerson>
 										</assignedAuthor>
 									</author>
-								</observation>         
+								</observation>
 							</entryRelationship>
 #*    *##end
 #*    *##if ( $immunizaton.getNextDate() )
@@ -733,7 +757,11 @@ Immunization List
 								<!-- Date Observation -->
 								<observation classCode="OBS" moodCode="EVN">
 									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+#*    *##if ( $immunizaton.getNextDate() )
 									<effectiveTime value="$dateTool.format('yyyyMMdd', $immunizaton.getNextDate())"/>
+#*    *##else
+									<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 								</observation>
 							</entryRelationship>
 #*    *##end
@@ -929,7 +957,11 @@ Laboratory Results & Results
 											<entryRelationship typeCode="COMP">
 												<procedure classCode="PROC" moodCode="EVN">
 													<!-- specimen collection date -->
+#*            *##if ( $lab.hl7TextInfo.getObrDate() )
 													<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))"/>
+#*            *##else
+													<effectiveTime nullFlavor="UNK"/>
+#*            *##end
 												</procedure>
 											</entryRelationship>
 #*            *##if ( !$labEntry.comments.isEmpty() )
@@ -1147,7 +1179,11 @@ Code"/>
 								<!-- Date Observation -->
 								<observation classCode="OBS" moodCode="EVN">
 									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+#*        *##if ( $med.getLastUpdateDate() )
 									<effectiveTime value="$dateTool.format('yyyyMMdd', $med.getLastUpdateDate())"/>
+#*        *##else
+									<effectiveTime nullFlavor="UNK"/>
+#*        *##end
 								</observation>
 							</entryRelationship>
 #*    *##end
@@ -1160,8 +1196,14 @@ Code"/>
 									<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
 									<!-- Start/Stop Date -->
 									<effectiveTime xsi:type="IVL_TS" operator="I">
+#*    *##if ( $med.getRxDate() )
 										<low value="$dateTool.format('yyyyMMdd', $med.getRxDate())"/>
-										<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
+#*    *##else
+										<low nullFlavor="UNK"/>
+#*    *##end
+#*    *##if ( $med.getEndDate() )
+										<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())"/>
+#*    *##end
 									</effectiveTime>
 									<consumable typeCode="CSM">
 										<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
@@ -1522,7 +1564,7 @@ Problems and Conditions - Problem List
 					</text>
 #**##foreach ( $problem in $patient.getProblems() )
 #*    *##if ( $problem.codingSystem == "icd9" )
-					<entry typeCode="COMP" contextConductionInd="true"> 
+					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
 						<!-- Problem List Observation -->
 						<observation classCode="OBS" moodCode="EVN">
@@ -1535,7 +1577,11 @@ Problems and Conditions - Problem List
 							<statusCode code="completed"/>
 #*        *##end
 							<effectiveTime xsi:type="IVL_TS">
+#*    *##if ( $problem.getStartDate() )
 								<low value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
+#*    *##else
+								<low nullFlavor="UNK"/>
+#*    *##end
 							</effectiveTime>
 							<value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
 							<!-- Diagnosing Provider -->
@@ -1561,7 +1607,7 @@ Problems and Conditions - Problem List
 							<entryRelationship typeCode="COMP" contextConductionInd="true">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
 								<!-- Secondary Code (ICD9) -->
-								<observation classCode="OBS" moodCode="EVN"> 
+								<observation classCode="OBS" moodCode="EVN">
 									<code code="BILLINGCODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
 									<value xsi:type="CD" code="$problem.getDxresearchCode()" displayName="$patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9"/>
 								</observation>
@@ -1572,7 +1618,11 @@ Problems and Conditions - Problem List
 								<!-- Date Observation -->
 								<observation classCode="OBS" moodCode="EVN">
 									<code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+#*        *##if ( $problem.getStartDate() )
 									<effectiveTime value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
+#*        *##else
+									<effectiveTime nullFlavor="UNK"/>
+#*        *##end
 								</observation>
 							</entryRelationship>
 						</observation>
@@ -1625,7 +1675,7 @@ Risk Factors
 						</list>
 					</text>
 #**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
-					<entry typeCode="COMP" contextConductionInd="true"> 
+					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.17"/>
 						<!-- Risk Factors Organizer -->
 						<organizer classCode="CLUSTER" moodCode="EVN">
@@ -1661,7 +1711,11 @@ Risk Factors
 									<id nullFlavor="NA"/>
 									<code nullFlavor="UNK"/>
 									<text>$risk.note</text>
+#*    *##if ( $risk.getObservation_date() )
 									<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $risk.getObservation_date())"/>
+#*    *##else
+									<effectiveTime nullFlavor="UNK"/>
+#*    *##end
 									<value xsi:type="BL" value="true"/>
 								</observation>
 							</component>
