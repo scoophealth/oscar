@@ -105,7 +105,6 @@ invoice</a>
                                             self.location.href="<%=urlBack%>";
                                         
                                         <%}else{%>
-                                            self.opener.refresh();
                                             self.close();
                                         <% }%>
 					</script>
