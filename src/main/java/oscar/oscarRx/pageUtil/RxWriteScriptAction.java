@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -53,9 +54,11 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.MiscUtils;
@@ -1128,6 +1131,32 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 		String ip = request.getRemoteAddr();
 		request.setAttribute("scriptId", scriptId);
+        
+		List<String> reRxDrugList = new ArrayList<String>();
+        reRxDrugList=bean.getReRxDrugIdList();        
+        
+        Iterator<String> i = reRxDrugList.iterator();
+        
+        DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao"); 
+        
+        while (i.hasNext()) {
+        
+        String item = i.next();
+        
+        //archive drug(s)
+        Drug drug = drugDao.find(Integer.parseInt(item));
+        drug.setArchived(true);
+        drug.setArchivedDate(new Date());
+        drug.setArchivedReason(Drug.REPRESCRIBED);       
+        drugDao.merge(drug);
+              
+        //log that this med is being re-prescribed
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_MEDICATION, "drugid="+item, ip, "" + bean.getDemographicNo(), auditStr.toString());
+        
+        //log that the med is being discontinued buy the system
+        LogAction.addLog("-1", LogConst.DISCONTINUE, LogConst.CON_MEDICATION, "drugid="+item, "", "" + bean.getDemographicNo(), auditStr.toString());
+        
+        }
 		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, scriptId, ip, "" + bean.getDemographicNo(), auditStr.toString());
 
 		return;

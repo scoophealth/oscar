@@ -72,6 +72,8 @@ if(listRxDrugs!=null){
          String eTreatmentType  = rx.getETreatmentType()!=null ? rx.getETreatmentType() : "";
          String rxStatus        = rx.getRxStatus()!=null ? rx.getRxStatus() : "";
          String drugForm		= rx.getDrugForm();
+         //remove from the rerx list
+         int DrugReferenceId = rx.getDrugReferenceId();
          
          if(ATC != null && ATC.trim().length()>0)
              ATC="ATC: "+ATC;
@@ -119,8 +121,7 @@ if(listRxDrugs!=null){
                 archivedReason=rx.getLastArchReason();
                 archivedDate=rx.getLastArchDate();
          }
-         else{
-         }
+
           if((outsideProvOhip!=null && !outsideProvOhip.equals("")) || (outsideProvName!=null && !outsideProvName.equals(""))){
              isOutsideProvider=true;
          }
@@ -279,7 +280,7 @@ if(listRxDrugs!=null){
 </fieldset>
 <%}else{%>
 <fieldset style="margin-top:2px;width:620px;" id="set_<%=rand%>">
-    <a tabindex="-1" href="javascript:void(0);"  style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');">X</a>
+    <a tabindex="-1" href="javascript:void(0);"  style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');removeReRxDrugId('<%=DrugReferenceId%>')"><img src='<c:out value="${ctx}/images/close.png"/>' border="0"></a>
     <a tabindex="-1" href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
 
     <label style="float:left;width:80px;" title="<%=ATC%>" >Name:</label>
@@ -503,9 +504,9 @@ if(listRxDrugs!=null){
             var isDiscontinuedLatest=<%=isDiscontinuedLatest%>;
             //oscarLog("isDiscon "+isDiscontinuedLatest);
             //pause(1000);
-            if(isDiscontinuedLatest){
+            var archR='<%=archivedReason%>';
+            if(isDiscontinuedLatest && archR!="represcribed"){
                var archD='<%=archivedDate%>';
-               var archR='<%=archivedReason%>';
                //oscarLog("in js discon "+archR+"--"+archD);
 
                     if(confirm('This drug was discontinued on <%=archivedDate%> because of <%=archivedReason%> are you sure you want to continue it?')==true){
