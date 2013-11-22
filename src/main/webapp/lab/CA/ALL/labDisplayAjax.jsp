@@ -38,7 +38,9 @@
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
          oscar.OscarProperties,
 		 org.apache.commons.codec.binary.Base64,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo,
-		 org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
+		 org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty,
+		javax.swing.text.rtf.RTFEditorKit,
+		java.io.ByteArrayInputStream"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -722,8 +724,26 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                         int linenum=0;
                         String highlight = "#E0E0FF";
 
-                        ArrayList headers = handler.getHeaders();
-                        int OBRCount = handler.getOBRCount();
+						ArrayList headers = handler.getHeaders();
+						int OBRCount = handler.getOBRCount();
+						boolean isUnstructuredDoc = false;
+						boolean	isVIHARtf = false;
+						boolean isSGorCDC = false;
+						//Checks to see if the PATHL7 lab is an unstructured document, a VIHA RTF pathology report, or if the patient location is SG/CDC
+						//labs that fall into any of these categories have certain requirements as per Excelleris 
+							if(handler.getMsgType().equals("PATHL7")){
+								for(i=0; i<headers.size(); i++){
+									if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))|| (headers.get(i).equals("CELLPATHR"))){
+										isUnstructuredDoc = true;
+									}
+									if(headers.get(i).equals("CELLPATHR")){
+										isVIHARtf = true;
+									}
+								}
+								if(handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC")){
+									isSGorCDC = true;
+								}
+							}//end of PATHL7 Doc check
                         if (handler.getMsgType().equals("MEDVUE")) { %>
                         <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
                            <tr>
@@ -765,7 +785,31 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 
                         for(i=0;i<headers.size();i++){
                             linenum=0;
-                        %>
+                           	if(isUnstructuredDoc){
+		                       %><table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
+	                           <tr>
+	                               <td colspan="4" height="7">&nbsp;</td>
+	                           </tr>
+	                           <tr>
+	                               <td bgcolor="#FFCC00" width="300" valign="bottom">
+	                                   <div class="Title2">
+	                                       <%=headers.get(i)%>
+	                                   </div>
+	                               </td>
+	                               <%--<td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>--%>
+	                               <td width="9">&nbsp;</td>
+	                               <td width="9">&nbsp;</td>
+	                               <td width="*">&nbsp;</td>
+	                           </tr>
+	                       </table>
+
+	                       <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
+	                           <tr class="Field2">
+	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
+	                               <td width="60%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+	                           </tr><%
+						} else {%>
                         <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
                                 <td colspan="4" height="7">&nbsp;</td>
@@ -778,7 +822,8 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                 </td>
                                 <%--<td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>--%>
                                 <td width="9">&nbsp;</td>
-                                <td width="9">&nbsp;</td>
+                                <td width="9">&nbsp;</td>/
+
                                 <td width="*">&nbsp;</td>
                             </tr>
                         </table>
@@ -794,7 +839,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                 <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                             </tr>
 
-                            <%
+                            <%}
 
                             for ( j=0; j < OBRCount; j++){
 
@@ -803,6 +848,14 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 
                                 for (k=0; k < obxCount; k++){
                                     String obxName = handler.getOBXName(j, k);
+									boolean isAllowedDuplicate = false;
+									if(handler.getMsgType().equals("PATHL7")){
+										//if the obxidentifier and result name are any of the following, they must be displayed (they are the Excepetion to Excelleris TX/FT duplicate result name display rules)
+										if((handler.getOBXName(j, k).equals("Culture") && handler.getOBXIdentifier(j, k).equals("6463-4")) || 
+										(handler.getOBXName(j, k).equals("Organism") && (handler.getOBXIdentifier(j, k).equals("X433") || handler.getOBXIdentifier(j, k).equals("X30011")))){
+										isAllowedDuplicate = true;
+											}
+									}
                                      boolean b2 = !obxName.equals(""), b3=handler.getObservationHeader(j, k).equals(headers.get(i));
                                     if (handler.getMsgType().equals("EPSILON")) {
                                     	b2=true; b3=true;
@@ -879,17 +932,51 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 				                                     </tr>
 				                                <%}
 
-                                      } else  if (!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) { %>
-                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../lab/CA/ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier='+encodeURIComponent('<%= handler.getOBXIdentifier(j, k)%>'))"><%=obxName %></a></td>
-                                            <td align="right"><%= handler.getOBXResult( j, k) %></td>
-                                            <td align="center">
-                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
-                                            </td>
-                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
-                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
-                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
-                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
+
+                                      } else  if (!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) {
+                                          	%><tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>"><%
+                                       		if(isUnstructuredDoc){
+	                                   			if(handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)){%>
+	                                   				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier='+encodeURIComponent('<%= handler.getOBXIdentifier(j, k)%>'))"></a><%
+	                                   				}
+	                                   			else{%> <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a><%}%>
+												<%if(isVIHARtf){
+												    //create bytes from the rtf string
+											    	byte[] rtfBytes = handler.getOBXResult(j, k).getBytes();
+											    	ByteArrayInputStream rtfStream = new ByteArrayInputStream(rtfBytes);
+
+											    	//Use RTFEditor Kit to get plaintext from RTF
+											    	RTFEditorKit rtfParser = new RTFEditorKit();
+											    	javax.swing.text.Document doc = rtfParser.createDefaultDocument();
+											    	rtfParser.read(rtfStream, doc, 0);
+											    	String rtfText = doc.getText(0, doc.getLength()).replaceAll("\n", "<br>");
+											    	String disclaimer = "IMPORTANT DISCLAIMER: You are viewing a PREVIEW of the original report. The rich text formatting contained in the original report may convey critical information that must be considered for clinical decision making. Please refer to the ORIGINAL report, by clicking 'Print', prior to making any decision on diagnosis or treatment.";%>
+											    	<td align="left"><%= rtfText + disclaimer %></td><%} %><%
+												else{%>
+	                                           		<td align="left"><%= handler.getOBXResult( j, k) %></td><%} %>
+	                                           	<%if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
+	                                        			%><td align="center"></td><%}
+	                                        		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td><%}
+                                   			}//end of isUnstructuredDoc
+
+                                   			else{//if it isn't a PATHL7 doc
+	                                   			if(!isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
+	                                   				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"></a><%
+	                                   				}
+	                               				else{%>
+	                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../lab/CA/ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier='+encodeURIComponent('<%= handler.getOBXIdentifier(j, k)%>'))"><%=obxName %></a></td><%}%>
+	                                            <%if((handler.getOBXResult(j, k).length() > 100) && isSGorCDC){%>
+	                                            	<td align="left"><%= handler.getOBXResult( j, k) %></td><%
+	                                            }else{%>
+	                                            <td align="right"><%= handler.getOBXResult( j, k) %></td><%}%>
+	                                            <td align="center">
+	                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
+	                                            </td>
+	                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
+	                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
+	                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
+	                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td><%
+	                                   			}//end of PATHL7 else %>
                                         </tr>
 
                                         <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
