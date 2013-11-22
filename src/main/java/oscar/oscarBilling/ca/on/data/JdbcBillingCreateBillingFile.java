@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -966,7 +967,9 @@ public class JdbcBillingCreateBillingFile {
 				bhObj.setBatch_id(rs.getString("batch_id"));
 				bhObj.setOperator(rs.getString("operator"));
 				bhObj.setGroup_num(rs.getString("group_num"));
-				bhObj.setProvider_reg_num(rs.getString("provider_reg_num"));
+				String billNo = rs.getString("provider_reg_num");
+				billNo = (billNo.length() < 6) ? StringUtils.leftPad(billNo, 6, "0") : billNo;
+				bhObj.setProvider_reg_num(billNo);
 				bhObj.setSpecialty(rs.getString("specialty"));
 				bhObj.setH_count(rs.getString("h_count"));
 				bhObj.setR_count(rs.getString("r_count"));
@@ -1041,7 +1044,7 @@ public class JdbcBillingCreateBillingFile {
 	// readin billingNo 
 	public void readInBillingNo() {
 		String home_dir;
-		home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
+		home_dir = OscarProperties.getInstance().getProperty("HOME_DIR") + File.separator;
 		propBillingNo = new Properties();
 		
 		try {
@@ -1079,7 +1082,7 @@ public class JdbcBillingCreateBillingFile {
 	// rename OHIP file 
 	public void renameFile() {
 		String home_dir;
-		home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
+		home_dir = OscarProperties.getInstance().getProperty("HOME_DIR") + File.separator;
 	    File file = new File(home_dir + ohipFilename);
 		
 	    // new filename
@@ -1097,7 +1100,7 @@ public class JdbcBillingCreateBillingFile {
 	public void writeFile(String value1) {
 		try {
 			String home_dir;
-			home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
+			home_dir = OscarProperties.getInstance().getProperty("HOME_DIR") + File.separator;
 			FileOutputStream out = new FileOutputStream(home_dir + ohipFilename);
 			PrintStream p = new PrintStream(out);
 			p.println(value1);
@@ -1114,7 +1117,7 @@ public class JdbcBillingCreateBillingFile {
 	public void writeHtml(String htmlvalue1) {
 		try {
 			String home_dir1;
-			home_dir1 = OscarProperties.getInstance().getProperty("HOME_DIR");
+			home_dir1 = OscarProperties.getInstance().getProperty("HOME_DIR") + File.separator;
 
 			FileOutputStream out1 = new FileOutputStream(home_dir1 + htmlFilename);
 			PrintStream p1 = new PrintStream(out1);
