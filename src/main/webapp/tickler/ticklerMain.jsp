@@ -196,7 +196,7 @@ function openNoteDialog(demographicNo, ticklerNo) {
 	jQuery("#tickler_note_ticklerNo").val(ticklerNo);
 	
 
-	jQuery("#tickler_note_noteId").val(''');
+	jQuery("#tickler_note_noteId").val('');
 	jQuery("#tickler_note").val('');
 	jQuery("#tickler_note_revision").html('');
 	jQuery("#tickler_note_revision_url").attr('onclick','');
@@ -886,7 +886,7 @@ function changeSite(sel) {
                                         
                                     </TD>
                                     <td ROWSPAN="1" class="<%=cellColour%>">
-                                    	<a href="javascript:void(0)" onClick="openNoteDialog('<%=demo.getDemographicNo() %>','<%=t.getId() %>');return false;">
+                                    	<a href="#" onClick="return openNoteDialog('<%=demo.getDemographicNo() %>','<%=t.getId() %>');return false;">
                                     		<img border="0" src="<%=request.getContextPath()%>/images/notepad.gif"/>
                                     	</a>
                                     </td>
