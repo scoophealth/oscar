@@ -165,8 +165,10 @@ public class JdbcBillingPageUtil {
 
 	public Properties getPropProviderName() {
 		Properties retval = new Properties();
+		
 		String sql = "select provider_no,last_name,first_name from provider "
-				+ "where status='1' and ohip_no!='' order by last_name, first_name";
+				+ "where status='1' order by last_name, first_name";
+		
 		String proid = "";
 		String proName = "";
 		ResultSet rslocal = dbObj.searchDBRecord(sql);
