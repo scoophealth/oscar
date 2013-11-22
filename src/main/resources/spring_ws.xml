@@ -45,5 +45,6 @@
 	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" publishedEndpointUrl="${https_endpoint_url_base}/ProviderService" />	
 	<jaxws:endpoint implementor="#demographicWs" address="/DemographicService" publishedEndpointUrl="${https_endpoint_url_base}/DemographicService" />	
 	<jaxws:endpoint implementor="#facilityWs" address="/FacilityService" publishedEndpointUrl="${https_endpoint_url_base}/FacilityService" />	
+   	<jaxws:endpoint implementor="#measurementWs" address="/MeasurementService" publishedEndpointUrl="${https_endpoint_url_base}/MeasurementService" />	
    	
 </beans>
