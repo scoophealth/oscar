@@ -1544,10 +1544,15 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
    if (isWeekView) {
       iterMax=7;
       // find the nProvider value that corresponds to provNum
-      for(int provIndex=0;provIndex<numProvider;provIndex++) {
-         if (curProvider_no[provIndex].equals(provNum)) {
-            nProvider=provIndex;
-         }
+      if(numProvider == 1) {
+    	  nProvider = 0;
+      }
+      else {
+	      for(int provIndex=0;provIndex<numProvider;provIndex++) {
+	         if (curProvider_no[provIndex].equals(provNum)) {
+	            nProvider=provIndex;
+	         }
+	      }
       }
    } else {
       iterMax=numProvider;
@@ -1555,6 +1560,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
    StringBuffer hourmin = null;
    String [] param1 = new String[2];
+
+   java.util.ResourceBundle wdProp = ResourceBundle.getBundle("oscarResources", request.getLocale());
 
    for(int iterNum=0;iterNum<iterMax;iterNum++) {
 
@@ -1569,8 +1576,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
         inform = new SimpleDateFormat ("yyyy-MM-dd", request.getLocale());
         try {
-           java.util.ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
-           formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), prop.getString("date.EEEyyyyMMdd"),request.getLocale());
+           formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), wdProp.getString("date.EEEyyyyMMdd"),request.getLocale());
         } catch (Exception e) {
            MiscUtils.getLogger().error("Error", e);
            formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");
