@@ -171,7 +171,7 @@ public class JdbcBillingPageUtil {
 	public Properties getPropProviderName() {
 		Properties retval = new Properties();
 		
-		List<Provider> ps = providerDao.getBillableProviders();
+		List<Provider> ps = providerDao.getProviders();
 		String proid = "";
 		String proName = "";
 		for(Provider p:ps) {
