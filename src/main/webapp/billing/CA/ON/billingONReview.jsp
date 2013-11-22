@@ -797,7 +797,6 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
                              + "Fax: "+provider.getClinicFax() ;
 
 if (codeValid) { %>
-%>
 
 <%
 // for satellite clinics
