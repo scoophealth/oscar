@@ -1520,6 +1520,9 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                 <input type="button" name="Button" size="110"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>"
                                     onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=demographic.getDemographicNo()%>'">
+                                <input type="button" size="110" name="Button"
+                                    value="<bean:message key="demographic.demographiceditdemographic.btnClientLabLabel"/>"
+                                    onclick="window.location='printClientLabLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
                                 </td>
                                                         </tr>
                         </table>
@@ -3370,6 +3373,9 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 								<input type="button" name="Button" size="110"
 									value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>"
 									onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=demographic.getDemographicNo()%>'">
+								<input type="button" size="110" name="Button"
+                                    value="<bean:message key="demographic.demographiceditdemographic.btnClientLabLabel"/>"
+                                    onclick="window.location='printClientLabLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
 								</td>
                                                         </tr>
 						</table>
