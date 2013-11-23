@@ -1006,7 +1006,7 @@ ctlCount = 0;
 						<option value="IHF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.IHF" /></option>
 						<option value="OFF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
 						<option value="OTN "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
-						<option value="OTN "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.PDF" /></option>
+						<option value="PDF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.PDF" /></option>
 					</select>
 				    </td>
 				</tr>
