@@ -215,6 +215,7 @@ public class EFormUtil {
 		logger.debug("Img Path: " + imagePath);
 		File dir = new File(imagePath);
 		String[] files = dir.list();
+		Arrays.sort(files);
 		ArrayList<String> fileList;
 		if (files != null) fileList = new ArrayList<String>(Arrays.asList(files));
 		else fileList = new ArrayList<String>();
