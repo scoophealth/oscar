@@ -78,7 +78,10 @@ function write2Parent(text){
 </table>
 
 
-
+	<%
+	//clear so values don't repeat after added to note
+	session.setAttribute("textOnEncounter", null);
+	%>
 
 </body>
 </html:html>
