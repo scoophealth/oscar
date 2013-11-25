@@ -174,6 +174,12 @@ public class SchemaUtils
 			c.close();
 		}
 	}
+	
+	private static boolean isWindows() {
+		String osName = System.getProperty("os.name");
+		return osName.toLowerCase().contains("windows");
+	}
+	
 	public static void restoreTable(boolean includeInitData, String... tableNames) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 		long start = System.currentTimeMillis();
@@ -186,11 +192,20 @@ public class SchemaUtils
 			s.executeUpdate("use "+schema);
 			s.executeUpdate("set foreign_key_checks = 0");
 			for (int i = 0; i < tableNames.length; i++) {
-				s.executeUpdate("drop table if exists " + tableNames[i]);
-				s.executeUpdate(createTableStatements.get(tableNames[i]).replaceAll("_maventest", ""));
+				String tableName = tableNames[i];
+				if (isWindows()) {
+					tableName = tableName.toLowerCase(); // make it case insensitive by default
+				}
+				s.executeUpdate("drop table if exists " + tableName);
+				
+				String createTableStatement = createTableStatements.get(tableName);
+				if (createTableStatement == null) {
+					throw new IllegalStateException("Unable to locate create table statement for " + tableName + ". Please make sure that the table exists in the schema.");
+				}
+				s.executeUpdate(createTableStatement.replaceAll("_maventest", ""));
 				
 				if(includeInitData)
-					s.executeUpdate("insert into " + tableNames[i] + " select * from " + tableNames[i] + "_maventest");
+					s.executeUpdate("insert into " + tableName + " select * from " + tableName + "_maventest");
             }
 			s.executeUpdate("set foreign_key_checks = 1");
 			s.close();
