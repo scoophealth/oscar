@@ -220,11 +220,18 @@ function setBillingCenter( providerNo ) {
 	}
 	}
 }
+
+function checkGroup() {
+	if (document.forms[0].isGroup.value == "true") {
+		alert("You have selected a provider that is configured for group billing. To generate group billing files, 'All Providers' must be selected in the Select Provider dropdown.");
+		document.forms[0].isGroup.value = "false";
+	}
+}
 </script>
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0"
+<body bgcolor="#FFFFFF" text="#000000" onLoad="checkGroup()" topmargin="0"
 	leftmargin="0" rightmargin="0">
 <div id="Layer1"
 	style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
@@ -314,12 +321,15 @@ function setBillingCenter( providerNo ) {
 			%>
 
 		</select></td>
-		<td><input type="submit" name="Submit" value="Create Report">
-		
+		<td>
+		<input type="submit" name="Submit" value="Create Report">
 		<input type="hidden" name="monthCode" value="<%=monthCode%>">
-		<input type="hidden" name="verCode" value="V03"> <input
-			type="hidden" name="curUser" value="<%=user_no%>"> <input
-			type="hidden" name="curDate" value="<%=nowDate%>"></td>
+		<input type="hidden" name="verCode" value="V03">
+		<input type="hidden" name="curUser" value="<%=user_no%>"> 
+		<input type="hidden" name="curDate" value="<%=nowDate%>">
+		<%-- <input type="hidden" name="isGroup" value="<%=isGroup%>"> --%>
+		<input type="hidden" name="isGroup" value="${param.isGroup}">
+		</td>
 	</tr>
 	<tr>
 		<td><font face="Arial, Helvetica, sans-serif" size="2"><b>
