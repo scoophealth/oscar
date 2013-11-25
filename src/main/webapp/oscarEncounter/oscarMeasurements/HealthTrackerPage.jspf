@@ -303,6 +303,7 @@ div.preventionProcedure{
     margin-bottom:3px;
     text-align:center;
     width:100px;
+    cursor: hand; cursor: pointer;
 }
 
 	
@@ -1415,14 +1416,12 @@ if(!btnLabel.equals("PHV")){
     ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.parseInt(demographic_no));
 %>
 
-
 <div class="preventionSection well-small" style="<%=hidden%>">
-   
+
+<!-- preventions type -->   
 <div class="well well-small mtype-graph-input">
 
-<!-- <div style="float:left;padding:1px;width:4px;height:10px;background-color:white;"></div>-->
-
-            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-content="<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
+            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-html="true" data-content="<%//=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%//=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
                 <span title="<%=h2.get("guideline")%>" style="padding-left:5px;"><%=h2.get("display_name")%></span>
             </a>
             <span style="float:right"><input type="button" class="btn" value="Add" onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
