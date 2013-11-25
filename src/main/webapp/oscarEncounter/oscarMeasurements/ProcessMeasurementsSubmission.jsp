@@ -23,15 +23,13 @@
     Ontario, Canada
 
 --%>
-
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page
-	import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 
 <html:html locale="true">
 <head>
@@ -42,7 +40,6 @@
 </head>
 
 <script language="javascript">
-
 function write2Parent(text){  
     var changed = <bean:write name="parentChanged"/>;    
     
@@ -61,11 +58,8 @@ function write2Parent(text){
     
     self.window.close();    
  }
-
-
 </script>
 
-<link rel="stylesheet" type="text/css" href="../styles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 <html:errors />
 <table>
@@ -78,7 +72,10 @@ function write2Parent(text){
 </table>
 
 
-
+<%
+//clear so values don't repeat after added to note
+session.setAttribute("textOnEncounter", null);
+%>
 
 </body>
 </html:html>
