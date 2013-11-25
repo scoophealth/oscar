@@ -68,9 +68,11 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 Vector vecPageSizes=new Vector();
 vecPageSizes.add("A4 page");
 vecPageSizes.add("A6 page");
+vecPageSizes.add("Letter page");
 Vector vecPageSizeValues=new Vector();
 vecPageSizeValues.add("PageSize.A4");
 vecPageSizeValues.add("PageSize.A6");
+vecPageSizeValues.add("PageSize.Letter");
 //are we printing in the past?
 //String reprint = (String)request.getAttribute("rePrint") != null ? (String)request.getAttribute("rePrint") : "false";
 
