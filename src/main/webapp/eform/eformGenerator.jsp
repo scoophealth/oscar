@@ -2541,11 +2541,11 @@ function _CompInt(x, y)
                         } catch(Exception e){
                         	MiscUtils.getLogger().error("Unable to locate image directory", e);
                         }
-                     String output = null;
-                     for(int i=0;i<(test.visitAllFiles(dir)).length;i++){
-                       output=test.visitAllFiles(dir)[i]; %>
-                       <option value="<%= output %>"  ><%= output %></option>
 
+                        ArrayList<String> fileList = EFormUtil.listImages();
+                        for(String fileStr : fileList){
+                        %>
+                          <option value="<%= fileStr %>"  ><%= fileStr %></option>
                        <%
                       }
                      %>
