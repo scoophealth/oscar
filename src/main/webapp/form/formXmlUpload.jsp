@@ -42,30 +42,28 @@
 <title><bean:message key="admin.admin.btnImportFormData" /></title>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000">
-<p><font face="Arial, Helvetica, sans-serif" size="2"><b><bean:message
-	key="admin.admin.btnImportFormData" /></b></font></p>
-<html:form action="/form/xmlUpload.do" method="POST"
-	enctype="multipart/form-data">
-	<font face="Arial, Helvetica, sans-serif" size="2"> </font>
-	<html:errors />
-	<table width="400" border="0">
-		<tr>
-			<td width="181"><b><font face="Arial, Helvetica, sans-serif"
-				size="2">Select Data (in zip format)</font></b></td>
-			<td width="209"><font face="Arial, Helvetica, sans-serif"
-				size="2"> <input type="file" name="file1" value=""></font></td>
-		</tr>
-		<tr>
-			<td width="181"><input type="submit" name="Submit"
-				value="<bean:message key="admin.admin.btnImportFormData"/>">
-			</td>
-			<td width="209">&nbsp;</td>
-		</tr>
-	</table>
+<body>
 
-	<p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
-	<p>&nbsp;</p>
+
+
+<div class="well">
+
+<h3><bean:message key="admin.admin.btnImportFormData" /></h3>
+
+<html:form action="/form/xmlUpload.do" method="POST" enctype="multipart/form-data">
+
+	<html:errors />
+
+
+
+Select data in zip format:<br /> 
+
+<input type="file" name="file1" value=""> <input type="submit" name="Submit" class="btn btn-primary" value="Import">
+
+<p><i class="icon-info-sign"></i> Use this function to import data for a specific form into the OSCAR database</p>
+		
 </html:form>
+
+</div>
 </body>
 </html:html>

@@ -28,53 +28,44 @@
 
 <title>Rich Text Letter Settings</title>
 <script src="../share/javascript/Oscar.js"></script>
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body>
+
 <% if (!userRole.toLowerCase().contains("admin")) { %>
 <p>
 <h2>Sorry! Only administrators can change these settings..</h2>
 </p>
 <% } else { %>
 
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td style="max-width:200px;" class="MainTableTopRowLeftColumn">
-		Rich Text Letter</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>Settings</td>						
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top" nowrap="nowrap">
-		   
-		</td>
-		<td valign="top" class="MainTableRightColumn">
-			<% if (status != null) { %>
-			Rich Text Letter is <%= status %>.
-			<% } else { %>
-			<form action="IndivicaRichTextLetterSettings.do" method="post">
-							
-				<input type="checkbox" name="indivica_rtl_enabled" id="indivica_rtl_enabled" <%= efd.isIndivicaRTLEnabled() ? "checked" : "" %>/> <label for="indivica_rtl_enabled">Check to use Rich Text Letter</label>
-				<br/><input type="submit" value="submit"/> 
-			</form>
-			<% } %>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
-	</tr>
-</table>
+<div class="well">
+
+<h3>Rich Text Letter</h3>
+
+<% if (status != null) { %>
+Rich Text Letter is <%= status %>.
+<% } else { %>
+<form action="<%=request.getContextPath()%>/eform/IndivicaRichTextLetterSettings.do" method="post" class="form-inline" id="rtlConfigForm">
+				
+	<label for="indivica_rtl_enabled"><input type="checkbox" name="indivica_rtl_enabled" id="indivica_rtl_enabled" <%= efd.isIndivicaRTLEnabled() ? "checked" : "" %>/> Check to use Rich Text Letter</label>
+	<br/><br/>
+	
+	<input type="submit" class="btn btn-primary" value="Save"/> 
+</form>
+
+</div>
 
 
 <%}%>
+
+<%}%>
+
+<script>
+registerFormSubmit('rtlConfigForm', 'dynamic-content');
+
+</script>
 </body>
 </html:html>
 <%!

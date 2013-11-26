@@ -30,8 +30,7 @@
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
-	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
-
+	
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String country = request.getLocale().getCountry();
 	
@@ -44,16 +43,15 @@
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
-<title><bean:message key="eform.showmyform.title" /></title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css"
-	href="../share/css/eformStyle.css">
+<title><bean:message key="admin.admin.frmIndependent"/>s</title>
+
+
 <script type="text/javascript">
 function popupPage(varpage, windowname) {
     var page = "" + varpage;
@@ -75,55 +73,51 @@ function checkSelectBox() {
     }
 }
 </script>
-<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body>
 
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
-			key="eform.showmyform.msgMyForm" /></td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td><bean:message key="eform.showmyform.msgFormLybrary" /></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="eform" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">
-                <a href="../admin/admin.jsp"><bean:message key="eform.independent.btnBack" /></a><br>
-                <a href="efmmanageindependent.jsp"><bean:message key="eform.independent.btnCurrent"/></a><br/>
-                <a href="efmmanageindependentdeleted.jsp"><bean:message key="eform.independent.btnDeleted"/></a>
-		</td>
-		<td class="MainTableRightColumn" valign="top">
+<%@ include file="efmTopNav.jspf"%>
 
-				<table class="elements" style="width:100%">
-					<tr bgcolor=<%=deepColor%>>
+
+<div class="well">
+<h3 style="display:inline"><bean:message key="admin.admin.frmIndependent"/>s</h3> <i class="icon-question-sign"></i> <oscar:help keywords="patient independent" key="app.top1"/>
+
+ 
+<p>View: <bean:message key="eform.independent.btnCurrent"/> | <a href="<%=request.getContextPath()%>/eform/efmmanageindependentdeleted.jsp" class="contentLink"><bean:message key="eform.independent.btnDeleted"/></a></p>
+
+
+				<table class="table table-condensed table-striped">
+					<thead>
+					<tr>
 						<th>
-							<a href="efmmanageindependent.jsp?orderby=<%=EFormUtil.NAME%>">
-								<bean:message key="eform.showmyform.btnFormName" />
+							<a href="<%=request.getContextPath()%>/eform/efmmanageindependent.jsp?orderby=<%=EFormUtil.NAME%>" class="contentLink">
+							<bean:message key="eform.showmyform.btnFormName" />
 							</a>
 						</th>
-						<th><a
-							href="efmmanageindependent.jsp?orderby=<%=EFormUtil.SUBJECT%>"><bean:message
-							key="eform.showmyform.btnSubject" /></a></th>
-						<th><a
-							href="efmmanageindependent.jsp?orderby=<%=EFormUtil.PROVIDER%>"><bean:message
-							key="eform.showmyform.btnFormProvider" /></a></th>
-						<th><a
-							href="efmmanageindependent.jsp"><bean:message
-							key="eform.showmyform.formDate" /></a></th>
-						<th><bean:message key="eform.showmyform.msgAction" /></th>
+						<th>	
+							<a href="<%=request.getContextPath()%>/eform/efmmanageindependent.jsp?orderby=<%=EFormUtil.SUBJECT%>" class="contentLink">
+							<bean:message key="eform.showmyform.btnSubject" />
+							</a>
+						</th>
+						<th>
+							<a href="<%=request.getContextPath()%>/eform/efmmanageindependent.jsp?orderby=<%=EFormUtil.PROVIDER%>" class="contentLink">
+							<bean:message key="eform.showmyform.btnFormProvider" />
+							</a>
+						</th>
+						<th>
+							<a href="<%=request.getContextPath()%>/eform/efmmanageindependent.jsp" class="contentLink">
+							<bean:message key="eform.showmyform.formDate" />
+							</a>	
+						</th>
+						<th>
+							<bean:message key="eform.showmyform.msgAction" />
+						</th>
 					</tr>
+					</thead>
+
+
+					<tbody>
 					<%
 						ArrayList<HashMap<String,? extends Object>> eForms;
 						eForms = EFormUtil.listPatientIndependentEForms(orderBy, EFormUtil.CURRENT);
@@ -132,7 +126,7 @@ function checkSelectBox() {
 						{
 							HashMap<String,? extends Object> curform = eForms.get(i);
 					%>
-					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
+					<tr>
 						<td><a href="#"
 							ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
 							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
@@ -156,13 +150,12 @@ function checkSelectBox() {
 					<%
 						}
 					%>
+
+					</tbody>
 				</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn"></td>
-		<td class="MainTableBottomRowRightColumn"></td>
-	</tr>
-</table>
+
+<%@ include file="efmFooter.jspf"%>
+</div>
+
 </body>
 </html:html>

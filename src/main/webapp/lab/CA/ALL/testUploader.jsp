@@ -26,96 +26,66 @@
 
 <% 
 if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-%><%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <%
 String outcome = (String) request.getAttribute("outcome");
-if(outcome != null){
-    if(outcome.equals("success")){
-%><script type="text/javascript">alert("Lab uploaded successfully");</script>
-<%
-    }else if(outcome.equals("uploaded previously")){
-%><script type="text/javascript">alert("Lab has already been uploaded");</script>
-<%    
-    }else if(outcome.equals("exception")){
-%><script type="text/javascript">alert("Exception uploading the lab");</script>
-<%
-    }else{
-%><script type="text/javascript">alert("Failed to upload lab");</script>
-<%
-    }
-}
 %>
-
 
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <title><bean:message key="lab.ca.all.testUploader.labUploadUtility" /></title>
-<link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
-<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+
 <script type="text/javascript">
             function selectOther(){                
                 if (document.UPLOAD.type.value == "OTHER")
-                    document.getElementById('OTHER').style.visibility = "visible";
+                    document.getElementById('OTHER').style.display = "block";
                 else
-                    document.getElementById('OTHER').style.visibility = "hidden";                
+                    document.getElementById('OTHER').style.display = "none";                
             }
-            function checkInput(){
-                if (document.UPLOAD.lab.value ==""){
-                    alert("Please select a lab for upload");
-                    return false;
-                }else if (document.UPLOAD.type.value == "OTHER" && document.UPLOAD.otherType.value == ""){
-                    alert("Please specify the other message type");
-                    return false;
-                }else{
-                    var lab = document.UPLOAD.lab.value;
-                    var ext = lab.substring((lab.length - 3), lab.length);
-                    if (ext != 'hl7' && ext != 'xml'){
-                        alert("Error: The lab must be either a .xml or .hl7 file");
-                        return false;
-                    }
-                }
-                return true;
-            }
-        </script>
+</script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script> 
+
 </head>
 
 <body>
-<form method='POST' name="UPLOAD" enctype="multipart/form-data"
-	action='insideLabUpload.do'>
-<table align="center" class="MainTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
-			key="demographic.demographiceditdemographic.msgPatientDetailRecord" />
-		</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>Upload <!--i18n--></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="lab" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td><input type="submit" value="<bean:message key="lab.ca.all.testUploader.uploadTheLab" />"
-			onclick="return checkInput()"></td>
-		<td>
-		<table>
-			<tr>
-				<td><bean:message key="lab.ca.all.testUploader.pleaseSelectTheLabfile" /></td>
-				<td><input type="file" name="importFile"></td>
-			</tr>
-			<tr>
-				<td><bean:message key="lab.ca.all.testUploader.labType" /></td>
-				<td><select name="type" onClick="selectOther()">
+
+<h3>HL7 Lab Upload</h3>
+<div class="well">
+
+    <div class="alert" style="display:none;">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>  
+    <div id="errorMsg">
+		
+	</div>
+    </div>
+
+<form method='POST' name="UPLOAD" id="uploadForm" enctype="multipart/form-data"	action='${ctx}/lab/CA/ALL/insideLabUpload.do'>
+		
+				<bean:message key="lab.ca.all.testUploader.pleaseSelectTheLabfile" />:<br />
+				<input type="file" name="importFile" id="importFile"> <i class="icon-question-sign"></i> <oscar:help keywords="lab" key="app.top1"/>
+	
+	<br /><br />
+				<bean:message key="lab.ca.all.testUploader.labType" /><br />
+				<select name="type" id="type" onchange="selectOther()">
+					<option value="0">Select Lab Type:</option>
 					<option value="ALPHA">ALPHA</option>
 					<option value="CML">CML</option>
 					<option value="EPSILON">EPSILON/MHL</option>
@@ -139,17 +109,110 @@ if(outcome != null){
 					<option value="ORU_R01">ORU_R01</option>
 					<option value="BIOTEST">BioTest</option>
 					<option value="OTHER">Other</option>
-				</select></td>
-			</tr>
-			<tr id="OTHER" style="visibility: hidden;">
-				<td><bean:message key="lab.ca.all.testUploader.pleaseSpecifyTheOtherLabType" /></td>
-				<td><input type="text" name="otherType"></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-</table>
-</form>
+				</select>
+			<br />
+			<div id="OTHER" style="display: none;">
+				<bean:message key="lab.ca.all.testUploader.pleaseSpecifyTheOtherLabType" />:<br />
+				<input type="text" name="otherType">
+			</div>
+			
+			<br />
+			<button type="submit" class="btn btn-primary"><i class="icon-upload"></i> Upload</button>
 
+</form>
+</div>
 </body>
+
+<script>
+var pageTitle = $(document).attr('title');
+$(document).attr('title', 'Administration Panel | <bean:message key="lab.ca.all.testUploader.labUploadUtility" />');
+
+$("#uploadForm").submit(function() {
+	
+	var lab = $('#importFile').val();
+	var ext = lab.substring((lab.length - 3), lab.length);
+
+	var type=$('#type').val();
+	var other = $('input[name=otherType]').val();
+
+		
+	if (lab==""){
+        $('.alert').removeClass('alert-success');
+        $('.alert').addClass('alert-error');
+        $('.alert').show();
+         
+        $('#errorMsg').html("<strong>Error!</strong> Please select a lab for upload.");
+
+        
+        return false;
+        
+	}else if(ext != 'hl7' && ext != 'xml'){
+
+	        $('.alert').removeClass('alert-success');
+	        $('.alert').addClass('alert-error');
+	        $('.alert').show();
+	         
+	        $('#errorMsg').html("<strong>Error!</strong> The lab must be either a .xml or .hl7 file.");
+
+	       
+	        return false;
+	}else if(type=="0" || type==""){
+	    $('.alert').removeClass('alert-success');
+        $('.alert').addClass('alert-error');
+        $('.alert').show();
+         
+        $('#errorMsg').html("<strong>Error!</strong> Please specify a lab type.");
+        return false;
+	}else if(type=="OTHER" && other==""){
+
+		    $('.alert').removeClass('alert-success');
+	        $('.alert').addClass('alert-error');
+	        $('.alert').show();
+	         
+	        $('#errorMsg').html("<strong>Error!</strong> Please specify the <strong>other</strong> lab type.");
+	        return false; 
+	}
+	
+
+});
+
+$( document ).ready(function( $ ) {
+<%
+if(outcome != null){
+	   if(outcome.equals("success")){
+	%>
+    $('.alert').removeClass('alert-error');
+    $('.alert').addClass('alert-success');
+	$('#errorMsg').html("Lab uploaded successfully");
+	$('.alert').show();
+	<%
+	    }else if(outcome.equals("uploaded previously")){
+	%>
+     $('.alert').removeClass('alert-success');
+     $('.alert').addClass('alert-error');
+	 $('#errorMsg').html("Lab has already been uploaded");
+	 $('.alert').show();
+	<%    
+	    }else if(outcome.equals("exception")){
+	%>
+	  $('.alert').removeClass('alert-success');
+      $('.alert').addClass('alert-error');  	
+	  $('#errorMsg').html("Exception uploading the lab");
+	  $('.alert').show();
+	<%
+	    }else{
+	%>
+	  $('.alert').removeClass('alert-success');
+      $('.alert').addClass('alert-error');
+	  $('#errorMsg').html("Failed to upload lab");
+	  $('.alert').show();
+	
+	<%
+	    }
+	}
+	%>
+	
+});
+
+</script>
 </html>
