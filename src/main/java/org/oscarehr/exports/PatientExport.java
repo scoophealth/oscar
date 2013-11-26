@@ -279,21 +279,6 @@ public abstract class PatientExport {
 	}
 
 	/**
-	 * Check if string is valid numeric
-	 * 
-	 * @param rhs
-	 * @return True if rhs is a number, else false
-	 */
-	public static boolean isNumeric(String rhs) {
-		try {
-			Double.parseDouble(rhs);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Function to allow access to ICD9 Description table data based on ICD9 code
 	 * 
 	 * @param code

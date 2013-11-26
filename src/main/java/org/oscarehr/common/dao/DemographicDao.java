@@ -960,6 +960,27 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		}
 	}
 
+	public static List<Integer> getDemographicIdsOpenedSinceTime(Date value) {
+		Connection c = null;
+		try {
+			c = DbConnectionFilter.getThreadLocalDbConnection();
+			PreparedStatement ps = c.prepareStatement("SELECT DISTINCT demographic_no FROM log WHERE dateTime >= ?");
+			ps.setDate(1, new java.sql.Date(value.getTime()));
+			ResultSet rs = ps.executeQuery();
+			ArrayList<Integer> results = new ArrayList<Integer>();
+			while (rs.next()) {
+				if (rs.getInt(1) != 0) {
+					results.add(rs.getInt(1));
+				}
+			}
+			return (results);
+		} catch (SQLException e) {
+			throw (new PersistenceException(e));
+		} finally {
+			SqlUtils.closeResources(c, null, null);
+		}
+	}
+
 	public static List<Integer> getDemographicIdsOpenedChartSinceTime(String value) {
 		Connection c = null;
 		try {
