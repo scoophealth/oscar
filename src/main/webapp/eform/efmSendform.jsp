@@ -23,12 +23,11 @@
     Ontario, Canada
 
 --%>
-<%-- 
-    Document   : efmSendform
-    Created on : Sep 3, 2009, 12:53:57 PM
-    Author     : jaygallagher
---%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%><%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%><%
+
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.*"%>
+<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
+
+<%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
@@ -36,20 +35,25 @@
     UserProperty prop = userPropertyDAO.getProp((String) session.getAttribute("user"),  UserProperty.MYDRUGREF_ID);
     String mydrugrefid = prop == null ? null : prop.getValue();
     if (mydrugrefid == null){mydrugrefid = "";}
+
+
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
         <title>myDrugref login details</title>
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/eformStyle.css">
+
     </head>
     <body>
 
-         <div id="importDiv" class="inputDiv" >
+<%@ include file="efmTopNav.jspf"%>
+
+         <div id="importDiv" class="well" >
+
+<h3>Send to eForm Emporium</h3>
             <center>
-            <form action="../eform/manageEForm.do" method="POST" >
+            <form action="<%= request.getContextPath() %>/eform/manageEForm.do" method="POST" id="eformSendForm" >
             <table style="text-align: center; border-collapse: collapse; border: 0px;">        
                 <tr>
                     <td class="fieldLabel">Username:</td>
@@ -84,19 +88,21 @@
                     </td>
                 </tr>
 
-                <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="Send to Eform Emporium" onclick="this.value = 'Importing...'; this.disabled = true;"></td></tr>
+                <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" class="btn btn-primary" value="Send" onclick="this.value = 'Sending...'; this.disabled = true;"></td></tr>
                 <tr><td>&nbsp;</td></tr>
             </table>
             </form>
             </center>
         </div>
 
-        <form action="../eform/manageEForm.do" method="POST" >
+        <form action="<%= request.getContextPath() %>/eform/manageEForm.do" method="POST" >
             <input type="hidden" name="method" value="exportEFormSend"/>
-            
-            
-     
         </form>
 
+<%@ include file="efmFooter.jspf"%>
+
+<script>
+registerFormSubmit('eformSendForm', 'dynamic-content');
+</script>
     </body>
 </html>

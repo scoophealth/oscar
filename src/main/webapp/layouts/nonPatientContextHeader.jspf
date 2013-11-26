@@ -41,7 +41,9 @@
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 
-<% 
+<%
+if (session.getAttribute("userrole") == null) response.sendRedirect(request.getContextPath()+"/logout.jsp");
+
 UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
     		
 Properties oscarVariables = OscarProperties.getInstance();
@@ -65,33 +67,83 @@ int curMonth = (cal.get(Calendar.MONTH)+1);
 int curDay = cal.get(Calendar.DAY_OF_MONTH);
 %>
 
-<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/datepicker.css">
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/DT_bootstrap.css">
-<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
+<head>
+<title>OSCAR</title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
 
 <style>
-body{background-color: #f3f3f3;}
+body{background-color: #fff /*#f3f3f3*/;}
 
-sup{  
+sup{
 color:#000;
 font-weight:bold;
 }  
 
+#main-wrapper{margin-top:70px;}
+
+div.navbar div.dropdown:hover ul.dropdown-menu{
+    display: block;  
+    margin:0px;  
+}
+
+.navbar .dropdown-menu {
+ margin-top: 0px;
+}
+
+.navbar .nav > li > a {
+padding:10px 10px;
+}
+
+#caret-loggedIn{
+vertical-align: top; 
+opacity: 0.3;
+margin-top:18px;
+}
+
 .accordion-heading{background-color:#fff;border-bottom:thin solid #C6C6C6;}
 
+.accordion-heading:hover{background-color:#e6e6e6;}
+.accordion-heading a:hover{text-decoration:none;}
+
+.icon-chevron-right{opacity:0.3;}
+
+.accordion-heading a:hover > .icon-chevron-right{opacity: 1;}
+
+.selected-heading{background-color:#e6e6e6;}
+
+.accordion-inner{background-color:#fff;border-bottom:thin solid #C6C6C6;}
+
+.accordion-inner a{color:#424242;}
+.accordion-inner a:hover{text-decoration:none;color:#000; cursor: pointer; cursor: hand;}
+
+.accordion-inner li{border-bottom: thin solid #c6c6c6;padding:2px 0px 2px 0px;}
+
+
 #side{
-border-right:thin solid #C6C6C6;
+position:absolute;
+/* border-right:thin solid #C6C6C6; */
 padding-right:10px;
+padding-bottom:20px
 }
 
 .icon-chevron-right{float:right;}  
+
+#adminNav{
+-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
+-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
+}
 
 #adminNav ul{
 	padding: 0px;
 	margin: 0px;
 	list-style-type: none;
 }
+
+#dynamic-content{}
 
 label.valid {
 	width: 24px;
@@ -110,9 +162,33 @@ label.error {
 	display: inline;
 }
 
+.table tbody tr:hover td, .table tbody tr:hover th {
+    background-color: #FFFFAA;
+}
+
+
+@media (max-width: 767px) {
+     #side {
+         width:98%;
+         position:static;
+     }
+     
+     #main-wrapper{margin-top:30px;}
+ }
+  
+@media (min-width: 768px) and (max-width: 1430px) { 
+	
+	 #side{
+	 	width: 240px;
+	 	margin-right:15px;
+	  } 
+	  
+	  #dynamic-content{margin-left:260px;}
+}
+
 .visible-print {
   display: none !important;
-}
+}  
 
 @media print {
   .visible-print {
@@ -125,7 +201,9 @@ label.error {
 </style>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+
 <oscar:customInterface section="main"/> <!--needs to be in header-->
+</head>
 
 <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -134,30 +212,27 @@ label.error {
           <a href="http://oscarmcmaster.org/" target="_blank" title="OSCAR EMR"><img src="<%=request.getContextPath()%>/images/oscar_logo_small.png" border="0" style="float:left"></a>
           
 			<div class="dropdown navbar-text pull-right" style="display:inline">
-					<bean:message key="global.loggedIn" />  <a class="navbar-link dropdown-toggle" data-toggle="dropdown" id="dLabel" role="button" href="#username" style="color:#000;"><%=userfirstname%> <%=userlastname%></a>
+					<bean:message key="global.loggedIn" />  <a class="navbar-link dropdown-toggle" data-toggle="dropdown" id="dLabel" role="button" href="#username" style="color:#000;"><%=userfirstname%> <%=userlastname%> <b class="caret" id="caret-loggedIn"></b></a>
 					 <ul class="dropdown-menu">
 					 				<li>	
-					 				<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-									<a href=# onClick ="popupPage2('<%=resourcebaseurl%>')"><bean:message key="global.help"/></a>
-									</caisi:isModuleLoad>
+									<!-- <a href=# onClick ="popupPage2('<%=resourcebaseurl%>')"><bean:message key="global.help"/></a>-->
+									<a href=# onClick ="popupPage2('<%=request.getContextPath()%>/oscarEncounter/About.jsp')">About</a>
 									</li>
 									<li class="divider"></li>
-									
-									<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+								
 										<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
-										  <li id="admin">
-										     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp');return false;"><i class="icon-cog"></i> <bean:message key="global.admin"/></a>
-										  </li>
+										 <!--  <li id="admin">
+										     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp');return false;"><i class="icon-cog"></i> Old <bean:message key="global.admin"/></a>
+										  </li>-->
 										
 										<% if (OscarProperties.getInstance().getBooleanProperty("admin2.enabled", "true")) { %>
 										<li id="admin2">
-										 <a href="<%=request.getContextPath()%>/administration/" TITLE='Administration Panel'><i class="icon-cog"></i> New Administration</a>
+										 <a href="<%=request.getContextPath()%>/administration/" TITLE='Administration Panel'><i class="icon-cog"></i> <bean:message key="global.admin"/></a>
 										<!--title new is temp for development-->
 										</li>
 										<% } %>
 										  
 										</security:oscarSec>
-									</caisi:isModuleLoad>
 									
 							        <security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 									<li>  
@@ -206,14 +281,12 @@ label.error {
 			 </li>
 			
 			<!-- TODO:mobile version code excluded here re-visit -->
-			
-			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+		
 			 <security:oscarSec roleName="<%=roleName$%>" objectName="_resource" rights="r">
-			 <li>
-			    <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="oscarEncounter.Index.clinicalResources"/></a>
-			 </li>
+			 <!-- <li>
+			    
+			 </li>-->
 			 </security:oscarSec>
-			</caisi:isModuleLoad>
 			
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_search" rights="r">
 			 <li id="search">
@@ -226,7 +299,6 @@ label.error {
 			</li>
 			</security:oscarSec>
 			
-			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="r">
 			<li>
 			    <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a>
@@ -241,25 +313,20 @@ label.error {
 			    
 			</li>
 			</security:oscarSec>
-			</oscar:oscarPropertiesCheck>
-			 </caisi:isModuleLoad>			
+			</oscar:oscarPropertiesCheck>		
 			 			 
-			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_con" rights="r">
 			<li id="con">
 			 <a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
 			 <span id="oscar_aged_consults"><bean:message key="global.con"/></span></a>
 			</li>
 			</security:oscarSec>
-			</caisi:isModuleLoad>
 			
-			 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r">
 			<li>
 			   <a HREF="#" onclick="popupPage2('<%=request.getContextPath()%>/dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a>
 			</li>
 			</security:oscarSec>
-			 </caisi:isModuleLoad>
 			 
 			<oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
 			<li>
@@ -272,7 +339,6 @@ label.error {
 			   <li><a href="javascript: function myFunction() {return false; }" onClick="popupPage2('<%=request.getContextPath()%>/oscarWorkflow/WorkFlowList.jsp','<bean:message key="global.workflow"/>')"><bean:message key="global.btnworkflow"/></a></li>
 			</oscar:oscarPropertiesCheck>
 
-			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 			 <oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">			
 			 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
 			   <li>
@@ -292,7 +358,6 @@ label.error {
 				 <span id="oscar_new_msg"><bean:message key="global.msg"/></span></a>
 			     </li>
 			   	</security:oscarSec>
-			 </caisi:isModuleLoad>
 			
 		   <security:oscarSec roleName="<%=roleName$%>" objectName="_tickler" rights="r">
 			<li>
@@ -361,3 +426,7 @@ label.error {
     	</div>
     </div>
 </div>
+
+<div style="position:absolute;top:50px; right:20px"><i class=" icon-question-sign"></i> <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="" onmouseover="window.status='';return true">Help</a> <a href="javascript:void(0)"  onClick="window.open('<%=request.getContextPath()%>/oscarEncounter/About.jsp','About OSCAR','scrollbars=1,resizable=1,width=800,height=600,left=0,top=0')" style="margin-left:10px;"><i class=" icon-question-sign"></i> <bean:message key="global.about" /></a></div>
+
+<!--<oscar:help keywords="admin" key="app.top1"/> --> 

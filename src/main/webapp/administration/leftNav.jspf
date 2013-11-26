@@ -23,39 +23,29 @@
     Ontario, Canada
 
 --%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
 
+<%@ page import="org.apache.commons.lang.StringUtils"%>
+
+<%
+String curProvider_no = (String)session.getAttribute("user");
+%>
 
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
-    <div class="span2" id="side">
+<div class="span2" id="side">
    
-    <!--Sidebar content-->
-    
-  
+    <!--Sidebar content--> 
 		<div class="accordion" id="adminNav">
 		
 			<div class="accordion-group nav nav-tabs">
 			
-			<div class="accordion-heading well-small" style="margin-bottom:0px;">
-			<i class="icon-cog"></i> <bean:message key="admin.admin.page.title" />
+			<div class="accordion-heading well-small" style="margin-bottom:0px;color:#000">
+			<a href="${ctx}/administration/"><i class="icon-cog"></i> <bean:message key="admin.admin.page.title" /></a>
 			</div>
-
-<%
-int fileIndex=0;
-if(request.getParameter("index")!=null){
-	fileIndex=Integer.parseInt(request.getParameter("index"));
-}
-%>
 
 <!-- #USER MANAGEMENT -->
 <security:oscarSec roleName="<%=roleName$%>"
@@ -66,12 +56,32 @@ if(request.getParameter("index")!=null){
 				<bean:message key="admin.admin.UserManagement" />
 				<i class="icon-chevron-right"></i> 
 				</a>
-				
 				</div>
-				
-				<div id="collapseOne" class="accordion-body collapse <%=fileIndex==1?"in":""%>">
+				<div id="collapseOne" class="accordion-body collapse">
 				<div class="accordion-inner">
-				<a href="?index=1">Create Provider</a>
+				<ul>					
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/provideraddarecordhtm.jsp"><bean:message key="admin.admin.btnAddProvider" /></a></li>
+					
+					
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/providersearchrecordshtm.jsp">
+						<bean:message key="admin.admin.btnSearchProvider" />
+					</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/securityaddarecord.jsp">
+						<bean:message key="admin.admin.btnAddLogin" />
+					</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/securitysearchrecordshtm.jsp">
+						<bean:message key="admin.admin.btnSearchLogin" />
+					</a></li>
+			
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/providerRole.jsp">
+					<bean:message key="admin.admin.assignRole"/></a></li>
+						
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin,_admin.unlockAccount" rights="r">
+						<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/unLock.jsp">
+						<bean:message key="admin.admin.unlockAcct"/></a></li>
+					</security:oscarSec>
+				</ul>
 				</div>
 				</div>
 </security:oscarSec>
@@ -87,7 +97,122 @@ if(request.getParameter("index")!=null){
 				</div>
 				<div id="collapseTwo" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+		            <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>">
+		            
+		            <oscar:oscarPropertiesCheck property="billregion" value="BC">
+
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/manageBillingform.jsp"><bean:message key="admin.admin.ManageBillFrm"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/billingPrivateCodeAdjust.jsp"><bean:message key="admin.admin.ManagePrivFrm"/></a></li>
+					<oscar:oscarPropertiesCheck property="BC_BILLING_CODE_MANAGEMENT"
+						value="yes">
+						<li><a href='javascript:void(0);'
+							class="xlink" rel="${ctx}/billing/CA/BC/billingCodeAdjust.jsp"><bean:message key="admin.admin.ManageBillCodes"/></a></li>
+					</oscar:oscarPropertiesCheck>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/showServiceCodeAssocs.do"><bean:message key="admin.admin.ManageServiceDiagnosticCodeAssoc"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/supServiceCodeAssocAction.do"><bean:message key="admin.admin.ManageProcedureFeeCodeAssoc"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/billingManageReferralDoc.jsp"><bean:message key="admin.admin.ManageReferralDoc"/></a></li>
+					<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no" defaultVal="true">
+						<li><a href='javascript:void(0);'
+							class="xlink" rel="${ctx}/billing/CA/BC/billingSim.jsp"><bean:message key="admin.admin.SimulateSubFile"/></a></li>
+						<li><a href='javascript:void(0);'
+							class="xlink" rel="${ctx}/billing/CA/BC/billingTeleplanGroupReport.jsp"><bean:message key="admin.admin.genTeleplanFile"/></a></li>
+					</oscar:oscarPropertiesCheck>
+					<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="yes">
+						<li><a href='javascript:void(0);'
+							class="xlink" rel="${ctx}/billing/CA/BC/TeleplanSimulation.jsp"><bean:message key="admin.admin.simulateSubFile2"/></a></li>
+						<li><a href='javascript:void(0);'
+							class="xlink" rel="${ctx}/billing/CA/BC/TeleplanSubmission.jsp"><bean:message key="admin.admin.genTeleplanFile2"/></a></li>
+						<li><a href='javascript:void(0);'
+							class="xlink" rel="${ctx}/billing/CA/BC/teleplan/ManageTeleplan.jsp"><bean:message key="admin.admin.manageTeleplan"/></a></li>
+					</oscar:oscarPropertiesCheck>
+					<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no"
+						defaultVal="true">
+						<li><a href='javascript:void(0);'
+							class="xlink" rel="${ctx}/billing/CA/BC/billingTA.jsp"><bean:message key="admin.admin.uploadRemittance"/></a></li>
+					</oscar:oscarPropertiesCheck>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/viewReconcileReports.jsp"><bean:message key="admin.admin.reconciliationReports"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/billingAccountReports.jsp"><bean:message key="admin.admin.AccountingRpts"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/billStatus.jsp"><bean:message key="admin.admin.editInvoices"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/BC/settleBG.jsp"><bean:message key="admin.admin.settlePaidClaims"/></a></li>
+					</oscar:oscarPropertiesCheck>
+			
+					<oscar:oscarPropertiesCheck property="billregion" value="ON">
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"><bean:message key="admin.admin.scheduleOfBenefits"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/addEditServiceCode.jsp"><bean:message key="admin.admin.manageBillingServiceCode"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/billingONEditPrivateCode.jsp"><bean:message key="admin.admin.managePrivBillingCode"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/manageCSSStyles.do"><bean:message key="admin.admin.manageCodeStyles"/></a></li>
+					<li><a href='#'
+						class="xlink" rel="${ctx}/admin/gstControl.jsp"><bean:message key="admin.admin.manageGSTControl"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/gstreport.jsp"><bean:message key="admin.admin.gstReport"/></a></li>
+					<li><a href='#'
+						class="xlink" rel="${ctx}/billing/CA/ON/manageBillingLocation.jsp"><bean:message
+						key="admin.admin.btnAddBillingLocation" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/manageBillingform.jsp"><bean:message
+						key="admin.admin.btnManageBillingForm" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/billingOHIPsimulation.jsp?html="><bean:message
+						key="admin.admin.btnSimulationOHIPDiskette" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/billingOHIPreport.jsp"><bean:message
+						key="admin.admin.btnGenerateOHIPDiskette" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/billingCorrection.jsp?billing_no="><bean:message
+						key="admin.admin.btnBillingCorrection" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/batchBilling.jsp?service_code=all"><bean:message
+						key="admin.admin.btnBatchBilling" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/inr/reportINR.jsp?provider_no=all"><bean:message
+						key="admin.admin.btnINRBatchBilling" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/billingONUpload.jsp"><bean:message key="admin.admin.uploadMOHFile"/></a></li>
+					
+						
+					<oscar:oscarPropertiesCheck property="moh_file_management_enabled" value="true" defaultVal="false">
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/billing/CA/ON/viewMOHFiles.jsp"><bean:message key="admin.admin.viewMOHFiles"/></a></li>
+					</oscar:oscarPropertiesCheck>
+					
+					
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/servlet/oscar.DocumentUploadServlet"><bean:message
+						key="admin.admin.btnBillingReconciliation" /></a></li>                       
+		                        <!--  li><a href='javascript:void(0);' onclick ='popupPage(600,900,"${ctx}/billing/CA/ON/billingRA.jsp");return false;'><bean:message key="admin.admin.btnBillingReconciliation"/></a></li-->
+					<!--  li><a href='javascript:void(0);' onclick ='popupPage(600,1000,"${ctx}/billing/CA/ON/billingOBECEA.jsp");return false;'><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li-->
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/billing/CA/ON/billStatus.jsp"><bean:message key="admin.admin.invoiceRpts"/></a></li>
+		                        <li><a href='javascript:void(0);'
+		                                class="xlink" rel="${ctx}/billing/CA/ON/endYearStatement.do"><bean:message key="admin.admin.endYearStatement"/></a></li>
+					
+					<oscar:oscarPropertiesCheck property="rma_enabled" value="true" defaultVal="false">
+						<li>
+							<a href='#'	class="xlink" rel="${ctx}/admin/clinicNbrManage.jsp">Manage Clinic NBR Codes</a>
+						</li>
+					</oscar:oscarPropertiesCheck>
+					
+					</oscar:oscarPropertiesCheck>
+		            </security:oscarSec>
+		                        
+		               
+		                <oscar:oscarPropertiesCheck property="billregion" value="ON">             	
+		                        <li><a href='javascript:void(0);' class="xlink" rel='${ctx}/billing/CA/ON/billingONPayment.jsp'><bean:message key="admin.admin.paymentReceived"/></a></li>
+		                </oscar:oscarPropertiesCheck>
+				</ul>
 				</div>
 				</div>
 </security:oscarSec>
@@ -104,7 +229,15 @@ if(request.getParameter("index")!=null){
 				
 				<div id="collapseThree" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/lab/CA/ALL/testUploader.jsp" ><bean:message key="admin.admin.hl7LabUpload" /></a></li>
+					<oscar:oscarPropertiesCheck property="OLD_LAB_UPLOAD" value="yes" defaultVal="false">
+						<li><a href="${ctx}/lab/CA/BC/LabUpload.jsp" class="contentLink"><bean:message key="admin.admin.oldLabUpload"/></a></li>
+					</oscar:oscarPropertiesCheck>
+					<li><a href="${ctx}/admin/labforwardingrules.jsp" class="contentLink"><bean:message key="admin.admin.labFwdRules" /></a></li>
+					
+					<li><a href="${ctx}/admin/addQueue.jsp" class="contentLink"><bean:message key="admin.admin.AddNewQueue"/></a></li>
+				</ul>
 				</div>
 				</div>
 </security:oscarSec>
@@ -120,14 +253,43 @@ if(request.getParameter("index")!=null){
 				</div>
 				<div id="collapseFour" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+					<li><a href="${ctx}/form/setupSelect.do" class="contentLink"><bean:message key="admin.admin.btnSelectForm" /></a></li>
+					
+					<li><a href="${ctx}/form/formXmlUpload.jsp" class="contentLink"><bean:message key="admin.admin.btnImportFormData" /></a></li>
+					
+					<li><a href="${ctx}/eform/efmformmanager.jsp" class="contentLink">
+						<bean:message key="eform.showmyform.msgManageEFrm"/>
+					</a></li>
+
+					<li><a href="${ctx}/eform/efmimagemanager.jsp"  class="contentLink">
+						<bean:message key="admin.admin.btnUploadImage" />
+					</a></li>
+					<li><a href="${ctx}/eform/efmmanageformgroups.jsp" class="contentLink">
+						<bean:message key="admin.admin.frmGroups"/>
+					</a></li>
+		
+					<% if (org.oscarehr.common.IsPropertiesOn.isIndivicaRichTextLetterEnable()) { %>
+					<li><a href="${ctx}/eform/efmformrtl_config.jsp" class="contentLink"><bean:message key="admin.admin.richTextLetter"/></a></li>
+					<% } %>
+		
+					<li><a href="${ctx}/eform/efmmanageindependent.jsp" class="contentLink">
+						<bean:message key="admin.admin.frmIndependent"/>s
+					</a></li>
+
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.fieldnote" rights="r" reverse="<%=false%>">
+					<li><a href='javascript:void(0);' 
+						class="xlink" rel="${ctx}/eform/fieldNoteReport/fieldnotereport.jsp">
+						<bean:message key="admin.admin.fieldNoteReport" /></a>
+					</li>
+					</security:oscarSec>
+				</ul>
 				</div>
 				</div>
 </security:oscarSec>
 <!--  #FORMS/EFORMS END-->	
 
 <!-- #REPORTS-->
-<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFive">
@@ -165,7 +327,8 @@ if(request.getParameter("index")!=null){
 								key="admin.admin.rehabStudy" /></a></li>
 								
 					<caisi:isModuleLoad moduleName="caisi">		
-						<li><html:link action="/PMmodule/Reports/ProgramActivityReport" styleClass="contentLink"><bean:message key="admin.admin.activityRpt" /></html:link></li>
+						<li><a href="javascript:void(0);"
+						class="xlink" rel="/PMmodule/Reports/ProgramActivityReport" styleClass="contentLink"><bean:message key="admin.admin.activityRpt" /></a></li>
 					</caisi:isModuleLoad>			
 								
 					<li><a href="${ctx}/oscarReport/patientlist.jsp"
@@ -202,11 +365,9 @@ if(request.getParameter("index")!=null){
 				</div>
 				</div>
 	</security:oscarSec>
-</caisi:isModuleLoad>
 <!-- #REPORTS END -->	
 
 <!-- #ECHART -->
-<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSix">
@@ -216,15 +377,16 @@ if(request.getParameter("index")!=null){
 				</div>
 				<div id="collapseSix" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/providertemplate.jsp"><bean:message
+						key="admin.admin.btnInsertTemplate" /></a></li>
+				</ul>
 				</div>
 				</div>
 	</security:oscarSec>
-</caisi:isModuleLoad>
 <!-- #ECHART END-->	
 
-
-<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <!-- #Schedule Management -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
@@ -236,11 +398,122 @@ if(request.getParameter("index")!=null){
 				
 				<div id="collapseSeven" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="${ctx}/schedule/scheduletemplatesetting.jsp"
+						title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message
+						key="admin.admin.scheduleSetting" /></a></li>
+					<oscar:oscarPropertiesCheck property="ENABLE_EDIT_APPT_STATUS"
+						value="yes">
+						<li><a href="javascript:void(0);"
+							class="xlink" rel='${ctx}/appointment/appointmentstatuscontrol.jsp'
+							title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message
+							key="admin.admin.appointmentStatusSetting" /></a></li>
+					</oscar:oscarPropertiesCheck>
+		
+					<li><a href="javascript:void(0);" class="xlink" rel='${ctx}/appointment/appointmentTypeAction.do'><bean:message
+								key="admin.admin.appointmentTypeList" /></a></li>
+								
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="${ctx}/admin/adminnewgroup.jsp?submit=blank"><bean:message
+						key="admin.admin.btnAddGroupNoRecord" /></a></li>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="${ctx}/admin/admindisplaymygroup.jsp"><bean:message
+						key="admin.admin.btnSearchGroupNoRecords" /></a></li>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="${ctx}/admin/groupnoacl.jsp"><bean:message
+						key="admin.admin.btnGroupNoAcl" /></a></li>
+		                        <li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/groupPreferences.jsp"><bean:message key="admin.admin.btnGroupPreference" /></a></li>
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarPrevention/PreventionManager.jsp" title="Customize prevention notifications."><bean:message key="admin.admin.preventionNotification.title" /></a></li>
+				</ul>
 				</div>
 				</div>
 	</security:oscarSec>
 <!-- #Schedule Management END-->
+
+<!-- #CAISI - TODO: Should this move under system management?-->
+<caisi:isModuleLoad moduleName="caisi">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi" 	rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseCAISI">
+				<bean:message key="admin.admin.caisi" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseCAISI" class="accordion-body collapse">
+				<div class="accordion-inner">
+				<ul>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="/SystemMessage.do">
+						<bean:message key="admin.admin.systemMessage" />
+					</a></li>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></a></li>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="/issueAdmin.do?method=list">
+						<bean:message key="admin.admin.issueEditor" />
+					</a></li>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="/SurveyManager.do">
+						<bean:message key="admin.admin.surveyManager" />
+					</a></li>
+					<li><a href="javascript:void(0);"
+						class="xlink" rel="/DefaultEncounterIssue.do">
+						<bean:message key="admin.admin.defaultEncounterIssue" />
+					</a></li>
+				</ul>
+				</div>
+				</div>
+	</security:oscarSec>
+
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi" rights="r" reverse="<%=true%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseCAISI2">
+				<bean:message key="admin.admin.caisi" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseCAISI2" class="accordion-body collapse">
+				<div class="accordion-inner">
+				<ul>
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin.systemMessage" rights="r" reverse="<%=false%>">
+						<li><a href="javascript:void(0);"
+						class="xlink" rel="/SystemMessage.do">
+							<bean:message key="admin.admin.systemMessage" />
+						</a></li>
+					</security:oscarSec>
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin.facilityMessage" rights="r" reverse="<%=false%>">
+						<li><a href="javascript:void(0);"
+						class="xlink" rel="/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></a></li>
+					</security:oscarSec>
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin.lookupFieldEditor" rights="r">
+						<li><a href="javascript:void(0);"
+						class="xlink" rel="/Lookup/LookupTableList.do"> <bean:message key="admin.admin.LookupFieldEditor"/></a></li>
+					</security:oscarSec>
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin.issueEditor" rights="r">
+						<li><a href="javascript:void(0);"
+						class="xlink" rel="/issueAdmin.do?method=list">
+							<bean:message key="admin.admin.issueEditor" />
+						</a></li>
+					</security:oscarSec>
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin.userCreatedForms" rights="r">
+						<li><a href="javascript:void(0);"
+						class="xlink" rel="/SurveyManager.do">
+							<bean:message key="admin.admin.surveyManager" />
+						</a></li>
+					</security:oscarSec>
+				</ul>
+				</div>
+				</div>	
+	</security:oscarSec>
+</caisi:isModuleLoad>
+<!-- #CAISI END-->
 
 <!-- #SYSTEM Management-->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
@@ -252,7 +525,103 @@ if(request.getParameter("index")!=null){
 				</div>
 				<div id="collapseEight" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+				<security:oscarSec roleName="<%=roleName$%>"
+					objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>">
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/providerAddRole.jsp">
+					<bean:message key="admin.admin.addRole"/></a></li>
+				</security:oscarSec>
+							
+				<li><a href='javascript:void(0);'
+					class="xlink" rel="${ctx}/admin/providerPrivilege.jsp">
+				<bean:message key="admin.admin.assignRightsObject"/></a></li>
+				
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/displayDocumentCategories.jsp"><bean:message key="admin.admin.DocumentCategories"/></a></li>
+		
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/ManageClinic.do"><bean:message key="admin.admin.clinicAdmin"/></a></li>
+					<%
+						if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable())
+									{
+					%>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/ManageSites.do"><bean:message key="admin.admin.sitesAdmin"/></a></li>
+					<%
+						}
+					%>
+		            <li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/oscarEncounter/oscarConsultationRequest/config/EditSpecialists.jsp"><bean:message key="admin.admin.professionalSpecialistAdmin"/></a></li>
+					
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/oscarResearch/oscarDxResearch/dxResearchCustomization.jsp"><bean:message
+						key="oscarEncounter.Index.btnCustomize" /> <bean:message
+						key="oscar.admin.diseaseRegistryQuickList" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/Customization.jsp"><bean:message
+						key="oscarEncounter.Index.btnCustomize" /> <bean:message
+						key="admin.admin.oscarMeasurements" /></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/resourcebaseurl.jsp"
+						title='<bean:message key="admin.admin.baseURLSettingTitle"/>'><bean:message
+						key="admin.admin.btnBaseURLSetting" /></a></li>
+				
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>">
+							<li><a href='javascript:void(0);'
+								class="xlink" rel="${ctx}/oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>"><bean:message
+								key="admin.admin.messages" /></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel="${ctx}/oscarMessenger/config/MessengerAdmin.jsp"><bean:message
+								key="admin.admin.btnMessengerAdmin" /></a></li>
+				
+					</security:oscarSec>
+					
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/keygen/keyManager.jsp"><bean:message key="admin.admin.keyPairGen" /></a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/FacilityManager.do"><bean:message key="admin.admin.manageFacilities" /></a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp">Create New Flowsheet</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/manageFlowsheets.jsp"><bean:message key="admin.admin.flowsheetManager"/></a></li>
+			      	
+			      	<oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
+			            <li><a href='javascript:void(0);'
+			            class="xlink" rel="${ctx}/admin/uploadEntryText.jsp"><bean:message key="admin.admin.uploadEntryTxt"/></a>
+			            </li>
+		            </oscar:oscarPropertiesCheck>	
+		            
+				 	<%
+						if (oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled())
+								{
+					%>
+					<security:oscarSec roleName="<%=roleName$%>"
+						objectName="_admin.cookieRevolver" rights="r">
+				
+						<li>&nbsp; <bean:message key="admin.admin.titleFactorAuth"/>
+						<ul>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/ip/show'><bean:message key="admin.admin.ipFilter"/></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/cert/?act=super'><bean:message key="admin.admin.setCert"/></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/supercert'><bean:message key="admin.admin.genCert"/></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/clear'><bean:message key="admin.admin.clearCookie"/></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/quest/adminQuestions'><bean:message key="admin.admin.adminSecQuestions"/></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/policyadmin/select'><bean:message key="admin.admin.adminSecPolicies"/></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/banremover/show'><bean:message key="admin.admin.removeBans"/></a></li>
+							<li><a href='javascript:void(0);'
+								class="xlink" rel='${ctx}/gatekeeper/matrixadmin/show'><bean:message key="admin.admin.genMatrixCards"/></a></li>
+						</ul>
+						</li>
+					</security:oscarSec>
+					<%
+						}
+					%>           	
+								
+				</ul>
 				</div>
 				</div>
 	</security:oscarSec>
@@ -269,12 +638,29 @@ if(request.getParameter("index")!=null){
 				
 				<div id="collapseNine" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+				
+				<security:oscarSec roleName="<%=roleName$%>"
+					objectName="_admin,_admin.securityLogReport" rights="r">
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/logReport.jsp?keyword=admin">
+					<bean:message key="admin.admin.securityLogReport"/></a></li>
+				</security:oscarSec>
+				
+				
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+					<% if (OscarProperties.getInstance().isFaxEnabled()) { %>
+		            <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/faxStatus.do"><bean:message key="admin.faxStatus.faxStatus" /></a></li>
+		            <% } %>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscarStatus.do"><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
+				</security:oscarSec>
+	
+							
+				</ul>	
 				</div>
 				</div>
 	</security:oscarSec>
 <!-- #SYSTEM REPORTS END-->
-
 
 <!-- #INTEGRATION-->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
@@ -286,28 +672,61 @@ if(request.getParameter("index")!=null){
 				</div>
 				<div id="collapseTen" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+					<li>API/Connections
+						<ul>
+						<li>&nbsp;<a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/api/clients.jsp">REST Clients</a></li>
+						</ul>
+					</li>
+					<li><a href='javascript:void(0);' class="xlink" rel='${ctx}/setProviderStaleDate.do?method=viewIntegratorProperties'><bean:message key="provider.btnSetIntegratorPreferences" /></a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel='${ctx}/lab/CA/ALL/sendOruR01.jsp'><bean:message key="admin.admin.sendOruR01" /></a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hospitalReportManager.jsp">Hospital Report Manager (HRM) Status</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hrmPreferences.jsp">Hospital Report Manager (HRM) Preferences</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hrmShowMapping.jsp">Hospital Report Manager (HRM) Class Mappings</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hrmCategories.jsp">Hospital Report Manager (HRM) Categories</a></li>
+		
+					<%
+						String olisKeystore = OscarProperties.getInstance().getProperty("olis_keystore", "");
+						if(olisKeystore.length()>0) {
+					%>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/olis/Preferences.jsp">OLIS Preferences</a></li>
+					<% } %>			
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/MyoscarConfiguration.jsp"><bean:message key="admin.admin.myoscarconfig"/></a></li>
+					<%
+						if (StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"))!=null)
+						{
+							%>
+								<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscar_myoscar_sync_config_redirect.jsp"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
+							<%
+						}
+					%>
+		
+					<%
+						if (oscarVariables.getProperty("hsfo.loginSiteCode", "") != null && !"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode", "")))
+									{
+					%>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/RecommitHSFO.do?method=showSchedule"><bean:message key="admin.admin.hsfoSubmit"/></a></li>
+					<%
+						}
+					%>
+		
+					  <%
+		                                if (oscarVariables.getProperty("hsfo2.loginSiteCode", "") != null && !"".equalsIgnoreCase(oscarVariables.getProperty("hsfo2.loginSiteCode", "")))
+		                                {
+		                        %>
+		                        <li><a href='javascript:void(0);'
+		                                class="xlink" rel="${ctx}/admin/RecommitHSFO2.do?method=showSchedule">schedule HSFO2 XML resubmit</a></li>
+		                        <%
+		                                }
+		                        %>		
+			
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/updateDrugref.jsp" ><bean:message key="admin.admin.UpdateDrugref"/></a></li>		
+				</ul>
 				</div>
 				</div>
 	</security:oscarSec>
 <!-- #INTEGRATION END -->
-
-<!-- #STATUS-->
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
-				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseEleven">
-				<bean:message key="admin.admin.Status" />
-				<i class="icon-chevron-right"></i>
-				</a>
-				</div>
-				
-				<div id="collapseEleven" class="accordion-body collapse">
-				<div class="accordion-inner">
-				Anim pariatur cliche...
-				</div>
-				</div>
-	</security:oscarSec>
-<!-- #STATUS END -->
 	
 <!-- #Data Management -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>">
@@ -319,13 +738,30 @@ if(request.getParameter("index")!=null){
 				</div>
 				<div id="collapseTwelve" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<ul>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/adminbackupdownload.jsp"><bean:message
+						key="admin.admin.btnAdminBackupDownload" /></a></li>
+						
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/demographic/demographicExport.jsp"><bean:message key="admin.admin.DemoExport"/></a></li>
+		                        <li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/demographic/demographicImport.jsp"><bean:message key="admin.admin.DemoImport"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/demographicmergerecord.jsp"><bean:message key="admin.admin.mergeRec"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/updatedemographicprovider.jsp"><bean:message
+						key="admin.admin.btnUpdatePatientProvider" /></a></li>
+				   
+				   <% if (OscarProperties.getInstance().getProperty("NEW_CONTACTS_UI","false").equals("true")) { %>
+		            	<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/demographic/migrate_demographic_contacts.jsp"><bean:message key="admin.admin.migrate_contacts"/></a></li>
+		            <% } %>
+						
+				</ul>
 				</div>
 				</div>
 	</security:oscarSec>
 <!-- #Data Management END-->
-
-
 
 <oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
@@ -337,17 +773,54 @@ if(request.getParameter("index")!=null){
 				</div>
 				<div id="collapseThirteen" class="accordion-body collapse">
 				<div class="accordion-inner">
-				Anim pariatur cliche...
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/oscarLearning/CourseManager.jsp"><bean:message key="admin.admin.learning.manageCourses"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/demographic/demographicImport.jsp"><bean:message key="admin.admin.learning.importPatient"/></a></li>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/oscarLearning/StudentImport.jsp"><bean:message key="admin.admin.learning.importStudent"/></a></li>
+				</ul>
 				</div>
 				</div>
 	</security:oscarSec>
 </oscar:oscarPropertiesCheck>
 
 
-</caisi:isModuleLoad>
+
 		</div> <!-- ACCORDION GROUP END -->	
 		</div> <!-- ACCORDION END -->
 	
-    </div>
+</div><!-- SIDE END -->
 
+<script>
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+	  var page = "" + varpage;
+	  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
+	  var popup=window.open(page, "groupno", windowprops);
+	  if (popup != null) {
+	    if (popup.opener == null) {
+	      popup.opener = self;
+	    }
+	    popup.focus();
+	  }
+}
+
+$(document).ready(function(){
+	$(".accordion-heading").click(function(e) {
+		if($(this).hasClass('selected-heading')) {
+			$('.accordion-heading ').removeClass('selected-heading');
+		}else{
+        	$('.accordion-heading').not(this).removeClass('selected-heading');
+        	$(this).addClass('selected-heading');
+		}
+	});
+
+	$(".xlink").click(function(e) {
+		var source = $(this).attr('rel');
+
+		$("#dynamic-content").html('<iframe id="myFrame" name="myFrame" frameborder="0" width="800" height="1000" src="'+source+'">');
+	});	
+
+})
+</script>
 

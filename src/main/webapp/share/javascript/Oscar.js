@@ -26,6 +26,15 @@ function popup(height, width, url, windowName) {
   return popup2(height, width, 0, 0, url, windowName);
 }
 
+function newWindow(url,windowName){
+    //this way the w&d works with older browsers as well
+    var w = document.getElementsByTagName('body')[0].clientWidth;//window.innerWidth;
+    var h = document.getElementsByTagName('body')[0].clientHeight;//window.innerHeight;
+    
+    //alert("w:"+ w +" h:"+h);
+    return popup2(h, w, 0, 0, url, windowName);
+ }
+
 
 function popup2(height, width, top, left, url, windowName){
   if ( typeof popup2.winRefs == 'undefined' ) {	  

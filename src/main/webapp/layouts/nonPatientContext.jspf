@@ -1,4 +1,5 @@
 <!doctype html>
+<html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -28,7 +29,7 @@
 
 <tiles:get name="header" />
 
-<div class="container-fluid" style="margin-top:70px;">
+<div class="container-fluid" id="main-wrapper">
 	<div class="row-fluid">
 		
 	<tiles:get name="content" /><!--secondary layout-->
