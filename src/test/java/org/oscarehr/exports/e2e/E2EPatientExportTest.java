@@ -114,12 +114,6 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testIsNumeric() {
-		assertTrue(E2EPatientExport.isNumeric("42"));
-		assertFalse(E2EPatientExport.isNumeric("<42"));
-	}
-
-	@Test
 	public void testCleanString() {
 		assertNotNull(E2EPatientExport.cleanString(" "));
 	}

@@ -47,6 +47,7 @@ import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.exports.PatientExport;
 
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
+import oscar.util.StringUtils;
 
 /**
  * Models a "patient" which bundles all data required to define a "patient" for export
@@ -428,7 +429,7 @@ public class E2EPatientExport extends PatientExport {
 	// Output convenience functions
 	public String getBirthDate() {
 		String out = demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
-		if(isNumeric(out)) {
+		if(StringUtils.isNumeric(out)) {
 			return out;
 		}
 		return "00010101";

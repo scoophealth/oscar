@@ -44,6 +44,7 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
 
 import oscar.OscarProperties;
+import oscar.util.StringUtils;
 
 /**
  * Creates the data models of the E2E document in velocity format for E2E Template Exporting
@@ -53,6 +54,7 @@ import oscar.OscarProperties;
 public class E2EVelocityTemplate extends VelocityTemplate {
 	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2e/e2etemplate.vm";
 	private static final String buildTag = OscarProperties.getInstance().getProperty("buildtag");
+	private static final StringUtils stringUtils = new StringUtils();
 	private static String template = null;
 	private static E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
@@ -133,6 +135,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		// Create Data Model
 		context.put("patient", record);
 		context.put("e2e", e2eResources);
+		context.put("stringUtils", stringUtils);
 		context.put("custodian", clinic);
 		context.put("randDocGUID", randDocGUID);
 		context.put("authorIdRoot", authorGUID);

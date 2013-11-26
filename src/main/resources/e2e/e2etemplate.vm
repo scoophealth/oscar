@@ -922,7 +922,7 @@ Laboratory Results & Results
 #*            *##else
 											<effectiveTime nullFlavor="UNK"/>
 #*            *##end
-#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() && $patient.isNumeric($labEntry.dataField) )
+#*            *##if ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() && $stringUtils.isNumeric($labEntry.dataField) )
 											<value xsi:type="PQ" value="$patient.cleanString($labEntry.dataField)" unit="$patient.getLabExtValue("$labEntry.id", "unit").replaceAll("\s","_")"/>
 #*            *##elseif ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() )
 											<value xsi:type="ST">$patient.cleanString($labEntry.dataField) $patient.getLabExtValue("$labEntry.id", "unit")</value>
@@ -1281,7 +1281,7 @@ Code"/>
 										<templateId root="2.16.840.1.113883.3.1818.10.4.8"/>
 										<!-- Dose Observation -->
 										<substanceAdministration classCode="SBADM" moodCode="RQO">
-#*    *##if ( $patient.isNumeric($med.duration) && $med.duration != "0" && $med.durUnit )
+#*    *##if ( $stringUtils.isNumeric($med.duration) && $med.duration != "0" && $med.durUnit )
 											<!-- Duration -->
 											<text>$!med.duration $!med.durUnit</text>
 #*    *##end
