@@ -142,7 +142,7 @@
         
 
 <script>
-Calendar.setup({ inputField : "lab_req_date", ifFormat : "%Y-%m-%d %H:%m", showsTime :true, button : "lab_req_date_cal" });
+Calendar.setup({ inputField : "lab_req_date", ifFormat : "%Y-%m-%d %H:%M", showsTime :true, button : "lab_req_date_cal" });
 Calendar.setup({ inputField : "dob", ifFormat : "%Y-%m-%d", showsTime :true, button : "dob_cal" });
 
 </script>
