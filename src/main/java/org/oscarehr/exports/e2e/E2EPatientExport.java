@@ -436,8 +436,9 @@ public class E2EPatientExport extends PatientExport {
 	}
 
 	public String getGenderDesc() {
-		if(demographic.getSex().equals("M")) return "Male";
-		else return "Female";
+		if(demographic.getSex().equalsIgnoreCase("M")) return "Male";
+		else if(demographic.getSex().equalsIgnoreCase("F")) return "Female";
+		else return "Undifferentiated";
 	}
 
 	/*
