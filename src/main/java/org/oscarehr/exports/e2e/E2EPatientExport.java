@@ -110,7 +110,7 @@ public class E2EPatientExport extends PatientExport {
 
 		if(exMedicationsAndTreatments) {
 			try {
-				this.drugs = drugDao.findByDemographicId(demographicNo);
+				this.drugs = drugDao.findByDemographicId(demographicNo, false);
 
 				// Sort drugs by reverse chronological order & group by DIN by sorting
 				Collections.reverse(drugs);

@@ -24,6 +24,7 @@
 package org.oscarehr.common.service;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimerTask;
@@ -54,21 +55,23 @@ import oscar.util.StringUtils;
  */
 public class E2ESchedulerJob extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
-	private String e2eUrl = OscarProperties.getInstance().getProperty("E2E_URL");
-	private String e2eDiff = OscarProperties.getInstance().getProperty("E2E_DIFF");
-	private String e2eDiffDays = OscarProperties.getInstance().getProperty("E2E_DIFF_DAYS");
+	private static final String e2eUrl = OscarProperties.getInstance().getProperty("E2E_URL");
+	private static final String e2eDiff = OscarProperties.getInstance().getProperty("E2E_DIFF");
+	private static final String e2eDiffDays = OscarProperties.getInstance().getProperty("E2E_DIFF_DAYS");
+	private static final boolean diffMode = e2eDiff != null && e2eDiff.toLowerCase().equals("on");
 
 	@Override
 	public void run() {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 		StringBuilder sb = new StringBuilder(255);
-		Integer success = 0;
-		Integer failure = 0;
-		Integer diffDays = 14;
-		boolean diffMode = e2eDiff != null && e2eDiff.toLowerCase().equals("on");
+		int success = 0;
+		int failure = 0;
+		int skipped = 0;
+		int diffDays = 14;
+		List<Integer> ids = null;
 
 		try {
-			List<Integer> ids = null;
+			// Gather demographic numbers for specified mode of operation
 			if(diffMode) {
 				if(e2eDiffDays != null && StringUtils.isNumeric(e2eDiffDays)) {
 					diffDays = Integer.parseInt(e2eDiffDays);
@@ -80,7 +83,9 @@ public class E2ESchedulerJob extends TimerTask {
 			} else {
 				ids = demographicDao.getActiveDemographicIds();
 			}
+			if(ids != null) Collections.sort(ids);
 
+			// Log Start Header
 			StringBuilder sbStart = reuseStringBuilder(sb);
 			sbStart.append("Starting E2E export job\nE2E Target URL: ").append(e2eUrl);
 			if(diffMode) {
@@ -89,7 +94,13 @@ public class E2ESchedulerJob extends TimerTask {
 				sbStart.append("\nExport Mode: Full");
 			}
 			logger.info(sbStart.toString());
-			logger.info((Integer.toString(ids.size()).concat(" records pending")));
+			StringBuilder sbStartRec = reuseStringBuilder(sb);
+			sbStartRec.append(ids.size()).append(" records pending");
+			if(ids.size() > 0) {
+				sbStartRec.append("\nRange: ").append(ids.get(0)).append(" - ").append(ids.get(ids.size()-1));
+				sbStartRec.append(", Median: ").append(ids.get((ids.size()-1)/2));
+			}
+			logger.info(sbStartRec.toString());
 
 			for(Integer id:ids) {
 				// Select Template
@@ -112,12 +123,13 @@ public class E2ESchedulerJob extends TimerTask {
 						output = t.export(patient);
 						endTemplate = System.currentTimeMillis();
 					} else {
-						logger.info("Patient ".concat(id.toString()).concat(" not active - skipping"));
+						logger.info("[Demo ".concat(id.toString()).concat("] Not active - skipped"));
+						skipped++;
 						continue;
 					}
 				} else {
 					endLoad = System.currentTimeMillis();
-					logger.error("Failed to load patient ".concat(id.toString()));
+					logger.error("[Demo ".concat(id.toString()).concat("] Failed to load"));
 					failure++;
 					continue;
 				}
@@ -156,6 +168,7 @@ public class E2ESchedulerJob extends TimerTask {
 					endPost = System.currentTimeMillis();
 				}
 
+				// Log Record completion + benchmarks
 				StringBuilder sbTimer = reuseStringBuilder(sb);
 				sbTimer.append("[Demo: ").append(id);
 				sbTimer.append("] L:").append( (endLoad - startLoad)/1000.0 );
@@ -169,9 +182,13 @@ public class E2ESchedulerJob extends TimerTask {
 			logger.error("Error", e);
 			logger.info("E2E export job aborted");
 		} finally {
+			// Log final record counts
+			int unaccounted = ids.size() - success - failure - skipped;
 			sb = reuseStringBuilder(sb);
-			sb.append(success).append(" records processed\n");
-			sb.append(failure).append(" records failed");
+			sb.append(success).append(" records processed");
+			if(failure > 0) sb.append("\n").append(failure).append(" records failed");
+			if(skipped > 0) sb.append("\n").append(skipped).append(" records skipped");
+			if(unaccounted > 0) sb.append("\n").append(unaccounted).append(" records unaccounted");
 			logger.info(sb.toString());
 			DbConnectionFilter.releaseAllThreadDbResources();
 		}
