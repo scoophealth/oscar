@@ -2020,14 +2020,14 @@ public class DemographicExportAction4 extends Action {
 							output = t.export(patient);
 							exportLog.append(t.getExportLog());
 						} else {
-							String msg = "Patient ".concat(demoNo).concat(" not active - skipping");
+							String msg = "[Demo ".concat(demoNo).concat("] Not active - skipped");
 							logger.info(msg);
 							t.addExportLogEntry(msg);
 							exportLog.append(t.getExportLog());
 							continue;
 						}
 					} else {
-						String msg = "Failed to load patient ".concat(demoNo);
+						String msg = "[Demo ".concat(demoNo).concat("] Failed to load");
 						logger.error(msg);
 						t.addExportLogEntry(msg);
 						exportLog.append(t.getExportLog());
