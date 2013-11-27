@@ -539,9 +539,9 @@ function popup1(height, width, url, windowName){
 
 	                              String tickler_url;
 		                          if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
-		                          	tickler_url = request.getContextPath()+"/Tickler.do?method=edit&tickler.demographic_webName="+moduleName+"&tickler.demographicNo="+moduleid;
+		                          	tickler_url = request.getContextPath()+"/Tickler.do?method=edit&tickler.demographic_webName="+moduleName+"&tickler.demographic_no="+moduleid;
 		                          } else {
-		                          	tickler_url = request.getContextPath()+"/tickler/ForwardDemographicTickler.do?docType=DOC&docId="+curdoc.getDocId()+"&demographicNo="+moduleid;
+		                          	tickler_url = request.getContextPath()+"/tickler/ForwardDemographicTickler.do?docType=DOC&docId="+curdoc.getDocId()+"&demographic_no="+moduleid;
 		                          }
 
 		                          %>
