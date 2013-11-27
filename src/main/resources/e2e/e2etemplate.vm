@@ -89,7 +89,7 @@ CDA Header
 					<given>$demographic.firstName</given>
 					<family>$demographic.lastName</family>
 				</name>
-				<administrativeGenderCode code="$demographic.sex" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
+				<administrativeGenderCode code="$demographic.sex.replace("U","UN")" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
 				<birthTime value="$patient.birthDate"/>
 				<languageCommunication>
 #if ( $demographic.officialLanguage == "English" )
