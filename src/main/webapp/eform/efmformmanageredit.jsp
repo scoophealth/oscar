@@ -29,13 +29,15 @@
 <%
 HashMap<String, Object> curform = new HashMap<String, Object>();
 HashMap<String, String> errors = new HashMap<String, String>();
+
 if (request.getAttribute("submitted") != null) {
     curform = (HashMap<String, Object>) request.getAttribute("submitted");
     errors = (HashMap<String, String>) request.getAttribute("errors");
-} else if (request.getParameter("fid") != null) {
+} else if (request.getParameter("fid") != null ) {
     String curfid = request.getParameter("fid");
     curform = EFormUtil.loadEForm(curfid);
 }
+
    //remove "null" values
    if (curform.get("fid") == null) curform.put("fid", "");
    if (curform.get("formName") == null) curform.put("formName", "");
@@ -67,27 +69,23 @@ if (request.getAttribute("submitted") != null) {
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="eform.edithtml.msgEditEform" /></title>
 
-
-
+<style>
+.input-error{   
+    border-color: rgba(229, 103, 23, 0.8) !important; 
+    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6) !important; 
+    outline: 0 none !important;
+    
+}
+</style>
 
 <script type="text/javascript" language="JavaScript">
 function openLastSaved() {
-    window.open('efmshowform_data.jsp?fid=<%= curform.get("fid") %>', 'PreviewForm', 'toolbar=no, location=no, status=yes, menubar=no, scrollbars=yes, resizable=yes, width=700, height=600, left=300, top=100');   
-}
-function disablensubmit() {
-    document.forms['eFormEdit'].savebtn.disabled = true;
-    document.forms['eFormEdit'].submit();
-}
-
-function disablenupload() {
-    document.getElementById('uploadbtn').disabled = true;
-    document.getElementById('uploadMarker').value = "true";
-    document.forms['eFormEdit'].submit();
+    window.open('<%=request.getContextPath()%>/eform/efmshowform_data.jsp?fid=<%= curform.get("fid") %>', 'PreviewForm', 'toolbar=no, location=no, status=yes, menubar=no, scrollbars=yes, resizable=yes, width=700, height=600, left=300, top=100');   
 }
 </script>
 </head>
 
-<body>
+<body id="eformBody">
 
 <%@ include file="efmTopNav.jspf"%>
 
@@ -97,20 +95,34 @@ function disablenupload() {
 <h3>Create New eForm</h3>
 <%}%>
 
-<html:form action="/eform/editForm" styleId="editform" method="POST" enctype="multipart/form-data">
+<form action="<%=request.getContextPath()%>/eform/editForm.do" method="POST" enctype="multipart/form-data" id="editform" name="eFormEdit">
 
 <div class="well" style="position: relative;">
 		
-	
-
 	<% if ((request.getAttribute("success") != null) && (errors.size() == 0)) { %>
-		<font class="warning" style="font-size: 12px;"><bean:message key="eform.edithtml.msgChangesSaved" /></font>
+	<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <bean:message key="eform.edithtml.msgChangesSaved" />.
+    </div>
 	<% } %> 
+	
+	<%String formNameMissing = errors.get("formNameMissing");
+    if (errors.containsKey("formNameMissing")) { %>
+	<div class="alert alert-error">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <bean:message key="<%=formNameMissing%>" />
+    </div>
+	<%} else if (errors.containsKey("formNameExists")) { %>
+	<div class="alert alert-error">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <bean:message key="<%=formNameMissing%>" />
+    </div>
+	<%}%>
 
 		<input type="hidden" name="fid" id="fid" value="<%= curform.get("fid")%>">
        
 		<% if ((request.getAttribute("success") == null) || (errors.size() != 0)) {%>
-<!--		 error? -->
+			<!--error? -->
 		<% } %>
 		
 			<!--LAST SAVED-->
@@ -120,20 +132,14 @@ function disablenupload() {
 
 			<!--FORM NAME-->
 			<div style="display:inline-block">
-			<bean:message key="eform.uploadhtml.formName" />:<br />
-			<input type="text" name="formName" value="<%= curform.get("formName") %>"
-				<% if (errors.containsKey("formNameMissing") || (errors.containsKey("formNameExists"))) { %>
-				class="warning" 
-				<% } %> size="30" /> 
-
-                                <%String formNameMissing = (String) errors.get("formNameMissing"); 
-                                  if (errors.containsKey("formNameMissing")) {  
-                                %>
-			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} else if (errors.containsKey("formNameExists")) { %>
-			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} %><br />
+			 
+			<bean:message key="eform.uploadhtml.formName" />:
+			<br />
+			<input type="text" name="formName" value="<%= curform.get("formName") %>" <% if (errors.containsKey("formNameMissing") || (errors.containsKey("formNameExists"))) { %>	class="input-error" <% } %> size="30" /> 
+			<br />
+			
 			</div>
 			
-           
 			<!--FORM ADDITIONAL INFO-->
 			<div style="display:inline-block">
 			<bean:message key="eform.uploadhtml.formSubject" />:<br />
@@ -182,7 +188,7 @@ function disablenupload() {
 				name="uploadbtn" id="uploadbtn" class="btn"
 				value="<bean:message key="eform.edithtml.frmUpload"/>"
 				onclick="disablenupload()"> <% if (errors.containsKey("uploadError")) { 
-                                    String uploadError = (String) errors.get("uploadError"); %>
+                                    String uploadError = errors.get("uploadError"); %>
                                 <font class="warning"><bean:message key="<%=uploadError%>" /></font>
 			<% } %><br />
 		
@@ -193,34 +199,37 @@ function disablenupload() {
 			<br />			
 			<bean:message key="eform.edithtml.msgEditHtml" />:<br />
 			<textarea wrap="off" name="formHtml" style="" class="span12" rows="40"><%= formHtml%></textarea><br />
-	
-			
-			
-	
-			
+
 <p>
-				<a href="<%=request.getContextPath()%>/eform/efmformmanager.jsp" class="btn contentLink">
-				 <i class="icon-circle-arrow-left"></i> Back to eForm Library<!--<bean:message key="eform.edithtml.msgBackToForms"/>-->
-				</a>
+	<a href="<%=request.getContextPath()%>/eform/efmformmanager.jsp" class="btn contentLink">
+	 <i class="icon-circle-arrow-left"></i> Back to eForm Library<!--<bean:message key="eform.edithtml.msgBackToForms"/>-->
+	</a>
 
-				<input type="button" class="btn"
-				value="<bean:message key="eform.edithtml.msgPreviewLast"/>"
-				<% if (curform.get("fid") == null) {%> disabled
-				<%}%> name="previewlast" onclick="openLastSaved()"> 
+	<input type="button" class="btn" value="<bean:message key="eform.edithtml.msgPreviewLast"/>" <% if (curform.get("fid") == null) {%> disabled	<%}%> name="previewlast" onclick="openLastSaved()"> 
 
 
-				<a href="<%=request.getContextPath()%>/eform/efmformmanageredit.jsp?fid=<%= curform.get("fid") %>" class="btn contentLink"> <bean:message key="eform.edithtml.cancelChanges"/></a>
+	<a href="<%=request.getContextPath()%>/eform/efmformmanageredit.jsp?fid=<%= curform.get("fid") %>" class="btn contentLink"> <bean:message key="eform.edithtml.cancelChanges"/></a>
 
-				<input type="submit" class="btn btn-primary"
-				value="<bean:message key="eform.edithtml.msgSave"/>"
-				name="savebtn" onclick="disablensubmit()"> 
-	
+	<input type="submit" class="btn btn-primary" value="<bean:message key="eform.edithtml.msgSave"/>" data-loading-text="Saving..." name="savebtn" id="savebtn"  > 
+
 </p>	
-
 </div>
-</html:form>
+</form>
 
 
 <%@ include file="efmFooter.jspf"%>
+
+<script>
+registerFormSubmit('editform', 'dynamic-content');
+
+$(document).ready(function () {
+
+$("html, body").animate({ scrollTop: 0 }, "slow");
+return false;
+
+});
+
+</script>
+
 </body>
 </html:html>

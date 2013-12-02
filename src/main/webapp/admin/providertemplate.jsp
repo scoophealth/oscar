@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<!DOCTYPE html>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -33,7 +34,6 @@
 
 <%
   String curUser_no = (String) session.getAttribute("user");
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*,oscar.util.*"	errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
@@ -65,37 +65,31 @@
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.common.model.EncounterTemplate"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%><html:html locale="true">
+<%@ page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.EncounterTemplate"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%><html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <title><bean:message key="admin.providertemplate.title" /></title>
-<link rel="stylesheet" href="../web.css">
-<script language="JavaScript">
-<!--
-function setfocus() {
-  this.focus();
-  document.template.name.focus();
-}
-//-->
-</SCRIPT>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+
 </head>
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor=<%=deepcolor%>>
-		<th><font face="Helvetica"><bean:message
-			key="admin.providertemplate.msgTitle" /></font></th>
-	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<form name="edittemplate" method="post" action="providertemplate.jsp">
-	<tr bgcolor=<%=weakcolor%>>
-		<td width="95%" align='right'>
-			<bean:message key="admin.providertemplate.formEdit" /> :
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+		<!--Body content-->
+		
+		<h3><bean:message key="admin.providertemplate.msgTitle" /></h3>
+		
+<div class="well">		
+	<form name="edittemplate" method="post" action="providertemplate.jsp" class="form-inline">
+			<!--<bean:message key="admin.providertemplate.formEdit" />:-->
+			Select Template<br>
 			<select name="name">
 			<%
 				List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
@@ -110,13 +104,11 @@ function setfocus() {
 			%>
 			</select>
 			<input type="hidden" value="Edit" name="dboperation">
-			<input type="button" value="<bean:message key="admin.providertemplate.btnEdit"/>" name="dboperation" onclick="document.forms['edittemplate'].dboperation.value='Edit'; document.forms['edittemplate'].submit();">
-		</td>
-		<td>&nbsp;</td>
-	</tr>
-	</form>
-</table>
-
+			<input type="button" value="<bean:message key="admin.providertemplate.btnEdit"/>" name="dboperation" class="btn" onclick="document.forms['edittemplate'].dboperation.value='Edit'; document.forms['edittemplate'].submit();">
+	</form>	
+	
+</div>	
+	
 <%
   boolean bEdit=request.getParameter("dboperation")!=null&&request.getParameter("dboperation").equals("Edit")?true:false;
   String tName = null;
@@ -129,41 +121,52 @@ function setfocus() {
 	}
   }
 %>
-<center>
-<table width="90%" border="0" cellspacing="2" cellpadding="2">
-	<form name="template" method="post" action="providertemplate.jsp">
-	<input type="hidden" name="dboperation" value="">
-	<tr>
-		<td valign="top" width="20%" align="right" title='no symbol "'><bean:message
-			key="admin.providertemplate.formTemplateName" />:</td>
-		<td><input type="text" name="name" value="<%=bEdit?tName:""%>"
-			style="width: 100%" maxlength="20"></td>
-	</tr>
-	<tr>
-		<td valign="top" width="20%" align="right"><bean:message
-			key="admin.providertemplate.formTemplateText" />:</td>
-		<td><textarea name="value" style="width: 100%" rows="20"><%=bEdit?tValue:""%></textarea>
-		</td>
-	</tr>
-</table>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor=<%=weakcolor%>>
-		<td width="23%" align='right'><input type="button"
-			value="<bean:message key="admin.providertemplate.btnDelete"/>"
-			onClick="document.forms['template'].dboperation.value='Delete'; document.forms['template'].submit();">
-		</td>
-		<td width="72%" align='right'><INPUT TYPE="hidden" NAME="creator"
-			VALUE="<%=curUser_no%>"> <input type="button"
-			value="<bean:message key="admin.providertemplate.btnSave"/>"
-			onClick="document.forms['template'].dboperation.value=' Save '; document.forms['template'].submit();">
-		<input type="button" name="Button"
-			value="<bean:message key="admin.providertemplate.btnExit"/>"
-			onClick="window.close();"></td>
-		<td>&nbsp;</td>
-	</tr>
-	</form>
-</table>
-</center>
+			<div class="well">	
+				<form name="template" method="post" action="providertemplate.jsp">
+				<input type="hidden" name="dboperation" value="">
+			
+					<bean:message key="admin.providertemplate.formTemplateName" />:<br>
+					<input type="text" name="name" value="<%=bEdit?tName:""%>" class="span10" maxlength="20">
+				
+					<br><br>
+				
+					<bean:message key="admin.providertemplate.formTemplateText" />:<br>
+					<textarea name="value" rows="20" class="span10"><%=bEdit?tValue:""%></textarea>
+			
+					<br>
+					<input type="button" value="<bean:message key="admin.providertemplate.btnDelete"/>" class="btn btn-danger" onClick="document.forms['template'].dboperation.value='Delete'; document.forms['template'].submit();">
+			
+					<INPUT TYPE="hidden" NAME="creator"	VALUE="<%=curUser_no%>"> 
+					<input type="button" value="<bean:message key="admin.providertemplate.btnSave"/>"	class="btn btn-primary" onClick="document.forms['template'].dboperation.value=' Save '; document.forms['template'].submit();">
+					
+			
+					<input type="button" name="Button" id="exit-btn" value="<bean:message key="admin.providertemplate.btnExit"/>"	 class="btn" onClick="window.close();">
+			
+				</form>
+			</div>	
+			
+		</div><!-- span12 -->
+	</div><!-- row fluid -->
+</div><!-- container -->
+
+
+
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script>
+<!--
+function setfocus() {
+  this.focus();
+  document.template.name.focus();
+}
+//-->
+
+var isInIFrame = (window.location != window.parent.location);
+if(isInIFrame==true){
+    $('#exit-btn').hide();
+}
+</script>
 </body>
 </html:html>

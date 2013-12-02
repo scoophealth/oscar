@@ -137,7 +137,7 @@ function updateAjax() {
                 
                 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="w" reverse="<%=false%>" >
                 <br/>
-                <a href="#" onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');" style="color: #835921;"><bean:message key="eform.showmyform.msgManageEFrm"/></a>
+                <a href="#" onclick="javascript: return popup(600, 1200, '../administration/?show=Forms', 'manageeforms');" style="color: #835921;"><bean:message key="eform.showmyform.msgManageEFrm"/></a>
                 </security:oscarSec>
 <jsp:include page="efmviewgroups.jsp">
     <jsp:param name="url" value="../eform/efmformslistadd.jsp"/>

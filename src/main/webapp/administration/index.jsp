@@ -253,7 +253,12 @@ margin-bottom:0px;
   <div class="span9 offset2" id="dynamic-content">
     
     <!-- ****DYNAMIC CONTENT**** -->
+<%
+String showMenu=request.getParameter("show");
+String loadPage=request.getParameter("load");
 
+if(showMenu==null && loadPage==null){
+%>
 <div class="row-fluid">	
       <div class="well quick-links">
 	<a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/unLock.jsp"><i class="icon-user icon-4x"></i>
@@ -305,7 +310,7 @@ margin-bottom:0px;
       </div>     
  </div>     
               
-             
+<%}%>             
           
        
     <!-- ****DYNAMIC CONTENT END**** -->
