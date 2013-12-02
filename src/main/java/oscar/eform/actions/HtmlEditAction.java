@@ -34,32 +34,33 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.upload.FormFile;
+
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.WebUtils;
 
 import oscar.eform.EFormUtil;
 import oscar.eform.data.EFormBase;
 import oscar.eform.data.HtmlEditForm;
-import oscar.util.StringUtils;
+
 
 public class HtmlEditAction extends Action {
-    public ActionForward execute(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
         HtmlEditForm fm = (HtmlEditForm) form;
+       
         try {
             String fid = fm.getFid();
             String formName = fm.getFormName();
             String formSubject = fm.getFormSubject();
             String formFileName = fm.getFormFileName();
             String formHtml = fm.getFormHtml();
-            FormFile uploadFile = fm.getUploadFile();
+            //FormFile uploadFile = fm.getUploadFile();
             boolean showLatestFormOnly = WebUtils.isChecked(request, "showLatestFormOnly");
             boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
             String roleType = fm.getRoleType();
             
             HashMap<String, String> errors = new HashMap<String, String>();
-            if (request.getParameter("uploadMarker").equals("true")) {
+           /* if (request.getParameter("uploadMarker").equals("true")) {
                 //if uploading file
                 String readstream = StringUtils.readFileStream(uploadFile);
                 if (readstream.length() == 0) {
@@ -72,7 +73,8 @@ public class HtmlEditAction extends Action {
                 request.setAttribute("submitted", curht);
                 request.setAttribute("errors", errors);
                 return(mapping.findForward("success"));
-            }
+            }*/
+            
             EFormBase updatedform = new EFormBase(fid, formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType); //property container (bean)
             //validation...
             if ((formName == null) || (formName.length() == 0)) {
@@ -96,6 +98,7 @@ public class HtmlEditAction extends Action {
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
         }
+
         return(mapping.findForward("success"));
     }
     

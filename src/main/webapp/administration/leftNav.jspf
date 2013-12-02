@@ -246,26 +246,26 @@ String curProvider_no = (String)session.getAttribute("user");
 <!--  #FORMS/EFORMS -->	
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFour">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseForms">
 				<bean:message key="admin.admin.FormsEforms" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseFour" class="accordion-body collapse">
+				<div id="collapseForms" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href="${ctx}/form/setupSelect.do" class="contentLink"><bean:message key="admin.admin.btnSelectForm" /></a></li>
 					
 					<li><a href="${ctx}/form/formXmlUpload.jsp" class="contentLink"><bean:message key="admin.admin.btnImportFormData" /></a></li>
 					
-					<li><a href="${ctx}/eform/efmformmanager.jsp" class="contentLink">
+					<li><a href="${ctx}/eform/efmformmanager.jsp" class="contentLink defaultForms">
 						<bean:message key="eform.showmyform.msgManageEFrm"/>
 					</a></li>
 
 					<li><a href="${ctx}/eform/efmimagemanager.jsp"  class="contentLink">
 						<bean:message key="admin.admin.btnUploadImage" />
 					</a></li>
-					<li><a href="${ctx}/eform/efmmanageformgroups.jsp" class="contentLink">
+					<li><a href="${ctx}/eform/efmmanageformgroups.jsp" class="contentLink defaultFormsGroups">
 						<bean:message key="admin.admin.frmGroups"/>
 					</a></li>
 		
@@ -647,6 +647,11 @@ String curProvider_no = (String)session.getAttribute("user");
 					<bean:message key="admin.admin.securityLogReport"/></a></li>
 				</security:oscarSec>
 				
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin, _admin.traceability" rights="r">
+					<li><a href="javascript:void(0);" class="xlink"
+						rel="${ctx}/admin/traceReport.jsp?keyword=admin">
+					<bean:message key="admin.admin.traceabilityReport"/></a></li>
+				</security:oscarSec>				
 				
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 					<% if (OscarProperties.getInstance().isFaxEnabled()) { %>
@@ -819,8 +824,56 @@ $(document).ready(function(){
 		var source = $(this).attr('rel');
 
 		$("#dynamic-content").html('<iframe id="myFrame" name="myFrame" frameborder="0" width="800" height="1000" src="'+source+'">');
-	});	
+	});
 
-})
+	//using this to collapse and load items so we can have direct links to menu items
+	try
+	  {
+		var show = getUrlVars()["show"];
+
+		if(show!=null){
+			var load = getUrlVars()["load"];
+			var pageToLoad="";
+			
+			if(show!=null & load!=null){
+				pageToLoad=$('.default'+show+load).attr('href');
+			}else{
+				pageToLoad=$('.default'+show).attr('href');		
+			}
+
+		//expand request menu item
+		$("#collapse"+show).collapse('show');	
+
+		//load request page or load default
+		$("#dynamic-content").load(pageToLoad, 
+				function(response, status, xhr) {
+			  		if (status == "error") {
+				    	var msg = "Sorry but there was an error: ";
+				    	$("#dynamic-content").html(msg + xhr.status + " " + xhr.statusText);
+					}
+		});	
+		
+		}
+	  }
+	catch(err)
+	  {
+	  //do nothing
+	  }	
+
+});
+
+//Read a page's GET URL variables and return them as an associative array.
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
 </script>
 
