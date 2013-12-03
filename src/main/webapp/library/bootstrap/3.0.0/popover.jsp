@@ -26,7 +26,7 @@
 --%>
 <html>
   <head>
-    <title>Bootstrap 101 Base Template</title>
+    <title>Bootstrap 101 Popover Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -38,25 +38,32 @@
     <![endif]-->
   </head>
   <body>
-    
+
+
 
     <div class="container">
 
       <div class="starter-template">
-        <h1>Hello, world! <small><a href="index.jsp">view example list</a></small></h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+	<h1>Hello, pops! <small><a href="index.jsp">view example list</a></small></h1>
 
-
+	<a data-original-title="A Title" href="#" id="poppy" class="btn btn-lg btn-danger" data-toggle="popover" title="" data-content="And here's some amazing content. It's very engaging. right?" role="button">Click to toggle popover</a>
       </div>
 
     </div><!-- /.container -->
 
 
+ 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+	<script>
+	$('#poppy').popover();
+	</script>
+
+
   </body>
 </html>
 

@@ -26,7 +26,7 @@
 --%>
 <html>
   <head>
-    <title>Bootstrap 101 Base Template</title>
+    <title>Bootstrap 101 Tooltip Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -40,23 +40,31 @@
   <body>
     
 
+
+
+     
     <div class="container">
 
       <div class="starter-template">
-        <h1>Hello, world! <small><a href="index.jsp">view example list</a></small></h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-
-
+        <h1>Hello, tool! <small><a href="index.jsp">view example list</a></small></h1>
+    	<button data-original-title="Tooltip on left" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="">Tooltip on left</button>
+        <button data-original-title="Tooltip on top" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="">Tooltip on top</button>
+        <button data-original-title="Tooltip on bottom" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="">Tooltip on bottom</button>
+        <button data-original-title="Tooltip on right" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="">Tooltip on right</button>
       </div>
 
-    </div><!-- /.container -->
-
-
+    </div><!-- /.container --> 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+	<script>
+	$('.btn-default').tooltip();
+	</script>
+
+
   </body>
 </html>
 
