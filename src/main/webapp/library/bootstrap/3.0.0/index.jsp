@@ -26,7 +26,7 @@
 --%>
 <html>
   <head>
-    <title>Bootstrap 101 Base Template</title>
+    <title>Bootstrap 101 Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -36,21 +36,42 @@
       <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
       <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/respond.min.js"></script>
     <![endif]-->
+
+   <style>
+	.label{ cursor: pointer; cursor: hand;}
+   </style>
+
   </head>
   <body>
-    
+
 
     <div class="container">
 
       <div class="starter-template">
-        <h1>Hello, world! <small><a href="index.jsp">view example list</a></small></h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+	<h1>Hello, world!</h1>
 
+	<table class="table table-striped table-hover">
+	<thead>
+          <tr>
+            <th></th>
+	    <th></th>
+	  </tr>
+	</thead>
+
+	<tbody>
+	<tr><td><a href="basic-example.jsp">basics</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:basic-example.jsp"'>view source</span></small> This is just a simple sample of what you will need to start using twitter bootstrap in oscar. </td></tr>
+	<tr><td><a href="tooltip.jsp">tooltip</a>  </td> <td><small><span class="label label-info" onclick='window.location="view-source:tooltip.jsp"'>view source</span></small> </td></tr>
+	<tr><td><a href="popover.jsp">popover</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:popover.jsp"'>view source</span></small> </td></tr>
+	<tr><td><a href="modal.jsp">modal</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:modal.jsp"'>view source</span></small> </td></tr>
+	<tr><td><a href="icons.jsp">icons</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:icons.jsp"'>view source</span></small> </td></tr>
+	<tr><td><a href="alert.jsp">alerts</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:alert.jsp"'>view source</span></small> </td></tr>
+	<tr><td><a href="tables.jsp">tables</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:tables.jsp"'>view source</span></small> </td></tr>
+	</tbody>
+	</table>
 
       </div>
 
-    </div><!-- /.container -->
-
+    </div><!-- /.container -->	
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
