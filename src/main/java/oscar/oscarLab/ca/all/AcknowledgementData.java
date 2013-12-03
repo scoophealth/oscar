@@ -61,7 +61,7 @@ public class AcknowledgementData {
 			Provider provider = (Provider) i[0];
 			ProviderLabRoutingModel routing = (ProviderLabRoutingModel) i[1];
 
-			acknowledgements.add(new ReportStatus(provider.getFullName(), provider.getPractitionerNo(), provider.getProviderNo(),routing.getStatus(), routing.getComment(), ConversionUtils.toDateString(routing.getTimestamp()), segmentID));
+			acknowledgements.add(new ReportStatus(provider.getFullName(), provider.getPractitionerNo(), provider.getProviderNo(),routing.getStatus(), routing.getComment(), ConversionUtils.toDateString(routing.getTimestamp(),ConversionUtils.DEFAULT_TS_PATTERN), segmentID));
 		}
 		return acknowledgements;
 	}

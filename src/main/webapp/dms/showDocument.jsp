@@ -457,7 +457,7 @@
                                                                             } 
                                                                         %>
                                                                         <font color="red"><%= ackStatus %></font>                                                                        
-                                                                            <%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%>,
+                                                                            <span id="timestamp_<%=docId + "_" + report.getOscarProviderNo()%>"><%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%></span>,
                                                                             comment: <span id="comment_<%=docId + "_" + report.getOscarProviderNo()%>"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
                                                                         
                                                                         <br>

@@ -1988,6 +1988,11 @@ function addDocComment(docId, providerNo,sync) {
     	data += "&method=addComment";
 
     	new Ajax.Request(url,{method:'post',parameters:data,asynchronous:sync,onSuccess:function(transport){
+    				var json=transport.responseText.evalJSON();
+    				if(json!=null ){
+    					var date = json.date;
+    					$("timestamp_"+docId+"_"+providerNo).update(date);
+    				}
 					$("status_"+docId).value = "A";
 					$("comment_"+docId+"_"+providerNo).update($("comment_"+docId).value);
 					$("comment_"+docId).update("");
