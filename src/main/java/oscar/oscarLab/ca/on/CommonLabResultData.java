@@ -28,6 +28,7 @@ package oscar.oscarLab.ca.on;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -348,6 +349,7 @@ public class CommonLabResultData {
 						if( status != 'F' ) {
 							plr.setComment(comment);
 						}
+						plr.setTimestamp(new Date());
 						providerLabRoutingDao.merge(plr);
 					}
 				}
@@ -359,6 +361,7 @@ public class CommonLabResultData {
 				p.setStatus(String.valueOf(status));
 				p.setComment(comment);
 				p.setLabType(labType);
+				p.setTimestamp(new Date());
 				providerLabRoutingDao.persist(p);
 			}
 

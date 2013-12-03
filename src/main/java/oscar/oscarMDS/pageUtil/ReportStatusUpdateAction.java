@@ -26,10 +26,13 @@
 package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -44,6 +47,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.util.ConversionUtils;
 
 public class ReportStatusUpdateAction extends DispatchAction {
 
@@ -113,6 +117,19 @@ public class ReportStatusUpdateAction extends DispatchAction {
         	logger.error("exception in setting comment",e);
             return mapping.findForward("failure");
         }
+        
+        String now = ConversionUtils.toDateString(Calendar.getInstance().getTime(), "dd-MMM-yy HH mm");
+        String jsonStr = "{date:" + now + "}";
+        JSONObject json = JSONObject.fromObject(jsonStr);
+        logger.info("JSON " + json.toString());
+        response.setContentType("application/json");
+        try {
+	        response.getWriter().write(json.toString());
+	        response.flushBuffer();
+        } catch (IOException e) {	        
+	        logger.error("FAILED TO RETURN DATE", e);
+        }
+        
     	return null;
     }
 
