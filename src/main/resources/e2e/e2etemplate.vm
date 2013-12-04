@@ -1069,32 +1069,38 @@ Medications and Prescriptions - Medication List
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
 					<text>
 						<list>
+#**##set( $previousDin = "0" )
+#**##set( $currentDin = "0" )
 #**##foreach ( $med in $patient.getMedications() )
-#*    *##if( !$previousDin.equals($med.regionalIdentifier) || !$med.regionalIdentifier )
+#*    *##if( !$med.regionalIdentifier || $med.regionalIdentifier.length() == 0 )
+#*        *##set( $currentDin = "null" )
+#*    *##else
+#*        *##set( $currentDin = $med.regionalIdentifier )
+#*    *##end
+#*    *##if( !$previousDin.equals($currentDin) || $currentDin.equals("null") )
 #*        *##if ( $med.brandName )
 							<item>$!med.brandName $!med.freqCode $!med.duration $!med.durUnit</item>
 #*        *##else
 							<item>$!med.genericName $!med.dosage $!med.freqCode $!med.duration $!med.durUnit</item>
 #*        *##end
-#*        *##if( !$med.regionalIdentifier )
-#*            *##set( $previousDin = "null" )
-#*        *##else
-#*            *##set( $previousDin = $med.regionalIdentifier )
-#*        *##end
 #*    *##end
+#*    *##set( $previousDin = $currentDin )
 #**##end
 						</list>
 					</text>
 #**##set( $previousDin = "0" )
+#**##set( $currentDin = "0" )
 #**##foreach ( $med in $patient.getMedications() )
-#*    *##if( !$previousDin.equals("0") && ( !$previousDin.equals($med.regionalIdentifier) || !$med.regionalIdentifier ) )
+#*    *##if( !$med.regionalIdentifier || $med.regionalIdentifier.length() == 0 )
+#*        *##set( $currentDin = "null" )
+#*    *##else
+#*        *##set( $currentDin = $med.regionalIdentifier )
+#*    *##end
+#*    *##if( !$previousDin.equals("0") && ( !$previousDin.equals($currentDin) || $currentDin.equals("null") ) )
 						</substanceAdministration>
 					</entry>
 #*    *##end
-#*    *##if( !$med.regionalIdentifier )
-#*        *##set( $previousDin = "null" )
-#*    *##end
-#*    *##if( !$previousDin.equals($med.regionalIdentifier) )
+#*    *##if( !$previousDin.equals($currentDin) || $currentDin.equals("null") )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
@@ -1510,11 +1516,7 @@ Code"/>
 #*    *##end
 								</substanceAdministration>
 							</entryRelationship>
-#*    *##if( !$med.regionalIdentifier )
-#*        *##set( $previousDin = "null" )
-#*    *##else
-#*        *##set( $previousDin = $med.regionalIdentifier )
-#*    *##end
+#*    *##set( $previousDin = $currentDin )
 #**##end
 						</substanceAdministration>
 					</entry>

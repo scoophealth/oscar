@@ -274,10 +274,20 @@ public abstract class PatientExport {
 			int answer;
 			try {
 				answer = Integer.parseInt(one.getRegionalIdentifier()) - Integer.parseInt(two.getRegionalIdentifier());
-			} catch (Exception e){
-				answer = 0;
+			} catch (Exception e) {
+				answer = getDrugName(one).compareTo(getDrugName(two));
 			}
 			return answer;
+		}
+
+		private String getDrugName(Drug drug) {
+			if(drug.getBrandName() != null) {
+				return drug.getBrandName();
+			} else if(drug.getGenericName() != null) {
+				return drug.getGenericName();
+			} else {
+				return "";
+			}
 		}
 	}
 
