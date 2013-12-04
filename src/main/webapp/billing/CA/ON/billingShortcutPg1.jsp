@@ -989,6 +989,12 @@ ctlCount = 0;
 							<%} else { %>
 								<option value="PDF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.PDF" /></option>
 							<%}%>
+
+							<%if (SxmlMisc.getXmlContent(prComments,"xml_p_sli").trim().equals("RTF")) {%>
+								<option selected value="RTF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.RTF" /></option>
+							<%} else { %>
+								<option value="RTF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.RTF" /></option>
+							<%}%>
 							</select>
 				   		</td>
 					</tr>
@@ -1007,6 +1013,7 @@ ctlCount = 0;
 						<option value="OFF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
 						<option value="OTN "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
 						<option value="PDF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.PDF" /></option>
+						<option value="RTF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.RTF" /></option>
 					</select>
 				    </td>
 				</tr>
