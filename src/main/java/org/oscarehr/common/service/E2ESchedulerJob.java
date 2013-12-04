@@ -123,13 +123,13 @@ public class E2ESchedulerJob extends TimerTask {
 						output = t.export(patient);
 						endTemplate = System.currentTimeMillis();
 					} else {
-						logger.info("[Demo ".concat(id.toString()).concat("] Not active - skipped"));
+						logger.info("[Demo: ".concat(id.toString()).concat("] Not active - skipped"));
 						skipped++;
 						continue;
 					}
 				} else {
 					endLoad = System.currentTimeMillis();
-					logger.error("[Demo ".concat(id.toString()).concat("] Failed to load"));
+					logger.error("[Demo: ".concat(id.toString()).concat("] Failed to load"));
 					failure++;
 					continue;
 				}
