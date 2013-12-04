@@ -1,3 +1,4 @@
+	 	
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -1400,6 +1401,7 @@ function changeSite(sel) {
                                 <option value="OFF"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
                                 <option value="OTN"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
 				<option value="PDF"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.PDF" /></option>
+				<option value="RTF"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.RTF" /></option>
 
                         </select>
                     </td>
