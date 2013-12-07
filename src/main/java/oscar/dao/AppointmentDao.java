@@ -25,29 +25,22 @@ package oscar.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.hl7.v2.HL7A04Data;
+import org.oscarehr.common.model.Demographic;
+//import org.oscarehr.PMmodule.model.Program;
+//import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 import oscar.OscarProperties;
-
 import oscar.appt.ApptData;
-
 import oscar.oscarClinic.ClinicData;
-
-import org.oscarehr.common.hl7.v2.HL7A04Data;
-
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.dao.DemographicDao;
-
 import oscar.oscarDemographic.data.DemographicData;
-
-//import org.oscarehr.PMmodule.model.Program;
-//import org.oscarehr.PMmodule.dao.ProgramDao;
-
-import org.oscarehr.util.SpringUtils;
 
 /**
  * Oscar Appointment DAO implementation created to extract database access code
@@ -153,7 +146,7 @@ public class AppointmentDao extends OscarSuperDao {
             
             {"search_appt_data", "select app.*, prov.first_name, prov.last_name, prov.ohip_no, adm.program_id as adm_program_id from provider prov, appointment app left join admission adm on app.demographic_no = adm.client_id where app.provider_no = prov.provider_no and app.provider_no=? and app.appointment_date=? and app.start_time=? and app.end_time=? and app.createdatetime=? and app.creator=? and app.demographic_no=? order by app.appointment_no desc limit 1"},
 
-            {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id,urgency,updatedatetime) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,now())" },
+            {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id,urgency,updatedatetime) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" },
             {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
             {"appendremarks", "update appointment set remarks=CONCAT(remarks,?) where appointment_no=?"},
             {"updatestatusc", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=?"},
