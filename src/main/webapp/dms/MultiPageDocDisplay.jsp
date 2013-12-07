@@ -86,7 +86,7 @@
 <html>
     <head>
     <!-- Global js import -->
-	<script src="/oscar/js/global.js" type="text/javascript"/>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
             <!-- main calendar program -->
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
 <!-- language for the calendar -->
