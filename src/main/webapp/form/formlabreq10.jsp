@@ -921,9 +921,9 @@ var maxYear=3100;
 										name="m_otherSwabsPus"
 										<%=props.getProperty("m_otherSwabsPus", "")%>></td>
 									<td class="checkboxLabelTd">Other Swabs / Pus <i>(specify
-									source):</i> <input type="text" name="m_otherSwabsSource"
+									source):</i> <input type="text" name="m_otherSwabsPusSource"
 										style="width: 100px; margin-left: 10px;" tabindex="20"
-										value="<%=props.getProperty("m_otherSwabsSource", "")%>"></td>
+										value="<%=props.getProperty("m_otherSwabsPusSource", "")%>"></td>
 								</tr>
 								<tr>
 									<td class="checkboxTd"><input type="checkbox"
