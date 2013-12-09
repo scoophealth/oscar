@@ -34,6 +34,9 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
+/**
+ * @deprecated 2013-12-09 use org.oscarehr.util.DateUtils instead
+ */
 public final class DateTimeFormatUtils {
 
 	private static final Logger log=MiscUtils.getLogger();

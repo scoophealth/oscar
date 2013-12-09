@@ -33,6 +33,9 @@ import java.util.GregorianCalendar;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
+/**
+ * @deprecated 2013-12-09 use org.oscarehr.util.DateUtils instead
+ */
 public class DateUtils {
 
 
