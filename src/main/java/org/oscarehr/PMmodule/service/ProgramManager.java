@@ -183,19 +183,19 @@ public class ProgramManager {
     }
 
     public Program[] getBedPrograms() {
-        return programDao.getBedPrograms();
+        return programDao.getProgramsByType(null, Program.BED_TYPE, null).toArray(new Program[0]);
     }
 
     public Program[] getBedPrograms(Integer facilityId) {
-        return programDao.getBedPrograms(facilityId);
+        return programDao.getProgramsByType(facilityId, Program.BED_TYPE, null).toArray(new Program[0]);
     }
 
     public List<Program> getServicePrograms() {
-        return programDao.getServicePrograms();
+        return programDao.getProgramsByType(null, Program.SERVICE_TYPE, null);
     }
 
     public Program[] getExternalPrograms() {
-        return programDao.getExternalPrograms();
+        return programDao.getProgramsByType(null, Program.EXTERNAL_TYPE, true).toArray(new Program[0]);
     }
 
     public boolean isBedProgram(String programId) {
@@ -398,15 +398,15 @@ public class ProgramManager {
     }
 
     public Program[] getCommunityPrograms() {
-        return programDao.getCommunityPrograms();
+        return programDao.getProgramsByType(null, Program.COMMUNITY_TYPE, null).toArray(new Program[0]);
     }
 
     public List<LabelValueBean> getProgramBeans(String providerNo) {
         if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList<LabelValueBean>();
         ArrayList<LabelValueBean> pList = new ArrayList<LabelValueBean>();
-        Program[] program = programDao.getCommunityPrograms();
-        for (int i = 0; i < program.length; i++) {
-            pList.add(new LabelValueBean(program[i].getName(), program[i].getId().toString()));
+        List<Program> programs = programDao.getProgramsByType(null, Program.COMMUNITY_TYPE, null);
+        for (Program program : programs) {
+            pList.add(new LabelValueBean(program.getName(), program.getId().toString()));
         }
         return pList;
         /*
