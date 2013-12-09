@@ -73,11 +73,9 @@ public class ProgramUtils
         	
         	sb.append("else { oldIn=false; newIn=false; } \n");
         }
-        for(Program program : programDao.getCommunityPrograms()){
-        	if(program.isCommunity()) {
-        		sb.append("if(oldProgramId=="+program.getId()+") {return(false);} \n");
-        		sb.append("if(newProgramId=="+program.getId()+") {return(false);} \n");
-        	}
+        for(Program program : programDao.getProgramsByType(null, Program.COMMUNITY_TYPE, null)){
+    		sb.append("if(oldProgramId=="+program.getId()+") {return(false);} \n");
+    		sb.append("if(newProgramId=="+program.getId()+") {return(false);} \n");
         }
         sb.append(" return(true);\n");
         sb.append("}\n");
@@ -91,7 +89,7 @@ public class ProgramUtils
         sb.append("function validAgeRangeForProgram(programId, age)\n");
         sb.append("{\n");
         
-        for (Program program : programDao.getAllActiveBedPrograms())
+        for (Program program : programDao.getProgramsByType(null, Program.BED_TYPE, true))
         {
             sb.append("if (programId == "+program.getId()+" && ( age<"+program.getAgeMin()+" || age>"+program.getAgeMax()+" )) return(false);\n");
         }
