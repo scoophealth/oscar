@@ -157,6 +157,7 @@ public class ContactAction extends DispatchAction {
 		        			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
 		        			c.setSdm("");
 		        			c.setEc("");
+		        			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		        			if(c.getId() == null)
 		        				demographicContactDao.persist(c);
 		        			else
