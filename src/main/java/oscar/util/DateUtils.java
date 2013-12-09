@@ -39,6 +39,9 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
+/**
+ * @deprecated 2013-12-09 use org.oscarehr.util.DateUtils instead
+ */
 public final class DateUtils {
 
 	private static Logger logger = MiscUtils.getLogger();
