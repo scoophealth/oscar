@@ -1,3 +1,4 @@
+<!DOCTYPE html> 
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -26,8 +27,7 @@
 <%@ page errorPage="../errorpage.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
-<%@ page
-	import="oscar.login.*, oscar.oscarDB.*, oscar.MyDateFormat"%>
+<%@ page import="oscar.login.*, oscar.oscarDB.*, oscar.MyDateFormat"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -84,20 +84,21 @@ boolean isSiteAccessPrivacy=false;
 
 <%@page import="oscar.Misc"%><html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+
+
+
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 <title>Log Report</title>
-<link rel="stylesheet" href="../css/receptionistapptstyle.css">
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../share/calendar/calendar.css" title="win2k-cold-1" />
-<!-- main calendar program -->
-<script type="text/javascript" src="../share/calendar/calendar.js"></script>
-<!-- language for the calendar -->
-<script type="text/javascript"
-	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script language="JavaScript">
 
                 <!--
@@ -117,50 +118,70 @@ function onSub() {
 }
 
 //-->
-
       </script>
+
+<style>
+
+label{margin-top:6px;margin-bottom:0px;}
+</style>
+
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
-	leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor="#486ebd">
-		<th align="CENTER" width="90%"><font face="Helvetica"
-			color="#FFFFFF"> Log Admin Report </font></th>
-	</tr>
-</table>
-<form name="myform" action="logReport.jsp" method="POST"
-	onSubmit="return ( onSub());">
-<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
-	cellpadding="1">
-	<tr bgcolor="lightsteelblue">
-		<td>Provider: <select name="providerNo">
-			<option value="*">All</option>
-			<%
-                for (int i = 0; i < vecProvider.size(); i++) {
-                    String prov = ((Properties)vecProvider.get(i)).getProperty("providerNo", "");
-                    String selected = request.getParameter("providerNo");
-%>
-			<option value="<%=prov %>"
-				<% if ((selected != null) && (selected.equals(prov))) { %> selected
-				<% } %>><%= ((Properties)vecProvider.get(i)).getProperty("name", "") %>
-			</option>
-			<%
-                }
-%>
-		</select></td>
-		<td nowrap>start <input type="text" name="startDate"
-			id="startDate" value="<%=startDate!=null?startDate:""%>" size="10"
-			readonly> <img src="../images/cal.gif" id="startDate_cal">
-		end <input type="text" name="endDate" id="endDate"
-			value="<%=endDate!=null?endDate:""%>" size="10" readonly> <img
-			src="../images/cal.gif" id="endDate_cal"></td>
-		<td nowrap><select name="content">
-			<option value="admin">Admin</option>
-			<option value="login">Log in</option>
-		</select></td>
-		<td><input type="submit" name="submit" value="Go"></td>
-	</tr>
-</table>
+<body>
+<form name="myform" class="well form-horizontal" action="logReport.jsp" method="POST" onSubmit="return(onSub());">
+	<fieldset>
+		<h3>Log Admin Report <small>Please select the provider, start and end dates.</small></h3>
+		
+			<div class="span4">
+			<label>Provider: </label>
+			
+				<select name="providerNo">
+					<option value="*">All</option>
+					<%
+		                for (int i = 0; i < vecProvider.size(); i++) {
+		                    String prov = ((Properties)vecProvider.get(i)).getProperty("providerNo", "");
+		                    String selected = request.getParameter("providerNo");
+					%>
+					<option value="<%=prov %>"
+						<% if ((selected != null) && (selected.equals(prov))) { %> selected
+						<% } %>><%= ((Properties)vecProvider.get(i)).getProperty("name", "") %>
+					</option>
+					<%
+		                }
+					%>
+				</select>
+			</div>
+
+			<div class="span4">
+			<label>Content Type:</label>
+			<select name="content" >
+				<option value="admin">Admin</option>
+				<option value="login">Log in</option>
+			</select>
+			</div>
+		
+			<div class="span4">		
+			<label>Start Date: </label>
+			<div class="input-append">
+				<input type="text" name="startDate" id="startDate1" value="<%=startDate!=null?startDate:""%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			</div>
+			</div>
+			
+			<div class="span4">		
+			<label >End Date: </label>
+			<div class="input-append">
+				<input type="text" name="endDate" id="endDate1" value="<%=endDate!=null?endDate:""%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			</div>
+			</div>
+
+
+		
+			<div class="span8" style="padding-top:10px;">
+			<input class="btn btn-primary" type="submit" name="submit" value="Run Report">
+			</div>
+
+	</fieldset>
 </form>
 <%
 	out.flush();
@@ -179,10 +200,8 @@ function onSub() {
 	  String sDate = request.getParameter("startDate");
 	  String eDate = request.getParameter("endDate");
 	  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-	  if("oracle".equalsIgnoreCase(strDbType)){
-		if("".equals(sDate) || sDate==null)  sDate = "1900-01-01";
-		if("".equals(eDate) || eDate==null)  eDate = "2999-01-01";
-	  }
+	  if("".equals(sDate) || sDate==null)  sDate = "1900-01-01";
+	  if("".equals(eDate) || eDate==null)  eDate = "2999-01-01";
 
 	  DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];
 	  params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDateEX(eDate, 1));
@@ -222,28 +241,20 @@ function onSub() {
 	  //endDate = eDate;
 	}
 %>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor="<%="#669999"%>">
-		<th align="left"><font face="Helvetica" color="white"> <%=propName.getProperty(providerNo,"")%>
-		- Log Report </font></th>
-		<th width="10%" nowrap><input type="button" name="Button"
-			value="Print" onClick="window.print()"> <input type="button"
-			name="Button" value=" Exit " onClick="window.close()"></th>
-	</tr>
-</table>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr>
-		<td>Period: ( <%= startDate==null?"":startDate %> ~ <%= endDate==null?"":endDate %>
-		)</td>
-	</tr>
-</table>
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="0"
-	cellpadding="0">
+<h4><%if(propName.getProperty(providerNo,"").equals("")){ out.print("All");}else{out.print(propName.getProperty(providerNo,""));}%> - Log Report</h4>
+
+<button class="btn pull-right" onClick="window.print()" style="margin-bottom:4px">
+	<i class="icon-print"></i> Print
+</button> 
+
+
+<p>Period: ( <%= startDate==null?"":startDate %> ~ <%= endDate==null?"":endDate %>)</p>	
+<table class="table table-bordered table-striped table-hover table-condensed">
 	<tr bgcolor="<%=tdTitleColor%>">
-		<TH width="30%">Time</TH>
-		<TH width="10%">Action</TH>
-		<TH width="10%">Content</TH>
-		<TH width="20%">Keyword</TH>
+		<TH>Time</TH>
+		<TH>Action</TH>
+		<TH>Content</TH>
+		<TH>Keyword</TH>
 		<TH>IP</TH>
 		<% if(bAll) { %>
 		<TH>Provider</TH>
@@ -267,17 +278,21 @@ for (int i = 0; i < vec.size(); i++) {
 		<td><%=prop.getProperty("contentId")%>&nbsp;</td>
 		<td><%=prop.getProperty("ip")%>&nbsp;</td>
 		<% if(bAll) { %>
-		<td><%=propName.getProperty(prop.getProperty("provider_no"), "")%></td>
+		<td><%=propName.getProperty(prop.getProperty("provider_no"), "")%>&nbsp;</td>
 		<% } %>
-                <td>
-                    <%=prop.getProperty("demographic_no")%>
-                </td>
-                <td><%=prop.getProperty("data") %>&nbsp;</td>
+        <td><%=prop.getProperty("demographic_no")%>&nbsp;</td>
+        <td><%=prop.getProperty("data") %>&nbsp;</td>
 	</tr>
 	<% } %>
-	<script type="text/javascript">
-Calendar.setup({ inputField : "startDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "startDate_cal", singleClick : true, step : 1 });
-Calendar.setup({ inputField : "endDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "endDate_cal", singleClick : true, step : 1 });
-      </script>
+
+<script type="text/javascript">
+var startDate = $("#startDate1").datepicker({
+	format : "yyyy-mm-dd"
+});
+
+var endDate = $("#endDate1").datepicker({
+	format : "yyyy-mm-dd"
+});
+</script>
 </body>
 </html:html>
