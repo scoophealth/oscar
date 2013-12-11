@@ -65,7 +65,7 @@
     
     //we calculate inverse of provider colour for text
     int base = 16;
-    if( userColour.length() == 0 )
+    if( userColour == null || userColour.length() == 0 )
         userColour = "#CCCCFF";   //default blue if no preference set
 
     int num = Integer.parseInt(userColour.substring(1), base);      //strip leading # sign and convert
