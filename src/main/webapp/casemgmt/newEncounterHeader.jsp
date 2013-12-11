@@ -79,8 +79,8 @@
     }
     else {
         EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo);
-        famDocName = prov.getFirstName();
-        famDocSurname = prov.getSurname();
+        famDocName =  prov == null || prov.getFirstName() == null ? "" : prov.getFirstName();
+        famDocSurname = prov == null || prov.getSurname() == null ? "" : prov.getSurname();
         colourUpdater = new ProviderColourUpdater(bean.familyDoctorNo);
         famDocColour = colourUpdater.getColour();
         if( famDocColour.length() == 0 )
