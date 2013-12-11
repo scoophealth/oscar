@@ -614,7 +614,7 @@ CREATE TABLE document (
   observationdate date default NULL,
   reviewer varchar(30) default '',
   reviewdatetime datetime default NULL,
-  number_of_pages int(6) not null default 0,
+  number_of_pages int(6),
   appointment_no int(11) default NULL,
   PRIMARY KEY  (document_no)
 ) ;
