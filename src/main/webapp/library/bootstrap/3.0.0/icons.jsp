@@ -26,7 +26,7 @@
 --%>
 <html>
   <head>
-    <title>Bootstrap 101 Base Template</title>
+    <title>Bootstrap 101 Icons Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -36,21 +36,35 @@
       <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
       <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/respond.min.js"></script>
     <![endif]-->
+
+
+<style>
+#red{color:red;}
+#custom-size{font-size:1.6em;}
+</style>
+
   </head>
   <body>
-    
 
     <div class="container">
 
-      <div class="starter-template">
-        <h1>Hello, world! <small><a href="index.jsp">view example list</a></small></h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
 
+	    	<h1>Hello, Icons! <small><a href="index.jsp">view example list</a></small></h1>
 
-      </div>
+		<h1><span class="glyphicon glyphicon-search"></span></h1>
+		<h2><span class="glyphicon glyphicon-search"></span></h2>
+		<h3><span class="glyphicon glyphicon-search"></span></h3>
+		<h4><span class="glyphicon glyphicon-search"></span></h4>
+		<span class="glyphicon glyphicon-search"></span><br>
+		<span class="glyphicon glyphicon-search" id="red"></span><br>
+		<span class="glyphicon glyphicon-search" id="custom-size"></span><br>
+
+		<button type="button" class="btn btn-default btn-lg">
+		  <span class="glyphicon glyphicon-search"></span> Star
+		</button>
+
 
     </div><!-- /.container -->
-
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

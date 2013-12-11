@@ -26,7 +26,7 @@
 --%>
 <html>
   <head>
-    <title>Bootstrap 101 Base Template</title>
+    <title>Bootstrap 101 Alerts Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -36,21 +36,37 @@
       <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
       <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/respond.min.js"></script>
     <![endif]-->
+
+
   </head>
   <body>
-    
 
     <div class="container">
 
-      <div class="starter-template">
-        <h1>Hello, world! <small><a href="index.jsp">view example list</a></small></h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
 
+	    	<h1>Hello, Alerts! <small><a href="index.jsp">view example list</a></small></h1>
 
+      <div class="alert alert-warning fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+        <strong>Holy warning!</strong> example text to display to user.
+      </div>
+
+      <div class="alert alert-success fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+        <strong>Holy success!</strong> example text to display to user.
+      </div>
+
+      <div class="alert alert-danger fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+        <strong>Holy danger!</strong> example text to display to user.
+      </div>
+
+      <div class="alert alert-info fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+        <strong>Holy info!</strong> example text to display to userd.
       </div>
 
     </div><!-- /.container -->
-
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
