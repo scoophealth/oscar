@@ -379,7 +379,7 @@ div.recommendations li {
 table.legend{
 border:0;
 padding-top:10px;
-width:370px;
+width:420px;
 }
 
 table.legend td{
@@ -523,18 +523,20 @@ text-align:left;
 		</div>
 		<% }
 
-	 String[] ColourCodesArray=new String[5];
+	 String[] ColourCodesArray=new String[6];
 	 ColourCodesArray[1]="#F0F0E7"; //very light grey - completed or normal
 	 ColourCodesArray[2]="#FFDDDD"; //light pink - Refused
 	 ColourCodesArray[3]="#FFCC24"; //orange - Ineligible
 	 ColourCodesArray[4]="#FF00FF"; //dark pink - pending
+	 ColourCodesArray[5]="#ee5f5b"; //dark salmon to match part of bootstraps danger - abnormal
 
 	 //labels for colour codes
-	 String[] lblCodesArray=new String[5];
+	 String[] lblCodesArray=new String[6];
 	 lblCodesArray[1]="Completed or Normal";
 	 lblCodesArray[2]="Refused";
 	 lblCodesArray[3]="Ineligible";
 	 lblCodesArray[4]="Pending";
+	 lblCodesArray[5]="Abnormal";
 
 	 //Title ie: Legend or Profile Legend
 	 String legend_title="Legend: ";
@@ -543,9 +545,9 @@ text-align:left;
 	 String legend_builder=" ";
 
 
-	 	for (int iLegend = 1; iLegend < 5; iLegend++){
+	 	for (int iLegend = 1; iLegend < 6; iLegend++){
 
-			legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><td> </td></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
+			legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><tr><td> </td></tr></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
 
 		}
 
@@ -604,7 +606,8 @@ text-align:left;
                         if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"&amp;demographic_no="+demographic_no+"')";
                         %>
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
-		<p <%=r(hdata.get("refused"),result)%>>Age: <%=hdata.get("age")%> <br />
+		<!--this is setting the style <%=r(hdata.get("refused"),result)%>  -->
+		<p <%=r(hdata.get("refused"),result)%> >Age: <%=hdata.get("age")%> <%if(result!=null && result.equals("abnormal")){out.print("result:"+result);}%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
 		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {
                     if (oscar.OscarProperties.getInstance().getBooleanProperty("prevention_show_comments","yes")){%>
@@ -755,7 +758,6 @@ text-align:left;
 		            	Map<String,Object> hdata = alist.get(k);
                                 Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
 		    %>
-		    
 		<input type="hidden" id="preventProcedureStatus<%=i%>-<%=k%>"
 			name="preventProcedureStatus<%=i%>-<%=k%>"
 			value="<%=hdata.get("refused")%>">
@@ -802,6 +804,10 @@ String r(Object re, String result){
            }
            else if( result != null && result.equalsIgnoreCase("pending")) {
                ret = "style=\"background: #FF00FF;\"";
+           }
+           else if(result!=null && result.equals("abnormal")){
+	        	   ret = "style=\"background: #ee5f5b;\"";
+	           
            }
         }
         return ret;
