@@ -238,21 +238,21 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 		p.loadPatient(demographicNo.toString());
 		List<Measurement> list = p.getMeasurements();
 		if (p.hasMeasurements()) {
-			// exImmunizations must be true
+			// exCareElements must be true
 			assertNotNull(list);
 			assertFalse(list.isEmpty());
-			p.setExLaboratoryResults(false);
-			assertFalse(p.hasImmunizations());
+			p.setExCareElements(false);
+			assertFalse(p.hasMeasurements());
 			// put boolean back to original state
-			p.setExLaboratoryResults(true);
-			assertTrue(p.hasImmunizations());
+			p.setExCareElements(true);
+			assertTrue(p.hasMeasurements());
 		}
 		if (!p.hasMeasurements() && list!=null && !list.isEmpty()) {
-			// exImmunizations must be false
-			p.setExLaboratoryResults(true);
-			assertTrue(p.hasImmunizations());
+			// exCareElements must be false
+			p.setExCareElements(true);
+			assertTrue(p.hasMeasurements());
 			// put boolean back to original state
-			p.setExLaboratoryResults(false);
+			p.setExCareElements(false);
 			assertFalse(p.hasMeasurements());
 		}
 	}
@@ -412,7 +412,7 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 			assertTrue("problems unexpectedly not true", p.hasProblems());
 			// put boolean back to original state
 			p.setExProblemList(false);
-			assertFalse("medications unexpectedly not false",p.hasProblems());
+			assertFalse("problems unexpectedly not false",p.hasProblems());
 		}
 	}
 

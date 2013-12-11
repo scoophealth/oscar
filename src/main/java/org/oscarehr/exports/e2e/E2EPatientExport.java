@@ -145,7 +145,6 @@ public class E2EPatientExport extends PatientExport {
 			}
 		}
 
-		//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
 		if(exLaboratoryResults) {
 			try {
 				this.labs = assembleLabs();
@@ -153,6 +152,9 @@ public class E2EPatientExport extends PatientExport {
 				log.error("loadPatient - Failed to load Labs");
 				this.labs = null;
 			}
+		}
+
+		if(exCareElements) {
 			try {
 				this.measurements = parseMeasurements();
 			} catch (Exception e) {
@@ -459,9 +461,8 @@ public class E2EPatientExport extends PatientExport {
 		return measurements;
 	}
 
-	//TODO Temporarily hooked into Lab Results checkbox - consider creating unique checkbox on UI down the road
 	public boolean hasMeasurements() {
-		return exLaboratoryResults && measurements!=null && !measurements.isEmpty();
+		return exCareElements && measurements!=null && !measurements.isEmpty();
 	}
 
 	/*
