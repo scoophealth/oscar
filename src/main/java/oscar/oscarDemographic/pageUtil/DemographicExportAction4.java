@@ -2008,6 +2008,7 @@ public class DemographicExportAction4 extends Action {
 					patient.setExImmunizations(exImmunizations);
 					patient.setExProblemList(exProblemList);
 					patient.setExLaboratoryResults(exLaboratoryResults);
+					patient.setExCareElements(exCareElements);
 					patient.setExRiskFactors(exRiskFactors);
 					patient.setExPersonalHistory(exPersonalHistory);
 					patient.setExFamilyHistory(exFamilyHistory);

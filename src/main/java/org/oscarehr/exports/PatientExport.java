@@ -97,6 +97,7 @@ public abstract class PatientExport {
 	protected boolean exImmunizations = false;
 	protected boolean exProblemList = false;
 	protected boolean exLaboratoryResults = false;
+	protected boolean exCareElements = false;
 	protected boolean exRiskFactors = false;
 	protected boolean exPersonalHistory = false;
 	protected boolean exFamilyHistory = false;
@@ -147,6 +148,10 @@ public abstract class PatientExport {
 		this.exLaboratoryResults = rhs;
 	}
 
+	public void setExCareElements(boolean rhs) {
+		this.exCareElements = rhs;
+	}
+
 	public void setExRiskFactors(boolean rhs) {
 		this.exRiskFactors = rhs;
 	}
@@ -169,6 +174,7 @@ public abstract class PatientExport {
 		this.exImmunizations = true;
 		this.exProblemList = true;
 		this.exLaboratoryResults = true;
+		this.exCareElements = true;
 		this.exRiskFactors = true;
 		this.exPersonalHistory = true;
 		this.exFamilyHistory = true;

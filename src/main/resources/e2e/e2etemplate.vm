@@ -108,7 +108,7 @@ CDA Header
 	-->
 	<author typeCode="AUT" contextControlCode="OP">
 		<time value="$dateTool.get('yyyyMMdd')"/>
-		<assignedAuthor>
+		<assignedAuthor classCode="ASSIGNED">
 			<id extension="$patient.authorId" root="$authorIdRoot"/>
 			<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 				<name use="L">
@@ -442,7 +442,7 @@ Clinically Measured Observation
 #*    *##else
 								<time nullFlavor="UNK"/>
 #*    *##end
-								<assignedAuthor>
+								<assignedAuthor classCode="ASSIGNED">
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
@@ -691,7 +691,7 @@ Immunization List
 #*    *##else
 								<time nullFlavor="UNK"/>
 #*    *##end
-								<assignedAuthor>
+								<assignedAuthor classCode="ASSIGNED">
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
@@ -737,7 +737,7 @@ Immunization List
 #*        *##else
 										<time nullFlavor="UNK"/>
 #*        *##end
-										<assignedAuthor>
+										<assignedAuthor classCode="ASSIGNED">
 											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 												<name use="L">
@@ -783,7 +783,7 @@ Immunization List
 #*        *##else
 										<time nullFlavor="UNK"/>
 #*        *##end
-										<assignedAuthor>
+										<assignedAuthor classCode="ASSIGNED">
 											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 												<name use="L">
@@ -871,7 +871,7 @@ Laboratory Results & Results
 #*    *##else
 								<time nullFlavor="UNK"/>
 #*    *##end
-								<assignedAuthor>
+								<assignedAuthor classCode="ASSIGNED">
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name>$patient.cleanString($lab.hl7TextInfo.requestingProvider)</name>
@@ -1595,7 +1595,7 @@ Problems and Conditions - Problem List
 #*        *##else
 								<time nullFlavor="UNK"/>
 #*        *##end
-								<assignedAuthor>
+								<assignedAuthor classCode="ASSIGNED">
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
@@ -1697,7 +1697,7 @@ Risk Factors
 #*    *##else
 								<time nullFlavor="UNK"/>
 #*    *##end
-								<assignedAuthor>
+								<assignedAuthor classCode="ASSIGNED">
 									<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
 									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
 										<name use="L">
