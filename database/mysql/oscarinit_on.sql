@@ -1423,7 +1423,7 @@ CREATE TABLE billing_on_item (
   rec_id char(1) default 'T',
   service_code char(20) default NULL,
   fee varchar(7) default '',
-  ser_num char(2) default '01',
+  ser_num char(5),
   service_date date,
   dx char(4) default '',
   dx1 char(4) default '',
