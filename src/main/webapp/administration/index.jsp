@@ -23,7 +23,6 @@
     Ontario, Canada
 
 --%>
-
 <%@ page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
@@ -142,7 +141,6 @@ text-decoration: none;
 color:#0088cc;
 }
 
-
 .icon-chevron-right{float:right;}  
 
 #adminNav{
@@ -201,6 +199,17 @@ padding-bottom:0px;
 margin-bottom:0px;
 }
 
+/*remove font awesomes 'link' response to icons*/
+i[class*='icon-'] {color:#333 }
+i[class*='icon-']:before {
+	display: inline-block;
+	text-decoration: none;
+	cursor: pointer; cursor: hand;
+}
+
+i[class*='icon-']:hover {color:#0088cc;}
+.icon-trash:hover{color:#bd362f !important;}
+
 @media (max-width: 767px) {
      #side {
          width:98%;
@@ -240,7 +249,6 @@ margin-bottom:0px;
 </head>
 
 <body>
-
 
 <!--<oscar:help keywords="admin" key="app.top1"/> --> 
 
