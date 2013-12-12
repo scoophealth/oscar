@@ -54,8 +54,8 @@
 		<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
 		<property name="sessionCookieKey" value="<%=sessionCookie.getName()%>" />
 		<property name="sessionCookieValue" value="<%=sessionCookie.getValue()%>" />
-		<property name="signaturePadUrlBase" value="<%=signaturePadUrlBase%>" />
-		<property name="signatureRequestId" value="<%=request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY)%>" />
+		<property name="jnlp.signaturePadUrlBase" value="<%=signaturePadUrlBase%>" />
+		<property name="jnlp.signatureRequestId" value="<%=request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY)%>" />
 		<jar href="topaz_signature_pad-0.0-SNAPSHOT.jar" />
 		<jar href="comm-0.0_signed.jar" />
 		<jar href="sigplus-2.52_signed.jar" />
