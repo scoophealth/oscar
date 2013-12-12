@@ -53,7 +53,7 @@
   if (request.getParameter("groupappt") != null) {
     boolean bSucc = false;
     if (request.getParameter("groupappt").equals("Add Group Appointment")) {
-        String[] param = new String[19];
+        String[] param = new String[20];
         int rowsAffected = 0, datano = 0;
         StringBuffer strbuf = null;
 		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
@@ -76,6 +76,7 @@
         param[15]=request.getParameter("remarks");
         param[17]=(String)request.getSession().getAttribute("programId_oscarView");
         param[18]=request.getParameter("urgency");
+		param[19]=request.getParameter("createdatetime");
 
 		String[] param2 = new String[7];
         for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -154,7 +155,7 @@
             		}
             	}
 
-                String[] paramu = new String[19];
+                String[] paramu = new String[20];
                         paramu[0]=request.getParameter("provider_no"+datano);
                         paramu[1]=request.getParameter("appointment_date");
                         paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
@@ -173,6 +174,7 @@
                         paramu[15]=request.getParameter("remarks");
                         paramu[17]=(String)request.getSession().getAttribute("programId_oscarView");
                         paramu[18]=request.getParameter("urgency");
+						paramu[19]=request.getParameter("createdatetime");
 
 		        if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
 					paramu[16]=request.getParameter("demographic_no");
