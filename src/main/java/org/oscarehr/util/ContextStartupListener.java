@@ -56,7 +56,6 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			
 			OscarProperties properties = OscarProperties.getInstance();
 			String vmstatLoggingPeriod = properties.getProperty("VMSTAT_LOGGING_PERIOD");
-			VmStat.startContinuousLogging(Long.parseLong(vmstatLoggingPeriod));
 
 			MiscUtilsOld.setShutdownSignaled(false);
 			MiscUtilsOld.registerShutdownHook();
