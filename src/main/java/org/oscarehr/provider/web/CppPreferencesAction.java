@@ -56,6 +56,8 @@ public class CppPreferencesAction extends DispatchAction {
 		CppPreferencesUIBean bean = new CppPreferencesUIBean(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		bean.deserializeParams(parameters);
 		bean.saveValues();
-		return view(mapping,actionform,request,response);
+		bean.loadValues();
+		request.setAttribute("bean", bean);
+		return mapping.findForward("exit");
 	}
 }
