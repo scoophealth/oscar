@@ -833,7 +833,7 @@ function prepareExtraFields(cpp,exts) {
 	rowIDs[i] = "Item"+exFields[i];
 	$(rowIDs[i]).hide();
     }
-    if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[8],rowIDs[9]).invoke("show");
+    if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[4],rowIDs[8],rowIDs[9]).invoke("show");
     if (cpp==cppNames[2]) $(rowIDs[3],rowIDs[4],rowIDs[7],rowIDs[8],rowIDs[9]).invoke("show");
     if (cpp==cppNames[3]) $(rowIDs[5],rowIDs[8],rowIDs[9],rowIDs[10]).invoke("show");
     if (cpp==cppNames[4]) $(rowIDs[3],rowIDs[6],rowIDs[8],rowIDs[9]).invoke("show");

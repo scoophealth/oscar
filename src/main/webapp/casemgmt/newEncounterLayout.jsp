@@ -713,10 +713,10 @@ function doscroll(){
 			<td><input type="text" id="resolutiondate" name="resolutiondate" value="" size="12"> (YYYY-MM-DD)</td></tr>
 		      <tr id="Itemageatonset"><td><bean:message key="oscarEncounter.ageAtOnset.title"/>: </td>
 			<td><input type="text" id="ageatonset" name="ageatonset" value="" size="2"></td></tr>
-		      <tr id="Itemtreatment"><td><bean:message key="oscarEncounter.treatment.title"/>: </td>
-			<td><input type="text" id="treatment" name="treatment" value=""></td></tr>
 		      <tr id="Itemproceduredate"><td><bean:message key="oscarEncounter.procedureDate.title"/>: </td>
 			<td><input type="text" id="proceduredate" name="proceduredate" value="" size="12"> (YYYY-MM-DD)</td></tr>
+		      <tr id="Itemtreatment"><td><bean:message key="oscarEncounter.treatment.title"/>: </td>
+                        <td><input type="text" id="treatment" name="treatment" value=""></td></tr>
 		      <tr id="Itemproblemstatus"><td><bean:message key="oscarEncounter.problemStatus.title"/>: </td>
 			<td><input type="text" id="problemstatus" name="problemstatus" value="" size="8"> <bean:message key="oscarEncounter.problemStatusExample.msg"/></td></tr>
 		      <tr id="Itemexposuredetail"><td><bean:message key="oscarEncounter.exposureDetail.title"/>: </td>
