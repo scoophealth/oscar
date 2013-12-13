@@ -740,16 +740,17 @@ window.onbeforeunload = onClosing;
 					<td><input type="text" id="ageatonset" name="ageatonset"
 						value="" size="2"></td>
 				</tr>
-				<tr id="Itemtreatment">
-					<td><bean:message key="oscarEncounter.treatment.title" />:</td>
-					<td><input type="text" id="treatment" name="treatment"
-						value=""></td>
-				</tr>
+				
 				<tr id="Itemproceduredate">
 					<td><bean:message key="oscarEncounter.procedureDate.title" />:
 					</td>
 					<td><input type="text" id="proceduredate" name="proceduredate"
 						value="" size="12"> (YYYY-MM-DD)</td>
+				</tr>
+				<tr id="Itemtreatment">
+					<td><bean:message key="oscarEncounter.treatment.title" />:</td>
+					<td><input type="text" id="treatment" name="treatment"
+						value=""></td>
 				</tr>
 				<tr id="Itemproblemstatus">
 					<td><bean:message key="oscarEncounter.problemStatus.title" />:

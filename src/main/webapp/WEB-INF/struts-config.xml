@@ -2251,6 +2251,7 @@
 
 		<action path="/provider/CppPreferences" type="org.oscarehr.provider.web.CppPreferencesAction" parameter="method" scope="request" validate="false" input="/provider/cpp_preferences.jsp">
 			<forward name="form" path="/provider/cpp_preferences.jsp" />
+			<forward name="exit" path="/oscarEncounter/close.jsp" />
 		</action>
 
 		<action path="/provider/OlisPreferences" type="org.oscarehr.provider.web.OlisPreferencesAction" parameter="method" scope="request" validate="false" input="/provider/olis_preferences.jsp">
