@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -35,44 +36,36 @@
 
 <%
   boolean bodd = false;
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*,org.apache.commons.io.FileUtils"
 	errorPage="errorpage.jsp"%>
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <title>ADMIN PAGE</title>
-<link rel="stylesheet" href="../web.css">
-<script LANGUAGE="JavaScript">
-    <!--
-		
-    //-->
-</script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 </head>
 
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<center>
-<table cellspacing="0" cellpadding="2" width="100%" border="0">
-	<tr>
-		<th align="CENTER" bgcolor="<%=deepcolor%>">BACKUP DOWNLOAD PAGE</th>
-	</tr>
-</table>
-<table border="0" cellspacing="0" cellpadding="0" width="90%">
-	<tr>
-		<td></td>
-		<td align="right"><a href="#" onClick='window.close()'> Close
-		</a></td>
-	</tr>
-</table>
+<body>
 
-<table cellspacing="1" cellpadding="2" width="90%" border="0">
-	<tr bgcolor='<%=deepcolor%>'>
+<h3><bean:message key="admin.admin.btnAdminBackupDownload" /></h3>
+
+<div class="well">
+<table class="table table-striped  table-condensed">
+<thead>
+	<tr>
 		<th>File Name</th>
 		<th>Size</th>
 	</tr>
+</thead>
+
+<tbody>
 	<%
     String backuppath = oscarVariables.getProperty("backup_path") ; //"c:\\root";
     if ( backuppath == null || backuppath.equals("") ) {
@@ -92,13 +85,15 @@
     for(int i=0; i<contents.length; i++) {
       bodd = bodd?false:true ;
       if(contents[i].isDirectory() || contents[i].getName().equals("BackupClient.class")  || contents[i].getName().startsWith(".")) continue;
-      out.println("<tr bgcolor='"+ (bodd?weakcolor:"white") +"'><td><a HREF='../servlet/BackupDownload?filename="+URLEncoder.encode(contents[i].getName())+"'>"+contents[i].getName()+"</a></td>") ;
+      out.println("<tr><td><a HREF='../servlet/BackupDownload?filename="+URLEncoder.encode(contents[i].getName())+"'>"+contents[i].getName()+"</a></td>") ;
       long bytes = contents[i].length( );
       String display = FileUtils.byteCountToDisplaySize( bytes );
 
       out.println("<td align='right' title=\""+bytes+" by\">"+display+"</td></tr>"); //+System.getProperty("file.separator")
     }
 %>
+</tbody>
 </table>
+</div>
 </body>
 </html>
