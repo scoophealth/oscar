@@ -40,14 +40,15 @@
 
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
-
 <title><bean:message key="admin.admin.traceabilityReport"/></title>
+<!--<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>-->
 
-<link rel="stylesheet" href="../css/receptionistapptstyle.css">
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css" />
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 	
 <script language="JavaScript">
 function setfocus() {
@@ -69,52 +70,30 @@ function validateInput() {
 </script>
 
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
-	leftmargin="0" rightmargin="0">
-<table>
-	<tr bgcolor="#486ebd">
-		<th align="CENTER" width="90%">
-			<font face="Helvetica" color="#FFFFFF">
-				<bean:message key="admin.admin.traceabilityReport"/>
-			</font>
-		</th>
-	</tr>
-</table>
-<table>
-	<tr>
-	<p>
-	<span style="font-size: x-small;">
+<body>
+<h3><bean:message key="admin.admin.traceabilityReport"/></h3>
+
+<div class="well">
+<h4><bean:message key='admin.admin.downloadTraceabilityData'/></h4>
 This screen will allow you to check your OSCAR against another OSCAR to see if it is running the same version.
 You can click "Download Traceability Data from this Oscar" to generate a file with information about the system. This file contains information only about the OSCAR program itself -- it does not include any PHI.
-If you have a Traceability Data file from another Oscar, you can choose it and click "Generate Traceability Report" to create a file which will let you know what files in the OSCAR program have been modified, added, or removed.
-    </span>
-    </p>
-	</tr>
-</table>
 
 <form action="GenerateTraceAction.do" method="post">
-<table>
-	<input type="hidden" name="method">
-	<tr bgcolor="lightsteelblue">
-		<td>
-			<input type="submit" value="<bean:message key='admin.admin.downloadTraceabilityData'/>"/>
-		</td>
-	</tr>
-</table>
+<input type="hidden" name="method">
+<input type="submit" class="btn btn-primary" value="Download"/>
 </form>
+</div>
+
+<div class="well">
+<h4><bean:message key='admin.admin.traceabilityReport'/></h4>
+If you have a Traceability Data file from another Oscar, you can choose it and click "Generate Traceability Report" to create a file which will let you know what files in the OSCAR program have been modified, added, or removed.
 
 <form action="GenerateTraceabilityReportAction.do" method="post" enctype="multipart/form-data" onsubmit="return validateInput()">
-<table width="100%" border="0" bgcolor="ivory" cellspacing="1"cellpadding="1">
-	<tr bgcolor="lightsteelblue">
-		<td>
-			<input type="file" name="file" value="Browse" size="100"/>
-		</td>
-		<td>
-			<input type="submit" name="submit" value="<bean:message key='admin.admin.traceabilityReport'/>"/>
-		</td>
-	</tr>
-</table>
+<input type="file" name="file" value="Browse" /><br>
+<input class="btn btn-primary" type="submit" name="submit" value="Generate"/>
 </form>
+
+</div>
 
 <table>
 	<tr>

@@ -25,7 +25,8 @@ String roleName$ = (String)session.getAttribute("userrole") + "," + (String)sess
 <html:html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/JavaScript">
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
@@ -51,124 +52,81 @@ function doDocuments() {
 <title><bean:message key="admin.oscarStatus.oscarStatus" /></title>
 
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
 
 </head>
-
-
 <body 
 <%if (request.getAttribute("documentStatusText") == null) { %>
 onLoad="setTimeout('doDocuments()',3000);"
 <%} %>
 >
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
+<form name="loadDoc" method="post" action="<%=request.getContextPath() %>/admin/oscarStatus.do">
+	<input type="hidden" name="delayed" value="do" />
+</form>
+<% if (request.getAttribute("restartOscar") != null) { %>
+	<h4>Oscar is restarting.</h4>
+	<pre><%=request.getAttribute("restartOscar") %></pre>
+<% } %>
 
-	<form name="loadDoc" method="post" action="<%=request.getContextPath() %>/admin/oscarStatus.do">
-		<input type="hidden" name="delayed" value="do" />
-	</form>
+<% if (request.getAttribute("rebootServer") != null) { %>
+	<h4>Server is rebooting.</em>
+	<pre><%=request.getAttribute("rebootServer") %></pre>
+<% } %>
 	
-	<% if (request.getAttribute("restartOscar") != null) { %>
-		<div style="margin-bottom: 20px;">
-		<em>Oscar is restarting.</em>
-		<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-			<pre><%=request.getAttribute("restartOscar") %></pre>
-		</div>
-		</div>
-	<% } %>
-	
-	<% if (request.getAttribute("rebootServer") != null) { %>
-		<div style="margin-bottom: 20px;">
-		<em>Server is rebooting.</em>
-		<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-			<pre><%=request.getAttribute("rebootServer") %></pre>
-		</div>
-		</div>
-	<% } %>
+<div class="page-header">
+	<h4><bean:message key="admin.oscarStatus.oscarStatus" /></h4>
+</div>
 
-	<tr class="MainTableTopRow">	
-		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message key="admin.oscarStatus.oscarStatus" /></td>
-	</tr>
-	<tr>
-		<td>
-			<div>
-			<strong>Oscar Server Status</strong>
-				<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-					Master Status:
-					<pre><%=request.getAttribute("sqlMasterStatusText") %></pre>
-				</div>
-				<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-					Slave Status:
-					<pre><%=request.getAttribute("sqlSlaveStatusText") %></pre>
-				</div>
-				<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-					Filesystem:
-					<pre><%=request.getAttribute("filesystemStatusText") %></pre>
-				</div>
-				<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-					Uptime:
-					<pre><%=request.getAttribute("uptimeText") %></pre>
-				</div>
-				<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-					Virtual Memory:
-					<pre><%=request.getAttribute("vmstatText") %></pre>
-				</div>
-				
-				<%if (request.getAttribute("documentStatusText") != null) { %>
-					<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-						Oscar Document Storage:
-						<pre><%=request.getAttribute("documentStatusText") %></pre>
-					</div>
-				<%} else { %>
-					<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-						Oscar Document Storage: <br>
-						<img src="<%= request.getContextPath() %>/images/loader.gif" />
-					</div>
-				<%} %>
-				
-				<%if (request.getAttribute("hl7StatusText") != null) { %>
-					<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px; max-height:200px; overflow:auto;">
-						HL7 Status:
-						<pre><%=request.getAttribute("hl7StatusText") %></pre>
-					</div>
-				<%} else { %>
-					<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px;">
-						HL7 Status: <br>
-						<img src="<%= request.getContextPath() %>/images/loader.gif" />
-					</div>
-				<%} %>
-				
-				<!-- Used to display the git sha1 id for this build from the code repository
-				 
-				-->
-				<div style="colour: black; border: 1px solid black; background-color: lightgrey; padding: 5px; margin: 10px; max-height:200px; overflow:auto;">
-					Build ID:
-					<pre>Git SHA-1: <%=BuildNumberPropertiesFileReader.getGitSha1()%></pre>
-				</div>
-			</div>
-		</td>
-	</tr>
-	<tr class="MainTableTopRow">	
-		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message key="admin.oscarStatus.restart" /></td>
-	</tr>
-	<security:oscarSec roleName="<%=roleName$%>"
-		objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>">
-	<tr>
-		<td>
-			<div style="margin-top: 10px;">
-				<form method="post" action="rebootConfirmation.jsp" name="confirmOscarReboot">
-					If you are having issues with Oscar, click the button below to restart Oscar.
-					<br>
-					<input type="submit" name="subbutton" value="REBOOT OSCAR" > 
-					<br>
-					If the server is experiencing problems, click the button below to reboot the server.
-					<br>
-					<input type="submit" name="subbutton" value="REBOOT SERVER" >
-				</form>
-			</div>
-		</td>
-	</tr>
-	</security:oscarSec>
+<h5>Master Status:</h5>
+	<pre><%=request.getAttribute("sqlMasterStatusText") %></pre>
+
+<h5>Slave Status:</h5>
+<pre><%=request.getAttribute("sqlSlaveStatusText") %></pre>
+
+<h5>Filesystem:</h5>
+<pre><%=request.getAttribute("filesystemStatusText") %></pre>
+
+<h5>Uptime:</h5>
+<pre><%=request.getAttribute("uptimeText") %></pre>
+
+<h5>Virtual Memory:</h5>
+<pre><%=request.getAttribute("vmstatText") %></pre>
+
+<%if (request.getAttribute("documentStatusText") != null) { %>
+	<h5>Oscar Document Storage:</h5>
+	<pre><%=request.getAttribute("documentStatusText") %></pre>
+<%} else { %>
+	<h5>Oscar Document Storage:</h5>
+	<div class="well">
+		<img src="<%= request.getContextPath() %>/images/loader.gif" />
+	</div>
+<%} %>
+
+<%if (request.getAttribute("hl7StatusText") != null) { %>
+	<h5>HL7 Status:</h5>
+	<pre><%=request.getAttribute("hl7StatusText") %></pre>
+<%} else { %>
+	<h5>HL7 Status:</h5>
+	<div class="well">
+		<img src="<%= request.getContextPath() %>/images/loader.gif" />
+	</div>
+<%} %>
+
+<h5>Build ID:</h5>
+<pre>Git SHA-1: <%=BuildNumberPropertiesFileReader.getGitSha1()%></pre>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>">
+	<h4><bean:message key="admin.oscarStatus.restart" /></h4>
+	<div class="well">
+		<form method="post" action="rebootConfirmation.jsp" name="confirmOscarReboot">
+			<p>If you are having issues with Oscar, click the button below to restart Oscar.</p>
+			<input class="btn btn-danger" type="submit" name="subbutton" value="REBOOT OSCAR" > 
+			<p>If the server is experiencing problems, click the button below to reboot the server.</p>
+			<input class="btn btn-danger" type="submit" name="subbutton" value="REBOOT SERVER" >
+		</form>
+	</div>
+</security:oscarSec>
 	
-</table>
 </body>
 
 </html:html>
