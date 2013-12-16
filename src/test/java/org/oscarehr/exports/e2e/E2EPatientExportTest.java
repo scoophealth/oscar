@@ -256,6 +256,32 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 		}
 	}
 
+	// Test Encounters
+	@Test
+	public void testEncounters() {
+		E2EPatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+		List<CaseManagementNote> list = p.getEncounters();
+		if (p.hasEncounters()) {
+			// exClinicalNotes must be true
+			assertNotNull(list);
+			assertFalse(list.isEmpty());
+			p.setExClinicalNotes(false);
+			assertFalse(p.hasEncounters());
+			// put boolean back to original state
+			p.setExClinicalNotes(true);
+			assertTrue(p.hasEncounters());
+		}
+		if (!p.hasEncounters() && list!=null && !list.isEmpty()) {
+			// exClinicalNotes must be false
+			p.setExClinicalNotes(true);
+			assertTrue(p.hasEncounters());
+			// put boolean back to original state
+			p.setExClinicalNotes(false);
+			assertFalse(p.hasEncounters());
+		}
+	}
+
 	@Test
 	public void testGetTypeDescription() {
 		assertNotNull((new E2EPatientExport()).getTypeDescription("test"));

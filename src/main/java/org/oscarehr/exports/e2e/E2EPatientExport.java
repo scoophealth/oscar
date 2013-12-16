@@ -67,6 +67,7 @@ public class E2EPatientExport extends PatientExport {
 	private List<CaseManagementNote> riskFactors = null;
 	private List<CaseManagementNote> familyHistory = null;
 	private List<CaseManagementNote> alerts = null;
+	private List<CaseManagementNote> encounters = null;
 	private List<Measurement> measurements = null;
 
 	/**
@@ -160,6 +161,15 @@ public class E2EPatientExport extends PatientExport {
 			} catch (Exception e) {
 				log.error("loadPatient - Failed to load Measurements");
 				this.measurements = null;
+			}
+		}
+
+		if(exClinicalNotes) {
+			try {
+				this.encounters = caseManagementNoteDao.getNotesByDemographic(demographicNo.toString());
+			} catch (Exception e) {
+				log.error("loadPatient - Failed to load Encounters");
+				this.encounters = null;
 			}
 		}
 
@@ -463,6 +473,17 @@ public class E2EPatientExport extends PatientExport {
 
 	public boolean hasMeasurements() {
 		return exCareElements && measurements!=null && !measurements.isEmpty();
+	}
+
+	/*
+	 * Encounters
+	 */
+	public List<CaseManagementNote> getEncounters() {
+		return encounters;
+	}
+
+	public boolean hasEncounters() {
+		return exClinicalNotes && encounters!=null && !encounters.isEmpty();
 	}
 
 	/*

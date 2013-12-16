@@ -2013,6 +2013,7 @@ public class DemographicExportAction4 extends Action {
 					patient.setExPersonalHistory(exPersonalHistory);
 					patient.setExFamilyHistory(exFamilyHistory);
 					patient.setExAlertsAndSpecialNeeds(exAlertsAndSpecialNeeds);
+					patient.setExClinicalNotes(exClinicalNotes);
 
 					// Load patient data and merge to template
 					String output = "";
