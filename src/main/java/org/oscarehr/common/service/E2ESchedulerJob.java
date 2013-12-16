@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.service;
 
+import java.net.NoRouteToHostException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -160,6 +161,9 @@ public class E2ESchedulerJob extends TimerTask {
 					}
 				} catch (HttpHostConnectException e) {
 					logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
+					failure++;
+				} catch (NoRouteToHostException e) {
+					logger.error("Can't resolve route to ".concat(e2eUrl));
 					failure++;
 				} catch (Exception e) {
 					logger.error("Error", e);

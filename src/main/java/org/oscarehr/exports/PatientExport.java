@@ -62,6 +62,7 @@ import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
  */
 public abstract class PatientExport {
 	protected static Logger log = MiscUtils.getLogger();
+	protected static String eol = System.getProperty("line.separator");
 
 	protected static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	protected static AllergyDao allergyDao = SpringUtils.getBean(AllergyDao.class);
@@ -103,6 +104,7 @@ public abstract class PatientExport {
 	protected boolean exPersonalHistory = false;
 	protected boolean exFamilyHistory = false;
 	protected boolean exAlertsAndSpecialNeeds = false;
+	protected boolean exClinicalNotes = false;
 
 	public PatientExport() {
 	}
@@ -171,6 +173,10 @@ public abstract class PatientExport {
 		this.exAlertsAndSpecialNeeds = rhs;
 	}
 
+	public void setExClinicalNotes(boolean rhs) {
+		this.exClinicalNotes = rhs;
+	}
+
 	public void setExAllTrue() {
 		this.exMedicationsAndTreatments = true;
 		this.exAllergiesAndAdverseReactions = true;
@@ -182,6 +188,7 @@ public abstract class PatientExport {
 		this.exPersonalHistory = true;
 		this.exFamilyHistory = true;
 		this.exAlertsAndSpecialNeeds = true;
+		this.exClinicalNotes = true;
 	}
 	/*
 	 * General Utility functions useful for template string manipulation
@@ -348,7 +355,7 @@ public abstract class PatientExport {
 	 * @return String without invalid characters
 	 */
 	public static String cleanString(String rhs) {
-		String eol = System.getProperty("line.separator");
+		if(rhs == null || rhs.isEmpty()) return rhs;
 		String str = rhs.replaceAll("<br( )+/>", eol);
 		str = str.replaceAll("&", "&amp;");
 		str = str.replaceAll("<", "&lt;");

@@ -494,7 +494,90 @@ Clinically Measured Observation
 Encounter History and Notes
 ********************************************************
 -->
-## TODO Populate with data from EMR
+#if ( $patient.hasEncounters() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.22.1"/>
+					<code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
+					<title>Encounter History and Notes [with entries]</title>
+					<text>
+						<list>
+#**##foreach ( $encounter in $patient.getEncounters() )
+							<item>$!dateTool.format('MMM dd, yyyy', $encounter.getObservation_date()) $!patient.cleanString($encounter.note)</item>
+#**##end
+						</list>
+					</text>
+#**##foreach ( $encounter in $patient.getEncounters() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.9"/>
+						<!-- Encounter Event -->
+						<encounter classCode="ENC" moodCode="EVN">
+							<id extension="$encounter.id" root="2.16.840.1.113883.3.1818.10.2.10.12" use="BUS"/>
+#*    *##if ( $encounter.observation_date )
+							<effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $encounter.getObservation_date())"/>
+#*    *##else
+							<effectiveTime nullFlavor="UNK"/>
+#*    *##end
+							<!-- Encounter Location -->
+							<participant typeCode="LOC" contextControlCode="OP">
+								<participantRole classCode="SDLOC">
+									<id extension="$custodian.id" root="2.16.840.1.113883.3.1818.10.2.10.19" use="BUS"/>
+								</participantRole>
+							</participant>
+							<!-- Encounter Provider -->
+							<participant typeCode="PRF" contextControlCode="OP">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.21"/>
+								<!-- Provider Participation -->
+								<participantRole>
+									<id extension="$encounter.providerNo" root="2.16.840.1.113883.3.1818.10.2.10.19" use="BUS"/>
+									<playingEntity classCode="PSN" determinerCode="INSTANCE">
+										<name use="L">
+											<given>$patient.getProviderFirstName($encounter.providerNo)</given>
+											<family>$patient.getProviderLastName($encounter.providerNo)</family>
+										</name>
+									</playingEntity>
+								</participantRole>
+							</participant>
+							<!-- Encounter Reason -->
+							<entryRelationship typeCode="RSON" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.24"/>
+								<!-- Reason Observation -->
+								<observation classCode="OBS" moodCode="EVN">
+									<!-- Record ID -->
+									<code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" />
+									<text>$patient.cleanString($encounter.note)</text>
+#*    *##if ( !$encounter.Billing_code.isEmpty() )
+									<value xsi:type="CD" code="$encounter.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="$patient.getICD9Description("$encounter.getBilling_code()").replaceAll("&","AND")"/>
+#*    *##else
+									<value xsi:type="CD" nullFlavor="NA"/>
+#*    *##end
+									<!-- Reason Author -->
+									<author typeCode="AUT" contextControlCode="OP">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
+										<!-- Author Participation -->
+#*    *##if ( $encounter.update_date )
+										<time value="$dateTool.format('yyyyMMddHHmmss', $encounter.getUpdate_date())"/>
+#*    *##else
+										<time nullFlavor="UNK"/>
+#*    *##end
+										<assignedAuthor classCode="ASSIGNED">
+											<id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+											<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+												<name use="L">
+													<given>$patient.getProviderFirstName($encounter.providerNo)</given>
+													<family>$patient.getProviderLastName($encounter.providerNo)</family>
+												</name>
+											</assignedPerson>
+										</assignedAuthor>
+									</author>
+								</observation>
+							</entryRelationship>
+						</encounter>
+					</entry>
+#**##end
+				</section>
+			</component>
+#else
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.22"/>
@@ -503,6 +586,7 @@ Encounter History and Notes
 					<text>No Encounter History</text>
 				</section>
 			</component>
+#end
 <!--
 ********************************************************
 Family History
