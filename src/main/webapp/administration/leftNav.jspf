@@ -582,7 +582,9 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/FacilityManager.do"><bean:message key="admin.admin.manageFacilities" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp">Create New Flowsheet</a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/manageFlowsheets.jsp"><bean:message key="admin.admin.flowsheetManager"/></a></li>
-			      	
+			      	<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/lotnraddrecordhtm.jsp"><bean:message key="admin.admin.add_lot_nr.title"/></a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/lotnrsearchrecordshtm.jsp"><bean:message key="admin.lotnrsearchrecordshtm.title"/></a></li>
+			
 			      	<oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
 			            <li><a href='javascript:void(0);'
 			            class="xlink" rel="${ctx}/admin/uploadEntryText.jsp"><bean:message key="admin.admin.uploadEntryTxt"/></a>

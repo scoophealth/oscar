@@ -100,7 +100,16 @@ public class AddPreventionAction  extends Action {
          ArrayList<Map<String,String>> extraData = new ArrayList<Map<String,String>>();
                   
          addHashtoArray(extraData,request.getParameter("location"),"location");
-         addHashtoArray(extraData,request.getParameter("lot"),"lot");                 
+         String lotItem = request.getParameter("lotItem");
+         if (lotItem != null && !lotItem.equals("-1") && !lotItem.equals("0"))
+    	 {
+        	 addHashtoArray(extraData,lotItem,"lot");
+    	 }
+         else
+         {
+        	 addHashtoArray(extraData,request.getParameter("lot"),"lot"); 
+         }
+                         
          addHashtoArray(extraData,request.getParameter("route"),"route");
          addHashtoArray(extraData,request.getParameter("dose"),"dose");
          addHashtoArray(extraData,request.getParameter("comments"),"comments");                 
