@@ -742,6 +742,8 @@ div.logoutBox {
 			<li><a href="#" onclick='popupPage(600,600,&quot;<html:rewrite page="/FacilityManager.do"/>&quot;);return false;'><bean:message key="admin.admin.manageFacilities" /></a></li>
 			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp"/>&quot;);return false;'>Create New Flowsheet</a></li>
 			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/manageFlowsheets.jsp"/>&quot;);return false;'><bean:message key="admin.admin.flowsheetManager"/></a></li>
+	      	<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/lotnraddrecordhtm.jsp"/>&quot;);return false;'><bean:message key="admin.admin.add_lot_nr.title"/></a></li>
+			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/lotnrsearchrecordshtm.jsp"/>&quot;);return false;'><bean:message key="admin.lotnrsearchrecordshtm.title"/></a></li>
 	      	
 	      	<oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
 	            <li><a href="#"

@@ -28,7 +28,9 @@
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
-<%@ page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.common.dao.PreventionsLotNrsDao" %>
+<%@page import="org.oscarehr.common.model.PreventionsLotNrs" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -44,6 +46,7 @@
   Map<String,Object> existingPrevention = null;
 
   String providerName ="";
+  String lot ="";
   String provider = (String) session.getValue("user");
   String dateFmt = "yyyy-MM-dd";
   String prevDate = UtilDateUtilities.getToday(dateFmt);
@@ -62,7 +65,8 @@
      prevDate = (String) existingPrevention.get("preventionDate");
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
-
+     
+     
      if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){
         completed = "1";
      }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){
@@ -77,7 +81,8 @@
      }
      summary = (String) existingPrevention.get("summary");
      extraData = PreventionData.getPreventionKeyValues(id);
-
+     lot = (String) extraData.get("lot");
+     
 	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.PREVENTIONS, Long.valueOf(id));
 	hasImportExtra = (cml.size()>0);
@@ -88,6 +93,9 @@
       prevention = (String) existingPrevention.get("preventionType");
   }
 
+  PreventionsLotNrsDao PreventionsLotNrsDao = (PreventionsLotNrsDao)SpringUtils.getBean(PreventionsLotNrsDao.class);
+  List<String> lotNrList = PreventionsLotNrsDao.findLotNrs(prevention, false);
+  
   String prevResultDesc = request.getParameter("prevResultDesc");
 
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
@@ -276,6 +284,72 @@ clear: left;
     }
   }
 </script>
+
+<script type="text/javascript">
+  function updateLotNr(elem){
+	if (elem.options[elem.selectedIndex].value != -1)
+	{
+		hideItem('lot');
+	}
+   //show "other" in drop-down
+   else if (elem.options[elem.selectedIndex].value == -1) 
+   {
+	    document.getElementById('lot').value = "";
+   		showItem('lot');
+      	document.getElementById('lot').focus();
+   }
+  }
+  </script>
+  <script type="text/javascript">
+  function hideLotDrop(elem){
+	  var bFound = 0;
+	  var LotNr = document.getElementById('lot').value;
+	  var summary =  document.getElementById('summary');
+	  //existing prevention record
+	  if (typeof(summary) != 'undefined' && summary != null)
+	  { 
+	     if (LotNr.length == 0)
+	     {
+	    	 if (elem.options[0].value != -1) //table exists
+	    	 {
+	    		 elem.options[elem.options.length-1].selected = true;
+	    		 return;
+	    	 }	    	 
+	    	 else
+	    	 {
+	  	       hideItem('lotDrop');
+	  		   showItem('lot');
+	  	       return;
+	  	    }
+	     }	  
+	  }	  
+	  if (LotNr.length >0)
+	  {
+		  for (var i = 0; i < elem.length; i++) {
+		        if (elem.options[i].value == LotNr){
+		        	bFound = 1;
+					break;
+				}
+		    }
+	  }
+	  if (elem.options[0].value == -1)
+	  //no preventionslotnrs table
+	  {
+		   hideItem('lotDrop');
+		   showItem('lot');	
+	  }
+	 // not in drop-down
+	 else if (!bFound && LotNr.length >0)
+	 {
+		 elem.options[elem.options.length-1].selected = true;
+	 }
+	  //exists in dd
+	  else if (elem.options[elem.selectedIndex].value != -1)
+	  {
+	   		hideItem('lot');
+	  }
+	  }
+</script>
 </head>
 
 <body class="BodyStyle" vlink="#0000FF" onload="disableifchecked(document.getElementById('neverWarn'),'nextDate');">
@@ -365,8 +439,15 @@ clear: left;
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
 			 <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
-                         <label for="lot">Lot:</label> <input type="text" name="lot"  value="<%=str((extraData.get("lot")),"")%>"/><br/>
-                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str((extraData.get("manufacture")),"")%>"/><br/>
+                         <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=lot%>" />
+                        <select onchange="javascript:updateLotNr(this);" id="lotDrop" name="lotItem" >
+                             <%for(String lotnr:lotNrList) {
+							 %>
+                               <option value="<%=lotnr%>" <%= ( lotnr.equals(lot) ? " selected" : "" ) %>><%=lotnr%> </option>
+                             <%}%>
+                             <option value="-1"  >Other</option>
+                         </select><br/>
+                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture" id="manufacture"  value="<%=str((extraData.get("manufacture")),"")%>"/><br/>
                    </fieldset>
                    <fieldset >
                       <legend >Comments</legend>
@@ -375,6 +456,9 @@ clear: left;
                </div>
                <script type="text/javascript">
                   hideExtraName(document.getElementById('providerDrop'));
+               </script>
+               <script type="text/javascript">
+               hideLotDrop(document.getElementById('lotDrop'));
                </script>
                <%} else if(layoutType.equals("h1n1")) {%>
                <div class="prevention">
