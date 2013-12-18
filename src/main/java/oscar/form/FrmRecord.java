@@ -28,12 +28,41 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public abstract class FrmRecord {
+	
+	/**
+	 * 
+	 * @param demographicNo
+	 * @param existingID
+	 * @return
+	 * @throws SQLException
+	 */
 	public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException;
 
+	/**
+	 * 
+	 * @param props
+	 * @return
+	 * @throws SQLException
+	 */
 	public abstract int saveFormRecord(Properties props) throws SQLException;
 
+	/**
+	 * 
+	 * @param submit
+	 * @return
+	 * @throws SQLException
+	 */
 	public abstract String findActionValue(String submit) throws SQLException;
 
+	/**
+	 * 
+	 * @param where
+	 * @param action
+	 * @param demoId
+	 * @param formId
+	 * @return
+	 * @throws SQLException
+	 */
 	public abstract String createActionURL(String where, String action, String demoId, String formId) throws SQLException;
 
 	/**

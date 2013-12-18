@@ -27,8 +27,9 @@ package oscar.form;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-
 import oscar.oscarDB.DBHandler;
+
+
 import oscar.util.UtilDateUtilities;
 
 public class FrmAdfRecord extends FrmRecord {
@@ -43,7 +44,7 @@ public class FrmAdfRecord extends FrmRecord {
 			String sql =
 				"SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin FROM demographic WHERE demographic_no = "
 					+ demographicNo;
-			ResultSet rs = null;
+			ResultSet rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 				props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
@@ -61,14 +62,9 @@ public class FrmAdfRecord extends FrmRecord {
 			}
 			rs.close();
 		} else {
-			String sql =
-				"SELECT * FROM formAdf WHERE demographic_no = "
-					+ demographicNo
-					+ " AND ID = "
-					+ existingID;
-			FrmRecordHelp frh = new FrmRecordHelp();
+			FrmRecordHelpEAV frh = new FrmRecordHelpEAV();
 			frh.setDateFormat(_dateFormat);
-			props = (frh).getFormRecord(sql);
+			props = (frh).getFormRecord("formAdf",demographicNo,existingID);
 		}
 
 		return props;

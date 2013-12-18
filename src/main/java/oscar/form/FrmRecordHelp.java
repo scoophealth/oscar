@@ -30,11 +30,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 
@@ -47,10 +45,24 @@ public class FrmRecordHelp {
     private String _dateFormat = "yyyy/MM/dd";
     private String _newDateFormat = "yyyy-MM-dd"; //handles both date formats, but yyyy/MM/dd is displayed to avoid deprecation
 
+   
+		
+		
+			
+			
     public void setDateFormat(String s) {// "dd/MM/yyyy"
         _dateFormat = s;
     }
 
+    /**
+     * retrieve the informations of the selected row that fit the query (AND ONLY ONE ROW!!!)</br>
+     * the query is a select query, ex : "select * from xxx where id = n" </br>
+     * the result is returned as a list of Properties (attribute,value)</br>
+     * note : the boolean value are returned with the value "on" and "off"
+     * @param sql : the sql query
+     * @return : a Properties that contains the attributes and value
+     * @throws SQLException : if something wrong appends
+     */
     public Properties getFormRecord(String sql) //int demographicNo, int existingID)
             throws SQLException {
         Properties props = new Properties();
@@ -83,6 +95,14 @@ public class FrmRecordHelp {
         return props;
     }
 
+    /**
+     * Save a form to the database.</br>
+     * note : of Properties content save_as_xml to true, the form is also saved in a XML File 
+     * @param props : Properties containing the fields of the form
+     * @param sql : a SQL select query from the table
+     * @return int id; the id of the inserted row.
+     * @throws SQLException : if something wrong appends
+     */
     public synchronized int saveFormRecord(Properties props, String sql) throws SQLException {
 
 
@@ -137,6 +157,14 @@ public class FrmRecordHelp {
         return ret;
     }
 
+    /**
+     * update a resultSet
+     * @param props : the field to update and they new value
+     * @param rs : the resultSet, at the good position.
+     * @param bInsert : set to true if the update row is a new row
+     * @return the resultSet updated
+     * @throws SQLException
+     */
     public ResultSet updateResultSet(Properties props, ResultSet rs, boolean bInsert) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
 
@@ -205,6 +233,12 @@ public class FrmRecordHelp {
     }
 
     //for page form
+    /**
+     * Update a form
+     * @param props : the field of the form
+     * @param sql : a select querry to the concerned table 
+     * @throws SQLException : 
+     */
     public void updateFormRecord(Properties props, String sql) throws SQLException {
 
 
@@ -217,6 +251,12 @@ public class FrmRecordHelp {
         rs.close();
     }
 
+    /**
+     * get attributes of a form into a Properties, according to the select query
+     * @param sql : the select query
+     * @return Properties : containing the attributes and values
+     * @throws SQLException
+     */
     public Properties getPrintRecord(String sql) throws SQLException {
         Properties props = new Properties();
 
@@ -227,6 +267,12 @@ public class FrmRecordHelp {
         return props;
     }
 
+    /**
+     * get attributes of a form into a Properties, according to the select query
+     * @param sql : the select query
+     * @return List<Properties> : a list of properties containing the attributes and values
+     * @throws SQLException
+     */
     public List<Properties> getPrintRecords(String sql) throws SQLException {
         ArrayList<Properties> results=new ArrayList<Properties>();
 
@@ -239,6 +285,12 @@ public class FrmRecordHelp {
         return results;
     }
     
+    /**
+     * Get a list of demographic id that responds to the querry
+     * @param sql
+     * @return
+     * @throws SQLException
+     */
     public List<Integer> getDemographicIds(String sql) throws SQLException {
         List<Integer> results=new ArrayList<Integer>();
 
@@ -250,6 +302,13 @@ public class FrmRecordHelp {
         return results;
     }
 
+    /**
+     * retun a properties containig the pair Attribute/value contained in the resultset</br>
+     * note : the boolean value are returned with the value "on" and "off"
+     * @param rs : the resultSet
+     * @return : a Properties containing all the pair Attribute/value
+     * @throws SQLException : if something goes wrong
+     */
     private Properties getResultsAsProperties(ResultSet rs) throws SQLException
     {
     	Properties p=new Properties();
@@ -275,6 +334,11 @@ public class FrmRecordHelp {
         return(p);
     }
 
+    /**
+     * Conver String!!!
+     * @param submit 
+     * @return
+     */
     public String findActionValue(String submit)  {
         if (submit != null && submit.equalsIgnoreCase("print")) {
             return "print";
@@ -293,6 +357,14 @@ public class FrmRecordHelp {
         }
     }
 
+    /**
+     * return an action URL
+     * @param where ?
+     * @param action ?
+     * @param demoId ?
+     * @param formId the id of the form( I guess...)
+     * @return
+     */
     public String createActionURL(String where, String action, String demoId, String formId)  {
         String temp = null;
 
@@ -313,6 +385,11 @@ public class FrmRecordHelp {
         return temp;
     }
 
+    /**
+     * convert a boolean properties into a checked format </br>
+     * checked='checked' if true, "" if false
+     * @param p : the properties
+     */
     public static void convertBooleanToChecked(Properties p)
     {
     	HashSet<Object> keySet=new HashSet<Object>();

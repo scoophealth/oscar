@@ -103,9 +103,9 @@ public class FrmLabReq10Record extends FrmRecord {
 
 
         } else {
-            String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo + " AND ID = "
-                    + existingID;
-            props = (new FrmRecordHelp()).getFormRecord(sql);
+//            String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo + " AND ID = "
+//                    + existingID;
+            props = (new FrmRecordHelpEAV()).getFormRecord("formLabReq10",demographicNo, existingID);
         }
 
         return props;
@@ -203,21 +203,21 @@ public class FrmLabReq10Record extends FrmRecord {
     }
 
     public Properties getPrintRecord(int demographicNo, int existingID) throws SQLException {
-        String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
-        return ((new FrmRecordHelp()).getPrintRecord(sql));
+        //String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
+        return ((new FrmRecordHelpEAV()).getPrintRecord(demographicNo, existingID,"formLabReq10"));
     }
 
     public static List<Properties> getPrintRecords(int demographicNo) throws SQLException {
-        String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo;
-        return ((new FrmRecordHelp()).getPrintRecords(sql));
+        //String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo;
+        return ((new FrmRecordHelpEAV()).getPrintRecords("formLabReq10",demographicNo));
     }
 
     public String findActionValue(String submit) throws SQLException {
-        return ((new FrmRecordHelp()).findActionValue(submit));
+        return ((new FrmRecordHelpEAV()).findActionValue(submit));
     }
 
     public String createActionURL(String where, String action, String demoId, String formId) throws SQLException {
-        return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
+        return ((new FrmRecordHelpEAV()).createActionURL(where, action, demoId, formId));
     }
 
 

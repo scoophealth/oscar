@@ -104,9 +104,9 @@ public class FrmLabReq07Record extends FrmRecord {
         	}
 
         } else {
-            String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " AND ID = "
-                    + existingID;
-            props = (new FrmRecordHelp()).getFormRecord(sql);
+//            String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " AND ID = "
+//                    + existingID;
+            props = (new FrmRecordHelpEAV()).getFormRecord("formLabReq07", demographicNo, existingID);
         }
 
         return props;
@@ -249,32 +249,32 @@ public class FrmLabReq07Record extends FrmRecord {
 
     public Properties getPrintRecord(int demographicNo, int existingID) throws SQLException {
         String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
-        return ((new FrmRecordHelp()).getPrintRecord(sql));
+        return ((new FrmRecordHelpEAV()).getPrintRecord(demographicNo, existingID,"formLabReq07"));
     }
 
     public static List<Properties> getPrintRecords(int demographicNo) throws SQLException {
-        String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo;
-        return ((new FrmRecordHelp()).getPrintRecords(sql));
+        //String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo;
+        return ((new FrmRecordHelpEAV()).getPrintRecords("formLabReq07",demographicNo));
     }
     
     public static List<Properties> getPrintRecordsSince(int demographicNo, Date lastUpdateDate) throws SQLException {
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " and formEdited > '" + formatter.format(lastUpdateDate) + "'";
-        return ((new FrmRecordHelp()).getPrintRecords(sql));
+        //String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " and formEdited > '" + formatter.format(lastUpdateDate) + "'";
+        return ((new FrmRecordHelpEAV()).getPrintRecords("formLabReq07",demographicNo ,formatter.format(lastUpdateDate) ));
     }
 
     public static List<Integer> getDemogaphicIdsSince(Date lastUpdateDate) throws SQLException {
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String sql = "SELECT demographic_no FROM formLabReq07 WHERE formEdited > '" + formatter.format(lastUpdateDate) + "'";
-        return ((new FrmRecordHelp()).getDemographicIds(sql));
+        //String sql = "SELECT demographic_no FROM formLabReq07 WHERE formEdited > '" + formatter.format(lastUpdateDate) + "'";
+        return ((new FrmRecordHelpEAV()).getDemographicIds("formLabReq07",formatter.format(lastUpdateDate)));
     }
 
     public String findActionValue(String submit) throws SQLException {
-        return ((new FrmRecordHelp()).findActionValue(submit));
+        return ((new FrmRecordHelpEAV()).findActionValue(submit));
     }
 
     public String createActionURL(String where, String action, String demoId, String formId) throws SQLException {
-        return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
+        return ((new FrmRecordHelpEAV()).createActionURL(where, action, demoId, formId));
     }
 
 
