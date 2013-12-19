@@ -47,7 +47,7 @@
     <measurement type="ASYM" typeDesc="Asthma Symptoms" typeDisplayName="Asthma Symptoms" measuringInstrc="frequency per week">
         <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
     </measurement>
-    <item measurement_type="ASWA" display_name="Absense since  last office visit" guideline="School/Work" graphable="yes" value_name="Has Absense" >
+    <item measurement_type="ASWA" display_name="Absence since  last office visit" guideline="School/Work" graphable="yes" value_name="Has Absence" >
         <ruleset>
             <rule indicationColor="HIGH">
                 <condition type="isDataEqualTo" param="ASWA" value="Yes" />
