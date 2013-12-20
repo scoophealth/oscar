@@ -39,7 +39,7 @@ import oscar.log.LogAction;
 public class MeasurementManager {
 	@Autowired
 	private MeasurementDao measurementDao;
-	
+
 	@Autowired
 	private MeasurementMapDao measurementMapDao;
 
@@ -47,32 +47,37 @@ public class MeasurementManager {
 		List<Measurement> results = measurementDao.findByIdStart(startIdInclusive, itemsToReturn);
 
 		//--- log action ---
-		if (results.size()>0) {
-			String resultIds=Measurement.getIdsAsStringList(results);
+		if (results.size() > 0) {
+			String resultIds = Measurement.getIdsAsStringList(results);
 			LogAction.addLogSynchronous("MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
-	
-	public Measurement getMeasurement(Integer id)
-	{
-		Measurement result=measurementDao.find(id);
-		
+
+	public Measurement getMeasurement(Integer id) {
+		Measurement result = measurementDao.find(id);
+
 		//--- log action ---
 		if (result != null) {
 			LogAction.addLogSynchronous("MeasurementManager.getMeasurement", "id=" + id);
 		}
 
-		return(result);
+		return (result);
 	}
-	
+
 	public List<MeasurementMap> getMeasurementMaps() {
-		// should be safe to get all as they're a defined set of loinic codes or huma entered entries
+		// should be safe to get all as they're a defined set of loinic codes or human entered entries
 		List<MeasurementMap> results = measurementMapDao.getAllMaps();
 
 		// not logging the read, this is not medicalData
-		
+
 		return (results);
-	}	
+	}
+
+	public Measurement addMeasurement(Measurement measurement) {
+		measurementDao.persist(measurement);
+		LogAction.addLogSynchronous("MeasurementManager.addMeasurement", "id=" + measurement.getId());
+		return(measurement);
+	}
 }

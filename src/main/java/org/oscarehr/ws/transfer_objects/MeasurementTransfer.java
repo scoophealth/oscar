@@ -42,8 +42,29 @@ public final class MeasurementTransfer {
 	private Date dateObserved;
 	private Integer appointmentNo;
 	private Date createDate;
-	
 
+	public static MeasurementTransfer toTransfer(Measurement measurement) {
+		if (measurement == null) return (null);
+
+		MeasurementTransfer measurementTransfer = new MeasurementTransfer();
+		BeanUtils.copyProperties(measurement, measurementTransfer);
+
+		return (measurementTransfer);
+	}
+
+	public void copyTo(Measurement measurement)
+	{
+		// ID should not be copied, nor createDate
+		
+		measurement.setAppointmentNo(appointmentNo);
+		measurement.setComments(comments);
+		measurement.setDataField(dataField);
+		measurement.setDateObserved(dateObserved);
+		measurement.setDemographicId(demographicId);
+		measurement.setMeasuringInstruction(measuringInstruction);
+		measurement.setProviderNo(providerNo);
+		measurement.setType(type);
+	}
 
 	public Integer getId() {
 		return (id);
@@ -123,15 +144,6 @@ public final class MeasurementTransfer {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
-	}
-
-	public static MeasurementTransfer toTransfer(Measurement measurement) {
-		if (measurement == null) return (null);
-
-		MeasurementTransfer measurementTransfer = new MeasurementTransfer();
-		BeanUtils.copyProperties(measurement, measurementTransfer);
-
-		return (measurementTransfer);
 	}
 
 	@Override
