@@ -25,11 +25,13 @@
 
 package org.oscarehr.ws;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
+import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.managers.DemographicManager;
@@ -85,5 +87,13 @@ public class DemographicWs extends AbstractWs {
 	{
 		boolean result=demographicManager.isPhrVerifiedToSendMedicalData(demographicId);
 		return(result);		
+	}
+	
+	/**
+	 * @see DemographicManager.searchDemographicsByAttributes for parameter details
+	 */
+	public DemographicTransfer[] searchDemographicsByAttributes(String hin, String firstName, String lastName, Gender gender, Calendar dateOfBirth, String city, String province, String phone, String email, String alias, int startIndex, int itemsToReturn) {
+		List<Demographic> demographics=demographicManager.searchDemographicsByAttributes(hin, firstName, lastName, gender, dateOfBirth, city, province, phone, email, alias, startIndex, itemsToReturn);
+		return(DemographicTransfer.toTransfers(demographics));	
 	}
 }

@@ -58,6 +58,7 @@ import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.common.Gender;
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
@@ -759,6 +760,83 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			this.releaseSession(session);
 		}
 		return list;
+	}
+
+	/**
+	 * All search parameters can be null to ignore that parameter (limit parameters can not be null).
+	 * The result is an AND of all non-null attributes. i.e. if gender and first name are provided then only results where both match are returned.
+	 * You must provide at least 1 non-null parameter.
+	 * 
+	 * @param hin it will do a substring match 
+	 * @param firstName it will do a substring match 
+	 * @param lastName it will do a substring match 
+	 * @param gender it will do an exact match 
+	 * @param dateOfBirth it will do an exact match 
+	 * @param city it will do an substring match 
+	 * @param province it will do an exact match 
+	 * @param phone it will do an substring match 
+	 * @param email it will do an substring match 
+	 * @param alias it will do an substring match 
+	 */
+	public List<Demographic> findByAttributes(String hin, String firstName, String lastName, Gender gender, Calendar dateOfBirth, String city, String province, String phone, String email, String alias, int startIndex, int itemsToReturn) {
+
+		// here we build the sql where clause, to simplify the logic we just append all parameters, then after we'll strip out the first " and" as the logic is easier then checking if we have to add "and" for every parameter.
+		String sqlCommand=null;
+		StringBuilder sqlParameters = new StringBuilder();
+
+		if (hin != null) sqlParameters.append(" and d.Hin like :hin");
+		if (firstName != null) sqlParameters.append(" and d.FirstName like :firstName");
+		if (lastName != null) sqlParameters.append(" and d.LastName like :lastName");
+		if (gender != null) sqlParameters.append(" and d.Sex = :gender");
+
+		if (dateOfBirth != null) {
+			sqlParameters.append(" and d.YearOfBirth = :yearOfBirth");
+			sqlParameters.append(" and d.MonthOfBirth = :monthOfBirth");
+			sqlParameters.append(" and d.DateOfBirth = :dateOfBirth");
+		}
+
+		if (city != null) sqlParameters.append(" and d.City like :city");
+		if (province != null) sqlParameters.append(" and d.Province = :province");
+		if (phone != null) sqlParameters.append(" and (d.Phone like :phone or d.Phone2 like :phone)");
+		if (email != null) sqlParameters.append(" and d.Email like :email");
+		if (alias != null) sqlParameters.append(" and d.Alias like :alias");
+
+		// at least 1 parameter must exist
+		// we remove the first " and" because the first clause is after the "where" in the sql statement.
+		if (sqlParameters.length() == 0) throw (new IllegalArgumentException("at least one parameter must be present"));
+		else sqlCommand = "from Demographic d where" + sqlParameters.substring(" and".length(), sqlParameters.length());
+
+		Session session = this.getSession();
+		try {
+			Query query = session.createQuery(sqlCommand);
+
+			if (hin != null) query.setParameter("hin", "%" + hin + "%");
+			if (firstName != null) query.setParameter("firstName", "%" + firstName + "%");
+			if (lastName != null) query.setParameter("lastName", "%" + lastName + "%");
+			if (gender != null) query.setParameter("gender", gender.name());
+
+			if (dateOfBirth != null) {
+				query.setParameter("yearOfBirth", ensure2DigitDateHack(dateOfBirth.get(Calendar.YEAR)));
+				query.setParameter("monthOfBirth", ensure2DigitDateHack(dateOfBirth.get(Calendar.MONTH)+1));
+				query.setParameter("dateOfBirth", ensure2DigitDateHack(dateOfBirth.get(Calendar.DAY_OF_MONTH)));
+			}
+
+			if (city != null) query.setParameter("city", "%" + city + "%");
+			if (province != null) query.setParameter("province", province);
+			if (phone != null) query.setParameter("phone", "%" + phone + "%");
+			if (email != null) query.setParameter("email", "%" + email + "%");
+			if (alias != null) query.setParameter("alias", "%" + alias + "%");
+
+			query.setFirstResult(startIndex);
+			query.setMaxResults(itemsToReturn);
+
+			@SuppressWarnings("unchecked")
+            List<Demographic> results =  query.list();
+
+			return (results);
+		} finally {
+			this.releaseSession(session);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1847,5 +1925,18 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
+    }
+    
+    /**
+     * This is a hack function because we store dateOfBirth
+     * in the DB as 3 string fields and where each string
+     * is 0 padded like 05. So this will convert to that
+     * format for us. We really need to get rid of this 
+     * date anomaly soon.
+     */
+    private static String ensure2DigitDateHack(int i)
+    {
+    	if (i>=10) return(String.valueOf(i));
+    	else return("0"+i);
     }
 }
