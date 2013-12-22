@@ -24,9 +24,11 @@
 
 package org.oscarehr.managers;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
@@ -351,6 +353,9 @@ public class DemographicManager {
 		else return(false);		
 	}
 
+	/**
+	 * @deprecated there should be a generic call for getDemographicExt(Integer demoId, String key) instead. Then the caller should assemble what it needs from the demographic and ext call itself.
+	 */
 	public String getDemographicWorkPhoneAndExtension(Integer demographicNo)
 	{
 		Demographic result=demographicDao.getDemographicById(demographicNo);
@@ -369,5 +374,19 @@ public class DemographicManager {
 		}
 		
 		return(workPhone);
+	}
+	
+	/**
+	 * @see DemographicDao.findByAttributes for parameter details
+	 */
+	public List<Demographic> searchDemographicsByAttributes(String hin, String firstName, String lastName, Gender gender, Calendar dateOfBirth, String city, String province, String phone, String email, String alias, int startIndex, int itemsToReturn) {
+		List<Demographic> results=demographicDao.findByAttributes(hin, firstName, lastName, gender, dateOfBirth, city, province, phone, email, alias, startIndex, itemsToReturn);
+
+		// log all items read
+		for(Demographic d : results) {
+	    	LogAction.addLogSynchronous("DemographicManager.searchDemographicsByAttributes result", "demographicNo="+d.getDemographicNo());
+    	}
+		
+		return(results);
 	}
 }

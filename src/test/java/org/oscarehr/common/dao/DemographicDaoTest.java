@@ -27,10 +27,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
@@ -196,7 +198,6 @@ public class DemographicDaoTest extends DaoTestFixtures {
 
 		assertNotNull(dao.searchByHealthCard(entity.getHin()));
 		assertEquals(1, dao.searchByHealthCard(entity.getHin()).size());
-
 	}
 
 	@Test
@@ -269,4 +270,72 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		result.add("findByField");
 	    return result;
     }
+	
+	@Test
+	public void findByAttributes() throws Exception {
+		Demographic entity = new Demographic();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setDemographicNo(null);
+		entity.setHin("7771111");
+		entity.setFirstName("bob");
+		entity.setLastName("the builder");
+		entity.setSex(Gender.M.name());
+		entity.setBirthDay(new GregorianCalendar(1990, 1, 4));
+		entity.setPhone("5556667777");
+		entity.setPhone2("9998884444");
+		dao.save(entity);
+
+		entity = new Demographic();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setDemographicNo(null);
+		entity.setHin("7772222");
+		entity.setFirstName("bart");
+		entity.setLastName("simpson");
+		entity.setSex(Gender.M.name());
+		entity.setBirthDay(new GregorianCalendar(1980, 2, 5));
+		entity.setPhone("2224446666");
+		dao.save(entity);
+
+		entity = new Demographic();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		entity.setDemographicNo(null);
+		entity.setHin("7773333");
+		entity.setFirstName("lisa");
+		entity.setLastName("simpson");
+		entity.setSex(Gender.F.name());
+		entity.setBirthDay(new GregorianCalendar(1970, 0, 9));
+		entity.setPhone2("6665553333");
+		dao.save(entity);
+
+		List<Demographic> results=dao.findByAttributes("777", null, null, null, null, null, null, null, null, null, 0, 99);
+		assertEquals(3, results.size());
+		
+		results=dao.findByAttributes(null, null, "sim", null, null, null, null, null, null, null, 0, 99);
+		assertEquals(2, results.size());
+
+		results=dao.findByAttributes(null, "bar", "sim", null, null, null, null, null, null, null, 0, 99);
+		assertEquals(1, results.size());
+
+		results=dao.findByAttributes(null, "b", null, null, null, null, null, null, null, null, 0, 99);
+		assertEquals(2, results.size());		
+
+		results=dao.findByAttributes(null, "b", null, null, new GregorianCalendar(1980, 2, 5), null, null, null, null, null, 0, 99);
+		assertEquals(1, results.size());
+
+		results=dao.findByAttributes(null, "b", null, null, null, null, null, "6665553333", null, null, 0, 99);
+		assertEquals(0, results.size());
+
+		results=dao.findByAttributes(null, null, null, null, null, null, null, "6665553333", null, null, 0, 99);
+		assertEquals(1, results.size());
+
+		results=dao.findByAttributes(null, "lisa", null, null, null, null, null, "66555333", null, null, 0, 99);
+		assertEquals(1, results.size());
+
+		results=dao.findByAttributes(null, null, null, Gender.F, null, null, null, null, null, null, 0, 99);
+		assertEquals(1, results.size());
+
+		results=dao.findByAttributes(null, null, null, Gender.F, null, null, null, "66555333", null, null, 0, 99);
+		assertEquals(1, results.size());
+	}
+
 }
