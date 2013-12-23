@@ -70,6 +70,10 @@ import com.lowagie.text.pdf.PdfReader;
  */
 public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLab.ca.all.upload.handlers.MessageHandler {
 
+	private static final String SYSTEM_USER_ID = "-1";
+
+	private static final String SYSTEM_PROVIDER = SYSTEM_USER_ID;
+
 	private static Logger logger = Logger.getLogger(EaapsHandler.class);
 
 	private StudyDataDao studyDataDao = SpringUtils.getBean(StudyDataDao.class);
@@ -200,24 +204,28 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	 * 		Returns the provider ID
 	 */
 	private String getProvider(EaapsMessageSupport message, StudyData studyData, Demographic demo) {
-	    String provider = message.getOrderingProvider();
-	    if (provider == null) {
-	    	provider = demo.getProviderNo();
+	    if (message.getOrderingProvider() != null) {
+	    	return message.getOrderingProvider();
 	    }
 	    
-	    if (provider == null && studyData != null) {
-	    	provider = studyData.getProviderNo();
+	    if (demo.getProviderNo() != null) {
+	    	 return demo.getProviderNo();
 	    }
 	    
-	    return provider;
+	    if (studyData.getProviderNo() != null) {
+	    	return studyData.getProviderNo();
+	    }
+	    
+	    return SYSTEM_PROVIDER;
     }
 
 	private void notifyProvider(EaapsMessageSupport message, Demographic demo) {
-		String providerId = getProvider(message, null, demo);
+		String providerId = demo.getProviderNo();
 		if (providerId == null || providerId.isEmpty()) {
 			if (logger.isInfoEnabled()) {
 				logger.info("MRP ID is not available for " + demo + " - skipping message generation");
 			}
+			return;
 		}
 		
 		Provider provider = providerDao.getProvider(providerId);
@@ -254,8 +262,8 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		}
 
 		String subject = "eAAPS: Recommendations ready for " + demo.getFormattedName();
-		String userName = "eAAPS";
-		String userNo = "N/A";
+		String userName = "System";
+		String userNo = SYSTEM_USER_ID;
 		String attachment = null;
 		String pdfAttachment = null;
 		String messageId = messageData.sendMessage2(mrpNote, subject, userName, sentToWho, userNo, providerListing, attachment, pdfAttachment);
