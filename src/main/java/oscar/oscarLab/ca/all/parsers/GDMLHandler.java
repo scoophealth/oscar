@@ -34,6 +34,7 @@
 
 package oscar.oscarLab.ca.all.parsers;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +47,8 @@ import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
-import org.oscarehr.common.model.Hl7TextMessageInfo;
+import org.oscarehr.common.dao.Hl7TextInfoDao.LabQuery;
+import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
@@ -82,8 +84,13 @@ public class GDMLHandler implements MessageHandler {
         Parser p = new PipeParser();
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
+        
+        String accessionNumber = getAccessionNum(msg);
+        String firstName = getFirstName();
+        String lastName = getLastName();
+        String hin = getHealthNum();
 
-        ArrayList<String> labs = getMatchingGDMLLabs(hl7Body);
+        ArrayList<String> labs = getMatchingGDMLLabs(accessionNumber, firstName, lastName, hin);
         headers = new ArrayList<String>();
         obrSegMap = new LinkedHashMap<OBR,ArrayList<OBX>>();
         obrSegKeySet = new ArrayList<OBR>();
@@ -120,38 +127,22 @@ public class GDMLHandler implements MessageHandler {
         }
     }
 
-    private ArrayList<String> getMatchingGDMLLabs(String hl7Body) {
-		Base64 base64 = new Base64(0);
+    private ArrayList<String> getMatchingGDMLLabs(String accessionNumber, String firstName, String lastName, String hin) {
+    	Base64 base64 = new Base64();
+    	Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");    	
 		ArrayList<String> ret = new ArrayList<String>();
-		int monthsBetween = 0;
-		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
-
-		try {
-			List<Hl7TextMessageInfo> matchingLabs = hl7TextInfoDao.getMatchingLabs(hl7Body);
-			for ( Hl7TextMessageInfo l: matchingLabs ) {
-				Date dateA = UtilDateUtilities.StringToDate(l.labDate_A,"yyyy-MM-dd hh:mm:ss");
-				Date dateB = UtilDateUtilities.StringToDate(l.labDate_B,"yyyy-MM-dd hh:mm:ss");
-				if (dateA.before(dateB)) {
-					monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
-				} else {
-					monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
-				}
-				if (monthsBetween < 4) {
-					ret.add(new String(base64.decode(l.message.getBytes("ASCII")), "ASCII"));
-				}
-				if (l.lab_no_A==l.lab_no_B)
-					break;
-			}
-
-
-		} catch (Exception e) {
-			logger.error("Exception in HL7 getMatchingLabs: ", e);
+		
+		List<Object[]> matchingLabs = hl7TextInfoDao.getLabs(new LabQuery("GDML", accessionNumber, firstName, lastName, hin));
+		for ( Object[] l: matchingLabs ) {
+			// Hl7TextInfo ti = (Hl7TextInfo) l[0]; 
+			Hl7TextMessage tm = (Hl7TextMessage) l[1];
+			try {
+	            ret.add(new String(base64.decode(tm.getBase64EncodedeMessage().getBytes("ASCII")), "ASCII"));
+            } catch (UnsupportedEncodingException e) {
+            	logger.error("Unable to decode message", e);
+            }
 		}
-
-		// if there have been no labs added to the database yet just return this
-		// lab
-		if (ret.size() == 0)
-			ret.add(hl7Body);
+		
 		return ret;
 	}
 
@@ -238,8 +229,6 @@ public class GDMLHandler implements MessageHandler {
     public String getOBXIdentifier(int i, int j){
 
         try{
-
-            Terser t = new Terser(msg);
             Segment obxSeg = (( obrSegMap.get(obrSegKeySet.get(i))).get(j));
             String ident = getString(Terser.get(obxSeg, 3, 0, 1, 1 ));
             String subIdent = Terser.get(obxSeg, 3, 0, 1, 2);
@@ -303,8 +292,6 @@ public class GDMLHandler implements MessageHandler {
     public String getOBXReferenceRange(int i, int j){
         String ret = "";
         try{
-            Terser terser = new Terser(msg);
-
             OBX obxSeg = (obrSegMap.get(obrSegKeySet.get(i))).get(j);
 
             // If the units are not specified use the formatted reference range
@@ -350,7 +337,6 @@ public class GDMLHandler implements MessageHandler {
             // if there are no units specified check the formatted reference
             // range for the units
             if (ret.equals("")){
-                Terser terser = new Terser(msg);
                 ret = getString(Terser.get(obxSeg,7,0,2,1));
 
                 // only display units from the formatted reference range if they
@@ -408,8 +394,6 @@ public class GDMLHandler implements MessageHandler {
         // update j to the number of the comment not the index of a comment array
         j++;
         try {
-            Terser terser = new Terser(msg);
-
             int obxCount = getOBXCount(i);
             int count = 0;
             int l = 0;
@@ -447,8 +431,6 @@ public class GDMLHandler implements MessageHandler {
     public int getOBXCommentCount(int i, int j){
         int count = 0;
         try{
-
-            Terser terser = new Terser(msg);
             String comment = "";
             OBX obxSeg = ( obrSegMap.get(obrSegKeySet.get(i))).get(j);
             while(comment != null){
@@ -491,10 +473,18 @@ public class GDMLHandler implements MessageHandler {
     }
 
     public String getFirstName(){
+    	return getFirstName(msg);
+    }
+    
+    private String getFirstName(ORU_R01 msg){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getGivenName().getValue()));
     }
 
     public String getLastName(){
+    	return getLastName(msg);
+    }
+    
+    private String getLastName(ORU_R01 msg){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getFamilyName().getValue()));
     }
 
@@ -528,6 +518,10 @@ public class GDMLHandler implements MessageHandler {
     }
 
     public String getHealthNum(){
+    	return getHealthNum(msg);
+    }
+    	
+    private String getHealthNum(ORU_R01 msg){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDExternalID().getID().getValue()));
     }
 
@@ -601,32 +595,19 @@ public class GDMLHandler implements MessageHandler {
     }
 
     public String getClientRef(){
-        /*String docNum = "";
-        int i=0;
-        try{
-            while(!getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue()).equals("")){
-                if (i==0){
-                    docNum = getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue());
-                }else{
-                    docNum = docNum + ", " + getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue());
-                }
-                i++;
-            }
-            return(docNum);
-        }catch(Exception e){
-            logger.error("Could not return doctor id numbers", e);
-
-            return("");
-        }*/
         try{
             return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDInternalID(0).getAssigningAuthority().getNamespaceID().getValue()));
         }catch(Exception e){
             logger.error("Could not return accession num: ", e);
-            return("");
+            return "";
         }
     }
 
     public String getAccessionNum(){
+    	return getAccessionNum(msg);
+    }
+    
+    private String getAccessionNum(ORU_R01 msg){
         try{
             return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDInternalID(0).getID().getValue()));
         }catch(Exception e){

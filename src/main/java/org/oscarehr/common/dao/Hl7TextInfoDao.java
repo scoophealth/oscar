@@ -100,7 +100,26 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 		query.executeUpdate();
 
     }
-
+    
+    @SuppressWarnings("unchecked")
+    public List<Object[]> getLabs(LabQuery labQuery) {
+    	String hql = "FROM Hl7TextInfo ti, Hl7TextMessage tm WHERE "
+    			+ "tm.id = ti.id AND "
+    			+ "ti.accessionNumber = ?1 AND "
+    			+ "tm.type = ?2 AND "
+    			+ "ti.firstName = ?3 AND "
+    			+ "ti.lastName = ?4 AND "
+    			+ "ti.healthNumber =?5 "
+    			+ "ORDER BY ti.obrDate, ti.labNumber";   	
+    	Query query = entityManager.createQuery(hql);
+	    query.setParameter(1, labQuery.getAccessionNumber());
+	    query.setParameter(2, labQuery.getType());
+	    query.setParameter(3, labQuery.getFirstName());
+	    query.setParameter(4, labQuery.getLastName());
+        query.setParameter(5, labQuery.getHin());
+    	return query.getResultList();
+    }
+    
     public List<Hl7TextMessageInfo> getMatchingLabs(String hl7msg) {
     	Base64 base64 = new Base64(0);
     	String sql = "SELECT a.lab_no as id, m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B, a.obr_date as labDate_A, b.obr_date as labDate_B FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no IN ( SELECT lab_id FROM hl7TextMessage WHERE message=?1 ) ORDER BY a.obr_date, a.lab_no";   	
@@ -145,4 +164,65 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     	query.executeUpdate();
     }
     
+	public static class LabQuery {
+		
+		private String type;
+		private String accessionNumber;
+		private String firstName;
+		private String lastName;
+		private String hin;
+
+		public LabQuery() {
+			super();
+		}
+
+		public LabQuery(String type, String accessionNumber, String firstName, String lastName, String hin) {
+			this();
+			this.type = type;
+			this.accessionNumber = accessionNumber;
+			this.firstName = firstName;
+			this.lastName = lastName;
+			this.hin = hin;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getAccessionNumber() {
+			return accessionNumber;
+		}
+
+		public void setAccessionNumber(String accessionNumber) {
+			this.accessionNumber = accessionNumber;
+		}
+
+		public String getFirstName() {
+			return firstName;
+		}
+
+		public void setFirstName(String firstName) {
+			this.firstName = firstName;
+		}
+
+		public String getLastName() {
+			return lastName;
+		}
+
+		public void setLastName(String lastName) {
+			this.lastName = lastName;
+		}
+
+		public String getHin() {
+			return hin;
+		}
+
+		public void setHin(String hin) {
+			this.hin = hin;
+		}
+	}
 }
