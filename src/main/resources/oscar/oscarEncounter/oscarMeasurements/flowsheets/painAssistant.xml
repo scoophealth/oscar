@@ -26,6 +26,25 @@
    	 	 	
 <item measurement_type="DNFS" display_name="DN4 Neuropathic Pain Score" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;This score can be used in daily clinical practice as a screening tool to better detect neuropathic pain." graphable="yes" value_name="DN4 Score for Neuropathic Pain" />
 
+<item measurement_type="ORSK" display_name="Opioid Risk" guideline="" graphable="yes" value_name="Opioid Risk">
+			<ruleset>
+				<rule indicationColor="LOW">
+				<condition type="getDataAsDouble" param="ORSK" value="&gt;0" />
+			    </rule>
+			    			    
+			    <rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ORSK" value="&gt;3" />
+			    </rule>
+			    
+			    <rule indicationColor="HIGH 1">
+				<condition type="getDataAsDouble" param="ORSK" value="&gt;7" />
+			    </rule>
+			</ruleset> 
+</item>
+  <measurement type="ORSK" typeDesc="Opioid Risk" typeDisplayName="Opioid Risk" measuringInstrc="">
+    <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />    
+  </measurement>
+  
 <item measurement_type="KEEL" display_name="Keele STarT Score" guideline="&lt;b&gt; How to Use the Score  &lt;/b&gt; &lt;br&gt;Use this score to identify patients &lt;i&gt;at risk&lt;/i&gt; of developing persistent symptoms." graphable="yes" value_name="Keele STarT Score for Risk of Back Pain Becoming Chronic">
 	   <ruleset>
               <rule indicationColor="HIGH">
@@ -92,6 +111,11 @@
 			maxValue="300" minValue="0" isNumeric="1" />
     </measurement>
     
+<item measurement_type="DTYP" display_name="Diabetes Type" guideline="1 or 2" graphable="no" value_name="type"/>
+  <measurement type="DTYP" typeDesc="Diabetes Type" typeDisplayName="Diabetes Type" measuringInstrc="1 or 2">
+    <validationRule name="1/2" maxValue="" minValue="" isDate="" isNumeric="" regularExp="1|2" maxLength="" minLength="" />
+  </measurement>
+      
 <item measurement_type="A1C" display_name="A1C" guideline="Target &gt; 7.0%" graphable="yes" value_name="A1C"  >
             <rules>
               <recommendation strength="warning" >
