@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -43,12 +44,10 @@
 <html:html locale="true">
 
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <!--I18n-->
-<title>Import Demographic Information</title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
-<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<title><bean:message key="admin.admin.DemoImport"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+
 
 <SCRIPT LANGUAGE="JavaScript">
 function displayAndDisable(){
@@ -62,7 +61,7 @@ function displayAndDisable(){
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body vlink="#0000FF">
 
 <%
 oscar.OscarProperties op = oscar.OscarProperties.getInstance();
@@ -75,33 +74,10 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
 } else {
 %>
 
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
-			key="demographic.demographiceditdemographic.msgPatientDetailRecord" />
-		</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>Import <!--i18n--></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="import demographic" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
-		<td valign="top" class="MainTableRightColumn"><!--            
-            <html:form action="/form/importUpload.do" method="POST" enctype="multipart/form-data" onsubmit="displayAndDisable()">
-                        <input type="file" name="importFile" value="">                    
-                        <input type="submit" name="Submit" value="Import">
-            </html:form>
-//--> <html:form action="/form/importUpload.do" method="POST"
+<div class="container-fluid well">
+	<h3><bean:message key="admin.admin.DemoImport"/></h3>
+		
+		<html:form action="/form/importUpload.do" method="POST"
 			enctype="multipart/form-data" onsubmit="displayAndDisable()">
                         <p><html:file property="importFile" value=""/></p>
 						<%if(learningEnabled != null && learningEnabled.equalsIgnoreCase("yes")) { %>
@@ -120,8 +96,8 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
                         </html:radio><br>
                         <html:radio property="matchProviderNames" value="false">
                             Import as new - same provider may have multiple entries
-                        </html:radio><br>
-                        <p><input type="submit" name="Submit" value="Import (CMS spec 4.0)"></p>
+                        </html:radio><br><br>
+                        <p><input class="btn btn-primary" type="submit" name="Submit" value="Import (CMS spec 4.0)"></p>
 		</html:form>
 
 		<div id="waitingMessage" style="display: none;">
@@ -147,14 +123,10 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
 			<input type="submit" name="Submit" value="Download Import Event Log">
                      </html:form>
 		<% } %>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
-	</tr>
-</table>
+</div>
                 
 <% } %>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+
 </body>
 </html:html>
