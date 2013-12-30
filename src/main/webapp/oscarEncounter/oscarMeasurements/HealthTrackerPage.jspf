@@ -248,7 +248,7 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
         	    
 	<oscar:customInterface section="health_tracker"/>
     <!-- Le styles -->
-    <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
      
@@ -433,6 +433,8 @@ text-decoration:none;
 #health-tracker-add{
 text-align:center;
 }
+
+.yes-no-options{display: inline;margin:0px;padding:0px}
 
 .save-all{
 float:left;
@@ -1110,13 +1112,11 @@ if(!btnLabel.equals("PHV")){
 	<%} else {%>
 		value="0"
 	<%}%>
-	/>
+/>
 
-<!-- is this date going to be customizable for each mtype? -->
 <input type="hidden" name="date" id="date" value="<%=date%>" size="10" > 
                <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
                <input type="hidden" name="template" value="<%=temp%>"/>
-
 
 <%
 	//set add link array
@@ -1142,10 +1142,8 @@ if(!btnLabel.equals("PHV")){
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
                 h.put("desc",mtypeBean.getTypeDesc());
-
-
-
             }
+            
             String prevName = (String) h.get("name");
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
             if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
@@ -1179,7 +1177,7 @@ if(!btnLabel.equals("PHV")){
 <a href="javascript:void(0)" style="text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')">
 </security:oscarSec>
 
-<%=h2.get("display_name")%>
+<%=h2.get("display_name")%> 
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 </a>
@@ -1264,7 +1262,7 @@ if(!btnLabel.equals("PHV")){
 				<span class="add-on"><i class="icon-calendar"></i></span>
 	 </div>
 <%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
-      <div style="display: inline;margin:0px;padding:0px" id="options-<%=name%>" >                        
+      <div id="options-<%=name%>" class="yes-no-options">                        
                             <label class="radio inline">
 							<input type="radio" name="<%=name%>" id="<%=name%>-YES" value="Yes" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							Yes
@@ -1274,7 +1272,6 @@ if(!btnLabel.equals("PHV")){
 							No
 							</label>  
 											
-    
      <%if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA")){%>                     
  					                            
 							<label class="radio inline">
@@ -1282,9 +1279,13 @@ if(!btnLabel.equals("PHV")){
 							NA
 							</label>
 	<%}%>					 		  
-     </div>                       
+     </div> <!-- yes-no-options -->                      
+  <%}else if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Review")){ %>
+							<label class="checkbox inline">
+							<input type="checkbox" name="<%=name%>" id="<%=name%>-REVIEWED" value="Reviewed" onfocus="toggle_visibility('add-box-<%=measure%>')">
+							Reviewed
+							</label>
   <%}else{ %>
-  
   <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else if (name.equals("BP")) {%>00/00 or 000/00 <%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
 	                       	<% if (name.equals("Weightkg") || name.equals("Heightcm") ){ %> onchange="calcBMI();"<%}%>
 	                       	<% if (name.equals("Weightkg")){ %> onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
@@ -1706,9 +1707,7 @@ function createAddAll(d,t){
 <%} }%> 
 
 
- <%if(temp.toUpperCase().equals("PAIN")){ %>
- <!-- pain  start-->
-   
+  
            <ul class="nav nav-tabs DoNotPrint">
               <li class="active"><a href="#toolkit"><%=temp.toUpperCase() %> Toolkit</a></li>
            </ul>
@@ -1776,10 +1775,8 @@ function createAddAll(d,t){
 </div><!-- inner tab content -->
 </div><!-- inner tabable -->    
                            
-               </div><!-- pain wrapper -->
+               </div>
 
- <!-- pain end -->       
-<%} %>   
 
 
  <%if(mFlowsheet.getTopHTMLStream().length()>1){ %>
