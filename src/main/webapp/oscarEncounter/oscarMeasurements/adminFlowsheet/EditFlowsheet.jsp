@@ -29,16 +29,17 @@
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization"%>
-
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.FlowSheetItem"%>
 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
     long startTimeToGetP = System.currentTimeMillis();
@@ -77,6 +78,8 @@
     XMLOutputter outp = new XMLOutputter();
     outp.setFormat(Format.getPrettyFormat());
 
+    DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class); 
+    Demographic demo = demographicDao.getDemographic(demographic);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -145,8 +148,6 @@ right:15px;
 
 #about-oscar:hover{cursor: hand; cursor: pointer;}
 
-
-
 .select-measurement{
 font-size:16px;
 width:250px;
@@ -159,10 +160,7 @@ width:100px !important;
 .rule-text{
 width:100px !important;
 }
-
-
 </style>
-
 
 <style type="text/css" media="print">
 .DoNotPrint {
@@ -195,19 +193,31 @@ width:100px !important;
 
 		  <span class="mode-toggle">
 		            <% if (demographic!=null) { %>
-		             Individual Patient 
+		             <i>for</i> Patient <%=demo.getLastName()%>, <%=demo.getFirstName()%>
 
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
-						| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
+						| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>&">All Patients</a> 
 					</security:oscarSec>
 
 		            <%}else{%>
-		                All Patients
+		               <i>for</i> All Patients
 		            <%}%>
 		  </span>
 </div>
 
+	<%if (demographic!=null) { %>
+		<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+			Any changes made to this flowsheet will be applied to this patient, for you only.
+		</div>
+	 <%}else{%>
+		<div class="alert">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+			Any changes made to this flowsheet will be applied to all of <u>your</u> patients.
+		</div>
+	 <%}%>
 	<div class="row-fluid">
+
 		<div class="span8">
 
 		<!-- Flowsheet Measurement List -->
@@ -456,12 +466,10 @@ width:100px !important;
             <%=outp.outputString(va)%>
         </textarea><!-- flowsheet xml output END-->
 
-
-<script src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script> 
+<script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script> 
 <script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script> 
-
 <script src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
 
 <script>
