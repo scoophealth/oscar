@@ -130,13 +130,13 @@
 	bgcolor="ivory">
 	<tr bgcolor="<%=deepcolor%>">
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="provider_no"%>&limit1=0&limit2=10"><bean:message
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&search_status=<%=request.getParameter("search_status")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="provider_no"%>&limit1=0&limit2=10"><bean:message
 			key="admin.providersearchresults.ID" /></a></b></TH>
 		<TH align="center" width="19%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="first_name"%>&limit1=0&limit2=10"><bean:message
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&search_status=<%=request.getParameter("search_status")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="first_name"%>&limit1=0&limit2=10"><bean:message
 			key="admin.provider.formFirstName" /></a> </b></TH>
 		<TH align="center" width="19%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="last_name"%>&limit1=0&limit2=10"><bean:message
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&search_status=<%=request.getParameter("search_status")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="last_name"%>&limit1=0&limit2=10"><bean:message
 			key="admin.provider.formLastName" /></a></b></TH>
 		<TH align="center" width="16%"><b><bean:message
 			key="admin.provider.formSpecialty" /></b></TH>
@@ -222,12 +222,12 @@
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
+	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&search_status=<%=request.getParameter("search_status")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
 	key="admin.providersearchresults.btnLastPage" /></a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message
+	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&search_status=<%=request.getParameter("search_status")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message
 	key="admin.providersearchresults.btnNextPage" /></a> <%
 }
 %>
