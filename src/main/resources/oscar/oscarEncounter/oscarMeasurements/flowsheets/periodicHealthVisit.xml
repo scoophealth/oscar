@@ -136,8 +136,6 @@
 			</rules>		
 		</item>
 
-
-		<item prevention_type="MMRV" display_name="Rubella and Varicella" guideline="" graphable="no"/>
 	</header>
 	
 	<header display_name="Prevention Interventions">
@@ -223,10 +221,18 @@
 	</header>
 	
 	<header display_name="Lifestyle/Habits">
+
+<item measurement_type="DIET" display_name="Diet" guideline="" graphable="no" value_name="Diet" />
+<item measurement_type="EXE" display_name="Exercise" guideline="" graphable="no" value_name="Exercise" />
+
+<item measurement_type="FAMR" display_name="Family/Relationships" guideline="" graphable="no" value_name="Family/Relationships" />
+<item measurement_type="WKED" display_name="Work/Education" guideline="" graphable="no" value_name="Work/Education" />
 	
 		<item measurement_type="IBPL" display_name="Income below poverty line" guideline="" graphable="no" value_name="Income below poverty line" />
 		<item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />
-		<item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day" />
+
+		<item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day"  />
+
 		<item measurement_type="MCCS" display_name="Smoking Cessation (Program)" guideline="" graphable="no" value_name="Completed" >
 			<rules>
 				<recommendation strength="recommendation" >
@@ -253,7 +259,13 @@
 			    </rule>
 			</ruleset>
 		</item>
-		
+
+
+		<item measurement_type="SDUS" display_name="Street Drug Use" guideline="" graphable="no" value_name="Street Drug Use" />
+
+		<item measurement_type="SEXH" display_name="Sexual History" guideline="" graphable="no" value_name="Sexual History" />
+	
+
 		<item measurement_type="BCTR" display_name="Family Planning/contraception" guideline="below age 50" graphable="no" value_name="Birth Control">
 			<rules>
 				<recommendation strength="hidden" >
@@ -276,8 +288,11 @@
 			</rules>
 		</item>
 
-		<item measurement_type="DEPR" display_name="Feeling down, depressed or hopeless?" guideline="Yearly or As Needed" graphable="no" value_name="Depressed" />
-		<item measurement_type="LETH" display_name="Little interest or pleasure in doing things?" guideline="Yearly or As Needed" graphable="no" value_name="Lethargic" />
+
+		<item prevention_type="MMRV" display_name="Rubella and Varicella" guideline="" graphable="no"/>
+
+		<item measurement_type="SHAB" display_name="Sleep Habits" guideline="" graphable="no" value_name="Sleep Habits" />
+
 		<item measurement_type="COGA" display_name="Cognitive Assessment" guideline="ages 65 and older" graphable="no" value_name="Cognitive Assessment"  >
 			<rules>
 			       	<recommendation strength="hidden">
@@ -298,7 +313,12 @@
 
 		<item measurement_type="SBLT" display_name="Seat belts" guideline="" graphable="no" value_name="Seat belts" />
 		<item measurement_type="SDET" display_name="Smoke detector that works" guideline="" graphable="no" value_name="Smoke detector that works" />
+		
 		<item measurement_type="PWC" display_name="Parents with children" guideline="" graphable="no" value_name="Parents with children" />
+ 
+		<item measurement_type="PCPR" display_name="Poison control prevention" guideline="" graphable="no" value_name="Poison control prevention" />
+		<item measurement_type="NFSW" display_name="Non-flammable sleepwear" guideline="" graphable="no" value_name="Non-flammable sleepwear" />
+		<item measurement_type="HOTW" display_name="Hot water thermostat &gt; 54deg. C" guideline="" graphable="no" value_name="Hot water thermostat &gt;54deg. C" />
 
 
 	    	<item measurement_type="FAHS" display_name="Risk Of Falling" guideline="Has Fallen or has risk factors for Falling" graphable="no" value_name="Risk of Falling">        
@@ -317,15 +337,37 @@
 	</header>
 	
 	<header display_name="Oral Hygiene">
-		<item measurement_type="BTFT" display_name="Brush teeth with fluoride toothpaste" guideline="" graphable="no" value_name="Brush teeth with fluoride toothpaste" />
-		<item measurement_type="FLOS" display_name="Floss" guideline="" graphable="no" value_name="Floss" />
+		<item measurement_type="BTFT" display_name="Brush teeth with fluoride toothpaste and floss" guideline="" graphable="no" value_name="Brush teeth with fluoride toothpaste and floss" />
 		<item measurement_type="DILY" display_name="Dentist in the last year" guideline="" graphable="no" value_name="Dentist in the last year" />		
 	</header>
 	
 	<header display_name="Vision and Hearing">
-	
+
+		<item measurement_type="ECHK" display_name="Do you have your eyes regularly checked?" guideline="" graphable="no" value_name="Do you have your eyes regularly checked?" >
+			<rules>
+			       	<recommendation strength="hidden">
+					<condition type="patientAge" value="&gt;64" />
+			       	</recommendation>
+			
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
+
+		<item measurement_type="HCON" display_name="Do you have any hearing concerns?" guideline="" graphable="no" value_name="Do you have any hearing concerns?" >
+			<rules>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>	
 	</header>
 	
+	<header display_name="Physical Exam">
+	<item measurement_type="PXAM" display_name="Physical Exam" guideline="" graphable="no" value_name="Physical Exam" />
+	</header>
+
 	<header display_name="Labs">
 	<item measurement_type="A1C" display_name="A1C" guideline="Target &gt; 7.0%" graphable="yes" value_name="A1C"  >
             <rules>
@@ -381,6 +423,9 @@
                   </rule>
                 </ruleset>
               </item>
+              
+	<item measurement_type="FUPP" display_name="Assessment/Follow-up plans" guideline="" graphable="no" value_name="Assessment/Follow-up plans" />
+
 	
 	</header>
 	
@@ -394,6 +439,13 @@
 		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
 	</measurement>
 	<measurement type="FAHS" typeDesc="Risk of Falling" typeDisplayName="Risk of Falling" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength=""/>
+	</measurement>
+	<measurement type="ECHK" typeDesc="Do you have your eyes regularly checked?" typeDisplayName="Do you have your eyes regularly checked?" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength=""/>
+	</measurement>
+
+	<measurement type="HCON" typeDesc="Do you have any hearing concerns?" typeDisplayName="Do you have any hearing concerns?" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength=""/>
 	</measurement>
 	<measurement type="BP" typeDesc="Blood Pressure" typeDisplayName="BP" measuringInstrc="Sitting Position (nnn/nnn) Target:&lt;130/80 Interval:3mo.">
@@ -435,13 +487,21 @@
 	<measurement type="PWC" typeDesc="Parents with children" typeDisplayName="Parents with children" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
 	</measurement>
+	
+	<measurement type="PCPR" typeDesc="Poison control prevention" typeDisplayName="Poison control prevention" measuringInstrc="">
+		<validationRule name="Reiew" maxValue="" minValue="" isDate="" isNumeric="" regularExp="REVIEWED|reviewed|Reviewed" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="NFSW" typeDesc="Non-flammable sleepwear" typeDisplayName="Non-flammable sleepwear" measuringInstrc="">
+		<validationRule name="Reiew" maxValue="" minValue="" isDate="" isNumeric="" regularExp="REVIEWED|reviewed|Reviewed" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="HOTW" typeDesc="Hot water thermostat &gt;54deg. C" typeDisplayName="Hot water thermostat &gt;54deg. C" measuringInstrc="">
+		<validationRule name="Reiew" maxValue="" minValue="" isDate="" isNumeric="" regularExp="REVIEWED|reviewed|Reviewed" maxLength="" minLength="" />
+	</measurement>
+	
 	<measurement type="SUNP" typeDesc="Sun protection" typeDisplayName="Sun protection" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
 	</measurement>
 	<measurement type="BTFT" typeDesc="Brush teeth with fluoride toothpaste" typeDisplayName="Brush teeth with fluoride toothpaste" measuringInstrc="">
-		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-	</measurement>
-	<measurement type="FLOS" typeDesc="Floss" typeDisplayName="Floss" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
 	</measurement>
 	<measurement type="DILY" typeDesc="Dentist in the last year" typeDisplayName="Dentist in the last year" measuringInstrc="">
