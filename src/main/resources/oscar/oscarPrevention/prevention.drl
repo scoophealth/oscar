@@ -814,7 +814,7 @@
               prev.addReminder("Colonoscopy makes FOBT Inelligible");
         </java:consequence>
     </rule>
-    
+    <!-- FOBT Rules End-->
     
     <rule name="Smoking">
         <parameter identifier="prev">
@@ -840,9 +840,27 @@
         </java:consequence>
     </rule>
     
-    
+    <rule name="PHV">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getHowManyMonthsSinceLast("PHV") == -1</java:condition>
+        <java:consequence>
+              prev.log("PHV debug");
+              prev.addWarning("PHV", "Periodic Health Visit has never been reviewed");
+        </java:consequence>
+    </rule>
 
-<!-- FOBT Rules End-->
+    <rule name="PHV 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+	<java:condition>prev.getHowManyMonthsSinceLast("PHV") &gt; 11</java:condition>
+        <java:consequence>
+              prev.log("PHV debug");
+              prev.addWarning("PHV", "Periodic Health Visit has not occurred in over a year");
+        </java:consequence>
+    </rule> 
 
   </rule-set>
 

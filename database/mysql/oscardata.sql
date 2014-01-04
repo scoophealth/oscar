@@ -1178,7 +1178,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'BP', 'BP', 'Blood Pressure', 'sitting position', '6', '2013-02-01 00:00:00'),
 ( 'BPII', 'BPI Pain Interference', 'BPI Pain Interference', 'null', '2', '2013-07-25 13:00:00'),
 ( 'BPIS', 'BPI Pain Severity', 'BPI Pain Severity', 'null', '2', '2013-07-25 00:00:00'),
-( 'BTFP', 'Brush teeth with fluoride toothpaste', 'NULL', 'Yes/No', '7', '2013-10-25 13:00:00'),
+( 'BTFT', 'Brush teeth with fluoride toothpaste', 'NULL', 'Yes/No', '7', '2013-10-25 13:00:00'),
 ( 'CASA', 'Consider ASA', 'Consider ASA', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'CD4', 'CD4', 'CD4', 'in x10e9/l', '14', '2013-02-01 00:00:00'),
 ( 'CD4P', 'CD4 Percent', 'CD4 Percent', 'in %', '4', '2013-02-01 00:00:00'),
@@ -1222,6 +1222,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'DT2', 'Type II', 'Diabetes Type 2', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'DTYP', 'Diabetes Type', 'Diabetes Type', '1 or 2', '10', '2013-02-01 00:00:00'),
 ( 'ECG', 'ECG', 'ECG', 'Yes/No', '7', '2013-02-01 00:00:00'),
+( 'ECHK', 'Do you have your eyes regularly checked?', 'NULL', 'Yes/No', '7', '2013-12-20 13:00:00'),
 ( 'EDC', 'EDC', 'Expected Date of Confinement', 'yyyy-mm-dd', '13', '2013-02-01 00:00:00'),
 ( 'EDDD', 'Education Diabetes', 'Education Diabetes', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'EDF', 'EDF', 'Erectile Dysfunction', 'Yes/No', '7', '2013-02-01 00:00:00'),
@@ -1235,6 +1236,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'Exer', 'Exercise', 'Exercise', '[min/week 0-1200]', '14', '2013-02-01 00:00:00'),
 ( 'EYEE', 'Dilated Eye Exam', 'Eye Exam', 'Exam Done', '7', '2013-02-01 00:00:00'),
 ( 'FAHS', 'Risk of Falling', 'Risk of Falling', 'Yes/No', '7', '2013-02-01 00:00:00'),
+( 'FAMR', 'Family/Relationships', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
 ( 'FAS', 'Folic Acid supplementation', 'NULL', 'Yes/No', '7', '2013-10-25 13:00:00'),
 ( 'FBPC', '2 hr PC BG', '2 hr PC BG', 'in mmol/L', '3', '2013-02-01 00:00:00'),
 ( 'FBS', 'FBS', 'Glucose FBS', 'FBS', '3', '2013-02-01 00:00:00'),
@@ -1260,9 +1262,11 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'FTRe', 'Foot Exam: Referral made', 'Referral made', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'FTST', 'Free Testost', 'Free Testost', 'in nmol/L', '14', '2013-02-01 00:00:00'),
 ( 'FTUl', 'Foot Exam: Ulcer', 'Ulcer', 'Yes/No', '7', '2013-02-01 00:00:00'),
+( 'FUPP', 'Assessment/Follow-up plans', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
 ( 'G', 'Gravida', 'Gravida', 'Gravida', '3', '2013-02-01 00:00:00'),
 ( 'G6PD', 'G6PD', 'G6PD', 'Positive', '7', '2013-02-01 00:00:00'),
 ( 'Hb', 'Hb', 'Hb', 'in g/L', '5', '2013-02-01 00:00:00'),
+( 'HCON', 'Do you have any hearing concerns?', 'NULL', 'Yes/No', '7', '2013-12-20 13:00:00'),
 ( 'HIP', 'Hip Circ.', 'Hip Circumference', 'at 2 cm above navel', '14', '2013-02-01 00:00:00'),
 ( 'Hchl', 'Hypercholesterolemia', 'Hypercholesterolemia', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'HDL', 'HDL', 'High Density Lipid', 'in mmol/L (n.n) Range:0.4-4.0', '2', '2013-02-01 00:00:00'),
@@ -1276,6 +1280,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'HFMT', 'HF Mod Risk Factor Hypertension', 'HF Mod Risk Factor Hypertension', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'HIVG', 'HIV genotype', 'HIV genotype', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'HLA', 'HLA B5701', 'HLA B5701', 'Yes/No', '7', '2013-02-01 00:00:00'),
+( 'HOTW', 'Hot water thermostat <54deg. C', 'NULL', 'Review', '16', '2013-12-20 13:00:00'),
 ( 'HpAI', 'Hep A IgG', 'Hep A IgG', 'Positive', '7', '2013-02-01 00:00:00'),
 ( 'HpBA', 'Hep BS Ab', 'Hep BS Ab', 'Positive', '7', '2013-02-01 00:00:00'),
 ( 'HPBC', 'Hep B CAb', 'Hep B CAb', 'Yes/No', '7', '2013-02-01 00:00:00'),
@@ -1329,6 +1334,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'NDIP', 'CMCC NDI Pain', 'CMCC Neck Disability Index - Pain', 'number', '5', '2013-02-01 00:00:00'),
 ( 'NDIS', 'CMCC NDI Score', 'CMCC Neck Disability Index - Score', 'number', '5', '2013-02-01 00:00:00'),
 ( 'NERF', 'Neuropathic Features?', 'Neuropathic Features?', 'null', '15', '2013-05-07 00:00:00'),
+( 'NFSW', 'Non-flammable sleepwear', 'NULL', 'Review', '16', '2013-12-20 13:00:00'),
 ( 'NOSK', 'Number of Cigarettes per day', 'Smoking', 'Cigarettes per day', '5', '2013-02-01 00:00:00'),
 ( 'NOVS', 'Need for nocturnal ventilated support', 'Need for nocturnal ventilated support', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'NtrC', 'Diet/Nutrition Counseling Given', 'Diet/Nutrition Counseling Given', 'Yes/No', '7', '2013-02-01 00:00:00'),
@@ -1341,6 +1347,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'P', 'Para', 'Para', 'Para', '3', '2013-02-01 00:00:00'),
 ( 'PANE', 'Painful Neuropathy', 'Painful Neuropathy', 'Present', '7', '2013-02-01 00:00:00'),
 ( 'PAPF', 'Pap Recall', 'Pap Recall Documentation', 'Patient Contacted by Letter or Phone', '11', '2013-02-01 00:00:00'),
+( 'PCPR', 'Poison control prevention', 'NULL', 'Review', '16', '2013-12-20 13:00:00'),
 ( 'PEDE', 'Pitting Edema', 'Pitting Edema', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'PEFR', 'PEFR value', 'PEFR value', 'null', '14', '2013-02-01 00:00:00'),
 ( 'PHIN', 'Pharmacological Intolerance', 'Pharmacological Intolerance', 'Yes/No', '7', '2013-02-01 00:00:00'),
@@ -1355,6 +1362,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'PTSD', 'PC PTSD Trauma Score', 'PC PTSD Trauma Score', 'null', '2', '2013-05-07 00:00:00'),
 ( 'PVD', 'PVD', 'Peripheral vascular disease', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'PWC', 'Parents with children', 'NULL', 'Yes/No', '7', '2013-10-25 13:00:00'),
+( 'PXAM', 'Physical Exam', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
 ( 'QDSH', 'QuickDASH Score', 'Disabilities of the Arm, Shoulder and Hand - Score', 'number', '5', '2013-02-01 00:00:00'),
 ( 'RABG', 'Recommend ABG', 'Recommend ABG', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'REBG', 'Review Blood Glucose Records', 'Review Glucose Records', 'Reviewed', '7', '2013-02-01 00:00:00'),
@@ -1366,7 +1374,10 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'SBLT', 'Seat belts', 'NULL', 'Yes/No', '7', '2013-10-25 13:00:00'),
 ( 'SCR', 'Serum Creatinine', 'Creatinine', 'in umol/L', '14', '2013-02-01 00:00:00'),
 ( 'SDET', 'Smoke detector that works', 'NULL', 'Yes/No', '7', '2013-10-25 13:00:00'),
+( 'SDUS', 'Street Drug Use', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
 ( 'SEXF', 'Sexual Function', 'Sexual Function', 'Yes/No', '7', '2013-02-01 00:00:00'),
+( 'SEXH', 'Sexual History', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
+( 'SHAB', 'Sleep Habits', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
 ( 'SKST', 'Smoking Status', 'Smoking Status', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'SMBG', 'Self monitoring BG', 'Self Monitoring Blood Glucose', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'SmCC', 'Smoking Cessation Counseling Given', 'Smoking Cessation Counseling Given', 'Yes/No', '7', '2013-02-01 00:00:00'),
@@ -1408,6 +1419,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'VLOA', 'Viral Load', 'Viral Load', 'in x10e9/L', '14', '2013-02-01 00:00:00'),
 ( 'WAIS', 'Waist', 'Waist', 'Waist Circum in cm', '5', '2013-02-01 00:00:00'),
 ( 'WHR', 'Waist:Hip', 'Waist Hip Ratio', 'Range:0.5-2 Interval:3mo.', '2', '2013-02-01 00:00:00'),
+( 'WKED', 'Work/Education', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
 ( 'WT', 'WT', 'Weight', 'in kg', '5', '2013-02-01 00:00:00');
 
 --
@@ -1628,8 +1640,8 @@ INSERT INTO `validations` (`id`, `name`, `regularExp`, `maxValue1`, `minValue`, 
 (12,'Yes/No/X','YES|yes|Yes|Y|NO|no|No|N|X|x',0,0,0,0,0,NULL,0),
 (13,'Date',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),
 (14,'Numeric Value greater than or equal to 0',NULL,0,0,0,0,1,NULL,0),
-(15, 'Yes/No/Maybe', 'YES|yes|Yes|Y|NO|no|No|N|MAYBE|maybe|Maybe', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
+(15, 'Yes/No/Maybe', 'YES|yes|Yes|Y|NO|no|No|N|MAYBE|maybe|Maybe', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 'Review', 'REVIEWED|reviewed|Reviewed', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 insert into `secRole` values(1, 'receptionist', 'receptionist');
