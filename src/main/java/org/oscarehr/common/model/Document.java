@@ -128,8 +128,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private String reviewer;
     @Column(name = "reviewdatetime")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date reviewdatetime;
-    @Basic(optional = false)
+    private Date reviewdatetime;    
     @Column(name = "number_of_pages")
     private int numberofpages;
     @Column(name="appointment_no")
