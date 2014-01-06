@@ -319,6 +319,14 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				for (int k = 0; k < obxCount; k++) {
 					String obxName = handler.getOBXName(j, k);
 					
+					boolean isAllowedDuplicate = false;
+					if(handler.getMsgType().equals("PATHL7")){
+						//if the obxidentifier and result name are any of the following, they must be displayed (they are the Excepetion to Excelleris TX/FT duplicate result name display rules)
+						if((handler.getOBXName(j, k).equals("Culture") && handler.getOBXIdentifier(j, k).equals("6463-4")) || 
+								(handler.getOBXName(j, k).equals("Organism") && (handler.getOBXIdentifier(j, k).equals("X433") || handler.getOBXIdentifier(j, k).equals("X30011")))){
+		   					isAllowedDuplicate = true;
+		   				}
+					}
 					if (!handler.getOBXResultStatus(j, k).equals("TDIS")) {
 
 						// ensure that the result is a real result
@@ -373,37 +381,61 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								}
 							} else{
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							if(handler.getMsgType().equals("PATHL7") && (obxCount>1) && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
+							if(!isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
 								cell.setPhrase(new Phrase("", lineFont));
 								table.addCell(cell);}
 							else{
 							cell.setPhrase(new Phrase((obrFlag ? "   " : "")
 									+ obxName, lineFont));
 							table.addCell(cell);}
+							boolean isLongText =false;
 							if(handler.getMsgType().equals("PATHL7")){
 								cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
+								//if this PATHL7 result is from CDC/SG and is greater than 100 characters
+								if((handler.getOBXResult(j, k).length() > 100) && (handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC"))){
+									cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+									//if the Abn, Reference Range and Units are empty or equal to null, give the long result the use of those columns
+									if(( handler.getOBXAbnormalFlag(j, k) == null ||handler.getOBXAbnormalFlag(j, k).isEmpty()) &&
+									( handler.getOBXReferenceRange(j, k) == null || handler.getOBXReferenceRange(j, k).isEmpty()) &&
+									(handler.getOBXUnits(j, k) == null || handler.getOBXUnits(j, k).isEmpty())){
+										isLongText = true;
+										cell.setColspan(4);
+										table.addCell(cell);
+									}else{//else use the 6 remaining columns, and add a new empty cell that takes the first two columns(Test & Results). 
+										//This will allow the corresponding Abn, RR and Units to be printed beneath the long result in the appropriate columns
+										cell.setColspan(6);
+										table.addCell(cell);
+										cell.setPhrase(new Phrase("", lineFont));
+										cell.setColspan(2);
+										table.addCell(cell);
+									}
+								}else{
+									cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+									table.addCell(cell);}
 							}else{
 							cell.setPhrase(new Phrase(handler
 									.getOBXResult(j, k).replaceAll(
-											"<br\\s*/*>", "\n"), lineFont));}
+											"<br\\s*/*>", "\n"), lineFont));
 							cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-							table.addCell(cell);
+							table.addCell(cell);}
+							cell.setColspan(1);
 							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							if(handler.getMsgType().equals("PATHL7")){
-								cell.setPhrase(new Phrase(handler.getOBXAbnormalFlag(j, k), lineFont));
-							}else{
-							cell.setPhrase(new Phrase(
-									(handler.isOBXAbnormal(j, k) ? handler
-											.getOBXAbnormalFlag(j, k) : "N"),
-									lineFont));}
-							table.addCell(cell);
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							cell.setPhrase(new Phrase(handler
-									.getOBXReferenceRange(j, k), lineFont));
-							table.addCell(cell);
-							cell.setPhrase(new Phrase(
-									handler.getOBXUnits(j, k), lineFont));
-							table.addCell(cell);
+							if(!isLongText){//if the Abn, RR and Unit columns have not been occupied above
+								if(handler.getMsgType().equals("PATHL7")){
+									cell.setPhrase(new Phrase(handler.getOBXAbnormalFlag(j, k), lineFont));
+								}else{
+								cell.setPhrase(new Phrase(
+										(handler.isOBXAbnormal(j, k) ? handler
+												.getOBXAbnormalFlag(j, k) : "N"),
+										lineFont));}
+								table.addCell(cell);
+								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								cell.setPhrase(new Phrase(handler
+										.getOBXReferenceRange(j, k), lineFont));
+								table.addCell(cell);
+								cell.setPhrase(new Phrase(
+										handler.getOBXUnits(j, k), lineFont));
+								table.addCell(cell);}// end of isLongText
 							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 							cell.setPhrase(new Phrase(handler
 									.getTimeStamp(j, k), lineFont));
