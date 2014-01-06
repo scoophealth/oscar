@@ -127,7 +127,7 @@
 			}
 		}
 
-		if (iLoad.equals("false") && iAction.equals("view")) { 
+		if ("false".equals(iLoad) && "view".equals(iAction)) { 
 		%>	
     		<a id='loadlink' href="javascript:void(0)" onclick="if(window.location.href.indexOf('?') != -1){window.location.href += '&load=true';}else{window.location.href += '?load=true';}"><bean:message key="oscarEncounter.Header.IntegratorUpdate"/></a>
     	<%}%>
