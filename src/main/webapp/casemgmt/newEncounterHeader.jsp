@@ -33,6 +33,7 @@
  <%@ page import="java.net.URLEncoder"%>
  <%@ page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager, org.oscarehr.util.LoggedInInfo, org.oscarehr.common.model.Facility" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
@@ -103,6 +104,34 @@
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.apptHistory" rights="r">
 		<a href="javascript:popupPage(400,850,'ApptHist','<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&amp;<%=bean.patientLastName.replaceAll("'", "\\\\'")%>&amp;first_name=<%=bean.patientFirstName.replaceAll("'", "\\\\'")%>&amp;orderby=appointment_date&amp;displaymode=appt_history&amp;dboperation=appt_history&amp;limit1=0&amp;limit2=25')" style="font-size: 11px;text-decoration:none;" title="<bean:message key="oscarEncounter.Header.nextApptMsg"/>"><span style="margin-left:20px;"><bean:message key="oscarEncounter.Header.nextAppt"/>: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
 		</security:oscarSec>
+		<input type='hidden' id='load' name='load' value='${load}'/>
+		<!-- done for integrator optimization 
+		     user UI (forms load) is very slow, so default is set to not download forms from integrator
+		     while pressing link 'Integrator Update' will lead to changing default to sync with integrator
+		     the 'Integrator Update' link is only enabled when echart is opened, so the parent is only forward.jsp,
+		     that is recognized by by 'action = view' request parameter
+		 -->
+		<%
+		String iLoad = null;
+		String iAction = null;
+		if (facility.isIntegratorEnabled()){
+			iLoad = request.getParameter("load");
+			iAction = request.getParameter("action");
+			iAction = (iAction == null)?"na":iAction;
+			if (iLoad  != null && !iLoad.equals("false")) {
+				CaisiIntegratorManager.setIntegratorEchartPull(true);
+			}
+			else {
+				iLoad = "false";
+				CaisiIntegratorManager.setIntegratorEchartPull(false);
+			}
+		}
+
+		if (iLoad.equals("false") && iAction.equals("view")) { 
+		%>	
+    		<a id='loadlink' href="javascript:void(0)" onclick="if(window.location.href.indexOf('?') != -1){window.location.href += '&load=true';}else{window.location.href += '?load=true';}"><bean:message key="oscarEncounter.Header.IntegratorUpdate"/></a>
+    	<%}%>
+		
         &nbsp;&nbsp;        
 		
         <% if(oscar.OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
@@ -156,7 +185,7 @@ String getEChartLinks(){
 			return "";
 		}
 		try{
-			String[] httpLink = str.split("\\|"); 
+			String[] httpLink = str.split("\\|"); 					
  			return "<a target=\"_blank\" href=\""+httpLink[1]+"\">"+httpLink[0]+"</a>";
 		}catch(Exception e){
 			MiscUtils.getLogger().error("ECHART_LINK is not in the correct format. title|url :"+str, e);

@@ -31,4 +31,5 @@ public class SessionConstants
     public static final String LOGGED_IN_SECURITY="loggedInSecurity";
     public static final String LOGGED_IN_PROVIDER_PREFERENCE="providerPreference";
     public static final String INTEGRATOR_OFFLINE="integratorOffline";
+    public static final String INTEGRATOR_ECHART_PULL="disableEchartIntegratorPull";
 }

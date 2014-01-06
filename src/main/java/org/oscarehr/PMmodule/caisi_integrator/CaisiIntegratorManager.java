@@ -107,6 +107,15 @@ public class CaisiIntegratorManager {
 		}
 	}
 	
+	public static void setIntegratorEchartPull(boolean status){
+		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
+		if(status){
+		session.setAttribute(SessionConstants.INTEGRATOR_ECHART_PULL,true);
+		}else{
+			session.removeAttribute(SessionConstants.INTEGRATOR_ECHART_PULL);
+		}
+	}
+	
 	public static void checkForConnectionError(Throwable exception){
 		Throwable rootException = ExceptionUtils.getRootCause(exception);
 		MiscUtils.getLogger().debug("Exception: "+exception.getClass().getName()+" --- "+rootException.getClass().getName());
@@ -119,6 +128,15 @@ public class CaisiIntegratorManager {
 	public static boolean isIntegratorOffline(){
 		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
 		Object object = session.getAttribute(SessionConstants.INTEGRATOR_OFFLINE);
+		if (object != null){
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isIntegratorEchartPull(){
+		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
+		Object object = session.getAttribute(SessionConstants.INTEGRATOR_ECHART_PULL);
 		if (object != null){
 			return true;
 		}

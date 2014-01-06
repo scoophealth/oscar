@@ -236,8 +236,11 @@ public class EctFormData {
 
 			if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return  (forms);
 			if(!CaisiIntegratorManager.isIntegratorOffline()){
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-				remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
+				// allow remote forms only if 'integrator update'  link is pressed
+				if (CaisiIntegratorManager.isIntegratorEchartPull()) {
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+					remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Error retriving remote forms :"+CaisiIntegratorManager.isIntegratorOffline(), e);
@@ -266,10 +269,10 @@ public class EctFormData {
 
 	public static PatientForm[] getPatientFormsFromLocalAndRemote(String demoNo, String table) {
 		ArrayList<PatientForm> results = getPatientFormsAsArrayList(demoNo, null, table);
-
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-			try {
+			try{
 				ArrayList<PatientForm> remoteResults = getRemotePatientForms(Integer.parseInt(demoNo), null, table);
 				results.addAll(remoteResults);
 			} catch( Exception e ) {
