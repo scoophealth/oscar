@@ -13212,7 +13212,7 @@ INSERT INTO billingstatus_types VALUES ('N','DNB','Do Not Bill',7);
 INSERT INTO billingstatus_types VALUES ('P','BILLPAT','Bill Patient',2);
 INSERT INTO billingstatus_types VALUES ('T','COLL','Transfer to Collection',4);
 INSERT INTO billingstatus_types VALUES ('A','PAIDPRIV','Paid Private',9);
-
+INSERT INTO billingstatus_types VALUES ('I', 'ICBC', 'ICBC', 17);
 
 
 --

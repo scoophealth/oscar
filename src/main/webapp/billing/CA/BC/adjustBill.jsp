@@ -106,7 +106,7 @@
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
 
-  String codes[] = {"W","O","P","N","X","T","D"};
+  String codes[] = {"W","O","P","N","X","T","D","I"};
   request.setAttribute("codes",codes);
   String serviceLocation = allFields.getProperty("service_location");
 
