@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -52,6 +53,7 @@ List<String> setsList = ds.getDemographicSets();
 <html>
 <head>
 <title>CIHI Export</title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <script type="text/javascript">
 	function setReportType(select) {
 
@@ -66,58 +68,37 @@ List<String> setsList = ds.getDemographicSets();
 	}
 
 </script>
-<style type="text/css">
-
-.container {
-border: 1px solid black;
-margin-top:5px;
-}
-div.vendor {
-font-size: 8px;
-width:48%;
-margin-top:5px;
-}
-input.right {
-float:right;
-}
-input.setright {
-	position:relative;
-	left: 25%;
-}
-</style>
 </head>
 <body>
+<div class="container-fluid well">
 <html:form action="/demographic/cihiExportOMD4.do" method="get">
 <h3>Vender Information</h3>
-<div class="container" style="width:100%;">
-<div class="vendor" style="float:right">
-		<html:text styleClass="right" property="vendorBusinessName"></html:text>Vendor Business Name<br clear="right">
-		<html:text styleClass="right" readonly="true" property="vendorId"></html:text>Vendor ID<br clear="right">
-		<html:text styleClass="right" readonly="true" property="vendorCommonName"></html:text>Vendor Common Name<br clear="right">
-		<html:text styleClass="right" readonly="true" property="vendorSoftware"></html:text>Vendor Software<br clear="right">
-		<html:text styleClass="right" readonly="true" property="vendorSoftwareCommonName"></html:text>Vendor Software Common Name<br clear="right">
-		<html:text styleClass="right" readonly="true" property="vendorSoftwareVer"></html:text>Vendor Software Ver<br clear="right">
-		<html:text styleClass="right" readonly="true" property="installDate"></html:text>Vendor Install Date
-</div>
+<table class="table-condensed">
+	<tr><td>Organization Name</td><td><html:text styleClass="right" property="orgName"></html:text></td></tr>
+	<tr><td>Contact Last Name</td><td><html:text styleClass="right" property="contactLName"></html:text></td></tr>
+	<tr><td>Contact First Name</td><td><html:text styleClass="right" property="contactFName"></html:text></td></tr>
+	<tr><td>Contact Phone</td><td><html:text  styleClass="right" property="contactPhone"></html:text></td></tr>
+	<tr><td>Contact Email</td><td><html:text styleClass="right" property="contactEmail"></html:text></td></tr>
+	<tr><td>Contact Username</td><td><html:text styleClass="right" property="contactUserName"></html:text></td></tr>
+	<tr><td>Vendor Business Name</td><td><html:text styleClass="right" property="vendorBusinessName"></html:text></td></tr>
+	<tr><td>Vendor ID</td><td><html:text styleClass="right" readonly="true" property="vendorId"></html:text></td></tr>
+	<tr><td>Vendor Common Name</td><td><html:text styleClass="right" readonly="true" property="vendorCommonName"></html:text></td></tr>
+	<tr><td>Vendor Software</td><td><html:text styleClass="right" readonly="true" property="vendorSoftware"></html:text></td></tr>
+	<tr><td>Vendor Software Common Name</td><td><html:text styleClass="right" readonly="true" property="vendorSoftwareCommonName"></html:text></td></tr>
+	<tr><td>Vendor Software Ver</td><td><html:text styleClass="right" readonly="true" property="vendorSoftwareVer"></html:text></td></tr>
+	<tr><td>Vendor Install Date</td><td><html:text styleClass="right" readonly="true" property="installDate"></html:text></td></tr>
 
-<div class="vendor" style="float:left;height:100%;">
-	Organization Name<html:text styleClass="right" property="orgName"></html:text><br clear="right">
-	Contact Last Name<html:text styleClass="right" property="contactLName"></html:text><br clear="right">
-	Contact First Name<html:text styleClass="right" property="contactFName"></html:text><br clear="right">
-	Contact Phone<html:text  styleClass="right" property="contactPhone"></html:text><br clear="right">
-	Contact Email<html:text styleClass="right" property="contactEmail"></html:text><br clear="right">
-	Contact Username<html:text styleClass="right" property="contactUserName"></html:text><br clear="right">
-	&nbsp;
-</div>
-</div>
-<div>
-			Extract Type<html:select property="extractType" onchange="setReportType(this);">
-				<html:option value="<%=DataExportDao.CIHI_OMD4%>"><%=DataExportDao.CIHI_OMD4%></html:option>
-				<html:option value="<%=DataExportDao.CIHI_PHC_VRS%>"><%=DataExportDao.CIHI_PHC_VRS%></html:option>
-			</html:select><br>
+<tr><td>Extract Type </td>
+<td>
+<html:select property="extractType" onchange="setReportType(this);">
+	<html:option value="<%=DataExportDao.CIHI_OMD4%>"><%=DataExportDao.CIHI_OMD4%></html:option>
+	<html:option value="<%=DataExportDao.CIHI_PHC_VRS%>"><%=DataExportDao.CIHI_PHC_VRS%></html:option>
+</html:select> 
+</td></tr>
 
-
-
+<tr><td>
+Patient Set
+</td><td>
 <html:select property="patientSet">
 	<html:option value="-1">--Select Set--</html:option>
 <%
@@ -130,11 +111,15 @@ for( int idx = 0; idx < setsList.size(); ++idx ) {
 }
 %>
 </html:select>
+</td></tr>
 
-<input type="submit" value="Run Report"/>
-</div>
+<tr><td colspan="2" align="right"> <input class="btn btn-primary" type="submit" value="Run Report"/> </td></tr>
+
+</table>
+
+
 <h3>Previous Reports</h3>
-<table width="100%">
+<table class="table table-striped  table-condensed">
 <tr>
 	<th>Run Date</th>
 	<th>File</th>
@@ -158,5 +143,6 @@ for( int idx = 0; idx < setsList.size(); ++idx ) {
 %>
 </table>
 </html:form>
+</div>
 </body>
 </html>
