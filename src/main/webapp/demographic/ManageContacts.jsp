@@ -101,7 +101,16 @@ function deleteProContact(id) {
 	var contactId = jQuery("input[name='procontact_"+id+".id']").val();
 	jQuery("form[name='contactForm']").append("<input type=\"hidden\" name=\"procontact.delete\" value=\""+contactId+"\"/>");
 	jQuery("#procontact_"+id).remove();
+}
 
+function clearContactName(id) {
+    jQuery("input[name='contact_"+id+".contactId']").val("0");
+    jQuery("input[name='contact_"+id+".contactName']").val("");
+}
+
+function clearProContactName(id) {
+    jQuery("input[name='procontact_"+id+".contactId']").val("0");
+    jQuery("input[name='procontact_"+id+".contactName']").val("");
 }
 
 function doPersonalSearch(id) {
