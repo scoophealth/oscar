@@ -295,11 +295,15 @@ while (rs.next()) {
              // Year
              decF.applyPattern("0000");
              String effDateYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"eff_date")));
-             // Month and Day
-             decF.applyPattern("00");
-             String effDateMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"eff_date")));
-             String effDateDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"eff_date")));
-          %> <%= effDateYear%>/ <%= effDateMonth%>/ <%= effDateDay%></td>
+             
+             if(!effDateYear.equals("0000")) {
+            	 // Month and Day
+             	decF.applyPattern("00");
+             	String effDateMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"eff_date")));
+             	String effDateDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"eff_date")));
+        	 %>
+         		<%= effDateYear%>/ <%= effDateMonth%>/ <%= effDateDay%></td>
+         	<%}%>
 	</tr>
 	<tr valign="top">
 		<td align="left"><b><bean:message
@@ -417,10 +421,15 @@ while (rs.next()) {
              // Format year
              decF.applyPattern("0000");
              String hcRenewYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
-             decF.applyPattern("00");
-             String hcRenewMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
-             String hcRenewDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
-          %> <%= hcRenewYear %> <%= hcRenewMonth %> <%= hcRenewDay %></td>
+          
+          	if(!hcRenewYear.equals("0000")) {
+            	 // Month and Day
+             	decF.applyPattern("00");
+             	String hcRenewMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
+             	String hcRenewDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
+        	 %>
+        	 <%= hcRenewYear %>/ <%= hcRenewMonth %>/ <%= hcRenewDay %></td>
+         	<%}%>
 	</tr>
 	<tr valign="top">
 		<td align="left"><b><bean:message
@@ -488,10 +497,15 @@ while (rs.next()) {
              // Format year
              decF.applyPattern("0000");
              String endYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"end_date")));
-             decF.applyPattern("00");
-             String endMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"end_date")));
-             String endDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"end_date")));
-          %> <%= endYear %> <%= endMonth %> <%= endDay %></td>
+             if(!endYear.equals("0000")) {
+            	 // Month and Day
+             	decF.applyPattern("00");
+             	String endMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"end_date")));
+             	String endDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"end_date")));
+        	 %>
+        	 <%= endYear %>/ <%= endMonth %>/ <%= endDay %></td>
+         	<%}%>
+             
 	<tr valign="top">
 		<td nowrap colspan="3">
 		<table width="100%" bgcolor="#EEEEFF">
