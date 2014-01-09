@@ -23,14 +23,53 @@
     Ontario, Canada
 
 --%>
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="oscar.oscarLab.ca.all.pageUtil.SendOruR01UIBean"%>
 <%@page import="org.oscarehr.common.model.ProfessionalSpecialist"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.Gender"%>
-
-<%@include file="/layouts/html_top.jspf"%>
-
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<html>
+<head>
+	<title>Send eData</title>
+	<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+	<link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+	
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.8.18.custom.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script>   
+	<script type="text/javascript">
+		function checkRequiredFields() {
+			if (jQuery("#professionalSpecialistId").val().length==0) {
+				alert('Select a provider / specialist to send to.');
+				return(false);
+			}			
+			if (jQuery("#clientFirstName").val().length==0 || jQuery("#clientLastName").val().length==0) {
+				alert('The clients first and last name is required.');
+				return(false);
+			}	
+			if (jQuery("#subject").val().length==0) {
+				alert('The data name is required.');
+				return(false);
+			}	
+			if (jQuery("#textMessage").val().length==0 && jQuery("#uploadFile").val().length==0) {
+				alert('Either Text Data or an Upload File is required.');
+				return(false);
+			}	
+			return(true);
+		}
+	</script>
+</head>
+<body>
+	<h4>Send eData <span style="font-size:9px">(ORU_R01 : Unsolicited Observation Message)</span></h4>
 <%--
 This jsp accepts parameters with the same name as
 the fields in the SendOruR01UIBean. All parameters are optional
@@ -40,130 +79,104 @@ for pre-populating data.
 	SendOruR01UIBean sendOruR01UIBean=new SendOruR01UIBean(request);
 %>
 
-<%@page import="org.apache.commons.lang.StringUtils"%><h2 class="oscarBlueHeader">
-	Send eData 
-	<span style="font-size:9px">(ORU_R01 : Unsolicited Observation Message)</span>
-</h2>
-
-
-<script type="text/javascript">
-	function checkRequiredFields()
-	{
-		if (jQuery("#professionalSpecialistId").val().length==0)
-		{
-			alert('Select a provider / specialist to send to.');
-			return(false);
-		}
-		
-		if (jQuery("#clientFirstName").val().length==0 || jQuery("#clientLastName").val().length==0)
-		{
-			alert('The clients first and last name is required.');
-			return(false);
-		}
-
-		if (jQuery("#subject").val().length==0)
-		{
-			alert('The data name is required.');
-			return(false);
-		}
-
-		if (jQuery("#textMessage").val().length==0 && jQuery("#uploadFile").val().length==0)
-		{
-			alert('Either Text Data or an Upload File is required.');
-			return(false);
-		}
-
-		return(true);
-	}
-</script>
-
-<form method="post" enctype="multipart/form-data" action="oruR01Upload.do" onsubmit="return checkRequiredFields()">
-	<table style="border-collapse:collapse; width:95%; font-size:12px">
-		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader" style="width:10em">From Provider</td>
-			<td><%=SendOruR01UIBean.getLoggedInProviderDisplayLine()%></td>
-		</tr>
-		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader">To Provider / Specialist</td>
-			<td>
+<form method="post" enctype="multipart/form-data" action="oruR01Upload.do" onsubmit="return checkRequiredFields()" class="well form-horizontal">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">From Provider:</label>
+			<div class="controls">
+				<%=SendOruR01UIBean.getLoggedInProviderDisplayLine()%>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">To Provider / Specialist:</label>
+			<div class="controls">
 				<select name="professionalSpecialistId" id="professionalSpecialistId">
 					<option value="">--- none selected ---</option>
 					<%
-						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getRemoteCapableProfessionalSpecialists())
-						{
-							%>
-								<option value="<%=professionalSpecialist.getId()%>" <%=sendOruR01UIBean.renderSelectedProfessionalSpecialistOption(professionalSpecialist.getId())%> ><%=SendOruR01UIBean.getProfessionalSpecialistDisplayString(professionalSpecialist)%></option>
-							<%
+						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getRemoteCapableProfessionalSpecialists()) 						{
+					%>
+					<option value="<%=professionalSpecialist.getId()%>" <%=sendOruR01UIBean.renderSelectedProfessionalSpecialistOption(professionalSpecialist.getId())%> ><%=SendOruR01UIBean.getProfessionalSpecialistDisplayString(professionalSpecialist)%></option>
+					<%
 						}
 					%>
 				</select>
-			</td>
-		</tr>
-		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader" style="vertical-align:top">For Client</td>
-			<td>
-				<table style="border-collapse:collapse">
-					<tr>
-						<td style="font-weight:bold;text-align:right">First Name</td>
-						<td><input type="text" id="clientFirstName" name="clientFirstName" value="<%=sendOruR01UIBean.getClientFirstName()%>" /></td>
-					</tr>
-					<tr>
-						<td style="font-weight:bold;text-align:right">Last Name</td>
-						<td><input type="text" id="clientLastName" name="clientLastName" value="<%=sendOruR01UIBean.getClientLastName()%>" /></td>
-					</tr>
-					<tr>
-						<td style="font-weight:bold;text-align:right">Health Number<br />(excluding version code)</td>
-						<td><input type="text" name="clientHealthNumber" value="<%=sendOruR01UIBean.getClientHin()%>" /></td>
-					</tr>
-					<tr>
-						<td style="font-weight:bold;text-align:right;vertical-align:top">BirthDay</td>
-						<td>
-							<input type="text" id="clientBirthDay" name="clientBirthDay" value="<%=sendOruR01UIBean.getClientBirthDate()%>" />
-							<script type="text/javascript">
-								jQuery(document).ready(function() {
-									Date.format='yy-mm-dd';
-									jQuery("#clientBirthDay").datepicker({dateFormat: 'yy-mm-dd'});
-								});
-							</script>
-						</td>
-					</tr>
-					<tr>
-						<td style="font-weight:bold;text-align:right">Gender</td>
-						<td>
-							<select name="clientGender">
-								<option value="">--- none selected ---</option>
-								<%
-									for (Gender gender : Gender.values())
-									{
-										%>
-											<option value="<%=gender.name()%>" <%=sendOruR01UIBean.renderSelectedGenderOption(gender)%> ><%=gender.getText()%></option>
-										<%
-									}
-								%>
-							</select>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader">Subject</td>
-			<td><input type="text" id="subject" name="subject" value="<%=sendOruR01UIBean.getSubject()%>" /></td>
-		</tr>
-		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader">Text Message</td>
-			<td><textarea id="textMessage" name="textMessage" style="width:40em;height:8em" ><%=sendOruR01UIBean.getTextMessage()%></textarea></td>
-		</tr>
-		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader">Upload File</td>
-			<td><input type="file" id="uploadFile" name="uploadFile" /></td>
-		</tr>
-	</table>
-	<br />
-	<input type="submit" value="Electronically Send Data" />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<input type="button" value="close" onclick='window.close()' />
-	
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"><strong>For Client</strong></label>
+			<div class="controls">&nbsp;</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">First Name</label>
+			<div class="controls">
+				<input type="text" id="clientFirstName" name="clientFirstName" value="<%=sendOruR01UIBean.getClientFirstName()%>" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Last Name</label>
+			<div class="controls">
+				<input type="text" id="clientLastName" name="clientLastName" value="<%=sendOruR01UIBean.getClientLastName()%>" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Health Number<br />(excluding version code)</label>
+			<div class="controls">
+				<input type="text" name="clientHealthNumber" value="<%=sendOruR01UIBean.getClientHin()%>" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">BirthDay</label>
+			<div class="controls">
+				<input type="text" id="clientBirthDay" name="clientBirthDay" value="<%=sendOruR01UIBean.getClientBirthDate()%>" />
+				<script type="text/javascript">
+					jQuery(document).ready(function() {
+						Date.format='yy-mm-dd';
+						jQuery("#clientBirthDay").datepicker({dateFormat: 'yy-mm-dd'});
+					});
+				</script>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Gender</label>
+			<div class="controls">
+				<select name="clientGender">
+					<option value="">--- none selected ---</option>
+					<%
+						for (Gender gender : Gender.values()) {
+					%>
+						<option value="<%=gender.name()%>" <%=sendOruR01UIBean.renderSelectedGenderOption(gender)%> ><%=gender.getText()%></option>
+					<%
+						}
+					%>
+				</select>
+			</div>
+		</div>
+		<hr/>
+		<div class="control-group">
+			<label class="control-label">Subject</label>
+			<div class="controls">
+				<input type="text" id="subject" name="subject" value="<%=sendOruR01UIBean.getSubject()%>" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Text Message</label>
+			<div class="controls">
+				<textarea id="textMessage" name="textMessage" style="width:40em;height:8em" ><%=sendOruR01UIBean.getTextMessage()%></textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Upload File</label>
+			<div class="controls">
+				<input type="file" id="uploadFile" name="uploadFile" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">&nbsp;</label>
+			<div class="controls">
+				<input type="submit" class="btn btn-primary" value="Electronically Send Data" />&nbsp;<input type="button" class="btn" value="close" onclick='window.close()' />
+			</div>
+		</div>
+	</fieldset>
 </form>
-
-<%@include file="/layouts/html_bottom.jspf"%>
+</body>
+</html>
