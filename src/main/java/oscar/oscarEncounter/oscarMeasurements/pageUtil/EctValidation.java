@@ -184,13 +184,18 @@ public class EctValidation{
                 String diastolic = inputValue.substring(slashIndex+1);
                 MiscUtils.getLogger().debug("The systolic value is " + systolic);
                 MiscUtils.getLogger().debug("The diastolic value is " + diastolic);
-                int iSystolic = Integer.parseInt(systolic);
-                int iDiastolic = Integer.parseInt(diastolic);
-                if( iDiastolic > iSystolic){                    
-                    validation=false;
-                }
-                else if (iDiastolic > 300 || iSystolic > 300){
-                    validation =false;
+                
+                try {
+                    int iSystolic = Integer.parseInt(systolic);
+                    int iDiastolic = Integer.parseInt(diastolic);
+                    if( iDiastolic > iSystolic){                    
+                        validation =false;
+                    }
+                    else if (iDiastolic > 300 || iSystolic > 300){
+                        validation =false;
+                    }
+                } catch (NumberFormatException ex) {
+                	validation =false;
                 }
             }
         }
