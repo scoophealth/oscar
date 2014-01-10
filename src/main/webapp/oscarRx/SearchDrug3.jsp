@@ -453,7 +453,7 @@ function ts_resortTable(lnk,clid) {
     if (table.rows.length <= 1) return;
 
 
-    var itm = ts_getInnerText(table.rows[1].cells[column]);
+    var itm = ts_getInnerText(table.rows[1].cells[column]).trim();
     sortfn = ts_sort_caseinsensitive;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
@@ -2094,6 +2094,49 @@ function updateQty(element){
           	});
           	return rx;
      }
+      
+     function isEmpty(str) {
+    	    return (!str || 0 === str.length);
+     }
+     
+     function validateNumeric(fieldId) {
+    	 var rx=true;
+    	 node = "input[name^='" + fieldId + "']";
+    	 jQuery(node).each(function(){
+     		var strRx  = jQuery(this).val();
+     		
+     		if(isEmpty(strRx)) {
+     			rx = true; 
+     		}
+     		else if (!isNaN(strRx)) {
+     			rx = true;
+     		}
+     		else {
+     			rx = false;
+     		}
+     	});
+    	return rx; 
+     }
+     
+      
+     function validateLastRefillDate() {
+        	var rx=true;
+        	jQuery('input[name^="lastRefillDate_"]').each(function(){
+        		var strRx  = jQuery(this).val();
+        		
+        		if(isEmpty(strRx)) {
+        			return true; //empty last refill date is perfectly
+        		}
+
+        		if(!checkAndValidateDate(strRx,null)) {
+        			jQuery(this).focus();
+        			rx=false;
+        			return false;
+        		}
+
+        	});
+        	return rx;
+   }
 
     function validateWrittenDate() {
     	var x = true;
@@ -2154,6 +2197,30 @@ function updateQty(element){
 		if(!validateRxDate()) {
     		return false;
     	}
+		if(!validateLastRefillDate()){
+			return false;
+		}
+		if(!validateNumeric("quantity_")) {
+			alert("Quantity field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("repeats_")) {
+			alert("Repeats field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("duration_")) {
+			alert("Duration field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("refillQuantity_")) {
+			alert("Refill Quantity field is not numeric");
+			return false;
+		}
+		
+		if(!validateNumeric("dispenseInterval_")) {
+			alert("Dispense Interval field is not numeric");
+			return false;
+		}
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
         new Ajax.Request(url,
@@ -2172,6 +2239,31 @@ function updateQty(element){
 		if(!validateRxDate()) {
     		return false;
     	}
+		if(!validateLastRefillDate()){
+			return false;
+		}
+		if(!validateNumeric("quantity_")) {
+			alert("Quantity field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("repeats_")) {
+			alert("Repeats field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("duration_")) {
+			alert("Duration field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("refillQuantity_")) {
+			alert("Refill Quantity field is not numeric");
+			return false;
+		}
+		
+		if(!validateNumeric("dispenseInterval_")) {
+			alert("Dispense Interval field is not numeric");
+			return false;
+		}
+		
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
         new Ajax.Request(url,
