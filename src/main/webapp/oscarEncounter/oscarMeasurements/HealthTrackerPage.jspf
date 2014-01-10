@@ -594,20 +594,14 @@ height:70px;
 		document.getElementById('gFrame').style.display='none';	
 
 	}
-
-	<%if (session.getAttribute("textOnEncounter")!=null) {%>
 	
-	if( opener.opener.document.forms["caseManagementEntryForm"] != undefined ){
-        opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-    }else if( opener.document.forms["caseManagementEntryForm"] != undefined ){
-        opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-	}
-
 <%
-		//clear so values don't repeat after added to note
+//health tracker is not using the paste function anymore but just incase we will still clear the value so if the user is using cdm indicators 
+//and it happens that this value exists we avoid the text pasting in a note. 
+if (session.getAttribute("textOnEncounter")!=null) {
+		//clear so values don't repeat
 		session.setAttribute("textOnEncounter", null);
 		//session.removeAttribute("textOnEncounter");
-
 }
 %>		
 
@@ -1294,7 +1288,7 @@ if(!btnLabel.equals("PHV")){
 	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%> placeholder="Enter Data" <%=getPattern(measure, mtypeBean.getMeasuringInstrc())%>> 
   <%} %>
   
-<input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Save" id="save_<%=name%>"/>
+
 
 </div> <!-- input-wrapper -->
 
@@ -1302,7 +1296,12 @@ if(!btnLabel.equals("PHV")){
 
 <!-- hidden fields for form -->
 <div class="well well-small" id="add-box-<%=measure%>" style="display:none;margin-bottom:1px;">
-   <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" style="float:right"> 
+   <span title="If you would like this measurement to display in your progress note then you need to select this checkbox."><input type="checkbox" name="<%=name%>_note" id="<%=name%>_note" value="addtonote"> <small>add to progress note</small></span>  
+   
+   <span class="pull-right">
+   <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" > 
+   <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Save" id="save_<%=name%>"/> 
+   </span>
 </div>
 
 <%if(mi.getWarning(measure)!=null){%>
@@ -1439,7 +1438,7 @@ if(!btnLabel.equals("PHV")){
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-html="true" data-content="<%//=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%//=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
                 <span title="<%=h2.get("guideline")%>" style="padding-left:5px;"><%=h2.get("display_name")%></span>
             </a>
-            <span style="float:right"><input type="button" class="btn" value="Add" onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
+            <button type="button" class="btn pull-right" value="Add" onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')"><i class="icon-plus"></i></button>
            
 </div> <!-- div well -->
     
