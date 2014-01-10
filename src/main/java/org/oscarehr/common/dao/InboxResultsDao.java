@@ -19,6 +19,9 @@ import javax.persistence.Query;
 
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.ejb.QueryImpl;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.oscarLab.ca.on.LabResultData;
@@ -168,13 +171,23 @@ public class InboxResultsDao {
 		int sexLoc = -1;
 		int moduleLoc = -1;
 		int obsDateLoc = -1;
+		boolean configureScalars = false;
 		try {
 
 			// Get documents by demographic
 			//if (demographicNo != null && !"".equals(demographicNo)) {
 			// Get mix from labs
 			if (mixLabsAndDocs) {
-				if ("0".equals(demographicNo) || "0".equals(providerNo)) {
+				if (demographicNo == null && "0".equals(providerNo)) {
+					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9;
+					UnclaimedInboxQueryBuilder unclaimedQuery = new UnclaimedInboxQueryBuilder();
+					unclaimedQuery.setPage(page);
+					unclaimedQuery.setPaged(isPaged);
+					unclaimedQuery.setPageSize(pageSize);
+					unclaimedQuery.setMixLabsAndDocs(true);
+					sql = unclaimedQuery.buildQuery();
+					configureScalars = true;
+				} else if ("0".equals(demographicNo) || "0".equals(providerNo)) {
 					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9;
 					sql = " SELECT X.id, X.lab_no as document_no, X.status, X.lab_type as doctype, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate "
 							+ " FROM document doc, "
@@ -290,7 +303,7 @@ public class InboxResultsDao {
 					docNoLoc = 0; statusLoc = 1; docTypeLoc = 8; lastNameLoc = 2; firstNameLoc = 3; hinLoc = 4; sexLoc = 5; moduleLoc = 6; obsDateLoc = 7;
 					// N
 					// document_no, status, last_name, first_name, hin, sex, module_id, observationdate
-					sql = " SELECT doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype"
+					sql = " SELECT doc.document_no as id, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, doc.document_no"
 							+ " FROM document doc, "
 							+ " 	(SELECT DISTINCT plr.* FROM providerLabRouting plr"
 							+ (isAbnormal != null ? ", hl7TextInfo info " : "")
@@ -398,11 +411,18 @@ public class InboxResultsDao {
 			logger.debug(sql);
 
 			Query q = entityManager.createNativeQuery(sql);
-
+			configureScalars(q);
+			
 			List<Object[]> result = q.getResultList();
 			for (Object[] r : result) {
 				LabResultData lbData = new LabResultData(LabResultData.DOCUMENT);
 				lbData.labType = LabResultData.DOCUMENT;
+				String labType = getStringValue(r[docTypeLoc]);
+				if (labType == null) {
+					lbData.labType = LabResultData.DOCUMENT;
+				} else {
+					lbData.labType = labType;
+				}
 
 
 				lbData.segmentID = getStringValue(r[docNoLoc]);
@@ -499,6 +519,29 @@ public class InboxResultsDao {
 		return labResults;
 	}
 
+	private void configureScalars(Query q) {
+		if (!(q instanceof QueryImpl)) {
+			throw new IllegalStateException("Invalid query type. Expected EJB Query implementation instance");
+		}
+		
+		QueryImpl ejbQuery = (QueryImpl) q;
+		if (!(ejbQuery.getHibernateQuery() instanceof SQLQuery)) {
+			throw new IllegalStateException("Invalid query type. Expected to retrieve SQL query instance");
+		}
+		
+	    SQLQuery sql = (SQLQuery) ejbQuery.getHibernateQuery();
+	    sql.addScalar("id", Hibernate.INTEGER);
+	    sql.addScalar("document_no", Hibernate.INTEGER);
+	    sql.addScalar("status", Hibernate.CHARACTER);
+	    sql.addScalar("doctype", Hibernate.STRING);
+	    sql.addScalar("last_name", Hibernate.STRING);
+	    sql.addScalar("first_name", Hibernate.STRING);
+	    sql.addScalar("hin", Hibernate.STRING);
+	    sql.addScalar("sex", Hibernate.CHARACTER);
+	    sql.addScalar("module_id", Hibernate.INTEGER);
+	    sql.addScalar("observationdate", Hibernate.DATE);
+    }
+	
 	private String getStringValue(Object value) {
 		return value != null ? value.toString() : null;
 	}
