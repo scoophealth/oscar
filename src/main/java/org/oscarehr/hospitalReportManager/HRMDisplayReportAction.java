@@ -37,6 +37,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
+import org.oscarehr.hospitalReportManager.model.HRMSubClass;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -44,6 +45,7 @@ import org.oscarehr.util.SpringUtils;
 public class HRMDisplayReportAction extends DispatchAction {
 
 	private static Logger logger=MiscUtils.getLogger();
+	private final String  MedicalRecordsReport = "Medical Records Report";
 	
 	private static HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private static HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
@@ -80,6 +82,11 @@ public class HRMDisplayReportAction extends DispatchAction {
                             request.setAttribute("providerLinkList", providerLinkList);
 
                             List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(document.getId());
+                            
+                            //Check the HRMSubClass for the corresponding descriptions, change the description
+                            findCorrespondingHRMSubClassDescriptions(subClassList, document.getReportType(), report.getSendingFacilityId() , report.getFirstReportSubClass());
+
+                            
                             request.setAttribute("subClassList", subClassList);
 
                             String loggedInProviderNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
@@ -150,6 +157,48 @@ public class HRMDisplayReportAction extends DispatchAction {
 		
 		
 		return mapping.findForward("display");
+	}
+		
+	/**
+	 * Check the HRMSubClass for the corresponding descriptions, change the description
+	 * @param subClassList
+	 * @param reportType
+	 * @param sendingFacilityId
+	 */
+	private void findCorrespondingHRMSubClassDescriptions(List<HRMDocumentSubClass> subClassList, String reportType, String sendingFacilityId, String reportSubClass ) {
+		
+		if (reportType == null || reportType.isEmpty()) {
+			return;
+		}
+		
+		if (sendingFacilityId == null || sendingFacilityId.isEmpty()) {
+			return;
+		}
+		
+	    for(HRMDocumentSubClass hrmDocumentSubClass: subClassList) {
+	    	
+	    	HRMSubClass hrmSubClass = hrmSubClassDao.findByClassNameMnemonicFacility(reportType, sendingFacilityId, hrmDocumentSubClass.getSubClassMnemonic());
+	    	
+	    	if (hrmSubClass != null) {
+	    		hrmDocumentSubClass.setSubClassDescription(hrmSubClass.getSubClassDescription());
+	    	}	    	
+	    }		
+	    
+	    if (subClassList != null && subClassList.size() == 0 && reportType.equalsIgnoreCase(MedicalRecordsReport) && reportSubClass != null && !reportSubClass.isEmpty()) {
+	    	String[] subClassFromReport = reportSubClass.split("\\^");
+	    	String subClass = "";
+	    	if (subClassFromReport.length == 2) {
+	    		subClass =  subClassFromReport[1];	    		
+	    	}
+	    	
+	    	HRMSubClass hrmSubClass = hrmSubClassDao.findByClassNameSubClassNameFacility(reportType,  sendingFacilityId, subClass);
+	    	if (hrmSubClass != null) {
+	    		HRMDocumentSubClass hrmDocumentSubClass = new HRMDocumentSubClass();
+	    		hrmDocumentSubClass.setSubClassDescription(hrmSubClass.getSubClassDescription());
+	    		subClassList.add(hrmDocumentSubClass);
+	    	}
+	    }
+		
 	}
 	
 	
