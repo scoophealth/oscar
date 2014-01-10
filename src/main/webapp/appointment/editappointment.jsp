@@ -25,6 +25,7 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
   if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
@@ -528,7 +529,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="type"
-					VALUE="<%=bFirstDisp?appt.get("type"):request.getParameter("type")%>"
+					VALUE="<%=bFirstDisp?appt.get("type"):StringEscapeUtils.escapeHtml(request.getParameter("type"))%>"
                     WIDTH="25">
             </div>
         </li>
@@ -589,7 +590,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="keyword"
 					tabindex="1"
-					VALUE="<%=bFirstDisp?nameSb.toString():request.getParameter("name")%>"
+					VALUE="<%=bFirstDisp?nameSb.toString():StringEscapeUtils.escapeHtml(request.getParameter("name"))%>"
                     width="25">
             </div>
             <div class="space">&nbsp;</div>
@@ -672,7 +673,7 @@ if (bMultisites) { %>
 	// multisites end ==================
 %>
             <INPUT TYPE="TEXT" NAME="location" tabindex="4"
-					VALUE="<%=bFirstDisp?appt.get("location"):request.getParameter("location")%>"
+					VALUE="<%=bFirstDisp?appt.get("location"):StringEscapeUtils.escapeHtml(request.getParameter("location"))%>"
 					WIDTH="25">
 <% } %>
             </div>
@@ -681,7 +682,7 @@ if (bMultisites) { %>
             <div class="input">
                 <input type="TEXT"
 					name="resources" tabindex="5"
-					value="<%=bFirstDisp?appt.get("resources"):request.getParameter("resources")%>"
+					value="<%=bFirstDisp?appt.get("resources"):StringEscapeUtils.escapeHtml(request.getParameter("resources"))%>"
                     width="25">
             </div>
         </li>
