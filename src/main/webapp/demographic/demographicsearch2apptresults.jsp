@@ -32,6 +32,7 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="oscar.oscarDemographic.data.DemographicMerged"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
@@ -184,7 +185,7 @@ function searchAll() {
             <div class="label"><bean:message
                  key="demographic.zdemographicfulltitlesearch.msgInput" />:
             </div>
-            <input type="text" class="wideInput" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17" MAXLENGTH="100"/>
+            <input type="text" class="wideInput" NAME="keyword" VALUE="<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>" SIZE="17" MAXLENGTH="100"/>
         </li>
         <li>
 	<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
@@ -204,11 +205,11 @@ function searchAll() {
 		<input type="hidden" name="month" value="<%=request.getParameter("month")%>">
 		<input type="hidden" name="day" value="<%=request.getParameter("day")%>">
 		<input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>">
-		<input type="hidden" name="notes" value="<%=request.getParameter("notes")%>">
-		<input type="hidden" name="reason" value="<%=request.getParameter("reason")%>">
-		<input type="hidden" name="location" value="<%=request.getParameter("location")%>">
-		<input type="hidden" name="resources" value="<%=request.getParameter("resources")%>">
-		<input type="hidden" name="type" value="<%=request.getParameter("type")%>">
+		<input type="hidden" name="notes" value="<%=StringEscapeUtils.escapeHtml(request.getParameter("notes"))%>">
+		<input type="hidden" name="reason" value="<%=StringEscapeUtils.escapeHtml(request.getParameter("reason"))%>">
+		<input type="hidden" name="location" value="<%=StringEscapeUtils.escapeHtml(request.getParameter("location"))%>">
+		<input type="hidden" name="resources" value="<%=StringEscapeUtils.escapeHtml(request.getParameter("resources"))%>">
+		<input type="hidden" name="type" value="<%=StringEscapeUtils.escapeHtml(request.getParameter("type"))%>">
 		<input type="hidden" name="style" value="<%=request.getParameter("style")%>">
 		<input type="hidden" name="billing" value="<%=request.getParameter("billing")%>">
 		<input type="hidden" name="status" value="<%=request.getParameter("status")%>">
@@ -221,7 +222,7 @@ function searchAll() {
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("search_mode") ||temp.equals("chart_no")  ||temp.equals("ptstatus") ||temp.equals("submit") || temp.equals("includeIntegratedResults")) continue;
-  	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
+  	out.println("<input type='hidden' name='"+temp+"' value=\""+StringEscapeUtils.escapeHtml(request.getParameter(temp))+"\">");
   }
 	%>
             <a href="#" onclick="showHideItem('demographicSearch');" id="cancelButton" class="leftButton top">
@@ -265,7 +266,7 @@ function searchAll() {
 <table width="95%" border="0">
 	<tr>
 		<td align="left"><bean:message
-			key="demographic.demographicsearch2apptresults.msgKeywords" /> <%=request.getParameter("keyword")%></td>
+			key="demographic.demographicsearch2apptresults.msgKeywords" /> <%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%></td>
 	</tr>
 </table>
 
@@ -418,7 +419,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode")||temp.equals("submit") ||temp.equals("chart_no")) continue;
-  	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
+  	out.println("<input type='hidden' name='"+temp+"' value=\""+StringEscapeUtils.escapeHtml(request.getParameter(temp))+"\">");
   }
   
 	%>
@@ -484,7 +485,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 	<caisi:isModuleLoad moduleName="caisi" reverse="true">
 	<bean:message key="demographic.search.noResultsWereFound" />
     <div class="createNew">
-	 <a href="../demographic/demographicaddarecordhtm.jsp?fromAppt=1&originalPage=<%=request.getParameter("originalPage")%>&keyword=<%=request.getParameter("keyword")%>&notes=<%=request.getParameter("notes")%>&appointment_date=<%=request.getParameter("appointment_date")%>&year=<%=request.getParameter("year")%>&month=<%=request.getParameter("month")%>&day=<%=request.getParameter("day")%>&start_time=<%=request.getParameter("start_time")%>&end_time=<%=request.getParameter("end_time")%>&duration=<%=request.getParameter("duration")%>&bFirstDisp=false&provider_no=<%=request.getParameter("provider_no")%>&notes=<%=request.getParameter("notes")%>&reason=<%=request.getParameter("reason")%>&location=<%=request.getParameter("location")%>&resources=<%=request.getParameter("resources")%>&type=<%=request.getParameter("type")%>&style=<%=request.getParameter("style")%>&billing=<%=request.getParameter("billing")%>&status=<%=request.getParameter("status")%>&createdatetime=<%=request.getParameter("createdatetime")%>&creator=<%=request.getParameter("creator")%>&remarks=<%=request.getParameter("remarks")%>">
+	 <a href="../demographic/demographicaddarecordhtm.jsp?fromAppt=1&originalPage=<%=request.getParameter("originalPage")%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&appointment_date=<%=request.getParameter("appointment_date")%>&year=<%=request.getParameter("year")%>&month=<%=request.getParameter("month")%>&day=<%=request.getParameter("day")%>&start_time=<%=request.getParameter("start_time")%>&end_time=<%=request.getParameter("end_time")%>&duration=<%=request.getParameter("duration")%>&bFirstDisp=false&provider_no=<%=request.getParameter("provider_no")%>&notes=<%=StringEscapeUtils.escapeHtml(request.getParameter("notes"))%>&reason=<%=StringEscapeUtils.escapeHtml(request.getParameter("reason"))%>&location=<%=StringEscapeUtils.escapeHtml(request.getParameter("location"))%>&resources=<%=StringEscapeUtils.escapeHtml(request.getParameter("resources"))%>&type=<%=StringEscapeUtils.escapeHtml(request.getParameter("type"))%>&style=<%=request.getParameter("style")%>&billing=<%=request.getParameter("billing")%>&status=<%=request.getParameter("status")%>&createdatetime=<%=request.getParameter("createdatetime")%>&creator=<%=request.getParameter("creator")%>&remarks=<%=request.getParameter("remarks")%>">
 
 	<bean:message key="demographic.search.btnCreateNew" />
 	</a>
@@ -502,11 +503,11 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 %> <script language="JavaScript">
 <!--
 function last() {
-  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
+  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
   //document.nextform.submit();  
 }
 function next() {
-  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
+  document.nextform.action="../demographic/demographiccontrol.jsp?keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
   //document.nextform.submit();  
 }
 //-->
@@ -531,7 +532,7 @@ function next() {
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("submit")  ||temp.equals("chart_no")) continue;
-  	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
+  	out.println("<input type='hidden' name='"+temp+"' value=\""+StringEscapeUtils.escapeHtml(request.getParameter(temp))+"\">");
   }
 	%>
 

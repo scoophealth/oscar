@@ -616,7 +616,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="type"
-                    VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>'
+                    VALUE="<%=bFirstDisp?"":request.getParameter("type").equals("")?"":StringEscapeUtils.escapeHtml(request.getParameter("type"))%>"
                     WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </div>
         </li>
@@ -644,7 +644,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             		name = String.valueOf((bFirstDisp && !bFromWL)?"":request.getParameter("name")==null?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name"));
             	%>
                 <INPUT TYPE="TEXT" NAME="keyword"
-                        VALUE="<%=name%>"
+                        VALUE="<%=StringEscapeUtils.escapeHtml(name)%>"
                         HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">
             </div>
             <div class="space">
@@ -712,7 +712,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 		<% } else {
 			// multisites end ==================
 		%>
-		                <input type="TEXT" name="location" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2">
+		                <input type="TEXT" name="location" tabindex="4" value="<%=StringEscapeUtils.escapeHtml(loc)%>" width="25" height="20" border="0" hspace="2">
 		<% } %>
             </div>
             <div class="space">&nbsp;</div>
@@ -720,7 +720,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="input">
                 <input type="TEXT" name="resources"
                     tabindex="5"
-                    value='<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":request.getParameter("resources")%>'
+                    value="<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":StringEscapeUtils.escapeHtml(request.getParameter("resources"))%>"
                     width="25" height="20" border="0" hspace="2">
             </div>
         </li>
@@ -728,7 +728,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="label"><bean:message key="Appointment.formCreator" />:</div>
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="user_id" readonly
-                    VALUE='<%=bFirstDisp?(StringEscapeUtils.escapeHtml(userlastname)+", "+StringEscapeUtils.escapeHtml(userfirstname)):request.getParameter("user_id").equals("")?"Unknown":request.getParameter("user_id")%>'
+                    VALUE="<%=bFirstDisp?(StringEscapeUtils.escapeHtml(userlastname)+", "+StringEscapeUtils.escapeHtml(userfirstname)):request.getParameter("user_id").equals("")?"Unknown":request.getParameter("user_id")%>"
                     WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </div>
             <div class="space">&nbsp;</div>
@@ -744,7 +744,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
                 <INPUT TYPE="TEXT" NAME="createdatetime" readonly VALUE="<%=strDateTime%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
                 <INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
                 <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord">
-                <INPUT TYPE="hidden" NAME="creator" VALUE='<%=StringEscapeUtils.escapeHtml(userlastname)+", "+StringEscapeUtils.escapeHtml(userfirstname)%>'>
+                <INPUT TYPE="hidden" NAME="creator" VALUE="<%=StringEscapeUtils.escapeHtml(userlastname)+", "+StringEscapeUtils.escapeHtml(userfirstname)%>">
                 <INPUT TYPE="hidden" NAME="remarks" VALUE="">
             </div>
         </li>
