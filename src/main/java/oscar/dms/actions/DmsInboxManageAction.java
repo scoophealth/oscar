@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -457,14 +458,27 @@ public class DmsInboxManageAction extends DispatchAction {
 
 		ArrayList<LabResultData> labdocs = new ArrayList<LabResultData>();
 
+		Collection<String> labIds = new HashSet<String>();
 		if (!"labs".equals(view) && !"abnormal".equals(view)) {
 			labdocs = inboxResultsDao.populateDocumentResultsData(searchProviderNo, demographicNo, patientFirstName,
 					patientLastName, patientHealthNumber, ackStatus, true, page, pageSize, mixLabsAndDocs, isAbnormal);
+			for(LabResultData d : labdocs) {
+				String businessId = getBusinessId(d);
+				labIds.add(businessId);
+			}
 		}
 		if (!"documents".equals(view)) {
-			labdocs.addAll(comLab.populateLabResultsData(searchProviderNo, demographicNo, patientFirstName,
-					patientLastName, patientHealthNumber, ackStatus, scannedDocStatus, true, page, pageSize,
-					mixLabsAndDocs, isAbnormal));
+			ArrayList<LabResultData> commonLabs = 
+				comLab.populateLabResultsData(searchProviderNo, demographicNo, patientFirstName,
+						patientLastName, patientHealthNumber, ackStatus, scannedDocStatus, true, page, pageSize,
+						mixLabsAndDocs, isAbnormal);
+			
+			for(LabResultData d : commonLabs) {
+				String businessId = getBusinessId(d);
+				if (!labIds.contains(businessId)) {
+					labdocs.add(d);
+				}
+			}
 		}
 
 		ArrayList<LabResultData> validlabdocs = new ArrayList<LabResultData>();
@@ -749,6 +763,10 @@ public class DmsInboxManageAction extends DispatchAction {
 
 		return mapping.findForward("dms_page");
 	}
+
+	private String getBusinessId(LabResultData d) {
+	    return d.getSegmentID() + d.getLabPatientId();
+    }
 
 	public ActionForward addNewQueue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		boolean success = false;
