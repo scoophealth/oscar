@@ -241,6 +241,10 @@ function checkDefaultDate(object, defaultValue) {
 
 function newDocType(){
 	var newOpt = prompt("Please enter new document type:", "");
+
+	if(newOpt == null)
+		return;
+
 	if (newOpt != "") {
 	    document.getElementById("docType").options[document.getElementById("docType").length] = new Option(newOpt, newOpt);
 	    document.getElementById("docType").options[document.getElementById("docType").length-1].selected = true;
@@ -253,6 +257,10 @@ function newDocType(){
 
 function newDocTypeLink(){
 	var newOpt = prompt("Please enter new document type:", "");
+
+	if(newOpt == null)
+		return;
+
 	if (newOpt != "") {
 	    document.getElementById("docType1").options[document.getElementById("docType1").length] = new Option(newOpt, newOpt);
 	    document.getElementById("docType1").options[document.getElementById("docType1").length-1].selected = true;
