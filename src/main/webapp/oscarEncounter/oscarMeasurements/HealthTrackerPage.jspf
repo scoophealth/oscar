@@ -1722,13 +1722,15 @@ function createAddAll(d,t){
 	String groupToView = temp.toLowerCase(); 
 	String user = (String) session.getAttribute("user");
 	String roleName = (String)session.getAttribute("userrole") + "," + user;
+	String orderBy = EFormUtil.DATE;
+
 %>
     <div class="tab-content">
 		<div id="completed" class="tab-pane active">
 		<table class="table table-striped table-condensed table-hover">
 		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td><td><strong>Completed Date</strong></td></tr>   
 		<%
-								ArrayList<HashMap<String,? extends Object>> eFormsCompleted = EFormUtil.listPatientEForms("form_name", EFormUtil.CURRENT, demographic_no, groupToView, roleName);
+								ArrayList<HashMap<String,? extends Object>> eFormsCompleted = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupToView, roleName);
 														
 								for (int i = 0; i < eFormsCompleted.size(); i++)
 								{
