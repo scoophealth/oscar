@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -38,6 +37,7 @@ public class HRMUtil {
 	
 	public static final String DATE = "time_received";
 	public static final String TYPE = " report_type";
+	private final String  MedicalRecordsReport = "Medical Records Report";
 	
 	private static HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private static HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
@@ -204,4 +204,47 @@ public class HRMUtil {
 			return hrmdocslist;
 			
 		}
+	
+	/**
+	 * Check the HRMSubClass for the corresponding descriptions, change the description
+	 * @param subClassList
+	 * @param reportType
+	 * @param sendingFacilityId
+	 */
+	public void findCorrespondingHRMSubClassDescriptions(List<HRMDocumentSubClass> subClassList, String reportType, String sendingFacilityId, String reportSubClass ) {
+		
+		if (reportType == null || reportType.isEmpty()) {
+			return;
+		}
+		
+		if (sendingFacilityId == null || sendingFacilityId.isEmpty()) {
+			return;
+		}
+		
+	    for(HRMDocumentSubClass hrmDocumentSubClass: subClassList) {
+	    	
+	    	HRMSubClass hrmSubClass = hrmSubClassDao.findByClassNameMnemonicFacility(reportType, sendingFacilityId, hrmDocumentSubClass.getSubClassMnemonic());
+	    	
+	    	if (hrmSubClass != null) {
+	    		hrmDocumentSubClass.setSubClassDescription(hrmSubClass.getSubClassDescription());
+	    	}	    	
+	    }		
+	    
+	    if (subClassList != null && subClassList.size() == 0 && reportType.equalsIgnoreCase(MedicalRecordsReport) && reportSubClass != null && !reportSubClass.isEmpty()) {
+	    	String[] subClassFromReport = reportSubClass.split("\\^");
+	    	String subClass = "";
+	    	if (subClassFromReport.length == 2) {
+	    		subClass =  subClassFromReport[1];	    		
+	    	}
+	    	
+	    	HRMSubClass hrmSubClass = hrmSubClassDao.findByClassNameSubClassNameFacility(reportType,  sendingFacilityId, subClass);
+	    	if (hrmSubClass != null) {
+	    		HRMDocumentSubClass hrmDocumentSubClass = new HRMDocumentSubClass();
+	    		hrmDocumentSubClass.setSubClassDescription(hrmSubClass.getSubClassDescription());
+	    		subClassList.add(hrmDocumentSubClass);
+	    	}
+	    }
+		
+	}
+
 }

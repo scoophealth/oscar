@@ -26,15 +26,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.hospitalReportManager.HRMReport;
 import org.oscarehr.hospitalReportManager.HRMReportParser;
+import org.oscarehr.hospitalReportManager.HRMUtil;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.common.dao.OscarLogDao;
 
 import oscar.oscarLab.ca.on.HRMResultsData;
 import oscar.util.DateUtils;
@@ -48,6 +51,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 	private HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 	private HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+	private HRMDocumentSubClassDao hrmDocumentSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
 	
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
@@ -174,9 +178,26 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 				String dispFilename = hrmDocument.getReportType();
 				String dispDocNo    = hrmDocument.getId().toString();
 
+				//This section has been added for the change request #985 HRM Reports alternative description for HRM documents 
+				HRMReport report = HRMReportParser.parseReport(hrmDocument.getReportFile());
+				
+				List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(hrmDocument.getId());
+				
+				HRMUtil hRMUtil = new HRMUtil();
+				hRMUtil.findCorrespondingHRMSubClassDescriptions(subClassList, hrmDocument.getReportType(), report.getSendingFacilityId() , report.getFirstReportSubClass());
 				
 				title = StringUtils.maxLenString(dispFilename, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 
+				//try to find the alternative title if exists
+				for (HRMDocumentSubClass subClass : subClassList) { 
+				           subClass.getSubClassDescription() ;						
+			    } 
+				
+				if (subClassList != null && subClassList.size() > 0 && subClassList.get(0) != null && subClassList.get(0).getSubClassDescription() != null && !subClassList.get(0).getSubClassDescription().isEmpty()) {
+					title = subClassList.get(0).getSubClassDescription();
+				}
+				
+				
 				if (reportStatus != null && reportStatus.equalsIgnoreCase("C")) {
 					title = StringUtils.maxLenString("(Cancelled) " + dispFilename, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 				}
