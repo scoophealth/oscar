@@ -52,6 +52,17 @@ public class UserPropertyDAO extends AbstractDao<UserProperty> {
         remove(prop.getId());
     }
 
+    public void saveProp(String provider, String userPropertyName, String value){
+    	UserProperty prop = getProp(provider, userPropertyName);
+        if( prop == null ) {
+           prop = new UserProperty();
+           prop.setProviderNo(provider);
+           prop.setName(userPropertyName);
+        }
+	    prop.setValue(value);     
+		saveProp(prop);
+    }
+
     public void saveProp(UserProperty prop) {
         if(prop.getId() != null && prop.getId().intValue()>0) {
         	merge(prop);
