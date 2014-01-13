@@ -295,6 +295,7 @@ public class ContactAction extends DispatchAction {
 		if(contact.getId() != null && contact.getId()>0) {
 			contactDao.merge(contact);
 		} else {
+			contact.setId(null);
 			contactDao.persist(contact);
 		}
 	   return mapping.findForward("cForm");

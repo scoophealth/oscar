@@ -67,7 +67,7 @@
 	            	
 	            	<!--  they can be an internal (Demographic) or external (Contact) contact -->
 	            		             
-		            <select name="contact_<%=id%>.type" id="contact_<%=id%>.type">
+		            <select name="contact_<%=id%>.type" id="contact_<%=id%>.type" onchange="clearContactName('<%=id%>');">
 		            	<option value="<%=DemographicContact.TYPE_DEMOGRAPHIC%>">Internal</option>
 		            	<option value="<%=DemographicContact.TYPE_CONTACT%>">External</option>
 					</select>
