@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -24,6 +25,7 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
 
 // Defaults    		
@@ -73,10 +75,10 @@ if( outcome !=null){
 %>
 
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.DemographicMerged"%>
-<%@page import="java.lang.System" %>
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="java.lang.System" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Demographic"%>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 
 
 <%
@@ -93,8 +95,8 @@ if( outcome !=null){
 
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>DEMOGRAPHIC - MERGE RECORDS</title>
+<title><bean:message key="admin.admin.mergeRec"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <script language="JavaScript">
 	function setfocus() {
 		document.titlesearch.keyword.focus();
@@ -140,88 +142,66 @@ if( outcome !=null){
 	}
 </SCRIPT>
 <!--base target="pt_srch_main"-->
-<link rel="stylesheet" href="../web.css">
+
+<style>
+input[type="radio"]{
+margin-left:8px;
+}
+</style>
+
+
 </head>
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor="#486ebd">
-		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">MERGE CLIENT RECORDS</font></th>
-	</tr>
-</table>
+<body onLoad="setfocus()">
+<div class="container-fluid well">
+<h3><bean:message key="admin.admin.mergeRec"/></h3>
 
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
-	BGCOLOR="#C4D9E7">
-	<form method="post" name="titlesearch" action="demographicmergerecord.jsp" onSubmit="return checkTypeIn()">
-	<tr valign="top">
-		<td rowspan="2" ALIGN="right" valign="middle"><font
-			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
+<form method="post" name="titlesearch" action="demographicmergerecord.jsp" class="form-inline" onSubmit="return checkTypeIn()">
 
-		<td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-			<input type="radio" name="search_mode" value="search_name" 
-			<%=searchMode.equals("search_name")?"checked":""%>
-			> Name </font></td>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-			<input type="radio" name="search_mode" value="search_phone"
-			<%=searchMode.equals("search_phone")?"checked":""%>
-			> Phone</font></td>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-			<input type="radio" name="search_mode" value="search_dob"
-			<%=searchMode.equals("search_dob")?"checked":""%>
-			> DOB</font></td>
-		<td valign="middle" rowspan="2" ALIGN="left">
-			<input type="text" NAME="keyword" SIZE="17" MAXLENGTH="100"> 
+Search:
+
+<input type="radio" name="search_mode" value="search_name" <%=searchMode.equals("search_name")?"checked":""%> > Name
+<input type="radio" name="search_mode" value="search_phone" <%=searchMode.equals("search_phone")?"checked":""%>	> Phone
+<input type="radio" name="search_mode" value="search_dob" <%=searchMode.equals("search_dob")?"checked":""%> > DOB
+<input type="radio" name="search_mode" value="search_address" <%=searchMode.equals("search_address")?"checked":""%>> Address
+<input type="radio" name="search_mode" value="search_hin" <%=searchMode.equals("search_hin")?"checked":""%>> HIN
+
+<input type="text" NAME="keyword" class="span6" MAXLENGTH="100"> 
 			<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name"> 
 			<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> 
 			<INPUT TYPE="hidden" NAME="limit2" VALUE="10"> 
-			<INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"> 
-			<input type="submit" name="mergebutton" value="Search Merged Records" onclick="searchMerged()">
-		</td>
-	</tr>
-	<tr>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-			<input type="radio" name="search_mode" value="search_address"
-			<%=searchMode.equals("search_address")?"checked":""%>
-			> Address </font></td>
-		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-			<input type="radio" name="search_mode" value="search_hin"
-			<%=searchMode.equals("search_hin")?"checked":""%>
-			> HIN</font></td>
-		<td></td>
-	</tr>
-	</form>
-</table>
-<br />
-<CENTER>
+
+<INPUT class="btn" TYPE="SUBMIT" NAME="button" VALUE="Search"> 
+<input class="btn" type="submit" name="mergebutton" value="Search Merged Records" onclick="searchMerged()">
+</form>
+</div><!--well-->
+
 <% if (request.getParameter("keyword") != null) {%>
-<table width="95%" border="0">
-	<tr>
-		<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
-	</tr>
-</table>
-<hr>
+
+<i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%>
+
 <CENTER>
 <form method="post" name="mergeform" action="MergeRecords.do" onSubmit="return checkTypeIn()">
 	<input type="hidden" name="mergeAction" value="merge" /> 
 	<input type="hidden" name="provider_no" value="<%= session.getAttribute("user") %>" />
 	
-<table width="100%" border="2" bgcolor="#ffffff">
-	<tr bgcolor="silver">
+<table class="table table-striped  table-condensed">
+	<tr>
 		<TH align="CENTER" width="5%"></th>
 		<% if (!mergedSearch){%>
 		<th align="center" width="5%">Main Record</th>
 		<%}%>
 		<TH align="center" width="10%"><b><a
-			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">DEMOGP' NO</a></b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">Demographic</a></b></font></TH>
 		<TH align="center" width="20%"><b><a
-			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>">LAST NAME</a> </b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>">Last Name</a> </b></font></TH>
 		<TH align="center" width="20%"><b><a
-			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=first_name&limit1=0&limit2=<%=strLimit%>">FIRST NAME</a> </b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=first_name&limit1=0&limit2=<%=strLimit%>">First Name</a> </b></font></TH>
 		<TH align="center" width="10%"><b><a
-			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=age&limit1=0&limit2=<%=strLimit%>">AGE</a></b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=age&limit1=0&limit2=<%=strLimit%>">Age</a></b></font></TH>
 		<TH align="center" width="10%"><b><a
-			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>">ROSTER STATUS</a></b></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>">Roster Status</a></b></font></TH>
 		<TH align="center" width="10%"><b><a
-			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=sex&limit1=0&limit2=<%=strLimit%>">SEX</a></B></font></TH>
+			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=sex&limit1=0&limit2=<%=strLimit%>">Sex</a></B></font></TH>
 		<TH align="center" width="10%"><b><a
 			href="demographicmergerecord.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=date_of_birth&limit1=0&limit2=<%=strLimit%>">DOB(yy/mm/dd)</a></B></Font></TH>
 	</tr>
@@ -298,7 +278,7 @@ else {
 		toggleLine = !toggleLine;
         nItems++; //to calculate if it is the end of records
 %>
-	<tr bgcolor="<%=toggleLine?"ivory":"white"%>">
+	<tr>
 		<%
         DemographicMerged dmDAO = new DemographicMerged();
 		String demographicNo = demo.getDemographicNo().toString() ;
@@ -343,9 +323,16 @@ else {
 </table>
 
 <br>
-<% if (mergedSearch){%> <input type="submit"
-	value="UnMerge Selected Records" onclick="UnMerge()" /> <%}else{%> <input
-	type="submit" value="Merge Selected Records" /> <%}%> <br />
+<% if (mergedSearch){%> 
+
+<input type="submit" class="btn btn-warning btn-large" value="UnMerge Selected Records" onclick="UnMerge()" /> 
+
+<%}else{%> 
+
+<input type="submit" class="btn btn-primary btn-large" value="Merge Selected Records" /> 
+
+<%}%> <br />
+
 </form>
 <%
 int nLastPage=0,nNextPage=0;
@@ -363,11 +350,13 @@ Next Page</a> <%
 }
 
 
-}else {// end if (request.getParameter("keyword") != null)
+}else{// end if (request.getParameter("keyword") != null)
 %>
-<p>Please search for the records you wish to merge.</p>
-<% } %>
 </center>
-<hr width="100%" color="navy">
+
+<h3 align="center">Please search for the records you wish to merge.</h3>
+<% } %>
+
+
 </body>
 </html>
