@@ -24,6 +24,8 @@
 
 package org.oscarehr.phr.util;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -162,8 +164,7 @@ public final class MyOscarUtils {
 			if (encryptedMyOscarPassword == null) return;
 			
 			SecretKeySpec key = getDeterministicallyMangledPasswordSecretKeyFromSession(session);
-			byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
-			String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
+			String decryptedMyOscarPasswordString = EncryptionUtils.decryptAesToString(key, encryptedMyOscarPassword);
 
 			try
 			{
@@ -204,14 +205,14 @@ public final class MyOscarUtils {
 		return(sb.toString());
 	}
 	
-	public static SecretKeySpec getSecretKeyFromDeterministicallyMangledPassword(String unmangledPassword)
+	public static SecretKeySpec getSecretKeyFromDeterministicallyMangledPassword(String unmangledPassword) throws UnsupportedEncodingException, NoSuchAlgorithmException
 	{
 		String mangledPassword=deterministicallyMangle(unmangledPassword);
-		SecretKeySpec secretKeySpec=EncryptionUtils.generateEncryptionKey(mangledPassword);
+		SecretKeySpec secretKeySpec=EncryptionUtils.generateAesEncryptionKey(mangledPassword, "SHA-1", 128);
 		return(secretKeySpec);
 	}
 	
-	public static void setDeterministicallyMangledPasswordSecretKeyIntoSession(HttpSession session, String unmangledPassword)
+	public static void setDeterministicallyMangledPasswordSecretKeyIntoSession(HttpSession session, String unmangledPassword) throws UnsupportedEncodingException, NoSuchAlgorithmException
 	{
 		SecretKeySpec secretKeySpec=getSecretKeyFromDeterministicallyMangledPassword(unmangledPassword);
 		session.setAttribute(MANGLED_SECRET_KEY_SESSION_KEY, secretKeySpec);
