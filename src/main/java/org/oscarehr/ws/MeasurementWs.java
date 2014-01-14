@@ -107,6 +107,16 @@ public class MeasurementWs extends AbstractWs {
 
 	public MeasurementMapTransfer[] getMeasurementMaps() {
 		List<MeasurementMap> measurementMaps = measurementManager.getMeasurementMaps();
-		return(MeasurementMapTransfer.toTransfers(measurementMaps));
+		return (MeasurementMapTransfer.toTransfers(measurementMaps));
+	}
+
+	/**
+	 * @return the ID of the added measurement
+	 */
+	public Integer addMeasurement(MeasurementTransfer measurementTransfer) {
+		Measurement measurement = new Measurement();
+		measurementTransfer.copyTo(measurement);
+		measurementManager.addMeasurement(measurement);
+		return (measurement.getId());
 	}
 }
