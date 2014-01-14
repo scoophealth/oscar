@@ -46,6 +46,7 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%
 
@@ -806,37 +807,21 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     	<td colspan='3' align="left">
     <c:if
 	test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
-	<div><span>CAISI Reporting Tools</span> <caisi:isModuleLoad
-		moduleName="TORONTO_RFQ" reverse="true">
-				
-		<div><a HREF="../PMmodule/ClientManager.do?method=getGeneralFormsReport" target="generalFormsReport">General Forms Reports 
-		</a></div>
-		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('quick');return false;">Registration
-		Intake Report</a></div>
-		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('indepth');return false;">Follow-up
-		Intake Report</a></div>
-		  
-		<div><html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
-		</div>
-		<%--
-                <div>
-                    <html:link action="/PMmodule/Reports/ClientListsReport">Client Lists Report</html:link>
-                </div>
-                --%>
-		<div><html:link action="/SurveyManager.do?method=reportForm">User Created Form Report</html:link>
-		</div>
-		</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-			<div><html:link action="QuatroReport/ReportList.do">Quatro Report Runner</html:link>
-			</div>
-		</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="streethealth">
-		<div><a href="javascript:void(0);" onclick="javascript:createStreetHealthReport();return false;">Street
-		Health Mental Health Report</a></div>
+	<div><span>CAISI Reporting Tools</span> 
+	<caisi:isModuleLoad moduleName="caisi">
+		<div><a HREF="../PMmodule/ClientManager.do?method=getGeneralFormsReport" target="generalFormsReport">General Forms Reports</a></div>
+		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('quick');return false;">Registration Intake Report</a></div>
+		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('indepth');return false;">Follow-up Intake Report</a></div>
+		<div><html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link></div>
+		<div><html:link action="/SurveyManager.do?method=reportForm">User Created Form Report</html:link></div>
+		<div><html:link action="QuatroReport/ReportList.do">Quatro Report Runner</html:link></div>
+		<div><a href="javascript:void(0);" onclick="javascript:createStreetHealthReport();return false;">Street Health Mental Health Report</a></div>
 	</caisi:isModuleLoad></div>
 </c:if> 
 	
     </td>
     </tr>
-    
+    <tr><td>&nbsp;</td></tr>
     <tr>
         <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
         <td></td>
