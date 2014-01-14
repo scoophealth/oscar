@@ -25,6 +25,8 @@
 
 package org.oscarehr.ws;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -44,7 +46,7 @@ public final class WsUtils
 	 * @param security can be null, it will return false for null. 
 	 * @param securityToken can be the SecurityId's password, or a valid securityToken.
 	 */
-	public static boolean checkAuthenticationAndSetLoggedInInfo(Security security, String securityToken)
+	public static boolean checkAuthenticationAndSetLoggedInInfo(Security security, String securityToken) throws UnsupportedEncodingException, NoSuchAlgorithmException
 	{
 		if (security != null)
 		{

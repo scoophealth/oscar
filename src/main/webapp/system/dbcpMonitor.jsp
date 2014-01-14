@@ -174,9 +174,6 @@ detect those and search the source.
 
     <h3>----- Thread Monitor -----</h3>
 
-	Thread Format: <%=VmStat.getThreadFormat() %><br />
-	Thread Info: <%=VmStat.getThreadInfo()%>
-
 	<br /><br />
 	<%
 		Map<Thread,StackTraceElement[]> threadMap=Thread.getAllStackTraces();
