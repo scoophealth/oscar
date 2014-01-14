@@ -99,7 +99,7 @@
                 }
 %> <input type="submit" value="Update"> <%                
             }catch(SQLException ex ) {
-            	MiscUtils.getLogger().error("SQL Error", ex);
+            	org.oscarehr.util.MiscUtils.getLogger().error("SQL Error", ex);
             }
 %>
 </form>

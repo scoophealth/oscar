@@ -34,7 +34,7 @@
   boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
 %>
 
-<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.*"
+<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.*,org.oscarehr.util.*"
 	errorPage="errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />

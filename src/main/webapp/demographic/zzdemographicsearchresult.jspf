@@ -86,7 +86,7 @@
 	  }
   } catch (java.sql.SQLException ex) {
 	  rs = null;
-	  MiscUtils.getLogger().error("SQL Error", ex);
+	  org.oscarehr.util.MiscUtils.getLogger().error("SQL Error", ex);
   }
  
   boolean bodd=false;
