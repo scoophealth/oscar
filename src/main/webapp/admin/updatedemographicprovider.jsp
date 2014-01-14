@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -33,19 +34,14 @@
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
-%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
 
 <jsp:useBean id="novector" class="java.util.Vector" scope="page" />
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.DemographicCust" %>
-<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
-<%@page import="org.oscarehr.common.model.Provider" %>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.DemographicCust" %>
+<%@ page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
@@ -57,9 +53,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="admin.updatedemographicprovider.title" />
-</title>
+<title><bean:message key="admin.admin.btnUpdatePatientProvider" /></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
@@ -88,13 +83,9 @@ function setregexp2() {
  	  names.add(p.getFormattedName());
  	}
 %>
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
-	<tr bgcolor="<%=deepcolor%>">
-		<th><font face="Helvetica"><bean:message
-			key="admin.updatedemographicprovider.msgTitle" /></font></th>
-	</tr>
-</table>
+<body onLoad="setfocus()">
+<div class="container-fluid">
+<h3><bean:message key="admin.admin.btnUpdatePatientProvider" /></h3>
 <%
   if(request.getParameter("update")!=null && request.getParameter("update").equals(" Go ") ) {
    
@@ -221,9 +212,9 @@ function setregexp2() {
   }
 %>
 
-<center>
-<table border="0" cellpadding="0" cellspacing="2" width="90%"
-	bgcolor="<%=weakcolor%>">
+
+<div class="well well-small">
+<table class="table table-striped  table-condensed">
 	<FORM NAME="ADDAPPT" METHOD="post"
 		ACTION="updatedemographicprovider.jsp" onsubmit="return(setregexp())">
 	<tr>
@@ -272,20 +263,20 @@ function setregexp2() {
 %>
 		</select> <br>
 		<INPUT TYPE="hidden" NAME="regexp" VALUE=""> <input
-			type="hidden" name="update" value=" Go "> <INPUT
+			type="hidden" name="update" value=" Go "> <INPUT class="btn btn-primary"
 			TYPE="submit"
-			VALUE="<bean:message key="admin.updatedemographicprovider.btnGo"/>">
+			VALUE="<bean:message key="global.update"/>">
 
 
 		</td>
 	</tr>
 	</form>
 </table>
+</div>
 
-<hr width=90% color='<%=deepcolor%>'>
 <!-- for nurse -->
-<table border="0" cellpadding="0" cellspacing="2" width="90%"
-	bgcolor="<%=weakcolor%>">
+<div class="well well-small">
+<table class="table table-striped  table-condensed">
 	<FORM NAME="ADDAPPT1" METHOD="post"
 		ACTION="updatedemographicprovider.jsp" onsubmit="return(setregexp1())">
 	<tr>
@@ -334,23 +325,22 @@ function setregexp2() {
 %>
 		</select> <br>
 		<INPUT TYPE="hidden" NAME="regexp" VALUE=""> <input
-			type="hidden" name="update" value=" Submit "> <INPUT
+			type="hidden" name="update" value=" Submit "> <INPUT class="btn btn-primary"
 			TYPE="submit"
-			VALUE="<bean:message key="admin.updatedemographicprovider.btnGo"/>">
+			VALUE="<bean:message key="global.update"/>">
 		</td>
 	</tr>
 	</form>
 </table>
+</div>
 
-<hr width=90% color='<%=deepcolor%>'>
 <!-- for midwife -->
-<table border="0" cellpadding="0" cellspacing="2" width="90%"
-	bgcolor="<%=weakcolor%>">
+<div class="well well-small">
+<table class="table table-striped  table-condensed">
 	<FORM NAME="ADDAPPT2" METHOD="post"
 		ACTION="updatedemographicprovider.jsp" onsubmit="return(setregexp2())">
 	<tr>
-		<td><b><bean:message
-			key="admin.updatedemographicprovider.msgMidwife" /></b></td>
+		<td><b><bean:message key="admin.updatedemographicprovider.msgMidwife" /></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="admin.updatedemographicprovider.formUse" />
@@ -394,14 +384,16 @@ function setregexp2() {
 %>
 		</select> <br>
 		<INPUT TYPE="hidden" NAME="regexp" VALUE=""> <input
-			type="hidden" name="update" value="UpdateMidwife"> <INPUT
+			type="hidden" name="update" value="UpdateMidwife"> <INPUT class="btn btn-primary"
 			TYPE="submit"
-			VALUE="<bean:message key="admin.updatedemographicprovider.btnGo"/>">
+			VALUE="<bean:message key="global.update"/>">
 		</td>
 	</tr>
 	</form>
 </table>
+</div>
 
-</center>
+
+</div>
 </body>
 </html:html>
