@@ -346,10 +346,12 @@ public class BillingSavePrep {
 		} else if (payProg.startsWith("NOT")) {
 			ret = "N";
 		} else if( payProg.startsWith("BON") ) {
-                        ret = "I";
-                } else if( payProg.startsWith("PAT")) {
-                        ret = "P";
-                }
+			ret = "I";
+        } else if( payProg.startsWith("PAT")) {
+        	ret = "P";
+		} else if( payProg.startsWith("WCB")) {
+			ret = "W";
+		}
 		return ret;
 	}
 
