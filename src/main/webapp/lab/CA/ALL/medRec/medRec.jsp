@@ -1,6 +1,6 @@
-<!--<%--
+<%--
 
-    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    Copyright (c) 2013. Department of Family Practice, University of British Columbia. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -17,12 +17,12 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
     This software was written for the
-    Department of Family Medicine
-    McMaster University
-    Hamilton
-    Ontario, Canada
+    Department of Family Practice
+    Faculty of Medicine
+    University of British Columbia
+    Vancouver, Canada
 
---%>-->
+--%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 

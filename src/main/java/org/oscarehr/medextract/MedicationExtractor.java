@@ -24,21 +24,33 @@
 
 
 package org.oscarehr.medextract;
-import edu.uwm.jiaoduan.i2b2.utils.LancetParser;
-
-import java.io.*;
-
-import org.oscarehr.util.MiscUtils;
-import org.apache.log4j.Logger;
-
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.common.model.Drug; 
+
 import oscar.oscarRx.util.RxDrugRef;
-import net.sf.json.*;
+import edu.uwm.jiaoduan.i2b2.utils.LancetParser;
 
 /**
  *
@@ -496,10 +508,11 @@ public class MedicationExtractor{
                     logger.info("returning from findBestMedicationMatch() with:"+return_map.toString());
                     return return_map;
                 }catch (Exception e){
-                   logger.error(e.toString());
-                    StringWriter sw = new StringWriter();
-                    e.printStackTrace(new PrintWriter(sw));
-                    logger.info(sw.toString());
+                    logger.error(e.toString());
+                    logger.info(e);
+                    /*StringWriter sw = new StringWriter();
+                    e.print StackTrace(new PrintWriter(sw));
+                    logger.info(sw.toString());*/
                     return inList.get(0);
                 }
             }

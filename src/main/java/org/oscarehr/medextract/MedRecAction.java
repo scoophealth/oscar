@@ -31,8 +31,13 @@ package org.oscarehr.medextract;
  * Time: 3:20 PM
  * To change this template use File | Settings | File Templates.
  */
+import java.sql.Date;
+import java.util.Calendar;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -40,20 +45,14 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Prescription;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.oscarProvider.data.ProSignatureData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import org.oscarehr.common.model.Prescription;
 import oscar.oscarRx.data.RxProviderData;
-
-import java.sql.Date;
-import java.util.Calendar;
 
 /*
 Fields from medRec.js
@@ -235,7 +234,7 @@ public class MedRecAction extends DispatchAction {
         Prescription rx = new Prescription();
 
         RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String)request.getSession().getAttribute("user"));
-        RxPatientData.Patient patient = RxPatientData.getPatient((String)request.getParameter("demographicId"));
+        RxPatientData.Patient patient = RxPatientData.getPatient(request.getParameter("demographicId"));
         java.util.Date today = oscar.oscarRx.util.RxUtil.Today();
 
         //SET UP THE PRESCRIPTION
