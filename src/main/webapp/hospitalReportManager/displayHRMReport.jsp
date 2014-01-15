@@ -122,6 +122,23 @@ if(demographicLink != null){
 	  display: none;
     }
 }
+
+#confidentiality-footer{display:none;}
+
+@media print {
+    #confidentiality-footer{
+    position: fixed;
+    bottom: 0;
+    display: block;
+    }
+}
+
+@page {
+    size: letter portrait;
+    margin: 1.2in 1.2in 1.2in 1.2in;
+    @top-left { content: element(confidentiality-footer); }
+}
+
 </style>
 
 <script type="text/javascript">
@@ -315,6 +332,7 @@ function revokeSignOffHrm(reportId) {
 	
 	<% } %>
 	
+	<div id="confidentiality-footer">
 	<%
 	String confidentialityStatement = (String) request.getAttribute("confidentialityStatement");
 	if (confidentialityStatement != null && confidentialityStatement.trim().length() > 0) {
@@ -322,6 +340,8 @@ function revokeSignOffHrm(reportId) {
 	<hr />
 	<em><strong>Provider Confidentiality Statement</strong><br /><%=confidentialityStatement %></em>
 	<% } %>
+   </div>
+	
 </div>
 
 <div id="infoBox">
