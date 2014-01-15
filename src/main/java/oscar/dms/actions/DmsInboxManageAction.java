@@ -765,7 +765,7 @@ public class DmsInboxManageAction extends DispatchAction {
 	}
 
 	private String getBusinessId(LabResultData d) {
-	    return d.getSegmentID() + d.getLabPatientId();
+	    return d.getSegmentID() + "_" + d.getLabPatientId();
     }
 
 	public ActionForward addNewQueue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
