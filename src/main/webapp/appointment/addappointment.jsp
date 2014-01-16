@@ -655,6 +655,9 @@ function pasteAppt(multipleSameDayGroupAppt) {
     String searchMode = request.getParameter("search_mode");
     if (searchMode == null || searchMode.isEmpty()) {
         searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");
+        if (searchMode == null || searchMode.isEmpty()) {
+        	searchMode = "search_name";
+        }
     }
 %> 
             <INPUT TYPE="hidden" NAME="search_mode" VALUE="<%=searchMode%>"> 

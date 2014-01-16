@@ -34,19 +34,32 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <script language="JavaScript">
+function encodeInput() {
+	document.titlesearch.keyword.value = document.titlesearch.keyword.value.replace(/\"/g, "");
+	document.titlesearch.keyword.value = encodeURI(document.titlesearch.keyword.value);
+}
+
+function search() {
+	encodeInput();
+	if (checkTypeIn()) document.titlesearch.submit();
+}
 function searchInactive() {
+	encodeInput();
     document.titlesearch.ptstatus.value="inactive";
     if (checkTypeIn()) document.titlesearch.submit();
 }
 
 function searchAll() {
+	encodeInput();
     document.titlesearch.ptstatus.value="";
     if (checkTypeIn()) document.titlesearch.submit();
 }
 
 function searchOutOfDomain() {
+	document.titlesearch.keyword.value = encodeURI(document.titlesearch.keyword.value);
     document.titlesearch.outofdomain.value="true";
     if (checkTypeIn()) document.titlesearch.submit();
 }
@@ -54,7 +67,7 @@ function searchOutOfDomain() {
 </script>
 
 <form method="get" name="titlesearch" action="demographiccontrol.jsp"
-	onsubmit="return checkTypeIn()">
+	onsubmit="search()">
 <div class="searchBox">
 <div class="RowTop header">
     <div class="title">
@@ -67,13 +80,11 @@ function searchOutOfDomain() {
             key="demographic.zdemographicfulltitlesearch.msgBy" />:
         </div>
 	<% String searchMode = request.getParameter("search_mode");
-         String keyWord = request.getParameter("keyword");
+		String displayMode = request.getParameter("displaymode");
+		String keyWord = null;
          if (searchMode == null || searchMode.equals("")) {
              searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");             
          }  
-         if (keyWord == null) {
-             keyWord = "";
-         }
      %>
          <select class="wideInput" name="search_mode">
             <option value="search_name" <%=searchMode.equals("search_name")?"selected":""%>>
@@ -100,7 +111,16 @@ function searchOutOfDomain() {
         <div class="label"><bean:message
             key="demographic.zdemographicfulltitlesearch.msgInput" />:
         </div>
-        <input class="wideInput" type="text" NAME="keyword" VALUE="<%=keyWord%>" SIZE="17" MAXLENGTH="100">
+        <%
+        if (displayMode != null && displayMode.equals("Search")) {
+			keyWord = request.getParameter("keyword");
+			keyWord = (keyWord == null)?"":java.net.URLDecoder.decode(keyWord, "UTF-8");
+		%>
+			<input class="wideInput" type="text" NAME="keyword" VALUE="<%=keyWord%>" SIZE="17" MAXLENGTH="100">
+		<%}
+		else {%>
+			<input class="wideInput" type="text" NAME="keyword" value="${fn:escapeXml(param.keyword)}" SIZE="17" MAXLENGTH="100">
+		<%}%>
     </li>
     <li>
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
