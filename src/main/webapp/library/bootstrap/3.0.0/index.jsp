@@ -66,6 +66,7 @@
 	<tr><td><a href="icons.jsp">icons</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:icons.jsp"'>view source</span></small> </td></tr>
 	<tr><td><a href="alert.jsp">alerts</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:alert.jsp"'>view source</span></small> </td></tr>
 	<tr><td><a href="tables.jsp">tables</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:tables.jsp"'>view source</span></small> </td></tr>
+	<tr><td><a href="data-tables.jsp">data tables</a></td> <td><small><span class="label label-info" onclick='window.location="view-source:data-tables.jsp"'>view source</span></small> </td></tr>
 	</tbody>
 	</table>
 
