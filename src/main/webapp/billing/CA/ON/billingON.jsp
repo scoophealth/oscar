@@ -224,14 +224,14 @@
 				propHist = new Properties();
 
 				//propHist.setProperty("billing_no", "" + rs.getInt("id"));
-				propHist.setProperty("visitdate", obj.getAdmission_date()); // admission date
+				propHist.setProperty("visitdate", StringUtils.trimToEmpty(obj.getAdmission_date())); // admission date
 				//propHist.setProperty("billing_date", rs.getString("billing_date")); // service date
 				//propHist.setProperty("update_date", rs.getString("timestamp")); // create date
-				propHist.setProperty("visitType", obj.getVisittype());
-				propHist.setProperty("clinic_ref_code", obj.getFacilty_num());
+				propHist.setProperty("visitType", StringUtils.trimToEmpty(obj.getVisittype()));
+				propHist.setProperty("clinic_ref_code", StringUtils.trimToEmpty(obj.getFacilty_num()));
 				vecHist.add(propHist);
 				//propHist.setProperty("service_code", serCode);
-				propHist.setProperty("diagnostic_code", iobj.getDx());
+				propHist.setProperty("diagnostic_code", StringUtils.trimToEmpty(iobj.getDx()));
 				vecHistD.add(propHist);
 				//r_doctor_ohip = rs.getString("ref_num");
 				// get the latest ref. doctor number
