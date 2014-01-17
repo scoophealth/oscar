@@ -33,11 +33,27 @@ class UnclaimedInboxQueryBuilder {
 	public String buildQuery() {
 	    String whereSubclauseForUnclamedLabs = "(provRt.provider_no = 0 OR provRt.provider_no = -1 OR provRt.provider_no IS NULL)";
 	    StringBuilder buf = new StringBuilder();
+	    // sql = "select info.priority, info.requesting_client, info.discipline, info.accessionNum, info.final_result_count" +
 	    buf.append(
-			  "(SELECT provRt.id, provRt.lab_no as document_no, hl7ti.result_status as status, provRt.lab_type as doctype, hl7ti.last_name, hl7ti.first_name, hl7ti.health_no as hin, hl7ti.sex, demo.demographic_no as module_id, hl7ti.obr_date as observationdate "
+			  "(SELECT "
+			  + "provRt.id, "
+			  + "provRt.lab_no as document_no, "
+			  + "hl7ti.result_status as status, "
+			  + "provRt.lab_type as doctype, "
+			  + "hl7ti.last_name, "
+			  + "hl7ti.first_name, "
+			  + "hl7ti.health_no as hin, "
+			  + "hl7ti.sex, "
+			  + "demo.demographic_no as module_id, "
+			  + "hl7ti.obr_date as observationdate, " // new ones
+			  + "hl7ti.priority as priority, "
+			  + "hl7ti.requesting_client as requesting_client, "
+			  + "hl7ti.discipline as discipline, "
+			  + "hl7ti.accessionNum as accessionNum, "
+			  + "hl7ti.final_result_count as final_result_count "
 			+ "FROM hl7TextInfo AS hl7ti "
 			+ "	LEFT JOIN patientLabRouting AS patRt ON hl7ti.lab_no = patRt.lab_no " 
-			+ "		JOIN providerLabRouting AS provRt ON hl7ti.lab_no = provRt.lab_no"
+			+ "		JOIN providerLabRouting AS provRt ON hl7ti.lab_no = provRt.lab_no "
 			+ "			LEFT JOIN demographic AS demo ON patRt.demographic_no = demo.demographic_no WHERE "
 			+ whereSubclauseForUnclamedLabs + " AND provRt.lab_type != 'DOC')"
 		);
@@ -45,7 +61,22 @@ class UnclaimedInboxQueryBuilder {
 	    if (mixLabsAndDocs) {
 	    	buf.append(
 			" UNION ALL "
-			+ "(SELECT provRt.id, provRt.lab_no, provRt.status, provRt.lab_type as doctype, demo.last_name, demo.first_name, demo.hin, demo.sex, demo.demographic_no as module_id, doc.observationdate"
+			+ "(SELECT "
+			+ "provRt.id, "
+			+ "provRt.lab_no, "
+			+ "provRt.status, "
+			+ "provRt.lab_type as doctype, "
+			+ "demo.last_name, "
+			+ "demo.first_name, "
+			+ "demo.hin, "
+			+ "demo.sex, "
+			+ "demo.demographic_no as module_id, "
+			+ "doc.observationdate,"
+			+ "\"\", "
+			+ "\"\", "
+			+ "\"\", "
+			+ "\"\", "
+			+ "\"\" "
 			+ " FROM providerLabRouting AS provRt "
 				+ "	JOIN ctl_document AS ctlDoc ON provRt.lab_no = ctlDoc.document_no "
 				+ "		JOIN document AS doc ON provRt.lab_no = doc.document_no "

@@ -135,7 +135,7 @@ public class InboxResultsDao {
 				patientHealthNumber, status, false, null, null, false, null);
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public ArrayList<LabResultData> populateDocumentResultsData(String providerNo, String demographicNo, String patientFirstName,
 			String patientLastName, String patientHealthNumber, String status, boolean isPaged, Integer page,
 			Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
@@ -171,22 +171,30 @@ public class InboxResultsDao {
 		int sexLoc = -1;
 		int moduleLoc = -1;
 		int obsDateLoc = -1;
-		boolean configureScalars = false;
+		
+		int priorityLoc = -1;
+		int requestingClientLoc = -1;
+		int disciplineLoc = -1;
+		int accessionNumLoc = -1;
+		int finalResultCountLoc = -1;
+		
 		try {
 
 			// Get documents by demographic
 			//if (demographicNo != null && !"".equals(demographicNo)) {
 			// Get mix from labs
+			boolean isUnclaimedQuery = false;
 			if (mixLabsAndDocs) {
 				if (demographicNo == null && "0".equals(providerNo)) {
 					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9;
+					priorityLoc = 10; requestingClientLoc = 11; disciplineLoc = 12; accessionNumLoc = 13; finalResultCountLoc = 14;
 					UnclaimedInboxQueryBuilder unclaimedQuery = new UnclaimedInboxQueryBuilder();
 					unclaimedQuery.setPage(page);
 					unclaimedQuery.setPaged(isPaged);
 					unclaimedQuery.setPageSize(pageSize);
 					unclaimedQuery.setMixLabsAndDocs(true);
 					sql = unclaimedQuery.buildQuery();
-					configureScalars = true;
+					isUnclaimedQuery = true;
 				} else if ("0".equals(demographicNo) || "0".equals(providerNo)) {
 					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9;
 					sql = " SELECT X.id, X.lab_no as document_no, X.status, X.lab_type as doctype, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate "
@@ -411,7 +419,7 @@ public class InboxResultsDao {
 			logger.debug(sql);
 
 			Query q = entityManager.createNativeQuery(sql);
-			configureScalars(q);
+			configureScalars(q, isUnclaimedQuery);
 			
 			List<Object[]> result = q.getResultList();
 			for (Object[] r : result) {
@@ -452,6 +460,10 @@ public class InboxResultsDao {
 				logger.debug("DOCUMENT " + lbData.isMatchedToPatient());
 				lbData.accessionNumber = "";
 				lbData.resultStatus = "N";
+				String statusString = getStringValue(r[statusLoc]);
+				if (statusString != null) {
+					lbData.resultStatus = statusString;
+				}
 
 				if (lbData.resultStatus.equals("A")) lbData.abn = true;
 
@@ -461,6 +473,9 @@ public class InboxResultsDao {
 				}));
 
 				String priority = "";
+				if (priorityLoc != -1) {
+					priority = getStringValue(r[priorityLoc]);
+				}
 				if (priority != null && !priority.equals("")) {
 					switch (priority.charAt(0)) {
 						case 'C':
@@ -487,9 +502,11 @@ public class InboxResultsDao {
 				}
 
 				lbData.requestingClient = "";
+				if (requestingClientLoc != -1) {
+					lbData.requestingClient = getStringValue(r[requestingClientLoc]);
+				}
 
 				lbData.reportStatus = "F";
-
 
 				// the "C" is for corrected excelleris labs
 				if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))) {
@@ -497,19 +514,31 @@ public class InboxResultsDao {
 				} else if (lbData.reportStatus != null && lbData.reportStatus.equals("X")){
 					lbData.cancelledReport = true;
 				} else{
-
 					lbData.finalRes = false;
 				}
 
-
-
-
-				lbData.discipline = getStringValue(r[docTypeLoc]);
-				if (lbData.discipline.trim().equals("")) {
-					lbData.discipline = null;
+				if (disciplineLoc == -1) {
+					lbData.discipline = getStringValue(r[docTypeLoc]);
+					if (lbData.discipline.trim().equals("")) {
+						lbData.discipline = null;
+					}
+				} else {
+					lbData.discipline = getStringValue(r[disciplineLoc]);
 				}
 
-				lbData.finalResultsCount = 0;//rs.getInt("final_result_count");
+				if (finalResultCountLoc == -1) {
+					lbData.finalResultsCount = 0;
+				} else { 
+					try {
+						lbData.finalResultsCount = Integer.parseInt(String.valueOf(r[finalResultCountLoc]));
+					} catch (Exception e ) {
+						// swallow
+					}
+				}
+				
+				if (accessionNumLoc != -1) {
+					lbData.accessionNumber = getStringValue(r[accessionNumLoc]);
+				}
 				labResults.add(lbData);
 			}
 
@@ -519,7 +548,7 @@ public class InboxResultsDao {
 		return labResults;
 	}
 
-	private void configureScalars(Query q) {
+	private void configureScalars(Query q, boolean isExtended) {
 		if (!(q instanceof QueryImpl)) {
 			throw new IllegalStateException("Invalid query type. Expected EJB Query implementation instance");
 		}
@@ -540,6 +569,15 @@ public class InboxResultsDao {
 	    sql.addScalar("sex", Hibernate.CHARACTER);
 	    sql.addScalar("module_id", Hibernate.INTEGER);
 	    sql.addScalar("observationdate", Hibernate.DATE);
+	    
+	    if (!isExtended) {
+	    	return;
+	    }
+	    
+	    for(String column : new String[] {"priority", "requesting_client", "discipline", "accessionNum", "final_result_count"}) {
+	    	sql.addScalar(column, Hibernate.STRING);
+	    }
+	    
     }
 	
 	private String getStringValue(Object value) {
