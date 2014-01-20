@@ -225,7 +225,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 	 */
 	private void addLabCategory(String header) throws DocumentException {
 		if(handler.getMsgType().equals("PATHL7")){
-			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck();}
+			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(header);}
 		
 		float[] mainTableWidths;
 		if(isUnstructuredDoc){
@@ -364,7 +364,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							if(isUnstructuredDoc){
 								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 								//if there are duplicate obxNames, display only the first 
-								if((handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)) || (obxName.equals(obrName))){
+								if((handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)) || (obxName.equalsIgnoreCase(obrName))){
 									cell.setPhrase(new Phrase("", lineFont));
 									table.addCell(cell);
 								}else {
