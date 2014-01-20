@@ -141,7 +141,7 @@
 		</span></li>
 	</nested:iterate>
 </ul>
-</div>
+<br>
 <input type="hidden" id="<c:out value="${param.cmd}"/>num"
 	value="<nested:write name="num"/>">
 <input type="hidden" id="<c:out value="${param.cmd}"/>threshold"
