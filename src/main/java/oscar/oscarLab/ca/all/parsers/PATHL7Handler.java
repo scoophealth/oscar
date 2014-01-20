@@ -39,7 +39,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -61,6 +63,9 @@ public class PATHL7Handler implements MessageHandler {
 
     Logger logger = Logger.getLogger(PATHL7Handler.class);
     ORU_R01 msg = null;
+
+	private static List<String> labDocuments = Arrays.asList("BLOODBANKT","CELLPATH","CELLPATHR","DIAG IMAGE","MICRO3T", "TRANSCRIP");
+	public static final String VIHARTF = "CELLPATHR";
 
     /** Creates a new instance of CMLHandler */
     public PATHL7Handler(){
@@ -96,13 +101,16 @@ public class PATHL7Handler implements MessageHandler {
      *  PID METHODS
      */
     public String getPatientName(){
-        return(getFirstName()+" "+getLastName());
+        return(getFirstName()+" "+getMiddleName()+" "+getLastName());
     }
 
     public String getFirstName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getGivenName().getValue()));
     }
 
+    public String getMiddleName(){
+    	return (getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getXpn3_MiddleInitialOrName().getValue()));
+    }
     public String getLastName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getFamilyName().getValue()));
     }
@@ -118,11 +126,13 @@ public class PATHL7Handler implements MessageHandler {
     public String getAge(){
         String age = "N/A";
         String dob = getDOB();
+        String service = getServiceDate(); 
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date date = formatter.parse(dob);
-            age = UtilDateUtilities.calcAge(date);
+            java.util.Date birthDate = formatter.parse(dob);
+            java.util.Date serviceDate = formatter.parse(service);
+            age = UtilDateUtilities.calcAgeAtDate(birthDate, serviceDate);
         } catch (ParseException e) {
             logger.error("Could not get age", e);
 
@@ -639,20 +649,16 @@ public class PATHL7Handler implements MessageHandler {
 
     	return "";
     }
-    
-    // Checks to see if the PATHL7 lab is an unstructured document, and sets isUnstructuredDoc to true if it is 
-    public boolean unstructuredDocCheck(){
 
-    		ArrayList <String> headers = this.getHeaders();
-    		int i=0;
-
-    		for(i=0; i<headers.size(); i++){
-    			if((headers.get(i).equals("DIAG IMAGE")) || (headers.get(i).equals("CELLPATH")) || (headers.get(i).equals("TRANSCRIP"))){
-    				//isUnstructuredDoc = true;
-    				return true;
-    			}
-    		}
-    	return false;
-    }
+	/*
+	 * Checks to see if the PATHL7 lab is an unstructured document or a VIHA RTF pathology report
+	 * labs that fall into any of these categories have certain requirements per Excelleris
+	*/
+	public boolean unstructuredDocCheck(String header){
+		return (labDocuments.contains(header));
+	}
+	public boolean vihaRtfCheck(String header){
+		return (header.equals(VIHARTF));
+	}
 
 }
