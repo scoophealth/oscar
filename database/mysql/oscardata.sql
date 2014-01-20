@@ -1339,6 +1339,7 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'NOVS', 'Need for nocturnal ventilated support', 'Need for nocturnal ventilated support', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'NtrC', 'Diet/Nutrition Counseling Given', 'Diet/Nutrition Counseling Given', 'Yes/No', '7', '2013-02-01 00:00:00'),
 ( 'NYHA', 'NYHA Functional Capacity Classification', 'NYHA Functional Capacity Classification', 'Class 1-4', '9', '2013-02-01 00:00:00'),
+( 'ORSK', 'Opioid Risk', 'NULL', 'Score 0-26', '3', '2013-12-27 13:00:00'),
 ( 'OSWP', 'Oswestry BDI Pain', 'Oswestry Back Disability Index - Pain', 'number', '5', '2013-02-01 00:00:00'),
 ( 'OSWS', 'Oswestry BDI Score', 'Oswestry Back Disability Index - Score', 'number', '5', '2013-02-01 00:00:00'),
 ( 'OTCO', 'Other Concerns', 'Other Concerns', 'Yes/No', '7', '2013-02-01 00:00:00'),
