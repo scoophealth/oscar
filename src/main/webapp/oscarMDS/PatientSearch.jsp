@@ -199,6 +199,7 @@ function checkTypeIn() {
   }
 
   String fieldname="", regularexp="like"; // exactly search is not required by users, e.g. regularexp="=";
+  boolean isNameSearchByLastNameAndFirstName = false;
   if(request.getParameter("search_mode")!=null) {
     if(request.getParameter("keyword").indexOf("*")!=-1 || request.getParameter("keyword").indexOf("%")!=-1) regularexp="like";
     if(request.getParameter("search_mode").equals("search_address")) fieldname="address";
@@ -207,9 +208,14 @@ function checkTypeIn() {
     if(request.getParameter("search_mode").equals("search_dob")) fieldname="year_of_birth "+regularexp+" ?"+" and month_of_birth "+regularexp+" ?"+" and date_of_birth ";
     if(request.getParameter("search_mode").equals("search_chart_no")) fieldname="chart_no";
     if(request.getParameter("search_mode").equals("search_name")) {
-      if(request.getParameter("keyword").indexOf(",")==-1)  fieldname="last_name";
-      else if(request.getParameter("keyword").trim().indexOf(",")==(request.getParameter("keyword").trim().length()-1)) fieldname="last_name";
-      else fieldname="last_name "+regularexp+" ?"+" and first_name ";
+      if(request.getParameter("keyword").indexOf(",")==-1) {
+	  	fieldname="last_name";
+      } else if(request.getParameter("keyword").trim().indexOf(",")==(request.getParameter("keyword").trim().length()-1)) {
+	  	fieldname="last_name";
+      } else {
+	    isNameSearchByLastNameAndFirstName = true;
+	  	fieldname="last_name "+regularexp+" ?"+" and first_name ";
+      }
     }
   }
 
@@ -224,10 +230,21 @@ function checkTypeIn() {
          rs = db.queryResults(sql, keyword.substring(0,(keyword.length()-1)));//lastname
       }
       else { //lastname,firstname         
-    		String[] param =new String[2];
+    		String[] param;
     		int index = keyword.indexOf(",");
-	  		param[0]=keyword.substring(0,index).trim()+"%";//(",");
-	  		param[1]=keyword.substring(index+1).trim()+"%";
+    		if (index != -1) {
+    		    if (isNameSearchByLastNameAndFirstName) {
+    				param = new String[2];
+	  				param[0]=keyword.substring(0,index).trim()+"%";//(",");
+	  				param[1]=keyword.substring(index+1).trim()+"%";
+    		    } else {
+    				param = new String[1];
+    				param[0]=keyword.substring(0,index).trim()+"%";//(",");
+    		    }
+    		} else {
+    			param = new String[1];
+    		    param[0]=keyword;
+    		}
     		rs = db.queryResults(sql, param);
    	}
   } else if(request.getParameter("search_mode").equals("search_dob")) {      
