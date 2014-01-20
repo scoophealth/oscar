@@ -70,6 +70,7 @@ public class BORN18MFormToXML {
 	
 	String demographicNo = null;
 	HashMap<String, YesNoUnknown.Enum> nddsQ = new HashMap<String, YesNoUnknown.Enum>();
+	HashMap<String, Integer> preventionType = new HashMap<String, Integer>();
 	final String[] nddsQkey = {"identifypictures","usegestures","followdirections","make4consonants","point3bodyparts","say20words","holdcupdrink","eatfingerfood","helpwithdressing","walkupstairs","walkalone","squatpickstand","pushpullwalk","stack3blocks","showaffection","pointtoshow","lookwhentalk"};
 	
 	public BORN18MFormToXML(Integer demographicNo) {
@@ -426,6 +427,24 @@ public class BORN18MFormToXML {
             	if (a.get("name") != null) immunizationPreventionTypes.add(a.get("name"));
             }
         }
+        
+        //Map list of prevention types to Vaccine Name in spec
+        if (preventionType.isEmpty()) {
+        	preventionType.put("Rot", 1);
+        	preventionType.put("DTaP-IPV-Hib", 2);
+        	preventionType.put("Pneu-C", 3);
+        	preventionType.put("MenC-C", 4);
+        	preventionType.put("Men-C-ACWY", 5);
+        	preventionType.put("HepB", 6);
+        	preventionType.put("MMR", 7);
+        	preventionType.put("MMRV", 7);
+        	preventionType.put("VZ", 8);
+        	preventionType.put("DTaP-IPV", 9);
+        	preventionType.put("HPV", 10);
+        	preventionType.put("HPV Vaccine", 10);
+        	preventionType.put("dTap", 11);
+        	preventionType.put("Flu", 12);
+        }
 		
 		List<Prevention> preventions = preventionDao.findByDemographicId(Integer.valueOf(demographicNo));
 		for (Prevention prevention : preventions) {
@@ -433,6 +452,13 @@ public class BORN18MFormToXML {
 			
 			IMMUNIZATION imm = rourke.addNewIMMUNIZATION();
 			imm.setDateGiven(dateToCal(prevention.getPreventionDate()));
+		
+			if (preventionType.get(prevention.getPreventionType())!=null) {
+				imm.setVaccineName(preventionType.get(prevention.getPreventionType()));
+			} else {
+				imm.setVaccineName(13);
+				imm.setVaccineNameOther(prevention.getPreventionType());
+			}
 			
 			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(prevention.getId());
 			for (PreventionExt preventionExt : preventionExts) {
@@ -442,22 +468,7 @@ public class BORN18MFormToXML {
 				if (StringUtils.empty(val)) continue;
 				
 				if (key.equals("name")) {
-					if (val.equalsIgnoreCase("Rotavirus")) imm.setVaccineName(1);
-					else if (val.equalsIgnoreCase("DTaP/IPV/Hib")) imm.setVaccineName(2);
-					else if (val.equalsIgnoreCase("Pneu-Conj")) imm.setVaccineName(3);
-					else if (val.equalsIgnoreCase("Men-C-C")) imm.setVaccineName(4);
-					else if (val.equalsIgnoreCase("Men-C-ACWY")) imm.setVaccineName(5);
-					else if (val.equalsIgnoreCase("Hepatitis B")) imm.setVaccineName(6);
-					else if (val.equalsIgnoreCase("MMR/MMRV")) imm.setVaccineName(7);
-					else if (val.equalsIgnoreCase("Varicella")) imm.setVaccineName(8);
-					else if (val.equalsIgnoreCase("DTaP/IPV")) imm.setVaccineName(9);
-					else if (val.equalsIgnoreCase("HPV")) imm.setVaccineName(10);
-					else if (val.equalsIgnoreCase("dTap")) imm.setVaccineName(11);
-					else if (val.equalsIgnoreCase("Influenza")) imm.setVaccineName(12);
-					else {
-						imm.setVaccineName(13);
-						imm.setVaccineNameOther(val);
-					}
+					if (imm.getVaccineNameOther()==null) imm.setVaccineNameOther(val);
 				}
 				else if (key.equals("lot")) imm.setLotNumber(val);
 				else if (key.equals("comments")) imm.setComments(val);
@@ -523,7 +534,6 @@ public class BORN18MFormToXML {
 	}
 	
 	private BigDecimal stringToBigDecimal(String n) {
-		Long nL = Long.valueOf(n);
-		return BigDecimal.valueOf(nL);
+		return (new BigDecimal(n));
 	}
 }
