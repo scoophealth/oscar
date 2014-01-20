@@ -1327,17 +1327,18 @@ function updateFaxButton() {
 						<tr>						
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
 							</td>
-							<td align="right" class="tite1">
+                            <td align="right" class="tite3"><img alt="calendar" id="referalDate_cal" src="../../images/cal.gif"> 
 							<%
-								if (request.getAttribute("id") != null)
-										{
-							%> <html:text styleClass="righty" property="referalDate" /> <%
- 	}
- 			else
- 			{
- %> <html:text styleClass="righty" property="referalDate" value="<%=formattedDate%>" /> <%
- 	}
- %>
+							if (request.getAttribute("id") != null)	{
+							%> 
+							<html:text styleId="referalDate" property="referalDate" readonly="true" ondblclick="this.value='';"/>
+							 <%
+ 							} else {
+ 							%> 
+ 							<html:text styleId="referalDate" property="referalDate" readonly="true" ondblclick="this.value='';" value="<%=formattedDate%>"/>
+ 							<%
+ 							}
+	 						%>
 							</td>
 						</tr>
 						<tr>
@@ -2062,7 +2063,10 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 <script type="text/javascript" language="javascript">
 
 Calendar.setup( { inputField : "followUpDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "followUpDate_cal", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "referalDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "referalDate_cal", singleClick : true, step : 1 } );
 </script>
+</script>
+
 </html:html>
 
 <%!protected String listNotes(CaseManagementManager cmgmtMgr, String code, String providerNo, String demoNo)
