@@ -8,8 +8,7 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.*,oscar.OscarProperties ,oscar.oscarReport.reportByTemplate.*,org.oscarehr.hospitalReportManager.*,org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
@@ -68,15 +67,26 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Clinic</title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
+	<title>HRM Preferences</title>
+	<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+	<link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+	
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.8.18.custom.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script>   
 
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/prototype.js"></script>
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/Oscar.js"></script>
+	<script type="text/javascript" language="JavaScript" src="../share/javascript/prototype.js"></script>
+	<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <script type="text/JavaScript">
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
@@ -98,143 +108,46 @@ function updateLink(filePath,keytype){
 	}
 }
 </script>
-<style type="text/css">
-table.outline {
-	margin-top: 50px;
-	border-bottom: 1pt solid #888888;
-	border-left: 1pt solid #888888;
-	border-top: 1pt solid #888888;
-	border-right: 1pt solid #888888;
-}
-
-table.grid {
-	border-bottom: 1pt solid #888888;
-	border-left: 1pt solid #888888;
-	border-top: 1pt solid #888888;
-	border-right: 1pt solid #888888;
-}
-
-td.gridTitles {
-	border-bottom: 2pt solid #888888;
-	font-weight: bold;
-	text-align: center;
-}
-
-td.gridTitlesWOBottom {
-	font-weight: bold;
-	text-align: center;
-}
-
-td.middleGrid {
-	border-left: 1pt solid #888888;
-	border-right: 1pt solid #888888;
-	text-align: center;
-}
-
-label {
-	float: left;
-	width: 120px;
-	font-weight: bold;
-}
-
-label.checkbox {
-	float: left;
-	width: 116px;
-	font-weight: bold;
-}
-
-label.fields {
-	float: left;
-	width: 80px;
-	font-weight: bold;
-}
-
-span.labelLook {
-	font-weight: bold;
-}
-
-input,textarea,select { //
-	margin-bottom: 5px;
-}
-
-textarea {
-	width: 450px;
-	height: 100px;
-}
-
-.boxes {
-	width: 1em;
-}
-
-#submitbutton {
-	margin-left: 120px;
-	margin-top: 5px;
-	width: 90px;
-}
-
-br {
-	clear: left;
-}
-</style>
 </head>
-
-<body vlink="#0000FF" class="BodyStyle">
-
-<table class="MainTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">admin</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar" style="width: 100%;">
-			<tr>
-				<td>HRM Preferences</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top" width="160px;">
-		&nbsp;</td>
-		<td class="MainTableRightColumn" valign="top">
-		<form action="<%=request.getContextPath()%>/hospitalReportManager/HRMPreferences.do" method="post">
-			
-			<table>
-			<tr>
-				<td>User Name:</td>
-				<td colspan=2><input readonly="readonly" type="text" name="userName" value="<%=userName%>" ></td>
-				
-			</tr>
-				<td>SFTP Download folder:</td>
-				<td colspan=2><input type="text" name="location" value="<%=location%>"></td>
-			<tr>
-			
-			</tr>
-			<tr>
-				<td>Private Key</td>
-				<td><a href="../<%=privateKey%>" id="pkeyLink">View Private Key</a></td>
-				<td><input type="button" name="privateKey" value="Upload Private Key" onClick='popupPage(600,900,&quot;<html:rewrite page="/hospitalReportManager/hrmKeyUploader.jsp"/>&quot;);return false;'></td>
-			</tr>
-			<tr>
-				<td>Decryption Key</td>
-				<td><a href="../<%=decryptionKey%>" id="dkeyLink">View Decryption Key</a></td>
-				<td><input type="button" name="decryptionKey" value="Upload Decryption Key" onClick='popupPage(600,900,&quot;<html:rewrite page="/hospitalReportManager/hrmKeyUploader.jsp"/>&quot;);return false;' ></td>
-			</tr>
-			<tr>
-				<td>Auto Polling Interval</td>
-				<td colspan=2><input type="text" name="interval" value="<%=interval %>"></td>
-			</tr>
-			<tr>
-				<td> 
-					<input type="submit" value="submit" />
-				</td>
-			</tr>
-			</table>
-		</form>
-		</td>
-		</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-
-		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
-	</tr>
-</table>
+<body>
+<h4>HRM Preferences</h4>
+<form action="<%=request.getContextPath()%>/hospitalReportManager/HRMPreferences.do" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">User Name:</label>
+			<div class="controls">
+				<input readonly="readonly" type="text" name="userName" value="<%=userName%>" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">SFTP Download Folder:</label>
+			<div class="controls">
+				<input type="text" name="location" value="<%=location%>"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Private Key:</label>
+			<div class="controls">
+				<a href="../<%=privateKey%>" id="pkeyLink">View Private Key</a>
+				<input type="button" class="btn" name="privateKey" value="Upload Private Key" onClick='popupPage(600,900,&quot;<html:rewrite page="/hospitalReportManager/hrmKeyUploader.jsp"/>&quot;);return false;' />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Decryption Key:</label>
+			<div class="controls">
+				<a href="../<%=decryptionKey%>" id="dkeyLink">View Decryption Key</a>
+				<input type="button" class="btn" name="decryptionKey" value="Upload Decryption Key" onClick='popupPage(600,900,&quot;<html:rewrite page="/hospitalReportManager/hrmKeyUploader.jsp"/>&quot;);return false;' />	
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Auto Polling Interval:</label>
+			<div class="controls">
+				<input type="text" name="interval" value="<%=interval %>" />
+			</div>
+		</div>
+		<div class="control-group">
+			<input type="submit" class="btn btn-primary" value="Submit" />
+		</div>
+	</table>
+</form>
 </html:html>
