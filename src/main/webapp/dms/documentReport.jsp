@@ -313,7 +313,9 @@ function popup1(height, width, url, windowName){
 		<table class="TopStatusBar">
 			<tr>
 				<td><bean:message key="dms.documentReport.msgDocuments"/> &nbsp;
-				<oscar:nameage demographicNo="<%=moduleid%>"/> &nbsp; <oscar:phrverification demographicNo="<%=moduleid%>"><bean:message key="phr.verification.link"/></oscar:phrverification>
+				<% if(module.equals("demographic")) { %>
+					<oscar:nameage demographicNo="<%=moduleid%>"/> &nbsp; <oscar:phrverification demographicNo="<%=moduleid%>"><bean:message key="phr.verification.link"/></oscar:phrverification>
+				<%} %>
 				</td>
 				<td>&nbsp;</td>
 				<td style="text-align: right;">
