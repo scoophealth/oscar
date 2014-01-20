@@ -175,6 +175,11 @@ public class EctValidation{
          
          boolean validation = true;    
          
+         if(inputValue.split("/").length >1 && regExp.isEmpty()){
+        	 // this field is not blood pressure, no need to validate
+        	 return validation;
+         }
+         
          if(matchRegExp(regExp, inputValue)){
             MiscUtils.getLogger().debug("/");
             int slashIndex = inputValue.indexOf("/");
@@ -184,18 +189,23 @@ public class EctValidation{
                 String diastolic = inputValue.substring(slashIndex+1);
                 MiscUtils.getLogger().debug("The systolic value is " + systolic);
                 MiscUtils.getLogger().debug("The diastolic value is " + diastolic);
-                
+
+                int iSystolic = 0;
+                int iDiastolic = 0;
+
                 try {
-                    int iSystolic = Integer.parseInt(systolic);
-                    int iDiastolic = Integer.parseInt(diastolic);
-                    if( iDiastolic > iSystolic){                    
-                        validation =false;
-                    }
-                    else if (iDiastolic > 300 || iSystolic > 300){
-                        validation =false;
-                    }
-                } catch (NumberFormatException ex) {
-                	validation =false;
+                	iSystolic = Integer.parseInt(systolic);
+                	iDiastolic = Integer.parseInt(diastolic);
+                }
+                catch (NumberFormatException e) {
+                	MiscUtils.getLogger().error("Wrong input for blood pressure");
+                	validation =  false;
+                }
+                if( iDiastolic > iSystolic){                    
+                    validation = false;
+                }
+                else if (iDiastolic > 300 || iSystolic > 300){
+                    validation = false;
                 }
             }
         }
