@@ -1355,29 +1355,32 @@ function changeLt(drugId){
             $(elementId).innerHTML='more';
     }
 
-    function changeDrugName(randomId,origDrugName){
-            if (confirm('If you change the drug name and write your own drug, you will lose the following functionality:'
-            + '\n  *  Known Dosage Forms / Routes'
-            + '\n  *  Drug Allergy Information'
-            + '\n  *  Drug-Drug Interaction Information'
-            + '\n  *  Drug Information'
-            + '\n\nAre you sure you wish to use this feature?')==true) {
+	function changeDrugName(randomId,origDrugName){
+		if ($("drugName_"+randomId).value==origDrugName) return;
+		
+		if (confirm('If you change the drug name and write your own drug, you will lose the following functionality:'
+			+ '\n  *  Known Dosage Forms / Routes'
+			+ '\n  *  Drug Allergy Information'
+			+ '\n  *  Drug-Drug Interaction Information'
+			+ '\n  *  Drug Information'
+			+ '\n\nAre you sure you wish to use this feature?')==true) {
 
-            //call another function to bring up prescribe.jsp
-            var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=normalDrugSetCustom";
-            var customDrugName=$("drugName_"+randomId).getValue();
-            var data="randomId="+randomId+"&customDrugName="+customDrugName;
-            new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,insertion: Insertion.Bottom,onSuccess:function(transport){
-                    $('set_'+randomId).remove();
+			//call another function to bring up prescribe.jsp
+			var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=normalDrugSetCustom";
+			var customDrugName=$("drugName_"+randomId).getValue();
+			var data="randomId="+randomId+"&customDrugName="+customDrugName;
+			new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,insertion: Insertion.Bottom,onSuccess:function(transport){
+				$('set_'+randomId).remove();
 
-                }});
-            <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
-                      callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
-             </oscar:oscarPropertiesCheck>
-        }else{
-            $("drugName_"+randomId).value=origDrugName;
-        }
-    }
+			}});
+			<oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
+				callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
+			</oscar:oscarPropertiesCheck>
+		}else{
+			$("drugName_"+randomId).value=origDrugName;
+		}
+	}
+
     function resetStash(){
                var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearStash";
                var data = "rand=" + Math.floor(Math.random()*10001);
