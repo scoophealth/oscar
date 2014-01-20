@@ -1672,6 +1672,8 @@ insert into `secRole` (role_name, description) values('property staff','property
 insert into `secRole` (role_name, description) values('Support Counsellor','Support Counsellor');
 insert into `secRole` (role_name, description) values('Counselling Intern', 'Counselling Intern');
 insert into `secRole` (role_name, description) values('Field Note Admin', 'Field Note Admin');
+INSERT INTO `secRole` (`role_name`, `description` ) VALUES ('student', 'Student (OSCAR Learning)');
+INSERT INTO `secRole` (`role_name`, `description` ) VALUES ('moderator', 'Moderator (OSCAR Learning)');
 
 
 insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'doctor', 'R0000001',1);
