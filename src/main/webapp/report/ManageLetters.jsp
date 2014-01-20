@@ -38,7 +38,11 @@
   String demographic_no = request.getParameter("demographic_no"); 
   
   String[] demos = request.getParameterValues("demo");
-  
+	if (demos==null) {
+		demos = new String[0];
+	} else {
+		request.getSession().setAttribute("ManageLettersDemos", demos);
+	}
 %>
 
 <html:html locale="true">

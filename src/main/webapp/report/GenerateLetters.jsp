@@ -38,7 +38,17 @@
   String demographic_no = request.getParameter("demographic_no"); 
   
   String[] demos = request.getParameterValues("demo");
+  if (demos==null) {
+	  demos = (String[]) request.getSession().getAttribute("ManageLettersDemos");
+	  if (demos==null) demos = new String[0];
+	  else request.getSession().removeAttribute("ManageLettersDemos");
+  }
   
+  String demoList = null;
+  for (String demo : demos) {
+	  if (demoList==null) demoList = "demo="+demo;
+	  else demoList += "&demo="+demo;
+  }
 %>
 
 <html:html locale="true">
@@ -164,7 +174,7 @@ function disableifchecked(ele,nextDate){
 		<table class="TopStatusBar">
 			<tr>
 				<td>Choose Letter</td>
-				<td>&nbsp; <a href="ManageLetters.jsp">manage</a></td>
+				<td>&nbsp; <a href="ManageLetters.jsp?<%=demoList==null?"":demoList%>">manage</a></td>
 				<td style="text-align: right"><oscar:help keywords="letter generate report" key="app.top1"/> | <a
 					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
 					key="global.about" /></a> | <a
