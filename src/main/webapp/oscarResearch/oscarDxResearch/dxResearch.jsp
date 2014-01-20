@@ -146,8 +146,20 @@ function showdatebox(x) {
     document.getElementById("startdate1st"+x).hide();
 }
 
+function isValidDate(subject){
+	if (subject.match(/^(?:(19|20)[0-9]{2})[\- \/.](0[1-9]|1[012])[\- \/.](0[1-9]|[12][0-9]|3[01])$/)){
+		return true;
+	} else {
+		return false;
+	}
+} 
+
 function update_date(did, demoNo, provNo) {
     var startdate = document.getElementById("startdatenew"+did).value;
+    if(!isValidDate(startdate)) {
+    	alert("Please, specify date in right format: YYYY-MM-DD");
+    	return;
+    }
     window.location.href = "dxResearchUpdate.do?status=A&startdate="+startdate+"&did="+did+"&demographicNo="+demoNo+"&providerNo="+provNo;
 }
 
