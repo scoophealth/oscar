@@ -200,13 +200,13 @@ public class EctMeasurementsAction extends Action {
                     }
                     if(!ectValidation.isValidBloodPressure(regExp, inputValue)){
                         errors.add(inputValueName,
-                        new ActionMessage("error.bloodPressure"));
+                        new ActionMessage("errors.invalid", inputTypeDisplay));
                         saveErrors(request, errors);
                         valid = false;
                     }
                     if(!ectValidation.isDate(dateObserved)&&inputValue.compareTo("")!=0){
                         errors.add(dateName,
-                        new ActionMessage("errors.invalidDate", inputTypeDisplay));
+                        new ActionMessage("errors.date", inputTypeDisplay));
                         saveErrors(request, errors);
                         valid = false;
                     }
