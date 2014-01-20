@@ -32,49 +32,33 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <html>
     <head>
+		<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+		<link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+		<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+		
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.8.18.custom.min.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script>   
+		<script type="text/javascript" language="JavaScript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
-        <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
-        <script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"></script>
-        <script type="text/javascript" src="../share/yui/js/connection-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/animation-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/datasource-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"></script>
-        <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
-        <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
-        <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
-        <style type="text/css">
-            body.mainbody {
-                padding: 0px;
-                margin: 3px;
-                font-size: 13px;
-            }
-
-
-
-        </style>
     </head>
     <body class="mainbody" onload="getUpdateTime();" >
-         <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">
-            <tr class="topbar">
-                <td class="MainTableTopRowLeftColumn" width="60px">Drugref</td>
-                <td class="MainTableTopRowRightColumn">
-                    <table class="TopStatusBar">
-                        <tr>
-                            <td>Update Drugref</td>
-                            <td style="text-align: right;"  >
-                                    <oscar:help keywords="1.6.11" key="app.top1"/> |
-                                    <a href="javascript: popupStart(300, 400, 'About.jsp')">About</a> |
-                                    <a href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-         </table>
-        <table  cellspacing="0" id="queue_provider_table" style="margin: 0px;" >
-            <tr><td colspan="2" ><a id="dbInfo"></a></td></tr>
-            <tr><td><a id="updatedb" style="display:none" onclick="updateDB();" href="javascript:void(0);" >Update Drugref Database</a></td><td><a id="updateResult"></a></td></tr>
-         </table>
+    	<h4>Update Drugref</h4>
+    	<div class="well">
+        	<p>Drugref<span class="pull-right"><oscar:help keywords="1.6.11" key="app.top1"/> |
+           		<a href="javascript: popupStart(300, 400, 'About.jsp')">About</a> |
+           		<a href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
+           	</span></p>
+			<p><a id="dbInfo" href="javascript:void(0);"></a></p>
+           	<p><a id="updatedb" style="display:none" onclick="updateDB();" href="javascript:void(0);" >Update Drugref Database</a></td><td><a id="updateResult"></a></td>
+         </div>
     </body>
     <script type="text/javascript">
         function getUpdateTime(){

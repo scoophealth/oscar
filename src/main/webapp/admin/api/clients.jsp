@@ -43,139 +43,54 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Manage REST Clients (OAuth)</title>
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/share/css/OscarStandardLayout.css">
-
-<script type="text/javascript" language="JavaScript" src="<%= request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" language="JavaScript" src="<%= request.getContextPath() %>/js/jquery-ui-1.8.18.custom.min.js"></script>
-<script type="text/javascript" language="JavaScript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
-
-<style type="text/css">
-table.outline {
-	margin-top: 50px;
-	border-bottom: 1pt solid #888888;
-	border-left: 1pt solid #888888;
-	border-top: 1pt solid #888888;
-	border-right: 1pt solid #888888;
-}
-
-table.grid {
-	border-bottom: 1pt solid #888888;
-	border-left: 1pt solid #888888;
-	border-top: 1pt solid #888888;
-	border-right: 1pt solid #888888;
-}
-
-td.gridTitles {
-	border-bottom: 2pt solid #888888;
-	font-weight: bold;
-	text-align: center;
-}
-
-td.gridTitlesWOBottom {
-	font-weight: bold;
-	text-align: center;
-}
-
-td.middleGrid {
-	border-left: 1pt solid #888888;
-	border-right: 1pt solid #888888;
-	text-align: center;
-}
-
-label {
-	float: left;
-	width: 120px;
-	font-weight: bold;
-}
-
-label.checkbox {
-	float: left;
-	width: 116px;
-	font-weight: bold;
-}
-
-label.fields {
-	float: left;
-	width: 80px;
-	font-weight: bold;
-}
-
-span.labelLook {
-	font-weight: bold;
-}
-
-input,textarea,select { //
-	margin-bottom: 5px;
-}
-
-textarea {
-	width: 450px;
-	height: 100px;
-}
-
-.boxes {
-	width: 1em;
-}
-
-#submitbutton {
-	margin-left: 120px;
-	margin-top: 5px;
-	width: 90px;
-}
-
-br {
-	clear: left;
-}
-</style>
+<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script>   
+<script type="text/javascript" language="JavaScript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 
 <script>
 	function addNewClient() {
-		
 		$('#new-form').dialog('open');
-		
-		
-		
-       
-	
 	}
 	
 	function listClients() {
 		 $("#clientTable tbody").find("tr").remove();
-		
 		jQuery.getJSON("clientManage.json",{method: "list"},
                 function(data,textStatus){
-
 					for(var x=0;x<data.length;x++) {
 						var id = data[x].id;
 						var name = data[x].name;
 						var key = data[x].key;
 						var secret = data[x].secret;
 						var uri = data[x].uri;
-						
 						$('#clientTable > tbody:last').append('<tr><td>'+name+'</td><td>'+key+'</td><td>'+secret+'</td><td>'+uri+'</td><td><a href="javascript:void(0);" onclick="deleteClient('+id+');"><img border="0" title="delete" src="../../images/Delete16.gif"/></a></td></tr>');
-                		
 					}
         });
 	}
 	
 	function deleteClient(id) {
-
-        jQuery.getJSON("clientManage.json",
-                {
-                        method: "delete",
-                        id: id
-                },
-                function(xml){
-                	if(xml.success)
-                		listClients();
-                	else
-                		alert(xml.error);
-                });
-	
+        jQuery.getJSON("clientManage.json", {
+	        method: "delete",
+	        id: id
+        },
+        function(xml) {
+        	if(xml.success)
+        		listClients();
+        	else
+        		alert(xml.error);
+        });
 	}
-	
-	
 	
 	$(document).ready(function(){
 		listClients();
@@ -214,96 +129,63 @@ br {
 		});
 		
 	});
-	
-	
 </script>
 </head>
 
 <body vlink="#0000FF" class="BodyStyle">
-
-<table class="MainTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">admin</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar" style="width: 100%;">
-			<tr>
-				<td>Manage Clients</td>
-			</tr>
-		</table>
-		</td>
+<h4>Manage Clients</h4>
+<table id="clientTable" name="clientTable" class="table table-bordered table-striped table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Client Key</th>
+			<th>Client Secret</th>
+			<th>URI</td>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+<input type="button" class="btn btn-primary" value="Add New" onClick="addNewClient()"/>	
+<%
+	String thisUrl = request.getRequestURL().toString();
+	String contextPath = request.getContextPath();
+	String here = thisUrl.substring(0,thisUrl.indexOf(contextPath) + contextPath.length());
+%>
+<hr />
+<table class="table table-bordered table-striped table-hover table-condensed">
+	<tr>
+		<td>Temporary Credential Request:</td>
+		<td><%=here%>/ws/test/initiate</td>
 	</tr>
 	<tr>
-		<td class="MainTableLeftColumn" valign="top" width="160px;">
-		&nbsp;</td>
-		<td class="MainTableRightColumn" valign="top">
-			<h3>Clients</h3>
-			<br/>
-			<table width="80%" id="clientTable" name="clientTable">
-				<thead>
-					<tr>
-						<td><b>Name</b></td>
-						<td><b>Client Key</B></td>
-						<td><b>Client Secret</B></td>
-						<td><b>URI</B></td>
-						<td><b>Actions</b></td>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-					
-			<br/><br/>
-			<input type="button" value="Add New" onClick="addNewClient()"/>	
-			
-			<br/><br/>
-			
-			<%
-				String thisUrl = request.getRequestURL().toString();
-				String contextPath = request.getContextPath();
-				
-				String here = thisUrl.substring(0,thisUrl.indexOf(contextPath) + contextPath.length());
-			%>
-			
-			<table  border="1">
-				<tr>
-					<td>Temporary Credential Request:</td>
-					<td><%=here%>/ws/test/initiate</td>
-				</tr>
-				<tr>
-					<td>Resource Owner Authorization URI:</td>
-					<td><%=here%>/ws/authorize</td>
-				</tr>
-				<tr>
-					<td>Token Request URI:</td>
-					<td><%=here%>/ws/token</td>
-				</tr>
-			</table>
-		</td>
+		<td>Resource Owner Authorization URI:</td>
+		<td><%=here%>/ws/authorize</td>
 	</tr>
 	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-
-		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+		<td>Token Request URI:</td>
+		<td><%=here%>/ws/token</td>
 	</tr>
 </table>
 
-
-
 <div id="new-form" title="Create Client">
 	<p class="validateTips"></p>
-
 	<form>
-	<fieldset>
-		<input type="text" name="clientName" id="clientName" class="text ui-widget-content ui-corner-all" />
-		<label for="clientName">Name:</label>
-		<br/>
-		<input type="text" name="clientURI" id="clientURI" class="text ui-widget-content ui-corner-all" />
-		<label for="clientURI">URI:</label>		
-	</fieldset>
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="clientName">Name:</label>
+				<div class="controls">
+					<input type="text" name="clientName" id="clientName" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="clientURI">URI:</label>
+				<div class="controls">
+					<input type="text" name="clientURI" id="clientURI" />
+				</div>
+			</div>
+		</fieldset>
 	</form>
 </div>
-
 </body>
-
-
 </html:html>
