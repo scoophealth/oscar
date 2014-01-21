@@ -38,7 +38,9 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
+
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.exports.e2e.E2EPatientExport;
 import org.oscarehr.exports.e2e.E2EVelocityTemplate;
 import org.oscarehr.util.DbConnectionFilter;
@@ -64,6 +66,7 @@ public class E2ESchedulerJob extends TimerTask {
 	@Override
 	public void run() {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+		OscarLogDao oscarLogDao = SpringUtils.getBean(OscarLogDao.class);
 		StringBuilder sb = new StringBuilder(255);
 		int success = 0;
 		int failure = 0;
@@ -80,7 +83,7 @@ public class E2ESchedulerJob extends TimerTask {
 
 				Calendar cal = GregorianCalendar.getInstance();
 				cal.add(Calendar.DAY_OF_YEAR, -diffDays);
-				ids = DemographicDao.getDemographicIdsOpenedSinceTime(cal.getTime());
+				ids = oscarLogDao.getDemographicIdsOpenedSinceTime(cal.getTime());
 			} else {
 				ids = demographicDao.getActiveDemographicIds();
 			}

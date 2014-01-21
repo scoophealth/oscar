@@ -56,6 +56,7 @@ CDA Header
 	<title>PITO EMR-2-EMR Record of $demographic.firstName $demographic.lastName</title>
 	<effectiveTime value="$dateTool.get('yyyyMMddHHmm')"/>
 	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+	<languageCode code="en-CA"/>
 	<!--
 	********************************************************
 	Record Target

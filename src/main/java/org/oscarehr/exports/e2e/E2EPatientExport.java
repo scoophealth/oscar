@@ -104,7 +104,7 @@ public class E2EPatientExport extends PatientExport {
 			try {
 				this.allergies = allergyDao.findAllergies(demographicNo);
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Allergies");
+				log.error("loadPatient - Failed to load Allergies", e);
 				this.allergies = null;
 			}
 		}
@@ -117,7 +117,7 @@ public class E2EPatientExport extends PatientExport {
 				Collections.reverse(drugs);
 				Collections.sort(drugs, new sortByDin());
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Medications");
+				log.error("loadPatient - Failed to load Medications", e);
 				this.drugs = null;
 			}
 		}
@@ -126,7 +126,7 @@ public class E2EPatientExport extends PatientExport {
 			try {
 				this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Immunizations");
+				log.error("loadPatient - Failed to load Immunizations", e);
 				this.preventions = null;
 			}
 		}
@@ -141,7 +141,7 @@ public class E2EPatientExport extends PatientExport {
 					}
 				}
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Problems");
+				log.error("loadPatient - Failed to load Problems", e);
 				this.problems = null;
 			}
 		}
@@ -150,7 +150,7 @@ public class E2EPatientExport extends PatientExport {
 			try {
 				this.labs = assembleLabs();
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Labs");
+				log.error("loadPatient - Failed to load Labs", e);
 				this.labs = null;
 			}
 		}
@@ -159,7 +159,7 @@ public class E2EPatientExport extends PatientExport {
 			try {
 				this.measurements = parseMeasurements();
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Measurements");
+				log.error("loadPatient - Failed to load Measurements", e);
 				this.measurements = null;
 			}
 		}
@@ -168,7 +168,7 @@ public class E2EPatientExport extends PatientExport {
 			try {
 				this.encounters = caseManagementNoteDao.getNotesByDemographic(demographicNo.toString());
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Encounters");
+				log.error("loadPatient - Failed to load Encounters", e);
 				this.encounters = null;
 			}
 		}
@@ -278,7 +278,7 @@ public class E2EPatientExport extends PatientExport {
 				}
 				this.riskFactors = caseManagementNoteDao.getNotes(cmRiskFactorNotesLong);
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Risk Factors/Personal History");
+				log.error("loadPatient - Failed to load Risk Factors/Personal History", e);
 				this.riskFactors = null;
 			}
 		}
@@ -294,7 +294,7 @@ public class E2EPatientExport extends PatientExport {
 				}
 				this.familyHistory = caseManagementNoteDao.getNotes(cmFamilyHistoryNotesLong);
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Family History");
+				log.error("loadPatient - Failed to load Family History", e);
 				this.familyHistory = null;
 			}
 		}
@@ -310,7 +310,7 @@ public class E2EPatientExport extends PatientExport {
 				}
 				this.alerts = caseManagementNoteDao.getNotes(cmAlertsNotesLong);
 			} catch (Exception e) {
-				log.error("loadPatient - Failed to load Alerts");
+				log.error("loadPatient - Failed to load Alerts", e);
 				this.alerts = null;
 			}
 		}
