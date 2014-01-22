@@ -25,8 +25,6 @@
 
 package oscar.login;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Properties;
 
@@ -72,7 +70,7 @@ public final class LoginCheckLoginBean {
 		setIp(ip1);
 	}
 
-	public String[] authenticate() throws UnsupportedEncodingException, NoSuchAlgorithmException {
+	public String[] authenticate() {
 		security = getUserID();
 
 		// the user is not in security table

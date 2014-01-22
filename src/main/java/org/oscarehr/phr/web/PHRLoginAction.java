@@ -114,7 +114,7 @@ public class PHRLoginAction extends DispatchAction
 	private void saveMyOscarPassword(HttpSession session, String myoscarPassword) {
 		try {
 	        SecretKeySpec key=MyOscarUtils.getDeterministicallyMangledPasswordSecretKeyFromSession(session);
-	        byte[] encryptedMyOscarPassword=EncryptionUtils.encryptAes(key, myoscarPassword);
+	        byte[] encryptedMyOscarPassword=EncryptionUtils.encrypt(key, myoscarPassword.getBytes("UTF-8"));
 
 	        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	        

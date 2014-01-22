@@ -58,8 +58,6 @@ public class OscarUsernameTokenValidator extends UsernameTokenValidator {
 			if (WsUtils.checkAuthenticationAndSetLoggedInInfo(security, usernameToken.getPassword())) return;
 		} catch (NumberFormatException e) {
 			logger.error("userIdString is not a number? usernameToken.getName()='" + usernameToken.getName() + '\'');
-		} catch (Exception e) {
-			logger.error("Unexpected error", e);
 		}
 
 		throw new WSSecurityException(WSSecurityException.FAILED_AUTHENTICATION);

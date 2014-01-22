@@ -27,7 +27,6 @@ package oscar.login;
 
 import java.io.IOException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -94,7 +93,7 @@ public final class LoginAction extends DispatchAction {
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
     private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
     
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NoSuchAlgorithmException {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	boolean ajaxResponse = request.getParameter("ajaxResponse") != null?Boolean.valueOf(request.getParameter("ajaxResponse")):false;
     	
     	String ip = request.getRemoteAddr();
