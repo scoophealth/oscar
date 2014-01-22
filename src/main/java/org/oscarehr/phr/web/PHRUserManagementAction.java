@@ -66,7 +66,6 @@ import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer3;
-import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.myoscar_server.ws.Role;
 import org.oscarehr.phr.RegistrationHelper;
 import org.oscarehr.phr.dao.PHRActionDAO;
@@ -591,26 +590,24 @@ public class PHRUserManagementAction extends DispatchAction {
 		RegistrationHelper.storeSelectionDefaults(request);
 	}
 
-	/**
-	 * @deprecated 2012-09-12, the entire relationship infrastructure has changed, need to update this asap, compatability will only be retained for a short while. 
-	 */
 	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId = new Long(key.substring("enable_reverse_relation_".length()));
-		Relation relation = Relation.valueOf(request.getParameter("reverse_relation_" + otherMyOscarUserId));
-		accountWs.createRelationship(otherMyOscarUserId, newAccount.getId(), relation);
+		String relation = request.getParameter("reverse_relation_" + otherMyOscarUserId);
+
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		AccountManager.createRelationship(myOscarLoggedInInfo, otherMyOscarUserId, newAccount.getId(), false, false, relation);
 	}
 
-	/**
-	 * @deprecated 2012-09-12, the entire relationship infrastructure has changed, need to update this asap, compatability will only be retained for a short while. 
-	 */
 	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId = new Long(key.substring("enable_primary_relation_".length()));
-		Relation relation = Relation.valueOf(request.getParameter("primary_relation_" + otherMyOscarUserId));
-		accountWs.createRelationship(newAccount.getId(), otherMyOscarUserId, relation);
+		String relation = request.getParameter("primary_relation_" + otherMyOscarUserId);
+
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		AccountManager.createRelationship(myOscarLoggedInInfo, newAccount.getId(), otherMyOscarUserId, false, false, relation);
 	}
 
 	public ActionForward approveAction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -643,8 +640,7 @@ public class PHRUserManagementAction extends DispatchAction {
 			Demographic demographic = demographicDao.getDemographic(demoNo);
 			Long patientMyOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
-			AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
-			accountWs.createRelationship2(patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), true, true, "PatientPrimaryCareProvider");
+			AccountManager.createRelationship(myOscarLoggedInInfo, patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), false, false, "PatientPrimaryCareProvider");
 
 			log.debug("Patient Provider relationship added or confirmed. providerNo=" + LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo() + ", patientDemoraphicNo=" + demoNo);
 			request.setAttribute("myOscarUserName", myOscarUserName);
