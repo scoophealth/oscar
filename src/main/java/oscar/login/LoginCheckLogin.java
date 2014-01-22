@@ -25,8 +25,6 @@
 
 package oscar.login;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Properties;
@@ -102,7 +100,7 @@ public final class LoginCheckLogin {
 	}
 
 	// authenticate is used to check password
-	public String[] auth(String user_name, String password, String pin, String ip) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+	public String[] auth(String user_name, String password, String pin, String ip) {
 		lb = new LoginCheckLoginBean();
 		lb.ini(user_name, password, pin, ip);
 		return lb.authenticate();
