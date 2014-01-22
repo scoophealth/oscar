@@ -62,20 +62,16 @@ public class LoginWs extends AbstractWs {
 
 		if (securities.size() > 0) security = securities.get(0);
 
-		try {
-	        if (WsUtils.checkAuthenticationAndSetLoggedInInfo(security, password)) {
-	        	LoginResultTransfer result = new LoginResultTransfer();
-	        	result.setSecurityId(security.getSecurityNo());
+		if (WsUtils.checkAuthenticationAndSetLoggedInInfo(security, password)) {
+			LoginResultTransfer result = new LoginResultTransfer();
+			result.setSecurityId(security.getSecurityNo());
 
-	        	// we haven't sorted out the token framework so we'll just return the encrypted pw for now
-	        	// this should be replaced once we have a token framework in place
-	        	result.setSecurityTokenKey(security.getPassword());
+			// we haven't sorted out the token framework so we'll just return the encrypted pw for now
+			// this should be replaced once we have a token framework in place
+			result.setSecurityTokenKey(security.getPassword());
 
-	        	return (result);
-	        }
-        } catch (Exception e) {
-	        logger.error("Unexpected error", e);
-        }
+			return (result);
+		}
 
 		throw (new NotAuthorisedException("Invalid Username/Password"));
 	}
