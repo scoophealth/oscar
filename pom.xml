@@ -905,11 +905,6 @@
 				 <version>1.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.oscarehr</groupId>
-			<artifactId>util</artifactId>
-			<version>2013.12.11</version>
-		</dependency>
 	</dependencies>
 
 	<build>

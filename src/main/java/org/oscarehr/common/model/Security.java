@@ -24,8 +24,6 @@
 
 package org.oscarehr.common.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -203,10 +201,10 @@ public class Security extends AbstractModel<Integer> {
 	/**
 	 * @return true if inputed password equals password in the DB, false otherwise.
 	 */
-	public boolean checkPassword(String inputedPassword) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+	public boolean checkPassword(String inputedPassword) {
 		if (password == null) return (false);
 
-		byte[] sha1Bytes = EncryptionUtils.getSha("SHA-1", inputedPassword);
+		byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
 		StringBuilder sb = new StringBuilder();
 		for (byte b : sha1Bytes) {
 			sb.append(b);
