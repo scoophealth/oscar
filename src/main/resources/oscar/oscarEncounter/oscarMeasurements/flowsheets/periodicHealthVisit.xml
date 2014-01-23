@@ -223,6 +223,9 @@
 	<header display_name="Lifestyle/Habits">
 
 <item measurement_type="DIET" display_name="Diet" guideline="" graphable="no" value_name="Diet" />
+
+<item measurement_type="CAVD" display_name="Calcium and Vitamin D" guideline="" graphable="no" value_name="Calcium and Vitamin D" />
+
 <item measurement_type="EXE" display_name="Exercise" guideline="" graphable="no" value_name="Exercise" />
 
 <item measurement_type="FAMR" display_name="Family/Relationships" guideline="" graphable="no" value_name="Family/Relationships" />
@@ -265,6 +268,9 @@
 
 		<item measurement_type="SEXH" display_name="Sexual History" guideline="" graphable="no" value_name="Sexual History" />
 	
+		<item measurement_type="STIS" display_name="STI Screening" guideline="" graphable="no" value_name="STI Screening" />
+		
+		<item measurement_type="SSXC" display_name="Safe Sex Counselling" guideline="" graphable="no" value_name="Safe Sex Counselling" />
 
 		<item measurement_type="BCTR" display_name="Family Planning/contraception" guideline="below age 50" graphable="no" value_name="Birth Control">
 			<rules>
@@ -314,13 +320,6 @@
 		<item measurement_type="SBLT" display_name="Seat belts" guideline="" graphable="no" value_name="Seat belts" />
 		<item measurement_type="SDET" display_name="Smoke detector that works" guideline="" graphable="no" value_name="Smoke detector that works" />
 		
-		<item measurement_type="PWC" display_name="Parents with children" guideline="" graphable="no" value_name="Parents with children" />
- 
-		<item measurement_type="PCPR" display_name="Poison control prevention" guideline="" graphable="no" value_name="Poison control prevention" />
-		<item measurement_type="NFSW" display_name="Non-flammable sleepwear" guideline="" graphable="no" value_name="Non-flammable sleepwear" />
-		<item measurement_type="HOTW" display_name="Hot water thermostat &gt; 54deg. C" guideline="" graphable="no" value_name="Hot water thermostat &gt;54deg. C" />
-
-
 	    	<item measurement_type="FAHS" display_name="Risk Of Falling" guideline="Has Fallen or has risk factors for Falling" graphable="no" value_name="Risk of Falling">        
 			 <rules> 
 			       	<recommendation strength="hidden">
@@ -346,7 +345,7 @@
 		<item measurement_type="ECHK" display_name="Do you have your eyes regularly checked?" guideline="" graphable="no" value_name="Do you have your eyes regularly checked?" >
 			<rules>
 			       	<recommendation strength="hidden">
-					<condition type="patientAge" value="&gt;64" />
+					<condition type="patientAge" value="&lt;65" />
 			       	</recommendation>
 			
 				<recommendation strength="warning" >
@@ -483,21 +482,7 @@
 	</measurement>
 	<measurement type="SDET" typeDesc="Smoke detector that works" typeDisplayName="Smoke detector that works" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-	</measurement>
-	<measurement type="PWC" typeDesc="Parents with children" typeDisplayName="Parents with children" measuringInstrc="">
-		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-	</measurement>
-	
-	<measurement type="PCPR" typeDesc="Poison control prevention" typeDisplayName="Poison control prevention" measuringInstrc="">
-		<validationRule name="Reiew" maxValue="" minValue="" isDate="" isNumeric="" regularExp="REVIEWED|reviewed|Reviewed" maxLength="" minLength="" />
-	</measurement>
-	<measurement type="NFSW" typeDesc="Non-flammable sleepwear" typeDisplayName="Non-flammable sleepwear" measuringInstrc="">
-		<validationRule name="Reiew" maxValue="" minValue="" isDate="" isNumeric="" regularExp="REVIEWED|reviewed|Reviewed" maxLength="" minLength="" />
-	</measurement>
-	<measurement type="HOTW" typeDesc="Hot water thermostat &gt;54deg. C" typeDisplayName="Hot water thermostat &gt;54deg. C" measuringInstrc="">
-		<validationRule name="Reiew" maxValue="" minValue="" isDate="" isNumeric="" regularExp="REVIEWED|reviewed|Reviewed" maxLength="" minLength="" />
-	</measurement>
-	
+	</measurement>	
 	<measurement type="SUNP" typeDesc="Sun protection" typeDisplayName="Sun protection" measuringInstrc="">
 		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
 	</measurement>
