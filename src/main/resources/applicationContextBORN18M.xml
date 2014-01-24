@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:int-ftp="http://www.springframework.org/schema/integration/sftp"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/integration/sftp
-	http://www.springframework.org/schema/integration/sftp/spring-integration-sftp.xsd"
-       default-autowire="no">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/integration/sftp
+		http://www.springframework.org/schema/integration/sftp/spring-integration-sftp.xsd"
+	default-autowire="no">
 
-<bean id="ftpClientFactoryBORN18M"
-	class="org.springframework.integration.sftp.session.DefaultSftpSessionFactory">
+	<bean id="ftpClientFactoryBORN18M" class="org.springframework.integration.sftp.session.DefaultSftpSessionFactory">
 		<property name="host" value="${born18m_sftp_host}"/>
 		<property name="port" value="${born18m_sftp_port}"/>
 		<property name="user" value="${born18m_sftp_username}"/>
 		<property name="password" value="${born18m_sftp_password}"/>
 	</bean>
-	
-	
+
+
 	<bean id="born18mScheduledTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
 			<bean class="org.oscarehr.common.service.BORN18MSchedulerJob">
@@ -23,8 +27,8 @@
 		<property name="delay" value="480000" />
 		<property name="period" value="3600000" />		<!--  every 60 mins-->
 	</bean>
-	
-		<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
+
+	<bean id="schedulerBorn18m" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="born18mScheduledTask" />
