@@ -156,7 +156,11 @@ public class ERxScheduledSynchronizer {
                         }
 
                         // Retrieve drug information
-                        drugATCCode = (String) drugLookup.atcFromDIN(Long.toString(toTranslate.getDrugCode())).firstElement();
+                        if (toTranslate.getDrugCode()==0) {
+                        	drugATCCode = "custom drug";
+                        } else {
+                        	drugATCCode = (String) drugLookup.atcFromDIN(Long.toString(toTranslate.getDrugCode())).firstElement();
+                        }
                         
                         if (drugATCCode == null) {
                             throw new IllegalArgumentException(

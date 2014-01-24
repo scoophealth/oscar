@@ -32,7 +32,6 @@ import java.util.Date;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.oscarRx.erx.model.ERxPrescription;
 
-import oscar.oscarRx.util.RxDrugRef;
 import oscar.oscarRx.util.RxUtil;
 
 /**
@@ -256,10 +255,9 @@ public class ERxPrescriptionTranslator {
     public static Drug translateToInternal(ERxPrescription in,
             String providerId, String patientId, String drugAtcCode) {
         Drug out = new Drug();
-        SimpleDateFormat df = new SimpleDateFormat();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         StringBuilder commentBuilder = new StringBuilder();
         StringBuilder specialInstructionsBuilder = new StringBuilder();
-        RxDrugRef drugLookup = new RxDrugRef();
 
         // Prepare comment fields so we can log non-critical import failures to them
         commentBuilder.append(in.getPrescriptionToString());
@@ -272,21 +270,14 @@ public class ERxPrescriptionTranslator {
         out.setDemographicId(Integer.parseInt(patientId.trim()));
         out.setProviderNo(providerId);
         
-        out.setAtc(drugAtcCode);
-
         // Set fields that will be the same for every imported prescription
         out.setNonAuthoritative(true);
 
         // Set fields that directly correspond to each other
         out.setPastMed(in.isDCPrescription());
-        out.setGenericName(in.getProductName());
-        out.setBrandName(in.getProductName());
-        out.setCustomName(in.getProductName());
         out.setDrugForm(in.getProductForm());
         out.setRegionalIdentifier(Long.toString(in.getDrugCode()));
         out.setDosage(in.getProductStrength());
-        out.setRepeat(in.getRefills());
-        out.setDurUnit(in.getRefillsDurationTimeUnit().toString());
         specialInstructionsBuilder.append(in.getSigManual());
         out.setTakeMin(in.getSigDosage());
         out.setTakeMax(in.getSigDosage());
@@ -297,8 +288,21 @@ public class ERxPrescriptionTranslator {
         out.setRxStatus(in.getStatus());
         out.setArchivedReason(in.getCeasingReason());
         out.setNoSubs(in.isDispenseAsWritten());
-        out.setSpecial(in.getProductName());
+        out.setSpecial(in.getPrescriptionToString());
 
+        // set fields that differ for custom drugs
+        if (drugAtcCode.equals("custom drug")) {
+        	out.setAtc(null);
+            out.setGenericName(null);
+            out.setBrandName(null);
+            out.setCustomName(in.getProductName());
+        } else {
+        	out.setAtc(drugAtcCode);
+            out.setGenericName(in.getProductName());
+            out.setBrandName(in.getProductName());
+            out.setCustomName(null);
+        }
+        
         // Set more-complex fields
         if ((in.getManualPrescriptionContent() != null)
                 && !in.getManualPrescriptionContent().trim().isEmpty()) {
@@ -350,9 +354,13 @@ public class ERxPrescriptionTranslator {
         try {
             out.setEndDate(df.parse(in.getEndingDate()));
         } catch (ParseException e) {
-        	out.setEndDate(RxUtil.StringToDate("0001-01-01", "yyyy-MM-dd"));
-            commentBuilder.append("\n[import error]: Could not parse end date "
-                    + in.getEndingDate() + ". Setting it to 0001-01-01.");
+        	try {
+        		out.setEndDate(df.parse(in.getPrescriptionEstimatedEndDate()));
+        	} catch (ParseException e1) {
+            	out.setEndDate(RxUtil.StringToDate("0001-01-01", "yyyy-MM-dd"));
+                commentBuilder.append("\n[import error]: Could not parse end date "
+                        + in.getEndingDate() + ". Setting it to 0001-01-01.");
+        	}
         }
 
         /*
@@ -362,6 +370,31 @@ public class ERxPrescriptionTranslator {
          * fields common to all prescriptions, and adds information to the note
          * where the narcotic fields have unexpected values.
          */
+        if (in.getNarcoticTotalQuantity() > 0) {
+        	// Handling Narcotics
+        	
+	        if (in.getQuantity() > 0) {
+	        	out.setRepeat(new Double(StrictMath.ceil(in.getNarcoticTotalQuantity()/in.getQuantity())).intValue()-1);
+	        	out.setQuantity(Float.toString(in.getQuantity()));
+	        } else {
+	        	out.setRepeat(0);
+	        	out.setQuantity(Float.toString(in.getNarcoticTotalQuantity()));
+	        }
+	        out.setDuration(Integer.toString(in.getNarcoticInterval()));
+	        out.setDurUnit(in.getNarcoticIntervalTimeUnit().toString());
+        }
+        else {
+        	// Handling non-narcotics
+        	
+        	out.setRepeat(in.getRefills());
+        	out.setQuantity(Float.toString(in.getQuantity()));
+        	
+        	out.setDuration(Integer.toString(in.getTreatmentDuration()));
+        	out.setDurUnit(in.getTreatmentDurationTimeUnit().toString());
+        }
+
+        /* replaced by above: if (in.getNarcoticTotalQuantity() > 0)...
+         * 
         out.setQuantity(Float.toString(in.getQuantity()));
         if ((in.getNarcoticTotalQuantity() >= 0)
                 && (in.getNarcoticTotalQuantity() != in.getQuantity())) {
@@ -389,19 +422,24 @@ public class ERxPrescriptionTranslator {
                             + in.getTreatmentDurationTimeUnit().toString()
                             + "!");
         }
+        */
+        
         switch (in.getRefillsDurationTimeUnit()) {
         case DAY:
             out.setRefillDuration(in.getRefillsDuration());
             break;
         case WEEK:
             out.setRefillDuration(in.getRefillsDuration() * 7);
+            break;
         case MONTH:
             out.setRefillDuration(in.getRefillsDuration() * 30);
+            break;
         case YEAR:
             out.setRefillDuration(in.getRefillsDuration() * 365);
+            break;
+        default:
+            out.setRefillDuration(in.getRefillsDuration()); // !!
         }
-        out.setRefillDuration(in.getRefillsDuration()); // !!
-
         out.setSpecialInstruction(specialInstructionsBuilder.toString());
 
         // Set the comment field
