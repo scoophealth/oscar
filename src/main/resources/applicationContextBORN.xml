@@ -1,30 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
+	xmlns:int-ftp="http://www.springframework.org/schema/integration/sftp"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/integration/ftp
-	http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd"
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/integration/sftp
+	http://www.springframework.org/schema/integration/sftp/spring-integration-sftp.xsd"
        default-autowire="no">
-
+       
 <bean id="ftpClientFactory"
-	class="org.springframework.integration.ftp.session.DefaultFtpsSessionFactory">
-		<property name="host" value="${born_ftps_host}"/>
-		<property name="port" value="${born_ftps_port}"/>
-		<property name="username" value="${born_ftps_username}"/>
-		<property name="password" value="${born_ftps_password}"/>
-		<property name="clientMode" value="2"/>
-		<property name="fileType" value="2"/>
-		<property name="bufferSize" value="100000"/>		
- 		<property name="protocol" value="TLS"/> 		
- 		<property name="trustManager" ref="trustManager"/> 		
- 		<property name="sessionCreation" value="true"/> 		
- 		<property name="protocols" value="SSLv3,TLSv1"/> 		
- 		<property name="implicit" value="false"/>
+	class="org.springframework.integration.sftp.session.DefaultSftpSessionFactory">
+		<property name="host" value="${born_sftp_host}"/>
+		<property name="port" value="${born_sftp_port}"/>
+		<property name="user" value="${born_sftp_username}"/>
+		<property name="password" value="${born_sftp_password}"/>
 	</bean>
-	
-	<bean name="trustManager" class="org.apache.commons.net.util.TrustManagerUtils.TrustManager">
-		<constructor-arg value="false"/>
-	</bean>
+
 	
 	<bean id="bornScheduledTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
