@@ -28,7 +28,6 @@ package org.oscarehr.integration.born;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import org.apache.commons.net.ftp.FTPFile;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.integration.file.remote.session.Session;
@@ -40,9 +39,9 @@ import oscar.OscarProperties;
 public class BornFtpManager {
 
 	public static void uploadONAREnhancedDataToRepository(String path, String filename) throws Exception {
-		String remotePath = OscarProperties.getInstance().getProperty("born_ftps_remote_dir","");
+		String remotePath = OscarProperties.getInstance().getProperty("born_sftp_remote_dir","");
 		DefaultFtpsSessionFactory ftpFactory = (DefaultFtpsSessionFactory)SpringUtils.getBean("ftpClientFactory");		
-		Session<FTPFile> session = null;		
+		Session session = null;		
 		try {
 			session = ftpFactory.getSession();		
 			if(session.isOpen()) {
@@ -76,4 +75,3 @@ public class BornFtpManager {
 		return success;
 	}
 }
-
