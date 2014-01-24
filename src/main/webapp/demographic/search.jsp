@@ -70,7 +70,16 @@
           } else {
             return true;
           }
-        }        
+        } 
+        
+        function encodeInput() {
+        	document.titlesearch.keyword.value = document.titlesearch.keyword.value.replace(/\"/g, "");
+        	document.titlesearch.keyword.value = encodeURI(document.titlesearch.keyword.value);
+        }
+        
+        function search() {
+        	if (checkTypeIn()) document.titlesearch.submit();
+        }
         
         function searchInactive() {
             document.titlesearch.ptstatus.value="inactive";

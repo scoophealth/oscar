@@ -23,8 +23,10 @@
     Ontario, Canada
 
 --%>
+
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@page import="org.oscarehr.util.SessionConstants"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
@@ -493,7 +495,7 @@ function autoFillHin(){
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">
-        <input type="text" name="last_name" id="last_name" onBlur="upCaseCtrl(this)" size=30 value=<%=request.getParameter("keyword")==null?"":request.getParameter("keyword")%>>
+        <input type="text" name="last_name" id="last_name" onBlur="upCaseCtrl(this)" size=30 value="${fn:escapeXml(param.keyword)}"/>
 
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
@@ -533,7 +535,9 @@ function autoFillHin(){
         <td><select name="spoken_lang">
 <%for (String sp_lang : Util.spokenLangProperties.getLangSorted()) { %>
                 <option value="<%=sp_lang %>"><%=sp_lang %></option>
-<%} %>
+<%} 
+
+%>
             </select>
         </td>
     </tr>

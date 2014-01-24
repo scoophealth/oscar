@@ -193,7 +193,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 <table width="95%" border="0">
 	<tr>
 		<td align="left"><i><bean:message
-			key="demographic.demographicsearchresults.msgSearchKeys" /></i> : <%=request.getParameter("keyword")%></td>
+			key="demographic.demographicsearchresults.msgSearchKeys" /></i> : <%=java.net.URLDecoder.decode(request.getParameter("keyword"), "UTF-8")%></td>
 	</tr>
 </table>
     <ul bgcolor="#ffffff">
