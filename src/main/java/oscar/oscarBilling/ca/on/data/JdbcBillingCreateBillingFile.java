@@ -260,26 +260,30 @@ public class JdbcBillingCreateBillingFile {
 			Demographic demo = demographicDao.getDemographic(ch1Obj.getDemographic_no());
 			ret += "\n<tr "+(summaryView ? "style='display:none;' class='record"+providerNo+"'": "")+">"; 
 			if (simulation) {
-				ret += "<td class='" + styleClass + "'>"
-					 + ch1Obj.getProvider_ohip_no()
-					 + "</td>";				
+				ret += "<td class='" + styleClass + "'>" + ch1Obj.getProvider_ohip_no() + "</td>"				
+				+ "<td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,640,'billingONCorrection.jsp?billing_no=" 
+						+ ch1Obj.getId()	+ "');return false;\">"	+ ch1Obj.getId() + "</a></td>"
+				+ "<td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,740,'../../../demographic/demographiccontrol.jsp?demographic_no=" 
+						+ ch1Obj.getDemographic_no() + "&displaymode=edit&dboperation=search_detail');return false;\">" + ch1Obj.getDemographic_name() + "</a></td>";
 			}
-			ret += "<td class='" + styleClass + "'>" + ch1Obj.getId() + "</td>"
-					+ "<td class='" + styleClass + "'>" + ch1Obj.getDemographic_name() + "</td>"
-					+ "<td class='" + styleClass + "'>" + demo.getRosterStatus() + "</td>"
-					+ "<td class='" + styleClass + "'>" + demo.getBirthDayAsString() + "</td>"
-					+ "<td class='" + styleClass + "'>" + demo.getSex() + "</td>"
-					+ "<td class='" + styleClass + "'>"
-					+ ch1Obj.getHin() + ch1Obj.getVer()
-					+ "</td><td class='" + styleClass + "'>"
-					+ ch1Obj.getBilling_date()
-					+ "</td><td class='" + styleClass + "'>"
-					+ itemObj.getService_code()
-					+ "</td><td align='right' class='" + styleClass + "'>"
-					+ itemObj.getFee()
-					+ "</td><td align='right' class='" + styleClass + "'>"
-					+ itemObj.getDx()
-					+ "</td><td class='" + styleClass + "'> &nbsp; &nbsp;" + referral + hcFlag + m_Flag + " </td></tr>";
+			else {
+				ret += "<td class='" + styleClass + "'>" + ch1Obj.getId() + "</td>"
+					+ "<td class='" + styleClass + "'>" + ch1Obj.getDemographic_name() + "</td>";
+			}
+			ret	+= "<td class='" + styleClass + "'>" + demo.getRosterStatus() + "</td>"
+				+ "<td class='" + styleClass + "'>" + demo.getBirthDayAsString() + "</td>"
+				+ "<td class='" + styleClass + "'>" + demo.getSex() + "</td>"
+				+ "<td class='" + styleClass + "'>"
+				+ ch1Obj.getHin() + ch1Obj.getVer()
+				+ "</td><td class='" + styleClass + "'>"
+				+ ch1Obj.getBilling_date()
+				+ "</td><td class='" + styleClass + "'>"
+				+ itemObj.getService_code()
+				+ "</td><td align='right' class='" + styleClass + "'>"
+				+ itemObj.getFee()
+				+ "</td><td align='right' class='" + styleClass + "'>"
+				+ itemObj.getDx()
+				+ "</td><td class='" + styleClass + "'> &nbsp; &nbsp;" + referral + hcFlag + m_Flag + " </td></tr>";
 		} else {
 			ret = "\n<tr "+(summaryView ? "style='display:none;' class='record"+providerNo+"'": "")+">"+ "<td class='" + styleClass + "'>&nbsp;</td>" + "<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td>"
 					+ "<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td>" + "<td class='" + styleClass + "'>"
@@ -293,9 +297,16 @@ public class JdbcBillingCreateBillingFile {
 	private String buildSiteHTMLContentRecord(int invCount) {
 		String ret = null;
 		if (invCount == 0) {
-			ret = "\n<tr><td class='myIvory'>" + ch1Obj.getId()	+ "</td>"
-					+ "<td class='myIvory'>" + ch1Obj.getDemographic_name() + "</td>"
-					+ "<td class='myIvory'>"
+			ret = "\n<tr><td class='myIvory'><a href=# onclick=\"popupPage(720,640,'billingONCorrection.jsp?billing_no="
+					+ ch1Obj.getId()
+					+ "');return false;\">"
+					+ ch1Obj.getId()
+					+ "</a></td>"
+					+ "<td class='myIvory'><a href=# onclick=\"popupPage(720,740,'../../../demographic/demographiccontrol.jsp?demographic_no="
+					+ ch1Obj.getDemographic_no()
+					+ "&displaymode=edit&dboperation=search_detail');return false;\">"
+					+ ch1Obj.getDemographic_name()
+					+ "</a></td><td class='myIvory'>"
 					+ ch1Obj.getHin() + ch1Obj.getVer()
 					+ "</td><td class='myIvory'>"
 					+ ch1Obj.getBilling_date()
