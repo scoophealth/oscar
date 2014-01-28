@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ page import="java.util.List"%>
 <%@ page import="org.oscarehr.common.model.Contact"%>
 <%@page import="org.oscarehr.common.model.DemographicContact"%>
@@ -76,8 +77,17 @@ function addContact() {
 	var total = jQuery("#contact_num").val();
 	total++;
 	jQuery("#contact_num").val(total);
-	jQuery.ajax({url:'contact.jsp?id='+total,async:false, success:function(data) {
-		  jQuery("#contact_container").append(data);
+	jQuery.ajax({url:'contact.jsp?search=Search&id='+total,async:false, success:function(data) {
+	jQuery("#contact_container").append(data);
+	}});
+}
+
+function addContactExisting() {
+	var total = jQuery("#contact_num").val();
+	total++;
+	jQuery("#contact_num").val(total);
+	jQuery.ajax({url:'contact.jsp?search=&id='+total,async:false, success:function(data) {
+	jQuery("#contact_container").append(data);
 	}});
 }
 
@@ -85,22 +95,29 @@ function deleteContact(id) {
 	var contactId = jQuery("input[name='contact_"+id+".id']").val();
 	jQuery("form[name='contactForm']").append("<input type=\"hidden\" name=\"contact.delete\" value=\""+contactId+"\"/>");
 	jQuery("#contact_"+id).remove();
+}
 
+function saveContact(id) {
+	var contactId = jQuery("input[name='contact_"+id+".id']").val();
+	jQuery("form[name='contactForm']").append("<input type=\"hidden\" name=\"contact.save\" value=\""+contactId+"\"/>");
 }
 
 function addProContact() {
 	var total = jQuery("#procontact_num").val();
 	total++;
 	jQuery("#procontact_num").val(total);
-	jQuery.ajax({url:'procontact.jsp?id='+total,async:false, success:function(data) {
-		  jQuery("#procontact_container").append(data);
+	jQuery.ajax({url:'procontact.jsp?search=Search&id='+total,async:false, success:function(data) {
+		jQuery("#procontact_container").append(data);
 	}});
 }
 
-function deleteProContact(id) {
-	var contactId = jQuery("input[name='procontact_"+id+".id']").val();
-	jQuery("form[name='contactForm']").append("<input type=\"hidden\" name=\"procontact.delete\" value=\""+contactId+"\"/>");
-	jQuery("#procontact_"+id).remove();
+function addProContactExisting() {
+	var total = jQuery("#procontact_num").val();
+	total++;
+	jQuery("#procontact_num").val(total);
+	jQuery.ajax({url:'procontact.jsp?search=&id='+total,async:false, success:function(data) {
+		  jQuery("#procontact_container").append(data);
+	}});
 }
 
 function clearContactName(id) {
@@ -201,6 +218,13 @@ function setSelect(id,type,name,val) {
 	});
 }
 
+function setSelectExisting(id,type,name,val) {
+	jQuery("select[name='"+type+"_"+id+"."+name+"']").attr('disabled', 'disabled').each(function() {
+		jQuery(this).val(val);
+	});
+}
+
+
 function setInput(id,type,name,val) {
 	jQuery("input[name='"+type+"_"+id+"."+name+"']").each(function() {
 		jQuery(this).val(val);
@@ -219,6 +243,12 @@ function setTextarea(id,type,name,val) {
 	});
 }
 
+function setTextareaExisting(id,type,name,val) {
+	jQuery("textarea[name='"+type+"_"+id+"."+name+"']").attr('readonly', 'readonly').each(function() {
+		jQuery(this).val(val);
+	});
+}
+
 jQuery(document).ready(function() {
 	<%
 		@SuppressWarnings("unchecked")
@@ -226,11 +256,11 @@ jQuery(document).ready(function() {
 		if(dcs != null) {
 			for(DemographicContact dc:dcs) {
 				%>
-					addContact();
+					addContactExisting();
 					var num = jQuery("#contact_num").val();
 					setInput(num,'contact','id','<%=dc.getId()%>');
 					setSelect(num,'contact','role','<%=dc.getRole()%>');
-					setSelect(num,'contact','type','<%=dc.getType()%>');
+					setSelectExisting(num,'contact','type','<%=dc.getType()%>');
 					setInput(num,'contact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'contact','contactName','<%=dc.getContactName()%>');
 					setTextarea(num,'contact','note','<%=dc.getNote()!=null?dc.getNote():""%>');
@@ -245,11 +275,11 @@ jQuery(document).ready(function() {
 		if(pdcs != null) {
 			for(DemographicContact dc:pdcs) {
 				%>
-					addProContact();
+					addProContactExisting();
 					var num = jQuery("#procontact_num").val();
 					setInput(num,'procontact','id','<%=dc.getId()%>');
 					setSelect(num,'procontact','role','<%=dc.getRole()%>');
-					setSelect(num,'procontact','type','<%=dc.getType()%>');
+					setSelectExisting(num,'procontact','type','<%=dc.getType()%>');
 					setInput(num,'procontact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'procontact','contactName','<%=dc.getContactName()%>');
 			    <%
@@ -290,6 +320,7 @@ jQuery(document).ready(function() {
 		<form method="post" name="contactForm" id="contactForm" action="Contact.do">
 			<input type="hidden" name="method" value="saveManage"/>
 			<input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
+			<input type="hidden" name="exit"/>
 
 			<b>Personal Contacts:</b>
 			<br />
@@ -305,8 +336,7 @@ jQuery(document).ready(function() {
 			<a href="#" onclick="addProContact();">[ADD]</a>
 
 			<br/>
-
-			<input type="submit" value="Submit" />
+			<input type="submit" value="Submit"/>
 			&nbsp;&nbsp;
 			<input type="button" name="cancel" value="Cancel" onclick="window.close()" />
 
