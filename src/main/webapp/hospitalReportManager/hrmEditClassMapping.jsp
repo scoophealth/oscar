@@ -11,6 +11,8 @@
 <%@page import="java.util.*, org.oscarehr.hospitalReportManager.*, org.oscarehr.hospitalReportManager.model.HRMCategory, org.oscarehr.hospitalReportManager.dao.HRMCategoryDao, org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils" %>
 <%@page import="org.oscarehr.hospitalReportManager.dao.HRMSubClassDao" %>
+<%@page import="org.oscarehr.hospitalReportManager.model.HRMSubClass" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%
 	
 	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
@@ -20,9 +22,36 @@
 	HRMSubClassDao hrmSubClassDao = (HRMSubClassDao)SpringUtils.getBean("HRMSubClassDao");
 	HRMCategoryDao categoryDao = (HRMCategoryDao) SpringUtils.getBean("HRMCategoryDao");
 	
-	List<String> sendingFacilityIds = categoryDao.findAllSendingFacilityIds();
+	List<String> sendingFacilityIds = hrmSubClassDao.findAllSendingFacilityIds();
 	
 	List<HRMCategory> categoryList = categoryDao.findAll();
+	
+	String id = request.getParameter("id");
+	
+	String className = "";
+	String subClassName = "";
+	String subClassMnemonic = "";
+	String subClassDescription = "";
+	String sendingFacilityId = "";
+	String categoryId = "0";
+	
+	
+	if(id != null) {
+		HRMSubClass sc = hrmSubClassDao.find(Integer.parseInt(id));
+		if(sc != null) {
+			className = sc.getClassName();
+			subClassName = sc.getSubClassName();
+			subClassMnemonic = sc.getSubClassMnemonic();
+			subClassDescription = sc.getSubClassDescription();
+			sendingFacilityId = sc.getSendingFacilityId();
+			HRMCategory c = sc.getHrmCategory();
+			if(c != null) {
+				categoryId = String.valueOf(c.getId());
+			}
+			
+		}
+		
+	}
 	
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -53,21 +82,30 @@ for(HRMCategory cat:categoryList) {
 	<%
 }%>
 
-function getCategories(sendingFacilityId) {
+function getCategories(sendingFacilityId, defaultVal) {
 	var response = "";
 	
 	for(var x=0;x<categoryList.length;x++) {
-		if(categoryList[x].sendingFacilityId == sendingFacilityId)
-			response += "<option value='"+categoryList[x].id+"'>"+categoryList[x].name+"</option>";	
+		if(categoryList[x].sendingFacilityId == sendingFacilityId) {
+			if(defaultVal != undefined &&  categoryList[x].id === defaultVal) {
+				response += "<option value='"+categoryList[x].id+"' selected='selected'>"+categoryList[x].name+"</option>";	
+			} else {
+				response += "<option value='"+categoryList[x].id+"'>"+categoryList[x].name+"</option>";	
+			}
+		}
 	}
 	return response;
 }
 
 $(document).ready(function() {
+	$("#className").val('<%=className%>');
+	$("#subclass").val('<%=subClassName%>');
+	$("#mnemonic").val('<%=subClassMnemonic%>');
+	$("#description").val('<%=StringEscapeUtils.escapeJavaScript(subClassDescription)%>');
 	$("#sendingFacilityIdSelect").bind('change',function(){
-		$("#category").html(getCategories($("#sendingFacilityIdSelect").val()));
-		
+		$("#category").html(getCategories($("#sendingFacilityIdSelect").val()),null);
 	});
+	$("#category").html(getCategories('<%=sendingFacilityId%>','<%=categoryId%>'));
 });
 </script>
 
@@ -81,7 +119,7 @@ $(document).ready(function() {
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td>Add HRM Mapping</td>
+				<td>Edit HRM Mapping</td>
 				<td>&nbsp;</td>
 				<td style="text-align: right"><a
 					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
@@ -95,22 +133,28 @@ $(document).ready(function() {
 			</td>
 		<td class="MainTableRightColumn" valign="top">
 			<form method="post" action="<%=request.getContextPath() %>/hospitalReportManager/Mapping.do">
+				<input type="hidden" name="id" value="<%=id%>"/>
 				Report class:
-				<select name="class">
+				<select name="class" id="className">
 					<option value="Medical Records Report">Medical Records Report</option>
 					<option value="Diagnostic Imaging Report">Diagnostic Imaging Report</option>
 					<option value="Cardio Respiratory Report">Cardio Respiratory Report</option>
 				</select>
 				<br />
-				Sub-class: <input type="text" name="subclass" /><br />  
-				Sub-class mnemonic: <input type="text" name="mnemonic" /><br />
-				Sub-class description: <input type="text" name="description" /><br />
+				Sub-class: <input type="text" name="subclass" id ="subclass" /><br />  
+				Sub-class mnemonic: <input type="text" name="mnemonic" id="mnemonic" /><br />
+				Sub-class description: <input type="text" name="description" id="description"/><br />
 				Sending Facility ID : 
 				<select name="sendingFacilityIdSelect" id="sendingFacilityIdSelect"> 
 					<option value="0">Select Option or New</option>
 					<option value="-1">New</option>
-				<%for(String tmp:sendingFacilityIds) { %>
-					<option value="<%=tmp%>"><%=tmp %></option>
+				<%for(String tmp:sendingFacilityIds) {
+					String selected="";
+					if(tmp.equals(sendingFacilityId)) {
+						selected="selected=\"selected\"";
+					}
+				%>
+					<option value="<%=tmp%>" <%=selected %>><%=tmp %></option>
 				<%} %>
 				</select>
 				

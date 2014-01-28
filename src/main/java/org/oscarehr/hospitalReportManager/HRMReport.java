@@ -255,7 +255,6 @@ public class HRMReport {
                             Date date = dateFP(o.getObservationDateTime()).toGregorianCalendar().getTime();
                             obrContentList.add(date);
                         }
-			
 			subclassList.add(obrContentList);
 		}
 		

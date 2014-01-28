@@ -349,7 +349,7 @@ public class HRMReportParser {
 				newSubClass.setSubClassMnemonic((String) subClass.get(1));
 				newSubClass.setSubClassDescription((String) subClass.get(2));
 				newSubClass.setSubClassDateTime((Date) subClass.get(3));
-
+				newSubClass.setSendingFacilityId(report.getSendingFacilityId());
 				if (firstSubClass) {
 					newSubClass.setActive(true);
 					firstSubClass = false;

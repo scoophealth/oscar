@@ -40,8 +40,7 @@
 <!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
-			key="eform.showmyform.msgMyForm" /></td>
+		<td class="MainTableTopRowLeftColumn" width="175">HRM</td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
@@ -49,11 +48,7 @@
 				<td>&nbsp;</td>
 				<td style="text-align: right"><a
 					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
-					key="global.help" /></a> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
+					key="global.help" /></a></td>
 			</tr>
 		</table>
 		</td>
@@ -71,7 +66,8 @@
 			}%>
 			
 			<a href="<%=request.getContextPath() %>/hospitalReportManager/hrmAddClassMapping.jsp">+ Add a class mapping</a>
-				<table class="elements" width="100%">
+			
+			<table class="elements" width="100%">
 					<tr bgcolor=<%=deepColor%>>
 						
 						<th>
@@ -98,12 +94,13 @@
 					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
 						
 						<td><%=curmapping.get("id")%></td>
+						<td><%=(curmapping.get("category")!=null) ? ((HRMCategory) curmapping.get("category")).getCategoryName() : "N/A" %></td>
 						<td><%=curmapping.get("class")%></td>
 						<td align='center'><%=curmapping.get("sub_class")%></td>
 						<td><%=curmapping.get("mnemonic") %></td>
 						<td><%=curmapping.get("description") %></td>
-						<td><%=((HRMCategory) curmapping.get("category")).getCategoryName() %></td>
-						<td><a href="<%=request.getContextPath() %>/hospitalReportManager/Mapping.do?deleteMappingId=<%=curmapping.get("mappingId") %>">Delete</a></td>
+						
+						<td><a href="<%=request.getContextPath() %>/hospitalReportManager/hrmEditClassMapping.jsp?id=<%=curmapping.get("mappingId") %>">Edit</a>&nbsp;<a href="<%=request.getContextPath() %>/hospitalReportManager/Mapping.do?deleteMappingId=<%=curmapping.get("mappingId") %>">Delete</a></td>
 					</tr>
 					<%
 						} %>
