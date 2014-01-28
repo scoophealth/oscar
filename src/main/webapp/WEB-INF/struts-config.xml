@@ -2268,6 +2268,7 @@
 			<forward name="pForm" path="/demographic/addEditProfessionalContact.jsp" />
 			<forward name="cForm" path="/demographic/addEditContact.jsp" />
 			<forward name="manage" path="/demographic/ManageContacts.jsp" />
+			<forward name="windowClose" path="/demographic/close.jsp" />
 		</action>
 
 		<action path="/oscarMDS/SubmitLab" type="oscar.oscarLab.ca.all.web.SubmitLabByFormAction" parameter="method" scope="request" validate="false">
