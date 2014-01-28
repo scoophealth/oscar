@@ -23,6 +23,8 @@ public class HRMCategory extends AbstractModel<Integer> {
 	private Integer id;
 	private String categoryName;
 	private String subClassNameMnemonic;
+	private String sendingFacilityId;
+	
 
 	public HRMCategory() {
 
@@ -49,4 +51,13 @@ public class HRMCategory extends AbstractModel<Integer> {
 		this.subClassNameMnemonic = subClassNameMnemonic;
 	}
 
+	public String getSendingFacilityId() {
+		return sendingFacilityId;
+	}
+
+	public void setSendingFacilityId(String sendingFacilityId) {
+		this.sendingFacilityId = sendingFacilityId;
+	}
+
+	
 }

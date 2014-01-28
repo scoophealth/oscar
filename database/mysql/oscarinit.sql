@@ -8797,6 +8797,7 @@ CREATE TABLE `HRMCategory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `categoryName` varchar(255) NOT NULL,
   subClassNameMnemonic varchar(255),
+  `sendingFacilityId` varchar(50),
   PRIMARY KEY (`id`)
 );
 
