@@ -168,7 +168,6 @@ maybe use jquery/ajax to post this data instead of submitting a form to send ALL
 <meta name="viewport" content="width=device-width, user-scalable=false;">
 
 <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
 
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->

@@ -47,6 +47,8 @@
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
+    
+    session.setAttribute("flowsheet", "flowsheets");
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
@@ -443,7 +445,7 @@ div.recommendations li{
                     <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
                     <span class="DoNotPrint">
                     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
-                    <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a>
+                    <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>">Edit</a>
                     &nbsp;
                     </security:oscarSec>
                     <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=lastOnly">Last Only</a>

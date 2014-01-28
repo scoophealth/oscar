@@ -44,13 +44,14 @@
 <%
     long startTimeToGetP = System.currentTimeMillis();
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-
-
+    
+    String ht = (String)session.getAttribute("flowsheet");
+    
     String temp = "";
-    if (request.getParameter("flowsheet") != null) {
-        temp = request.getParameter("flowsheet");
+    if(request.getParameter("flowsheet") != null){
+    	temp = request.getParameter("flowsheet");
     }else{
-	temp = "tracker";
+		temp = "tracker";
     }
 
     String flowsheet = temp;
@@ -88,7 +89,7 @@
 <title>Edit Flowsheet</title><!--I18n-->
 
 <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
+
 
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -185,9 +186,14 @@ width:100px !important;
 <div class="container-fluid main-container">
 <div class="row-fluid">
 
-<%if (request.getParameter("ht") != null && request.getParameter("demographic")!=null) {%> 
-<a href="../HealthTrackerPage.jspf?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Health Tracker</a> <br/>
-<%}%>
+<%if (demographic!=null) {
+	if(ht.equals("healthTracker")){%> 
+	<a href="../HealthTrackerPage.jspf?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Health Tracker</a> <br/>
+	<%}else{%>
+	<a href="../TemplateFlowSheet.jsp?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Flowsheets</a> <br/>
+	<%
+	}
+}%>
 
 <h3 style="display:inline;">Edit Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span> </h3>
 
@@ -196,7 +202,7 @@ width:100px !important;
 		             <i>for</i> Patient <%=demo.getLastName()%>, <%=demo.getFirstName()%>
 
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
-						| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>&">All Patients</a> 
+						| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
 					</security:oscarSec>
 
 		            <%}else{%>
@@ -246,7 +252,11 @@ width:100px !important;
 		               %>
 		                <tr>
 		         		<td>
-		         		<a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>" title="Edit" class="action-icon"><i class="icon-pencil"></i></a>
+		         		<%if(mFlowsheet.getFlowSheetItem(mstring).getPreventionType()!=null){ %>
+		         		<i class="icon-pencil action-icon"  rel="popover" data-container="body"  data-toggle="popover" data-placement="right" data-content="unable to edit a prevention item" data-trigger="hover" title=""></i>
+		                <%}else{%>
+		                <a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>" title="Edit" class="action-icon"><i class="icon-pencil"></i></a>
+		                <%}%>
 		                <a href="FlowSheetCustomAction.do?method=delete&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>" title="Delete" class="action-icon"><i class="icon-trash"></i></a>
 		                </td>
 		                <td><%=counter%></td>
@@ -473,6 +483,10 @@ width:100px !important;
 <script src="<%=request.getContextPath() %>/js/jquery.validate.js"></script>
 
 <script>
+$(function (){ 
+	$("[rel=popover]").popover({});  
+}); 
+
 $(document).ready(function () {
 
 <%if(request.getParameter("add")!=null){%>
