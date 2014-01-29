@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -17,19 +18,15 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%if (session.getAttribute("user") == null) {
-				response.sendRedirect("../logout.jsp");
-			}
-
-			%>
-<%@ page errorPage="../appointment/errorpage.jsp"
-	import="java.util.*,java.sql.*"%>
+<%if (session.getAttribute("user") == null) {response.sendRedirect("../logout.jsp");} %>
+<%@ page errorPage="../appointment/errorpage.jsp" import="java.util.*,java.sql.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@ page import="org.oscarehr.util.MiscUtils"%>
 <%//
 			//int serviceCodeLen = 5;
 			String msg = "Type in a service code and search first to see if it is available.";
+			String alert = "info";
 			String action = "search"; // add/edit
 			//BillingServiceCode serviceCodeObj = new BillingServiceCode();
 			Properties prop = new Properties();
@@ -82,7 +79,7 @@
 							prop.setProperty("service_code", serviceCode);
 						} else {
 							msg = serviceCode
-									+ " is <font color='red'>NOT</font> added. Action failed! Try edit it again.";
+									+ " is not added. Action failed! Try edit it again.";
 							action = "add" + serviceCode;
 							prop.setProperty("service_code", serviceCode);
 							String description = request.getParameter("description");
@@ -92,15 +89,18 @@
 							prop.setProperty("value", request.getParameter("value"));
 							prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
                                                         prop.setProperty("gstFlag", request.getParameter("gstFlag"));
+							alert = "error";
 						}
 					} else {
-						msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode
+						msg = "You can not save the service code - " + serviceCode
 								+ ". Please search the service code first.";
 						action = "search";
 						prop.setProperty("service_code", serviceCode);
+						alert = "error";
 					}
 				} else {
-					msg = "You can <font color='red'>NOT</font> save the service code. Please search the service code first.";
+					msg = "You can not save the service code. Please search the service code first.";
+					alert = "error";
 				}
 			} else if (request.getParameter("submit") != null && request.getParameter("submit").equals("Search")) {
 				// check the input data
@@ -149,25 +149,16 @@
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+
+<!DOCTYPE html>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Add/Edit Private Service Code</title>
-<link rel="stylesheet" type="text/css" href="billingON.css" />
-<link rel="StyleSheet" type="text/css" href="../web.css" />
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-<!-- main calendar program -->
-<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-<!-- language for the calendar -->
-<script type="text/javascript"
-	src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>">
-              </script>
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript"
-	src="../../../share/calendar/calendar-setup.js"></script>
+<title><bean:message key="admin.admin.managePrivBillingCode"/></title>
+
+	<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet">
+	<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
+
+
 <script language="JavaScript">
 
       <!--
@@ -264,105 +255,102 @@
 
       </script>
 </head>
-<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
-	rightmargin="0">
-<center>
-<table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-	<tr class="myDarkGreen">
-		<th><font color="white"><%=msg%></font></th>
-	</tr>
-</table>
-</center>
+<body>
 
-<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"
-	class="myYellow">
-	<form method="post" name="baseur0"
-		action="billingONEditPrivateCode.jsp">
-	<tr>
-		<td align="right" width="70%"><select name="service_code"
-			id="service_code">
-			<option selected="selected" value="">- choose one -</option>
-			<%//
-				List sL = dbObj.getPrivateBillingCodeDesc();
-				String strCode = "";
-				String strDesc = "";
-				for (int i = 0; i < sL.size(); i = i + 2) {
-					try {
-						strCode = ((String) sL.get(i)).substring(1);
-					} catch (NullPointerException e) {
-						strCode = "";
-						MiscUtils.getLogger().warn("NULL value set for a private billing code");
-					}
-					
-					try {
-						strDesc = (String) sL.get(i+1);
-						strDesc = strDesc.length() > 30 ? strDesc.substring(0,30): strDesc;
-					} catch (NullPointerException e) {
-						strDesc = "";
-						MiscUtils.getLogger().warn("NULL value set for a private billing code description (code is '"+strCode+"')");
-					}
-				%>
-			<option value="<%=strCode%>"><%=(strCode + "| " + strDesc)%></option>
-			<%}
+<h3><bean:message key="admin.admin.managePrivBillingCode"/></h3>
 
-				%>
-		</select></td>
-		<td><input type="hidden" name="submit" value="Search"> <input
-			type="submit" name="action" value=" Edit "></td>
-	</tr>
-	</form>
-</table>
+<div class="container-fluid">
 
-<form method="post" name="baseurl" action="billingONEditPrivateCode.jsp">
-<table width="100%" border="0" cellspacing="2" cellpadding="2">
-	<tr class="myGreen">
-		<td align="right"><b><font color="red">Private</font> Code</b></td>
-		<td>_<input type="text" name="service_code"
-			value="<%=prop.getProperty("service_code", "?").substring(1)%>"
-			size='8' maxlength='10' onblur="upCaseCtrl(this)" /> (e.g. O001A) <input
-			type="submit" name="submit" value="Search"
-			onclick="javascript:return onSearch();"></td>
-	</tr>
-	<tr>
-		<td align="right"><b>Description</b></td>
-		<td><input type="text" name="description"
-			value="<%=prop.getProperty("description", "")%>" size='50'></td>
-	</tr>
-	<tr class="myGreen">
-		<td align="right"><b>Fee</b></td>
-		<td><input type="text" name="value"
-			value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'>Add
-		GST<input type="checkbox" name="gstCheck" id="gstCheck"
-			onclick="setFlag()" /> (format: xx.xx, e.g. 18.20)
-		<input type="hidden" value="" id="gstFlag" name="gstFlag" /></td>
-	</tr>
-	<tr>
-		<td align="right"><b>Issued Date</b></td>
-		<td><input type="text" name="billingservice_date"
-			id="billingservice_date"
-			value="<%=prop.getProperty("billingservice_date", "")%>" size='10'
-			maxlength='10' readonly> (effective date) <img
-			src="../../../images/cal.gif" id="billingservice_date_cal"></td>
-	</tr>
-	<tr class="myGreen">
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td><input type="submit" name="submit" value="Delete"
-			onclick="javascript:return onDelete();"></td>
-		<td align="center"><input type="hidden" name="action"
-			value='<%=action%>'> <input type="submit" name="submit"
-			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
-			onclick="javascript:return onSave();"> <input type="button"
-			name="Cancel"
-			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
-			onClick="window.close()"></td>
-	</tr>
-</table>
+
+
+<div class="well">
+<form method="post" name="baseur0" action="billingONEditPrivateCode.jsp" class="form-inline">
+
+Select Code to edit:<br>
+	<select name="service_code" id="service_code" required>
+		<option selected="selected" value="">- choose one -</option>
+		<%//
+			List sL = dbObj.getPrivateBillingCodeDesc();
+			String strCode = "";
+			String strDesc = "";
+			for (int i = 0; i < sL.size(); i = i + 2) {
+				try {
+					strCode = ((String) sL.get(i)).substring(1);
+				} catch (NullPointerException e) {
+					strCode = "";
+					MiscUtils.getLogger().warn("NULL value set for a private billing code");
+				}
+				
+				try {
+					strDesc = (String) sL.get(i+1);
+					strDesc = strDesc.length() > 30 ? strDesc.substring(0,30): strDesc;
+				} catch (NullPointerException e) {
+					strDesc = "";
+					MiscUtils.getLogger().warn("NULL value set for a private billing code description (code is '"+strCode+"')");
+				}
+			%>
+		<option value="<%=strCode%>"><%=(strCode + "| " + strDesc)%></option>
+		<%}
+		
+			%>
+	</select>
+	<input type="hidden" name="submit" value="Search"> 
+	<input class="btn" type="submit" name="action" value="Edit">
 </form>
+</div><!--select code to edit well-->
+
+<div class="well">
+<form method="post" name="baseurl" action="billingONEditPrivateCode.jsp">
+
+<div class="alert alert-<%=alert%>">
+  <%=msg%>
+</div>
+
+Private Code_ <small>(e.g. O001A)</small><br>
+<div class="input-append">
+<input type="text" name="service_code" value="<%=prop.getProperty("service_code", "?").substring(1)%>" class="span2" maxlength='10' onblur="upCaseCtrl(this)" required/> 
+<button type="submit" name="submit" class="btn btn-primary" onclick="javascript:return onSearch();" value="Search">Search</button>
+</div>
+
+<br>
+
+Description<br>
+<input type="text" name="description" value="<%=prop.getProperty("description", "")%>" size='50'><br>
+
+Fee <small>(format: xx.xx, e.g. 18.20)</small><br>
+<input type="text" name="value" value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'> <br>
+
+<input type="checkbox" name="gstCheck" id="gstCheck" onclick="setFlag()" /> Add GST <br>
+
+<input type="hidden" value="" id="gstFlag" name="gstFlag" />
+
+<br>
+
+Issued Date <small>(effective date)</small><br>
+
+<div class="input-append date" id="billingservice_date" data-date="2014-02-04" data-date-format="yyyy-mm-dd">
+<input  style="width:90px" name="billingservice_date"  id="billingservice_date" size="16" type="text" value="" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly>
+<span class="add-on"><i class="icon-calendar"></i></span>
+</div>
+
+
+<br>
+<input class="btn" type="submit" name="submit" value="Delete" onclick="javascript:return onDelete();">
+<input type="hidden" name="action" value='<%=action%>'> 
+<input class="btn" type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="javascript:return onSave();"> 
+</form>
+</div><!--edit/add well-->
+
+</div>
+
+	<script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script> 
+	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
+	<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
 </body>
 <script type="text/javascript">
-Calendar.setup( { inputField : "billingservice_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "billingservice_date_cal", singleClick : true, step : 1 } );
+$(function (){  
+	$('#billingservice_date').datepicker();
+});
 </script>
 </html:html>
