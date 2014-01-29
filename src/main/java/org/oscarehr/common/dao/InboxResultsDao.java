@@ -10,6 +10,7 @@
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -161,22 +162,22 @@ public class InboxResultsDao {
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
 		String sql = "";
 
-		int idLoc = -1;
-		int docNoLoc = -1;
-		int statusLoc = -1;
-		int docTypeLoc = -1;
-		int lastNameLoc = -1;
-		int firstNameLoc = -1;
-		int hinLoc = -1;
-		int sexLoc = -1;
-		int moduleLoc = -1;
-		int obsDateLoc = -1;
+		int idLoc = 0;
+		int docNoLoc = 1;
+		int statusLoc = 2;
+		int docTypeLoc = 3;
+		int lastNameLoc = 4;
+		int firstNameLoc = 5;
+		int hinLoc = 6;
+		int sexLoc = 7;
+		int moduleLoc = 8;
+		int obsDateLoc = 9;
 		
-		int priorityLoc = -1;
-		int requestingClientLoc = -1;
-		int disciplineLoc = -1;
-		int accessionNumLoc = -1;
-		int finalResultCountLoc = -1;
+		int priorityLoc = 10;
+		int requestingClientLoc = 11;
+		int disciplineLoc = 12;
+		int accessionNumLoc = 13;
+		int finalResultCountLoc = 14;
 		
 		try {
 
@@ -186,8 +187,6 @@ public class InboxResultsDao {
 			boolean isUnclaimedQuery = false;
 			if (mixLabsAndDocs) {
 				if (demographicNo == null && "0".equals(providerNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9;
-					priorityLoc = 10; requestingClientLoc = 11; disciplineLoc = 12; accessionNumLoc = 13; finalResultCountLoc = 14;
 					UnclaimedInboxQueryBuilder unclaimedQuery = new UnclaimedInboxQueryBuilder();
 					unclaimedQuery.setPage(page);
 					unclaimedQuery.setPaged(isPaged);
@@ -196,7 +195,6 @@ public class InboxResultsDao {
 					sql = unclaimedQuery.buildQuery();
 					isUnclaimedQuery = true;
 				} else if ("0".equals(demographicNo) || "0".equals(providerNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 3; lastNameLoc = 4; firstNameLoc = 5; hinLoc = 6; sexLoc = 7; moduleLoc = 8; obsDateLoc = 9;
 					sql = " SELECT X.id, X.lab_no as document_no, X.status, X.lab_type as doctype, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate "
 							+ " FROM document doc, "
 							+ " (SELECT plr.id, plr.lab_type, plr.lab_no, plr.status "
@@ -227,7 +225,6 @@ public class InboxResultsDao {
 							+ " WHERE X.lab_type = 'DOC' AND doc.document_no = X.lab_no ";
 
 				} else if (demographicNo != null && !"".equals(demographicNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8;
 					sql = " SELECT plr.id, doc.document_no, plr.status, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate, plr.lab_type as doctype "
 							+ " FROM demographic d, providerLabRouting plr, document doc, "
 							+ " (SELECT * FROM "
@@ -261,7 +258,6 @@ public class InboxResultsDao {
 							+ " WHERE X.lab_type = 'DOC' and X.id = plr.id and doc.document_no = plr.lab_no and d.demographic_no = '"
 							+ demographicNo + "' ";
 				} else if (patientSearch) { // N arg
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8;
 					sql = " SELECT plr.id, doc.document_no, plr.status, d.last_name, d.first_name, hin, sex, d.demographic_no as module_id, doc.observationdate, plr.lab_type as doctype "
 							+ " FROM demographic d, providerLabRouting plr, document doc,  "
 							+ " (SELECT * FROM "
@@ -308,9 +304,6 @@ public class InboxResultsDao {
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 
 				} else {
-					docNoLoc = 0; statusLoc = 1; docTypeLoc = 8; lastNameLoc = 2; firstNameLoc = 3; hinLoc = 4; sexLoc = 5; moduleLoc = 6; obsDateLoc = 7;
-					// N
-					// document_no, status, last_name, first_name, hin, sex, module_id, observationdate
 					sql = " SELECT doc.document_no as id, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, doc.document_no"
 							+ " FROM document doc, "
 							+ " 	(SELECT DISTINCT plr.* FROM providerLabRouting plr"
@@ -337,7 +330,6 @@ public class InboxResultsDao {
 				}
 			} else { // Don't mix labs and docs.
 				if ("0".equals(demographicNo) || "0".equals(providerNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 5; lastNameLoc = 6; firstNameLoc = 7; hinLoc = 8; sexLoc = 9; moduleLoc = 3; obsDateLoc = 4;
 					sql = " SELECT id, document_no, status, demographic_no as module_id, observationdate, doctype, last_name, first_name, hin, sex"
 							+ " FROM "
 							+ " (SELECT plr.id, doc.document_no, plr.status, observationdate, plr.lab_type as doctype"
@@ -353,7 +345,6 @@ public class InboxResultsDao {
 							+ ") as X"
 							+ " LEFT JOIN demographic d" + " ON d.demographic_no = -1";
 				} else if (demographicNo != null && !"".equals(demographicNo)) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8;
 					sql = "SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype "
 							+ "FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
 							+ "WHERE d.demographic_no = '"
@@ -370,7 +361,6 @@ public class InboxResultsDao {
 							+ " ORDER BY id DESC "
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 				} else if (patientSearch) {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8;
 					sql = "SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype "
 							+ "FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
 							+ "WHERE d.first_name like '%"
@@ -391,7 +381,6 @@ public class InboxResultsDao {
 							+ " ORDER BY id DESC "
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 				} else {
-					idLoc = 0; docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8;
 					sql = " SELECT * "
 							+ " FROM (SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype "
 							+ " FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
@@ -423,6 +412,16 @@ public class InboxResultsDao {
 			
 			List<Object[]> result = q.getResultList();
 			for (Object[] r : result) {
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("idLoc = " + idLoc + ", docNoLoc = " + docNoLoc + ", statusLoc = " + statusLoc + ", docTypeLoc = " + docTypeLoc 
+							+ ", lastNameLoc = " + lastNameLoc + ", firstNameLoc = " + firstNameLoc + ", hinLoc = " + hinLoc + ", sexLoc = " 
+							+ sexLoc + ", moduleLoc = " + moduleLoc + ", obsDateLoc = " + obsDateLoc + ", priorityLoc = " + priorityLoc 
+							+ ", requestingClientLoc = " + requestingClientLoc + ", disciplineLoc = " + disciplineLoc + ", accessionNumLoc = "
+							+ accessionNumLoc + ", finalResultCountLoc = " + finalResultCountLoc);
+					logger.debug(Arrays.toString(r));
+				}
+				
 				LabResultData lbData = new LabResultData(LabResultData.DOCUMENT);
 				lbData.labType = LabResultData.DOCUMENT;
 				String labType = getStringValue(r[docTypeLoc]);
@@ -468,12 +467,16 @@ public class InboxResultsDao {
 				if (lbData.resultStatus.equals("A")) lbData.abn = true;
 
 				lbData.dateTime = getStringValue(r[obsDateLoc]);
-				lbData.setDateObj(DateUtils.parseDate(getStringValue(r[obsDateLoc]), new String[] {
-						"yyyy-MM-dd"
-				}));
+				
+				String obsDateString = getStringValue(r[obsDateLoc]);
+				if (obsDateString != null) {
+					lbData.setDateObj(DateUtils.parseDate(obsDateString, new String[] {
+							"yyyy-MM-dd"
+					}));
+				}
 
 				String priority = "";
-				if (priorityLoc != -1) {
+				if (isUnclaimedQuery) {
 					priority = getStringValue(r[priorityLoc]);
 				}
 				if (priority != null && !priority.equals("")) {
@@ -502,7 +505,7 @@ public class InboxResultsDao {
 				}
 
 				lbData.requestingClient = "";
-				if (requestingClientLoc != -1) {
+				if (isUnclaimedQuery) {
 					lbData.requestingClient = getStringValue(r[requestingClientLoc]);
 				}
 
@@ -517,16 +520,16 @@ public class InboxResultsDao {
 					lbData.finalRes = false;
 				}
 
-				if (disciplineLoc == -1) {
+				if (!isUnclaimedQuery) {
 					lbData.discipline = getStringValue(r[docTypeLoc]);
-					if (lbData.discipline.trim().equals("")) {
+					if (lbData.discipline != null && lbData.discipline.trim().equals("")) {
 						lbData.discipline = null;
 					}
 				} else {
 					lbData.discipline = getStringValue(r[disciplineLoc]);
 				}
 
-				if (finalResultCountLoc == -1) {
+				if (!isUnclaimedQuery) {
 					lbData.finalResultsCount = 0;
 				} else { 
 					try {
@@ -536,7 +539,7 @@ public class InboxResultsDao {
 					}
 				}
 				
-				if (accessionNumLoc != -1) {
+				if (isUnclaimedQuery) {
 					lbData.accessionNumber = getStringValue(r[accessionNumLoc]);
 				}
 				labResults.add(lbData);
