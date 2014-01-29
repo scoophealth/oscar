@@ -62,7 +62,8 @@
 						<%=StringEscapeUtils.escapeHtml(category.getSendingFacilityId())%>
 					</td>
 					<td style="border:solid black 1px">
-					  <b><a href="hrm_categories_action.jsp?id=<%=category.getId()%>&action=delete">Delete</a></b>				
+					  <b><a href="hrm_categories_action.jsp?id=<%=category.getId()%>&action=delete">Delete</a></b>-	
+					  <b><a href="hrmCategoriesUpdate.jsp?id=<%=category.getId()%>">Update</a></b>				
 					</td>
 				</tr>
 			<%

@@ -12,6 +12,7 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.hospitalReportManager.dao.HRMCategoryDao"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="java.util.List"%>
 <%
 	HRMCategoryDao hrmCategoryDao = (HRMCategoryDao) SpringUtils.getBean("HRMCategoryDao");
 
@@ -34,6 +35,27 @@
 	{
 		Integer id=new Integer(request.getParameter("id"));
 		hrmCategoryDao.remove(id);
+	}
+	else if ("update".equals(action))
+	{
+		Integer id = new Integer(request.getParameter("id"));
+		List<HRMCategory>  HRMCategoryList = hrmCategoryDao.findById(id);
+		
+		HRMCategory hrmCategory = null;
+		if(!HRMCategoryList.isEmpty()) {
+
+			hrmCategory = HRMCategoryList.get(0);
+			
+			String categoryName=request.getParameter("categoryName");
+			String subClassNameMnemonic=request.getParameter("subClassNameMnemonic");
+			String sendingFacilityId = request.getParameter("sendingFacilityID");
+			
+			hrmCategory.setCategoryName(categoryName);
+			hrmCategory.setSubClassNameMnemonic(subClassNameMnemonic);
+			hrmCategory.setSendingFacilityId(sendingFacilityId);
+			
+			hrmCategoryDao.merge(hrmCategory);			
+	    }
 	}
 	else
 	{
