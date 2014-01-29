@@ -27,6 +27,8 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import org.oscarehr.common.dao.ClinicDAO;
@@ -191,7 +193,7 @@ public class EctConsultationFormRequestUtil {
                 referalDate = oscar.Misc.getString(rs, "referalDate");
                 service = oscar.Misc.getString(rs, "serviceId");
                 specialist = oscar.Misc.getString(rs, "specId");
-                String appointmentTime = oscar.Misc.getString(rs, "appointmentTime");
+                Date appointmentTime = rs.getTime("appointmentTime");
                 reasonForConsultation = oscar.Misc.getString(rs, "reason");
                 clinicalInformation = oscar.Misc.getString(rs, "clinicalInfo");
                 concurrentProblems = oscar.Misc.getString(rs, "concurrentProblems");
@@ -224,43 +226,25 @@ public class EctConsultationFormRequestUtil {
 
                 String date = oscar.Misc.getString(rs, "appointmentDate");
                 if( date == null || date.equals("") ) {
-                	appointmentYear = "1970";
-                	appointmentMonth = "1";
-                	appointmentDay = "1";
+                	appointmentDate ="";
                 	appointmentHour = "1";
                 	appointmentMinute = "1";
                 	appointmentPm = "AM";
 
                 }
                 else {
-	                int fir = date.indexOf('-');
-	                int las = date.lastIndexOf('-');
-	                appointmentYear = date.substring(0, fir);
-	                appointmentMonth = date.substring(fir + 1, las);
-	                appointmentDay = date.substring(las + 1);
-	                fir = appointmentTime.indexOf(':');
-	                las = appointmentTime.lastIndexOf(':');
-	                if (fir > -1 && las > -1) {
+                	appointmentDate = date;
+                	Calendar cal = Calendar.getInstance();
+    				cal.setTime(appointmentTime);
+    				
+    				if(cal.get(Calendar.AM_PM) == Calendar.AM)
+    					appointmentPm = "AM";
+    				else
+    					appointmentPm = "PM";
 
-	                    appointmentHour = appointmentTime.substring(0, fir);
-	                    if (fir < las) {
-	                        appointmentMinute = appointmentTime.substring(fir + 1, las);
-	                    }
-	                    int h = Integer.parseInt(appointmentHour);
-	                    if (h > 12) {
-	                        appointmentPm = "PM";
-	                        appointmentHour = Integer.toString(h - 12);
-	                    } else if (h==12){
-	                    	appointmentPm = "PM";
-	                        appointmentHour = Integer.toString(h);
-	                    } else {
-	                        appointmentPm = "AM";
-	                        if(h == 0)
-	                        	appointmentHour = Integer.toString(12);
-	                        else
-	                        	appointmentHour = Integer.toString(h);
-	                    }
-	                }
+    				appointmentHour = String.valueOf(cal.get(Calendar.HOUR));
+    	            appointmentMinute = String.valueOf(cal.get(Calendar.MINUTE));
+
                 }
             }
             rs.close();
@@ -416,9 +400,7 @@ public class EctConsultationFormRequestUtil {
     public String referalDate;
     public String service;
     public String specialist;
-    public String appointmentYear;
-    public String appointmentMonth;
-    public String appointmentDay;
+    public String appointmentDate;
     public String appointmentHour;
     public String appointmentMinute;
     public String appointmentPm;

@@ -1111,8 +1111,6 @@ function updateFaxButton() {
 			thisForm.setStatus("1");
 
 			thisForm.setSendTo(team);
-			//thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
-			thisForm.setAppointmentYear(year);
         		if (bMultisites) {
 	        		thisForm.setSiteName(defaultSiteName);
         		}
@@ -1427,73 +1425,15 @@ function updateFaxButton() {
 							<td align="right" class="tite3"><html:checkbox property="patientWillBook" value="1" onclick="disableDateFields()">
 							</html:checkbox></td>
 						</tr>
-						<tr>
-							<td class="tite4">
-							<%
-								if (thisForm.iseReferral())
-								{
-									%>
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> :
-									<%
-								}
-								else
-								{
-									%>
-									<a href="javascript:popupOscarCal(300,380,'<%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')">
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> :
-									</a>
-									<%
-								}
-							%>
-							</td>
-							<td align="right" class="tite3">
-							<table bgcolor="white">
-								<tr>
-									<th class="tite2"><bean:message key="global.year" /></th>
-									<th class="tite2"><bean:message key="global.month" /></th>
-									<th class="tite2"><bean:message key="global.day" /></th>
-								</tr>
-								<tr>
-									<td class="tite3"><html:text size="5" maxlength="4"	property="appointmentYear" /></td>
-									<td class="tite3">
-										<html:select property="appointmentMonth">
-										<%
-											for (int i = 1; i < 13; i = i + 1)
-											{
-												String month = Integer.toString(i);
-												if (i < 10)
-												{
-													month = "0" + month;
-												}
-												%>
-												<html:option value="<%=String.valueOf(i)%>"><%=month%></html:option>
-												<%
-											}
-										%>
-										</html:select>
-									</td>
 
-									<td class="tite3">
-										<html:select property="appointmentDay">
-										<%
-											for (int i = 1; i < 32; i = i + 1)
-											{
-												String dayOfWeek = Integer.toString(i);
-												if (i < 10)
-												{
-													dayOfWeek = "0" + dayOfWeek;
-												}
-												%>
-                                                                                                <html:option value="<%=String.valueOf(i)%>"><%=dayOfWeek%></html:option>
-												<%
-											}
-										%>
-										</html:select>
-									</td>
-								</tr>
-							</table>
+						<tr>						
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" />:
+							</td>
+                            <td align="right" class="tite3"><img alt="calendar" id="appointmentDate_cal" src="../../images/cal.gif"> 
+ 							<html:text styleId="appointmentDate" property="appointmentDate" readonly="true" ondblclick="this.value='';" />
 							</td>
 						</tr>
+
 						<tr>
 							<td class="tite4"><bean:message	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime" />:
 							</td>
@@ -2064,6 +2004,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 
 Calendar.setup( { inputField : "followUpDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "followUpDate_cal", singleClick : true, step : 1 } );
 Calendar.setup( { inputField : "referalDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "referalDate_cal", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "appointmentDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "appointmentDate_cal", singleClick : true, step : 1 } );
 </script>
 </script>
 

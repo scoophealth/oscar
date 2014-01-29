@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -72,7 +73,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
-import org.apache.commons.lang.StringUtils;
+
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -149,13 +150,13 @@ public class EctConsultationFormRequestAction extends Action {
                         		consult.setLetterheadAddress(frm.getLetterheadAddress());
                         		consult.setLetterheadPhone(frm.getLetterheadPhone());
                         		consult.setLetterheadFax(frm.getLetterheadFax());
-                        		
-                                if( frm.getAppointmentYear() != null && !frm.getAppointmentYear().equals("") ) {
-                                   date = DateUtils.parseDate(frm.getAppointmentYear() + "-" + frm.getAppointmentMonth() + "-" + frm.getAppointmentDay(), format);
-                                   consult.setAppointmentDate(date);
-                                   date = DateUtils.setHours(date, new Integer(appointmentHour));
-                                   date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
-                                   consult.setAppointmentTime(date);
+
+                                if( frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("") ) {
+                                	date = DateUtils.parseDate(frm.getAppointmentDate(), format);
+                                	consult.setAppointmentDate(date);
+                                	date = DateUtils.setHours(date, new Integer(appointmentHour));
+                                	date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
+                                	consult.setAppointmentTime(date);
                                 }
                                 consult.setReasonForReferral(frm.getReasonForConsultation());
                                 consult.setClinicalInfo(frm.getClinicalInformation());
@@ -168,7 +169,7 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setSendTo(frm.getSendTo());
                                 consult.setConcurrentProblems(frm.getConcurrentProblems());
                                 consult.setUrgency(frm.getUrgency());
-				consult.setSiteName(frm.getSiteName());
+                                consult.setSiteName(frm.getSiteName());
                                 Boolean pWillBook = false;
                                 if( frm.getPatientWillBook() != null ) {
                                     pWillBook = frm.getPatientWillBook().equals("1");
@@ -255,12 +256,13 @@ public class EctConsultationFormRequestAction extends Action {
                                 Integer specId = new Integer(frm.getSpecialist());
                                 ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(specId);
                                 consult.setProfessionalSpecialist(professionalSpecialist);
-                                if( frm.getAppointmentYear() != null && !frm.getAppointmentYear().equals("") ) {
-                                   date = DateUtils.parseDate(frm.getAppointmentYear() + "-" + frm.getAppointmentMonth() + "-" + frm.getAppointmentDay(), format);
-                                   consult.setAppointmentDate(date);
-                                   date = DateUtils.setHours(date, new Integer(appointmentHour));
-                                   date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
-                                   consult.setAppointmentTime(date);
+                                
+                                if( frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("") ) {
+                                	date = DateUtils.parseDate(frm.getAppointmentDate(), format);
+                                	consult.setAppointmentDate(date);
+                                	date = DateUtils.setHours(date, new Integer(appointmentHour));
+                                	date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
+                                	consult.setAppointmentTime(date);
                                 }
                                 consult.setReasonForReferral(frm.getReasonForConsultation());
                                 consult.setClinicalInfo(frm.getClinicalInformation());
@@ -272,7 +274,7 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setSendTo(frm.getSendTo());
                                 consult.setConcurrentProblems(frm.getConcurrentProblems());
                                 consult.setUrgency(frm.getUrgency());
-				consult.setSiteName(frm.getSiteName());
+                                consult.setSiteName(frm.getSiteName());
                                  Boolean pWillBook = false;
                                 if( frm.getPatientWillBook() != null ) {
                                     pWillBook = frm.getPatientWillBook().equals("1");
