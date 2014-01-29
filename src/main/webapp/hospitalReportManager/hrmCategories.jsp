@@ -26,6 +26,8 @@
 	<br />
 	SubClass Name Mnemonic : <input type="text" name="subClassNameMnemonic" /> (should be of the format &lt;subclass_name&gt;:&lt;subclass_mnemonic&gt;)
 	<br />
+	Sending Facility ID : <input type="text" name="sendingFacilityID" />
+	<br />
 	
 	<input type="submit" value="Add" />
 </form>
@@ -37,9 +39,8 @@
 		<td style="border:solid black 1px">ID</td>
 		<td style="border:solid black 1px">CategoryName</td>
 		<td style="border:solid black 1px">SubClass Name Mnemonic</td>
-		<%--
-		<td style="border:solid black 1px"></td>
-		 --%>
+		<td style="border:solid black 1px">Sending Facility ID</td>
+        <td style="border:solid black 1px">Action</td>
 	</tr>
 	<%
 		HRMCategoryDao hrmCategoryDao = (HRMCategoryDao) SpringUtils.getBean("HRMCategoryDao");
@@ -57,11 +58,12 @@
 					<td style="border:solid black 1px">
 						<%=StringEscapeUtils.escapeHtml(category.getSubClassNameMnemonic())%>
 					</td>
-					<%--
 					<td style="border:solid black 1px">
-						<input type="button" value="delete" onclick="if (confirm('are you sure you want to delete this?')) window.location.href='hrm_categories_action.jsp?action=delete&id=<%=category.getId()%>'" />
+						<%=StringEscapeUtils.escapeHtml(category.getSendingFacilityId())%>
 					</td>
-					 --%>
+					<td style="border:solid black 1px">
+					  <b><a href="hrm_categories_action.jsp?id=<%=category.getId()%>&action=delete">Delete</a></b>				
+					</td>
 				</tr>
 			<%
 		}
