@@ -21,10 +21,12 @@
 	{
 		String categoryName=request.getParameter("categoryName");
 		String subClassNameMnemonic=request.getParameter("subClassNameMnemonic");
+		String sendingFacilityId = request.getParameter("sendingFacilityID");
 		
 		HRMCategory category=new HRMCategory();
 		category.setCategoryName(categoryName);
 		category.setSubClassNameMnemonic(subClassNameMnemonic);
+		category.setSendingFacilityId(sendingFacilityId);
 		
 		hrmCategoryDao.persist(category);
 	}
