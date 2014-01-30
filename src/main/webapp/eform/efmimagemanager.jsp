@@ -23,8 +23,7 @@
     Ontario, Canada
 
 --%>
-<%@ page
-	import="oscar.eform.data.*, oscar.OscarProperties, oscar.eform.*, java.util.*"%>
+<%@ page import="oscar.eform.data.*, oscar.OscarProperties, oscar.eform.*, java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -33,21 +32,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 </head>
 
-<script type="text/javascript" language="javascript">
-  function checkFormAndDisable(){
-    if(document.forms[0].image.value==""){ 
-      alert("<bean:message key="eform.uploadhtml.msgFileMissing"/>");
-    } else {
-      document.forms[0].subm.value = "<bean:message key="eform.uploadimages.processing"/>";
-      document.forms[0].subm.disabled = true;
-      document.forms[0].submit();
-    } 
-  }
-  
-  function BackHtml(){
-    top.location.href = "../admin/admin.jsp";
-  }
-  
+<script type="text/javascript" language="javascript"> 
   function showImage(url, id) {
         Popup = window.open(url,id,'toolbar=no,location=no,status=yes,menubar=no, scrollbars=yes,resizable=yes,width=700,height=600,left=200,top=0');
   }
@@ -63,15 +48,7 @@
 
 <h3>Image Library</h3>
 
-
-		<html:errors />
-		<html:form action="/eform/imageUpload" enctype="multipart/form-data" method="post">
-		<bean:message key="eform.uploadimages.msgFileName" /><br>
-	
-		<input type="file" name="image" size="40" >
-		<input type="button" class="btn" name="subm" value="<bean:message key="eform.uploadimages.btnUpload"/>" onclick="javascript:checkFormAndDisable();">
-
-		</html:form>	
+<iframe id="uploadFrame" name="uploadFrame" frameborder="0" width="800" height="100" src="<%=request.getContextPath()%>/eform/partials/upload_image.jsp"></iframe>	
 	
 		<table class="table table-condensed table-striped table-hover" id="tblImage">
 		<thead>
@@ -94,12 +71,12 @@
         	%>
        
 			<tr>
-				<td>
+				<td title="<%=curimage%>">
 					<a href="#"	class="viewImage" onclick="showImage('<%=fileURL%>', '<%="image" + i%>'); return false;"><%=curimage%></a>
 				</td>
 					
 				<td>
-					<a href="#" onclick="javascript: deleteImg('<%= curimage%>'); return false;"><bean:message key="eform.uploadimages.btnDelete" /></a>
+					<a href="<%= request.getContextPath() %>/eform/deleteImage.do?filename=<%=curimage%>" class="contentLink"><bean:message key="eform.uploadimages.btnDelete" /></a>
 				</td>
 			</tr>
 			<% } %>
@@ -107,20 +84,13 @@
 		</table>
 
 
-
-
-
 <%@ include file="efmFooter.jspf"%>
 
 <script>
 $('#tblImage').dataTable({
-	"aaSorting" : [ [ 0, "asc" ] ],
-	"fnDrawCallback": bindLinks
+	"aaSorting" : [ [ 0, "asc" ] ]
 });
 
-function bindLinks(oSettings){
-	registerHref('click', 'a.viewImage', '#dynamic-content');
-}
 </script>
 </body>
 </html:html>

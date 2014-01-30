@@ -31,7 +31,7 @@
 <h3 id="myModalLabel">Modal header</h3>
 </div>
 <div class="modal-body" id="confirmModalBody">
-<p>One fine body…</p>
+<p></p>
 </div>
 <div class="modal-footer">
 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>

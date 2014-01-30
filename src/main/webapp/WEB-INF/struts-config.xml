@@ -1713,21 +1713,23 @@
 		<action name="FrmForm" path="/tickler/AddTickler" scope="request" type="oscar.oscarTickler.pageUtil.AddTicklerAction">
 			<forward name="close" path="/close.html" />
 		</action>
-		<action input="/eform/efmformmanager.jsp" name="eFormHtmlUpload" path="/eform/uploadHtml" scope="request" type="oscar.eform.upload.HtmlUploadAction" validate="true">
-			<forward name="success" path="/eform/efmformmanager.jsp" />
+		<action input="/eform/partials/upload.jsp" name="eFormHtmlUpload" path="/eform/uploadHtml" scope="request" type="oscar.eform.upload.HtmlUploadAction" validate="true">
+			<forward name="success" path="/eform/partials/upload.jsp" />
+			<forward name="fail" path="/eform/partials/upload.jsp" />
 		</action>
 		<action input="/eform/efmformmanageredit.jsp" name="eFormEdit" path="/eform/editForm" scope="request" type="oscar.eform.actions.HtmlEditAction" validate="true">
 			<forward name="success" path="/eform/efmformmanageredit.jsp" />
 			<forward name="fail" path="/eform/efmformmanageredit.jsp" />
 		</action>
-		<action input="/eform/efmimagemanager.jsp" name="eFormImageUpload" path="/eform/imageUpload" scope="request" type="oscar.eform.upload.ImageUploadAction" validate="true">
-			<forward name="success" path="/eform/efmimagemanager.jsp" />
+		<action input="/eform/partials/upload_image.jsp" name="eFormImageUpload" path="/eform/imageUpload" scope="request" type="oscar.eform.upload.ImageUploadAction" validate="true">
+			<forward name="success" path="/eform/partials/upload_image.jsp" />
 		</action>
 		<action input="/eform/efmformmanager.jsp" name="deleteEform" path="/eform/delEForm" scope="request" type="oscar.eform.actions.DelEFormAction">
 			<forward name="success" path="/eform/efmformmanager.jsp" />
 		</action>
-		<action input="/eform/efmformmanager.jsp" name="FrmForm" path="/eform/manageEForm" scope="request" type="oscar.eform.actions.ManageEFormAction" parameter="method">
-			<forward name="success" path="/eform/efmformmanager.jsp" />
+		<action input="/eform/partials/import.jsp" name="FrmForm" path="/eform/manageEForm" scope="request" type="oscar.eform.actions.ManageEFormAction" parameter="method">
+			<forward name="fail" path="/eform/partials/import.jsp" />
+			<forward name="success" path="/eform/partials/import.jsp" />
 		</action>
 		<action input="/eform/efmformrtl_config.jsp" path="/eform/IndivicaRichTextLetterSettings" scope="request" type="oscar.eform.actions.RTLSettingsAction">
 			<forward name="success" path="/eform/efmformrtl_config.jsp" />
