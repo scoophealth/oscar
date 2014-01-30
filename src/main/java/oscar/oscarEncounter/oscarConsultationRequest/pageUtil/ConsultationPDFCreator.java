@@ -345,9 +345,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 		if (!reqFrm.pwb.equals("1")) {
 			infoTable.addCell(setInfoCell(cell, getResource("msgappDate")));
-			infoTable.addCell(setDataCell(cell, reqFrm.pwb.equals("1") ? getResource("pwb") : String.format("%s/%s/%s (y/m/d)", reqFrm.appointmentYear,
-					 reqFrm.appointmentMonth,
-					 reqFrm.appointmentDay)));
+			infoTable.addCell(setDataCell(cell, reqFrm.pwb.equals("1") ? getResource("pwb") : reqFrm.appointmentDate));
 			infoTable.addCell(setInfoCell(cell, getResource("msgTime")));
 			infoTable.addCell(setDataCell(cell, String.format("%s:%s %s", reqFrm.appointmentHour,
 					 reqFrm.appointmentMinute,

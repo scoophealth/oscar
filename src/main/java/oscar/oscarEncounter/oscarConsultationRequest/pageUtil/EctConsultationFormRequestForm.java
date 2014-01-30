@@ -41,21 +41,17 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	String allergies;
 
-	String appointmentDay;
+	String appointmentDate;
 
 	String appointmentHour;
 
 	String appointmentMinute;
-
-	String appointmentMonth;
 
 	String appointmentNotes;
 
 	String appointmentPm;
 
 	String appointmentTime;
-
-	String appointmentYear;
 
 	String clinicalInformation;
 
@@ -169,8 +165,8 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		return (StringUtils.trimToEmpty(allergies));
 	}
 
-	public String getAppointmentDay() {
-		return (StringUtils.trimToEmpty(appointmentDay));
+	public String getAppointmentDate() {
+		return (StringUtils.trimToEmpty(appointmentDate));
 	}
 
 	public String getAppointmentHour() {
@@ -179,10 +175,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	public String getAppointmentMinute() {
 		return (StringUtils.trimToEmpty(appointmentMinute));
-	}
-
-	public String getAppointmentMonth() {
-		return (StringUtils.trimToEmpty(appointmentMonth));
 	}
 
 	public String getAppointmentNotes() {
@@ -195,10 +187,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	public String getAppointmentTime() {
 		return (StringUtils.trimToEmpty(appointmentTime));
-	}
-
-	public String getAppointmentYear() {
-		return (StringUtils.trimToEmpty(appointmentYear));
 	}
 
 	public String getClinicalInformation() {
@@ -270,8 +258,8 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		allergies = str;
 	}
 
-	public void setAppointmentDay(String str) {
-		appointmentDay = str;
+	public void setAppointmentDate(String str) {
+		appointmentDate = str;
 	}
 
 	public void setAppointmentHour(String str) {
@@ -280,10 +268,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	public void setAppointmentMinute(String str) {
 		appointmentMinute = str;
-	}
-
-	public void setAppointmentMonth(String str) {
-		appointmentMonth = str;
 	}
 
 	public void setAppointmentNotes(String str) {
@@ -296,10 +280,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	public void setAppointmentTime(String str) {
 		appointmentTime = str;
-	}
-
-	public void setAppointmentYear(String str) {
-		appointmentYear = str;
 	}
 
 	public void setClinicalInformation(String str) {
