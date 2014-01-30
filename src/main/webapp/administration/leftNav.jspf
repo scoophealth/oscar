@@ -262,7 +262,7 @@ String curProvider_no = (String)session.getAttribute("user");
 						<bean:message key="eform.showmyform.msgManageEFrm"/>
 					</a></li>
 
-					<li><a href="${ctx}/eform/efmimagemanager.jsp"  class="contentLink">
+					<li><a href="${ctx}/eform/efmimagemanager.jsp"  class="contentLink defaultImageUpload">
 						<bean:message key="admin.admin.btnUploadImage" />
 					</a></li>
 					<li><a href="${ctx}/eform/efmmanageformgroups.jsp" class="contentLink defaultFormsGroups">
