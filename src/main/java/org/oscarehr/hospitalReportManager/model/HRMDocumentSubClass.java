@@ -31,6 +31,8 @@ public class HRMDocumentSubClass extends AbstractModel<Integer> {
 	private String subClassDescription;
 	private Date subClassDateTime;
 	private boolean isActive;
+	private String sendingFacilityId;
+	
 	
 	@Override
     public Integer getId() {
@@ -84,6 +86,13 @@ public class HRMDocumentSubClass extends AbstractModel<Integer> {
 	public void setActive(boolean isActive) {
     	this.isActive = isActive;
     }
-	
 
+	public String getSendingFacilityId() {
+		return sendingFacilityId;
+	}
+
+	public void setSendingFacilityId(String sendingFacilityId) {
+		this.sendingFacilityId = sendingFacilityId;
+	}
+	
 }

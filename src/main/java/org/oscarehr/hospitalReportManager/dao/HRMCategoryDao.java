@@ -42,6 +42,16 @@ public class HRMCategoryDao extends AbstractDao<HRMCategory> {
 		return documents;
 	}
 	
+	public List<String> findAllSendingFacilityIds() {
+		String sql = "select distinct(x.sendingFacilityId) from " + this.modelClass.getName() + " x";
+		Query query = entityManager.createQuery(sql);
+	
+		@SuppressWarnings("unchecked")
+		List<String> subclasses = query.getResultList();
+		return subclasses;
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	public List<HRMCategory> findBySendingFacilityId(String sendingFacilityId)
 	{
@@ -59,6 +69,19 @@ public class HRMCategoryDao extends AbstractDao<HRMCategory> {
 		query.setParameter(1, sendingFacilityId);
 		query.setParameter(2, subClassNameMnemonic);
 		return query.getResultList();
+	}
+	
+	public HRMCategory findBySubClassNameMnemonic(String sendingFacilityId, String subClassNameMnemonic)
+	{
+		try{
+			String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1 and x.sendingFacilityId = ?2";
+			Query query = entityManager.createQuery(sql);
+			query.setParameter(1, subClassNameMnemonic);
+			query.setParameter(2, sendingFacilityId);
+			return (HRMCategory) (query.getSingleResult());
+		} catch(NoResultException e) {
+	        return null;
+	    }
 	}
 	
 	public HRMCategory findBySubClassNameMnemonic(String subClassNameMnemonic)
