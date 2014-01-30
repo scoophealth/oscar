@@ -237,7 +237,13 @@
 		<item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day"  />
 
 		<item measurement_type="MCCS" display_name="Smoking Cessation (Program)" guideline="" graphable="no" value_name="Completed" >
+		
 			<rules>
+			<!--hide MCCS if no value for POSK-->
+				<recommendation strength="hidden" >
+					<condition type="lastValueAsInt" param="POSK" value="&lt;0" />
+				</recommendation>
+
 				<recommendation strength="recommendation" >
 					<condition type="monthrange" param="MCCS" value="3-6" />
 				</recommendation>
