@@ -622,7 +622,7 @@ for(ConsultationRequestExt ext:exts) {
                                         </td>
                                         <td class="fillLine">
                             <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
-                             <%=reqFrm.appointmentYear %>/<%=reqFrm.appointmentMonth %>/<%=reqFrm.appointmentDay %>  (y/m/d)
+                             <%=reqFrm.appointmentDate %>  (y/m/d)
                             <%}else{%>
                                             &nbsp;
                 			    <%}%>

@@ -26,6 +26,8 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ClinicDAO;
@@ -64,9 +66,7 @@ public class EctConsultationFormRequestUtil {
 	public String referalDate;
 	public String service;
 	public String specialist;
-	public String appointmentYear;
-	public String appointmentMonth;
-	public String appointmentDay;
+	public String appointmentDate;
 	public String appointmentHour;
 	public String appointmentMinute;
 	public String appointmentPm;
@@ -199,7 +199,7 @@ public class EctConsultationFormRequestUtil {
 			referalDate = ConversionUtils.toDateString(cr.getReferralDate());
 			service = "" + cr.getServiceId();
 			specialist = "" + cr.getSpecialistId();
-			String appointmentTime = ConversionUtils.toTimeString(cr.getAppointmentTime());
+			Date appointmentTime = cr.getAppointmentTime();
 			reasonForConsultation = cr.getReasonForReferral();
 			clinicalInformation = cr.getClinicalInfo();
 			concurrentProblems = cr.getConcurrentProblems();
@@ -232,42 +232,25 @@ public class EctConsultationFormRequestUtil {
 
 			String date = ConversionUtils.toDateString(cr.getAppointmentDate());
 			if (date == null || date.equals("")) {
-				appointmentYear = "1970";
-				appointmentMonth = "1";
-				appointmentDay = "1";
+            	appointmentDate ="";
 				appointmentHour = "1";
 				appointmentMinute = "1";
 				appointmentPm = "AM";
 
-			} else {
-				int fir = date.indexOf('-');
-				int las = date.lastIndexOf('-');
-				appointmentYear = date.substring(0, fir);
-				appointmentMonth = date.substring(fir + 1, las);
-				appointmentDay = date.substring(las + 1);
-				fir = appointmentTime.indexOf(':');
-				las = appointmentTime.lastIndexOf(':');
-				if (fir > -1 && las > -1) {
+			} 
+			
+			else {
+            	appointmentDate = date;
+            	Calendar cal = Calendar.getInstance();
+				cal.setTime(appointmentTime);
+				
+				if(cal.get(Calendar.AM_PM) == Calendar.AM)
+					appointmentPm = "AM";
+				else
+					appointmentPm = "PM";
 
-					appointmentHour = appointmentTime.substring(0, fir);
-					if (fir < las) {
-						appointmentMinute = appointmentTime.substring(fir + 1, las);
-					}
-					int h = Integer.parseInt(appointmentHour);
-					if (h > 12) {
-						appointmentPm = "PM";
-						appointmentHour = Integer.toString(h - 12);
-					} else if (h == 12) {
-						appointmentPm = "PM";
-						appointmentHour = Integer.toString(h);
-					}else {
-                        appointmentPm = "AM";
-                        if(h == 0)
-                        	appointmentHour = Integer.toString(12);
-                        else
-                        	appointmentHour = Integer.toString(h);
-					}
-				}
+				appointmentHour = String.valueOf(cal.get(Calendar.HOUR));
+	            appointmentMinute = String.valueOf(cal.get(Calendar.MINUTE));
 			}
 		}
 
