@@ -1162,7 +1162,7 @@ if(!btnLabel.equals("PHV")){
             
 %>
 
-<div class="preventionSection well-small" style="<%=hidden%>">
+<div class="preventionSection well-small" style="<%=hidden%>" id="wrap-<%=measure%>">
    
 <!--mtype START-->
 
@@ -1374,7 +1374,7 @@ if(!btnLabel.equals("PHV")){
 	<input type="hidden" id="<%=hdata.get("id")%>-comment-html" value="<%=com%>">
 
 		<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%> <br> <small><%=getFromFacilityMsg(mdb) %></small>'  data-trigger="hover">     
-			<p style="line-height:90%;font-size:18px"  ><%=hdata.get("age")%></p>
+			<p style="line-height:90%;font-size:18px"><%=hdata.get("age")%></p>
 			
 			<span style="line-height:60%;font-size:10px;"><%=hdata.get("prevention_date")%>&nbsp;
 			<i title="<%=mdb.getNumMonthSinceObserved()%> Months since last observed."><%=mdb.getNumMonthSinceObserved()%>M</i>
@@ -1718,7 +1718,11 @@ function createAddAll(d,t){
     <ul class="nav nav-pills">
     	<li class="active"><a href="#completed" data-toggle="tab" title="forms completed in the past"><bean:message key="global.completed" /></a></li>
     	<li><a href="#templates" data-toggle="tab" title="new forms to be completed"><bean:message key="global.templates" /></a></li>
-	
+    	
+    	
+    	<%if(temp.toUpperCase().equals("PHV")){ //temp for PHV TODO: make generic so the below links will be user added/managed %>
+    	<li><a href="#resources" data-toggle="tab" title="">Resources</a></li>
+		<%} %>
     </ul>
 <%
 	String groupToView = temp.toLowerCase(); 
@@ -1775,6 +1779,17 @@ function createAddAll(d,t){
 		</table>
 		</div><!-- templates -->
 
+		<%if(temp.toUpperCase().equals("PHV")){%>
+		<div id="resources" class="tab-pane">
+		<ul>
+		<li><a href="http://www.sexualityandu.ca" target="_blank">www.sexualityandu.ca</a></li>
+		<li><a href="whttp://ww.myfavouritemedicine.com/videos" target="_blank">www.myfavouritemedicine.com/videos (23 and a half hours) </a></li>
+		<li><a href="http://www.hc-sc.gc.ca" target="_blank">www.hc-sc.gc.ca (canada food guide) </a></li>
+		<li><a href="http://www.heartandstroke.com" target="_blank">www.heartandstroke.com (health information) </a></li>
+		<li><a href="http://www.smokershelpline.ca" target="_blank">www.smokershelpline.ca</a></li>
+		</ul>
+		</div>
+		<%}%>
 </div><!-- inner tab content -->
 </div><!-- inner tabable -->    
                            
@@ -1834,6 +1849,18 @@ $(function (){
 });  
 
 $(document).ready(function () {
+
+	//TODO:these will change generic so this function can be re-used
+	$("input:radio[name=SmokingStatus]").click(function() {
+	    var value = $(this).val().toLowerCase();
+	    if(value=="yes"){
+			$('#wrap-POSK').show();
+			$('#wrap-MCCS').show();
+		}else{
+			$('#wrap-POSK').hide();
+			$('#wrap-MCCS').hide();			
+		}
+	});
 	
 	$(document).scroll(function () {
 	    var y = $(this).scrollTop();
