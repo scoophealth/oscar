@@ -459,12 +459,19 @@ public class InboxResultsDao {
 				logger.debug("DOCUMENT " + lbData.isMatchedToPatient());
 				lbData.accessionNumber = "";
 				lbData.resultStatus = "N";
-				String statusString = getStringValue(r[statusLoc]);
-				if (statusString != null) {
-					lbData.resultStatus = statusString;
+				
+				// status seem to matter only for labs - so A for documents
+				// means acknowledged, not abnormal :)
+				if (!LabResultData.DOCUMENT.equals(lbData.labType)) {
+					String statusString = getStringValue(r[statusLoc]);
+					if (statusString != null) {
+						lbData.resultStatus = statusString;
+					}
+	
+					if (lbData.resultStatus.equals("A")) {
+						lbData.abn = true;
+					}
 				}
-
-				if (lbData.resultStatus.equals("A")) lbData.abn = true;
 
 				lbData.dateTime = getStringValue(r[obsDateLoc]);
 				
@@ -542,7 +549,31 @@ public class InboxResultsDao {
 				if (isUnclaimedQuery) {
 					lbData.accessionNumber = getStringValue(r[accessionNumLoc]);
 				}
-				labResults.add(lbData);
+				
+				boolean isDuplicateFound = false;
+				// unclaimed search might contain duplicate records, for example 
+				// with provider_no set to "" and "0", in case we already found one 
+				// unclaimed provider for this result. This bug must be fixed on the
+				// parsing side, this is just a patch to avoid duplicate entries
+				// displayed for the same lab / doc
+				if (isUnclaimedQuery && lbData.getSegmentID() != null) {
+					for(LabResultData l : labResults) {
+						if (lbData.getSegmentID() == null || lbData.labType == null) {
+							continue;
+						}
+
+						if (lbData.getSegmentID().equals(l.getSegmentID())
+								&& lbData.labType.equals(l.labType)) {
+							logger.info("Duplicate result data found, skipping - " + Arrays.toString(r));
+							isDuplicateFound = true;
+							break;
+						}
+					}
+				}
+				
+				if (!isDuplicateFound) {
+					labResults.add(lbData);
+				}
 			}
 
 		} catch (Exception e) {

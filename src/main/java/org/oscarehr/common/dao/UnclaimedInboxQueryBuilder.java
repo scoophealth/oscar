@@ -31,9 +31,8 @@ class UnclaimedInboxQueryBuilder {
 	private int pageSize;
 
 	public String buildQuery() {
-	    String whereSubclauseForUnclamedLabs = "(provRt.provider_no = 0 OR provRt.provider_no = -1 OR provRt.provider_no IS NULL)";
+	    String whereSubclauseForUnclamedLabs = "(provRt.provider_no = 0 OR provRt.provider_no = -1 OR provRt.provider_no IS NULL OR provRt.provider_no = '')";
 	    StringBuilder buf = new StringBuilder();
-	    // sql = "select info.priority, info.requesting_client, info.discipline, info.accessionNum, info.final_result_count" +
 	    buf.append(
 			  "(SELECT "
 			  + "provRt.id, "
