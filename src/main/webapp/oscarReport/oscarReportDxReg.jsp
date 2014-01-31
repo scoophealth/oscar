@@ -60,7 +60,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
         src="../share/javascript/Oscar.js"></script>
         <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
         	<link rel="stylesheet" type="text/css" href="../css/jquery.autocomplete.css" />
-	<script src="http://www.google.com/jsapi"></script>
+	<script src="https://www.google.com/jsapi"></script>
 	<script>
 		google.load("jquery", "1");
 	</script>

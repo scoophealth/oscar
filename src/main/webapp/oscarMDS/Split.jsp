@@ -9,16 +9,13 @@
 
 --%>
 <%@ page import="oscar.dms.*,java.util.*" %>
-<%@ page import="com.sun.pdfview.PDFFile" %>
-<%@ page import="java.io.FileNotFoundException,java.io.IOException" %>
-<%@ page import="org.apache.pdfbox.pdmodel.*" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
-<%@page import="org.oscarehr.common.dao.DocumentDao, java.io.File, java.io.RandomAccessFile, java.nio.channels.FileChannel, java.nio.ByteBuffer, com.sun.pdfview.PDFFile" %>
+<%@page import="oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
+<%@page import="org.oscarehr.common.dao.DocumentDao" %>
 
 <html>
 <head>
@@ -51,37 +48,14 @@
 <ul id="picker">
 <%
 String documentId = request.getParameter("document");
-DocumentDao docdao = (DocumentDao) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("documentDao");
+DocumentDao docdao = SpringUtils.getBean(DocumentDao.class);
 org.oscarehr.common.model.Document thisDocument = docdao.getDocument(documentId);
 
-String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-File documentDir = new File(docdownload);
-
-File docDir = new File(docdownload);
-String documentDirName = documentDir.getName();
-File parentDir = documentDir.getParentFile();
-String filePath=docdownload+thisDocument.getDocfilename();
-
-File cacheDir = new File(parentDir,documentDirName+"_cache");
-
-if(!cacheDir.exists()){
-    cacheDir.mkdir();
-}
-
-File file = new File(documentDir, thisDocument.getDocfilename());
-
-RandomAccessFile raf = new RandomAccessFile(file, "r");
-FileChannel channel = raf.getChannel();
-ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
-PDFFile pdffile = new PDFFile(buf);
-
-for (int i = 1; i <= pdffile.getNumPages(); i++) {
+for (int i = 1; i <= thisDocument.getNumberofpages(); i++) {
 %>
 	<li><img class="page" src="<%= request.getContextPath() + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + documentId + "&curPage=" + i %>" /></li>
 <% }
 
-channel.close();
-raf.close();
 %>
 </ul>
 </div>
