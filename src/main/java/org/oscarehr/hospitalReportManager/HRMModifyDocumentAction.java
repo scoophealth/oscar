@@ -33,6 +33,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.log.LogAction;
+
 public class HRMModifyDocumentAction extends DispatchAction {
 
 	HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
@@ -108,11 +110,13 @@ public class HRMModifyDocumentAction extends DispatchAction {
 		try {
 			String signedOff = request.getParameter("signedOff");
 			HRMDocumentToProvider providerMapping = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(reportId, providerNo);
-
+			Integer id= null;
+			
 			if (providerMapping != null) {
 				providerMapping.setSignedOff(Integer.parseInt(signedOff));
 				providerMapping.setSignedOffTimestamp(new Date());
 				hrmDocumentToProviderDao.merge(providerMapping);
+				id = providerMapping.getId();
 			}
 			else
 			{
@@ -122,7 +126,13 @@ public class HRMModifyDocumentAction extends DispatchAction {
 				hrmDocumentToProvider.setSignedOff(Integer.parseInt(signedOff));
 				hrmDocumentToProvider.setSignedOffTimestamp(new Date());
 				hrmDocumentToProviderDao.persist(hrmDocumentToProvider);
+				id = hrmDocumentToProvider.getId();
 			}
+			
+			for(HRMDocumentToDemographic hd:hrmDocumentToDemographicDao.findByHrmDocumentId(reportId)) {
+				LogAction.addLogSynchronous(providerNo,"Sign-off" + ((signedOff != null && signedOff.equals("0"))?" Revoked":"") , "hrm", reportId, Integer.parseInt(hd.getDemographicNo()));
+			}
+			
 			
 			request.setAttribute("success", true);
 		} catch (Exception e) {

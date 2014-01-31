@@ -115,6 +115,21 @@ public class LogAction {
 
 		addLogSynchronous(oscarLog);
 	}
+	
+	/**
+	 * This method will add a log entry in the same thread and can participate in the same transaction if one exists.
+	 */
+	public static void addLogSynchronous(String provider_no, String action, String content, String contentId, Integer demographicNo) {
+		OscarLog oscarLog = new OscarLog();
+
+		oscarLog.setProviderNo(provider_no);
+		oscarLog.setAction(action);
+		oscarLog.setContent(content);
+		oscarLog.setContentId(contentId);
+		oscarLog.setDemographicId(demographicNo);
+
+		addLogSynchronous(oscarLog);
+	}
 
 	/**
 	 * This method will add the log entry in the same thread and transaction as it's being called in. This method will not throw exceptions, it will log to the file / console / log4j logger if an error occurs.
