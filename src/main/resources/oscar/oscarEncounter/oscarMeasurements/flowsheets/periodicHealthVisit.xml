@@ -234,14 +234,19 @@
 		<item measurement_type="IBPL" display_name="Income below poverty line" guideline="" graphable="no" value_name="Income below poverty line" />
 		<item measurement_type="SKST" display_name="Smoking Status" guideline="&lt;strong&gt;Smoking Counseling&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;To Prevent Tobacco-Caused Disease&lt;/li&gt; &lt;li&gt;Smoking cessation: counseling effective to reduce the proportion of smokers.&lt;/li&gt; &lt;li&gt;Nicotine replacement therapy (A): may be offered as an adjunct to smoking cessation; it increases cessation rates.&lt;/li&gt; &lt;li&gt;Buproprion may be added as an adjunct to smoking cessation; it increases cessation rates. No recommendation yet for newer medications.&lt;/li&gt; &lt;li&gt;Fruit and Green leafy vegetables for smokers: eat an average of seven portions of green leafy vegetables or fruit per week to lower risk of lung cancer.&lt;/li&gt; &lt;li&gt;Referral to validated smoking cessation program: Referral by physician improves participation in group programs.&lt;/li&gt; &lt;li&gt;To reduce the risk of oral cancer. Intervention programs have reduced the incidence of precancerous lesions. Also prevents periodontal disease due to smoking (B).&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Smoker" />
 
-		<item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day"  />
-
+		<item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day">
+			<rules>
+				<recommendation strength="hidden" >
+					<condition type="isDataEqualToYes" param="SKST" value="No" />
+				</recommendation>
+			</rules>
+		</item>
+		
 		<item measurement_type="MCCS" display_name="Smoking Cessation (Program)" guideline="" graphable="no" value_name="Completed" >
 		
 			<rules>
-			<!--hide MCCS if no value for POSK-->
 				<recommendation strength="hidden" >
-					<condition type="lastValueAsInt" param="POSK" value="&lt;0" />
+					<condition type="isDataEqualToYes" param="SKST" value="No" />
 				</recommendation>
 
 				<recommendation strength="recommendation" >
