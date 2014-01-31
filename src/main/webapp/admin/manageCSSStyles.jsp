@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -29,25 +30,20 @@
 <html>
 <head>
 <title><bean:message key="admin.admin.manageCodeStyles"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>
 <script type="text/javascript" src="../share/javascript/picker.js"></script>
 <script type="text/javascript">
-<%	
-	String success = (String)request.getAttribute("success");
-	if( "true".equalsIgnoreCase(success)) {
-%>
-		alert("<bean:message key="admin.manageCodeStyles.sucess"/>");
-<%
-	}
-%>
 
 function enableEdit(elem) {
 	if( elem.checked == true ) {
 		$("styleText").readOnly = false;
+		$("apply-btn").style.display='block';
 	}
 	else {
 		$("styleText").readOnly = true;
+		$("apply-btn").style.display='none';
 	}
 	
 }
@@ -58,6 +54,7 @@ function addStyle(id, option) {
 	var idx2;
 	var tmp1;
 	var tmp2;
+
 	
 	//need to account for color not overwriting background-color
 	if(id == "color") {
@@ -220,21 +217,62 @@ function init() {
 }
 
 </script>
+
+<style type="text/css">
+.span4{padding-left:0px;padding-right:0px;margin-left:0px;margin-right:0px;}
+.span10{padding-left:0px;padding-right:0px;margin-left:0px;margin-right:0px;}
+</style>
+
 </head>
-<body bgcolor="ivory" onload="init();">
+<body>
+
+<h3><bean:message key="admin.admin.manageCodeStyles"/></h3>
+
+<div class="container-fluid form-inline">
+
+<%	
+	String success = (String)request.getAttribute("success");
+	if( "true".equalsIgnoreCase(success)) {
+%>
+	<div class="alert alert-success">
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+	<strong>Success!</strong> <bean:message key="admin.manageCodeStyles.sucess"/>
+	</div>
+<%
+	}
+%>
 
 <html:form action="/admin/manageCSSStyles" method="post">
 <input type="hidden" id="method" name="method" value="save"/>
-<html:hidden styleId="editStyle" property="editStyle"/>
-<div style="float:right;text-align:center;margin-right:40px;"><bean:message key="admin.manageCodeStyles.StyleText"/><br/><span style="font-size:small;"><bean:message key="admin.manageCodeStyles.ManualEnter"/><input type="checkbox" onclick="enableEdit(this);"></span><br/><html:textarea rows="5" cols="90" readonly="true" styleId="styleText" property="styleText"></html:textarea></div>
-<div style="float:left;text-align:center;"><bean:message key="admin.manageCodeStyles.CurrentStyles"/><br/><span style="font-size:small;">&nbsp;</span><br/><html:select styleId="style" property="selectedStyle"><option value="-1"><bean:message key="admin.manageCodeStyles.NoneSelected"/></option><html:optionsCollection property="styles" label="name" value="style"></html:optionsCollection></html:select>&nbsp;<span><input type="button" onclick="edit();return false;" value="<bean:message key="admin.manageCodeStyles.Edit"/>"/><br/><br/>&nbsp;<html:submit value="Delete" onclick="return deleteStyle();"></html:submit></span></div>
-<br clear="all"/>
-<div style="text-align:center;"><input type="button" value="<bean:message key="admin.manageCodeStyles.Clear"/>" onclick="reinit();return false;"/>&nbsp;&nbsp;<input type="button" value="<bean:message key="admin.manageCodeStyles.Apply"/>" onclick="applyStyle();return false;"/><br><span id="example"><bean:message key="admin.manageCodeStyles.Example"/></span></div>
-<hr style="width:33%; text-align:center;"/>
-<div style="text-align:center;">
-<bean:message key="admin.manageCodeStyles.StyleName"/>&nbsp;<html:text styleId="styleName" property="styleName"></html:text>
-<p><bean:message key="admin.manageCodeStyles.Instructions"/></p>
-<bean:message key="admin.manageCodeStyles.FontSize"/>&nbsp;
+
+<div class="well"><!--select existing styles-->
+
+	<bean:message key="admin.manageCodeStyles.CurrentStyles"/><br/>
+
+	<html:select styleId="style" property="selectedStyle">
+	<option value="-1"><bean:message key="admin.manageCodeStyles.NoneSelected"/></option>
+	<html:optionsCollection property="styles" label="name" value="style"></html:optionsCollection>
+	</html:select>
+
+	<input class="btn" type="button" onclick="edit();return false;" value="<bean:message key="admin.manageCodeStyles.Edit"/>"/>
+	<html:submit value="Delete" styleClass="btn" onclick="return deleteStyle();"></html:submit>
+
+</div><!--select existing styles-->
+
+
+
+<div class="span10">
+
+<bean:message key="admin.manageCodeStyles.StyleName"/><br>
+<html:text styleId="styleName" property="styleName"></html:text>
+<!--<br><br>
+<small><bean:message key="admin.manageCodeStyles.Instructions"/></small>-->
+
+</div>
+
+
+<div class="span4">
+<bean:message key="admin.manageCodeStyles.FontSize"/><br>
 <select id="font-size" onchange="addStyle(this.id, this.options[this.selectedIndex]);">
 <option value=""><bean:message key="admin.manageCodeStyles.NoneSelected"/></option>
 <option value="xx-small">XX-Small</option>
@@ -244,50 +282,79 @@ function init() {
 <option value="x-large">X-Large</option>
 <option value="xx-large">XX-Large</option>
 </select>
+<br>
 
-<bean:message key="admin.manageCodeStyles.FontStyle"/>&nbsp;
+<bean:message key="admin.manageCodeStyles.FontStyle"/><br>
 <select id="font-style" onchange="addStyle(this.id, this.options[this.selectedIndex]);">
 <option value=""><bean:message key="admin.manageCodeStyles.NoneSelected"/></option>
 <option value="italic">Italic</option>
 <option value="oblique">Obllique</option>
 </select>
+<br>
 
-<bean:message key="admin.manageCodeStyles.FontVariant"/>&nbsp;
+<bean:message key="admin.manageCodeStyles.FontVariant"/><br>
 <select id="font-variant" onchange="addStyle(this.id, this.options[this.selectedIndex]);">
 <option value=""><bean:message key="admin.manageCodeStyles.NoneSelected"/></option>
 <option value="small-caps">Small-Caps</option>
 </select>
+<br>
 
-<bean:message key="admin.manageCodeStyles.FontWeight"/>&nbsp;
+<bean:message key="admin.manageCodeStyles.FontWeight"/><br>
 <select id="font-weight" onchange="addStyle(this.id, this.options[this.selectedIndex]);">
 <option value=""><bean:message key="admin.manageCodeStyles.NoneSelected"/></option>
 <option value="bold">Bold</option>
 <option value="bolder">Bolder</option>
 <option value="lighter">Lighter</option>
 </select>
-<br/><br/>
+<br/>
 
-<bean:message key="admin.manageCodeStyles.TextDecoration"/>&nbsp;
+<bean:message key="admin.manageCodeStyles.TextDecoration"/><br>
 <select id="text-decoration" onchange="addStyle(this.id, this.options[this.selectedIndex]);">
 <option value=""><bean:message key="admin.manageCodeStyles.NoneSelected"/></option>
 <option value="underline">Underline</option>
 <option value="overline">Overline</option>
 <option value="line-through">Line Through</option>
 </select>
+<br/>
 
-<bean:message key="admin.manageCodeStyles.TextColour"/>&nbsp;
-<a href="javascript:TCP.popup(document.forms[0].elements['color'])"><img
-				width="15" height="13" border="0" src="../images/sel.gif"></a>
-<input id="color" type="text" readonly="readonly" size="7"/>
+<bean:message key="admin.manageCodeStyles.TextColour"/><br>
+<a href="javascript:TCP.popup(document.forms[0].elements['color']);"><img width="15" height="13" border="0" src="../images/sel.gif"></a>
+<input id="color" type="text"  size="7" onchange="checkColours();"/>
+<br>
 
-<bean:message key="admin.manageCodeStyles.BackgroundColour"/>&nbsp;
-<a href="javascript:TCP.popup(document.forms[0].elements['background-color'])"><img
-				width="15" height="13" border="0" src="../images/sel.gif"></a>
-<input id="background-color" type="text" readonly="readonly" size="7"/>
+<bean:message key="admin.manageCodeStyles.BackgroundColour"/><br>
+<a href="javascript:TCP.popup(document.forms[0].elements['background-color'])" ><img width="15" height="13" border="0" src="../images/sel.gif"></a>
+<input id="background-color" type="text"  size="7" onchange="checkColours();"/>
+<br>
+
+
+</div><!--span4-->
+
+<div class="span4">
+<html:hidden styleId="editStyle" property="editStyle"/>
+
+<bean:message key="admin.manageCodeStyles.StyleText"/> <small><bean:message key="admin.manageCodeStyles.ManualEnter"/><input type="checkbox" onclick="enableEdit(this);"></small><br/>
+<html:textarea rows="8" styleClass="span6" readonly="true" styleId="styleText" property="styleText"></html:textarea>
+<input class="btn" id="apply-btn" type="button" value="<bean:message key="admin.manageCodeStyles.Apply"/>" onclick="applyStyle();return false;" style="display:none"/>
+
+<br><br>
+
+Sample Text:<br>
+<span id="example"><bean:message key="admin.manageCodeStyles.Example"/></span>
+
+</div><!--span6-->
+
+
+
+<div class="span10" style="text-align:right;">
+<hr>
+<input class="btn btn-large" type="button" value="<bean:message key="admin.manageCodeStyles.Clear"/>" onclick="reinit();return false;"/>
+<html:submit value="Save" styleClass="btn btn-large btn-primary" onclick="return checkfields();"></html:submit>
 </div>
-<p style="text-align:center;">
-<html:submit value="Save" onclick="return checkfields();"></html:submit>
+
 </html:form>
+</div>
+
 
 </body>
 
