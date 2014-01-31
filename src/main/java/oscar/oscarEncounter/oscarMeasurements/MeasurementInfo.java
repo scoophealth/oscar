@@ -246,6 +246,27 @@ public class MeasurementInfo {
         return value;
     }
     
+    public int isDataEqualToYes(String measurement){   	
+        int v = 0;
+        String str="";
+        ArrayList list = getMeasurementData(measurement);
+        Hashtable h =  null;
+        if ( list != null && list.size() > 0){
+            EctMeasurementsDataBean mdata = (EctMeasurementsDataBean) list.get(0);
+            try{
+            	str = mdata.getDataField();
+            }catch (Exception e ){
+               MiscUtils.getLogger().error("Error", e);
+            }
+        }        
+        
+        if(str.equalsIgnoreCase("yes")){
+        	v=1;
+        }
+        
+        return v;
+    }
+    
     public boolean getGender(String sex){
     	if (sex==null) return false;
     	

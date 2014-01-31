@@ -165,7 +165,11 @@ public class RecommendationCondition {
         	list.add(new DSCondition("getGender", "M", "==", "true"));
         }else if ("isFemale".equals(type)){
         	list.add(new DSCondition("getGender", "F", "==", "true"));
-        }
+	    }else if ("isDataEqualToYes".equals(type)){
+	    	int v = 0;
+	    	if(value.equals("Yes")){ v=1;}
+	        list.add(new DSCondition("isDataEqualToYes",param,"==",""+v)); //change "Yes" to ""+value
+	    }
 
         /*if ("getDataAsDouble".equals(type)){
             String toParse = value;
