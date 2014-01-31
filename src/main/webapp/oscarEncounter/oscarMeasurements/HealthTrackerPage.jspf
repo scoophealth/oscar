@@ -72,6 +72,8 @@
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
     
+    session.setAttribute("flowsheet", "healthTracker");
+    
     String ornPilot = OscarProperties.getInstance().getProperty("ORN_PILOT", "no");
 	 
 //ADD MEAS
@@ -286,9 +288,9 @@ div.preventionSection {
     width: 620px;
     min-height:50px;
     margin-top:5px;
-    border: thin solid grey;
+    border: thin solid #c6c6c6;
     background: #fff;
-    padding:0px 2px 8px 0px;
+    padding:0px 0px 8px 0px;
 }
 
 div.preventionSection:hover {
@@ -1436,7 +1438,7 @@ if(!btnLabel.equals("PHV")){
 <div class="well well-small mtype-graph-input">
 
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-html="true" data-content="<%//=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%//=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
-                <span title="<%=h2.get("guideline")%>" style="padding-left:5px;"><%=h2.get("display_name")%></span>
+                <span style="padding-left:5px;"><%=h2.get("display_name")%></span>
             </a>
             <button type="button" class="btn pull-right" value="Add" onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')"><i class="icon-plus"></i></button>
            
