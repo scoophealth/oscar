@@ -28,7 +28,7 @@
 	<header display_name="Basics">
 		<item measurement_type="HT" display_name="Height cm" guideline="" graphable="yes" value_name="Height"/>
 		<item measurement_type="WT" display_name="Weight kg" guideline="" graphable="yes" value_name="Weight"/>
-		<item measurement_type="BMI" display_name="BMI" guideline="Target: 18.5 - 24.9 (kg/m&lt;sup&gt;2&lt;/sup&gt;)" graphable="yes" value_name="BMI">
+		<item measurement_type="BMI" display_name="BMI" guideline="&lt;strong&gt;BMI (Body Mass Index = kg/m2):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;B recommendation for obese adults with obesity-related disease.&lt;/li&gt; &lt;li&gt;C recommendation for general adult population.&lt;/li&gt; Obesity (BMI &gt; 30) &lt;li&gt; The Obesity Network recommends screening for depression, eating disorders and psychiatric disorders in obese patients.&lt;/li&gt; &lt;li&gt;Behaviour modification techniques, cognitive behavioural therapy, activity enhancement and dietary counseling are effective in the management of obesity.&lt;/li&gt; &lt;li&gt; Reduce calorie intake by 500-1000 kcal/day.&lt;/li&gt; &lt;li&gt;Initiate 30 min of moderate intensity exercise 3-5x/week, increase to &gt; 60 min on most days with endurance training.&lt;/li&gt; &lt;li&gt;Target weight loss of 5%-10% of body weight or 0.5-1 kg/wk for 6 months&lt;/li&gt; &lt;/ul&gt;" graphable="yes" value_name="BMI">
 			<rules>
 				<recommendation strength="recommendation" >
 					<condition type="monthrange" param="BMI" value="3-6" />
@@ -50,7 +50,7 @@
 				</rule>
 			</ruleset>
 		</item>
-		<item measurement_type="WAIS" display_name="Waist Circ " guideline="" graphable="yes" value_name="Waist Circ">
+		<item measurement_type="WAIS" display_name="Waist Circ" guideline="&lt;strong&gt;Waist to Hip Ratio (WHR):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;WHR &gt;1.0 for men and &gt;0.85 for women is considered a marker for abdominal obesity.&lt;/li&gt; &lt;/ul&gt; &lt;br&gt; &lt;strong&gt;Waist circumference (WC):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;A WC above 102 cm (40 in) for men and 88 cm (35 in) for women is associated with increased risk of type 2 diabetes, coronary heart disease and hypertension.&lt;/li&gt; &lt;li&gt;The WC should be used in those with a BMI between 18.5 and 34.9 to identify additional risk&lt;/li&gt; &lt;/ul&gt;" graphable="yes" value_name="Waist Circ">
 			<rules>
 				<recommendation strength="recommendation" >
 					<condition type="monthrange" param="WAIS" value="3-6" />
@@ -73,12 +73,12 @@
 				</rule>
 			</ruleset>
 		</item>
-		<item measurement_type="BP" display_name="BP" guideline="Target &gt; 130/80" graphable="yes" value_name="BP" />
+		<item measurement_type="BP" display_name="BP" guideline="&lt;strong&gt;Blood Pressure (B):&lt;/strong&gt; &lt;br&gt; To screen for hypertension. &lt;ul&gt; &lt;li&gt;Target blood pressure of 140/90 in most patients and 130/80 in patients with diabetes and chronic kidney disease.&lt;/li&gt; &lt;li&gt;Treatment of hypertension in adults lowers risk of stroke, cardiac events and death (A recommendation).&lt;/li&gt; &lt;/ul&gt;" graphable="yes" value_name="BP" />
 	</header>
 	
 	<header display_name="Immunizations">
 
-		<item prevention_type="DTaP" display_name="Adacel (tdaP)" guideline="every 10 years" graphable="no">
+		<item prevention_type="DTaP" display_name="Adacel (tdaP)" guideline="&lt;strong&gt;Tetanus (A):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Routine booster doses every 10 years if had primary series&lt;/li&gt; &lt;li&gt;Adults without a primary series need three doses.&lt;/li&gt; &lt;li&gt;Primary adult series are given at time 0, 1-2 months, and 6-12 months Pertussis&lt;/li&gt; &lt;li&gt;Single dose of acellular pertussis vaccine to all adults who have not received a dose in the past.&lt;/li&gt; &lt;/ul&gt;" graphable="no">
 			<rules>
 				<recommendation strength="warning" >
 					<condition type="monthrange" value="&gt;120" />
@@ -89,7 +89,7 @@
 			</rules>
 		</item>
 		
-		<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no">
+		<item prevention_type="Flu" display_name="Flu Vaccine" guideline="&lt;strong&gt;Influenza vaccine (A):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Annually immunize the following: People at high risk of influenza-related complications or those more likely to require hospitalization. Adults (including pregnant women) and children with the following chronic&lt;/li&gt; &lt;li&gt; health conditions: &lt;ul&gt; &lt;li&gt;cardiac or pulmonary disorders (including bronchopulmonary dysplasia, cystic fibrosis and asthma);&lt;/li&gt; &lt;li&gt;diabetes mellitus and other metabolic diseases; &lt;li&gt;cancer, immunodeficiency, immunosuppression (due to underlying disease and/or therapy);&lt;/li&gt; &lt;li&gt;renal disease;&lt;/li&gt; &lt;li&gt;anemia or hemoglobinopathy; &lt;/li&gt; &lt;li&gt;conditions that compromise the management of respiratory secretions and are associated with an increased risk of; and children and adolescents with conditions treated for long periods with acetylsalicylic acid.&lt;/li&gt; &lt;li&gt;People of any age who are residents of nursing homes and other chronic care facilities.&lt;/li&gt; &lt;li&gt;People &gt;65 years of age.&lt;/li&gt; &lt;li&gt;Healthy children 6 to 23 months of age. &lt;/li&gt; &lt;li&gt;Healthy pregnant women (the risk of influenza-related hospitalization for increases with length of gestation, i.e. it is higher in the third than in the second trimester).&lt;/li&gt; &lt;/ul&gt; &lt;/li&gt; &lt;/ul&gt;" graphable="no">
 			<rules>
 				<recommendation strength="warning" >
 					<condition type="monthrange" value="&gt;12" />
@@ -100,7 +100,7 @@
 			</rules>
 		</item>
 
-		<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no">
+		<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="&lt;strong&gt;Pneumococcal vaccine (A):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;To all persons &gt;65 years&lt;/li&gt; &lt;li&gt;High Risk: All persons &gt;5 years with the following conditions: &lt;ul&gt; &lt;li&gt;sickle cell disease,&lt;/li&gt; &lt;li&gt;asplenia, splenic dysfunction,&lt;/li&gt; &lt;li&gt;chronic cardiorespiratory disease (except asthma),&lt;/li&gt; &lt;li&gt;cirrhosis, alcoholism,&lt;/li&gt; &lt;li&gt;chronic renal disease,&lt;/li&gt; &lt;li&gt;nephrotic syndrome,&lt;/li&gt; &lt;li&gt;diabetes mellitus,&lt;/li&gt; &lt;li&gt;chronic CSF leak,&lt;/li&gt; &lt;li&gt;HIV infection,&lt;/li&gt; &lt;li&gt;smokers,&lt;/li&gt; &lt;li&gt;homeless&lt;/li&gt; &lt;li&gt;injection drug users and &lt;/li&gt; &lt;li&gt;other conditions associated with immunosuppression (Hodgkin's disease, lymphoma, multiple myeloma, induced immunosuppression for organ transplantation).&lt;/li&gt; &lt;/li&gt; &lt;/ul&gt;" graphable="no">
 			<rules>
 			       	<recommendation strength="hidden">
 					<condition type="patientAge" value="&lt;65" />
@@ -111,7 +111,7 @@
 			</rules>		
 		</item>
 
-		<item prevention_type="VZ" display_name="Zoster vaccine" guideline="" graphable="no">
+		<item prevention_type="VZ" display_name="Zoster vaccine" guideline="&lt;strong&gt;Herpes zoster vaccine:&lt;/strong&gt;&lt;br&gt; Indicated for the prevention of herpes zoster and its complications in persons 60 years and older without contraindications." graphable="no">
 			<rules>
 			       	<recommendation strength="hidden">
 					<condition type="patientAge" value="&lt;60" />
@@ -119,7 +119,7 @@
 			</rules>		
 		</item>
 
-		<item prevention_type="HPV Vaccine" display_name="HPV Vaccine" guideline="" graphable="no">
+		<item prevention_type="HPV Vaccine" display_name="HPV Vaccine" guideline="&lt;strong&gt;Human Papillomavirus:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Recommended for females between 9 and 13 years&lt;/li&gt; &lt;li&gt;Would benefit females between 14 and 26 years of age even if already sexually active&lt;/li&gt; &lt;/ul&gt;" graphable="no">
 			<rules>
 				<recommendation strength="hidden">
 					<condition type="isMale" />
@@ -139,7 +139,7 @@
 	</header>
 	
 	<header display_name="Prevention Interventions">
-		<item prevention_type="PAP" display_name="PAP" guideline="for women; every 3 years; ages 21 to 69" graphable="no" >
+		<item prevention_type="PAP" display_name="PAP" guideline="&lt;strong&gt;Pap(B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;To reduce the risk of invasive cervical carcinoma.&lt;/li&gt; &lt;li&gt;There is fair evidence to include Pap smears in the periodic health examination of women who have been sexually active.&lt;/li&gt; &lt;li&gt;Please consult your provincial cancer prevention guidelines for initiation, frequency and cessation of screening.&lt;/li&gt; &lt;/ul&gt;" graphable="no" >
 			<rules>
 				<recommendation strength="hidden">
 					<condition type="isMale" />
@@ -160,7 +160,7 @@
 			</rules>
 		</item>
 
-		<item prevention_type="MAM" display_name="Mammography" guideline="" graphable="no" >
+		<item prevention_type="MAM" display_name="Mammography" guideline="&lt;strong&gt;Breasts (A):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;To screen for breast cancer&lt;/li&gt; &lt;li&gt;Screen women aged 50-69 years by clinical examination and mammography, every 1-2 years.&lt;/li&gt; &lt;/ul&gt; &lt;strong&gt;Mammography with Clinical Breast Exam (A):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Screen women aged 50-69 every 1-2 years for breast cancer.&lt;/li&gt; &lt;li&gt;C recommendation for women aged 40-49 at average risk.&lt;/li&gt; &lt;li&gt;Frequent screening may be required (every 12-18 months) in 40-49 year group.&lt;/li&gt; &lt;li&gt;Upon reaching the age of 40, women should be informed of the potential benefits and risks of screening mammography to decide at what age they wish to begin screening.&lt;/li&gt; &lt;/ul&gt;" graphable="no" >
 			<rules>
 				<recommendation strength="hidden">
 					<condition type="isMale" />
@@ -181,7 +181,7 @@
 			</rules>
 		</item>
 
-		<item prevention_type="COLONOSCOPY" display_name="Colonoscopy" guideline="" graphable="no" >
+		<item prevention_type="COLONOSCOPY" display_name="Colonoscopy" guideline="&lt;strong&gt;Colorectal cancer screening of patients &gt; or =50 years:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Hemoccult multiphase every 1-2 years (A) OR&lt;/li&gt; &lt;li&gt;Flexible Sigmoidoscopy (B) (Frequency not established)&lt;/li&gt; &lt;li&gt;Colonoscopy (Frequency not established)&lt;/li&gt; &lt;/ul&gt;" graphable="no" >
 			<rules>
 			       	<recommendation strength="hidden">
 					<condition type="patientAge" value="&lt;50" />
@@ -206,7 +206,7 @@
 			</rules>
 		</item>
 
-		<item prevention_type="BMD" display_name="Bone Mineral Density" guideline="" graphable="no" >
+		<item prevention_type="BMD" display_name="Bone Mineral Density" guideline="Bone Mineral Density: Screen for osteoporosis From CTFPHC (B): &lt;br&gt; &lt;p&gt;To prevent fragility fractures: Screen postmenopausal women by DEXA if over 65 years of age or have a history of previous fracture, or have an Osteoprosis Risk Assessment Instrument score &gt; or =9 or have a SCORE score &gt; or =6.&lt;/p&gt; From Osteoporosis Society of Canada: Indications for measuring bone mineral density &lt;ul&gt; &lt;li&gt;Older Adults (age &gt; or = 50 yr)&lt;/li&gt; &lt;li&gt;Age &gt; or = 65 yr (both women and men)&lt;/li&gt; &lt;li&gt;Clinical risk factors for fracture (menopausal women, men age 50-64 yr): Fragility fracture after age 40 yr&lt;/li&gt; &lt;li&gt;Prolonged use of glucocorticoids*&lt;/li&gt; &lt;li&gt;Use of other high-risk medications &lt;/li&gt; &lt;li&gt;Parental hip fracture Vertebral fracture or osteopenia identified on radiography&lt;/li&gt; &lt;li&gt;Current smoking&lt;/li&gt; &lt;li&gt;High alcohol intake&lt;/li&gt; &lt;li&gt;Low body weight (&lt; 60 kg) or &lt;/li&gt; &lt;li&gt;major weight loss (&gt; 10% of body weight at age 25 yr) Rheumatoid arthritis&lt;/li&gt; &lt;li&gt;Other disorders strongly associated with osteoporosis&lt;/li&gt; &lt;li&gt;Younger adults (age &lt;50 yr)&lt;/li&gt; &lt;li&gt;Fragility fracture&lt;/li&gt; &lt;li&gt;Prolonged use of glucocorticoids*&lt;/li&gt; &lt;li&gt;Use of other high-risk medications&lt;/li&gt; &lt;li&gt;Hypogonadism or premature&lt;/li&gt; &lt;li&gt;menopause (age&lt;45 yr)&lt;/li&gt; &lt;li&gt;Malabsorption syndrome&lt;/li&gt; &lt;li&gt;Primary hyperparathyroidism&lt;/li&gt; &lt;li&gt;Other disorders strongly associated with rapid bone loss and/or fracture&lt;/li&gt; &lt;/ul&gt;" graphable="no" >
 			<rules>
 			       	<recommendation strength="hidden">
 					<condition type="patientAge" value="&lt;65" />
@@ -222,17 +222,17 @@
 	
 	<header display_name="Lifestyle/Habits">
 
-<item measurement_type="DIET" display_name="Diet" guideline="" graphable="no" value_name="Diet" />
+<item measurement_type="DIET" display_name="Diet" guideline="&lt;strong&gt;Adverse nutritional habits (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Prevention of coronary artery disease, colon cancer&lt;/li&gt; &lt;li&gt;Provide general dietary advice: decrease fat, increase fiber.&lt;/li&gt; &lt;li&gt;Those at increased risk, consider referral to a clinical nutritionist or other professional with specialized nutritional expertise.&lt;/li&gt; &lt;/ul&gt; &lt;strong&gt;Dietary advice on fat/cholesterol (B): &lt;/strong&gt; &lt;li&gt;Prevent coronary heart disease&lt;/li&gt; &lt;li&gt;Decrease intake of total fat, saturated fat, and cholesterol&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Diet" />
 
-<item measurement_type="CAVD" display_name="Calcium and Vitamin D" guideline="" graphable="no" value_name="Calcium and Vitamin D" />
+<item measurement_type="CAVD" display_name="Calcium and Vitamin D" guideline="&lt;strong&gt;Calcium 1000-1500mg/day:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Prevent osteoporosis&lt;/li&gt; &lt;li&gt;The Osteoporosis Society of Canada (OSC) recommends adults have 1000 to 1500 mg of elemental calcium per day; 1200 mg if &gt; or = 50 yrs.&lt;/li&gt; &lt;li&gt;If this amount cannot be provided by diet alone (usually three or more servings of dairy products), then calcium supplementation should be recommended.&lt;/li&gt; &lt;li&gt;The Society of Obstetricians and Gynaecologists of Canada (SOGC) recommend postmenopausal women have 1500 mg of elemental calcium per day.&lt;/li&gt; &lt;/ul&gt; &lt;strong&gt;Vitamin D:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Prevent osteoporosis and hip fractures&lt;/li&gt; &lt;li&gt;OSC recommends 400-1000 IU (10-25 mcg) daily if low risk of vit D deficiency and 800-1000 IU (20-25 mcg) if &gt; or = 50 yrs and at moderate risk of vit D deficiency.&lt;/li&gt; &lt;li&gt;SOGC recommends 800 IU/day in postmenopausal women &lt;/li&gt; &lt;/ul&gt; From CTFPHC (B): Calcium and vitamin D supplementation alone prevents osteoprotic fractures in postmenopausal women without documented osteoprosis." graphable="no" value_name="Calcium and Vitamin D" />
 
-<item measurement_type="EXE" display_name="Exercise" guideline="" graphable="no" value_name="Exercise" />
+<item measurement_type="EXE" display_name="Exercise" guideline="&lt;strong&gt;Moderate physical activity (B): &lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Prevention of cardiovascular disease and hypertension.&lt;/li&gt; &lt;li&gt;Physical activity can also contribute to the prevention of obesity, Type II diabetes mellitus and osteoporosis.&lt;/li&gt; &lt;li&gt;Recommend moderate-level physical activity performed consistently to accumulate 30 minutes or more over the course of most days of the week.&lt;/li&gt; &lt;li&gt;Moderate intensity physical activities include: normal walking, golfing on foot, slow biking, raking leaves, cleaning windows, slow dancing, light restaurant work. &lt;/li&gt; &lt;li&gt;Note: Doing moderate physical activity is a B recommendation but physician counseling is a C.&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Exercise" />
 
 <item measurement_type="FAMR" display_name="Family/Relationships" guideline="" graphable="no" value_name="Family/Relationships" />
 <item measurement_type="WKED" display_name="Work/Education" guideline="" graphable="no" value_name="Work/Education" />
 	
 		<item measurement_type="IBPL" display_name="Income below poverty line" guideline="" graphable="no" value_name="Income below poverty line" />
-		<item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />
+		<item measurement_type="SKST" display_name="Smoking Status" guideline="&lt;strong&gt;Smoking Counseling&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;To Prevent Tobacco-Caused Disease&lt;/li&gt; &lt;li&gt;Smoking cessation: counseling effective to reduce the proportion of smokers.&lt;/li&gt; &lt;li&gt;Nicotine replacement therapy (A): may be offered as an adjunct to smoking cessation; it increases cessation rates.&lt;/li&gt; &lt;li&gt;Buproprion may be added as an adjunct to smoking cessation; it increases cessation rates. No recommendation yet for newer medications.&lt;/li&gt; &lt;li&gt;Fruit and Green leafy vegetables for smokers: eat an average of seven portions of green leafy vegetables or fruit per week to lower risk of lung cancer.&lt;/li&gt; &lt;li&gt;Referral to validated smoking cessation program: Referral by physician improves participation in group programs.&lt;/li&gt; &lt;li&gt;To reduce the risk of oral cancer. Intervention programs have reduced the incidence of precancerous lesions. Also prevents periodontal disease due to smoking (B).&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Smoker" />
 
 		<item measurement_type="POSK" display_name="Smoking Packs Per Day" guideline="" graphable="yes" value_name="Packs per day"  />
 
@@ -256,7 +256,7 @@
 			</rules>
 		</item>
 
-		<item measurement_type="DRPW" display_name="Drinks per Week" guideline="" graphable="no" value_name="# drinks per week" >
+		<item measurement_type="DRPW" display_name="Drinks per Week" guideline="&lt;strong&gt;Alcohol Counseling&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Prevent Alcohol related Morbidities&lt;/li&gt; &lt;li&gt;Case finding for problem drinking: Standardized questionnaires (e.g. CAGE, AUDIT) and/or patient inquiry.&lt;/li&gt; &lt;li&gt;Counseling for problem drinking: Clarify association between alcohol consumption and alcohol-related consequences; advice to reduce consumption&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="# drinks per week" >
 			<ruleset>
 			    <rule indicationColor="HIGH">
 				<condition type="isMale"  value="true" />
@@ -274,9 +274,9 @@
 
 		<item measurement_type="SEXH" display_name="Sexual History" guideline="" graphable="no" value_name="Sexual History" />
 	
-		<item measurement_type="STIS" display_name="STI Screening" guideline="" graphable="no" value_name="STI Screening" />
+		<item measurement_type="STIS" display_name="STI Screening" guideline="&lt;strong&gt;Screening for Sexually Transmitted Infections in High Risk Populations:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;High-risk Populations: individuals under age 30 with at least 2 sexual partners in the previous year or age 16 years at first intercourse, prostitutes, sexual contacts of individuals known to have an STI.&lt;/li&gt; &lt;li&gt;Syphilis (A): Serology testing &lt;/li&gt; &lt;li&gt;Gonorrhea (A): Screen with Gram stain and culture of cervical or urethral specimen. Urine testing available. &lt;/li&gt; &lt;li&gt;Chlamydia (B): Screen with culture or polymerase chain reaction. Urine testing available.&lt;/li&gt; &lt;li&gt;HIV (A): Screen with blood test&lt;/li&gt; &lt;li&gt;Hepatitis B virus (HBV): Screen with hepatitis B surface antigen (HBsAg) in blood. &lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="STI Screening" />
 		
-		<item measurement_type="SSXC" display_name="Safe Sex Counselling" guideline="" graphable="no" value_name="Safe Sex Counselling" />
+		<item measurement_type="SSXC" display_name="Safe Sex Counselling" guideline="&lt;strong&gt;Safe sex practices/Sexually Transmitted Diseases counseling&lt;/strong&gt; &lt;br&gt; (esp. Gonorrhea counseling) (B): &lt;ul&gt; &lt;li&gt;Prevent transmission of sexually transmitted diseases.&lt;/li&gt; &lt;li&gt;Abstinence is most effective, fair evidence to use condoms&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Safe Sex Counselling" />
 
 		<item measurement_type="BCTR" display_name="Family Planning/contraception" guideline="below age 50" graphable="no" value_name="Birth Control">
 			<rules>
@@ -286,7 +286,7 @@
 			</rules>
 		</item>
 
-		<item measurement_type="FAS" display_name="Folic Acid Supplementation" guideline="for women; below age 50" graphable="no" value_name="Folic Acid Supplementation"  >
+		<item measurement_type="FAS" display_name="Folic Acid Supplementation" guideline="&lt;strong&gt;Folic acid (A):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;To prevent neural tube defects (NTD) in all women capable of becoming pregnant&lt;/li&gt; &lt;li&gt;Low risk-women: Folic acid supplementation of 0.4 to 0.8 mg daily taken at least one month before and three months after conception.&lt;/li&gt; &lt;li&gt;High-risk women (previous pregnancy with NTD): Supplementation with 4 mg folic acid daily during 3 months before and 3 month after conception reduces recurrence.&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Folic Acid Supplementation"  >
 			<rules>
 				<recommendation strength="hidden">
 					<condition type="isMale" />
@@ -301,11 +301,11 @@
 		</item>
 
 
-		<item prevention_type="MMRV" display_name="Rubella and Varicella" guideline="" graphable="no"/>
+		<item prevention_type="MMRV" display_name="Rubella and Varicella" guideline="&lt;strong&gt;Rubella (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Give one dose of a vaccine to non-pregnant women of childbearing age unless there is proof of immunity via immunization records or serology.&lt;/li&gt; &lt;li&gt;They do not recommend serologic testing as it may delay needed immunization. &lt;/li&gt; &lt;li&gt;According to the Task Force, the decision on universal vaccination or screening for immunization status followed by vaccination depends on the physician's practice setting (i.e., cost of serologic testing, will patient follow-up for needed vaccination).&lt;/li&gt; &lt;/ul&gt; &lt;strong&gt;Varicella (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Determine Varicella infection status by history or serology.&lt;/li&gt; &lt;li&gt;Administer to those susceptible to Varicella infection, including: women of childbearing age (but not during pregnancy), health care workers, household contacts of immunocompromised people, adults who may be exposed at work (teachers, day care workers), other susceptible adults, especially new immigrants from tropical climates.&lt;/li&gt; &lt;li&gt;Give two doses at least 4 weeks apart, if &gt; or = 13 years.4 &lt;/li&gt; &lt;/ul&gt;" graphable="no"/>
 
 		<item measurement_type="SHAB" display_name="Sleep Habits" guideline="" graphable="no" value_name="Sleep Habits" />
 
-		<item measurement_type="COGA" display_name="Cognitive Assessment" guideline="ages 65 and older" graphable="no" value_name="Cognitive Assessment"  >
+		<item measurement_type="COGA" display_name="Cognitive Assessment" guideline="&lt;strong&gt;Cognitive assessment:&lt;/strong&gt; &lt;li&gt;When caregivers or informants describe cognitive decline in an individual, these observations should be taken very seriously; cognitive assessment and careful follow-up are indicated (A). &lt;/li&gt; &lt;li&gt;Memory complaints by patient or caregiver should be evaluated and the individual followed to assess progression.&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Cognitive Assessment"  >
 			<rules>
 			       	<recommendation strength="hidden">
 					<condition type="patientAge" value="&lt;65" />
@@ -321,12 +321,12 @@
 
 	<header display_name="Safety">
 
-		<item measurement_type="HPNP" display_name="Hearing protection/Noise control programs" guideline="" graphable="no" value_name="Hearing protection/Noise control programs" />
+		<item measurement_type="HPNP" display_name="Hearing protection/Noise control programs" guideline="&lt;ul&gt; &lt;li&gt;Noise control programs/ hearing protection (A): Good evidence to support noise control programs and hearing protection but no comment made on impact of physician counseling.&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Hearing protection/Noise control programs" />
 
-		<item measurement_type="SBLT" display_name="Seat belts" guideline="" graphable="no" value_name="Seat belts" />
+		<item measurement_type="SBLT" display_name="Seat belts" guideline="&lt;ul&gt; &lt;li&gt;Seat belts (B): Prevent injury from Motor Vehicle Collisions. Physicians can influence significant short-term improvement in seat belt use.&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Seat belts" />
 		<item measurement_type="SDET" display_name="Smoke detector that works" guideline="" graphable="no" value_name="Smoke detector that works" />
 		
-	    	<item measurement_type="FAHS" display_name="Risk Of Falling" guideline="Has Fallen or has risk factors for Falling" graphable="no" value_name="Risk of Falling">        
+	    	<item measurement_type="FAHS" display_name="Risk Of Falling" guideline="&lt;strong&gt;Fall assessment:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Good evidence to perform multidisciplinary post-fall assessment on elderly patients who have a history of falls or to refer elderly patients to multidisciplinary post-fall assessment teams, where such a service is available (A).&lt;/li&gt; &lt;li&gt;There is insufficient evidence to support including assessment and counseling of elderly patients for the risk of falling in the routine health exam of the elderly&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Risk of Falling">        
 			 <rules> 
 			       	<recommendation strength="hidden">
 					<condition type="patientAge" value="&lt;65" />
@@ -338,12 +338,12 @@
 			</rules>
 		</item>
 
-		<item measurement_type="SUNP" display_name="Sun protection" guideline="" graphable="no" value_name="Sun protection" />
+		<item measurement_type="SUNP" display_name="Sun protection" guideline="&lt;strong&gt;Avoid sun exposure, use protective clothing (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Prevent skin cancer&lt;/li&gt; &lt;li&gt;Evidence from epidemiologic studies focusing on etiology of melanoma, prudence and low cost/side-effects, supports the avoidance of excessive sun exposure at mid-day, plus the use of protective clothing&lt;/li&gt; &lt;li&gt;Sunscreen use is a C recommendation for general population (last updated 1994).&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Sun protection" />
 	</header>
 	
 	<header display_name="Oral Hygiene">
-		<item measurement_type="BTFT" display_name="Brush teeth with fluoride toothpaste and floss" guideline="" graphable="no" value_name="Brush teeth with fluoride toothpaste and floss" />
-		<item measurement_type="DILY" display_name="Dentist in the last year" guideline="" graphable="no" value_name="Dentist in the last year" />		
+		<item measurement_type="BTFT" display_name="Brush teeth with fluoride toothpaste and floss" guideline="&lt;strong&gt;Oral Hygiene:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;To prevent periodontal disease, and oral cancer&lt;/li&gt; &lt;li&gt;Brushing/flossing teeth (A, B): Flossing teeth is effective to preventing gingivitis in adults. Brushing teeth is essential in the application of fluoride dentifrice to prevent dental caries (A) and prevention of gingivitis (B).&lt;/li&gt; &lt;li&gt;Fluoride (toothpaste/supplement) (A): Daily use of fluoride toothpaste gives significant reductions in decay and/or daily fluoride supplements (only where water fluoride levels are less than optimal).&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Brush teeth with fluoride toothpaste and floss" />
+		<item measurement_type="DILY" display_name="Dentist in the last year" guideline="&lt;ul&gt; &lt;li&gt;Tooth scaling and prophylaxis (B): In periodontally healthy patients, intensive professional oral hygiene and prophylaxis prevents chronic gingivitis and periodontitis. Annual scaling provides no additional benefit for those who maintain good oral hygiene.&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Dentist in the last year" />		
 	</header>
 	
 	<header display_name="Vision and Hearing">
@@ -360,7 +360,7 @@
 			</rules>
 		</item>
 
-		<item measurement_type="HCON" display_name="Do you have any hearing concerns?" guideline="" graphable="no" value_name="Do you have any hearing concerns?" >
+		<item measurement_type="HCON" display_name="Do you have any hearing concerns?" guideline="&lt;strong&gt;Screening for hearing impairment in elderly (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;All of the following have high sensitivity to detect hearing loss&lt;/li&gt; &lt;li&gt;Whispered voice test: Whispered-voice, out of field of vision&lt;/li&gt; &lt;li&gt;Audioscope&lt;/li&gt; &lt;li&gt;Inquiry: Ask the patient about any hearing difficulty&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Do you have any hearing concerns?" >
 			<rules>
 				<recommendation strength="warning" >
 					<condition type="monthrange" value="-1" />
@@ -394,7 +394,7 @@
             </ruleset>
           </item>
 
-	<item measurement_type="FBS" display_name="Fasting Plasma Glucose" guideline="" graphable="yes" value_name="Fasting Plasma Glucose">
+	<item measurement_type="FBS" display_name="Fasting Plasma Glucose" guideline="&lt;strong&gt;Fasting plasma glucose (FPG):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Screen for Type II diabetes mellitus&lt;/li&gt; &lt;li&gt;Should be done every 3 years in adults &gt; or =40 years of age or more frequently if one of the following risk factors: &lt;ul&gt; &lt;li&gt;First-degree relative with DM&lt;/li&gt; &lt;li&gt;Presence of complications associated with DM&lt;/li&gt; &lt;li&gt;Hypertension&lt;/li&gt; &lt;li&gt;Dyslipidemia&lt;/li&gt; &lt;li&gt;Overweight or Abdominal obesity&lt;/li&gt; &lt;li&gt;Member of high risk population (Aboriginal, Hispanic, Asian, South Asian or African descent)&lt;/li&gt; &lt;li&gt;History of impaired glucose tolerance or impaired fasting glucose&lt;/li&gt; &lt;li&gt;Vascular disease&lt;/li&gt; &lt;li&gt;History of gestational DM or macrosomic infant&lt;/li&gt; &lt;li&gt;Schizophrenia&lt;/li&gt; &lt;li&gt;Polycystic ovarian syndrome&lt;/li&gt; &lt;li&gt;Other risk factors&lt;/li&gt; &lt;li&gt;FPG &gt; or =7.0 mmol/L is diagnostic of diabetes mellitus&lt;/li&gt; &lt;li&gt;From CTFPHC screen adults with hypertension or hyperlipidemia to prevent cardiovascular events and death (B)&lt;/li&gt; &lt;/ul&gt; &lt;/li&gt; &lt;/ul&gt;" graphable="yes" value_name="Fasting Plasma Glucose">
             <rules>
               <recommendation strength="warning" >
                 <condition type="monthrange" param="FBS" value="&gt;3" />
@@ -413,7 +413,7 @@
             </ruleset>
           </item>
 
-              <item measurement_type="TCHD" display_name="Ratio (TC/HDL)" guideline="Ratio &lt; 4.0" graphable="yes" value_name="TC/HDL" >
+              <item measurement_type="TCHD" display_name="Ratio (TC/HDL)" guideline="&lt;strong&gt;Fasting Lipid Profile &amp;#40;total cholesterol, HDL-C, triglyceride and LDL-C&amp;#41;13:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Men &gt; or =40 years of age, and women &gt; or =50 years of age or postmenopausal&lt;/li&gt; &lt;li&gt;All patients with the following conditions, regardless of age: &lt;ul&gt; &lt;li&gt;Diabetes&lt;/li&gt; &lt;li&gt;Hypertension&lt;/li&gt; &lt;li&gt;Current cigarette smoking&lt;/li&gt; &lt;li&gt;Obesity (Obesity Canada guidelines)&lt;/li&gt; &lt;li&gt;Family history of premature CAD (&lt;60 years in first-degree relatives) &lt;/li&gt; &lt;li&gt;Inflammatory diseases* (systemic lupus erythematosis, rheumatoid arthritis, psoriasis)&lt;/li&gt; &lt;li&gt;Chronic renal diseases (eGFR &lt;60 mL/min/1.73 m2)&lt;/li&gt; &lt;li&gt;Evidence of atherosclerosis&lt;/li&gt; &lt;li&gt;HIV infection treated with highly active antiretroviral therapy&lt;/li&gt; &lt;li&gt;Clinical manifestations of hyperlipidemias (xanthomas, xanthelasmas, premature arcus cornealis)&lt;/li&gt; &lt;li&gt;Erectile dysfunction&lt;/li&gt; &lt;li&gt;Children with a family history of hypercholesterolemia or chylomicronemia&lt;/li&gt; &lt;li&gt;* Data on inflammatory bowel diseases are lacking. CAD Coronary artery disease; eGFR Estimated glomerular filtration rate&lt;/li&gt; &lt;li&gt;Apo B can be used as an lternative marker in the screening of dyslipidemia&lt;/li&gt; &lt;li&gt;C-reactive protein (hsCRP) in men &gt;50 and women &gt;60 years who are at moderate risk for CVD (by FRS) and level of LDL-C is &lt;3.5 mmol/L.&lt;/li&gt; &lt;/ul&gt; &lt;/li&gt; &lt;/ul&gt; Two hsCRP samples should be taken at least two weeks apart and the patient should be free of any acute illness. Treat if the lower of the two values is &gt;2.0 mg/L" graphable="yes" value_name="TC/HDL" >
                 <rules>
                   <recommendation strength="warning" >
                     <condition type="monthrange" param="TCHD" value="&gt;12" />
