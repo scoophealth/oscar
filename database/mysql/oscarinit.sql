@@ -8846,6 +8846,7 @@ CREATE TABLE `HRMDocumentToProvider` (
   `signedOff` int(11) ,
   `signedOffTimestamp` datetime ,
   `viewed` int(11) ,
+  `signOffProvider` varchar(6), 
   PRIMARY KEY (`id`)
 ) ;
 

@@ -54,6 +54,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
@@ -69,12 +70,15 @@ import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToProviderDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
@@ -120,6 +124,7 @@ import cds.PatientRecordDocument.PatientRecord;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
+import cdsDt.PersonNameSimple;
 
 /**
  *
@@ -132,8 +137,10 @@ public class DemographicExportAction4 extends Action {
 	private static final DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 	private static final HRMDocumentToDemographicDao hrmDocToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
+	private static final HRMDocumentToProviderDao hrmDocToProviderDao = (HRMDocumentToProviderDao) SpringUtils.getBean("HRMDocumentToProviderDao");
 	private static final HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private static final HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
+	private static final ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	private static final Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
 	private static final DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
@@ -1515,6 +1522,8 @@ public class DemographicExportAction4 extends Action {
 					String hrmDocumentId = hrmDocToDemographic.getHrmDocumentId();
 					List<HRMDocument> hrmDocs = hrmDocDao.findById(Integer.valueOf(hrmDocumentId));
 					for (HRMDocument hrmDoc : hrmDocs) {
+						List<HRMDocumentToProvider> hdpList = hrmDocToProviderDao.findByHrmDocumentId(hrmDoc.getId().toString());
+						
 						String reportFile = hrmDoc.getReportFile();
 						if (StringUtils.empty(reportFile)) continue;
 
@@ -1554,6 +1563,26 @@ public class DemographicExportAction4 extends Action {
 								}
 							}
 
+							for(HRMDocumentToProvider hdp: hdpList) {
+								if(hdp.getSignedOff() != null && hdp.getSignedOff().intValue() == 1) {
+									Provider signOffProvider = providerDao.getProvider(hdp.getSignOffProvider());
+									if(signOffProvider != null) {
+										ReportsReceived.ReportReviewed reviewed = rpr.addNewReportReviewed();
+										PersonNameSimple pns = reviewed.addNewName();
+										pns.setFirstName(signOffProvider.getFirstName());
+										pns.setLastName(signOffProvider.getLastName());
+										reviewed.setReviewingOHIPPhysicianId(signOffProvider.getOhipNo());
+										Calendar cal = Calendar.getInstance();
+										cal.setTime(hdp.getSignedOffTimestamp());
+										reviewed.addNewDateTimeReportReviewed().setFullDate(cal);
+									}
+								}
+							}
+							//reviewing info
+							
+								
+							
+							
 							String reviewerId = null;
 							Calendar reviewDate = null;
 
@@ -1630,14 +1659,6 @@ public class DemographicExportAction4 extends Action {
 								rpr.setSourceFacility(hrmDoc.getSourceFacility());
 							}
 
-							//reviewing info
-							if (reviewerId!=null && reviewDate!=null) {
-								ReportsReceived.ReportReviewed reviewed = rpr.addNewReportReviewed();
-								reviewed.addNewName();
-								reviewed.setReviewingOHIPPhysicianId(reviewerId);
-								reviewed.addNewDateTimeReportReviewed().setFullDate(reviewDate);
-							}
-
 							//Notes
 							List<HRMDocumentComment> comments = hrmDocCommentDao.getCommentsForDocument(hrmDocumentId);
 							String notes = null;
@@ -1676,7 +1697,7 @@ public class DemographicExportAction4 extends Action {
 									obrContent.addNewObservationDateTime().setFullDateTime(obrObservationDateTime);
 								}
 							}
-						}
+						}	
 					}
 				}
 			}
