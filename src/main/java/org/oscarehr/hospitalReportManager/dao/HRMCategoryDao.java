@@ -11,7 +11,6 @@ package org.oscarehr.hospitalReportManager.dao;
 
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.dao.AbstractDao;
@@ -73,27 +72,20 @@ public class HRMCategoryDao extends AbstractDao<HRMCategory> {
 	
 	public HRMCategory findBySubClassNameMnemonic(String sendingFacilityId, String subClassNameMnemonic)
 	{
-		try{
-			String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1 and x.sendingFacilityId = ?2";
-			Query query = entityManager.createQuery(sql);
-			query.setParameter(1, subClassNameMnemonic);
-			query.setParameter(2, sendingFacilityId);
-			return (HRMCategory) (query.getSingleResult());
-		} catch(NoResultException e) {
-	        return null;
-	    }
+		String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1 and x.sendingFacilityId = ?2";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, subClassNameMnemonic);
+		query.setParameter(2, sendingFacilityId);
+		return getSingleResultOrNull(query);
+		
 	}
 	
 	public HRMCategory findBySubClassNameMnemonic(String subClassNameMnemonic)
 	{
-		try{
-			String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1";
-			Query query = entityManager.createQuery(sql);
-			query.setParameter(1, subClassNameMnemonic);
-			return (HRMCategory) (query.getSingleResult());
-		} catch(NoResultException e) {
-	        return null;
-	    }
+		String sql = "select x from " + modelClass.getSimpleName() + " x where x.subClassNameMnemonic=?1";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, subClassNameMnemonic);
+		return getSingleResultOrNull(query);
 	}
 	
 }
