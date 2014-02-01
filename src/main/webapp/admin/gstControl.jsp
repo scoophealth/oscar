@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -17,8 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%@ page
-	import="java.util.*,oscar.oscarReport.data.*, java.util.Properties, oscar.oscarBilling.ca.on.administration.*"%>
+<%@ page import="java.util.*,oscar.oscarReport.data.*, java.util.Properties, oscar.oscarBilling.ca.on.administration.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -40,26 +40,23 @@ String percent = props.getProperty("gstPercent");
     function extractNums(str){
         return str.replace(/\D/g, "");
     }
-
-
-
 </script>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Edit GST</title>
+<title><bean:message key="admin.admin.manageGSTControl"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body
-	style="font-family: arial, helvetica, sans-serif; font-size: 13px;"
-	onload="loadData()">
+<body onload="loadData()">
+
+<h3><bean:message key="admin.admin.manageGSTControl"/></h3>
+
 <html:form action="/admin/GstControl">
-	<TABLE>
-		<TR>
-			<TD>GST :</TD>
-			<TD align="right"><input type="text" size="3" maxlength="3"
-				id="gstPercent" name="gstPercent" value="<%=percent%>" />%</TD>
-		</TR>
-	</TABLE>
-	<input type="submit" value="Submit" onclick="submitcheck()" />
+GST:<br>
+<div class="input-append">
+	<input type="text" class="span2" maxlength="3" id="gstPercent" name="gstPercent" value="<%=percent%>" />
+	<span class="add-on">%</span>
+</div>
+<br>
+<input class="btn btn-primary" type="submit" value="save" onclick="submitcheck()" />
 </html:form>
 </body>
 </html:html>
