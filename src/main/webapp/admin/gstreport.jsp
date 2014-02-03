@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -73,70 +74,75 @@ else {
 	pList= (new JdbcBillingPageUtil()).getCurProviderStr();
 }
 %>
-<link rel="stylesheet" type="text/css" media="all"
-	href="../share/calendar/calendar.css" title="win2k-cold-1" />
-<script type="text/javascript" src="../share/calendar/calendar.js"></script>
-<script type="text/javascript"
-	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-<script type="text/javascript">
-
-</script>
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>GST Report</title>
+<title><bean:message key="admin.admin.gstReport"/></title>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 </head>
 <body>
-<FORM name="gstform" action="gstreport.jsp">
-<table width="100%" cellpadding="0" cellspacing="0" style="border: 0px;">
-	<TR style="background-color: green;">
-		<TD height="40" width="10%"></TD>
-		<TD>
-		<div style="color: white;">GST Report</div>
-		</TD>
-		<TD valign="BOTTOM">
-		<div align="right"><b><%=DateUtils.sumDate("yyyy-MM-dd","0")%></b><input
-			type="button" value="Print" onclick="window.print()" /></div>
-		</TD>
-	</TR>
-</TABLE>
-<TABLE width="100%" CELLPADDING="0" CELLSPACING="0" style="border: 0px;">
-	<TR>
-		<TD width="15%" align="center"><a
-			href="javascript: function myFunction() {return false; }"
-			style="font-size: 10px;" id="hlSDate">From:</a> <input type="text"
-			name="xml_vdate" id="xml_vdate" value="<%=startDate%>" maxlength="10"
-			style="width: 80px" /></TD>
-		<TD width="15%" align="center"><a
-			href="javascript: function myFunction() {return false; }"
-			style="font-size: 10px;" id="hlADate">To:</a> <input type="text"
-			name="xml_appointment_date" id="xml_appointment_date"
-			value="<%=endDate%>" maxlength="10" style="width: 80px" /></TD>
-		<TD height="40" align="left" width="70%"
-			style="background-color: #FFCC99;"><select name="providerview">
-			<%
-                            if(pList.size() == 1) {
-                            String temp[] = ((String) pList.get(0)).split("\\|");
-                            %>
-			<option value="<%=temp[0]%>"><%=temp[1]%>, <%=temp[2]%></option>
-			<%
-                            } else {
-                            %>
-			<option value="all">-- Select a Provider --</option>
-			<% for (i = 0 ; i < pList.size(); i++) { 
-                            String temp[] = ((String) pList.get(i)).split("\\|");
-                            %>
-			<option value="<%=temp[0]%>"
-				<%=providerNo.equals(temp[0])?"selected":""%>><%=temp[1]%>,
-			<%=temp[2]%></option>
-			<% } 
-                            } %>
-		</select> <input type="submit" value="Search" /></TD>
-	</TR>
-</table>
-<TABLE width="100%" cellpadding="0" cellspacing="0" border="1">
-	<TR style="background-color: #FFCC99;">
+<FORM name="gstform" action="gstreport.jsp" class="form-inline">
+
+<h3><bean:message key="admin.admin.gstReport"/></h3>
+
+<div class="container-fluid well">
+<div class="span2">Date: <%=DateUtils.sumDate("yyyy-MM-dd","0")%></div> <div class="span2 pull-right"><button class="btn" type="button" value="Print" onclick="window.print()" /><i class="icon-print icon-white"></i> Print</button></div>
+
+<div class="span12">
+	<div class="span2">		
+	Start:
+	<div class="input-append">
+		<input type="text" name="xml_vdate" id="xml_vdate" value="<%=startDate%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" style="width:90px" />
+		<span class="add-on"><i class="icon-calendar"></i></span>
+	</div>
+	</div>
+	<div class="span2">		
+	End:
+	<div class="input-append">
+		<input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=endDate%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" style="width:90px"/>
+		<span class="add-on"><i class="icon-calendar"></i></span>
+	</div>
+</div>
+
+<div class="span6">
+Provider
+<div>
+<select name="providerview">
+	<%
+                          if(pList.size() == 1) {
+                          String temp[] = ((String) pList.get(0)).split("\\|");
+                          %>
+	<option value="<%=temp[0]%>"><%=temp[1]%>, <%=temp[2]%></option>
+	<%
+                          } else {
+                          %>
+	<option value="all">-- Select a Provider --</option>
+	<% for (i = 0 ; i < pList.size(); i++) { 
+                          String temp[] = ((String) pList.get(i)).split("\\|");
+                          %>
+	<option value="<%=temp[0]%>"
+		<%=providerNo.equals(temp[0])?"selected":""%>><%=temp[1]%>,
+	<%=temp[2]%></option>
+	<% } 
+                          } %>
+</select> 
+<input class="btn btn-primary" type="submit" value="Search" />
+</div>
+</div><!--span6-->
+
+</div><!--span10-->
+
+
+<div class="span12">
+<br>
+<TABLE class="table table-striped  table-condensed">
+	<TR style="font-weight:bold;">
 		<TD width="20%" align="center">SERVICE DATE</TD>
 		<TD width="10%" align="center">PATIENT</TD>
 		<TD width="15%" align="center">PATIENT NAME</TD>
@@ -169,7 +175,7 @@ else {
                 earnedtotal = earnedtotal.add(earned);
                 %>
 	<% if ( gst.doubleValue() > 0 ){%>
-	<TR style="background-color: <%=bgColour%>;">
+	<TR>
 		<TD width="20%" align="center"><%=props.getProperty("date", "")%></TD>
 		<TD width="10%" align="center"><%=props.getProperty("demographic_no", "")%></TD>
 		<TD width="15%" align="center"><%=props.getProperty("name", "")%></TD>
@@ -180,7 +186,7 @@ else {
 		<%}%>
 	</TR>
 	<%}%>
-	<TR style="background-color: #FFCC99;" align="center">
+	<TR align="center" style="font-weight:bold;">
 		<TD width="20%">Totals:</TD>
 		<TD></TD>
 		<TD></TD>
@@ -189,12 +195,18 @@ else {
 		<TD width="15%"><%=billedtotal%></TD>
 	</TR>
 </TABLE>
+</div><!--span12-->
+
+</div>
 </FORM>
 </body>
+<script type="text/javascript">
+var startDate = $("#xml_vdate").datepicker({
+	format : "yyyy-mm-dd"
+});
 
-<script language='javascript'>
-       Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});          
-       Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});                      
-   </script>
+var endDate = $("#xml_appointment_date").datepicker({
+	format : "yyyy-mm-dd"
+});
+</script>
 </html>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
