@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.oscarProvider.data.ProviderData"%>
 <%@ page import="oscar.oscarDemographic.data.DemographicData,java.text.SimpleDateFormat, java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
@@ -38,7 +39,7 @@
 
 <%
   DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-
+      		
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
@@ -53,6 +54,8 @@
   String completed = "0";
   String nextDate = "";
   String summary = "";
+  String creatorProviderNo = "";
+  String creatorName = "";
   boolean never = false;
   Map<String,String> extraData = new HashMap<String,String>();
 	boolean hasImportExtra = false;
@@ -65,7 +68,7 @@
      prevDate = (String) existingPrevention.get("preventionDate");
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
-     
+     creatorProviderNo = (String) existingPrevention.get("creator");
      
      if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){
         completed = "1";
@@ -107,7 +110,18 @@
   }
 
   List<Map<String, String>>  providers = ProviderData.getProviderList();
-
+  if (creatorProviderNo == "")
+  { 
+	  creatorProviderNo = provider;
+  }
+  for (int i=0; i < providers.size(); i++) {
+       Map<String,String> h = providers.get(i);
+	   if (h.get("providerNo").equals(creatorProviderNo))
+	   {
+	   		creatorName = h.get("lastName") + " " +  h.get("firstName");
+	   }
+  }
+  
   //calc age at time of prevention
   Date dob = PreventionData.getDemographicDateOfBirth(Integer.valueOf(demographic_no));
   SimpleDateFormat fmt = new SimpleDateFormat(dateFmt);
@@ -431,6 +445,8 @@ clear: left;
                                       <%}%>
                                       <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
                                   </select>
+                                  <br/>
+                             <label for="creator" class="fields" >Creator:</label> <input type="text" name="creator" value="<%=creatorName%>" readonly/> <br/>
                          </div>
                    </fieldset>
                    <fieldset >
@@ -479,6 +495,8 @@ clear: left;
                                       <%}%>
                                       <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
                                   </select>
+                                  <br/>
+                             <label for="creator" class="fields" >Creator:</label> <input type="text" name="creator" value="<%=creatorName%>" readonly/> <br/>
                          </div>
                    </fieldset>
                    <fieldset>
@@ -572,6 +590,8 @@ clear: left;
                                       <%}%>
                                       <option value="-1" >Other</option>
                                   </select>
+                                  <br/>
+                                  <label for="creator" class="fields" >Creator:</label> <input type="text" name="creator" value="<%=creatorName%>" readonly/> <br/>
                          </div>
                    </fieldset>
                    <fieldset >
