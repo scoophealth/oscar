@@ -72,6 +72,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 
 	public ActionForward makeIndependent(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String reportId = request.getParameter("reportId");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		try {
 			HRMDocument document = hrmDocumentDao.find(Integer.parseInt(reportId));
@@ -92,6 +93,10 @@ public class HRMModifyDocumentAction extends DispatchAction {
 						}
 					}
 				}
+			}
+
+			for(HRMDocumentToDemographic hd:hrmDocumentToDemographicDao.findByHrmDocumentId(reportId)) {
+				LogAction.addLogSynchronous(providerNo,"Make Independent" , "hrm", reportId, Integer.parseInt(hd.getDemographicNo()));
 			}
 
 			request.setAttribute("success", true);
@@ -148,6 +153,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 	public ActionForward assignProvider(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String hrmDocumentId = request.getParameter("reportId");
 		String providerNo = request.getParameter("providerNo");
+		String loggedInProviderNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		try {
 			HRMDocumentToProvider providerMapping = new HRMDocumentToProvider();
@@ -157,14 +163,21 @@ public class HRMModifyDocumentAction extends DispatchAction {
 			providerMapping.setSignedOff(0);
 
 			hrmDocumentToProviderDao.merge(providerMapping);
+			for(HRMDocumentToDemographic hd:hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocumentId)) {
+				LogAction.addLogSynchronous(loggedInProviderNo,"assign provider" , "hrm", hrmDocumentId, Integer.parseInt(hd.getDemographicNo()),providerNo );
+			}
 
-			
 			//we want to remove any unmatched entries when we do a manual match like this. -1 means unclaimed in this table.
 			HRMDocumentToProvider existingUnmatched = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(hrmDocumentId, "-1");
 			if(existingUnmatched != null) {
-				hrmDocumentToProviderDao.remove(existingUnmatched.getId());
+				Integer id = existingUnmatched.getId();
+				hrmDocumentToProviderDao.remove(id);
+				for(HRMDocumentToDemographic hd:hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocumentId)) {
+					LogAction.addLogSynchronous(loggedInProviderNo,"remove provider" , "hrm", hrmDocumentId, Integer.parseInt(hd.getDemographicNo()) );
+				}
 			}
-			
+
+
 			request.setAttribute("success", true);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Tried to assign HRM document to provider but failed.", e); 
@@ -176,6 +189,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 
 	public ActionForward removeDemographic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String hrmDocumentId = request.getParameter("reportId");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		try {
 			List<HRMDocumentToDemographic> currentMappingList = hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocumentId);
@@ -199,6 +213,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 	public ActionForward assignDemographic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String hrmDocumentId = request.getParameter("reportId");
 		String demographicNo = request.getParameter("demographicNo");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		try {
 			try {
@@ -233,6 +248,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 	public ActionForward makeActiveSubClass(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String hrmDocumentId = request.getParameter("reportId");
 		String subClassId = request.getParameter("subClassId");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		try {
 			hrmDocumentSubClassDao.setAllSubClassesForDocumentAsInactive(Integer.parseInt(hrmDocumentId));
@@ -257,6 +273,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 
 	public ActionForward removeProvider(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String providerMappingId = request.getParameter("providerMappingId");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		String hrmDocumentId = null;
 		
@@ -265,6 +282,9 @@ public class HRMModifyDocumentAction extends DispatchAction {
 			hrmDocumentId = hrmDocumentToProviderDao.find(Integer.parseInt(providerMappingId)).getHrmDocumentId();
 			
 			hrmDocumentToProviderDao.remove(Integer.parseInt(providerMappingId));
+			for(HRMDocumentToDemographic hd:hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocumentId)) {
+				LogAction.addLogSynchronous(providerNo,"remove provider" , "hrm", hrmDocumentId, Integer.parseInt(hd.getDemographicNo()), providerMappingId );
+			}
 
 			
 			if(hrmDocumentId != null) {
@@ -294,6 +314,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 
 	public ActionForward addComment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String documentId = request.getParameter("reportId");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		String commentString = request.getParameter("comment");
 
@@ -306,6 +327,11 @@ public class HRMModifyDocumentAction extends DispatchAction {
 			comment.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 
 			hrmDocumentCommentDao.merge(comment);
+
+			for(HRMDocumentToDemographic hd:hrmDocumentToDemographicDao.findByHrmDocumentId(documentId)) {
+				LogAction.addLogSynchronous(providerNo,"add comment" , "hrm", documentId, Integer.parseInt(hd.getDemographicNo()), commentString );
+			}
+
 			request.setAttribute("success", true);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't add a comment for HRM document", e);
@@ -317,9 +343,13 @@ public class HRMModifyDocumentAction extends DispatchAction {
 	
 	public ActionForward deleteComment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String commentId = request.getParameter("commentId");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		
 		try {
 			hrmDocumentCommentDao.deleteComment(commentId);
+
+			//not in audit log yet..i didn't have the hrmDocumentId available to do this one.
+
 			request.setAttribute("success", true);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't delete comment on HRM document", e);
