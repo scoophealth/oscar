@@ -473,7 +473,10 @@ public class PreventionData {
 				h = new HashMap<String,Object>();
 				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
 				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd");
-
+				String lastUpdateDate = UtilDateUtilities.DateToString(prevention.getLastUpdateDate(), "yyyy-MM-dd");
+				@SuppressWarnings("deprecation")
+                String creatorName = ProviderData.getProviderName(prevention.getCreatorProviderNo());
+				
 				addToHashIfNotNull(h, "id", prevention.getId().toString());
 				addToHashIfNotNull(h, "demographicNo", prevention.getDemographicId().toString());
 				addToHashIfNotNull(h, "provider_no", prevention.getProviderNo());
@@ -486,8 +489,10 @@ public class PreventionData {
 				addToHashIfNotNull(h, "refused", prevention.isRefused()?"1":prevention.isIneligible()?"2":"0");
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "never", prevention.isNever()?"1":"0");
-
+				addToHashIfNotNull(h, "creator", prevention.getCreatorProviderNo());
+				
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
+				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;
 				Map<String,String> ext = getPreventionKeyValues(prevention.getId().toString());
 				
 				if (ext.containsKey("result")) { //This is a preventive Test
