@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -17,7 +18,8 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%@page import="org.oscarehr.util.DateRange"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ page import="org.oscarehr.util.DateRange"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ page import="java.math.*, java.util.*, oscar.util.*"%>
@@ -46,9 +48,7 @@ String user_no = (String) session.getAttribute("user");
 %>
 
 
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -221,31 +221,30 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 		}
 		
 		String billingTable = htmlValue;
-		htmlValue   = "<style type='text/css'><!-- .myGreen{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
-		htmlValue  += "\n<table width='100%' border='0' cellspacing='0' cellpadding='2'>\n"
-					+ "<tr><td colspan='12' class='myGreen'></td></tr>";
+		htmlValue  = "\n<table class='table table-striped table-hover'>\n"
+					+ "<thead><tr><td colspan='12' ></td></tr>";
 		if (summaryView) {
-			htmlValue += "\n<tr><td class='myGreen'>OHIP NO</td><td class='myGreen'>NUMBER OF RECORDS</td><td class='myGreen'>TOTAL BILLED</td><td class='myGreen' colspan='9'></td></tr>";
+			htmlValue += "\n<tr><th >OHIP NO</th><th >Number of Records</th><th >Total Billed</th><th  colspan='9'></th></t></thead>";
 		}
 		else {
-			htmlValue += "\n<tr><td class='myGreen'>OHIP NO</td><td class='myGreen'>ACCT NO</td>"
-					+ "<td width='25%' class='myGreen'>NAME</td><td class='myGreen'>RO</td><td class='myGreen'>DOB</td><td class='myGreen'>Sex</td><td class='myGreen'>HEALTH #</td>"
-					+ "<td class='myGreen'>BILLDATE</td><td class='myGreen'>CODE</td>"
-					+ "<td align='right' class='myGreen'>BILLED</td>"
-					+ "<td align='right' class='myGreen'>DX</td><td align='right' class='myGreen'>Comment</td></tr>";	
+			htmlValue += "\n<thead><tr><th >OHIP NO</th><th >Acct NO</th>"
+					+ "<th >Name</th><th >RO</th><th >DOB</th><th >Sex</th><th >Health #</th>"
+					+ "<th >Billdate</th><th >Code</th>"
+					+ "<th >Billed</th>"
+					+ "<th >DX</th><th align='right' >Comment</th></tr></thead>";	
 		
 			
 						
 		}
-		htmlValue  += billingTable;
-		htmlValue  += "\n<tr><td colspan='12' class='myIvory'>&nbsp;</td></tr><tr><td colspan='4' class='myIvory'>" 
+		htmlValue  += "<tbody>"+billingTable;
+		htmlValue  += "\n<tr><td colspan='12' >&nbsp;</td></tr><tr><td colspan='4'>" 
 			+ recordCount
 			+ " RECORDS PROCESSED, " 
 			+ errorCount 
-			+" ERROR"+ (errorCount > 1 ? "S" : "") + "</td><td colspan='8' class='myIvory'>TOTAL: "
+			+" ERROR"+ (errorCount > 1 ? "S" : "") + "</td><td colspan='8'>TOTAL: "
 			+ bigTotal.toString()
 			+ "\n</td></tr>";
-		htmlValue  += "</table>";
+		htmlValue  += "</tbody></table>";
 	}
 	request.setAttribute("html",htmlValue);
 }
@@ -255,22 +254,16 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Report</title>
-<link rel="stylesheet" type="text/css" href="billingON.css" />
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-<!-- main calendar program -->
-<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-<!-- language for the calendar -->
-<script type="text/javascript"
-	src="../../../share/calendar/lang/calendar-en.js"></script>
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript"
-	src="../../../share/calendar/calendar-setup.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/jquery/jquery-1.4.2.js"></script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+
 <script type="text/javascript" language="JavaScript">
 <!--
 function openBrWindow(theURL,winName,features) {
@@ -292,20 +285,22 @@ function checkData() {
 }
 //-->
 </script>
-
+<style type="text/css">
+	input[name=summaryView] {margin: 4px 4px 4px; margin-left:20px;}
+	select[name=provider] {margin-right:20px;}
+	input[name=submit] {margin-bottom: -60px;}
+</style>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
-	topmargin="0" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr class="myDarkGreen">
-		<th align='LEFT'><input type='button' name='print' value='Print'
-			onClick='window.print()'></th>
-		<th><font color="#FFFFFF"> OHIP Report Simulation</font></th>
-		<th align='RIGHT'><input type='button' name='close' value='Close'
-			onClick='window.close()'></th>
-	</tr>
-</table>
+<body>
+
+<div class="container-fluid">
+<h3><bean:message key="admin.admin.btnSimulationOHIPDiskette" /></h3>
+
+<form name="serviceform" method="post" action="billingONOhipSimulation.jsp" onSubmit="return checkData();">
+<div class="row well">
+<button type='button' name='print' value='Print' class="btn pull-right" onClick='window.print()'> <i class="icon icon-print"></i> Print</button><br/>
+
 
 <%
 String providerview=request.getParameter("provider")==null?user_no:request.getParameter("provider");
@@ -313,84 +308,104 @@ String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParamet
 String xml_appointment_date = request.getParameter("xml_appointment_date")==null? nowDate : request.getParameter("xml_appointment_date");
 %>
 
-<table width="100%" border="0" class="myYellow">
-	<form name="serviceform" method="post"
-		action="billingONOhipSimulation.jsp" onSubmit="return checkData();">
-	<tr>
-		<td width="220"><b><font face="Arial" size="2"> Select
-		Provider </font></b></td>
-		<td width="254"><select name="provider">
-			<% if (bMultisites) { %>
-			<option value="all">Select Providers</option>
-			<% } else { %>
-			<option value="all">All Providers</option>
-			<% } %>
-			<%
-		BillingReviewPrep prep = new BillingReviewPrep();
-			
-			
-		List providerStr; 
-			
-		if (isTeamBillingOnly || isTeamAccessPrivacy) {
-			providerStr = prep.getTeamProviderBillingStr(user_no);
-		}
-		else if (isSiteAccessPrivacy) {
-			providerStr = prep.getSiteProviderBillingStr(user_no);
-		}
-		else {
-			providerStr = prep.getProviderBillingStr();
-		}
-		
-		for (int i = 0; i < providerStr.size(); i++) {
-			String temp[] = ((String) providerStr.get(i)).split("\\|");
-			%>
-			<option value="<%=temp[0]%>"
-				<%=providerview.equals(temp[0])?"selected":(providerStr.size()==1?"selected":"")%>><%=temp[1]%>,
-			<%=temp[2]%></option>
-			<%}
-		%>
-		</select></td>
-		<td width="254"><b><font face="Arial" size="2"> Bill
-		Center: </font></b> <input type="hidden" name="billcenter"
-			value="<%=billCenter%>"> <font face="Arial" size="2"><b><%=healthOffice%></b>
-		</font></td>
-		<% if (!bMultisites) { %>
-		<td width="220">
-			<b><font face="Arial" size="2"> 
-				<input type="checkbox" name="summaryView" id="summaryView" <%= summaryView ? "checked" : "" %> />		
-				<label for="summaryView">Summary View</label> 
-			</font></b>
-		</td>
+
+	<input type="hidden" name="monthCode" value="<%=monthCode%>"> 
+	<input type="hidden" name="verCode" value="V03"> 
+	<input type="hidden" name="curUser" value="<%=user_no%>"> 
+	<input type="hidden" name="curDate" value="<%=nowDate%>">
+
+
+<div class="span12">
+	
+<div class="span3">
+Select Provider<br>
+<select name="provider">
+		<% if (bMultisites) { %>
+		<option value="all">Select Providers</option>
+		<% } else { %>
+		<option value="all">All Providers</option>
 		<% } %>
-		<td width="277"><font color="#003366"> <input
-			type="hidden" name="monthCode" value="<%=monthCode%>"> <input
-			type="hidden" name="verCode" value="V03"> <input
-			type="hidden" name="curUser" value="<%=user_no%>"> <input
-			type="hidden" name="curDate" value="<%=nowDate%>"> </font></td>
-	</tr>
-	<tr>
-		<td><font face="Arial, Helvetica, sans-serif" size="2"><b>
-		Service Date: </b></font></td>
-		<td><font size="1" face="Arial, Helvetica, sans-serif">
-		From:</font> <input type="text" id="xml_vdate" name="xml_vdate" size="10"
-			maxlength="10" value="<%=xml_vdate%>" readonly> <img
-			src="../../../images/cal.gif" id="xml_vdate_cal"></td>
-		<td><font size="1" face="Arial, Helvetica, sans-serif">
-		To:</font> <input type="text" id="xml_appointment_date"
-			name="xml_appointment_date" size="10" maxlength="10"
-			value="<%=xml_appointment_date%>" readonly> <img
-			src="../../../images/cal.gif" id="xml_appointment_date_cal"></td>
-		<td><input type="submit" name="submit" value="Create Report">
-		</td>
-	</tr>
-	</form>
-</table>
+		<%
+	BillingReviewPrep prep = new BillingReviewPrep();
+		
+		
+	List providerStr; 
+		
+	if (isTeamBillingOnly || isTeamAccessPrivacy) {
+		providerStr = prep.getTeamProviderBillingStr(user_no);
+	}
+	else if (isSiteAccessPrivacy) {
+		providerStr = prep.getSiteProviderBillingStr(user_no);
+	}
+	else {
+		providerStr = prep.getProviderBillingStr();
+	}
+	
+	for (int i = 0; i < providerStr.size(); i++) {
+		String temp[] = ((String) providerStr.get(i)).split("\\|");
+		%>
+		<option value="<%=temp[0]%>"
+			<%=providerview.equals(temp[0])?"selected":(providerStr.size()==1?"selected":"")%>><%=temp[1]%>,
+		<%=temp[2]%></option>
+		<%}
+	%>
+</select>
+</div><!--span3-->
+		
+	<div class="span2">	
+	From:<br>
+	<div class="input-append">
+		<input type="text" name="xml_vdate" id="xml_vdate" value="<%=xml_vdate%>"  style="width:90px" autocomplete="off" />
+		<span class="add-on"><i class="icon-calendar"></i></span>
+	</div>
+	</div>
+
+
+	<div class="span2">	
+	To:<br>
+	<div class="input-append">
+		<input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=xml_appointment_date%>"  style="width:90px" autocomplete="off" />
+		<span class="add-on"><i class="icon-calendar"></i></span>
+	</div>
+	</div>
+
+</div> <!--span12-->
+
+<div class="span12">
+	<div class="span2">
+	Bill Center: <input type="hidden" name="billcenter" value="<%=billCenter%>"> <%=healthOffice%>
+	</div>
+
+
+	<% if (!bMultisites) { %>
+	<div class="span2"><input type="checkbox" name="summaryView" id="summaryView" <%= summaryView ? "checked" : "" %> />Summary View</div>
+	<% } %>
+
+	<div class="span2">
+	<button class="btn btn-primary" type="submit" name="submit" value="Create Report">Create Report</button>
+	</div>
+
+</div><!--span12-->
+
+
+</div><!--form well-->
+</form>
 
 <%=request.getAttribute("html") == null?"":request.getAttribute("html")%>
 
-</body>
+
+
+</div><!--container-->
+
 <script type="text/javascript">
-Calendar.setup({ inputField : "xml_vdate", ifFormat : "%Y/%m/%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 });
-Calendar.setup({ inputField : "xml_appointment_date", ifFormat : "%Y/%m/%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 });
+var startDate = $("#xml_vdate").datepicker({
+	format : "yyyy/mm/dd"
+});
+
+var endDate = $("#xml_appointment_date").datepicker({
+	format : "yyyy/mm/dd"
+});
 </script>
+
+</body>
 </html>
