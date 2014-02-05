@@ -56,12 +56,18 @@ public class ImageUploadForm extends ActionForm {
         if (image.getFileSize() == 0) {
             errors.add("image", new ActionMessage("eform.uploadimages.imageMissing"));
         }
-        String serverImagePath = OscarProperties.getInstance().getProperty("eform_image") + 
-                                "/" + image.getFileName();
+        
+        String serverImagePath = OscarProperties.getInstance().getProperty("eform_image") + "/" + image.getFileName();
         File testimage = new File(serverImagePath);
+        
         if (testimage.exists()) {
             errors.add("image", new ActionMessage("eform.uploadimages.imageAlreadyExists", image.getFileName()));
         }
+        
+        if(errors.size()==0){
+        	request.setAttribute("status", "success");
+        }
+        
         return errors;
     }
 }

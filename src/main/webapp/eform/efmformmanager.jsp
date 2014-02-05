@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<!DOCTYPE html>
 <%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -39,10 +40,6 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
-
-<style>
-.uploadEformTitle{display:inline-block;}
-</style>
 </head>
 <script language="javascript">
   function checkFormAndDisable(){
@@ -119,66 +116,15 @@ $(function ()  {
 <div class="tab-pane" id="upload">
 <div class="well">
 
-<html:form action="/eform/uploadHtml" method="POST" onsubmit="return checkFormAndDisable()" enctype="multipart/form-data">
-<div class="alert alert-error" style="display:none"> <html:errors /> </div>
-                                       
-                                        <div class='uploadEformTitle'>
-                                        <bean:message key="eform.uploadhtml.formName" /><br>
-                                        <input type="text" name="formName" size="30">
-                                        </div>
-                                        
-                                        <div class='uploadEformTitle'>
-                                        <bean:message key="eform.uploadhtml.formSubject" /><br>
-                                        <input type="text" name="formSubject" size="30">
-                                        </div>
-                                        
-                                        <div class='uploadEformTitle'>
-                                        <bean:message key="eform.uploadhtml.btnRoleType"/><br>
-                                        <select name="roleType">
-                                        <option value="" >- select one -</option>
-                                       <%  ArrayList roleList = EFormUtil.listSecRole();
-  											for (int i=0; i<roleList.size(); i++) {    
-  										%>  											
-                                        	
-                                        		<option value="<%=roleList.get(i) %>"><%=roleList.get(i) %></option>
-                                        	
-                                        <%} %>
-                                        </select>
-                                        </div>
-                                        
-                                        <div class='uploadEformTitle'>
-                                        <input type="checkbox" name="showLatestFormOnly" value="true"/><bean:message key="eform.uploadhtml.showLatestFormOnly"/><br />
-                                        <input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/>
-                                        </div>
-                                        
-                                        <input type="file" name="formHtml" size="50">
-                                        <input type="submit" name="subm" class="btn btn-primary" value="<bean:message key="eform.uploadhtml.btnUpload"/>">
-               
-</html:form>
+<iframe id="uploadFrame" name="uploadFrame" frameborder="0" width="950" height="120" src="<%=request.getContextPath()%>/eform/partials/upload.jsp"></iframe>
+
 </div>
 </div>
 
 <div class="tab-pane" id="import">
 <div class="well">
                         
-                                <form action="<%=request.getContextPath()%>/eform/manageEForm.do" method="POST" enctype="multipart/form-data" id="eformImportForm">
-                                    <input type="hidden" name="method" value="importEForm">
-                                        <font color="red" size="1"> <html:errors /> </font>
-                                        <%List<String> importErrors = (List<String>) request.getAttribute("importErrors");
-                                        if (importErrors != null && importErrors.size() > 0) {%>
-                                        
-                                                <%for (String importError: importErrors) {%>
-                                                - <%=importError%><br>
-                                                <%}%>
-                                           
-                                        <%}%>
-                                        Import eForm: <br>
-                                        
-                                        
-                                        <input type="file" name="zippedForm" size="50">
-                                        <input type="submit" name="subm" value="Import" class="btn" onclick="this.value = 'Importing...'; this.disabled = true;"><br>
-                                        <span class="label label-info">Info: </span> <strong>When importing the file format is required to be a zip file.</strong>
-                                </form>
+<iframe id="importFrame" name="importFrame" frameborder="0" width="800" height="100" src="<%=request.getContextPath()%>/eform/partials/import.jsp"></iframe>
 
 </div>
 </div>
@@ -189,7 +135,7 @@ $(function ()  {
 
 </div><!-- tab content eformOptions -->
     
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped" id="eformTbl">
 <thead>
     <tr>
         <th><!--<a href="<%= request.getContextPath() %>/eform/efmformmanager.jsp?orderby=file_name" class="contentLink"class="contentLink"><bean:message key="eform.uploadhtml.btnFile" />--></a></th>
@@ -213,7 +159,7 @@ $(function ()  {
 %>
     <tr>
         <td><%if(curForm.get("formFileName").toString().length()!=0){%><i class="icon-file" title="<%=curForm.get("formFileName").toString()%>"></i><%}%></td>
-        <td>
+        <td title="<%=curForm.get("formName")%>">
         <a href="#" onclick="newWindow('<%= request.getContextPath() %>/eform/efmshowform_data.jsp?fid=<%=curForm.get("fid")%>', '<%="Form"+i%>'); return false;"><%=curForm.get("formName")%></a>
         </td>
         <td><%=curForm.get("formSubject")%> </td>
