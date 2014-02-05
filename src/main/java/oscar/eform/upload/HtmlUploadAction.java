@@ -53,9 +53,12 @@ public class HtmlUploadAction extends Action {
             boolean patientIndependent = fm.isPatientIndependent();
             String fileName = formHtml.getFileName();
             EFormUtil.saveEForm(formName, subject, fileName, formHtmlStr, showLatestFormOnly, patientIndependent, roleType);
+            request.setAttribute("status", "success");
+            return(mapping.findForward("success"));
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
+            return(mapping.findForward("fail"));
         }
-        return(mapping.findForward("success"));
+        
     }
 }

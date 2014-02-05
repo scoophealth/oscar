@@ -72,7 +72,12 @@ public class ManageEFormAction extends DispatchAction {
         EFormExportZip eFormExportZip = new EFormExportZip();
         List<String> errors = eFormExportZip.importForm(zippedForm.getInputStream());
         request.setAttribute("importErrors", errors);
-        return mapping.findForward("success");
+        if(errors.size() > 0){
+        	return mapping.findForward("fail");
+        }else{
+	        request.setAttribute("status", "success");	
+	        return mapping.findForward("success");
+        }
     }
 
     /*
