@@ -30,6 +30,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -47,6 +48,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -82,15 +84,23 @@ public class ContactAction extends DispatchAction {
 
 		List<DemographicContact> pdcs = demographicContactDao.findByDemographicNoAndCategory(Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PROFESSIONAL);
 		for(DemographicContact dc:pdcs) {
+			// workaround: UI allows to enter specialist with  a type that is not set, prevent NPE and display 'Unknown' as name
+			// user then can choose to delete this entry
+			String contactName = null;
 			if(dc.getType() == (DemographicContact.TYPE_PROVIDER)) {
-				dc.setContactName(providerDao.getProvider(dc.getContactId()).getFormattedName());
+				Provider provider = providerDao.getProvider(dc.getContactId()); 
+				contactName = (provider == null)?"Unknown":provider.getFormattedName();
 			}
 			if(dc.getType() == (DemographicContact.TYPE_CONTACT)) {
-				dc.setContactName(contactDao.find(Integer.parseInt(dc.getContactId())).getFormattedName());
+				Contact contact = contactDao.find(Integer.parseInt(dc.getContactId()));
+				contactName = (contact == null)?"Unknown":contact.getFormattedName();
 			}
 			if(dc.getType() == (DemographicContact.TYPE_PROFESSIONALSPECIALIST)) {
-				dc.setContactName(professionalSpecialistDao.find(Integer.parseInt(dc.getContactId())).getFormattedName());
+				ProfessionalSpecialist profSpecialist = professionalSpecialistDao.find(Integer.parseInt(dc.getContactId()));
+				contactName = (profSpecialist == null)?"Unknown":profSpecialist.getFormattedName();
 			}
+			StringUtils.trimToEmpty(contactName);
+			dc.setContactName(contactName);
 		}
 		request.setAttribute("procontacts", pdcs);
 		request.setAttribute("procontact_num", pdcs.size());
@@ -120,7 +130,10 @@ public class ContactAction extends DispatchAction {
 
 				c.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
     			c.setRole(request.getParameter("contact_"+x+".role"));
-    			c.setType(Integer.parseInt(request.getParameter("contact_"+x+".type")));
+    			
+    			if (request.getParameter("contact_"+x+".type") != null) {
+    			    c.setType(Integer.parseInt(request.getParameter("contact_"+x+".type")));
+    			}
     			c.setNote(request.getParameter("contact_"+x+".note"));
     			c.setContactId(otherId);
     			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
@@ -175,6 +188,7 @@ public class ContactAction extends DispatchAction {
 		        			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
 		        			c.setSdm("");
 		        			c.setEc("");
+		        			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		        			
 		        			if(c.getId() == null)
 		        				demographicContactDao.persist(c);
@@ -191,10 +205,14 @@ public class ContactAction extends DispatchAction {
     	String[] ids = request.getParameterValues("contact.delete");
     	if(ids != null) {
     		for(String id:ids) {
-    			int contactId = Integer.parseInt(id);
-    			DemographicContact dc = demographicContactDao.find(contactId);
-    			dc.setDeleted(true);
-    			demographicContactDao.merge(dc);
+			try {
+    				int contactId = Integer.parseInt(id);
+    				DemographicContact dc = demographicContactDao.find(contactId);
+    				dc.setDeleted(true);
+    				demographicContactDao.merge(dc);
+			} catch (NumberFormatException e) {
+				continue;
+			}
     		}
     	};
 
@@ -214,7 +232,9 @@ public class ContactAction extends DispatchAction {
 
 				c.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
     			c.setRole(request.getParameter("procontact_"+x+".role"));
-    			c.setType(Integer.parseInt(request.getParameter("procontact_"+x+".type")));
+    			if (request.getParameter("procontact_"+x+".type") != null) {
+    			    c.setType(Integer.parseInt(request.getParameter("procontact_"+x+".type")));
+    			}
     			c.setContactId(otherId);
     			c.setCategory(DemographicContact.CATEGORY_PROFESSIONAL);
     			c.setFacilityId(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
@@ -249,7 +269,7 @@ public class ContactAction extends DispatchAction {
     			demographicContactDao.merge(dc);
     		}
     	}
-		return manage(mapping,form,request,response);
+		return mapping.findForward("windowClose");
 	}
 
 	private String getReverseRole(String roleName, int targetDemographicNo) {

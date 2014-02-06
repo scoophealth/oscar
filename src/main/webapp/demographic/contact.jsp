@@ -25,11 +25,13 @@
 --%>
 
 <%@ include file="/taglibs.jsp"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.DemographicContact"%>
 <%
 	String id = request.getParameter("id");
+    StringUtils.trimToEmpty(id);
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	request.setAttribute("providers",providerDao.getActiveProviders());
 %>
@@ -89,7 +91,7 @@
 	            			           
 	            	<input type="hidden" name="contact_<%=id%>.contactId" value="0"/>
 		             <input type="text" name="contact_<%=id%>.contactName" id="contact_<%=id%>.contactName" size="20" readonly="readonly"/>		             
-		             <a href="#" onclick="doPersonalSearch('<%=id%>');return false;">Search</a>
+		             <a href="#" onclick="doPersonalSearch('<%=id%>');return false;">${param.search}</a>
 		             
 		             &nbsp;
 		             SDM:<input type="checkbox" name="contact_<%=id%>.sdm"/>
