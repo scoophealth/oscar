@@ -219,8 +219,7 @@ public class EctConsultationFormRequestPrintPdf {
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.patientPhone, 385, height - 166, 0);
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.patientDOB, 385, height - 181, 0);
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, (reqForm.patientHealthCardType+" "+reqForm.patientHealthNum+" "+reqForm.patientHealthCardVersionCode).trim(), 440, height - 195, 0);
-        cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.appointmentHour+":"+reqForm.appointmentMinute+" "+reqForm.appointmentPm+" " +
-                reqForm.appointmentDay+"/"+reqForm.appointmentMonth+"/"+reqForm.appointmentYear, 440, height - 208, 0);
+        cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.appointmentHour+":"+reqForm.appointmentMinute+" "+reqForm.appointmentPm+" " + reqForm.appointmentDate, 440, height - 208, 0);
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.patientChartNo, 385, height - 222, 0);
         cb.endText();
     }

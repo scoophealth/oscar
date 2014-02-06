@@ -122,7 +122,7 @@ public class EctConsultationFaxAction extends Action {
 
       try{
          if (Integer.parseInt(reqFrm.status) > 2 ){
-            appDate = reqFrm.appointmentDay+"/"+reqFrm.appointmentMonth+"/"+reqFrm.appointmentYear+" (d/m/y) ";
+            appDate = reqFrm.appointmentDate;
          }else{
             appDate = "";
          }

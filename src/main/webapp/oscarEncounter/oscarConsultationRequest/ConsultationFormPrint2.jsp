@@ -513,7 +513,7 @@ if (requestId!=null) aburl+="&requestId="+requestId; %>
 						   					<%}%>
 											<%if (Integer.parseInt(reqFrm.status) > 2 ){%>
 												<BR>
-												<%=reqFrm.appointmentYear %>/<%=reqFrm.appointmentMonth %>/<%=reqFrm.appointmentDay %>  (y/m/d)
+												<%=reqFrm.appointmentDate %>  (y/m/d)
 							  		  	   <%}%>
 										</td>
 									</tr>
