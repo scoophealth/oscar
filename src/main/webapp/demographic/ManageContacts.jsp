@@ -71,10 +71,20 @@ function addContact() {
 	var total = jQuery("#contact_num").val();
 	total++;
 	jQuery("#contact_num").val(total);
-	jQuery.ajax({url:'contact.jsp?id='+total,async:false, success:function(data) {
+	jQuery.ajax({url:'contact.jsp?search=Search&id='+total,async:false, success:function(data) {
 		  jQuery("#contact_container").append(data);
 	}});
 }
+
+function addContactExisting() {
+    var total = jQuery("#contact_num").val();
+    total++;
+    jQuery("#contact_num").val(total);
+    jQuery.ajax({url:'contact.jsp?search=&id='+total,async:false, success:function(data) {
+    jQuery("#contact_container").append(data);
+    }});
+}
+
 
 function deleteContact(id) {
 	var contactId = jQuery("input[name='contact_"+id+".id']").val();
@@ -87,10 +97,20 @@ function addProContact() {
 	var total = jQuery("#procontact_num").val();
 	total++;
 	jQuery("#procontact_num").val(total);
-	jQuery.ajax({url:'procontact.jsp?id='+total,async:false, success:function(data) {
+	jQuery.ajax({url:'procontact.jsp?search=Search&id='+total,async:false, success:function(data) {
 		  jQuery("#procontact_container").append(data);
 	}});
 }
+
+function addProContactExisting() {
+    var total = jQuery("#procontact_num").val();
+    total++;
+    jQuery("#procontact_num").val(total);
+    jQuery.ajax({url:'procontact.jsp?search=&id='+total,async:false, success:function(data) {
+              jQuery("#procontact_container").append(data);
+    }});
+}
+
 
 function deleteProContact(id) {
 	var contactId = jQuery("input[name='procontact_"+id+".id']").val();
@@ -203,6 +223,12 @@ function setSelect(id,type,name,val) {
 	});
 }
 
+function setSelectExisting(id,type,name,val) {
+    jQuery("select[name='"+type+"_"+id+"."+name+"']").attr('disabled', 'disabled').each(function() {
+            jQuery(this).val(val);
+    });
+}
+
 function setInput(id,type,name,val) {
 	jQuery("input[name='"+type+"_"+id+"."+name+"']").each(function() {
 		jQuery(this).val(val);
@@ -228,11 +254,11 @@ jQuery(document).ready(function() {
 		if(dcs != null) {
 			for(DemographicContact dc:dcs) {
 				%>
-					addContact();
+					addContactExisting();
 					var num = jQuery("#contact_num").val();
 					setInput(num,'contact','id','<%=dc.getId()%>');
 					setSelect(num,'contact','role','<%=dc.getRole()%>');
-					setSelect(num,'contact','type','<%=dc.getType()%>');
+					setSelectExisting(num,'contact','type','<%=dc.getType()%>');
 					setSelect(num,'contact','consentToContact','<%=dc.isConsentToContact()?"1":"0"%>');
 					setSelect(num,'contact','active','<%=dc.isActive()?"1":"0"%>');
 					setInput(num,'contact','contactId','<%=dc.getContactId()%>');
@@ -249,13 +275,13 @@ jQuery(document).ready(function() {
 		if(pdcs != null) {
 			for(DemographicContact dc:pdcs) {
 				%>
-					addProContact();
+					addProContactExisting();
 					var num = jQuery("#procontact_num").val();
 					setInput(num,'procontact','id','<%=dc.getId()%>');
 					setSelect(num,'procontact','role','<%=dc.getRole()%>');
 					setSelect(num,'procontact','consentToContact','<%=dc.isConsentToContact()?"1":"0"%>');
 					setSelect(num,'procontact','active','<%=dc.isActive()?"1":"0"%>');
-					setSelect(num,'procontact','type','<%=dc.getType()%>');
+					setSelectExisting(num,'procontact','type','<%=dc.getType()%>');
 					setInput(num,'procontact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'procontact','contactName','<%=dc.getContactName()%>');
 			    <%
