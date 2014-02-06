@@ -24,8 +24,7 @@
 
 --%>
 
-<%@ page
-	import="oscar.util.*, oscar.form.*, oscar.form.data.*,java.util.*,oscar.oscarPrevention.*"%>
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*,java.util.*, oscar.oscarProvider.data.*, oscar.oscarPrevention.*"%>
 
 <% 
                 String id = request.getParameter("id");
@@ -45,7 +44,7 @@
 </legend> <%if ( refused.equals("1")){ %> Refused <a
 	onclick="deleteInjection('<%=hdata.get("id")%>')"
 	href="javascript: function myFunction() {return false; }"
-	style="color: blue;"> Delete </a> <%}else{%> Given By: <%=PreventionData.getProviderName(hdata)%>
+	style="color: blue;"> Delete </a> <%}else{%> Given By: <%=ProviderData.getProviderName((String)hdata.get("provider_no"))%>
 Location: <%=hextended.get("location")  %> Lot #: <%=hextended.get("lot")  %>
 Product #: <%=hextended.get("product")  %> Dosage: <%=hextended.get("dosage")  %>
 <a onclick="deleteInjection('<%=hdata.get("id")%>')"
