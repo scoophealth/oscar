@@ -29,7 +29,10 @@
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="java.text.*"%>
+<%@page import="org.oscarehr.common.model.FunctionalCentre"%>
+
 <%
+	String functionalCentreId=request.getParameter("functionalCentreId");
 	int programId=Integer.parseInt(request.getParameter("programId"));
 	String startDateString=request.getParameter("startDate");
 	String endDateString=request.getParameter("endDate");
@@ -53,16 +56,15 @@
 		// do nothing, bad input
 	}
 	
-	
-	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(programId, startDate, endDate);
+	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(functionalCentreId, programId, startDate, endDate);
 	Program program=populationReportUIBean.getProgram();
-	
+	FunctionalCentre functionalCentre=populationReportUIBean.getFunctionalCentre();
 	PopulationReportDataObjects.RoleDataGrid roleDataGrid=populationReportUIBean.getRoleDataGrid();
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-<h1>Activity Report : <%=program.getName()%> from <%=startDateString%> to <%=endDateString%></h1>
+<h1>Activity Report : <%=functionalCentre==null?"":functionalCentre.getDescription()%> <%=program==null?"":program.getName()%> from <%=startDateString%> to <%=endDateString%></h1>
 <div>
 The numbers here represent the number of encounters/notes except in the total unique clients column where it represents clients.
 The total and subtotal rows don't always add up to all the encounter types as some encounters are left blank for the encounter type.

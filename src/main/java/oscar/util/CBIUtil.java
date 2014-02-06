@@ -40,12 +40,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Service;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
@@ -67,11 +69,10 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-
+import org.oscarehr.common.dao.OcanStaffFormDataDao;
 import oscar.OscarProperties;
 
 import com.cbi.ws.CBIService;
-import com.cbi.ws.CBIServiceImplService;
 import com.cbi.ws.CbiDataItem;
 import com.cbi.ws.CbiServiceResult;
 
@@ -82,33 +83,26 @@ public class CBIUtil
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
 	// submit cbi data to cbi web service
-	public void submitCBIData(Admission admission, OcanStaffForm ocanStaffForm) throws Exception
+	public void submitCBIData(OcanStaffForm ocanStaffForm) throws Exception
 	{
-		logger.debug("in CBIUtil : submitCBIData");
-		logger.debug("admission = " + admission);
+		logger.debug("in CBIUtil : submitCBIData");		
 		logger.debug("ocanStaffForm = " + ocanStaffForm);
 
 		// invoke webservice to submit data
-		CbiServiceResult cbiServiceResult = invokeWebService(admission, ocanStaffForm);
+		CbiServiceResult cbiServiceResult = invokeWebService(ocanStaffForm);
 		String result = "true";
 		String transactionId = null;
-		String resultMsg = "Submitted Successfully";
+		String resultMsg = "";
 
 		if (cbiServiceResult != null)
 		{
-			result = (cbiServiceResult.getResultCode() == 0) ? "true" : "false";
-			resultMsg = cbiServiceResult.getDescription();
-			if (result.equals("true"))
-			{
-				transactionId = cbiServiceResult.getReason();
-				resultMsg = resultMsg + " - ASSESSMENT ID : " + ocanStaffForm.getAssessmentId();
-			}
-			else
-			{
-				//resultMsg = resultMsg + " - " + cbiServiceResult.getReason();
-				resultMsg = cbiServiceResult.getReason()+" - "+(ocanStaffForm!=null?ocanStaffForm.getPostalCode():"");
-			}
+			result = (cbiServiceResult.getResultCode() == 1002) ? "false" : "true";  //All data errors trigger the same error code 1002
+			resultMsg = cbiServiceResult.getDescription() + " " + cbiServiceResult.getReason();
+			transactionId = cbiServiceResult.getReason();		
+			
 		}
+
+		resultMsg = resultMsg + " - FORM ID : " + ocanStaffForm.getId();
 
 		Integer submissionId = insertIntoSubmissionLog(result, transactionId, resultMsg);
 		logger.debug("submissionId = " + submissionId);
@@ -116,172 +110,125 @@ public class CBIUtil
 		// update submission id in OcanStaffForm
 		ocanStaffForm.setSubmissionId(submissionId);
 		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
-		ocanStaffFormDao.saveEntity(ocanStaffForm);
+		ocanStaffFormDao.merge(ocanStaffForm);
 
 		logger.debug("out CBIUtil : submitCBIData");
 	}
 
-	private CbiServiceResult invokeWebService(Admission admission, OcanStaffForm ocanStaffForm) throws Exception
+	private CbiServiceResult invokeWebService(OcanStaffForm ocanStaffForm) throws Exception
 	{
 		logger.debug("invoking CBI web service");
 
 		String CBI_WS_URL = oscarProperties.getProperty("CBI_WS_URL");
 		String CBI_WS_USERNAME = oscarProperties.getProperty("CBI_WS_USERNAME");
 		String CBI_WS_PASSWORD = oscarProperties.getProperty("CBI_WS_PASSWORD");
-
+		String CBI_WS_CLIENT_QNAME = oscarProperties.getProperty("CBI_WS_CLIENT_QNAME");
+		String CBI_WS_CLIENT_QNAME_URL = oscarProperties.getProperty("CBI_WS_CLIENT_QNAME_URL");		
+	
 		logger.info("CBI_WS_URL = " + CBI_WS_URL);
 
-		URL baseUrl = com.cbi.ws.CBIServiceImplService.class.getResource(".");
-		URL wsdlLocation = new URL(baseUrl, CBI_WS_URL);
+		URL url = new URL(CBI_WS_URL);
+		QName qname = new QName(CBI_WS_CLIENT_QNAME_URL, CBI_WS_CLIENT_QNAME);
 
-		CBIServiceImplService cbiServiceImplService = new CBIServiceImplService(wsdlLocation);
-		CBIService cbiService = cbiServiceImplService.getCBIServiceImplPort();
+		Service service = Service.create(url, qname);
 
-		BindingProvider bindingProvider = (BindingProvider) cbiService;
+		CBIService cbiService = service.getPort(CBIService.class);
 
-		Map<String, List<String>> credentials = new HashMap<String, List<String>>();
+		Map<String, Object> req_ctx = ((BindingProvider)cbiService).getRequestContext();
+		req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, CBI_WS_URL);
 
-		credentials.put("Username", Collections.singletonList(CBI_WS_USERNAME));
-		credentials.put("password", Collections.singletonList(CBI_WS_PASSWORD));
-		bindingProvider.getRequestContext().put(MessageContext.HTTP_REQUEST_HEADERS, credentials);
-
+		Map<String, List<String>> headers = new HashMap<String, List<String>>();
+		headers.put("Username", Collections.singletonList(CBI_WS_USERNAME));
+		headers.put("Password", Collections.singletonList(CBI_WS_PASSWORD));
+		req_ctx.put(MessageContext.HTTP_REQUEST_HEADERS, headers);
+ 		
 		//add logging handler only if debug mode is on.. 
 		//in info mode no need to create a handler object
 		if(logger.isDebugEnabled())
 			addLoggingHandler(cbiService);
 		
-		CbiDataItem cbiDataItem = getCbiDataItem(admission, ocanStaffForm);
+		CbiDataItem cbiDataItem = getCbiDataItem(ocanStaffForm);
 		CbiServiceResult result = cbiService.processCBIItem(cbiDataItem);
-
+		
 		logger.debug("result = " + result);
 
 		if (result != null)
-		{
-			logger.debug("----------------------------------------");
-			logger.debug("result.getDescription() = " + result.getDescription());
-			logger.debug("result.getReason() = " + result.getReason());
-			logger.debug("result.getResultCode() = " + result.getResultCode());
-			logger.debug("----------------------------------------");
+		{			
+			logger.debug("CBI response result.getDescription() = " + result.getDescription());
+			logger.debug("CBI response result.getReason() = " + result.getReason());
+			logger.debug("CBI response result.getResultCode() = " + result.getResultCode());			
 		}
 
 		return result;
 	}
 
-	private void addLoggingHandler(CBIService cbiService)
-	{
-		BindingProvider bindingProvider = (BindingProvider) cbiService;
-		Binding binding = bindingProvider.getBinding();
-		List<Handler> handlerList = binding.getHandlerChain();
 
-		handlerList.add(new SOAPHandler<SOAPMessageContext>()
-		{
-			@Override
-			public boolean handleMessage(SOAPMessageContext context)
-			{
-				SOAPMessage msg = context.getMessage();
-				Boolean outboundProperty = (Boolean) context.get (MessageContext.MESSAGE_OUTBOUND_PROPERTY);
-
-				try
-				{
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					msg.writeTo(bout);
-					
-					String requestResponseStr = "cbi response xml";
-					if(outboundProperty)
-						requestResponseStr = "cbi request xml";
-					
-					logger.debug(requestResponseStr+" : "+bout.toString());
-				}
-				catch (Exception e)
-				{
-					logger.error("error while printing soap message");
-				}
-				return true;
-			}
-
-			@Override
-			public boolean handleFault(SOAPMessageContext context)
-			{
-				return false;
-			}
-
-			@Override
-			public void close(MessageContext context)
-			{
-			}
-
-			@Override
-			public Set<QName> getHeaders()
-			{
-				return null;
-			}
-
-		});
-		binding.setHandlerChain(handlerList);
-	}
-
-	private CbiDataItem getCbiDataItem(Admission admission, OcanStaffForm ocanStaffForm) throws Exception
+	private CbiDataItem getCbiDataItem(OcanStaffForm ocanStaffForm) throws Exception
 	{
 		CbiDataItem cbiDataItem = new CbiDataItem();
+		
+		FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");	
+		
+		cbiDataItem.setOrgId(String.valueOf(facilityDao.find(ocanStaffForm.getFacilityId()).getOrgId()));
+		
+		//cbiDataItem.setFcAdmissionId(ocanStaffForm.getAdmissionId() + "");		
+		cbiDataItem.setProgramEnrollmentId(ocanStaffForm.getAdmissionId() + "");
+		
+		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+		Admission admission = admissionDao.getAdmission(ocanStaffForm.getAdmissionId());
+		//set functional center id
+		if(admission.getProgram()!=null && admission.getProgram().getFunctionalCentreId()!=null && 
+				admission.getProgram().getFunctionalCentreId().trim().length()>0)
+			cbiDataItem.setFcId(Integer.parseInt(admission.getProgram().getFunctionalCentreId().replaceAll("[\\t ]+", "")));
 
-		cbiDataItem.setOrgId(ocanStaffForm.getFacilityId());
-		cbiDataItem.setFcAdmissionId(admission.getId() + "");
-
-		// set functional center id
-		if (admission.getProgram() != null && admission.getProgram().getFunctionalCentreId() != null
-				&& admission.getProgram().getFunctionalCentreId().trim().length() > 0)
-			cbiDataItem.setFcId(Integer.parseInt(admission.getProgram().getFunctionalCentreId()
-					.replaceAll("[\\t ]+", "")));
-
-		cbiDataItem.setClientId(ocanStaffForm.getClientId() + "");
-
-		if (admission.getAdmissionDate() != null)
+		cbiDataItem.setClientId(ocanStaffForm.getClientId() + "");						
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		if(ocanStaffForm.getAdmissionDate()!=null)
 		{
-			GregorianCalendar admissionCal = new GregorianCalendar();
-			admissionCal.setTime(admission.getAdmissionDate());
-			XMLGregorianCalendar admissionDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(admissionCal);
-
-			cbiDataItem.setFcReferralDate(admissionDate);
-			cbiDataItem.setFcAdmissionDate(admissionDate);
-			cbiDataItem.setFcServiceInitDate(admissionDate);
+			cbiDataItem.setFcAdmissionDate(asXMLGregorianCalendar(formatter.format(ocanStaffForm.getAdmissionDate())));
+			
+		}
+		if(ocanStaffForm.getReferralDate()!=null)
+		{
+			cbiDataItem.setFcReferralDate(asXMLGregorianCalendar(formatter.format(ocanStaffForm.getReferralDate())));
+		}
+		if(ocanStaffForm.getServiceInitDate()!=null)
+		{	
+			cbiDataItem.setFcServiceInitDate(asXMLGregorianCalendar(formatter.format(ocanStaffForm.getServiceInitDate())));
 		}
 
-		if (admission.getDischargeDate() != null)
+		if(ocanStaffForm.getDischargeDate()!=null)
 		{
-			GregorianCalendar dischargeCal = new GregorianCalendar();
-			dischargeCal.setTime(admission.getDischargeDate());
-			XMLGregorianCalendar dischargeDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(dischargeCal);
-			cbiDataItem.setFcDischargeDate(dischargeDate);
+			cbiDataItem.setFcDischargeDate(asXMLGregorianCalendar(formatter.format(ocanStaffForm.getDischargeDate())));
 		}
 
-		if (ocanStaffForm.getHcNumber() != null && ocanStaffForm.getHcNumber().trim().length() > 0)
+		if(ocanStaffForm.getHcNumber()!=null && ocanStaffForm.getHcNumber().trim().length()>0)
 			cbiDataItem.setHealthCardNo(Long.parseLong(ocanStaffForm.getHcNumber()));
 
 		cbiDataItem.setFirstname(ocanStaffForm.getFirstName());
 		cbiDataItem.setLastnameAtBirth(ocanStaffForm.getLastNameAtBirth());
 		cbiDataItem.setLastnameCurrent(ocanStaffForm.getLastName());
 
-		// set dob
-		if (ocanStaffForm.getDateOfBirth() != null && ocanStaffForm.getDateOfBirth().trim().length() > 0)
+		//set dob
+		if(ocanStaffForm.getDateOfBirth()!=null && ocanStaffForm.getDateOfBirth().trim().length()>0)
 		{
-			GregorianCalendar calDOB = new GregorianCalendar();
-			calDOB.setTime(dateFormatter.parse(ocanStaffForm.getDateOfBirth()));
-			XMLGregorianCalendar xmlDOB = DatatypeFactory.newInstance().newXMLGregorianCalendar(calDOB);
-			cbiDataItem.setDateOfBirth(xmlDOB);
+			cbiDataItem.setDateOfBirth(asXMLGregorianCalendar(ocanStaffForm.getDateOfBirth()));
 		}
 
-		if (ocanStaffForm.getEstimatedAge() != null && ocanStaffForm.getEstimatedAge().trim().length() > 0)
+		if(ocanStaffForm.getEstimatedAge()!=null && ocanStaffForm.getEstimatedAge().trim().length()>0)
 			cbiDataItem.setAge(Integer.valueOf(ocanStaffForm.getEstimatedAge()));
 
 		cbiDataItem.setGender(ocanStaffForm.getGender());
 		cbiDataItem.setAddress1(ocanStaffForm.getAddressLine1());
 		cbiDataItem.setAddress2(ocanStaffForm.getAddressLine2());
-		cbiDataItem.setCity(ocanStaffForm.getCity());
+		cbiDataItem.setCity(ocanStaffForm.getCity()); //province?	
 		cbiDataItem.setPostalCode(ocanStaffForm.getPostalCode());
-
-		// cbiDataItem.setLhinOfResidence(value);
 		cbiDataItem.setPhone(ocanStaffForm.getPhoneNumber());
+		
+		OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");			
+		cbiDataItem.setLhinOfResidence(ocanStaffFormDataDao.findByQuestion(ocanStaffForm.getId(), "service_recipient_lhin").size()>0?ocanStaffFormDataDao.findByQuestion(ocanStaffForm.getId(), "service_recipient_lhin").get(0).getAnswer():"");	
 
+		cbiDataItem.setAction("I");
 		return cbiDataItem;
 	}
 
@@ -293,7 +240,7 @@ public class CBIUtil
 		submissionLog.setResult(result);
 		submissionLog.setTransactionId(transactionId);
 		submissionLog.setResultMessage(resultMsg);
-
+		submissionLog.setSubmissionType("CBI");
 		ocanSubmissionLogDao.persist(submissionLog);
 
 		return submissionLog.getId();
@@ -311,6 +258,10 @@ public class CBIUtil
 
 		if (ocanStaffForm != null)
 		{
+			//Find if this admissionId already has cbi form submitted.
+			//If there is no one ever submitted, then submit
+			//If there is one already submitted, 
+			
 			// if submission id = 0 , then it is not submitted yet.
 			if (ocanStaffForm.getSubmissionId() == 0)
 			{
@@ -347,10 +298,20 @@ public class CBIUtil
 	/***
 	 * get submitted log records based on the date
 	 */
-	public List<OcanSubmissionLog> getSubmissionLogRecords(Date submissionDate)
+	public List<OcanSubmissionLog> getCbiSubmissionLogRecords(Date submissionDate)
 	{
 		OcanSubmissionLogDao ocanSubmissionLogDao = (OcanSubmissionLogDao) SpringUtils.getBean("ocanSubmissionLogDao");
-		List<OcanSubmissionLog> list = ocanSubmissionLogDao.findBySubmissionDate(submissionDate);
+		List<OcanSubmissionLog> list = ocanSubmissionLogDao.findBySubmissionDateType(submissionDate, "CBI");
+		return list;
+	}
+
+	public List<OcanSubmissionLog> getCbiSubmissionLogRecords(Date submissionStartDate, Date submissionEndDate)
+	{
+		OcanSubmissionLogDao ocanSubmissionLogDao = (OcanSubmissionLogDao) SpringUtils.getBean("ocanSubmissionLogDao");
+		GregorianCalendar endDateInclusive=new GregorianCalendar();
+		endDateInclusive.setTime(submissionEndDate);
+		endDateInclusive.add(GregorianCalendar.DAY_OF_YEAR, 1);
+		List<OcanSubmissionLog> list = ocanSubmissionLogDao.findBySubmissionDateType(submissionStartDate, endDateInclusive.getTime(), "CBI");
 		return list;
 	}
 
@@ -389,7 +350,28 @@ public class CBIUtil
 
 		return admissionList;
 	}
-
+	
+	
+	public List<OcanStaffForm> getUnsubmittedCbiForms() {
+		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
+		List<OcanStaffForm> allCbiForms = ocanStaffFormDao.getLatestCbiFormsByGroupOfAdmissionId();
+		List<OcanStaffForm> toBeSubmittedCbiForms = new ArrayList<OcanStaffForm>();
+		Integer admissionId_new = 0;
+		Integer admissionId_old = 0;
+		if(allCbiForms!=null) {
+			//Only submit the latest cbi form for each admission_id
+			for(OcanStaffForm form : allCbiForms) {
+				admissionId_new = form.getAdmissionId();
+				if(admissionId_old.intValue()!=admissionId_new.intValue()) {
+					if(form.getSubmissionId()==0) //means not submitted yet
+						toBeSubmittedCbiForms.add(form);					
+				}
+				admissionId_old = form.getAdmissionId();
+			}				
+		}
+		return toBeSubmittedCbiForms;
+	}
+	
 	private List<Program> getPrograms()
 	{
 		ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
@@ -445,12 +427,13 @@ public class CBIUtil
 		Integer facilityId = 0;
 
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 		Demographic demographic = demographicDao.getDemographic(clientId + "");
 		if (demographic != null)
 		{
 			String providerNo = demographic.getProviderNo();
 
-			ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+			
 			List<Integer> facilityIds = providerDao.getFacilityIds(providerNo);
 			if (facilityIds == null || facilityIds.size() == 0)
 			{
@@ -478,7 +461,7 @@ public class CBIUtil
 		List<Date> list = null;
 
 		OcanSubmissionLogDao ocanSubmissionLogDao = (OcanSubmissionLogDao) SpringUtils.getBean("ocanSubmissionLogDao");
-		List<OcanSubmissionLog> submissionLogsList = ocanSubmissionLogDao.findAll();
+		List<OcanSubmissionLog> submissionLogsList = ocanSubmissionLogDao.findAllByType("CBI");
 		if (submissionLogsList != null)
 		{
 			list = new ArrayList<Date>();
@@ -491,6 +474,30 @@ public class CBIUtil
 
 		return list;
 	}
+	
+	public static String getCbiSubmissionFailureWarningMessage(Integer facilityId, String providerNo) {
+		
+		StringBuilder messages = new StringBuilder();		
+	
+		OcanSubmissionLogDao ocanSubmissionLogDao = (OcanSubmissionLogDao) SpringUtils.getBean("ocanSubmissionLogDao");
+		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
+		List<OcanSubmissionLog> failedSubmissionList = ocanSubmissionLogDao.findFailedSubmissionsByType("CBI");
+		if(failedSubmissionList!=null && !failedSubmissionList.isEmpty()) {
+			messages.append("Failed to upload CBI forms: ");			
+			for(OcanSubmissionLog submissionLog : failedSubmissionList) {
+				OcanStaffForm cbiForm = ocanStaffFormDao.findByProviderAndSubmissionId(providerNo, submissionLog.getId(),"CBI");
+				if(cbiForm!=null) {
+					messages.append("form id:" +cbiForm.getId() +", client id:"+cbiForm.getClientId() + " ,client name:" + cbiForm.getFirstName() + " " + cbiForm.getLastName() + " ; " );
+				}
+			}
+		}
+		
+		return messages.toString();
+		
+		
+		
+	}
+
 
 	/**
 	 * generate tree structure to be display in admin screen
@@ -589,5 +596,100 @@ public class CBIUtil
 
 		return resultMap;
 	}
+	
+	
+	private void addLoggingHandler(CBIService cbiService)
+	{
+		BindingProvider bindingProvider = (BindingProvider) cbiService;
+		Binding binding = bindingProvider.getBinding();
+		List<Handler> handlerList = binding.getHandlerChain();
 
+		handlerList.add(new SOAPHandler<SOAPMessageContext>()
+		{
+			@Override
+			public boolean handleMessage(SOAPMessageContext context)
+			{
+				SOAPMessage msg = context.getMessage();
+				Boolean outboundProperty = (Boolean) context.get (MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+
+				try
+				{
+					ByteArrayOutputStream bout = new ByteArrayOutputStream();
+					msg.writeTo(bout);
+					
+					String requestResponseStr = "================= cbi response xml =================";
+					if(outboundProperty)
+						requestResponseStr = "-------------------- cbi request xml -----------------------";
+					
+					logger.debug(requestResponseStr+" : "+bout.toString());
+				}
+				catch (Exception e)
+				{
+					logger.error("error while printing soap message");
+				}
+				return true;
+			}
+
+			@Override
+			public boolean handleFault(SOAPMessageContext context)
+			{
+				return false;
+			}
+
+			@Override
+			public void close(MessageContext context)
+			{
+			}
+
+			@Override
+			public Set<QName> getHeaders()
+			{
+				return null;
+			}
+
+		});
+		binding.setHandlerChain(handlerList);
+		
+	}
+	
+	
+	
+	private static DatatypeFactory df = null;
+    static {
+        try {
+            df = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException dce) {
+            logger.error("Exception while obtaining DatatypeFactory instance");
+        }
+    }  
+
+	 private static XMLGregorianCalendar asXMLGregorianCalendar(String fromDate)
+		{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");			
+
+	        java.util.Date date = null;
+
+	        try { 
+				fromDate = fromDate.concat(" 12:13:14"); //Because CBI server does not handle time zone properly, if time is 00:00:00, it will cut one day off. So have to put fake time here.
+				date = sdf.parse(fromDate); 
+			} catch (Exception e) { 
+				logger.error("error while setting cbi date"); 
+			}
+
+	        if (date == null) {
+	            return null;
+	        } else {
+	            GregorianCalendar gc = new GregorianCalendar();
+	            gc.clear();	        
+	            String timezone = gc.getTimeZone().getDisplayName();    
+	            gc.setTimeInMillis(date.getTime());
+	            XMLGregorianCalendar xmlCalendar = df.newXMLGregorianCalendar(gc);
+	            	            
+	            xmlCalendar.setTimezone(-300); //always set it as Eastern Standard Time because of CBI server code problem. We don't care about time anyway.
+	                       
+	            return xmlCalendar;
+	        }
+	    }
+	 
+	 
 }

@@ -24,7 +24,7 @@ package org.oscarehr.util;
 
 public class EncounterUtil {
     public enum EncounterType {
-        FACE_TO_FACE_WITH_CLIENT("face to face encounter with client"), TELEPHONE_WITH_CLIENT("telephone encounter with client"), ENCOUNTER_WITH_OUT_CLIENT("encounter without client");
+        FACE_TO_FACE_WITH_CLIENT("face to face encounter with client"), TELEPHONE_WITH_CLIENT("telephone encounter with client"), ENCOUNTER_WITH_OUT_CLIENT("encounter without client"), EMAIL_WITH_CLIENT("email encounter with client");
 
         private String oldDbValue = null;
 

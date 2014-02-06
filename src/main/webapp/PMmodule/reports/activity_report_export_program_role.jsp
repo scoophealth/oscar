@@ -23,6 +23,7 @@
 
 --%>
 <%@page import="oscar.util.DateUtils"%>
+<%@page import="oscar.util.SqlUtils"%>
 <%@page import="java.util.*"%>
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
@@ -31,8 +32,29 @@
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="java.text.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
 <%
-	String[] programIdsString=request.getParameterValues("programIds");
+	String[] programIds=request.getParameterValues("programIds");
+    String[] functionalCentreIds=request.getParameterValues("functionalCentreIds");	
+    
+    List<String> programIdsString = new ArrayList<String>();
+    if(programIds !=null) {
+    	for(String programId : programIds )
+    	programIdsString.add(programId);
+    }
+    ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    if(functionalCentreIds!=null) {
+	    for(String functionalCentreId : functionalCentreIds) {
+	    	List<Program> programList = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
+	    	for(Program p : programList) {
+	    		programIdsString.add(String.valueOf(p.getId()));
+	    	}
+	    	
+	    }
+    }
+    		
 	Integer secRoleId = Integer.valueOf(request.getParameter("secRoleId"));
 	String startDateString = request.getParameter("startDate");
 	String endDateString = request.getParameter("endDate");
