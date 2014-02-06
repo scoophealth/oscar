@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -32,7 +33,7 @@
 <%@ page import="org.oscarehr.common.model.ProviderData"%>
 <%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
 
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%@ include file="../../../admin/dbconnection.jsp"%>
@@ -77,15 +78,17 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 	}
 }
 %>
-
-
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Billing Report</title>
-<link rel="stylesheet" type="text/css" href="billingON.css" />
+<title><bean:message key="admin.admin.btnGenerateOHIPDiskette" /></title>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 
 <%
 			GregorianCalendar now = new GregorianCalendar();
@@ -122,65 +125,7 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 			String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
 			String xml_appointment_date = request.getParameter("xml_appointment_date")==null? UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd") : request.getParameter("xml_appointment_date");
 			%>
-<script language="JavaScript" type="text/JavaScript">
-<!--
-function validateGroupReport() {
-	var e = document.getElementsByName('provider')[0];
-	var val = e.options[e.selectedIndex].value;
-	if(val == 'all') {
-		alert("This function will create the billing for the selected provider's group. No applicable to 'All Providers'");
-		return false;
-	}
-	return true;
-}
 
-var checkSubmitFlg = false;
-function checkSubmit() {
-	if (checkSubmitFlg == true) {
-		return false;      
-	}
-	checkSubmitFlg = true;
-	document.forms[0].Submit.disabled = true;
-	return true;   
-}
-function recreate(si) {
-    ret = confirm("Are you sure you want to regenerate the file? \n\nWARNING: This should only be performed in very specific circumstances. If you are unsure, consult your OSCAR administrator before using this feature.");
-	if(ret) {
-		ss=document.forms[0].billcenter[document.forms[0].billcenter.selectedIndex].value;
-		var su = document.forms[0].useProviderMOH.checked;
-		location.href="onregenreport.jsp?diskId="+si+"&billcenter="+ss+"&useProviderMOH="+su;		
-	}
-}
-
-function reloadPage(init) {  //reloads the window if Nav4 resized
-if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
-document.pgW=innerWidth; document.pgH=innerHeight; onresize=reloadPage; }}
-else if (innerWidth!=document.pgW || innerHeight!=document.pgH) location.reload();
-}
-reloadPage(true);
-
-function findObj(n, d) { 
-var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
-d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
-if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
-for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=findObj(n,d.layers[i].document);
-if(!x && d.getElementById) x=d.getElementById(n); return x;
-}
-
-function showHideLayers() {
-var i,p,v,obj,args=showHideLayers.arguments;
-for (i=0; i<(args.length-2); i+=3) if ((obj=findObj(args[i]))!=null) { v=args[i+2];
-if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
-obj.visibility=v; }
-}
-//-->
-</script>
-
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-<script type="text/javascript" src="../../../share/calendar/lang/calendar-en.js"></script>
-<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>	
 <script>
 var providerBillCenterMap = new Object();
 <%
@@ -212,49 +157,40 @@ function setBillingCenter( providerNo ) {
 	}
 }
 </script>
+
+<style type="text/css">
+	input[name=useProviderMOH] {margin: 4px 4px 4px;}
+</style>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body>
+<h3><bean:message key="admin.admin.btnGenerateOHIPDiskette" /></h3>
+
+<div class="container-fluid">
 <div id="Layer1" style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
-<div id="Layer2" style="position: absolute; left: 45px; top: 61px; width: 129px; height: 123px; z-index: 2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#DDDDEE">
-		<td align='CENTER'><font size="2"> <strong>Last 5
-		Years</strong></font></td>
-	</tr>
-	<%for (int i = 0; i < 5; i++) {
 
-				%>
-	<tr>
-		<td align='CENTER'><font size="2"> <a
-			href="billingONMRI.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
-	</tr>
-	<%}
+<div class="row well">
 
-			%>
-</table>
+
+<div class="dropdown">
+<!-- Link or button to toggle dropdown -->
+<a href="#" class="dropdown-archive">Show Archive</a>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+		<%for (int i = 0; i < 5; i++) { %>
+		<li><a href="billingONMRI.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></li>
+		<%}%>
+		</ul>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%"
-	class="myDarkGreen">
-	<tr>
-		<th align='LEFT'><input type='button' name='print' value='Print'
-			onClick='window.print()'></th>
-		<th><font face="Arial" color="#FFFFFF"> OHIP Report - <%=thisyear%></font></th>
-		<th align='RIGHT'><input type='button' name='close' value='Close'
-			onClick='window.close()'></th>
-	</tr>
-</table>
+<button type='button' name='print' value='Print' class="btn pull-right" onClick='window.print()'> <i class="icon icon-print"></i> Print</button><br/>
 
 
-<table width="100%" border="0" class="myGreen">
-	<form name="form1" method="post" action="ongenreport.jsp"
-		onsubmit="return checkSubmit();">
-	<tr>
-		<td width="220"><a href="#"
-			onClick="showHideLayers('Layer2','','show')">Show Archive</a></td>
-		<td width="220">Select Provider</td>
-		<td width="254"><select name="provider" onchange = "setBillingCenter(this.value);">
+
+	<form name="form1" method="post" action="ongenreport.jsp" onsubmit="return checkSubmit();">
+
+		<div class="span4">
+		Select Provider<br>
+		<select name="provider" onchange = "setBillingCenter(this.value);">
 			<%
 			List providerStr; 
 			
@@ -286,61 +222,72 @@ function setBillingCenter( providerNo ) {
 			<%}
 			}
 			%>
-		</select></td>
-		<td width="200">Billing Center</td>
-		<td width="254"><select name="billcenter" id="billcenter">
+		</select>
+		</div>
 
+		<div class="span4">
+		Billing Center<br>
+		<select name="billcenter" id="billcenter">
 			<%for (Enumeration e = BillingDataHlp.propBillingCenter.propertyNames(); e.hasMoreElements();) {
 				String centerCode = (String) e.nextElement();
 %>
-
 			<option value="<%=centerCode%>"
 				<%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=BillingDataHlp.propBillingCenter.getProperty(centerCode)%></option>
 			<%}
-
 			%>
-
-		</select></td>
-		<td><input type="submit" name="Submit" value="Create Report">
+		</select>
+		</div>
 		
 		<input type="hidden" name="monthCode" value="<%=monthCode%>">
-		<input type="hidden" name="verCode" value="V03"> <input
-			type="hidden" name="curUser" value="<%=curProvider_no%>"> <input
-			type="hidden" name="curDate" value="<%=nowDate%>"></td>
-	</tr>
-	<tr>
-		<td><font face="Arial, Helvetica, sans-serif" size="2"><b>
-		Service Date: </b></font></td>
-		<td><font size="1" face="Arial, Helvetica, sans-serif">
-		From:</font> <input type="text" id="xml_vdate" name="xml_vdate" size="10"
-			maxlength="10" value="<%=xml_vdate%>" readonly> <img
-			src="../../../images/cal.gif" id="xml_vdate_cal"></td>
-		<td><font size="1" face="Arial, Helvetica, sans-serif">
-		To:</font> <input type="text" id="xml_appointment_date"
-			name="xml_appointment_date" size="10" maxlength="10"
-			value="<%=xml_appointment_date%>" readonly> <img
-			src="../../../images/cal.gif" id="xml_appointment_date_cal"></td>
-			<td colspan="3">
-			<input type="checkbox" name="useProviderMOH" id="useProviderMOH" <%=("true".equals(request.getParameter("useProviderMOH")) ? "checked" : "") %>><label for="useProviderMOH"> Use individual provider's bill center setting (will use above bill center if provider does not have one set.)</label>
-		</td>		
-	</tr>	
+		<input type="hidden" name="verCode" value="V03"> 
+		<input type="hidden" name="curUser" value="<%=curProvider_no%>"> 
+		<input type="hidden" name="curDate" value="<%=nowDate%>">
+
+		<div class="span10">
+		Service Date:
+		</div>
+
+		<div class="span4">		
+		<label>From:</label>
+		<div class="input-append">
+			<input type="text" name="xml_vdate" id="xml_vdate" value="<%=xml_vdate%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		</div>
+		</div>
+		<div class="span4">		
+		<label>To:</label>
+		<div class="input-append">
+			<input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=xml_appointment_date%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		</div>
+		</div>
+		
+		<div class="span10">
+		<input type="checkbox" name="useProviderMOH" id="useProviderMOH" <%=("true".equals(request.getParameter("useProviderMOH")) ? "checked" : "") %>>Use individual provider's bill center setting (will use above bill center if provider does not have one set.)
+		<br><br>
+		<input class="btn btn-primary" type="submit" name="Submit" value="Create Report">
+		</div>
 	</form>
-</table>
-<script type="text/javascript">
-Calendar.setup({ inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 });
-Calendar.setup({ inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 });
-</script>
-<table width="100%" border="0" cellspacing="1" cellpadding="1"
-	class="myIvory">
-	<tr class="myYellow">
-		<th width="25%">Provider</th>
-		<th width="15%">Creation Date</th>
-		<th width="10%">Clm/Rec</th>
-		<th width="10%">Total</th>
-		<th width="12%" colspan=2>to OHIP</th>
+
+
+
+</div><!--row well-->
+
+
+
+<table class="table table-striped table-hover">
+<thead>
+	<tr>
+		<th>Provider</th>
+		<th>Creation Date</th>
+		<th>Clm/Rec</th>
+		<th>Total</th>
+		<th colspan=2>to OHIP</th>
 		<th>HTML</th>
 	</tr>
+</thead>
 
+<tbody>
 	<%Properties proName = (new JdbcBillingPageUtil()).getPropProviderName();
 			String pro_no = "", pro_ohip = "", pro_group = "", pro_name = "", updatedate = "", cr = "", oFile = "", hFile = "", total = "";
 
@@ -371,8 +318,7 @@ Calendar.setup({ inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", sho
 
 %>
 
-	<tr bgcolor="<%=bgColor%>"
-		onMouseOver="this.style.backgroundColor='pink';"
+	<tr 	onMouseOver="this.style.backgroundColor='pink';"
 		onMouseout="this.style.backgroundColor='<%=bgColor%>';">
 		<td><font size="2"><%=pro_name%></font></td>
 		<td align="center"><font size="2"><%=updatedate.substring(0,16)%></font></td>
@@ -438,10 +384,20 @@ for(BillActivity ba:bas) {
 	<%
 }
 %>
-
+</tbody>
 </table>
-</body>
-</html>
+</div><!--container-->
 
+<script>
+$('.dropdown-archive').dropdown();
+
+var startDate = $("#xml_vdate").datepicker({
+	format : "yyyy-mm-dd"
+});
+
+var endDate = $("#xml_appointment_date").datepicker({
+	format : "yyyy-mm-dd"
+});
+</script>
 </body>
 </html>
