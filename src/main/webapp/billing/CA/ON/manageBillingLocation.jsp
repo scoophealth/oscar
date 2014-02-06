@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -48,9 +49,8 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="billing.manageBillingLocation.title" /></title>
-<link rel="stylesheet" href="billingON.css">
+<title><bean:message key="admin.admin.btnAddBillingLocation" /></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <script language="JavaScript">
 <!--
 
@@ -104,37 +104,23 @@ function confirmthis(lno) {
 </script>
 </head>
 
-<body leftmargin="0" topmargin="5" rightmargin="0">
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0"
-	cellspacing="2" cellpadding="2">
-	<tr class="myDarkGreen">
-		<td height="40" width="10%"></td>
-		<td width="90%" align="left"><font color="#FFFFFF" size="+2">Billing
-		Location</font></td>
-	</tr>
-</table>
-
-<table width="100%" border="0" bgcolor="ivory">
+<body>
+<h3><bean:message key="admin.admin.btnAddBillingLocation" /></h3>
+<div class="container-fluid well">
+<table>
 	<tr>
 		<td width="3%"></td>
 		<td width="30%" align="left" valign="top">
 		<form name="serviceform" method="post"
 			action="dbManageBillingLocation.jsp"><B><bean:message
 			key="billing.manageBillingLocation.msgCodeDescription" /></B> <br>
-		<input type="text" name="location1" size="4"> <input
-			type="text" name="location1desc" size="30"> <br>
-		<input type="text" name="location2" size="4"> <input
-			type="text" name="location2desc" size="30"> <br>
-		<input type="text" name="location3" size="4"> <input
-			type="text" name="location3desc" size="30"> <br>
-		<input type="text" name="location4" size="4"> <input
-			type="text" name="location4desc" size="30"> <br>
-		<input type="text" name="location5" size="4"> <input
-			type="text" name="location5desc" size="30"> <br>
+		<input style="width:40px" type="text" name="location1" size="4"> <input type="text" name="location1desc" size="30"> <br>
+		<input style="width:40px" type="text" name="location2" size="4"> <input type="text" name="location2desc" size="30"> <br>
+		<input style="width:40px" type="text" name="location3" size="4"> <input type="text" name="location3desc" size="30"> <br>
+		<input style="width:40px" type="text" name="location4" size="4"> <input type="text" name="location4desc" size="30"> <br>
+		<input style="width:40px" type="text" name="location5" size="4"> <input type="text" name="location5desc" size="30"> <br>
 		<br>
-		<input type="submit" name="action" style="width: 100px;"
-			value="<bean:message key="billing.manageBillingLocation.btnAdd"/>">
+		<input class="btn btn-primary" type="submit" name="action" value="<bean:message key="billing.manageBillingLocation.btnAdd"/>">
 		<br>
 		</p>
 		</form>
@@ -142,8 +128,8 @@ function confirmthis(lno) {
 
 		<td width="37%" valign="top">
 
-		<table width="100%" border="0" cellspacing="2" cellpadding="2">
-			<tr class="myYellow">
+		<table class="table table-striped  table-condensed">
+			<tr>
 				<th width="6%"><bean:message
 					key="billing.manageBillingLocation.msgClinicLocation" /></th>
 				<th><bean:message
@@ -167,13 +153,13 @@ if(clinicLocations.size()==0) {
 		bodd=bodd?false:true; //for the color of rows
 %>
 
-			<tr <%=bodd? "class=\"myGreen\"":"bgcolor='ivory'"%>>
+			<tr>
 				<form name="serviceform" method="post"
 					action="manageBillingLocation.jsp"
 					onsubmit="return confirmthis(<%=clinicLocation.getClinicLocationNo()%>);">
 				<td align="center"><%=clinicLocation.getClinicLocationNo()%></td>
 				<td><%=clinicLocation.getClinicLocationName()%></td>
-				<td align="center"><input type="submit" name="submit"
+				<td align="center"><input class="btn" type="submit" name="submit"
 					value="Delete" /> <input type="hidden" name="location_no"
 					value="<%=clinicLocation.getClinicLocationNo()%>" /></td>
 				</form>
@@ -186,9 +172,9 @@ if(clinicLocations.size()==0) {
 		</table>
 
 		</td>
-		<td width="20%">&nbsp;</td>
 	</tr>
 
 </table>
+</div>
 </body>
 </html:html>
