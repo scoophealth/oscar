@@ -44,13 +44,7 @@ public class OcanSubmissionLogDao extends AbstractDao<OcanSubmissionLog> {
 		entityManager.persist(rec);
 	}
 	
-	public List<OcanSubmissionLog> findAll() {
-		Query query = entityManager.createQuery("select l from OcanSubmissionLog l order by l.submitDateTime DESC");
-		@SuppressWarnings("unchecked")
-		List<OcanSubmissionLog> results = query.getResultList();
-		return results;
-	}
-	
+		
 	public List<OcanSubmissionLog> findBySubmissionDate(Date submissionDate) {
 		Query query = entityManager.createQuery("select l from OcanSubmissionLog l where date(l.submitDateTime)=?  order by l.submitDateTime DESC");
 		query.setParameter(1, submissionDate);
@@ -59,4 +53,39 @@ public class OcanSubmissionLogDao extends AbstractDao<OcanSubmissionLog> {
 		return results;
 	}
 	
+	public List<OcanSubmissionLog> findBySubmissionDateType(Date submissionDate, String type) {
+		Query query = entityManager.createQuery("select l from OcanSubmissionLog l where date(l.submitDateTime)=?  and submissionType=? order by l.submitDateTime DESC");
+		query.setParameter(1, submissionDate);
+		query.setParameter(2, type);
+		@SuppressWarnings("unchecked")
+		List<OcanSubmissionLog> results = query.getResultList();
+		return results;
+	}
+	
+	public List<OcanSubmissionLog> findBySubmissionDateType(Date submissionStartDate, Date submissionEndDate, String type) {
+		Query query = entityManager.createQuery("select l from OcanSubmissionLog l where submitDateTime>=?  and l.submitDateTime<=? and submissionType=? order by l.submitDateTime DESC");
+		query.setParameter(1, submissionStartDate);
+		query.setParameter(2, submissionEndDate);
+		query.setParameter(3, type);
+		@SuppressWarnings("unchecked")
+		List<OcanSubmissionLog> results = query.getResultList();
+		return results;
+	}
+	
+	public List<OcanSubmissionLog> findAllByType(String type) {
+		Query query = entityManager.createQuery("select l from OcanSubmissionLog l where l.submissionType=? order by l.submitDateTime DESC");
+		query.setParameter(1, type);
+		@SuppressWarnings("unchecked")
+		List<OcanSubmissionLog> results = query.getResultList();
+		return results;
+	}
+	
+	public List<OcanSubmissionLog> findFailedSubmissionsByType(String type) {
+		Query query = entityManager.createQuery("select l from OcanSubmissionLog l where l.submissionType=? and l.result=? order by l.submitDateTime DESC");
+		query.setParameter(1, type);
+		query.setParameter(2, "false");
+		@SuppressWarnings("unchecked")
+		List<OcanSubmissionLog> results = query.getResultList();
+		return results;
+	}
 }

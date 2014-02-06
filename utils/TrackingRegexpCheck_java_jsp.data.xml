@@ -3181,5 +3181,6 @@
 		<ViolationValue>/src/main/java/oscar/util/CBIUtil.java:public StringBuffer generateTree(List&lt;Date&gt; list)</ViolationValue>
 		<ViolationValue>/src/main/java/oscar/util/CBIUtil.java:StringBuffer strbuff = new StringBuffer();</ViolationValue>
 		<ViolationValue>/src/main/webapp/admin/cbiAdmin.jsp:StringBuffer treeDataStr = cbiUtil.generateTree(submissionDateList);</ViolationValue>
+	<ViolationValue>/src/main/webapp/oscarReport/cbi_report_form.jsp:StringBuffer treeDataStr = cbiUtil.generateTree(submissionDateList);</ViolationValue>
     </ViolationSet>
 </TrackingRegexpCheck>

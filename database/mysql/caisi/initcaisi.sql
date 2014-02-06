@@ -2002,6 +2002,10 @@ create table OcanStaffForm
 	providerName varchar(100),
 	clientFormProviderName varchar(100),	
 	consent varchar(50),
+	referralDate date,
+	admissionDate date,
+	serviceInitDate date,
+	dischargeDate date,
 	index(startDate),
 	index(completionDate)
 );
@@ -2097,5 +2101,8 @@ submitDateTime timestamp,
 result varchar(255),
 transactionId varchar(100),
 resultMessage text,
-submissionData longtext
+submissionData longtext,
+submissionType varchar(30),
+KEY `submitDateIndex` (`submitDateTime`),
+KEY `submissionTypeIndex` (`submissionType`)
 );

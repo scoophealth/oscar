@@ -214,6 +214,42 @@ private Logger log=MiscUtils.getLogger();
         return rs;
     }
    
+   public List<Admission> getServiceAndBedProgramAdmissions(Integer demographicNo, Integer facilityId) {
+       if (demographicNo == null || demographicNo <= 0) {
+           throw new IllegalArgumentException();
+       }
+
+       String queryStr = "select a FROM Admission a , Program p WHERE (a.programType='Bed' or a.programType='Service') and a.clientId=? and a.programId=p.id and (p.facilityId=? or p.facilityId is null) ORDER BY a.admissionDate DESC";
+	Query query = entityManager.createQuery(queryStr);
+	query.setParameter(1, demographicNo);  
+	query.setParameter(2, facilityId);    
+	@SuppressWarnings("unchecked")
+        List<Admission> rs = query.getResultList();
+        if (log.isDebugEnabled()) {
+           log.debug("getServiceAndBedProgramAdmissions for clientId " + demographicNo + ", # of admissions: " + rs.size());
+        }
+
+        return rs;
+   }
+   
+   public List<Admission> getAdmissionsByProgramAndClient(Integer demographicNo, Integer programId ) {
+       if (demographicNo == null || demographicNo <= 0) {
+           throw new IllegalArgumentException();
+       }
+
+       String queryStr = "select a FROM Admission a WHERE a.clientId=? and a.programId=? ORDER BY a.admissionDate DESC";
+       Query query = entityManager.createQuery(queryStr);
+	query.setParameter(1, demographicNo);  
+	query.setParameter(2, programId);
+
+	@SuppressWarnings("unchecked")
+       List<Admission> rs = query.getResultList();
+       if (log.isDebugEnabled()) {
+           log.debug("getCurrentAdmissionsByProgramAndClient for clientId " + demographicNo + " programId " + programId + ", # of admissions: " + rs.size());
+       }
+
+       return rs;
+   }
    
    
     public List<Admission> getAdmissionsByProgramId(Integer programId, Boolean automaticDischarge, Integer days) {

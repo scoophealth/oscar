@@ -35,6 +35,8 @@
 <%@page import="java.util.List"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.apache.commons.lang.ArrayUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+
 <%
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
@@ -116,17 +118,39 @@
 	ocanStaffForm.setOcanType(request.getParameter("ocanType")==null?"":request.getParameter("ocanType"));
 	ocanStaffForm.setConsent(request.getParameter("consent")==null?"NOT_SPECIFIED":request.getParameter("consent"));
 	
+	ocanStaffForm.setReasonForAssessment(reasonForAssessment);
+	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
+	
 	//CBI additional data
 	ocanStaffForm.setEstimatedAge(request.getParameter("estimatedAge")==null?"":request.getParameter("estimatedAge"));
 	ocanStaffForm.setLastNameAtBirth(request.getParameter("lastNameAtBirth")==null?"":request.getParameter("lastNameAtBirth"));
+	ocanStaffForm.setAdmissionId(request.getParameter("admissionId")==null?null:Integer.valueOf(request.getParameter("admissionId")));
+	String referralDate = request.getParameter("referralDate")==null?"":request.getParameter("referralDate");
+	String admissionDate = request.getParameter("admissionDate")==null?"":request.getParameter("admissionDate");
+	String serviceInitDate = request.getParameter("serviceInitDate")==null?"":request.getParameter("serviceInitDate");
+	String dischargeDate = request.getParameter("dischargeDate")==null?"":request.getParameter("dischargeDate");
+	String submissionId = request.getParameter("submissionId")==null?"":request.getParameter("submissionId");
+	try {
+		if(!StringUtils.isBlank(referralDate))
+			ocanStaffForm.setReferralDate(formatter.parse(referralDate));
+		if(!StringUtils.isBlank(admissionDate))
+			ocanStaffForm.setAdmissionDate(formatter.parse(admissionDate));
+		if(!StringUtils.isBlank(serviceInitDate))
+			ocanStaffForm.setServiceInitDate(formatter.parse(serviceInitDate));
+		if(!StringUtils.isBlank(dischargeDate))
+			ocanStaffForm.setDischargeDate(formatter.parse(dischargeDate));
+		if(!StringUtils.isBlank(submissionId))
+			ocanStaffForm.setSubmissionId(Integer.parseInt(submissionId));
+	}catch(java.text.ParseException e){
+		MiscUtils.getLogger().error("Unexpected error on ocan form page.", e);
+	}
+	
 	
 	//Once ocan assessment was completed, it can not be changed to other status.
 	if(!"Completed".equals(ocanStaffForm.getAssessmentStatus())) {	
 		ocanStaffForm.setAssessmentStatus(assessmentStatus);
 	}
 	
-	ocanStaffForm.setReasonForAssessment(reasonForAssessment);
-	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	
 	try {
 		if(!StringUtils.isBlank(startDate))

@@ -62,25 +62,29 @@ public class OcanSubmissionLogDaoTest extends DaoTestFixtures {
 	
 	@Test
 	public void testFindAll() throws Exception {
-		
+		String type = "OCAN";	
 		OcanSubmissionLog oSL1 = new OcanSubmissionLog();
 		EntityDataGenerator.generateTestDataForModelClass(oSL1);
+		oSL1.setSubmissionType(type);
 		dao.persist(oSL1);
 		
 		OcanSubmissionLog oSL2 = new OcanSubmissionLog();
 		EntityDataGenerator.generateTestDataForModelClass(oSL2);
+		oSL2.setSubmissionType(type);
 		dao.persist(oSL2);
 		
 		OcanSubmissionLog oSL3 = new OcanSubmissionLog();
 		EntityDataGenerator.generateTestDataForModelClass(oSL3);
+		oSL3.setSubmissionType(type);
 		dao.persist(oSL3);
 		
 		OcanSubmissionLog oSL4 = new OcanSubmissionLog();
 		EntityDataGenerator.generateTestDataForModelClass(oSL4);
+		oSL4.setSubmissionType(type);
 		dao.persist(oSL4);
 		
 		List<OcanSubmissionLog> expectedResult = new ArrayList<OcanSubmissionLog>(Arrays.asList(oSL1, oSL2, oSL3, oSL4));
-		List<OcanSubmissionLog> result = dao.findAll();
+		List<OcanSubmissionLog> result = dao.findAllByType(type);
 		
 		Logger logger = MiscUtils.getLogger();
 		

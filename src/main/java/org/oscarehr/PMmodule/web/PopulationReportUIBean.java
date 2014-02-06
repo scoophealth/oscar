@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -39,13 +41,16 @@ import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataGr
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataRow;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.ProviderDataGrid;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.RoleDataGrid;
+import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.dao.IssueGroupDao;
 import org.oscarehr.common.dao.PopulationReportDao;
 import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.common.model.FunctionalCentre;
 import org.oscarehr.common.model.IssueGroup;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.EncounterUtil;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,27 +58,35 @@ public class PopulationReportUIBean {
 
 	private static Logger logger=MiscUtils.getLogger();
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	
 	private IssueGroupDao issueGroupDao = (IssueGroupDao) SpringUtils.getBean("issueGroupDao");
 	private PopulationReportDao populationReportDao = (PopulationReportDao) SpringUtils.getBean("populationReportDao");
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 	private SecRoleDao secRoleDao=(SecRoleDao)SpringUtils.getBean("secRoleDao");
 	private ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
+	private FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
 	
 	private Date startDate = null;
 	private Date endDate = null;
 	private Program program = null;
 	public boolean skipTotalRow=false;
+	private FunctionalCentre functionalCentre = null;
 
 	public PopulationReportUIBean() {
 
 	}
 
-	public PopulationReportUIBean(int programId, Date startDate, Date endDate) {
+	public PopulationReportUIBean(String functionalCentreId, int programId, Date startDate, Date endDate) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		setProgramId(programId);
+		setFunctionalCentreId(functionalCentreId);
 	}
 
+	public void setFunctionalCentreId(String functionalCentreId) {
+		functionalCentre = functionalCentreDao.find(functionalCentreId);
+	}
+	
 	public void setProgramId(int programId) {
 		program = programDao.getProgram(programId);
 	}
@@ -98,13 +111,17 @@ public class PopulationReportUIBean {
 		return (program);
 	}
 
+	public FunctionalCentre getFunctionalCentre() {
+		return (functionalCentre);
+	}
+	
 	public List<Program> getAllPrograms() {
 		return (programDao.getAllActivePrograms());
 	}
 
 	private List<SecRole> allRoles = null;
 
-	public List<SecRole> getRoles() {
+	public List<SecRole> getSecRoles() {
 
 		if (allRoles == null) allRoles = secRoleDao.findAll();
 		return (allRoles);
@@ -116,7 +133,7 @@ public class PopulationReportUIBean {
 		
 		RoleDataGrid roleDataGrid = new RoleDataGrid();
 
-		for (SecRole role : getRoles()) {
+		for (SecRole role : getSecRoles()) {
 			roleDataGrid.put(role, getEncounterTypeDataGrid(role));
 		}
 
@@ -184,16 +201,35 @@ public class PopulationReportUIBean {
 	private EncounterTypeDataRow getEncounterTypeDataRow(Integer roleId, EncounterUtil.EncounterType encounterType) {
 
 		EncounterTypeDataRow result = new EncounterTypeDataRow();
-
-		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(program.getId(), roleId, encounterType, startDate, endDate);
-
+		Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+		int rowTotalUniqueEncounters = 0;
+		int rowTotalUniqueClients = 0;
+		
+		if(functionalCentre!=null) {
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			List<Program> programList = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
+			for(Program p : programList) {
+				Map<Integer, Integer> counts1 = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(p.getId(), roleId, encounterType, startDate, endDate);
+				counts.putAll(counts1);
+				
+				rowTotalUniqueEncounters += populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(p.getId(), roleId, encounterType, startDate, endDate);
+				rowTotalUniqueClients += populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(p.getId(), roleId, encounterType, startDate, endDate);				
+			}
+		}
+		if(program!=null) {
+			Map<Integer, Integer> counts2 = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(program.getId(), roleId, encounterType, startDate, endDate);
+			counts.putAll(counts2);
+			rowTotalUniqueEncounters += populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
+			rowTotalUniqueClients += populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
+		}
+		
 		for (IssueGroup issueGroup : getIssueGroups()) {
 			Integer count = counts.get(issueGroup.getId());
 			result.put(issueGroup, (count != null ? count : 0));
 		}
 
-		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
-		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
+		result.rowTotalUniqueEncounters = rowTotalUniqueEncounters;
+		result.rowTotalUniqueClients = rowTotalUniqueClients;
 		
 		return (result);
 	}
