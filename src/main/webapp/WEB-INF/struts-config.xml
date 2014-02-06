@@ -1402,7 +1402,7 @@
 			<forward name="success" path="/oscarReport/RptByExample.jsp" />
 		</action>
 		<action input="/admin/gstControl.jsp" name="GstControlForm" path="/admin/GstControl" scope="request" type="oscar.oscarBilling.ca.on.administration.GstControlAction">
-			<forward name="success" path="/admin/admin.jsp" />
+			<forward name="success" path="/admin/gstControl.jsp" />
 		</action>
 		<action input="/admin/manageCSSStyles.jsp" name="CSSStylesForm" path="/admin/manageCSSStyles" type="org.oscarehr.billing.CA.ON.web.ManageCSSAction" parameter="method" scope="request" validate="false">
 			<forward name="init" path="/admin/manageCSSStyles.jsp" />
