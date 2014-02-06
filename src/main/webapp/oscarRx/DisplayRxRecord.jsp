@@ -24,6 +24,7 @@
 
 --%>
 <%@page import="org.oscarehr.common.dao.DrugDao,org.oscarehr.common.model.Drug,org.oscarehr.util.MiscUtils,org.oscarehr.util.SpringUtils,org.oscarehr.PMmodule.dao.ProviderDao,org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -86,55 +87,55 @@ Drug drug = drugDao.find(drugId);
 									Written Date: <%= drug.getWrittenDate()%><br>
 									Create Date: <%= drug.getCreateDate()%><br>
 									<br>
-									ATC: <%= drug.getAtc()%><br>
-									DIN: <%= drug.getRegionalIdentifier()%><br>
+									ATC: <%= StringUtils.trimToEmpty(drug.getAtc())%><br>
+									DIN: <%= StringUtils.trimToEmpty(drug.getRegionalIdentifier())%><br>
 									<br>
 									
-									Rx Text: <%= drug.getSpecial()%><br>
+									Rx Text: <%= StringUtils.trimToEmpty(drug.getSpecial())%><br>
 									<br>
 									
-									Dosage: <%= drug.getDosageDisplay() %><br>
+									Dosage: <%= StringUtils.trimToEmpty(drug.getDosageDisplay())%><br>
 									
 									
-									Frequency: <%= drug.getFreqCode()%><br>
-									Duration: <%= drug.getDuration()%> &nbsp;<%= drug.getDurUnit()%><br>
-									Quantity: <%= drug.getQuantity()%><br>
-									Repeats: <%= drug.getRepeat()%><br>
+									Frequency: <%= StringUtils.trimToEmpty(drug.getFreqCode())%><br>
+									Duration: <%= StringUtils.trimToEmpty(drug.getDuration())%> &nbsp;<%= StringUtils.trimToEmpty(drug.getDurUnit())%><br>
+									Quantity: <%= StringUtils.trimToEmpty(drug.getQuantity())%><br>
+									Repeats: <%= (drug.getRepeat() == null)?0:drug.getRepeat()%><br>
 									
 									
 									
-									Refill Duration: <%= drug.getRefillDuration() %><br>
-									Refill Quantity: <%= drug.getRefillQuantity() %><br>
-									Dispense Interval: <%= drug.getDispenseInterval() %><br>
-									Pickup Date: <%= drug.getPickUpDateTime() %><br>
+									Refill Duration: <%= (drug.getRefillDuration() == null)?"":drug.getRefillDuration()%><br>
+									Refill Quantity: <%= (drug.getRefillQuantity() == null)?"":drug.getRefillQuantity()%><br>
+									Dispense Interval: <%= (drug.getDispenseInterval() == null)?"":drug.getDispenseInterval()%><br>
+									Pickup Date: <%= (drug.getPickUpDateTime() == null)?"":drug.getPickUpDateTime() %><br>
 									
-									Unit: <%= drug.getUnit()%><br>
-									Method: <%= drug.getMethod()%><br>
-									Route: <%= drug.getRoute()%><br>
-									Form: <%= drug.getDrugForm()%><br>
+									Unit: <%= StringUtils.trimToEmpty(drug.getUnit())%><br>
+									Method: <%= StringUtils.trimToEmpty(drug.getMethod())%><br>
+									Route: <%= StringUtils.trimToEmpty(drug.getRoute())%><br>
+									Form: <%= StringUtils.trimToEmpty(drug.getDrugForm())%><br>
 									
-									Strength: <%= drug.getDosage()%> 
+									Strength: <%= StringUtils.trimToEmpty(drug.getDosage())%> 
 									<% if(drug.getUnitName() != null && !drug.getUnitName().equalsIgnoreCase("null") ){ %>
 									<%= drug.getUnitName()%>
 									<%}%>
 									<br>
 									Long Term: <%= drug.getLongTerm()%><br>
 									Past Med: <%= drug.getPastMed()%><br>
-									Patient Compliance: <%= drug.getPatientCompliance()%><br>
-									Last Refill: <%= drug.getLastRefillDate()%><br>
-									eTreatment: <%= drug.getETreatmentType()%><br>
-									Status: <%= drug.getRxStatus()%><br>
+									Patient Compliance: <%= (drug.getPatientCompliance()==null)?"":drug.getPatientCompliance()%><br>
+									Last Refill: <%= (drug.getLastRefillDate() == null)?"":drug.getLastRefillDate()%><br>
+									eTreatment: <%= StringUtils.trimToEmpty(drug.getETreatmentType())%><br>
+									Status: <%= StringUtils.trimToEmpty(drug.getRxStatus())%><br>
 									
 									<br>
 									Outside Provider<br>
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name: <%= drug.getOutsideProviderName()%><br>
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ohip: <%= drug.getOutsideProviderOhip()%><br>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name: <%= StringUtils.trimToEmpty(drug.getOutsideProviderName())%><br>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ohip: <%= StringUtils.trimToEmpty(drug.getOutsideProviderOhip())%><br>
 									
 									<br>
-									Archived Reason: <%= drug.getArchivedReason()%><br>
-									Archived Date: <%= drug.getArchivedDate()%><br>
+									Archived Reason: <%= StringUtils.trimToEmpty(drug.getArchivedReason())%><br>
+									Archived Date: <%= (drug.getArchivedDate() == null)?"":drug.getArchivedDate()%><br>
 									
-									Comment: <%= drug.getComment()%><br>
+									Comment: <%= StringUtils.trimToEmpty(drug.getComment())%><br>
 									
 									<%--
 									Unused Items

@@ -347,7 +347,7 @@ function isValidDate(dateStr)
     var matchArray = dateStr.match(datePat); // is the format ok?
 
     if (matchArray == null) {
-        alert("Please enter the date as yyyy-mm-dd. Your current selection reads: " + datePat);
+        alert("Please enter the date as yyyy-mm-dd. Your current selection reads: " + dateStr);
         return false;
     }
 

@@ -233,6 +233,16 @@ if(listRxDrugs!=null){
            <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="addFav('<%=rand%>','<%=drugName%>')">Add to Favorite</a>
        </div>
        
+       <!--  g.d. added -->
+        <br/>
+        <bean:message key="WriteScript.msgPickUpDate"/>: 
+           <input type="text" id="pickupDate_<%=rand%>"  name="pickupDate_<%=rand%>" value="<%=pickupDate%>" onchange="if (!isValidDate(this.value)) {this.value=null}" />
+           <bean:message key="WriteScript.msgPickUpTime"/>: 
+           <input type="text" id="pickupTime_<%=rand%>"  name="pickupTime_<%=rand%>" value="<%=pickupTime%>" onchange="if (!isValidTime(this.value)) {this.value=null}" />
+       <br/>
+       
+       
+       
        <bean:message key="WriteScript.msgComment"/>:
            <input type="text" id="comment_<%=rand%>" name="comment_<%=rand%>" value="<%=comment%>" size="60"/>
            <br/>  
@@ -382,7 +392,6 @@ if(listRxDrugs!=null){
            <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="addFav('<%=rand%>','<%=drugName%>')">Add to Favorite</a>
        
            <br />
-           
            <bean:message key="WriteScript.msgPickUpDate"/>: 
            <input type="text" id="pickupDate_<%=rand%>"  name="pickupDate_<%=rand%>" value="<%=pickupDate%>" onchange="if (!isValidDate(this.value)) {this.value=null}" />
            <bean:message key="WriteScript.msgPickUpTime"/>: 

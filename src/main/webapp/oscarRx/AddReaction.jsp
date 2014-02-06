@@ -105,6 +105,19 @@ String allergyId = (String) request.getAttribute("allergyId");
 								property="ageOfOnset" size="4" maxlength="4" /></td>
 
 						</tr>
+						
+						<tr valign="center">
+							<td><bean:message key="oscarEncounter.lifestage.title"/>: 
+	                                <html:select property="lifeStage">
+	                                        <html:option value=""><bean:message key="oscarEncounter.lifestage.opt.notset"/></html:option>
+	                                        <html:option value="N"><bean:message key="oscarEncounter.lifestage.opt.newborn"/></html:option>
+	                                        <html:option value="I"><bean:message key="oscarEncounter.lifestage.opt.infant"/></html:option>
+	                                        <html:option value="C"><bean:message key="oscarEncounter.lifestage.opt.child"/></html:option>
+	                                        <html:option value="T"><bean:message key="oscarEncounter.lifestage.opt.adolescent"/></html:option> 
+	                                        <html:option value="A"><bean:message key="oscarEncounter.lifestage.opt.adult"/></html:option>
+	                                </html:select>
+	                        </td>
+						</tr>
 
 						<tr valign="center">
 
