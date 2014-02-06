@@ -97,7 +97,7 @@ function onsub() {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
   }
-  if(!(document.searchprovider.provider_no.value=="-new-" || document.searchprovider.provider_no.value.match(/^\d+$/))){
+  if(!(document.searchprovider.provider_no.value=="-new-" || document.searchprovider.provider_no.value.match(/^[1-9]\d*$/))){
   		alert("Provider No. must be a number.");
   		return false;
   }
