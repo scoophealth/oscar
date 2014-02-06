@@ -105,7 +105,8 @@ invoice</a>
                                             self.location.href="<%=urlBack%>";
                                         
                                         <%}else{%>
-                                            self.close();
+					    self.close();
+					    self.opener.opener.refresh();
                                         <% }%>
 					</script>
 <% } else { %>
@@ -122,9 +123,8 @@ invoice</a>
 						  }
 						}
 						popupPage(700,720,'billingON3rdInv.jsp?billingNo=<%=billingNo%>');
-						
-						self.opener.refresh();
 						self.close();
+						self.opener.refresh();
 					</script>
 <% } %>
 <%} else {
