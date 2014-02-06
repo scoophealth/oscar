@@ -71,9 +71,7 @@
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
-    
-    session.setAttribute("flowsheet", "healthTracker");
-    
+        
     String ornPilot = OscarProperties.getInstance().getProperty("ORN_PILOT", "no");
 	 
 //ADD MEAS
@@ -975,7 +973,7 @@ if(!btnLabel.equals("PHV")){
 		
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
 		<span class="DoNotPrint" style="padding-left:10px;" id="edit-flowsheet">
-		<i class="icon-pencil"></i> <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&ht" title="Edit Flowsheet">Edit</a>   
+		<i class="icon-pencil"></i> <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker" title="Edit Flowsheet">Edit</a>   
 		</span>
 		</security:oscarSec>
 		
@@ -1016,7 +1014,7 @@ if(!btnLabel.equals("PHV")){
 	
 		<span class="DoNotPrint" style="padding-left:10px;" id="flowsheet-print">
 	 	<i class="icon-print"></i> 
-	 	<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&ht" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet">Custom Print</a>
+	 	<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&htracker" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet">Custom Print</a>
 	 	</span>	
 	 	
 		<!-- 
@@ -1084,14 +1082,14 @@ if(!btnLabel.equals("PHV")){
 <%if(!isMeasurements && !temp.equals("tracker")){ out.print("No measurements! "); 	
 		%>	
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
-		To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>' title='Edit Flowsheet'>Edit Flowsheet</a>.	
+		To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker' title='Edit Flowsheet'>Edit Flowsheet</a>.	
 		</security:oscarSec>	
 <%}else if(!isMeasurements && temp.equals("tracker")){%>            		    
 
 <div class="well" id="health-tracker-add">
 <p class="lead muted">It looks like you are not tracking any measurements! </p>
 
-<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&add" class="btn btn-large"><i class="icon-plus-sign icon-large"></i> Add Measurements</a>
+<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&add&htracker" class="btn btn-large"><i class="icon-plus-sign icon-large"></i> Add Measurements</a>
 
 </div>
 

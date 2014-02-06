@@ -424,7 +424,7 @@ div.headPrevention a:visited { color:black; }
 
 <div class="module-block DoNotPrint">
 <%if (!printView){%>
-	<%if (request.getParameter("ht") != null) {%> 
+	<%if (request.getParameter("htracker") != null) {%> 
 	<a href="HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>" title="go back to <%=temp%>"><< <%=flowSheet%></a> <br/>
 	<%}else{%>
 	<a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>" title="go back to <%=temp%>"><< <%=flowSheet%></a> <br/>
