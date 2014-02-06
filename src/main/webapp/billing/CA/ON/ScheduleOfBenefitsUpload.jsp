@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -32,7 +33,7 @@
   List warnings = (List) request.getAttribute("warnings"); 
 %>
 
-<%@page import="oscar.oscarDemographic.data.*,java.util.*"%>
+<%@ page import="oscar.oscarDemographic.data.*,java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
@@ -41,13 +42,8 @@
 <html:html locale="true">
 
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<!--I18n-->
-<title>Schedule Of Benefits Upload Utility</title>
-<html:base />
-<link rel="stylesheet" type="text/css"
-	href="../../../share/css/OscarStandardLayout.css">
-<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
+<title><bean:message key="admin.admin.scheduleOfBenefits"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 
 <script type="text/javascript" LANGUAGE="JavaScript">
 
@@ -100,120 +96,124 @@ function checkAll(formId){
    }
 }
 </script>
-
-
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-
-
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
-<!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
-			key="demographic.demographiceditdemographic.msgPatientDetailRecord" />
-		</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>Upload <!--i18n--></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="1.6.4" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp; <a
-			href="http://www.health.gov.on.ca/english/providers/program/ohip/sob/schedule_master.html">OHIP
-		Fee Schedule</a><br />
-		<br />
-		<li>Download the text file.</li>
-		<li>Brows&find file on HD.</li>
-		<li>Click "Import".</li>
-		<li>Click "Update" checkbox to select All.</li>
-		<li>Click "Update Billing Code Prices" at bottom.</li>
-		<li>Click "Import".</li>
-		</td>
-		<td valign="top" class="MainTableRightColumn">
-		<% if ( warnings == null ){ %> <html:form
-			action="/billing/CA/ON/benefitScheduleUpload" method="POST"
-			enctype="multipart/form-data" onsubmit="return checkForm();">
-			<input type="file" name="importFile" value="/root/apr05sob.001">
-			<input type="submit" name="Submit" value="Import">
-			<div>			
-				<input type="checkbox" name="showChangedCodes" value="on" checked tabindex="1" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.showCodesChangedPrices" /><br>			
-				<input type="checkbox" name="showNewCodes" value="on" tabindex="2" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.showNewCodes" /><br>
-				<input type="checkbox" name="forceUpdate" value="on" tabindex="3" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.forceUpdate" /><br>				
-				<input type="checkbox" name="updateAssistantFees" onclick="toggleAssistantInput(this);" value="on" tabindex="5" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.updateAssistantFees" /><span id="updateAssistantInput" style="display:none;"><input type="text" name="updateAssistantFeesValue" id="updateAssistantFeesValue" size="7" maxlength="8" style="margin-left:30px;" tabindex="7" /></span><br/>
-				<input type="checkbox" name="updateAnaesthetistFees" onclick="toggleAnaesthetistInput(this);" value="on" tabindex="6" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.updateAnaesthetistFees" /><span id="updateAnaesthetistInput" style="display:none;"><input type="text" name="updateAnaesthetistFeesValue" id="updateAnaesthetistFeesValue" size="7" maxlength="8" style="margin-left:8px;" tabindex="8"/></span>
-			</div>
-		</html:form> <% } %> <%
-            String outcome = (String) request.getAttribute("outcome");
-            if(outcome != null && outcome.equals("success")){ %>
-		<div>SOB File Successfully Uploaded</div>
-		<%}else if(outcome != null && outcome.equals("exception")){ %>
-		<div>There has been a problem Uploading this SOB file</div>
-		<%}else if(outcome != null && outcome.equals("uploadedPreviously")){ %>
-		<div>This file has already been processed</div>
-		<%}%> <%
-               if ( warnings != null) {          %> <html:form
-			action="/billing/CA/ON/benefitScheduleChange" method="POST"
-			styleId="sbForm">
-			<table class="ele">
-				<tr>
-					<th nowrap><oscar:oscarPropertiesCheck property="SOB_CHECKALL"
-						value="yes">
-						<input type="checkbox" name="checkAll2"
-							onclick="checkAll('sbForm')" id="checkA" />
-					</oscar:oscarPropertiesCheck> Update</th>
-					<th>Fee Code</th>
-					<th>Current Price</th>
-					<th>New Price</th>
-					<th>Diff</th>
-					<th>Description</th>
-                    <th>Effective Date</th>
-                    <th>Termination Date</th>
-				</tr>
-				<% for (int i = 0; i < warnings.size(); i++){ 
-                      Hashtable h = (Hashtable) warnings.get(i);
-                      
-                 
-                  %>
-				<tr>
-					<td><input type="checkbox" name="change"
-						value="<%=h.get("feeCode")%>|<%=h.get("newprice")%>|<%=h.get("effectiveDate")%>|<%=h.get("terminactionDate")%>|<%=h.get("description")%>" /></td>
-					<td><%=h.get("feeCode")%></td>
-					<td><%=h.get("oldprice")%></td>
-					<td><%=h.get("newprice")%></td>
-					<td><%=h.get("diff")%></td>
-					<td title="<%=h.get("prices")%>"><%=h.get("description")%></td>
-                    <td><%=h.get("effectiveDate")%></td>
-                    <td><%=h.get("terminactionDate")%></td>
-				</tr>
-				<%}%>
-			</table>
-			<input type="submit" value="Update Billing Code Prices">
-		</html:form> <% } %> <% List l = (List) request.getAttribute("changes");
-               if ( l != null) {          %>
-		<ul>
-			<% for (int i = 0; i < l.size(); i++){ 
-                      Hashtable h = (Hashtable) l.get(i); %>
-			<li><%=h.get("code")%> value updated to : <%=h.get("value")%></li>
-			<%}%>
-		</ul>
-		<% }%>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
-	</tr>
-</table>
+<body>
+<h3><bean:message key="admin.admin.scheduleOfBenefits"/> <small><oscar:help keywords="1.6.4" key="app.top1"/></small></h3>
+<div class="container-fluid form-inline">
+
+
+<div class="well">
+
+<div>
+1. Download the text file from <a href="http://www.health.gov.on.ca/english/providers/program/ohip/sob/schedule_master.html">OHIP Fee Schedule</a> and save it to your computer.
+</div><!--#1-->
+
+<div>
+2. Browse & find file:
+<% if ( warnings == null ){ %> 
+<html:form
+action="/billing/CA/ON/benefitScheduleUpload" method="POST"
+enctype="multipart/form-data" onsubmit="return checkForm();">
+<input type="file" name="importFile" value="/root/apr05sob.001">
+<input class="btn btn-primary" type="submit" name="Submit" value="Import">
+<div>			
+<input type="checkbox" name="showChangedCodes" value="on" checked tabindex="1" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.showCodesChangedPrices" /><br>			
+<input type="checkbox" name="showNewCodes" value="on" tabindex="2" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.showNewCodes" /><br>
+<input type="checkbox" name="forceUpdate" value="on" tabindex="3" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.forceUpdate" /><br>				
+<input type="checkbox" name="updateAssistantFees" onclick="toggleAssistantInput(this);" value="on" tabindex="5" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.updateAssistantFees" /><span id="updateAssistantInput" style="display:none;"><input type="text" name="updateAssistantFeesValue" id="updateAssistantFeesValue" size="7" maxlength="8" style="margin-left:30px;" tabindex="7" /></span><br/>
+<input type="checkbox" name="updateAnaesthetistFees" onclick="toggleAnaesthetistInput(this);" value="on" tabindex="6" /><bean:message key="oscar.billing.CA.ON.billingON.sobUpload.updateAnaesthetistFees" /><span id="updateAnaesthetistInput" style="display:none;"><input type="text" name="updateAnaesthetistFeesValue" id="updateAnaesthetistFeesValue" size="7" maxlength="8" style="margin-left:8px;" tabindex="8"/></span>
+</div>
+</html:form> 
+<% } else{ %> 
+<a href="ScheduleOfBenefitsUpload.jsp">Try again</a>
+<%}%>
+</div><!--#2-->
+
+<div>
+3. Click "Import" when file found 
+</div><!--#3-->
+
+<br>
+<%
+String outcome = (String) request.getAttribute("outcome");
+if(outcome != null && outcome.equals("success")){ %>
+<div class="alert alert-success">SOB File Successfully Uploaded</div>
+<%}else if(outcome != null && outcome.equals("exception")){ %>
+<div class="alert alert-error">There was a problem uploading this SOB file</div>
+<%}else if(outcome != null && outcome.equals("uploadedPreviously")){ %>
+<div class="alert ">This file has already been processed</div>
+<%}%> 
+
+
+<% if ( warnings != null && outcome.equals("success")) { %> 
+<div>
+4. Click "Update" checkbox to select All<br>
+
+	<html:form
+	action="/billing/CA/ON/benefitScheduleChange" method="POST"
+	styleId="sbForm">
+	<table class="table table-striped  table-condensed">
+		<tr>
+			<th nowrap><oscar:oscarPropertiesCheck property="SOB_CHECKALL"
+				value="yes">
+				<input type="checkbox" name="checkAll2"
+					onclick="checkAll('sbForm')" id="checkA" />
+			</oscar:oscarPropertiesCheck> Update</th>
+			<th>Fee Code</th>
+			<th>Current Price</th>
+			<th>New Price</th>
+			<th>Diff</th>
+			<th>Description</th>
+	<th>Effective Date</th>
+	<th>Termination Date</th>
+		</tr>
+		<% for (int i = 0; i < warnings.size(); i++){ 
+	Hashtable h = (Hashtable) warnings.get(i);
+
+
+	%>
+		<tr>
+			<td><input type="checkbox" name="change"
+				value="<%=h.get("feeCode")%>|<%=h.get("newprice")%>|<%=h.get("effectiveDate")%>|<%=h.get("terminactionDate")%>|<%=h.get("description")%>" /></td>
+			<td><%=h.get("feeCode")%></td>
+			<td><%=h.get("oldprice")%></td>
+			<td><%=h.get("newprice")%></td>
+			<td><%=h.get("diff")%></td>
+			<td title="<%=h.get("prices")%>"><%=h.get("description")%></td>
+	<td><%=h.get("effectiveDate")%></td>
+	<td><%=h.get("terminactionDate")%></td>
+		</tr>
+		<%}%>
+	</table>
+	<input class="btn btn-primary" type="submit" value="Update Billing Code Prices">
+	</html:form> 
+
+5. Click "Update Billing Code Prices"
+</div><!--#4-->
+<% } %> 
+
+
+
+<% List l = (List) request.getAttribute("changes");
+if ( l != null) {          %>
+<ul>
+	<% for (int i = 0; i < l.size(); i++){ 
+      Hashtable h = (Hashtable) l.get(i); %>
+	<li><%=h.get("code")%> value updated to : <%=h.get("value")%></li>
+	<%}%>
+</ul>
+<% }%>
+
+
+</div><!--main well-->
+
+
+
+
+
+</div><!--container-->
+
+
 </body>
 </html:html>
