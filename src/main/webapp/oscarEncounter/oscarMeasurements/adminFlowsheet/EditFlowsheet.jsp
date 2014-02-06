@@ -45,7 +45,12 @@
     long startTimeToGetP = System.currentTimeMillis();
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
-    String ht = (String)session.getAttribute("flowsheet");
+    String module="";
+    String htQueryString = "";
+    if(request.getParameter("htracker")!=null){
+    	module="htracker";
+    	htQueryString="&"+module;	
+    }
     
     String temp = "";
     if(request.getParameter("flowsheet") != null){
@@ -187,7 +192,7 @@ width:100px !important;
 <div class="row-fluid">
 
 <%if (demographic!=null) {
-	if(ht.equals("healthTracker")){%> 
+	if(request.getParameter("htracker")!=null){%> 
 	<a href="../HealthTrackerPage.jspf?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Health Tracker</a> <br/>
 	<%}else{%>
 	<a href="../TemplateFlowSheet.jsp?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Flowsheets</a> <br/>
@@ -255,9 +260,9 @@ width:100px !important;
 		         		<%if(mFlowsheet.getFlowSheetItem(mstring).getPreventionType()!=null){ %>
 		         		<i class="icon-pencil action-icon"  rel="popover" data-container="body"  data-toggle="popover" data-placement="right" data-content="unable to edit a prevention item" data-trigger="hover" title=""></i>
 		                <%}else{%>
-		                <a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>" title="Edit" class="action-icon"><i class="icon-pencil"></i></a>
+		                <a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%><%=htQueryString%>" title="Edit" class="action-icon"><i class="icon-pencil"></i></a>
 		                <%}%>
-		                <a href="FlowSheetCustomAction.do?method=delete&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>" title="Delete" class="action-icon"><i class="icon-trash"></i></a>
+		                <a href="FlowSheetCustomAction.do?method=delete&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%><%=htQueryString%>" title="Delete" class="action-icon"><i class="icon-trash"></i></a>
 		                </td>
 		                <td><%=counter%></td>
 		                <td><%=mstring%></td>
@@ -312,7 +317,7 @@ width:100px !important;
 	             //do nothing   
 	            }
 		    %>
-		       <tr><td><a href="FlowSheetCustomAction.do?method=archiveMod&id=<%=cust.getId()%>&flowsheet=<%=flowsheet%><%=demographicStr%>" class="action-icon"><i class="icon-trash"></i></a> </td> 
+		       <tr><td><a href="FlowSheetCustomAction.do?method=archiveMod&id=<%=cust.getId()%>&flowsheet=<%=flowsheet%><%=demographicStr%><%=htQueryString%>" class="action-icon"><i class="icon-trash"></i></a> </td> 
 		       
 		       <td><%=cust.getAction()%></td>
 		       
@@ -376,7 +381,9 @@ width:100px !important;
 <div class="modal-body">
 <!-- Add measurement type -->
 <div>
-		       
+		    <%if(request.getParameter("htracker")!=null){ %>
+		    <input type="hidden" name="htracker" value="<%=module%>">
+		    <%}%>   
             <input type="hidden" name="flowsheet" value="<%=temp%>"/>
             <input type="hidden" name="method" value="save"/>
             <%if (demographic !=null){%>
