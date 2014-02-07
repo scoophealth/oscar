@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -77,20 +78,13 @@ user_no = (String) session.getAttribute("user");
 
 <html>
 <head>
-<link rel="stylesheet" href="billing.css">
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
-
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-
-  <!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 
 <title><bean:message key="admin.admin.btnBatchBilling"/></title>
 <script type="text/javascript">
@@ -149,34 +143,25 @@ function init() {
 }
 //-->
 </script>
-
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
-	topmargin="0" onLoad="init()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor="#486ebd">
-		<th align='LEFT'><input type='button' name='print' value='Print'
-			onClick='window.print()'></th>
-		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
-			color="#FFFFFF"><bean:message key="admin.admin.btnBatchBilling"/></font></th>
-		<th align='RIGHT'><input type='button' name='close' value='Close'
-			onClick='window.close()'></th>
-	</tr>
-</table>
+<body>
+<h3><bean:message key="admin.admin.btnBatchBilling"/></h3>
+
+<div class="container-fluid">
+
+
+<div class="row well well-condensed">
 
 <% 
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
  %>
-<table width="100%" border="0" bgcolor="#E6F0F7">
 	<form name="serviceform" method="post" action="BatchBill.do">	
 	<input type="hidden" id="method" name="method" value="">	
-	<tr>
-		<td width="220"><b><font face="Arial, Helvetica, sans-serif"
-			size="2" color="#003366"><bean:message key="billing.batchbilling.msgProvider"/></font></b></td>
-		<td width="254"><b><font face="Arial, Helvetica, sans-serif"
-			size="2" color="#003366"> <select name="provider"
-			onChange="jumpMenu('parent',this)">
+
+<div class="span2">
+	<bean:message key="billing.batchbilling.msgProvider"/><br>
+		<select name="provider" class="span2"onChange="jumpMenu('window',this)">
 			<option value="#"><b><bean:message key="billing.batchbilling.msgProvider"/></b></option>
 			<option value="all"
 				<%=providerview.equals("all")?"selected":""%>><bean:message key="billing.batchbilling.msgAllProvider"/></option>
@@ -186,10 +171,6 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 				proFirst = p.getFirstName();
 				proLast = p.getLastName();
 				proNo = p.getProviderNo();
-// billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-// specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-	
-
  %>
 			<option value="<%=proNo%>"
 				<%=providerview.equals(proNo)?"selected":""%>><%=proLast%>,
@@ -197,14 +178,13 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 			<%
 
  }
-//
   %>
-		</select> </font></b></td>
-		<td width="254"><font color="#003366"><b><font
-			face="Arial, Helvetica, sans-serif" size="2"><bean:message key="billing.batchbilling.serviceCode"/>:</font></b>			
-		</td>
-		<td width="254">
-			<select id="service_code" name="service_code">
+		</select>
+</div>
+
+<div class="span3">
+		<bean:message key="billing.batchbilling.serviceCode"/>:			
+			<select id="service_code" class="span3" name="service_code">
 				<option value="all" <%=servicecode.equals("all")?"selected":""%>><bean:message key="billing.batchbilling.msgAllServiceCode"/></option>
 		<%			
 			List<String>serviceCodes = batchBillingDAO.findDistinctServiceCodes();
@@ -215,11 +195,11 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 			}
 		%>
 			</select>
-		</td>
-		<td width="254"><font color="#003366"><b><font
-			face="Arial, Helvetica, sans-serif" size="2"><bean:message key="billing.batchbilling.msgClinicLocation"/>:</font></b>			
-		</td>		
-		<td width="277"><select name="clinic_view">
+</div>
+
+<div class="span4">
+		<bean:message key="billing.batchbilling.msgClinicLocation"/>:			
+		<select name="clinic_view" class="span4">
 			<%
              String clinic_location="", clinic_code="";
              List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
@@ -232,31 +212,45 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 			<%
              }
              %>
-		</select><font color="#003366"> <input type="hidden" name="verCode"
+		</select>
+</div>
+</div><!--row well-->
+		
+
+<div class="row">
+
+
+		<input type="hidden" name="verCode"
 			value="V03"> <input type="hidden" name="curUser"
 			value="<%=user_no%>"> <input type="hidden" name="curDate"
 			value="<%=nowDate%>"> <input type="hidden" name="curTime"
-			value="<%=nowTime%>"> </font></td>
-	</tr>
-	<tr>
-		<td colspan=6>
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr bgcolor="#CCCCFF">
-				<td width="12%" height="16"><input type="checkbox" onclick="selectAll();"></td>
-				<td colspan="6" height="16">&nbsp;</td>
-			</tr>
-			<tr bgcolor="#CCCCFF">
-				<td width="12%" height="16"><bean:message key="billing.batchbilling.msgSelection"/></td>
-				<td width="22%" height="16"><bean:message key="billing.batchbilling.msgDemographic"/></td>
-				<td width="22%" height="16"><bean:message key="billing.batchbilling.msgProviderTitle"/></td>
-				<td width="12%" height="16"><bean:message key="billing.batchbilling.msgService"/></td>
-				<td width="12%" height="16"><bean:message key="billing.batchbilling.msgAmount"/></td>
-				<td width="10%" height="16"><bean:message key="billing.batchbilling.msgDiagnostic"/></td>
-				<td width="10%" height="16"><bean:message key="billing.batchbilling.msgLastBillDate"/></td>
+			value="<%=nowTime%>">
+			
 
-			</tr>
 	<% 
 	   if( batchBillings != null && batchBillings.size() > 0) {
+
+%>
+
+<button class="btn pull-right" type='button' name='print' value='Print' onClick='window.print()'><i class="icon icon-print"></i> Print</button>
+		<br/><input type="checkbox" onclick="selectAll();"><br/><br/>
+		
+		<table class="table table-striped table-hover table-condensed">
+		<thead>
+			<tr>
+				<th><bean:message key="billing.batchbilling.msgSelection"/></th>
+				<th><bean:message key="billing.batchbilling.msgDemographic"/></th>
+				<th><bean:message key="billing.batchbilling.msgProviderTitle"/></th>
+				<th><bean:message key="billing.batchbilling.msgService"/></th>
+				<th><bean:message key="billing.batchbilling.msgAmount"/></th>
+				<th><bean:message key="billing.batchbilling.msgDiagnostic"/></th>
+				<th><bean:message key="billing.batchbilling.msgLastBillDate"/></th>
+
+			</tr>
+		</thead>
+		<tbody>
+
+<%
 		   DemographicDao demographicDAO = (DemographicDao) SpringUtils.getBean("demographicDao");
 		   String demo_name="";
 	       String diagnostic_code="", service_code="", billing_amount="";
@@ -299,15 +293,16 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 		  }
 	  	  Count1 = Count1 + 1;
 	    %>
-				<tr bgcolor="<%=color%>">
-					<td width="12%" height="16"><input type="checkbox"
+		
+				<tr>
+					<td><input type="checkbox"
 						name="bill" value="<%=service_code + ";" + diagnostic_code + ";" + batchBilling.getDemographicNo() + ";" + batchBilling.getBillingProviderNo()%>"></td>
-					<td width="22%" height="16"><%=demo_name%></a></td>
-					<td width="22%" height="16"><%=proName1%></td>
-					<td width="12%" height="16"><%=service_code%></td>
-					<td width="12%" height="16"><%=billing_amount%></td>
-					<td width="10%" height="16"><%=diagnostic_code%></td>
-					<td width="10%" height="16"><%=billdate%></td>
+					<td><%=demo_name%></a></td>
+					<td><%=proName1%></td>
+					<td><%=service_code%></td>
+					<td><%=billing_amount%></td>
+					<td><%=diagnostic_code%></td>
+					<td><%=billdate%></td>
 				</tr>
 				<%}
 	  			 if ( Count1 == 0) { %>
@@ -328,13 +323,19 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	   		
 	<%
 				}
-	   }
+	   }else if(servicecode!=null && providerview!=null && batchBillings == null){
 %>
+<p>* Make selection above to generate batch billing</p>
+<%
+}else{
+%>
+<p>Nothing to report</p>
+<%}%>
+</tbody>
 </table>
-    </td>
-    </tr>
   </form>
-</table>
+</div>
 
+</div>
 </body>
 </html>
