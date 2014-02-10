@@ -107,14 +107,12 @@ function setfocus() {
 	//  document.titlesearch.keyword.select();
 }
 function onSub() {
-//  if( document.myform.codeType.value=="" || document.myform.startDate.value=="" || document.myform.endDate.value==""
-//    || (document.myform.providerNoDoctor.value=="" && document.myform.providerNoResident.value==""
-//     && document.myform.providerNoNP.value=="" && document.myform.providerNoSW.value=="") ) {
-//    alert("Please select the codeType/period/provider item(s) from the drop down list before query.");
-//    return false ;
-//  } else {
-    return true;
-//  }
+	if( document.myform.startDate.value=="" || document.myform.endDate.value=="") {
+		alert("Please set Start and End Dates.");
+		return false ;
+	} else {
+		return true;
+	}
 }
 
 //-->
