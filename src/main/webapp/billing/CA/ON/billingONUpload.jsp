@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -22,22 +23,15 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 OscarProperties props = OscarProperties.getInstance();
 session.setAttribute("homepath", props.getProperty("project_home", ""));      
 %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ page import="oscar.*" errorPage="errorpage.jsp"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Upload MOH Files</title>
-<link rel="stylesheet" type="text/css" href="billingON.css" />
+<title><bean:message key="admin.admin.uploadMOHFile"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 
 <script type="text/javascript">
-<!--
-
-
-//-->
-
 function onSubmit(){
 	var val1 = document.form1.file1.value;
 	var n = val1.lastIndexOf('\\');
@@ -65,32 +59,14 @@ function onSubmit(){
 </SCRIPT>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%"
-	class="myDarkGreen">
-	<tr>
-		<th><font color="#FFFFFF"> Upload MOH Files </font></th>
-	</tr>
-</table>
-
-<p>
-<table width="400" border="0">
-	<form id="form1" name="form1" method="post" action=""
-		ENCTYPE="multipart/form-data" onsubmit="return onSubmit();">
-	<tr>
-		<td width="181"><b>Select diskette</b></td>
-		<td width="209"><input type="file" name="file1" value=""></td>
-	</tr>
-	<tr>
-		<td width="181"><input type="submit" name="Submit"
-			value="Create Report"></td>
-		<td width="209">&nbsp;</td>
-	</tr>
+<body>
+<h3><bean:message key="admin.admin.uploadMOHFile"/></h3>
+<div class="container-fluid well">
+	<form id="form1" name="form1" method="post" action="" ENCTYPE="multipart/form-data" onsubmit="return onSubmit();">
+		Select diskette<input style="margin-left:40px;" type="file" name="file1" value="" required>
+		<input class="btn btn-primary" type="submit" name="Submit" value="Create Report">
 	</form>
-</table>
-
-<p><font face="Arial, Helvetica, sans-serif" size="2">*
-Select a file downloaded from EDT.</font></p>
-
+*Select a file downloaded from EDT.
+</div>
 </body>
 </html>
