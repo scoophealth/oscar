@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -17,6 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -71,10 +73,8 @@ if(!filename.equals("")) {
 
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Billing Reconcilliation</title>
-<link rel="stylesheet" type="text/css"
-	href="../billing/CA/ON/billingON.css" />
+<title><bean:message key="admin.admin.btnBillingReconciliation" /></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 
 <script language="JavaScript">
 <!--
@@ -108,29 +108,25 @@ function checkReconcile(url){
 </SCRIPT>
 </head>
 
-<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body>
+<h3><bean:message key="admin.admin.btnBillingReconciliation" /></h3>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr class="myDarkGreen">
-		<th align='LEFT'><input type='button' name='print' value='Print'
-			onClick='window.print(); return false;'></th>
-		<th><font color="#FFFFFF">Billing Reconcilliation</font></th>
-		<th align='RIGHT'><input type='button' name='close' value='Close'
-			onClick='window.close()'></th>
-	</tr>
-</table>
+<div class="container-fluid well">
+<button class="btn btn-primary pull-right" type='button' name='print' value='Print' onClick='window.print(); return false;'><i class="icon icon-print icon-white"></i>  Print</button><br/><br/>
 
-<table width="100%" border="0" cellspacing="1" cellpadding="0">
-	<tr class="myYellow">
-		<th width="10%">Read Date</th>
-		<th width="10%">Payment Date</th>
-		<th width="25%">Payable</th>
-		<th width="10%">Records/Claims</th>
-		<th width="8%">Total</th>
-		<th width="22%">Action</th>
+<table class="table table-striped table-hover table-condensed">
+<thead>
+	<tr >
+		<th>Read Date</th>
+		<th>Payment Date</th>
+		<th>Payable</th>
+		<th>Records/Claims</th>
+		<th>Total</th>
+		<th>Action</th>
 		<th>Status</th>
 	</tr>
-
+</thead>
+<tbody>
 	<% 
 
 List aL;
@@ -175,7 +171,8 @@ for(int i = 0; i < aL.size(); i++) {
 	<%
 }
 %>
+</tbody>
 </table>
-
+</div>
 </body>
 </html>
