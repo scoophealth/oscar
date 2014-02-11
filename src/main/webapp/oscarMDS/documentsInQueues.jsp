@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ page import="java.util.*, oscar.util.*, oscar.OscarProperties, oscar.dms.*, oscar.dms.data.*"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -2082,13 +2083,14 @@ List<String> abnormals=(List<String>)request.getAttribute("abnormals");
                            var typeDocLab=initTypeDocLab('<%=typeDocLab%>');   //{DOC=[357, 317, 316], HL7=[38, 33, 30, 28]}
                            var docType=initDocType('<%=docType%>');   //{357=DOC, 38=HL7, 317=DOC, 316=DOC, 33=HL7, 30=HL7, 28=HL7}
                            var patientDocs=initPatientDocs('<%=patientDocs%>');//{2=[316, 30, 28], 1=[33], -1=[357, 317, 38]}
-                           var patientIdNames=initPatientIdNames('<%=patientIdNamesStr%>');//;2=TEST2, PATIENT2;1=Zrrr, Srrr;-1=Not, Assigned
+                           var patientIdNames=initPatientIdNames('<%=StringEscapeUtils.escapeJavaScript(patientIdNamesStr)%>');//;2=TEST2, PATIENT2;1=Zrrr, Srrr;-1=Not, Assigned
                            var docStatus=initDocStatus('<%=docStatus%>');//{357=A, 38=N, 317=A, 316=A, 33=N, 30=N, 28=N}
                            var normals=initNormals('<%=normals%>');//[357, 317, 316, 38, 33, 30, 28]
                            var abnormals=initAbnormals('<%=abnormals%>');//[123,567]
                            var patientIds=initPatientIds('<%=patientIdStr%>');
                         var queueDocNos=initHashtblWithList('<%=queueDocNos%>');
                         var providerNo='<%=providerNo%>';
+                        console.log(queueDocNos);
                         var searchProviderNo='<%=searchProviderNo%>';
  /*console.log(typeDocLab);
  console.log(docType);
