@@ -46,7 +46,7 @@ ArrayList frwdProviders = fr.getProviders(providerNo);
 <html>
 <head>
 
-<title>Lab Report Forwarding Rules</title>
+<title><bean:message key="admin.admin.labFwdRules" /></title>
 
 <script type="text/javascript">
                         
@@ -96,7 +96,7 @@ ArrayList frwdProviders = fr.getProviders(providerNo);
 
 <body>
 
-<h3>Lab Forwarding Rules</h3>
+<h3><bean:message key="admin.admin.labFwdRules" /></h3>
 
 
 
@@ -176,9 +176,7 @@ status = fr.getStatus(providerNo);
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> The incoming labs are not being forwarded.
     </div>
-    
-    <!--<p class="text-warning">The incoming labs are not being forwarded</p>-->
-    
+        
 
 <%}%>
 <br />
@@ -205,7 +203,7 @@ status = fr.getStatus(providerNo);
 				<small>(Hold 'Ctrl' to select multiple providers)</small>
 				<br />
 				
-				<select multiple name="providerNums">
+				<select multiple name="providerNums" style="height: 200px">
 					<optgroup
 						label="&#160&#160Doctors&#160&#160&#160&#160&#160&#160&#160&#160">
 						<% //ArrayList providers = ProviderData.getProviderList();

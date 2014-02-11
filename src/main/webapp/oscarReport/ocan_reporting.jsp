@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
 
@@ -43,7 +44,10 @@
 	List<Demographic> clients = OcanReportingBean.getOCANClients();
 %>
 
-<h1>OCAN Reporting - 2.0.1</h1>
+<html>
+<head>
+<title><bean:message key="admin.admin.ocanReporting"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 
 <script>
 	var ctx = '<%=request.getContextPath()%>';
@@ -269,6 +273,10 @@
 
 	}
 </script>
+</head>
+
+<body>
+<h3>OCAN Reporting - 2.0.1</h3>
 
 <form method="post" id="ocanForm" action="../OcanReporting.do">
 	<input type="hidden" name="method" value=""/>
@@ -411,5 +419,6 @@
 		</tr>
 	</table>
 </form>
-
+</body>
+</html>
 
