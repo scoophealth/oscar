@@ -57,10 +57,8 @@ String last_name="", first_name="", mygroup="";
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarReport.manageProvider.title" /></title>
-<link rel="stylesheet" href="oscarReport.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <script language="JavaScript">
 <!--
 
@@ -86,85 +84,71 @@ function refresh() {
 
 
 </head>
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
-	topmargin="10">
+<body>
+<input class="btn" type='button' name='print' value='<bean:message key="global.btnPrint"/>'onClick='window.print()'> oscarReport
+<br><br>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#000000">
-		<td height="40" width="10%"><input type='button' name='print'
-			value='<bean:message key="global.btnPrint"/>'
-			onClick='window.print()'></td>
-		<td width="90%" align="left">
-		<p><font face="Verdana, Arial, Helvetica, sans-serif"
-			color="#FFFFFF"><b><font
-			face="Arial, Helvetica, sans-serif" size="4">oscar<font
-			size="3">Report</font></font></b></font></p>
-		</td>
-	</tr>
-</table>
+<div class="container-fluid well">
 <form name="form1" action="dbManageProvider.jsp" method="post">
-<table width="50%" border="0" cellspacing="0" cellpadding="2">
-	<tr bgcolor="#CCCCFF">
-		<td width="100%" colspan="3" align="center"><b><bean:message
-			key="oscarReport.manageProvider.msgManageProvider" /> <%=action.toUpperCase()%></b>
-		</td>
-	</tr>
-	<tr bgcolor="#CCCCFF">
-		<td width="40%"><bean:message
-			key="oscarReport.manageProvider.msgTeam" /></td>
-		<td width="50%" align="left"><bean:message
-			key="oscarReport.manageProvider.msgProviderName" /></td>
-		<td width="10%" align="left"><bean:message
-			key="oscarReport.manageProvider.msgCheck" /></td>
-	</tr>
-
-	<% 
-		boolean bodd=true;	
-	    int count1 = 0;
-		 	          	    	   
-	for(String myGroup: myGroupDao.getGroups()) {
-		bodd=bodd?false:true; //for the color of rows
-		
-		
-		for(MyGroup mg: myGroupDao.getGroupByGroupNo(myGroup)) {
-			Provider p = providerDao.getProvider(mg.getId().getProviderNo());
-			status = "";
-			if (p != null) {
-				for(ReportProvider rp:reportProviderDao.findByProviderNoTeamAndAction(p.getProviderNo(), mg.getId().getMyGroupNo(), action)) {
-					status = rp.getStatus();
+	<table class="table table-striped  table-condensed">
+		<tr>
+			<td width="100%" colspan="3" align="center"><b><bean:message
+				key="oscarReport.manageProvider.msgManageProvider" /> <%=action.toUpperCase()%></b>
+			</td>
+		</tr>
+		<tr>
+			<td width="40%"><bean:message
+				key="oscarReport.manageProvider.msgTeam" /></td>
+			<td width="50%" align="left"><bean:message
+				key="oscarReport.manageProvider.msgProviderName" /></td>
+			<td width="10%" align="left"><bean:message
+				key="oscarReport.manageProvider.msgCheck" /></td>
+		</tr>
+	
+		<% 
+			boolean bodd=true;	
+		    int count1 = 0;
+			 	          	    	   
+		for(String myGroup: myGroupDao.getGroups()) {
+			bodd=bodd?false:true; //for the color of rows
+			
+			
+			for(MyGroup mg: myGroupDao.getGroupByGroupNo(myGroup)) {
+				Provider p = providerDao.getProvider(mg.getId().getProviderNo());
+				status = "";
+				if (p != null) {
+					for(ReportProvider rp:reportProviderDao.findByProviderNoTeamAndAction(p.getProviderNo(), mg.getId().getMyGroupNo(), action)) {
+						status = rp.getStatus();
+					}
+				} else {
+					continue;
 				}
-			} else {
-				continue;
-			}
-           
-%>
-
-	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-		<td width="40%"><%=mg.getId().getMyGroupNo()%></td>
-		<td width="50%" align="left"><%=p.getLastName()%>,
-		<%=p.getFirstName()%>
-	</tr>
-	<td width="10%" align="left"><input type="checkbox"
-		name="provider<%=count1%>"
-		value="<%=p.getProviderNo()%>|<%=mg.getId().getMyGroupNo()%>"
-		<%=status.equals("A")?"checked":""%>></td>
-	</tr>
-
-	<%
-	count1 = count1 + 1;
+	           
+	%>
+	
+		<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+			<td width="40%"><%=mg.getId().getMyGroupNo()%></td>
+			<td width="50%" align="left"><%=p.getLastName()%>,
+			<%=p.getFirstName()%>
+		</tr>
+		<td width="10%" align="left"><input type="checkbox"
+			name="provider<%=count1%>"
+			value="<%=p.getProviderNo()%>|<%=mg.getId().getMyGroupNo()%>"
+			<%=status.equals("A")?"checked":""%>></td>
+		</tr>
+	
+		<%
+		count1 = count1 + 1;
+		}
+	
 	}
-
-}
- 	    
-%>
-	<tr>
-		<td colspan=3><input type="hidden" name="submit" value="Submit">
-		<input type=submit
-			value=<bean:message key="oscarReport.manageProvider.btnSubmit"/>>
-		<input type=hidden name=action value=<%=action%>> <input
-			type=hidden name=count value=<%=count1%>></td>
-	</tr>
-</table>
+	 	    
+	%>
+	</table>
+	<input type="hidden" name="submit" value="Submit">
+	<input class="btn btn-primary" type=submit value=<bean:message key="oscarReport.manageProvider.btnSubmit"/>>
+	<input type=hidden name=action value=<%=action%>> <input type=hidden name=count value=<%=count1%>>
 </form>
+</div>
 </body>
 </html:html>
