@@ -363,6 +363,21 @@ clear: left;
 	   		hideItem('lot');
 	  }
 	  }
+
+
+var warnOnWindowClose=true;
+
+function cancelCloseWarning(){
+warnOnWindowClose=false;
+}
+
+window.onbeforeunload = displayCloseWarning;
+
+function displayCloseWarning(){
+	if(warnOnWindowClose){
+		return 'Are you sure you want to close this window?';
+	}
+}
 </script>
 </head>
 
@@ -409,7 +424,7 @@ clear: left;
 -->
             </td>
             <td valign="top" class="MainTableRightColumn">
-               <html:form action="/oscarPrevention/AddPrevention" >
+               <html:form action="/oscarPrevention/AddPrevention" onsubmit="return cancelCloseWarning()">
                <input type="hidden" name="prevention" value="<%=prevention%>"/>
                <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
                <% if ( id != null ) { %>
