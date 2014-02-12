@@ -94,11 +94,11 @@
 					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
 						
 						<td><%=curmapping.get("id")%></td>
-						<td><%=(curmapping.get("category")!=null) ? ((HRMCategory) curmapping.get("category")).getCategoryName() : "N/A" %></td>
 						<td><%=curmapping.get("class")%></td>
 						<td align='center'><%=curmapping.get("sub_class")%></td>
 						<td><%=curmapping.get("mnemonic") %></td>
 						<td><%=curmapping.get("description") %></td>
+						<td><%=(curmapping.get("category")!=null) ? ((HRMCategory) curmapping.get("category")).getCategoryName() : "N/A" %></td>
 						
 						<td><a href="<%=request.getContextPath() %>/hospitalReportManager/hrmEditClassMapping.jsp?id=<%=curmapping.get("mappingId") %>">Edit</a>&nbsp;<a href="<%=request.getContextPath() %>/hospitalReportManager/Mapping.do?deleteMappingId=<%=curmapping.get("mappingId") %>">Delete</a></td>
 					</tr>
