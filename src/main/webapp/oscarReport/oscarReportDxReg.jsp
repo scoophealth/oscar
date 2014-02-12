@@ -19,8 +19,8 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
-<%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@ page import="org.oscarehr.util.SessionConstants"%>
+<%@ page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
@@ -31,16 +31,16 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
     <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
-<%@page import="org.oscarehr.common.model.Dxresearch"%>
-<%@page import="oscar.oscarResearch.oscarDxResearch.util.*"%>
-<%@page import="java.util.*, java.sql.*"%>
+<%@ page import="org.oscarehr.common.dao.DxresearchDAO"%>
+<%@ page import="org.oscarehr.common.model.Dxresearch"%>
+<%@ page import="oscar.oscarResearch.oscarDxResearch.util.*"%>
+<%@ page import="java.util.*, java.sql.*"%>
 
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
-<%@page import="org.oscarehr.common.model.Provider" %>
-<%@page import="org.oscarehr.common.dao.MyGroupDao" %>
-<%@page import="org.oscarehr.common.model.MyGroup" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@ page import="org.oscarehr.common.model.MyGroup" %>
 
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
@@ -78,6 +78,8 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 			font-size: 100%;
 		}
 	</style>
+	
+	<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <%
 			    ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
@@ -97,21 +99,9 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
     %>
     <body vlink="#0000FF" class="BodyStyle">
 
-        <table class="MainTable">
-            <tr class="MainTableTopRow">
-                <td class="MainTableTopRowLeftColumn">admin</td>
-                <td class="MainTableTopRowRightColumn">
-                    <table class="TopStatusBar" style="width: 100%;">
-                        <tr>
-                            <td>Patient Disease Registry Report</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td class="MainTableLeftColumn" valign="top" width="160px;">&nbsp;
-                </td>
-                <td class="MainTableRightColumn" valign="top">
+ <h3>Patient Disease Registry Report</h3>
+
+<br>
 
                     <table border="1" width="100%">
                             <tbody>
@@ -300,14 +290,6 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 %>
                     </nested:form>
 
-                </td>
-            </tr>
-
-            <tr>
-                <td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-
-                <td class="MainTableBottomRowRightColumn">&nbsp;</td>
-            </tr>
-        </table>
+   
 
     </html:html>
