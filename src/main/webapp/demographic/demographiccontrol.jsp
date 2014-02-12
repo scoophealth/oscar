@@ -145,6 +145,8 @@
     {"search_provider", "select * from provider status='1' order by last_name"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
     {"search_provider_doc_with_ohip", "select * from provider where provider_type='doctor' and status='1' and ohip_no is not null and ohip_no !='' order by last_name"},
+    {"search_provider_nurse", "select * from oscar.provider p, secuserrole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'nurse' order by p.last_name, p.first_name"},
+    {"search_provider_midwife", "select * from oscar.provider p, secuserrole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'midwife' order by p.last_name, p.first_name"},
     {"search_demographicid", "select * from demographic where demographic_no=?"},
     {"search*", "select * from demographic "+ ptstatusexp+domainRestriction+orderby + " "+limit },
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
