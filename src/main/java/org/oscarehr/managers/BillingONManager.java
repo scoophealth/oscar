@@ -39,7 +39,7 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.web.BillingInvoiceAction;
 import org.oscarehr.common.service.BillingONService;
-import org.oscarehr.util.EmailUtils;
+import org.oscarehr.util.EmailUtilsOld;
 import org.oscarehr.util.LocaleUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.VelocityUtils;
@@ -104,7 +104,7 @@ public class BillingONManager {
             Demographic demographic = demographicDao.getDemographic(String.valueOf(demoNo));
             String emailAddress = demographic.getEmail();
 
-            if (EmailUtils.isValidEmailAddress(emailAddress)) {
+            if (EmailUtilsOld.isValidEmailAddress(emailAddress)) {
                 Clinic clinic = clinicDAO.getClinic();
 
                 //Get Due Date of Invoice
@@ -161,7 +161,7 @@ public class BillingONManager {
                 String mergedBody = VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
 
                 try {
-                        EmailUtils.sendEmail(emailAddress, demographic.getFormattedName(), fromAddress, clinic.getClinicName(), mergedSubject, mergedBody, null);
+                        EmailUtilsOld.sendEmail(emailAddress, demographic.getFormattedName(), fromAddress, clinic.getClinicName(), mergedSubject, mergedBody, null);
                 } catch (EmailException e) {
                         MiscUtils.getLogger().error("Unexpected error.", e);
                 }

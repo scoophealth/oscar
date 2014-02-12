@@ -43,7 +43,7 @@ import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.EmailUtils;
+import org.oscarehr.util.EmailUtilsOld;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.VelocityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +168,7 @@ public class WaitListManager {
 			String[] splitEmailAddresses = temp.split(",");
 			for (String emailAddress : splitEmailAddresses) {
 				try {
-					EmailUtils.sendEmail(emailAddress, emailAddress, fromAddress, fromAddress, mergedSubject, mergedBody, null);
+					EmailUtilsOld.sendEmail(emailAddress, emailAddress, fromAddress, fromAddress, mergedSubject, mergedBody, null);
 				} catch (EmailException e) {
 					logger.error("Unexpected error.", e);
 					throw new EmailException(e.toString());
@@ -239,7 +239,7 @@ public class WaitListManager {
 			String[] splitEmailAddresses = temp.split(",");
 			for (String emailAddress : splitEmailAddresses) {
 				try {
-					EmailUtils.sendEmail(emailAddress, emailAddress, fromAddress, fromAddress, mergedSubject, mergedBody, null);
+					EmailUtilsOld.sendEmail(emailAddress, emailAddress, fromAddress, fromAddress, mergedSubject, mergedBody, null);
 				} catch (EmailException e) {
 					logger.error("Unexpected error.", e);
 				}
@@ -295,7 +295,7 @@ public class WaitListManager {
 			String[] splitEmailAddresses = temp.split(",");
 			for (String emailAddress : splitEmailAddresses) {
 				try {
-					EmailUtils.sendEmail(emailAddress, emailAddress, fromAddress, fromAddress, mergedSubject, mergedBody, null);
+					EmailUtilsOld.sendEmail(emailAddress, emailAddress, fromAddress, fromAddress, mergedSubject, mergedBody, null);
 				} catch (EmailException e) {
 					logger.error("Unexpected error.", e);
 				}
