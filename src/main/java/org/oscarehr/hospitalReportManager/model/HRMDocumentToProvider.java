@@ -31,13 +31,6 @@ public class HRMDocumentToProvider extends AbstractModel<Integer>  {
 	private Date signedOffTimestamp;
 	private Integer viewed = 0;
 	
-	//the full history is not captured here...but if signedOff=1, the provider that did it will be listed here
-	//and if the signOff=0 and signOffProvider!=null , then this holds the value of the provider who did that sign-off revocation.
-	//the full solution would be to archive this table, or setup a 1-many relationship to capture full history. 
-	//all sign off/revocation is captured in the audit log as well.
-	private String signOffProvider;
-	
-	
 	@Override
     public Integer getId() {
 	    return id;
@@ -83,13 +76,5 @@ public class HRMDocumentToProvider extends AbstractModel<Integer>  {
     	this.viewed = viewed;
     }
 
-	public String getSignOffProvider() {
-		return signOffProvider;
-	}
-
-	public void setSignOffProvider(String signOffProvider) {
-		this.signOffProvider = signOffProvider;
-	}
-	
 	
 }

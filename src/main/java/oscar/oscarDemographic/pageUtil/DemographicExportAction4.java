@@ -1565,16 +1565,20 @@ public class DemographicExportAction4 extends Action {
 
 							for(HRMDocumentToProvider hdp: hdpList) {
 								if(hdp.getSignedOff() != null && hdp.getSignedOff().intValue() == 1) {
-									Provider signOffProvider = providerDao.getProvider(hdp.getSignOffProvider());
-									if(signOffProvider != null) {
-										ReportsReceived.ReportReviewed reviewed = rpr.addNewReportReviewed();
-										PersonNameSimple pns = reviewed.addNewName();
-										pns.setFirstName(signOffProvider.getFirstName());
-										pns.setLastName(signOffProvider.getLastName());
-										reviewed.setReviewingOHIPPhysicianId(signOffProvider.getOhipNo());
-										Calendar cal = Calendar.getInstance();
-										cal.setTime(hdp.getSignedOffTimestamp());
-										reviewed.addNewDateTimeReportReviewed().setFullDate(cal);
+									if(hdp.getProviderNo() != null && hdp.getProviderNo().length() > 0) {	
+										Provider signOffProvider = providerDao.getProvider(hdp.getProviderNo());
+										if(signOffProvider != null) {
+											ReportsReceived.ReportReviewed reviewed = rpr.addNewReportReviewed();
+											PersonNameSimple pns = reviewed.addNewName();
+											pns.setFirstName(signOffProvider.getFirstName());
+											pns.setLastName(signOffProvider.getLastName());
+											reviewed.setReviewingOHIPPhysicianId(signOffProvider.getOhipNo());
+											Calendar cal = Calendar.getInstance();
+											cal.setTime(hdp.getSignedOffTimestamp());
+											reviewed.addNewDateTimeReportReviewed().setFullDate(cal);
+										}
+									} else {
+										logger.warn("HRMDocumentToProvider id=" + hdp.getId() + " has a sign-off with no sign off provider.can't export sign off info");
 									}
 								}
 							}
@@ -1654,6 +1658,12 @@ public class DemographicExportAction4 extends Action {
 								reviewDate = reportDates.get("revieweddatetime");
 							}
 
+							
+							if(rpr.getReceivedDateTime() == null) {
+								Calendar c = Calendar.getInstance();
+								c.setTime(hrmDoc.getTimeReceived());
+								rpr.addNewReceivedDateTime().setFullDateTime(c);
+							}
 							//Source Facility
 							if (hrmDoc.getSourceFacility()!=null) {
 								rpr.setSourceFacility(hrmDoc.getSourceFacility());

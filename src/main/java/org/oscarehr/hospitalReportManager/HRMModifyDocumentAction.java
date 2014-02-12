@@ -120,7 +120,6 @@ public class HRMModifyDocumentAction extends DispatchAction {
 			if (providerMapping != null) {
 				providerMapping.setSignedOff(Integer.parseInt(signedOff));
 				providerMapping.setSignedOffTimestamp(new Date());
-				providerMapping.setSignOffProvider(providerNo);
 				hrmDocumentToProviderDao.merge(providerMapping);
 				id = providerMapping.getId();
 			}
@@ -131,7 +130,6 @@ public class HRMModifyDocumentAction extends DispatchAction {
 				hrmDocumentToProvider.setProviderNo(providerNo);
 				hrmDocumentToProvider.setSignedOff(Integer.parseInt(signedOff));
 				hrmDocumentToProvider.setSignedOffTimestamp(new Date());
-				hrmDocumentToProvider.setSignOffProvider(providerNo);
 				hrmDocumentToProviderDao.persist(hrmDocumentToProvider);
 				id = hrmDocumentToProvider.getId();
 			}

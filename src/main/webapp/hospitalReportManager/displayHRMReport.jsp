@@ -382,7 +382,7 @@ function revokeSignOffHrm(reportId) {
 				<div id="provstatus<%=hrmReportId %>"></div>
 				<% if (providerLinkList != null || providerLinkList.size() >= 1) {
 					for (HRMDocumentToProvider p : providerLinkList) { 
-						if (!p.getProviderNo().equalsIgnoreCase("-1")) { %>
+						if (p.getSignedOff() == 1 && p.getProviderNo() != null && p.getProviderNo().length()>0) { %>
 						<%=providerDao.getProviderName(p.getProviderNo())%> <%=p.getSignedOff() !=null && p.getSignedOff()  == 1 ? "<abbr title='" + p.getSignedOffTimestamp() + "'>(Signed-Off)</abbr>" : "" %> <a href="#" onclick="removeProvFromHrm('<%=p.getId() %>', '<%=hrmReportId %>')">(remove)</a><br />
 				<%		}  
 					}
