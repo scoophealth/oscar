@@ -348,18 +348,14 @@ String curProvider_no = (String)session.getAttribute("user");
 						class="contentLink"><bean:message key="admin.admin.cdsRpt" /></a></li>
 					<li><a href="${ctx}/oscarReport/mis_report_form.jsp"
 						class="contentLink"><bean:message key="admin.admin.misRpt" /></a></li>
-					<li><a href="${ctx}/oscarReport/ocan_report_form.jsp"
-						class="contentLink"><bean:message key="admin.admin.ocanRpt" /></a></li>
-					<li><a href="${ctx}/oscarReport/ocan_iar.jsp"
-						class="contentLink"><bean:message key="admin.admin.ocanIarRpt" /></a></li>
-					<li><html:link page="/oscarReport/ocan_reporting.jsp" styleClass="contentLink"><bean:message key="admin.admin.ocanReporting"/></html:link></li>
-					<li><a href="${ctx}/admin/UsageReport.jsp" class="contentLink"><bean:message
-								key="admin.admin.usageRpt" /></a></li>
+					<li><a href="${ctx}/oscarReport/ocan_report_form.jsp" class="contentLink"><bean:message key="admin.admin.ocanRpt" /></a></li>
+					<li><a href="${ctx}/oscarReport/ocan_iar.jsp" class="contentLink"><bean:message key="admin.admin.ocanIarRpt" /></a></li>
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarReport/ocan_reporting.jsp"><bean:message key="admin.admin.ocanReporting"/></a></li>
+					<li><a href="${ctx}/admin/UsageReport.jsp" class="contentLink"><bean:message key="admin.admin.usageRpt" /></a></li>
 					<oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
-						<li><html:link page="/admin/oscarLogging.jsp" styleClass="contentLink"><bean:message key="admin.admin.serverLog" /></html:link></li>
+						<li><a href="${ctx}/admin/oscarLogging.jsp" class="contentLink"><bean:message key="admin.admin.serverLog" /></a></li>
 					</oscar:oscarPropertiesCheck>
-					<li><a href="Reports/" class="contentLink"><bean:message
-								key="admin.admin.DiseaseRegistry" /></a></li>
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/report/DxresearchReport.do"><bean:message key="admin.admin.DiseaseRegistry" /></a></li>
 				</ul>
 
 				</div>
