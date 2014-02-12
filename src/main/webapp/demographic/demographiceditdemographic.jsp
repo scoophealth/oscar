@@ -2515,7 +2515,7 @@ if ( PatStat.equals(Dead) ) {%>
 									<option value=""></option>
 									<%
                           rsdemo.close();
-                          rsdemo=apptMainBean.queryResults("search_provider_doc");
+                          rsdemo=apptMainBean.queryResults("search_provider_nurse");
                           while (rsdemo.next()) {
                         %>
 									<option value="<%=rsdemo.getString("provider_no")%>"
@@ -2532,7 +2532,7 @@ if ( PatStat.equals(Dead) ) {%>
 									<option value=""></option>
 									<%
                           rsdemo.close();
-                          rsdemo=apptMainBean.queryResults("search_provider_doc");
+                          rsdemo=apptMainBean.queryResults("search_provider_midwife");
                           while (rsdemo.next()) {
                         %>
 									<option value="<%=rsdemo.getString("provider_no")%>"

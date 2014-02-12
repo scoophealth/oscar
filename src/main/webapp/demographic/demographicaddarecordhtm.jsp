@@ -55,6 +55,8 @@
 <%
 	String [][] dbQueries=new String[][] {
     {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
+    {"search_provider_nurse", "select * from oscar.provider p, secuserrole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'nurse' order by p.last_name, p.first_name"},
+    {"search_provider_midwife", "select * from oscar.provider p, secuserrole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'midwife' order by p.last_name, p.first_name"},
     {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
     {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() +"' and is_history='N'  order by name"}
@@ -999,7 +1001,7 @@ function autoFillHin(){
                                                 <bean:message key="demographic.demographicaddrecordhtm.formDoctor"/><% } %>
                                                 : </b></td>
       <td align="left" >
-        <select name="staff">
+        <select name="staff" style="min-width: 150px">
 					<option value=""></option>
           <%
   ResultSet rsdemo = addDemoBean.queryResults("search_provider");
@@ -1014,10 +1016,10 @@ function autoFillHin(){
 				</select></td>
 				<td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formNurse" />: </b></td>
-				<td><select name="cust1">
+				<td><select name="cust1" style="min-width: 150px">
 					<option value=""></option>
 					<%
-  rsdemo=addDemoBean.queryResults("search_provider");
+  rsdemo=addDemoBean.queryResults("search_provider_nurse");
   while (rsdemo.next()) {
 %>
 					<option value="<%=rsdemo.getString("provider_no")%>"><%=Misc.getShortStr( (Misc.getString(rsdemo,"last_name")+","+Misc.getString(rsdemo,"first_name")),"",12)%></option>
@@ -1030,10 +1032,10 @@ function autoFillHin(){
 			<tr valign="top">
 				<td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formMidwife" />: </b></td>
-				<td><select name="cust4">
+				<td><select name="cust4" style="min-width: 150px">
 					<option value=""></option>
 					<%
-  rsdemo=addDemoBean.queryResults("search_provider");
+  rsdemo=addDemoBean.queryResults("search_provider_midwife");
   while (rsdemo.next()) {
 %>
 					<option value="<%=Misc.getString(rsdemo,"provider_no")%>">
@@ -1045,7 +1047,7 @@ function autoFillHin(){
 				</select></td>
 				<td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formResident" />: </b></td>
-				<td align="left"><select name="cust2">
+				<td align="left"><select name="cust2" style="min-width: 150px">
 					<option value=""></option>
 					<%
   rsdemo=addDemoBean.queryResults("search_provider");
