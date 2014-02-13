@@ -569,7 +569,7 @@ function refresh() {
 
 <% } // reportAction != null %>
 
-<%@ include file="../demographic/zfooterbackclose.jsp"%>
+
 </body>
 </html:html>
 

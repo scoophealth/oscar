@@ -878,9 +878,7 @@ function tranbuttonb7_click() {
 					type="hidden" name="Submit" value=" Next "> <input
 					type="submit"
 					value='<bean:message key="schedule.scheduletemplateapplying.btnNext"/>'>
-				<input type="button"
-					value='<bean:message key="schedule.scheduletemplateapplying.btnCancel"/>'
-					onclick="window.close()"></div>
+				</div>
 				</td>
 			</tr>
 		</table>

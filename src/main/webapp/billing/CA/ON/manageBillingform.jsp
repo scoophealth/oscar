@@ -208,7 +208,6 @@ if (clinicview.compareTo("000") == 0) { %>
 }
 %>
 
-<%@ include file="zfooterbackclose.jsp"%>
 
 </body>
 </html:html>

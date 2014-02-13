@@ -230,9 +230,7 @@ function go() {
 			</tr>
 			<tr>
 				<td>
-				<div align="right"><input type="button" name="Button"
-					value='<bean:message key="schedule.scheduletemplatesetting.btnCancel"/>'
-					onClick="window.close()"></div>
+				<div align="right"></div>
 				</td>
 			</tr>
 			<tr>
