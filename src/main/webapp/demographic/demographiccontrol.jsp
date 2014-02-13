@@ -65,6 +65,7 @@
 
 	String searchMode=request.getParameter("search_mode");
 	String keyword=request.getParameter("keyword");
+	keyword = (keyword == null)?"":java.net.URLDecoder.decode(keyword, "UTF-8");
 	MatchingDemographicParameters matchingDemographicParameters=null;
 
 	MiscUtils.getLogger().debug("Search parameters, searchMode="+searchMode+", keyword="+keyword);
