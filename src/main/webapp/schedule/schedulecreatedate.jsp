@@ -411,9 +411,7 @@ function refresh() {
 				<input type="hidden" name="Submit" value=" Next "> <input
 					type="submit"
 					value='<bean:message key="schedule.schedulecreatedate.btnNext"/>'>
-				<input type="button"
-					value='<bean:message key="schedule.schedulecreatedate.btnCancel"/>'
-					onclick="window.close()"></div>
+				</div>
 				</td>
 			</tr>
 		</table>

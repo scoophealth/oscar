@@ -125,9 +125,7 @@ function upCaseCtrl(ctrl) {
 				<div align="right"><input type="button" name="Button"
 					value='<bean:message key="schedule.scheduledatefinal.btnDoAgain"/>'
 					onclick="self.location.href='scheduletemplatesetting.jsp'">
-				<input type="button" name="Cancel"
-					value='<bean:message key="schedule.scheduledatefinal.btnFinish"/>'
-					onclick="window.close()"></div>
+				</div>
 				</td>
 			</tr>
 		</table>
