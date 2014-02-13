@@ -183,6 +183,7 @@ if (ackList != null){
     }
 }
 
+
 Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
 int lab_no = Integer.parseInt(segmentID);
 Hl7TextInfo hl7Lab = hl7TextInfoDao.findLabId(lab_no);
@@ -1089,11 +1090,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                            <%}
                            
                            for ( j=0; j < OBRCount; j++){
-
+								
                                boolean obrFlag = false;
                                int obxCount = handler.getOBXCount(j);
                                for (k=0; k < obxCount; k++){
-
+								
                                	String obxName = handler.getOBXName(j, k);
 
 								boolean isAllowedDuplicate = false;
@@ -1364,6 +1365,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                				if(handler.getMsgType().equals("PATHL7") && !isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
                                    				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k),"UTF-8") %>')"></a><%
                                    				}
+                               				else if(handler.getMsgType().equals("ALPHA") ) {
+                               			
+                               			%>
+                               					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName%></a><%
+                                          			
+                               				}
                                				else{%>
                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k),"UTF-8") %>')"><%=obxName %></a>
                                            &nbsp;<%if(loincCode != null){ %>

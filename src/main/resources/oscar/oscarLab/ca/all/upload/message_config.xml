@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <message-configuration id="HL7_upload" version="1.0">
+	<handler name="ALPHA" className="AlphaHandler" />
 	<handler name="CML" className="CMLHandler" />
 	<handler name="GDML" className="GDMLHandler" />
 	<handler name="ICL" className="ICLHandler" />
