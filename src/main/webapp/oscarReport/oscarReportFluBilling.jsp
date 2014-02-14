@@ -25,6 +25,8 @@
 --%>
 
 <%@ page import="java.util.*,oscar.oscarReport.data.*"%>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -57,8 +59,9 @@ pros = request.getParameter("proNo");
 
 oscar.oscarReport.data.RptFluReportData fluData  = new oscar.oscarReport.data.RptFluReportData();
 fluData.fluReportGenerate(pros,years);
-ArrayList proList = fluData.providerList();
+List<Provider> providers = fluData.providerList();
 %>
+
 <%!
   String selled (String i,String years){
          String retval = "";
@@ -126,18 +129,14 @@ ArrayList proList = fluData.providerList();
 %>
 
 				</select> <select name="proNo">
-					<option value="-1" <%=selled("-1",pros)%>><bean:message
-						key="oscarReport.oscarReportFluBilling.msgAllProviders" /></option>
+					<option value="-1" <%=selled("-1",pros)%>><bean:message key="oscarReport.oscarReportFluBilling.msgAllProviders" /></option>
 					<%
-                                  for( int i = 0; i < proList.size(); i++){
-                                     ArrayList w = (ArrayList) proList.get(i);
-                                     String proNum  = (String) w.get(0);
-                                     String proName = (String) w.get(1);
-                              %>
-					<option value="<%=proNum%>" <%=selled(proNum,pros)%>><%=proName%></option>
-					<% 
-                                  }
-                              %>
+						for (Provider p : providers) {
+					%>
+					<option value="<%=p.getProviderNo()%>" <%=selled(p.getProviderNo(), pros)%>><%=p.getFormattedName()%></option>
+					<%
+						}
+					%>
 				</select> <input type=submit
 					value="<bean:message key="oscarReport.oscarReportFluBilling.btnUpdate"/>" />
 				</td>
