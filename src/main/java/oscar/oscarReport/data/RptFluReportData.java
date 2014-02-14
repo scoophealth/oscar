@@ -26,10 +26,8 @@ package oscar.oscarReport.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanComparator;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
@@ -52,20 +50,11 @@ public class RptFluReportData {
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<List<String>> providerList() {
-		ArrayList<List<String>> arraylist = new ArrayList<List<String>>();
-
+	public List<Provider> providerList() {
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
-		List<Provider> ps = dao.getProvidersByType(ProviderDao.PR_TYPE_DOCTOR);
-		Collections.sort(ps, new BeanComparator("lastName"));
-		for (Provider p : ps) {
-			List<String> arraylist1 = new ArrayList<String>();
-			arraylist1.add(p.getProviderNo());
-			arraylist1.add(p.getFormattedName());
-
-			arraylist.add(arraylist1);
-		}
-		return arraylist;
+		List<Provider> pList = dao.getActiveProviders();
+		
+		return pList;
 	}
 
 	public void fluReportGenerate(String s, String s1) {

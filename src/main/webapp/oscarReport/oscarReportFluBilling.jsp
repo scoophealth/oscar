@@ -25,6 +25,8 @@
 --%>
 
 <%@ page import="java.util.*,oscar.oscarReport.data.*"%>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+
 
 <%@ include file="/taglibs.jsp"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
@@ -55,7 +57,7 @@
 
 	oscar.oscarReport.data.RptFluReportData fluData = new oscar.oscarReport.data.RptFluReportData();
 	fluData.fluReportGenerate(pros, years);
-	ArrayList proList = fluData.providerList();
+	List<Provider> providers = fluData.providerList();
 %>
 <%!String selled(String i, String years) {
 		String retval = "";
@@ -89,12 +91,9 @@
 			<bean:message key="oscarReport.oscarReportFluBilling.msgAllProviders" />
 		</option>
 		<%
-			for (int i = 0; i < proList.size(); i++) {
-				ArrayList<String> w = (ArrayList<String>) proList.get(i);
-				String proNum = (String) w.get(0);
-				String proName = (String) w.get(1);
+			for (Provider p : providers) {
 		%>
-		<option value="<%=proNum%>" <%=selled(proNum, pros)%>><%=proName%></option>
+		<option value="<%=p.getProviderNo()%>" <%=selled(p.getProviderNo(), pros)%>><%=p.getFormattedName()%></option>
 		<%
 			}
 		%>
