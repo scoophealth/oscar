@@ -56,7 +56,23 @@
         var origObservationDate = "";
         var tmpSaveNeeded = true;
         var calendar;
-
+		var reloadWindows = new Object();
+		var updateDivTimer = null;
+		var reloadDivUrl;
+		var reloadDiv;
+		
+		function checkLengthofObject(o) {
+			var c = 0;
+			for( var attr in o ) {
+				if( o.hasOwnProperty(attr) ) {
+					++c;
+				}
+			}
+			
+			return c;
+		
+		}
+		
         function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
 		  if (varpage == null || varpage == -1) {
 		  	return false;
@@ -74,6 +90,34 @@
                         openWindows[name].opener = self;
                     }
                     openWindows[name].focus();
+                    if( updateDivTimer == null ) {
+                    	updateDivTimer = setInterval(
+                    		function() {
+			
+								if( checkLengthofObject(openWindows) > 0 ) {
+									for( var name in openWindows ) {
+										if( openWindows[name].closed && reloadWindows[name] != undefined ) {
+											reloadDivUrl = reloadWindows[name];
+											reloadDiv = reloadWindows[name+"div"];
+											
+											loadDiv(reloadDiv,reloadDivUrl,0);
+
+											delete reloadWindows[name];
+											var divName = name + "div";
+											delete reloadWindows[divName];
+											delete openWindows[name];
+										}
+																	
+									}
+			
+								}
+								if( checkLengthofObject(openWindows) == 0 ) {
+									clearInterval(updateDivTimer);
+									updateDivTimer = null;
+								}
+		
+							},1000);
+                    } 
                 }
 
         }

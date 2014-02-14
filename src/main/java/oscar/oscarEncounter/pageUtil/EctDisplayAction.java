@@ -165,6 +165,7 @@ public class EctDisplayAction extends Action {
 				}
 
 				Dao.setReloadUrl(request.getRequestURL().toString() + "?" + request.getQueryString());
+				Dao.setDivId(cmd);
 
 				com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
 				if (securityMgr.hasReadAccess("_" + cmd.toLowerCase(), request.getSession().getAttribute("userrole") + "," + request.getSession().getAttribute("user"))) {

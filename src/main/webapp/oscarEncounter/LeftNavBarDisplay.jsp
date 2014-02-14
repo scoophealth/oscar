@@ -30,7 +30,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="com.quatro.dao.security.SecobjprivilegeDao" %>
 <%@ page import="com.quatro.model.security.Secobjprivilege" %>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.List, java.util.regex.Pattern, java.util.regex.Matcher" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
@@ -168,16 +168,16 @@
                     current.add(item);
             }
 
-            StringBuffer jscode = new StringBuffer();
-
-            numDisplayed = display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+            StringBuilder jscode = new StringBuilder();
+			
+            numDisplayed = display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, dao.getReloadUrl(), dao.getDivId(), request, out);
 
             if( numDisplayed < numToDisplay ){
-               numDisplayed += display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+               numDisplayed += display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, dao.getReloadUrl(), dao.getDivId(), request, out);
             }
 
             if( numDisplayed < numToDisplay ){
-                numDisplayed += display(pastDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+                numDisplayed += display(pastDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, dao.getReloadUrl(), dao.getDivId(),request, out);
             }
 
             if( numDisplayed == 0 ) {
@@ -199,10 +199,14 @@
         return "";
     }
 
-    public int display(ArrayList<NavBarDisplayDAO.Item>items, int numToDisplay, int numDisplayed, String reloadUrl, boolean xpanded, int numItems, StringBuffer js, int displayThreshold, javax.servlet.http.HttpServletRequest request, javax.servlet.jsp.JspWriter out ) throws IOException {
+    public int display(ArrayList<NavBarDisplayDAO.Item>items, int numToDisplay, int numDisplayed, String reloadUrl, boolean xpanded, int numItems, StringBuilder js, int displayThreshold, String divReloadUrl, String cmd, javax.servlet.http.HttpServletRequest request, javax.servlet.jsp.JspWriter out ) throws IOException {
         String stripe,colour,bgColour;
         String imgName;
         String dateFormat = "dd-MMM-yyyy";
+        Pattern pattern = Pattern.compile("'([^']*)'");        
+        
+        
+        String divReloadInfo;
         numToDisplay -= numDisplayed;
 
         int total = items.size() < numToDisplay ? items.size() : numToDisplay;
@@ -246,7 +250,8 @@
 				//This should be done in the display classes but I'll keep it here for future reference
 				//url = StringUtils.replaceEach(url, new String[] {"'","\\\""}, new String[] {"\'","\\\""});
                 if( item.isURLJavaScript() ) {
-                	out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + url + "\" title='" + item.getLinkTitle() + "'>");
+                    divReloadInfo = trackWindowString(url, divReloadUrl, cmd, pattern);
+                	out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + divReloadInfo + url + "\" title='" + item.getLinkTitle() + "'>");
                 }
                 else {
                 	out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href=\"" + url + "\" title='" + item.getLinkTitle() + "' target=\"_blank\">");
@@ -257,9 +262,10 @@
 
                 if( item.getDate() != null ) {
                     out.println("<span style=\"z-index: 100; "+dateColour+" overflow:hidden;   position:relative; height:1.2em; white-space:nowrap; float:right; text-align:right;\">");
-
+										
                     if( item.isURLJavaScript() ) {
-                    	out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + url + "\" title='" + item.getLinkTitle() + "'>");
+                		divReloadInfo = trackWindowString(url, divReloadUrl, cmd, pattern);
+                    	out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + divReloadInfo + url + "\" title='" + item.getLinkTitle() + "'>");
                     }
                     else {
                     	out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href=\"" + url + "\" title='" + item.getLinkTitle() + "' target=\"_blank\">");
@@ -276,6 +282,21 @@
          }
 
          return j;
+    }
+    
+    public String trackWindowString(String url, String reloadUrl, String cmd, Pattern pattern) {
+		String windowName, divReloadInfo = "";
+		if( url.startsWith("popupPage") ) {                		    
+	    	Matcher matcher = pattern.matcher(url);
+	    	if( matcher.find() ) {                				
+	    		windowName = matcher.group(1);
+	    		reloadUrl += "&numToDisplay=6&cmd=" + cmd;
+	    		divReloadInfo = "reloadWindows['" + windowName + "'] = '" + reloadUrl + "';reloadWindows['"+ windowName + "div'] = '" + cmd + "';";                		    	
+	    	}
+	   
+		}
+		
+		return divReloadInfo;
     }
 
     %>
