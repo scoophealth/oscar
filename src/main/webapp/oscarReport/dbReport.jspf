@@ -54,7 +54,7 @@
         {"search_mygroup", "select distinct mygroup_no from mygroup where mygroup_no like ?"},
 	{"search_mygroup_provider", "select p.last_name, p.first_name, p.provider_no, m.mygroup_no from provider p, mygroup m where m.provider_no=p.provider_no and m.mygroup_no=?"},
 	{"search_reportprovider_check", "select status from reportprovider where  provider_no=? and team=? and action=?"},
-	{"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
+	{"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where p.status='1' and r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
         {"search_reportprovider_ohip","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? and p.provider_no like ? order by team"},
         {"count_visit", "select count(*) n from billing where status<>'D' and creator=? and visittype=? and billing_date>=? and billing_date<=?"},
   };

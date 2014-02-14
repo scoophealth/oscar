@@ -27,8 +27,12 @@ package oscar.oscarReport.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 public class RptFluReportData {
@@ -99,27 +103,15 @@ public class RptFluReportData {
 		demoList = null;
 		years = null;
 	}
-	public ArrayList providerList() {
-		ArrayList arraylist = new ArrayList();
-		try {
-			
-			String s = "select provider_no, last_name, first_name from provider where provider_type = 'doctor' order by last_name";
-			ResultSet resultset;
-			ArrayList arraylist1;
-			for (resultset = DBHandler.GetSQL(s); resultset.next(); arraylist
-					.add(arraylist1)) {
-				arraylist1 = new ArrayList();
-				arraylist1.add(resultset.getString("provider_no"));
-				arraylist1.add(resultset.getString("last_name") + ", "
-						+ resultset.getString("first_name"));
-			}
-			resultset.close();
-		} catch (SQLException sqlexception) {
-			MiscUtils.getLogger().debug("Problems");
-			MiscUtils.getLogger().debug(sqlexception.getMessage());
-		}
-		return arraylist;
+
+	@SuppressWarnings("unchecked")
+	public List<Provider> providerList() {
+		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+		List<Provider> pList = dao.getActiveProviders();
+		
+		return pList;
 	}
+	
 	public void fluReportGenerate(String s, String s1) {
 		years = s1;
 		try {
