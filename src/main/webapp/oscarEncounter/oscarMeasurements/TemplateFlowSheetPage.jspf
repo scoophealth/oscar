@@ -173,6 +173,10 @@
 	function getContextPath() {
 		return '<%=request.getContextPath()%>';
 	}
+
+	function refreshEncounter() {
+	      self.opener.location.reload(); 
+	}
 </script>
 <oscar:customInterface name="renal" section="diab"/>
 			
