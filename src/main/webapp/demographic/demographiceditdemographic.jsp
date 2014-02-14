@@ -102,6 +102,10 @@
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	List<Provider> providers = providerDao.getActiveProviders();
+	List<Provider> doctors = providerDao.getActiveProvidersByRole("doctor");
+	List<Provider> nurses = providerDao.getActiveProvidersByRole("nurse");
+	List<Provider> midwifes = providerDao.getActiveProvidersByRole("midwife");
+	
 	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 %>
 
@@ -2654,7 +2658,7 @@ if ( Dead.equals(PatStat) ) {%>
 									style="width: 200px">
 									<option value=""></option>
 									<%
-							for(Provider p : providers) {
+							for(Provider p : doctors) {
                          
                         %>
 									<option value="<%=p.getProviderNo()%>"
@@ -2670,7 +2674,7 @@ if ( Dead.equals(PatStat) ) {%>
 									<%
                          
                          
-									for(Provider p : providers) {
+									for(Provider p : nurses) {
                         %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(nurse)?"selected":""%>>
@@ -2685,7 +2689,7 @@ if ( Dead.equals(PatStat) ) {%>
 									style="width: 200px">
 									<option value=""></option>
 									<%
-									for(Provider p : providers) {
+									for(Provider p : midwifes) {
                         %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(midwife)?"selected":""%>>
@@ -2697,7 +2701,7 @@ if ( Dead.equals(PatStat) ) {%>
 								<td align="left"><select name="resident" style="width: 200px" <%=getDisabled("resident")%>>
 									<option value=""></option>
 									<%
-									for(Provider p : providers) {
+									for(Provider p : doctors) {
                         %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(resident)?"selected":""%>>
