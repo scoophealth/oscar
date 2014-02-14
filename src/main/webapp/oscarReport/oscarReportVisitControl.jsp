@@ -137,22 +137,16 @@ function popupPage(height, width, url) {
 							key="oscarReport.oscarReportVisitControl.msgSelectProviderAll" />
 					</option>
 					<%
-						String proFirst="";
-																								            String proLast="";
-																								            String proOHIP="";
-																								            for(ReportProvider rps : reportProviderDao.findByAction("visitreport")) {
-																								            	Provider p = providerDao.getProvider(rps.getProviderNo());
-																								          
-																								                proFirst = p.getFirstName();
-																								                proLast = p.getLastName();
-																								                proOHIP = p.getProviderNo();
+						for (ReportProvider rps : reportProviderDao.findByAction("visitreport")) {
+							Provider p = providerDao.getProvider(rps.getProviderNo());
+							if (p.getStatus().equals("1")) {
 					%>
-					<option value="<%=proOHIP%>"><%=proLast%>,
-						<%=proFirst%></option>
+							<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></option>
 					<%
+							}
 						}
 					%>
-				</select>
+					</select>
 			</div>
 		</div>
 
