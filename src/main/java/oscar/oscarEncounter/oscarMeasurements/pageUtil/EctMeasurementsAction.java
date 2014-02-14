@@ -53,7 +53,6 @@ import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarMessenger.util.MsgStringQuote;
 
 
@@ -65,19 +64,9 @@ public class EctMeasurementsAction extends Action {
         EctMeasurementsForm frm = (EctMeasurementsForm) form;
 
         HttpSession session = request.getSession();
-        //request.getSession().setAttribute("EctMeasurementsForm", frm);
 
-        EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-
-
-        String demographicNo = null;
+        String demographicNo = request.getParameter("demographic_no");
         String providerNo = (String) session.getAttribute("user");
-
-        //if form has demo use it since session bean could have been overwritten
-        if( (demographicNo = (String)frm.getValue("demographicNo")) == null ) {
-            if ( bean != null)
-                demographicNo = bean.getDemographicNo();
-        }
 
         String template = request.getParameter("template");
         MeasurementFlowSheet mFlowsheet = null;
