@@ -229,6 +229,17 @@ public class ProviderDao extends HibernateDaoSupport {
 		return rs;
 	}
 
+	public List<Provider> getActiveProvidersByRole(String role) {
+		
+		List<Provider> rs = getHibernateTemplate().find(
+			"select p FROM Provider p, SecUserRole s where p.ProviderNo = s.ProviderNo and p.Status='1' and s.RoleName = ? order by p.LastName, p.FirstName", role);
+
+		if (log.isDebugEnabled()) {
+			log.debug("getActiveProvidersByRole: # of results=" + rs.size());
+		}
+		return rs;
+	}
+
 	public List<Provider> getDoctorsWithOhip(){
 		return getHibernateTemplate().find(
 				"FROM Provider p " + 

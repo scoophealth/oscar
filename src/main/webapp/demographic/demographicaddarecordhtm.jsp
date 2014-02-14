@@ -991,16 +991,14 @@ function autoFillHin(){
       <td id="demoDoctorCell" align="left" >
         <select name="staff">
 					<option value=""></option>
-          <%
- for(Provider p: providerDao.getActiveProviders()) {
- 
-     String docProviderNo = p.getProviderNo();
-%>
-					<option id="doc<%=docProviderNo%>" value="<%=docProviderNo%>"><%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
 					<%
-  }
- 
-%>
+						for (Provider p : providerDao.getActiveProvidersByRole("doctor")) {
+								String docProviderNo = p.getProviderNo();
+					%>
+					<option id="doc<%=docProviderNo%>" value="<%=docProviderNo%>"><%=Misc.getShortStr((p.getFormattedName()), "", 12)%></option>
+					<%
+						}
+					%>
 					<option value=""></option>
 				</select></td>
 				<td id="nurseLbl" align="right"><b><bean:message
@@ -1008,7 +1006,7 @@ function autoFillHin(){
 				<td id="nurseCell" ><select name="cust1">
 					<option value=""></option>
 					<%
-					for(Provider p: providerDao.getActiveProviders()) {
+					for(Provider p: providerDao.getActiveProvidersByRole("nurse")) {
 %>
 					<option value="<%=p.getProviderNo()%>"><%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
 					<%
@@ -1023,7 +1021,7 @@ function autoFillHin(){
 				<td id="midwifeCell"><select name="cust4">
 					<option value=""></option>
 					<%
-					for(Provider p: providerDao.getActiveProviders()) {
+					for(Provider p: providerDao.getActiveProvidersByRole("midwife")) {
 %>
 					<option value="<%=p.getProviderNo()%>">
 					<%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
@@ -1037,7 +1035,7 @@ function autoFillHin(){
 				<td id="residentCell" align="left"><select name="cust2">
 					<option value=""></option>
 					<%
-					for(Provider p: providerDao.getActiveProviders()) {
+					for(Provider p: providerDao.getActiveProvidersByRole("doctor")) {
 %>
 					<option value="<%=p.getProviderNo()%>">
 					<%=Misc.getShortStr( (p.getFormattedName()),"",12)%></option>
