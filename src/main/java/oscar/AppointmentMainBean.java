@@ -25,6 +25,7 @@
 
 package oscar;
 
+import java.net.URLDecoder;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -223,6 +224,7 @@ public class AppointmentMainBean {
     }
 
   public ResultSet queryResults(String aKeyword, String dboperation) throws Exception{
+	  aKeyword= URLDecoder.decode(aKeyword, "UTF-8");
 	  String sqlQuery = null;
 	  ResultSet rs =null;
 	  if(aKeyword.equals("*")) {
