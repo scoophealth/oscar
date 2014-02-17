@@ -55,8 +55,8 @@
 <%
 	String [][] dbQueries=new String[][] {
     {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
-    {"search_provider_nurse", "select * from oscar.provider p, secuserrole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'nurse' order by p.last_name, p.first_name"},
-    {"search_provider_midwife", "select * from oscar.provider p, secuserrole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'midwife' order by p.last_name, p.first_name"},
+    {"search_provider_nurse", "select * from provider p, secUserRole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'nurse' order by p.last_name, p.first_name"},
+    {"search_provider_midwife", "select * from provider p, secUserRole s where p.provider_no = s.provider_no and p.status='1' and s.role_name = 'midwife' order by p.last_name, p.first_name"},
     {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
     {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() +"' and is_history='N'  order by name"}
