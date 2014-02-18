@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -33,9 +34,8 @@
 
 
 <head>
-<title>Add Private Billing Code
-</title>
-<link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
+<title>Add Private Billing Code</title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <script type="text/javascript">
 
 function isNumeric(strString){
@@ -60,130 +60,41 @@ function checkUnits(){
 	}
 	return true;
 }
-
-
-
 </script>
-
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}
-</style>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
-<!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Billing
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						Add Private Billing Code
-                        </td>
-                        <td  >&nbsp;
+<body>
+	<h3>Add Private Billing Code</h3>
+	<div class="container-fluid well">
+	
+    <html:form action="/billing/CA/BC/billingAddCode" onsubmit="return checkUnits();">
+      <%
+		BillingAddCodeForm frm = (BillingAddCodeForm) request.getAttribute("BillingAddCodeForm");
+		String isEdit = request.getParameter("edit")!=null?request.getParameter("edit"):"";
+		if (request.getAttribute("code") != null){
+			frm.setCode((String) request.getAttribute("code"));
+			frm.setDesc((String) request.getAttribute("desc"));
+			frm.setValue((String) request.getAttribute("value"));
+		}
 
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">&nbsp;
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn" valign="top">
+		if (request.getAttribute("returnMessage") != null){%>
+			<%=request.getAttribute("returnMessage")%>
+		<%}%>                
+	<html:hidden property="whereTo" value="private"/>
 
+	
+        Service Code: <br>
+	A-<html:text property="code" maxlength="9" style="width:100px" />
+	<div style="margin-top:-10px;margin-bottom:10px;"><small>Private Codes will be prefixed with 'A' by default</small></div>
+		
+	Description:<br>
+	<html:text property="desc"/><br> 
 
+        Price:<br>
+	<html:text property="value"/><br> 
 
-
-              <html:form action="/billing/CA/BC/billingAddCode" onsubmit="return checkUnits();">
-                <%
-                    BillingAddCodeForm frm = (BillingAddCodeForm) request.getAttribute("BillingAddCodeForm");
-					String isEdit = request.getParameter("edit")!=null?request.getParameter("edit"):"";
-                    if (request.getAttribute("code") != null){
-                        frm.setCode((String) request.getAttribute("code"));
-                        frm.setDesc((String) request.getAttribute("desc"));
-                        frm.setValue((String) request.getAttribute("value"));
-                    }
-
-                if (request.getAttribute("returnMessage") != null){%>
-
-                <table>
-                    <tr>
-                    <td style="font-color: red;"><%=request.getAttribute("returnMessage")%></td>
-                    </tr>
-                </table>
-                <%}%>                
-                <html:hidden property="whereTo" value="private"/>
-
-                <table width="50%">
-                    <!--<tr>
-                        <td>Code ID</td>
-                        <td><html:text property="codeId"/></td>
-                    </tr>-->
-                    <tr>
-                        <td colspan="2"><strong>Private Codes will be prefixed with 'A' by default</strong></td>
-                    </tr>
-                    <tr>
-                        <td width="23%"><strong>Service Code:</strong></td>
-                        <td width="77%">A-<html:text property="code" maxlength="9"/></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Description:</strong></td>
-                        <td><html:text property="desc"/></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Price:</strong></td>
-                        <td><html:text property="value"/></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><html:submit value="Add"/><html:button onclick="javascript: document.location = 'billingPrivateCodeAdjust.jsp'" property="back" value="Back"/>
-                    </tr>
-                </table>
-              </html:form>
-			   </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+	<html:submit styleClass="btn btn-primary" value="Add"/> <a href="billingPrivateCodeAdjust.jsp" class="btn">Cancel</a>
+    </html:form>
+    </div>
 </body>
 </html:html>
