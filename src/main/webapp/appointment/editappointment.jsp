@@ -82,27 +82,6 @@
         .deep { background-color: <%= deepcolor %>; }
         .weak { background-color: <%= weakcolor %>; }
     </style>
-    <!-- Must change styles for browsers that do not understand display:table properties -->
-    <!--[if lt IE 8]>
-        <style type="text/css">
-            body { min-width: 760px; }
-            .row { clear: both; }
-            li.deep { background-color: <%= weakcolor %>; }
-            .label, .space { float:left; width: 100px !important; }
-            .panel li div { border:none; }
-            .input, .space { text-align: right; float:left; }
-            .panel { background-color: #EEEEFF; }
-        </style>
-    <![endif]-->
-    <!-- Min-width doesn't work properly in IE6, so we simulate it using JavaScript.
-    It's important to set a min-width since many elements will be floating, and
-    resizing may otherwise cause elements to collapse in strange ways
-    -->
-    <!--[if lt IE 7]>
-        <script language="JavaScript">
-            window.onresize = function() { setMinWidth(860); }
-        </script>
-    <![endif]-->
 <% } %>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="appointment.editappointment.title" /></title>
@@ -687,11 +666,11 @@ if (bMultisites) { %>
             </div>
         </li>
         <li class="weak row">
-            <div class="label"><bean:message key="Appointment.formLastCreator" />:</div>
+ 			<div class="label"><bean:message key="Appointment.formLastEditor" />:</div>
             <div class="input">
-		<% String lastCreatorNo = bFirstDisp?(String)appt.get("creator"):request.getParameter("user_id"); %>
-
-            <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
+			<% String lastEditor = appt.get("lastUpdateUser")==null?(String)appt.get("creator"):providerDao.getProvider((String)appt.get("lastUpdateUser")).getFormattedName(); %>
+			<INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastEditor%>" readonly WIDTH="25">            
+            
             </div>
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formLastTime" />:</div>
