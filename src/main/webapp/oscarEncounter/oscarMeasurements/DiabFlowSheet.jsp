@@ -10,7 +10,7 @@
 --%>
 <% long startTime = System.currentTimeMillis(); %>
 <%@page contentType="text/html"%>
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*, oscar.oscarRx.util.*"%>
+<%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*, oscar.oscarRx.util.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
@@ -205,6 +205,47 @@ ArrayList<String> recomendations = mi.getRecommendations();
 		});
 
 		$("#highlightSliderLength").text(Object.keys(dateRange)[0]);
+
+
+		$("#close-message").click(function() {
+			$("#measurement-view").hide();
+			$("#deleteId").val("");
+		});
+
+
+		$("[id^=mView]").click(function() {
+
+		id=this.id;
+		measId=id.replace('mView-','');
+		msg=$("#mMessage-"+measId).html();
+
+		$("#deleteId").val(measId);
+
+		$("#measurement-view-message").html(msg);
+		$("#measurement-view").show();
+		
+		});
+
+	    $("#deleteButton").click(function(){
+		var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/DeleteData2.do";
+		
+		var deletevalue = "id="+$("#deleteId").val()+"&deleteCheckbox="+$("#deleteId").val();
+
+	    	//get scroll position
+	    	var ycoord = $('input[name=ycoord]').val();
+	    	
+		$.ajax({
+		    url: link,
+		    method: 'POST',
+		    data: deletevalue,
+		    success: function(returnData){
+		    	window.location = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?ycoord="+ycoord+"&demographic_no=<%=demographic_no%>&template=diab3";
+
+		    }
+		});
+
+    	});
+	    
 	});
 
 
@@ -301,6 +342,9 @@ ArrayList<String> recomendations = mi.getRecommendations();
 			var y = document.mainForm.ycoord.value;
 
 			window.scrollTo(x, y);
+
+			//if scroll to position then page is being reloaded due to saving so refresh encounter
+			self.opener.location.reload();
 		}
 
 		window.onload = setScrollPos;
@@ -309,24 +353,6 @@ ArrayList<String> recomendations = mi.getRecommendations();
 		window.onclick = getScrollCoords;
 
 	</script>
-
-	<script LANGUAGE="JavaScript">
-	<%if (session.getAttribute("textOnEncounter")!=null) {%>
-	
-		if( opener.opener.document.forms["caseManagementEntryForm"] != undefined ){
-	        opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-	    }else if( opener.document.forms["caseManagementEntryForm"] != undefined ){
-	        opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-		}
-	
-	<%
-			//clear so values don't repeat after added to note
-			session.setAttribute("textOnEncounter", null);
-	
-	}
-	%>	
-	</script>
-
 
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/share/css/jquery-ui-1.8.15.custom.draggable.slider.css" />
 	<style type="text/css" media="all">
@@ -488,6 +514,163 @@ ArrayList<String> recomendations = mi.getRecommendations();
     		font-weight: bold;
     		text-decoration: underline;
 		}
+
+
+
+#measurement-view{
+display:none;
+position:fixed;
+top:80px;
+width:600px;
+
+text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+padding:10px;
+left: 50%;
+margin-left: -300px;
+
+color: #333;
+background-color: #f5f5f5;
+border-color: #eed3d7;
+font-family:"Arial";
+
+border: 1px solid #fbeed5;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+
+-moz-box-shadow: 3px 3px 4px #444;
+-webkit-box-shadow: 3px 3px 4px #444;
+box-shadow: 3px 3px 4px #444;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+}
+
+#measurement-view{
+
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.428571429;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+       -o-user-select: none;
+          user-select: none;
+}
+
+.btn:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.btn:hover,
+.btn:focus {
+  color: #333333;
+  text-decoration: none;
+}
+
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.btn-danger {
+  color: #ffffff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active,
+.open .dropdown-toggle.btn-danger {
+  color: #ffffff;
+  background-color: #d2322d;
+  border-color: #ac2925;
+}
+
+.btn-danger:active,
+.btn-danger.active,
+.open .dropdown-toggle.btn-danger {
+  background-image: none;
+}
+
+.btn-danger.disabled,
+.btn-danger[disabled],
+fieldset[disabled] .btn-danger,
+.btn-danger.disabled:hover,
+.btn-danger[disabled]:hover,
+fieldset[disabled] .btn-danger:hover,
+.btn-danger.disabled:focus,
+.btn-danger[disabled]:focus,
+fieldset[disabled] .btn-danger:focus,
+.btn-danger.disabled:active,
+.btn-danger[disabled]:active,
+fieldset[disabled] .btn-danger:active,
+.btn-danger.disabled.active,
+.btn-danger[disabled].active,
+fieldset[disabled] .btn-danger.active {
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  color: #ffffff;
+  background-color: #3276b1;
+  border-color: #285e8e;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  background-image: none;
+}
+
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active {
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+
 	</style>
 
 </head>
@@ -573,9 +756,7 @@ if (!medicationsResult.isEmpty()) {
 		}
 	}
 }
-%>
 
-<%
 java.util.Calendar calender = java.util.Calendar.getInstance();
 String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
 String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
@@ -728,6 +909,7 @@ String date = year+"-"+month+"-"+day;
 
 					<td class="comments">
 						<input type="text" size="15" name="<%=name + "_comments"%>" />
+						<input type="hidden" name="<%=name%>_note" id="<%=name%>_note" value="addtonote">
 					</td>
 
 					<%
@@ -842,21 +1024,26 @@ String date = year+"-"+month+"-"+day;
    							hdata.put("unixTime", Long.toString(mdb.getDateEnteredAsDate().getTime()));
    						%>
 
-   							<div itemtime="<%=hdata.get("unixTime")%>" class="recentBlock measurements" onclick="javascript:popup(465,635,'<%=project%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+					<div itemtime="<%=hdata.get("unixTime")%>" class="recentBlock measurements" id="mView-<%=hdata.get("id")%>">
 
-   							<div itemtime="<%=hdata.get("unixTime")%>" class="recentBlock measurements" onclick="javascript:popup(465,635,'../../oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+					<b><%=hdata.get("data")%></b>; <%=hdata.get("prevention_date")%> <br>
+					<b>
+					<%=hdata.get("comments")%>
+					</b>
+					</div>
+					
+					<div id="mMessage-<%=hdata.get("id")%>" style="display:none;">
+					
+					<h1><%=name%>: <%=hdata.get("data")%></h1>
+					Date Observed: <%=hdata.get("prevention_date")%><br>
+					<%=hdata.get("comments")%><br>
+					
 
-		   		               		<b><%=hdata.get("data")%></b>; <%=hdata.get("prevention_date")%> <br>
-		   		               <b>
-		   		                    <%=hdata.get("comments")%>
-		   		               </b>
-		   		            </div>
-   						<%
-   						}
-   						%>
-    					</td>
-
-
+					</div>
+					<%
+					}
+					%>
+					</td>
 
 					<td class="data" align="left">
 					<%
@@ -875,12 +1062,13 @@ String date = year+"-"+month+"-"+day;
 		            	hdata.put("unixTime", Long.toString(mdb.getDateEnteredAsDate().getTime()));
 		                %>
 
-			            	<div itemtime="<%=hdata.get("unixTime")%>" <%if (mdb.getIndicationColour()!=null) {%> <%}%> class="block measurements <%=name%>" onclick="javascript:popup(465,635,'<%=project%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+			        <div itemtime="<%=hdata.get("unixTime")%>" id="mView-<%=hdata.get("id")%>"  <%if (mdb.getIndicationColour()!=null) {%> <%}%> class="block measurements <%=name%>" >
 			                <%if (!hdata.get("data").equals("")) { %>
 			                <b><%=hdata.get("data")%></b>, <%=hdata.get("prevention_date")%><br>
 			                <%}else{ %>
 			                <%=hdata.get("prevention_date")%><br>
-			                <%} %>
+			                <%}%>
+			                
 			              	<%
 			              	if (hdata.get("comments")!= null) {
 
@@ -894,7 +1082,15 @@ String date = year+"-"+month+"-"+day;
 			              		}
 			              	}
 			              	%>
-			            	</div>
+			          </div>
+			          
+			        <div id="mMessage-<%=hdata.get("id")%>" style="display:none;">
+					
+					<h1><%=name%>: <%=hdata.get("data")%></h1>
+					Date Observed: <%=hdata.get("prevention_date")%><br>
+					<%=hdata.get("comments")%><br>
+					
+					</div>
 		            <%}
 		 			if (increaseHeight) {
 		 			String className = "\".block.measurements." + name + "\"";
@@ -929,6 +1125,15 @@ String date = year+"-"+month+"-"+day;
 
 	</table>
 	</form>
+
+
+<div id="measurement-view">
+<div id="measurement-view-message"> </div>
+<input type="hidden" name="deleteId" id="deleteId" value="">
+<p align='right'><button type='button' id="deleteButton" name='deleteButton' class='btn btn-danger'>Delete</button> <button type='button' id='close-message' name='close' class='btn btn-primary'>Close</button></p>
+</div>
+
+
 
 </body>
 
