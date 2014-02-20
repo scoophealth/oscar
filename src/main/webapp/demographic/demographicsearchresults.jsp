@@ -288,6 +288,8 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 
     }else{  //MySQL
           dboperation += "_mysql";
+          keyword = (keyword == null)?"":java.net.URLDecoder.decode(keyword, "UTF-8");
+          keyword = keyword.trim();
 	  if(request.getParameter("search_mode").equals("search_name")) {
 		 keyword="^"+keyword;
 		 if(keyword.indexOf(",")==-1)
