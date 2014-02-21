@@ -66,7 +66,9 @@ public class PatientListByAppt extends HttpServlet {
                          "       p.last_name, p.first_name, a.location           "+
                          "from   demographic d, appointment a, provider p       "+
                          "where  a.demographic_no=d.demographic_no              "+
-                         "and    a.provider_no=p.provider_no                    ";
+                         "and    a.provider_no=p.provider_no                    "+
+                         "and    a.status <> 'C'                                "+
+                         "and    a.status <> 'D'                                ";
 
 
             if(!drNo.equals("all")){
