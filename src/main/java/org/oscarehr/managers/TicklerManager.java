@@ -54,7 +54,7 @@ import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerComment;
 import org.oscarehr.common.model.TicklerUpdate;
-import org.oscarehr.util.EmailUtils;
+import org.oscarehr.util.EmailUtilsOld;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -367,7 +367,7 @@ public class TicklerManager {
 	        
 	        if (ticklerEditEnabled & ticklerEmailEnabled) {
 	            String emailTo = t.getDemographic().getEmail();
-	            if (EmailUtils.isValidEmailAddress(emailTo)) { 
+	            if (EmailUtilsOld.isValidEmailAddress(emailTo)) { 
 
 	                InputStream is = TicklerManager.class.getResourceAsStream(TICKLER_EMAIL_TEMPLATE_FILE);
 	                String emailTemplate=IOUtils.toString(is);
@@ -384,7 +384,7 @@ public class TicklerManager {
 	                String mergedSubject=VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
 	                String mergedBody=VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
 
-	                EmailUtils.sendEmail(emailTo, null, emailFrom, null, mergedSubject, mergedBody, null);
+	                EmailUtilsOld.sendEmail(emailTo, null, emailFrom, null, mergedSubject, mergedBody, null);
 	                
 	                //--- log action ---
 	    			LogAction.addLogSynchronous("TicklerManager.sendNotification", "ticklerId="+t.getId());

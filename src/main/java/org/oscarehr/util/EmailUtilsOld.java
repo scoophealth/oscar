@@ -63,8 +63,11 @@ import oscar.OscarProperties;
  * If the recipient_override parameter is not null, it will assume the value is an email address and use that and replace to/cc/bcc addresses.
  * The print_instead_of_send value should be true or false, if true it will skip the last send step and log it at info level instead.
  * The email.connection_security parameter sets which type of connection security is used (choices are: ssl, starttls, or unset for none)
+ * 
+ * This class was renamed to EmailUtilsOld because of a conflict with the utils package which has a similar class.
+ * The utils package version reads from a generic config.xml file instead though where as this one reads from the oscar properties. 
  */
-public final class EmailUtils
+public final class EmailUtilsOld
 {
 	private static final Logger logger=MiscUtils.getLogger();
 	
@@ -225,7 +228,7 @@ public final class EmailUtils
 			String smtpUser=(argv.length>4?argv[4]:null);
 			String smtpPassword=(argv.length>5?argv[4]:null);
                         String connectionSecurity=(argv.length>6?argv[5]:null);
-			HtmlEmail htmlEmail=EmailUtils.getHtmlEmail(smtpServer, smtpPort, smtpUser, smtpPassword, connectionSecurity);
+			HtmlEmail htmlEmail=EmailUtilsOld.getHtmlEmail(smtpServer, smtpPort, smtpUser, smtpPassword, connectionSecurity);
 
 			htmlEmail.addTo(toEmailAddress, toEmailAddress);
 			htmlEmail.setFrom(fromEmailAddress, fromEmailAddress);
