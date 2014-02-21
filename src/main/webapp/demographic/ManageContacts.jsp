@@ -111,6 +111,13 @@ function addProContact() {
 	}});
 }
 
+function deleteProContact(id) {
+        var contactId = jQuery("input[name='procontact_"+id+".id']").val();
+        jQuery("form[name='contactForm']").append("<input type=\"hidden\" name=\"procontact.delete\" value=\""+contactId+"\"/>");
+        jQuery("#procontact_"+id).remove();
+}
+
+
 function addProContactExisting() {
 	var total = jQuery("#procontact_num").val();
 	total++;
