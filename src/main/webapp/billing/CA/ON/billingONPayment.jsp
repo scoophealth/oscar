@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -163,14 +164,18 @@
     }         
     
 %>
-<!DOCTYPE html>
 <html>
     <head>
         <title><bean:message key="oscar.billing.paymentReceived.title"/></title>
-        <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" /> 
-        <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-        <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
-        <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+        
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+		<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+		
+		<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+		<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+        
         <script type="text/javascript">
             function popupPage(vheight,vwidth,varpage) {
               var page = "" + varpage;
@@ -183,65 +188,74 @@
                     popup.focus();
                 }
             }
-        </script>                    
-        <link rel="stylesheet" type="text/css" href="billingON.css" />
-        <style type="text/css">
-            h1 {padding-left:10px;padding-top:16px;padding-bottom:16px;text-align:left; font-weight: 900;font-size:16pt;font-family:arial,sans-serif;color:white;}
-            h2 {font-weight: bold; font-family:arial, sans-serif;}
-            h3 {font-family:arial, sans-serif;}
-            h4 {color:red; font-weight:bold;font-family:arial, sans-serif;}
-            thead {background-color:lightblue;}
-	    th {padding-top:10px;padding-bottom:10px;font-weight: bold; font-size:9pt; font-family:arial,sans-serif;}
-            td {font-family:arial,sans-serif}
-        </style>
+        </script>    
+
+<style>
+table td,th{font-size:12px;}
+</style>                
     </head>
+
     <body>
-        <h1 class="myDarkGreen"><bean:message key="oscar.billing.paymentReceived.title"/></h1>
-        <h2 style="padding-right:10px;text-align:right"><%=today%></h2>
-        <h4><%=errorMsg%></h4>
+    	<h3><bean:message key="admin.admin.paymentReceived"/></h3>
+
+	
+    	<div class="container-fluid">
+    	<span class="pull-right"><%=today%></span>
+
+<div class="row well">
+        <%=errorMsg%>
+
         <form name="billingPaymentForm" method="get" action="billingONPayment.jsp">
                                   
-            <table width="100%" class="myYellow">
-                <tr>
-                    <td colspan="2">                   
-                        <h3 style="text-align:center"><bean:message key="oscar.billing.on.paymentReceived.freezePeriod"/></h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td  style="padding-right:5px;text-align:right" ><a id="startDate" href="javascript: function myFunction() {return false; }"><bean:message key="oscar.billing.on.paymentReceived.startDate"/></a>
-                        <input type="text" name="startDateText" id="startDateText" value="<%=DateUtils.formatDate(startDate,locale)%>"/>
-                    </td>
-                                        
-                    <td  style="padding-left:5px;text-align:left" ><a id="endDate" href="javascript: function myFunction() {return false; }"><bean:message key="oscar.billing.on.paymentReceived.endDate"/></a>
-                        <input type="text" name="endDateText" id="endDateText" value="<%=DateUtils.formatDate(endDate,locale)%>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="padding-top:10px;text-align:center"><bean:message key="oscar.billing.on.paymentReceived.providerName"/>
-                    
-                        <select name="providerList">
-                    <%  if(pList.size() > 1) { %>
-                            <option value=""><bean:message key="oscar.billing.on.paymentReceived.allproviders"/></option>
-                    <%  } %>
-    
-                    <%  for (Provider p : pList) { 
-                            String selected = "";                            
-                            if (providerNo != null && providerNo.equals(p.getProviderNo())){
-                                selected = "selected";
-                            }
-                    %>                    
-                            <option <%=selected%> value="<%=p.getProviderNo()%>"><%=p.getLastName()%>, <%=p.getFirstName()%></option>
-	            <%  } %>                 
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="padding-top:14px;text-align:center"><input type="submit" value="<bean:message key="oscar.billing.on.paymentReceived.generateReport"/>"/></td>
-                </tr>
-            </table>
+	        <h4><bean:message key="oscar.billing.on.paymentReceived.freezePeriod"/></h4>
 
-            <h3><bean:message key="oscar.billing.on.paymentReceived.raBillingReport"/></h3>
-            <table width="100%" cellspacing="0" class="myYellow">                
+		<div class="span3">
+		Provider:<br>
+            <!--<bean:message key="oscar.billing.on.paymentReceived.providerName"/>-->
+                      <select name="providerList">
+                  <%  if(pList.size() > 1) { %>
+                          <option value=""><bean:message key="oscar.billing.on.paymentReceived.allproviders"/></option>
+                  <%  } %>
+  
+                  <%  for (Provider p : pList) { 
+                          String selected = "";                            
+                          if (providerNo != null && providerNo.equals(p.getProviderNo())){
+                              selected = "selected";
+                          }
+                  %>                    
+                          <option <%=selected%> value="<%=p.getProviderNo()%>"><%=p.getLastName()%>, <%=p.getFirstName()%></option>
+            <% } %>                 
+                      </select>
+		</div>
+
+
+			<div class="span2">		
+			<bean:message key="oscar.billing.on.paymentReceived.startDate"/><br>
+			<div class="input-append">
+				<input type="text" style="width:90px" name="startDateText" id="startDateText" value="<%=DateUtils.formatDate(startDate,locale)%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			</div>
+			</div>
+		
+			<div class="span2">		
+			<bean:message key="oscar.billing.on.paymentReceived.endDate"/><br>
+			<div class="input-append">
+				<input type="text"  style="width:90px" name="endDateText" id="endDateText" value="<%=DateUtils.formatDate(endDate,locale)%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			</div>
+			</div>
+            
+			<div class="span2">
+<br>
+				<input class="btn btn-primary" type="submit" value="<bean:message key="oscar.billing.on.paymentReceived.generateReport"/>"/>
+			</div>
+
+</div>
+
+
+<div class="row">
+            <h4><bean:message key="oscar.billing.on.paymentReceived.raBillingReport"/></h4>
+            <table class="table-striped table-condensed table-hover">                
                     <thead>
 			<tr>
                                 <th><bean:message key="oscar.billing.on.paymentReceived.invoiceNumber"/></th>
@@ -261,7 +275,7 @@
 			</tr>
                     </thead>
 
-    
+		</tbody>
                     <%
                         BigDecimal feeTotal = new BigDecimal("0.00");
                         BigDecimal claimTotal = new BigDecimal("0.00");
@@ -380,7 +394,7 @@
                     <%      }                                                       
                         }
                     %>
-                <tr style="background-color:lightblue;">
+                <tr>
                     <td colspan="2" style="font-weight:bold;"><bean:message key="oscar.billing.on.paymentReceived.itemCount"/>:</td>
                     <td colspan="4"><%=numItems%></td>
                     <td style="font-weight:bold"><bean:message key="oscar.billing.on.paymentReceived.cumulativeTotal"/>:</td>
@@ -389,12 +403,13 @@
                     <td style="text-align:right"><%=paidTotal%></td>
                     <td style="text-align:right"><%=adjTotal%></td>
                     <td colspan="5"></td>
-                </tr>            
+                </tr> 
+		</tbody>           
             </table>
-                
+               <hr>
             <!-- 3rd Party Payments Table -->
-            <h3><bean:message key="oscar.billing.on.paymentReceived.premiumPaymentReport"/></h3>
-            <table width="100%" cellspacing="0" class="myYellow">  
+            <h4><bean:message key="oscar.billing.on.paymentReceived.premiumPaymentReport"/></h4>
+            <table width="100%" cellspacing="0" class="table-striped table-condensed table-hover">  
                 <thead>
                     <tr>
                             <th style="text-align:left"><bean:message key="oscar.billing.on.paymentReceived.providerName"/></th> 
@@ -402,6 +417,7 @@
                             <th colspan="9" style="text-align:right"><bean:message key="oscar.billing.on.paymentReceived.paid"/></th>                            
                     </tr>                   
                 </thead>
+		<tbody>
                  <%       
                         int numPremiumItems = 0; 
                         String rowColor = "myWhite";   
@@ -444,17 +460,19 @@
                   <%        totalPremiums = totalPremiums.add(new BigDecimal(amountPaid));
                             }
                         }%>
-                  <tr style="background-color:lightblue;">
+                  <tr>
                         <td colspan="2" style="font-weight:bold;"><bean:message key="oscar.billing.on.paymentReceived.itemCount"/>:</td>
                         <td colspan="3"><%=numPremiumItems%></td>
                         <td style="font-weight:bold"><bean:message key="oscar.billing.on.paymentReceived.cumulativeTotal"/>:</td>
                         <td style="text-align:right;font-weight:bold"><%=totalPremiums.toPlainString()%></td>                       
                         <td colspan="4"></td>
                   </tr>
+		</tbody>
             </table>
+		<hr>
                 <!-- 3rd Party Payments Table -->
-                <h3><bean:message key="oscar.billing.on.paymentReceived.3rdPartyBillingReport"/></h3>
-                <table width="100%" cellspacing="0" class="myYellow">
+                <h4><bean:message key="oscar.billing.on.paymentReceived.3rdPartyBillingReport"/></h4>
+                <table class="table-striped table-condensed table-hover">
                     <thead>
 			<tr>
                                 <th><bean:message key="oscar.billing.on.paymentReceived.invoiceNumber"/></th>
@@ -470,7 +488,7 @@
                     		<th><bean:message key="oscar.billing.on.paymentReceived.balanceOutstanding"/></th>
 			</tr>
                     </thead>
-                    
+                    <tbody>
                     <%                        
                         BigDecimal total3rdPaid = new BigDecimal("0.00");
                         BigDecimal total3rdRefunded = new BigDecimal("0.00");
@@ -619,7 +637,7 @@
                            }                                                       
                         }
                     %> 
-                    <tr style="background-color:lightblue;">
+                    <tr>
                         <td colspan="2" style="font-weight:bold;"><bean:message key="oscar.billing.on.paymentReceived.itemCount"/>:</td>
                         <td colspan="3"><%=num3rdItems%></td>
                         <td style="font-weight:bold"><bean:message key="oscar.billing.on.paymentReceived.cumulativeTotal"/>:</td>
@@ -628,20 +646,23 @@
                         <td style="text-align:right"><%=total3rdRefunded%></td>
                         <td colspan="2"></td>
                     </tr>
+		</tbody>
                 </table> 
+		<br>
             <% 
                 BigDecimal finalAmt = paidTotal.add(total3rdPaid).subtract(total3rdRefunded).add(totalPremiums);
             %>
-            <table width="100%" class="myDarkGreen">
-                <tr>
-                    <td style="width:10%;color:white;font-weight:bold;font-size:14pt;"><bean:message key="oscar.billing.on.paymentReceived.totalPaid"/>:</td>
-                    <td style="padding-top:14px;padding-bottom:14px;color:white;font-weight:bold; font-size:14pt;"><%=finalAmt%></td>
-                </tr>
-            </table>
+		<h3><bean:message key="oscar.billing.on.paymentReceived.totalPaid"/>: <%=finalAmt%></h3>
+
         </form>
+
+</div><!--row-->
+</div><!--container-->
+
         <script type="text/javascript">                       
-            Calendar.setup({inputField:"startDateText",ifFormat:"%Y-%m-%d",showsTime:false,button:"startDate",singleClick:true,step:1});          
-            Calendar.setup({inputField:"endDateText",ifFormat:"%Y-%m-%d",showsTime:false,button:"endDate",singleClick:true,step:1}); 
+	        var startDate = $("#startDateText").datepicker({format : "yyyy-mm-dd"});
+	        var endDate = $("#endDateText").datepicker({format : "yyyy-mm-dd"});
         </script>
+  
     </body>
 </html>
