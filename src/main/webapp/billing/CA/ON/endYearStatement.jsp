@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
@@ -22,29 +23,25 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>    
     
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<script type="text/javascript" src="/oscar/js/global.js"></script>
-<title>End Year Statement</title>
-<meta http-equiv="Pragma" content="no-cache">
-<link rel="stylesheet" href="../../../web.css">
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/css/extractedFromPages.css"  />
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-<!-- main calendar program -->
-<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-<!-- language for the calendar -->
-<script type="text/javascript"
-	src="../../../share/calendar/lang/calendar-en.js"></script>
-<!-- the following script defines the Calendar.setup helper function, which makes adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<title><bean:message key="admin.admin.endYearStatement"/></title>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+
 <script type="text/javascript">
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
 	  var page = "" + varpage;
 	  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
 	  window.location = page;
 }
+
 function demographicSearch() {
 	var search_param = document.forms[0].lastNameParam.value;
 	var url = '../../../demographic/demographicsearch2reportresults.jsp';
@@ -56,6 +53,7 @@ function demographicSearch() {
 	popupPage(700,1000,url,'master');
 	return false;	
 }
+
 function refresh() {
   var u = self.location.href;
   if(u.lastIndexOf("view=1") > 0) {
@@ -64,6 +62,7 @@ function refresh() {
     history.go(0);
   }
 }
+
 function calToday(field) {
 	var calDate=new Date();
 	varMonth = calDate.getMonth()+1;
@@ -72,57 +71,74 @@ function calToday(field) {
 	field.value = calDate.getFullYear() + '/' + (varMonth) + '/' + varDate;
 }
 //-->
+
+
 </script>
 
+<style>
+.well{padding-left:8px; padding-right:8px;}
+</style>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
-	topmargin="0">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#CCCCFF">
-		<td width="5%"></td>
-		<td width="80%" align="left">
-		<p><b><font face="Verdana, Arial" color="#FFFFFF" size="3"><a
-			href="billingReportCenter.jsp">OSCARbilling</a></font></b></p>
-		</td>
-	</tr>
-</table>
+<%
+String name="";
+if(request.getParameter("firstNameParam")!=null && request.getParameter("lastNameParam")!=null){
+name=request.getParameter("firstNameParam")+" "+request.getParameter("lastNameParam");
+}
+%>
+<body>
+<h3><bean:message key="admin.admin.endYearStatement"/></h3>
 
-<table width="100%" border="0" bgcolor="#EEEEFF">
+<div class="container-fluid">
+
+<div class="row well">
 	<html:form action="billing/CA/ON/endYearStatement">
 		<html:hidden property="demographicNoParam"/>
-	<tr>
-		<td width="550px" align="center"><font size="3"> 
-			First Name: <html:text property="firstNameParam" size="16" style="font-size:16px" ></html:text> &nbsp;&nbsp;
-		</font></td>
-		<td width="50px" align="left" nowrap>Date From:</td>
-		<td width="200px" align="left" nowrap>
-				<input type="text" name="fromDateParam" id="fromDateParam" onDblClick="calToday(this)" size="10" >
-				 <img src="../../../images/cal.gif" id="fromDateCal"> 
-		</td>
-		<td align="left" width="200px"><font size="3"><input type="submit" name="search" value="Create Statement"> &nbsp;&nbsp;</font></td>
-	</tr>
-	<tr>
-		<td width="550px" align="center"><font size="3"> 
-			Last Name: <html:text property="lastNameParam" size="16" style="font-size:16px" ></html:text> &nbsp;&nbsp;
-			<input type="button" value="Search" onclick="demographicSearch()"></input>
-		</font></td>
-		<td width="50px" align="left" nowrap>Date To:</td>
-		<td width="200px" align="left" nowrap>
-				<input type="text" name="toDateParam" id="toDateParam" onDblClick="calToday(this)" size="10" > 
-				<img src="../../../images/cal.gif" id="toDateCal">
-		</td>
-		<td align="left"><input type="submit" name="pdf" value="Print PDF" <logic:empty name="result">disabled="disabled"</logic:empty> ></td>
-	</tr>
+		
+		<div class="span5">  
+		Patient Name: <br>
+		<div class="input-append">
+		<input class="span4" id="nameForlooksOnly" type="text" value="<%=name%>">
+		<button class="btn btn-primary" type="button" value="Search" onclick="demographicSearch()"><i class="icon icon-search"></i></button>
+		</div>
+		</div>
+
+		<html:hidden property="firstNameParam" styleId="fname"></html:hidden> 
+		<html:hidden property="lastNameParam" styleId="lname"></html:hidden> 
+
+
+		<div class="span2">
+		<label>Start Date:</label>
+		<div class="input-append">
+			<input type="text" style="width:90px" name="toDateParam" id="toDateParam" value="<%= request.getAttribute("fromDateParam") != null ? request.getAttribute("fromDateParam") : "" %>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		</div>
+		</div>
+		
+	
+		
+		<div class="span2">
+		<label>End Date:</label>
+		<div class="input-append">
+			<input type="text" style="width:90px" name="xml_appointment_date" id="xml_appointment_date" value="<%= request.getAttribute("fromDateParam") != null ? request.getAttribute("fromDateParam") : "" %>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		</div>
+		</div>
+		
+		<div class="span10">
+		<input class="btn" type="submit" name="search" value="Create Statement"> 
+
+		<input class="btn" type="submit" name="pdf" value="Print PDF" <logic:empty name="result">disabled="disabled"</logic:empty> >
+		</div>
 	</html:form>
-</table>
+</div>
+
+<div class="row">
+
 <div style="color"red"><html:errors/></div>
+
 <logic:notEmpty name="summary">
-<table border="0" width="100%">
-<tr>
-<td width="15px"/>
-<td>
-<table style="border:collapse" width="100%">
+<table class="table table-striped  table-condensed">
 	<tr>
 		<td width="50px">&nbsp;</td>
 		<td align="left" colspan="2">Patient Information</td>
@@ -152,14 +168,11 @@ function calToday(field) {
 	</tr>
 </table>
 </logic:notEmpty>
+
 <br/>
+
 <logic:notEmpty name="result">
-<table border="0" width="100%">
-	<tr>
-		<td width="10px"/>
-		<td>
-			<table border="1" cellspacing="0" cellpadding="0" width="100%"
-	bordercolorlight="#99FF99" bordercolordark="#FFFFFF" bgcolor="#FFFFFF">
+<table class="table table-striped  table-condensed">
 				<tr bgcolor=#ccffcc>
 					<th>INVOICE NUMBER</th>
 					<th>INVOICE DATE</th>
@@ -195,20 +208,16 @@ function calToday(field) {
 					<td><logic:notEmpty name="summary"><bean:write name="summary" property="invoiced" /></logic:notEmpty></td>
 					<td><logic:notEmpty name="summary"><bean:write name="summary" property="paid" /></logic:notEmpty></td>
 				</tr>
-			</table>
+</table>
 </logic:notEmpty>
-		</td>
-		<td width="10px"/>
-	</tr>
-</table>			
-</td>
-<td width="15px"/>
-</tr>
+</div><!--row-->
+
+
+</div><!--container-->
 </body>
 <script type="text/javascript">
-Calendar.setup( { inputField : "fromDateParam", ifFormat : "%Y/%m/%d", showsTime :false, button : "fromDateCal", singleClick : true, step : 1 } );
-Calendar.setup( { inputField : "toDateParam", ifFormat : "%Y/%m/%d", showsTime :false, button : "toDateCal", singleClick : true, step : 1 } );
-document.getElementById('fromDateParam').value = '<%= request.getAttribute("fromDateParam") != null ? request.getAttribute("fromDateParam") : "" %>';
-document.getElementById('toDateParam').value = '<%= request.getAttribute("toDateParam") != null ? request.getAttribute("toDateParam") : "" %>';
+	var startDate = $("#toDateParam").datepicker({format : "yyyy-mm-dd"});
+	var endDate = $("#xml_appointment_date").datepicker({format : "yyyy-mm-dd"});
+
 </script>
 </html>
