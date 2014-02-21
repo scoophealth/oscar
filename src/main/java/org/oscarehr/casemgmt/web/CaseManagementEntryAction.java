@@ -1456,10 +1456,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "verify");
 				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
-				appointmentArchiveDao.archiveAppointment(appointment);
-				appointment.setStatus(apptStatus);
-				appointment.setLastUpdateUser(providerNo);
-				appointmentDao.merge(appointment);
+				// don't process appointment if it's been deleted
+				if (appointment != null) {
+					appointmentArchiveDao.archiveAppointment(appointment);
+					appointment.setStatus(apptStatus);
+					appointment.setLastUpdateUser(providerNo);
+					appointmentDao.merge(appointment);
+				}
 			}
 
 		} else if (note.isSigned()) {
@@ -1472,10 +1475,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "sign");
 				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
-				appointmentArchiveDao.archiveAppointment(appointment);
-				appointment.setStatus(apptStatus);
-				appointment.setLastUpdateUser(providerNo);
-				appointmentDao.merge(appointment);
+				if (appointment != null) {
+					appointmentArchiveDao.archiveAppointment(appointment);
+					appointment.setStatus(apptStatus);
+					appointment.setLastUpdateUser(providerNo);
+					appointmentDao.merge(appointment);
+				}
 			}
 		}
 
