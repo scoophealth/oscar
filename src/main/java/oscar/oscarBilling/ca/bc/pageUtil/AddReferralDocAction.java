@@ -53,8 +53,10 @@ public class AddReferralDocAction extends Action {
 
      String id = request.getParameter("id");
      if (id == null ){
+    	 
     	 List<Billingreferral> billingReferrals = billingReferralDao.getBillingreferral(f.getReferral_no());
-    	 if(billingReferrals.size() == 0) {
+    	 
+    	 if(billingReferrals == null) {
     		 Billingreferral billingReferral = new Billingreferral();
     		 billingReferral.setReferralNo(f.getReferral_no());
     		 billingReferral.setLastName(f.getLast_name());
