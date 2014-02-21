@@ -31,7 +31,7 @@ public class InboxPopulatingTest extends DaoTestFixtures {
 
 	@Test
 	@Ignore
-	public void test() throws Exception {
+	public void test() {
 		DataUtils.populateDemographicsAndProviders();
 		DataUtils.populateProviders();
 		DataUtils.populateLabs();
