@@ -62,21 +62,25 @@ public class SimulateTeleplanFileAction extends Action{
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response) throws Exception{
-        String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
 
-        
+    	String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
+
         String provider = request.getParameter("provider");
         String providerBillingNo = request.getParameter("provider");
         if(provider != null && provider.equals("all")){
             providerBillingNo = "%";
         }
+        @SuppressWarnings("deprecation")
         ProviderData pd = new ProviderData();
-        List list = pd.getProviderListWithInsuranceNo(providerBillingNo);
+     
+        @SuppressWarnings("deprecation")
+        List<String> list = pd.getProviderListWithInsuranceNo(providerBillingNo);
 
+        @SuppressWarnings("deprecation")
         ProviderData[] pdArr = new ProviderData[list.size()];
 
         for (int i=0;i < list.size(); i++){
-            String provNo = (String) list.get(i);
+            String provNo = list.get(i);
             pdArr[i] = new ProviderData(provNo);
         }
         //This needs to be replaced for sim
@@ -92,11 +96,15 @@ public class SimulateTeleplanFileAction extends Action{
                 teleplanWr.setBillingmasterDAO(billingmasterDAO);
                 teleplanWr.setDemographicDao(demographicDao);
                 TeleplanSubmission submission = teleplanWr.getSubmission(testRun, pdArr, dataCenterId);
-                response.getWriter().print(submission.getHtmlFile());
+
+                //response.getWriter().print(submission.getHtmlFile());
+                request.setAttribute("TeleplanHtmlFile", submission.getHtmlFile());
+                
             }catch(Exception e){
-                MiscUtils.getLogger().error("Error", e);
+                MiscUtils.getLogger().debug("Error: Teleplan Html File", e);
             }
         }
-        return null;
+        return mapping.findForward("success");
+        //return null;
     }
 }

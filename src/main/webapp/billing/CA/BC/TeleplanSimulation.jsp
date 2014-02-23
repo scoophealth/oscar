@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -28,14 +29,11 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page
-	import="java.util.*, java.sql.*, oscar.util.*,oscar.oscarProvider.data.ProviderData,oscar.oscarBilling.ca.bc.data.*,oscar.entities.*"%>
+<%@ page import="java.util.*, java.sql.*, oscar.util.*,oscar.oscarProvider.data.ProviderData,oscar.oscarBilling.ca.bc.data.*,oscar.entities.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el"
-	prefix="html-el"%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -65,14 +63,12 @@ List billList = billActDAO.getBillactivityByYear(Integer.parseInt(thisyear));
 pageContext.setAttribute("billActivityList",billList);
 
 %>
+
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Billing Report</title>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+	<title><bean:message key="admin.admin.simulateSubFile2"/></title>
+	<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <script language="JavaScript">
-
-
 
 var checkSubmitFlg = false;
 function checkSubmit() {
@@ -106,54 +102,47 @@ function showHideLayers() { //v3.0
   }
 }
 //-->
-                                           </script>
+</script>
+
+<style type="text/css">
+@media print {
+	.noprint {
+		display:none;
+	}
+}
+</style>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000">
+<body>
+	<h3><bean:message key="admin.admin.simulateSubFile2"/></h3>
+	<div class="container-fluid well noprint">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%"
-	onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
-	<tr bgcolor="#486ebd">
-		<td align="LEFT"><input type='button' name='print' value='Print'
-			onClick='window.print()'></td>
-		<th align="CENTER" style="color: #FFFFFF">Simulate Teleplan
-		Report - <%=thisyear%></th>
-		<td align="RIGHT"><input type='button' name='close' value='Close'
-			onClick='window.close()'></td>
-	</tr>
-	<tr>
-		<td colspan="2"><c:if test="${!empty error}">
-			<c:out value="${error}" />
-		</c:if></td>
-	</tr>
-</table>
-
-<table width="100%" border="0" bgcolor="#E6F0F7">
-	<html:form action="/billing/CA/BC/SimulateTeleplanFile.do"
-		onsubmit="return checkSubmit();">
-		<tr>
-			<td width="220">&nbsp;</td>
-			<td width="220">Select provider</td>
-			<td width="254"><select name="provider">
+		<h4>Simulate Teleplan Report - <%=thisyear%></h4>
+		<c:if test="${!empty error}"><c:out value="${error}" /></c:if>
+	
+		<html:form action="/billing/CA/BC/SimulateTeleplanFile.do"
+			onsubmit="return checkSubmit();" styleClass="form-inline">
+			Select provider
+			<select name="provider">
 				<option value="all">All Providers</option>
 				<%ProviderData pd = new ProviderData();
-                    List list = pd.getProviderListWithInsuranceNo();
-                    for (int i=0;i < list.size(); i++){
-                    String provNo = (String) list.get(i);
-                    ProviderData provider = new ProviderData(provNo);%>
+	                List list = pd.getProviderListWithInsuranceNo();
+	                for (int i=0;i < list.size(); i++){
+	                String provNo = (String) list.get(i);
+	                ProviderData provider = new ProviderData(provNo);%>
 				<option value="<%=provider.getOhip_no()%>"><%=provider.getLast_name()%>,<%=provider.getFirst_name()%></option>
 				<%}%>
 			</select></td>
-			<td width="181">&nbsp;</td>
-			<td width="254">&nbsp;</td>
-			<td width="277"><input type="submit" name="Submit"
-				value="Create Report"></td>
-		</tr>
-		<tr>
-			<td colspan="4">&nbsp;</td>
-		</tr>
-	</html:form>
-</table>
+			<input class="btn btn-primary" type="submit" name="Submit" value="Create Report">
+		</html:form>
+	</div>
+
+<%if(request.getAttribute("TeleplanHtmlFile")!=null){%>
+<button class="btn noprint" type='button' value='Print' onClick="window.print()"/><i class="icon-print"></i> Print</button>
+<%
+out.println(request.getAttribute("TeleplanHtmlFile"));
+}
+%>
 
 </body>
 </html>
