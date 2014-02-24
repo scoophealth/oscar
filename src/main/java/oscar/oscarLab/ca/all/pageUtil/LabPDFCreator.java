@@ -381,9 +381,10 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								}
 							} else{
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							if(!isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
+							if(!isAllowedDuplicate && (obxCount>1) && k > 0 && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
 								cell.setPhrase(new Phrase("", lineFont));
-								table.addCell(cell);}
+								table.addCell(cell);
+							}
 							else{
 							cell.setPhrase(new Phrase((obrFlag ? "   " : "")
 									+ obxName, lineFont));
