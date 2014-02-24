@@ -63,6 +63,15 @@
         int curMonth = (now.get(Calendar.MONTH)+1);
         int curDay = now.get(Calendar.DAY_OF_MONTH);
         String curProvider_no = (String) session.getAttribute("user");
+        
+    	java.util.ResourceBundle oscarResources = ResourceBundle.getBundle("oscarResources", request.getLocale());
+        String noteReason = oscarResources.getString("oscarEncounter.noteReason.TelProgress");
+
+    	if (OscarProperties.getInstance().getProperty("disableTelProgressNoteTitleInEncouterNotes") != null 
+    			&& OscarProperties.getInstance().getProperty("disableTelProgressNoteTitleInEncouterNotes").equals("yes")) {
+    		noteReason = "";
+    	}
+        
 %>
 <html:html locale="true">
 <head>
@@ -354,7 +363,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 		<div class="links"><security:oscarSec roleName="<%=roleName$%>"
 			objectName="_eChart" rights="r">
 			<a class="encounterBtn" title="Encounter" href="#"
-				onclick="popupEChart(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;">E</a>
+				onclick="popupEChart(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;">E</a>
 		</security:oscarSec> <!-- Rights --> <security:oscarSec roleName="<%=roleName$%>"
 			objectName="_rx" rights="r">
 			<a class="rxBtn" title="Prescriptions" href="#" onclick="popup(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=rs.getString("provider_no")%>&demographicNo=<%=dem_no%>')">Rx</a>
