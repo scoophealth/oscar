@@ -127,6 +127,7 @@
             String div = (String)request.getAttribute("navbarName");
             div = div.trim();
             int numItems = dao.numItems();
+            StringBuilder reloadURL = new StringBuilder(request.getParameter("reloadURL") + "&reloadURL=" + request.getParameter("reloadURL"));
             String strToDisplay = request.getParameter("numToDisplay");
             int numToDisplay;
             boolean xpanded = false;
@@ -134,9 +135,9 @@
 
             if( strToDisplay != null ) {
                 numToDisplay = Integer.parseInt(strToDisplay);
-
+				reloadURL.append("&numToDisplay=" + strToDisplay);
                 if( numItems > numToDisplay ) {
-                    String xpandUrl = request.getParameter("reloadURL") + "&cmd=" + div;
+                    String xpandUrl = request.getParameter("reloadURL") + "&reloadURL=" + request.getParameter("reloadURL") + "&cmd=" + div;
                     manageItems = xpandUrl;
                 }
             }
@@ -146,7 +147,7 @@
                     xpanded = true;
                 }
             }
-
+			reloadURL.append("&cmd=" + div);
             int numDisplayed = 0;
 
             ArrayList<NavBarDisplayDAO.Item> current = new ArrayList<NavBarDisplayDAO.Item>();
@@ -170,14 +171,14 @@
 
             StringBuilder jscode = new StringBuilder();
 			
-            numDisplayed = display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, dao.getReloadUrl(), dao.getDivId(), request, out);
+            numDisplayed = display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, reloadURL.toString(), dao.getDivId(), request, out);
 
             if( numDisplayed < numToDisplay ){
-               numDisplayed += display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, dao.getReloadUrl(), dao.getDivId(), request, out);
+               numDisplayed += display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, reloadURL.toString(), dao.getDivId(), request, out);
             }
 
             if( numDisplayed < numToDisplay ){
-                numDisplayed += display(pastDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, dao.getReloadUrl(), dao.getDivId(),request, out);
+                numDisplayed += display(pastDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, reloadURL.toString(), dao.getDivId(),request, out);
             }
 
             if( numDisplayed == 0 ) {
