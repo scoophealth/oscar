@@ -1,6 +1,6 @@
 /*  editControl - a WYSIWYG edit control using iFrames and designMode
     Copyright (C) 2009-2013 Peter Hutten-Czapski
-     Version 1.4 now about 500 lines of code
+     Version 1.6 now about 600 lines of code
         NEW in 0.2 button styles, links, select box
         NEW in 0.3 help, date, rule, select all, and clean functions
         NEW in 0.4 code completely rewritten, more functions including images and
@@ -13,6 +13,7 @@
         NEW in 1.3i grafted on compatibility with signature and faxing features
         NEW in 1.4 support for Firefox FF18+ browsers (ionMonkey series)
         NEW in 1.5 restored support for images, measurements and user template default values lost in 1.3i
+        NEW in 1.6 restored button support for newest Firefox ESR 24
     * Requirements: DesignMode and other Dom 2 methods
     * Mozilla 1.3+ IE 5.5+ Netscape 6+ Opera 9+ Konqueror 3.5.7+ Safari 1.3+ Chrome
     * designed for and tested on Firefox 2 - 20.  Tested on Opera 10, Chromium 25 and IE 6/7
@@ -544,9 +545,8 @@ function tbuttonOnClick() {
   			break;
   		case "promptUser" : value = prompt(this.getAttribute('promptText'));	
   		default: 
-  			if (window[this.name]) { window[this.name].document.execCommand(this.id, false, value); } 
-  			else { document.getElementById(this.name).contentWindow.document.execCommand(this.id, false, value); }
-return;
+		document.getElementById(this.name).contentWindow.document.execCommand(this.id, false, value); 
+		return;
 	}
 }
 function viewsource(source) {
