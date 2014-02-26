@@ -160,6 +160,15 @@
     int curYear = now.get(Calendar.YEAR);
     int curMonth = (now.get(Calendar.MONTH)+1);
     int curDay = now.get(Calendar.DAY_OF_MONTH);
+    
+	java.util.ResourceBundle oscarResources = ResourceBundle.getBundle("oscarResources", request.getLocale());
+    String noteReason = oscarResources.getString("oscarEncounter.noteReason.TelProgress");
+
+	if (OscarProperties.getInstance().getProperty("disableTelProgressNoteTitleInEncouterNotes") != null 
+			&& OscarProperties.getInstance().getProperty("disableTelProgressNoteTitleInEncouterNotes").equals("yes")) {
+		noteReason = "";
+	}
+
 %>
 
 
@@ -657,7 +666,7 @@ function hideItem(id){
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=false%>" >
 var numMenus = 1;
-var encURL = "<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&encType=<%=URLEncoder.encode("telephone encounter with client")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=";
+var encURL = "<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=<%=URLEncoder.encode("telephone encounter with client")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=";
 function showMenu(menuNumber, eventObj) {
     var menuId = 'menu' + menuNumber;
     return showPopup(menuId, eventObj);
@@ -688,7 +697,7 @@ function closeApptBox(e) {
 	if (tg.nodeName != 'DIV') return;
 	var reltg = (e.relatedTarget) ? e.relatedTarget : e.toElement;
 	while (reltg != tg && reltg.nodeName != 'BODY')
-		reltg= reltg.parentNode
+		reltg= reltg.parentNode;
 	if (reltg== tg) return;
 
 	// Mouseout took place when mouse actually left layer
