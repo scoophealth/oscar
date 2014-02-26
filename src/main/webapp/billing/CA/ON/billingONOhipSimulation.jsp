@@ -405,6 +405,18 @@ var startDate = $("#xml_vdate").datepicker({
 var endDate = $("#xml_appointment_date").datepicker({
 	format : "yyyy/mm/dd"
 });
+
+//open a new popup window
+function popupPage(vheight,vwidth,varpage) { 
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "attachment", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
 </script>
 
 </body>
