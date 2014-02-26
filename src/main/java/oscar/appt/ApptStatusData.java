@@ -146,25 +146,29 @@ public final class ApptStatusData {
         return this.aTitle;
     }
 
-    private String appendStatus(String status, String s) {
-        String temp = null;
-        if (status.length() == 1) {
-            temp = status + s;
-        } else {
-            temp = status.substring(0, 1) + s;
-        }
-        return temp;
-    }
+	private String appendStatus(String status, String s) {
+		String temp = "";
+		if (status != null) {
+			if (status.length() == 1) {
+				temp = status + s;
+			} else {
+				temp = status.substring(0, 1) + s;
+			}
+		}
+		return temp;
+	}
 
-    private String preStatus(String status, String s) {
-        String temp = null;
-        if (status.length() == 1) {
-            temp = s;
-        } else {
-            temp = s + status.substring(1, 2);
-        }
-        return temp;
-    }
+	private String preStatus(String status, String s) {
+		String temp = "";
+		if (status != null) {
+			if (status.length() == 1) {
+				temp = s;
+			} else {
+				temp = s + status.substring(1, 2);
+			}
+		}
+		return temp;
+	}
 
     private String getStr(String kind) {
         String rstr = null;
