@@ -14,7 +14,7 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
   
 -->
-<flowsheet name="pain" display_name="Pain Assistant" dxcode_triggers="icd9:7194,icd9:338,icd9:338.2,icd9:7292" ds_rules="" top_HTML=""  warning_colour="#E00000" recommendation_colour="yellow">
+<flowsheet name="pain" display_name="Pain Assistant" dxcode_triggers="icd9:7194,icd9:338,icd9:338.2,icd9:7292,icd9:724" ds_rules="" top_HTML=""  warning_colour="#E00000" recommendation_colour="yellow">
     
     <indicator key="LOW" colour="#9999FF" />
     <indicator key="HIGH" colour="orange" />
