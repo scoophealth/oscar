@@ -262,11 +262,11 @@ if (wPhoneExt != null)
 										<div class="help-block" id="username-non-unique">Username is already in use</div>
 										<%if(ulist.size() > 1) {%>
 										<div class="help-block">Available:
-										<%
+										<%	
 											
-											for (int i = 1; i <= 2 ; i++){
+											for (int i = 1; i < ulist.size() ; i++){
 												%>
-													<span><%=ulist.get(i)%><%if(i != 2){ %>,<%}%></span>
+													<span><%=ulist.get(i)%><%if(i < ulist.size()-1 && ulist.size() > 2){ %>,<%}%></span>
 												<%
 											}
 										%>
