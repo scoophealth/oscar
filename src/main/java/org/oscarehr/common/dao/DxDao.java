@@ -111,4 +111,18 @@ public class DxDao extends AbstractDao<DxAssociation> {
 		}
 		
 	}
+	
+	@NativeSql
+	public String getCodeDescription(String codingSystem, String code) {
+		String desc="";
+		StringBuilder buf = new StringBuilder("select description from " + codingSystem + " where "+ codingSystem + "='" + code + "'");
+		try {
+			Query query = entityManager.createNativeQuery(buf.toString());
+			desc =  (String) query.getSingleResult();
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("error "+buf,e);
+		}
+		return desc;
+	}
+		
 }
