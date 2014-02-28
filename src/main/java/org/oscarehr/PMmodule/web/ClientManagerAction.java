@@ -1745,6 +1745,10 @@ public class ClientManagerAction extends DispatchAction {
 			List<CdsClientForm> cdsForms = cdsClientFormDao.findByFacilityClient(facilityId, clientId);
 			request.setAttribute("cdsForms", cdsForms);
 
+			// CBI forms
+			List<OcanStaffForm> cbiForms = ocanStaffFormDao.findByFacilityClient(facilityId, clientId, "CBI");
+			request.setAttribute("cbiForms", cbiForms);
+						
 			// FULL OCAN Forms
 			List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findByFacilityClient(facilityId, clientId, "FULL");
 			request.setAttribute("ocanStaffForms", ocanStaffForms);
@@ -2046,15 +2050,15 @@ public class ClientManagerAction extends DispatchAction {
 		Admission admission = admissionDao.getAdmission((long) admissionId);
 
 		StringBuilder sb = new StringBuilder();
-
-		sb.append(admission.getProgramName());
-		sb.append(" ( ");
-		sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate()));
-		sb.append(" - ");
-		if (admission.getDischargeDate() == null) sb.append("current");
-		else sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getDischargeDate()));
-		sb.append(" )");
-
+		if(admission!=null) {
+			sb.append(admission.getProgramName());
+			sb.append(" ( ");
+			sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate()));
+			sb.append(" - ");
+			if (admission.getDischargeDate() == null) sb.append("current");
+			else sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getDischargeDate()));
+			sb.append(" )");
+		}
 		return (StringEscapeUtils.escapeHtml(sb.toString()));
 	}
 

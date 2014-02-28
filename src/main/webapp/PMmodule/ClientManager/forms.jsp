@@ -397,6 +397,49 @@ New User Created Form:&nbsp;
 <br />
 
 <% if(programEnableOcan) { %>
+
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">CBI Form History</th>
+	</tr>
+</table>
+</div>
+<table class="simple" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr>
+			<th>Form ID</th>
+			<th>Date</th>
+			<th>Provider</th>
+			<th>Signed</th>
+			<th>Admission</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<c:forEach var="form" items="${cbiForms}">
+		<tr>
+			<c:set var="form" value="${form}" scope="request" />
+			<%
+				OcanStaffForm cbiForm=(OcanStaffForm)request.getAttribute("form");
+				String admissionString=ClientManagerAction.getEscapedAdmissionSelectionDisplay(cbiForm.getAdmissionId());
+			%>
+			<td><%=cbiForm.getId()%></td>
+			<td><%=ClientManagerAction.getEscapedDateDisplay(cbiForm.getCreated())%></td>
+			<td><%=ClientManagerAction.getEscapedProviderDisplay(cbiForm.getProviderNo())%></td>
+			<td><%=cbiForm.isSigned()?"signed":"unsigned"%></td>
+			<td><%=admissionString%></td>
+			<%
+				
+			String cbiFormUrl="ClientManager/cbi_form.jsp?view=history&ocanType=CBI&demographicId="+currentDemographic.getDemographicNo()+ "&ocanStaffFormId="+cbiForm.getId();
+			
+			%>
+			<td><a href="<%=cbiFormUrl%>">View CBI Data</a> </td>
+		</tr>
+	</c:forEach>
+</table>
+<br />
+<br />
+
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>

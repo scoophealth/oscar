@@ -26,11 +26,13 @@
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.DemographicExt"%>
 <%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.dao.AdmissionDao"%>
+<%@page import="org.oscarehr.common.dao.DemographicExtDao"%>
 <%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
@@ -42,6 +44,7 @@
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String currentProgramId = (String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
+    String view = (String) request.getParameter("view");
 	String ocanType = request.getParameter("ocanType");
 	int prepopulate = 0;
 	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
@@ -52,15 +55,34 @@
 		ocanStaffFormId = Integer.parseInt(request.getParameter("ocanStaffFormId"));
 	}
 	OcanStaffForm ocanStaffForm = null;
-	if(ocanStaffFormId != 0) {
-		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
-	}else {		
+	
+	if(ocanStaffFormId != 0 ) {
+		if(view!=null && "history".equals(view)) { //view from form history page, not populate from demographic, directly pull data from ocanStaffForm table.
+			ocanStaffForm = OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
+		} else { //edit cbi form, still needs to populate data from demographic		
+			ocanStaffForm = OcanForm.getCbiForm(Integer.valueOf(request.getParameter("ocanStaffFormId")), currentDemographicId,OcanForm.PRE_POPULATION_LEVEL_DEMOGRAPHIC,ocanType, Integer.valueOf(currentProgramId));
+		}
+	}else {	//new cbi form	
 		ocanStaffForm = OcanForm.getCbiInitForm(currentDemographicId,OcanForm.PRE_POPULATION_LEVEL_DEMOGRAPHIC,ocanType, Integer.valueOf(currentProgramId));		
 		if(ocanStaffForm!=null) {
 			ocanStaffFormId = ocanStaffForm.getId()==null?0:ocanStaffForm.getId().intValue();
 		}
 	}
 
+	//No matter if it's a new cbi form or not, always pre-populate phone extension.
+	String phoneExt = "";
+	DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
+	DemographicExt de = demographicExtDao.getDemographicExt(Integer.valueOf(currentDemographicId), "hPhoneExt");
+	if(de!=null) {
+		if(de.getValue()==null || de.getValue().equals("null"))
+			phoneExt = "";
+		else
+			phoneExt = de.getValue();
+	} else {
+		//ocanStaffForm.setPhoneExt("");
+		phoneExt = "";
+	}
+	
 	DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	String hc_type = demographicDao.getDemographicById(currentDemographicId).getHcType();
 	String admissionDate = "0001-01-01";
@@ -114,10 +136,148 @@ function checkHin() {
 
 	return(true);
 }
- 
+function checkDates() {
+	var serviceInitDate = document.cbi_form.serviceInitDate.value;
+	var admissionDate = document.getElementById("admissionDate").value;	
+	var dischargeDate = document.getElementById("dischargeDate").value;	
+	if(!serviceInitDate || typeof serviceInitDate == 'undefined') {
+		serviceInitDate = "";
+	}
+	if(!dischargeDate || typeof dischargeDate == 'undefined') {
+		dischargeDate = "";
+	}
+	
+	if(!compareDates(serviceInitDate, admissionDate)) {
+		alert("The Service Initiation Date should be later or equal to the Admission Date.");
+		return false;
+	} 
+	if(dischargeDate != "") {
+		if(!compareDates(dischargeDate, admissionDate)) {
+				alert("The Admission Date should be earlier or equal to the Discharge Date.");
+				return false;
+		} 
+	}
+	return true;
+	
+}
 
-function submitOcanForm() {
-	if ( !checkHin() ) return false;
+function compareDates(date1, date2) {	
+	
+	var aDateString = date1.split('-') ;	
+	
+	if(aDateString[1]=='01') aDateString[1]=1;
+	if(aDateString[1]=='02') aDateString[1]=2;
+	if(aDateString[1]=='03') aDateString[1]=3;
+	if(aDateString[1]=='04') aDateString[1]=4;
+	if(aDateString[1]=='05') aDateString[1]=5;
+	if(aDateString[1]=='06') aDateString[1]=6;
+	if(aDateString[1]=='07') aDateString[1]=7;
+	if(aDateString[1]=='08') aDateString[1]=8;
+	if(aDateString[1]=='09') aDateString[1]=9;
+	
+	if(aDateString[2]=='01') aDateString[2]=1;
+	if(aDateString[2]=='02') aDateString[2]=2;
+	if(aDateString[2]=='03') aDateString[2]=3;
+	if(aDateString[2]=='04') aDateString[2]=4;
+	if(aDateString[2]=='05') aDateString[2]=5;
+	if(aDateString[2]=='06') aDateString[2]=6;
+	if(aDateString[2]=='07') aDateString[2]=7;
+	if(aDateString[2]=='08') aDateString[2]=8;
+	if(aDateString[2]=='09') aDateString[2]=9;	
+	
+	var sDateString ;
+	if(date2 && typeof date2 != 'undefined') {
+		sDateString = date2.split('-') ; 
+		if(sDateString[1]=='01') sDateString[1]=1;
+		if(sDateString[1]=='02') sDateString[1]=2;
+		if(sDateString[1]=='03') sDateString[1]=3;
+		if(sDateString[1]=='04') sDateString[1]=4;
+		if(sDateString[1]=='05') sDateString[1]=5;
+		if(sDateString[1]=='06') sDateString[1]=6;
+		if(sDateString[1]=='07') sDateString[1]=7;
+		if(sDateString[1]=='08') sDateString[1]=8;
+		if(sDateString[1]=='09') sDateString[1]=9;
+		
+		if(sDateString[2]=='01') sDateString[2]=1;
+		if(sDateString[2]=='02') sDateString[2]=2;
+		if(sDateString[2]=='03') sDateString[2]=3;
+		if(sDateString[2]=='04') sDateString[2]=4;
+		if(sDateString[2]=='05') sDateString[2]=5;
+		if(sDateString[2]=='06') sDateString[2]=6;
+		if(sDateString[2]=='07') sDateString[2]=7;
+		if(sDateString[2]=='08') sDateString[2]=8;
+		if(sDateString[2]=='09') sDateString[2]=9;		
+		
+		if (sDateString[0]>aDateString[0]) {		  
+		  	return false;
+		} else if(sDateString[0]==aDateString[0] && sDateString[1] > aDateString[1]) {
+			return false;
+		} else if(sDateString[0]==aDateString[0] && sDateString[1] ==aDateString[1] && sDateString[2] > aDateString[2]) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	return true;
+}
+
+function checkAdmission() {
+	var sel = document.getElementById('admissionId');
+	var admissionValue = sel.options[sel.selectedIndex].value; 
+	if (sel.options[sel.selectedIndex].value == '') {	
+		alert("The CBI form was already created for this functional centre.");
+		return false;
+	}
+	return true;
+}
+
+
+function submitCbiForm() {
+	//Homeless people may not have HIN. 
+	//if ( !checkHin() ) return false;
+	if(!checkDates()) return false;
+	if(!checkAdmission()) return false;
+	
+	
+	return true;
+}
+
+$('document').ready(function() {
+	
+	var demographicId='<%=currentDemographicId%>';	
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var programId = '<%=currentProgramId%>';
+	
+	if(document.getElementById("cbi_dates") == null) {
+		$.get('cbi_get_dates.jsp?ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&admissionId=0&programId='+programId, function(data) {
+			$("#center_block_dates").append(data);					 
+			});				
+	}
+});
+</script>
+
+<script>
+
+function changeProgram(selectBox) {
+	
+	var selectBoxId = selectBox.id;	
+	var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
+	
+	var demographicId='<%=currentDemographicId%>';	
+	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	
+	if(document.getElementById("admissionDate") == null) {	
+			$.get('cbi_get_dates.jsp?ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
+				  $("#center_block_dates").append(data);					 
+				});														
+	} 
+	else if(document.getElementById("admissionDate") !=null ) {		
+		$("#cbi_dates").remove();
+		$.get('cbi_get_dates.jsp?ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
+			  $("#center_block_dates").append(data);					 
+			});	
+	}
+		
 }
 </script>
 
@@ -143,7 +303,7 @@ function submitOcanForm() {
 }
 
 </style>			
-<form id="cbi_form" name="cbi_form" action="ocan_form_action.jsp" method="post" onsubmit="return submitCbiForm()">	
+<form id="cbi_form" name="cbi_form" action="ocan_form_action.jsp" method="post" onsubmit="return submitCbiForm(); ">	
 		
 	<input type="hidden" name="client_date_of_birth" id="client_date_of_birth" value="<%=ocanStaffForm.getClientDateOfBirth()%>" />
 	<input type="hidden" id="clientStartDate" name="clientStartDate" value="<%=ocanStaffForm.getFormattedClientStartDate()%>"/>
@@ -283,7 +443,7 @@ function submitOcanForm() {
 					String selected="";
 					if(ocanStaffFormId==0)	{	//new form: list all programs IDs not used in cbi form.
 					%>
-						<select name="admissionId">
+						<select name="admissionId" id="admissionId" onchange="changeProgram(this);" class="{validate: {required:true}}" >
 						<option value=""> </option>
 					<%
 						for (Admission admission : OcanForm.getServiceAndBedProgramAdmissions(loggedInInfo.getCurrentFacility().getId(),Integer.valueOf(currentDemographicId)) )
@@ -294,7 +454,8 @@ function submitOcanForm() {
 								 
 							if (ocanStaffForm.getAdmissionId()!=null && ocanStaffForm.getAdmissionId().intValue()==admission.getId().intValue()) 
 								selected="selected=\"selected\"";
-								
+							else 
+								selected="";
 							%>
 								<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
 							<%						
@@ -316,31 +477,14 @@ function submitOcanForm() {
 				</select>			
 			</td>
 		</tr>
-		<tr>
-			<td class="genericTableHeader">Referral Date</td>
-			<td class="genericTableData">			
-				<input id="referralDate" name="referralDate" onfocus="this.blur()" class="systemData {validate: {required:true}}" type="text" value="<%=ocanStaffForm.getReferralDate()==null?"":DateFormatUtils.ISO_DATE_FORMAT.format(ocanStaffForm.getReferralDate())%>"> <img title="Calendar" id="cal_referralDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'referralDate',ifFormat :'%Y-%m-%d',button :'cal_referralDate',align :'cr',singleClick :true,firstDay :1});</script>		
-			</td>
-			</td>			
+		<tr><td colspan="2">
+		
+		<div id="center_block_dates">
+		<!-- results from adding cbi form dates will go into this block -->
+		</div>
+		</td>
 		</tr>
-		<tr>
-			<td class="genericTableHeader">Admission Date</td>
-			<td class="genericTableData">
-				<input id="admissionDate" name="admissionDate" onfocus="this.blur()" class="systemData {validate: {required:true}}" type="text" value="<%=ocanStaffForm.getAdmissionDate()==null?"":DateFormatUtils.ISO_DATE_FORMAT.format(ocanStaffForm.getAdmissionDate())%>"> <img title="Calendar" id="cal_admissionDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'admissionDate',ifFormat :'%Y-%m-%d',button :'cal_admissionDate',align :'cr',singleClick :true,firstDay :1});</script>		
-			</td>			
-		</tr>
-		<tr>
-			<td class="genericTableHeader">Service Initiation Date</td>
-			<td class="genericTableData">
-				<input id="serviceInitDate" name="serviceInitDate" onfocus="this.blur()" class="userInputedData mandatoryData {validate: {required:true}}" type="text" value="<%=ocanStaffForm.getServiceInitDate()==null?"":DateFormatUtils.ISO_DATE_FORMAT.format(ocanStaffForm.getServiceInitDate())%>"> <img title="Calendar" id="cal_serviceInitDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'serviceInitDate',ifFormat :'%Y-%m-%d',button :'cal_serviceInitDate',align :'cr',singleClick :true,firstDay :1});</script>		
-			</td>		
-		</tr>
-		<tr>
-			<td class="genericTableHeader">Discharge Date</td>
-			<td class="genericTableData">
-				<input id="dischargeDate" name="dischargeDate" onfocus="this.blur()" class="systemData {validate: {required:false}}" type="text" value="<%=ocanStaffForm.getDischargeDate()==null?"":DateFormatUtils.ISO_DATE_FORMAT.format(ocanStaffForm.getDischargeDate())%>"> <img title="Calendar" id="cal_dischargeDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'dischargeDate',ifFormat :'%Y-%m-%d',button :'cal_dischargeDate',align :'cr',singleClick :true,firstDay :1});</script>		
-			</td>			
-		</tr>
+		
 		<tr>
 			<td class="genericTableHeader">Last Name at Birth</td>
 			<td class="genericTableData">
@@ -350,7 +494,7 @@ function submitOcanForm() {
 		<tr>
 			<td class="genericTableHeader">Current Last Name </td>
 			<td class="genericTableData">
-				<input type="text" name="lastName" id="lastName" value="<%=ocanStaffForm.getLastName()%>" size="32" maxlength="32"/>
+				<input type="text" name="lastName" id="lastName" readonly="readonly" value="<%=ocanStaffForm.getLastName()%>" size="32" maxlength="32"/>
 			</td>			
 		</tr>
 		<tr>
@@ -362,19 +506,19 @@ function submitOcanForm() {
 		<tr>
 			<td class="genericTableHeader">First Name</td>
 			<td class="genericTableData">
-				<input type="text" name="firstName" id="firstName" value="<%=ocanStaffForm.getFirstName()%>" size="32" maxlength="32" />
+				<input type="text" name="firstName" id="firstName" readonly="readonly" value="<%=ocanStaffForm.getFirstName()%>" size="32" maxlength="32" />
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Preferred Name</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"preferred",32, prepopulationLevel,"userInputedData")%>
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"preferred",32, prepopulationLevel, "userInputedData")%>
 			</td>
 		</tr>			
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-				<input type="text" name="addressLine1" id="addressLine1" value="<%=ocanStaffForm.getAddressLine1()%>" size="64" maxlength="64"/>
+				<input type="text" name="addressLine1" id="addressLine1" readonly="readonly" value="<%=ocanStaffForm.getAddressLine1()%>" size="64" maxlength="64"/>
 			</td>
 		</tr>
 		<tr>
@@ -386,62 +530,61 @@ function submitOcanForm() {
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-				<input type="text" name="city" id="city" value="<%=ocanStaffForm.getCity()%>" size="32" maxlength="32"/>
+				<input type="text" name="city" id="city" readonly="readonly" value="<%=ocanStaffForm.getCity()%>" size="32" maxlength="32"/>
 			</td>
 		</tr>	
 		
 		<tr>
 			<td class="genericTableHeader">Province</td>
 			<td class="genericTableData">
-				<select name="province">
-					<%=OcanForm.renderAsProvinceSelectOptions(ocanStaffForm)%>
-				</select>					
+			<input type="text" name="province" id="province" value="<%=ocanStaffForm.getProvince()%>" readonly="readonly" size="8" maxlength="8" />							
 			</td>
 		</tr>
 		
 		<tr>
 			<td class="genericTableHeader">Postal Code (e.g. M4H 2T1)</td>
 			<td class="genericTableData">
-				<input type="text" name="postalCode" id="postalCode" value="<%=ocanStaffForm.getPostalCode()%>" size="8" maxlength="8" class="{validate: {postalCode:true}}"/>
+				<input type="text" name="postalCode" id="postalCode" value="<%=ocanStaffForm.getPostalCode()%>" readonly="readonly" size="8" maxlength="8" class="{validate: {postalCode:true}}"/>
 			</td>
 		</tr>	
 		
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-				<input type="text" name="phoneNumber" id="phoneNumber" value="<%=ocanStaffForm.getPhoneNumber()%>" size="32" maxlength="32"/>
+				<input type="text" name="phoneNumber" id="phoneNumber" readonly="readonly" value="<%=ocanStaffForm.getPhoneNumber()%>" size="32" maxlength="32"/>
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Ext: </td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"extension",16, prepopulationLevel)%>
+			<td class="genericTableData">				
+				<input id="extension", name="extension" type="text" readonly="readonly" value="<%=phoneExt%>" />
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email address</td>
 			<td class="genericTableData">
-				<input type="text" name="email" id="email" value="<%=ocanStaffForm.getEmail()%>" size="64" maxlength="64"/>
+				<input type="text" name="email" id="email" readonly="readonly" value="<%=ocanStaffForm.getEmail()%>" size="64" maxlength="64"/>
 			</td>
 		</tr>
 		
 		<tr>
 			<td class="genericTableHeader">Date of Birth (YYYY-MM-DD)</td>
-			<td class="genericTableData">					
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",false,ocanStaffForm.getDateOfBirth(),prepopulationLevel)%>
+			<td class="genericTableData">							
+				<input id="date_of_birth" name="date_of_birth" onfocus="this.blur()" class="{validate: {required:true}}" type="text" readonly="readonly" value="<%=ocanStaffForm.getDateOfBirth()==null?"":ocanStaffForm.getDateOfBirth()%>" />		
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Estimated Age</td>
-			<td class="genericTableData">
-				<input type="text" name="estimatedAge" id="estimatedAge" value="<%=ocanStaffForm.getEstimatedAge()%>" size="3" maxlength="3"/>
+			<td class="genericTableData">				
+				
+				<input type="text" name="estimatedAge" id="estimatedAge" readonly="readonly" value="<%=ocanStaffForm.getEstimatedAge()%>" size="3" maxlength="3"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Health Card # and Version Code</td>
 			<td class="genericTableData">
-				<input type="text" name="hcNumber" id="hcNumber" value="<%=ocanStaffForm.getHcNumber()%>" size="32" maxlength="32" class="{validate: {digitalNumber:true}}"/>
-				<input type="text" name="hcVersion" id="hcVersion" value="<%=ocanStaffForm.getHcVersion()%>" size="2" maxlength="2"/>
+				<input type="text" name="hcNumber" id="hcNumber" readonly="readonly" value="<%=ocanStaffForm.getHcNumber()%>" size="32" maxlength="32" />
+				<input type="text" name="hcVersion" id="hcVersion" readonly="readonly" value="<%=ocanStaffForm.getHcVersion()%>" size="2" maxlength="2"/>
 			</td>
 		</tr>
 		<tr>
@@ -473,9 +616,7 @@ function submitOcanForm() {
 		<tr>
 			<td class="genericTableHeader">Gender</td>
 			<td class="genericTableData">
-				<select name="gender" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "gender", OcanForm.getOcanFormOptions("Administrative Gender"),ocanStaffForm.getGender(),prepopulationLevel)%>
-				</select>					
+			<input type="text" name="gender" id="gender" readonly="readonly" value="<%=ocanStaffForm.getGender()%>" />									
 			</td>
 		</tr>	
 		
@@ -493,9 +634,11 @@ function submitOcanForm() {
 				<br />
 				<input type="hidden" name="clientId" id="clientId" value="<%=currentDemographicId%>" />
 				<input type="hidden" name="ocanType" id="ocanType" value="<%=ocanType%>" />				
-				
+				Sign <input type="checkbox" name="signed" id="signed" <%=ocanStaffForm.isSigned()==true?"checked":"" %>/>
+				<% if(view==null) {//can only save when edit from summary page. If open from form history page, only view.
+				%>
 				<input type="submit" name="submit" value="Save"/>&nbsp;&nbsp;&nbsp;&nbsp;			
-				
+				<% } %>
 				<input type="button" name="cancel" value="Cancel" onclick="history.go(-1)" />
 				
 			</td>

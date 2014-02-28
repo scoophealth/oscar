@@ -37,6 +37,7 @@ import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.OcanClientFormDao;
 import org.oscarehr.common.dao.OcanConnexOptionDao;
 import org.oscarehr.common.dao.OcanFormOptionDao;
@@ -49,6 +50,7 @@ import org.oscarehr.common.model.OcanConnexOption;
 import org.oscarehr.common.model.OcanFormOption;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class OcanForm {
@@ -59,12 +61,13 @@ public class OcanForm {
 	
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private static DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
 	private static OcanFormOptionDao ocanFormOptionDao = (OcanFormOptionDao) SpringUtils.getBean("ocanFormOptionDao");
 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
 	private static OcanClientFormDao ocanClientFormDao = (OcanClientFormDao) SpringUtils.getBean("ocanClientFormDao");
 	private static OcanConnexOptionDao ocanConnexOptionDao = (OcanConnexOptionDao) SpringUtils.getBean("ocanConnexOptionDao");
-	
+		
 	public static Demographic getDemographic(String demographicId)
 	{
 		return demographicDao.getDemographic(demographicId);
@@ -114,6 +117,25 @@ public class OcanForm {
 		return(ocanStaffForm);
 	}
 	
+	public static OcanStaffForm getCbiForm(Integer ocanStaffFormId, Integer clientId, int prepopulationLevel,String ocanType, Integer programId) {
+		//The demographic data should be populated each time when create or edit cbi form
+		OcanStaffForm cbiForm = null;
+		if(prepopulationLevel == OcanForm.PRE_POPULATION_LEVEL_DEMOGRAPHIC) {
+			cbiForm = getCbiInitForm(clientId, prepopulationLevel, ocanType, programId);
+			
+			OcanStaffForm ocanStaffForm = ocanStaffFormDao.findOcanStaffFormById(ocanStaffFormId);
+			cbiForm.setId(ocanStaffFormId);
+			cbiForm.setAddressLine2(ocanStaffForm.getAddressLine2());
+			cbiForm.setLastNameAtBirth(ocanStaffForm.getLastNameAtBirth());
+			cbiForm.setServiceInitDate(ocanStaffForm.getServiceInitDate());
+			
+		} else {
+			cbiForm = getOcanStaffForm(ocanStaffFormId);
+		}
+		
+		return cbiForm;
+	}
+	
 	public static OcanStaffForm getCbiInitForm(Integer clientId, int prepopulationLevel,String ocanType, Integer programId)
 	{		
 		OcanStaffForm ocanStaffForm=new OcanStaffForm();
@@ -149,17 +171,36 @@ public class OcanForm {
 				Demographic demographic=demographicDao.getDemographicById(clientId);		
 				ocanStaffForm.setLastName(demographic.getLastName());
 				ocanStaffForm.setFirstName(demographic.getFirstName());	
-				ocanStaffForm.setAddressLine1(demographic.getAddress());
-				ocanStaffForm.setCity(demographic.getCity());
-				ocanStaffForm.setProvince(demographic.getProvince());
-				ocanStaffForm.setPostalCode(demographic.getPostal());
-				ocanStaffForm.setPhoneNumber(demographic.getPhone());
-				ocanStaffForm.setEmail(demographic.getEmail());
-				ocanStaffForm.setHcNumber(demographic.getHin());
-				ocanStaffForm.setHcVersion(demographic.getVer());
+				ocanStaffForm.setAddressLine1(demographic.getAddress()==null?"":demographic.getAddress());
+				ocanStaffForm.setCity(demographic.getCity()==null?"":demographic.getCity());
+				ocanStaffForm.setProvince(demographic.getProvince()==null?"":demographic.getProvince());
+				ocanStaffForm.setPostalCode(demographic.getPostal()==null?"":demographic.getPostal());
+				ocanStaffForm.setPhoneNumber(demographic.getPhone()==null?"":demographic.getPhone());
+				ocanStaffForm.setEmail(demographic.getEmail()==null?"":demographic.getEmail());
+				ocanStaffForm.setHcNumber(demographic.getHin()==null?"":demographic.getHin());
+				ocanStaffForm.setHcVersion(demographic.getVer()==null?"":demographic.getVer());
 				ocanStaffForm.setDateOfBirth(demographic.getFormattedDob());
-				ocanStaffForm.setClientDateOfBirth(demographic.getFormattedDob());
-				ocanStaffForm.setGender(convertGender(demographic.getSex()));						             
+				ocanStaffForm.setClientDateOfBirth(demographic.getFormattedDob()==null?"":demographic.getFormattedDob());
+				ocanStaffForm.setGender(convertGender(demographic.getSex()==null?"":demographic.getSex()));
+				
+				Calendar rightNow = Calendar.getInstance();
+				int year = rightNow.get(Calendar.YEAR);
+				int month = rightNow.get(Calendar.MONTH)+1;
+				int date = rightNow.get(Calendar.DATE);
+				if(demographic.getFormattedDob()!=null) {
+					String[] split_dob=demographic.getFormattedDob().split("-");
+					int year_dob=Integer.parseInt(split_dob[0]);
+					int month_dob = Integer.parseInt(split_dob[1]);
+					int date_dob = Integer.parseInt(split_dob[2]);
+					int age = year - year_dob;			
+					if(month < month_dob) {
+						age--;
+					} else if(month==month_dob){
+						if(date < date_dob)
+							age--;
+					}
+					ocanStaffForm.setEstimatedAge(String.valueOf(age));
+				}
 		}
 		
 		return(ocanStaffForm);
@@ -287,6 +328,40 @@ public class OcanForm {
 	
 	public static List<Admission> getAdmissions(Integer facilityId, Integer clientId) {
 		return(admissionDao.getAdmissionsByFacility(clientId, facilityId));
+
+	}
+
+	public static String renderAsEstimatedAge(Integer ocanStaffFormId, String question, boolean required, String dob, int prepopulationLevel)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
+		String value="", className="";
+		if(existingAnswers.size()>0) {value = existingAnswers.get(0).getAnswer();}
+		if(value.equals("")) {			
+			Calendar rightNow = Calendar.getInstance();
+			int year = rightNow.get(Calendar.YEAR);
+			int month = rightNow.get(Calendar.MONTH)+1;
+			int date = rightNow.get(Calendar.DATE);
+			String[] split_dob=dob.split("-");
+			int year_dob=Integer.parseInt(split_dob[0]);
+			int month_dob = Integer.parseInt(split_dob[1]);
+			int date_dob = Integer.parseInt(split_dob[2]);
+			int age = year - year_dob;			
+			if(month < month_dob) {
+				age--;
+			} else if(month==month_dob){
+				if(date < date_dob)
+					age--;
+			}
+			value = String.valueOf(age);
+		}
+		if(required) {className="{validate: {required:true}}";}
+		return "<input type=\"text\" value=\"" + value + "\" id=\""+question+"\" name=\""+question+"\" onfocus=\"this.blur()\" readonly=\"readonly\" class=\""+className+"\"/> ";
+	}	
+	
+	public static List<Admission> getAdmissions(Integer clientId) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		return(admissionDao.getAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId()));
 	}
 	
 	public static String getEscapedAdmissionSelectionDisplay(Admission admission)
@@ -528,7 +603,7 @@ public class OcanForm {
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
 	 */
-	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String defaultValue, int prepopulationLevel, boolean clientForm)
+	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String defaultValue, int prepopulationLevel, boolean readonly)
 	{
 		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
 		boolean useDefaultValue=false;
@@ -569,7 +644,7 @@ public class OcanForm {
 
 		StringBuilder sb=new StringBuilder();
 
-		sb.append("<textarea name=\""+question+"\" id=\""+question+"\" rows=\"" + rows + "\" cols=\"" + cols + "\">");
+		sb.append("<textarea maxlength=\"512\" name=\""+question+"\" id=\""+question+"\" rows=\"" + rows + "\" cols=\"" + cols + "\">");
 
 		if(!clientForm) {
 			existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
@@ -594,7 +669,7 @@ public class OcanForm {
 
 		StringBuilder sb=new StringBuilder();
 
-		sb.append("<textarea name=\""+question+"\" id=\""+question+"\" rows=\"" + rows + "\" cols=\"" + cols + "\" readonly=\"readonly\" onfocus=\"this.blur()\">");
+		sb.append("<textarea maxlength=\"512\" name=\""+question+"\" id=\""+question+"\" rows=\"" + rows + "\" cols=\"" + cols + "\" readonly=\"readonly\" onfocus=\"this.blur()\">");
 		if(existingAnswers.size()>0) {
 			sb.append(existingAnswers.get(0).getAnswer());
 		}
@@ -624,7 +699,7 @@ public class OcanForm {
 	
 	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, int prepopulationLevel, String styleClass)
 	{
-		return renderAsTextField(ocanStaffFormId, question, size, prepopulationLevel, false,styleClass);
+		return renderAsTextField(ocanStaffFormId, question, size, prepopulationLevel, false, styleClass);
 	}
 	
 	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, int prepopulationLevel)
@@ -660,6 +735,28 @@ public class OcanForm {
 		StringBuilder sb=new StringBuilder();
 
 		sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+"\" size=\"" + size + "\" maxlength=\"" + size +"\" value=\""+value+"\"/>");
+		
+		return(sb.toString());
+	}
+	
+	public static String renderAsTextFieldReadOnly(Integer ocanStaffFormId, String question, int size, int prepopulationLevel, boolean readonly, String defaultValue)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);		
+		
+		String value = "";
+		if(existingAnswers.size()>0) {
+			value = existingAnswers.get(0).getAnswer();
+		}
+		if(value==null || "".equals(value)) {
+			//fill with default data from demographic, e.g. name, DOB, gender, HIN, hin version, phone, address
+			value=defaultValue;
+		}
+		
+		StringBuilder sb=new StringBuilder();
+		if(readonly) 
+			sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+ "\" readonly=\"readonly\" " +   "\" size=\"" + size + "\" maxlength=\"" + size +"\" value=\""+value+"\"/>");
+		else 
+			sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+  "\" size=\"" + size + "\" maxlength=\"" + size +"\" value=\""+value+"\"/>");
 		
 		return(sb.toString());
 	}

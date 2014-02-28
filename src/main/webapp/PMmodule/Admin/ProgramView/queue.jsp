@@ -43,6 +43,34 @@
 
 <script>
     function do_admission() {
+    	var admissionDate = document.getElementById('admissionDate').value;
+      <%
+      	String referralDateString=(String)request.getAttribute("referralDate");
+      %>
+      	var reDate = "<%=referralDateString%>";
+    	
+    	if(!admissionDate || typeof admissionDate == 'undefined') {
+    		alert("Please choose admission date");
+    		return false;
+    	}    	
+    	
+    	var today = new Date();
+ 	    var admissionDateString = admissionDate.split('-') ;
+ 	    var admissionDateYear = admissionDateString[0];
+ 	    var admissionDateMonth = admissionDateString[1];
+ 	    var admissionDateDate = admissionDateString[2];
+ 	    var enterDate = new Date(admissionDateYear, parseInt(admissionDateMonth)-1, admissionDateDate);
+ 	    if (enterDate > today)
+ 	    {
+ 	        alert("Please don't enter future date");
+ 	        return false;
+ 	    }
+ 	    
+    	if(!compareDates(admissionDate,reDate)) {
+    		alert("The admission date should be later or equal to the referral Date.");
+    		return false;
+    	} 
+    	
         var form = document.programManagerViewForm;
         form.method.value='admit';
         form.submit();
@@ -107,6 +135,66 @@
         form.elements['remoteReferralId'].value = remoteReferralId;
         form.method.value='remove_remote_queue';
         form.submit();
+	}
+	//true: date2 <= date1
+	function compareDates(date1, date2) {	
+		
+		var aDateString = date1.split('-') ;	
+		
+		if(aDateString[1]=='01') aDateString[1]=1;
+		if(aDateString[1]=='02') aDateString[1]=2;
+		if(aDateString[1]=='03') aDateString[1]=3;
+		if(aDateString[1]=='04') aDateString[1]=4;
+		if(aDateString[1]=='05') aDateString[1]=5;
+		if(aDateString[1]=='06') aDateString[1]=6;
+		if(aDateString[1]=='07') aDateString[1]=7;
+		if(aDateString[1]=='08') aDateString[1]=8;
+		if(aDateString[1]=='09') aDateString[1]=9;
+		
+		if(aDateString[2]=='01') aDateString[2]=1;
+		if(aDateString[2]=='02') aDateString[2]=2;
+		if(aDateString[2]=='03') aDateString[2]=3;
+		if(aDateString[2]=='04') aDateString[2]=4;
+		if(aDateString[2]=='05') aDateString[2]=5;
+		if(aDateString[2]=='06') aDateString[2]=6;
+		if(aDateString[2]=='07') aDateString[2]=7;
+		if(aDateString[2]=='08') aDateString[2]=8;
+		if(aDateString[2]=='09') aDateString[2]=9;	
+		
+		var sDateString ;
+		if(date2 && typeof date2 != 'undefined') {
+			sDateString = date2.split('-') ; 
+			if(sDateString[1]=='01') sDateString[1]=1;
+			if(sDateString[1]=='02') sDateString[1]=2;
+			if(sDateString[1]=='03') sDateString[1]=3;
+			if(sDateString[1]=='04') sDateString[1]=4;
+			if(sDateString[1]=='05') sDateString[1]=5;
+			if(sDateString[1]=='06') sDateString[1]=6;
+			if(sDateString[1]=='07') sDateString[1]=7;
+			if(sDateString[1]=='08') sDateString[1]=8;
+			if(sDateString[1]=='09') sDateString[1]=9;
+			
+			if(sDateString[2]=='01') sDateString[2]=1;
+			if(sDateString[2]=='02') sDateString[2]=2;
+			if(sDateString[2]=='03') sDateString[2]=3;
+			if(sDateString[2]=='04') sDateString[2]=4;
+			if(sDateString[2]=='05') sDateString[2]=5;
+			if(sDateString[2]=='06') sDateString[2]=6;
+			if(sDateString[2]=='07') sDateString[2]=7;
+			if(sDateString[2]=='08') sDateString[2]=8;
+			if(sDateString[2]=='09') sDateString[2]=9;		
+			
+			if (sDateString[0]>aDateString[0]) {		  
+			  	return false;
+			} else if(sDateString[0]==aDateString[0] && sDateString[1] > aDateString[1]) {
+				return false;
+			} else if(sDateString[0]==aDateString[0] && sDateString[1] ==aDateString[1] && sDateString[2] > aDateString[2]) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return true;
 	}
 </script>
 <html:hidden property="clientId" />

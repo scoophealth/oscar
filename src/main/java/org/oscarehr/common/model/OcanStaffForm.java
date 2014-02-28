@@ -515,7 +515,5 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 
 	public void setDischargeDate(Date dischargeDate) {
     	this.dischargeDate = dischargeDate;
-    }	
-	
-	
+    }
 }

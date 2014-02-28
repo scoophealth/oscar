@@ -97,6 +97,7 @@
 	
 	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(loggedInInfo, ocanStaffFormId, clientId, signed);
 	
+	ocanStaffForm.setSigned(signed);
 	int prepopulate = 0;
 	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
 	
@@ -140,6 +141,9 @@
 			ocanStaffForm.setServiceInitDate(formatter.parse(serviceInitDate));
 		if(!StringUtils.isBlank(dischargeDate))
 			ocanStaffForm.setDischargeDate(formatter.parse(dischargeDate));
+		else
+			ocanStaffForm.setDischargeDate(null);
+		
 		if(!StringUtils.isBlank(submissionId))
 			ocanStaffForm.setSubmissionId(Integer.parseInt(submissionId));
 	}catch(java.text.ParseException e){
