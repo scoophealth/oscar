@@ -72,6 +72,24 @@
 	}
 
 	function do_referral() {
+		var referralDate = document.getElementById('referralDate').value;
+	    if(!referralDate || typeof referralDate == 'undefined') {
+	    		alert("Please choose referral date");
+	    		return false;
+	    }   
+	    var today = new Date();
+
+	    var referralDateString = referralDate.split('-') ;
+	    var referralDateYear = referralDateString[0];
+	    var referralDateMonth = referralDateString[1];
+	    var referralDateDate = referralDateString[2];
+	    var enterDate = new Date(referralDateYear, parseInt(referralDateMonth)-1, referralDateDate);
+	    if (enterDate > today)
+	    {
+	        alert("Please don't enter future date");
+	        return false;
+	    }
+	    
 		var form = document.clientManagerForm;
 		form.method.value='refer';
 		form.submit();
@@ -284,6 +302,13 @@
 			<td><html:textarea cols="50" rows="7"
 				property="referral.presentProblems" /></td>
 		</tr>
+		<tr> <td>Referral Date:</td>
+			<td><input type="text" id="referralDate" name="referralDate" value="" readonly ><img titltype="text"e="Calendar" id="cal_referralDate" 
+                src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar" border="0">
+                <script type="text/javascript">Calendar.setup({inputField:'referralDate',ifFormat :'%Y-%m-%d',button :'cal_referralDate',align :'cr',singleClick :true,firstDay :1});</script>                                     
+                </td>
+        </tr>
+		
 		<c:if test="${program.type eq 'Bed' }">
 			<!-- <c:if test="${requestScope.temporaryAdmission == true}"> -->
 			<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">

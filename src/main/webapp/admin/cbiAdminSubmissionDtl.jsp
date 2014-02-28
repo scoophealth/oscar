@@ -60,8 +60,7 @@ if(submissionLogList!=null)
 	totalCount = submissionLogList.size();
 	for(OcanSubmissionLog ocanSubmissionLog : submissionLogList)
 	{
-		if(ocanSubmissionLog.getResult()!=null && (ocanSubmissionLog.getResult().equalsIgnoreCase("success") || 
-				ocanSubmissionLog.getResult().equalsIgnoreCase("true")))
+		if(ocanSubmissionLog.getResultMessage()!=null && ocanSubmissionLog.getResultMessage().contains("success") )
 			successCount++;
 		else
 			failureCount++;
@@ -153,7 +152,7 @@ if(submissionLogList!=null)
 										<td align="center"><%=dateFormat.format(ocanStaffForm.getCreated()) %></td>
 										<td align="center"><%=result %></td>
 										<td align="center"><%=dateFormat.format(ocanSubmissionLog.getSubmitDateTime()) %></td>
-										<td align="center"><%=ocanSubmissionLog.getResult().equalsIgnoreCase("true")?"":ocanSubmissionLog.getResultMessage() %></td>
+										<td align="center"><%=ocanSubmissionLog.getResultMessage() %></td>
 									</tr>
 									<%
 								}

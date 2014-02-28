@@ -359,11 +359,11 @@ public class CBIUtil
 		Integer admissionId_new = 0;
 		Integer admissionId_old = 0;
 		if(allCbiForms!=null) {
-			//Only submit the latest cbi form for each admission_id
+			//Only submit the latest SIGNED cbi form for each admission_id
 			for(OcanStaffForm form : allCbiForms) {
 				admissionId_new = form.getAdmissionId();
 				if(admissionId_old.intValue()!=admissionId_new.intValue()) {
-					if(form.getSubmissionId()==0) //means not submitted yet
+					if(form.getSubmissionId()==0 && form.isSigned()) //submissionId=0 means not submitted yet
 						toBeSubmittedCbiForms.add(form);					
 				}
 				admissionId_old = form.getAdmissionId();
@@ -371,6 +371,17 @@ public class CBIUtil
 		}
 		return toBeSubmittedCbiForms;
 	}
+	
+	public OcanStaffForm getLatestCbiFormByDemographicNoAndProgramId(Integer demographicNo, Integer programId) {
+		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
+		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+		Admission admission = admissionDao.getAdmission(programId, demographicNo);
+		Integer admissionId = Integer.valueOf(admission.getId().intValue());
+		Integer facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
+		OcanStaffForm cbiForm = ocanStaffFormDao.findLatestCbiFormsByFacilityAdmissionId(facilityId, admissionId, null); //could be signed or unsigned
+		return cbiForm;				
+	}
+	
 	
 	private List<Program> getPrograms()
 	{

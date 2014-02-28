@@ -219,7 +219,8 @@ private Logger log=MiscUtils.getLogger();
            throw new IllegalArgumentException();
        }
 
-       String queryStr = "select a FROM Admission a , Program p WHERE (a.programType='Bed' or a.programType='Service') and a.clientId=? and a.programId=p.id and (p.facilityId=? or p.facilityId is null) ORDER BY a.admissionDate DESC";
+       String queryStr = "select a FROM Admission a , Program p WHERE (a.programType='Bed' or a.programType='Service') and a.clientId=? and a.programId=p.id and p.functionalCentreId is not null and p.functionalCentreId!='' and (p.facilityId=? or p.facilityId is null) ORDER BY a.admissionDate DESC";
+
 	Query query = entityManager.createQuery(queryStr);
 	query.setParameter(1, demographicNo);  
 	query.setParameter(2, facilityId);    
@@ -237,7 +238,7 @@ private Logger log=MiscUtils.getLogger();
            throw new IllegalArgumentException();
        }
 
-       String queryStr = "select a FROM Admission a WHERE a.clientId=? and a.programId=? ORDER BY a.admissionDate DESC";
+       String queryStr = "select a FROM Admission a WHERE a.clientId=? and a.programId=? and a.admissionStatus='current' ORDER BY a.admissionDate DESC";
        Query query = entityManager.createQuery(queryStr);
 	query.setParameter(1, demographicNo);  
 	query.setParameter(2, programId);
