@@ -63,6 +63,7 @@ String outcome = (String) request.getAttribute("outcome");
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script> 
 
+
 </head>
 
 <body>
@@ -78,9 +79,18 @@ String outcome = (String) request.getAttribute("outcome");
     </div>
 
 <form method='POST' name="UPLOAD" id="uploadForm" enctype="multipart/form-data"	action='${ctx}/lab/CA/ALL/insideLabUpload.do'>
-		
-				<bean:message key="lab.ca.all.testUploader.pleaseSelectTheLabfile" />:<br />
-				<input type="file" name="importFile" id="importFile"> <i class="icon-question-sign"></i> <oscar:help keywords="lab" key="app.top1"/>
+						
+<bean:message key="lab.ca.all.testUploader.pleaseSelectTheLabfile" />: <i class="icon-question-sign"></i> <oscar:help keywords="lab" key="app.top1"/> <br />
+				
+<div style="position:relative;">
+<a class='btn' href='javascript:;'>
+    Choose File...
+    <input type="file" name="importFile" id="importFile" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+</a>
+&nbsp;
+<span class='label label-success' id="upload-file-info"></span>
+
+</div>
 	
 	<br /><br />
 				<bean:message key="lab.ca.all.testUploader.labType" /><br />
