@@ -45,7 +45,9 @@ import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
 import org.jdom.Element;
+import org.oscarehr.common.dao.DxDao;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -146,15 +148,21 @@ public class MeasurementFlowSheet {
     public String getDxTriggersQueryBuilder(String demo, String provider){
         StringBuilder sb = new StringBuilder();
         String query="";
+        String desc="";
+        
+        DxDao dao = SpringUtils.getBean(DxDao.class);
+        
         if (dxTriggers != null){
             for(String s:dxTriggers){
                  if (!s.equals("OscarCode:CKDSCREEN")){
-                	 String[] type = s.split(":");	 
-                 sb.append("<a href='javascript:void(0);' id='dxlink"+type[1]+"' rel='selectedCodingSystem="+type[0]+"&forward="+type[1]+"&demographicNo="+demo+"&providerNo="+provider+"'>"+s+"</a> ");
+                	 String[] type = s.split(":");
+                 desc=dao.getCodeDescription(type[0], type[1]);
+                 sb.append("<li><a href='javascript:void(0);' id='dxlink"+type[1]+"' rel='selectedCodingSystem="+type[0]+"&forward="+type[1]+"&demographicNo="+demo+"&providerNo="+provider+"'>"+s+ " " + desc +"</a></li>");
                  }
             }
             
             query=sb.toString();
+            query="<ul>"+query+"</ul>";
         }
         return query;
      }
