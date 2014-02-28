@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+
+<rule-set name="HealthTracker"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+          xs:schemaLocation="http://drools.org/rules rules.xsd
+                             http://drools.org/semantics/java java.xsd">
+
+   
+<!--TODO: adding commonly used measurements-->
+
+</rule-set>
+
+

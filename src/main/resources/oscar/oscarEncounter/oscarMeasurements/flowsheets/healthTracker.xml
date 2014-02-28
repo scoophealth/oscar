@@ -14,7 +14,7 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
   
 -->
-<flowsheet name="tracker" display_name="Health Tracker" ds_rules="" top_HTML=""  warning_colour="#E00000" recommendation_colour="yellow">
+<flowsheet name="tracker" display_name="Health Tracker" ds_rules="tracker.drl" top_HTML=""  warning_colour="#E00000" recommendation_colour="yellow">
     <indicator key="LOW" colour="#9999FF" />
     <indicator key="HIGH" colour="orange" />
     <indicator key="HIGH 1" colour="#E00000" />
