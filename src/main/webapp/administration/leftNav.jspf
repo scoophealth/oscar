@@ -356,11 +356,30 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href="${ctx}/oscarReport/ocan_report_form.jsp" class="contentLink"><bean:message key="admin.admin.ocanRpt" /></a></li>
 					<li><a href="${ctx}/oscarReport/ocan_iar.jsp" class="contentLink"><bean:message key="admin.admin.ocanIarRpt" /></a></li>
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarReport/ocan_reporting.jsp"><bean:message key="admin.admin.ocanReporting"/></a></li>
+					
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarReport/cbi_submit_form.jsp"><bean:message key="admin.admin.cbiSubmit"/></a></li>
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/cbiAdmin.jsp"><bean:message key="admin.admin.cbi.reportlink"/></a></li>
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarReport/cbi_report_form.jsp"><bean:message key="admin.admin.cbiRpt"/></a></li>
+					
 					<li><a href="${ctx}/admin/UsageReport.jsp" class="contentLink"><bean:message key="admin.admin.usageRpt" /></a></li>
 					<oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
 						<li><a href="${ctx}/admin/oscarLogging.jsp" class="contentLink"><bean:message key="admin.admin.serverLog" /></a></li>
 					</oscar:oscarPropertiesCheck>
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/report/DxresearchReport.do"><bean:message key="admin.admin.DiseaseRegistry" /></a></li>
+					<li>
+					<a href="javascript:void(0);" class="xlink" rel="${ctx}/renal/ckd_screening_report.jsp">CKD Screening Report</a>
+					</li>	
+					
+					<li>
+						<a href="javascript:void(0);" class="xlink" rel="${ctx}/renal/preImplementationSubmit.jsp">
+							Pre-Implementation Report
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" class="xlink" rel="${ctx}/renal/patientLetterManager.jsp">
+							Manage Patient Letter
+						</a>
+					</li>
 				</ul>
 
 				</div>
@@ -794,7 +813,6 @@ String curProvider_no = (String)session.getAttribute("user");
 </oscar:oscarPropertiesCheck>
 
 
-
 		</div> <!-- ACCORDION GROUP END -->	
 		</div> <!-- ACCORDION END -->
 	
@@ -826,7 +844,7 @@ $(document).ready(function(){
 	$(".xlink").click(function(e) {
 		var source = $(this).attr('rel');
 
-		$("#dynamic-content").html('<iframe id="myFrame" name="myFrame" frameborder="0" width="800" height="1000" src="'+source+'">');
+		$("#dynamic-content").html('<iframe id="myFrame" name="myFrame" frameborder="0" width="950" height="1000" src="'+source+'">');
 	});
 
 	//using this to collapse and load items so we can have direct links to menu items
