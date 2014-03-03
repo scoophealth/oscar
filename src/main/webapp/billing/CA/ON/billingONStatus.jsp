@@ -574,9 +574,7 @@ if(statusType.equals("_")) { %>
     		<tr <%=color %>>
     			<td><span class="smallFont"><%=bObj.getHin() %> <%=bObj.getVer() %></span></td>
     			<td><font size="-1"><%=bObj.getDob() %></font></td>
-    			<td align="right">
-    			<a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingONCorrection.jsp?billing_no=<%=bObj.getBilling_no()%>','BillCorrection<%=bObj.getBilling_no()%>');return false;">
-    			<%=bObj.getBilling_no() %></a></td>
+    			<td align="right"><a href=# onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=bObj.getBilling_no()%>','BillCorrection<%=bObj.getBilling_no()%>');return false;"><%=bObj.getBilling_no() %></a></td>
     			<td><%=bObj.getRef_no() %></td>
     			<td><%=bObj.getFacility() %></td>
     			<td><%=bObj.getAdmitted_date() %></td>
@@ -683,9 +681,10 @@ if(statusType.equals("_")) { %>
     	   amountPaid = (amountPaid==null||amountPaid.equals("")||amountPaid.equals("null"))? "0.00" : amountPaid;
 	       
 	       BigDecimal bTemp;
+	       BigDecimal adj;
 	       try {
 		   		bTemp = (new BigDecimal(amountPaid.trim())).setScale(2,BigDecimal.ROUND_HALF_UP);
-		   
+			    adj = (new BigDecimal(ch1Obj.getTotal())).setScale(2,BigDecimal.ROUND_HALF_UP);               
 	       }
 	       catch(NumberFormatException e ) {		   		
 		   		MiscUtils.getLogger().error("Could not parse amount paid for invoice " + ch1Obj.getId(), e);
@@ -693,10 +692,10 @@ if(statusType.equals("_")) { %>
 	       }
 	       
 	       paidTotal = paidTotal.add(bTemp);
-	       BigDecimal adj = (new BigDecimal(ch1Obj.getTotal())).setScale(2,BigDecimal.ROUND_HALF_UP);               
-               adj = adj.subtract(bTemp);
-               adjTotal = adjTotal.add(adj);
-	       String color = "";
+           adj = adj.subtract(bTemp);
+           adjTotal = adjTotal.add(adj);
+	       
+           String color = "";
                
                if (invoiceNo.equals(ch1Obj.getId())){
                    newInvoice = false;
@@ -726,29 +725,19 @@ if(statusType.equals("_")) { %>
        %>       
           <tr <%=color %>> 
              <td align="center"><%= ch1Obj.getBilling_date()%>  <%--=ch1Obj.getBilling_time()--%></td>  <!--SERVICE DATE-->
-             <td align="center"><a href="javascript: setDemographic('<%=ch1Obj.getDemographic_no()%>');"><%=ch1Obj.getDemographic_no()%></a></td> <!--PATIENT-->
+             <td align="center"><%=ch1Obj.getDemographic_no()%></td> <!--PATIENT-->
              <td align="center"><a href=# onclick="popupPage(800,740,'../../../demographic/demographiccontrol.jsp?demographic_no=<%=ch1Obj.getDemographic_no()%>&displaymode=edit&dboperation=search_detail');return false;"><%= ch1Obj.getDemographic_name()%></a></td> 
              <td align="center"><%=ch1Obj.getStatus()%></td> <!--STAT-->
              <td align="center"><%=settleDate%></td> <!--SETTLE DATE-->
              <td align="center"><%=getHtmlSpace(ch1Obj.getTransc_id())%></td><!--CODE-->
              <td align="right"><%=getStdCurr(ch1Obj.getTotal())%></td><!--BILLED-->
-             <td align="right">
-                 <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingRAView.jsp?billing_no=<%=ch1Obj.getId()%>','RAView<%=ch1Obj.getId()%>');return false;">
-                 <%=amountPaid%>
-                 </a>
-             </td><!--PAID-->
+             <td align="right"><%=amountPaid%></td><!--PAID-->
              <td align="center"><%=adj.toString()%></td> <!--SETTLE DATE-->
              <td align="center"><%=getHtmlSpace(ch1Obj.getRec_id())%></td><!--DX1-->
              <!--td>&nbsp;</td--><!--DX2-->
              <td align="center"><%=payProgram%></td>
-             <td align="center">
-                 <!--  a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'../../../billing/CA/BC/billingView.do?billing_no=<%=ch1Obj.getId()%>','BillView<%=ch1Obj.getId()%>')">--><%=ch1Obj.getId()%>
-
-             </td><!--ACCOUNT-->
-             <td class="highlightBox">                 
-                 <a id="A<%=i%>" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a>
-                 <%=errorCode%>
-             </td><!--MESSAGES-->
+             <td align="center"><a href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;"><%=ch1Obj.getId()%></a></td><!--ACCOUNT-->
+             <td class="highlightBox"><a id="A<%=i%>" href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a><%=errorCode%></td><!--MESSAGES-->
              <% if (bMultisites) {%>
 				 <td "<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : "bgcolor='" + siteBgColor.get(ch1Obj.getClinic()) + "'")%>">
 				 	<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : siteShortName.get(ch1Obj.getClinic()))%>
