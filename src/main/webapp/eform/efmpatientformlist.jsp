@@ -143,75 +143,86 @@ function updateAjax() {
 		
 		</td>
 		<td class="MainTableRightColumn" valign="top">
-			<%
-				if (isMyOscarAvailable)
-				{
-			%>
-					<form action="efmpatientformlistSendPhrAction.jsp">
-						<input type="hidden" name="clientId" value="<%=demographic_no%>" />
-						<table class="elements" width="100%">
-							<tr bgcolor=<%=deepColor%>>
-								<th>&nbsp;</th>
-								<th>
-									<a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_name&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>">
-										<bean:message key="eform.showmyform.btnFormName" />
-									</a>
-								</th>
-								<th><a
-									href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
-									key="eform.showmyform.btnSubject" /></a></th>
-								<th><a
-									href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
-									key="eform.showmyform.formDate" /></a></th>
-								<th><bean:message key="eform.showmyform.msgAction" /></th>
-							</tr>
-							<%
-								ArrayList<HashMap<String,? extends Object>> eForms;
-								if (groupView.equals(""))
-								{
-									eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$);
-								}
-								else
-								{
-									eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView, roleName$);
-								}
-								
-								for (int i = 0; i < eForms.size(); i++)
-								{
-									HashMap<String,? extends Object> curform = eForms.get(i);
-							%>
-							<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
-								<td>
-									<input type="checkbox" name="sendToPhr" value="<%=curform.get("fdid")%>" />
-								</td>
-								<td><a href="#"
-									ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>&appointment=<%=appointment%>', '<%="FormP" + i%>'); return false;"
-									TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
-									onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
-								<td><%=curform.get("formSubject")%></td>
-								<td align='center'><%=curform.get("formDate")%></td>
-								<td align='center'><a
-									href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
-									key="eform.uploadimages.btnDelete" /></a></td>
-							</tr>
-							<%
-								}
-									if (eForms.size() <= 0)
-									{
-							%>
-							<tr>
-								<td align='center' colspan='5'><bean:message
-									key="eform.showmyform.msgNoData" /></td>
-							</tr>
-							<%
-								}
-							%>
-						</table>
-						<input type="submit" value="Send To PHR" />
-					</form>
-			<%
-				}
-			%>
+			<form action="efmpatientformlistSendPhrAction.jsp">
+				<input type="hidden" name="clientId" value="<%=demographic_no%>" />
+				<table class="elements" width="100%">
+					<tr bgcolor=<%=deepColor%>>
+					<%
+						if (isMyOscarAvailable) {
+					%>
+							<th>&nbsp;</th>
+					<%
+						}
+					%>
+						<th>
+							<a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_name&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>">
+								<bean:message key="eform.showmyform.btnFormName" />
+							</a>
+						</th>
+						<th><a
+							href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+							key="eform.showmyform.btnSubject" /></a></th>
+						<th><a
+							href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+							key="eform.showmyform.formDate" /></a></th>
+						<th><bean:message key="eform.showmyform.msgAction" /></th>
+					</tr>
+					<%
+						ArrayList<HashMap<String,? extends Object>> eForms;
+						if (groupView.equals(""))
+						{
+							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$);
+						}
+						else
+						{
+							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView, roleName$);
+						}
+						
+						for (int i = 0; i < eForms.size(); i++)
+						{
+							HashMap<String,? extends Object> curform = eForms.get(i);
+					%>
+					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
+					<%
+						if (isMyOscarAvailable) {
+					%>
+							<td>
+								<input type="checkbox" name="sendToPhr" value="<%=curform.get("fdid")%>" />
+							</td>
+					<%
+						}
+					%>
+						<td><a href="#"
+							ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>&appointment=<%=appointment%>', '<%="FormP" + i%>'); return false;"
+							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
+							onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
+						<td><%=curform.get("formSubject")%></td>
+						<td align='center'><%=curform.get("formDate")%></td>
+						<td align='center'><a
+							href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
+							key="eform.uploadimages.btnDelete" /></a></td>
+					</tr>
+					<%
+						}
+							if (eForms.size() <= 0)
+							{
+					%>
+					<tr>
+						<td align='center' colspan='5'><bean:message
+							key="eform.showmyform.msgNoData" /></td>
+					</tr>
+					<%
+						}
+					%>
+				</table>
+				<%
+					if (isMyOscarAvailable) {
+				%>
+					<input type="submit" value="Send To PHR" />
+				<%
+					}
+				%>
+			</form>
 		</td>
 	</tr>
 	<tr>
