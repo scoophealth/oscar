@@ -2046,7 +2046,7 @@ Calendar.setup( { inputField : "appointmentDate", ifFormat : "%Y/%m/%d", showsTi
 		StringBuffer noteStr = new StringBuffer();
 		for (CaseManagementNote n : notes)
 		{
-			if (!n.isLocked()) noteStr.append(n.getNote() + "\n");
+			if (!n.isLocked() && !n.isArchived()) noteStr.append(n.getNote() + "\n");
 		}
 
 		return noteStr.toString();
