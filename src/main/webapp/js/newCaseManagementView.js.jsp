@@ -53,8 +53,7 @@
         var measurementWindows = new Array();
         var openWindows = new Object();
         var origCaseNote = "";
-        var origObservationDate = "";
-        var tmpSaveNeeded = true;
+        var origObservationDate = "";        
         var calendar;
 		var reloadWindows = new Object();
 		var updateDivTimer = null;
@@ -171,8 +170,8 @@
             	datesChanged = true;
             }
             	
-            if (noteNotNull && notesChanged && tmpSaveNeeded || datesChanged) {
-                tmpSaveNeeded = false;
+            if (noteNotNull && notesChanged || datesChanged) {
+                
                 //autoSave(false);
                 document.forms['caseManagementEntryForm'].sign.value='persist';
                 document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
@@ -188,8 +187,7 @@
                         method: 'post',
                         postBody: Form.serialize(frm),
                         asynchronous: false,
-                        onComplete: function(request) {
-                            tmpSaveNeeded = false;
+                        onComplete: function(request) {                            
                             okToClose = true;
                         },
                         onFailure: function(request) {
@@ -1930,8 +1928,7 @@ function editNote(e) {
     	var viewEditedNote = confirm("You have started to edit this note in another window.\nDo you wish to continue?");
     	if( viewEditedNote ) {    	
     		var parent = $(caseNote).parentNode.id;
-    		var oldNoteId = parent.substr(1);	
-    		tmpSaveNeeded = true;
+    		var oldNoteId = parent.substr(1);	    		
     		var params = "method=releaseNoteLock&demographicNo=" + demographicNo + "&providerNo=" + providerNo  + "&noteId=" + oldNoteId + "&force=true";
     		jQuery.ajax({
 				type: "POST",
@@ -2035,14 +2032,6 @@ function editNote(e) {
         $(caseNote).focus();
         origCaseNote = $F(caseNote);
         
-        //If we're editing a note started in another window force save on exit
-        //(not required anymore, second window is not allowed if first one is not closed
-
-        /*
-        if( tmpSaveNeeded ) {
-        	origCaseNote += ".";
-        }
-        */
     }
     else {
         fetchNote(nId);
@@ -2489,7 +2478,6 @@ function saveNoteAjax(method, chain) {
     document.forms["caseManagementEntryForm"].includeIssue.value = "off";
 
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
-    tmpSaveNeeded = false;
 
 	var params = Form.serialize(caseMgtEntryfrm);
     params += "&ajaxview=ajaxView&fullChart=" + fullChart;
@@ -2522,7 +2510,6 @@ function saveNoteAjax(method, chain) {
                             }
 
                       );
-    tmpSaveNeeded = true;
     return false;
 }
 
@@ -2592,7 +2579,7 @@ function savePage(method, chain) {
     document.forms["caseManagementViewForm"].method.value = method;
 
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
-    tmpSaveNeeded = false;
+    
     if( method == "saveAndExit" ) {
     	needToReleaseLock = false;
     }
@@ -2600,6 +2587,7 @@ function savePage(method, chain) {
     	needToReleaseLock = true;
     }
 
+	origCaseNote = $F(caseNote);
     caseMgtEntryfrm.submit();
 
 	jQuery("span[note_addon]").each(function(i){
@@ -2701,7 +2689,7 @@ function changeDiagnosisUnresolved(issueId) {
         if( !lostNoteLock && (origCaseNote != $F(caseNote)  || origObservationDate != $("observationDate").value)) {
             if( confirm(closeWithoutSaveMsg) ) {
                 var frm = document.forms["caseManagementEntryForm"];
-                tmpSaveNeeded = false;
+                origCaseNote = $F(caseNote);
                 frm.method.value = "cancel";
                 frm.submit();
             }
@@ -2977,8 +2965,11 @@ function autoSave(async) {
                                                 var d = new Date();
                                                 var min = d.getMinutes();
                                                 min = min < 10 ? "0" + min : min;
+                                                
+                                                var seconds = d.getSeconds();
+                                                seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                                                var fmtDate = "<i>" + msgDraftSaved + " " + d.getDate() + "-" + month[d.getMonth()]  + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
+                                                var fmtDate = "<i>" + msgDraftSaved + " " + d.getDate() + "-" + month[d.getMonth()]  + "-" + d.getFullYear() + " " + d.getHours() + ":" + min +  ":" + seconds + "<\/i>";
                                                 $("autosaveTime").update(fmtDate);
                                                 
 
@@ -3010,7 +3001,7 @@ function backup() {
 
 var autoSaveTimer;
 function setTimer() {
-    autoSaveTimer = setTimeout("backup()", 60000);
+    autoSaveTimer = setTimeout("backup()", 30000);
 }
 
 var unsavedNoteMsg;
@@ -3766,7 +3757,7 @@ function assignNoteAjax(method, chain,programId,demographicNo) {
     document.forms["caseManagementEntryForm"].includeIssue.value = "off";
 
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
-    tmpSaveNeeded = false;
+    
 
 	var params = Form.serialize(caseMgtEntryfrm);
     params += "&ajaxview=ajaxView&fullChart=" + fullChart;

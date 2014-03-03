@@ -53,7 +53,7 @@ public class CaseManagementTmpSaveDao extends AbstractDao<CaseManagementTmpSave>
     }
 
     public CaseManagementTmpSave find(String providerNo, Integer demographicNo, Integer programId) {
-    	Query query = entityManager.createQuery("SELECT x FROM CaseManagementTmpSave x WHERE x.providerNo = ? and x.demographicNo=? and x.programId = ?");
+    	Query query = entityManager.createQuery("SELECT x FROM CaseManagementTmpSave x WHERE x.providerNo = ? and x.demographicNo=? and x.programId = ? order by x.updateDate DESC");
 		query.setParameter(1,providerNo);
 		query.setParameter(2,demographicNo);
 		query.setParameter(3,programId);
@@ -62,7 +62,7 @@ public class CaseManagementTmpSaveDao extends AbstractDao<CaseManagementTmpSave>
     }
     
     public CaseManagementTmpSave find(String providerNo, Integer demographicNo, Integer programId, Date date) {
-    	Query query = entityManager.createQuery("SELECT x FROM CaseManagementTmpSave x WHERE x.providerNo = ? and x.demographicNo=? and x.programId = ? and x.updateDate = ?");
+    	Query query = entityManager.createQuery("SELECT x FROM CaseManagementTmpSave x WHERE x.providerNo = ? and x.demographicNo=? and x.programId = ? and x.updateDate >= ? order by x.updateDate DESC");
 		query.setParameter(1,providerNo);
 		query.setParameter(2,demographicNo);
 		query.setParameter(3,programId);
