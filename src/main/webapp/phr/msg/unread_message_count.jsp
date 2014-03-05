@@ -23,19 +23,29 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
 <%
 	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 	if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
 	{
-		int count=MessageManager.getUnreadActiveMessageCount(myOscarLoggedInInfo, myOscarLoggedInInfo.getLoggedInPersonId());
-		
-		if (count>0)
+		try
 		{
-			%>
-				<div style="color:white;vertical-align:top;font-size:smaller;background-color:red;border-radius:4px;padding-left:2px;padding-right:1px"><%=count%></div>
-			<%
+			int count=MessageManager.getUnreadActiveMessageCount(myOscarLoggedInInfo, myOscarLoggedInInfo.getLoggedInPersonId());
+			
+			if (count>0)
+			{
+				%>
+					<div style="color:white;vertical-align:top;font-size:smaller;background-color:red;border-radius:4px;padding-left:2px;padding-right:1px"><%=count%></div>
+				<%
+			}
+		}
+		catch (Exception e)
+		{
+			// we'll force a re-login if this ever fails for any reason what so ever.
+			MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get(), true);
 		}
 	}
 %>

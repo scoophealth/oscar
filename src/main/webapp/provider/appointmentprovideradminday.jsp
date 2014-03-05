@@ -1146,7 +1146,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
  <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
     <myoscar:indivoRegistered provider="<%=curUser_no%>">
 		<%
-			MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get());
+			MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get(), false);
 		%>
 	    <li>
 			<a HREF="#" ONCLICK ="popup('600', '1024','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title='<bean:message key="global.myoscar"/>'>
