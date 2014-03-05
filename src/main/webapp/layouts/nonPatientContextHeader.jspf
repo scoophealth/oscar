@@ -375,7 +375,7 @@ label.error {
 			 <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 			    <myoscar:indivoRegistered provider="<%=curUser_no%>">
 					<%
-					MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get());%>
+					MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get(), false);%>
 				    <li>
 						<a HREF="#" ONCLICK ="popupPage2('<%=request.getContextPath()%>/phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title='<bean:message key="global.myoscar"/>'>
 							<bean:message key="global.btnmyoscar"/>
