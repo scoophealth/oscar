@@ -78,7 +78,7 @@ public class dxResearchUpdateQuickListAction extends Action {
 				QuickListDao quickListDao = SpringUtils.getBean(QuickListDao.class);
 				List<QuickList> quickLists = quickListDao.findByNameResearchCodeAndCodingSystem(quickListName, itemValues[1], itemValues[0]);
 				for (QuickList q : quickLists) {
-					quickListDao.remove(q);
+					quickListDao.remove(q.getId());
 				}
 			}
 		}
@@ -106,7 +106,7 @@ public class dxResearchUpdateQuickListAction extends Action {
 			} else {
 				QuickListDao quickListDao = SpringUtils.getBean(QuickListDao.class);
 				List<QuickList> quickLists = quickListDao.findByNameResearchCodeAndCodingSystem(quickListName, xml_research[i], codingSystem);
-				if (quickLists.isEmpty()) {
+				if (!quickLists.isEmpty()) {
 					continue;
 				}
 
