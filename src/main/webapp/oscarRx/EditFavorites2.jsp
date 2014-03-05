@@ -134,6 +134,7 @@ int i, j;
         }
 
         if(err == false) {
+        	favoriteName = encodeURI(favoriteName);
             var data="favoriteId="+favoriteId+"&favoriteName="+favoriteName+"&customName="+customName+"&takeMin="+takeMin+"&takeMax="+takeMax+"&frequencyCode="+frequencyCode+
                 "&duration="+duration+"&durationUnit="+durationUnit+"&quantity="+quantity+"&repeat="+repeat+"&nosubs="+nosubs+"&prn="+prn+"&customInstr="+customInstr+"&special="+special;
             var url="<c:out value="${ctx}"/>" + "/oscarRx/updateFavorite2.do?method=ajaxEditFavorite";
