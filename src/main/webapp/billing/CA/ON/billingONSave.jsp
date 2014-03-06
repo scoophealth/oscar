@@ -106,7 +106,7 @@ invoice</a>
                                         
                                         <%}else{%>
 					    self.close();
-					    self.opener.opener.refresh();
+					    self.opener.refresh();
                                         <% }%>
 					</script>
 <% } else { %>
