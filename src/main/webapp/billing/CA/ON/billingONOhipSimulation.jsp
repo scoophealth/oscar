@@ -59,7 +59,7 @@ int curYear = now.get(Calendar.YEAR);
 int curMonth = (now.get(Calendar.MONTH)+1);
 int curDay = now.get(Calendar.DAY_OF_MONTH);
 
-String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); //"yyyy/MM/dd HH:mm"
+String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now()); //"yyyy-MM-dd HH:mm"
 String monthCode = BillingDataHlp.propMonthCode.getProperty("" + curMonth);
 
 OscarProperties props = OscarProperties.getInstance();
@@ -399,11 +399,11 @@ Select Provider<br>
 
 <script type="text/javascript">
 var startDate = $("#xml_vdate").datepicker({
-	format : "yyyy/mm/dd"
+	format : "yyyy-mm-dd"
 });
 
 var endDate = $("#xml_appointment_date").datepicker({
-	format : "yyyy/mm/dd"
+	format : "yyyy-mm-dd"
 });
 
 //open a new popup window
