@@ -151,13 +151,18 @@ public class EctConsultationFormRequestAction extends Action {
                         		consult.setLetterheadPhone(frm.getLetterheadPhone());
                         		consult.setLetterheadFax(frm.getLetterheadFax());
 
-                                if( frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("") ) {
-                                	date = DateUtils.parseDate(frm.getAppointmentDate(), format);
-                                	consult.setAppointmentDate(date);
-                                	date = DateUtils.setHours(date, new Integer(appointmentHour));
-                                	date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
-                                	consult.setAppointmentTime(date);
-                                }
+								if (frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("")) {
+									date = DateUtils.parseDate(frm.getAppointmentDate(), format);
+									consult.setAppointmentDate(date);
+									try {
+										date = DateUtils.setHours(date, new Integer(appointmentHour));
+										date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
+										consult.setAppointmentTime(date);
+									}
+									catch(NumberFormatException nfEx) {
+						                MiscUtils.getLogger().error("Invalid Time", nfEx);
+									}
+								}
                                 consult.setReasonForReferral(frm.getReasonForConsultation());
                                 consult.setClinicalInfo(frm.getClinicalInformation());
                                 consult.setCurrentMeds(frm.getCurrentMedications());
@@ -257,13 +262,19 @@ public class EctConsultationFormRequestAction extends Action {
                                 ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(specId);
                                 consult.setProfessionalSpecialist(professionalSpecialist);
                                 
-                                if( frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("") ) {
-                                	date = DateUtils.parseDate(frm.getAppointmentDate(), format);
-                                	consult.setAppointmentDate(date);
-                                	date = DateUtils.setHours(date, new Integer(appointmentHour));
-                                	date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
-                                	consult.setAppointmentTime(date);
-                                }
+								if (frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("")) {
+									date = DateUtils.parseDate(frm.getAppointmentDate(), format);
+									consult.setAppointmentDate(date);
+									try {
+										date = DateUtils.setHours(date, new Integer(appointmentHour));
+										date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
+										consult.setAppointmentTime(date);
+									}
+									catch(NumberFormatException nfEx) {
+						                MiscUtils.getLogger().error("Invalid Time", nfEx);
+										
+									}
+								}
                                 consult.setReasonForReferral(frm.getReasonForConsultation());
                                 consult.setClinicalInfo(frm.getClinicalInformation());
                                 consult.setCurrentMeds(frm.getCurrentMedications());
