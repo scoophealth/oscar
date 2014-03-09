@@ -1499,6 +1499,7 @@ function updateFaxButton() {
 							<table>
 								<tr>
 									<td><html:select property="appointmentHour">
+										<html:option value=""></html:option>
 										<%
 											for (int i = 1; i < 13; i = i + 1)
 														{
@@ -1510,6 +1511,7 @@ function updateFaxButton() {
 										%>
 									</html:select></td>
 									<td><html:select property="appointmentMinute">
+										<html:option value=""></html:option>
 										<%
 											for (int i = 0; i < 60; i = i + 1)
 														{
