@@ -34,7 +34,7 @@
             if (Icd9List != null && Icd9List.size() > 0) {
                 Iterator<Icd9> iterator = Icd9List.iterator();
                 while (iterator.hasNext()) {
-                    Icd9 icd9 = (Icd9) iterator.next();
+                    Icd9 icd9 = iterator.next();
                     String code = icd9.getIcd9();
                     String description = icd9.getDescription();
                     out.println(code + " --> " + description);
