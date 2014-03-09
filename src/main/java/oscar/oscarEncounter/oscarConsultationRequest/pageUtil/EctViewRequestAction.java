@@ -107,8 +107,11 @@ public class EctViewRequestAction extends Action {
 				thisForm.setAppointmentPm("PM");
 			}
 
+			if(cal.get(Calendar.HOUR)==0)
+				thisForm.setAppointmentHour("12");
+			else
+				thisForm.setAppointmentHour(String.valueOf(cal.get(Calendar.HOUR)));
 			
-            thisForm.setAppointmentHour(String.valueOf(hour));
             thisForm.setAppointmentMinute(String.valueOf(cal.get(Calendar.MINUTE)));
 		}
 	}
