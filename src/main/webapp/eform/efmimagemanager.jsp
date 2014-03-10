@@ -88,7 +88,8 @@
 
 <script>
 $('#tblImage').dataTable({
-	"aaSorting" : [ [ 0, "asc" ] ]
+	"aaSorting" : [ [ 0, "asc" ] ],
+	"bPaginate": false
 });
 
 </script>
