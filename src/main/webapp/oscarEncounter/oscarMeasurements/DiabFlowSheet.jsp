@@ -312,7 +312,7 @@ ArrayList<String> recomendations = mi.getRecommendations();
     }
 
     function calcBMI() {
-    	if (isNumeric(document.getElementsByName("Weight")[0].value) && isNumeric(document.getElementsByName("Height")[0].value)) {
+    	if (isNumeric(document.getElementsByName("Weight")[0].value) && isNumeric(document.getElementsByName("Height")[0].value) && document.getElementById("Weight").value!=="" && document.getElementById("Height").value!=="" ) {
     		if (document.getElementsByName("Height")[0].value > 0) {
     			document.getElementsByName("BMI")[0].value = (document.getElementsByName("Weight")[0].value/Math.pow(document.getElementsByName("Height")[0].value/100,2)).toFixed(1);
     		}
@@ -897,7 +897,7 @@ String date = year+"-"+month+"-"+day;
 	                           <input type="button" onclick="document.mainForm.<%=name%>[2].checked = true;" value="Clear">
 	                 <%}else{%>
 	                       <input type="text" id="<%=name%>" name="<%=name%>" size="14"
-	                       	<% if (name.equals("Weight") || name.equals("Height") ){ %> onchange="calcBMI();"<%}%>
+	                       	<% if (name.equals("Weight") || name.equals("Height") ){ %> onchange="calcBMI();" onkeyup="calcBMI();"<%}%>
 	                       	<% if (name.equals("Weight")){ %> title="Double click to automatically convert from lbs to kg" onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("Height")){ %> title="Double click to automatically convert from feet and inches to cm" onDblClick="htEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("BMI")){ %> title="Double click to automatically calculate BMI from height and weight" onDblClick="calcBMI();"<%}%>
