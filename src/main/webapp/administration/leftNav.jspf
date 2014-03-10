@@ -401,7 +401,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					</li>
 					<li>
 						<a href="javascript:void(0);" class="xlink" rel="${ctx}/renal/patientLetterManager.jsp">
-							Manage Patient Letter
+							<bean:message key="admin.renal.managePatientLetter"/>
 						</a>
 					</li>
 				</ul>

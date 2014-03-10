@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -34,21 +35,8 @@
 <html:html locale="true">
 
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<!--I18n-->
-<title>ORN Pilot</title>
-<script src="../share/javascript/Oscar.js"></script>
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-
-<script type="text/javascript" src="../share/calendar/calendar.js"></script>
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-
-<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-
+<title><bean:message key="admin.renal.managePatientLetter"/></title>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 
 <%
 	if(request.getParameter("action") != null && request.getParameter("action").equals("save")) {
@@ -61,13 +49,7 @@
 		}catch(IOException e) {
 			MiscUtils.getLogger().error("Error",e);
 		}
-		%>
-			<script>
-				$(document).ready(function(){
-					window.close();
-				});
-			</script>	
-		<%
+
 	}
 %>
 
@@ -90,52 +72,27 @@
 	}
 
 %>
+
+<style>
+input, textarea {
+    width: 800px;
+}
+</style>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body>
+<h3><bean:message key="admin.renal.managePatientLetter"/></h3>
 
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td style="max-width:200px;" class="MainTableTopRowLeftColumn">Patient Letter</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>Patient Letter Manager</td>
-				<td>&nbsp;</td>
-				<td style="text-align: right">
-					<a href="javascript:popupStart(300,400,'About.jsp')"><bean:message key="global.about" /></a> | 
-					<a href="javascript:popupStart(300,400,'License.jsp')"><bean:message key="global.license" /></a>
-				</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top" nowrap="nowrap">
-		    
-		</td>
-		<td valign="top" class="MainTableRightColumn">
-			<h4>Use this section to customize the patient letter generated from the screening report.</h4>
-			<br/>
-			<form action="patientLetterManager.jsp?action=save">
-				<input type="hidden" name="action" value="save"/>
-				<textarea name="letter" rows="30" cols="80"><%=currentLetter %></textarea>
-				<br/>
-				<input type="submit" value="Save & Exit"/>
- 			</form>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
-	</tr>
-</table>
-<script type="text/javascript">
-    //Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
-</script>
-
+<div class="container-fluid well">
+	Use this section to customize the patient letter generated from the screening report.
+	<br/>
+	<form action="patientLetterManager.jsp?action=save">
+		<input type="hidden" name="action" value="save"/>
+		<textarea name="letter" rows="30" cols="80"><%=currentLetter %></textarea>
+		<br/>
+		<input class="btn btn-primary" type="submit" value="Save"/>
+	</form>
+</div>
 </body>
 </html:html>
-<%!
 
-%>
