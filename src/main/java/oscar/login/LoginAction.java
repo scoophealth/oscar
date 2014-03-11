@@ -372,7 +372,7 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute(SessionConstants.LOGGED_IN_SECURITY, cl.getSecurity());
 
 		    loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
-		    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo);
+		    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo, true);
             
             List<Integer> facilityIds = providerDao.getFacilityIds(provider.getProviderNo());
             if (facilityIds.size() > 1) {
