@@ -105,7 +105,7 @@ public final class MyOscarUtils {
 		return (myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn() && demographic != null && demographic.getMyOscarUserName() != null);
 	}
 
-	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(final LoggedInInfo loggedInInfo) {
+	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(final LoggedInInfo loggedInInfo, final boolean forceReLogin) {
 		if (!isMyOscarEnabled()) return;
 		
 		HttpSession session = loggedInInfo.session;
@@ -117,7 +117,7 @@ public final class MyOscarUtils {
 			@Override
 			public void run()
 			{
-				attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo);
+				attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo, forceReLogin);
 			}
 		};
 		
@@ -145,11 +145,11 @@ public final class MyOscarUtils {
 		return(AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName()));
 	}
 	
-	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(LoggedInInfo loggedInInfo) {
+	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(LoggedInInfo loggedInInfo, boolean forceReLogin) {
 		HttpSession session = loggedInInfo.session;
 		
 		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
-		if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) return;
+		if (!forceReLogin && myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) return;
 		
 		try {
 			String myOscarUserName=getMyOscarUserNameFromOscar(loggedInInfo.loggedInProvider.getProviderNo());
@@ -167,7 +167,7 @@ public final class MyOscarUtils {
 
 			try
 			{
-			LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
+				LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
 			
 				myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.locale);
 				MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
