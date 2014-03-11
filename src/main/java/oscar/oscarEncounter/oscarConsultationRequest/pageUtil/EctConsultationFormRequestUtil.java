@@ -235,19 +235,25 @@ public class EctConsultationFormRequestUtil {
                 else {
                 	appointmentDate = date;
                 	Calendar cal = Calendar.getInstance();
-					if (appointmentTime != null) {
-						cal.setTime(appointmentTime);
-						if (cal.get(Calendar.AM_PM) == Calendar.AM) 
-							appointmentPm = "AM";
-						else 
-							appointmentPm = "PM";
-						appointmentHour = String.valueOf(cal.get(Calendar.HOUR));
-						appointmentMinute = String.valueOf(cal.get(Calendar.MINUTE));
-					} else {
-	                	appointmentHour = "";
-	                	appointmentMinute = "";
-	                	appointmentPm = "";
-					}
+    				if (appointmentTime != null) {
+    					cal.setTime(appointmentTime);
+    					if (cal.get(Calendar.AM_PM) == Calendar.AM) 
+    						appointmentPm = "AM";
+    					else 
+    						appointmentPm = "PM";
+    					if(cal.get(Calendar.HOUR)==0)
+    						appointmentHour = "12";
+    					else
+    						appointmentHour = String.valueOf(cal.get(Calendar.HOUR));
+    					if(cal.get(Calendar.MINUTE)<10)
+    						appointmentMinute = "0" + String.valueOf(cal.get(Calendar.MINUTE));
+    					else
+    						appointmentMinute = String.valueOf(cal.get(Calendar.MINUTE));
+    				} else {
+                    	appointmentHour = "";
+                    	appointmentMinute = "";
+                    	appointmentPm = "";
+    				}
                 }
             }
             rs.close();
