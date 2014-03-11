@@ -227,24 +227,27 @@ public class EctConsultationFormRequestUtil {
                 String date = oscar.Misc.getString(rs, "appointmentDate");
                 if( date == null || date.equals("") ) {
                 	appointmentDate ="";
-                	appointmentHour = "1";
-                	appointmentMinute = "1";
-                	appointmentPm = "AM";
+                	appointmentHour = "";
+                	appointmentMinute = "";
+                	appointmentPm = "";
 
                 }
                 else {
                 	appointmentDate = date;
                 	Calendar cal = Calendar.getInstance();
-    				cal.setTime(appointmentTime);
-    				
-    				if(cal.get(Calendar.AM_PM) == Calendar.AM)
-    					appointmentPm = "AM";
-    				else
-    					appointmentPm = "PM";
-
-    				appointmentHour = String.valueOf(cal.get(Calendar.HOUR));
-    	            appointmentMinute = String.valueOf(cal.get(Calendar.MINUTE));
-
+					if (appointmentTime != null) {
+						cal.setTime(appointmentTime);
+						if (cal.get(Calendar.AM_PM) == Calendar.AM) 
+							appointmentPm = "AM";
+						else 
+							appointmentPm = "PM";
+						appointmentHour = String.valueOf(cal.get(Calendar.HOUR));
+						appointmentMinute = String.valueOf(cal.get(Calendar.MINUTE));
+					} else {
+	                	appointmentHour = "";
+	                	appointmentMinute = "";
+	                	appointmentPm = "";
+					}
                 }
             }
             rs.close();

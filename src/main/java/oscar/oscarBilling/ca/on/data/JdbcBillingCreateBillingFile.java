@@ -1189,12 +1189,14 @@ public class JdbcBillingCreateBillingFile {
 	}
 
 	private String getCompactDateStr(String y) {
-		String ret = y;
-		if (y.length() > 6) {
-			String[] temp = y.split("\\-");
-			if (temp.length == 3) {
-				ret = temp[0] + (temp[1].length() == 1 ? ("0" + temp[1]) : temp[1])
-						+ (temp[2].length() == 1 ? ("0" + temp[2]) : temp[2]);
+		String ret = "";
+		if (y != null) {
+			ret = y;
+			if (y.length() > 6) {
+				String[] temp = y.split("\\-");
+				if (temp.length == 3) {
+					ret = temp[0] + (temp[1].length() == 1 ? ("0" + temp[1]) : temp[1]) + (temp[2].length() == 1 ? ("0" + temp[2]) : temp[2]);
+				}
 			}
 		}
 		return ret;
