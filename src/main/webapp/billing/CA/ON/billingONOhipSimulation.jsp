@@ -221,13 +221,13 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 		}
 		
 		String billingTable = htmlValue;
-		htmlValue  = "\n<table class='table table-striped table-hover'>\n"
-					+ "<thead><tr><td colspan='12' ></td></tr>";
+		htmlValue  = "\n<table class='table table-striped table-hover table-condensed'>\n"
+					+ "<thead>";
 		if (summaryView) {
-			htmlValue += "\n<tr><th >OHIP NO</th><th >Number of Records</th><th >Total Billed</th><th  colspan='9'></th></t></thead>";
+			htmlValue += "\n<tr><th >OHIP NO</th><th >Number of Records</th><th >Total Billed</th><th colspan='9'></th></tr></thead>";
 		}
 		else {
-			htmlValue += "\n<thead><tr><th >OHIP NO</th><th >Acct NO</th>"
+			htmlValue += "<tr><th >OHIP NO</th><th >Acct NO</th>"
 					+ "<th >Name</th><th >RO</th><th >DOB</th><th >Sex</th><th >Health #</th>"
 					+ "<th >Billdate</th><th >Code</th>"
 					+ "<th >Billed</th>"
@@ -250,11 +250,9 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 }
 %>
 
-
-
 <html>
 <head>
-<title>Billing Report</title>
+<title><bean:message key="admin.admin.btnSimulationOHIPDiskette" /></title>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
@@ -298,9 +296,14 @@ function checkData() {
 <h3><bean:message key="admin.admin.btnSimulationOHIPDiskette" /></h3>
 
 <form name="serviceform" method="post" action="billingONOhipSimulation.jsp" onSubmit="return checkData();">
-<div class="row well">
+<div class="row well well-small">
+Bill Center:
+	<input type="hidden" name="billcenter" value="<%=billCenter%>">
+	<%=healthOffice%>
+	
 <button type='button' name='print' value='Print' class="btn pull-right" onClick='window.print()'> <i class="icon icon-print"></i> Print</button><br/>
 
+	
 
 <%
 String providerview=request.getParameter("provider")==null?user_no:request.getParameter("provider");
@@ -315,7 +318,7 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 	<input type="hidden" name="curDate" value="<%=nowDate%>">
 
 
-<div class="span12">
+<div class="span12" style="margin:4px;">
 	
 <div class="span3">
 Select Provider<br>
@@ -368,34 +371,38 @@ Select Provider<br>
 		<span class="add-on"><i class="icon-calendar"></i></span>
 	</div>
 	</div>
+	
+<% if (!bMultisites) { %>
+	<div class="span2"><br><input type="checkbox" name="summaryView" id="summaryView" <%= summaryView ? "checked" : "" %> />Summary View</div>
+<% } %>
 
+	<div class="span2">
+	<br>
+	<button class="btn btn-primary " type="submit" name="submit" value="Create Report">Create Report</button>
+	</div>
+	
+	
 </div> <!--span12-->
 
-<div class="span12">
-	<div class="span2">
-	Bill Center: <input type="hidden" name="billcenter" value="<%=billCenter%>"> <%=healthOffice%>
-	</div>
+<div class="span11">
 
+	<br>
 
-	<% if (!bMultisites) { %>
-	<div class="span2"><input type="checkbox" name="summaryView" id="summaryView" <%= summaryView ? "checked" : "" %> />Summary View</div>
-	<% } %>
-
-	<div class="span2">
-	<button class="btn btn-primary" type="submit" name="submit" value="Create Report">Create Report</button>
-	</div>
-
+	
+	
 </div><!--span12-->
 
 
 </div><!--form well-->
 </form>
 
-<%=request.getAttribute("html") == null?"":request.getAttribute("html")%>
+
 
 
 
 </div><!--container-->
+
+<%=request.getAttribute("html") == null?"":request.getAttribute("html")%>
 
 <script type="text/javascript">
 var startDate = $("#xml_vdate").datepicker({
