@@ -91,7 +91,7 @@ else {
 
 <h3><bean:message key="admin.admin.gstReport"/></h3>
 
-<div class="container-fluid well">
+<div class="container-fluid well well-small">
 <div class="span2">Date: <%=DateUtils.sumDate("yyyy-MM-dd","0")%></div> <div class="span2 pull-right"><button class="btn" type="button" value="Print" onclick="window.print()" /><i class="icon-print icon-white"></i> Print</button></div>
 
 <div class="span12">
@@ -141,14 +141,19 @@ Provider
 
 <div class="span12">
 <br>
+
+</div><!--span12-->
+
+</div>
+
 <TABLE class="table table-striped  table-condensed">
 	<TR style="font-weight:bold;">
-		<TD width="20%" align="center">SERVICE DATE</TD>
-		<TD width="10%" align="center">PATIENT</TD>
-		<TD width="15%" align="center">PATIENT NAME</TD>
-		<TD width="15%" align="center">GST Billed</TD>
-		<TD width="15%" align="center">Revenue</TD>
-		<TD width="15%" align="center">Total with ONLY GST</TD>
+		<TD align="center">SERVICE DATE</TD>
+		<TD align="center">PATIENT</TD>
+		<TD align="center">PATIENT NAME</TD>
+		<TD align="center">GST Billed</TD>
+		<TD align="center">Revenue</TD>
+		<TD align="center">Total with ONLY GST</TD>
 	</TR>
 	<% for ( i = 0; i < list.size(); i++){
                 if ( i % 2 == 1)        // If odd, then have colour, 
@@ -195,9 +200,6 @@ Provider
 		<TD width="15%"><%=billedtotal%></TD>
 	</TR>
 </TABLE>
-</div><!--span12-->
-
-</div>
 </FORM>
 </body>
 <script type="text/javascript">
