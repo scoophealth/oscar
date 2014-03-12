@@ -131,11 +131,13 @@ public final class RegistrationHelper {
 
 		sb.append("<select name=\"" + widgetName + "\">");
 
-		for (Relation relation : Relation.values()) {
-			sb.append("<option value=\"" + relation.name() + "\" "+getSelectedString(session, widgetName, relation.name())+" >");
-			sb.append(relation.name());
-			sb.append("</option>");
-		}
+		sb.append("<option value=\"" + Relation.PRIMARY_CARE_PROVIDER.name() + "\" "+getSelectedString(session, widgetName, Relation.PRIMARY_CARE_PROVIDER.name())+" >");
+		sb.append(Relation.PRIMARY_CARE_PROVIDER.name());
+		sb.append("</option>");
+
+		sb.append("<option value=\"" + Relation.RESEARCH_ADMINISTRATOR.name() + "\" "+getSelectedString(session, widgetName, Relation.RESEARCH_ADMINISTRATOR.name())+" >");
+		sb.append(Relation.RESEARCH_ADMINISTRATOR.name());
+		sb.append("</option>");
 
 		sb.append("</select>");
 
