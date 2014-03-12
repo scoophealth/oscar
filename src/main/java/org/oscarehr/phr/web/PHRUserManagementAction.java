@@ -57,15 +57,13 @@ import org.oscarehr.common.model.Property;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
-import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
-import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.InvalidRelationshipException_Exception;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
-import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer3;
+import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.myoscar_server.ws.Role;
 import org.oscarehr.phr.RegistrationHelper;
 import org.oscarehr.phr.dao.PHRActionDAO;
@@ -569,45 +567,50 @@ public class PHRUserManagementAction extends DispatchAction {
 		return (newAccount);
 	}
 
-	private void addRelationships(HttpServletRequest request, PersonTransfer3 newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
+	private void addRelationships(HttpServletRequest request, PersonTransfer3 newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 
 		if (log.isDebugEnabled()) {
 			WebUtils.dumpParameters(request);
 		}
-
-		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
 
 		@SuppressWarnings("unchecked")
 		Enumeration<String> e = request.getParameterNames();
 		while (e.hasMoreElements()) {
 			String key = e.nextElement();
 
-			if (key.startsWith("enable_primary_relation_")) handlePrimaryRelation(accountWs, request, newAccount, key);
-			if (key.startsWith("enable_reverse_relation_")) handleReverseRelation(accountWs, request, newAccount, key);
+			if (key.startsWith("enable_primary_relation_")) handlePrimaryRelation(request, newAccount, key);
+			if (key.startsWith("enable_reverse_relation_")) handleReverseRelation(request, newAccount, key);
 		}
 
 		RegistrationHelper.storeSelectionDefaults(request);
 	}
 
-	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
+	private void handleReverseRelation(HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId = new Long(key.substring("enable_reverse_relation_".length()));
 		String relation = request.getParameter("reverse_relation_" + otherMyOscarUserId);
 
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-		AccountManager.createRelationship(myOscarLoggedInInfo, otherMyOscarUserId, newAccount.getId(), false, false, relation);
+
+		if (Relation.RESEARCH_SUBJECT.name().equals(relation)) relation="ResearchSubjectResearchAdministrator";
+		if (Relation.PATIENT.name().equals(relation)) relation="PatientPrimaryCareProvider";
+
+		AccountManager.createRelationship(myOscarLoggedInInfo, newAccount.getId(), otherMyOscarUserId, false, true, relation);
 	}
 
-	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception, NoSuchItemException_Exception {
+	private void handlePrimaryRelation(HttpServletRequest request, PersonTransfer3 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId = new Long(key.substring("enable_primary_relation_".length()));
 		String relation = request.getParameter("primary_relation_" + otherMyOscarUserId);
 
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-		AccountManager.createRelationship(myOscarLoggedInInfo, newAccount.getId(), otherMyOscarUserId, false, false, relation);
+		
+		if (Relation.RESEARCH_ADMINISTRATOR.name().equals(relation)) relation="ResearchSubjectResearchAdministrator";
+		if (Relation.PRIMARY_CARE_PROVIDER.name().equals(relation)) relation="PatientPrimaryCareProvider";
+		
+		AccountManager.createRelationship(myOscarLoggedInInfo, newAccount.getId(), otherMyOscarUserId, true, false, relation);
 	}
 
 	public ActionForward approveAction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
