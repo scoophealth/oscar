@@ -20,6 +20,7 @@ package oscar.oscarBilling.ca.on.data;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.math.BigDecimal;
@@ -877,9 +878,9 @@ public class JdbcBillingCreateBillingFile {
 		String home_dir;
 		home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
 		propBillingNo = new Properties();
-
+		RandomAccessFile raf=null;
 		try {
-			RandomAccessFile raf = new RandomAccessFile(home_dir + ohipFilename, "r");
+			raf = new RandomAccessFile(home_dir + ohipFilename, "r");
 			do {
 				String lineValue = raf.readLine();
 				if (lineValue == null) {
@@ -903,10 +904,17 @@ public class JdbcBillingCreateBillingFile {
 					propBillingNo.setProperty(bNo, "");
 				}
 			} while (true);
-			raf.close();
 
 		} catch (Exception e) {
 			_logger.error("Read OHIP File Error");
+		}
+		finally
+		{ 
+			try {
+				if (raf!=null) raf.close();
+            } catch (IOException e) {
+	            _logger.error("Unexpected error", e);
+            }			
 		}
 	}
 
