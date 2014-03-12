@@ -409,27 +409,6 @@ filter:alpha(opacity=100); /* For IE8 and earlier */
     outline: 0 none !important;
 }
 
-#health-tracker-title{
-display:inline-block;
-padding-right:20px
-}
-
-#health-tracker-title h4{
-padding:0;
-padding-top:8px;
-margin:0;
-}
-
-#health-tracker-title a{
-color:#333;
-text-decoration:none;
-}
-
-#health-tracker-title a:hover{
-color:#0088cc;
-text-decoration:none;
-}
-
 #health-tracker-add{
 text-align:center;
 }
@@ -442,6 +421,17 @@ margin-left:560px;
 padding-top:50px;
 height:70px;
 }
+
+#dxAlert ul {
+display: inline; 
+margin:0px;
+}
+
+#dxAlert ul li { 
+display: inline; 
+padding-left:8px;
+}
+
         
 .print{display:none;}
 
@@ -663,11 +653,13 @@ function fsPopup(width,height,url,window) {
     }
 
     function calcBMI() {
-    	if (isNumber(document.getElementById("Weightkg")) && isNumber(document.getElementById("Heightcm"))) {
+        
+    	if ( isNumber(document.getElementById("Weightkg")) && isNumber(document.getElementById("Heightcm")) && document.getElementById("Heightcm").value!=="" && document.getElementById("Weightkg").value!=="" ) {
     		if (document.getElementById("Heightcm").value > 0) {
     			document.getElementById("BMI").value = (document.getElementById("Weightkg").value/Math.pow(document.getElementById("Heightcm").value/100,2)).toFixed(1);
     		}
     	}
+    	
     }
 
     function calcWeeklyDose(obj) {
@@ -692,9 +684,6 @@ function fsPopup(width,height,url,window) {
 <div id="tracker-bar" class="container-fluid navbar-inner DoNotPrint">
 
    		<div class="span12" style="padding-left:0px;margin-left:0px">
-<!--
-<div id="health-tracker-title"><a href="?demographic_no=<%=demographic_no%>&template=tracker"><i class="icon-home icon-3x"></i></a></div>
--->
 
 <a href="?demographic_no=<%=demographic_no%>&template=tracker" class="btn <%if(temp.equals("tracker")){ out.print("btn-primary active");} %>"><i class="icon-home icon-large"></i></a>
 
@@ -847,6 +836,7 @@ if(!btnLabel.equals("PHV")){
  	
 		<%if(dxCodeQueryString!=""){ %>	
 			To add a diagnosis use one of the available codes: 	
+			
 			<%	
 			out.print(dxCodeQueryString); 	
 				
@@ -886,7 +876,7 @@ if(!btnLabel.equals("PHV")){
 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 <h3 id="unDxModalLabel">Warning!</h3>
 </div>
-<div class="modal-body" style="text-align:center;font-size:16px">
+<div class="modal-body" style="font-size:16px">
  	<p>You are using the <b><%=flowSheet%></b> without a diagnosis. </p>	
  	
 		<%if(dxCodeQueryString!=""){ %>	
@@ -1183,7 +1173,6 @@ if(!btnLabel.equals("PHV")){
 					String name = h2.get("display_name").toString();
 					name = name.replaceAll("\\W","");
 					iDate++;
-					
 					%>
 
 <!--graphing start-->  
@@ -1281,11 +1270,11 @@ if(!btnLabel.equals("PHV")){
 							</label>
   <%}else{ %>
   <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else if (name.equals("BP")) {%>00/00 or 000/00 <%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
-	                       	<% if (name.equals("Weightkg") || name.equals("Heightcm") ){ %> onchange="calcBMI();"<%}%>
+	                       	<% if ((name.equals("Weightkg") || name.equals("Heightcm")) ){ %> onchange="calcBMI();" onkeyup="calcBMI();"<%}%>
 	                       	<% if (name.equals("Weightkg")){ %> onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("Heightcm")){ %> onDblClick="htEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("BMI")){ %> onDblClick="calcBMI();"<%}%>
-	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%> placeholder="Enter Data" <%=getPattern(measure, mtypeBean.getMeasuringInstrc())%>> 
+	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%> placeholder="Enter Data" <%=getPattern(measure, mtypeBean.getMeasuringInstrc())%> autocomplete="off"> 
   <%} %>
   
 
