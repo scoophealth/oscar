@@ -656,7 +656,9 @@ if (nItems == 0) {
 				<td colspan="8" class="white"><bean:message
 					key="tickler.ticklerDemoMain.msgNoMessages" /></td>
 			</tr>
-			<%}%>
+			<%}
+			Demographic d = demographicDao.getDemographicById(request.getParameter("demoview")==null?null: Integer.parseInt(request.getParameter("demoview")));
+			%>
 			<tr bgcolor=#FFFFFF>
 				<td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnCheckAll" /></a> - <a
@@ -664,7 +666,7 @@ if (nItems == 0) {
 					key="tickler.ticklerDemoMain.btnClearAll" /></a> &nbsp; &nbsp; &nbsp;
 				&nbsp; &nbsp; <input type="button" name="button"
 					value="<bean:message key="tickler.ticklerDemoMain.btnAddTickler"/>"
-					onClick="popupPage('400','600', 'ticklerAdd.jsp?updateParent=true&parentAjaxId=<%=parentAjaxId%>')"
+					onClick="popupPage('400','600', 'ticklerAdd.jsp?updateParent=true&parentAjaxId=<%=parentAjaxId%>&bFirstDisp=false&messageID=null&demographic_no=<%=d.getDemographicNo()%>&chart_no=<%=d.getChartNo()%>&name=<%=d.getDisplayName()%>')"
 					class="sbttn"> <input type="hidden" name="submit_form"
 					value=""> <% if (ticklerview.compareTo("D") == 0){%> <input
 					type="button"
