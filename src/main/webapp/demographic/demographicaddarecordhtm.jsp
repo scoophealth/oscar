@@ -445,7 +445,7 @@ function autoFillHin(){
 	<% } %>
 </td></tr>
 <tr><td>
-<form method="post" name="adddemographic" action="demographicaddarecord.jsp"  onsubmit="return checkFormTypeIn()">
+<form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkFormTypeIn()">
 <input type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">
 <input type="hidden" name="originalPage" value="<%=request.getParameter("originalPage")%>">
 <input type="hidden" name="bFirstDisp" value="<%=request.getParameter("bFirstDisp")%>">
