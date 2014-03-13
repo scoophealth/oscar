@@ -47,7 +47,7 @@
                 inQueueB=true;
 
             String creator = (String) session.getAttribute("user");
-            ArrayList doctypes = EDocUtil.getDoctypes("demographic");
+            ArrayList doctypes = EDocUtil.getActiveDocTypes("demographic");
             EDoc curdoc = EDocUtil.getDoc(documentNo);
 
             String demographicID = curdoc.getModuleId();
