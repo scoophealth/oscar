@@ -340,7 +340,8 @@
                                             <input type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>');" name="demographicKeyword" />
                                             <div id="autocomplete_choices<%=docId%>"class="autocomplete"></div>
                                             <%}%>
-											<input type="button" id="createNewDemo" value="Create New Demographic"  onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
+											<input type="button" id="createNewDemo" value="Create New Demographic"  onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=Create')"/>
+											
 
                                                    <input id="saved_<%=docId%>" type="hidden" name="saved" value="false"/>
                                                    <br><input id="mrp_<%=docId%>" style="display: none;" type="checkbox" onclick="sendMRP(this)"  name="demoLink" >

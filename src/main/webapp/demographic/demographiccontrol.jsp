@@ -176,6 +176,7 @@
 	  {"pdfchartlabel" , "demographicpdfchartlabel.jsp"},
 	  {"appt_history" , "demographicappthistory.jsp"},
 	  {"Create", "demographicaddarecordhtm.jsp"},
+	  {"Add Record", "demographicaddarecord.jsp"},
 	  {"Update Record" , "demographicupdatearecord.jsp"},
 	  {"Delete" , "demographicdeletearecord.jsp"},
 	  {"Save Record & Back to Appointment" , "demographicaddbacktoappt.jsp"},
