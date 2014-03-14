@@ -5720,7 +5720,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:sent_to_born tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:sentby varchar(62) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:sentbyNo varchar(6) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:sentto varchar(255) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:sentto text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:serviceDesc varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:serviceId int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:service_code varchar(10) default '',</ViolationValue>

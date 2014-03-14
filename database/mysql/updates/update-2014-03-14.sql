@@ -1,0 +1,1 @@
+ALTER TABLE `messagetbl` CHANGE `sentto` `sentto` text;

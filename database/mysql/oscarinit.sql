@@ -6915,7 +6915,7 @@ CREATE TABLE messagetbl (
   themessage text,
   thesubject varchar(128) default NULL,
   sentby varchar(62) default NULL,
-  sentto varchar(255) default NULL,
+  sentto text default NULL,
   sentbyNo varchar(6) default NULL,
   sentByLocation int(10) default NULL,
   attachment text,
