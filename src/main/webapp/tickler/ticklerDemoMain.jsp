@@ -487,7 +487,10 @@ if (nItems == 0) {
 				<td colspan="8" class="white"><bean:message
 					key="tickler.ticklerDemoMain.msgNoMessages" /></td>
 			</tr>
-			<%}%>
+			<%}
+			rs = apptMainBean.queryResults(demoview, "search_demographic_details");
+			while (rs.next()) {
+			%>
 			<tr bgcolor=#666699>
 				<td colspan="8" class="white"><a href="javascript:CheckAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnCheckAll" /></a> - <a
@@ -495,8 +498,9 @@ if (nItems == 0) {
 					key="tickler.ticklerDemoMain.btnClearAll" /></a> &nbsp; &nbsp; &nbsp;
 				&nbsp; &nbsp; <input type="button" name="button"
 					value="<bean:message key="tickler.ticklerDemoMain.btnAddTickler"/>"
-					onClick="popupPage('400','600', 'ticklerAdd.jsp?updateParent=true&parentAjaxId=<%=parentAjaxId%>')"
-					class="sbttn"> <input type="hidden" name="submit_form"
+					onClick="popupPage('400','600', 'ticklerAdd.jsp?updateParent=true&parentAjaxId=<%=parentAjaxId%>&bFirstDisp=false&messageID=null&demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&chart_no=<%=apptMainBean.getString(rs,"chart_no")%>&name=<%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%>')"
+					class="sbttn"> <%}%>
+					<input type="hidden" name="submit_form"
 					value=""> <% if (ticklerview.compareTo("D") == 0){%> <input
 					type="button"
 					value="<bean:message key="tickler.ticklerDemoMain.btnErase"/>"
