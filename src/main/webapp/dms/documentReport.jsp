@@ -125,7 +125,7 @@ if (sortRequest != null) {
     else if (sortRequest.equals("reviewer")) sort = EDocUtil.SORT_REVIEWER;
 }
 
-ArrayList doctypes = EDocUtil.getDoctypes(module);
+ArrayList doctypes = EDocUtil.getActiveDocTypes(module);
 
 //Retrieve encounter id for updating encounter navbar if info this page changes anything
 String parentAjaxId;
