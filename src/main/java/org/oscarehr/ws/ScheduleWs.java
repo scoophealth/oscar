@@ -26,6 +26,7 @@
 package org.oscarehr.ws;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.jws.WebService;
@@ -105,5 +106,11 @@ public class ScheduleWs extends AbstractWs {
 		
 		appointmentTransfer.copyTo(appointment);
 		scheduleManager.updateAppointment(appointment);
+	}
+    
+	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider(Date startTime, Date endTime, String providerNo)
+	{
+		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(startTime, endTime, providerNo);
+		return(AppointmentTransfer.toTransfer(appointments));
 	}
 }
