@@ -27,6 +27,7 @@ package oscar.eform.actions;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
@@ -193,6 +194,7 @@ public class DisplayImageAction extends DownloadAction{
     			visitAllFiles(new File(dir, children[i]));
     		}
     	}
+    	Arrays.sort(children);
     	return children;
     }
     
