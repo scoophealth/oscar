@@ -88,7 +88,7 @@ function popupPage(height, width, url) {
 </head>
 <body>
 <div style="float:right;">	
-	<a style="font-size:10px" href="#" onclick="popupPage(700,720,'manageProvider.jsp?action=visitreport')">Manage Visit Report Providers</a>	
+	<a style="font-size:10px" href="#" onclick="popupPage(700,720,'../oscarReport/manageProvider.jsp?action=visitreport')">Manage Visit Report Providers</a>	
 </div>
 
 <div class="page-header">
