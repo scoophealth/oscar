@@ -70,6 +70,15 @@ function checkQuery() {
     if (!ret) alert("Please select at least one field");
     return ret;
 }
+
+function checkQueryName() {
+	if (document.forms[0].queryName.value.trim()=="") {
+		alert("Please enter a query name");
+		document.forms[0].queryName.focus();
+		return false;
+	}
+	else return true;
+}
 </script>
 
 <style type="text/css" media="print">
@@ -127,7 +136,7 @@ function checkQuery() {
                 oscarReport
             </td>
             <td class="MainTableTopRowRightColumn">
-            <html:form action="/report/DemographicReport" onsubmit="return checkQuery();">
+            <html:form action="/report/DemographicReport">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
@@ -422,8 +431,8 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
         </tr>
     </table>
 <html:text property="queryName"/><br>
-<input type="submit" value="Save Query" name="query"/>
-<input type="submit" value="Run Query"  name="query"/>
+<input type="submit" value="Save Query" name="query" onclick="return (checkQuery() && checkQueryName());"/>
+<input type="submit" value="Run Query"  name="query" onclick="return checkQuery();"/>
 
     </td>
     <td valign=top>
