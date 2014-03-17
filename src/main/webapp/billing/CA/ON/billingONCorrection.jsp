@@ -338,7 +338,7 @@ function checkSettle(status) {
 </script>
 </head>
 
-<body>
+<body onload="$('#billing_no').focus()">
 <%//
     RaDetailDao raDetailDao = (RaDetailDao) SpringUtils.getBean("raDetailDao");
     BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
@@ -492,7 +492,7 @@ function checkSettle(status) {
     
 <div class="span2">
 <a href="#" onclick="return sanityCheck('<%=nullToEmpty(billNo)%>');"><bean:message key="billing.billingCorrection.formInvoiceNo" /></a><br>
-<input type="text" name="billing_no"  value="<%=nullToEmpty(billNo)%>" class="span2">
+<input type="text" id="billing_no" name="billing_no"  value="<%=nullToEmpty(billNo)%>" class="span2">
 </div>
 
 
