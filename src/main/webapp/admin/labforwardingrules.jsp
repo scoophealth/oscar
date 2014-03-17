@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -161,7 +162,7 @@ status = fr.getStatus(providerNo);
 <tr> 
 <td><%= (String) ((ArrayList) frwdProviders.get(i)).get(1) %> <%= (String) ((ArrayList) frwdProviders.get(i)).get(2) %></td>
 <td><%= status.equals("N") ? "New" : "Filed" %></td>
-<td><button type="submit" class="btn btn-small" onclick="return removeProvider('<%= (String) ((ArrayList) frwdProviders.get(i)).get(0) %>', '<%= (String) ((ArrayList) frwdProviders.get(i)).get(1) %> <%= (String) ((ArrayList) frwdProviders.get(i)).get(2) %>')" title="remove provider"><i class="icon-trash"></i> remove</button></td>
+<td><button type="submit" class="btn btn-small" onclick="return removeProvider('<%= (String) ((ArrayList) frwdProviders.get(i)).get(0) %>', '<%= StringEscapeUtils.escapeJavaScript((String) ((ArrayList) frwdProviders.get(i)).get(1)) %> <%= StringEscapeUtils.escapeJavaScript((String) ((ArrayList) frwdProviders.get(i)).get(2)) %>')" title="remove provider"><i class="icon-trash"></i> remove</button></td>
 </tr> 
 
 <br />
