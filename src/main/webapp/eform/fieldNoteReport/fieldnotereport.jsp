@@ -64,6 +64,7 @@
 	//get resident names
 	TreeSet<Integer> fieldNoteEforms = FieldNoteManager.getFieldNoteEforms();
 	TreeMap<String, String> residentNameList = FieldNoteManager.getResidentNameList(fieldNoteEforms, startDate, endDate);
+	TreeMap<String, TreeMap<String, Integer>> supervisorResidentCountList = FieldNoteManager.getSupervisorResidentCountList();
 %>
 <html:html locale="true">
 <head>
@@ -85,60 +86,71 @@
 		document.fieldNoteReportForm.residentName.value = residentName;
 		document.fieldNoteReportForm.method.value = method;
 		document.fieldNoteReportForm.action = "fieldnotereportdetail.jsp";
+		
+		if (method=="view") document.fieldNoteReportForm.target = "_blank";
+		document.fieldNoteReportForm.submit();
+		document.fieldNoteReportForm.target = "_self";
+	}
+	
+	function changeReportDates() {
+		document.fieldNoteReportForm.action = "";
 		document.fieldNoteReportForm.submit();
 	}
 
-	function setDefaultDates()
-	{
+	function setDefaultDates() {
 		document.fieldNoteReportForm.date_start.value = "<%=dateStartDefault%>";
 		document.fieldNoteReportForm.date_end.value = "<%=dateEndDefault%>";
+		document.fieldNoteReportForm.action = "";
 		document.fieldNoteReportForm.submit();
 	}
 	
-	function checkDates()
-	{
-<%
-	if (invalidDate) {
-%>
-		alert("Invalid Start/End dates");
-<%
+	function showSupervisorReport() {
+		document.getElementById("supervisorReport").style.display = "table";
+		document.getElementById("supervisorReportButton").style.display = "none";
 	}
+	
+	function checkDates() {
+<%
+		if (invalidDate) {
+%>
+			alert("Invalid Start/End dates");
+<%
+		}
 %>
 	}
 </script>
 </head>
 <body onload="checkDates();">
 
-<div class="eformInputHeading" align="center">
-	<bean:message key="admin.fieldNote.report"/>
-</div>
-
 <form name="fieldNoteReportForm" action="fieldnotereport.jsp">
 <input type="hidden" name="residentId"/>
 <input type="hidden" name="residentName"/>
 <input type="hidden" name="method"/>
 
-<table width="100%">
+<table>
+	<tr>
+		<th class="eformInputHeading"><bean:message key="admin.fieldNote.report"/></th>
+	</tr>
     <tr style="background-color: <%=fieldNoteEforms.isEmpty()?"#FFFF00":"#FFFFFF"%>;">
     	<td align="<%=fieldNoteEforms.isEmpty()?"left":"right"%>">
 <%
 	if (fieldNoteEforms.isEmpty()) {
 %>
-    		No eForm assigned as Field Note. Press [Select eForms] to assign.
+    	<bean:message key="admin.fieldNote.noEformAssigned"/>
 <%
 	}
 %>
-    		<input type="button" value="Select eForms" title="<bean:message key="admin.fieldNote.selectEforms"/>" onclick="window.location.href='fieldnoteselect.jsp'"/>
+    		<input type="button" value="<bean:message key="admin.fieldNote.selectEformsButton"/>" title="<bean:message key="admin.fieldNote.selectEforms"/>" onclick="window.location.href='fieldnoteselect.jsp'"/>
     	</td>
     </tr>
     <tr style="background-color: #F2F2F2;">
     	<td>
-			Report start date:<input type="text" name="date_start" size="8" value="<%=dateStart%>" id="startDate"><a id="SCal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0"/></a>
+			<bean:message key="admin.fieldNote.startDate"/>:<input type="text" name="date_start" size="8" value="<%=dateStart%>" id="startDate"><a id="SCal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0"/></a>
 			&nbsp;
-			Report end date:<input type="text" name="date_end" size="8" value="<%=dateEnd%>" id="endDate"><a id="ECal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0"/></a>
+			<bean:message key="admin.fieldNote.endDate"/>:<input type="text" name="date_end" size="8" value="<%=dateEnd%>" id="endDate"><a id="ECal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0"/></a>
 			&nbsp;
-    		<input type="submit" title="Change reporting dates" value="<bean:message key="admin.fieldNote.change"/>"/>
-    		<input type="button" value="Reset" title="Reset dates to defaults" onclick="setDefaultDates();"/>
+    		<input type="submit" title="<bean:message key="admin.fieldNote.changeDates"/>" value="<bean:message key="admin.fieldNote.change"/>" onclick="changeReportDates();"/>
+    		<input type="button" value="<bean:message key="admin.fieldNote.reset"/>" title="<bean:message key="admin.fieldNote.resetDates"/>" onclick="setDefaultDates();"/>
 			<script language='javascript'>
 				Calendar.setup({inputField:"startDate",ifFormat:"%Y-%m-%d",showsTime:false,button:"SCal",singleClick:true,step:1});
 				Calendar.setup({inputField:"endDate",ifFormat:"%Y-%m-%d",showsTime:false,button:"ECal",singleClick:true,step:1});
@@ -146,19 +158,52 @@
     	</td>
     </tr>
 </table>
-
-<p>&nbsp;</p>
-
+<br/>
+<input type="button" id="supervisorReportButton" value="<bean:message key="admin.fieldNote.viewSupervisors"/>" title="<bean:message key="admin.fieldNote.notesSupervisors"/>" onclick="showSupervisorReport();"/>
+<table id="supervisorReport" border="1" style="display:none">
+	<tr>
+		<th>Supervisor</th>
+		<th>Resident</th>
+		<th>Number of Field Notes</th>
+	</tr>
+<%
+	for (String supervisor : supervisorResidentCountList.keySet()) {
+%>
+	<tr>
+		<td rowspan="<%=supervisorResidentCountList.get(supervisor).size()%>" valign="top">
+			<%=supervisor%>
+		</td>
+<%
+		boolean first = true;
+		for (String resident : supervisorResidentCountList.get(supervisor).keySet()) {
+			if (first) {
+				first = false;
+			} else {
+%>
+			<tr>
+<%
+			}
+%>
+			<td><%=resident%></td>
+			<td align="center"><%=supervisorResidentCountList.get(supervisor).get(resident)%></td>
+		</tr>
+<%
+		}
+	}
+%>
+</table>
+<br/><br/>
 <table>
 <%
 	for (String residentName : residentNameList.keySet()) {
 		String residentId = residentNameList.get(residentName);
+		String resNameSend = residentName.replace("'", "\\'");
 %>
     <tr>
     	<td><%=residentName%></td>
     	<td>
-    		<input type="button" value="View" title="View report online" onclick="send('<%=residentId%>','<%=residentName%>','view');"/>
-    		<input type="button" value="Download" title="Download report as Word document" onclick="send('<%=residentId%>','<%=residentName%>','download');"/>
+    		<input type="button" value="<bean:message key="admin.fieldNote.view"/>" title="<bean:message key="admin.fieldNote.viewReport"/>" onclick="send('<%=residentId%>','<%=resNameSend%>','view');"/>
+    		<input type="button" value="<bean:message key="admin.fieldNote.download"/>" title="<bean:message key="admin.fieldNote.downloadReport"/>" onclick="send('<%=residentId%>','<%=resNameSend%>','download');"/>
     	</td>
     </tr>
 <%
