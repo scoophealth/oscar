@@ -515,7 +515,7 @@ function popupAttachDemo(demographic){ // open a new popup window
 
                                                                         for (int ii = 0; ii < lst.getLength(); ii++){
                                                                            Node firstnode = lst.item(ii);
-                                                                           displayNodes(firstnode,out,0,theProviders,CurrentLocationName);
+                                                                           displayNodes(firstnode,out,0,theProviders,CurrentLocationName, addressBook);
                                                                         }
                                                                     %>
 											</td>
@@ -622,7 +622,7 @@ function popupAttachDemo(demographic){ // open a new popup window
 
 <%!
 
- public void displayNodes(Node node,JspWriter out,int depth,String[] thePros,String CurrentLocationName ){
+ public void displayNodes(Node node,JspWriter out,int depth,String[] thePros,String CurrentLocationName, oscar.oscarMessenger.data.MsgAddressBook addressBook){
       depth++;
 
       Element element = (Element) node;
@@ -662,17 +662,19 @@ function popupAttachDemo(demographic){ // open a new popup window
             }
 
          }else{
-
+               String providerNo = element.getAttribute("id");
+               String providerName = element.getAttribute("desc");
+               providerName = addressBook.getRealProviderName(providerNo, providerName);
                if ( java.util.Arrays.binarySearch(thePros,element.getAttribute("id")) < 0 ){
-                  out.print("<input type=\"checkbox\" name=provider value="+element.getAttribute("id")+"  > <font color=#0e8ef7>"+personTitler(element.getAttribute("desc"))+"</font>\n");
+                  out.print("<input type=\"checkbox\" name=provider value="+providerNo+"  > <font color=#0e8ef7>"+personTitler(providerName)+"</font>\n");
                }else{
-                  out.print("<input type=\"checkbox\" name=provider value="+element.getAttribute("id")+" checked > "+personTitler(element.getAttribute("desc"))+"\n");
+                  out.print("<input type=\"checkbox\" name=provider value="+providerNo+" checked > "+personTitler(providerName)+"\n");
                }
          }
          if (node.hasChildNodes()){
             NodeList nlst = node.getChildNodes();
             for (int i = 0; i < nlst.getLength(); i++){
-               displayNodes(nlst.item(i), out,depth,thePros,CurrentLocationName);
+               displayNodes(nlst.item(i), out,depth,thePros,CurrentLocationName, addressBook);
             }
          }
          out.print("</td>\n");
