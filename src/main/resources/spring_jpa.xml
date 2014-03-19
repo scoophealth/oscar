@@ -71,5 +71,7 @@
 	<context:component-scan base-package="org.oscarehr.billing.CA.BC.dao" />
 	<context:component-scan base-package="org.oscarehr.billing.CA.dao" />
 	<context:component-scan base-package="org.oscarehr.PMmodule.dao" />
+	<!-- Sharing Center -->
+	<context:component-scan base-package="org.oscarehr.sharingcenter.dao" />
 
 </beans>

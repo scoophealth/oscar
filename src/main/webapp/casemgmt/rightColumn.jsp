@@ -26,6 +26,7 @@
 
 
 
+<%@page import="org.oscarehr.sharingcenter.SharingCenterUtil"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <%@taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -35,6 +36,10 @@
 <%
 String demo=request.getParameter("demographicNo");
 String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+
+// MARC-HI's Sharing Center
+boolean isSharingCenterEnabled = SharingCenterUtil.isEnabled();
+
 %>
 <script type="text/javascript">
 
@@ -75,6 +80,14 @@ String roleName$ = (String) session.getAttribute("userrole") + "," + (String) se
 			</c:choose>
 </security:oscarSec>
 
+<!-- MARC-HI's Sharing Center -->
+<% if (isSharingCenterEnabled) { %>
+	<div>
+		<button type="button" onclick="window.open('${ctx}/sharingcenter/documents/demographicExport.jsp?demographic_no=<%=demo%>');">
+			Export Patient Demographic
+		</button>
+	</div>
+<% } %>
 
 <div id="rightColLoader" style="width: 100%;">
 <h3 style="width: 100%; background-color: #CCCCFF;">

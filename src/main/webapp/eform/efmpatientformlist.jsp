@@ -24,6 +24,11 @@
 
 --%>
 
+<%@page import="org.oscarehr.sharingcenter.SharingCenterUtil"%>
+<%@page import="org.oscarehr.sharingcenter.dao.AffinityDomainDao"%>
+<%@page import="org.oscarehr.sharingcenter.model.AffinityDomainDataObject"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+
 <%@page import="java.util.*,oscar.eform.*"%>
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
@@ -49,7 +54,15 @@
 	String appointment = request.getParameter("appointment");
 	String parentAjaxId = request.getParameter("parentAjaxId");
 
-	boolean isMyOscarAvailable = EfmPatientFormList.isMyOscarAvailable(Integer.parseInt(demographic_no));	
+	boolean isMyOscarAvailable = EfmPatientFormList.isMyOscarAvailable(Integer.parseInt(demographic_no));
+
+	// MARC-HI's Sharing Center
+	boolean isSharingCenterEnabled = SharingCenterUtil.isEnabled();
+
+	// get all installed affinity domains
+	AffinityDomainDao affDao = SpringUtils.getBean(AffinityDomainDao.class);
+	List<AffinityDomainDataObject> affinityDomains = affDao.getAllAffinityDomains();
+
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -80,7 +93,23 @@
 		    }
 		);
 		return false;
-     }	  
+     }
+	
+	$(document).ready(function() {
+		var shareDocumentsTarget = "../sharingcenter/documents/shareDocumentsAction.jsp";
+		
+		// Share button click event
+		$("#SendToAffinityDomain").click(function() {
+			// change the form's action (share page) then submit (only if forms are selected)
+                        if ($("input:checkbox[name='sendToPhr']:checked").size() > 0) {
+                            $("#sendToPhrForm").attr('action', shareDocumentsTarget);
+                            $("#sendToPhrForm").submit();
+                        } else {
+                            alert('No forms selected');
+                            return false;
+                        }
+		});
+	});
 </script>
 	
 <script type="text/javascript" language="javascript">
@@ -163,12 +192,12 @@ function updateAjax() {
 		</td>
 		<td class="MainTableRightColumn" valign="top">
 
-			<form action="efmpatientformlistSendPhrAction.jsp">
+			<form id="sendToPhrForm" action="efmpatientformlistSendPhrAction.jsp">
 				<input type="hidden" name="clientId" value="<%=demographic_no%>" />
 				<table class="elements" width="100%">
 					<tr bgcolor=<%=deepColor%>>
 						<%
-							if (isMyOscarAvailable)
+							if (isMyOscarAvailable || isSharingCenterEnabled)
 							{
 								%>
 									<th>&nbsp;</th>
@@ -205,7 +234,7 @@ function updateAjax() {
 					%>
 					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
 						<%
-							if (isMyOscarAvailable)
+							if (isMyOscarAvailable || isSharingCenterEnabled)
 							{
 								%>
 									<td>
@@ -241,6 +270,23 @@ function updateAjax() {
 					<input type="submit" value="<bean:message key="eform.showmyform.btnsendtophr" />"> |
 				<% } %> 
 				<button onclick="showHtml(); return false;">Save as PDF</button>
+				
+				<!-- MARC-HI's Sharing Center -->
+				<% if (isSharingCenterEnabled) { %>
+					<input type="hidden" id="documentType" name="type" value="eforms" />
+					<div>
+						<span style="float: right;">
+                          <select name="affinityDomain">
+
+                            <% for(AffinityDomainDataObject domain : affinityDomains) { %>
+                              <option value="<%=domain.getId()%>"><%=domain.getName()%></option>
+                            <% } %>
+
+                          </select>
+                          <input type="button" id="SendToAffinityDomain" name="SendToAffinityDomain" value="Share">
+                        </span>
+					</div>
+				<% } %>
 			
 			</form>
 		

@@ -25,6 +25,7 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
+<%@page import="org.oscarehr.sharingcenter.SharingCenterUtil"%>
 <%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
@@ -168,9 +169,11 @@
 			&& OscarProperties.getInstance().getProperty("disableTelProgressNoteTitleInEncouterNotes").equals("yes")) {
 		noteReason = "";
 	}
+	
+	// MARC-HI's Sharing Center
+	boolean isSharingCenterEnabled = SharingCenterUtil.isEnabled();
 
 %>
-
 
 
 
@@ -1360,6 +1363,17 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 				<bean:message
 					key="demographic.demographiceditdemographic.btnAddEForm" /> </a></td>
 			</tr>
+			
+			<% if (isSharingCenterEnabled) { %>
+			<!-- Sharing Center Links -->
+			<tr>
+			  <td><a href="../sharingcenter/networks/sharingnetworks.jsp?demographic_no=<%=demographic_no%>"><bean:message key="sharingcenter.networks.sharingnetworks" /></a></td>
+			</tr>
+			<tr>
+			  <td><a href="../sharingcenter/documents/SharedDocuments.do?demographic_no=<%=demographic_no%>"><bean:message key="sharingcenter.documents.shareddocuments" /></a></td>
+			</tr>
+			<% } // endif isSharingCenterEnabled %>
+
 		</table>
 		</td>
 		<td class="MainTableRightColumn" valign="top">

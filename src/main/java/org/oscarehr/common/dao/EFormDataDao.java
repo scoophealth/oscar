@@ -73,6 +73,14 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
 		return(results);
 	}
+    
+	public EFormData findByFormDataId(Integer formDataId)
+	{
+		Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.id=?1");
+		query.setParameter(1, formDataId);
+		
+		return this.getSingleResultOrNull(query);
+	}
 
     /**
      * @param demographicId can not be null

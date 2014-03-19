@@ -25,6 +25,10 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.sharingcenter.SharingCenterUtil"%>
+<%@page import="org.oscarehr.sharingcenter.dao.AffinityDomainDao"%>
+<%@page import="org.oscarehr.sharingcenter.model.AffinityDomainDataObject"%>
 <%@page
 	import="java.util.*,oscar.oscarDemographic.data.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,oscar.oscarDemographic.pageUtil.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -56,6 +60,13 @@
 //  ArrayList queryArray = searchData.getQueryTypes();
 
   String userRole = (String)session.getAttribute("userrole");
+
+// MARC-HI's Sharing Center
+boolean isSharingCenterEnabled = SharingCenterUtil.isEnabled();
+
+//get all installed affinity domains
+AffinityDomainDao affDao = SpringUtils.getBean(AffinityDomainDao.class);
+List<AffinityDomainDataObject> affinityDomains = affDao.getAllAffinityDomains();
 %>
 
 <html:html locale="true">
@@ -263,6 +274,23 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 <%  } %>
 
 <input class="btn btn-primary" type="submit" value="<bean:message key="export" />"<%=pgpReady?"":"disabled"%> />
+
+<%	if (isSharingCenterEnabled) { %>
+	<!-- Sharing Center Submission -->
+    <br />
+    <br />
+    <div class="pull-left">
+      <select name="affinityDomain" class="pull-left">
+
+        <% for(AffinityDomainDataObject domain : affinityDomains) { %>
+          <option value="<%=domain.getId()%>"><%=domain.getName()%></option>
+        <% } %>
+
+      </select>
+      <input type="submit" class="btn btn-info" id="SendToAffinityDomain" name="SendToAffinityDomain" value="Share">
+    </div>
+<% } %>
+
 </html:form>
 
 </div><!--span4-->

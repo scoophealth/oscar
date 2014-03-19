@@ -1689,6 +1689,8 @@
 		</action>
 		<action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction4">
 			<forward name="fail" path="/demographic/demographicExport.jsp" />
+			<!-- Sharing Center forward -->
+			<forward name="sendToAffinityDomain" path="/sharingcenter/documents/shareDocumentsAction.jsp" />
 		</action>
 		<action input="/demographic/diabetesExport.jsp" name="DiabetesExportForm" path="/demographic/DiabetesExport" scope="request" type="oscar.oscarDemographic.pageUtil.DiabetesExportAction">
 		</action>
@@ -2561,6 +2563,52 @@
         </action>
 		<action path="/admin/GenerateTraceabilityReportAction" type="org.oscarehr.admin.traceability.GenerateTraceabilityReportAction">
         </action>
+        
+                <!-- Sharing Center Actions/Servlets -->
+                <action path="/sharingcenter/affinitydomain/AffinityDomain"
+                        type="org.oscarehr.sharingcenter.actions.AffinityDomainServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/affinitydomain/AffinityDomainParser"
+                        type="org.oscarehr.sharingcenter.actions.AffinityDomainParseServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/affinitydomain/ClinicInfo"
+                        type="org.oscarehr.sharingcenter.actions.ClinicInfoServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/security/Infrastructure"
+                        type="org.oscarehr.sharingcenter.actions.SecurityInfrastructureServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/networks/ShareDomain"
+                        type="org.oscarehr.sharingcenter.actions.ShareDomainServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/documents/DocumentExport"
+                        type="org.oscarehr.sharingcenter.actions.DocumentExportServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/documents/SharedDocuments"
+                        type="org.oscarehr.sharingcenter.actions.SharedDocumentsServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/documents/DemographicExport"
+                        type="org.oscarehr.sharingcenter.actions.DemographicExportServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/affinitydomain/DomainMappings"
+                        type="org.oscarehr.sharingcenter.actions.MappingServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/affinitydomain/ConsentChecker"
+                        type="org.oscarehr.sharingcenter.actions.ConsentCheckerServlet"
+                        scope="request">
+                </action>
+                <action path="/sharingcenter/documents/DocumentPreview"
+                        type="org.oscarehr.sharingcenter.actions.DocumentPreviewServlet"
+                        scope="request">
+                </action>
 
 		
 	</action-mappings>

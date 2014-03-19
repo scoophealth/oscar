@@ -748,6 +748,7 @@ public final class EDocUtil {
                 doc.setContentdatetime(MyDateFormat.getSysDate(contentDateTime));
 		doc.setSource(source);
 		doc.setSourceFacility(sourceFacility);
+		doc.setNumberofpages(1);
 		documentDao.persist(doc);
 
 		int key = 0;

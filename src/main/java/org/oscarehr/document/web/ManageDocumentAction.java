@@ -80,6 +80,8 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.sharingcenter.SharingCenterUtil;
+import org.oscarehr.sharingcenter.model.DemographicExport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -745,6 +747,24 @@ public class ManageDocumentAction extends DispatchAction {
 		}
 
 		return null;// execute2(mapping, form, request, response);
+	}
+	
+	public ActionForward downloadCDS(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		DemographicExport export = SharingCenterUtil.retrieveDemographicExport(Integer.valueOf(request.getParameter("doc_no")));
+		String contentType = "application/zip";
+		String filename = String.format("%s_%s", export.getDocumentType(), export.getId());
+		byte[] contentBytes = export.getDocument();
+
+		response.setContentType(contentType);
+		response.setContentLength(contentBytes.length);
+		response.setHeader("Content-Disposition", "inline; filename=" + filename);
+		log.debug("about to Print to stream");
+		ServletOutputStream outs = response.getOutputStream();
+		outs.write(contentBytes);
+		outs.flush();
+		outs.close();
+		return null;
 	}
 
 	public ActionForward display(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
