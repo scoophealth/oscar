@@ -30,6 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*, org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%
