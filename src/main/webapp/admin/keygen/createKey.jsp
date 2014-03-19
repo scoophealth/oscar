@@ -68,8 +68,8 @@ if (name != null){
             }else{
 
                 String keyPairOut = "-------- Service Name --------\n"+name+"\n------------------------------\n"+
-                        "----- Client Private Key -----\n"+clientKey+"\n------------------------------\n"+
-                        "------ Oscar Public Key ------\n"+oscarKey+"\n------------------------------";
+                        "----- Client Private Key -----\n"+clientKey.replaceAll("\\r?\\n", "")+"\n------------------------------\n"+
+                        "------ Oscar Public Key ------\n"+oscarKey.replaceAll("\\r?\\n", "")+"\n------------------------------";
                 response.setContentType("text");
                 response.setContentLength(keyPairOut.length());
                 response.setHeader("Content-Disposition","attachment; filename=keyPair.key");
