@@ -84,8 +84,9 @@ public class LabUploadAction extends Action {
 		LabUploadForm frm = (LabUploadForm) form;
 		FormFile importFile = frm.getImportFile();
 		
-		// We don't want a session...
-		request.getSession(false).invalidate();
+		// We don't want a session... (Prylynx)
+		// I've commented this out as it causes ProblemCheckFilter to make an exception while processing the JSP resulting in CURHST.0 files not being generated
+		//request.getSession(false).invalidate();
 		
 		String signature = request.getParameter("signature");
 		String key = request.getParameter("key");
