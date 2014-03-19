@@ -809,10 +809,38 @@ String curProvider_no = (String)session.getAttribute("user");
 	</security:oscarSec>
 <!-- #Data Management END-->
 
+<!-- #SHARING CENTER -->
+<oscar:oscarPropertiesCheck property="sharingcenter.enabled" value="true">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.sharingcenter" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThirteen">
+				<bean:message key="sharingcenter.title" />
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				
+				<div id="collapseThirteen" class="accordion-body collapse">
+				<div class="accordion-inner">
+			
+				<ul>
+					<li><a href="${ctx}/sharingcenter/affinitydomain/manage.jsp" class="contentLink"><bean:message key="sharingcenter.affinitydomain.manage" /></a></li>
+					<li><a href="${ctx}/sharingcenter/affinitydomain/clinic.jsp" class="contentLink"><bean:message key="sharingcenter.clinicinfo" /></a></li>								
+					<li><a href="${ctx}/sharingcenter/security/infrastructure.jsp" class="contentLink"><bean:message key="sharingcenter.security" /></a></li>
+				</ul>
+				</div>
+				</div>
+	</security:oscarSec>
+</oscar:oscarPropertiesCheck>
+<!-- #SHARING CENTER END -->	
+
+
+
+
+
 <oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThirteen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFourteen">
 				<bean:message key="admin.admin.learning" />
 				<i class="icon-chevron-right"></i>
 				</a>

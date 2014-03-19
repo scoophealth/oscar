@@ -57,6 +57,13 @@
 			<id>oscar_repo</id>
 			<url>http://oscarmcmaster.sourceforge.net/m2</url>
 		</repository>
+		
+		<!-- MARC-HI (Everest & SHIC) -->
+		<repository>
+			<id>marc-te-main</id>
+			<name>MARC-HI Technology Exchange Private Maven Repository</name>
+			<url>http://te.marc-hi.ca/mvn</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -87,12 +94,12 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -168,6 +175,11 @@
 		<dependency>
 			<groupId>ca.uhn.hapi</groupId>
 			<artifactId>hapi-structures-v22</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi</groupId>
+			<artifactId>hapi-structures-v231</artifactId>
 			<version>1.0.1</version>
 		</dependency>
 
@@ -886,18 +898,86 @@
 			<artifactId>myoscar_client_utils</artifactId>
 			<version>2013.07.22</version>
 		</dependency>
+
+		<!-- MARC-HI - Everest Framework -->
+		<dependency>
+			<groupId>org.marc.everest</groupId>
+			<artifactId>everest-core</artifactId>
+			<version>1.0.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.everest</groupId>
+			<artifactId>everest-rmim-ca-r02-04-03</artifactId>
+			<version>1.0.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.everest</groupId>
+			<artifactId>everest-rmim-uv-cdar2</artifactId>
+			<version>1.0.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.everest</groupId>
+			<artifactId>everest-formatters-xml-its1</artifactId>
+			<version>1.0.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.everest</groupId>
+			<artifactId>everest-formatters-xml-dt-r1</artifactId>
+			<version>1.0.12</version>
+		</dependency>
 		
-        <dependency>
-                <groupId>org.marc.everest</groupId>
-                <artifactId>everest-core</artifactId>
-                <version>1.0</version>
-        </dependency>
-                
-        <dependency>
-                <groupId>org.marc.everest</groupId>
-                <artifactId>everest-rmim-ca-r02-04-03</artifactId>
-                <version>1.0</version>
-        </dependency>
+		<!-- MARC-HI - Shared Health Integration Components (SHIC) Library -->
+		<dependency>
+			<groupId>org.marc.shic</groupId>
+			<artifactId>shic-core</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.shic</groupId>
+			<artifactId>shic-xds</artifactId>
+			<version>1.0.5</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>jcl-over-slf4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>jul-to-slf4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>log4j-over-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.shic</groupId>
+			<artifactId>shic-atna</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.shic</groupId>
+			<artifactId>shic-pix</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.shic</groupId>
+			<artifactId>shic-svs</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marc.shic</groupId>
+			<artifactId>shic-cda</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		
+		<!--tagsoup-->
+		<dependency>
+			<groupId>org.ccil.cowan.tagsoup</groupId>
+			<artifactId>tagsoup</artifactId>
+			<version>1.2.1</version>
+		</dependency>
 
 		<dependency>
 				 <groupId>com.cbi.ws</groupId>

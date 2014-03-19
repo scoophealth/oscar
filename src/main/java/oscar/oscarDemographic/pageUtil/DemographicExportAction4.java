@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -58,6 +59,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -77,9 +79,15 @@ import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.sharingcenter.DocumentType;
+import org.oscarehr.sharingcenter.dao.DemographicExportDao;
+import org.oscarehr.sharingcenter.model.DemographicExport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
+
+
+
 
 import oscar.OscarProperties;
 import oscar.appt.ApptStatusData;
@@ -209,6 +217,9 @@ public class DemographicExportAction4 extends Action {
 
 	String ffwd = "fail";
 	String tmpDir = oscarProperties.getProperty("TMP_DIR");
+	
+	// Sharing Center - holds the ID that will 'potentially' be exported.
+	int documentExportId = 0;
 	
 	int template = 0;
 	try {
@@ -1966,18 +1977,50 @@ public class DemographicExportAction4 extends Action {
 			//PGP encrypt zip file
 			PGPEncrypt pgp = new PGPEncrypt();
 			if (pgp.encrypt(zipName, tmpDir)) {
-				Util.downloadFile(zipName+".pgp", tmpDir, response);
-				Util.cleanFile(zipName+".pgp", tmpDir);
-				ffwd = "success";
+				
+				// Sharing Center - Skip download if sharing with affinity domain
+				if (request.getParameter("SendToAffinityDomain") == null) {
+					Util.downloadFile(zipName+".pgp", tmpDir, response);
+					Util.cleanFile(zipName+".pgp", tmpDir);
+					ffwd = "success";
+				} else {
+					// Sharing Center - Change the forward (redirect) to the affinity domain export page
+					ffwd = "sendToAffinityDomain";
+				}
+				
 			} else {
 				request.getSession().setAttribute("pgp_ready", "No");
 			}
 		} else {
 			logger.info("Warning: PGP Encryption NOT available - unencrypted file exported!");
-			Util.downloadFile(zipName, tmpDir, response);
-			ffwd = "success";
+			
+			// Sharing Center - Skip download if sharing with affinity domain
+			if (request.getParameter("SendToAffinityDomain") == null) {
+				Util.downloadFile(zipName, tmpDir, response);
+				ffwd = "success";
+			} else {
+				// Sharing Center - Change the forward (redirect) to the affinity domain export page
+				ffwd = "sendToAffinityDomain";
+			}
+			
 		}
-
+		
+		// Sharing Center - Store the exported data for later retrieval while sending to the affinity domain
+		if (ffwd.equalsIgnoreCase("sendToAffinityDomain")) {
+			String exportFile = Util.fixDirName(tmpDir) + zipName;
+			
+			DemographicExportDao demographicExportDao = SpringUtils.getBean(DemographicExportDao.class);
+			DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+			
+			DemographicExport demographicExport = new DemographicExport();
+			byte[] data = FileUtils.readFileToByteArray(new File(exportFile));
+			demographicExport.setDocument(data);
+			demographicExport.setDemographic(demographicDao.getDemographic(demographicNo));
+			demographicExport.setDocumentType(DocumentType.CDS.name());
+			
+			DemographicExport export = demographicExportDao.saveEntity(demographicExport);
+			documentExportId = export.getId();
+		}
 
 		//Remove zip & export files from temp dir
 		Util.cleanFile(zipName, tmpDir);
@@ -2123,7 +2166,11 @@ public class DemographicExportAction4 extends Action {
 			break;
 	}
 
-	return mapping.findForward(ffwd);
+	if (ffwd.equalsIgnoreCase("sendToAffinityDomain")) {
+		return new ActionForward(mapping.findForward("sendToAffinityDomain").getPath() + "?affinityDomain=" + request.getParameter("affinityDomain") + "&demoId=" + demographicNo + "&docNo=" + documentExportId + "&type=" + DocumentType.CDS.name(), false);
+	} else {
+		return mapping.findForward(ffwd);
+	}
 }
 
 	File makeReadMe(ArrayList<File> fs) throws IOException {
