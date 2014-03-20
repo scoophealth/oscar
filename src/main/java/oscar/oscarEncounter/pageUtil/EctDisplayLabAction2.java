@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.pageUtil;
 
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -37,12 +38,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import org.w3c.dom.Document;
 import oscar.OscarProperties;
+import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -135,8 +139,8 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			logger.info("number of labs: " + labs.size());
 			for (int j = 0; j < labs.size(); j++) {
 				result = labs.get(j);
-				Date date = result.getDateObj();
-				String formattedDate = DateUtils.getDate(date, "dd-MMM-yyyy", request.getLocale());
+                Date date = getServiceDate(result);
+                String formattedDate = DateUtils.getDate(date, "dd-MMM-yyyy", request.getLocale());
 				// String formattedDate = DateUtils.getDate(date);
 				func = new StringBuilder("popupPage(700,960,'");
 				label = result.getLabel();
@@ -179,6 +183,9 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				logger.info("Adding link: " + labDisplayName + " : " + formattedDate);
 				item.setLinkTitle(labDisplayName + " " + formattedDate);
 				labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES); // +" "+formattedDate;
+                if (labDisplayName == null) {
+                    labDisplayName = "";
+                }
 				hash = winName.hashCode();
 				hash = hash < 0 ? hash * -1 : hash;
 				func.append(hash + "','" + url + "'); return false;");
@@ -199,7 +206,105 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 		}
 	}
 
+    public Date getServiceDate(LabResultData labData) {
+        ServiceDateLoader loader = new ServiceDateLoader(labData);
+        Date resultDate = loader.determineResultDate();
+        if (resultDate != null) {
+            return resultDate;
+        }
+        return labData.getDateObj();
+    }
+
 	public String getCmd() {
 		return cmd;
 	}
+
+    /**
+     * Attempts to determine service date for any given lab.
+     */
+    private static class ServiceDateLoader {
+
+        private LabResultData labData;
+
+        public ServiceDateLoader(LabResultData labData) {
+            this.labData = labData;
+        }
+
+        /**
+         * Attempts to determine service date for the aggregated
+         * lab.
+         *
+         * @return
+         * 		Returns the service date or null if date can
+         * 		not be determined
+         *
+         */
+        public Date determineResultDate() {
+            String serviceDate = getServiceDate();
+            if (serviceDate == null) {
+                return null;
+            }
+            return parseServiceDate(serviceDate);
+        }
+
+        private Date parseServiceDate(String serviceDate) {
+            Date result = null;
+            try {
+                result = DateUtils.parseDate(serviceDate, null);
+            } catch (ParseException e) {
+                logger.error("Unable to parse as date: " + serviceDate, e);
+            }
+            return result;
+        }
+
+        private String getServiceDate() {
+            String segmentId = labData.getSegmentID();
+            MessageHandler handler = null;
+
+            try {
+                if (!labData.isRemoteLab()) {
+                    handler = getLocalHandler(segmentId);
+                } else {
+                    handler = getRemoteHandler(labData);
+                }
+            } catch (Exception e) {
+                logger.error("Unable to get handler for " + labData, e);
+            }
+
+            if (handler == null) {
+                return null;
+            }
+
+            String serviceDate = handler.getServiceDate();
+            return serviceDate;
+        }
+
+        public MessageHandler getRemoteHandler(LabResultData labData) {
+            Integer labPatientId = null;
+            try {
+                labPatientId = Integer.parseInt(labData.getLabPatientId());
+            } catch (Exception e) {
+                logger.error("Unable to parse " + labData.getLabPatientId(), e);
+                return null;
+            }
+
+            String remoteLabKey = LabDisplayHelper.makeLabKey(labPatientId, labData.getSegmentID(), labData.labType, labData.getDateTime());
+            CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(labData.getRemoteFacilityId(), remoteLabKey, labPatientId);
+            Document xmlData = null;
+            try {
+                xmlData = LabDisplayHelper.getXmlDocument(remoteLabResult);
+            } catch (Exception e) {
+                logger.error("Unable to get remote lab result", e);
+                return null;
+            }
+
+            MessageHandler handler = LabDisplayHelper.getMessageHandler(xmlData);
+            return handler;
+        }
+
+        public MessageHandler getLocalHandler(String segmentId) {
+            return oscar.oscarLab.ca.all.parsers.Factory.getHandler(segmentId);
+        }
+    }
+
 }
