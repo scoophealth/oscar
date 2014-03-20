@@ -429,4 +429,8 @@ public class LabResultData implements Comparable<LabResultData> {
 	public void setLabel(String label) {
 		this.label = label;
 	}
+
+    public boolean isRemoteLab() {
+        return getRemoteFacilityId() != null;
+    }
 }
