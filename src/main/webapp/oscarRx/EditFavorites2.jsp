@@ -262,13 +262,16 @@ int i, j;
                                                 %>><%=freq[j].getFreqCode()%></option>
 							<%
                                             }
+                                            
+                                            String duration = f.getDuration() == null ? "" : f.getDuration();
+                                            
                                             %>
 						</select> <b>For:</b> <input type=text name="fldDuration<%= i%>"
-							class=tblRow size=3 value="<%= f.getDuration() %>" /> <select
+							class=tblRow size=3 value="<%= duration %>" /> <select
 							name="fldDurationUnit<%= i%>" class=tblRow>
 							<option
 								<%
-                                                if(f.getDurationUnit().equals("D"))
+                                                if(duration.equals("D"))
                                                 { %>
 								selected="selected"
 								<% }
@@ -276,7 +279,7 @@ int i, j;
 								value="D">Day(s)</option>
 							<option
 								<%
-                                                if(f.getDurationUnit().equals("W"))
+                                                if(duration.equals("W"))
                                                 { %>
 								selected="selected"
 								<% }
@@ -284,7 +287,7 @@ int i, j;
 								value="W">Week(s)</option>
 							<option
 								<%
-                                                if(f.getDurationUnit().equals("M"))
+                                                if(duration.equals("M"))
                                                 { %>
 								selected="selected"
 								<% }
