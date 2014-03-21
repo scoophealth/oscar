@@ -116,7 +116,7 @@
 <table width="100%">
 	<tr>
 		<td valign="top">
-			<input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.location.href='fieldnotereport.jsp?date_start=<%= dateStart %>&date_end=<%= dateEnd %>'" />
+			<input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.close();" />
 		</td>
 		<td>
 <%
@@ -311,7 +311,7 @@
     if (!"download".equals(method)) {
 %>
         <p>&nbsp;</p>
-        <input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.location.href='fieldnotereport.jsp?date_start=<%= dateStart %>&date_end=<%= dateEnd %>'" />
+        <input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.close();" />
 <%
     }
 %>
