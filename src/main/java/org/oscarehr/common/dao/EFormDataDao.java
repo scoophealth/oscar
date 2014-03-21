@@ -241,17 +241,17 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		return query.getResultList();
 	}    
 
-    public List<Integer> findFdidsByFidsAndDates(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
+    public List<EFormData> findByFidsAndDates(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
     {
-    	if (fids==null || fids.isEmpty()) return new ArrayList<Integer>();
+    	if (fids==null || fids.isEmpty()) return null;
     	
-    	Query query = entityManager.createQuery("select x.id from " + modelClass.getSimpleName() + " x where x.current=1 and x.formId in (?1) and x.formDate>=?2 and x.formDate<?3");
+    	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.current=1 and x.formId in (?1) and x.formDate>=?2 and x.formDate<?3");
     	query.setParameter(1, fids);
     	query.setParameter(2, dateStart);
     	query.setParameter(3, dateEnd);
     	
     	@SuppressWarnings("unchecked")
-    	List<Integer> results=query.getResultList();
+    	List<EFormData> results=query.getResultList();
     	
     	return(results);
     }

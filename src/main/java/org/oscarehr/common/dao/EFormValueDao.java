@@ -78,7 +78,7 @@ public class EFormValueDao extends AbstractDao<EFormValue> {
 		@SuppressWarnings("unchecked")
 		List<EFormValue> results = query.getResultList();
 
-		if (results.isEmpty()) return null;
+		if (results==null || results.isEmpty()) return null;
 		return(results.get(0));
     }
 
