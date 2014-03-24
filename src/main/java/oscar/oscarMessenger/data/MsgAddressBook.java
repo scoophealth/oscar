@@ -26,8 +26,11 @@
 package oscar.oscarMessenger.data;
 
 import javax.servlet.jsp.JspWriter;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
 
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -340,5 +343,12 @@ public class MsgAddressBook {
    }
 //------------------------------------------------------------------------------------------------------------
 
-
+   public String getRealProviderName(String providerNo, String providerName) {
+       ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+       Provider provider = providerDao.getProvider(providerNo);
+       if (provider != null) {
+           return provider.getFormattedName();
+       }
+       return providerName;
+   }
 }
