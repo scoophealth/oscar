@@ -2426,7 +2426,10 @@
         <action path="/PMmodule/OcanWorkload" type="org.oscarehr.PMmodule.web.OcanWorkloadAction" parameter="method" scope="request" >
             <forward name="view" path="/PMmodule/OcanWorkload.jsp" />
        </action>
-
+       
+		<action input="/billing/CA/ON/viewMOHFiles.jsp" path="/billing/CA/ON/moveMOHFiles" scope="request" type="org.oscarehr.billing.CA.ON.web.MoveMOHFilesAction" validate="false">
+            <forward name="success" path="/billing/CA/ON/viewMOHFiles.jsp"/>
+        </action>
 
         <action input="/billing/CA/ON/endYearStatement.jsp" name="PatientEndYearStatementForm" path="/billing/CA/ON/endYearStatement" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementAction" validate="false">
             <forward name="success" path="/billing/CA/ON/endYearStatement.jsp"/>
