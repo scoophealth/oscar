@@ -8,6 +8,7 @@
     and "gnu.org/licenses/gpl-2.0.html".
     
 --%>
+<%@page import="org.oscarehr.util.WebUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -71,11 +72,16 @@ function checkForm() {
 		<th align="CENTER" bgcolor="<%=deepcolor%>">View MOH Files</th>
 	</tr>
 </table>
-<% if (folder == EDTFolder.INBOX) {%> <form method="POST" action="<%=request.getContextPath()%>/billing/CA/ON/moveMOHFiles.do" onsubmit="return checkForm();"><% } %>
+
+	<%= WebUtils.popMessages(request.getSession(), "messages") %>
+
+		<%
+		    if (folder == EDTFolder.INBOX) {
+		%> <form method="POST" action="<%=request.getContextPath()%>/billing/CA/ON/moveMOHFiles.do" onsubmit="return checkForm();"><% } %>
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
 	<tr>
 		<td>
-		<select onchange="location.href='viewMOHFiles.jsp?folder='+this.options[selectedIndex].value">
+		<select name="folder" onchange="location.href='viewMOHFiles.jsp?folder='+this.options[selectedIndex].value">
 			<option value="inbox" <% if (folder == EDTFolder.INBOX) {%>selected<%}%>>Inbox</option>
 			<option value="outbox" <% if (folder == EDTFolder.OUTBOX) {%>selected<%}%>>Outbox</option>
 			<option value="sent" <% if (folder == EDTFolder.SENT) {%>selected<%}%>>Sent</option>
@@ -147,7 +153,7 @@ function checkForm() {
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
 	<tr>
 		<td>
-		<select onchange="location.href='viewMOHFiles.jsp?folder='+this.options[selectedIndex].value">
+		<select name="folder" onchange="location.href='viewMOHFiles.jsp?folder='+this.options[selectedIndex].value">
 			<option value="inbox" <% if (folder == EDTFolder.INBOX) {%>selected<%}%>>Inbox</option>
 			<option value="outbox" <% if (folder == EDTFolder.OUTBOX) {%>selected<%}%>>Outbox</option>
 			<option value="sent" <% if (folder == EDTFolder.SENT) {%>selected<%}%>>Sent</option>
