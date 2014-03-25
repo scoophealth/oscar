@@ -361,6 +361,10 @@ div.logoutBox {
 				key="admin.admin.btnBillingReconciliation" /></a></li>                       
                         <!--  li><a href="#" onclick ='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingRA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnBillingReconciliation"/></a></li-->
 			<!--  li><a href="#" onclick ='popupPage(600,1000,&quot;<html:rewrite page="/billing/CA/ON/billingOBECEA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li-->
+			<li>
+				<a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/mcedt/mcedt.do"/>&quot;);return false;'><bean:message key="admin.admin.mcedt"/></a>
+			</li>
+			</li>
 			<li><a href="#"
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/ON/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.invoiceRpts"/></a></li>
                         <li><a href="#"

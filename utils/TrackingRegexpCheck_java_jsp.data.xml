@@ -15,8 +15,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProviderDao.java:List lst = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java:if (null == this._roles) this._roles = new java.util.HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/ProgramManager.java:* Iterator iter = programProviderDAOT.getProgramProvidersByProvider(new Long(providerNo)).iterator(); ArrayList pList = new ArrayList(); while (iter.hasNext()) { ProgramProvider p = (ProgramProvider) iter.next(); if (p!=null &amp;&amp; p.getProgramId() !=</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/RoomManager.java:List roomIdCounts = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/RoomManager.java:List roomIdKeys = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/impl/StreetHealthReportManagerImpl.java:List results = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/service/impl/StreetHealthReportManagerImpl.java:return new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/utility/GetProviderRoles.java:Set roles = new HashSet();</ViolationValue>
@@ -37,9 +35,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:Hashtable ht=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:List&lt;Hashtable&gt; r=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java://          List editingCodeList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:Hashtable d = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:List secondList= new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchProviderAutoCompleteAction.java:Hashtable d=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:List&lt;dxResearchBean&gt; dxCodes = handler.getDxResearchBeanVector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector params = new Vector();</ViolationValue>
@@ -199,8 +194,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:public Vector getMeasuringInstrcVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:public Vector getMeasuringInstrcVectorVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:public Collection&lt;EctMeasurementsDataBean&gt; getMeasurementsDataVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:Vector measuringInstructionVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public Vector getMeasuringInstructionVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:public Collection&lt;EctStyleSheetBean&gt; getStyleSheetNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection&lt;EctTypeDisplayNameBean&gt; getTypeDisplayNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:Vector validationsVector = new Vector();</ViolationValue>
@@ -749,12 +742,6 @@
         <ViolationValue>/src/main/java/org/caisi/dao/ProviderDAO.java:public class ProviderDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/AgencyDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/AgencyDao.java:public class AgencyDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/BedCheckTimeDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/BedCheckTimeDAO.java:public class BedCheckTimeDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/BedDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/BedDAO.java:public class BedDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/BedDemographicDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/BedDemographicDao.java:public class BedDemographicDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ClientReferralDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ClientReferralDAO.java:public class ClientReferralDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/DefaultRoleAccessDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -767,8 +754,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/GenericIntakeNodeDAO.java:public class GenericIntakeNodeDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/HealthSafetyDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/HealthSafetyDao.java:public class HealthSafetyDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/LogDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/LogDAO.java:public class LogDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java:public class ProgramAccessDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramClientRestrictionDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -789,12 +774,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProgramTeamDAO.java:public class ProgramTeamDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProviderDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/ProviderDao.java:public class ProviderDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomBedDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomBedDAO.java:public class RoomBedDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomDAO.java:public class RoomDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomDemographicDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/RoomDemographicDao.java:public class RoomDemographicDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/SecUserRoleDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/SecUserRoleDao.java:public class SecUserRoleDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/StreetHealthDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -1141,9 +1120,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:public Hashtable&lt;String, Long&gt; getHashofMessages(String providerNo, String name) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:Hashtable&lt;String,String&gt; h = new Hashtable&lt;String,String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:Hashtable d = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchProviderAutoCompleteAction.java:Hashtable d=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchProviderAutoCompleteAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSCondition.java:import java.util.Hashtable;</ViolationValue>
@@ -1613,7 +1589,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementInfo.java:Hashtable&lt;String,String&gt; warningHash = new Hashtable&lt;String,String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementInfo.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java://                 Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java://Hashtable recoHash =  getRecommendationHash( reco);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable indicatorHash = mFlowsheet.getIndicatorHashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, ArrayList&lt;String&gt;&gt; dxTrigHash = new Hashtable&lt;String, ArrayList&lt;String&gt;&gt;();</ViolationValue>
@@ -1670,13 +1645,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:public static Hashtable&lt;String,Object&gt; getMeasurementDataById(String id){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:return measurementsDataVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:return new Hashtable&lt;String, Object&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:Vector measuringInstructionVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public EctMeasuringInstructionBeanHandler(Vector measuringInstructionVector) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public Vector getMeasuringInstructionVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public void setMeasuringInstructionVector(Vector measuringInstructionVector){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:return measuringInstructionVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:this.measuringInstructionVector=measuringInstructionVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:Vector&lt;EctStyleSheetBean&gt; styleSheetNameVector = new Vector&lt;EctStyleSheetBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:public Collection&lt;EctStyleSheetBean&gt; getStyleSheetNameVector() {</ViolationValue>
@@ -2498,6 +2466,8 @@
         <ViolationValue>/src/main/java/oscar/oscarWorkflow/WorkFlowInfo.java:public WorkFlowInfo(Hashtable h){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWorkflow/WorkFlowState.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWorkflow/WorkFlowState.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/util/CBIUtil.java:StringBuffer strbuff = new StringBuffer();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/util/CBIUtil.java:public StringBuffer generateTree(List&lt;Date&gt; list)</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/Doc2PDF.java:Vector v = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/Doc2PDF.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/Doc2PDF.java:public static Vector getXMLTagValue(String xml, String section) throws Exception {</ViolationValue>
@@ -2514,6 +2484,7 @@
         <ViolationValue>/src/main/webapp/admin/addQueue.jsp:for(Hashtable qht:queues){</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/adminnewgroup.jsp:StringBuffer strbuf=new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/adminnewgroup.jsp:strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/cbiAdmin.jsp:StringBuffer treeDataStr = cbiUtil.generateTree(submissionDateList);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/gstreport.jsp:Vector list = gstReport.getGST(providerNo, startDate, endDate);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:Vector   vecProvider  = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:Vector&lt;Properties&gt; vec = new Vector&lt;Properties&gt;();</ViolationValue>
@@ -2625,12 +2596,12 @@
         <ViolationValue>/src/main/webapp/billing/CA/ON/specialtyBilling/fluBilling/onDbAddFluBilling.jsp:Vector vec = obj.getBillingClaimObj(request);</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/navigation.jsp:&lt;%@ page import="java.util.Vector" %&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/navigation.jsp:Vector dxCodes;</ViolationValue>
+        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:&lt;%@page import="java.util.Hashtable"%&gt;</ViolationValue>
+        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
+        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/viewNotes.jsp:StringBuffer editors = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/viewNotes.jsp:StringBuffer strNoteIssues = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/viewNotes.jsp:StringBuffer strcme = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
-        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:for (Hashtable ht : queues) {</ViolationValue>
-        <ViolationValue>/src/main/webapp/casemgmt/noteBrowser.jsp:&lt;%@page import="java.util.Hashtable"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/common/OntarioMDRedirect.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%&gt;&lt;%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%&gt;&lt;%</ViolationValue>
         <ViolationValue>/src/main/webapp/common/OntarioMDRedirect.jsp:Hashtable loginCreds = omd.loginToOntarioMD(uname,pword,requestor);</ViolationValue>
         <ViolationValue>/src/main/webapp/common/omdDiseaseList.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable,org.apache.commons.collections.*"%&gt;</ViolationValue>
@@ -2657,18 +2628,17 @@
         <ViolationValue>/src/main/webapp/dms/addDocument.jsp:linkhtmlerrors = (Hashtable) request.getAttribute("linkhtmlerrors");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/addedithtmldocument.jsp:Hashtable linkhtmlerrors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/addedithtmldocument.jsp:linkhtmlerrors = (Hashtable) request.getAttribute("linkhtmlerrors");</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:&lt;%@page import="java.util.Hashtable"%&gt;</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/editDocument.jsp:Hashtable docerrors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/editDocument.jsp:docerrors = (Hashtable) request.getAttribute("docerrors");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:List&lt;Hashtable&gt; queues=queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:for (Hashtable ht : queues) {</ViolationValue>
-        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
-        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:for (Hashtable ht : queues) {</ViolationValue>
-        <ViolationValue>/src/main/webapp/dms/documentBrowser.jsp:&lt;%@page import="java.util.Hashtable"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromProvider.jsp:Hashtable providerDocs=(Hashtable)request.getSession().getAttribute("providerDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromQueue.jsp:Hashtable queueDocs=(Hashtable)request.getSession().getAttribute("queueDocs");</ViolationValue>
-        <ViolationValue>/src/main/webapp/eform/efmSendform.jsp:&lt;%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%&gt;&lt;%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%&gt;&lt;%</ViolationValue>
         <ViolationValue>/src/main/webapp/eform/efmformmanagerdownload.jsp:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
         <ViolationValue>/src/main/webapp/eform/efmformmanagerdownload.jsp:Vector params = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/eform/efmformmanagerdownload.jsp:Vector vec = new Vector();</ViolationValue>
@@ -2743,8 +2713,6 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/Index.jsp:msgId = (String) msgVector.elementAt(j);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/Index2.jsp:Vector msgVector = msgDemoMap.getMsgVector(demoNo);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/Index2.jsp:Vector splitChart = ectSplitChart.getSplitCharts(demoNo);</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/LeftNavBarDisplay.jsp:StringBuffer jscode = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/LeftNavBarDisplay.jsp:public int display(ArrayList&lt;NavBarDisplayDAO.Item&gt;items, int numToDisplay, int numDisplayed, String reloadUrl, boolean xpanded, int numItems, StringBuffer js, int displayThreshold, javax.servlet.http.HttpServletRequest request, javax.servlet.jsp.JspWriter out ) throws IOException {</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/immunization/ScheduleConfig.jsp:Vector cfgId = new EctImmConfigData().getImmunizationConfigId();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/immunization/ScheduleConfig.jsp:Vector cfgSet = new EctImmConfigData().getImmunizationConfigName();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/immunization/ScheduleEdit.jsp:StringBuffer sb = new StringBuffer();</ViolationValue>
@@ -2803,7 +2771,6 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HistoryIndex.jsp:property="measurementsDataVector" type="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/Measurements.jsp:&lt;%@ page import="java.util.Vector;"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/Measurements.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/Measurements.jsp:property="measuringInstructionVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/TemplateFlowSheetPage.jspf:StringBuffer recListBuffer = new StringBuffer();</ViolationValue>
@@ -2858,6 +2825,7 @@
         <ViolationValue>/src/main/webapp/oscarReport/LabReqReport.jsp:Hashtable h = (Hashtable) labRep.get(j);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptByExamplesAllFavorites.jsp:property="favoriteVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptViewAllQueryByExamples.jsp:property="queryVector"&gt;</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarReport/cbi_report_form.jsp:StringBuffer treeDataStr = cbiUtil.generateTree(submissionDateList);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp:property="measuringInstrcVector" indexId="index"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializePatientsInAbnormalRangeCDMReport.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
@@ -3178,9 +3146,14 @@
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:bgcolor = new StringBuffer("pink");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:strHolidayName = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:strHolidayName = new StringBuffer(aHScheduleHoliday.holiday_name) ;</ViolationValue>
-		<ViolationValue>/src/main/java/oscar/util/CBIUtil.java:public StringBuffer generateTree(List&lt;Date&gt; list)</ViolationValue>
-		<ViolationValue>/src/main/java/oscar/util/CBIUtil.java:StringBuffer strbuff = new StringBuffer();</ViolationValue>
-		<ViolationValue>/src/main/webapp/admin/cbiAdmin.jsp:StringBuffer treeDataStr = cbiUtil.generateTree(submissionDateList);</ViolationValue>
-	<ViolationValue>/src/main/webapp/oscarReport/cbi_report_form.jsp:StringBuffer treeDataStr = cbiUtil.generateTree(submissionDateList);</ViolationValue>
+    </ViolationSet>
+    <ViolationSet>
+        <ViolationKey>.*\.(error|warn|debug|fatal)\s*\((e[0-9]*|ex[0-9]*|[a-zA-Z]+xception)\);</ViolationKey>
+        <ViolationValue>/src/main/java/org/apache/xml/security/encryption/XMLCipher.java:log.debug(e);</ViolationValue>
+    </ViolationSet>
+    <ViolationSet>
+        <ViolationKey>.*org.apache.commons.logging.Log.*</ViolationKey>
+        <ViolationValue>/src/main/java/org/apache/xml/security/encryption/XMLCipher.java:org.apache.commons.logging.LogFactory.getLog(XMLCipher.class);</ViolationValue>
+        <ViolationValue>/src/main/java/org/apache/xml/security/encryption/XMLCipher.java:private static org.apache.commons.logging.Log log =</ViolationValue>
     </ViolationSet>
 </TrackingRegexpCheck>

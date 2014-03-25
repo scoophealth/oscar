@@ -984,6 +984,12 @@
 				 <artifactId>cbi_ws_client</artifactId>
 				 <version>1.1</version>
 		</dependency>
+		
+        <dependency>
+                <groupId>org.oscarehr.integration.ebs</groupId>
+                <artifactId>ebs-client</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
 	</dependencies>
 
@@ -1199,7 +1205,8 @@
 			<exclude>src/main/java/oscar/form/pdfservlet/FrmPDFServlet.java</exclude>
 			<exclude>src/main/java/oscar/form/study/FrmStudyPING_DiabetesRecord.java</exclude>
 
-
+            <exclude>src/main/java/org/apache/xml/security/encryption/XMLCipher.java</exclude>
+            <exclude>src/main/java/org/apache/xml/security/encryption/DocumentSerializer.java</exclude>
                 </excludes>
 		<strictCheck>true</strictCheck>
             </configuration>
