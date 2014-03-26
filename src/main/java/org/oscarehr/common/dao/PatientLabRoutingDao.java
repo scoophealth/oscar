@@ -111,5 +111,4 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
     	
     	return q.getResultList();
     }
-
 }
