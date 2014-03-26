@@ -744,6 +744,17 @@ public class RxPrescriptionData {
         return arr;
     }
 
+    public Prescription[] getActivePrescriptionsByPatient(int demographicNo) {
+            List<Prescription> lst = new ArrayList<Prescription>();
+            Prescription[] p = getPrescriptionsByPatientHideDeleted(demographicNo);
+            for (int i = 0; i < p.length; i++) {
+                if (!p[i].isArchived() && !p[i].isDiscontinued() && p[i].isCurrent()) {
+                	lst.add(p[i]);
+                }
+            }
+            return lst.toArray(new Prescription[lst.size()]);
+    }
+
     public Vector getCurrentATCCodesByPatient(int demographicNo) {
         Vector vec = new Vector();
         Prescription[] p = getPrescriptionsByPatientHideDeleted(demographicNo);

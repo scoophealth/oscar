@@ -159,7 +159,7 @@ public class DSDemographicAccess {
     public List<Prescription> getRxCodes() {
     	logger.debug("GET RX CODES CALLED");
         try {
-            Prescription[] prescriptions = new RxPrescriptionData().getPrescriptionsByPatientHideDeleted(Integer.parseInt(this.demographicNo));
+            Prescription[] prescriptions = new RxPrescriptionData().getActivePrescriptionsByPatient(Integer.parseInt(this.demographicNo));
             List<Prescription> prescribedDrugs = Arrays.asList(prescriptions);
             return prescribedDrugs;
         } catch (NumberFormatException nfe) {
