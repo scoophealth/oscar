@@ -400,18 +400,18 @@ public class JdbcBillingRAImpl {
 		BillingONCHeader1Dao billingDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 
 		try {
-			for (RaDetail r : dao.findByIdOhipAndErrorCode(ConversionUtils.fromIntString(raNo), providerOhipNo, Arrays.asList(notErrorCode))) {
-				String account = "" + r.getBillingNo();
+			for (Integer billingNo : dao.findDistinctIdOhipWithError(ConversionUtils.fromIntString(raNo), providerOhipNo, Arrays.asList(notErrorCode))) {
+				String account = "" + billingNo;
 				String demoLast = "";
 				String billingDate = "";
 
-				BillingONCHeader1 billing = billingDao.find(r.getBillingNo());
+				BillingONCHeader1 billing = billingDao.find(billingNo);
 				if (billing != null) {
 					demoLast = billing.getDemographicName();
 					billingDate = ConversionUtils.toDateString(billing.getBillingDate());
 				}
 
-				for (RaDetail rr : dao.findByHeaderAndBillingNos(ConversionUtils.fromIntString(raNo), r.getBillingNo())) {
+				for (RaDetail rr : dao.findByHeaderAndBillingNos(ConversionUtils.fromIntString(raNo), billingNo)) {
 					Properties prop = new Properties();
 					String explain = rr.getErrorCode();
 					if (explain == null || explain.compareTo("") == 0) {
