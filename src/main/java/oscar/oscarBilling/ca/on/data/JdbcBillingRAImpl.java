@@ -479,7 +479,7 @@ public class JdbcBillingRAImpl {
 
 	public List getRAErrorReport(String raNo, String providerOhipNo, String notErrorCode) {
 		List ret = new Vector();
-		String sql = "select * from radetail where raheader_no=" + raNo + " and providerohip_no='" + providerOhipNo
+		String sql = "select distinct radetail.billing_no from radetail where raheader_no=" + raNo + " and providerohip_no='" + providerOhipNo
 				+ "' and error_code<>'' and error_code not in(" + notErrorCode + ") ";
 		// _logger.info("getRAErrorReport(sql = " + sql + ")");
 		ResultSet rsdemo = dbObj.searchDBRecord(sql);
