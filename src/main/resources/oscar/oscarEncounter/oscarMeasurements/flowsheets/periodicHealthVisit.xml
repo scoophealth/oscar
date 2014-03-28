@@ -279,7 +279,16 @@
 
 		<item measurement_type="SEXH" display_name="Sexual History" guideline="" graphable="no" value_name="Sexual History" />
 	
-		<item measurement_type="STIS" display_name="STI Screening" guideline="&lt;strong&gt;Screening for Sexually Transmitted Infections in High Risk Populations:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;High-risk Populations: individuals under age 30 with at least 2 sexual partners in the previous year or age 16 years at first intercourse, prostitutes, sexual contacts of individuals known to have an STI.&lt;/li&gt; &lt;li&gt;Syphilis (A): Serology testing &lt;/li&gt; &lt;li&gt;Gonorrhea (A): Screen with Gram stain and culture of cervical or urethral specimen. Urine testing available. &lt;/li&gt; &lt;li&gt;Chlamydia (B): Screen with culture or polymerase chain reaction. Urine testing available.&lt;/li&gt; &lt;li&gt;HIV (A): Screen with blood test&lt;/li&gt; &lt;li&gt;Hepatitis B virus (HBV): Screen with hepatitis B surface antigen (HBsAg) in blood. &lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="STI Screening" />
+		<item measurement_type="STIS" display_name="STI Screening" guideline="&lt;strong&gt;Screening for Sexually Transmitted Infections in High Risk Populations:&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;High-risk Populations: individuals under age 30 with at least 2 sexual partners in the previous year or age 16 years at first intercourse, prostitutes, sexual contacts of individuals known to have an STI.&lt;/li&gt; &lt;li&gt;Syphilis (A): Serology testing &lt;/li&gt; &lt;li&gt;Gonorrhea (A): Screen with Gram stain and culture of cervical or urethral specimen. Urine testing available. &lt;/li&gt; &lt;li&gt;Chlamydia (B): Screen with culture or polymerase chain reaction. Urine testing available.&lt;/li&gt; &lt;li&gt;HIV (A): Screen with blood test&lt;/li&gt; &lt;li&gt;Hepatitis B virus (HBV): Screen with hepatitis B surface antigen (HBsAg) in blood. &lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="STI Screening">
+			<rules>
+			    <recommendation strength="hidden">
+					<condition type="patientAge" value="&gt;50" />
+				</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>	
+		</item>
 		
 		<item measurement_type="SSXC" display_name="Safe Sex Counselling" guideline="&lt;strong&gt;Safe sex practices/Sexually Transmitted Diseases counseling&lt;/strong&gt; &lt;br&gt; (esp. Gonorrhea counseling) (B): &lt;ul&gt; &lt;li&gt;Prevent transmission of sexually transmitted diseases.&lt;/li&gt; &lt;li&gt;Abstinence is most effective, fair evidence to use condoms&lt;/li&gt; &lt;/ul&gt;" graphable="no" value_name="Safe Sex Counselling" />
 
@@ -306,7 +315,19 @@
 		</item>
 
 
-		<item prevention_type="MMRV" display_name="Rubella and Varicella" guideline="&lt;strong&gt;Rubella (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Give one dose of a vaccine to non-pregnant women of childbearing age unless there is proof of immunity via immunization records or serology.&lt;/li&gt; &lt;li&gt;They do not recommend serologic testing as it may delay needed immunization. &lt;/li&gt; &lt;li&gt;According to the Task Force, the decision on universal vaccination or screening for immunization status followed by vaccination depends on the physician's practice setting (i.e., cost of serologic testing, will patient follow-up for needed vaccination).&lt;/li&gt; &lt;/ul&gt; &lt;strong&gt;Varicella (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Determine Varicella infection status by history or serology.&lt;/li&gt; &lt;li&gt;Administer to those susceptible to Varicella infection, including: women of childbearing age (but not during pregnancy), health care workers, household contacts of immunocompromised people, adults who may be exposed at work (teachers, day care workers), other susceptible adults, especially new immigrants from tropical climates.&lt;/li&gt; &lt;li&gt;Give two doses at least 4 weeks apart, if &gt; or = 13 years.4 &lt;/li&gt; &lt;/ul&gt;" graphable="no"/>
+		<item prevention_type="MMRV" display_name="Rubella and Varicella" guideline="&lt;strong&gt;Rubella (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Give one dose of a vaccine to non-pregnant women of childbearing age unless there is proof of immunity via immunization records or serology.&lt;/li&gt; &lt;li&gt;They do not recommend serologic testing as it may delay needed immunization. &lt;/li&gt; &lt;li&gt;According to the Task Force, the decision on universal vaccination or screening for immunization status followed by vaccination depends on the physician's practice setting (i.e., cost of serologic testing, will patient follow-up for needed vaccination).&lt;/li&gt; &lt;/ul&gt; &lt;strong&gt;Varicella (B):&lt;/strong&gt; &lt;ul&gt; &lt;li&gt;Determine Varicella infection status by history or serology.&lt;/li&gt; &lt;li&gt;Administer to those susceptible to Varicella infection, including: women of childbearing age (but not during pregnancy), health care workers, household contacts of immunocompromised people, adults who may be exposed at work (teachers, day care workers), other susceptible adults, especially new immigrants from tropical climates.&lt;/li&gt; &lt;li&gt;Give two doses at least 4 weeks apart, if &gt; or = 13 years.4 &lt;/li&gt; &lt;/ul&gt;" graphable="no">
+			<rules>
+				<recommendation strength="hidden">
+					<condition type="isMale" />
+			    </recommendation>
+			    <recommendation strength="hidden">
+					<condition type="patientAge" value="&gt;49" />
+				</recommendation>
+				<recommendation strength="warning" >
+					<condition type="monthrange" value="-1" />
+				</recommendation>
+			</rules>
+		</item>
 
 		<item measurement_type="SHAB" display_name="Sleep Habits" guideline="" graphable="no" value_name="Sleep Habits" />
 
