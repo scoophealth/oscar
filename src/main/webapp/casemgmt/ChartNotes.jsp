@@ -409,7 +409,7 @@ try
 		String provView = request.getParameter("providerview");
 		if (provView == null || provView.equals("") || provView.equals("null"))
 		{
-			provView = "1";
+			provView = provNo;
 		}
 	%>
 	<html:hidden property="appointmentNo" value="<%=apptNo%>" />
