@@ -67,8 +67,10 @@ import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -83,6 +85,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgMessageData;
 import oscar.util.ConversionUtils;
 import oscar.util.OscarRoleObjectPrivilege;
+import oscar.util.UtilDateUtilities;
 
 public class EFormUtil {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -105,6 +108,7 @@ public class EFormUtil {
 	private static EFormGroupDao eFormGroupDao = (EFormGroupDao) SpringUtils.getBean(EFormGroupDao.class);
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean(ProviderDao.class);
 	private static TicklerDao ticklerDao = SpringUtils.getBean(TicklerDao.class);
+	private static PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
 
 	private EFormUtil() {
 	}
@@ -743,8 +747,12 @@ public class EFormUtil {
 		String[] template_echart = { "EncounterNote", "SocialHistory", "FamilyHistory", "MedicalHistory", "OngoingConcerns", "RiskFactors", "Reminders", "OtherMeds" };
 		String[] code = { "", "SocHistory", "FamHistory", "MedHistory", "Concerns", "RiskFactors", "Reminders", "OMeds" };
 		ArrayList<String> templates = new ArrayList<String>();
-
-		// write to echart
+		
+		/* write to echart
+		 * <EncounterNote {or another template_echart}>
+		 * 		content to write to echart
+		 * </EncounterNote>
+		 */
 		for (int i = 0; i < template_echart.length; i++) {
 			templates = getWithin(template_echart[i], text);
 			for (String template : templates) {
@@ -755,17 +763,30 @@ public class EFormUtil {
 			}
 		}
 
-		// write to document
-		templates = getWhole("document", text);
+		/* write to document
+		 * <document>
+		 * 		<docdesc>{optional:documentDescription}</docdesc>
+		 * 		<belong>{optional:provider/patient}</belong>
+		 * 		<docowner>{optional}</docowner>
+		 * 		<content>
+		 * 			content to write to document
+		 * 		</content>
+		 * </document>
+		 */
+		templates = getWithin("document", text);
 		for (String template : templates) {
 			if (StringUtils.isBlank(template)) continue;
 
-			String docDesc = getInfo("docdesc", template, eForm.getFormName());
-			String belong = getAttribute("belong", getBeginTag("document", template));
-			if (StringUtils.isBlank(belong)) belong = "provider";
-			String docOwner = getInfo("docowner", template, eForm.getProviderNo());
-			if (belong.equalsIgnoreCase("patient")) docOwner = getInfo("docowner", template, eForm.getDemographicNo());
-			String docText = getContent("content", template);
+			String docDesc = getContent("docdesc", template, eForm.getFormName());
+			String belong = getContent("belong", template, "provider").toLowerCase();
+			String docOwner = getContent("docowner", template, eForm.getProviderNo());
+			if (belong.equals("patient")) {
+				docOwner = getContent("docowner", template, eForm.getDemographicNo());
+			}
+			else if (!belong.equals("provider")) {
+				belong = "provider";
+			}
+			String docText = getContent("content", template, "");
 			docText = putTemplateEformHtml(eForm.getFormHtml(), docText);
 
 			if (NumberUtils.isDigits(docOwner)) {
@@ -775,34 +796,106 @@ public class EFormUtil {
 				EDocUtil.addDocumentSQL(edoc);
 			}
 		}
+		
+		/* write to prevention
+		 * <prevention>
+		 * 		<type>{preventionType: must be identical to Oscar prevention types}</type>
+		 * 		<provider>{optional:providerNo}</provider>
+		 * 		<date>{optional:preventionDate}</date>
+		 * 		<status>{optional:completed/refused/ineligible}</status>
+		 * 		<name>{optional}</name>
+		 * 		<dose>{optional}</dose>
+		 * 		<manufacture>{optional}</manufacture>
+		 * 		<route>{optional}</route>
+		 * 		<lot>{optional}</lot>
+		 * 		<location>{optional}</location>
+		 * 		<comments>{optional}</comments>
+		 * 		<reason>{optional}</reason>
+		 * 		<result>{optional:pending/normal/abnormal}</result>
+		 * </prevention>
+		 */
+		
+		templates = getWithin("prevention", text);
+		for (String template : templates) {
+			if (StringUtils.isBlank(template)) continue;
 
-		// write to message
+			String preventionType = getEqualIgnoreCase(preventionManager.getPreventionTypeList(), getContent("type", template, null));
+			if (preventionType == null) continue;
+			
+			String preventionProvider = getContent("provider", template, eForm.getProviderNo());
+			String preventionDate = getContent("date", template, eForm.getFormDate());
+			String preventionStatus = getContent("status", template, "completed"); //completed(0)/refused(1)/ineligible(2)
+			
+			Prevention prevention = new Prevention();
+			prevention.setPreventionType(preventionType);
+			prevention.setPreventionDate(UtilDateUtilities.StringToDate(preventionDate, "yyyy-MM-dd"));
+			prevention.setProviderNo(preventionProvider);
+			prevention.setDemographicId(Integer.valueOf(eForm.getDemographicNo()));
+			prevention.setCreatorProviderNo(eForm.getProviderNo());
+			if (preventionStatus.equalsIgnoreCase("refused")) prevention.setRefused(true);
+			else if (preventionStatus.equalsIgnoreCase("ineligible")) prevention.setIneligible(true);
+			
+			HashMap<String, String> extHash = new HashMap<String, String>();
+			String extData = null;
+			if ((extData = getContent("name", template, null)) != null) extHash.put("name", extData);
+			if ((extData = getContent("dose", template, null)) != null) extHash.put("dose", extData);
+			if ((extData = getContent("manufacture", template, null)) != null) extHash.put("manufacture", extData);
+			if ((extData = getContent("route", template, null)) != null) extHash.put("route", extData);
+			if ((extData = getContent("lot", template, null)) != null) extHash.put("lot", extData);
+			if ((extData = getContent("location", template, null)) != null) extHash.put("location", extData);
+			if ((extData = getContent("comments", template, null)) != null) extHash.put("comments", extData);
+			if ((extData = getContent("reason", template, null)) != null) extHash.put("reason", extData);
+			if ((extData = getContent("result", template, null)) != null) {
+				extData = extData.toLowerCase();
+				if (extData.equals("pending") || extData.equals("normal") || extData.equals("abnormal")) {
+					extHash.put("result", extData);
+				}
+			}
+			preventionManager.addPreventionWithExts(prevention, extHash);
+		}
+
+		/* write to message
+		 * <message>
+		 * 		<subject>{optional}</subject>
+		 * 		<sendto>{list of providerNo to receive message, separated by comma}</sendto>
+		 * 		<content>
+		 * 			content of message
+		 * 		</content>
+		 * </message>
+		 */
 		templates = getWithin("message", text);
 		for (String template : templates) {
 			if (StringUtils.isBlank(template)) continue;
 
-			String subject = getInfo("subject", template, eForm.getFormName());
+			String subject = getContent("subject", template, eForm.getFormName());
 			String sentWho = getSentWho(template);
 			String[] sentList = getSentList(template);
 			String userNo = eForm.getProviderNo();
 			String userName = providerDao.getProviderName(eForm.getProviderNo());
-			String message = getContent("content", template);
+			String message = getContent("content", template, "");
 			message = putTemplateEformHtml(eForm.getFormHtml(), message);
 
 			MsgMessageData msg = new MsgMessageData();
 			msg.sendMessage2(message, subject, userName, sentWho, userNo, msg.getProviderStructure(sentList), null, null);
 		}
 		
-		// write to ticklers
+		/* write to ticklers
+		 * <tickler>
+		 * 		<taskAssignedTo>{providerNo}</taskAssignedTo>
+		 * 		<tickMsg>
+		 * 			message of the tickler
+		 * 		</tickMsg>
+		 * </tickler>
+		 */
 		templates = getWithin("tickler", text);
 		for (String template : templates) {
 			if (StringUtils.isBlank(template)) continue;
 			
-			String taskAssignedTo = getInfo("taskAssignedTo", template, null);
+			String taskAssignedTo = getContent("taskAssignedTo", template, null);
 			if (taskAssignedTo==null) continue; //no assignee
 			if (providerDao.getProvider(taskAssignedTo.trim())==null) continue; //assignee provider no not exists
 			
-			String message = getContent("tickMsg", template);
+			String message = getContent("tickMsg", template, "");
 			Tickler tickler = new Tickler();
 			tickler.setTaskAssignedTo(taskAssignedTo);
 			tickler.setMessage(message);
@@ -1142,23 +1235,20 @@ public class EFormUtil {
 		return fieldIndexList;
 	}
 
-	private static String getInfo(String tag, String template, String deflt) {
-		if (StringUtils.isBlank(tag) || StringUtils.isBlank(template)) return deflt;
-
-		ArrayList<String> infos = getWithin(tag, template);
-		if (infos.isEmpty()) return deflt;
-
-		String info = infos.get(0).replaceAll("\\s", "");
-		return StringUtils.isBlank(info) ? deflt : info;
-	}
-
-	private static String getContent(String tag, String template) {
+	private static String getContent(String tag, String template, String dflt) {
 		ArrayList<String> contents = getWithin(tag, template);
-		if (contents.isEmpty()) return "";
+		if (contents.isEmpty()) return dflt;
 
 		String content = contents.get(0).trim();
-		if (content.startsWith("\n")) content = content.substring(1); // remove 1st line break, UNIX style
-		else if (content.startsWith("\r\n")) content = content.substring(2); // remove 1st line break, WINDOWS style
+		
+		while (content.length()>0 && Character.isWhitespace(content.charAt(0))) {
+			content = content.substring(1);
+			content = content.trim();
+		}
+		while (content.length()>0 && Character.isWhitespace(content.charAt(content.length()-1))) {
+			content = content.substring(0, content.length()-1);
+			content = content.trim();
+		}
 		return content;
 	}
 
@@ -1221,7 +1311,7 @@ public class EFormUtil {
 	}
 
 	private static String[] getSentList(String msgtxt) {
-		String sentListTxt = getInfo("sendto", msgtxt, "");
+		String sentListTxt = getContent("sendto", msgtxt, "");
 		String[] sentList = sentListTxt.split(",");
 		for (int i = 0; i < sentList.length; i++) {
 			sentList[i] = sentList[i].trim();
@@ -1264,5 +1354,14 @@ public class EFormUtil {
 			}
 			if (!swapped) break;
 		}
+	}
+	
+	private static String getEqualIgnoreCase(ArrayList<String> lst, String str) {
+		if (lst==null || lst.isEmpty() || StringUtils.isBlank(str)) return null;
+		
+		for (String strLst : lst) {
+			if (str.trim().equalsIgnoreCase(strLst.trim())) return strLst.trim();
+		}
+		return null;
 	}
 }
