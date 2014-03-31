@@ -248,8 +248,8 @@ public class JdbcBillingCreateBillingFile {
 			ret += "\n<tr " + (summaryView ? "style='display:none;' class='record" + providerNo + "'" : "") + ">";
 			if (simulation) {
 				ret += "<td class='" + styleClass + "'>" + ch1Obj.getProvider_ohip_no() + "</td>"
-					+ "<td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,740,'billingONCorrection.jsp?billing_no=" + ch1Obj.getId() + "');return false;\">" + ch1Obj.getId() + "</a></td>" 
-					+ "<td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,740,'../../../demographic/demographiccontrol.jsp?demographic_no=" + ch1Obj.getDemographic_no() + "&displaymode=edit&dboperation=search_detail');return false;\">" + ch1Obj.getDemographic_name() + "</a></td>"; 
+					+ "<td class='" + styleClass + "'><a href='javascript:void(0);' class='xlink' rel='../billing/CA/ON/billingONCorrection.jsp?billing_no=" + ch1Obj.getId() + "'>" + ch1Obj.getId() + "</a></td>" 
+					+ "<td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,740,'../demographic/demographiccontrol.jsp?demographic_no=" + ch1Obj.getDemographic_no() + "&displaymode=edit&dboperation=search_detail');return false;\">" + ch1Obj.getDemographic_name() + "</a></td>"; 
 			}
 			else {
 				ret += "<td class='" + styleClass + "'>" + ch1Obj.getId() + "</td>" 
