@@ -84,7 +84,7 @@
      }
      summary = (String) existingPrevention.get("summary");
      extraData = PreventionData.getPreventionKeyValues(id);
-     lot = (String) extraData.get("lot");
+     lot = extraData.get("lot");
      
 	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.PREVENTIONS, Long.valueOf(id));
@@ -99,8 +99,6 @@
   PreventionsLotNrsDao PreventionsLotNrsDao = (PreventionsLotNrsDao)SpringUtils.getBean(PreventionsLotNrsDao.class);
   List<String> lotNrList = PreventionsLotNrsDao.findLotNrs(prevention, false);
   
-  String prevResultDesc = request.getParameter("prevResultDesc");
-
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
   HashMap<String,String> prevHash = pdc.getPrevention(prevention);
 
@@ -470,7 +468,7 @@ function displayCloseWarning(){
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
 			 <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
-                         <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=lot%>" />
+                         <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=str(lot,"")%>" />
                         <select onchange="javascript:updateLotNr(this);" id="lotDrop" name="lotItem" >
                              <%for(String lotnr:lotNrList) {
 							 %>
@@ -612,7 +610,6 @@ function displayCloseWarning(){
                    <fieldset >
                       <legend >Result</legend>
                       <% if (extraData.get("result") == null ){ extraData.put("result","pending");} %>
-			<%=prevResultDesc%><br />
                       <input type="radio" name="result" value="pending" <%=checked( (extraData.get("result")) ,"pending")%> >Pending</input><br/>
                       <input type="radio" name="result" value="normal"  <%=checked((extraData.get("result")),"normal")%> >Normal</input><br/>
                       <input type="radio" name="result" value="abnormal" <%=checked((extraData.get("result")),"abnormal")%> >Abnormal</input> &nbsp;&nbsp;&nbsp;  Reason: <input type="text" name="reason" value="<%=str((extraData.get("reason")),"")%>"/>
