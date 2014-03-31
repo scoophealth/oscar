@@ -24,6 +24,8 @@
 
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.oscarehr.common.dao.PreventionDao;
@@ -34,14 +36,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import oscar.log.LogAction;
+import oscar.oscarPrevention.PreventionDisplayConfig;
+import oscar.util.StringUtils;
 
 @Service
 public class PreventionManager {
 	@Autowired
 	private PreventionDao preventionDao;
-
 	@Autowired
 	private PreventionExtDao preventionExtDao;
+	
+	private ArrayList<String> preventionTypeList = new ArrayList<String>();
 
 	public List<Prevention> getPreventionsByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
@@ -78,5 +83,34 @@ public class PreventionManager {
 		}
 
 		return(results);
+	}
+	
+	public ArrayList<String> getPreventionTypeList() {
+		if (preventionTypeList.isEmpty()) {
+			PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+			for (HashMap<String,String> prevTypeHash : pdc.getPreventions()) {
+			    if (prevTypeHash != null && StringUtils.filled(prevTypeHash.get("name"))) {
+			    	preventionTypeList.add(prevTypeHash.get("name").trim()); 
+			    }
+			}
+		}
+		return preventionTypeList;
+	}
+	
+	public void addPreventionWithExts(Prevention prevention, HashMap<String, String> exts) {
+		if (prevention == null) return;
+		
+		preventionDao.persist(prevention);
+		if (exts != null) {
+			for (String keyval : exts.keySet()) {
+				if (StringUtils.filled(keyval) && StringUtils.filled(exts.get(keyval))) {
+					PreventionExt preventionExt = new PreventionExt();
+					preventionExt.setPreventionId(prevention.getId());
+					preventionExt.setKeyval(keyval);
+					preventionExt.setVal(exts.get(keyval));
+					preventionExtDao.persist(preventionExt);
+				}
+			}
+		}
 	}
 }
