@@ -23,7 +23,6 @@
     Ontario, Canada
 
 --%>
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 
@@ -165,9 +164,10 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/billing/CA/ON/manageBillingform.jsp"><bean:message
 						key="admin.admin.btnManageBillingForm" /></a></li>
-					<li><a href='javascript:void(0);'
-						class="xlink" rel="${ctx}/billing/CA/ON/billingOHIPsimulation.jsp?html="><bean:message
+
+					<li><a href="${ctx}/billing/CA/ON/billingOHIPsimulation.jsp?html=" class="contentLink"><bean:message
 						key="admin.admin.btnSimulationOHIPDiskette" /></a></li>
+
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/billing/CA/ON/billingOHIPreport.jsp"><bean:message
 						key="admin.admin.btnGenerateOHIPDiskette" /></a></li>
