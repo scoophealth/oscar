@@ -107,13 +107,13 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
                     //Date date = (Date)curform.get("formDateAsDate");
                     //String formattedDate = DateUtils.getDate(date,dateFormat,request.getLocale());
                     key = StringUtils.maxLenString(dsConsequence.getText(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES);
-                    item.setLinkTitle(dsConsequence.getText());
+                    item.setLinkTitle(dsGuideline.getTitle());
                     key = StringEscapeUtils.escapeJavaScript(key);
                     js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
                     javascript.append(js);
                     url += "return false;";
                     item.setURL(url);
-                    String strTitle = StringUtils.maxLenString(dsConsequence.getText(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+                    String strTitle = StringUtils.maxLenString(dsGuideline.getTitle(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
                     item.setTitle(strTitle);
                     if (dsConsequence.getConsequenceStrength() == DSConsequence.ConsequenceStrength.warning) {
                         item.setColour("#ff5409;");
