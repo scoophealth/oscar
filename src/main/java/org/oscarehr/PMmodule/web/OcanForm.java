@@ -627,12 +627,17 @@ public class OcanForm {
 		return(sb.toString());
 	}
 	
-	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, int prepopulationLevel)
+	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, int prepopulationLevel, String styleClass)
 	{
-		return renderAsTextField(ocanStaffFormId, question, size, prepopulationLevel, false);
+		return renderAsTextField(ocanStaffFormId, question, size, prepopulationLevel, false,styleClass);
 	}
 	
-	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, int prepopulationLevel, boolean clientForm)
+	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, int prepopulationLevel)
+	{
+		return renderAsTextField(ocanStaffFormId, question, size, prepopulationLevel, false, null);
+	}
+	
+	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, int prepopulationLevel, boolean clientForm, String styleClass)
 	{
 		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
 
@@ -642,7 +647,7 @@ public class OcanForm {
 		}
 		StringBuilder sb=new StringBuilder();
 
-		sb.append("<input type=\"text\" name=\""+question+"\" id=\""+question+"\" size=\"" + size + "\" maxlength=\"" + size +"\" value=\""+value+"\"/>");
+		sb.append("<input type=\"text\" name=\""+question+"\" "+(styleClass!=null?"class=\""+styleClass+"\" ":"")+"id=\""+question+"\" size=\"" + size + "\" maxlength=\"" + size +"\" value=\""+value+"\"/>");
 		
 		return(sb.toString());
 	}
