@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-<%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*,java.lang.String,org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*, org.apache.commons.lang.StringEscapeUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
@@ -45,23 +45,17 @@ if (request.getAttribute("submitted") != null) {
    if (curform.get("formFileName") == null) curform.put("formFileName", "");
    if (curform.get("roleType") == null) curform.put("roleType", "");
    
-   if (request.getParameter("formHtml") != null){
+   if (request.getParameter("formHtmlG") != null){
        //load html from hidden form from eformGenerator.jsp,the html is then injected into edit-eform
-      curform.put("formHtml",org.apache.commons.lang.StringEscapeUtils.unescapeHtml(request.getParameter("formHtml")));
+      curform.put("formHtml", StringEscapeUtils.unescapeHtml(request.getParameter("formHtmlG")));
    }
    if (curform.get("formDate") == null) curform.put("formDate", "--");
    if (curform.get("formTime") == null) curform.put("formTime", "--");
    
    if (curform.get("showLatestFormOnly") ==null) curform.put("showLatestFormOnly", false);
    if (curform.get("patientIndependent") ==null) curform.put("patientIndependent", false);
-   boolean patientIndependent = (Boolean) curform.get("patientIndependent");
    
-   String formHtmlRaw = (String) curform.get("formHtml");
-   String formHtml = "";
-   if (request.getAttribute("formHtml") != null) {
-       formHtml = (String) request.getAttribute("formHtml");
-   }
-	formHtml =org.apache.commons.lang.StringEscapeUtils.escapeHtml(formHtmlRaw);
+   String formHtml = StringEscapeUtils.escapeHtml((String) curform.get("formHtml"));
 	if(formHtml==null){formHtml="";}	
 %>
 <html:html locale="true">
@@ -169,7 +163,7 @@ function openLastSaved() {
 			<div style="display:inline-block">
 			<bean:message key="eform.uploadhtml.showLatestFormOnly" />	<input type="checkbox" name="showLatestFormOnly" value="true" <%= (Boolean)curform.get("showLatestFormOnly")?"checked":"" %> />
 				<br/>
-			<bean:message key="eform.uploadhtml.patientIndependent" /> <input type="checkbox" name="patientIndependent" value="true" <%= patientIndependent?"checked":"" %> /><br />
+			<bean:message key="eform.uploadhtml.patientIndependent" /> <input type="checkbox" name="patientIndependent" value="true" <%= (Boolean)curform.get("patientIndependent")?"checked":"" %> /><br />
 			</div>
 
 <!--
