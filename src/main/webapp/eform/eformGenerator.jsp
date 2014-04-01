@@ -1270,15 +1270,10 @@ text = textTop  + textMiddle + textBottom;
 return unescape(text);
 }
 
-//this function used for injecting html in to Edit E-Form in efmformmanageredit.jsp w/ variable formHtml
+//this function used for injecting html in to Edit E-Form in efmformmanageredit.jsp w/ variable formHtmlG
 function injectHtml(){
-    document.getElementById('formHtml').value = popUp();
+    document.getElementById('formHtmlG').value = popUp();
     document.getElementById('toSave').submit();
-}
-//this function used for injecting html in to Edit E-Form in efmformmanageredit.jsp w/ variable formHtml BUT not efficient
-function injectHtml2(){
-window.open('efmformmanageredit.jsp?formHtml=','happyWindow');
-happyWindow.document.getElementById('formHtml').value = popUp();
 }
 
 </script>
@@ -2510,7 +2505,7 @@ function _CompInt(x, y)
 
 <!-- this form  used for injecting html in to Edit E-Form-->
 <form method="post" action="efmformmanageredit.jsp" id="toSave">
-    <input type="hidden" name="formHtml" id="formHtml" />
+    <input type="hidden" name="formHtmlG" id="formHtmlG" />
 </form>
 
 <form method="post" action="" name="FormName" id="FormName">
