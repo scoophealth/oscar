@@ -54,27 +54,11 @@ public class HtmlEditAction extends Action {
             String formSubject = fm.getFormSubject();
             String formFileName = fm.getFormFileName();
             String formHtml = fm.getFormHtml();
-            //FormFile uploadFile = fm.getUploadFile();
             boolean showLatestFormOnly = WebUtils.isChecked(request, "showLatestFormOnly");
             boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
             String roleType = fm.getRoleType();
             
             HashMap<String, String> errors = new HashMap<String, String>();
-           /* if (request.getParameter("uploadMarker").equals("true")) {
-                //if uploading file
-                String readstream = StringUtils.readFileStream(uploadFile);
-                if (readstream.length() == 0) {
-                    errors.put("uploadError", "eform.errors.upload.failed");
-                } else {
-                    formHtml = org.apache.commons.lang.StringEscapeUtils.escapeJava(readstream);
-                    formFileName = uploadFile.getFileName();
-                }
-                HashMap<String, Object> curht = createHashMap(fid, formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType);
-                request.setAttribute("submitted", curht);
-                request.setAttribute("errors", errors);
-                return(mapping.findForward("success"));
-            }*/
-            
             EFormBase updatedform = new EFormBase(fid, formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType); //property container (bean)
             //validation...
             if ((formName == null) || (formName.length() == 0)) {
@@ -108,6 +92,7 @@ public class HtmlEditAction extends Action {
         curht.put("formName", formName);
         curht.put("formSubject", formSubject);
         curht.put("formFileName", formFileName);
+        curht.put("formHtml", formHtml);
         curht.put("showLatestFormOnly", showLatestFormOnly);
         curht.put("patientIndependent", patientIndependent);
         curht.put("roleType", roleType);
@@ -119,7 +104,6 @@ public class HtmlEditAction extends Action {
             curht.put("formDate", EFormUtil.getEFormParameter(fid, "formDate"));
             curht.put("formTime", EFormUtil.getEFormParameter(fid, "formTime"));
         }
-        curht.put("formHtml", org.apache.commons.lang.StringEscapeUtils.unescapeJava(formHtml));
         return curht;
     }
     
