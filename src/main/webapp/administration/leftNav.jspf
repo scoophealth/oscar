@@ -838,10 +838,6 @@ String curProvider_no = (String)session.getAttribute("user");
 </oscar:oscarPropertiesCheck>
 <!-- #SHARING CENTER END -->	
 
-
-
-
-
 <oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
@@ -850,7 +846,7 @@ String curProvider_no = (String)session.getAttribute("user");
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseThirteen" class="accordion-body collapse">
+				<div id="collapseFourteen" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/oscarLearning/CourseManager.jsp"><bean:message key="admin.admin.learning.manageCourses"/></a></li>
