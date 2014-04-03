@@ -26,10 +26,10 @@
 package oscar.oscarPrevention;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -45,13 +45,13 @@ import oscar.oscarDemographic.data.DemographicData;
 
 public class PreventionDisplayConfig {
     private static Logger log = MiscUtils.getLogger();
-    static PreventionDisplayConfig preventionDisplayConfig = new PreventionDisplayConfig();
+    private static PreventionDisplayConfig preventionDisplayConfig = new PreventionDisplayConfig();
    
-    HashMap<String,HashMap<String,String>> prevHash = null;
-    ArrayList<HashMap<String,String>> prevList = null;
+    private HashMap<String,HashMap<String,String>> prevHash = null;
+    private ArrayList<HashMap<String,String>> prevList = null;
 
-    Hashtable<String,Map<String,Object>> configHash = null;
-    ArrayList<Map<String,Object>> configList = null;
+    private HashMap<String,Map<String,Object>> configHash = null;
+    private ArrayList<Map<String,Object>> configList = null;
 
     private PreventionDisplayConfig() {
     	// use getInstance()
@@ -79,38 +79,47 @@ public class PreventionDisplayConfig {
         return prevHash.get(s);
     }
     
-    public void loadPreventions() {
-      prevList = new ArrayList<HashMap<String,String>>();
-      prevHash = new HashMap<String,HashMap<String,String>>(); 
-      log.debug("STARTING2");
-      
-      try{
-         InputStream is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");               
-         
-         if (OscarProperties.getInstance().getProperty("PREVENTION_ITEMS") != null){
-            String filename = OscarProperties.getInstance().getProperty("PREVENTION_ITEMS");
-            is = new FileInputStream(filename) ;                                                
-         }
-                  
-         SAXBuilder parser = new SAXBuilder();
-         Document doc = parser.build(is);        
-         Element root = doc.getRootElement();                  
-         List items = root.getChildren("item");                  
-         for (int i = 0; i < items.size(); i++){           
-            Element e = (Element) items.get(i);
-            List attr = e.getAttributes();
-            HashMap<String,String> h = new HashMap<String,String>();
-            for (int j = 0; j < attr.size(); j++){           
-               Attribute att = (Attribute) attr.get(j);
-               h.put(att.getName(),att.getValue() );
-            }            
-            prevList.add(h);            
-            prevHash.put(h.get("name"), h);            
-         }                
-      }catch(Exception e ){
-         MiscUtils.getLogger().error("Error", e);
-      }
-   }
+	public void loadPreventions() {
+		prevList = new ArrayList<HashMap<String, String>>();
+		prevHash = new HashMap<String, HashMap<String, String>>();
+		log.debug("STARTING2");
+
+		InputStream is = null;
+		try {
+			if (OscarProperties.getInstance().getProperty("PREVENTION_ITEMS") != null) {
+				String filename = OscarProperties.getInstance().getProperty("PREVENTION_ITEMS");
+				is = new FileInputStream(filename);
+			}
+			else {
+				is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");
+			}
+
+
+			SAXBuilder parser = new SAXBuilder();
+			Document doc = parser.build(is);
+			Element root = doc.getRootElement();
+			List items = root.getChildren("item");
+			for (int i = 0; i < items.size(); i++) {
+				Element e = (Element) items.get(i);
+				List attr = e.getAttributes();
+				HashMap<String, String> h = new HashMap<String, String>();
+				for (int j = 0; j < attr.size(); j++) {
+					Attribute att = (Attribute) attr.get(j);
+					h.put(att.getName(), att.getValue());
+				}
+				prevList.add(h);
+				prevHash.put(h.get("name"), h);
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		} finally {
+			try {
+	            if (is != null) is.close();
+            } catch (IOException e) {
+	           log.error("Unexpected error", e);
+            }
+		}
+	}
 
 
     public ArrayList<Map<String,Object>> getConfigurationSets() {
@@ -123,41 +132,51 @@ public class PreventionDisplayConfig {
     }
 
    
-    public void loadConfigurationSets() {
-       getPreventions();
-       configHash = new Hashtable<String,Map<String,Object>>();
-       configList = new ArrayList<Map<String,Object>>();
-       try{
-         InputStream is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionConfigSets.xml");               
-         if (OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS") != null){
-            String filename = OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS");
-            is = new FileInputStream(filename) ;                                                
-         }
-         SAXBuilder parser = new SAXBuilder();
-         Document doc = parser.build(is);        
-         Element root = doc.getRootElement();                  
-         List items = root.getChildren("set");                  
-         for (int i = 0; i < items.size(); i++){           
-            Element e = (Element) items.get(i);
-            List attr = e.getAttributes();
-            Map<String,Object> h = new HashMap<String,Object>();
-            for (int j = 0; j < attr.size(); j++){           
-               Attribute att = (Attribute) attr.get(j);
-               if(att.getName().equals("prevList")){
-                  h.put(att.getName(),att.getValue().split(","));
-               }else{
-                  h.put(att.getName(),att.getValue() );
-               }
-                              
-            }                        
-            configList.add(h);        
-            configHash.put((String)h.get("title"), h);            
-         }                
-      }catch(Exception e ){
-         MiscUtils.getLogger().error("Error", e);
-      }
-       
-    }
+	public void loadConfigurationSets() {
+		getPreventions();
+		configHash = new HashMap<String, Map<String, Object>>();
+		configList = new ArrayList<Map<String, Object>>();
+
+		InputStream is = null;
+		try {
+			if (OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS") != null) {
+				String filename = OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS");
+				is = new FileInputStream(filename);
+			} else {
+				is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionConfigSets.xml");
+			}
+
+			SAXBuilder parser = new SAXBuilder();
+			Document doc = parser.build(is);
+			Element root = doc.getRootElement();
+			List items = root.getChildren("set");
+			for (int i = 0; i < items.size(); i++) {
+				Element e = (Element) items.get(i);
+				List attr = e.getAttributes();
+				Map<String, Object> h = new HashMap<String, Object>();
+				for (int j = 0; j < attr.size(); j++) {
+					Attribute att = (Attribute) attr.get(j);
+					if (att.getName().equals("prevList")) {
+						h.put(att.getName(), att.getValue().split(","));
+					} else {
+						h.put(att.getName(), att.getValue());
+					}
+
+				}
+				configList.add(h);
+				configHash.put((String) h.get("title"), h);
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		} finally {
+			try {
+				if (is != null) is.close();
+			} catch (IOException e) {
+				log.error("Unexpected error", e);
+			}
+		}
+
+	}
 
 
     public String getDisplay(Map<String,Object> setHash, String Demographic_no) {
