@@ -2,8 +2,8 @@
 <server>
 	<misc>
 		<override_config_sytem_property_key>myoscar_client_config</override_config_sytem_property_key>
-		<ws_client_connection_timeout_ms>4000</ws_client_connection_timeout_ms>
-		<ws_client_receive_timeout_ms>4000</ws_client_receive_timeout_ms>
+		<ws_client_connection_timeout_ms>15000</ws_client_connection_timeout_ms>
+		<ws_client_receive_timeout_ms>15000</ws_client_receive_timeout_ms>
 		<ws_client_port_cache_size>64</ws_client_port_cache_size>
 		<ws_client_port_cache_time_ms>3600000</ws_client_port_cache_time_ms>
 		<!-- this setting will allow all ssl certificates including self signed one -->
