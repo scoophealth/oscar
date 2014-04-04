@@ -368,6 +368,19 @@ public class RxPrescriptionData {
 		return lst.toArray(new Prescription[lst.size()]);
 	}
 
+	public Prescription[] getActivePrescriptionsByPatient(int demographicNo) {
+		List<Prescription> lst = new ArrayList<Prescription>();
+		DrugDao dao = SpringUtils.getBean(DrugDao.class);
+
+		for (Drug drug : dao.findByDemographicId(demographicNo)) {
+			Prescription p = toPrescription(drug, demographicNo);
+			if (!p.isArchived() && !p.isDiscontinued() && p.isCurrent()) {
+				lst.add(p);
+			}
+		}
+		return lst.toArray(new Prescription[lst.size()]);
+	}
+	
 	public Vector getCurrentATCCodesByPatient(int demographicNo) {
 		List<String> result = new ArrayList<String>();
 
