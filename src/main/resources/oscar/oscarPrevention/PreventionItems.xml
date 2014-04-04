@@ -21,9 +21,7 @@ Varicella Immunoglobulin	VarIg
 
 -->
 <preventions>
- 
-  	
-  		
+   		
 	<item 
 		resultDesc=""
   		desc="DTaP=Diphtheria, Tetanus, Acellular Pertussis - pediatric"
@@ -31,7 +29,6 @@ Varicella Immunoglobulin	VarIg
   		healthCanadaType="DTaP"
   		layout="injection" atc="" 
   		showIfMinRecordNum="1"/>
-  		
   		
 	<item 
 		resultDesc=""
@@ -105,7 +102,7 @@ Varicella Immunoglobulin	VarIg
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV"
 		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
 		showIfMinRecordNum="1" />
-		
+
  	<item 
 		resultDesc=""
  		desc="Rot-1=Rotavirus Vaccine" 
@@ -181,6 +178,17 @@ Varicella Immunoglobulin	VarIg
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MenC"
 		layout="injection" atc="J07AH07" minAge="0" maxAge="19"
 		showIfMinRecordNum="1" />
+
+     <item
+       resultDesc=""
+       desc="Bexsero rMenB=meningocococcal B recombinant multicomponent"
+       name="rMenB" 
+       healthCanadaType="rMenB"
+       link="http://www.hc-sc.gc.ca/dhp-mps/prodpharma/sbd-smd/drug-med/sbd_smd_2014_bexsero_147275-eng.php"
+       layout="injection" 
+       atc="J07AH08" 
+       minAge="1" 
+       maxAge="17" /> 
 
 	<item 
 		resultDesc=""
