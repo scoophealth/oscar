@@ -431,9 +431,9 @@ function showHideLayers() { //v3.0
 	obj.visibility=v; }
 }
     function onNext() {
-        //document.forms[0].submit.value="save";
         var ret = checkAllDates();
-        if (!(ret = checkSli())) {
+        if (!checkSli()) {
+        	ret = false;
         	alert("You have selected billing codes that require an SLI code but have not provided an SLI code.");
         }
         return ret;
@@ -442,42 +442,41 @@ function showHideLayers() { //v3.0
 	    document.forms[0].serviceDate0.value = document.forms[0].serviceDate0.value.toUpperCase();
 	    document.forms[0].serviceDate1.value = document.forms[0].serviceDate1.value.toUpperCase();
 	    document.forms[0].serviceDate2.value = document.forms[0].serviceDate2.value.toUpperCase();
-        var b = true;
         if(document.forms[0].billDate.value.length<1){
         	alert("No billing date!");
-            b = false;
+            return false;
         } else if(!isChecked("code_xml_") && document.forms[0].serviceDate0.value.length!=5 || !isServiceCode(document.forms[0].serviceDate0.value)){
         	alert("Need service code!");
-            b = false;
+        	return false;
         } else if(document.forms[0].serviceDate1.value.length>0 && document.forms[0].serviceDate1.value.length!=5 || !isServiceCode(document.forms[0].serviceDate1.value)){
         	alert("Wrong service code 2!");
-            b = false;
+        	return false;
         } else if(document.forms[0].serviceDate2.value.length>0 && document.forms[0].serviceDate2.value.length!=5 || !isServiceCode(document.forms[0].serviceDate2.value)){
         	alert("Wrong service code 3!");
-            b = false;
+        	return false;
         } else if(document.forms[0].serviceDate3.value.length>0 && document.forms[0].serviceDate3.value.length!=5 || !isServiceCode(document.forms[0].serviceDate3.value)){
         	alert("Wrong service code 4!");
-            b = false;
+        	return false;
         } else if(document.forms[0].serviceDate4.value.length>0 && document.forms[0].serviceDate4.value.length!=5 || !isServiceCode(document.forms[0].serviceDate4.value)){
         	alert("Wrong service code 5!");
-            b = false;
+        	return false;
         } else if(document.forms[0].dxCode.value.length!=3){
         	alert("Wrong dx code!");
-            b = false;
+        	return false;
         //} else if(document.forms[0].xml_provider.options[0].selected){
         } else if(document.forms[0].xml_provider.value=="000000"){
         	alert("Please select a provider.");
-            b = false;
+        	return false;;
         }
         <% if (!OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
         else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")){
         	alert("Need an admission date.");
-            b = false;
+        	return false;
         }
         <% } %>
 
 		if(document.forms[0].xml_vdate.value.length>0) {
-        	b = checkServiceDate(document.forms[0].xml_vdate.value);
+        	return checkServiceDate(document.forms[0].xml_vdate.value);
         }
         if(document.forms[0].billDate.value.length>0) {
         	var billDateA = document.forms[0].billDate.value.split("\n");
@@ -485,23 +484,23 @@ function showHideLayers() { //v3.0
         		var v = billDateA[i];
         		if (v) {
 					//alert(" !" + v);
-					b = checkServiceDate(v);
+					return checkServiceDate(v);
 				}
 			}
         }
 
         if(!isInteger(document.forms[0].dxCode.value)) {
         	alert("Wrong dx code!");
-            b = false;
+            return false;
         }
         if(document.forms[0].referralCode.value.length>0) {
           if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
         	alert("Wrong referral code!");
-            b = false;
+            return false;
           }
         }
 
-        return b;
+        return true;
     }
 function checkServiceDate(s) {
 	var calDate=new Date();
