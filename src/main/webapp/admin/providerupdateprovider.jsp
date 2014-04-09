@@ -40,6 +40,7 @@
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="oscar.OscarProperties"%>
+<%@page import="org.oscarehr.common.Gender" %>
 
 <%
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
@@ -226,8 +227,13 @@ for (int i=0; i<sites.size(); i++) {
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formSex" />:
 			</td>
-			<td><input type="text" name="sex"
-				value="<%= provider.getSex() %>" maxlength="1"></td>
+        	<td><select  name="sex" id="sex">
+                <option value=""></option>
+        		<% for(Gender gn : Gender.values()){ %>
+                <option value=<%=gn.name()%> <%=((provider.getSex().toUpperCase().equals(gn.name())) ? "selected" : "") %>><%=gn.getText()%></option>
+                <% } %>
+                </select>
+            </td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formDOB" />:

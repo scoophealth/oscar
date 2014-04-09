@@ -42,6 +42,7 @@
 <%@page import="org.oscarehr.common.dao.WaitingListNameDao" %>
 <%@page import="org.oscarehr.common.model.WaitingListName" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@page import="org.oscarehr.common.Gender" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -2475,11 +2476,13 @@ if ( Dead.equals(PatStat) ) {%>
 									name="age" readonly value="<%=age%>" size="3"> </b></td>
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.formSex" />:</b></td>
-								<td align="left" valign="top"><input type="text" name="sex"
-									style="width: 20px;" <%=getDisabled("sex")%>
-									value="<%=demographic.getSex()%>"
-									onBlur="upCaseCtrl(this)" size="1" maxlength="1">
-								</td>
+			                	<td><select  name="sex" id="sex">
+			                        <option value=""></option>
+			                		<% for(Gender gn : Gender.values()){ %>
+			                        <option value=<%=gn.name()%> <%=((demographic.getSex().toUpperCase().equals(gn.name())) ? "selected" : "") %>><%=gn.getText()%></option>
+			                        <% } %>
+			                        </select>
+			                    </td>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message
