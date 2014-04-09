@@ -1538,6 +1538,18 @@ if ( PatStat.equals(Dead) ) {%>
 							<%}%>
                                                         </span>
 							</li>
+							 <li><span class="label">
+							 	<bean:message key="demographic.demographiceditdemographic.PatientStatusDate" />:</span>
+                                <span class="info">
+                                <%
+                                String tmpDate="";
+                                if(demographic.getPatientStatusDate ()!= null) {
+                                	tmpDate = org.apache.commons.lang.time.DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getPatientStatusDate());
+                                }
+                                %>
+                                <%=tmpDate%></span>
+							</li>
+							
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formChartNo" />:</span>
                                                         <span class="info"><%=demographic.getChartNo()%></span>
