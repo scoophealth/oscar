@@ -47,6 +47,10 @@ String patientFirstName    = (String) request.getAttribute("patientFirstName");
 String patientLastName     = (String) request.getAttribute("patientLastName");
 String patientHealthNumber = (String) request.getAttribute("patientHealthNumber");
 
+String startDate = org.apache.commons.lang.StringUtils.trimToEmpty(request.getParameter("startDate"));
+String endDate = org.apache.commons.lang.StringUtils.trimToEmpty(request.getParameter("endDate"));
+
+
 boolean ajax = "true".equals(request.getParameter("ajax"));
 /*
 String view = (String)request.getAttribute("view");
@@ -157,6 +161,9 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 	var currentBold = false;
 	var oldestDate = null;
 
+	var startDate = "<%=startDate%>";
+	var endDate="<%=endDate%>";
+	
 	window.changePage = function (p) {
 		if (p == "Next") { page++; }
 		else if (p == "Previous") { page--; }
@@ -249,7 +256,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 	function getQuery() {
 		var query = "method=prepareForContentPage";
 		query +="&searchProviderNo="+searchProviderNo+"&providerNo="+providerNo+"&status="+searchStatus+"&page="+page
-			   +"&pageSize="+pageSize+"&isListView="+(isListView?"true":"false");
+			   +"&pageSize="+pageSize+"&isListView="+(isListView?"true":"false")+"&startDate="+startDate+"&endDate="+endDate;
 		switch (selected_category) {
 		case CATEGORY_ALL:
 			query  += "&view=all";
