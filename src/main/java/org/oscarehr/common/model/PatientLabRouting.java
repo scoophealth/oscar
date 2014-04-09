@@ -25,12 +25,18 @@
 
 package org.oscarehr.common.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "patientLabRouting")
@@ -50,6 +56,9 @@ public class PatientLabRouting extends AbstractModel<Integer> {
 	@Column(name = "demographic_no")
 	private Integer demographicNo;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateModified = new Date();
+	
 	public int getLabNo() {
     	return labNo;
     }
@@ -73,6 +82,21 @@ public class PatientLabRouting extends AbstractModel<Integer> {
 	public void setDemographicNo(Integer demographicNo) {
     	this.demographicNo = demographicNo;
     }
+
+	
+	public Date getDateModified() {
+		return dateModified;
+	}
+
+	public void setDateModified(Date dateModified) {
+		this.dateModified = dateModified;
+	}
+
+	@PrePersist
+	@PreUpdate
+	protected void jpa_setDateModified() {
+		this.dateModified = new Date();
+	}
 
 	@Override
     public Integer getId() {
