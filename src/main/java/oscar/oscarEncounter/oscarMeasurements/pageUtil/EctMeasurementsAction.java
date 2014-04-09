@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -47,8 +48,8 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.FlowSheetCustomizationDao;
 import org.oscarehr.common.dao.MeasurementDao;
-import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.dao.MeasurementDao.SearchCriteria;
+import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.SecRole;
@@ -332,6 +333,7 @@ public class EctMeasurementsAction extends Action {
         	 
          }//create note
 
+         request.setAttribute("textOnEncounter", StringEscapeUtils.escapeJavaScript(textOnEncounter));
         return mapping.findForward("success");
     }
 
