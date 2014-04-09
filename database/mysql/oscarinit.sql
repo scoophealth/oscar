@@ -6973,6 +6973,7 @@ CREATE TABLE patientLabRouting (
   lab_no int(10) NOT NULL default '0',
   lab_type char(3) NOT NULL default 'MDS',
   id int(10) NOT NULL auto_increment,
+  dateModified datetime,
   PRIMARY KEY  (`id`),
   KEY `demographic` (`demographic_no`),
   KEY `lab_type_index` (`lab_type`),
