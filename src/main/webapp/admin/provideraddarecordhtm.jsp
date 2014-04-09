@@ -36,6 +36,7 @@
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.oscarehr.common.dao.SiteDao"%>
 <%@ page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.common.Gender" %>
 <%
 
   String curProvider_no,userfirstname,userlastname;
@@ -216,8 +217,13 @@ for (int i=0; i<sites.size(); i++) {
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formSex" />:
 			</td>
-			<td><input type="text" name="sex" maxlength="1"
-				onBlur="upCaseCtrl(this)"></td>
+        	<td><select  name="sex" id="sex">
+                <option value=""></option>
+        		<% for(Gender gn : Gender.values()){ %>
+                <option value=<%=gn.name()%>><%=gn.getText()%></option>
+                <% } %>
+                </select>
+            </td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formDOB" />(<font
