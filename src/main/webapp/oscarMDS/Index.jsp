@@ -132,6 +132,8 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/oscarMDS/encounterStyles.css">
 
 <script type="text/javascript" >
+	jQuery(window).on("scroll",handleScroll());
+	
 	function split(id) {
 		var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id;
 		popupStart(1100, 1100, loc, "Splitter");
@@ -310,7 +312,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 		var view = document.getElementById("readerSwitcher");
 		var active, passive;
 		if (isListView) {
-			pageSize = 40;
+			pageSize = 20;
 			active = view;
 			passive = list;
 		}
