@@ -53,7 +53,7 @@ public class ProviderColourUpdater {
        PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
 	   List<Property> props = dao.findByNameAndProvider(strColName, provider);
        for(Property prop : props) {
-            return prop.getValue();
+            return prop.getValue()!=null?prop.getValue():"";
        }
        return "";
    }
