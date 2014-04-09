@@ -211,6 +211,7 @@ function check() {
 								<input type="hidden" name="value(parentChanged)" value="false" />
 								<input type="hidden" name="value(demographicNo)"
 									value="<%=demo%>" />
+									<input type="hidden" name="demographic_no" value="<%=demo%>" />
 								<logic:present name="css">
 									<input type="hidden" name="value(css)"
 										value="<bean:write name="css"/>" />
