@@ -202,7 +202,10 @@ public class SchemaUtils
 				if (createTableStatement == null) {
 					throw new IllegalStateException("Unable to locate create table statement for " + tableName + ". Please make sure that the table exists in the schema.");
 				}
-				s.executeUpdate(createTableStatement.replaceAll("_maventest", ""));
+				// remove FK constraints as they cause errors during test with random data
+				String sql=createTableStatement.replaceAll(",\\s+CONSTRAINT `\\w+` FOREIGN KEY .`\\w+`. REFERENCES `\\w+` .`\\w+`.","");
+
+				s.executeUpdate(sql.replaceAll("_maventest", ""));
 				
 				if(includeInitData)
 					s.executeUpdate("insert into " + tableName + " select * from " + tableName + "_maventest");
