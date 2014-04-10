@@ -160,6 +160,20 @@ function setBillingCenter( providerNo ) {
 
 <style type="text/css">
 	input[name=useProviderMOH] {margin: 4px 4px 4px;}
+	
+@media print {
+  .visible-print {
+    display: inherit !important;
+  }
+  .hidden-print {
+    display: none !important;
+  }
+  
+  /*this is so the link locatons don't display*/
+  a:link:after, a:visited:after {
+    content: "";
+  }
+ }
 </style>
 </head>
 
@@ -169,7 +183,7 @@ function setBillingCenter( providerNo ) {
 <div class="container-fluid">
 <div id="Layer1" style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
 
-<div class="row well">
+<div class="row well hidden-print">
 
 
 <div class="dropdown">

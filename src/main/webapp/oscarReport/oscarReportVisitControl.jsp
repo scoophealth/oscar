@@ -87,24 +87,24 @@ function popupPage(height, width, url) {
 </script>
 </head>
 <body>
-<div style="float:right;">	
+<div class="hidden-print" style="float:right;">	
 	<a style="font-size:10px" href="#" onclick="popupPage(700,720,'../oscarReport/manageProvider.jsp?action=visitreport')">Manage Visit Report Providers</a>	
 </div>
 
 <div class="page-header">
-	<h4>
+	<h3>
 		<bean:message key="oscarReport.oscarReportVisitControl.title" />
 		<div class="pull-right">
-			<button name="print" onclick="window.print()" class="btn">
+			<button name="print" onclick="window.print()" class="btn hidden-print">
 				<i class="icon-print icon-black"></i>
 				<bean:message key="global.btnPrint" />
 			</button>
 		</div>
-	</h4>
+	</h3>
 </div>
 
 <form action="${ctx}/oscarReport/oscarReportVisitControl.jsp"
-	class="well form-horizontal" id="visitForm">
+	class="well form-horizontal hidden-print" id="visitForm">
 	<fieldset>
 		<h4>
 			<bean:message key="oscarReport.oscarReportVisitControl.title" />

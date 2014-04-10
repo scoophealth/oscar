@@ -240,6 +240,12 @@ i[class*='icon-']:hover {color:#0088cc;}
   .hidden-print {
     display: none !important;
   }
+  #dynamic-content{margin-left:0px;}
+  
+  /*this is so the link locatons don't display*/
+  a:link:after, a:visited:after {
+    content: "";
+  }
 }
 </style>
 
@@ -253,12 +259,15 @@ i[class*='icon-']:hover {color:#0088cc;}
 <!--<oscar:help keywords="admin" key="app.top1"/> --> 
 
 <div class="container-fluid">
-<div class="row-fluid" style="text-align:right"><i class=" icon-question-sign"></i> <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="" onmouseover="window.status='';return true">Help</a> <i class=" icon-info-sign" style="margin-left:10px;"></i> <a href="javascript:void(0)"  onClick="window.open('<%=request.getContextPath()%>/oscarEncounter/About.jsp','About OSCAR','scrollbars=1,resizable=1,width=800,height=600,left=0,top=0')" ><bean:message key="global.about" /></a></div>
+<div class="row-fluid hidden-print" style="text-align:right"><i class=" icon-question-sign"></i> <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="" onmouseover="window.status='';return true">Help</a> <i class=" icon-info-sign" style="margin-left:10px;"></i> <a href="javascript:void(0)"  onClick="window.open('<%=request.getContextPath()%>/oscarEncounter/About.jsp','About OSCAR','scrollbars=1,resizable=1,width=800,height=600,left=0,top=0')" ><bean:message key="global.about" /></a></div>
+
 <div class="row-fluid">
+
 
 <%@ include file="leftNav.jspf"%>
 
-  <div class="span9 offset2" id="dynamic-content">
+
+  <div class="span9" id="dynamic-content">
     
     <!-- ****DYNAMIC CONTENT**** -->
 <%
