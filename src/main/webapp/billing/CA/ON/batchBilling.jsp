@@ -143,6 +143,17 @@ function init() {
 }
 //-->
 </script>
+
+<style>
+@media print {
+  .visible-print {
+    display: inherit !important;
+  }
+  .hidden-print {
+    display: none !important;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -150,13 +161,12 @@ function init() {
 
 <div class="container-fluid">
 
-
-<div class="row well well-condensed">
+<div class="row well well-condensed hidden-print">
 
 <% 
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
  %>
-	<form name="serviceform" method="post" action="BatchBill.do">	
+	<form name="serviceform" method="post" action="BatchBill.do" class="form-inline">	
 	<input type="hidden" id="method" name="method" value="">	
 
 <div class="span2">
@@ -306,36 +316,50 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 				</tr>
 				<%}
 	  			 if ( Count1 == 0) { %>
-				<tr bgcolor="#FFFFFF">
+				<tr>
 					<td colspan=7><bean:message key="billing.batchbilling.msgNoMatch"/></td>
-				
+				</tr>
 				  <%} else {%>
 	
-				<tr bgcolor="#FFFFFF">
-					<td colspan="2"><bean:message key="billing.batchbilling.serviceDate"/>
-						<input type="text" name="BillDate" id="BillDate" readonly value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>">
-						<img src="<c:out value="${ctx}/images/cal.gif" />" id="billDate_cal" alt="calendar">				
-					<td colspan=5><input type="button" onclick="return setMethod('doBatchBill');"
-						value="<bean:message key="billing.batchbilling.btnSubmit"/>">&nbsp;&nbsp;
-						<input type="button" onclick="return askFirst('remove');" value="<bean:message key="billing.batchbilling.btnRemove"/>"> 					
+				<tr>
+					<td colspan="7">
+					<div class="span3">
+					<bean:message key="billing.batchbilling.serviceDate"/>
+					<div class="input-append">
+						<input type="text" name="BillDate" id="BillDate" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>" data-date-format="yyyy-m-d" style="width:90px"  autocomplete="off" readonly/>
+						<span class="add-on"><i class="icon-calendar"></i></span>
+					</div>
+					</div>
+					
+					<div class="span4">
+					<input type="button" class="btn btn-primary" onclick="return setMethod('doBatchBill');"	value="<bean:message key="billing.batchbilling.btnSubmit"/>">
+					<input type="button" class="btn" onclick="return askFirst('remove');" value="<bean:message key="billing.batchbilling.btnRemove"/>"> 					
+					</div>
 					</td>
-	   			</td>
+	   			</tr>
 	   		
 	<%
 				}
 	   }else if(servicecode!=null && providerview!=null && batchBillings == null){
 %>
-<p>* Make selection above to generate batch billing</p>
+<tr><td>* Make selection above to generate batch billing</td></tr>
 <%
 }else{
 %>
-<p>Nothing to report</p>
+<tr><td>Nothing to report</td></tr>
 <%}%>
 </tbody>
 </table>
+
   </form>
 </div>
 
 </div>
+
+<script>
+$(function (){ 
+	$('#BillDate').datepicker();
+}); 
+</script>
 </body>
 </html>
