@@ -39,6 +39,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -53,9 +56,17 @@ public class RptByExampleAction extends Action {
         RptByExampleForm frm = (RptByExampleForm) form;        
         
         if(request.getSession().getAttribute("user") == null)
-            response.sendRedirect("../logout.htm");        
-               
-        String providerNo = (String) request.getSession().getAttribute("user");
+            response.sendRedirect("../logout.htm");     
+        
+        String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+
+        SecUserRoleDao secUserRoleDao = SpringUtils.getBean(SecUserRoleDao.class);
+        
+        if(!secUserRoleDao.hasAdminRole(providerNo)) {
+        	MiscUtils.getLogger().warn("provider "  + providerNo + " does not have admin privileges to run query by example");
+        	return new ActionForward("/oscarReport/RptByExample.jsp");
+        }
+        
         RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler();  
         Collection favorites = hd.getFavoriteCollection(providerNo);       
         request.setAttribute("favorites", favorites);        
