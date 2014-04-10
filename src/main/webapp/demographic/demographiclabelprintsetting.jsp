@@ -186,8 +186,10 @@ function ClipBoard4() {
 	}
 	else {
 		ProviderData provider = providerDao.findByProviderNo(demo.getProviderNo());
-		providername = provider.getLastName() + "," + provider.getFirstName();
-
+		if(provider != null) {
+			providername = provider.getLastName() + "," + provider.getFirstName();
+		}
+		
 		dob_year = Integer.parseInt(demo.getYearOfBirth());
 		dob_month = Integer.parseInt(demo.getMonthOfBirth());
 		dob_date = Integer.parseInt(demo.getDateOfBirth());

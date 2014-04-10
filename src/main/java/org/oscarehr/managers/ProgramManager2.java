@@ -30,6 +30,9 @@ import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.common.dao.ProviderDefaultProgramDao;
+import org.oscarehr.common.model.ProviderDefaultProgram;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,4 +79,21 @@ public class ProgramManager2 {
 
 		return (results);
 	}
+	
+    public ProgramProvider getCurrentProgramInDomain(String providerNo) {
+        ProviderDefaultProgramDao providerDefaultProgramDao = SpringUtils.getBean(ProviderDefaultProgramDao.class);
+        int defProgramId = 0;
+        List<ProviderDefaultProgram> rs = providerDefaultProgramDao.getProgramByProviderNo(providerNo);
+		if(!rs.isEmpty()) {
+		   defProgramId = rs.get(0).getProgramId();
+		}
+		ProgramProvider result =  programProviderDAO.getProgramProvider(providerNo, Long.valueOf(defProgramId));
+		
+		if(result !=null) {
+		        LogAction.addLogSynchronous("ProgramManager2.getCurrentProgramInDomain", "id returned=" + result.getId());
+		}
+		
+		return (result);
+	}
+
 }
