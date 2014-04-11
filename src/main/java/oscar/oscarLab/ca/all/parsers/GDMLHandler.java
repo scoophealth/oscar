@@ -236,7 +236,7 @@ public class GDMLHandler implements MessageHandler {
             if (subIdent != null)
                 ident = ident+"&"+subIdent;
 
-            logger.info("returning obx identifier: "+ident);
+            logger.debug("returning obx identifier: "+ident);
             return(ident);
         }catch(Exception e){
             logger.error("error returning obx identifier", e);
