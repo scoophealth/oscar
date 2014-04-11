@@ -43,7 +43,9 @@
 <%@page import="org.oscarehr.common.model.WaitingListName" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@page import="org.oscarehr.common.Gender" %>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -174,6 +176,24 @@
 	// MARC-HI's Sharing Center
 	boolean isSharingCenterEnabled = SharingCenterUtil.isEnabled();
 
+	String currentProgram="";
+	String programId = (String)session.getAttribute(org.oscarehr.util.SessionConstants.CURRENT_PROGRAM_ID);
+	if(programId != null && programId.length()>0) {
+		Integer prId = null;
+		try {
+			prId = Integer.parseInt(programId);
+		} catch(NumberFormatException e) {
+			//do nothing
+		}
+		if(prId != null) {
+			ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+			Program p = programManager.getProgram(prId);
+			if(p != null) {
+				currentProgram = p.getName();
+			}
+		}
+	}
+	
 %>
 
 
@@ -792,6 +812,17 @@ jQuery(document).ready(function($) {
 function showCbiReminder()
 {
        alert('<bean:message key="demographic.demographiceditdemographic.updateCBIReminder"/>');
+}
+
+function updatePaperArchive(paperArchiveSel) {
+	var val = jQuery("#paper_chart_archived").val();
+	if(val == '' || val == 'NO') {
+		jQuery("#paper_chart_archived_date").val('');
+		jQuery("#paper_chart_archived_program").val('');
+	}
+	if(val == 'YES') {
+		jQuery("#paper_chart_archived_program").val('<%=currentProgram%>');
+	}
 }
 </script>
 
@@ -1719,10 +1750,42 @@ if ( Dead.equals(PatStat) ) {%>
 	          					if(warningLevel.equals("4")) {warningLevelStr="None";}
                               %>
 						&nbsp;
-						<b><%=warningLevelStr %></b>
+						
 						</div>
-
-
+						
+						<div class="demographicSection" id="paperChartIndicator">
+						<h3>&nbsp;<bean:message
+							key="demographic.demographiceditdemographic.paperChartIndicator" /></h3>
+							<%
+								String archived = demoExt.get("paper_chart_archived");
+								String archivedStr = "", archivedDate = "", archivedProgram = "";
+								if("YES".equals(archived)) {
+									archivedStr="Yes";
+								}
+								if("NO".equals(archived)) {
+									archivedStr="No";
+								}
+                      			if(demoExt.get("paper_chart_archived_date") != null) {
+                      				archivedDate = demoExt.get("paper_chart_archived_date");
+                      			}
+                      			if(demoExt.get("paper_chart_archived_program") != null) {
+                      				archivedProgram = demoExt.get("paper_chart_archived_program");
+                      			}
+							%>
+                           <ul>
+	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.archived"/>:</span>
+	                              <span class="info"><%=archivedStr %></span>
+	                          </li>
+	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.dateArchived"/>:</span>
+	                              <span class="info"><%=archivedDate %></span>
+	                          </li>
+	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.programArchived"/>:</span>
+	                              <span class="info"><%=archivedProgram %></span>
+	                          </li>
+	                       </ul>
+						</div>
+						
+						
 						</div>
 						<div class="rightSection">
 						<div class="demographicSection" id="contactInformation">
@@ -2956,6 +3019,36 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									size="30" value="<%=demographic.getChartNo()%>" <%=getDisabled("chart_no")%>>
 								</td>
 							</tr>
+							
+							<tr>
+	                            <td align="right"><b>Archived Paper Chart Indicator: </b></td>
+	                            <td align="left">
+	                            	<%
+	                            		String paperChartIndicator = StringUtils.trimToEmpty(demoExt.get("paper_chart_archived"));
+	                            		String paperChartIndicatorDate = StringUtils.trimToEmpty(demoExt.get("paper_chart_archived_date"));
+	                            		String paperChartIndicatorProgram = StringUtils.trimToEmpty(demoExt.get("paper_chart_archived_program"));
+	                            	%>
+	                            	<select name="paper_chart_archived" id="paper_chart_archived" <%=getDisabled("paper_chart_archived")%> onChange="updatePaperArchive()">
+		                            	<option value="" <%="".equals(paperChartIndicator)?" selected":""%>>
+		                            	</option>
+										<option value="NO" <%="NO".equals(paperChartIndicator)?" selected":""%>>
+											<bean:message key="demographic.demographiceditdemographic.paperChartIndicator.no"/>
+										</option>
+										<option value="YES"	<%="YES".equals(paperChartIndicator)?" selected":""%>>
+											<bean:message key="demographic.demographiceditdemographic.paperChartIndicator.yes"/>
+										</option>
+									</select>
+									
+									<input type="text" name="paper_chart_archived_date" id="paper_chart_archived_date" size="11" value="<%=paperChartIndicatorDate%>" >
+										<img src="../images/cal.gif" id="archive_date_cal">
+											<bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/>
+										
+									<input type="hidden" name="paper_chart_archived_program" id="paper_chart_archived_program" value="<%=paperChartIndicatorProgram%>"/>
+                                </td>
+							</tr>
+							
+                                                        
+                                                        
 <% if (oscarProps.isPropertyActive("meditech_id")) { %>
                                                         <tr>
                                                             <td align="right"><b>Meditech ID: </b></td>
@@ -3297,6 +3390,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "paper_chart_archived_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "archive_date_cal", singleClick : true, step : 1 });
 
 function callEligibilityWebService(url,id){
 
