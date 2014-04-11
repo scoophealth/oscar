@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
 
@@ -45,12 +46,16 @@
 %>
 
 <%@ include file="/taglibs.jsp"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}"
-	scope="request" />
 
-<div class="page-header">
-	<h4>MIS Reports</h4>
-</div>
+<html>
+<head>	
+<title><bean:message key="admin.admin.misRpt" /></title>
+</head>
+
+<body>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
+
+	<h3><bean:message key="admin.admin.misRpt" /></h3>
 
 <form action="${ctx}/oscarReport/mis_report_form.jsp" class="well form-horizontal" id="misForm">
 
@@ -74,6 +79,8 @@
 		<label class="control-label"></label> 
 		<div class="controls">
 				<div class="toggleDiv">
+				
+				<%if(functionalCentres.size()>0){%>
 					<select id="functionalCentreId" name="functionalCentreId" class="input-medium">
 						<%
 							for (FunctionalCentre functionalCentre : functionalCentres)
@@ -84,6 +91,13 @@
 							}
 						%>
 					</select>
+				<%}else{%>
+					    <div class="alert span6">
+							No function centre in use by facility
+					    </div>
+					
+				<%}%>
+
 				</div>
 				<div class="toggleDiv" style="display: none;">
 					<select id="programIds" name="programIds" multiple='multiple' class="input">
@@ -99,9 +113,8 @@
 							}
 						%>
 					</select>
-					<label class="checkbox"> <input type="checkbox"
-						name="reportProgramsIndividually"> Report Programs
-						Separately
+					<label class="checkbox"> 
+					<input type="checkbox"	name="reportProgramsIndividually"> Report Programs Separately
 					</label>
 
 				</div>
@@ -181,8 +194,8 @@
 			actualEndDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive of the 30/31 days of the month
 
 			MisReportUIBean misReportUIBean=null;	
-			
 			String reportBy=request.getParameter("reportBy");
+			
 			if ("functionalCentre".equals(reportBy))
 			{
 				String functionalCentreId=request.getParameter("functionalCentreId");
@@ -207,6 +220,7 @@
 				throw(new IllegalStateException("missed a case : reportBy="+reportBy));
 			}	
 	%>
+	
 <table class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 		<tr>
@@ -274,3 +288,6 @@
 		});
 		registerFormSubmit('misForm', 'dynamic-content');
 	</script>
+	
+</body>
+</html>
