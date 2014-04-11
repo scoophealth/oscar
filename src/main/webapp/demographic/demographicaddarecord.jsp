@@ -46,6 +46,10 @@
 <%@page import="org.oscarehr.PMmodule.service.ProgramManager" %>
 <%@page import="org.oscarehr.PMmodule.service.AdmissionManager" %>
 
+<%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
+<%@page import="org.oscarehr.common.model.DemographicArchive" %>
+<%@page import="org.oscarehr.common.dao.DemographicExtArchiveDao" %>
+<%@page import="org.oscarehr.common.model.DemographicExtArchive" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -62,6 +66,10 @@
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 
 	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+	
+	DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
+	DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
+		
 %>
 
 <html:html locale="true">
@@ -330,6 +338,17 @@
 		String ip = request.getRemoteAddr();
 		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip,param2[0]);
 
+		//archive the original too
+		Long archiveId = demographicArchiveDao.archiveRecord(demographicDao.getDemographic(dem));
+		List<DemographicExt> extensions = demographicExtDao.getDemographicExtByDemographicNo(Integer.parseInt(dem));
+		for (DemographicExt extension : extensions) {
+			DemographicExtArchive archive = new DemographicExtArchive(extension);
+			archive.setArchiveId(archiveId);
+			String oldValue = request.getParameter(archive.getKey() + "Orig");
+			archive.setValue(oldValue);
+			demographicExtArchiveDao.saveEntity(archive);	
+		}	
+		
         //add to waiting list if the waiting_list parameter in the property file is set to true
         
 
