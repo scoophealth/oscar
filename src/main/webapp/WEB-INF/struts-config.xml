@@ -2654,6 +2654,9 @@
 		<action path="/mcedt/info" type="org.oscarehr.integration.mcedt.InfoAction" name="mcedtInfoForm">
 			<forward name="info" path="/mcedt/info.jsp" />
 		</action>
+		
+		<action path="/demographicSupport" type="org.oscarehr.common.web.DemographicAction" parameter="method">
+		</action>
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="100M" />
 	<message-resources parameter="oscarResources" null="false" />

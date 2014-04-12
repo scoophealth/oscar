@@ -33,6 +33,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -60,10 +61,9 @@ public class DemographicExt extends AbstractModel<Integer> implements Serializab
     private boolean hidden;
 	
 	@PrePersist
+	@PreUpdate
 	protected void prePersist() {
-		if (this.dateCreated == null) {
-			this.dateCreated = new Date();
-		}
+		this.dateCreated = new Date();
 	}
 	
     // constructors

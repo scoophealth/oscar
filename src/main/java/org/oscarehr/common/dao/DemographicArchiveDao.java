@@ -91,4 +91,18 @@ public class DemographicArchiveDao extends AbstractDao<DemographicArchive> {
 		persist(da);
 		return da.getId();
     }
+    
+    public List<DemographicArchive> findByDemographicNoChronologically(Integer demographicNo) {
+
+    	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by x.lastUpdateDate ASC";
+
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, demographicNo);
+
+        @SuppressWarnings("unchecked")
+        List<DemographicArchive> results = query.getResultList();
+
+        return (results);
+    }
+    
 }

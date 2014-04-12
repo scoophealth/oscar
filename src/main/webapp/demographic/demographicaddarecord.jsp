@@ -307,7 +307,7 @@
        String proNo = (String) session.getValue("user");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "hPhoneExt", request.getParameter("hPhoneExt"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "wPhoneExt", request.getParameter("wPhoneExt"), "");
-       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "demo_cell", request.getParameter("cellphone"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "demo_cell", request.getParameter("demo_cell"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "aboriginal", request.getParameter("aboriginal"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "cytolNum",  request.getParameter("cytolNum"),  "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "ethnicity",     request.getParameter("ethnicity"),     "");
@@ -344,8 +344,7 @@
 		for (DemographicExt extension : extensions) {
 			DemographicExtArchive archive = new DemographicExtArchive(extension);
 			archive.setArchiveId(archiveId);
-			String oldValue = request.getParameter(archive.getKey() + "Orig");
-			archive.setValue(oldValue);
+			archive.setValue(request.getParameter(archive.getKey()));
 			demographicExtArchiveDao.saveEntity(archive);	
 		}	
 		
