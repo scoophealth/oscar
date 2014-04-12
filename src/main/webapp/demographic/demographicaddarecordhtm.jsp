@@ -712,7 +712,7 @@ function autoFillHin(){
 			<tr valign="top">
 				<td id="phoneCellLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPhoneCell" />: </b></td>
-				<td id="phoneCellCell" align="left"><input type="text" name="cellphone"
+				<td id="phoneCellCell" align="left"><input type="text" name="demo_cell"
 					onBlur="formatPhoneNum()"></td>
 				<td align="right"><b><bean:message
 						key="demographic.demographicaddrecordhtm.formPhoneComment" />: </b></td>

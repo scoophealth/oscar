@@ -118,7 +118,7 @@ public class DemographicExtDaoTest extends DaoTestFixtures {
 		newerEntity.setDateCreated(new Date(2222222));
 		dao.persist(newerEntity);
 		DemographicExt foundEntity = dao.getLatestDemographicExt(20, "Test");
-		assertEquals(newerEntity, foundEntity);
+		assertEquals(newerEntity.getId(), foundEntity.getId());
 	}
 
 	@Test

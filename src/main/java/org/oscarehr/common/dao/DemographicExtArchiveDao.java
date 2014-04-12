@@ -55,4 +55,22 @@ public class DemographicExtArchiveDao extends AbstractDao<DemographicExtArchive>
 
 		return this.getSingleResultOrNull(query);
 	}
+	
+	public List<DemographicExtArchive> getDemographicExtArchiveByArchiveId(Long archiveId) {
+		Query query = entityManager.createQuery("SELECT d from DemographicExtArchive d where d.archiveId=?");
+		query.setParameter(1, archiveId);
+		
+		@SuppressWarnings("unchecked")
+		List<DemographicExtArchive> results = query.getResultList();
+		return results;
+	}
+	
+	public List<DemographicExtArchive> getDemographicExtArchiveByDemoReverseCronological(Integer demographicNo) {
+		Query query = entityManager.createQuery("SELECT d from DemographicExtArchive d where d.demographicNo=? order by d.dateCreated ASC");
+		query.setParameter(1, demographicNo);
+		
+		@SuppressWarnings("unchecked")
+		List<DemographicExtArchive> results = query.getResultList();
+		return results;
+	}
 }

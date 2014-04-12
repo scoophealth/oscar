@@ -110,7 +110,7 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
  			throw new IllegalArgumentException();
  		}
 
- 		Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.demographicNo=? and d.key = ? order by d.dateCreated DESC");
+ 		Query query = entityManager.createQuery("SELECT d from DemographicExt d where d.demographicNo=? and d.key = ? order by d.dateCreated DESC, d.id DESC");
  		query.setParameter(1, demographicNo);
  		query.setParameter(2, key);
 
@@ -209,7 +209,6 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
      * This Method is used to add a key value pair for a patient
      * @param providerNo providers Number entering the key value pair
      * @param demo Demographic number of the patient that the  key/value  pair is for
-     * @param key The key ie "cellphone"
      * @param value The value for this key
      */
     public void addKey(String providerNo, Integer demo,String key, String value){

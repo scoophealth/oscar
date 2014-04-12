@@ -286,8 +286,8 @@
 	for (DemographicExt extension : extensions) {
 		DemographicExtArchive archive = new DemographicExtArchive(extension);
 		archive.setArchiveId(archiveId);
-		String oldValue = request.getParameter(archive.getKey() + "Orig");
-		archive.setValue(oldValue);
+		//String oldValue = request.getParameter(archive.getKey() + "Orig");
+		archive.setValue(request.getParameter(archive.getKey()));
 		demographicExtArchiveDao.saveEntity(archive);	
 	}	
 	

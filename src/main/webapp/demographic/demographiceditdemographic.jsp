@@ -228,6 +228,8 @@
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/check_hin.js"></script>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/nhpup_1.1.js"></script>
+
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
@@ -811,7 +813,26 @@ jQuery(document).ready(function($) {
 
 function showCbiReminder()
 {
-       alert('<bean:message key="demographic.demographiceditdemographic.updateCBIReminder"/>');
+  alert('<bean:message key="demographic.demographiceditdemographic.updateCBIReminder"/>');
+}
+
+
+
+var addressHistory = "";
+var homePhoneHistory="";
+var workPhoneHistory="";
+var cellPhoneHistory="";
+
+function generateMarkup(addresses,type,header) {
+	 var markup = '<table border="0" cellpadding="2" cellspacing="2" width="200px">';
+     markup += '<tr><th><b>Date Entered</b></th><th><b>'+header+'</b></th></tr>';
+     for(var x=0;x<addresses.length;x++) {
+     	if(addresses[x].type == type) {
+     		markup += '<tr><td>'+addresses[x].dateSeen+'</td><td>'+addresses[x].name+'</td></tr>';
+     	}
+     }
+     markup += "</table>";
+     return markup;
 }
 
 function updatePaperArchive(paperArchiveSel) {
@@ -824,9 +845,47 @@ function updatePaperArchive(paperArchiveSel) {
 		jQuery("#paper_chart_archived_program").val('<%=currentProgram%>');
 	}
 }
+
+jQuery(document).ready(function() {
+	var addresses;
+	
+	 jQuery.getJSON("../demographicSupport.do",
+             {
+                     method: "getAddressAndPhoneHistoryAsJson",
+                     demographicNo: demographicNo
+             },
+             function(response){
+                 if (response instanceof Array) {
+                     addresses = response;
+           	  	} else {
+                     var arr = new Array();
+                     arr[0] = response;
+                     addresses = arr;
+            	}
+                 
+                addressHistory = generateMarkup(addresses,'address','Address');
+                homePhoneHistory = generateMarkup(addresses,'phone','Phone #');
+                workPhoneHistory = generateMarkup(addresses,'phone2','Phone #');
+                cellPhoneHistory = generateMarkup(addresses,'cell','Phone #');
+       });
+});
+
 </script>
 
 <style type="text/css">
+#pup {
+  position:absolute;
+  z-index:200; /* aaaalways on top*/
+  padding: 3px;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 250px;
+  border: 1px solid black;
+  background-color: #777;
+  color: white;
+  font-size: 0.95em;
+}
+
 div.demographicSection{
    width:100%;
    margin-top: 2px;
@@ -902,88 +961,11 @@ div.demographicWrapper {
 <body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();checkRosterStatus2();"
 	topmargin="0" leftmargin="0" rightmargin="0">
 <%
-//---------------------History of phones and address ----------------------------
-	Demographic demographic = demographicDao.getDemographic(demographic_no);
-	List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNo(Integer.parseInt(demographic_no));
-	List<DemographicExtArchive> extArchives = demographicExtArchiveDao.getDemographicExtArchiveByDemoAndKey(Integer.parseInt(demographic_no), "demo_cell");
-	List<String> homePhones = new ArrayList<String>();
-	List<String> workPhones = new ArrayList<String>();
-	List<String> cellPhones = new ArrayList<String>();
-	List<String> addresses = new ArrayList<String>();
+       Demographic demographic = demographicDao.getDemographic(demographic_no);
+       List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNo(Integer.parseInt(demographic_no));
+       List<DemographicExtArchive> extArchives = demographicExtArchiveDao.getDemographicExtArchiveByDemoAndKey(Integer.parseInt(demographic_no), "demo_cell");
 
-	for (DemographicArchive archive : archives) {
-	    String homePhone = archive.getPhone();
-	    String workPhone = archive.getPhone2();
-	    String address = archive.getAddress() + ", " + archive.getCity() + ", " + archive.getProvince() + ", " + archive.getPostal();
-	    
-	   	if (StringUtils.isNotBlank(homePhone) && !homePhones.contains(homePhone)) {
-	   	 	DemographicExtArchive homePhoneExt = demographicExtArchiveDao.getDemographicExtArchiveByArchiveIdAndKey(archive.getId(), "hPhoneExt");
-	   	    homePhones.add(homePhone + (homePhoneExt == null || StringUtils.isBlank(homePhoneExt.getValue()) ? "" : " Ext " + homePhoneExt.getValue()));
-	   	}
-	   	if (StringUtils.isNotBlank(workPhone) && !workPhones.contains(workPhone)) {
-	   	 	DemographicExtArchive workPhoneExt = demographicExtArchiveDao.getDemographicExtArchiveByArchiveIdAndKey(archive.getId(), "wPhoneExt");
-	   	 	workPhones.add(workPhone + (workPhoneExt == null || StringUtils.isBlank(workPhoneExt.getValue()) ? "" : " Ext " + workPhoneExt.getValue()));
-	   	}
-	   	if (StringUtils.isNotBlank(address) && !addresses.contains(address)) {
-	   	 	addresses.add(address);
-	   	}
-	}
-	for (DemographicExtArchive extArchive : extArchives) {
-	    String cellPhone = extArchive.getValue();
-	    if (StringUtils.isNotBlank(cellPhone) && !cellPhones.contains(cellPhone)) {
-	        cellPhones.add(cellPhone);
-	   	}
-	}
-//---------------------History of phones and address ----------------------------
 %>
-<div id="homePhones" style="display:none;">
-	<h2>Home Phone History</h2>
-	<table>
-		<%
-			for (String homePhone : homePhones) {
-		%>
-			<tr><td><%=homePhone %></td></tr>
-		<%
-			}
-		%>
-	</table>
-</div>
-<div id="workPhones" style="display:none;">
-	<h2>Work Phone History</h2>
-	<table>
-		<%
-			for (String workPhone : workPhones) {
-		%>
-			<tr><td><%=workPhone %></td></tr>
-		<%
-			}
-		%>
-	</table>
-</div>
-<div id="cellPhones" style="display:none;">
-	<h2>Cell Phone History</h2>
-	<table>
-		<%
-			for (String cellPhone : cellPhones) {
-		%>
-			<tr><td><%=cellPhone %></td></tr>
-		<%
-			}
-		%>
-	</table>
-</div>
-<div id="addresses" style="display:none;">
-	<h2>Address History</h2>
-	<table>
-		<%
-			for (String address : addresses) {
-		%>
-			<tr><td><%=address %></td></tr>
-		<%
-			}
-		%>
-	</table>
-</div>
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn"><bean:message
@@ -1799,21 +1781,21 @@ if ( Dead.equals(PatStat) ) {%>
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgContactInfo"/></h3>
 						<ul>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneH" />(<a class="popup" href="#" rel="homePhones" title="Home Phone History">History</a>):</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneH" />(<span class="popup"  onmouseover="nhpup.popup(homePhoneHistory);" title="Home phone History">History</span>):</span>
                                                         <span class="info"><%=demographic.getPhone()%> <%=StringUtils.trimToEmpty(demoExt.get("hPhoneExt"))%></span>
 							</li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneW" />(<a class="popup" href="#" rel="workPhones" title="Work Phone History">History</a>):</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneW" />(<span class="popup"  onmouseover="nhpup.popup(workPhoneHistory);" title="Work phone History">History</span>):</span>
                                                         <span class="info"><%=demographic.getPhone2()%> <%=StringUtils.trimToEmpty(demoExt.get("wPhoneExt"))%></span>
 							</li>
 	                        						<li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneC" />(<a class="popup" href="#" rel="cellPhones" title="Cell Phone History">History</a>):</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneC" />(<span class="popup"  onmouseover="nhpup.popup(cellPhoneHistory);" title="cell phone History">History</span>):</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%></span></li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographicaddrecordhtm.formPhoneComment" />:</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("phoneComment"))%></span></li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formAddr" />(<a class="popup" href="#" rel="addresses" title="Address History">History</a>):</span>
+                                                            key="demographic.demographiceditdemographic.formAddr" />(<span class="popup"  onmouseover="nhpup.popup(addressHistory);" title="Address History">History</span>):</span>
                                                         <span class="info"><%=demographic.getAddress()%></span>
 							</li>
                                                     <li><span class="label"><bean:message
