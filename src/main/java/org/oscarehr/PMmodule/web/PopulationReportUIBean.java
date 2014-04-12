@@ -210,7 +210,8 @@ public class PopulationReportUIBean {
 			List<Program> programList = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
 			for(Program p : programList) {
 				Map<Integer, Integer> counts1 = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(p.getId(), roleId, encounterType, startDate, endDate);
-				counts.putAll(counts1);
+							
+				counts.putAll(addNewCounts(counts, counts1));				
 				
 				rowTotalUniqueEncounters += populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(p.getId(), roleId, encounterType, startDate, endDate);
 				rowTotalUniqueClients += populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(p.getId(), roleId, encounterType, startDate, endDate);				
@@ -218,7 +219,9 @@ public class PopulationReportUIBean {
 		}
 		if(program!=null) {
 			Map<Integer, Integer> counts2 = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(program.getId(), roleId, encounterType, startDate, endDate);
-			counts.putAll(counts2);
+			
+			counts.putAll(addNewCounts(counts, counts2));
+	
 			rowTotalUniqueEncounters += populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
 			rowTotalUniqueClients += populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
 		}
@@ -249,5 +252,19 @@ public class PopulationReportUIBean {
 		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(program.getId(), provider, encounterType, startDate, endDate);
 		
 		return (result);
+	}
+	
+	private Map<Integer, Integer> addNewCounts(Map<Integer, Integer> counts, Map<Integer, Integer> counts1) {
+		for (Map.Entry<Integer, Integer> entry : counts1.entrySet()) {
+			Integer value_old = counts.get(entry.getKey());
+			if(value_old == null)
+				counts.put(entry.getKey(), entry.getValue());
+			else {
+				Integer value_new = value_old + entry.getValue();
+				counts.remove(entry.getKey());
+				counts.put(entry.getKey(), value_new);
+			}
+		}
+		return counts;
 	}
 }
