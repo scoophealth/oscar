@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.net.URLEncoder"%>
 <%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -119,8 +120,8 @@ if(groupName.equals(groupView)){
 <%}else{%>
 <tr>
 <%}%>
-<td><a href="<%= request.getContextPath() %>/eforms/delGroup.do?group_name=<%=groupName%>" class="btn btn-small" title="delete this group" data-confirm="<i class='icon-warning-sign icon-large'></i> Are you sure you would like to delete group: <strong><%=groupName%></strong>?"><i class="icon-trash"></i></a></td>
-<td title="<%=groupName%>"><a href='<%= request.getContextPath() %>/eform/efmmanageformgroups.jsp?orderby=form_name&group_view=<%=groupName%>' class="contentLink"> <%=groupName%> </a> </td>
+<td><a href='<%= request.getContextPath() %>/eforms/delGroup.do?group_name=<%=URLEncoder.encode(groupName, "UTF-8")%>' class="btn btn-small" title="delete this group" data-confirm="<i class='icon-warning-sign icon-large'></i> Are you sure you would like to delete group: <strong><%=groupName%></strong>?"><i class="icon-trash"></i></a></td>
+<td title="<%=groupName%>"><a href='<%= request.getContextPath() %>/eform/efmmanageformgroups.jsp?orderby=form_name&group_view=<%=URLEncoder.encode(groupName, "UTF-8")%>' class="contentLink"> <%=groupName%> </a> </td>
 <td><%= (String) curhash.get("count") %> </td>
 
 </tr>
