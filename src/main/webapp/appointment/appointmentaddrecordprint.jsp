@@ -30,6 +30,7 @@
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="oscar.util.ConversionUtils" %>
+<%@page import="oscar.util.UtilDateUtilities"%>
 <%
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 %>
@@ -48,7 +49,7 @@
 <%
 	int demographicNo = 0;
 	org.oscarehr.common.model.Demographic demo = null;
-
+        String createDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
 	if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
     	demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
     	DemographicData demData = new DemographicData();
@@ -69,7 +70,7 @@
 	a.setStyle(request.getParameter("style"));
 	a.setBilling(request.getParameter("billing"));
 	a.setStatus(request.getParameter("status"));
-	a.setCreateDateTime(new java.util.Date());
+	a.setCreateDateTime(ConversionUtils.fromTimestampString(createDateTime));
 	a.setCreator(request.getParameter("creator"));
 	a.setRemarks(request.getParameter("remarks"));
 	a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
@@ -109,7 +110,7 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 
 		Appointment appt1 = appointmentDao.search_appt_no(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("appointment_date")), 
 				ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")), 
-				ConversionUtils.fromDateString(request.getParameter("createdatetime")), request.getParameter("creator"), demographicNo);
+				ConversionUtils.fromTimestampString(createDateTime), request.getParameter("creator"), demographicNo);
 		if (appt1 != null) {
 			Integer apptNo = appt1.getId();
 			String mcNumber = request.getParameter("appt_mc_number");
