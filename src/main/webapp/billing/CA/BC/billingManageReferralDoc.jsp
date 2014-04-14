@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -36,13 +37,9 @@
 %>
 <html:html locale="true">
 
-
-
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Manage Referral Docs</title>
-<link rel="stylesheet" type="text/css"
-	href="../../../oscarEncounter/encounterStyles.css">
+<title><bean:message key="admin.admin.ManageReferralDoc"/></title>
+
 <script type="text/javascript">
 
 function isNumeric(strString){
@@ -67,65 +64,50 @@ function checkUnits(){
 	}
 	return true;
 }
-
-
-
 </script>
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-</head>
+<style>
+table td{font-size:10px;}
+</style>
 
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
-<!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">billing</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td>Manage Referral Billing</td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><a
-					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
-					key="global.help" /></a> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp; &nbsp; <a
-			href="billingAddReferralDoc.jsp">Add Doc</a></td>
-		<td class="MainTableRightColumn">
-		<%
+<body>
+	<h3><bean:message key="admin.admin.ManageReferralDoc"/></h3>
+	<div class="container-fluid">
+		
+	    <%
               String limit = request.getParameter("limit");
               String lastname = request.getParameter("lastname");
             %>
-		<form action="billingManageReferralDoc.jsp">Last Name: <input
-			type="text" name="lastname"
-			value="<%= (lastname == null)?"":lastname%>" /> <select name="limit">
-			<option value="10" <%=selected(limit,"10")%>>10</option>
-			<option value="50" <%=selected(limit,"50")%>>50</option>
-			<option value="100" <%=selected(limit,"100")%>>100</option>
-		</select> <input type="submit" value="Search" /></form>
-		<table class="ele">
+		<form action="<%=request.getContextPath() %>/billing/CA/BC/billingManageReferralDoc.jsp" class="form-inline" name="referralDocform" id="referralDocform">
+			Last Name: <input type="text" name="lastname" value="<%= (lastname == null)?"":lastname%>" /> 
+			<select name="limit" class="span1" title="limit results">
+				<option value="10" <%=selected(limit,"10")%>>10</option>
+				<option value="50" <%=selected(limit,"50")%>>50</option>
+				<option value="100" <%=selected(limit,"100")%>>100</option>
+			</select> 
+			<input class="btn btn-primary" type="submit" value="Search" /> 
+			<a href="<%=request.getContextPath() %>/billing/CA/BC/billingAddReferralDoc.jsp" class="contentLink btn btn-info">Add Doctor</a>
+		</form>
+
+		<table class="table table-striped table-condensed table-hover">
+		<thead>
 			<tr>
 				<!--th>id</th-->
-				<th>Billing #</th>
+				<th>Billing#</th>
 				<th>Last Name</th>
 				<th>First Name</th>
 				<th>Specialty</th>
-				<th>Address 1</th>
-				<th>Address 2</th>
+				<th>Address1</th>
+				<th>Address2</th>
 				<th>City</th>
 				<th>Province</th>
 				<th>Postal</th>
 				<th>Phone</th>
 				<th>Fax</th>
 			</tr>
+		</thead>
+
+		<tbody>
 			<%
 			//ReferralBillingData rbd = new ReferralBillingData();
                if (limit == null) limit = "10";
@@ -136,31 +118,40 @@ function checkUnits(){
             %>
 			<tr>
 				<!--td><%=billingReferral.getBillingreferralNo()%></td-->
-				<td><a
-					href="billingAddReferralDoc.jsp?id=<%=billingReferral.getBillingreferralNo()%>"><%=billingReferral.getReferralNo()%></a></td>
-				<td><%=billingReferral.getLastName()%></td>
-				<td><%=billingReferral.getFirstName()%></td>
-				<td><%=billingReferral.getSpecialty()%></td>
-				<td><%=billingReferral.getAddress1()%></td>
-				<td><%=billingReferral.getAddress2()%></td>
-				<td><%=billingReferral.getCity()%></td>
-				<td><%=billingReferral.getProvince()%></td>
-				<td><%=billingReferral.getPostal()%></td>
-				<td><%=billingReferral.getPhone()%></td>
-				<td><%=billingReferral.getFax()%></td>
+				<td><a href="<%=request.getContextPath() %>/billing/CA/BC/billingAddReferralDoc.jsp?id=<%=billingReferral.getBillingreferralNo()%>" class="contentLink"><%=billingReferral.getReferralNo()%></a></td>
+				<td><%if(billingReferral.getLastName()!=null){out.print(billingReferral.getLastName());}%></td>
+				<td><%if(billingReferral.getFirstName()!=null){out.print(billingReferral.getFirstName());}%></td>
+				<td><%if(billingReferral.getSpecialty()!=null){out.print(billingReferral.getSpecialty());}%></td>
+				<td><%if(billingReferral.getAddress1()!=null){out.print(billingReferral.getAddress1());}%></td>
+				<td><%if(billingReferral.getAddress2()!=null){out.print(billingReferral.getAddress2());}%></td>
+				<td><%if(billingReferral.getCity()!=null){out.print(billingReferral.getCity());}%></td>
+				<td><%if(billingReferral.getProvince()!=null){out.print(billingReferral.getProvince());}%></td>
+				<td><%if(billingReferral.getPostal()!=null){out.print(billingReferral.getPostal());}%></td>
+				<td><%if(billingReferral.getPhone()!=null){out.print(billingReferral.getPhone());}%></td>
+				<td><%if(billingReferral.getFax()!=null){out.print(billingReferral.getFax());}%></td>
 			</tr>
-
-
 			<%}%>
+		</tbody>
 		</table>
+	</div>
+<script>
+registerFormSubmit('referralDocform', 'dynamic-content');
 
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn"></td>
-		<td class="MainTableBottomRowRightColumn"></td>
-	</tr>
-</table>
+$( document ).ready(function( $ ) {
+$("a.contentLink").on("click", function(e) {
+	e.preventDefault();
+	$("#dynamic-content").load($(this).attr("href"), 
+		function(response, status, xhr) {
+	  		if (status == "error") {
+		    	var msg = "Sorry but there was an error: ";
+		    	$("#dynamic-content").html(msg + xhr.status + " " + xhr.statusText);
+			}
+		}
+	);
+});
+		
+});
+</script>
 </body>
 </html:html>
 <%!
