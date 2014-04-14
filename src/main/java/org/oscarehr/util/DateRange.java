@@ -31,7 +31,9 @@ import java.util.Date;
  */
 public class DateRange implements Serializable {
 
-	private Date from;
+    private static final long serialVersionUID = 1L;
+
+    private Date from;
 	private Date to;
 
 	/**
@@ -47,7 +49,7 @@ public class DateRange implements Serializable {
 	 */
 	public DateRange(Date from, Date to) {
 		if (from != null && to != null) {
-			if (!from.before(to)) {
+			if (!from.before(to) && !from.equals(to)) { // allow single day range
 				throw new IllegalArgumentException("From date must preceed to date");
 			}
 		}
