@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
@@ -61,6 +62,8 @@ public class EctDisplayAction extends Action {
 	protected static final int CROP_LEN_TITLE = 45;
 	protected static final int MAX_LEN_KEY = 12;
 	protected static final int CROP_LEN_KEY = 9;
+	
+	private boolean enabled;
 
 	public EctDisplayAction() {
 		super();
@@ -237,4 +240,106 @@ public class EctDisplayAction extends Action {
 		return "";
 	}
 
+	/**
+	 * Get currently logged in provider
+	 * 
+	 * @return
+	 * 		Returns the provider ID or null of the ID cannot be retrieved.
+	 */
+	protected String getProviderNo() {
+		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
+		if (info == null) {
+			return null;
+		}
+		
+		if (info.loggedInProvider == null) {
+			return null;
+		}
+			
+		return info.loggedInProvider.getProviderNo();
+	}
+
+	/**
+	 * Creates a new display item with the specified title and 
+	 * a link that cannot be clicked at.
+	 * 
+	 * @param title
+	 * 		Title to be displayed for the item
+	 * @return
+	 * 		Returns the new item.
+	 */
+	protected NavBarDisplayDAO.Item newItem(String title) {
+		return newItem(title, null);
+	}
+
+	/**
+	 * Creates a new display item with the specified title and color and
+	 * a link that cannot be clicked at.
+	 * 
+	 * @param title
+	 * 		Title to be displayed for the item
+	 * @param color
+	 * 		Color of the link to be displayed in the item (e.g. "red", or "green")
+	 * @return
+	 * 		Returns the new item.
+	 */
+	protected NavBarDisplayDAO.Item newItem(String title, String color) {
+		return newItem(title, "return false;", color);
+	}
+
+	/**
+	 * Creates a new display item with the specified title and color and
+	 * link.
+	 * 
+	 * @param title
+	 * 		Title to be displayed for the item
+	 * @param color
+	 * 		Color of the link to be displayed in the item (e.g. "red", or "green")
+	 * @param link
+	 * 		Targer URL to be opened with link is clicked
+	 * @return
+	 * 		Returns the new item.
+	 */
+	protected NavBarDisplayDAO.Item newItem(String title, String url, String color) {
+		NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+	    item.setTitle(title);
+	    if (color != null) {
+	    	item.setColour(color);
+	    }
+	    
+	    if (url != null) {
+	    	item.setURL(url);
+	    } else {
+	    	// for all null urls, make sure we don't allow clicking them
+	    	item.setURL("return false;");
+	    }
+	    item.setURLJavaScript(true);
+	    
+	    return item;
+	}
+
+	/**
+	 * Checks if the action is enabled. Non-enabled actions should not render the encounter 
+	 * screen widget (i.e. return true in {@link #getInfo(EctSessionBean, javax.servlet.http.HttpServletRequest, NavBarDisplayDAO, org.apache.struts.util.MessageResources)}
+	 * and must not modify the nav bar dao). 
+	 * 
+	 * @return
+	 * 		Returns true of the actions is enabled and false otherwise.
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * Sets if the action is enabled. Non-enabled actions should not render the encounter 
+	 * screen widget (i.e. return true in {@link #getInfo(EctSessionBean, javax.servlet.http.HttpServletRequest, NavBarDisplayDAO, org.apache.struts.util.MessageResources)}
+	 * and must not modify the nav bar dao). 
+	 * 
+	 * @param enabled
+	 * 		Boolean flag that indicates if the actions is enabled.
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
 }

@@ -542,10 +542,10 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo,                                       
                   ctx + "/oscarEncounter/displayEpisodes.do?hC=" + Colour.episode,
                   ctx + "/oscarEncounter/displayPregnancies.do?hC="+ Colour.episode,
-                  ctx + "/oscarEncounter/displayContacts.do?hC=" + Colour.contacts,
+                  ctx + "/oscarEncounter/displayContacts.do?hC=" + Colour.contacts
               ];
 
-            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "unresolvedIssues", "resolvedIssues", "Guidelines","episode","pregnancy","contacts" ];
+            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "unresolvedIssues", "resolvedIssues", "Guidelines","episode","pregnancy","contacts"];
 
 
           var navbar = "leftNavBar";

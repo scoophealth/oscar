@@ -89,6 +89,7 @@
 		<form-bean name="FrmXmlUploadForm" type="oscar.form.pageUtil.FrmXmlUploadForm" />
 		<form-bean name="FrmForm" type="oscar.form.FrmForm" />
 		<form-bean name="FrmFormForm" type="oscar.form.pageUtil.FrmFormForm" />
+		<form-bean name="EctMyOscarFilterForm" type="oscar.oscarEncounter.data.myoscar.EctMyOscarFilterForm"/>
 		<form-bean name="EctConsultationFormRequestForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm" />
 		<form-bean name="EctViewConsultationRequestsForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsForm" />
 		<form-bean name="EctViewRequestForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewRequestForm" />
@@ -1103,6 +1104,11 @@
 			<forward name="failESend" path="/oscarEncounter/ViewRequest.do" />
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" />
 		</action>
+		
+		<action path="/oscarEncounter/myoscar/measurements_*" name="EctMyOscarFilterForm" scope="request" type="oscar.oscarEncounter.data.myoscar.EctMyOscarFilterAction">
+			<forward name="success" path="/oscarEncounter/myoscar/{1}.jsp" />
+		</action>
+		
 		<action input="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" name="EctConsultationFormRequestForm" path="/oscarEncounter/RequestConsultation" scope="request"
 			type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestAction"
 		>
@@ -2563,8 +2569,8 @@
                         <forward name="failure" path="/failure.jsp" />                       
 		</action>
 		
-		 <action path="/oscarEncounter/displayContacts" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayContactsAction" />
-
+		<action path="/oscarEncounter/displayContacts" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayContactsAction" />
+		
 		<action path="/renal/CkdDSA" type="org.oscarehr.renal.web.CkdDSAAction" parameter="method">
 			<forward name="detail" path="/renal/ckd_dsa_detail.jsp" />
 		</action>
