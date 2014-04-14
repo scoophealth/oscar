@@ -114,8 +114,9 @@ String curProvider_no = (String)session.getAttribute("user");
 						class="xlink" rel="${ctx}/billing/CA/BC/showServiceCodeAssocs.do"><bean:message key="admin.admin.ManageServiceDiagnosticCodeAssoc"/></a></li>
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/billing/CA/BC/supServiceCodeAssocAction.do"><bean:message key="admin.admin.ManageProcedureFeeCodeAssoc"/></a></li>
-					<li><a href='javascript:void(0);'
-						class="xlink" rel="${ctx}/billing/CA/BC/billingManageReferralDoc.jsp"><bean:message key="admin.admin.ManageReferralDoc"/></a></li>
+
+					<li><a href="${ctx}/billing/CA/BC/billingManageReferralDoc.jsp" class="contentLink defaultManageReferralDoc"><bean:message key="admin.admin.ManageReferralDoc"/></a></li>
+
 					<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no" defaultVal="true">
 						<li><a href='javascript:void(0);'
 							class="xlink" rel="${ctx}/billing/CA/BC/billingSim.jsp"><bean:message key="admin.admin.SimulateSubFile"/></a></li>
