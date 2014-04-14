@@ -117,9 +117,7 @@ width: 400px;
 		<center>Error reading report. Ask administrator to check to log to determine the cause.</center>
 	
 	<%} else { %>
-		<center>CKD Pre-Implementation Report</center>
-		
-		<br/>
+		<h3>CKD Pre-Implementation Report</h3>
 		
 		<table style="width:100%" border="1">
 			<thead>
