@@ -23,8 +23,9 @@
     Ontario, Canada
 
 --%>
-<%@ page
-	import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%>
+<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%>
+<%@ page import="oscar.oscarDemographic.data.DemographicMerged"%>
+	
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -159,7 +160,7 @@ function checkTypeIn() {
 	<input type="hidden" name="labType"
 		value="<%=request.getParameter("labType")%>" />
 	<tr bgcolor="#339999">
-		<TH align="center" width="20%"><b><bean:message
+		<TH align="center" width="10%"><b><bean:message
 			key="oscarMDS.segmentDisplay.patientSearch.msgPatientId" /></b></TH>
 		<TH align="center" width="20%"><b><bean:message
 			key="oscarMDS.segmentDisplay.patientSearch.msgLastName" /></b></TH>
@@ -169,6 +170,8 @@ function checkTypeIn() {
 			key="oscarMDS.segmentDisplay.patientSearch.msgAge" /></b></TH>
 		<TH align="center" width="10%"><b><bean:message
 			key="oscarMDS.segmentDisplay.patientSearch.msgRosterStatus" /></b></TH>
+		<TH align="center" width="10%"><b><bean:message
+			key="oscarMDS.segmentDisplay.patientSearch.msgPatientStatus" /></b></TH>
 		<TH align="center" width="5%"><b><bean:message
 			key="oscarMDS.segmentDisplay.patientSearch.msgSex" /></B></TH>
 		<TH align="center" width="10%"><b><bean:message
@@ -216,7 +219,7 @@ function checkTypeIn() {
     }
   }
 
-  String sql = "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby; // + " "+limit;  
+  String sql = "select demographic_no,first_name,last_name,roster_status,patient_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby; // + " "+limit;  
   
   if(request.getParameter("search_mode").equals("search_name")) {      
       keyword=keyword+"%";
@@ -257,7 +260,19 @@ function checkTypeIn() {
                 idx++;
   	}
   	idx = 0;
+  	
+	
+	DemographicMerged dmDAO = new DemographicMerged();
+
     while (rs.next() && idx < Integer.parseInt(strLimit2)) {
+        String dem_no = oscar.Misc.getString(rs,"demographic_no");
+        String head = dmDAO.getHead(dem_no);
+
+        if(head != null && !head.equals(dem_no)) {
+        	//skip non head records
+        	continue;
+        }
+
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
 
@@ -282,6 +297,7 @@ function checkTypeIn() {
 		<td><%=nbsp( Misc.toUpperLowerCase(oscar.Misc.getString(rs,"first_name")) )%></td>
 		<td><%= age %></td>
 		<td><%=nbsp( oscar.Misc.getString(rs,"roster_status") )%></td>
+		<td><%=nbsp( oscar.Misc.getString(rs,"patient_status") )%></td>
 		<td><%=nbsp( oscar.Misc.getString(rs,"sex") )%></td>
 		<td><%=nbsp( oscar.Misc.getString(rs,"year_of_birth")+"-"+oscar.Misc.getString(rs,"month_of_birth")+"-"+oscar.Misc.getString(rs,"date_of_birth") )%></td>
 		<td><%=providerBean.getProperty(oscar.Misc.getString(rs,"provider_no"))==null?"&nbsp;":providerBean.getProperty(oscar.Misc.getString(rs,"provider_no")) %></td>

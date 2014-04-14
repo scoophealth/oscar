@@ -397,8 +397,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptConsultReportData.java:demoList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicColumnNames.java:backhash = new java.util.Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicColumnNames.java:hstbl = new java.util.Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ArrayList arraylist = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:arraylist1 = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:demoList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:ArrayList a = new ArrayList ();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:ArrayList arrayList = new ArrayList();</ViolationValue>
@@ -635,7 +633,7 @@
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONReview.jsp:vecServiceParam[0] = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONReview.jsp:vecServiceParam[1] = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONReview.jsp:vecServiceParam[2] = new Vector();</ViolationValue>
-		  <ViolationValue>/src/main/webapp/billing/CA/ON/billingONStatus.jsp:bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new Vector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/billing/CA/ON/billingONStatus.jsp:bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONStatus.jsp:bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingShortcutPg1.jsp:Vector            vecHist           = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingShortcutPg1.jsp:Vector vecCodeCol1 = new Vector();</ViolationValue>
@@ -718,8 +716,8 @@
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:HashMap labsBasedOnName = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:ArrayList dateList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:ArrayList idList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:HashMap measIdMap = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:HashMap dateIdHash = new HashMap();</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:HashMap measIdMap = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:LinkedHashMap IdMap = new LinkedHashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:LinkedHashMap nameMap = new LinkedHashMap();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Collections.sort(list,new SortHashtable());</ViolationValue>
@@ -1697,7 +1695,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgSendMessageAction.java:rs = DBHandler.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgSendMessageAction.java:rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgSendMessageAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgSessionBean.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageAction.java:DBHandler.RunSQL("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\' and status not like 'del'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1737,7 +1734,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicQueryBuilder.java:rs = DBHandler.GetSQL(stringBuffer.toString());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s2);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:for (resultset = DBHandler.GetSQL(s); resultset.next(); arraylist</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
@@ -1980,8 +1976,8 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/newEncounter.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:&lt;%@ page import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/ViewScript.jsp:&lt;%@page import="oscar.service.OscarSuperManager"%&gt;&lt;html:html locale="true"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/ViewScript2.jsp:&lt;%@page import="oscar.service.OscarSuperManager"%&gt;&lt;html:html locale="true"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
@@ -2837,37 +2833,14 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:public SortHashtable() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:public class SortHashtable implements Comparator {</ViolationValue>
-	     <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:result = ((Hashtable) object).get(COLL_DATE_DATE);</ViolationValue>
-		  <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:} else if (Hashtable.class.isAssignableFrom(object.getClass())) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:result = ((Hashtable) object).get(COLL_DATE_DATE);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:} else if (Hashtable.class.isAssignableFrom(object.getClass())) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:Hashtable&lt;String,Object&gt; info = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:public static Hashtable&lt;String,Object&gt; getInfo(String lab_no) throws SQLException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/util/CumulativeLabValuesComparator.java:*  A custom comparator used to compare the Hashtables within an array by the</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/util/CumulativeLabValuesComparator.java:Date dateA = UtilDateUtilities.getDateFromString((String) ((Hashtable) o1).get("date") , "yyyy-MM-dd HH:mm:ss");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/util/CumulativeLabValuesComparator.java:Date dateB = UtilDateUtilities.getDateFromString((String) ((Hashtable) o2).get("date") , "yyyy-MM-dd HH:mm:ss");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/util/CumulativeLabValuesComparator.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Node.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Node.java:protected Hashtable data;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Node.java:this.data = new Hashtable(fields.length);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java://Hashtable return in list</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; cmlLabs = findUniqueLabsForPatientCML(demographic);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; hl7Labs = findUniqueLabsForPatientHL7Text(demographic);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; labList = new ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; labs = new ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; mdsLabs = findUniqueLabsForPatientMDS(demographic);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; pathLabs = findUniqueLabsForPatientExcelleris(demographic);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:Hashtable&lt;String, Serializable&gt; h = new Hashtable&lt;String, Serializable&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:Hashtable&lt;String, Serializable&gt; ht = (Hashtable&lt;String, Serializable&gt;) accessionMap.get(accessionNum);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:Hashtable&lt;String, Serializable&gt; t = new Hashtable&lt;String, Serializable&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ht = new Hashtable&lt;String, Serializable&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findUniqueLabsForPatient(String demographic){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findUniqueLabsForPatientCML(String demographic){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findUniqueLabsForPatientExcelleris(String demographic){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findUniqueLabsForPatientHL7Text(String demographic){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findUniqueLabsForPatientMDS(String demographic){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findValuesByLoinc(String demographicNo, String loincCode){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:public static ArrayList&lt;Hashtable&lt;String, Serializable&gt;&gt; findValuesForDemographic(String demographicNo){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable mnemonics = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable notes = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:import java.util.Hashtable;</ViolationValue>
@@ -3844,25 +3817,7 @@
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:String getChecked(Hashtable h,String reg){</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:StringBuffer sb = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues.jsp:Hashtable h = (Hashtable) prevList.get(i);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:&lt;%  Hashtable dater = (Hashtable) labsBasedOnName.get(labType+"|"+prevName);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable dater2 = (Hashtable) labsBasedOnName.get(labType+"|"+prevName);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable h = (Hashtable) prevList.get(i);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable hdata = (Hashtable) dater.get(labDate);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable hdata = (Hashtable) dater2.get(labDate);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable hdata = (Hashtable) list.get(g);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable labsBasedOnDate = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues2.jsp:Hashtable labsBasedOnName = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:// use a custom comparator to compare the Hashtables in the array</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp://Hashtable idHash = (Hashtable) dateIdHash.get("idHash");</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable dateIdHash = (Hashtable) dateList.get(i);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable dateIdHash = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable h = (Hashtable) labList.get(j);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable ht = (Hashtable) IdMap.get(IdMap.keySet().iterator().next());</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable ht = (Hashtable) IdMap.get(dateIdHash.get("id"));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Collections.sort(list,new SortHashtable());</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Hashtable hdata = (Hashtable) list.get(k);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:SortHashtable sorter = new SortHashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; formCreated = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; patientName = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; req_id      = new Vector&lt;String&gt;();</ViolationValue>
