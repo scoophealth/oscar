@@ -7184,7 +7184,7 @@ CREATE TABLE radetail (
 
 CREATE TABLE raheader (
   raheader_no int(6) NOT NULL auto_increment,
-  filename varchar(12) NOT NULL default '',
+  filename varchar(30) NOT NULL,
   paymentdate varchar(8) NOT NULL default '',
   payable varchar(30) NOT NULL default '',
   totalamount varchar(10) NOT NULL default '',
