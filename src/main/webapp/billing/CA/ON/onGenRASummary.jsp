@@ -390,18 +390,21 @@ for(int i=0; i<aL.size(); i++) {
 %>
 <!-- added another TR for table-filter js to automatically calculate totals based on filters -->
 <tr class="myYellow">
-			<td align="center"></td>
-			<td></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center"></td>
-			<td align="center">Total:</td>
-			<td id="amountSubmit" align=right></td>
-			<td id="amountPay" align=right></td>
-			<td id="clinicPay" align=right></td>
-			<td id="hospitalPay" align=right></td>
-			<td align=right>&nbsp;</td>
-			<td align=right>&nbsp;</td>
+                        <td align="center"></td>
+                        <td></td>
+                        <td align="center"></td>
+                        <td align="center"></td>
+                        <td align="center"></td>
+                         <td align="center"></td>
+                        <td align="center">Total:</td>
+                        <td id="amountSubmit" align=right></td>
+                        <td id="amountPay" align=right></td>
+                        <td id="clinicPay" align=right></td>
+                        <td id="hospitalPay" align=right></td>
+                        <td id="OBPay" align=right></td>
+                        <td align=right>&nbsp;</td>
+                        <td align=right  width="0" style="display:none" >&nbsp;</td>
+
 
 </tr>
 
@@ -623,38 +626,39 @@ recordAffected = apptMainBean.queryExecuteUpdate(param2,"update_rahd_content");
 
 %>
 <script language="javascript" type="text/javascript">
-	document.getElementById('loadingMsg').style.display='none';
-	var totRowIndex = tf_Tag(tf_Id('ra_table'),"tr").length;
-	var table_Props = 	{	
-					col_0: "none",
-					col_1: "none",
-					col_2: "none",
-					col_3: "none",
-					col_4: "none",
-					col_5: "none",
-					col_6: "none",
-					col_7: "none",
-					col_8: "none",
-					col_9: "none",
-					col_10: "none",
-					col_11: "none",
-					col_12: "select",
-					display_all_text: " [ Show all clinics ] ",
-					flts_row_css_class: "dummy",
-					flt_css_class: "positionFilter",
-					sort_select: true,
-					rows_always_visible: [totRowIndex],
-					col_operation: { 
-								id: ["amountSubmit","amountPay","clinicPay","hospitalPay"],
-								col: [6,7,8,9],
-								operation: ["sum","sum","sum","sum"],
-								write_method: ["innerHTML","innerHTML","innerHTML","innerHTML"],
-								exclude_row: [totRowIndex],
-								decimal_precision: [2,2,2,2],
-								tot_row_index: [totRowIndex]
-							}
-				};
-	var tf = setFilterGrid( "ra_table",table_Props );
+        document.getElementById('loadingMsg').style.display='none';
+        var totRowIndex = tf_Tag(tf_Id('ra_table'),"tr").length;
+        var table_Props =       {
+                                        col_0: "none",
+                                        col_1: "none",
+                                        col_2: "none",
+                                        col_3: "none",
+                                        col_4: "none",
+                                        col_5: "none",
+                                        col_6: "none",
+                                        col_7: "none",
+                                        col_8: "none",
+                                        col_9: "none",
+                                        col_10: "none",
+                                        col_11: "none",
+                                        col_12: "select",
+                                        display_all_text: " [ Show all clinics ] ",
+                                        flts_row_css_class: "dummy",
+                                        flt_css_class: "positionFilter",
+                                        sort_select: true,
+                                        rows_always_visible: [totRowIndex],
+                                        col_operation: {
+                                                                id: ["amountSubmit","amountPay","clinicPay","hospitalPay","OBPay"],
+                                                                col: [7,8,9,10,11],
+                                                                operation: ["sum","sum","sum","sum","sum"],
+                                                                write_method: ["innerHTML","innerHTML","innerHTML","innerHTML","innerHTML"],
+                                                                exclude_row: [totRowIndex],
+                                                                decimal_precision: [2,2,2,2,2],
+                                                                tot_row_index: [totRowIndex]
+                                                        }
+                                };
+        var tf = setFilterGrid( "ra_table",table_Props );
+
 </script>
 	
 </body>
