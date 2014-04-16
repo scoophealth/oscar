@@ -1,4 +1,3 @@
-
 CREATE TABLE `surveyData` (
   surveyDataId int(10) NOT NULL auto_increment,
   surveyId varchar(5) default NULL,
@@ -9507,7 +9506,9 @@ CREATE TABLE `program` (
   `enableEncounterTransportationTime` tinyint(1),
   `siteSpecificField` varchar(255),
 	emailNotificationAddressesCsv varchar(255),
-	lastReferralNotification datetime
+	lastReferralNotification datetime,
+  `enableOCAN` tinyint(1) not null
+
 );
 
 CREATE TABLE `vacancy_template` (

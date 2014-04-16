@@ -89,6 +89,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 <input type="hidden" name="old_facility_id" value=<%if(p!=null) { %> "<%=p.getFacilityId() %>" <%}else{ %> "" <%} %> />
 <input type="hidden" name="old_enableEncounterTime" value=<%if(p!=null) { %> "<%=p.getEnableEncounterTime() %>" <%}else{ %> "" <%} %> />
 <input type="hidden" name="old_enableEncounterTransportationTime" value=<%if(p!=null) { %> "<%=p.isEnableEncounterTransportationTime() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_enableOCAN" value=<%if(p!=null) { %> "<%=p.isEnableOCAN() %>" <%}else{ %> "" <%} %> />
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -287,6 +288,10 @@ Program p = (Program)request.getAttribute("oldProgram");
 	<tr class="b">
 		<td width="20%">Email Notification Addresses (csv):</td>
 		<td><html:text property="program.emailNotificationAddressesCsv" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Enable OCAN:</td>
+		<td><html:checkbox property="program.enableOCAN" /></td>
 	</tr>
 	<tr>
 		<td colspan="2"><input type="button" value="Save" onclick="return save()" /> <html:cancel /></td>
