@@ -1524,6 +1524,36 @@ public class CaseManagementManager {
 
 		return false;
 	}
+	
+	public List<ProgramProvider> getProgramProviders(String providerNo) {
+		List<ProgramProvider> providerPrograms = programProviderDao.getProgramProviderByProviderNo(providerNo);
+		return providerPrograms;
+	}
+	
+	public List<Admission> getAdmission(Integer demographicNo) {
+		List<Admission> allAdmissions = this.admissionManager.getAdmissions(Integer.valueOf(demographicNo));
+		return allAdmissions;
+	}
+	
+	public boolean isClientInProgramDomain(List<ProgramProvider> providerPrograms, List<Admission> allAdmissions) {
+
+		for (int x = 0; x < providerPrograms.size(); x++) {
+			ProgramProvider pp = providerPrograms.get(x);
+			long programId = pp.getProgramId().longValue();
+
+			for (int y = 0; y < allAdmissions.size(); y++) {
+				Admission admission = allAdmissions.get(y);
+				long admissionProgramId = admission.getProgramId().longValue();
+
+				if (programId == admissionProgramId) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+	
 
 	public boolean isClientReferredInProgramDomain(String providerNo, String demographicNo) {
 	 	boolean referred = false;
