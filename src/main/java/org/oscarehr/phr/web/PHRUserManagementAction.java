@@ -643,7 +643,7 @@ public class PHRUserManagementAction extends DispatchAction {
 			Demographic demographic = demographicDao.getDemographic(demoNo);
 			Long patientMyOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
-			AccountManager.createRelationship(myOscarLoggedInInfo, patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), false, false, "PatientPrimaryCareProvider");
+			AccountManager.createRelationship(myOscarLoggedInInfo, patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), false, true, "PatientPrimaryCareProvider");
 
 			log.debug("Patient Provider relationship added or confirmed. providerNo=" + LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo() + ", patientDemoraphicNo=" + demoNo);
 			request.setAttribute("myOscarUserName", myOscarUserName);
