@@ -671,6 +671,7 @@
 			<forward name="LoginTest" path="/login/LoginTest.jsp" redirect="true" />
 			
 			<forward name="forcepasswordreset" path="/forcepasswordreset.jsp" />
+			<forward name="programLocation" path="/location.jsp" redirect="true"/>
 			
 		</action>
 		<action input="/login/loginTest.jsp" path="/login/recordLogin" scope="request" type="oscar.login.LoginAgreementAction"></action>
