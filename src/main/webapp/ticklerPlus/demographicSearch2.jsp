@@ -57,6 +57,7 @@
 
 		</td>
 	</tr>
+	<input type="hidden" name="outofdomain" value=""/>
 	<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name">
 	<INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name">
 	<INPUT TYPE="hidden" NAME="originalpage"
