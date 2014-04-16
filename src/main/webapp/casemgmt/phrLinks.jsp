@@ -54,7 +54,7 @@ String winName2 = "SendMyoscarMsg" + demographicNo;
 	elSelect.append('<option>MyOscar</option>');
 
 <%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {		/*register link -myoscar (strikethrough) links to create account*/	%>		
-		elSelect.append('<option onclick="popupPage(600, 650, \'indivoRegistration\', \'../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographicNo%>\');" >Register Patient for MyOSCAR</option>');
+		elSelect.append('<option onclick="popupPage(700,900, \'indivoRegistration\', \'../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographicNo%>\');" >Register Patient for MyOSCAR</option>');
 <%}else{%>
 		elSelect.append('<option onclick="popupPage(600,900,\'<%=winName%>\',\'<%=request.getContextPath()%>/demographic/viewPhrRecord.do?demographic_no=<%=demographicNo%>\');return false;">Open Patient\'s Record</option>');
 		elSelect.append('<option onclick="popupPage(700,960,\'<%=winName2%>\',\'<%=request.getContextPath() %>/phr/PhrMessage.do?method=createMessage&providerNo=<%=provNo%>&demographicNo=<%=demographicNo%>\'); return false;">Send Patient a Message</option>');		    
