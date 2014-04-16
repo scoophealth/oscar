@@ -38,8 +38,10 @@
     String isOscar = request.getParameter("infirmaryView_isOscar");
     if (session.getAttribute("infirmaryView_isOscar")==null) isOscar="false";
     if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);
-    if(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID) != null)
+    if(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID) != null) {
     	session.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,request.getParameter(SessionConstants.CURRENT_PROGRAM_ID));
+    	org.caisi.core.web.InfirmAction.updateCurrentProgram(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID));
+    }
     session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
 
 %><c:import url="/infirm.do?action=getSig" />
@@ -79,24 +81,6 @@
         return;
     }
 
-	String useProgramLocation = OscarProperties.getInstance().getProperty("useProgramLocation");
-	String moduleNames = OscarProperties.getInstance().getProperty("ModuleNames");
-	boolean caisiEnabled = moduleNames != null && StringUtils.containsIgnoreCase(moduleNames, "Caisi");
-	boolean locationEnabled = caisiEnabled && (useProgramLocation != null && useProgramLocation.equals("true"));
-	
-	String sessionLocation = request.getParameter("programIdForLocation");
-	
-	if (sessionLocation != null) {
-		session.setAttribute("sessionLocation", sessionLocation);   
-	}
-	
-	if(locationEnabled && session.getAttribute("sessionLocation") == null) {
-	    response.sendRedirect("../location.jsp");
-	    return;
-	}
-	
-	String programIdForLocation = request.getParameter("programIdForLocation");
-
     if(request.getParameter("year")==null && request.getParameter("month")==null && request.getParameter("day")==null && request.getParameter("displaymode")==null && request.getParameter("dboperation")==null) {
         GregorianCalendar now=new GregorianCalendar();
         int nowYear = now.get(Calendar.YEAR);
@@ -112,20 +96,20 @@
             
         if(caisiView!=null && "true".equals(caisiView)) {
         	if (viewAll_bool){
-	        	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&programIdForLocation=" + programIdForLocation + "&viewall=1");
+	        	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
 	        	return;
         	}
         	else{
-	        	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&programIdForLocation=" + programIdForLocation + "&viewall=0");
+	        	response.sendRedirect("./providercontrol.jsp?GoToCaisiViewFromOscarView=true&year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=0");
 	        	return;
 	        }
         }
         if (viewAll_bool){
-	        response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&programIdForLocation=" + programIdForLocation + "&viewall=1");
+	        response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
 	        return;
 	    }
 	    else{
-	    	response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&programIdForLocation=" + programIdForLocation + "&viewall=0");
+	    	response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=0");
 	        return;
 	    }
 	        

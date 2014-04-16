@@ -36,6 +36,9 @@
 <%@ page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="org.apache.commons.lang.StringUtils"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.caisi.service.InfirmBedProgramManager"%>
+<%@ page import="org.apache.struts.util.LabelValueBean"%>
+
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -53,10 +56,16 @@
 <%
 ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 
+
 String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
-List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
+//List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
+InfirmBedProgramManager bpm = (InfirmBedProgramManager) SpringUtils.getBean("infirmBedProgramManager");
+List<LabelValueBean> programs = bpm.getProgramBeans(providerNo, facility.getId());
+
+int defaultprogramId = bpm.getDefaultProgramId(providerNo);
+
 %>
 <p>&nbsp;</p>
 <table align="center">
@@ -67,9 +76,10 @@ List<Program> programs = programManager.getActiveProgramByFacility(providerNo, f
 		<select id="programIdForLocation" name="programIdForLocation">
 		<%
 			if (programs != null && !programs.isEmpty()) {
-		       	for (Program program : programs) {
+		       	for (LabelValueBean program : programs) {
+		       		String selected = (Integer.parseInt(program.getValue()) == defaultprogramId)?" selected=\"selected\" ":"";
 		   	%>
-		        <option value="<%=program.getId()%>"><%=StringEscapeUtils.escapeHtml(program.getName())%></option>
+		        <option value="<%=program.getValue()%>" <%=selected%>><%=StringEscapeUtils.escapeHtml(program.getLabel())%></option>
 		    <%	}
 		    }
 		  	%>
@@ -82,7 +92,7 @@ List<Program> programs = programManager.getActiveProgramByFacility(providerNo, f
 <script type="text/javascript">
 function setLocation(){
 	var programIdForLocation = jQuery("#programIdForLocation").val();
-	window.location.href="provider/providercontrol.jsp?programIdForLocation="+programIdForLocation;
+	window.location.href="provider/providercontrol.jsp?<%=org.oscarehr.util.SessionConstants.CURRENT_PROGRAM_ID%>="+programIdForLocation;
 }
 </script>
 </html>

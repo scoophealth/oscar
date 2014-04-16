@@ -1,4 +1,4 @@
-<%--
+	<%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
@@ -30,6 +30,7 @@
 <%@page import="org.oscarehr.decisionSupport.model.DSConsequence"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="java.util.Set,java.util.HashSet"%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
 <%
  
   String DONOTBOOK = "Do_Not_Book";
@@ -134,6 +135,8 @@
     String moduleNames = OscarProperties.getInstance().getProperty("ModuleNames");
     boolean caisiEnabled = moduleNames != null && org.apache.commons.lang.StringUtils.containsIgnoreCase(moduleNames, "Caisi");
     boolean locationEnabled = caisiEnabled && (useProgramLocation != null && useProgramLocation.equals("true"));
+    
+    ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.Site"%>
@@ -959,7 +962,11 @@ function pasteAppt(multipleSameDayGroupAppt) {
 		%>
 			<select name="location" >
                 <%
-                String sessionLocation = StringUtils.defaultString((String) session.getAttribute("sessionLocation"));
+                String sessionLocation = "";
+                ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                if(programProvider!=null && programProvider.getProgram() != null) {
+                	sessionLocation = programProvider.getProgram().getId().toString();
+                }
                 if (programs != null && !programs.isEmpty()) {
 			       	for (Program program : programs) {
 			       	    String description = StringUtils.isBlank(program.getLocation()) ? program.getName() : program.getLocation();

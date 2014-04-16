@@ -335,6 +335,10 @@ public final class LoginAction extends DispatchAction {
                 where = "caisiPMM";
             }
             
+            if (where.equals("provider") && OscarProperties.getInstance().getProperty("useProgramLocation", "false").equals("true") ) {
+                where = "programLocation";
+            }
+            
             if (where.equals("provider")) {
                 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
                 UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
