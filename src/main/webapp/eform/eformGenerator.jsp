@@ -3206,7 +3206,7 @@ function DrawMarker(){
 		if (e){
 			inputName = e
 		} else if (!e){
-			alert('Please enter in a value for the custom input name field');	//reminds user to put in mandatory name for input field
+			alert("<bean:message key="eFormGenerator.emptyInput"/>");	//reminds user to put in mandatory name for input field
 			return false;
 		}
 	} else if(inputNameType == "Measurement"){
@@ -3238,7 +3238,7 @@ function DrawMarker(){
 	for (i=0; i < document.getElementsByName('InputChecklist').length; i++){
 		var InputItem = document.getElementsByName('InputChecklist')[i].value;
 		if (inputName == InputItem){
-			alert('Name already in use, please enter in another UNIQUE input name');
+			alert("<bean:message key="eFormGenerator.duplicateName"/>");
 		}
 	}
 
