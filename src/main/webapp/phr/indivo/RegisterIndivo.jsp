@@ -225,7 +225,7 @@ if (wPhoneExt != null)
 				</div>
 
 			
-				<table class="table">					
+				<table class="table table-condensed table-striped">					
 					<!-- Responses coming from server side -->
 					<%if (request.getParameter("failmessage") != null && usernameNotUnique==false) {%>
 			           <tr class="error">
@@ -235,9 +235,14 @@ if (wPhoneExt != null)
 			               	</td>
 			         	</tr>
 			        <%} 
-					if (request.getParameter("success") != null){%>
+					if (request.getParameter("success") != null){%>                       
 						<tr class="success">
 							<td>	
+								<script type="text/javascript" language="JavaScript">
+		                           if(window.opener.document.forms[1].myOscarUserName){
+		                              window.opener.document.forms[1].myOscarUserName.value = '<%=ulist.get(0)%>'
+		                 		   }
+		                        </script>
 								<span class="span2"></span>		            
 								<span class="span3 text-success">User was successfully added</span>
 	
@@ -328,7 +333,7 @@ if (wPhoneExt != null)
 				<h4>Relationships</h4>
 			
 				
-				<table class="table">
+				<table class="table table-condensed table-striped">
 
 					<tr>
 						<td>Provider</td>
@@ -355,8 +360,10 @@ if (wPhoneExt != null)
 			                %><tr>
 		                		<%if (curProviderID != null && curProvider != null){ %>
 		                		<td>
+		                			<label class="checkbox">
 		                			<input type="checkbox" name="enable_primary_relation_<%=curProviderID%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+curProviderID)%> />
 		                			<strong><%=StringEscapeUtils.escapeHtml(curProviderUserName+" ("+curProvider.getFormattedName()+')')%></strong>
+		                			</label>
 		                		</td>
 		                		<td><%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+curProviderID)%></td>
 		                        <td align="center"><input type="checkbox" name="reverse_relation_<%=curProviderID%>" value="PATIENT" <%=RegistrationHelper.getCheckedStringWithValueString(session, "reverse_relation_"+curProviderID,"PATIENT")%> ></td>
@@ -379,8 +386,10 @@ if (wPhoneExt != null)
 				                		
 				                		<%if (providerMyOscarId != null){ %>
 				                		<td>
+				                			<label class="checkbox">
 				                			<input type="checkbox" name="enable_primary_relation_<%=providerMyOscarId%>" <%=RegistrationHelper.getCheckedString(session, "enable_primary_relation_"+providerMyOscarId)%> />
 				                			<strong><%=StringEscapeUtils.escapeHtml(entry.getKey()+" ("+entry.getValue().getFormattedName()+')')%></strong>
+				                			</label>
 				                		</td>
 				                		<td><%=RegistrationHelper.renderRelationshipSelect(session, "primary_relation_"+providerMyOscarId)%></td>
 				                        <td align="center"><input type="checkbox" name="reverse_relation_<%=providerMyOscarId%>" value="PATIENT" <%=RegistrationHelper.getCheckedStringWithValueString(session, "reverse_relation_"+providerMyOscarId,"PATIENT")%> ></td>
