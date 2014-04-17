@@ -42,6 +42,7 @@
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
 
 <%@ page import="java.util.*, java.sql.*,java.net.*, oscar.*" errorPage="errorpage.jsp"%>
 
@@ -403,6 +404,24 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		}
 		else if(searchMode.equals("search_chart_no")) {
 			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset);
+		}
+	}
+	
+	//if caisi is on, we need to filter this list according to program domain.
+	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
+		CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+		List<Demographic> tmpDemoList = new ArrayList<Demographic>();
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		List<org.oscarehr.PMmodule.model.ProgramProvider> programProviders = caseManagementManager.getProgramProviders(providerNo);
+		
+		if(demoList != null && request.getParameter("outofdomain")!=null && !request.getParameter("outofdomain").equals("true") ) {
+			for(Demographic demo:demoList) {
+				List<org.oscarehr.common.model.Admission> allAdmissions = caseManagementManager.getAdmission(demo.getDemographicNo());
+				if(caseManagementManager.isClientInProgramDomain(providerNo, demo.getDemographicNo().toString())) {
+					tmpDemoList.add(demo);
+				}
+			}
+			demoList = tmpDemoList;
 		}
 	}
 

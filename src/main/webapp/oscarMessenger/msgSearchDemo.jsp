@@ -102,6 +102,7 @@ function write2Parent(keyword, demographic_no){
         searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");
     }
 %>
+				<input type="hidden" name="outofdomain" value="">
 				<input type="hidden" name="search_mode" value="<%=searchMode%>">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
