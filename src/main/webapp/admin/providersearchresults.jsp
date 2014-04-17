@@ -213,14 +213,15 @@
   
   nNextPage=Integer.parseInt(strLimit)+Integer.parseInt(strOffset);
   nLastPage=Integer.parseInt(strOffset)-Integer.parseInt(strLimit);
+  String searchStatusQ = (searchStatus!=null)?"&search_status="+searchStatus:"";
   if(nLastPage>=0) {
 %> <a
-	href="providersearchresults.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&search_status=<%= searchStatus %>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>"><bean:message
+	href="providersearchresults.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %><%= searchStatusQ %>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>"><bean:message
 	key="admin.providersearchresults.btnLastPage" /></a> | <%
   }
   if(nItems==Integer.parseInt(strLimit)) {
 %> <a
-	href="providersearchresults.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&search_status=<%= searchStatus %>&orderby=<%= orderBy %>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>"><bean:message
+	href="providersearchresults.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %><%= searchStatusQ %>&orderby=<%= orderBy %>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>"><bean:message
 	key="admin.providersearchresults.btnNextPage" /></a> <%
 }
 %>
