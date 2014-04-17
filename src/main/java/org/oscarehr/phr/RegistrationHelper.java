@@ -45,6 +45,13 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 import org.oscarehr.myoscar.client.ws_manager.MyOscarLoggedInInfoInterface;
 import org.oscarehr.phr.util.UsernameHelper;
+import org.oscarehr.myoscar_server.ws.AccountWs;
+import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.myoscar_server.ws.RelationshipTransfer4;
+
+
+
 
 public final class RegistrationHelper {
 	private static final String MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY = "MYOSCAR_REGISTRATION_DEFAULTS";
@@ -214,4 +221,32 @@ public final class RegistrationHelper {
 
 		request.getSession().setAttribute(MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY, defaults);
 	}
+	
+	/**
+	Checks to see if:
+	 a. PatientPrimaryCareProvider exists with the myoscar user 
+	 b. If the current provider has verified this relationship 
+	**/
+	public static boolean iHavePatientRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo,Long myOscarUserId){
+		
+	   AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
+	   final int REASONABLE_RELATIONSHIP_LIMIT = 256;
+	   int startIndex = 0;
+	   
+	   while(true){           
+	      java.util.List<RelationshipTransfer4> relationList = accountWs.getRelationshipsByPersonId2(myOscarLoggedInInfo.getLoggedInPersonId(), startIndex, REASONABLE_RELATIONSHIP_LIMIT);
+	      if (relationList.size() == 0) break;
+	    
+		  for (RelationshipTransfer4 rt : relationList) {
+			 if (rt.getRelation().equals("PatientPrimaryCareProvider")){
+	            if (rt.getPerson1().getPersonId().equals(myOscarUserId) && rt.getPerson2VerificationDate()!=null) {
+	               return true;
+	            }
+			 }
+	      }
+		  startIndex = startIndex + relationList.size();
+	   }
+	   return false;
+	}
+	
 }

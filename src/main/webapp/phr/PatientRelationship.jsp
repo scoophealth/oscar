@@ -30,7 +30,7 @@
 <%@page import="org.apache.http.HttpRequest"%>
 <%@page import="org.oscarehr.util.MiscUtils" %>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="org.oscarehr.phr.util.MyOscarServerRelationManager"%>
+<%@page import="org.oscarehr.phr.RegistrationHelper"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -45,7 +45,7 @@ Long myOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, myOscarUserName
 
 
 if(myOscarLoggedInInfo !=null && myOscarLoggedInInfo.isLoggedIn() && myOscarUserName != null && demographic != null){ 
-	if(!MyOscarServerRelationManager.hasPatientRelationship(myOscarLoggedInInfo,myOscarUserId)){ %>
+	if(!RegistrationHelper.iHavePatientRelationship(myOscarLoggedInInfo,myOscarUserId)){ %>
     	<span id="relationshipMessage" style="color:red; font-size:x-small;padding-left:3px;"><bean:message key="phr.verification.patient.not.respond" />
       		<a id="relationshipAdder" href="javascript:void();"><bean:message key="phr.verification.addPatientRelationship"/></a>
       	</span>
