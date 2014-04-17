@@ -36,7 +36,7 @@ Used to monitor:
 2. Status of mysql db connections
 3. Current db connections in the thread (with stack traces back to the relevant
 classes)
-Note: If a connection is openened independently of the spring dataSource,
+Note: If a connection is opened independently of the spring dataSource,
 then it will not show up in section #3. Will have to use sections #1 and #2 to
 detect those and search the source.
 
@@ -95,7 +95,7 @@ detect those and search the source.
         <table border="1" style="border-collapse: collapse; border: 1px solid grey; font-size: 12px;">
             <tr>
                 <th>ConnID</th>
-                <th>Usre</th>
+                <th>User</th>
                 <th>Host</th>
                 <th>Database</th>
                 <th>Status</th>
@@ -120,6 +120,7 @@ detect those and search the source.
 
     <h3>----- JVM Memory Monitor -----</h3>
         Free Memory: <%=String.valueOf(Runtime.getRuntime().freeMemory()/1000000)%> MB<br/>
+        Used Memory: <%=String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)%> MB<br/>
         Total Memory: <%=String.valueOf(Runtime.getRuntime().totalMemory()/1000000)%> MB<br/>
         Max Memory: <%=String.valueOf(Runtime.getRuntime().maxMemory()/1000000)%> MB  (Maximum memory JVM will attempt to use.)
 

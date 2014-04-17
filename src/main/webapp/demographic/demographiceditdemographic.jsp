@@ -1775,6 +1775,31 @@ if ( Dead.equals(PatStat) ) {%>
 						</div>
 						
 						
+						<!--  consents -->
+						<div class="demographicSection" id="consent">
+						<h3>&nbsp;<bean:message
+							key="demographic.demographiceditdemographic.consent" /></h3>
+                              <%
+                          		   String usSigned = StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")));
+                        	       String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
+								   String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
+                              %>
+						 <ul>
+	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.privacyConsent"/>:</span>
+	                              <span class="info"><%=privacyConsent %></span>
+	                          </li>
+	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.informedConsent"/>:</span>
+	                              <span class="info"><%=informedConsent %></span>
+	                          </li>
+	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.usConsent"/>:</span>
+	                              <span class="info"><%=usSigned %></span>
+	                          </li>
+	                       </ul>
+						
+						</div>
+						
+						<!-- end of consent -->
+						
 						</div>
 						<div class="rightSection">
 						<div class="demographicSection" id="contactInformation">
@@ -2486,7 +2511,7 @@ if ( Dead.equals(PatStat) ) {%>
 								<%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {%>
 
 								<%
-									String onclickString="popup(900, 700, '../phr/indivo/RegisterIndivo.jsp?demographicNo="+demographic_no+"', 'indivoRegistration');";
+									String onclickString="popup(900, 800, '../phr/indivo/RegisterIndivo.jsp?demographicNo="+demographic_no+"', 'indivoRegistration');";
 									MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 									if (myOscarLoggedInInfo==null || !myOscarLoggedInInfo.isLoggedIn()) onclickString="alert('Please login to MyOscar first.')";
 								%>
@@ -2705,18 +2730,7 @@ if ( Dead.equals(PatStat) ) {%>
 										<% if (oscar.util.StringUtils.noNull(demographic.getCountryOfOrigin()).equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
 									<%}%>
 								</select></td>
-								<%
-									String usSigned = StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")));
-								%>
-								<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
-								<input type="hidden" name="usSignedOrig" value="<%=usSigned%>" />
-								<td colspan="2">
-									<div id="usSigned">
-										<input type="radio" name="usSigned" value="signed" <%=usSigned.equals("signed") ? "checked" : ""%>>U.S. Resident Consent Form Signed 
-									    <input type="radio" name="usSigned" value="unsigned" <%=usSigned.equals("unsigned") ? "checked" : ""%>>U.S. Resident Consent Form NOT Signed
-								    </div>
-								</td>
-								</oscar:oscarPropertiesCheck>
+								
 							</tr>
 							<tr valign="top">
 								<td align="right"><b>SIN:</b></td>
@@ -3036,6 +3050,28 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 </td>
 							</tr>
 							
+							
+							<tr valign="top">
+								
+								
+								<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+								<td colspan="2">
+									<input type="hidden" name="usSignedOrig" value="<%=StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")))%>" />	
+	 								<input type="hidden" name="privacyConsentOrig" value="<%=privacyConsent%>" />
+	 								<input type="hidden" name="informedConsentOrig" value="<%=informedConsent%>" />
+									<br/>
+									<input type="checkbox" name="privacyConsent" value="yes" <%=privacyConsent.equals("yes") ? "checked" : ""%>><b>Privacy Consent (verbal) Obtained</b> 
+									<br/>
+									<input type="checkbox" name="informedConsent" value="yes" <%=informedConsent.equals("yes") ? "checked" : ""%>><b>Informed Consent (verbal) Obtained</b>
+									<br/><br/>
+									<div id="usSigned">
+										<input type="radio" name="usSigned" value="signed" <%=usSigned.equals("signed") ? "checked" : ""%>><b>U.S. Resident Consent Form Signed </b>
+										<br/>
+									    <input type="radio" name="usSigned" value="unsigned" <%=usSigned.equals("unsigned") ? "checked" : ""%>><b>U.S. Resident Consent Form NOT Signed</b>
+								    </div>
+								</td>
+								</oscar:oscarPropertiesCheck>
+						  	</tr>
                                                         
                                                         
 <% if (oscarProps.isPropertyActive("meditech_id")) { %>
@@ -3124,23 +3160,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								</table>
 								</td>
 							</tr>
-							<tr valign="top">
-								<%
-									String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
-									String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
-								%>
-								<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
-								<td colspan="2">
-	 								<input type="hidden" name="privacyConsentOrig" value="<%=privacyConsent%>" />
-	 								<input type="hidden" name="informedConsentOrig" value="<%=informedConsent%>" />
-									<br/>
-									<input type="checkbox" name="privacyConsent" value="yes" <%=privacyConsent.equals("yes") ? "checked" : ""%>><b>Privacy Consent (verbal) Obtained</b> 
-									<br/>
-									<input type="checkbox" name="informedConsent" value="yes" <%=informedConsent.equals("yes") ? "checked" : ""%>><b>Informed Consent (verbal) Obtained</b>
-									<br/>
-								</td>
-								</oscar:oscarPropertiesCheck>
-						  	</tr>
+							
 							<tr valign="top">
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.formDateJoined1" />:
