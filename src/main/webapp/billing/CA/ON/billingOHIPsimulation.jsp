@@ -220,7 +220,7 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 		}
 		
 		String billingTable = htmlValue;
-		htmlValue  = "\n<table class='table table-striped table-hover table-condensed'>\n"
+		htmlValue  = "\n<table class='table table-hover table-condensed'>\n"
 					+ "<thead>";
 		if (summaryView) {
 			htmlValue += "\n<tr><th >OHIP NO</th><th >Number of Records</th><th >Total Billed</th><th colspan='9'></th></tr></thead>";
@@ -278,6 +278,8 @@ function checkData() {
 	input[name=summaryView] {margin: 4px 4px 4px; margin-left:20px;}
 	select[name=provider] {margin-right:20px;}
 	input[name=submit] {margin-bottom: -60px;}
+	
+	.myLightBlue{background-color:#d9edf7;}
 </style>
 </head>
 
@@ -287,7 +289,7 @@ function checkData() {
 <h3><bean:message key="admin.admin.btnSimulationOHIPDiskette" /></h3>
 
 <form name="serviceform" id="serviceform" action="<%=request.getContextPath() %>/billing/CA/ON/billingOHIPsimulation.jsp">
-<div class="row well well-small">
+<div class="row well well-small hidden-print">
 
 <input type="hidden" name="submit" value="Create Report">
 

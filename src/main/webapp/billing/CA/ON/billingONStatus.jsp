@@ -155,7 +155,6 @@ BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 		
 		<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 		<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
        
         <script type="text/javascript">
 
@@ -280,30 +279,39 @@ function checkAll(group) {
 </script>
 
 <style>
-table td,th{font-size:8px;}
+table td,th{font-size:12px;}
+
+@media print {
+  .hidden-print {
+    display: none !important;
+  }
+}
 </style>
   
     </head>
     <body>
     <h3><bean:message key="admin.admin.invoiceRpts"/></h3>
-  	<div class="container-fluid ">
+  	<div class="container-fluid">
  <div class="row">
 <%=DateUtils.sumDate("yyyy-MM-dd","0")%>
 
-<div class="pull-right">
+<div class="pull-right hidden-print">
 <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')">Manage Provider List</a>
 <button class="btn" type='button' name='print' value='Print' onClick='window.print()'><i class="icon icon-print"></i> Print</i></button>
 </div>
 </div>
 
+<form name="serviceform" method="get" action="billingONStatus.jsp">
 
-<div class="row well well-small">    
-    <form name="serviceform" method="get" action="billingONStatus.jsp">
-
+<div class="row well well-small hidden-print">    
+  
     	<%
     		String tmpStrBillType = Arrays.toString(strBillType);
     	%>
- <div class="span10">
+
+
+<div class="row">
+<div class="span10">
 <small>    
 <input type="checkbox" name="billTypeAll" value="ALL" checked onclick="changeStatus();"><span style="padding-right:4px">ALL</span></input> 
         <input type="checkbox" name="billType" value="HCP" <%=tmpStrBillType.indexOf("HCP")>=0?"checked":""%>><span style="padding-right:4px">Bill OHIP </span></input> 
@@ -317,9 +325,11 @@ table td,th{font-size:8px;}
         <input type="checkbox" name="billType" value="STD" <%=tmpStrBillType.indexOf("STD")>=0?"checked":""%>><span style="padding-right:4px">STD/LTD</span></input> 
         <input type="checkbox" name="billType" value="IFH" <%=tmpStrBillType.indexOf("IFH")>=0?"checked":""%>><span style="padding-right:4px">IFH</span></input> 
 </small>
-<br><br>
 </div>
+</div><!-- row -->
 
+
+<div class="row">
 <div class="span3">  
 <br>
 <% // multisite start ==========================================
@@ -425,29 +435,31 @@ OHIP No.: <br>
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>
 	</div>
-        
+</div><!-- row -->    
     
-		
-<div class="span3">	        
+<div class="row">		
+<div class="span2">	        
 Dx:<br>
-<input type="text" name="dx" value="<%=dx%>"/>
+<input type="text" name="dx" class="span2" value="<%=dx%>"/>
 </div>
 
-<div class="span3">	
+<div class="span2">	
 Serv. Code:<br>
-<input type="text" name="serviceCode" value="<%=serviceCode%>"/>
+<input type="text" name="serviceCode" class="span2" value="<%=serviceCode%>"/>
 </div>
 
-<div class="span3">	
+<div class="span2">	
 Demographic:<br>
-<input type="text" name="demographicNo" size="5" value="<%=demoNo%>"/>
+<input type="text" name="demographicNo" class="span2" value="<%=demoNo%>"/>
 </div>
 
 <div class="span2">	
 RA Code:<br>
 <input type="text" name="raCode" class="span2" value="<%=raCode%>"/>
 </div>
+</div> <!-- row -->
 
+<div class="row">
 <div class="span2">	
 Visit Type:<br>
 	<select class="span2" name="visitType" style="background-color:none;">
@@ -461,6 +473,7 @@ Visit Type:<br>
 	</select>
 
 </div>
+
 
 <div class="span5">		
 Billing Form:<br>
@@ -485,12 +498,13 @@ Billing Form:<br>
 
 </select>
 </div>
+</div><!-- row -->
 
-  
+<div class="row" >
 <div class="span10">
 <small>	
        <input type="radio" name="statusType" value="%" <%=statusType.equals("%")?"checked":""%>>All</input>
-<input type="radio" name="statusType" value="_" <%=statusType.equals("_")?"checked":""%>>Rejected</input>
+	   <input type="radio" name="statusType" value="_" <%=statusType.equals("_")?"checked":""%>>Rejected</input>
        <input type="radio" name="statusType" value="H" <%=statusType.equals("H")?"checked":""%>>Capitated</input>
        <input type="radio" name="statusType" value="O" <%=statusType.equals("O")?"checked":""%>>Invoiced</input>
        <input type="radio" name="statusType" value="P" <%=statusType.equals("P")?"checked":""%>>Bill Patient</input>
@@ -502,11 +516,14 @@ Billing Form:<br>
        <input type="radio" name="statusType" value="D" <%=statusType.equals("D")?"checked":""%>>Deleted Bill</input>
 </small>
 </div>
-
-<div class="span10">
-<br>	
-<input class="btn btn-primary" type="submit" name="Submit" value="Create Report">   
 </div>
+
+<div class="row">
+<div class="span2" style="padding-top:10px;">
+<input class="btn btn-primary" type="submit" name="Submit" value="Create Report">
+</div>   
+</div><!-- row -->
+
     </form>
 </div>
 
@@ -516,8 +533,8 @@ Billing Form:<br>
 <% //
 if(statusType.equals("_")) { %>
     <!--  div class="rejected list"-->
-       <table class="table table-striped table-hover">
-          <tr class="myYellow"> 
+       <table class="table">
+          <tr class="warning"> 
              <th>Health#</th>
              <th>D.O.B</th>
              <th>Invoice #</th>
@@ -569,10 +586,10 @@ if(statusType.equals("_")) { %>
 			invoiceNo = bObj.getBilling_no(); 
 			nC = nC ? false : true;
 		} 
-	    color = nC ? "class='myGreen'" : "";
+	    color = nC ? "class='success'" : "";
 	%>
     		<tr <%=color %>>
-    			<td><span class="smallFont"><%=bObj.getHin() %> <%=bObj.getVer() %></span></td>
+    			<td><small><%=bObj.getHin() %> <%=bObj.getVer() %></small></td>
     			<td><font size="-1"><%=bObj.getDob() %></font></td>
     			<td align="right"><a href=# onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=bObj.getBilling_no()%>','BillCorrection<%=bObj.getBilling_no()%>');return false;"><%=bObj.getBilling_no() %></a></td>
     			<td><%=bObj.getRef_no() %></td>
@@ -604,7 +621,7 @@ if(statusType.equals("_")) { %>
     		</tr>
 <% }}} else { %>
     <!--  div class="tableListing"-->
-       <table class="table table-hover table-striped">
+       <table class="table">
           <thead>
 		<tr> 
              <th>SERVICE DATE</th>
@@ -707,7 +724,7 @@ if(statusType.equals("_")) { %>
 	    	   invoiceNo = ch1Obj.getId(); 
 	    	   nC = nC ? false : true;
 	       } 
-	       color = nC ? "class='myGreen'" : "";
+	       color = nC ? "class='success'" : "";
                String settleDate = ch1Obj.getSettle_date();
                if( settleDate == null || !ch1Obj.getStatus().equals("S")) {
                    settleDate = "N/A";
@@ -737,7 +754,7 @@ if(statusType.equals("_")) { %>
              <!--td>&nbsp;</td--><!--DX2-->
              <td align="center"><%=payProgram%></td>
              <td align="center"><a href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;"><%=ch1Obj.getId()%></a></td><!--ACCOUNT-->
-             <td class="highlightBox"><a id="A<%=i%>" href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a><%=errorCode%></td><!--MESSAGES-->
+             <td class="highlightBox"><a id="A<%=i%>" href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a> <%=errorCode%></td><!--MESSAGES-->
              <% if (bMultisites) {%>
 				 <td "<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : "bgcolor='" + siteBgColor.get(ch1Obj.getClinic()) + "'")%>">
 				 	<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : siteShortName.get(ch1Obj.getClinic()))%>
@@ -751,7 +768,7 @@ if(statusType.equals("_")) { %>
           </tr>
        <% } %>  
        
-          <tr class="myYellow"> 
+          <tr class="warning"> 
              <td>Count:</td>  
              <td align="center"><%=patientCount%></td> 
              <td align="center"><%=patientCount%></td> 
