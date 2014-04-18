@@ -53,11 +53,25 @@ import oscar.OscarProperties;
 public class InfirmAction extends DispatchAction
 {
 	private static final Logger logger = MiscUtils.getLogger();
-	private InfirmBedProgramManager bpm = (InfirmBedProgramManager) SpringUtils.getBean("infirmBedProgramManager");
+	private static InfirmBedProgramManager bpm = (InfirmBedProgramManager) SpringUtils.getBean("infirmBedProgramManager");
 	private ProgramManager pm = (ProgramManager) SpringUtils.getBean("programManager");
 	private AdmissionManager mgr = (AdmissionManager) SpringUtils.getBean("admissionManager");
 	
 
+	public static void updateCurrentProgram(String programId) {
+		if(programId == null) {
+			return;
+		}
+		try {
+			Integer.parseInt(programId);
+		}catch(NumberFormatException e) {
+			logger.error("error parsing programId to set a users default program",e);
+		}
+		logger.info("updating the current program to " + programId);
+		
+		bpm.setDefaultProgramId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), Integer.parseInt(programId));
+	}
+	
 	public ActionForward showProgram(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception
@@ -65,16 +79,12 @@ public class InfirmAction extends DispatchAction
 		logger.debug("====> inside showProgram action.");
 
 
-
 		HttpSession se = request.getSession();
 		se.setAttribute("infirmaryView_initflag", "true");
-		String providerNo=(String) se.getAttribute("user");
-
-		List programBean;
-
+		String providerNo=(String) se.getAttribute("user");		
 		String archiveView = (String)request.getSession().getAttribute("archiveView");
 
-		InfirmBedProgramManager manager=bpm;
+		
 		Integer facilityId=null;
 
 		// facility filtering
@@ -83,42 +93,57 @@ public class InfirmAction extends DispatchAction
             facilityId = loggedInInfo.currentFacility.getId();
         }
 
-		programBean=manager.getProgramBeans(providerNo, facilityId);
-		se.setAttribute("infirmaryView_programBeans",programBean);
+        List<LabelValueBean> programBeans = bpm.getProgramBeans(providerNo, facilityId);
+        
+        //this one seems to be for the caisi case management page, and caseload screens
+		se.setAttribute("infirmaryView_programBeans",programBeans);
 		
 
 		//set default program
-		int defaultprogramId=bpm.getDefaultProgramId(providerNo);
-		boolean defaultInList=false;
-		for (int i=0;i<programBean.size();i++){
-			int id=new Integer(((LabelValueBean) programBean.get(i)).getValue()).intValue();
-			if ( defaultprogramId == id ) defaultInList=true;
+		int defaultprogramId = bpm.getDefaultProgramId(providerNo);
+		boolean defaultInList = false;
+		
+		for (LabelValueBean programBean:programBeans){
+			int id=new Integer(programBean.getValue()).intValue();
+			if ( defaultprogramId == id ) {
+				defaultInList=true;
+			}
 		}
-		if (!defaultInList) defaultprogramId=0;
+		if (!defaultInList)  {
+			defaultprogramId=0;
+		}
 		int OriprogramId=0;
-		if (programBean.size()>0) OriprogramId=new Integer(((LabelValueBean) programBean.get(0)).getValue()).intValue();
-		int programId=0;
-		if (defaultprogramId!=0 && OriprogramId!=0) programId=defaultprogramId;
-		else {
-			if (OriprogramId==0) programId=0;
-			if (defaultprogramId==0 && OriprogramId!=0) programId=OriprogramId;
+		if (!programBeans.isEmpty()) {
+			OriprogramId=new Integer(programBeans.get(0).getValue()).intValue();
 		}
+		int programId=0;
+		if (defaultprogramId!=0 && OriprogramId!=0) { 
+			programId=defaultprogramId;
+		} else {
+			if (OriprogramId==0) {
+				programId=0;
+			}
+			if (defaultprogramId==0 && OriprogramId!=0) {
+				programId=OriprogramId;
+			}
+		}
+		
+		//I guess this overrides everything we've done??
 		if (se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)!=null){
 			programId=Integer.valueOf((String)se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).intValue();
 		}
 		
 		se.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,String.valueOf(programId));
 
+		org.caisi.core.web.InfirmAction.updateCurrentProgram(String.valueOf(programId));
+		 
 		if(programId != 0) {
 			se.setAttribute("case_program_id",String.valueOf(programId));
 		}
 
 		if(programId != 0) {
-			ProgramManager programManager = pm;
-			se.setAttribute("program_client_statuses",programManager.getProgramClientStatuses(new Integer(programId)));
-
+			se.setAttribute("program_client_statuses",pm.getProgramClientStatuses(new Integer(programId)));
 		}
-
 
 		String[] programInfo = bpm.getProgramInformation(programId);
 		if(programInfo[0] != null) {
@@ -139,8 +164,7 @@ public class InfirmAction extends DispatchAction
 
 		Date dt;
 
-		if (se.getAttribute("infirmaryView_date")!=null)
-		{
+		if (se.getAttribute("infirmaryView_date")!=null) {
 			dt=(Date) se.getAttribute("infirmaryView_date") ; //new Date(year,month-1,day);
 		}else{
 			dt=new Date();

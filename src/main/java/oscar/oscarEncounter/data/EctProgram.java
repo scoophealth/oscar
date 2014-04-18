@@ -49,7 +49,6 @@ public class EctProgram {
 		
 		InfirmBedProgramManager manager=getInfirmBedProgramManager();
 		programBean=manager.getProgramBeans(providerNo, null);	
-		//se.setAttribute("infirmaryView_programBeans",programBean );
 	
 		//get default program
 		int defaultprogramId=manager.getDefaultProgramId(providerNo);
