@@ -435,7 +435,8 @@ public class JdbcBillingCreateBillingFile {
 		if (ch1Obj.getVer() != null && (ch1Obj.getVer().length() > 2 || "##".equals(ch1Obj.getVer())))
 			errorPartMsg += "Header1: Ver. code wrong!<br>";
 		
-		errorMsg += errorPartMsg;
+		if(errorPartMsg.length() > 0)
+			errorMsg += ch1Obj.getId() + " - " + errorPartMsg;
 	}
 
 	private void checkHeader2() {
