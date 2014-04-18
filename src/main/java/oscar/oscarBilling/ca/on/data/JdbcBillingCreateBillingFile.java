@@ -360,7 +360,8 @@ public class JdbcBillingCreateBillingFile {
 			errorPartMsg += "Header1: HIN is invalid!<br>";
 		}
 
-		errorMsg += errorPartMsg;
+		if(errorPartMsg.length() > 0)
+			errorMsg += ch1Obj.getId() + " - " + errorPartMsg;
 	}
 
 
