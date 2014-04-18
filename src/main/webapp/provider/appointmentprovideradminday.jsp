@@ -57,6 +57,9 @@
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.model.Tickler" %>
 <%@ page import="org.oscarehr.managers.TicklerManager" %>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
+
 
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
@@ -190,7 +193,6 @@ private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();%>
            + "&day="+ day_q + "&view=" + view_q + "&displaymode=" + displayMode_q;
 	}
 	session.setAttribute("infirmaryView_OscarQue",reqstr);
-	String absurl="/infirm.do?action=showProgram";
 %>
 <c:import url="/infirm.do?action=showProgram" />
 </caisi:isModuleLoad>
@@ -1731,6 +1733,13 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
         param0[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 		param0[2]=programId_oscarView;
 		if (locationEnabled) {
+			
+			
+			ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+			ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+            if(programProvider!=null && programProvider.getProgram() != null) {
+            	programProvider.getProgram().getName();
+            }
 		    param0[3]=request.getParameter("programIdForLocation");
 		    strsearchappointmentday = "searchappointmentdaywithlocation";
 		}
