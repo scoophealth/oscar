@@ -34,6 +34,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -323,6 +324,7 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 		this.id = id;
 	}
 
+	@PrePersist
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {
 		this.updateDateTime = new Date();

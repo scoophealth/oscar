@@ -38,6 +38,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -151,6 +153,9 @@ public class Admission extends AbstractModel<Integer> implements Serializable {
 	@Column(name="temporary_admission_flag")
 	private boolean temporaryAdmissionFlag;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdateDate = null;
+	
 	public Admission () {
 		// auto generated code... bah
 	}
@@ -579,4 +584,26 @@ public class Admission extends AbstractModel<Integer> implements Serializable {
 		
 	}
 
+	public boolean isTemporaryAdmissionFlag() {
+		return temporaryAdmissionFlag;
+	}
+
+	public void setTemporaryAdmissionFlag(boolean temporaryAdmissionFlag) {
+		this.temporaryAdmissionFlag = temporaryAdmissionFlag;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	@PreUpdate
+	@PrePersist
+	protected void jpa_updateDate() {
+		setLastUpdateDate(new Date());
+	}
+	
 }

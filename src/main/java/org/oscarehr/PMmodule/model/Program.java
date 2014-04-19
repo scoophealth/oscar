@@ -99,7 +99,7 @@ public class Program implements Serializable {
 	private Integer capacity_actual = new Integer(0);
 	private Integer totalUsedRoom = new Integer(0);
 	private String lastUpdateUser;
-	private Date lastUpdateDate;
+	private Date lastUpdateDate = new Date();
 	private LookupCodeValue shelter;
 	private String siteSpecificField;
 	private Boolean enableEncounterTime = false;
