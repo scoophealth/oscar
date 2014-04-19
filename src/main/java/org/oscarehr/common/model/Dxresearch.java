@@ -25,6 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,7 +47,7 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
 	@Temporal(TemporalType.DATE)
     private Date startDate;
 	@Column(name="update_date")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
     private Character status;
     @Column(name="dxresearch_code")
@@ -175,6 +177,10 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
     }
 
 
-
+    @PrePersist
+	@PreUpdate
+	protected void jpaUpdateDate() {
+		this.updateDate = new Date();
+	}
 
 }

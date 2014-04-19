@@ -178,4 +178,8 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	{
 		lastUpdateDate=new Date();
 	}
+	
+	public String getDeletedRawValue() {
+		return String.valueOf(deleted);
+	}
 }

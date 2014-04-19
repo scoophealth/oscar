@@ -484,7 +484,7 @@ CREATE TABLE demographic (
   newsletter varchar(32),
   anonymous varchar(32),
   lastUpdateUser varchar(6),
-  lastUpdateDate date,
+  lastUpdateDate datetime not null,
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
   KEY name (last_name,first_name),
@@ -704,7 +704,7 @@ CREATE TABLE dxresearch (
   dxresearch_no int(10) NOT NULL auto_increment,
   demographic_no int(10) default '0',
   start_date date default '0001-01-01',
-  update_date date default '0001-01-01',
+  update_date datetime not null,
   status char(1) default 'A',
   dxresearch_code varchar(10) default '',
   coding_system varchar(20),
@@ -6973,6 +6973,7 @@ CREATE TABLE patientLabRouting (
   lab_no int(10) NOT NULL default '0',
   lab_type char(3) NOT NULL default 'MDS',
   id int(10) NOT NULL auto_increment,
+  created datetime not null,
   dateModified datetime,
   PRIMARY KEY  (`id`),
   KEY `demographic` (`demographic_no`),
@@ -7105,7 +7106,7 @@ CREATE TABLE provider (
   `email` varchar(60) default NULL,
   `title` varchar(20) default NULL,
   `lastUpdateUser` varchar(6) default NULL,
-  `lastUpdateDate` date default NULL,
+  `lastUpdateDate` datetime not null,
   `signed_confidentiality` datetime,
   PRIMARY KEY  (provider_no)
 );
@@ -7674,6 +7675,7 @@ create table secUserRole(
   `role_name` VARCHAR(60) not null,
   `orgcd` VARCHAR(80) default 'R0000001',
   `activeyn`    int(1),
+  `lastUpdateDate` datetime not null,
   primary key (id)
 );
 
@@ -9502,7 +9504,7 @@ CREATE TABLE `program` (
   `capacity_funding` int(10),
   `capacity_space` int(10),
   `lastUpdateUser` varchar(6),
-  `lastUpdateDate` date,
+ lastUpdateDate datetime not null,
   `enableEncounterTime` tinyint(1),
   `enableEncounterTransportationTime` tinyint(1),
   `siteSpecificField` varchar(255),
@@ -11310,7 +11312,8 @@ create table labPatientPhysicianInfo(
   comment2 text,
   patient_phone varchar(20),
   doc_phone varchar(20),
-  collection_date varchar(20)
+  collection_date varchar(20),
+  lastUpdateDate datetime not null
 );
 
 

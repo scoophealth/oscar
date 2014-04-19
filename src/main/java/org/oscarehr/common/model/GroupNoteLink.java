@@ -30,7 +30,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -44,7 +46,7 @@ public class GroupNoteLink extends AbstractModel<Integer> implements Serializabl
 	private Integer id;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date created = new Date();
+	private Date created;
 	
 	private Integer noteId;
 	private Integer demographicNo;
@@ -120,4 +122,9 @@ public class GroupNoteLink extends AbstractModel<Integer> implements Serializabl
 		this.active = active;
 	}
 
+	@PrePersist
+	@PreUpdate
+	protected void jpaUpdateDate() {
+		this.created = new Date();
+	}
 }
