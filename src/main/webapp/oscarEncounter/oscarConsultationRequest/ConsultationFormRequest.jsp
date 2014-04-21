@@ -512,11 +512,29 @@ function initSpec() {
 }
 
 /////////////////////////////////////////////////////////////////////
-function initService(ser){
+function initService(ser,name,spec,specname,phone,fax,address){
 	var i = 0;
 	var isSel = 0;
 	var strSer = new String(ser);
-
+	var strNa = new String(name);
+    var strSpec = new String(spec);
+    var strSpecNa = new String(specname);
+    var strPhone = new String(phone);
+    var strFax = new String(fax);
+    var strAddress = new String(address);
+    
+    var isSerDel=1;//flagging service if deleted: 1=deleted 0=active
+    
+    $H(servicesName).each(function(pair){
+          if( pair.value == strSer ) {
+            isSerDel = 0;
+          }
+    });
+    
+        if (isSerDel==1 && strSer != "null") {
+        K(strSer,strNa);
+        D(strSer,strSpec,strPhone,strSpecNa,strFax,strAddress);
+	}
         $H(servicesName).each(function(pair){
               var opt = new Option( pair.key, pair.value );
               if( pair.value == strSer ) {
@@ -1963,7 +1981,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 				<script type="text/javascript">
 
 	        initMaster();
-        	initService('<%=consultUtil.service%>');
+        	initService('<%=consultUtil.service%>','<%=((consultUtil.service==null)?"":consultUtil.getServiceName(consultUtil.service.toString()))%>','<%=consultUtil.specialist%>','<%=((consultUtil.specialist==null)?"":consultUtil.getSpecailistsName(consultUtil.specialist.toString()))%>','<%=consultUtil.specPhone%>','<%=consultUtil.specFax%>','<%=consultUtil.specAddr%>');
                 initSpec();
             document.EctConsultationFormRequestForm.phone.value = ("");
         	document.EctConsultationFormRequestForm.fax.value = ("");
