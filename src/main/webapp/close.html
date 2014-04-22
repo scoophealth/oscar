@@ -26,9 +26,16 @@
 
 <html>
 <head>
-<script language=javascript>
-        window.close();
-        </script>
+<script type="text/javascript">
+    window.close();
+
+    window.onunload = function() {
+        if (window.opener && !window.opener.closed) {
+            window.opener.popUpClosed();
+        }
+    };
+</script>
+
 </head>
 <body>
 Click

@@ -127,6 +127,15 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 			%>
 
 <script>
+function recreate(si) {
+    ret = confirm("Are you sure you want to regenerate the file? \n\nWARNING: This should only be performed in very specific circumstances. If you are unsure, consult your OSCAR administrator before using this feature.");
+	if(ret) {
+		ss=document.forms[0].billcenter[document.forms[0].billcenter.selectedIndex].value;
+		var su = document.forms[0].useProviderMOH.checked;
+		location.href="onregenreport.jsp?diskId="+si+"&billcenter="+ss+"&useProviderMOH="+su;		
+	}
+}
+
 var providerBillCenterMap = new Object();
 <%
 ProviderBillCenterDao providerBillCenterDao = (ProviderBillCenterDao)SpringUtils.getBean("providerBillCenterDao");
@@ -178,13 +187,16 @@ function setBillingCenter( providerNo ) {
 </head>
 
 <body>
+
 <h3><bean:message key="admin.admin.btnGenerateOHIPDiskette" /></h3>
 
 <div class="container-fluid">
+
 <div id="Layer1" style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
 
 <div class="row well hidden-print">
 
+<button type='button' name='print' value='Print' class="btn hidden-print" onClick='window.print()' style="position:absolute;top:20px;right:20px;"> <i class="icon icon-print"></i> Print</button>
 
 <div class="dropdown">
 <!-- Link or button to toggle dropdown -->
@@ -196,7 +208,7 @@ function setBillingCenter( providerNo ) {
 		</ul>
 </div>
 
-<button type='button' name='print' value='Print' class="btn pull-right" onClick='window.print()'> <i class="icon icon-print"></i> Print</button><br/>
+
 
 
 
@@ -257,19 +269,17 @@ function setBillingCenter( providerNo ) {
 		<input type="hidden" name="curUser" value="<%=curProvider_no%>"> 
 		<input type="hidden" name="curDate" value="<%=nowDate%>">
 
-		<div class="span10">
-		Service Date:
-		</div>
 
 		<div class="span4">		
-		<label>From:</label>
+		<label>Service Date Start:</label>
 		<div class="input-append">
 			<input type="text" name="xml_vdate" id="xml_vdate" value="<%=xml_vdate%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>
 		</div>
+		
 		<div class="span4">		
-		<label>To:</label>
+		<label>Service Date End:</label>
 		<div class="input-append">
 			<input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=xml_appointment_date%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
 			<span class="add-on"><i class="icon-calendar"></i></span>
@@ -289,7 +299,7 @@ function setBillingCenter( providerNo ) {
 
 
 
-<table class="table table-striped table-hover">
+<table class="table ">
 <thead>
 	<tr>
 		<th>Provider</th>
@@ -332,18 +342,16 @@ function setBillingCenter( providerNo ) {
 
 %>
 
-	<tr 	onMouseOver="this.style.backgroundColor='pink';"
-		onMouseout="this.style.backgroundColor='<%=bgColor%>';">
+	<tr onMouseOver="this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" bgcolor="<%=bgColor%>">
 		<td><font size="2"><%=pro_name%></font></td>
 		<td align="center"><font size="2"><%=updatedate.substring(0,16)%></font></td>
-		<td align="center"><font size="2"><%=cr%></td>
+		<td align="center"><font size="2"><%=cr%></font></td>
 		<td align="right"><font size="2"><%=total%></font></td>
 
 		<td width="15%"><font size="2"> <a
 			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>"
 			target="_blank"><%=oFile%></a></font></td>
-		<td width="3%"><input type="button" value="R"
-			onclick="recreate(<%=obj.getId() %>)" /></td>
+		<td width="3%"><input type="button" value="R" class="btn hidden-print" onclick="recreate(<%=obj.getId() %>)" /></td>
 		<td><font size="2"> <a
 			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>"
 			target="_blank"><%=hFile%></a></font></td>
@@ -382,7 +390,7 @@ for(BillActivity ba:bas) {
 %>
 
 	<tr bgcolor="<%=count%2==0?yearColor:"white"%>">
-		<td><font size="2"><%=pro_name%></font></td>
+		<td><%if(pro_name!=null){ %><font size="2"><%=pro_name%></font><%}%></td>
 		<td align="center"><font size="2"><%=updatedate%></font></td>
 		<td align="center"><font size="2"><%=cr%></td>
 		<td align="right"><font size="2"><%=total.substring(0,total.indexOf(".")) + total.substring(total.indexOf("."), total.indexOf(".") + 3)%></font></td>
@@ -412,6 +420,12 @@ var startDate = $("#xml_vdate").datepicker({
 var endDate = $("#xml_appointment_date").datepicker({
 	format : "yyyy-mm-dd"
 });
+
+$( document ).ready(function() {
+parent.parent.resizeIframe($('html').height());
+
+});
+
 </script>
 </body>
 </html>

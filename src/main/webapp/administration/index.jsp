@@ -127,7 +127,6 @@ margin-top:18px;
 
 #side{
 position:absolute;
-/* border-right:thin solid #C6C6C6; */
 padding-right:10px;
 padding-bottom:20px
 }
@@ -139,6 +138,12 @@ text-decoration: none;
 
 #side a:hover{
 color:#0088cc;
+}
+
+div#dynamic-content iframe {
+    position: absolute;
+    height: 100%;
+    width: 75%;
 }
 
 .icon-chevron-right{float:right;}  
@@ -219,7 +224,7 @@ i[class*='icon-']:hover {color:#0088cc;}
      #main-wrapper{margin-top:30px;}
  }
   
-@media (min-width: 768px) and (max-width: 1430px) { 
+@media (min-width: 768px) { 
 	
 	 #side{
 	 	width: 240px;
@@ -443,6 +448,11 @@ function validDate(value, format, separator){
 	} catch(e){
 		return false;
 	}			
+}
+
+function resizeIframe(newHgt)
+{
+    $('#myFrame').height((parseInt(newHgt)+75)+'px');
 }
 
 $(document).ready(function() {
