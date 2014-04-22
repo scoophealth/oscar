@@ -67,8 +67,10 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.document.dao.DocumentDAO;
@@ -146,6 +148,18 @@ public class ManageDocumentAction extends DispatchAction {
 				MiscUtils.getLogger().error("Error", e);
 			}
 		}
+                
+		//Check to see if we have to route document to patient
+		PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+		PatientLabRouting patientLabRouting = patientLabRoutingDao.findDemographics(docType, Integer.parseInt(documentId));
+		if(patientLabRouting == null) {
+			patientLabRouting = new PatientLabRouting();
+			patientLabRouting.setDemographicNo(Integer.parseInt(demog));
+			patientLabRouting.setLabNo(Integer.parseInt(documentId));
+			patientLabRouting.setLabType("DOC");
+			patientLabRoutingDao.persist(patientLabRouting);
+		}
+                
 		Document d = documentDAO.getDocument(documentId);
 
 		d.setDocdesc(documentDescription);
