@@ -33,6 +33,9 @@
 <%@page import="org.oscarehr.common.model.OcanClientForm"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="java.util.Enumeration"%>
+<%@ page import="org.oscarehr.PMmodule.service.ProgramManager"%>
+<%@ page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 
 <input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
@@ -41,6 +44,13 @@
 <% 
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+ 		boolean programEnableOcan=false;
+ 		String currentProgram = (String)session.getAttribute(org.oscarehr.util.SessionConstants.CURRENT_PROGRAM_ID);
+ 		if(currentProgram != null) {
+ 			ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
+ 			Program program = pm.getProgram(currentProgram);
+ 			programEnableOcan =program.isEnableOCAN();
+ 		}
 %>
 
 <script>
@@ -386,6 +396,7 @@ New User Created Form:&nbsp;
 <br />
 <br />
 
+<% if(programEnableOcan) { %>
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -582,5 +593,8 @@ New User Created Form:&nbsp;
 		</tr>
 	</c:forEach>
 </table>
+
+
+<% } %>
 <br />
 <br />

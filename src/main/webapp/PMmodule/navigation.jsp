@@ -32,8 +32,10 @@
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
-<%@ page
-	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.oscarehr.PMmodule.service.ProgramManager"%>
+<%@ page import="org.oscarehr.PMmodule.model.Program"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
@@ -59,6 +61,15 @@
 
     String dateStr = yearStr + "-" + mthStr + "-" + dayStr;
 	WebApplicationContext ctx=null;
+	
+	//get current program, to check for OCAN
+	boolean programEnableOcan=false;
+	String currentProgram = (String)session.getAttribute(org.oscarehr.util.SessionConstants.CURRENT_PROGRAM_ID);
+	if(currentProgram != null) {
+		ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
+		Program program = pm.getProgram(currentProgram);
+		programEnableOcan =program.isEnableOCAN();
+	}
 %>
 
 <script type="text/javascript">
@@ -184,7 +195,7 @@
 		</caisi:isModuleLoad>
 		</span></div>
                 <%                
-                if (org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility!=null && org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
+                if (org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility!=null && org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms() && programEnableOcan)
                 {
                 %>
                         <div>

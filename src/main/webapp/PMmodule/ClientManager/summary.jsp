@@ -65,10 +65,23 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.DemographicCust"%>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao"%>
-<%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%><input type="hidden" name="clientId" value="" />
+<%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%>
+<%@ page import="org.oscarehr.PMmodule.service.ProgramManager"%>
+
+<input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
+<%
+//get current program, to check for OCAN
+boolean programEnableOcan=false;
+String currentProgram = (String)session.getAttribute(org.oscarehr.util.SessionConstants.CURRENT_PROGRAM_ID);
+if(currentProgram != null) {
+	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
+	Program program = pm.getProgram(currentProgram);
+	programEnableOcan =program.isEnableOCAN();
+}
+%>
 <script>
 var XMLHttpRequestObject = false;
 
@@ -563,7 +576,7 @@ function openSurvey() {
 			</tr>
 		<%
 
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms() && programEnableOcan )
 		{
 	%>
 	<tr>
