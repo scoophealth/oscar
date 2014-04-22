@@ -173,7 +173,7 @@ String curProvider_no = (String)session.getAttribute("user");
 						class="xlink" rel="${ctx}/billing/CA/ON/billingOHIPreport.jsp"><bean:message
 						key="admin.admin.btnGenerateOHIPDiskette" /></a></li>
 					<li><a href='javascript:void(0);'
-						class="xlink" rel="${ctx}/billing/CA/ON/billingCorrection.jsp?billing_no="><bean:message
+						class="xlink" rel="${ctx}/billing/CA/ON/billingCorrection.jsp?admin&billing_no="><bean:message
 						key="admin.admin.btnBillingCorrection" /></a></li>
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/billing/CA/ON/batchBilling.jsp?service_code=all"><bean:message
@@ -887,9 +887,10 @@ $(document).ready(function(){
 
 	$(".xlink").click(function(e) {
 		var source = $(this).attr('rel');
-
 		$("#dynamic-content").html('<iframe id="myFrame" name="myFrame" frameborder="0" width="950" height="1000" src="'+source+'">');
+
 	});
+
 
 	//using this to collapse and load items so we can have direct links to menu items
 	try

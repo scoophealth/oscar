@@ -51,6 +51,9 @@ function onUnbilled(url) {
   }
 }
 
+function popUpClosed() {
+    window.location.reload();
+}
 </SCRIPT>
 <script src="<c:out value="../js/jquery.js"/>"></script>
 <script>

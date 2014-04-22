@@ -164,7 +164,7 @@
 	
 <oscar:customInterface section="editInvoice"/>
 
-<script language="JavaScript">
+<script type="text/javascript">
 <!--
 
 function setfocus() {	
@@ -336,6 +336,7 @@ function checkSettle(status) {
 
 //-->
 </script>
+
 </head>
 
 <body onload="$('#billing_no').focus()">
@@ -482,17 +483,24 @@ function checkSettle(status) {
 
 <div class="container-fluid">
 
+<%if (request.getParameter("adminSubmit")!=null) { %>
+    <div class="alert alert-success" id="alert_message">
+    	<button type="button" class="close" data-dismiss="alert">&times;</button>
+  		<strong>Success! </strong> Your entry was saved!
+    </div>
+<%} %>
+
 <div class="row well well-small">
 <%if(createTimestamp!=null){%>
 <bean:message key="billing.billingCorrection.msgLastUpdate" />: <%=nullToEmpty(createTimestamp)%>
 <%}%>
 
-<form name="form1" method="post" action="billingONCorrection.jsp">
+<form name="form1" method="post" action="billingONCorrection.jsp<%if (request.getParameter("admin")!=null) { out.print("?admin"); }%>">
 <input type="hidden" id="billTotal" value="<%=BillTotal%>" />
     
 <div class="span2">
 <a href="#" onclick="return sanityCheck('<%=nullToEmpty(billNo)%>');"><bean:message key="billing.billingCorrection.formInvoiceNo" /></a><br>
-<input type="text" id="billing_no" name="billing_no"  value="<%=nullToEmpty(billNo)%>" class="span2">
+<input type="text" id="billing_no" name="billing_no"  value="<%=nullToEmpty(billNo)%>" class="span2" required>
 </div>
 
 
@@ -524,7 +532,7 @@ OHIP Claim No  <br>
 <table>
 <% 
         for(int i=0; i<lError.size(); i++) {
-            String codeNo = (String) lError.get(i);
+            String codeNo = lError.get(i);
             if("".equals(codeNo)) continue;
 
             BillingONErrorCode errorCode = billingONErrorCodeDao.find(codeNo);
@@ -686,8 +694,7 @@ OHIP Claim No  <br>
 <div class="row well well-small">
 
 <div class="span10">
-<b><bean:message key="billing.billingCorrection.msgBillingInf" /></b>
-</div>
+<b><bean:message key="billing.billingCorrection.msgBillingInf" /></b><br>
 
 <div class="span4"> 
 
@@ -828,11 +835,7 @@ function changeSite(sel) {
 				%>
 		</select>
 <% } %>
-
-
 <input type="hidden" name="xml_provider_no" value="<%=Provider%>">
-
-
 </div><!--span4-->
 
 <div class="span4"> 
@@ -904,10 +907,12 @@ for (ClinicNbr clinic : nbrs) {
 		<option value="RTF " <%=sliCode.startsWith("RTF")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.RTF" /></option>
 	</select>
 </div><!--span4-->
+</div><!-- span10 -->
 </div><!--well-->
 
+
 <div class="row well well-small">
-<div class="span10">
+
 <table class="table table-striped table-hover">
 <thead>
 	<tr>
@@ -996,7 +1001,7 @@ for (ClinicNbr clinic : nbrs) {
 </tbody>
 </table>
 </div>
-</div>
+
 
 <div class="row well well-small">
 <div class="span10">
@@ -1018,9 +1023,14 @@ for (ClinicNbr clinic : nbrs) {
 <div class="row well well-small">
 <div class="span10">
 
-	
+<%if (request.getParameter("admin")!=null || request.getParameter("adminSubmit")!=null ) { %>
+<input type="hidden" name="adminSubmit" value="adminSubmit">
+<input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="Submit">
+<%}else{%> 
 <input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="<bean:message key="billing.billingCorrection.btnSubmit"/>">
 <input class="btn" type="submit" name="submit" onclick="return validateAllItems();" value="Submit&Correct Another">
+<%}%>
+
 <%if(billNo!=null){%>
 
 		<a id="reprintLink" name="reprintLink" href="billingON3rdInv.jsp?billingNo=<%=billNo%>" class="btn"><i class="icon icon-print"></i> Reprint</a>
@@ -1269,5 +1279,18 @@ for (ClinicNbr clinic : nbrs) {
     var startDate = $("#xml_vdate").datepicker({
     	format : "yyyy-mm-dd"
     });
+
+    window.setTimeout(function() {
+    	  $("#alert_message").fadeTo(500, 0).slideUp(500, function(){
+    	    $(this).remove(); 
+    	  });
+    }, 5000);
+	
+    $( document ).ready(function() {
+    	parent.parent.resizeIframe($('html').height());
+
+    });
+
+
 </script>
 </html:html>
