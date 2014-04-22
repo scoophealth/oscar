@@ -72,5 +72,6 @@
 		<property name="enableEncounterTransportationTime" column="enableEncounterTransportationTime" type="boolean" length="1" />
 		<property name="emailNotificationAddressesCsv" />
 		<property name="lastReferralNotification" />
+		<property name="enableOCAN" />
     </class>
 </hibernate-mapping>

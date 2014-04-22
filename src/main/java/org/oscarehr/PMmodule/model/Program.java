@@ -106,7 +106,8 @@ public class Program implements Serializable {
 	private Boolean enableEncounterTransportationTime = false;
 	private String emailNotificationAddressesCsv = null;
 	private Date lastReferralNotification = null;
-
+	private boolean enableOCAN;
+	
 	//these are all transient - these need to be removed, we shouldn't be having fields like this in JPA model objects.
 	private Integer noOfVacancy = 0;
 	private String vacancyName;
@@ -836,4 +837,13 @@ public class Program implements Serializable {
 		return (sb.toString());
 	}
 
+	public boolean isEnableOCAN() {
+		return enableOCAN;
+	}
+
+	public void setEnableOCAN(boolean enableOCAN) {
+		this.enableOCAN = enableOCAN;
+	}
+
+	
 }

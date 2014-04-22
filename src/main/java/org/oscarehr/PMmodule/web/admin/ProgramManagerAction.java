@@ -721,6 +721,7 @@ public class ProgramManagerAction extends DispatchAction {
 		if (request.getParameter("program.alcohol") == null) program.setAlcohol(false);
 		if (request.getParameter("program.physicalHealth") == null) program.setPhysicalHealth(false);
 		if (request.getParameter("program.mentalHealth") == null) program.setMentalHealth(false);
+		if (request.getParameter("program.enableOCAN") == null) program.setEnableOCAN(false);
 		if (request.getParameter("program.housing") == null) program.setHousing(false);
 		if (request.getParameter("program.enableEncounterTime") == null) program.setEnableEncounterTime(false);
 		if (request.getParameter("program.enableEncounterTransportationTime") == null) program.setEnableEncounterTransportationTime(false);
@@ -805,6 +806,7 @@ public class ProgramManagerAction extends DispatchAction {
 		oldProgram.setAlcohol(getParameterAsBoolean(request,"old_alcohol"));
 		oldProgram.setPhysicalHealth(getParameterAsBoolean(request,"old_physicalHealth"));
 		oldProgram.setMentalHealth(getParameterAsBoolean(request,"old_mentalHealth"));
+		oldProgram.setEnableOCAN(getParameterAsBoolean(request,"old_enableOCAN"));
 		oldProgram.setHousing(getParameterAsBoolean(request,"old_housing"));
 		oldProgram.setFacilityId(getParameterAsInteger(request,"old_facility_id",0));
 		oldProgram.setEnableEncounterTime(getParameterAsBoolean(request,"old_enableEncounterTime"));
