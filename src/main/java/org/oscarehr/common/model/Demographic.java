@@ -110,7 +110,7 @@ public class Demographic implements Serializable {
 
 	private Provider provider;
 	private String lastUpdateUser = null;
-	private Date lastUpdateDate = null;
+	private Date lastUpdateDate = new Date();
 
 	private String title;
 	private String officialLanguage;

@@ -63,7 +63,7 @@ public class Provider implements Serializable, Comparable<Provider>{
     private String email;
     private String title;
     private String lastUpdateUser;
-    private Date lastUpdateDate;
+    private Date lastUpdateDate = new Date();
 
 	public String getPractitionerNo() {
 		return practitionerNo;
