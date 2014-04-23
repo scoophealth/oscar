@@ -1393,12 +1393,10 @@
 		            <exclude>**/OntarioMDSpec4DataTest.java</exclude>
 		            <exclude>**/ONAREnhancedBornConnectorTest.java</exclude>
 		          </excludes>
-				<systemProperties>
-					<property>
-						<name>oscar.dbinit.skip</name>
-						<value>${oscar.dbinit.skip}</value>
-					</property>
-				</systemProperties>
+			  <systemPropertyVariables>
+		             <oscar.dbinit.skip>${oscar.dbinit.skip}</oscar.dbinit.skip>
+		             <buildDirectory>${project.build.directory}</buildDirectory>
+			  </systemPropertyVariables>
 		        </configuration>
 			<version>2.10</version>
 		      </plugin>
