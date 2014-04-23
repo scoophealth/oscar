@@ -176,7 +176,7 @@ function save() {
        var paragraph = window.opener.document.getElementById("attachDefault");
 
        //if we are saving something we need to update list on parent form
-       if( ops.options.length )
+       if( ops.options.length > 0 )
             paragraph.innerHTML = "";
 
        //delete what we have before adding new docs to list
