@@ -195,7 +195,7 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 
 <script LANGUAGE="JavaScript">
 	self.opener.refresh();
-	//self.close();
+	self.close();
 </script>
 
 <%
