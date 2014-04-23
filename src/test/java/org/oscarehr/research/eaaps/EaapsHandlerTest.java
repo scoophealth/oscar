@@ -28,6 +28,7 @@ import static org.junit.Assert.*;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.DaoTestFixtures;
@@ -43,7 +44,15 @@ import org.oscarehr.common.model.Study;
 import org.oscarehr.common.model.StudyData;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
+
 public class EaapsHandlerTest extends DaoTestFixtures {
+	
+	@Before
+	public void beforeTest() {
+		OscarProperties props = OscarProperties.getInstance();
+		props.setProperty("DOCUMENT_DIR", System.getProperty("buildDirectory"));
+	}
 	
 	@BeforeClass
 	public static void init() throws Exception {

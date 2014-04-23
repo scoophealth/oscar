@@ -27,10 +27,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import oscar.OscarProperties;
 
 public class EaapsMessageSupportTest {
 
+	
+	@Before
+	public void beforeTest() {
+		OscarProperties props = OscarProperties.getInstance();
+		props.setProperty("DOCUMENT_DIR", System.getProperty("buildDirectory"));
+	}
 	
 	@Test
 	public void test() throws Exception {
