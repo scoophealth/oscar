@@ -24,6 +24,7 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +38,7 @@ public class SecUserRole implements Serializable {
     private String _providerNo;
     private boolean _active;
     private String orgCd;
+    private Date lastUpdateDate;
 
 
 
@@ -176,6 +178,14 @@ public class SecUserRole implements Serializable {
 	public void setOrgCd(String orgCd) {
     	this.orgCd = orgCd;
     }
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
 
 
 }
