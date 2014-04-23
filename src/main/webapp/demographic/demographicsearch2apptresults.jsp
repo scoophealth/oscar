@@ -76,9 +76,6 @@
 	List<Demographic> demoList = null;  
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 %>
-<caisi:isModuleLoad moduleName="caisi" reverse="false">
-<%caisi=true; %>
-</caisi:isModuleLoad>
 
 <html>
 <head>
