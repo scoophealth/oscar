@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.springframework.stereotype.Repository;
 
@@ -99,6 +100,11 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 	}
 
 	public List<ProfessionalSpecialist> findByReferralNo(String referralNo) {
+		
+		if (StringUtils.isBlank(referralNo)) {
+			return null;
+		}
+		
 		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x WHERE x.referralNo=? order by x.lastName");
 		query.setParameter(1, referralNo);
 
