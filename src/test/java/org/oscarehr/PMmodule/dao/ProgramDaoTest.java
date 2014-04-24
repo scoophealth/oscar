@@ -37,7 +37,7 @@ public class ProgramDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("program","admission","Facility","program_queue","lst_orgcd","secUserRole");
+		SchemaUtils.restoreTable("program","admission","Facility","program_queue","lst_orgcd","secUserRole","provider");
 	}
 
 	@Test

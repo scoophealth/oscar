@@ -99,7 +99,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		List<CaseManagementNote> issueList = this.getHibernateTemplate().find(hql, demoNo );
 		
 		hql = "select max(cmn.id) from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + issueIds + ") and cmn.demographic_no = ? group by cmn.uuid order by max(cmn.id)";
-		List<Integer> currNoteList = (List<Integer>) this.getHibernateTemplate().find(hql, demoNo );
+		List<Integer> currNoteList = this.getHibernateTemplate().find(hql, demoNo );
 		
 		for (CaseManagementNote issueNote : issueList) {
 			if (currNoteList.contains( issueNote.getId() )) {
@@ -220,6 +220,13 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 	}
 	
+	public List<CaseManagementNote> getNotesByDemographicSince(String demographic_no,Date date) {
+		
+		String hql = "select cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.update_date > ? and cmn.locked != '1' and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date";
+		return getHibernateTemplate().find(hql, demographic_no,date);	
+	}
+	
+	
 	public long getNotesCountByDemographicId(String demographic_no) {
 		String hql = "select count(*) from CaseManagementNote cmm where cmm.demographic_no = ?";
 		return ((Long)getHibernateTemplate().find(hql, demographic_no).get(0)).longValue();
@@ -298,7 +305,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 				List<CaseManagementNote> issueList = this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no });
 				
 				hql = "select  max(cmn.id) from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? group by cmn.uuid order by max(cmn.id)";
-				List<Integer> currNoteList = (List<Integer>) this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no });
+				List<Integer> currNoteList = this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no });
 				
 				for(CaseManagementNote issueNote : issueList)
 				{
@@ -465,6 +472,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	}
 	
 	public void updateNote(CaseManagementNote note) {
+		note.setUpdate_date(new Date());
 		this.getHibernateTemplate().update(note);
 	}
 
@@ -473,6 +481,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			UUID uuid = UUID.randomUUID();
 			note.setUuid(uuid.toString());
 		}
+		note.setUpdate_date(new Date());
 		this.getHibernateTemplate().save(note);
 	}
 
@@ -481,7 +490,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			UUID uuid = UUID.randomUUID();
 			note.setUuid(uuid.toString());
 		}
-
+		note.setUpdate_date(new Date());
 		return this.getHibernateTemplate().save(note);
 	}
 

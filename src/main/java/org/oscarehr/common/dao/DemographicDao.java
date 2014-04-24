@@ -1002,6 +1002,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			objExists = clientExistsThenEvict(demographic.getDemographicNo());
 		}
 
+		demographic.setLastUpdateDate(new Date());
 		this.getHibernateTemplate().saveOrUpdate(demographic);
 
 		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && !objExists) {
@@ -1455,6 +1456,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		boolean objExists = false;
 		if (client.getDemographicNo() != null) objExists = clientExistsThenEvict(client.getDemographicNo());
 
+		client.setLastUpdateDate(new Date());
 		this.getHibernateTemplate().saveOrUpdate(client);
 
 		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && !objExists) (new HL7A04Generator()).generateHL7A04(client);
@@ -1938,5 +1940,9 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
     {
     	if (i>=10) return(String.valueOf(i));
     	else return("0"+i);
+    }
+    
+    public List<Integer> getDemographicIdsAddedSince(Date value) {	
+    	return this.getHibernateTemplate().find("select d.DemographicNo from Demographic d where d.lastUpdateDate >?", value);
     }
 }

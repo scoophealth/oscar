@@ -423,4 +423,28 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 
 		return items;
 	}
+	
+	public List<Dxresearch> getByDemographicNoSince(int demographicNo,Date lastUpdateDate) {
+		String hql = "select d from Dxresearch d where d.demographicNo=? and d.status='A' and d.updateDate > ?";
+    	Query query = entityManager.createQuery(hql);
+    	query.setParameter(1,demographicNo);
+    	query.setParameter(2, lastUpdateDate);
+
+    	@SuppressWarnings("unchecked")
+    	List<Dxresearch> items = query.getResultList();
+
+		return items;
+	}
+	
+	//for integrator
+	public List<Integer> getByDemographicNoSince(Date lastUpdateDate) {
+		String hql = "select d.demographicNo from Dxresearch d where d.updateDate > ?";
+    	Query query = entityManager.createQuery(hql);
+    	query.setParameter(1, lastUpdateDate);
+
+    	@SuppressWarnings("unchecked")
+    	List<Integer> items = query.getResultList();
+
+		return items;
+	}
 }

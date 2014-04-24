@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -83,5 +84,25 @@ public class BillingONItemDao extends AbstractDao<BillingONItem>{
 		Query query = createQuery("i", "i.ch1Id= :chId AND i.status != 'D'");
 		query.setParameter("chId", chId);
 		return query.getResultList();
+    }
+	
+    public List<BillingONCHeader1> getCh1ByDemographicNoSince(Integer demographic_no, Date lastUpdateDate) {
+        String queryStr = "FROM BillingONCHeader1 b WHERE b.demographicNo = "+demographic_no+" and b.timestamp > ? ORDER BY b.id";
+        Query q = entityManager.createQuery(queryStr);
+        q.setParameter(1, lastUpdateDate);
+
+        List<BillingONCHeader1> rs = q.getResultList();
+
+        return rs;
+    }
+    
+    public List<Integer> getDemographicNoSince(Date lastUpdateDate) {
+        String queryStr = "select b.demographicNo FROM BillingONCHeader1 b WHERE b.timestamp > ? ORDER BY b.id";
+        Query q = entityManager.createQuery(queryStr);
+        q.setParameter(1, lastUpdateDate);
+        
+        List<Integer> rs = q.getResultList();
+
+        return rs;
     }
 }

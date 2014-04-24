@@ -549,7 +549,7 @@ private Logger log=MiscUtils.getLogger();
         if (admission == null) {
             throw new IllegalArgumentException();
         }
-
+        admission.setLastUpdateDate(new Date());
         this.saveEntity(admission);
         
         if (log.isDebugEnabled()) {
@@ -773,5 +773,49 @@ private Logger log=MiscUtils.getLogger();
 
         return rs;
     }
+    
+    /**
+     * results are ordered by admission date descending
+     */
+    public List<Admission> getAdmissionsByFacilitySince(Integer demographicNo, Integer facilityId,Date lastUpdateDate) {
+         if (demographicNo == null || demographicNo <= 0) {
+             throw new IllegalArgumentException();
+         }
+
+         String queryStr = "SELECT a FROM Admission a WHERE a.clientId=? and a.programId in " +
+            "(select s.id from Program s where s.facilityId=? or s.facilityId is null) and a.lastUpdateDate > ? ORDER BY a.admissionDate DESC";
+         
+         Query query = entityManager.createQuery(queryStr);
+         query.setParameter(1,demographicNo);
+         query.setParameter(2,facilityId);
+         query.setParameter(3,lastUpdateDate);
+         
+         @SuppressWarnings("unchecked")
+         List<Admission> rs = query.getResultList();
+ 
+         if (log.isDebugEnabled()) {
+             log.debug("getAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
+         }
+
+         return rs;
+     }
+    
+    /**
+     * for integrator
+     */
+    public List<Integer> getAdmissionsByFacilitySince(Integer facilityId,Date lastUpdateDate) {
+        
+         String queryStr = "select a.clientId FROM Admission a WHERE a.programId in " +
+            "(select s.id from Program s where s.facilityId=? or s.facilityId is null) and a.lastUpdateDate > ? ORDER BY a.admissionDate DESC";
+         
+         Query query = entityManager.createQuery(queryStr);
+         query.setParameter(1,facilityId);
+         query.setParameter(2,lastUpdateDate);
+         
+         @SuppressWarnings("unchecked")
+         List<Integer> rs = query.getResultList();
+         
+        return rs;
+     }
 
 }
