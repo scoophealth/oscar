@@ -264,6 +264,17 @@ public class FrmRecordHelp {
         return(p);
     }
 
+    public List<Integer> getDemographicIds(String sql) throws SQLException {
+        List<Integer> results=new ArrayList<Integer>();
+
+        ResultSet rs = DBHandler.GetSQL(sql);
+        while (rs.next()) {
+        	results.add(rs.getInt("demographic_no"));
+        }
+
+        return results;
+    }
+    
     public String findActionValue(String submit)  {
         if (submit != null && submit.equalsIgnoreCase("print")) {
             return "print";
