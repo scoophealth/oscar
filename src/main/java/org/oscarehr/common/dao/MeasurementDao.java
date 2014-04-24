@@ -56,7 +56,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	//for integrator
 	public List<Integer> findDemographicIdsUpdatedAfterDate(Date updatedAfterThisDate) {
 		
-		String sqlCommand = "select x.demographicId from Measurement x where x.createDate>?2";
+		String sqlCommand = "select x.demographicId from Measurement x where x.createDate>?1";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, updatedAfterThisDate);
