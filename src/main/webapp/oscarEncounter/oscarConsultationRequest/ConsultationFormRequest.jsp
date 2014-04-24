@@ -319,9 +319,7 @@ function disableDateFields(){
 
 function setDisabledDateFields(form, disabled)
 {
-	form.appointmentYear.disabled = disabled;
-	form.appointmentMonth.disabled = disabled;
-	form.appointmentDay.disabled = disabled;
+	form.appointmentDate.disabled = disabled;
 	form.appointmentHour.disabled = disabled;
 	form.appointmentMinute.disabled = disabled;
 	form.appointmentPm.disabled = disabled;
