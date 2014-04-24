@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -126,12 +127,24 @@ public final class RxDeleteRxAction extends DispatchAction {
         }
         String ip = request.getRemoteAddr();
         try{
-            String deleteRxId=(request.getParameter("deleteRxId").split("_"))[1];
-
+        	String[] parts=request.getParameter("deleteRxId").split("_");
+            String deleteRxId=parts[1];
+            String deleteType=parts[0];
             Drug drug = drugDao.find(Integer.parseInt(deleteRxId));
+            if (deleteType.equals("delA")) {//if user clicked deleteAll
+            	List<Drug> deleteDrugs=drugDao.findByDemographicIdSimilarDrugOrderByDate(drug.getDemographicId(), drug.getRegionalIdentifier(), drug.getCustomName(),drug.getBrandName());
+            	for (Drug deleteDrug : deleteDrugs) {
+            		if (!deleteDrug.isArchived() && deleteDrug.isExpired()) {
+            			setDrugDelete(deleteDrug);
+                        drugDao.merge(deleteDrug);           			
+            		}
+            	}
+            	
+            }
             setDrugDelete(drug);
             drugDao.merge(drug);
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, deleteRxId, ip,""+bean.getDemographicNo(), drug.getAuditString());
+            
         }
         catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);

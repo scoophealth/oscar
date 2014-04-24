@@ -87,7 +87,8 @@ if (heading != null){
 			<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
             	<%if(!OscarProperties.getInstance().getProperty("rx.delete_drug.hide","false").equals("true")) {%>
-            	<th align="center" width="35px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
+            	<th align="center" colspan="2" width="70px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
+
             <% 	}	 
 			}            
             %>
@@ -249,6 +250,11 @@ if (heading != null){
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
                    <a id="del_<%=prescriptIdInt%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">Del</a>
+                <%}%>
+            </td>
+            <td width="20px" align="center" valign="top">
+                <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
+                   <a id="delA_<%=prescriptIdInt%>" name="deleteAll" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">DelAll</a>
                 <%}%>
             </td>
 
