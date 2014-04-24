@@ -1450,18 +1450,24 @@ if(!btnLabel.equals("PHV")){
     
     <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
 
-<font size="3">
+
+
 <p align="center">
-<!--Age: <%=hdata.get("age")%> <br/>-->
+<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=hdata.get("provider_name")%>'  data-trigger="hover">
+<font size="3">
+<!--Age: <%=hdata.get("age")%> <br/> <%=hdata.get("age")%> -->
 <%=refused(hdata.get("refused"))%>
 </font>
-		<font size="1"><%=hdata.get("prevention_date")%></font>
-            <%if (comb) {%>
 
-            <a href="#" rel="popover" data-content="<%=hdata.get("prevention_date")%>: <%=com%>" data-original-title="<%=hdata.get("age")%>" data-trigger="hover" class="footnote"> <i class="icon-comment"></i></a>
-            <%}%>
+<font size="1"><%=hdata.get("prevention_date")%></font>
+</span>
+           <%if (comb) {%>
+           
+           <a href="#" rel="tooltip" title="<strong>Comment by: <%=hdata.get("provider_name")%></strong> <br>  <%=com%>"  data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"> <i class="icon-comment"></i></a>
+           <%}%>
 	
-        </p>
+</p>
+
 <p width="16px" <%=r(hdata.get("refused"))%> >  </p>
     </div> <!-- prevention procedure -->
 
@@ -2169,11 +2175,13 @@ $("#MoreDx").click(function(){
 </html>
 
 <%!String refused(Object re){
-        String ret = "Given";
+        String ret = "Completed";
         if (re instanceof java.lang.String){
 
             if (re != null && re.equals("1")){
                 ret = "Refused";
+            }else if (re != null && re.equals("2")){
+            	ret= "Ineligible";
             }
         }
         return ret;
