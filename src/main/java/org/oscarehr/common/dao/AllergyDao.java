@@ -101,6 +101,19 @@ public class AllergyDao extends AbstractDao<Allergy> {
 
 		return (results);
 	}
+	
+	//for integrator
+	public List<Integer> findDemographicIdsUpdatedAfterDate(Date updatedAfterThisDate) {
+		String sqlCommand = "select x.demographicNo from Allergy x where x.lastUpdateDate>?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, updatedAfterThisDate);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+
+		return (results);
+	}
 
 	public Integer getMaxPosition() {
 		String sqlCommand = "select MAX(position) from Allergy ";

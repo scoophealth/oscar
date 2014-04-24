@@ -24,6 +24,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -56,5 +57,18 @@ public class MdsMSHDao extends AbstractDao<MdsMSH> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("id", id);
 		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getLabResultsSince(Integer demographicNo, Date updateDate) {
+		String query = "select m.id from MdsMSH m, PatientLabRouting p WHERE m.id = p.labNo and p.labType='MDS' and p.demographicNo = ?1 and (m.dateTime > ?2 or p.created > ?3) ";
+		Query q = entityManager.createQuery(query);
+		
+		q.setParameter(1, demographicNo);
+		q.setParameter(2, updateDate);
+		q.setParameter(3, updateDate);
+		
+		
+		return q.getResultList();    
 	}
 }

@@ -23,11 +23,13 @@
 
 package org.oscarehr.casemgmt.dao;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.NonUniqueResultException;
 
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.Issue;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -87,6 +89,7 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
         Iterator<CaseManagementIssue> itr = issuelist.iterator();
         while (itr.hasNext()) {
         	CaseManagementIssue cmi = itr.next();
+        	cmi.setUpdate_date(new Date());
         	if(cmi.getId()!=null && cmi.getId().longValue()>0) {
         		getHibernateTemplate().update(cmi);
         	} else {
@@ -97,6 +100,7 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     }
 
     public void saveIssue(CaseManagementIssue issue) {
+    	issue.setUpdate_date(new Date());
         getHibernateTemplate().saveOrUpdate(issue);
     }
     
@@ -105,4 +109,16 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
         return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.certain = true");
     }
 
+    //for integrator
+    @SuppressWarnings("unchecked")
+    public List<Integer> getIssuesByProgramsSince(Date date, List<Program> programs) {
+    	StringBuilder sb = new StringBuilder();
+    	int i=0;
+    	for(Program p:programs) {
+    		if(i++ > 0)
+    			sb.append(",");
+    		sb.append(p.getId());
+    	}
+        return this.getHibernateTemplate().find("select cmi.demographic_no from CaseManagementIssue cmi where cmi.update_date > ? and program_id in ("+sb.toString()+")", new Object[] {date});
+    }
 }

@@ -96,50 +96,6 @@ public class PreventionDaoTest extends DaoTestFixtures {
 		assertTrue(true);
 	}
 
-	@Test
-	public void testFindByDemographicIdAfterDatetime() throws Exception {
-
-		int demographicId1 = 111;
-		int demographicId2 = 112;
-
-		Date lastUpdateDate1 = new Date(dfm.parse("20110701").getTime());
-		Date lastUpdateDate2 = new Date(dfm.parse("20091012").getTime());
-
-		Prevention prevention1 = new Prevention();
-		EntityDataGenerator.generateTestDataForModelClass(prevention1);
-		prevention1.setDemographicId(demographicId1);
-		prevention1.setLastUpdateDate(lastUpdateDate1);
-		dao.persist(prevention1);
-
-		Prevention prevention2 = new Prevention();
-		EntityDataGenerator.generateTestDataForModelClass(prevention2);
-		prevention2.setDemographicId(demographicId2);
-		prevention2.setLastUpdateDate(lastUpdateDate2);
-		dao.persist(prevention2);
-
-		Prevention prevention3 = new Prevention();
-		EntityDataGenerator.generateTestDataForModelClass(prevention3);
-		prevention3.setDemographicId(demographicId1);
-		prevention3.setLastUpdateDate(lastUpdateDate1);
-		dao.persist(prevention3);
-
-		List<Prevention> expectedResult = new ArrayList<Prevention>(Arrays.asList(prevention1, prevention3));
-		List<Prevention> result = dao.findByDemographicIdAfterDatetime(demographicId1, lastUpdateDate1);
-
-		Logger logger = MiscUtils.getLogger();
-
-		if (result.size() != expectedResult.size()) {
-			logger.warn("Array sizes do not match.");
-			fail("Array sizes do not match.");
-		}
-		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))) {
-				logger.warn("Items  do not match.");
-				fail("Items  do not match.");
-			}
-		}
-		assertTrue(true);
-	}
 
 	@Test
 	public void testFindNotDeletedByDemographicId() throws Exception {

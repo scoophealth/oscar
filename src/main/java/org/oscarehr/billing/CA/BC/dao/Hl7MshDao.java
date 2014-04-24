@@ -23,6 +23,7 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -78,5 +79,16 @@ public class Hl7MshDao extends AbstractDao<Hl7Msh>{
 		query.setParameter("labType", labType);
 		return query.getResultList();
     }
+	
+	public List<Integer> getLabResultsSince(Integer demographicNo, Date updateDate) {
+		String query = "select m.id from Hl7Msh m, PatientLabRouting p WHERE m.id = p.labNo and p.labType='BCP' and p.demographicNo = ?1 and (m.dateTime > ?2 or p.dateModified > ?3) ";
+		Query q = entityManager.createQuery(query);
+		
+		q.setParameter(1, demographicNo);
+		q.setParameter(2, updateDate);
+		q.setParameter(3, updateDate);
+		
+		return q.getResultList();    
+	}
 	
 }

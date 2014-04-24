@@ -58,6 +58,20 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 
 		return (results);
 	}
+	
+	//for integrator
+	public List<Integer> findDemographicIdsUpdatedAfterDate(Date updatedAfterThisDate) {
+		
+		String sqlCommand = "select x.demographicId from Measurement x where x.createDate>?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, updatedAfterThisDate);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+
+		return (results);
+	}
 
 	public List<Measurement> findMatching(Measurement measurement) {
 
