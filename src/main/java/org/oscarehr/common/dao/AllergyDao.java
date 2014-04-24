@@ -84,7 +84,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
 	
 	//for integrator
 	public List<Integer> findDemographicIdsUpdatedAfterDate(Date updatedAfterThisDate) {
-		String sqlCommand = "select x.demographicNo from Allergy x where x.lastUpdateDate>?2";
+		String sqlCommand = "select x.demographicNo from Allergy x where x.lastUpdateDate>?1";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, updatedAfterThisDate);
