@@ -81,7 +81,7 @@ public class IntegratorConsentDao extends AbstractDao<IntegratorConsent> {
 	 * This is for the Integrator.
 	 */
 	public List<Integer> findDemographicIdsByFacilitySince(int facilityId, Date lastDataUpdated) {
-		Query query = entityManager.createQuery("select distinct x.demographicId from IntegratorConsent x where x.facilityId=?1 and x.createdDate > ?3 order by x.createdDate desc");
+		Query query = entityManager.createQuery("select distinct x.demographicId from IntegratorConsent x where x.facilityId=?1 and x.createdDate > ?2 order by x.createdDate desc");
 		query.setParameter(1, facilityId);
 		query.setParameter(2, lastDataUpdated);
 
