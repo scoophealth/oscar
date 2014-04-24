@@ -1837,6 +1837,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				if(sb.length()>0) {sb.append(" ");}
 				sb.append("Procedure Date:"+getNoteExt(noteId, "Procedure Date",noteExts));
 			}
+			if (prefsBean.getMedHxTreatment().equals("on")) {
+				if (sb.length() > 0) {
+					sb.append(" ");
+				}
+				sb.append("Treatment:" + getNoteExt(noteId, "Treatment", noteExts));
+			}
 		}
 		if(sb.length()>0) {
 			sb.insert(0, " (");
