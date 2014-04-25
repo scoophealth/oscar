@@ -459,7 +459,13 @@ public class MDSHandler implements MessageHandler {
 	              return(comment);
 
 	            }else{
-	                return(getString(DynamicHapiLoaderUtils.terserGet(terser,"/."+segments[l]+"-3-2")));
+	                //return(getString(DynamicHapiLoaderUtils.terserGet(terser,"/."+segments[l]+"-3-2")));
+	            	String comment = null;
+					for (int x=0; x < nteSegs.length; x++){
+						String commentCode = getString(DynamicHapiLoaderUtils.terserGet(terser,nteSegs[x],3,0,2,1));
+						comment = (comment==null) ? commentCode : comment+"<br/>"+commentCode;
+					}
+					return comment;
 	            }
 	        }catch(Exception e){
 	            logger.error("Could not retrieve OBX comments", e);
