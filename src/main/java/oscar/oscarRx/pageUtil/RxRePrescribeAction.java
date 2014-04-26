@@ -136,11 +136,12 @@ public final class RxRePrescribeAction extends DispatchAction {
 
 	public ActionForward represcribe(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		oscar.oscarRx.pageUtil.RxSessionBean beanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+		RxSessionBean beanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (beanRX == null) {
 			response.sendRedirect("error.html");
 			return null;
 		}
+		
 		RxDrugListForm frm = (RxDrugListForm) form;
 		StringBuilder auditStr = new StringBuilder();
 		try {
@@ -247,6 +248,8 @@ public final class RxRePrescribeAction extends DispatchAction {
 			response.sendRedirect("error.html");
 			return null;
 		}
+		
+		request.setAttribute("action", "represcribe");
 		StringBuilder auditStr = new StringBuilder();
 
 		RxPrescriptionData rxData = new RxPrescriptionData();

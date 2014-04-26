@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -37,6 +38,7 @@
     <%
 
 List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("listRxDrugs");
+String action = StringUtils.defaultString((String)request.getAttribute("action"), "prescribe");
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
 
 if(listRxDrugs!=null){
@@ -169,7 +171,12 @@ if(listRxDrugs!=null){
                        <br><br>
         </div>
 
-        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
+       <%--  <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" /> --%>
+       <%if (action.equals("prescribe")){ %>
+        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>" name="quantity_<%=rand%>" value="<%=quantityText%>" onblur="updateQty(this);" />
+        <%}else { %>
+        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" name="quantity_<%=rand%>" value="<%=quantityText%>"/>
+        <%} %>
         <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
 
         <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
@@ -197,7 +204,7 @@ if(listRxDrugs!=null){
        	  &nbsp;       	  
        	  <bean:message key="WriteScript.msgPrescribedRefillQuantity"/>
        	  <input type="text" size="6" id="refillQuantity_<%=rand%>" name="refillQuantity_<%=rand%>" value="<%=refillQuantity%>" />
-       	  <br/>       	  
+       	  <br/>       	 
        	  <bean:message key="WriteScript.msgPrescribedDispenseInterval"/>
        	  <input type="text" size="6" id="dispenseInterval_<%=rand%>" name="dispenseInterval_<%=rand%>" value="<%=dispenseInterval%>" />
        	  <br/>
@@ -322,7 +329,7 @@ if(listRxDrugs!=null){
                        <br><br>
         </div>
 
-        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
+        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte1:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
         <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
 
         <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> />Long Term Med
