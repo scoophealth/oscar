@@ -114,11 +114,11 @@ public class MDSResultsData {
     }
 
 
- public ArrayList<LabResultData> populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-	 return populateLabResultsData("Epsilon", providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+ public ArrayList<LabResultData> populateEpsilonResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
+	 return populateLabResultsData("Epsilon", providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status , labNo);
  }
  
- private ArrayList<LabResultData> populateLabResultsData(String labName, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+ private ArrayList<LabResultData> populateLabResultsData(String labName, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
         //logger.info("populateCMLResultsData getting called now");
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -131,12 +131,17 @@ public class MDSResultsData {
         try {
         	LabPatientPhysicianInfoDao dao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
         	
-        	List<Object[]> infos;
-            if ( demographicNo == null) {
-            	infos = dao.findByPatientName(status, labName, providerNo, patientLastName, patientFirstName, patientHealthNumber);
-            } else {
-            	infos = dao.findByDemographic(ConversionUtils.fromIntString(demographicNo), labName);
-            }
+        	List<Object[]> infos = new ArrayList<Object[]>();
+        	if(labNo != null && labNo.intValue()>0) {
+        		LabPatientPhysicianInfo lppi = dao.find(labNo);
+        		infos.add(new Object[]{lppi});
+        	} else {
+	            if ( demographicNo == null) {
+	            	infos = dao.findByPatientName(status, labName, providerNo, patientLastName, patientFirstName, patientHealthNumber);
+	            } else {
+	            	infos = dao.findByDemographic(ConversionUtils.fromIntString(demographicNo), labName);
+	            }
+        	}
             
             for(Object [] o : infos) {
             	LabPatientPhysicianInfo lpp = (LabPatientPhysicianInfo) o[0];
@@ -183,8 +188,8 @@ public class MDSResultsData {
         return labResults;
  	}
 
-    public ArrayList<LabResultData> populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-        return populateLabResultsData("CML", providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    public ArrayList<LabResultData> populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
+        return populateLabResultsData("CML", providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, labNo);
     }
 
     public int findCMLAdnormalResults(String labId){
@@ -326,7 +331,7 @@ public class MDSResultsData {
         return labResults;
     }
 
-    public ArrayList<LabResultData> populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
 
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -339,12 +344,17 @@ public class MDSResultsData {
 
         try {
         	ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);        	
-        	List<Object[]> searchResult;
-            if (demographicNo == null) {
-            	searchResult = dao.findMdsResultResultDataByManyThings(status, providerNo, patientLastName, patientFirstName, patientHealthNumber);
-            } else {
-            	searchResult = dao.findMdsResultResultDataByDemoId(demographicNo);
-            }
+        	List<Object[]> searchResult = null;
+        		
+        	if(labNo != null && labNo.intValue()>0 && demographicNo != null) {
+        		searchResult = dao.findMdsResultResultDataByDemographicNoAndLabNo(Integer.parseInt(demographicNo), labNo);
+        	} else {
+	            if (demographicNo == null) {
+	            	searchResult = dao.findMdsResultResultDataByManyThings(status, providerNo, patientLastName, patientFirstName, patientHealthNumber);
+	            } else {
+	            	searchResult = dao.findMdsResultResultDataByDemoId(demographicNo);
+	            }
+        	}
             
             Integer MSHsegmentID = null; 
         	String accessionNum = null; 

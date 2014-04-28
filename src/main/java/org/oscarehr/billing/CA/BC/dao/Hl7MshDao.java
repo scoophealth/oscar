@@ -63,6 +63,21 @@ public class Hl7MshDao extends AbstractDao<Hl7Msh>{
 		return query.getResultList();
     }
 
+    public List<Object[]> findPathnetResultsByLabNo(Integer labNo) {
+        String sql = "SELECT msh, pid, orc, obr, providerLabRouting, MIN(obr.resultStatus) " +
+                "FROM Hl7Msh msh, Hl7Pid pid, Hl7Orc orc, Hl7Obr obr, ProviderLabRoutingModel providerLabRouting " +
+                "WHERE providerLabRouting.labNo = pid.messageId " +
+                "AND pid.messageId = msh.messageId " +
+                "AND pid.id = orc.pidId " +
+                "AND pid.id = obr.pidId  "+
+                "AND pid.messageId= :labNo " +
+                "GROUP BY pid.id";
+        
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("labNo", labNo);
+		return query.getResultList();
+    }
+    
 	public List<Object[]> findPathnetResultsDeomgraphicNo(Integer demographicNo, String labType) {		
 	    String sql =  "SELECT msh, pid, orc, obr, patientLabRouting, MIN(obr.resultStatus) " +
                 "FROM Hl7Msh msh, Hl7Pid pid, Hl7Orc orc, Hl7Obr obr, PatientLabRouting patientLabRouting " +

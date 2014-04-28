@@ -141,18 +141,18 @@ public class CommonLabResultData {
 
 
     		if(!isPaged && cml != null && cml.trim().equals("yes")){
-    			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
     			labs.addAll(cmlLabs);
     		}
 
     		if (!isPaged && mds != null && mds.trim().equals("yes")){
-    			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
     			labs.addAll(mdsLabs);
 
     		}
     		if (!isPaged && pathnet != null && pathnet.trim().equals("yes")){
     			PathnetResultsData pathData = new PathnetResultsData();
-    			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
     			labs.addAll(pathLabs);
     		}
 
@@ -163,7 +163,7 @@ public class CommonLabResultData {
     		        labs.addAll(hl7Labs);
                 }
                 else {
-                	ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+                	ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
     		        labs.addAll(hl7Labs);
                 }
 
@@ -194,26 +194,26 @@ public class CommonLabResultData {
 		if (scannedDocStatus != null && (scannedDocStatus.equals("N") || scannedDocStatus.equals("I") || scannedDocStatus.equals(""))) {
 
 			if (epsilon != null && epsilon.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(cmlLabs);
 			}
 
 			if (cml != null && cml.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(cmlLabs);
 			}
 			if (mds != null && mds.trim().equals("yes")) {
-				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(mdsLabs);
 			}
 			if (pathnet != null && pathnet.trim().equals("yes")) {
 				PathnetResultsData pathData = new PathnetResultsData();
-				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(pathLabs);
 			}
 			if (hl7text != null && hl7text.trim().equals("yes")) {
 
-				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(hl7Labs);
 			}
 		}
@@ -289,26 +289,26 @@ public class CommonLabResultData {
 		if (scannedDocStatus != null && (scannedDocStatus.equals("N") || scannedDocStatus.equals("I") || scannedDocStatus.equals(""))) {
 
 			if (epsilon != null && epsilon.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(cmlLabs);
 			}
 
 			if (cml != null && cml.trim().equals("yes")) {
-				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(cmlLabs);
 			}
 			if (mds != null && mds.trim().equals("yes")) {
-				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, null);
 				labs.addAll(mdsLabs);
 			}
 			if (pathnet != null && pathnet.trim().equals("yes")) {
 				PathnetResultsData pathData = new PathnetResultsData();
-				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(pathLabs);
 			}
 			if (hl7text != null && hl7text.trim().equals("yes")) {
 
-				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status,null);
 				labs.addAll(hl7Labs);
 			}
 			

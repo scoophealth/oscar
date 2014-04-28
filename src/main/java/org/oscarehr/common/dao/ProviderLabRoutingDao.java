@@ -172,6 +172,31 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
     }
 	
 	@NativeSql({"providerLabRouting", "mdsMSH","mdsPID","mdsPV1","mdsZFR","mdsOBR","mdsZRG"})
+	public List<Object[]> findMdsResultResultDataByDemographicNoAndLabNo(Integer demographicNo, Integer labNo) {
+       
+		String sql;
+        sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
+                "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+                "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+                "FROM " +
+                "patientLabRouting "+
+                "LEFT JOIN providerLabRouting on patientLabRouting.lab_no = providerLabRouting.lab_no "+
+                "LEFT JOIN mdsMSH on patientLabRouting.lab_no = mdsMSH.segmentID "+
+                "LEFT JOIN mdsPID on patientLabRouting.lab_no = mdsPID.segmentID "+
+                "LEFT JOIN mdsPV1 on patientLabRouting.lab_no = mdsPV1.segmentID "+
+                "LEFT JOIN mdsZFR on patientLabRouting.lab_no = mdsZFR.segmentID "+
+                "LEFT JOIN mdsOBR on patientLabRouting.lab_no = mdsOBR.segmentID "+
+                "LEFT JOIN mdsZRG on patientLabRouting.lab_no = mdsZRG.segmentID "+
+                "WHERE " +
+                "patientLabRouting.lab_type = 'MDS' " +
+                "AND patientLabRouting.demographic_no =  " + demographicNo +" and mdsMSH.segmentID = " + labNo + " group by mdsMSH.segmentID";
+        Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+	    
+    }
+	
+	
+	@NativeSql({"providerLabRouting", "mdsMSH","mdsPID","mdsPV1","mdsZFR","mdsOBR","mdsZRG"})
 	public List<Object[]> findMdsResultResultDataByDemoId(String demographicNo) {
 		String sql = "SELECT mdsMSH.segmentID, mdsMSH.messageConID AS accessionNum, mdsPID.patientName, mdsPID.healthNumber, " +
                 "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +

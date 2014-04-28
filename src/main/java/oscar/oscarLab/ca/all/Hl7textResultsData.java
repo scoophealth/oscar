@@ -437,7 +437,7 @@ public class Hl7textResultsData {
 		return lbData;
 	}
 
-	public static ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+	public static ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
 
 		if (providerNo == null) {
 			providerNo = "";
@@ -459,22 +459,29 @@ public class Hl7textResultsData {
 		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 		List<Object[]> routings = null;
 
-		if (demographicNo == null) {
-			// note to self: lab reports not found in the providerLabRouting table will not show up - 
-			// need to ensure every lab is entered in providerLabRouting, with '0'
-			// for the provider number if unable to find correct provider				
-			routings = dao.findLabsViaMagic(status, providerNo, patientFirstName, patientLastName, patientHealthNumber);
+		if(labNo != null && labNo.intValue()>0) {
+			routings = new ArrayList<Object[]>();
+			for(Hl7TextInfo info:dao.findByLabId(labNo)) {
+				routings.add(new Object[]{info});
+			}
 		} else {
-			routings = dao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+			if (demographicNo == null) {
+				// note to self: lab reports not found in the providerLabRouting table will not show up - 
+				// need to ensure every lab is entered in providerLabRouting, with '0'
+				// for the provider number if unable to find correct provider				
+				routings = dao.findLabsViaMagic(status, providerNo, patientFirstName, patientLastName, patientHealthNumber);
+			} else {
+				routings = dao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+			}
 		}
 
 		for (Object[] o : routings) {
 			Hl7TextInfo hl7 = (Hl7TextInfo) o[0];
-			PatientLabRouting p = (PatientLabRouting) o[1];
+			//PatientLabRouting p = (PatientLabRouting) o[1];
 
 			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
 			lbData.labType = LabResultData.HL7TEXT;
-			lbData.segmentID = "" + p.getLabNo();
+			lbData.segmentID = "" + hl7.getLabNumber();
 
 			//check if any demographic is linked to this lab
 			if (lbData.isMatchedToPatient()) {
@@ -491,10 +498,14 @@ public class Hl7textResultsData {
 				lbData.setLabPatientId("-1");
 			}
 
-			if (demographicNo == null && !providerNo.equals("0")) {
-				lbData.acknowledgedStatus = hl7.getResultStatus();
-			} else {
+			if(o.length == 1) {
 				lbData.acknowledgedStatus = "U";
+			} else {
+				if (demographicNo == null && !providerNo.equals("0")) {
+					lbData.acknowledgedStatus = hl7.getResultStatus();
+				} else {
+					lbData.acknowledgedStatus = "U";
+				}
 			}
 
 			lbData.accessionNumber = hl7.getAccessionNumber();
