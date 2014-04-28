@@ -28,6 +28,7 @@ package oscar.form;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -55,7 +56,7 @@ public class FrmRhImmuneGlobulinRecord extends FrmRecord {
 			if (rs.next()) {
                                 java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 				props.setProperty("demographic_no",oscar.Misc.getString(rs, "demographic_no"));
-				props.setProperty("formCreated",UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));	
+				props.setProperty("formCreated",UtilDateUtilities.DateToString(new Date(),_dateFormat));	
                                 props.setProperty("dob", UtilDateUtilities.DateToString(dob,"yyyy-MM-dd"));
                                 props.setProperty("sex", oscar.Misc.getString(rs, "sex"));
                                 props.setProperty("phone", oscar.Misc.getString(rs, "phone"));

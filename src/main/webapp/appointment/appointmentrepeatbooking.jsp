@@ -46,11 +46,11 @@
     boolean bSucc = false;
     if (request.getParameter("groupappt").equals("Add Group Appointment")) {
         int rowsAffected=0, datano=0;
-		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
+		String createdDateTime = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd HH:mm:ss");
 		String userName = (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 		String everyNum = request.getParameter("everyNum")!=null? request.getParameter("everyNum") : "0";
 		String everyUnit = request.getParameter("everyUnit")!=null? request.getParameter("everyUnit") : "day";
-		String endDate = request.getParameter("endDate")!=null? request.getParameter("endDate") : UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy");
+		String endDate = request.getParameter("endDate")!=null? request.getParameter("endDate") : UtilDateUtilities.DateToString(new Date(),"dd/MM/yyyy");
 		int delta = Integer.parseInt(everyNum);
 		if (everyUnit.equals("week") ) {
 			delta = delta*7;
@@ -116,7 +116,7 @@
     if (request.getParameter("groupappt").equals("Group Update") || request.getParameter("groupappt").equals("Group Cancel") ||
     		request.getParameter("groupappt").equals("Group Delete")) {
         int rowsAffected=0, datano=0;
-		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
+		String createdDateTime = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd HH:mm:ss");
 		String userName =  (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 
 		for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -335,7 +335,7 @@ for (int i = 1; i < 12; i++) {
 		<font size="-1"><bean:message key="ddmmyyyy"/></font></td>
 		<td nowrap valign="top"><input type="text" id="endDate"
 			name="endDate" size="10"
-			value="<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy")%>"
+			value="<%=UtilDateUtilities.DateToString(new Date(),"dd/MM/yyyy")%>"
 			readonly></td>
 	</tr>
 </table>

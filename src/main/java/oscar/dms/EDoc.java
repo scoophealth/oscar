@@ -165,7 +165,7 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 		this.setDateTimeStampAsDate(EDocUtil.getDmsDateTimeAsDate());
                 this.setContentDateTime(EDocUtil.getDmsDateTimeAsDate());
 		if (fileName.length() != 0) {
-			String filenamePrefix = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyyMMdd") + UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HHmmss");
+			String filenamePrefix = UtilDateUtilities.DateToString(new Date(), "yyyyMMdd") + UtilDateUtilities.DateToString(new Date(), "HHmmss");
 			this.fileName = filenamePrefix + fileName;
 		}
 	}

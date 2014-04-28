@@ -52,7 +52,7 @@
 OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
 
-String createDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
+String createDateTime = UtilDateUtilities.DateToString(new java.util.Date(),"yyyy-MM-dd HH:mm:ss");
 
 String[] param = new String[20];
 param[0]=request.getParameter("provider_no");

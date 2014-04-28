@@ -28,6 +28,7 @@ package oscar.oscarEncounter.data;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.oscarDB.DBHandler;
@@ -57,9 +58,9 @@ public class EctMentalHealthRecord
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("c_pName", oscar.Misc.getString(rs, "pName"));
                 props.setProperty("c_sex", oscar.Misc.getString(rs, "sex"));
-                props.setProperty("c_referralDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                props.setProperty("c_referralDate", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                 props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("c_homePhone", oscar.Misc.getString(rs, "phone"));
@@ -99,7 +100,7 @@ public class EctMentalHealthRecord
                         if(md.getColumnTypeName(i).equalsIgnoreCase("date")) {
                             value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                             if(value==null)  {
-                                value = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd");
+                                value = UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd");
                             }
                         }  else  {
                             value = oscar.Misc.getString(rs, i);
@@ -139,7 +140,7 @@ public class EctMentalHealthRecord
             if(name.equalsIgnoreCase("ID"))  {
                 rsNew.updateNull(name);
             } else if(name.equalsIgnoreCase("formEdited")) {
-                java.util.Date d = UtilDateUtilities.Today();
+                java.util.Date d = new Date();
                 rsNew.updateDate(name, new java.sql.Date(d.getTime()));
             } else if(name.equalsIgnoreCase("formCreated"))  {
                 java.util.Date d = UtilDateUtilities.StringToDate(props.getProperty(name, null), "yyyy/MM/dd");

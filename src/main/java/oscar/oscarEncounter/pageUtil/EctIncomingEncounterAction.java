@@ -136,7 +136,7 @@ public class EctIncomingEncounterAction extends Action {
 			bean.currentDate = UtilDateUtilities.StringToDate(request.getParameter("curDate"));
 
 			if (bean.currentDate == null) {
-				bean.currentDate = UtilDateUtilities.Today();
+				bean.currentDate = new Date();
 			}
 
 			bean.providerNo = request.getParameter("providerNo");

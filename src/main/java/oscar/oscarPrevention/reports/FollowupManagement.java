@@ -93,7 +93,7 @@ public class FollowupManagement {
         measure.put("measuringInstruction","");
         measure.put("comments",  comment == null ? "":comment  );
         measure.put("dateObserved",UtilDateUtilities.DateToString(dateObserved, "yyyy-MM-dd HH:mm:ss"));
-        measure.put("dateEntered",UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss"));
+        measure.put("dateEntered",UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
         WriteNewMeasurements.write(measure,demographicNo,providerNo);
     }
     

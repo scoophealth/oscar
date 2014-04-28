@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -37,8 +38,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RaDetail;
 import org.oscarehr.common.model.RaHeader;
-import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
@@ -150,7 +151,7 @@ public class JdbcBillingRAImpl {
 						h.setRecords("0");
 						h.setClaims("0");
 						h.setStatus("N");
-						h.setReadDate(UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"));
+						h.setReadDate(UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
 						h.setContent("<xml_cheque>" + total + "</xml_cheque>");
 
 						raHeaderDao.persist(h);

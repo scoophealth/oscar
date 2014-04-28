@@ -194,7 +194,7 @@
     }
 
     ArrayList docTypes = EDocUtil.getDoctypes("demographic");
-    String todayDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd");
+    String todayDate = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
 
 
     int tabIndex = 0;

@@ -25,6 +25,7 @@
 
 package oscar.login;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -41,7 +42,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.util.UtilDateUtilities;
 
 import com.quatro.model.security.LdapSecurity;
 
@@ -88,7 +88,7 @@ public final class LoginCheckLoginBean {
 			return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
 		}
 
-		if (security.getBExpireset() != null && security.getBExpireset().intValue() == 1 && (security.getDateExpiredate() == null || security.getDateExpiredate().before(UtilDateUtilities.now()))) {
+		if (security.getBExpireset() != null && security.getBExpireset().intValue() == 1 && (security.getDateExpiredate() == null || security.getDateExpiredate().before(new Date()))) {
 			return cleanNullObjExpire(LOG_PRE + "Expired: " + username);
 		}
 		String expired_days = "";
@@ -96,7 +96,7 @@ public final class LoginCheckLoginBean {
 			// Give warning if the password will be expired in 10 days.
 
 			long date_expireDate = security.getDateExpiredate().getTime();
-			long date_now = UtilDateUtilities.now().getTime();
+			long date_now = new Date().getTime();
 			long date_diff = (date_expireDate - date_now) / (24 * 3600 * 1000);
 
 			if (security.getBExpireset().intValue() == 1 && date_diff < 11) {

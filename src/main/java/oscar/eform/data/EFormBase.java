@@ -26,6 +26,7 @@
 package oscar.eform.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.util.StringBuilderUtils;
@@ -163,8 +164,8 @@ public class EFormBase {
     }
 
     private void dateTimeStamp() {
-       formDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
-       formTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
+       formDate = UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd");
+       formTime = UtilDateUtilities.DateToString(new Date(), "HH:mm:ss");
     }
 
     public void setFormCreator(String formCreator) {

@@ -117,7 +117,7 @@
 
 %>
 <%
-  String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );
+  String today = UtilDateUtilities.DateToString(new java.util.Date(), "yyyy-MM-dd" );
   String lastYear = (Integer.parseInt(today.substring(0,today.indexOf('-'))) - 2) + today.substring(today.indexOf('-'));
 
   if(request.getParameter("delete")!= null && request.getParameter("delete").equals("1") ) { //delete rschedule

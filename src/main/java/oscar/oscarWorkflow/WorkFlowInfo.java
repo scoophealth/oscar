@@ -132,7 +132,7 @@ public class WorkFlowInfo {
         int ret = -1;
         MiscUtils.getLogger().debug("GEST "+this.completionDate);
         if(this.completionDate != null){
-           ret = UtilDateUtilities.calculateGestationAge( UtilDateUtilities.now(), this.completionDate);
+           ret = UtilDateUtilities.calculateGestationAge( new Date(), this.completionDate);
         }
         return ret;
     }

@@ -60,7 +60,7 @@
         String[] param = new String[20];
         int rowsAffected = 0, datano = 0;
         StringBuffer strbuf = null;
-		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
+		String createdDateTime = UtilDateUtilities.DateToString(new java.util.Date(),"yyyy-MM-dd HH:mm:ss");
 		String userName = (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 
         param[1]=request.getParameter("appointment_date");
@@ -152,7 +152,7 @@
     		request.getParameter("groupappt").equals("Group Delete")) {
         int rowsAffected = 0, datano = 0;
         StringBuffer strbuf = null;
-		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
+		String createdDateTime = UtilDateUtilities.DateToString(new java.util.Date(),"yyyy-MM-dd HH:mm:ss");
 		String userName = (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 
 		for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {

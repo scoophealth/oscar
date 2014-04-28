@@ -70,7 +70,7 @@ public class FrmToXMLUtil{
              
         // TODO code application logic here            
         String _dateFormat = "yyyy-MM-dd hh:mm:ss";
-        String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
+        String dateEntered = UtilDateUtilities.DateToString(new Date(),_dateFormat);
         ProviderData prData = new ProviderData(dataProps.getProperty("provider_no"));
         String vType = "Other"; //Other
         if(prData.getProvider_type().equalsIgnoreCase("doctor"))

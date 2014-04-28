@@ -26,6 +26,7 @@
 package oscar.eform.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
@@ -370,8 +371,8 @@ public class EForm extends EFormBase {
 	}
 
 	public void setNowDateTime() {
-		this.formTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
-		this.formDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
+		this.formTime = UtilDateUtilities.DateToString(new Date(), "HH:mm:ss");
+		this.formDate = UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd");
 	}
 
 	public ActionMessages setMeasurements(ArrayList<String> names, ArrayList<String> values) {

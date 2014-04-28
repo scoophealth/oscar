@@ -28,6 +28,7 @@ package oscar.oscarEncounter.data;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -66,8 +67,8 @@ public class EctLabReqRecord
                     props.setProperty("patientName", "" + demo.getFullName());
                     props.setProperty("healthNumber", demo.getHin());
                     props.setProperty("version", demo.getVer());
-                    props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                    props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                    props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                    props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                     props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                     props.setProperty("homePhone", demo.getPhone());
                     props.setProperty("patientAddress", demo.getAddress());
@@ -187,7 +188,7 @@ public class EctLabReqRecord
 
                         if(md.getColumnName(i).equalsIgnoreCase("formEdited"))
                         {
-                            d = UtilDateUtilities.Today();
+                            d = new Date();
                         }
                         else
                         {

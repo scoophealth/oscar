@@ -103,9 +103,9 @@ public class FrmFormAction extends Action {
         String formName = (String) frm.getValue("formName");
         logger.debug("formNme Top "+formName);
         
-        String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
-        //String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
-        String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd");
+        String dateEntered = UtilDateUtilities.DateToString(new Date(),_dateFormat);
+        //String visitCod = UtilDateUtilities.DateToString(new Date(),"yyyyMMdd");
+        String today = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
 
         logger.debug("current mem 2 "+currentMem());
 

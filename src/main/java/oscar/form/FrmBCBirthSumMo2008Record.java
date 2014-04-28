@@ -26,6 +26,7 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.util.UtilDateUtilities;
@@ -43,9 +44,9 @@ public class FrmBCBirthSumMo2008Record extends FrmRecord {
 		if (existingID <= 0) {
 			this.setDemoProperties(demographicNo, props);
 			
-			props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
+			props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
 		} 
 		else {
 			String sql = "SELECT * FROM formBCBirthSumMo2008 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;

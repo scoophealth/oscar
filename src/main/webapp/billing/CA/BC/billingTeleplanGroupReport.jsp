@@ -235,7 +235,7 @@ function showHideLayers() { //v3.0
 
 	<%
 	String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
-	String strToday = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
+	String strToday = UtilDateUtilities.DateToString(new java.util.Date(), "yyyy-MM-dd");
 
 
 	List<BillActivity> bas = billActivityDao.findCurrentByDateRange(ConversionUtils.fromDateString(thisyear+"-01-01 00:00:00"), ConversionUtils.fromDateString(thisyear+"-12-31 23:59:59"));

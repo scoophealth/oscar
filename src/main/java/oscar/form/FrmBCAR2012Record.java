@@ -51,7 +51,7 @@ public class FrmBCAR2012Record extends FrmRecord{
     public Properties getFormRecord(int demographicNo, int existingID) {
     	      
         Date dateOfBirth;
-        Date dateToday = UtilDateUtilities.Today();
+        Date dateToday = new Date();
     	
         if(demographicNo > 0) {
     		super.setDemographic(demographicNo);

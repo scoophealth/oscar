@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -126,7 +127,7 @@ public class EctSaveEncounterAction extends Action {
     sessionbean.reminders = httpservletrequest.getParameter("reTextarea");
     sessionbean.encounter = httpservletrequest.getParameter("enTextarea");
     sessionbean.subject = httpservletrequest.getParameter("subject");
-    java.util.Date date = UtilDateUtilities.Today();
+    java.util.Date date = new Date();
     sessionbean.eChartTimeStamp = date;
 
     if (!httpservletrequest.getParameter("btnPressed").equals("Exit")) {

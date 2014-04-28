@@ -155,7 +155,7 @@
                           colour = wfi.getColour();
                           String gestAge = "";
                           try{
-                             gestAge = ""+ UtilDateUtilities.calculateGestationAge( UtilDateUtilities.now(), (Date) h.get("completion_date"));
+                             gestAge = ""+ UtilDateUtilities.calculateGestationAge( new Date(), (Date) h.get("completion_date"));
                           }catch(Exception e){}
                 %>
 			<tr style="background-color: <%=colour%>">

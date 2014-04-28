@@ -24,10 +24,13 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
+
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.util.UtilDateUtilities;
 /**
  *
@@ -44,7 +47,7 @@ public class FrmSelfAssessmentRecord extends FrmRecord{
 
         if(existingID <= 0 && demographic != null) {
             props.setProperty("demographic_no", String.valueOf(demographicNo));
-            props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"dd/MM/yyyy"));
+            props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),"dd/MM/yyyy"));
         } else {
             String sql = "SELECT * FROM formSelfAssessment WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
             FrmRecordHelp frmRec = new FrmRecordHelp();

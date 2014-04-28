@@ -25,10 +25,10 @@
 
 package oscar.oscarEncounter.data;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.oscarDB.DBHandler;
@@ -45,15 +45,15 @@ public class EctARRecord {
             if(resultset.next()) {
                 java.util.Date date = UtilDateUtilities.calcDate(resultset.getString("year_of_birth"), resultset.getString("month_of_birth"), resultset.getString("date_of_birth"));
                 properties.setProperty("demographic_no", resultset.getString("demographic_no"));
-                properties.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
-                properties.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
+                properties.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),"yyyy/MM/dd"));
+                properties.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(),"yyyy/MM/dd"));
                 properties.setProperty("c_pName", resultset.getString("pName"));
                 properties.setProperty("c_address", resultset.getString("address"));
                 properties.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date,"yyyy/MM/dd"));
                 properties.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
                 properties.setProperty("pg1_homePhone", resultset.getString("phone"));
                 properties.setProperty("pg1_workPhone", resultset.getString("phone2"));
-                properties.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
+                properties.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(),"yyyy/MM/dd"));
             }
             resultset.close();
         } else {
@@ -72,7 +72,7 @@ public class EctARRecord {
                     } else if(resultsetmetadata.getColumnTypeName(k).equalsIgnoreCase("date")) {
                         value = UtilDateUtilities.DateToString(resultset1.getDate(k),"yyyy/MM/dd");
                         if(value == null)
-                            value = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd");
+                            value = UtilDateUtilities.DateToString(new Date(),"yyyy/MM/dd");
                     } else {
                         value = resultset1.getString(k);
                     }
@@ -104,11 +104,11 @@ public class EctARRecord {
             if(name.equalsIgnoreCase("ID"))
                 resultset1.updateNull(name);
             else if(name.equalsIgnoreCase("formEdited")) {
-                java.util.Date date = UtilDateUtilities.Today();
-                resultset1.updateDate(name, new Date(date.getTime()));
+                java.util.Date date = new Date();
+                resultset1.updateDate(name, new java.sql.Date(date.getTime()));
             } else if(name.equalsIgnoreCase("formCreated")) {
                 java.util.Date date1 = UtilDateUtilities.StringToDate(properties.getProperty(name, null),"yyyy/MM/dd");
-                resultset1.updateDate(name, new Date(date1.getTime()));
+                resultset1.updateDate(name, new java.sql.Date(date1.getTime()));
             } else if(name.equalsIgnoreCase("demographic_no"))
                 resultset1.updateString(name, properties.getProperty("demographic_no"));
             else if(name.equalsIgnoreCase("provider_no"))
@@ -129,7 +129,7 @@ public class EctARRecord {
                     if(date2 == null)
                         resultset1.updateNull(name);
                     else
-                        resultset1.updateDate(name, new Date(date2.getTime()));
+                        resultset1.updateDate(name, new java.sql.Date(date2.getTime()));
                 } else if(value == null)
                     resultset1.updateNull(name);
                 else

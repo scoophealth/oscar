@@ -99,7 +99,7 @@ public class FrmRecordHelp {
             int spaceIndex = sql.indexOf(" ", index);
             ;
             String formClass = sql.substring(index, spaceIndex);
-            Date d = UtilDateUtilities.now();
+            Date d = new Date();
             String now = UtilDateUtilities.DateToString(d, "yyyyMMddHHmmss");
             String place = OscarProperties.getInstance().getProperty("form_record_path", "/root");
 
@@ -167,7 +167,7 @@ public class FrmRecordHelp {
             if (md.getColumnTypeName(i).equalsIgnoreCase("date")) {
             java.util.Date d;
                 if (md.getColumnName(i).equalsIgnoreCase("formEdited")) {
-                    d = UtilDateUtilities.Today();
+                    d = new Date();
                 } else {
                     if ((value == null) || (value.indexOf('/') != -1))
                         d = UtilDateUtilities.StringToDate(value, _dateFormat);
@@ -184,7 +184,7 @@ public class FrmRecordHelp {
             if (md.getColumnTypeName(i).equalsIgnoreCase("timestamp")) {
                 Date d;
                 if (md.getColumnName(i).equalsIgnoreCase("formEdited")) {
-                    d = UtilDateUtilities.Today();
+                    d = new Date();
                 } else {
                     d = UtilDateUtilities.StringToDate(value, "yyyyMMddHHmmss");
                 }

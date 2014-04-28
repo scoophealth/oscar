@@ -38,7 +38,7 @@ int curYear = now.get(Calendar.YEAR);
 int curMonth = (now.get(Calendar.MONTH)+1);
 int curDay = now.get(Calendar.DAY_OF_MONTH);
 
-String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd"); //"yyyy/MM/dd HH:mm"
+String nowDate = UtilDateUtilities.DateToString(new java.util.Date(), "yyyy-MM-dd"); //"yyyy/MM/dd HH:mm"
 String monthCode = "";
 if (curMonth == 1) monthCode = "A";
 else if (curMonth == 2) monthCode = "B";

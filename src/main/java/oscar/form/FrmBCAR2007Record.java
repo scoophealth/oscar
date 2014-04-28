@@ -26,13 +26,14 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
-import org.oscarehr.util.SpringUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
 import oscar.util.UtilDateUtilities;
@@ -55,7 +56,7 @@ public class FrmBCAR2007Record extends FrmRecord {
             if (demo != null) {
                 java.util.Date date = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
                 props.setProperty("demographic_no", demo.getDemographicNo().toString());
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),_dateFormat));
 
                 props.setProperty("c_surname", demo.getLastName());
                 props.setProperty("c_givenName", demo.getFirstName());
@@ -68,9 +69,9 @@ public class FrmBCAR2007Record extends FrmRecord {
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
                 props.setProperty("c_phone", demo.getPhone());
                 props.setProperty("c_phoneAlt1", demo.getPhone2());
-                props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
-                props.setProperty("pg2_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
-                props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
+                props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(), _dateFormat));
+                props.setProperty("pg2_formDate", UtilDateUtilities.DateToString(new Date(), _dateFormat));
+                props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(new Date(), _dateFormat));
                 
                 String rd = SxmlMisc.getXmlContent(demo.getFamilyDoctor(), "rd");
                 rd = rd != null ? rd : "";

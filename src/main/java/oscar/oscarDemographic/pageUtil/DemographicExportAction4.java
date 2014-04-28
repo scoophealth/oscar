@@ -198,7 +198,7 @@ public class DemographicExportAction4 extends Action {
 		if (demographicNo==null) {
 			list = new DemographicSets().getDemographicSet(setName);
 		if (list.isEmpty()) {
-			Date asofDate = UtilDateUtilities.Today();
+			Date asofDate = new Date();
 			RptDemographicReportForm frm = new RptDemographicReportForm ();
 			frm.setSavedQuery(setName);
 			RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();

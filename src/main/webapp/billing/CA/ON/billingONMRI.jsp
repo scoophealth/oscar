@@ -96,7 +96,7 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 			int curMonth = (now.get(Calendar.MONTH) + 1);
 			int curDay = now.get(Calendar.DAY_OF_MONTH);
 
-			String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss"); //String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
+			String nowDate = UtilDateUtilities.DateToString(new java.util.Date(), "yyyy-MM-dd HH:mm:ss"); //String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
 			String thisyear = (request.getParameter("year") == null || request.getParameter("year").equals("")) ? ("" + curYear)
 					: request.getParameter("year");
 
@@ -123,7 +123,7 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 			List mriList = prep.getMRIList(thisyear + "-01-01 00:00:01", thisyear + "-12-31 23:59:59","U");
 			
 			String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
-			String xml_appointment_date = request.getParameter("xml_appointment_date")==null? UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd") : request.getParameter("xml_appointment_date");
+			String xml_appointment_date = request.getParameter("xml_appointment_date")==null? UtilDateUtilities.DateToString(new java.util.Date(), "yyyy-MM-dd") : request.getParameter("xml_appointment_date");
 			%>
 
 <script language="JavaScript" type="text/JavaScript">

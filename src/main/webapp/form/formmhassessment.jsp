@@ -59,7 +59,7 @@
     String path = "form/dataFiles";
 
     if (props.getProperty("a_formDate","").equals("")){
-       props.setProperty("a_formDate", oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "yyyy/MM/dd"));
+       props.setProperty("a_formDate", oscar.util.UtilDateUtilities.DateToString(new java.util.Date(), "yyyy/MM/dd"));
     }
 %>
 

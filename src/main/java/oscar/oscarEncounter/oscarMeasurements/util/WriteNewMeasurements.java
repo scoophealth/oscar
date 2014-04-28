@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.oscarMeasurements.util;
 //used by eforms for writing measurements
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -109,7 +110,7 @@ public class WriteNewMeasurements {
             String measuringInst = (String)curmeasure.get("measuringInstruction");
             String comments = (String)curmeasure.get("comments");
             String dateObserved = (String)curmeasure.get("dateObserved");
-            java.util.Date now = UtilDateUtilities.now();
+            java.util.Date now = new Date();
             String dateEntered = UtilDateUtilities.DateToString(now, "yyyy-MM-dd HH:mm:ss");
             String sql;
             if (measuringInst == null || measuringInst.equals("")) {
@@ -285,7 +286,7 @@ public class WriteNewMeasurements {
         measure.put("measuringInstruction","");
         measure.put("comments",  comment == null ? "":comment  );
         measure.put("dateObserved",UtilDateUtilities.DateToString(dateObserved, "yyyy-MM-dd HH:mm:ss"));
-        measure.put("dateEntered",UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss"));
+        measure.put("dateEntered",UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
         write(measure,demographicNo,providerNo);
     }
 }

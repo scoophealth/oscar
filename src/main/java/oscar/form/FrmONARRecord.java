@@ -3,6 +3,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.OscarProperties;
@@ -26,9 +27,9 @@ public class FrmONARRecord extends FrmRecord {
                         .getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities
-                        .DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                        .DateToString(new Date(), "yyyy/MM/dd"));
                 // props.setProperty("formEdited",
-                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
+                // UtilDateUtilities.DateToString(new Date(),"yyyy/MM/dd"));
                 props.setProperty("c_lastName", oscar.Misc.getString(rs, "last_name"));
                 props.setProperty("c_firstName", oscar.Misc.getString(rs, "first_name"));
                 props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
@@ -42,7 +43,7 @@ public class FrmONARRecord extends FrmRecord {
                         .getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"))));
                 props.setProperty("pg1_homePhone", oscar.Misc.getString(rs, "phone"));
                 props.setProperty("pg1_workPhone", oscar.Misc.getString(rs, "phone2"));
-                props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(),
                         "yyyy/MM/dd"));
             }
             rs.close();
