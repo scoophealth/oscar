@@ -45,9 +45,9 @@ public class FrmMentalHealthForm14Record extends FrmRecord {
                 Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"),
                         oscar.Misc.getString(rs, "date_of_birth"));
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-               props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+               props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),
                         "yyyy/MM/dd"));
-                props.setProperty("formEdited",UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd HH:mm:ss"));
+                props.setProperty("formEdited",UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
                 props.setProperty("clientDOB", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("clientName", oscar.Misc.getString(rs, "clientName"));
                 props.setProperty("demoProvider", oscar.Misc.getString(rs, "provider_no"));

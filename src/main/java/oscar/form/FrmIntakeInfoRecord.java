@@ -28,6 +28,7 @@ package oscar.form;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import org.oscarehr.util.MiscUtils;
@@ -58,7 +59,7 @@ public class FrmIntakeInfoRecord extends FrmRecord {
 				props.setProperty(
 					"formCreated",
 					UtilDateUtilities.DateToString(
-						UtilDateUtilities.Today(),
+						new Date(),
 						_dateFormat));	
                                 props.setProperty("dob", UtilDateUtilities.DateToString(dob,"yyyy/MM/dd"));
                                 props.setProperty("sex", oscar.Misc.getString(rs, "sex"));

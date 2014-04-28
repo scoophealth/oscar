@@ -377,7 +377,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
 			if (!filled(reviewerId) && fm.getReviewDoc()) {
 				reviewerId = (String) request.getSession().getAttribute("user");
-				reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
+				reviewDateTime = UtilDateUtilities.DateToString(new Date(), EDocUtil.REVIEW_DATETIME_FORMAT);
 				if (fm.getFunction() != null && fm.getFunction().equals("demographic")) {
 					LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REVIEWED, LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr(), fm.getFunctionId());
 				} else {
@@ -408,7 +408,7 @@ public class AddEditDocumentAction extends DispatchAction {
 				throw new FileNotFoundException();
 			}
 			if(fm.getReviewDoc()) {
-				newDoc.setReviewDateTime(UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT));
+				newDoc.setReviewDateTime(UtilDateUtilities.DateToString(new Date(), EDocUtil.REVIEW_DATETIME_FORMAT));
 			}
 			EDocUtil.editDocumentSQL(newDoc, fm.getReviewDoc());
 

@@ -706,14 +706,14 @@ public final class EDocUtil {
         }
 
 	public static String getDmsDateTime() {
-		String nowDateR = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd");
-		String nowTimeR = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
+		String nowDateR = UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd");
+		String nowTimeR = UtilDateUtilities.DateToString(new Date(), "HH:mm:ss");
 		String dateTimeStamp = nowDateR + " " + nowTimeR;
 		return dateTimeStamp;
 	}
 
 	public static Date getDmsDateTimeAsDate() {
-		return UtilDateUtilities.now();
+		return new Date();
 	}
 
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String contentDateTime, String observationDate, String updateDateTime, String docCreator, String responsible) {

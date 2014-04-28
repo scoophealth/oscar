@@ -45,10 +45,10 @@ public class FrmType2DiabeteRecord extends FrmRecord {
                 Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"),
                         oscar.Misc.getString(rs, "date_of_birth"));
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),
                         "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
-                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
+                // UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd
                 // HH:mm:ss"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("pName", oscar.Misc.getString(rs, "pName"));

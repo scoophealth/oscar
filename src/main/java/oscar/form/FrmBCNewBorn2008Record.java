@@ -26,6 +26,7 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.util.UtilDateUtilities;
@@ -45,11 +46,11 @@ public class FrmBCNewBorn2008Record extends FrmRecord {
 			props.setProperty("MothersName", demographic.getLastName() + ", " + demographic.getFirstName());
 			props.setProperty("MothersAge", String.valueOf(UtilDateUtilities.calcAge(this.date)));
 
-			props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg2_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
+			props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg2_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
 		} 
 		else {
 			String sql = "SELECT * FROM formBCNewBorn2008 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;

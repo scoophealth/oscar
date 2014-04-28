@@ -26,6 +26,7 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.OscarProperties;
@@ -59,8 +60,8 @@ public class FrmONAREnhancedRecord extends FrmRecord {
 			props.setProperty("pg1_homePhone", demographic.getPhone());
 			props.setProperty("pg1_workPhone", demographic.getPhone2());
 
-			props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
+			props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
 		} 
 		else {
 			String sql = "SELECT * FROM formONAREnhanced WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;

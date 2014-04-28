@@ -62,7 +62,7 @@
 	</tr>
 </table>
 <% 
-String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+String nowDate = UtilDateUtilities.DateToString(new java.util.Date(), "yyyy/MM/dd"); 
 
 String raNo = "", flag="", plast="", pfirst="", pohipno="", proNo="";
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");

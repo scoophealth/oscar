@@ -3607,7 +3607,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		if (apptDate == null || apptDate.equals("") || apptDate.equalsIgnoreCase("null")) {
-			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
+			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(new Date(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
 		} else {
 			apptDate = convertDateFmt(apptDate, request);
 			encounterText = "\n[" + apptDate + " .: " + reason + "]\n";

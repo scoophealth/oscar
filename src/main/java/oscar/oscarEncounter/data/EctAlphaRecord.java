@@ -45,9 +45,9 @@ public class EctAlphaRecord {
             if(rs.next()) {
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("pName", oscar.Misc.getString(rs, "pName"));
-                props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                props.setProperty("formDate", UtilDateUtilities.DateToString(new java.util.Date(), "yyyy/MM/dd"));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new java.util.Date(), "yyyy/MM/dd"));
+                props.setProperty("formEdited", UtilDateUtilities.DateToString(new java.util.Date(), "yyyy/MM/dd"));
             }
             rs.close();
         } else {
@@ -105,7 +105,7 @@ public class EctAlphaRecord {
             if(md.getColumnTypeName(i).equalsIgnoreCase("date")) {
                 java.util.Date d;
                 if(md.getColumnName(i).equalsIgnoreCase("formEdited"))
-                    d = UtilDateUtilities.Today();
+                    d = new java.util.Date();
                 else
                     d = UtilDateUtilities.StringToDate(value, "yyyy/MM/dd");
                 if(d == null)

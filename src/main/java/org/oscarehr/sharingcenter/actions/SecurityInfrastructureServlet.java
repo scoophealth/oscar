@@ -57,17 +57,15 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.marc.shic.core.exceptions.SslException;
+import org.marc.shic.core.utils.SslUtility;
 import org.oscarehr.sharingcenter.dao.InfrastructureDao;
 import org.oscarehr.sharingcenter.model.InfrastructureDataObject;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import sun.security.pkcs.PKCS10;
-
-import org.marc.shic.core.exceptions.SslException;
-import org.marc.shic.core.utils.SslUtility;
-
 import oscar.OscarProperties;
+import sun.security.pkcs.PKCS10;
 
 public class SecurityInfrastructureServlet extends Action {
 

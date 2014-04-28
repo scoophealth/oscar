@@ -56,7 +56,7 @@ public class dxResearchAction extends Action {
         
         dxResearchForm frm = (dxResearchForm) form; 
         request.getSession().setAttribute("dxResearchForm", frm);
-        String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+        String nowDate = UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"); 
         String codingSystem = frm.getSelectedCodingSystem();        
         String demographicNo = frm.getDemographicNo();
         String providerNo = frm.getProviderNo();

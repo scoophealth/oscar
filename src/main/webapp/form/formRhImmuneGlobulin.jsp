@@ -230,7 +230,7 @@
                 if(h != null){
                     String gestAge = "";
                     try{
-                       gestAge = ""+UtilDateUtilities.calculateGestationAge( UtilDateUtilities.now(), (Date) h.get("completion_date"));
+                       gestAge = ""+UtilDateUtilities.calculateGestationAge( new Date(), (Date) h.get("completion_date"));
                     }catch(Exception gestAgeEx){}
                     %> <span style="margin-right: 20px;">EDD: <%=h.get("completion_date")%></span>
 <!-- span style="margin-right:20px;">Start date: <%=h.get("create_date_time")%> </span -->

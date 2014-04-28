@@ -3,6 +3,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -26,10 +27,10 @@ public class FrmBCINRRecord extends FrmRecord {
 						.getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 				props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
 				props
-						.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+						.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),
 								_dateFormat));
 				// props.setProperty("formEdited",
-				// UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
+				// UtilDateUtilities.DateToString(new Date(),_dateFormat));
 				props.setProperty("c_surname", oscar.Misc.getString(rs, "last_name"));
 				props.setProperty("c_givenName", oscar.Misc.getString(rs, "first_name"));
 				props.setProperty("c_address", oscar.Misc.getString(rs, "address"));

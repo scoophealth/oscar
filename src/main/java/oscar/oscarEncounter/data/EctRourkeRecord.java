@@ -59,8 +59,8 @@ public class EctRourkeRecord {
                 java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("c_pName", oscar.Misc.getString(rs, "pName"));
                 if(oscar.Misc.getString(rs, "sex").equalsIgnoreCase("M")) {
@@ -127,7 +127,7 @@ public class EctRourkeRecord {
             if(name.equalsIgnoreCase("ID")) {
                 rsPage.updateNull(name);
             } else if(name.equalsIgnoreCase("formEdited")) {
-                java.util.Date d = UtilDateUtilities.Today();
+                java.util.Date d = new Date();
                 rsPage.updateDate(name, new java.sql.Date(d.getTime()));
             } else if(name.equalsIgnoreCase("formCreated")) {
                 java.util.Date d = UtilDateUtilities.StringToDate(props.getProperty(name, null), "yyyy/MM/dd");

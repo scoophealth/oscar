@@ -51,7 +51,7 @@
     if (request.getParameter("submit")!=null && request.getParameter("submit").equals("Update")) {
 		//if it is a array, need to have loop to insert the records for study_no
 		String[] study_no = request.getParameterValues("study_no");
-        String datetime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss");
+        String datetime = UtilDateUtilities.DateToString(new java.util.Date(), "yyyy-MM-dd HH:mm:ss");
 
         int rowsAffected = demographicStudyDao.removeByDemographicNo(Integer.parseInt(demographic_no));
 		if (study_no != null) {

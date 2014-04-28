@@ -75,13 +75,6 @@ public class UtilDateUtilities {
         }
     }
 
-    public static Date now()    {    //Today()    
-        return GregorianCalendar.getInstance().getTime();
-    }
-    public static Date  Today()  {       
-        return GregorianCalendar.getInstance().getTime();
-    }
-
     public static Date calcDate(String s, String s1, String s2)    {
     	if (s==null || s1==null || s2==null) return(null);
     	
@@ -176,7 +169,7 @@ public class UtilDateUtilities {
 
     public static String getToday(String datePattern){
        Format formatter = new SimpleDateFormat(datePattern);
-       return formatter.format(Today());       
+       return formatter.format(new Date());       
     }
     
     /**

@@ -6,6 +6,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.oscarDB.DBHandler;
@@ -26,7 +27,7 @@ public class FrmInvoiceRecord extends FrmRecord {
                 java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), rs
                         .getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),
                         _dateFormat));
                 props.setProperty("patientName", oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"));
                 props.setProperty("patientSex", oscar.Misc.getString(rs, "sex"));
@@ -40,9 +41,9 @@ public class FrmInvoiceRecord extends FrmRecord {
                 props.setProperty("c_phn", oscar.Misc.getString(rs, "hin") + oscar.Misc.getString(rs, "ver") + "(" + oscar.Misc.getString(rs, "hc_type")
                         + ")");
                 props.setProperty("c_phone", oscar.Misc.getString(rs, "phone") + "  " + oscar.Misc.getString(rs, "phone2"));
-                props.setProperty("date_invoice", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                props.setProperty("date_invoice", UtilDateUtilities.DateToString(new Date(),
                         _dateFormat));
-                props.setProperty("date_signature", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                props.setProperty("date_signature", UtilDateUtilities.DateToString(new Date(),
                         _dateFormat));
             }
             rs.close();

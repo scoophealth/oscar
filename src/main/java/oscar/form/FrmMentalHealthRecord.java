@@ -27,6 +27,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.oscarDB.DBHandler;
@@ -51,9 +52,9 @@ public class FrmMentalHealthRecord  extends FrmRecord {
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("c_pName", oscar.Misc.getString(rs, "pName"));
                 props.setProperty("c_sex", oscar.Misc.getString(rs, "sex"));
-                props.setProperty("c_referralDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                props.setProperty("c_referralDate", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                //props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                 props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("c_homePhone", oscar.Misc.getString(rs, "phone"));

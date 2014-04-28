@@ -27,6 +27,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import org.oscarehr.common.dao.ClinicDAO;
@@ -61,10 +62,10 @@ public class FrmLabReqRecord extends FrmRecord {
                 props.setProperty("patientName", oscar.Misc.getString(rs, "patientName"));
                 props.setProperty("healthNumber", oscar.Misc.getString(rs, "hin"));
                 props.setProperty("version", oscar.Misc.getString(rs, "ver"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),
                         "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
-                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                // UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("phoneNumber", oscar.Misc.getString(rs, "phone"));
                 props.setProperty("patientAddress", oscar.Misc.getString(rs, "address"));

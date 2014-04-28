@@ -25,6 +25,7 @@
 
 package oscar.dms.actions;
 
+import java.util.Date;
 import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -109,7 +110,7 @@ public class AddEditHtmlAction extends Action {
 
 	if (!filled(reviewerId) && fm.getReviewDoc()) {
 	    reviewerId = (String)request.getSession().getAttribute("user");
-	    reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
+	    reviewDateTime = UtilDateUtilities.DateToString(new Date(), EDocUtil.REVIEW_DATETIME_FORMAT);
 	}
         EDoc currentDoc;
         MiscUtils.getLogger().debug("mode: " + fm.getMode());

@@ -327,8 +327,8 @@
 			param[4]=request.getParameter("ohip_version");
 			param[5]=request.getParameter("demographic_name");
 			param[6]=request.getParameter("hin");
-			param[7] = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
-			param[8] = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
+			param[7] = UtilDateUtilities.DateToString(new java.util.Date(), "yyyy-MM-dd");
+			param[8] = UtilDateUtilities.DateToString(new java.util.Date(), "HH:mm:ss");
 			//param[7]=request.getParameter("billing_date");
 			//param[8]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("billing_time"));
 			param[9]= tempDate[k] ; // parse(billingDate) ;//request.getParameter("appointment_date");

@@ -46,8 +46,8 @@ public class EctType2DiabetesRecord {
             {
                 Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("pName", oscar.Misc.getString(rs, "pName"));
             }
@@ -122,7 +122,7 @@ public class EctType2DiabetesRecord {
             if(md.getColumnTypeName(i).equalsIgnoreCase("date")) {
                 Date d;
                 if(md.getColumnName(i).equalsIgnoreCase("formEdited"))  {
-                    d = UtilDateUtilities.Today();
+                    d = new Date();
                 } else {
                     d = UtilDateUtilities.StringToDate(value, "yyyy/MM/dd");
                 }

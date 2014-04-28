@@ -20,6 +20,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import org.oscarehr.common.dao.ClinicDAO;
@@ -52,9 +53,9 @@ public class FrmConsultantRecord extends FrmRecord {
 		if (rs.next()) {
 			java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
                 	props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-	                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                        props.setProperty("consultTime", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-	                props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
+	                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+                        props.setProperty("consultTime", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
+	                props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(),"yyyy/MM/dd"));
 	                props.setProperty("p_name", oscar.Misc.getString(rs, "pName"));
         	        props.setProperty("p_address1", oscar.Misc.getString(rs, "address"));
 			props.setProperty("p_address2", oscar.Misc.getString(rs, "address2"));

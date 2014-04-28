@@ -27,6 +27,7 @@ package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,8 +68,8 @@ public class EctAddShortMeasurementAction extends DispatchAction{
        if ( followUpType != null && followUpValue != null){   
            FollowupManagement fup = new FollowupManagement();
            MiscUtils.getLogger().debug("followUpType:"+followUpType+" followUpValue: "+followUpValue+" demos:"+demos+" providerNo:"+providerNo+" comment:"+comment);
-           fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,UtilDateUtilities.now(),comment);
-           response.getWriter().print("id="+id+"&followupValue="+followUpValue+"&Date="+UtilDateUtilities.DateToString(UtilDateUtilities.now()));        
+           fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,new Date(),comment);
+           response.getWriter().print("id="+id+"&followupValue="+followUpValue+"&Date="+UtilDateUtilities.DateToString(new Date()));        
        }
        return null;
     }
@@ -109,7 +110,7 @@ public class EctAddShortMeasurementAction extends DispatchAction{
     		
     		for( String key : keys ) {
     			arrDemoMethod = nextContactMethods.get(key).toArray(new String[nextContactMethods.get(key).size()]);
-    			fup.markFollowupProcedure(followUpType,key,arrDemoMethod,providerNo,UtilDateUtilities.now(),comment);
+    			fup.markFollowupProcedure(followUpType,key,arrDemoMethod,providerNo,new Date(),comment);
     		}
     	}
     	

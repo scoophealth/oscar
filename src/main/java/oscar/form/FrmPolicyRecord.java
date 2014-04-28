@@ -25,6 +25,7 @@ package oscar.form;
 
 import java.sql.SQLException;
 import java.util.Properties;
+
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;

@@ -49,7 +49,7 @@
 <%
 	int demographicNo = 0;
 	org.oscarehr.common.model.Demographic demo = null;
-        String createDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
+        String createDateTime = UtilDateUtilities.DateToString(new java.util.Date(),"yyyy-MM-dd HH:mm:ss");
 	if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
     	demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
     	DemographicData demData = new DemographicData();

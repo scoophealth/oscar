@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -85,11 +86,11 @@ public class FrmLabReq07Record extends FrmRecord {
                 }
 
                 props.setProperty("hcType", StringUtils.trimToEmpty(demographic.getHcType()));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),
                         "yyyy/MM/dd"));
 
                 //props.setProperty("formEdited",
-                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                // UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                 java.util.Date dob = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
                 props.setProperty("birthDate", StringUtils.trimToEmpty(UtilDateUtilities.DateToString(dob, "yyyy/MM/dd")));
 

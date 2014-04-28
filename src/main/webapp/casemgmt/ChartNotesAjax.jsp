@@ -1005,7 +1005,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 		}
 
 		if( apptDate == null || apptDate.equals("") || apptDate.equalsIgnoreCase("null") ) {
-			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
+			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(new java.util.Date(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
 		}
 		else {
 			apptDate = convertDateFmt(apptDate);

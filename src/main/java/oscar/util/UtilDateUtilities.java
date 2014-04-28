@@ -94,13 +94,6 @@ public class UtilDateUtilities {
         return simpledateformat.format(date);
     }
 
-    public static Date now()    {    //Today()    
-        return GregorianCalendar.getInstance().getTime();
-    }
-    public static Date  Today()  {       
-        return GregorianCalendar.getInstance().getTime();
-    }
-
     public static Date  Tomorrow()  {
        Calendar c =GregorianCalendar.getInstance();
        c.roll(Calendar.DATE, 1);
@@ -201,7 +194,7 @@ public class UtilDateUtilities {
 
     public static String getToday(String datePattern){
        Format formatter = new SimpleDateFormat(datePattern);
-       return formatter.format(Today());       
+       return formatter.format(new Date());       
     }
     
     /**

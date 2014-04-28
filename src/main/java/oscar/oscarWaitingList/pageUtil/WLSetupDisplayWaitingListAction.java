@@ -26,6 +26,7 @@
 package oscar.oscarWaitingList.pageUtil;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -191,7 +192,7 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         	
         }
         
-        today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd");
+        today = UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd");
         
         request.setAttribute("WLId", waitingListId);
         session.setAttribute( "waitingList", hd );     

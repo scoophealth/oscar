@@ -3,6 +3,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.oscarDB.DBHandler;
@@ -22,8 +23,8 @@ public class FrmGrowthChartRecord extends FrmRecord {
             if(rs.next()) {
                 java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
                 props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
-                props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(),_dateFormat));
+                props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(),_dateFormat));
                 props.setProperty("patientName", oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"));
                 props.setProperty("patientSex", oscar.Misc.getString(rs, "sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date,_dateFormat));

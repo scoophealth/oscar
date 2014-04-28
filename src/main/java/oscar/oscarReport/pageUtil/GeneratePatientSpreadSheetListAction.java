@@ -35,10 +35,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
-import org.oscarehr.common.model.Demographic;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.FontFactory;

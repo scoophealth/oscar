@@ -24,14 +24,15 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;
 
-import org.oscarehr.common.dao.ClinicDAO;
-import org.oscarehr.common.model.Clinic;
 import oscar.util.UtilDateUtilities;
 
 public class FrmPositionHazardRecord extends FrmRecord {
@@ -51,7 +52,7 @@ public class FrmPositionHazardRecord extends FrmRecord {
                 props.setProperty("healthNumber", demographic.getHin());
                 props.setProperty("version", demographic.getVer());
                 props.setProperty("hcType", demographic.getHcType());
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
 
                 java.util.Date dob = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));

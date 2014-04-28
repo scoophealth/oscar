@@ -75,10 +75,10 @@ public class FrmFormAddRHWorkFlowAction extends Action{
         WriteNewMeasurements measurement = new WriteNewMeasurements();
         
         if (bloodType != null){
-            measurement.write("BLDT",bloodType,  demographicNo,providerNo,UtilDateUtilities.now(),"");
+            measurement.write("BLDT",bloodType,  demographicNo,providerNo,new Date(),"");
         }
         if (rhType != null){
-            measurement.write("RHT",rhType, demographicNo,providerNo,UtilDateUtilities.now(),"");
+            measurement.write("RHT",rhType, demographicNo,providerNo,new Date(),"");
         }
         
     

@@ -2,7 +2,9 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
+
 import oscar.util.UtilDateUtilities;
 
 public class FrmBCARRecord extends FrmRecord {
@@ -19,10 +21,10 @@ public class FrmBCARRecord extends FrmRecord {
 
 			this.setDemoProperties(demographicNo, props);
 
-			props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg2_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
-			props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), dateFormat));
+			props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg2_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
+			props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
 
 		} else {
 			String sql = "SELECT * FROM formBCAR WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;

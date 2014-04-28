@@ -25,6 +25,7 @@
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -115,7 +116,7 @@ public class EctDisplayAction extends Action {
 			bean.currentDate = UtilDateUtilities.StringToDate(request.getParameter("curDate"));
 
 			if (bean.currentDate == null) {
-				bean.currentDate = UtilDateUtilities.Today();
+				bean.currentDate = new Date();
 			}
 			bean.providerNo = request.getParameter("providerNo");
 			if (bean.providerNo == null) {
@@ -208,7 +209,7 @@ public class EctDisplayAction extends Action {
 		if (forward != null && !forward.equals("success")) {
 			MiscUtils.getLogger().error("Forward :" + forward + " navName :" + navName + " cmd " + cmd + " params " + params);
 		}
-		return new ActionForward((String) Actions.get(forward));
+		return new ActionForward(Actions.get(forward));
 	}
 
 	/**

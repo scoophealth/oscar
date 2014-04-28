@@ -3,6 +3,7 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import org.oscarehr.common.dao.ClinicDAO;
@@ -41,9 +42,9 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 				props.setProperty("demographic_no", rs
 						.getString("demographic_no"));
 				props.setProperty("formCreated", UtilDateUtilities
-						.DateToString(UtilDateUtilities.Today(), _dateFormat));
+						.DateToString(new Date(), _dateFormat));
 				props.setProperty("formEdited", UtilDateUtilities.DateToString(
-						UtilDateUtilities.Today(), _dateFormat));
+						new Date(), _dateFormat));
 				props.setProperty("c_surname", oscar.Misc.getString(rs, "last_name"));
 				props.setProperty("c_givenName", oscar.Misc.getString(rs, "first_name"));
 				props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
@@ -58,7 +59,7 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 				props.setProperty("c_phone", oscar.Misc.getString(rs, "phone") + "  "
 						+ oscar.Misc.getString(rs, "phone2"));
 				props.setProperty("pg1_formDate", UtilDateUtilities
-						.DateToString(UtilDateUtilities.Today(), _dateFormat));
+						.DateToString(new Date(), _dateFormat));
 			}
 			Clinic clinic = clinicDao.getClinic();
 			if(clinic != null) {

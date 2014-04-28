@@ -27,6 +27,7 @@ package oscar.oscarReport.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -129,7 +130,7 @@ public class GeneratePatientLettersAction extends Action {
                 String fileName = letterData.get("ID")+"-"+StringUtils.replace((String)letterData.get("report_name")," ","-")+"-"+demos[i]+".pdf";
                 String html = "";
                 char status = 'A';
-                String observationDate = UtilDateUtilities.DateToString(UtilDateUtilities.now());
+                String observationDate = UtilDateUtilities.DateToString(new Date());
                 String module = "demographic";
                 String moduleId = demos[i];
 
@@ -165,7 +166,7 @@ public class GeneratePatientLettersAction extends Action {
             MiscUtils.getLogger().debug("Follow up type "+followUpType+" follow up value "+followUpValue);
             if ( followUpType != null && followUpValue != null){
                 FollowupManagement fup = new FollowupManagement();
-                fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,UtilDateUtilities.now(),comment);
+                fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,new Date(),comment);
             }
         }
 

@@ -96,7 +96,7 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
     formdata.setDocType(defaultType);
     formdata.setDocDesc(defaultType.equals("")?defaultDesc:defaultType);
     formdata.setDocCreator(user_no);
-    formdata.setObservationDate(UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"));
+    formdata.setObservationDate(UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
     formdata.setHtml(defaultHtml);
     formdata.setAppointmentNo(appointment);
 }
@@ -327,7 +327,7 @@ var docSubClassList = [
 	(yyyy/mm/dd): </span>
 	<input type="text" name="observationDate" id="observationDate"
 		value="<%=formdata.getObservationDate()%>"
-		onclick="checkDefaultDate(this, '<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd")%>')"
+		onclick="checkDefaultDate(this, '<%=UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd")%>')"
 		size="10" style="text-align: center;">
 	<a id="obsdate"><img title="Calendar" src="../images/cal.gif"
 		alt="Calendar" border="0" /></a>

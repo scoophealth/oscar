@@ -579,7 +579,7 @@ table.ele thead {
                              <% if (dis.lastFollowup != null ){ %>
                                  <%=dis.lastFollupProcedure%>
                                  <%=UtilDateUtilities.DateToString(dis.lastFollowup)%>
-                                 <%=UtilDateUtilities.getNumMonths(dis.lastFollowup,UtilDateUtilities.now())%>M
+                                 <%=UtilDateUtilities.getNumMonths(dis.lastFollowup,new Date())%>M
                              <% }else{ %>
                                 ----
                              <% } %>

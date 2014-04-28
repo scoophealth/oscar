@@ -28,6 +28,7 @@ package oscar.form;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 
 import org.oscarehr.util.MiscUtils;
@@ -52,7 +53,7 @@ public class FrmGripStrengthRecord extends FrmRecord {
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {                                
 				props.setProperty("demographic_no",oscar.Misc.getString(rs, "demographic_no"));
-				props.setProperty("formCreated",UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
+				props.setProperty("formCreated",UtilDateUtilities.DateToString(new Date(),_dateFormat));
 			}
 			rs.close();
                         sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
