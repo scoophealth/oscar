@@ -38,7 +38,6 @@
 <%@page import="java.util.regex.*" %>
 <%@page import="java.util.*" %>
 
-
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
@@ -330,6 +329,12 @@ if(getStatus!=null && getStatus.equals("master")){
 </tr>
 </table>		
 	
-		
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script>
+$( document ).ready(function() {	
+    parent.parent.resizeIframe($('html').height());	
+	
+});
+</script>		
 </body>
 </html:html>
