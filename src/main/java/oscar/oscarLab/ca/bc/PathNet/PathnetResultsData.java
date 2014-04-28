@@ -105,7 +105,7 @@ public class PathnetResultsData {
 		return labResults;
 	}
 
-	public ArrayList<LabResultData> populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+	public ArrayList<LabResultData> populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
 		if (providerNo == null) {
 			providerNo = "";
 		}
@@ -126,13 +126,16 @@ public class PathnetResultsData {
 		try {
 			Hl7MshDao dao = SpringUtils.getBean(Hl7MshDao.class);
 
-			List<Object[]> pathnetResultsData;
+			List<Object[]> pathnetResultsData = null;
 
-			if (demographicNo == null) {
-				pathnetResultsData = dao.findPathnetResultsDataByPatientNameHinStatusAndProvider(patientLastName + "%^" + patientFirstName + "%", "%" + patientHealthNumber + "%", "%" + status + "%", providerNo.equals("") ? "%" : providerNo, "BCP");
+			if(labNo != null && labNo.intValue()>0) {
+				pathnetResultsData  = dao.findPathnetResultsByLabNo(labNo);
 			} else {
-				pathnetResultsData = dao.findPathnetResultsDeomgraphicNo(ConversionUtils.fromIntString(demographicNo), "BCP");
-
+				if (demographicNo == null) {
+					pathnetResultsData = dao.findPathnetResultsDataByPatientNameHinStatusAndProvider(patientLastName + "%^" + patientFirstName + "%", "%" + patientHealthNumber + "%", "%" + status + "%", providerNo.equals("") ? "%" : providerNo, "BCP");
+				} else {
+					pathnetResultsData = dao.findPathnetResultsDeomgraphicNo(ConversionUtils.fromIntString(demographicNo), "BCP");
+				}
 			}
 
 			for (Object[] o : pathnetResultsData) {
