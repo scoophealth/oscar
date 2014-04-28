@@ -126,7 +126,13 @@ onLoad="setTimeout('doDocuments()',3000);"
 		</form>
 	</div>
 </security:oscarSec>
+
+<script>
+$( document ).ready(function() {	
+    parent.parent.resizeIframe($('html').height());	
 	
+});
+</script>	
 </body>
 
 </html:html>
