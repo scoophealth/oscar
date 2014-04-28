@@ -33,6 +33,9 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * @deprecated 2013-04-28 use org.oscarehr.util.DateUtils instead 
+ */
 public class UtilDateUtilities {
 
     public static Date StringToDate(String s)    {
