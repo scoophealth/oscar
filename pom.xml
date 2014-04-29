@@ -990,6 +990,16 @@
                 <artifactId>ebs-client</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+                <groupId>org.oscarehr.integration.ebs</groupId>
+                <artifactId>edt-stubs</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+                <groupId>org.oscarehr.integration.ebs</groupId>
+                <artifactId>hcv-stubs</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
 	</dependencies>
 

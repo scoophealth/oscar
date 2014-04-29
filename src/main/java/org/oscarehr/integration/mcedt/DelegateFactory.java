@@ -31,11 +31,11 @@ import org.oscarehr.util.MiscUtils;
 import oscar.OscarProperties;
 import ca.ontario.health.edt.EDTDelegate;
 
-class DelegateFactory {
+public class DelegateFactory {
 	
 	private static Logger logger = MiscUtils.getLogger();
 	
-	static EDTDelegate newDelegate() {
+	public static EDTDelegate newDelegate() {
 		OscarProperties props = OscarProperties.getInstance();
 		EdtClientBuilderConfig config = new EdtClientBuilderConfig();
 		config.setLoggingRequired(!Boolean.valueOf(props.getProperty("mcedt.logging.skip")));

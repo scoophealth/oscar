@@ -560,6 +560,7 @@
 		
 		<form-bean name="mcedtUpdateForm" type="org.oscarehr.integration.mcedt.UpdateForm" />
 
+        <form-bean name="ValidateSwipeCard" type="org.oscarehr.integration.mchcv.ValidateSwipeCard" />
 	</form-beans>
 
 	<global-forwards>
@@ -2474,6 +2475,10 @@
         <action input="/billing/CA/ON/endYearStatement.jsp" name="PatientEndYearStatementForm" path="/billing/CA/ON/endYearStatement" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementAction" validate="false">
             <forward name="success" path="/billing/CA/ON/endYearStatement.jsp"/>
             <forward name="failure" path="/billing/CA/ON/endYearStatement.jsp"/>
+        </action>
+
+        <action name="ValidateSwipeCard" path="/demographic/ValidateSwipeCard" scope="request" type="org.oscarehr.integration.mchcv.ValidateSwipeCardAction" validate="false">
+            <forward name="success" path="/demographic/demographicswipe.jsp"/>
         </action>
 
 		<action name="AppointmentTypeForm" path="/appointment/appointmentTypeAction" scope="request" type="oscar.appt.web.AppointmentTypeAction" validate="false">
