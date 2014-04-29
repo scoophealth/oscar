@@ -71,8 +71,8 @@
         <br>
         <form method="post" action="<c:out value="${pageContext.request.contextPath}/login/recordLogin.do"/>">
             <input type="hidden" name="submit" id="submit">
-            <input type="submit" onclick="document.forms[0].submit.value='accept';return true;" value="<bean:message key="provider.login.btn.agree"/>">
-            <input type="submit" onclick="document.forms[0].submit.value='refuse';return true;" value="<bean:message key="provider.login.btn.refuse"/>">
+            <input type="submit" onclick="document.forms[0].submit.value='accept';return true;" value="Complete Login">
+            <%-- input type="submit" onclick="document.forms[0].submit.value='refuse';return true;" value="<bean:message key="provider.login.btn.refuse"/>" --%>
         </form>
         </div>
     </body>
