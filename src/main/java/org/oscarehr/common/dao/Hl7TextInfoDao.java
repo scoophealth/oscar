@@ -265,29 +265,37 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 	    	}
 	    	else if (patientSearch) { // N
 	    		sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, Z.status "
-	    			+ " FROM hl7TextInfo info, "
-	    			+ " (SELECT * FROM "
-	    			+ "	 (SELECT * FROM  "
-	    			+ "		(SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status, d.demographic_no "
-	    			+ "			FROM providerLabRouting plr, ctl_document cd, demographic d "
-	    			+ "			WHERE 	 "
-	    			+ "			(d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
-	    			+ "		AND cd.module_id = d.demographic_no 	AND cd.document_no = plr.lab_no	AND plr.lab_type = 'DOC' "
-	    			+ "				AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
-	    			+ "		)ORDER BY id DESC) AS Y "
-	    			+ " 	UNION "
-	    			+ "	SELECT * FROM "
-	    			+ "		(SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status, d.demographic_no "
-	    			+ "		FROM providerLabRouting plr, patientLabRouting plr2, demographic d" + (isAbnormal != null ? ", hl7TextInfo info " : " ")
-	    			+ "		WHERE d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
-	    			+ "		AND	plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7' "
-	    			+ (isAbnormal != null ? " AND plr.lab_no = info.lab_no AND (info.result_status IS NULL OR info.result_status != 'A') " : " " )
-	    			+ "				AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
-	    			+ " 	AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = d.demographic_no ORDER BY id DESC) AS Z "
-	    			+ " 			ORDER BY id DESC) AS X "
-	    			+ " 	  ) AS Z  "
-	    			+ " WHERE Z.lab_type = 'HL7' and Z.lab_no = info.lab_no "
-	    			+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
+	    				+ " FROM hl7TextInfo info, "
+	    				+ " 	(SELECT * FROM "
+						+ "			(SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status, d.demographic_no "
+						+ "				FROM providerLabRouting plr, ctl_document cd, demographic d "
+						+ "				WHERE "
+						+ "					d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
+						+ "					AND cd.module_id = d.demographic_no 	AND cd.document_no = plr.lab_no	AND plr.lab_type = 'DOC' "
+						+ "					AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
+						+ " 		) AS X "
+						+ " 		UNION "
+						+ "			(SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status, d.demographic_no "
+						+ "				FROM providerLabRouting plr, patientLabRouting plr2, demographic d" + (isAbnormal != null ? ", hl7TextInfo info " : " ")
+						+ "				WHERE d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
+						+ "					AND	plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7' "
+						+ 					(isAbnormal != null ? " AND plr.lab_no = info.lab_no AND (info.result_status IS NULL OR info.result_status != 'A') " : " " )
+						+ "					AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
+						+ " 				AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = d.demographic_no "
+						+ " 		) "
+						+ " 		UNION "
+						+ " 		(SELECT DISTINCT plr.id, plr.lab_type, plr.lab_no, plr.status, NULL AS demographic_no "
+						+ " 			FROM providerLabRouting plr, hl7TextInfo info "
+						+ " 			WHERE info.first_name like '%"+patientFirstName+"%' AND info.last_name like '%"+patientLastName+"%' AND info.health_no like '%"+patientHealthNumber+"%' "
+						+ " 				AND plr.lab_type = 'HL7' AND plr.lab_no = info.lab_no "
+						+					(isAbnormal != null ? " AND (info.result_status IS NULL OR info.result_status != 'A') " : " ")
+						+ " 				AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
+						+ " 				AND plr.lab_no NOT IN (SELECT DISTINCT lab_no FROM patientLabRouting WHERE lab_type = 'HL7' AND demographic_no != 0) "
+						+ " 		) "
+						+ " 		ORDER BY id DESC " 
+						+ " 	) AS Z "
+						+ " WHERE Z.lab_type = 'HL7' and Z.lab_no = info.lab_no "
+						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 	    	}
 	    	else { // N
 	    		sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status,  info.accessionNum, info.final_result_count, X.status "
@@ -335,20 +343,29 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 	    			+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 	    	}
 	    	else if (patientSearch) { // A
-	    		sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, X.status "
-	    			+ " FROM hl7TextInfo info, "
-	    			+ " (SELECT DISTINCT plr.id, plr.lab_type, plr.status, plr.lab_no, d.demographic_no "
-	    			+ " FROM providerLabRouting plr, patientLabRouting plr2, demographic d "
-	    			+ " WHERE   (d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
-	    			+ " 		AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = d.demographic_no "
-	    			+ " 		AND plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7' "
-	    			+ " 		AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
-	    			+ " 		) "
-	    			+ " ORDER BY plr.id DESC "
-	    			+ " ) AS X "
-	    			+ " WHERE X.lab_type = 'HL7' and X.lab_no = info.lab_no "
-	    			+ (isAbnormal != null ? " AND (" + (!isAbnormal ? "info.result_status IS NULL OR" : "") + " info.result_status " + (isAbnormal ? "" : "!") + "= 'A') " : " ")
-	    			+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
+				sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, Z.status "
+						+ " FROM hl7TextInfo info, "
+						+ " 	(SELECT * FROM "
+						+ " 		(SELECT DISTINCT plr.id, plr.lab_type, plr.status, plr.lab_no, d.demographic_no "
+						+ " 			FROM providerLabRouting plr, patientLabRouting plr2, demographic d "
+						+ " 			WHERE d.first_name like '%"+patientFirstName+"%' AND d.last_name like '%"+patientLastName+"%' AND d.hin like '%"+patientHealthNumber+"%' "
+						+ " 				AND plr.lab_no = plr2.lab_no AND plr2.demographic_no = d.demographic_no "
+						+ " 				AND plr.lab_type = 'HL7' AND plr2.lab_type = 'HL7' "
+						+ " 				AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : "")
+						+ " 		) AS X "
+						+ " 		UNION "
+						+ " 		(SELECT DISTINCT plr.id, plr.lab_type, plr.status, plr.lab_no, NULL AS demographic_no "
+						+ " 			FROM providerLabRouting plr, hl7TextInfo info "
+						+ " 			WHERE info.first_name like '%"+patientFirstName+"%' AND info.last_name like '%"+patientLastName+"%' AND info.health_no like '%"+patientHealthNumber+"%' "
+						+ " 				AND plr.lab_type = 'HL7' AND plr.lab_no = info.lab_no "
+						+ " 				AND plr.status like '%"+status+"%' " + (searchProvider ? " AND plr.provider_no = '"+providerNo+"' " : " ")
+						+ " 				AND plr.lab_no NOT IN (SELECT DISTINCT lab_no FROM patientLabRouting WHERE lab_type = 'HL7' AND demographic_no != 0) "
+						+ " 		) "
+						+ " 		ORDER BY id DESC "
+						+ " 	) AS Z "
+						+ " WHERE Z.lab_type = 'HL7' and Z.lab_no = info.lab_no "
+						+ (isAbnormal != null ? " AND (" + (!isAbnormal ? "info.result_status IS NULL OR" : "") + " info.result_status " + (isAbnormal ? "" : "!") + "= 'A') " : " ")
+						+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 	    	}
 	    	else { // A
 	    		sql = " SELECT info.label, info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status,  info.accessionNum, info.final_result_count, plr.status "
@@ -360,7 +377,6 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 	    			+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 	    	}
 	    }
-	    
 	    Query query = entityManager.createNativeQuery(sql);
 	    return query.getResultList();
     }
