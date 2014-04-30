@@ -29,6 +29,7 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
+<%@page import="java.net.URLEncoder"%>
 <%@page import="org.apache.commons.httpclient.HttpClient"%>
 <%@page import="org.apache.commons.httpclient.methods.GetMethod"%>
 <%@page import="org.jdom.Document"%>
@@ -133,7 +134,7 @@ the trick with the latter one is to carry out a search and under each result the
     public List<HashMap <String,String>> searchTripDatabase(String searchString) throws Exception{
        Logger logger = MiscUtils.getLogger();
        List<HashMap <String,String>> h  = null;
-       GetMethod post = new GetMethod("http://www.tripdatabase.com/search/xml?key=MCM001&criteria="+searchString);
+       GetMethod post = new GetMethod("http://www.tripdatabase.com/search/xml?key=MCM001&criteria="+URLEncoder.encode(searchString,"UTF-8"));
       
        HttpClient httpclient = new HttpClient();
        try{
