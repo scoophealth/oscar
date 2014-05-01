@@ -9,8 +9,8 @@
 			<bean class="org.oscarehr.oscarRx.erx.ERxScheduler">
 			</bean>
 		</property>
-		<property name="delay" value="1000" />
-		<property name="period" value="60000" />		<!--  every 30 mins =1800000 -->
+		<property name="delay" value="180000" />	<!--  delay 3 mins  =180000 -->
+		<property name="period" value="1800000" />	<!--  every 30 mins =1800000 -->
 	</bean>
 	
 		<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
