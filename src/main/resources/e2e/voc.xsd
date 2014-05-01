@@ -313,6 +313,7 @@ RoseTree XML to Schema: $Id: VocabXMLtoXSD.xsl,v 1.6 2005/05/24 00:14:18 lmckenz
          <xs:simpleType>
             <xs:restriction base="cs">
                <xs:enumeration value="A"/>
+               <xs:enumeration value="OR"/>
                <xs:enumeration value="ASGN"/>
                <xs:enumeration value="C"/>
                <xs:enumeration value="I"/>
@@ -501,6 +502,7 @@ RoseTree XML to Schema: $Id: VocabXMLtoXSD.xsl,v 1.6 2005/05/24 00:14:18 lmckenz
             <xs:restriction base="cs">
                <xs:enumeration value="BAD"/>
                <xs:enumeration value="TMP"/>
+               <xs:enumeration value="CONF"/>
             </xs:restriction>
          </xs:simpleType>
       </xs:union>

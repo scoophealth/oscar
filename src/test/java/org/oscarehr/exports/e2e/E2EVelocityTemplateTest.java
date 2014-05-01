@@ -108,7 +108,7 @@ public class E2EVelocityTemplateTest extends DaoTestFixtures {
 		assertTrue("XML unexpectedly not well-formed", new E2EExportValidator().isWellFormedXML(s));
 		//logger.warn("There should be one VALIDATION ERROR warning below.");
 		// following statement should cause error
-		assertFalse("XML well-formed, expected not well-formed", new E2EExportValidator().isWellFormedXML(s.replace("</ClinicalDocument>", "</clinicalDocument>"), true));
+		assertFalse("XML well-formed, expected not well-formed", new E2EExportValidator().isWellFormedXML(s.replace("</hl7:ClinicalDocument>", "</hl7:clinicalDocument>"), true));
 
 		// validate against XML schema
 		assertTrue("XML document unexpectedly not valid", new E2EExportValidator().isValidXML(s));
