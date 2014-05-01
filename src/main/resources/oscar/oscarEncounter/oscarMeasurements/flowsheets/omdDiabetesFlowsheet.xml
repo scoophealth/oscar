@@ -23,7 +23,7 @@
 -->
 <flowsheet name="diab2" 
 ds_rules="diab.drl" 
-           dxcode_triggers="icd9:250,OscarCode:CKDSCREEN" 
+           dxcode_triggers="icd9:250,icd9:7902,OscarCode:CKDSCREEN" 
     display_name="Diabetes Flowsheet" warning_colour="#E00000" recommendation_colour="yellow" top_HTML="">
   <indicator key="HIGH 1" colour="#E00000" />
   <indicator key="HIGH" colour="orange" />
