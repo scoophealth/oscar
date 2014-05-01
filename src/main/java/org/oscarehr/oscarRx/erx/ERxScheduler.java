@@ -49,7 +49,6 @@ public class ERxScheduler extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
 	
 	private static Long lastRun = null;
-	private static boolean firstRun = true;
 
 	@Override
 	public void run() {
@@ -65,40 +64,43 @@ public class ERxScheduler extends TimerTask {
 				logger.info("External Prescriber: Starting Synchronizer Task");
 				
 				int synchronizeInterval = ONE_DAY_MILLISEC;
+//trunk implementation:
 //				int dayBack1stImport = 7;
 				
 				try {
 					synchronizeInterval = Integer.parseInt(OscarProperties.getInstance().getProperty("util.erx.synchronize_interval"));
+//trunk implementation:
 //					dayBack1stImport = Integer.parseInt(OscarProperties.getInstance().getProperty("util.erx.1st_import_day_back"));
 				} catch (NumberFormatException e) {
 					//do nothing
 				}
 				
 				Date now = new Date();
-				
-			    if (!firstRun) {
-			    	if (eRxLastRun != null) {
+
+				if (lastRun == null) {
+					logger.info("First Run after server startup");
+					
+					if (eRxLastRun == null) {
+						logger.info("First Run Ever (or after Last Run reset)");
+						
+						lastRun = (new Date().getTime()) - (ONE_DAY_MILLISEC * 7) - synchronizeInterval; //set back 1 week
+//trunk implementation:
+//						lastRun = (new Date().getTime()) - (ONE_DAY_MILLISEC * dayBack1stImport) - synchronizeInterval;
+					}
+					else {
 			    		try {
 			    			lastRun = Long.parseLong(eRxLastRun.getValue());
 			    		} catch (NumberFormatException nfex) {
 			    			logger.error("Parse String to Long Error", nfex);
 			    		}
-			    	}
-			    	if (lastRun == null) lastRun = new Date().getTime();
-			    	
-			    	if (lastRun + synchronizeInterval <= now.getTime()) {
-			    		doPrescriptionSync();
-				    }
-				} else {
-					logger.info("First Run after startup");
-					
-					if (lastRun == null) lastRun = (new Date().getTime()) - (ONE_DAY_MILLISEC * 7); //set back 1 week
-//					if (lastRun == null) lastRun = (new Date().getTime()) - (ONE_DAY_MILLISEC * dayBack1stImport);
-					doPrescriptionSync();
-					ERxScheduler.firstRun = false;
-					
-					lastRun = now.getTime();
+				    	if (lastRun == null) lastRun = now.getTime();
+					}
 				}
+				
+		    	if (lastRun + synchronizeInterval <= now.getTime()) {
+		    		doPrescriptionSync();
+		    		lastRun = now.getTime();
+			    }
 				logger.debug("===== External Prescriber Synchronizer JOB RUNNING....");
 				
 			} catch (Exception e) {
