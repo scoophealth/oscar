@@ -498,7 +498,7 @@ Encounter History and Notes
 #if ( $patient.hasEncounters() )
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
-					<templateId root="2.16.840.1.113883.3.1818.10.2.22.1"/>
+					<templateId root="2.16.840.1.113883.3.1818.10.2.12.1"/>
 					<code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
 					<title>Encounter History and Notes [with entries]</title>
 					<text>
@@ -581,7 +581,7 @@ Encounter History and Notes
 #else
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
-					<templateId root="2.16.840.1.113883.3.1818.10.2.22"/>
+					<templateId root="2.16.840.1.113883.3.1818.10.2.12"/>
 					<code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
 					<title>Encounter History and Notes [without entries]</title>
 					<text>No Encounter History</text>
@@ -990,7 +990,7 @@ Laboratory Results & Results
 											<id nullFlavor='UNK'/>
 #*            *##end
 #*            *##if ( !$patient.getLabExtValue("$labEntry.id", "identifier").isEmpty() )
-											<code code="$patient.cleanString($patient.getLabExtValue("$labEntry.id", "identifier"))" displayName="$patient.getLabExtValue("$labEntry.id", "name")" codeSystemName="LOINC"/>
+											<code code="$patient.cleanString($patient.getLabExtValue("$labEntry.id", "identifier"))" displayName="$patient.getLabExtValue("$labEntry.id", "name")" codeSystem="2.16.840.1.113883.2.20.5.1" codeSystemName="pCLOCD"/>
 #*            *##else
 											<code nullFlavor='UNK'/>
 #*            *##end
@@ -1150,7 +1150,7 @@ Medications and Prescriptions - Medication List
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
-					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
 					<text>
 						<list>
@@ -1611,7 +1611,7 @@ Code"/>
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
-					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [without entries]</title>
 					<text>No Medication Entries</text>
 				</section>
