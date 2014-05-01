@@ -54,12 +54,13 @@ import oscar.util.StringUtils;
 public class E2EVelocityTemplate extends VelocityTemplate {
 	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2e/e2etemplate.vm";
 	private static final String buildTag = OscarProperties.getInstance().getProperty("buildtag");
+	private static final String notSupported = "This section is not supported by the Originating Application";
+	private static final String noInformation = "No information for this section for this patient";
 	private static final StringUtils stringUtils = new StringUtils();
 	private static String template = null;
 	private static E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private Clinic clinic = clinicDao.getClinic();
-	private static String clinicUUID = null;
 	private boolean validate = true;
 
 	public E2EVelocityTemplate() {
@@ -68,17 +69,6 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		// Load E2E Resources
 		if(e2eResources == null) {
 			e2eResources = new E2EResources();
-		}
-
-		// Generate Clinic UUID
-		if(clinicUUID == null) {
-			try {
-				String clinicData = clinic.getId().toString().concat(clinic.getClinicName()).concat(clinic.getClinicAddress());
-				clinicUUID = UUID.nameUUIDFromBytes(clinicData.getBytes()).toString().toUpperCase();
-			} catch (Exception e) {
-				log.info("Failed to generate UUID from clinic data - using randomized UUID");
-				clinicUUID = UUID.randomUUID().toString().toUpperCase();
-			}
 		}
 	}
 
@@ -122,15 +112,6 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 
 		// Generate GUIDs
 		String randDocGUID = UUID.randomUUID().toString().toUpperCase();
-		String authorGUID = null;
-		try {
-			String authorData = record.getAuthorId().concat(record.getProviderFirstName(record.getAuthorId())).concat(record.getProviderLastName(record.getAuthorId()));
-			authorGUID = UUID.nameUUIDFromBytes(authorData.getBytes()).toString().toUpperCase();
-			//authorGUID = UUIDConverter.getUUID(authorData).toString().toUpperCase();
-		} catch (Exception e) {
-			log.info("Failed to generate GUID from author name - using randomized GUID");
-			authorGUID = UUID.randomUUID().toString().toUpperCase();
-		}
 
 		// Create Data Model
 		context.put("patient", record);
@@ -138,9 +119,9 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		context.put("stringUtils", stringUtils);
 		context.put("custodian", clinic);
 		context.put("randDocGUID", randDocGUID);
-		context.put("authorIdRoot", authorGUID);
-		context.put("custodianIdRoot", clinicUUID);
 		context.put("buildTag", buildTag);
+		context.put("notSupported", notSupported);
+		context.put("noInformation", noInformation);
 
 		// Merge Template & Data Model
 		String result = VelocityUtils.velocityEvaluate(context, template);
