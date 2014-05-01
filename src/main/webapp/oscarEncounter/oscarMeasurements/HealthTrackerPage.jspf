@@ -416,11 +416,27 @@ text-align:center;
 .yes-no-options{display: inline;margin:0px;padding:0px}
 
 .save-all{
-float:left;
-margin-left:560px;
-padding-top:50px;
-height:70px;
+z-index:999;
+position:fixed;
+bottom:0px;
+left:10px;
+
+    width: 625px;
+    height:50px;
+    border: thin solid #c6c6c6;
+    background: #fff;
+    padding:8px;
+    text-align:right;
+    
+opacity:0.4;
+filter:alpha(opacity=40); /* For IE8 and earlier */
 }
+
+.save-all:hover{
+opacity:1.0;
+filter:alpha(opacity=100); /* For IE8 and earlier */
+}
+
 
 #dxAlert ul {
 display: inline; 
@@ -960,29 +976,18 @@ if(!btnLabel.equals("PHV")){
 
 <%if(isMeasurements){%>
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-		
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
-		<span class="DoNotPrint" style="padding-left:10px;" id="edit-flowsheet">
-		<i class="icon-pencil"></i> <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker" title="Edit Flowsheet">Edit</a>   
-		</span>
-		</security:oscarSec>
-		
+				
+		<!-- this is no longer needed since new development expands the comment area automatically
 		<span class="DoNotPrint" style="padding-left:10px;" id="expand-all">
 		<i class="icon-plus-sign"></i> 
 		<a id="expand_all" href="javascript:void(0)" TITLE="<bean:message key='global.expandall' />"><bean:message key="global.expandall" /></a>
-		</span>
+		</span>-->
 		
 		<span class="DoNotPrint" style="padding-left:10px;display:none" id="collapse-all" >
 		<i class="icon-minus-sign"></i>
 		<a id="collapse_all" href="javascript:void(0)" TITLE="<bean:message key='global.collapseall' />"><bean:message key="global.collapseall" /></a>
 		</span>
-		
-		<!-- 
-		<span style="padding-left:10px;">
-		<b>+</b><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>')" TITLE="Add all measurements">
-		<bean:message key="oscarencounter.templateflowsheet.addall" /></a>
-		</span>
-		-->
+
 		<%if (recList.size() > 0){ %>
 		<span class="DoNotPrint" style="padding-left:10px;">
 		<i id="plus-overdue" class="icon-plus-sign"></i> <i id="minus-overdue" class="icon-minus-sign" style="display:none"></i>
@@ -1001,18 +1006,7 @@ if(!btnLabel.equals("PHV")){
 		Add Renal</a>
 		</span>
 	 	<%} }%>
-	
-		<span class="DoNotPrint" style="padding-left:10px;" id="flowsheet-print">
-	 	<i class="icon-print"></i> 
-	 	<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&htracker" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet">Custom Print</a>
-	 	</span>	
-	 	
-		<!-- 
-		<span>
-			<a class="DoNotPrint" href="#"  title="Tracker Graph">Tracker Graph</a>
-		</span>
-		-->
-		
+			
 		<span class="DoNotPrint">
 		<br>
 		<%
@@ -1066,7 +1060,7 @@ if(!btnLabel.equals("PHV")){
    	</div>
    </div>
      
-	    <div class="row-fluid">
+	    <div class="row-fluid" style="margin-bottom:60px;">
 		    <div class="span6">
 
 <%if(!isMeasurements && !temp.equals("tracker")){ out.print("No measurements! "); 	
@@ -1815,7 +1809,16 @@ function createAddAll(d,t){
 <%if(isMeasurements){ %>
 <div class="DoNotPrint save-all">
 	<!-- this will have to be visible to user -->
-		    <input class="btn btn-primary" type="submit" name="submit" value="Save All" /> 
+			
+		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&htracker" class="btn btn-large" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet"><i class="icon-print"></i> Print</a>
+					
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
+			<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker" class="btn btn-large" title="Edit Flowsheet"><i class="icon-pencil"></i> Edit</a>   
+			</security:oscarSec>
+					
+		    <input class="btn btn-primary btn-large" type="submit" name="submit" value="Save All" />
+		 </security:oscarSec>    
 </div>
 <%}%>
 <!-- end of form -->
