@@ -140,7 +140,7 @@ text-decoration: none;
 color:#0088cc;
 }
 
-div#dynamic-content iframe {
+#myFrame {
     position: absolute;
     height: 100%;
     width: 75%;

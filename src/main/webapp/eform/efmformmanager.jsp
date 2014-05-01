@@ -116,7 +116,7 @@ $(function ()  {
 <div class="tab-pane" id="upload">
 <div class="well">
 
-<iframe id="uploadFrame" name="uploadFrame" frameborder="0" width="950" height="120" src="<%=request.getContextPath()%>/eform/partials/upload.jsp"></iframe>
+<iframe id="uploadFrame" name="uploadFrame" frameborder="0" width="900" height="120" src="<%=request.getContextPath()%>/eform/partials/upload.jsp"></iframe>
 
 </div>
 </div>
