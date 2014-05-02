@@ -252,13 +252,28 @@ public class EctSaveEncounterAction extends Action {
                   "Sign,Save and Exit")) {
             	  Appointment appt = appointmentDao.find(Integer.parseInt(sessionbean.appointmentNo));
             	  appointmentArchiveDao.archiveAppointment(appt);
-                  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.signStatus(),sessionbean.providerNo,sessionbean.appointmentNo});
+            	  
+            	  //log and skip update when as.signStatus() returns "" - Ronnie Cheng
+            	  if (as.signStatus().equals("")) {
+            		  MiscUtils.getLogger().info("Skip signStatus appointment : appointmentNo ["+sessionbean.appointmentNo+"] status ["+sessionbean.status+"]");
+            	  }
+            	  else {
+            		  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.signStatus(),sessionbean.providerNo,sessionbean.appointmentNo});  
+            	  }
               }
               if (httpservletrequest.getParameter("btnPressed").equals(
                   "Verify and Sign")) {
             	  Appointment appt = appointmentDao.find(Integer.parseInt(sessionbean.appointmentNo));
             	  appointmentArchiveDao.archiveAppointment(appt);
-            	  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.verifyStatus(),sessionbean.providerNo,sessionbean.appointmentNo});
+            	  
+            	  //log and abandon update when as.verifyStatus() returns "" - Ronnie Cheng
+            	  if (as.verifyStatus().equals("")) {
+            		  MiscUtils.getLogger().info("Skip verifyStatus appointment : appointmentNo ["+sessionbean.appointmentNo+"] status ["+sessionbean.status+"]");
+            	  }
+            	  else {
+            		  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.verifyStatus(),sessionbean.providerNo,sessionbean.appointmentNo});  
+            	  }
+            	  
               }
             }
           }
