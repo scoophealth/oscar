@@ -764,28 +764,29 @@ public class EFormUtil {
 		}
 
 		/* write to document
-		 * <document>
+		 * <document {optional:belong=provider/patient}>
 		 * 		<docdesc>{optional:documentDescription}</docdesc>
-		 * 		<belong>{optional:provider/patient}</belong>
-		 * 		<docowner>{optional}</docowner>
+		 * 		<docowner>{optional:provider_no/demographic_no}</docowner>
 		 * 		<content>
 		 * 			content to write to document
 		 * 		</content>
 		 * </document>
 		 */
-		templates = getWithin("document", text);
+		templates = getWhole("document", text);
 		for (String template : templates) {
 			if (StringUtils.isBlank(template)) continue;
 
+			String belong = getAttribute("belong", getBeginTag("document", template));
+			if (!"patient".equalsIgnoreCase(belong)) belong = "provider";
+			else belong = "demographic";
+			
+			String docOwner = getContent("docowner", template, null);
+			if (docOwner == null) {
+				if (belong.equals("demographic")) docOwner = eForm.getDemographicNo();
+				else docOwner = eForm.getProviderNo(); 
+			}
+			
 			String docDesc = getContent("docdesc", template, eForm.getFormName());
-			String belong = getContent("belong", template, "provider").toLowerCase();
-			String docOwner = getContent("docowner", template, eForm.getProviderNo());
-			if (belong.equals("patient")) {
-				docOwner = getContent("docowner", template, eForm.getDemographicNo());
-			}
-			else if (!belong.equals("provider")) {
-				belong = "provider";
-			}
 			String docText = getContent("content", template, "");
 			docText = putTemplateEformHtml(eForm.getFormHtml(), docText);
 
