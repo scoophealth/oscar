@@ -13,7 +13,7 @@
 		<property name="period" value="60000" />		<!--  every 30 mins =1800000 -->
 	</bean>
 	
-		<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<bean id="schedulerOLIS" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="olisScheduledPullTask" />
