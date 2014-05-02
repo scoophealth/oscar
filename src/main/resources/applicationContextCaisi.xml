@@ -147,7 +147,7 @@
                 <property name="period" value="86400000" />
     </bean>
 
-	<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
+	<bean id="schedulerCaisi" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="scheduledBedProgramDischargeTask" />

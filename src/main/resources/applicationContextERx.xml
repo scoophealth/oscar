@@ -13,7 +13,7 @@
 		<property name="period" value="1800000" />	<!--  every 30 mins =1800000 -->
 	</bean>
 	
-		<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<bean id="schedulerERx" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="erxScheduledTimerTask" />
