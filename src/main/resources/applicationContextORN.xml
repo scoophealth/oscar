@@ -16,7 +16,7 @@
 		<property name="period" value="60000" />		<!--  every 2 mins-->
 	</bean>
 	
-		<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<bean id="schedulerORN" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="ckdScreenerScheduledTask" />
