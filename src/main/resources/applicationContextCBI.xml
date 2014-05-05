@@ -21,7 +21,7 @@
 		<property name="period" value="${CBI_JOB_INTERVAL}" />
 	</bean>
 	
-		<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
+	<bean id="schedulerCBI" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="cbiDataSubmissionJob" />
