@@ -1510,6 +1510,12 @@ public class CaseManagementManager {
 
 	public void saveNoteSimple(CaseManagementNote note) {
 		this.caseManagementNoteDAO.saveNote(note);
+		
+		
+	}
+	
+	public Long saveNoteSimpleReturnID(CaseManagementNote note) {
+		return (Long)this.caseManagementNoteDAO.saveAndReturn(note);
 	}
 
 	public boolean isClientInProgramDomain(String providerNo, String demographicNo) {
