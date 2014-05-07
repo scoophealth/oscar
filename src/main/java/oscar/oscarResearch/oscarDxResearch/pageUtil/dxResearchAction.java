@@ -46,7 +46,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
 import oscar.util.ParameterActionForward;
-import oscar.util.UtilDateUtilities;
 
 
 public class dxResearchAction extends Action {
@@ -56,7 +55,6 @@ public class dxResearchAction extends Action {
         
         dxResearchForm frm = (dxResearchForm) form; 
         request.getSession().setAttribute("dxResearchForm", frm);
-        String nowDate = UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"); 
         String codingSystem = frm.getSelectedCodingSystem();        
         String demographicNo = frm.getDemographicNo();
         String providerNo = frm.getProviderNo();
@@ -105,7 +103,7 @@ public class dxResearchAction extends Action {
 				for (Dxresearch r : research) {
 					count = count + 1;
 
-					r.setUpdateDate(ConversionUtils.fromDateString(nowDate));
+					r.setUpdateDate(new Date());
 					r.setStatus('A');
 
 					dao.save(r);

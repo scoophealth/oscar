@@ -267,7 +267,7 @@ public class DocumentDao extends AbstractDao<Document> {
 	 * 		Returns a list containing array with CtlDocument and Document pairs in the corresponding order. 
 	 */
 	@SuppressWarnings("unchecked")
-    public List<Object[]> findDocuments(String module, String moduleid, String docType, boolean includePublic, boolean includeDeleted, boolean includeActive, EDocSort sort) {
+    public List<Object[]> findDocuments(String module, String moduleid, String docType, boolean includePublic, boolean includeDeleted, boolean includeActive, EDocSort sort, Date since) {
 		Map<String, Object> params = new HashMap<String, Object>();
 	
 		StringBuilder buf = new StringBuilder("SELECT DISTINCT c, d " +
@@ -300,6 +300,12 @@ public class DocumentDao extends AbstractDao<Document> {
 		} else if (includeActive) {
 			buf.append(" AND d.status != 'D'");
 		}
+		
+		if(since != null) {
+			buf.append(" AND d.updatedatetime > :updatedatetime ");
+			params.put("updatedatetime",since);
+		}
+		
 		buf.append(" ORDER BY ").append(sort.getValue());
 
 		Query query = entityManager.createQuery(buf.toString());
@@ -333,4 +339,25 @@ public class DocumentDao extends AbstractDao<Document> {
         List<Document> documents = query.getResultList();
         return documents;
     }
+    
+    //for integrator
+	public List<Integer> findDemographicIdsSince(Date since) {
+		
+		String sql = "SELECT DISTINCT c.id.moduleId " + "FROM Document d, CtlDocument c WHERE c.id.documentNo=d.documentNo AND c.id.module='demographic'";
+		
+		if(since != null) {
+			sql += " AND d.updatedatetime > :since";
+		}
+		
+		Query query = entityManager.createQuery(sql);
+ 		
+		if(since != null) {
+			query.setParameter("since",since);
+		}
+		@SuppressWarnings("unchecked")
+		List<Integer> resultDocs = query.getResultList();
+		
+		
+		return resultDocs;
+	}
 }

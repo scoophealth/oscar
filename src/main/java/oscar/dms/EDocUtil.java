@@ -38,8 +38,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import org.apache.commons.io.FileUtils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
@@ -461,7 +461,7 @@ public final class EDocUtil {
 		boolean includePublic = publicDoc.equals(PUBLIC);
 		boolean includeDeleted = viewstatus.equals("deleted");
 		boolean includeActive = viewstatus.equals("active");
-		List<Object[]> documents = documentDao.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort);
+		List<Object[]> documents = documentDao.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort, null);
 
 		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
 		for (Object[] o : documents) {
@@ -477,6 +477,35 @@ public final class EDocUtil {
 		return resultDocs;
 	}
 
+	public static ArrayList<EDoc> listDocsSince(String module, String moduleid, String docType, String publicDoc, EDocSort sort, String viewstatus, Date since) {
+		
+		boolean includePublic = publicDoc.equals(PUBLIC);
+		boolean includeDeleted = viewstatus.equals("deleted");
+		boolean includeActive = viewstatus.equals("active");
+		
+		
+		List<Object[]> documents = documentDao.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort, since);
+
+		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
+		for (Object[] o : documents) {
+			Document d = (Document)o[1];
+			EDoc currentdoc = toEDoc(d);
+			resultDocs.add(currentdoc);
+		}
+
+		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+			resultDocs = documentFacilityFiltering(resultDocs);
+		}
+
+		return resultDocs;
+	}
+	
+	public static ArrayList<Integer> listDemographicIdsSince(Date since) {
+		return (ArrayList<Integer>)documentDao.findDemographicIdsSince(since);
+	}
+
+
+	
 	private static EDoc toEDoc(Document d) {
 		EDoc currentdoc = new EDoc();
 		currentdoc.setDocId(d.getId().toString());
