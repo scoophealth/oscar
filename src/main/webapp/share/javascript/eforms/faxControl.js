@@ -30,7 +30,7 @@ var faxControl = {
 				
 				if (data == null || data.trim() == "") {
 					placeholder.html("");
-					alert("Error loading fax control, please contact an administrator.");
+					console.log("Error loading fax control, please contact an administrator.");
 				}
 				else { 
 					placeholder.html(data);					
