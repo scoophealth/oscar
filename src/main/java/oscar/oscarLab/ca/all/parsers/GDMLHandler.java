@@ -94,7 +94,7 @@ public class GDMLHandler implements MessageHandler {
         headers = new ArrayList<String>();
         obrSegMap = new LinkedHashMap<OBR,ArrayList<OBX>>();
         obrSegKeySet = new ArrayList<OBR>();
-
+        //Add ORB/ORX of the matching labs
         for (int i=0; i < labs.size(); i++){
             msg = (ORU_R01) p.parse(( labs.get(i)).replaceAll("\n", "\r\n"));
             int obrCount = msg.getRESPONSE().getORDER_OBSERVATIONReps();
@@ -123,6 +123,34 @@ public class GDMLHandler implements MessageHandler {
                     headers.add(header);
                 }
 
+            }
+        }
+      //Add ORB/ORX of the parsed lab
+        msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
+        int obrCount = msg.getRESPONSE().getORDER_OBSERVATIONReps();
+
+        for (int j=0; j < obrCount; j++){
+
+            // ADD OBR SEGMENTS AND THEIR OBX SEGMENTS TO THE OBRSEGMAP
+            OBR obrSeg = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBR();
+            ArrayList<OBX> obxSegs = obrSegMap.get(obrSeg);
+
+            // if the obrsegment has not yet been created it will be now
+            if (obxSegs == null)
+                obxSegs = new ArrayList<OBX>();
+
+            int obxCount = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATIONReps();
+            for (int k=0; k < obxCount; k++){
+                obxSegs.add(msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATION(k).getOBX());
+            }
+
+            obrSegMap.put(obrSeg, obxSegs);
+            obrSegKeySet.add(obrSeg);
+
+            // ADD THE HEADER TO THE HEADERS ARRAYLIST
+            String header = getString(obrSeg.getUniversalServiceIdentifier().getAlternateIdentifier().getValue());
+            if (!headers.contains(header)){
+                headers.add(header);
             }
         }
     }
