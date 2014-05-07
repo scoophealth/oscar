@@ -198,4 +198,10 @@ public class BillingONItem extends AbstractModel<Integer> implements Serializabl
     public int hashCode() {
         return (id != null ? id.hashCode() : 0);
     }        
+    
+    @PrePersist
+    @PreUpdate
+    protected void jpa_updateTimestamp() {
+    	this.lastEditDT = new Date();
+    }
 }
