@@ -18,9 +18,9 @@
 		<property name="username" value="${db_username}" />
 		<property name="password" value="${db_password}" />
 
-		<property name="maxActive" value="32" />
-		<property name="maxIdle" value="8" />
-		<property name="maxWait" value="300000" />
+		<property name="maxActive" value="${db_max_active}" />
+		<property name="maxIdle" value="${db_max_idle}" />
+		<property name="maxWait" value="${db_max_wait}" />
 
 		<property name="testOnBorrow" value="true" />
 		<property name="validationQuery" value="${db_validationQuery}" />
@@ -29,11 +29,11 @@
 		<!-- bug in the connector 3.11 driver which prevents this from being used, we need to upgrade drivers before re-enabling -->
 		<property name="poolPreparedStatements" value="false" />
 		<!-- abandoned features are deprecated and have no effect, don't expect the below to do anything -->
-		<!--
-		<property name="removeAbandoned" value="true" />
-		<property name="removeAbandonedTimeout" value="15" />
-		<property name="logAbandoned" value="true" />
-		 -->
+		
+		<property name="removeAbandoned" value="${db_remove_abandoned}" />
+		<property name="removeAbandonedTimeout" value="${db_remove_abandoned_timeout}" />
+		<property name="logAbandoned" value="${db_log_abandoned}" />
+		 
 	</bean>
 
 	<!-- JPA -->
