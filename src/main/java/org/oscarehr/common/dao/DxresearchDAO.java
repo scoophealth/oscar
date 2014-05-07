@@ -425,7 +425,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 	}
 	
 	public List<Dxresearch> getByDemographicNoSince(int demographicNo,Date lastUpdateDate) {
-		String hql = "select d from Dxresearch d where d.demographicNo=? and d.status='A' and d.updateDate > ?";
+		String hql = "select d from Dxresearch d where d.demographicNo=? and d.updateDate > ?";
     	Query query = entityManager.createQuery(hql);
     	query.setParameter(1,demographicNo);
     	query.setParameter(2, lastUpdateDate);

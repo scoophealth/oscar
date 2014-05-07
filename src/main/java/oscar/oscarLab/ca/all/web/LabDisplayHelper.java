@@ -165,7 +165,7 @@ public class LabDisplayHelper {
 		XmlUtils.appendChild(doc, child, "providerName", reportStatus.getProviderName());
 		XmlUtils.appendChild(doc, child, "providerNo", reportStatus.getProviderNo());
 		XmlUtils.appendChild(doc, child, "status", reportStatus.getStatus());
-		XmlUtils.appendChild(doc, child, "comment", reportStatus.getComment());
+		XmlUtils.appendChild(doc, child, "comment", reportStatus.getComment()!=null?reportStatus.getComment():"");
 		XmlUtils.appendChild(doc, child, "timestamp", reportStatus.getTimestamp());
 		XmlUtils.appendChild(doc, child, "segmentId", reportStatus.getID());
 
