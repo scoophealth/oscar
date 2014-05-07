@@ -23,6 +23,7 @@
  */
 package org.oscarehr.document.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.DocumentDao;
@@ -35,12 +36,12 @@ import oscar.util.ConversionUtils;
 public class DocumentMergeDemographicDAO extends DocumentDao {
 
 	@Override
-	public List<Object[]> findDocuments(final String module, String moduleid, final String docType, final boolean includePublic, final boolean includeDeleted, final boolean includeActive, final EDocSort sort) {
-		List<Object[]> result = super.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort);
+	public List<Object[]> findDocuments(final String module, String moduleid, final String docType, final boolean includePublic, final boolean includeDeleted, final boolean includeActive, final EDocSort sort, final Date since) {
+		List<Object[]> result = super.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort,null);
 		MergedDemographicTemplate<Object[]> template = new MergedDemographicTemplate<Object[]>() {
 			@Override
 			protected List<Object[]> findById(Integer demographic_no) {
-				return DocumentMergeDemographicDAO.super.findDocuments(module, demographic_no.toString(), docType, includePublic, includeDeleted, includeActive, sort);
+				return DocumentMergeDemographicDAO.super.findDocuments(module, demographic_no.toString(), docType, includePublic, includeDeleted, includeActive, sort, since);
 			}
 		};
 		return template.findMerged(ConversionUtils.fromIntString(moduleid), result);

@@ -61,12 +61,11 @@ public class dxResearchUpdateAction extends Action {
 		Dxresearch research = dao.find(ConversionUtils.fromIntString(did));
 		if (research != null) {
 			if (status.equals("C") || status.equals("D")) {
-				research.setUpdateDate(new Date());
 				research.setStatus(status.charAt(0));
 			} else if (status.equals("A") && startDate != null) {
-				research.setUpdateDate(new Date());
 				research.setStartDate(new Date());
 			}
+			research.setUpdateDate(new Date());
 			
 			dao.merge(research);
 		}
