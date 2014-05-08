@@ -67,8 +67,7 @@
     //-->
 </script>
 </head>
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="<%=deepcolor%>">
@@ -161,9 +160,7 @@
 	key="admin.lotnrsearchresults.btnNextPage" /></a> <%
 }
 %>
-<p><bean:message
-	key="admin.lotnrsearchresults.msgClickForEditing" /></p>
+<p><bean:message key="admin.lotnrsearchresults.msgClickForEditing" /></p>
 </center>
-<%@ include file="footerhtm.jsp"%></center>
 </body>
 </html:html>

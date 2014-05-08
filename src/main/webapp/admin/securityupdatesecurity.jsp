@@ -248,7 +248,7 @@
 </table>
 
 <p></p>
-<%@ include file="footerhtm.jsp"%></center>
+</center>
 <script type="text/javascript">
 Calendar.setup({ inputField : "date_ExpireDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date_ExpireDate_cal" });
 </script>

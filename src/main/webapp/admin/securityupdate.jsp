@@ -103,7 +103,7 @@
 %>
 </p>
 <p></p>
-<%@ include file="footer2htm.jsp"%>
+
 </center>
 </body>
 </html:html>

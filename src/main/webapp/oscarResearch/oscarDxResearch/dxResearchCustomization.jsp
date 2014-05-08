@@ -52,11 +52,11 @@ function setfocus(){
 <html:errors />
 <table width="100%" bgcolor="#EEEEFF">
 	<tr bgcolor="#000000">
-		<td class="subject" colspan="2">&nbsp;&nbsp;&nbsp;<bean:message
+		<td class="subject" colspan="3">&nbsp;&nbsp;&nbsp;<bean:message
 			key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch" /></td>
 	</tr>
 	<tr>
-		<td class=heading colspan="2"><bean:message
+		<td class=heading colspan="3"><bean:message
 			key="oscarResearch.oscarDxResearch.dxCustomization.title" /></td>
 	</tr>
 	<tr>
@@ -81,11 +81,6 @@ function setfocus(){
 	</tr>
 	<tr>
 		<td></td>
-	</tr>
-	<tr>
-		<td><input type="button" class="mbttn"
-			onClick="javascript:window.close()"
-			value="<bean:message key="global.btnClose"/>" /></td>
 	</tr>
 </table>
 </body>

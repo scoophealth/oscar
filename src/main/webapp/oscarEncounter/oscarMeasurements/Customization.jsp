@@ -178,17 +178,6 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
 	<tr>
 		<td></td>
 	</tr>
-	<tr>
-		<td>
-		<table class=messButtonsA cellspacing=0 cellpadding=3>
-			<tr>
-				<td class="messengerButtonsA"><a
-					href="javascript:window.close()" class="messengerButtons"><bean:message
-					key="global.btnClose" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
 </table>
 </body>
 </html:html>
