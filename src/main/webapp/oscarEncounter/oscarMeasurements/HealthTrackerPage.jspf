@@ -1430,9 +1430,15 @@ if(!btnLabel.equals("PHV")){
       <div class='item active'>
     <%
         out.flush();
+    	
+    	String result;   
         for (int k = 0; k < alist.size(); k++){
       	  	Map<String,Object> hdata = alist.get(k);
             String com = PreventionData.getPreventionComment(""+hdata.get("id"));
+            
+            Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
+            result = hExt.get("result");
+            
             boolean comb = false;
             if (com != null ){
                 comments.add(com);
@@ -1462,7 +1468,9 @@ if(!btnLabel.equals("PHV")){
 	
 </p>
 
-<p width="16px" <%=r(hdata.get("refused"))%> >  </p>
+<p width="16px" <%=r(hdata.get("refused"))%> ></p>
+<%if(result!=null && result.equals("abnormal")){%><small style="color:#b94a48">result: <%=result%></small><%}%>
+
     </div> <!-- prevention procedure -->
 
     <%}%>
