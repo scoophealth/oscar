@@ -224,9 +224,7 @@
 	key="admin.providersearchresults.btnNextPage" /></a> <%
 }
 %>
-<p><bean:message
-	key="admin.providersearchresults.msgClickForEditing" /></p>
+<p><bean:message key="admin.providersearchresults.msgClickForEditing" /></p>
 </center>
-<%@ include file="footerhtm.jsp"%></center>
 </body>
 </html:html>

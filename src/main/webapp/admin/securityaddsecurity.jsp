@@ -66,6 +66,6 @@
 %>
 <h1><bean:message key="${message}" /></h1>
 
-<%@ include file="footer2htm.jsp"%></center>
+</center>
 </body>
 </html:html>

@@ -134,12 +134,6 @@
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 	</tr>
-	<tr>
-		<td align="center" bgcolor="#CCCCFF" colspan="2"><input
-			type="button" name="Cancel"
-			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
-			onClick="window.close()" /></td>
-	</tr>
 </table>
 </form>
 

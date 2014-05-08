@@ -108,6 +108,6 @@ else
 }
 %>
 
-<%@ include file="footer2htm.jsp"%></center>
+</center>
 </body>
 </html:html>

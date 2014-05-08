@@ -217,6 +217,5 @@
 %>
 <p><bean:message key="admin.securitysearchresults.msgClickForDetail" /></p>
 </center>
-<%@ include file="footerhtm.jsp"%></center>
 </body>
 </html:html>

@@ -98,9 +98,7 @@ function setfocus() {
 			name="submit_form" value=' Save '> <input type="submit"
 			name="confirmButton"
 			value="<bean:message key="admin.resourcebaseurl.btnSave"/>">
-		<input type="button" name="Cancel"
-			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
-			onClick="window.close()"></td>
+		</td>
 	</tr>
 	</form>
 </table>

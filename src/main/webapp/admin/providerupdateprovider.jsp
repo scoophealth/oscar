@@ -448,7 +448,6 @@ for (int i=0; i<sites.size(); i++) {
 %>
 </form>
 
-<p></p>
-<%@ include file="footerhtm.jsp"%></center>
+</center>
 </body>
 </html:html>
