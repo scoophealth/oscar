@@ -912,7 +912,7 @@ if(!btnLabel.equals("PHV")){
        
 </div>
 <div class="modal-footer">
-<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Continue">
+<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="<bean:message key="oscarencounter.healthtracker.skipdiagnosis" />">
 </div>
 </div>
 <!-- modal end --> 
@@ -977,17 +977,6 @@ if(!btnLabel.equals("PHV")){
 <%if(isMeasurements){%>
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 				
-		<!-- this is no longer needed since new development expands the comment area automatically
-		<span class="DoNotPrint" style="padding-left:10px;" id="expand-all">
-		<i class="icon-plus-sign"></i> 
-		<a id="expand_all" href="javascript:void(0)" TITLE="<bean:message key='global.expandall' />"><bean:message key="global.expandall" /></a>
-		</span>-->
-		
-		<span class="DoNotPrint" style="padding-left:10px;display:none" id="collapse-all" >
-		<i class="icon-minus-sign"></i>
-		<a id="collapse_all" href="javascript:void(0)" TITLE="<bean:message key='global.collapseall' />"><bean:message key="global.collapseall" /></a>
-		</span>
-
 		<%if (recList.size() > 0){ %>
 		<span class="DoNotPrint" style="padding-left:10px;">
 		<i id="plus-overdue" class="icon-plus-sign"></i> <i id="minus-overdue" class="icon-minus-sign" style="display:none"></i>
