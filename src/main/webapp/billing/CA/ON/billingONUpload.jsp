@@ -42,7 +42,10 @@ function onSubmit(){
 	var val1 = document.form1.file1.value;
 	var n = val1.lastIndexOf('\\');
 	val1 = val1.substring((n*1+1));
-	//alert(val1);
+	if (val1.length>12) {
+			alert("File name: "+val1+" is too long. Please rename file and upload again!");
+			return false;
+			}
 	if (val1.substring(0,1) == "P" || val1.substring(0,1) == "S"){
 		if (document.all){
 			document.all.form1.action="../../../servlet/oscar.DocumentUploadServlet";

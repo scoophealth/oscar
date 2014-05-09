@@ -25,6 +25,7 @@ package oscar;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,8 +57,8 @@ public class DocumentUploadServlet extends HttpServlet {
 			return;
 
 		String providedFilename = request.getParameter("filename");
-		if (providedFilename != null) {
-			
+		if (providedFilename != null && providedFilename.indexOf(File.separator) == -1) {
+			providedFilename=URLDecoder.decode(providedFilename,"UTF-8");
 			File documentDirectory = new File(foldername);
 			File providedFile = new File(inboxFolder, providedFilename);
 			if (!providedFile.exists()) { providedFile = new File(archiveFolder, providedFilename); }
