@@ -1477,14 +1477,19 @@ function changeLt(drugId){
             updateQty($('quantity_'+randomId));
     }
    function Delete2(element){
-
-        if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
              var id_str=(element.id).split("_");
+             var id_str=(element.id).split("_");
+			var del_type=id_str[0];
+			var warning;
+			if (del_type=="del"){ warning="Are you sure you wish to delete the selected prescriptions?";}
+			else if (del_type=="delA"){ warning="Are you sure you wish to delete this prescription and ALL expired prescriptions of this drug?";}
+        if(confirm(warning)==true){
              var id=id_str[1];
              //var id=element.id;
              var rxDate="rxDate_"+ id;
              var reRx="reRx_"+ id;
              var del="del_"+ id;
+             var delA="delA_"+ id;
              var discont="discont_"+ id;
              var prescrip="prescrip_"+id;
 
@@ -1494,6 +1499,7 @@ function changeLt(drugId){
                   $(rxDate).style.textDecoration='line-through';
                   $(reRx).style.textDecoration='line-through';
                   $(del).style.textDecoration='line-through';
+                  $(delA).style.textDecoration='line-through';
                   $(discont).style.textDecoration='line-through';
                   $(prescrip).style.textDecoration='line-through';
             }});
