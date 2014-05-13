@@ -38,7 +38,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.oscarehr.casemgmt.model.ClientImage;
-import org.oscarehr.util.HinValidator;
+import org.oscarehr.integration.mchcv.HCValidationFactory;
+import org.oscarehr.integration.mchcv.HCValidationResult;
+import org.oscarehr.integration.mchcv.HCValidator;
 
 /**
  * This object is to help support tracking which fields in the demographic object have been marked as "valid" by an end user. The original intent is because only "validated" information is allowed to be sent to the HNR and part of the scope of work was to
@@ -182,18 +184,22 @@ public class HnrDataValidation extends AbstractModel<Integer> {
 	}
 	
 	public static boolean isHcInfoValidateable(Demographic demographic) {
-		if (demographic==null) return(false);
-		else if (demographic.getFirstName()==null) return(false);
-		else if (demographic.getLastName()==null) return(false);
-		else if (demographic.getSex()==null) return(false);
-		else if (demographic.getBirthDay()==null) return(false);
-		else if (demographic.getHin()==null) return(false);
-		// HIN type is not here because only ontario has it
-		else if (demographic.getHcType()==null) return(false);
-		else if (!HinValidator.isValid(demographic.getHin(), demographic.getHcType().toLowerCase())) return(false);
-		else if (demographic.getEffDate()==null) return(false);
-		else if (demographic.getHcRenewDate()==null) return(false);
-		else return(true);
+		if (demographic == null) return false;
+		if (demographic.getFirstName() == null) return false;
+		if (demographic.getLastName() == null) return false;
+		if (demographic.getSex() == null) return false;
+		if (demographic.getBirthDay()==null) return false;
+		if (demographic.getHin() == null) return false;
+                if (demographic.getHcType() == null) return false;
+                if (demographic.getEffDate() == null) return false;
+                if (demographic.getHcRenewDate() == null) return false;
+                
+                HCValidator validator = HCValidationFactory.getHCValidator();
+                HCValidationResult validationResult = validator.validate(demographic.getHin(), demographic.getHcType().toLowerCase());
+                boolean hinValid = validationResult.isValid();
+                if (!hinValid) return false;
+                
+		return true;
 	}
 	
 	public static byte[] getHcInfoValidationBytes(Demographic demographic) {

@@ -24,45 +24,62 @@
 
 --%>
 
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
 <html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>PATIENT DETAIL INFO</title>
-<link rel="stylesheet" href="../web.css" />
-<script language="JavaScript">
-<!--
-function setfocus() {
-  this.focus();
-  document.swipecard.card_no.focus();
-  document.swipecard.card_no.select();
-}
-//-->
-</script>
-</head>
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor="#486ebd">
-		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
-		DETAIL RECORD</font></th>
-	</tr>
-</table>
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
-	BGCOLOR="#C4D9E7">
-	<form method="post" name="swipecard" action="demographicswipe.jsp">
-	<tr valign="top">
-		<td rowspan="2" ALIGN="right" valign="middle"><font
-			face="Verdana" color="#0000FF"><b><i>Swipe Card </i></b></font></td>
+    <head>
+        <script type="text/javascript" src="<%= request.getContextPath()%>/js/global.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath()%>/js/jquery.js"></script>
+        <link href="<%=request.getContextPath()%>/css/bootstrap.min.css" rel="stylesheet">
+        <title>PATIENT DETAIL INFO</title>
+        <link rel="stylesheet" href="../web.css" />
+        <script language="JavaScript">
+            <!--
+            function setfocus() {
+                this.focus();
+                document.swipecard.card_no.focus();
+                document.swipecard.card_no.select();
+            }
+            //-->
+        </script>
+    </head>
+    <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
+        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr bgcolor="#486ebd">
+                <th align=CENTER NOWRAP>
+                    <font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font>
+                </th>
+            </tr>
+        </table>
 
-		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
-			NAME="card_no" SIZE="60" MAXLENGTH="120"> <INPUT
-			TYPE="SUBMIT" NAME="displaymode" VALUE="Validate" SIZE="17"></td>
-	</tr>
-	</form>
-</table>
-<br>
-<br>
-<form><input type="button" name="Button" value="Cancel"
-	onclick=self.close();></form>
-</body>
+        <html:form action="/demographic/ValidateSwipeCard">
+
+            <div class="container">
+
+                <p class="row">
+                    <p class="span">
+                        Swipe card
+                    </p>
+                    <p class="span">
+                        <html:text property="magneticStripe" />
+                    </p>
+                </p>
+
+                <p class="row">
+                    <p class="span2">
+                        <html:submit value="Validate" />
+                    </p>
+                </p>
+            </div>
+
+        </html:form>        
+        <br>
+        <br>
+        <form>
+            <input type="button" name="Button" value="Cancel" onclick=self.close();>
+        </form>
+    </body>
 </html>

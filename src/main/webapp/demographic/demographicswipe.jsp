@@ -24,6 +24,10 @@
 
 --%>
 
+<%@page import="java.util.Date"%>
+<%@page import="org.oscarehr.integration.mchcv.HCMagneticStripe" %>
+<%@page import="org.oscarehr.integration.mchcv.HCValidationResult" %>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -56,7 +60,10 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
 -->
 </script>
 </head>
-<body topmargin="0" onLoad="setfocus()" leftmargin="0" rightmargin="0">
+
+
+
+<body topmargin="0" onLoad="setfocus();" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
@@ -65,42 +72,72 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
 </table>
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
 	BGCOLOR="#C4D9E7">
-	<% String card = request.getParameter("card_no");
-   String hin = card.substring(8,card.indexOf("^"));  
-   String lastname = card.substring(card.indexOf("^")+1, card.indexOf("/")).toUpperCase();
-   String subcard = card.substring(card.indexOf("/")+1);
-   String firstname = subcard.substring(0,subcard.indexOf("^")).toUpperCase();
-   String dobyear = subcard.substring(subcard.indexOf("^")+9,subcard.indexOf("^")+13);
-   String dobmonth = subcard.substring(subcard.indexOf("^")+13, subcard.indexOf("^")+15);
-   String dobdate = subcard.substring(subcard.indexOf("^")+15, subcard.indexOf("^")+17);
-   String vercode = subcard.substring(subcard.indexOf("^")+17, subcard.indexOf("^")+19);
-   vercode = vercode.toUpperCase();
+    <%
+   HCMagneticStripe hcMagneticStripe = (HCMagneticStripe) request.getAttribute("hcMagneticStripe");
+   HCValidationResult validationResult = (HCValidationResult) request.getAttribute("validationResult");
    
-   int monthInt = Integer.parseInt(subcard.substring(subcard.indexOf("^")+1, subcard.indexOf("^")+3));
-   String endyear = (monthInt > 30 ? "19" : "20") + subcard.substring(subcard.indexOf("^")+1, subcard.indexOf("^")+3); 
-   String endmonth = subcard.substring(subcard.indexOf("^")+3, subcard.indexOf("^")+5); 
-   String enddate = dobdate;
- 
-   monthInt = Integer.parseInt(subcard.substring(subcard.indexOf("^")+24, subcard.indexOf("^")+26));
-   String effyear = (monthInt > 30 ? "19" : "20") + subcard.substring(subcard.indexOf("^")+24, subcard.indexOf("^")+26); 
-   String effmonth = subcard.substring(subcard.indexOf("^")+26, subcard.indexOf("^")+28);
-   String effdate = subcard.substring(subcard.indexOf("^")+28, subcard.indexOf("^")+30); 
+   String responseCode = validationResult.getResponseCode();
+   String responseDescription = validationResult.getResponseDescription();
+   String responseAction = validationResult.getResponseAction();
+   
+   String firstName = validationResult.getFirstName();
+   if (firstName == null) {
+       firstName = hcMagneticStripe.getFirstName();
+   }
+   
+   String lastName = validationResult.getLastName();
+   if (lastName == null) {
+       lastName = hcMagneticStripe.getLastName();
+   }
+           
+   String birthDate = validationResult.getBirthDate();
+   if (birthDate == null) {
+       birthDate = hcMagneticStripe.getBirthDate();
+   }
+   
+   String dobyear = birthDate.substring(0, 4);
+   String dobmonth = birthDate.substring(4, 6);
+   String dobdate = birthDate.substring(6, 8);
+   
+   String expiryDate = validationResult.getExpiryDate();
+   if (expiryDate == null) {
+       expiryDate = hcMagneticStripe.getExpiryDate();
+   }
 
-   String sex = subcard.substring(subcard.indexOf("^")+8,subcard.indexOf("^")+9);
-    if (sex.compareTo("2") == 0) {
-   sex="F";
-   } else{
-   sex="M";
+   String endyear = expiryDate.substring(0, 4);
+   String endmonth = expiryDate.substring(4, 6);
+   String enddate = expiryDate.substring(6, 8);
+   
+   String issueDate = validationResult.getIssueDate();
+   if (issueDate == null) {
+       issueDate = hcMagneticStripe.getIssueDate();
+   }   
+   String effyear = issueDate.substring(0, 4);
+   String effmonth = issueDate.substring(4, 6);
+   String effdate = issueDate.substring(6, 8);
+   
+   String gender = validationResult.getGender();
+   if (gender == null) {
+       gender = hcMagneticStripe.getSex();
    }
    %>
+   
+       	<tr>
+                <td align="left"><font size="-1"><b>Validation result: </b></font></td>
+		<td><font size="-1"><%=responseDescription%></font></td>
+	</tr>   
+	<tr>
+                <td align="left"><font size="-1"><b>Response action: </b></font></td>
+		<td><font size="-1">(<%=responseCode%>) <%=responseAction%></font></td>
+	</tr>   
 
 	<tr>
 		<td align="right"><b>Last Name: </b></td>
 		<td align="left"><input type="text" name="last_name"
-			value="<%=lastname%>"></td>
+			value="<%=lastName%>"></td>
 		<td align="right"><b>First Name: </b></td>
 		<td align="left"><input type="text" name="first_name"
-			value="<%=firstname%>"></td>
+			value="<%=firstName%>"></td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b>:</b>
@@ -120,15 +157,15 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
 		</table>
 		</td>
 		<td align="right"><b> Sex:</b></td>
-		<td align="left"><input type="text" name="sex" value="<%=sex%>">
+		<td align="left"><input type="text" name="sex" value="<%=gender%>">
 		</td>
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>HIN: </b></td>
-		<td align="left"><input type="text" name="hin" value="<%=hin%>"></td>
+                <td align="left"><input type="text" name="hin" value="<%=hcMagneticStripe.getHealthNumber()%>"></td>
 		<td align="right"><b>Ver.</b></td>
 		<td align="left"><input type="text" name="ver"
-			value="<%=vercode%>"></td>
+			value="<%=hcMagneticStripe.getCardVersion()%>"></td>
 	</tr>
         <tr valign="top">
                 <td align="right"><b>EFF Date:</b></td>
@@ -169,7 +206,9 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
 <br>
 <br>
 <form><input type="button" name="Button1" value="Confirm"
-	onclick="javascript:Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>', '<%=vercode%>','<%=sex%>', '<%=effyear%>', '<%=effmonth%>', '<%=effdate%>', '<%=endyear%>', '<%=endmonth%>', '<%=enddate%>')"><input
+	onclick="javascript:Attach('<%=lastName%>','<%=firstName%>','<%=hcMagneticStripe.getHealthNumber()%>','<%=dobyear%>'
+            ,'<%=dobmonth%>','<%=dobdate%>', '<%=hcMagneticStripe.getCardVersion()%>','<%=gender%>', '<%=effyear%>', '<%=effmonth%>', '<%=effdate%>'
+            , '<%=endyear%>', '<%=endmonth%>', '<%=enddate%>');"><input
 	type="button" name="Button" value="Cancel" onclick=self.close();>
 </form>
 </body>
