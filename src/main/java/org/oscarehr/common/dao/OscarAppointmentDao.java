@@ -129,14 +129,26 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return rs;
 	}
 	
+	/**
+	 * The result order is unspecified.
+	 */
+	public List<Appointment> findAllByUpdateDateRange(Date startDateInclusive, Date endDateExclusive) {
+		
+		String sql = "SELECT a FROM Appointment a WHERE a.updateDateTime >=?1 and a.updateDateTime<?2";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, startDateInclusive);
+		query.setParameter(2, endDateExclusive);
+
+		List<Appointment> results = query.getResultList();
+		return results;
+	}
+	
 	public List<Appointment> getAllByDemographicNoSince(Integer demographicNo,Date lastUpdateDate ) {
 		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = " + demographicNo + " and a.updateDateTime > ? ORDER BY a.id";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, lastUpdateDate);
 
-		@SuppressWarnings("unchecked")
 		List<Appointment> rs = query.getResultList();
-
 		return rs;
 	}
 	
@@ -152,9 +164,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, 	lastUpdateDate);
 
-		@SuppressWarnings("unchecked")
 		List<Integer> rs = query.getResultList();
-
 		return rs;
 	}
 

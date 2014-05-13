@@ -25,6 +25,11 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.springframework.beans.BeanUtils;
@@ -44,4 +49,20 @@ public class AppointmentArchiveDao extends AbstractDao<AppointmentArchive> {
 		persist(aa);
 		return aa;
 	}
+	
+	/**
+	 * The result order is unspecified.
+	 */
+	public List<AppointmentArchive> findAllByUpdateDateRange(Date startDateInclusive, Date endDateExclusive) {
+		
+		String sql = "SELECT a FROM AppointmentArchive a WHERE a.updateDateTime >=?1 and a.updateDateTime<?2";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, startDateInclusive);
+		query.setParameter(2, endDateExclusive);
+
+		@SuppressWarnings("unchecked")
+        List<AppointmentArchive> results = query.getResultList();
+		return results;
+	}
+
 }
