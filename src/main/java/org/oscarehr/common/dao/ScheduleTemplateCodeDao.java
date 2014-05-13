@@ -44,16 +44,7 @@ public class ScheduleTemplateCodeDao extends AbstractDao<ScheduleTemplateCode> {
 		Query query = createQuery("x", null);
 		return query.getResultList();
 	}
-	
-	@Deprecated
-	/**
-	 * Use findAll()
-	 * @return
-	 */
-	public List<ScheduleTemplateCode> getAll() {
-		return findAll();
-	}
-	
+		
 	public ScheduleTemplateCode getByCode(char code) {
 		Query query = entityManager.createQuery("select s from ScheduleTemplateCode s where s.code=?");
 		query.setParameter(1, code);
