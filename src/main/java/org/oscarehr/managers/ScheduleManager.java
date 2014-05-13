@@ -31,7 +31,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.AppointmentTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ScheduleDateDao;
@@ -39,6 +41,7 @@ import org.oscarehr.common.dao.ScheduleHolidayDao;
 import org.oscarehr.common.dao.ScheduleTemplateCodeDao;
 import org.oscarehr.common.dao.ScheduleTemplateDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.ScheduleDate;
@@ -53,7 +56,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import oscar.log.LogAction;
-import oscar.util.DateUtils;
 
 
 @Service
@@ -63,6 +65,9 @@ public class ScheduleManager {
 	
 	@Autowired
 	private OscarAppointmentDao oscarAppointmentDao;
+
+	@Autowired
+	private AppointmentArchiveDao appointmentArchiveDao;
 
 	@Autowired
 	private ScheduleHolidayDao scheduleHolidayDao;
@@ -137,7 +142,7 @@ public class ScheduleManager {
 			
 			//make sure the appts returned are in local time. 
 			timeSlot.setTimeZone(Calendar.getInstance().getTimeZone());
-			DateUtils.zeroTimeFields(timeSlot);
+			DateUtils.truncate(timeSlot, Calendar.DAY_OF_MONTH);
 			TreeMap<Calendar, Character> allTimeSlots=dayWorkSchedule.getTimeSlots();
 			
 			for (int i=0; i<timecode.length(); i++)
@@ -167,7 +172,7 @@ public class ScheduleManager {
 	
 	public List<ScheduleTemplateCode> getScheduleTemplateCodes()
 	{
-		List<ScheduleTemplateCode> scheduleTemplateCodes=scheduleTemplateCodeDao.getAll();
+		List<ScheduleTemplateCode> scheduleTemplateCodes=scheduleTemplateCodeDao.findAll();
 		
 		// This method will not log access as the codes are not private medical data.
 		return(scheduleTemplateCodes);
@@ -232,5 +237,29 @@ public class ScheduleManager {
 		LogAction.addLogSynchronous("AppointmentManager.getAppointmentsForDateRangeAndProvider", "appointments for providerNo=" + providerNo + ", appointments for " + startTime + " to: " + endTime);
 
 		return(appointments);
+	}
+	
+	/**
+	 * @see OscarAppointmentDao.findAllByUpdateDateRange
+	 */
+	public List<Appointment> getAllAppointmentsByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive) {
+		List<Appointment> appointments = oscarAppointmentDao.findAllByUpdateDateRange(startDateInclusive.getTime(), endDateInclusive.getTime());
+
+		//--- log action ---
+		LogAction.addLogSynchronous("AppointmentManager.getAllAppointmentsByUpdateDateRange", "appointments from=" + startDateInclusive.getTime() + " to=" + endDateInclusive.getTime());
+
+		return (appointments);
+	}
+
+	/**
+	 * @see AppointmentArchiveDao.findAllByUpdateDateRange
+	 */
+	public List<AppointmentArchive> getAllAppointmentArchivesByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive) {
+		List<AppointmentArchive> appointments = appointmentArchiveDao.findAllByUpdateDateRange(startDateInclusive.getTime(), endDateInclusive.getTime());
+
+		//--- log action ---
+		LogAction.addLogSynchronous("AppointmentManager.getAllAppointmentArchivesByUpdateDateRange", "appointments from=" + startDateInclusive.getTime() + " to=" + endDateInclusive.getTime());
+
+		return (appointments);
 	}
 }

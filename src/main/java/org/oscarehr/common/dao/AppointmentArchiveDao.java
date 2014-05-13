@@ -51,15 +51,21 @@ public class AppointmentArchiveDao extends AbstractDao<AppointmentArchive> {
 	}
 	
 	/**
-	 * The result order is unspecified.
+	 * Results are ordered by updateDate.
+	 * Note that the result size is limited so if you call this with a month timeframe, you may only receive 
+	 * the first few days. The results are ordered by updateDateTime so you can call this again with the start
+	 * time set to the largest updateDateTime you were returned last time. Note that you must call it with the largest
+	 * and not the largest+1 because there can be duplicate entries at the same time. This means you need to de-duplicate
+	 * the results yourself if that matters to you.
 	 */
 	public List<AppointmentArchive> findAllByUpdateDateRange(Date startDateInclusive, Date endDateExclusive) {
 		
-		String sql = "SELECT a FROM AppointmentArchive a WHERE a.updateDateTime >=?1 and a.updateDateTime<?2";
+		String sql = "SELECT a FROM AppointmentArchive a WHERE a.updateDateTime >=?1 and a.updateDateTime<?2 order by a.updateDateTime";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, startDateInclusive);
 		query.setParameter(2, endDateExclusive);
-
+		setDefaultLimit(query);
+		
 		@SuppressWarnings("unchecked")
         List<AppointmentArchive> results = query.getResultList();
 		return results;

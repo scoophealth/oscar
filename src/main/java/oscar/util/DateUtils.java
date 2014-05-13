@@ -154,6 +154,7 @@ public final class DateUtils {
 	
 	/**
 	 * sets hours/minutes/seconds/milliseconds to 0
+	 * @deprecated use apache commons DateUtils.truncate()
 	 */
 	public static void zeroTimeFields(Calendar cal)
 	{
