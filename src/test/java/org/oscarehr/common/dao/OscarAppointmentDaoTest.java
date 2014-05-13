@@ -44,7 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class OscarAppointmentDaoTest extends DaoTestFixtures {
 
-	OscarAppointmentDao dao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
+	static OscarAppointmentDao dao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 
 	@Before
 	public void before() throws Exception {
@@ -218,4 +218,49 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 	public void testFindByDateAndProvider() {
 		assertNotNull(dao.findByDateAndProvider(new Date(), "100"));
 	}
+	
+	public static Appointment makePersistedAppointment()
+	{
+		Appointment a=new Appointment();
+		a.setProviderNo("1111");
+		a.setAppointmentDate(new Date());
+		a.setStartTime(new Date());
+		a.setEndTime(new Date());
+		dao.persist(a);
+		a=dao.find(a.getId()); // must select back out to get the proper update date (with ms zero-ed from the db etc...)
+		return(a);
+	}
+	
+	@Test
+	public void testFindAllByUpdateDateRange() throws InterruptedException
+	{
+		Appointment a1=makePersistedAppointment();
+		Thread.sleep(2000);
+		
+		Appointment a2=makePersistedAppointment();
+		Thread.sleep(2000);
+
+		Appointment a3=makePersistedAppointment();
+		Thread.sleep(2000);
+
+		Appointment a4=makePersistedAppointment();
+		Thread.sleep(2000);
+		
+		assertNotNull(a1);
+		
+		// get a2 inclusive to a3 exclusive
+		Date startTime=a2.getUpdateDateTime();
+		Date endTime=a3.getUpdateDateTime();
+		
+		List<Appointment> results=dao.findAllByUpdateDateRange(startTime, endTime);
+		assertEquals(1, results.size());
+		assertEquals(a2.getId(), results.get(0).getId());
+
+		// get a2 inclusive to a4 exclusive
+		endTime=a4.getUpdateDateTime();
+		
+		results=dao.findAllByUpdateDateRange(startTime, endTime);
+		assertEquals(2, results.size());
+	}
+	
 }

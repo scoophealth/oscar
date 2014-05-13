@@ -23,7 +23,11 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,29 +37,29 @@ import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.util.SpringUtils;
 
-public class AppointmentArchiveDaoTest extends DaoTestFixtures{
+public class AppointmentArchiveDaoTest extends DaoTestFixtures {
 
-	protected AppointmentArchiveDao dao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	protected AppointmentArchiveDao dao = (AppointmentArchiveDao) SpringUtils.getBean("appointmentArchiveDao");
 
 	public AppointmentArchiveDaoTest() {
 	}
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("appointmentArchive","appointment");
+		SchemaUtils.restoreTable("appointmentArchive", "appointment");
 	}
 
 	@Test
 	public void testCreate() throws Exception {
-		 AppointmentArchive entity = new AppointmentArchive();
-		 EntityDataGenerator.generateTestDataForModelClass(entity);
-		 dao.persist(entity);
-		 assertNotNull(entity.getId());
+		AppointmentArchive entity = new AppointmentArchive();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 
 	@Test
 	public void testArchiveAppointment() throws Exception {
-		OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+		OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 		Appointment appt = new Appointment();
 		EntityDataGenerator.generateTestDataForModelClass(appt);
 		appointmentDao.persist(appt);
@@ -63,5 +67,40 @@ public class AppointmentArchiveDaoTest extends DaoTestFixtures{
 		AppointmentArchive archive = dao.archiveAppointment(appt);
 
 		assertNotNull(archive.getId());
+	}
+
+	@Test
+	public void testFindAllByUpdateDateRange() throws InterruptedException {
+		Appointment a1 = OscarAppointmentDaoTest.makePersistedAppointment();
+		AppointmentArchive aa1 = dao.archiveAppointment(a1);
+		Thread.sleep(2000);
+
+		Appointment a2 = OscarAppointmentDaoTest.makePersistedAppointment();
+		AppointmentArchive aa2 = dao.archiveAppointment(a2);
+		Thread.sleep(2000);
+
+		Appointment a3 = OscarAppointmentDaoTest.makePersistedAppointment();
+		AppointmentArchive aa3 = dao.archiveAppointment(a3);
+		Thread.sleep(2000);
+
+		Appointment a4 = OscarAppointmentDaoTest.makePersistedAppointment();
+		AppointmentArchive aa4 = dao.archiveAppointment(a4);
+		Thread.sleep(2000);
+
+		assertNotNull(aa1);
+
+		// get aa2 inclusive to aa3 exclusive
+		Date startTime = aa2.getUpdateDateTime();
+		Date endTime = aa3.getUpdateDateTime();
+
+		List<AppointmentArchive> results = dao.findAllByUpdateDateRange(startTime, endTime);
+		assertEquals(1, results.size());
+		assertEquals(aa2.getId(), results.get(0).getId());
+
+		// get aa2 inclusive to aa4 exclusive
+		endTime = aa4.getUpdateDateTime();
+
+		results = dao.findAllByUpdateDateRange(startTime, endTime);
+		assertEquals(2, results.size());
 	}
 }
