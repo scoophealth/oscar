@@ -57,12 +57,12 @@ public class MedicationUtil {
 
     public static Code getRouteCodeForMedication(Drug med) {
 
-        return Code.fromStrings(med.getRoute(), "2.16.840.1.113883.5.112", null, "RouteOfAdministration");
+        return new Code(med.getRoute(), "2.16.840.1.113883.5.112", null, "RouteOfAdministration");
     }
 
     public static Code getDrugCode(Drug drug) {
 
-        return Code.fromStrings(drug.getAtc(), "2.16.840.1.113883.6.77", drug.getBrandName(), "ATC");
+        return new Code(drug.getAtc(), "2.16.840.1.113883.6.77", drug.getBrandName(), "ATC");
     }
 
     /**

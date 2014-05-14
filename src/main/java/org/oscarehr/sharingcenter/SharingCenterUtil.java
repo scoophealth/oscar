@@ -24,11 +24,16 @@
 
 package org.oscarehr.sharingcenter;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +46,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.marc.everest.datatypes.II;
+import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
 import org.marc.shic.cda.datatypes.Code;
 import org.marc.shic.cda.exceptions.InvalidStringDataException;
 import org.marc.shic.cda.level1.BppcDocument;
@@ -100,6 +106,7 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.ProviderData;
 import org.oscarehr.common.model.Relationships;
+import org.oscarehr.sharingcenter.actions.DocumentPermissionStatus;
 import org.oscarehr.sharingcenter.dao.AffinityDomainDao;
 import org.oscarehr.sharingcenter.dao.ClinicInfoDao;
 import org.oscarehr.sharingcenter.dao.DemographicExportDao;
@@ -124,7 +131,6 @@ import org.oscarehr.sharingcenter.model.PatientPolicyConsent;
 import org.oscarehr.sharingcenter.model.PatientSharingNetworkDataObject;
 import org.oscarehr.sharingcenter.model.PolicyDefinitionDataObject;
 import org.oscarehr.sharingcenter.model.SiteMapping;
-import org.oscarehr.sharingcenter.actions.DocumentPermissionStatus;
 import org.oscarehr.sharingcenter.util.CDADocumentUtil;
 import org.oscarehr.sharingcenter.util.EformParser;
 import org.oscarehr.util.MiscUtils;
@@ -902,7 +908,7 @@ public class SharingCenterUtil {
 
             DocumentMetaData document = new DocumentMetaData();
 
-            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
+            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
 
             document.addExtendedAttribute("authorInstitution", clinicData.getName());
 
@@ -1005,7 +1011,7 @@ public class SharingCenterUtil {
 
             DocumentMetaData document = new DocumentMetaData();
 
-            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
+            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
 
             document.addExtendedAttribute("authorInstitution", clinicData.getName());
 
@@ -1100,7 +1106,7 @@ public class SharingCenterUtil {
 
             DocumentMetaData document = new DocumentMetaData();
 
-            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
+            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
 
             document.addExtendedAttribute("authorInstitution", clinicData.getName());
 
@@ -1190,7 +1196,7 @@ public class SharingCenterUtil {
 
             DocumentMetaData document = new DocumentMetaData();
 
-            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
+            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
 
             document.addExtendedAttribute("authorInstitution", clinicData.getName());
 
@@ -1271,7 +1277,7 @@ public class SharingCenterUtil {
                 document.addConfidentiality(new CodeValue(policy.getCode(), policy.getCodeSystem(), policy.getDisplayName()));
 
                 AuthorizationTemplate authorization = cdaDocument.addConsentPolicy(OidUtil.getOid(OidType.POLICY_OID), policyId);
-                authorization.setCode(Code.fromStrings(policy.getCode(), policy.getCodeSystem()));
+                authorization.setCode(new Code(policy.getCode(), policy.getCodeSystem()));
             }
         }
         export.setDocument(CdaUtils.toXmlString(cdaDocument.getDocument(), false).getBytes());
@@ -1299,7 +1305,7 @@ public class SharingCenterUtil {
 
             DocumentMetaData document = new DocumentMetaData();
 
-            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
+            document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getId(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
 
             document.addExtendedAttribute("authorInstitution", clinicData.getName());
 
@@ -1584,21 +1590,21 @@ public class SharingCenterUtil {
 
     private static BppcDocument generateBppcDocument(PersonDemographic patient, PersonDemographic author, PersonDemographic legalAuthenticator, int policyId) {
         BppcDocument retVal = CDAFactory.createBPPCDocument(true);
-
+        
         // title
-        retVal.setTitle("Consent to Share Information");
+        retVal.getRoot().setTitle("Consent to Share Information");
 
         // language
-        retVal.setLanguageCode("en-US");
+        retVal.getRoot().setLanguageCode("en-US");
 
         // code
-        retVal.setTypeId(new II("57016-8", "2.16.840.1.113883.6.1"));
+        retVal.getRoot().setTypeId(new II("57016-8", "2.16.840.1.113883.6.1"));
 
         // confidentiality code
-        retVal.setConfidentiality(new CodeValue("N", "2.16.840.1.113883.5.25", "Normal", "Confidentiality"));
+        retVal.getRoot().setConfidentialityCode(x_BasicConfidentialityKind.Normal);
 
         // record target
-        retVal.setRecordTarget(patient);
+        retVal.addRecordTarget(patient);
 
         // location
         ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean(ClinicDAO.class);
@@ -1612,19 +1618,15 @@ public class SharingCenterUtil {
             LOGGER.error("Location arguments missing", e);
         }
 
-        // non-structured
-        retVal.setNonXmlBody(
-                "test pdf".getBytes(), "application/pdf");
-
         // original author
-        retVal.addAuthor(author, location);
+        retVal.addAuthor(author);
 
         // scanner author
-        retVal.addScanner(location,
-                "SOME SCANNER NAME AND MODEL", "SCAN SOFTWARE NAME v0.0");
+        retVal.addScanner(location, "Scanner", "Scanner");
 
         // legal authenticator (the patient/consent giver is legally responsible for their consent)
-        retVal.addLegalAuthenticator(legalAuthenticator, Calendar.getInstance());
+        retVal.setLegalAuthenticator(legalAuthenticator);
+        
 
         // custodian
         retVal.setCustodian(location);
@@ -1633,11 +1635,52 @@ public class SharingCenterUtil {
         retVal.setDataEnterer(author);
         // consent policies (multiple)
         PolicyDefinitionDataObject policy = policyDefinitionDao.getPolicyDefinition(Integer.valueOf(policyId));
-        if (policy
-                != null) {
+        if (policy != null) {
             CodeValue consent = new CodeValue(policy.getCode(), policy.getCodeSystem(), policy.getDisplayName());
             retVal.addConsentPolicy(consent, Calendar.getInstance(), null); // no end time
+            
+            // non-structured
+            retVal.setNonXmlBody(downloadFile(policy.getPolicyDocUrl()), "application/pdf");
         }
+        return retVal;
+    }
+
+    private static byte[] downloadFile(String url) {
+        byte[] retVal = null;
+        try {
+            URL resource = new URL(url);
+            retVal = downloadFile(resource);
+        } catch (MalformedURLException ex) {
+            MiscUtils.getLogger().error("Problem getting the url: " + url, ex);
+        }
+        return retVal;
+    }
+
+    private static byte[] downloadFile(URL url) {
+        byte[] retVal = null;
+        
+        try {
+            InputStream in = new BufferedInputStream(url.openStream());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[512];
+            while (true) {
+                int len = in.read(buffer);
+                if (len == -1) {
+                    break;
+                }
+                out.write(buffer, 0, len);
+            }
+            
+            out.close();
+            in.close();
+            
+            retVal = out.toByteArray();
+            
+        } catch (IOException e) {
+            MiscUtils.getLogger().error("Unable to download file from url: " + url.toString() , e);
+        }
+
         return retVal;
     }
 }

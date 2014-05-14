@@ -59,9 +59,9 @@ public class MeasurementUtil {
 		String displayName = measurement.getType();
 		Code result;
 		if (displayName.equals("WT")) {
-			result = Code.fromStrings("3141-9", "2.16.840.1.113883.6.1", "BODY WEIGHT (MEASURED)", "LOINC");
+			result = new Code("3141-9", "2.16.840.1.113883.6.1", "BODY WEIGHT (MEASURED)", "LOINC");
 		} else if (displayName.equals("HT")) {
-			result = Code.fromStrings("8302-2", "2.16.840.1.113883.6.1", "BODY HEIGHT (MEASURED)", "LOINC");
+			result = new Code("8302-2", "2.16.840.1.113883.6.1", "BODY HEIGHT (MEASURED)", "LOINC");
 		} else {
 			result = Code.unavailable(NullFlavor.Other, displayName);
 		}

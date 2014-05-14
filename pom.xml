@@ -941,12 +941,12 @@
 		<dependency>
 			<groupId>org.marc.shic</groupId>
 			<artifactId>shic-core</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marc.shic</groupId>
 			<artifactId>shic-xds</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -965,22 +965,22 @@
 		<dependency>
 			<groupId>org.marc.shic</groupId>
 			<artifactId>shic-atna</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marc.shic</groupId>
 			<artifactId>shic-pix</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marc.shic</groupId>
 			<artifactId>shic-svs</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marc.shic</groupId>
 			<artifactId>shic-cda</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 		</dependency>
 		
 		<!--tagsoup-->
