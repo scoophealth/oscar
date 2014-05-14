@@ -33,10 +33,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ActStatus;
+import org.marc.shic.cda.level1.PhrExtractDocument;
 import org.marc.shic.cda.level2.ActiveProblemsSection;
 import org.marc.shic.cda.level2.FamilyMedicalHistorySection;
 import org.marc.shic.cda.level2.HistoryOfPastIllnessSection;
-import org.marc.shic.cda.level2.PhrExtractDocument;
 import org.marc.shic.cda.level2.SocialHistorySection;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;

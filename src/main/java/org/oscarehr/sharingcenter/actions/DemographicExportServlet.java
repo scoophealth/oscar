@@ -31,7 +31,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.marc.shic.cda.level2.PhrExtractDocument;
+import org.marc.shic.cda.level1.PhrExtractDocument;
 import org.marc.shic.cda.utils.CdaUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.sharingcenter.DocumentType;

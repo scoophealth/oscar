@@ -54,18 +54,21 @@ import org.marc.shic.cda.datatypes.Code;
 import org.marc.shic.cda.datatypes.Time;
 import org.marc.shic.cda.exceptions.TemplateViolationException;
 import org.marc.shic.cda.level1.CDAFactory;
+import org.marc.shic.cda.level1.PhrExtractDocument;
 import org.marc.shic.cda.level2.AllergiesAndDrugSensitiviesSection;
 import org.marc.shic.cda.level2.ImmunizationsSection;
 import org.marc.shic.cda.level2.MedicationSection;
-import org.marc.shic.cda.level2.PhrExtractDocument;
 import org.marc.shic.cda.level2.VitalSignsSection;
 import org.marc.shic.cda.level3.Medication;
 import org.marc.shic.cda.level3.MedicationPrescription;
+import org.marc.shic.cda.templates.AuthorTemplate;
+import org.marc.shic.cda.templates.AuthoringPersonTemplate;
 import org.marc.shic.cda.templates.CustodianTemplate;
 import org.marc.shic.cda.templates.DocumentationOfTemplate;
-import org.marc.shic.cda.templates.Entity;
 import org.marc.shic.cda.templates.LegalAuthenticatorTemplate;
+import org.marc.shic.cda.templates.Performer1Template;
 import org.marc.shic.cda.templates.RecordTargetTemplate;
+import org.marc.shic.cda.utils.FuncUtil;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DemographicDao;
@@ -145,8 +148,6 @@ public class CDADocumentUtil {
         // *** CREATE VITAL SIGNS SECTION ***
         createMeasurements(demographicNo);
 
-        phrExtractDocument.validate();
-
         // *** WRITE xPhr TO FILE & FORMAT IT ***
         formatAndWriteXPHR(phrExtractDocument);
 
@@ -218,8 +219,7 @@ public class CDADocumentUtil {
         setCustodianInfo(clinic);
 
         LegalAuthenticatorTemplate legalAuthenticator = phrExtractDocument.setLegalAuthenticator();
-        setRecordTargetInfo(demographic).copyTo(legalAuthenticator);
-
+        FuncUtil.copy(setRecordTargetInfo(demographic), legalAuthenticator);
         HashSet<Provider> providers = new HashSet<Provider>();
         providers.add(provider);
         providers.addAll(CaseManagementUtil.getAllCaseManagementNoteProviders(demographicNo));
@@ -229,9 +229,22 @@ public class CDADocumentUtil {
             setProviderInfo(docTemplate.addPerformer(), prov);
         }
     }
-
-    private static Entity setProviderInfo(Entity template, Provider provider) {
-        template.setId(OidUtil.getOid(OidType.PROVIDER_OID), provider.getProviderNo());
+    
+    private static AuthorTemplate setProviderInfo(AuthorTemplate template, Provider provider) {
+    	AuthoringPersonTemplate author = (AuthoringPersonTemplate)template;
+    	author.addId(OidUtil.getOid(OidType.PROVIDER_OID), provider.getProviderNo());
+    	author.addName(EntityNameUse.Legal, provider.getTitle(), EntityNamePartType.Title);
+    	author.addName(EntityNameUse.Legal, provider.getFirstName(), EntityNamePartType.Given);
+    	author.addName(EntityNameUse.Legal, provider.getLastName(), EntityNamePartType.Family);
+    	author.addAddress(PostalAddressUse.WorkPlace, provider.getAddress(), AddressPartType.AddressLine);
+    	author.addTelecom(TelecommunicationsAddressUse.Home, provider.getPhone());
+    	author.addTelecom(TelecommunicationsAddressUse.WorkPlace, provider.getWorkPhone());
+    	author.addTelecom(TelecommunicationsAddressUse.WorkPlace, provider.getEmail());
+        return template;
+    }
+    
+    private static Performer1Template setProviderInfo(Performer1Template template, Provider provider) {
+        template.addId(OidUtil.getOid(OidType.PROVIDER_OID), provider.getProviderNo());
         template.addName(EntityNameUse.Legal, provider.getTitle(), EntityNamePartType.Title);
         template.addName(EntityNameUse.Legal, provider.getFirstName(), EntityNamePartType.Given);
         template.addName(EntityNameUse.Legal, provider.getLastName(), EntityNamePartType.Family);
@@ -279,11 +292,9 @@ public class CDADocumentUtil {
             return AdministrativeGender.Undifferentiated;
         }
     }
-
     private static void createMeasurements(int demographicNo) {
         List<Measurement> measurements = MeasurementUtil.getMeasurements(demographicNo);
         VitalSignsSection vitalSignsSection = phrExtractDocument.getVitalSignsSection();
-
         for (Measurement measurement : measurements) {
 
             String displayName = measurement.getType();
@@ -292,24 +303,23 @@ public class CDADocumentUtil {
             String unit;
             Calendar dateObserved = Calendar.getInstance();
             dateObserved.setTime(measurement.getDateObserved());
-
             if (displayName.equals("WT")) {
-                result = Code.fromStrings("3141-9", "2.16.840.1.113883.6.1", "BODY WEIGHT (MEASURED)", "LOINC");
+                result = new Code("3141-9", "2.16.840.1.113883.6.1", "BODY WEIGHT (MEASURED)", "LOINC");
                 value = Double.parseDouble(measurement.getDataField());
                 unit = MeasurementUtil.getMeasurementUnits(measurement);
             } else if (displayName.equals("HT")) {
-                result = Code.fromStrings("8302-2", "2.16.840.1.113883.6.1", "BODY HEIGHT (MEASURED)", "LOINC");
+                result = new Code("8302-2", "2.16.840.1.113883.6.1", "BODY HEIGHT (MEASURED)", "LOINC");
                 value = Double.parseDouble(measurement.getDataField());
                 unit = MeasurementUtil.getMeasurementUnits(measurement);
             } else if (displayName.equals("BP")) {
                 String[] bpSplit = measurement.getDataField().split("/");
 
-                result = Code.fromStrings("8480-6", "2.16.840.1.113883.6.1", "INTRAVASCULAR SYSTOLIC", "LOINC");
+                result = new Code("8480-6", "2.16.840.1.113883.6.1", "INTRAVASCULAR SYSTOLIC", "LOINC");
                 value = Double.parseDouble(bpSplit[0]);
                 unit = "mmHg";
                 vitalSignsSection.addVitalSign(new Time(dateObserved)).setResultObservation(result, value, unit);
 
-                result = Code.fromStrings("8462-4", "2.16.840.1.113883.6.1", "INTRAVASCULAR DIASTOLIC", "LOINC");
+                result = new Code("8462-4", "2.16.840.1.113883.6.1", "INTRAVASCULAR DIASTOLIC", "LOINC");
                 value = Double.parseDouble(bpSplit[1]);
                 vitalSignsSection.addVitalSign(new Time(dateObserved)).setResultObservation(result, value, unit);
 
@@ -334,7 +344,6 @@ public class CDADocumentUtil {
         MedicationSection medicationSection = phrExtractDocument.getMedicationSection();
 
         for (Drug medication : medications) {
-
             Provider provider = ProviderUtil.createProvider(medication.getProviderNo());
 
             Calendar creationDate = Calendar.getInstance();
