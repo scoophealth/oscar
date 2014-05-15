@@ -67,7 +67,7 @@ public class AllergyManager {
 	}
 	
 	public List<Allergy> getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Allergy> results = allergyDao.findUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		List<Allergy> results = allergyDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
 		LogAction.addLogSynchronous("AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
