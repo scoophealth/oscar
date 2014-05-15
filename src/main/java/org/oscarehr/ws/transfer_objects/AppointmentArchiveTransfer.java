@@ -27,27 +27,18 @@ package org.oscarehr.ws.transfer_objects;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Appointment.BookingSource;
+import org.oscarehr.common.model.AppointmentArchive;
 import org.springframework.beans.BeanUtils;
 
 import oscar.util.DateUtils;
 
-public final class AppointmentTransfer {
-	
-	private static final TimeZone GMT_TIME_ZONE=TimeZone.getTimeZone("GMT");
-	
+public final class AppointmentArchiveTransfer {
 	private Integer id;
+	private Integer appointmentId;
 	private String providerNo;
-	/**
-	 * start time is inclusive i.e. 15:30:00 means 3:30pm is the actual start time.
-	 */
 	private Calendar appointmentStartDateTime;
-	/**
-	 * end time is exclusive i.e. 15:45:00 mean it ended right before that, i.e. 15:44:59.9999999999....
-	 */
 	private Calendar appointmentEndDateTime;
 	private String name;
 	private int demographicNo;
@@ -74,6 +65,14 @@ public final class AppointmentTransfer {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getAppointmentId() {
+		return (appointmentId);
+	}
+
+	public void setAppointmentId(Integer appointmentId) {
+		this.appointmentId = appointmentId;
 	}
 
 	public String getProviderNo() {
@@ -244,74 +243,35 @@ public final class AppointmentTransfer {
     	this.bookingSource = bookingSource;
     }
 
-	public Appointment copyTo(Appointment appointment) {
-
-		String[] ignored = { "id", "appointmentDate", "startTime", "endTime", "createDateTime", "updateDateTime", "creator", "lastUpdateUser", "creatorSecurityId" };
-		BeanUtils.copyProperties(this, appointment, ignored);
-
-		if (appointmentStartDateTime != null) {
-			appointment.setAppointmentDate(appointmentStartDateTime.getTime());
-			appointment.setStartTime(appointmentStartDateTime.getTime());
-		}
-
-		// yupp terrible source of error here, if an appointment starts on one day and ends on the other like
-		// a hospital visit at 11:45pm that ends at 12:15am, this is going to go all bad, but there's 
-		// not much we can do right now because it's a fault in oscars data structure.
-		if (appointmentEndDateTime != null)
-		{
-			// also oscar sets end time funny, it is not exclusive so we need to calculate exclusivity ourselves.
-			appointmentEndDateTime.add(Calendar.MILLISECOND, -1);
-			appointment.setEndTime(appointmentEndDateTime.getTime());
-		}
-
-		return (appointment);
-	}
-
-	public static AppointmentTransfer toTransfer(Appointment appointment, boolean useGMTTime) {
+	public static AppointmentArchiveTransfer toTransfer(AppointmentArchive appointment, boolean useGMTTime) {
 		if (appointment==null) return(null);
 		
-		AppointmentTransfer appointmentTransfer = new AppointmentTransfer();
+		AppointmentArchiveTransfer appointmentTransfer = new AppointmentArchiveTransfer();
 		
 		String[] ignored = { "appointmentDate", "startTime", "endTime", "createDateTime", "updateDateTime", "creatorSecurityId" };
 		BeanUtils.copyProperties(appointment, appointmentTransfer, ignored);
 
 		Calendar cal = DateUtils.toGregorianCalendar(appointment.getAppointmentDate(), appointment.getStartTime());
-		cal=setToGMTIfRequired(cal,useGMTTime);
+		cal=AppointmentTransfer.setToGMTIfRequired(cal,useGMTTime);
 		appointmentTransfer.setAppointmentStartDateTime(cal);
 
 		cal = DateUtils.toGregorianCalendar(appointment.getAppointmentDate(), appointment.getEndTime());
-		cal=setToGMTIfRequired(cal,useGMTTime);
+		cal=AppointmentTransfer.setToGMTIfRequired(cal,useGMTTime);
 		appointmentTransfer.setAppointmentEndDateTime(cal);
 
 		cal=DateUtils.toGregorianCalendar(appointment.getCreateDateTime());
-		cal=setToGMTIfRequired(cal,useGMTTime);
+		cal=AppointmentTransfer.setToGMTIfRequired(cal,useGMTTime);
 		appointmentTransfer.setCreateDateTime(cal);
 		
 		cal=DateUtils.toGregorianCalendar(appointment.getUpdateDateTime());
-		cal=setToGMTIfRequired(cal,useGMTTime);
+		cal=AppointmentTransfer.setToGMTIfRequired(cal,useGMTTime);
 		appointmentTransfer.setUpdateDateTime(cal);
 
 		return (appointmentTransfer);
 	}
-
-	public static Calendar setToGMTIfRequired(Calendar cal, boolean useGMTTime)
-	{
-		if (useGMTTime)
-		{
-			// must materialise time before setting zone or it thinks you're setting that time in that zone.
-			cal.getTimeInMillis();
-			
-			cal.setTimeZone(GMT_TIME_ZONE);
-			
-			// materialise value again so results are as expected.
-			cal.getTimeInMillis();
-		}
-		
-		return(cal);
-	}
 	
-	public static AppointmentTransfer[] toTransfer(List<Appointment> appointments, boolean useGMTTime) {
-		AppointmentTransfer[] result = new AppointmentTransfer[appointments.size()];
+	public static AppointmentArchiveTransfer[] toTransfer(List<AppointmentArchive> appointments, boolean useGMTTime) {
+		AppointmentArchiveTransfer[] result = new AppointmentArchiveTransfer[appointments.size()];
 
 		for (int i = 0; i < appointments.size(); i++) {
 			result[i] = toTransfer(appointments.get(i), useGMTTime);
