@@ -151,6 +151,23 @@ public class TicklerDao extends AbstractDao<Tickler>{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Tickler> getTicklers(CustomFilter filter, int offset, int limit) {
+		String sql = "select t FROM Tickler t where t.serviceDate >= ? and t.serviceDate <= ? ";
+		ArrayList<Object> paramList = new ArrayList<Object>();
+		sql = getTicklerQueryString(sql, paramList, filter);
+		
+		Query query = entityManager.createQuery(sql);
+		for(int x=0;x<paramList.size();x++) {
+			query.setParameter(x+1, paramList.get(x));
+		}
+		query.setFirstResult(offset);
+		setLimit(query,limit);
+		List<Tickler> results = query.getResultList();
+		
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Tickler> getTicklers(CustomFilter filter) {
 		String sql = "select t FROM Tickler t where t.serviceDate >= ? and t.serviceDate <= ? ";
 		ArrayList<Object> paramList = new ArrayList<Object>();
