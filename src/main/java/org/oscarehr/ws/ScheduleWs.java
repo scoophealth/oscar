@@ -22,21 +22,26 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.ws;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jws.WebService;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.cxf.annotations.GZIP;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.managers.DayWorkSchedule;
 import org.oscarehr.managers.ScheduleManager;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.transfer_objects.AppointmentArchiveTransfer;
 import org.oscarehr.ws.transfer_objects.AppointmentTransfer;
 import org.oscarehr.ws.transfer_objects.AppointmentTypeTransfer;
 import org.oscarehr.ws.transfer_objects.DayWorkScheduleTransfer;
@@ -46,71 +51,120 @@ import org.springframework.stereotype.Component;
 
 @WebService
 @Component
-@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
+@GZIP(threshold = AbstractWs.GZIP_THRESHOLD)
 public class ScheduleWs extends AbstractWs {
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	@Autowired
 	private ScheduleManager scheduleManager;
-	
-	public ScheduleTemplateCodeTransfer[] getScheduleTemplateCodes()
-	{
-		List<ScheduleTemplateCode> scheduleTemplateCodes=scheduleManager.getScheduleTemplateCodes();
-		return(ScheduleTemplateCodeTransfer.toTransfer(scheduleTemplateCodes));
+
+	public ScheduleTemplateCodeTransfer[] getScheduleTemplateCodes() {
+		List<ScheduleTemplateCode> scheduleTemplateCodes = scheduleManager.getScheduleTemplateCodes();
+		return (ScheduleTemplateCodeTransfer.toTransfer(scheduleTemplateCodes));
 	}
 
-	public AppointmentTransfer getAppointment(Integer appointmentId)
-	{
-		Appointment appointment=scheduleManager.getAppointment(appointmentId);
-		return(AppointmentTransfer.toTransfer(appointment));
+	/**
+	 * @deprecated you should use the method with the useGMTTime option
+	 */
+	public AppointmentTransfer getAppointment(Integer appointmentId) {
+		Appointment appointment = scheduleManager.getAppointment(appointmentId);
+		return (AppointmentTransfer.toTransfer(appointment, false));
 	}
 
-	public AppointmentTransfer[] getAppointmentsForProvider(String providerNo, Calendar date)
-	{
-		List<Appointment> appointments=scheduleManager.getDayAppointments(providerNo, date);
-		return(AppointmentTransfer.toTransfer(appointments));
+	/**
+	 * @deprecated you should use the method with the useGMTTime option
+	 */
+	public AppointmentTransfer[] getAppointmentsForProvider(String providerNo, Calendar date) {
+		List<Appointment> appointments = scheduleManager.getDayAppointments(providerNo, date);
+		return (AppointmentTransfer.toTransfer(appointments, false));
+	}
+
+	/**
+	 * @deprecated you should use the method with the useGMTTime option
+	 */
+	public AppointmentTransfer[] getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn) {
+		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
+		return (AppointmentTransfer.toTransfer(appointments, false));
+	}
+
+	public AppointmentTransfer getAppointment2(Integer appointmentId, boolean useGMTTime) {
+		Appointment appointment = scheduleManager.getAppointment(appointmentId);
+		return (AppointmentTransfer.toTransfer(appointment, useGMTTime));
+	}
+
+	public AppointmentTransfer[] getAppointmentsForProvider2(String providerNo, Calendar date, boolean useGMTTime) {
+		List<Appointment> appointments = scheduleManager.getDayAppointments(providerNo, date);
+		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
+	}
+
+	public AppointmentTransfer[] getAppointmentsForPatient2(Integer demographicId, int startIndex, int itemsToReturn, boolean useGMTTime) {
+		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
+		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
 	}
 	
-	public AppointmentTransfer[] getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn)
-	{
-		List<Appointment> appointments=scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
-		return(AppointmentTransfer.toTransfer(appointments));
+	public DayWorkScheduleTransfer getDayWorkSchedule(String providerNo, Calendar date) {
+		DayWorkSchedule dayWorkSchedule = scheduleManager.getDayWorkSchedule(providerNo, date);
+		if (dayWorkSchedule == null) return (null);
+		else return (DayWorkScheduleTransfer.toTransfer(dayWorkSchedule));
 	}
-	
-	public DayWorkScheduleTransfer getDayWorkSchedule(String providerNo, Calendar date)
-	{
-		DayWorkSchedule dayWorkSchedule=scheduleManager.getDayWorkSchedule(providerNo, date);
-		if (dayWorkSchedule==null) return(null);
-		else return(DayWorkScheduleTransfer.toTransfer(dayWorkSchedule));
+
+	public AppointmentTypeTransfer[] getAppointmentTypes() {
+		List<AppointmentType> appointmentTypes = scheduleManager.getAppointmentTypes();
+		return (AppointmentTypeTransfer.toTransfer(appointmentTypes));
 	}
-	
-	public AppointmentTypeTransfer[] getAppointmentTypes()
-	{
-		List<AppointmentType> appointmentTypes=scheduleManager.getAppointmentTypes();
-		return(AppointmentTypeTransfer.toTransfer(appointmentTypes));
-	}
-	
+
 	/**
 	 * @return the ID of the appointment just added
 	 */
-	public Integer addAppointment(AppointmentTransfer appointmentTransfer)
-	{
-		Appointment appointment=new Appointment();
+	public Integer addAppointment(AppointmentTransfer appointmentTransfer) {
+		Appointment appointment = new Appointment();
 		appointmentTransfer.copyTo(appointment);
 		scheduleManager.addAppointment(appointment);
-		return(appointment.getId());
+		return (appointment.getId());
 	}
-	
-	
-	public void updateAppointment(AppointmentTransfer appointmentTransfer)
-	{
-		Appointment appointment=scheduleManager.getAppointment(appointmentTransfer.getId());
-		
+
+	public void updateAppointment(AppointmentTransfer appointmentTransfer) {
+		Appointment appointment = scheduleManager.getAppointment(appointmentTransfer.getId());
+
 		appointmentTransfer.copyTo(appointment);
 		scheduleManager.updateAppointment(appointment);
 	}
-    
-	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider(Date startTime, Date endTime, String providerNo)
-	{
+
+	/**
+	 * @deprecated you should use the method with the useGMTTime option
+	 */
+	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider(Date startTime, Date endTime, String providerNo) {
 		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(startTime, endTime, providerNo);
-		return(AppointmentTransfer.toTransfer(appointments));
+		return (AppointmentTransfer.toTransfer(appointments, false));
+	}
+
+	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider2(Date startTime, Date endTime, String providerNo, boolean useGMTTime) {
+		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(startTime, endTime, providerNo);
+		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
+	}
+
+	public AppointmentTransfer[] getAllAppointmentsByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive, boolean useGMTTime) {
+		List<Appointment> appointments = scheduleManager.getAllAppointmentsByUpdateDateRange(startDateInclusive, endDateInclusive);
+		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
+	}
+
+	public AppointmentArchiveTransfer[] getAllAppointmentArchivesByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive, boolean useGMTTime) {
+		List<AppointmentArchive> appointments = scheduleManager.getAllAppointmentArchivesByUpdateDateRange(startDateInclusive, endDateInclusive);
+		return (AppointmentArchiveTransfer.toTransfer(appointments, useGMTTime));
+	}
+	
+	/**
+	 * This method is a helper method to help people code and test their clients against time zone differences.
+	 * We will not support revisioning for this method, if / when we want to change this, we will.
+	 */
+	public Calendar testTimeZone_1492_05_12_18_26_32(boolean useGMTTime)
+	{
+		Calendar cal = new GregorianCalendar(1492, 05, 12, 18, 26, 32);
+		cal=AppointmentTransfer.setToGMTIfRequired(cal,useGMTTime);
+		
+		logger.debug("timeZoneTest sent: "+cal);
+		logger.debug("timeZoneTest sent: "+DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(cal));
+		
+		return(cal);
 	}
 }
