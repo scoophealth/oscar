@@ -26,6 +26,7 @@
 package org.oscarehr.ws;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class AllergyWs extends AbstractWs {
 
 	/**
 	 * Get a list of DataIdTransfer objects for allergies starting with the passed in Id.
+	 * @deprecated 2014-05-15 use the method with lastUpdateDate instead
 	 */
 	public DataIdTransfer[] getAllergyDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn)
 	{
@@ -86,5 +88,10 @@ public class AllergyWs extends AbstractWs {
 		result.setOwnerDemographicId(allergy.getDemographicNo());
 		
 		return(result);
+	}
+	
+	public AllergyTransfer[] getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Allergy> allergies=allergyManager.getUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		return(AllergyTransfer.toTransfers(allergies));
 	}
 }

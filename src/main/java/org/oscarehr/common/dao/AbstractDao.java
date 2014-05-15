@@ -36,7 +36,7 @@ import oscar.util.ParamAppender;
 
 @Transactional
 public abstract class AbstractDao<T extends AbstractModel<?>> {
-	protected int DEFAULT_MAX_SELECT_SIZE = 5000;
+	public static final int MAX_LIST_RETURN_SIZE = 5000;
 
 	protected Class<T> modelClass;
 
@@ -103,7 +103,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	}
 	
 	protected int getMaxSelectSize() {
-	    return DEFAULT_MAX_SELECT_SIZE;
+	    return MAX_LIST_RETURN_SIZE;
     }
 
 	/** Removes an entity based on the ID
