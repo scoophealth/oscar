@@ -218,6 +218,16 @@ function showHideERxPref() {
 	if (providerPreference == null) {
 	    providerPreference = new ProviderPreference();
 	}
+	
+	String startHour = request.getParameter("start_hour")!=null?request.getParameter("start_hour"):providerPreference.getStartHour().toString();
+	String endHour = request.getParameter("end_hour")!=null?request.getParameter("end_hour"):providerPreference.getEndHour().toString();
+	String everyMin = request.getParameter("every_min")!=null?request.getParameter("every_min"):providerPreference.getEveryMin().toString();
+	String myGroupNo = request.getParameter("mygroup_no")!=null?request.getParameter("mygroup_no"):providerPreference.getMyGroupNo();
+	String newTicklerWarningWindow =request.getParameter("new_tickler_warning_window")!=null?request.getParameter("new_tickler_warning_window"):providerPreference.getNewTicklerWarningWindow();
+	String ticklerProviderNo = request.getParameter("tklerproviderno");
+	String defaultPMM = request.getParameter("default_pmm")!=null?request.getParameter("default_pmm"):providerPreference.getDefaultCaisiPmm();
+	String caisiBillingNotDelete = request.getParameter("caisiBillingPreferenceNotDelete")!=null?request.getParameter("caisiBillingPreferenceNotDelete"):String.valueOf(providerPreference.getDefaultDoNotDeleteBilling());
+	
 %>
 
 <body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();showHideERxPref();" topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
@@ -715,6 +725,9 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       </tr>
     <tr>
         <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDisplayDocumentAs');return false;"><bean:message key="provider.btnSetDisplayDocumentAs"/></a></td>
+    </tr>
+     <tr>
+        <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewCobalt');return false;"><bean:message key="provider.btnSetCobalt"/></a></td>
     </tr>
 	 <oscar:oscarPropertiesCheck property="util.erx.enabled" value="true">
 	 	<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">

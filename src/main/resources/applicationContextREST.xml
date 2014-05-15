@@ -16,6 +16,7 @@
 	
 	<context:component-scan base-package="org.oscarehr.ws.rest"/>
 	<context:component-scan base-package="org.oscarehr.ws.rest.util"/>
+	<context:component-scan base-package="org.oscarehr.ws.rest.conversion"/>
 	<aop:aspectj-autoproxy/>
 	
 	
@@ -102,6 +103,7 @@
 		
 		<jaxrs:providers>
 			<ref bean="jaxb"/>
+			<ref bean="jsonProvider"/>
 		</jaxrs:providers>
 
 		<jaxrs:features>
@@ -111,7 +113,14 @@
 		<jaxrs:serviceBeans>
 			<bean class="org.oscarehr.ws.rest.PharmacyService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.DemographicService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.ScheduleService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.DemographicMergeService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.MessagingService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.InboxService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.TicklerWebService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.ProviderService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.RSSFeedService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.PersonaService"  autowire="byName"/>
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>
@@ -119,5 +128,14 @@
 			<entry key="json" value="application/json" />
 		</jaxrs:extensionMappings>
 	</jaxrs:server>
+	
+	 <bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
+		 <property name="dropRootElement" value="true" />
+		<property name="serializeAsArray" value="true" />
+		<!-- 
+		<property name="arrayKeys" value="patients,programs"/>
+		-->
+		<property name="dropCollectionWrapperElement" value="true" />
+		</bean>
 	
 </beans>

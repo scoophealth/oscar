@@ -32,7 +32,6 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.dao.ProviderDefaultProgramDao;
 import org.oscarehr.common.model.ProviderDefaultProgram;
-import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +39,16 @@ import oscar.log.LogAction;
 
 @Service
 public class ProgramManager2 {
+	
 	@Autowired
 	private ProgramDao programDao;
 
 	@Autowired
 	private ProgramProviderDAO programProviderDAO;
+	
+	@Autowired
+	private ProviderDefaultProgramDao providerDefaultProgramDao;
+	
 
 	public Program getProgram(Integer programId) {
 		Program result = programDao.getProgram(programId);
@@ -80,20 +84,40 @@ public class ProgramManager2 {
 		return (results);
 	}
 	
-    public ProgramProvider getCurrentProgramInDomain(String providerNo) {
-        ProviderDefaultProgramDao providerDefaultProgramDao = SpringUtils.getBean(ProviderDefaultProgramDao.class);
-        int defProgramId = 0;
-        List<ProviderDefaultProgram> rs = providerDefaultProgramDao.getProgramByProviderNo(providerNo);
-		if(!rs.isEmpty()) {
-		   defProgramId = rs.get(0).getProgramId();
-		}
-		ProgramProvider result =  programProviderDAO.getProgramProvider(providerNo, Long.valueOf(defProgramId));
+	public List<ProgramProvider> getProgramDomain(String providerNo) {
+		List<ProgramProvider> results = programProviderDAO.getProgramProvidersByProvider(providerNo);
 		
-		if(result !=null) {
-		        LogAction.addLogSynchronous("ProgramManager2.getCurrentProgramInDomain", "id returned=" + result.getId());
+		//--- log action ---
+		if (results.size()>0) {
+			String resultIds=ProgramProvider.getIdsAsStringList(results);
+			LogAction.addLogSynchronous("ProgramManager2.getProgramDomain", "ids returned=" + resultIds);
 		}
 		
-		return (result);
+		return (results);
 	}
+	
+	public ProgramProvider getCurrentProgramInDomain(String providerNo) {
+		
+		int defProgramId = 0;
+        List<ProviderDefaultProgram> rs = providerDefaultProgramDao.getProgramByProviderNo(providerNo);
+        if(!rs.isEmpty()) {
+    	   defProgramId = rs.get(0).getProgramId();
+        }
+        ProgramProvider result =  programProviderDAO.getProgramProvider(providerNo, Long.valueOf(defProgramId));
+        
+        if(result !=null) {
+        	LogAction.addLogSynchronous("ProgramManager2.getCurrentProgramInDomain", "id returned=" + result.getId());
+        }
+        
+        return (result);
+	}
+	
+	public void setCurrentProgramInDomain(String providerNo, Integer programId) {
 
+		if(programProviderDAO.getProgramProvider(providerNo, programId.longValue()) != null) {
+			providerDefaultProgramDao.setDefaultProgram(providerNo, programId);
+		} else {
+			throw new RuntimeException("Program not in user's domain");
+		}
+	}
 }

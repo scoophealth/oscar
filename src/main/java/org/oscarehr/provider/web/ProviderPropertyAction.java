@@ -62,7 +62,6 @@ public class ProviderPropertyAction extends DispatchAction {
 
     public void setUserPropertyDAO(UserPropertyDAO dao) {
         this.userPropertyDAO = dao;
-
     }
 
     public ActionForward unspecified(ActionMapping actionmapping,
@@ -145,8 +144,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.DEFAULT_SEX);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.DEFAULT_SEX);
 
          if (prop == null){
              prop = new UserProperty();
@@ -180,12 +178,11 @@ public class ProviderPropertyAction extends DispatchAction {
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty prop = (UserProperty)frm.get("dateProperty");
          String fmt = prop != null ? prop.getValue() : "";
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.DEFAULT_SEX);
+         UserProperty saveProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),UserProperty.DEFAULT_SEX);
 
          if( saveProperty == null ) {
              saveProperty = new UserProperty();
-             saveProperty.setProviderNo(provider);
+             saveProperty.setProviderNo(getLoggedInProviderNo());
              saveProperty.setName(UserProperty.DEFAULT_SEX);
          }
 
@@ -211,8 +208,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.HC_TYPE);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.HC_TYPE);
 
          if (prop == null){
              prop = new UserProperty();
@@ -246,12 +242,11 @@ public class ProviderPropertyAction extends DispatchAction {
          UserProperty prop = (UserProperty)frm.get("dateProperty");
          String fmt = prop != null ? prop.getValue() : "";
 
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.HC_TYPE);
+        UserProperty saveProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),UserProperty.HC_TYPE);
 
          if( saveProperty == null ) {
              saveProperty = new UserProperty();
-             saveProperty.setProviderNo(provider);
+             saveProperty.setProviderNo(getLoggedInProviderNo());
              saveProperty.setName(UserProperty.HC_TYPE);
          }
 
@@ -280,23 +275,14 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.MYDRUGREF_ID);
-         //String propertyToSet = "";
-         //if( prop != null ) {
-         //   propertyToSet = prop.getValue();
-
-         //}else{
-         //    prop = new UserProperty();
-
-         //}
+         
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.MYDRUGREF_ID);
+         
 
          if (prop == null){
              prop = new UserProperty();
          }
 
-         //request.setAttribute("propert",propertyToSet);
          request.setAttribute("dateProperty",prop);
 
 
@@ -317,17 +303,12 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_PAGE_SIZE);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_PAGE_SIZE);
 
 
          if (prop == null){
              prop = new UserProperty();
          }
-
-         //request.setAttribute("propert",propertyToSet);
-         //request.setAttribute("dateProperty",prop);
-
 
          request.setAttribute("providertitle","provider.setRxPageSize.title"); //=Set Rx Script Page Size
          request.setAttribute("providermsgPrefs","provider.setRxPageSize.msgPrefs"); //=Preferences"); //
@@ -343,18 +324,16 @@ public class ProviderPropertyAction extends DispatchAction {
 
    public ActionForward saveRxPageSize(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
 
-        String provider=(String) request.getSession().getAttribute("user");
-
         DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UPageSize=(UserProperty)frm.get("rxPageSizeProperty");
         String rxPageSize="";
         if(UPageSize!=null)
             rxPageSize=UPageSize.getValue();
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_PAGE_SIZE);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_PAGE_SIZE);
         if(prop==null){
             prop=new UserProperty();
             prop.setName(UserProperty.RX_PAGE_SIZE);
-            prop.setProviderNo(provider);
+            prop.setProviderNo(getLoggedInProviderNo());
         }
         prop.setValue(rxPageSize);
         this.userPropertyDAO.saveProp(prop);
@@ -372,10 +351,7 @@ public class ProviderPropertyAction extends DispatchAction {
     }
 
       public ActionForward saveDefaultDocQueue(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-
-        String provider=(String) request.getSession().getAttribute("user");
-
-        DynaActionForm frm=(DynaActionForm)actionform;
+    	DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty existingQ=(UserProperty)frm.get("existingDefaultDocQueueProperty");
         UserProperty newQ=(UserProperty)frm.get("newDefaultDocQueueProperty");
         String mode=request.getParameter("chooseMode");
@@ -393,11 +369,11 @@ public class ProviderPropertyAction extends DispatchAction {
                  request.setAttribute("method","saveDefaultDocQueue");
                  return actionmapping.findForward("genDefaultDocQueue");
         }
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.DOC_DEFAULT_QUEUE);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.DOC_DEFAULT_QUEUE);
         if(prop==null){
             prop=new UserProperty();
             prop.setName(UserProperty.DOC_DEFAULT_QUEUE);
-            prop.setProviderNo(provider);
+            prop.setProviderNo(getLoggedInProviderNo());
         }
         if(mode.equals("new")){
             //save and get most recent id
@@ -424,8 +400,7 @@ public class ProviderPropertyAction extends DispatchAction {
     //}
     public ActionForward viewDefaultDocQueue(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
         DynaActionForm frm=(DynaActionForm)actionform;
-        String provider=(String)request.getSession().getAttribute("user");
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.DOC_DEFAULT_QUEUE);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.DOC_DEFAULT_QUEUE);
         UserProperty propNew=new UserProperty();
 
         if(prop==null){
@@ -458,9 +433,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_PROFILE_VIEW);
 
          String propValue="";
          if (prop == null){
@@ -502,18 +475,16 @@ public class ProviderPropertyAction extends DispatchAction {
    public ActionForward saveRxProfileView(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
 
        try{
-        String provider=(String) request.getSession().getAttribute("user");
-
         DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UProfileView=(UserProperty)frm.get("rxProfileViewProperty");
         String[] va=null;
         if(UProfileView!=null)
             va=UProfileView.getValueArray();
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_PROFILE_VIEW);
         if(prop==null){
             prop=new UserProperty();
             prop.setName(UserProperty.RX_PROFILE_VIEW);
-            prop.setProviderNo(provider);
+            prop.setProviderNo(getLoggedInProviderNo());
         }
 
         String rxProfileView="";
@@ -547,8 +518,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_SHOW_PATIENT_DOB);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_SHOW_PATIENT_DOB);
 
          String propValue="";
          if (prop == null){
@@ -579,20 +549,17 @@ public class ProviderPropertyAction extends DispatchAction {
      }
 
    public ActionForward saveShowPatientDOB(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-
-        String provider=(String) request.getSession().getAttribute("user");
-
-        DynaActionForm frm=(DynaActionForm)actionform;
+	    DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UShowPatientDOB=(UserProperty)frm.get("rxShowPatientDOBProperty");
 
         boolean checked=false;
         if(UShowPatientDOB!=null)
             checked = UShowPatientDOB.isChecked();
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_SHOW_PATIENT_DOB);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_SHOW_PATIENT_DOB);
         if(prop==null){
             prop=new UserProperty();
             prop.setName(UserProperty.RX_SHOW_PATIENT_DOB);
-            prop.setProviderNo(provider);
+            prop.setProviderNo(getLoggedInProviderNo());
         }
         String showPatientDOB="no";
         if(checked)
@@ -620,8 +587,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletRequest request,
                                HttpServletResponse response) {
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.USE_MYMEDS);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.USE_MYMEDS);
          if (prop == null) prop = new UserProperty();
 
          String propValue=prop.getValue();
@@ -642,8 +608,6 @@ public class ProviderPropertyAction extends DispatchAction {
      }
 
       public ActionForward saveUseMyMeds(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-        String provider=(String) request.getSession().getAttribute("user");
-
         DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UUseMyMeds=(UserProperty)frm.get("useMyMedsProperty");
         //UserProperty UUseRx3=(UserProperty)request.getAttribute("rxUseRx3Property");
@@ -651,11 +615,11 @@ public class ProviderPropertyAction extends DispatchAction {
         boolean checked=false;
         if(UUseMyMeds!=null)
             checked = UUseMyMeds.isChecked();
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.USE_MYMEDS);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.USE_MYMEDS);
         if(prop==null){
             prop=new UserProperty();
             prop.setName(UserProperty.USE_MYMEDS);
-            prop.setProviderNo(provider);
+            prop.setProviderNo(getLoggedInProviderNo());
         }
         prop.setValue(String.valueOf(checked));
         this.userPropertyDAO.saveProp(prop);
@@ -680,8 +644,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletRequest request,
                                HttpServletResponse response) {
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_USE_RX3);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_USE_RX3);
 
          String propValue="";
          if (prop == null){
@@ -712,20 +675,17 @@ public class ProviderPropertyAction extends DispatchAction {
      }
 
    public ActionForward saveUseRx3(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-        String provider=(String) request.getSession().getAttribute("user");
-
         DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UUseRx3=(UserProperty)frm.get("rxUseRx3Property");
-        //UserProperty UUseRx3=(UserProperty)request.getAttribute("rxUseRx3Property");
-
+      
         boolean checked=false;
         if(UUseRx3!=null)
             checked = UUseRx3.isChecked();
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_USE_RX3);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_USE_RX3);
         if(prop==null){
             prop=new UserProperty();
             prop.setName(UserProperty.RX_USE_RX3);
-            prop.setProviderNo(provider);
+            prop.setProviderNo(getLoggedInProviderNo());
         }
         String useRx3="no";
         if(checked)
@@ -755,8 +715,7 @@ public class ProviderPropertyAction extends DispatchAction {
 
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_DEFAULT_QUANTITY);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_DEFAULT_QUANTITY);
 
 
          if (prop == null){
@@ -779,19 +738,16 @@ public class ProviderPropertyAction extends DispatchAction {
      }
 
    public ActionForward saveDefaultQuantity(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-
-        String provider=(String) request.getSession().getAttribute("user");
-
-        DynaActionForm frm=(DynaActionForm)actionform;
+DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UDefaultQuantity=(UserProperty)frm.get("rxDefaultQuantityProperty");
         String rxDefaultQuantity="";
         if(UDefaultQuantity!=null)
             rxDefaultQuantity=UDefaultQuantity.getValue();
-        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_DEFAULT_QUANTITY);
+        UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.RX_DEFAULT_QUANTITY);
         if(prop==null){
             prop=new UserProperty();
             prop.setName(UserProperty.RX_DEFAULT_QUANTITY);
-            prop.setProviderNo(provider);
+            prop.setProviderNo(getLoggedInProviderNo());
         }
         prop.setValue(rxDefaultQuantity);
         this.userPropertyDAO.saveProp(prop);
@@ -812,8 +768,6 @@ public class ProviderPropertyAction extends DispatchAction {
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-         String provider = (String) request.getSession().getAttribute("user");
-
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -822,12 +776,12 @@ public class ProviderPropertyAction extends DispatchAction {
              drugrefId = UdrugrefId.getValue();
          }
 
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.MYDRUGREF_ID);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.MYDRUGREF_ID);
 
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.MYDRUGREF_ID);
-             prop.setProviderNo(provider);
+             prop.setProviderNo(getLoggedInProviderNo());
          }
          prop.setValue(drugrefId);
 
@@ -855,10 +809,9 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_USERNAME);
-         UserProperty prop2 = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_PASSWORD);
+         
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.ONTARIO_MD_USERNAME);
+         UserProperty prop2 = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.ONTARIO_MD_PASSWORD);
 
          if (prop == null){
              prop = new UserProperty();
@@ -890,8 +843,6 @@ public class ProviderPropertyAction extends DispatchAction {
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-         String provider = (String) request.getSession().getAttribute("user");
-
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -900,12 +851,12 @@ public class ProviderPropertyAction extends DispatchAction {
              drugrefId = UdrugrefId.getValue();
          }
 
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_USERNAME);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.ONTARIO_MD_USERNAME);
 
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.ONTARIO_MD_USERNAME);
-             prop.setProviderNo(provider);
+             prop.setProviderNo(getLoggedInProviderNo());
          }
          prop.setValue(drugrefId);
 
@@ -919,12 +870,12 @@ public class ProviderPropertyAction extends DispatchAction {
              drugrefId2 = UdrugrefId2.getValue();
          }
 
-         UserProperty prop2 = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_PASSWORD);
+         UserProperty prop2 = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.ONTARIO_MD_PASSWORD);
 
          if (prop2 ==null){
              prop2 = new UserProperty();
              prop2.setName(UserProperty.ONTARIO_MD_PASSWORD);
-             prop2.setProviderNo(provider);
+             prop2.setProviderNo(getLoggedInProviderNo());
          }
          prop2.setValue(drugrefId2);
 
@@ -950,8 +901,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
 
          if (prop == null){
              prop = new UserProperty();
@@ -976,8 +926,6 @@ public class ProviderPropertyAction extends DispatchAction {
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-         String provider = (String) request.getSession().getAttribute("user");
-
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -986,12 +934,12 @@ public class ProviderPropertyAction extends DispatchAction {
              drugrefId = UdrugrefId.getValue();
          }
 
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
 
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
-             prop.setProviderNo(provider);
+             prop.setProviderNo(getLoggedInProviderNo());
          }
          prop.setValue(drugrefId);
 
@@ -1020,8 +968,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TEAM_WARNING);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.CONSULTATION_TEAM_WARNING);
 
          if (prop == null){
              prop = new UserProperty();
@@ -1064,8 +1011,6 @@ public class ProviderPropertyAction extends DispatchAction {
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-         String provider = (String) request.getSession().getAttribute("user");
-
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -1074,14 +1019,12 @@ public class ProviderPropertyAction extends DispatchAction {
              drugrefId = UdrugrefId.getValue();
          }
 
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TEAM_WARNING);
-
-
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.CONSULTATION_TEAM_WARNING);
 
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.CONSULTATION_TEAM_WARNING);
-             prop.setProviderNo(provider);
+             prop.setProviderNo(getLoggedInProviderNo());
          }
          prop.setValue(drugrefId);
 
@@ -1121,8 +1064,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.WORKLOAD_MANAGEMENT);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.WORKLOAD_MANAGEMENT);
 
          if (prop == null)
              prop = new UserProperty();
@@ -1154,8 +1096,6 @@ public class ProviderPropertyAction extends DispatchAction {
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-         String provider = (String) request.getSession().getAttribute("user");
-
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -1164,12 +1104,12 @@ public class ProviderPropertyAction extends DispatchAction {
              drugrefId = UdrugrefId.getValue();
          }
 
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.WORKLOAD_MANAGEMENT);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.WORKLOAD_MANAGEMENT);
 
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.WORKLOAD_MANAGEMENT);
-             prop.setProviderNo(provider);
+             prop.setProviderNo(getLoggedInProviderNo());
          }
          prop.setValue(drugrefId);
 
@@ -1201,8 +1141,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_REQ_PASTE_FMT);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.CONSULTATION_REQ_PASTE_FMT);
 
          if (prop == null){
              prop = new UserProperty();
@@ -1237,12 +1176,11 @@ public class ProviderPropertyAction extends DispatchAction {
          UserProperty prop = (UserProperty)frm.get("dateProperty");
          String fmt = prop != null ? prop.getValue() : "";
 
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.CONSULTATION_REQ_PASTE_FMT);
+         UserProperty saveProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),UserProperty.CONSULTATION_REQ_PASTE_FMT);
 
          if( saveProperty == null ) {
              saveProperty = new UserProperty();
-             saveProperty.setProviderNo(provider);
+             saveProperty.setProviderNo(getLoggedInProviderNo());
              saveProperty.setName(UserProperty.CONSULTATION_REQ_PASTE_FMT);
          }
 
@@ -1347,8 +1285,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletRequest request,
                                HttpServletResponse response) {
         DynaActionForm frm = (DynaActionForm)actionform;
-        String provider = (String) request.getSession().getAttribute("user");
-        UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EFORM_FAVOURITE_GROUP);
+        UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.EFORM_FAVOURITE_GROUP);
 
         if (prop == null){
          prop = new UserProperty();
@@ -1387,12 +1324,11 @@ public class ProviderPropertyAction extends DispatchAction {
          UserProperty prop = (UserProperty)frm.get("dateProperty");
          String group = prop != null ? prop.getValue() : "";
 
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.EFORM_FAVOURITE_GROUP);
+         UserProperty saveProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),UserProperty.EFORM_FAVOURITE_GROUP);
 
          if( saveProperty == null ) {
              saveProperty = new UserProperty();
-             saveProperty.setProviderNo(provider);
+             saveProperty.setProviderNo(getLoggedInProviderNo());
              saveProperty.setName(UserProperty.EFORM_FAVOURITE_GROUP);
          }
 
@@ -1422,8 +1358,7 @@ public class ProviderPropertyAction extends DispatchAction {
             HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;
-		String provider = (String) request.getSession().getAttribute("user");
-		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CPP_SINGLE_LINE);
+		UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.CPP_SINGLE_LINE);
 
 		String propValue="";
 		if (prop == null){
@@ -1455,19 +1390,17 @@ public class ProviderPropertyAction extends DispatchAction {
 
 
     public ActionForward saveUseCppSingleLine(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-    	String provider=(String) request.getSession().getAttribute("user");
-
     	DynaActionForm frm=(DynaActionForm)actionform;
     	UserProperty UUseRx3=(UserProperty)frm.get("cppSingleLineProperty");
 
 		boolean checked=false;
 		if(UUseRx3!=null)
 			checked = UUseRx3.isChecked();
-		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.CPP_SINGLE_LINE);
+		UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.CPP_SINGLE_LINE);
 		if(prop==null){
 			prop=new UserProperty();
 			prop.setName(UserProperty.CPP_SINGLE_LINE);
-			prop.setProviderNo(provider);
+			prop.setProviderNo(getLoggedInProviderNo());
 		}
 		String useRx3="no";
 		if(checked)
@@ -1498,8 +1431,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
             HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;
-		String provider = (String) request.getSession().getAttribute("user");
-		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
+		UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
 
 		String propValue="";
 		if (prop == null){
@@ -1531,19 +1463,17 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
 
     public ActionForward saveEDocBrowserInDocumentReport(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-    	String provider=(String) request.getSession().getAttribute("user");
-
     	DynaActionForm frm=(DynaActionForm)actionform;
     	UserProperty Uprop=(UserProperty)frm.get("eDocBrowserInDocumentReportProperty");
 
 		boolean checked=false;
 		if(Uprop!=null)
 			checked = Uprop.isChecked();
-		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
+		UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
 		if(prop==null){
 			prop=new UserProperty();
 			prop.setName(UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
-			prop.setProviderNo(provider);
+			prop.setProviderNo(getLoggedInProviderNo());
 		}
 		String propValue="no";
 		if(checked)
@@ -1574,8 +1504,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
             HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;
-		String provider = (String) request.getSession().getAttribute("user");
-		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
+		UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
 
 		String propValue="";
 		if (prop == null){
@@ -1607,19 +1536,17 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
 
     public ActionForward saveEDocBrowserInMasterFile(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-    	String provider=(String) request.getSession().getAttribute("user");
-
     	DynaActionForm frm=(DynaActionForm)actionform;
     	UserProperty Uprop=(UserProperty)frm.get("eDocBrowserInMasterFileProperty");
 
 		boolean checked=false;
 		if(Uprop!=null)
 			checked = Uprop.isChecked();
-		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
+		UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
 		if(prop==null){
 			prop=new UserProperty();
 			prop.setName(UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
-			prop.setProviderNo(provider);
+			prop.setProviderNo(getLoggedInProviderNo());
 		}
 		String propValue="no";
 		if(checked)
@@ -1650,8 +1577,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
             HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;
-		String provider = (String) request.getSession().getAttribute("user");
-		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.LAB_ACK_COMMENT);
+		UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.LAB_ACK_COMMENT);
 
 		String propValue="";
 		if (prop == null){
@@ -1682,19 +1608,17 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 	}
 
     public ActionForward saveCommentLab(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-    	String provider=(String) request.getSession().getAttribute("user");
-
     	DynaActionForm frm=(DynaActionForm)actionform;
     	UserProperty Uprop=(UserProperty)frm.get("labAckCommentProperty");
 
 		boolean checked=false;
 		if(Uprop!=null)
 			checked = Uprop.isChecked();
-		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.LAB_ACK_COMMENT);
+		UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.LAB_ACK_COMMENT);
 		if(prop==null){
 			prop=new UserProperty();
 			prop.setName(UserProperty.LAB_ACK_COMMENT);
-			prop.setProviderNo(provider);
+			prop.setProviderNo(getLoggedInProviderNo());
 		}
 		String disableComment="no";
 		if(checked)
@@ -1726,11 +1650,9 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
     public ActionForward viewEncounterWindowSize(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;
-		String provider = (String) request.getSession().getAttribute("user");
-
-		UserProperty width = this.userPropertyDAO.getProp(provider, "encounterWindowWidth");
-		UserProperty height = this.userPropertyDAO.getProp(provider, "encounterWindowHeight");
-		UserProperty maximize = this.userPropertyDAO.getProp(provider, "encounterWindowMaximize");
+		UserProperty width = this.userPropertyDAO.getProp(getLoggedInProviderNo(), "encounterWindowWidth");
+		UserProperty height = this.userPropertyDAO.getProp(getLoggedInProviderNo(), "encounterWindowHeight");
+		UserProperty maximize = this.userPropertyDAO.getProp(getLoggedInProviderNo(), "encounterWindowMaximize");
 
 		if (width == null){
 			width = new UserProperty();
@@ -1776,30 +1698,28 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		String height = h != null ? h.getValue() : "";
 		boolean maximize = m != null ? m.isChecked() : false;
 
-		String provider = (String) request.getSession().getAttribute("user");
-
-		UserProperty wProperty = this.userPropertyDAO.getProp(provider,"encounterWindowWidth");
+		UserProperty wProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),"encounterWindowWidth");
 		if( wProperty == null ) {
 			wProperty = new UserProperty();
-			wProperty.setProviderNo(provider);
+			wProperty.setProviderNo(getLoggedInProviderNo());
 			wProperty.setName("encounterWindowWidth");
 		}
 		wProperty.setValue(width);
 		userPropertyDAO.saveProp(wProperty);
 
-		UserProperty hProperty = this.userPropertyDAO.getProp(provider,"encounterWindowHeight");
+		UserProperty hProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),"encounterWindowHeight");
 		if( hProperty == null ) {
 			hProperty = new UserProperty();
-			hProperty.setProviderNo(provider);
+			hProperty.setProviderNo(getLoggedInProviderNo());
 			hProperty.setName("encounterWindowHeight");
 		}
 		hProperty.setValue(height);
 		userPropertyDAO.saveProp(hProperty);
 
-		UserProperty mProperty = this.userPropertyDAO.getProp(provider,"encounterWindowMaximize");
+		UserProperty mProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),"encounterWindowMaximize");
 		if( mProperty == null ) {
 			mProperty = new UserProperty();
-			mProperty.setProviderNo(provider);
+			mProperty.setProviderNo(getLoggedInProviderNo());
 			mProperty.setName("encounterWindowMaximize");
 		}
 		mProperty.setValue(maximize?"yes":"no");
@@ -1820,9 +1740,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
     public ActionForward viewQuickChartSize(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;
-		String provider = (String) request.getSession().getAttribute("user");
-
-		UserProperty size = this.userPropertyDAO.getProp(provider, "quickChartSize");
+				UserProperty size = this.userPropertyDAO.getProp(getLoggedInProviderNo(), "quickChartSize");
 
 		if (size == null){
 			size = new UserProperty();
@@ -1852,12 +1770,10 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
 		String size = s != null ? s.getValue() : "";
 
-		String provider = (String) request.getSession().getAttribute("user");
-
-		UserProperty wProperty = this.userPropertyDAO.getProp(provider,"quickChartSize");
+		UserProperty wProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),"quickChartSize");
 		if( wProperty == null ) {
 			wProperty = new UserProperty();
-			wProperty.setProviderNo(provider);
+			wProperty.setProviderNo(getLoggedInProviderNo());
 			wProperty.setName("quickChartsize");
 		}
 		wProperty.setValue(size);
@@ -1935,9 +1851,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
  public ActionForward viewPatientNameLength(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;
-		String provider = (String) request.getSession().getAttribute("user");
-
-		UserProperty length = this.userPropertyDAO.getProp(provider, UserProperty.PATIENT_NAME_LENGTH);
+		UserProperty length = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.PATIENT_NAME_LENGTH);
 
 		if (length == null){
 			length = new UserProperty();
@@ -1967,12 +1881,10 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
 		String length = s != null ? s.getValue() : "";
 
-		String provider = (String) request.getSession().getAttribute("user");
-
-		UserProperty wProperty = this.userPropertyDAO.getProp(provider,UserProperty.PATIENT_NAME_LENGTH);
+		UserProperty wProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),UserProperty.PATIENT_NAME_LENGTH);
 		if( wProperty == null ) {
 			wProperty = new UserProperty();
-			wProperty.setProviderNo(provider);
+			wProperty.setProviderNo(getLoggedInProviderNo());
 			wProperty.setName(UserProperty.PATIENT_NAME_LENGTH);
 		}
 		wProperty.setValue(length);
@@ -1997,8 +1909,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.DISPLAY_DOCUMENT_AS);
+         UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.DISPLAY_DOCUMENT_AS);
 
          if (prop == null){
              prop = new UserProperty();
@@ -2032,12 +1943,11 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty prop = (UserProperty)frm.get("displayDocumentAsProperty");
          String fmt = prop != null ? prop.getValue() : "";
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.DISPLAY_DOCUMENT_AS);
+         UserProperty saveProperty = this.userPropertyDAO.getProp(getLoggedInProviderNo(),UserProperty.DISPLAY_DOCUMENT_AS);
 
          if( saveProperty == null ) {
              saveProperty = new UserProperty();
-             saveProperty.setProviderNo(provider);
+             saveProperty.setProviderNo(getLoggedInProviderNo());
              saveProperty.setName(UserProperty.DISPLAY_DOCUMENT_AS);
          }
 
@@ -2055,10 +1965,85 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
          return actionmapping.findForward("genDisplayDocumentAs");
     }
+    
+    
+
+    public ActionForward viewCobalt(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm frm = (DynaActionForm)actionform;
+		UserProperty prop = this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.COBALT);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equalsIgnoreCase("yes"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		request.setAttribute("cobaltProperty", prop);
+		request.setAttribute("providertitle","provider.cobalt.title"); //=Select if you want to use Rx3
+		request.setAttribute("providermsgPrefs","provider.cobalt.msgPrefs"); //=Preferences
+		request.setAttribute("providermsgProvider","provider.cobalt.msgProfileView"); //=Use Rx3
+		request.setAttribute("providermsgEdit","provider.cobalt.msgEdit"); //=Do you want to use Rx3?
+		request.setAttribute("providerbtnSubmit","provider.cobalt.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.cobalt.msgSuccess"); //=Rx3 Selection saved
+		request.setAttribute("method","saveCobalt");
+
+		frm.set("cobaltProperty", prop);
+
+		return actionmapping.findForward("genCobalt");
+    }
+    
+
+    public ActionForward saveCobalt(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("cobaltProperty");
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(getLoggedInProviderNo(), UserProperty.COBALT);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.COBALT);
+			prop.setProviderNo(getLoggedInProviderNo());
+		}
+		String propValue="no";
+		if(checked)
+			propValue="yes";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("cobaltProperty",prop);
+		request.setAttribute("providertitle","provider.cobalt.title");
+		request.setAttribute("providermsgPrefs","provider.cobalt.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.cobalt.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.cobalt.msgEdit");
+		request.setAttribute("providerbtnSubmit","provider.cobalt.btnSubmit");
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.cobalt.msgSuccess_selected");
+		else
+			request.setAttribute("providermsgSuccess","provider.cobalt.msgSuccess_unselected");
+		request.setAttribute("method","saveCobalt");
+
+		return actionmapping.findForward("genCobalt");
+    }
+    
     /**
      * Creates a new instance of ProviderPropertyAction
      */
     public ProviderPropertyAction() {
     }
 
+    private String getLoggedInProviderNo() {
+    	return LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+    }
 }

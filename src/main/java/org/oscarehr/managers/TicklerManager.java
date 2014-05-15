@@ -146,6 +146,17 @@ public class TicklerManager {
         return(results);
     }
     
+    public List<Tickler> getTicklers(CustomFilter filter, int offset, int limit) {
+    	List<Tickler> results = ticklerDao.getTicklers(filter,offset,limit);     
+        
+        //--- log action ---
+        for(Tickler tickler:results) {
+        	LogAction.addLogSynchronous("TicklerManager.getTicklers", "ticklerId="+tickler.getId());
+        }
+        
+        return(results);
+    }
+    
     
     protected List<Tickler> ticklerFacilityFiltering(List<Tickler> ticklers) {
         ArrayList<Tickler> results = new ArrayList<Tickler>();
