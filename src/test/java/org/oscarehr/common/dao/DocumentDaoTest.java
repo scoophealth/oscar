@@ -23,8 +23,12 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
@@ -44,18 +48,27 @@ public class DocumentDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("document", "ctl_document", "consultdocs", "provider", "providersite", "demographic","provider_facility","Facility","demographic_merged");
+		SchemaUtils.restoreTable("document", "ctl_document", "consultdocs", "provider", "providersite", "demographic", "provider_facility", "Facility", "demographic_merged");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
+	public void test() throws Exception {
 		Document entity = new Document();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setDocumentNo(null);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+
+		Calendar cal = new GregorianCalendar();
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		List<Document> results = dao.findByUpdateDate(cal.getTime(), 99);
+		assertTrue(results.size() > 0);
+
+		cal.add(Calendar.DAY_OF_YEAR, 2);
+		results = dao.findByUpdateDate(cal.getTime(), 99);
+		assertEquals(0, results.size());
 	}
-	
+
 	@Test
 	public void testFindConstultDocsDocsAndProvidersByModule() {
 		List<Object[]> docs = dao.findConstultDocsDocsAndProvidersByModule(Module.DEMOGRAPHIC, 0);

@@ -117,8 +117,11 @@ public class AllergyDao extends AbstractDao<Allergy> {
 		return (results);
 	}
 
-	public List<Allergy> findUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.lastUpdateDate>=?1";
+	/**
+	 * @return results ordered by lastUpdateDate
+	 */
+	public List<Allergy> findByUpdateDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.lastUpdateDate>=?1 order by x.lastUpdateDate";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, updatedAfterThisDateInclusive);
@@ -126,7 +129,6 @@ public class AllergyDao extends AbstractDao<Allergy> {
 		
 		@SuppressWarnings("unchecked")
 		List<Allergy> results = query.getResultList();
-
 		return (results);
 	}
 }

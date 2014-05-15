@@ -25,7 +25,9 @@
 package org.oscarehr.ws;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -68,13 +70,33 @@ public class DocumentWs extends AbstractWs {
 		}
 	}
 
+	public DocumentTransfer[] getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
+		try {
+			List<Document> documents = documentManager.getDocumentsUpdateAfterDate(updateAfterThisDateInclude, itemsToReturn);
+
+			ArrayList<DocumentTransfer> results = new ArrayList<DocumentTransfer>();
+
+			for (Document document : documents) {
+				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(document.getId());
+				DocumentTransfer transfer = DocumentTransfer.toTransfer(document, ctlDocument);
+				results.add(transfer);
+			}
+
+			return (results.toArray(new DocumentTransfer[0]));
+		} catch (IOException e) {
+			logger.error("Unexpected error", e);
+			throw (new WebServiceException(e));
+		}
+	}
+
 	/**
 	 * Get a list of DataIdTransfer objects for documents starting with the passed in Id.
+	 * @deprecated 2014-05-15 use getDocumentsUpdateAfter() instead
 	 */
 	public DataIdTransfer[] getDocumentDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
 
-		Boolean archived=null;
-		if (active!=null) archived=!active;
+		Boolean archived = null;
+		if (active != null) archived = !active;
 
 		List<Document> documents = documentManager.getDocumentsByIdStart(archived, startIdInclusive, itemsToReturn);
 
