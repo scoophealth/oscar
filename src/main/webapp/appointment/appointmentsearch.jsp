@@ -90,7 +90,7 @@
   //code
   String code = request.getParameter("code")!=null?request.getParameter("code"):"";  
   ScheduleTemplateCodeDao scheduleTemplateCodeDao = (ScheduleTemplateCodeDao)SpringUtils.getBean("scheduleTemplateCodeDao");
-  List<ScheduleTemplateCode> codes = scheduleTemplateCodeDao.getAll();
+  List<ScheduleTemplateCode> codes = scheduleTemplateCodeDao.findAll();
   
   //numberOfResults
   String numberOfResults = request.getParameter("numberOfResults")!=null?request.getParameter("numberOfResults"):"3";  
