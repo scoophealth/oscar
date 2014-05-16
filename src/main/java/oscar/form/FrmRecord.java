@@ -29,6 +29,7 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.Demographic;
@@ -89,17 +90,17 @@ public abstract class FrmRecord {
         date = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
         demoProps.setProperty("demographic_no", demographic.getDemographicNo().toString());
 
-        demoProps.setProperty("c_surname", demographic.getLastName());
-        demoProps.setProperty("c_givenName", demographic.getFirstName());
-        demoProps.setProperty("c_address", demographic.getAddress());
-        demoProps.setProperty("c_city", demographic.getCity());
-        demoProps.setProperty("c_province", demographic.getProvince());
-        demoProps.setProperty("c_postal", demographic.getPostal());
-        demoProps.setProperty("c_phn", demographic.getHin());
+        demoProps.setProperty("c_surname", StringUtils.trimToEmpty(demographic.getLastName()));
+        demoProps.setProperty("c_givenName", StringUtils.trimToEmpty(demographic.getFirstName()));
+        demoProps.setProperty("c_address", StringUtils.trimToEmpty(demographic.getAddress()));
+        demoProps.setProperty("c_city", StringUtils.trimToEmpty(demographic.getCity()));
+        demoProps.setProperty("c_province", StringUtils.trimToEmpty(demographic.getProvince()));
+        demoProps.setProperty("c_postal", StringUtils.trimToEmpty(demographic.getPostal()));
+        demoProps.setProperty("c_phn", StringUtils.trimToEmpty(demographic.getHin()));
         demoProps.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, dateFormat));
         demoProps.setProperty("pg1_age", String.valueOf(UtilDateUtilities.getNumYears(date, GregorianCalendar.getInstance().getTime())));
-        demoProps.setProperty("c_phone", demographic.getPhone());
-        demoProps.setProperty("c_phoneAlt1", demographic.getPhone2());
+        demoProps.setProperty("c_phone", StringUtils.trimToEmpty(demographic.getPhone()));
+        demoProps.setProperty("c_phoneAlt1", StringUtils.trimToEmpty(demographic.getPhone2()));
         
         String rd = SxmlMisc.getXmlContent(demographic.getFamilyDoctor(), "rd");
         rd = rd != null ? rd : "";

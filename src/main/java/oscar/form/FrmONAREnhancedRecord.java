@@ -29,6 +29,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
+
 import oscar.OscarProperties;
 import oscar.util.UtilDateUtilities;
 
@@ -44,21 +46,21 @@ public class FrmONAREnhancedRecord extends FrmRecord {
 		if (existingID <= 0) {
 
 			this.setDemoProperties(demographicNo, props);
-			props.setProperty("c_lastName", demographic.getLastName());
-			props.setProperty("c_firstName", demographic.getFirstName());
+			props.setProperty("c_lastName", StringUtils.trimToEmpty(demographic.getLastName()));
+			props.setProperty("c_firstName", StringUtils.trimToEmpty(demographic.getFirstName()));
 			props.setProperty("c_hin", demographic.getHin());
 
-			if (demographic.getHcType().equals("ON")) {
+			if ( "ON".equals(demographic.getHcType()) ) {
 				props.setProperty("c_hinType", "OHIP");
-			} else if (demographic.getHcType().equals("QC")) {
+			} else if ( "QC".equals(demographic.getHcType()) ) {
 				props.setProperty("c_hinType", "RAMQ");
 			} else {
 				props.setProperty("c_hinType", "OTHER");
 			}
-			props.setProperty("c_fileNo", demographic.getChartNo());
+			props.setProperty("c_fileNo", StringUtils.trimToEmpty(demographic.getChartNo()));
 
-			props.setProperty("pg1_homePhone", demographic.getPhone());
-			props.setProperty("pg1_workPhone", demographic.getPhone2());
+			props.setProperty("pg1_homePhone", StringUtils.trimToEmpty(demographic.getPhone()));
+			props.setProperty("pg1_workPhone", StringUtils.trimToEmpty(demographic.getPhone2()));
 
 			props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), dateFormat));
 			props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(new Date(), dateFormat));
