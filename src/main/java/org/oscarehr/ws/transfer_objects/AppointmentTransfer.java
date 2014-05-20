@@ -310,7 +310,7 @@ public final class AppointmentTransfer {
 		return(cal);
 	}
 	
-	public static AppointmentTransfer[] toTransfer(List<Appointment> appointments, boolean useGMTTime) {
+	public static AppointmentTransfer[] toTransfers(List<Appointment> appointments, boolean useGMTTime) {
 		AppointmentTransfer[] result = new AppointmentTransfer[appointments.size()];
 
 		for (int i = 0; i < appointments.size(); i++) {
