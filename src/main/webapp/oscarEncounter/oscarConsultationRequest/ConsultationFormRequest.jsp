@@ -1981,7 +1981,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 				<script type="text/javascript">
 
 	        initMaster();
-        	initService('<%=consultUtil.service%>','<%=((consultUtil.service==null)?"":consultUtil.getServiceName(consultUtil.service.toString()))%>','<%=consultUtil.specialist%>','<%=((consultUtil.specialist==null)?"":consultUtil.getSpecailistsName(consultUtil.specialist.toString()))%>','<%=consultUtil.specPhone%>','<%=consultUtil.specFax%>','<%=consultUtil.specAddr%>');
+        	initService('<%=consultUtil.service%>','<%=((consultUtil.service==null)?"":StringEscapeUtils.escapeJavaScript(consultUtil.getServiceName(consultUtil.service.toString())))%>','<%=consultUtil.specialist%>','<%=((consultUtil.specialist==null)?"":StringEscapeUtils.escapeJavaScript(consultUtil.getSpecailistsName(consultUtil.specialist.toString())))%>','<%=StringEscapeUtils.escapeJavaScript(consultUtil.specPhone)%>','<%=StringEscapeUtils.escapeJavaScript(consultUtil.specFax)%>','<%=StringEscapeUtils.escapeJavaScript(consultUtil.specAddr)%>');
                 initSpec();
             document.EctConsultationFormRequestForm.phone.value = ("");
         	document.EctConsultationFormRequestForm.fax.value = ("");
