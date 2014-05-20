@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.AllergyDao;
@@ -38,6 +39,9 @@ public class AllergyManager {
 	@Autowired
 	private AllergyDao allergyDao;
 
+	/**
+	 * @deprecated 2014-05-15 remove as soon as WS is removed.
+	 */
 	public List<Allergy> getAllergiesByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findAllergiesByIdStart(archived, startIdInclusive, itemsToReturn);
 
@@ -60,5 +64,13 @@ public class AllergyManager {
 		}
 
 		return(result);
+	}
+	
+	public List<Allergy> getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Allergy> results = allergyDao.findUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous("AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+
+		return (results);
 	}
 }
