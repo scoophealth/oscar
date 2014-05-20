@@ -26,9 +26,11 @@ package org.oscarehr.common.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
@@ -168,6 +170,16 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 		cal.add(Calendar.MONTH, -1);
 
 		assertEquals(1, dao.findByDemographicIdUpdatedAfterDate(1, cal.getTime()).size());
+		
+		cal=new GregorianCalendar();
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		List<Measurement> results=dao.findByCreateDate(cal.getTime(), 99);
+		assertTrue(results.size()>0);
+
+		cal.add(Calendar.DAY_OF_YEAR, 2);
+		results=dao.findByCreateDate(cal.getTime(), 99);
+		assertEquals(0, results.size());
+
 	}
 
 	@Test

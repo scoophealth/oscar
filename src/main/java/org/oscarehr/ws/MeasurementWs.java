@@ -25,6 +25,7 @@
 package org.oscarehr.ws;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class MeasurementWs extends AbstractWs {
 
 	/**
 	 * Get a list of DataIdTransfer objects for measurements starting with the passed in Id.
+	 * @deprecated 2014-05-20 use getCreatedAfterDate instead
 	 */
 	public DataIdTransfer[] getMeasurementDataIds(Integer startIdInclusive, int itemsToReturn) {
 
@@ -75,6 +77,11 @@ public class MeasurementWs extends AbstractWs {
 		}
 
 		return (results);
+	}
+
+	public MeasurementTransfer[] getCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Measurement> results=measurementManager.getCreatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		return(MeasurementTransfer.toTransfers(results));
 	}
 
 	private DataIdTransfer getDataIdTransfer(Measurement measurement) {
