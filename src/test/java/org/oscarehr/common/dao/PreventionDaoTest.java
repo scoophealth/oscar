@@ -26,6 +26,7 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -34,7 +35,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -94,6 +97,16 @@ public class PreventionDaoTest extends DaoTestFixtures {
 			}
 		}
 		assertTrue(true);
+		
+		Calendar cal=new GregorianCalendar();
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		List<Prevention> results=dao.findByUpdateDate(cal.getTime(), 99);
+		assertTrue(results.size()>0);
+
+		cal.add(Calendar.DAY_OF_YEAR, 2);
+		results=dao.findByUpdateDate(cal.getTime(), 99);
+		assertEquals(0, results.size());
+
 	}
 
 

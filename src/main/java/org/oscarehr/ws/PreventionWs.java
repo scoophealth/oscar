@@ -24,7 +24,9 @@
 
 package org.oscarehr.ws;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -34,8 +36,8 @@ import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.managers.PreventionManager;
-import org.oscarehr.ws.transfer_objects.PreventionTransfer;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
+import org.oscarehr.ws.transfer_objects.PreventionTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,8 +59,23 @@ public class PreventionWs extends AbstractWs {
 		return (null);
 	}
 
+	public PreventionTransfer[] getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		ArrayList<PreventionTransfer> results=new ArrayList<PreventionTransfer>();
+		
+		for (Prevention prevention : preventions)
+		{
+			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(prevention.getId());
+			PreventionTransfer preventionTransfer=PreventionTransfer.toTransfer(prevention, preventionExts);
+			results.add(preventionTransfer);
+		}
+		
+		return(results.toArray(new PreventionTransfer[0]));
+	}
+	
 	/**
 	 * Get a list of DataIdTransfer objects for preventions starting with the passed in Id.
+	 * @deprecated 2014-05-20 use getUpdatedAfterDate() instead
 	 */
 	public DataIdTransfer[] getPreventionDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
 		Boolean archived = null;

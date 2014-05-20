@@ -25,6 +25,7 @@
 package org.oscarehr.managers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +49,9 @@ public class PreventionManager {
 	
 	private ArrayList<String> preventionTypeList = new ArrayList<String>();
 
+	/**
+	 * @deprecated 2014-05-20 remove after calling ws method is removed
+	 */
 	public List<Prevention> getPreventionsByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
 
@@ -60,6 +64,14 @@ public class PreventionManager {
 		return (results);
 	}
 	
+	public List<Prevention> getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Prevention> results = preventionDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous("PreventionManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+
+		return (results);
+	}
+
 	public Prevention getPrevention(Integer id)
 	{
 		Prevention result=preventionDao.find(id);

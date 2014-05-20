@@ -24,12 +24,12 @@
 
 package org.oscarehr.ws.transfer_objects;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.oscarehr.managers.PrescriptionManager.PrescriptionAndDrugs;
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Prescription;
 import org.springframework.beans.BeanUtils;
 
 public final class PrescriptionTransfer {
@@ -130,25 +130,15 @@ public final class PrescriptionTransfer {
 	 * If prescription is null, then null is returned.
 	 * If prescription is not null, then drugs must not be null, it should at least be an empty list to signify no drugs.
 	 */
-	public static PrescriptionTransfer toTransfer(PrescriptionAndDrugs prescriptionAndDrugs) {
-		if (prescriptionAndDrugs == null) return (null);
+	public static PrescriptionTransfer toTransfer(Prescription prescription, List<Drug> drugs) {
+		if (prescription == null) return (null);
 
 		PrescriptionTransfer prescriptionTransfer = new PrescriptionTransfer();
-		BeanUtils.copyProperties(prescriptionAndDrugs.prescription, prescriptionTransfer);
+		BeanUtils.copyProperties(prescription, prescriptionTransfer);
 		
-		prescriptionTransfer.setDrugs(DrugTransfer.toTransfers(prescriptionAndDrugs.drugs));
+		prescriptionTransfer.setDrugs(DrugTransfer.toTransfers(drugs));
 
 		return (prescriptionTransfer);
-	}
-
-	public static PrescriptionTransfer[] toTransfers(List<PrescriptionAndDrugs> prescriptionAndDrugsList) {
-		ArrayList<PrescriptionTransfer> results = new ArrayList<PrescriptionTransfer>();
-
-		for (PrescriptionAndDrugs prescriptionAndDrugs : prescriptionAndDrugsList) {
-			results.add(toTransfer(prescriptionAndDrugs));
-		}
-
-		return (results.toArray(new PrescriptionTransfer[0]));
 	}
 
 	@Override
