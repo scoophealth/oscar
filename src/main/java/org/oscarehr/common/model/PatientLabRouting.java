@@ -59,6 +59,9 @@ public class PatientLabRouting extends AbstractModel<Integer> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateModified = new Date();
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date created;
+	
 	public int getLabNo() {
     	return labNo;
     }
@@ -78,7 +81,7 @@ public class PatientLabRouting extends AbstractModel<Integer> {
 	public Integer getDemographicNo() {
     	return demographicNo;
     }
-
+	
 	public void setDemographicNo(Integer demographicNo) {
     	this.demographicNo = demographicNo;
     }
@@ -90,6 +93,14 @@ public class PatientLabRouting extends AbstractModel<Integer> {
 
 	public void setDateModified(Date dateModified) {
 		this.dateModified = dateModified;
+	}
+	
+	public Date getCreated() {
+		return this.created;
+	}
+	
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 
 	@PrePersist
