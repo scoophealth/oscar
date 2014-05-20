@@ -29,7 +29,6 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.Prevention;
 
-@SuppressWarnings("unchecked")
 public class PreventionDao extends AbstractDao<Prevention> {
 
 	public PreventionDao() {
@@ -50,6 +49,8 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
 
 	 * @param archived can be null for all deleted and non-deleted items 
+	 * 
+	 * @deprecated 2014-05-20 remove after calling manager method is removed
 	 */
     public List<Prevention> findByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
     	String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 ";
@@ -67,12 +68,28 @@ public class PreventionDao extends AbstractDao<Prevention> {
         return preventions;
     }
     
+	/**
+	 * @return results ordered by lastUpdateDate
+	 */
+	public List<Prevention> findByUpdateDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.lastUpdateDate>=?1 order by x.lastUpdateDate";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, updatedAfterThisDateInclusive);
+		setLimit(query, itemsToReturn);
+		
+		@SuppressWarnings("unchecked")
+		List<Prevention> results = query.getResultList();
+		return (results);
+	}
+
     public List<Prevention> findByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
     	Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate>=?2 and deleted='0'");
     	query.setParameter(1, demographicId);
 		query.setParameter(2, dateTime);
 
-		List<Prevention> results = query.getResultList();
+		@SuppressWarnings("unchecked")
+        List<Prevention> results = query.getResultList();
 
 		return (results);
 	}
@@ -117,7 +134,8 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		query.setParameter(1, demographicId);
 		query.setParameter(2, '0');
 
-		List<Prevention> results = query.getResultList();
+		@SuppressWarnings("unchecked")
+        List<Prevention> results = query.getResultList();
 
 		return (results);
 	}
@@ -128,7 +146,8 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		query.setParameter(2, startDate);
 		query.setParameter(3, endDate);
 
-		List<Prevention> results = query.getResultList();
+		@SuppressWarnings("unchecked")
+        List<Prevention> results = query.getResultList();
 
 		return (results);
 	}
@@ -137,11 +156,14 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where preventionType=?1 and demographicId=?2 and deleted='0' order by preventionDate");
 		query.setParameter(1, preventionType);
 		query.setParameter(2, demoNo);
-		List<Prevention> results = query.getResultList();
+		
+		@SuppressWarnings("unchecked")
+        List<Prevention> results = query.getResultList();
 		return (results);
 	}
 
-	public List<Prevention> findActiveByDemoId(Integer demoId) {
+	@SuppressWarnings("unchecked")
+    public List<Prevention> findActiveByDemoId(Integer demoId) {
 		Query query = createQuery("p", "p.demographicId = :demoNo and p.deleted <> '1' ORDER BY p.preventionType, p.preventionDate");
 		query.setParameter("demoNo", demoId);
 		return query.getResultList();

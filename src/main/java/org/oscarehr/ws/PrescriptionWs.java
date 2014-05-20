@@ -33,9 +33,9 @@ import java.util.List;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.managers.PrescriptionManager;
-import org.oscarehr.managers.PrescriptionManager.PrescriptionAndDrugs;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.PrescriptionTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,14 +49,11 @@ public class PrescriptionWs extends AbstractWs {
 	private PrescriptionManager prescriptionManager;
 
 	public PrescriptionTransfer getPrescription(Integer prescriptionId) {
-		PrescriptionAndDrugs prescriptionAndDrugs =new PrescriptionAndDrugs();
+		Prescription prescription = prescriptionManager.getPrescription(prescriptionId);
 
-		prescriptionAndDrugs.prescription = prescriptionManager.getPrescription(prescriptionId);
-
-		if (prescriptionAndDrugs.prescription != null) {
-			prescriptionAndDrugs.drugs = prescriptionManager.getDrugsByScriptNo(prescriptionAndDrugs.prescription.getId(), false);
-
-			return (PrescriptionTransfer.toTransfer(prescriptionAndDrugs));
+		if (prescription != null) {
+			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(prescription.getId(), false);
+			return (PrescriptionTransfer.toTransfer(prescription, drugs));
 		}
 
 		return (null);
@@ -99,11 +96,8 @@ public class PrescriptionWs extends AbstractWs {
 		
 		for (Prescription prescription : prescriptions)
 		{
-			PrescriptionAndDrugs prescriptionAndDrugs =new PrescriptionAndDrugs();
-			prescriptionAndDrugs.prescription = prescription;
-			prescriptionAndDrugs.drugs = prescriptionManager.getDrugsByScriptNo(prescriptionAndDrugs.prescription.getId(), false);
-			
-			PrescriptionTransfer prescriptionTransfer=PrescriptionTransfer.toTransfer(prescriptionAndDrugs);
+			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(prescription.getId(), false);
+			PrescriptionTransfer prescriptionTransfer=PrescriptionTransfer.toTransfer(prescription, drugs);
 			results.add(prescriptionTransfer);
 		}
 		
