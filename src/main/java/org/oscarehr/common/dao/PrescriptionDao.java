@@ -72,6 +72,7 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 	/**
 	 * This method will return a list of items starting from the provided ID.
 	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
+	 * @deprecated 2014-05-20 remove after calling ws method is removed
 	 */
 	public List<Prescription> findByIdStart(Integer startIdInclusive, int itemsToReturn) {
 		String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 order by x.id";
@@ -86,4 +87,18 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 		return results;
 	}
 
+	/**
+	 * @return results ordered by lastUpdateDate
+	 */
+	public List<Prescription> findByUpdateDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.lastUpdateDate>=?1 order by x.lastUpdateDate";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, updatedAfterThisDateInclusive);
+		setLimit(query, itemsToReturn);
+		
+		@SuppressWarnings("unchecked")
+		List<Prescription> results = query.getResultList();
+		return (results);
+	}
 }

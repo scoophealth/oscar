@@ -23,11 +23,18 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Prescription;
 import org.oscarehr.util.SpringUtils;
 
 public class PrescriptionDaoTest extends DaoTestFixtures {
@@ -45,5 +52,19 @@ public class PrescriptionDaoTest extends DaoTestFixtures {
 		dao.updatePrescriptionsByScriptNo(100, "comment");
 	}
 	
-	
+	@Test
+	public void testFind()
+	{
+		Prescription prescription=new Prescription();
+		dao.persist(prescription);
+		
+		Calendar cal=new GregorianCalendar();
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		List<Prescription> results=dao.findByUpdateDate(cal.getTime(), 99);
+		assertTrue(results.size()>0);
+
+		cal.add(Calendar.DAY_OF_YEAR, 2);
+		results=dao.findByUpdateDate(cal.getTime(), 99);
+		assertEquals(0, results.size());
+	}
 }
