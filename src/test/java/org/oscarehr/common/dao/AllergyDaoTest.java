@@ -87,11 +87,11 @@ public class AllergyDaoTest extends DaoTestFixtures {
 		
 		Calendar cal=new GregorianCalendar();
 		cal.add(Calendar.DAY_OF_YEAR, -1);
-		List<Allergy> results=dao.findUpdatedAfterDate(cal.getTime(), 99);
+		List<Allergy> results=dao.findByUpdateDate(cal.getTime(), 99);
 		assertTrue(results.size()>0);
 
 		cal.add(Calendar.DAY_OF_YEAR, 2);
-		results=dao.findUpdatedAfterDate(cal.getTime(), 99);
+		results=dao.findByUpdateDate(cal.getTime(), 99);
 		assertEquals(0, results.size());
 	}
 
