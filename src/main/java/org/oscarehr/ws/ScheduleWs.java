@@ -76,7 +76,7 @@ public class ScheduleWs extends AbstractWs {
 	 */
 	public AppointmentTransfer[] getAppointmentsForProvider(String providerNo, Calendar date) {
 		List<Appointment> appointments = scheduleManager.getDayAppointments(providerNo, date);
-		return (AppointmentTransfer.toTransfer(appointments, false));
+		return (AppointmentTransfer.toTransfers(appointments, false));
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ScheduleWs extends AbstractWs {
 	 */
 	public AppointmentTransfer[] getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn) {
 		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
-		return (AppointmentTransfer.toTransfer(appointments, false));
+		return (AppointmentTransfer.toTransfers(appointments, false));
 	}
 
 	public AppointmentTransfer getAppointment2(Integer appointmentId, boolean useGMTTime) {
@@ -94,12 +94,12 @@ public class ScheduleWs extends AbstractWs {
 
 	public AppointmentTransfer[] getAppointmentsForProvider2(String providerNo, Calendar date, boolean useGMTTime) {
 		List<Appointment> appointments = scheduleManager.getDayAppointments(providerNo, date);
-		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
+		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
 	public AppointmentTransfer[] getAppointmentsForPatient2(Integer demographicId, int startIndex, int itemsToReturn, boolean useGMTTime) {
 		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
-		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
+		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 	
 	public DayWorkScheduleTransfer getDayWorkSchedule(String providerNo, Calendar date) {
@@ -135,24 +135,24 @@ public class ScheduleWs extends AbstractWs {
 	 */
 	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider(Date startTime, Date endTime, String providerNo) {
 		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(startTime, endTime, providerNo);
-		return (AppointmentTransfer.toTransfer(appointments, false));
+		return (AppointmentTransfer.toTransfers(appointments, false));
 	}
 
 	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider2(Date startTime, Date endTime, String providerNo, boolean useGMTTime) {
 		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(startTime, endTime, providerNo);
-		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
+		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentTransfer[] getAllAppointmentsByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive, boolean useGMTTime) {
-		List<Appointment> appointments = scheduleManager.getAllAppointmentsByUpdateDateRange(startDateInclusive, endDateInclusive);
-		return (AppointmentTransfer.toTransfer(appointments, useGMTTime));
+	public AppointmentTransfer[] getAppointmentUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
+		List<Appointment> appointments=scheduleManager.getAppointmentUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		return(AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentArchiveTransfer[] getAllAppointmentArchivesByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive, boolean useGMTTime) {
-		List<AppointmentArchive> appointments = scheduleManager.getAllAppointmentArchivesByUpdateDateRange(startDateInclusive, endDateInclusive);
-		return (AppointmentArchiveTransfer.toTransfer(appointments, useGMTTime));
+	public AppointmentArchiveTransfer[] getAppointmentArchiveUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
+		List<AppointmentArchive> appointments=scheduleManager.getAppointmentArchiveUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		return(AppointmentArchiveTransfer.toTransfers(appointments, useGMTTime));
 	}
-	
+
 	/**
 	 * This method is a helper method to help people code and test their clients against time zone differences.
 	 * We will not support revisioning for this method, if / when we want to change this, we will.
