@@ -59,6 +59,22 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return (results);
 	}
 	
+	/**
+	 * @return results ordered by createDate
+	 */
+	public List<Measurement> findByCreateDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.createDate>=?1 order by x.createDate";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, updatedAfterThisDateInclusive);
+		setLimit(query, itemsToReturn);
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+		return (results);
+	}
+
+	
 	//for integrator
 	public List<Integer> findDemographicIdsUpdatedAfterDate(Date updatedAfterThisDate) {
 		
@@ -694,6 +710,8 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	/**
 	 * This method will return a list of items starting from the provided ID.
 	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
+	 * 
+	 * @deprecated 2014-05-20 remove after calling manager method is removed
 	 */
 	public List<Measurement> findByIdStart(Integer startIdInclusive, int itemsToReturn) {
 		String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 order by x.id";

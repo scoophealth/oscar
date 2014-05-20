@@ -24,7 +24,9 @@
 
 package org.oscarehr.ws.transfer_objects;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Measurement;
@@ -50,6 +52,16 @@ public final class MeasurementTransfer {
 		BeanUtils.copyProperties(measurement, measurementTransfer);
 
 		return (measurementTransfer);
+	}
+
+	public static MeasurementTransfer[] toTransfers(List<Measurement> measurements) {
+		ArrayList<MeasurementTransfer> results = new ArrayList<MeasurementTransfer>();
+
+		for (Measurement measurement : measurements) {
+			results.add(toTransfer(measurement));
+		}
+
+		return (results.toArray(new MeasurementTransfer[0]));
 	}
 
 	public void copyTo(Measurement measurement)
