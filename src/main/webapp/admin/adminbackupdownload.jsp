@@ -51,11 +51,18 @@
 <link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 </head>
-
 <body>
 
 <h3><bean:message key="admin.admin.btnAdminBackupDownload" /></h3>
 
+<%
+String backuppath = oscarVariables.getProperty("backup_path"); 
+
+File dir = new File(backuppath);
+boolean exists = dir.exists();
+
+if(exists){
+%>
 <div class="well">
 <table class="table table-striped  table-condensed">
 <thead>
@@ -67,7 +74,7 @@
 
 <tbody>
 	<%
-    String backuppath = oscarVariables.getProperty("backup_path") ; //"c:\\root";
+
     if ( backuppath == null || backuppath.equals("") ) {
         Exception e = new Exception("Unable to find the key backup_path in the properties file.  Please check the value of this key or add it if it is missing.");
         throw e;
@@ -95,5 +102,12 @@
 </tbody>
 </table>
 </div>
+<%}else{%>
+
+    <div class="alert alert-error">
+    <strong>Warning!</strong> It appears that your backup directory does not exist or there is a problem with the path. Please check <i>backup_path</i> in your properties file.      
+    </div>
+
+<%}%>
 </body>
 </html>
