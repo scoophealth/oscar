@@ -13535,6 +13535,10 @@ insert into billing_on_errorCode values ('MS','Maximum allowable for sleep studi
 insert into billing_on_errorCode values ('MX','Maximum of 2artroscopy “R” codes with E595 has been reached ') ON DUPLICATE KEY UPDATE description='Maximum of 2artroscopy “R” codes with E595 has been reached';
 insert into billing_on_errorCode values ('I8', 'Confirmation not received');
 insert into billing_on_errorCode values ('P9', 'Complex New Patient');
+insert into billing_on_errorCode values ('CNA', 'Counselling NOT Allowed');
+insert into billing_on_errorCode values ('DF', 'Corresponding fee code has not been claimed or was approved at zero');
+insert into billing_on_errorCode values ('AD1', 'Corresponding procedure not claimed by same or different physician');
+
 
 UPDATE IGNORE billingservice SET sliFlag = TRUE where service_code = 'E450B';
 UPDATE IGNORE billingservice SET sliFlag = TRUE where service_code = 'E450C';
