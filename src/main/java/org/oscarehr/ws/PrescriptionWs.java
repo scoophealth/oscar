@@ -24,16 +24,18 @@
 
 package org.oscarehr.ws;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
-import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.managers.PrescriptionManager;
+import org.oscarehr.managers.PrescriptionManager.PrescriptionAndDrugs;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.PrescriptionTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +49,14 @@ public class PrescriptionWs extends AbstractWs {
 	private PrescriptionManager prescriptionManager;
 
 	public PrescriptionTransfer getPrescription(Integer prescriptionId) {
-		Prescription prescription = prescriptionManager.getPrescription(prescriptionId);
+		PrescriptionAndDrugs prescriptionAndDrugs =new PrescriptionAndDrugs();
 
-		if (prescription != null) {
-			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(prescription.getId(), false);
-			return (PrescriptionTransfer.toTransfer(prescription, drugs));
+		prescriptionAndDrugs.prescription = prescriptionManager.getPrescription(prescriptionId);
+
+		if (prescriptionAndDrugs.prescription != null) {
+			prescriptionAndDrugs.drugs = prescriptionManager.getDrugsByScriptNo(prescriptionAndDrugs.prescription.getId(), false);
+
+			return (PrescriptionTransfer.toTransfer(prescriptionAndDrugs));
 		}
 
 		return (null);
@@ -59,6 +64,7 @@ public class PrescriptionWs extends AbstractWs {
 
 	/**
 	 * Get a list of DataIdTransfer objects for prescriptions starting with the passed in Id.
+	 * @deprecated 2014-05-20 use the method with lastUpdateDate instead
 	 */
 	public DataIdTransfer[] getPrescriptionDataIds(Integer startIdInclusive, int itemsToReturn) {
 		List<Prescription> prescriptions = prescriptionManager.getPrescriptionsByIdStart(startIdInclusive, itemsToReturn);
@@ -85,4 +91,23 @@ public class PrescriptionWs extends AbstractWs {
 
 		return (result);
 	}
+	
+	public PrescriptionTransfer[] getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Prescription> prescriptions=prescriptionManager.getPrescriptionUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+
+		ArrayList<PrescriptionTransfer> results=new ArrayList<PrescriptionTransfer>();
+		
+		for (Prescription prescription : prescriptions)
+		{
+			PrescriptionAndDrugs prescriptionAndDrugs =new PrescriptionAndDrugs();
+			prescriptionAndDrugs.prescription = prescription;
+			prescriptionAndDrugs.drugs = prescriptionManager.getDrugsByScriptNo(prescriptionAndDrugs.prescription.getId(), false);
+			
+			PrescriptionTransfer prescriptionTransfer=PrescriptionTransfer.toTransfer(prescriptionAndDrugs);
+			results.add(prescriptionTransfer);
+		}
+		
+		return(results.toArray(new PrescriptionTransfer[0]));
+	}
+
 }

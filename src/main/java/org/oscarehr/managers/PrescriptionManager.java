@@ -23,6 +23,7 @@
  */
 package org.oscarehr.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.DrugDao;
@@ -42,6 +43,12 @@ public class PrescriptionManager {
 	@Autowired
 	private DrugDao drugDao;
 
+	public static class PrescriptionAndDrugs
+	{
+		public Prescription prescription;
+		public List<Drug> drugs;
+	}
+	
 	public Prescription getPrescription(Integer prescriptionId) {
 		Prescription result = prescriptionDao.find(prescriptionId);
 
@@ -52,6 +59,9 @@ public class PrescriptionManager {
 	}
 
 
+	/**
+	 * @deprecated 2014-05-20 remove after calling ws method is removed
+	 */
 	public List<Prescription> getPrescriptionsByIdStart(Integer startIdInclusive, int itemsToReturn) {
 		List<Prescription> results = prescriptionDao.findByIdStart(startIdInclusive, itemsToReturn);
 
@@ -60,6 +70,14 @@ public class PrescriptionManager {
 			String resultIds=Prescription.getIdsAsStringList(results);
 			LogAction.addLogSynchronous("PrescriptionManager.getPrescriptionsByIdStart", "ids returned=" + resultIds);
 		}
+
+		return (results);
+	}
+
+	public List<Prescription> getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Prescription> results = prescriptionDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous("PrescriptionManager.getPrescriptionUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}
