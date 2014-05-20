@@ -42,12 +42,6 @@ public class PrescriptionManager {
 
 	@Autowired
 	private DrugDao drugDao;
-
-	public static class PrescriptionAndDrugs
-	{
-		public Prescription prescription;
-		public List<Drug> drugs;
-	}
 	
 	public Prescription getPrescription(Integer prescriptionId) {
 		Prescription result = prescriptionDao.find(prescriptionId);
