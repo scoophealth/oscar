@@ -281,6 +281,7 @@
             <form-property name="patientNameLength" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="displayDocumentAsProperty" type="org.oscarehr.common.model.UserProperty"/>
 			<form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="cobaltProperty" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
@@ -673,6 +674,7 @@
 			
 			<forward name="forcepasswordreset" path="/forcepasswordreset.jsp" />
 			<forward name="programLocation" path="/location.jsp" redirect="true"/>
+			<forward name="cobalt" path="/web/index.jsp" redirect="true" />
 			
 		</action>
 		<action input="/login/loginTest.jsp" path="/login/recordLogin" scope="request" type="oscar.login.LoginAgreementAction"></action>
@@ -1528,6 +1530,7 @@
             <forward name="genEDocBrowserInMasterFile"		path="/provider/setEDocBrowserInMasterFile.jsp"/>
             <forward name="genPatientNameLength" 			path="/provider/setPatientNameLength.jsp"/>
             <forward name="genDisplayDocumentAs"		path="/provider/setDisplayDocumentAs.jsp"/>
+            <forward name="genCobalt"						path="/provider/setCobalt.jsp"/>
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />

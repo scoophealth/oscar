@@ -43,6 +43,7 @@ import org.apache.cxf.rs.security.oauth.data.OAuthContext;
 import org.apache.cxf.security.SecurityContext;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.ProviderTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -97,6 +98,20 @@ public class ProviderService {
     @Path("/provider/{id}")
     public ProviderTransfer getProvider(@PathParam("id") String id) {
         return ProviderTransfer.toTransfer(providerDao.getProvider(id));
+    }
+    
+    @GET
+    @Path("/provider/me")
+    @Produces("application/json")
+    public String getLoggedInProvider() {
+    	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+    	
+    	if(provider != null) {
+    		JsonConfig config = new JsonConfig();
+        	config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());
+            return JSONObject.fromObject(provider,config).toString();
+    	}
+    	return null;
     }
     
     @GET

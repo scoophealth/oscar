@@ -161,13 +161,17 @@ public class ScheduleManager {
 		return (dayWorkSchedule);
 	}
 
-	public List<Appointment> getDayAppointments(String providerNo, Calendar date) {
-		List<Appointment> appointments = oscarAppointmentDao.findByProviderAndDayandNotStatus(providerNo, date.getTime(), AppointmentStatus.APPOINTMENT_STATUS_CANCELLED);
+	public List<Appointment> getDayAppointments(String providerNo, Date date) {
+		List<Appointment> appointments = oscarAppointmentDao.findByProviderAndDayandNotStatus(providerNo, date, AppointmentStatus.APPOINTMENT_STATUS_CANCELLED);
 
 		//--- log action ---
 		LogAction.addLogSynchronous("AppointmentManager.getDayAppointments", "appointments for providerNo=" + providerNo + ", appointments for date=" + date);
 
 		return (appointments);
+	}
+	
+	public List<Appointment> getDayAppointments(String providerNo, Calendar date) {
+		return getDayAppointments(providerNo,date.getTime());
 	}
 	
 	public List<ScheduleTemplateCode> getScheduleTemplateCodes()

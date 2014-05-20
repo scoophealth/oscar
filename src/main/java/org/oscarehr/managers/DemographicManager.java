@@ -87,6 +87,16 @@ public class DemographicManager {
 
 		return (result);
 	}
+	
+	public String getDemographicFormattedName(Integer demographicId) {
+		Demographic result = getDemographic(demographicId);
+		String name = null;
+		if(result != null) {
+			name = result.getLastName() + "," + result.getFirstName();
+		}
+
+		return (name);
+	}
 
 	public Demographic getDemographicByMyOscarUserName(String myOscarUserName) {
 		Demographic result = demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
