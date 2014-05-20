@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.MeasurementDao;
@@ -43,6 +44,9 @@ public class MeasurementManager {
 	@Autowired
 	private MeasurementMapDao measurementMapDao;
 
+	/**
+	 * @deprecated 2014-05-20 remove after calling ws is removed
+	 */
 	public List<Measurement> getMeasurementsByIdStart(Integer startIdInclusive, int itemsToReturn) {
 		List<Measurement> results = measurementDao.findByIdStart(startIdInclusive, itemsToReturn);
 
@@ -51,6 +55,14 @@ public class MeasurementManager {
 			String resultIds = Measurement.getIdsAsStringList(results);
 			LogAction.addLogSynchronous("MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
 		}
+
+		return (results);
+	}
+
+	public List<Measurement> getCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Measurement> results = measurementDao.findByCreateDate(updatedAfterThisDateInclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous("MeasurementManager.getCreatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}
