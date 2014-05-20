@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.CtlDocumentDao;
@@ -44,7 +45,8 @@ public class DocumentManager {
 	private CtlDocumentDao ctlDocumentDao;
 	
 	/**
-	 * @param archived can be null for both deleted and non deleted items 
+	 * @param archived can be null for both deleted and non deleted items
+	 * @deprecated 2014-05-15 use the method with lastUpdateDate instead, remove as soon as calling ws method is removed.
 	 */
 	public List<Document> getDocumentsByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Document> results = documentDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
@@ -80,5 +82,13 @@ public class DocumentManager {
 		}
 
 		return(result);
+	}
+	
+	public List<Document> getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
+		List<Document> results = documentDao.findByUpdateDate(updateAfterThisDateInclude, itemsToReturn);
+
+		LogAction.addLogSynchronous("DocumentManager.getUpdateAfterDate", "updateAfterThisDateInclude=" + updateAfterThisDateInclude);
+
+		return (results);
 	}
 }
