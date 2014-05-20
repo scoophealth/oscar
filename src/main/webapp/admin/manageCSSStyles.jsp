@@ -245,7 +245,7 @@ function init() {
 <html:form action="/admin/manageCSSStyles" method="post">
 <input type="hidden" id="method" name="method" value="save"/>
 
-<div class="well"><!--select existing styles-->
+<div class="row well"><!--select existing styles-->
 
 	<bean:message key="admin.manageCodeStyles.CurrentStyles"/><br/>
 
@@ -261,7 +261,7 @@ function init() {
 
 
 
-<div class="span10">
+<div class="row">
 
 <bean:message key="admin.manageCodeStyles.StyleName"/><br>
 <html:text styleId="styleName" property="styleName"></html:text>
@@ -270,7 +270,7 @@ function init() {
 
 </div>
 
-
+<div class="row">
 <div class="span4">
 <bean:message key="admin.manageCodeStyles.FontSize"/><br>
 <select id="font-size" onchange="addStyle(this.id, this.options[this.selectedIndex]);">
@@ -330,6 +330,7 @@ function init() {
 
 </div><!--span4-->
 
+
 <div class="span4">
 <html:hidden styleId="editStyle" property="editStyle"/>
 
@@ -343,7 +344,7 @@ Sample Text:<br>
 <span id="example"><bean:message key="admin.manageCodeStyles.Example"/></span>
 
 </div><!--span6-->
-
+</div><!-- row -->
 
 
 <div class="span10" style="text-align:right;">
