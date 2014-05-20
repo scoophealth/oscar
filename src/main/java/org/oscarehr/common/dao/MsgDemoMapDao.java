@@ -46,6 +46,16 @@ public class MsgDemoMapDao extends AbstractDao<MsgDemoMap>{
         List<MsgDemoMap> results = query.getResultList();
         return results;
 	}
+	
+	public List<MsgDemoMap> findByMessageId(Integer messageId) {
+		String sql = "select x from MsgDemoMap x where x.id.messageId=?1";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,messageId);
+
+        @SuppressWarnings("unchecked")
+        List<MsgDemoMap> results = query.getResultList();
+        return results;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getMessagesAndDemographicsByMessageId(Integer messageId) {

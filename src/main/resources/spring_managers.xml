@@ -17,6 +17,7 @@
     <context:component-scan base-package="org.oscarehr.survey.service.impl" />
     <context:component-scan base-package="org.oscarehr.survey.service" />
     <context:component-scan base-package="org.oscarehr.PMmodule.service"/>
+    <context:component-scan base-package="org.oscarehr.ticklers.service"/>
 <!--
     I have a sample listener in here. Leaving commented for now.    
     <context:component-scan base-package="org.oscarehr.listeners" />

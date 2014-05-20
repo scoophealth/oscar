@@ -93,7 +93,8 @@ public final class LoginAction extends DispatchAction {
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
     private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-    
+    private UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	boolean ajaxResponse = request.getParameter("ajaxResponse") != null?Boolean.valueOf(request.getParameter("ajaxResponse")):false;
     	
@@ -303,8 +304,7 @@ public final class LoginAction extends DispatchAction {
         	
             if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
             	String tklerProviderNo = null;
-            	UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-        		UserProperty prop = propDao.getProp(providerNo, UserProperty.PROVIDER_FOR_TICKLER_WARNING);
+            	UserProperty prop = propDao.getProp(providerNo, UserProperty.PROVIDER_FOR_TICKLER_WARNING);
         		if (prop == null) {
         			tklerProviderNo = providerNo;
         		} else {
@@ -341,8 +341,7 @@ public final class LoginAction extends DispatchAction {
             
             if (where.equals("provider")) {
                 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
-                UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
-                UserProperty drugrefProperty = propDAO.getProp(UserProperty.MYDRUGREF_ID);
+                UserProperty drugrefProperty = propDao.getProp(UserProperty.MYDRUGREF_ID);
                 if (drugrefProperty != null) {
                    
                     DSService service =  (DSService) ctx.getBean("dsService");
@@ -410,6 +409,12 @@ public final class LoginAction extends DispatchAction {
                 String proceedURL = mapping.findForward(where).getPath();
                 request.getSession().setAttribute("proceedURL", proceedURL);               
                 return mapping.findForward("LoginTest");
+            }
+            
+            //are they using the new UI?
+            UserProperty prop = propDao.getProp(provider.getProviderNo(), UserProperty.COBALT);
+            if(prop != null && prop.getValue() != null && prop.getValue().equals("yes")) {
+            	where="cobalt";
             }
         }
         // expired password

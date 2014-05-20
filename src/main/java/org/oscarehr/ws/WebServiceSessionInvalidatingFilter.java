@@ -58,8 +58,14 @@ public class WebServiceSessionInvalidatingFilter implements javax.servlet.Filter
 		}
 		finally
 		{
-			HttpSession session = request.getSession(false);
-			if (session != null) session.invalidate();
+			String requestURL = request.getRequestURL().toString();
+			
+			//don't apply to REST calls, we want those to be available to the web interface without losing session
+			if(requestURL.indexOf("/ws/rs/")==-1) {
+				HttpSession session = request.getSession(false);
+				if (session != null) session.invalidate();
+			}
+			//I still need to figure out how to invalidate REST sessions that are stateless.
 		}
 	}
 

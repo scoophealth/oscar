@@ -996,6 +996,12 @@
 				 <version>1.1</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>rome</groupId>
+			<artifactId>rome</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
         <dependency>
                 <groupId>org.oscarehr.integration.ebs</groupId>
                 <artifactId>ebs-client</artifactId>

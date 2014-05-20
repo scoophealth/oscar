@@ -40,6 +40,13 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector params = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/document/web/ManageDocumentAction.java:HashMap hm = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/integration/born/ONAREnhancedFormToXML.java:ArrayList validationErrors = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docStatus = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docType = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientIdNames = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientNumDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable&lt;String, List&lt;String&gt;&gt; ab_NormalDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:HashMap m = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable result = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
@@ -144,7 +151,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:List aL = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoChartLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/data/EctImmImmunizationSetData.java:createDateVec = new Vector();</ViolationValue>
@@ -1152,6 +1158,37 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:params.addElement(new Vector(uuids));</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable docStatus;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable docType;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable patientDocs;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable patientIdNames;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable patientNumDoc;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable&lt;String,List&lt;String&gt;&gt; typeDocLab;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public Hashtable getDocStatus() {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public Hashtable getDocType() {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public Hashtable getPatientDocs() {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public Hashtable getPatientIdNames() {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public Hashtable getPatientNumDoc() {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public Hashtable&lt;String, List&lt;String&gt;&gt; getTypeDocLab() {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setDocStatus(Hashtable docStatus) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setDocType(Hashtable docType) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientDocs(Hashtable patientDocs) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientIdNames(Hashtable patientIdNames) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientNumDoc(Hashtable patientNumDoc) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setTypeDocLab(Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docStatus = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docType = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientIdNames = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientNumDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable&lt;String, List&lt;String&gt;&gt; ab_NormalDoc = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Vector&lt;Object&gt; vec = OscarRoleObjectPrivilege.getPrivilegeProp("_queue." + queueid);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1)) || documentResultsDao.isSentToProvider(docid, searchProviderNo)) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) vec.get(0), (Vector) vec.get(1))) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java://        Hashtable h = findOscarId(PHRDocument.TYPE_DEMOGRAPHIC,this.getSenderMyOscarUserId());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable result = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
@@ -1946,9 +1983,6 @@
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:public Vector getPreventionData(String preventionType){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java:Hashtable&lt;String,Map&lt;String,Object&gt;&gt; configHash = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java:configHash = new Hashtable&lt;String,Map&lt;String,Object&gt;&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/pageUtil/PreventionReportAction.java:Hashtable h =report.runReport(list,asofDate);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/pageUtil/PreventionReportAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java:Collection followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>

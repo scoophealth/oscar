@@ -65,4 +65,19 @@ public class MessageListDao extends AbstractDao<MessageList> {
 		query.setParameter("status", status);
 		return query.getResultList();	    
     }
+	
+    public List<MessageList> findMessageRangeByProviderNo(String providerNo, int start, int max) {
+    	Query query = createQuery("mt", "mt.providerNo = :providerNo order by id desc");
+		query.setParameter("providerNo", providerNo);
+		query.setFirstResult(start);
+		query.setMaxResults(max);
+		List<MessageList> result = query.getResultList();
+		return result;
+	}
+    
+	public List<MessageList> findUnreadByProvider(String providerNo) {
+		Query query = createQuery("ml", "ml.providerNo = :providerNo and ml.status ='new'");
+		query.setParameter("providerNo", providerNo);
+		return query.getResultList();
+	}
 }
