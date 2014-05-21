@@ -133,19 +133,6 @@ public class GDMLHandler implements MessageHandler {
 
             // ADD OBR SEGMENTS AND THEIR OBX SEGMENTS TO THE OBRSEGMAP
             OBR obrSeg = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBR();
-            ArrayList<OBX> obxSegs = obrSegMap.get(obrSeg);
-
-            // if the obrsegment has not yet been created it will be now
-            if (obxSegs == null)
-                obxSegs = new ArrayList<OBX>();
-
-            int obxCount = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATIONReps();
-            for (int k=0; k < obxCount; k++){
-                obxSegs.add(msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATION(k).getOBX());
-            }
-
-            obrSegMap.put(obrSeg, obxSegs);
-            obrSegKeySet.add(obrSeg);
 
             // ADD THE HEADER TO THE HEADERS ARRAYLIST
             String header = getString(obrSeg.getUniversalServiceIdentifier().getAlternateIdentifier().getValue());
