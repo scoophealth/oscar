@@ -201,6 +201,10 @@ public class PreventionPrintPdf {
                 procedureDate = request.getParameter("preventProcedureDate" + headerIds[idx] + "-" + subIdx);
                 procedureStatus = request.getParameter("preventProcedureStatus" + headerIds[idx] + "-" + subIdx);
                 procedureStatus = readableStatuses.get(procedureStatus);              
+                
+                if( procedureStatus == null ) {
+                	procedureStatus = "N/A";
+                }
               
                 //Age                
                 Phrase procedure = new Phrase(LEADING, "Age:", FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL, Color.BLACK));
