@@ -982,6 +982,13 @@
 			<artifactId>shic-cda</artifactId>
 			<version>1.0.6</version>
 		</dependency>
+                
+        <!-- Apache Tika - MimeType handling for downloaded files (ie. XDS) -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.5</version>
+        </dependency>
 		
 		<!--tagsoup-->
 		<dependency>
