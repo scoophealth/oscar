@@ -29,6 +29,8 @@ import java.util.Calendar;
  * The purpose of this object is to transfer the ID of a piece of any piece of medical data in the oscar system.
  * 
  * In theory all pieces of medical data should have the following fields. In reality oscar is currently missing some of the fields. Expect null in some cases.
+ * 
+ * @deprecated 2014-05-21 in theory this is no longer required as all calling methods are deprecated now.
  */
 public final class DataIdTransfer {
 	
