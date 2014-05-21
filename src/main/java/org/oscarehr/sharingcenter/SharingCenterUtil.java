@@ -43,8 +43,12 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.tika.mime.MimeType;
+import org.apache.commons.io.IOUtils;
 
 import org.apache.log4j.Logger;
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.mime.MimeTypeException;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
 import org.marc.shic.cda.datatypes.Code;
@@ -300,7 +304,17 @@ public class SharingCenterUtil {
 
         try {
             metaData = communicator.retrieveDocumentSet(metaData);
-            String fileName = doc.getTitle() + System.currentTimeMillis() + ".pdf";
+            
+            // proper way to find extension for mimetype (using Apache Tika)
+            String ext = "";
+            try {
+                TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
+                MimeType mimeType = tikaConfig.getMimeRepository().forName(metaData.getMimeType());
+                ext = mimeType.getExtension();
+            } catch (MimeTypeException e) {
+                MiscUtils.getLogger().error("Unable to find extension for MimeType " + metaData.getMimeType(), e);
+            }
+            String fileName = doc.getTitle() + System.currentTimeMillis() + ext;
 
             FileOutputStream out = new FileOutputStream(oscarProperties.getProperty("DOCUMENT_DIR") + "/" + fileName);
             out.write(metaData.getContent());
@@ -1659,9 +1673,11 @@ public class SharingCenterUtil {
     private static byte[] downloadFile(URL url) {
         byte[] retVal = null;
         
+        InputStream in = null;
+        ByteArrayOutputStream out = null;
         try {
-            InputStream in = new BufferedInputStream(url.openStream());
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            in = new BufferedInputStream(url.openStream());
+            out = new ByteArrayOutputStream();
 
             byte[] buffer = new byte[512];
             while (true) {
@@ -1671,14 +1687,13 @@ public class SharingCenterUtil {
                 }
                 out.write(buffer, 0, len);
             }
-            
-            out.close();
-            in.close();
-            
             retVal = out.toByteArray();
             
         } catch (IOException e) {
             MiscUtils.getLogger().error("Unable to download file from url: " + url.toString() , e);
+        } finally {
+            IOUtils.closeQuietly(out);
+            IOUtils.closeQuietly(in);
         }
 
         return retVal;
