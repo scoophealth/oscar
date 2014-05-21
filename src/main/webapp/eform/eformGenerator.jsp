@@ -2532,19 +2532,18 @@ function _CompInt(x, y)
                         this function/scriplet look in images directory and populate the selection
                         so that the user can select which image they want to use for generating an eform
                     */
-                     OscarProperties oscarProps = OscarProperties.getInstance();
+                    String imagePath = OscarProperties.getInstance().getProperty("eform_image");
+                    if (imagePath == null) { 
+			MiscUtils.getLogger().debug("Please provide a valid image path for eform_image in properties");  
+			}
+                    String[] fileINames = new File(imagePath).list();
+                    if (fileINames == null) { 
+			MiscUtils.getLogger().debug("Strange, no files found in the supplied eform_image directory");  
+			}
+                    Arrays.sort(fileINames);
 
-                     DisplayImageAction test = new DisplayImageAction();
-                     File dir=null;
-                        try {
-                            dir =new File(oscarProps.getProperty("eform_image"));
-                        } catch(Exception e){
-                        	MiscUtils.getLogger().error("Unable to locate image directory", e);
-                        }
-                     String output = null;
-                     for(int i=0;i<(test.visitAllFiles(dir)).length;i++){
-                       output=test.visitAllFiles(dir)[i]; %>
-                       <option value="<%= output %>"  ><%= output %></option>
+                    for (int i = 0; i < fileINames.length; i++) {  %>
+                       <option value="<%= fileINames[i] %>"  ><%= fileINames[i] %></option>
 
                        <%
                       }
@@ -2552,7 +2551,6 @@ function _CompInt(x, y)
             </select>
         </p>
 
-	<!-- <p><b>Image Name:</b><input type="text" name="imageName" id="imageName"></p> -->
 	<p>	- <bean:message key="eFormGenerator.imageUploadPrompt"/> <bean:message key="eFormGenerator.imageUploadLink"/></p>
 	<p><b>Orientation of form:</b><br>
 			<input type="radio" name="Orientation" id="OrientPortrait" value="750" checked><bean:message key="eFormGenerator.imagePortrait"/><br>
