@@ -243,27 +243,20 @@ public class ScheduleManager {
 		return(appointments);
 	}
 	
-	/**
-	 * @see OscarAppointmentDao.findAllByUpdateDateRange
-	 */
-	public List<Appointment> getAllAppointmentsByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive) {
-		List<Appointment> appointments = oscarAppointmentDao.findAllByUpdateDateRange(startDateInclusive.getTime(), endDateInclusive.getTime());
+	
+	public List<Appointment> getAppointmentUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Appointment> results = oscarAppointmentDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.getAllAppointmentsByUpdateDateRange", "appointments from=" + startDateInclusive.getTime() + " to=" + endDateInclusive.getTime());
+		LogAction.addLogSynchronous("ScheduleManager.getAppointmentUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
-		return (appointments);
+		return (results);
 	}
 
-	/**
-	 * @see AppointmentArchiveDao.findAllByUpdateDateRange
-	 */
-	public List<AppointmentArchive> getAllAppointmentArchivesByUpdateDateRange(Calendar startDateInclusive, Calendar endDateInclusive) {
-		List<AppointmentArchive> appointments = appointmentArchiveDao.findAllByUpdateDateRange(startDateInclusive.getTime(), endDateInclusive.getTime());
+	public List<AppointmentArchive> getAppointmentArchiveUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<AppointmentArchive> results = appointmentArchiveDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.getAllAppointmentArchivesByUpdateDateRange", "appointments from=" + startDateInclusive.getTime() + " to=" + endDateInclusive.getTime());
+		LogAction.addLogSynchronous("ScheduleManager.getAppointmentArchiveUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
-		return (appointments);
+		return (results);
 	}
 }

@@ -270,7 +270,7 @@ public final class AppointmentArchiveTransfer {
 		return (appointmentTransfer);
 	}
 	
-	public static AppointmentArchiveTransfer[] toTransfer(List<AppointmentArchive> appointments, boolean useGMTTime) {
+	public static AppointmentArchiveTransfer[] toTransfers(List<AppointmentArchive> appointments, boolean useGMTTime) {
 		AppointmentArchiveTransfer[] result = new AppointmentArchiveTransfer[appointments.size()];
 
 		for (int i = 0; i < appointments.size(); i++) {
