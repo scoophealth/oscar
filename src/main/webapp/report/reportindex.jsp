@@ -828,6 +828,17 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 	
     </td>
     </tr>
+
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>">
+    <tr>
+	<td width="2"><%=j%><%j++;%></td>
+	<td width="1"></td>
+	<td width="300"><a href="javascript:void(0);" onclick="popupPage(600,800,'../oscarReport/reportByTemplate/homePage.jsp')"><bean:message key="admin.admin.rptbyTemplate" /></a></td>
+
+    </tr>      
+</security:oscarSec>
+
     <tr><td>&nbsp;</td></tr>
     <tr>
         <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
