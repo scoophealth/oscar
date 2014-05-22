@@ -59,7 +59,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	private static E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private Clinic clinic = clinicDao.getClinic();
-	private static String clinicUUID = null;
+	//private static String clinicUUID = null;
 	private boolean validate = true;
 
 	public E2EVelocityTemplate() {
@@ -71,7 +71,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		}
 
 		// Generate Clinic UUID
-		if(clinicUUID == null) {
+		/*if(clinicUUID == null) {
 			try {
 				String clinicData = clinic.getId().toString().concat(clinic.getClinicName()).concat(clinic.getClinicAddress());
 				clinicUUID = UUID.nameUUIDFromBytes(clinicData.getBytes()).toString().toUpperCase();
@@ -79,7 +79,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 				log.info("Failed to generate UUID from clinic data - using randomized UUID");
 				clinicUUID = UUID.randomUUID().toString().toUpperCase();
 			}
-		}
+		}*/
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 
 		// Generate GUIDs
 		String randDocGUID = UUID.randomUUID().toString().toUpperCase();
-		String authorGUID = null;
+		/*String authorGUID = null;
 		try {
 			String authorData = record.getAuthorId().concat(record.getProviderFirstName(record.getAuthorId())).concat(record.getProviderLastName(record.getAuthorId()));
 			authorGUID = UUID.nameUUIDFromBytes(authorData.getBytes()).toString().toUpperCase();
@@ -130,7 +130,7 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		} catch (Exception e) {
 			log.info("Failed to generate GUID from author name - using randomized GUID");
 			authorGUID = UUID.randomUUID().toString().toUpperCase();
-		}
+		}*/
 
 		// Create Data Model
 		context.put("patient", record);
@@ -138,8 +138,8 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		context.put("stringUtils", stringUtils);
 		context.put("custodian", clinic);
 		context.put("randDocGUID", randDocGUID);
-		context.put("authorIdRoot", authorGUID);
-		context.put("custodianIdRoot", clinicUUID);
+		//context.put("authorIdRoot", authorGUID);
+		//context.put("custodianIdRoot", clinicUUID);
 		context.put("buildTag", buildTag);
 
 		// Merge Template & Data Model
