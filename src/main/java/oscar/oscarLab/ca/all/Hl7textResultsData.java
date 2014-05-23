@@ -339,7 +339,7 @@ public class Hl7textResultsData {
 		"AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no=" + demographicNo+" GROUP BY hl7.lab_no";
 
 		String attachQuery = "SELECT consultdocs.document_no FROM consultdocs, patientLabRouting " +
-		"WHERE patientLabRouting.id = consultdocs.document_no AND " +
+		"WHERE patientLabRouting.lab_no = consultdocs.document_no AND patientLabRouting.lab_type='HL7' AND " +
 		"consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY consultdocs.document_no";
 
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
@@ -350,13 +350,13 @@ public class Hl7textResultsData {
 			ResultSet rs = DBHandler.GetSQL(attachQuery);
 			while(rs.next()) {
 				LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-				lbData.labPatientId = oscar.Misc.getString(rs, "document_no");
+				lbData.segmentID = oscar.Misc.getString(rs, "document_no");
 				attachedLabs.add(lbData);
 			}
 			rs.close();
 
 			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-			LabResultData.CompareId c = lbData.getComparatorId();
+			LabResultData.SegmentCompareId c = lbData.getSegmentComparatorId();
 			rs = DBHandler.GetSQL(sql);
 
 			while(rs.next()){
@@ -368,6 +368,8 @@ public class Hl7textResultsData {
 				lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
 				lbData.finalResultsCount = rs.getInt("final_result_count");
 				lbData.label = oscar.Misc.getString(rs,"label");
+				
+				
 
 				if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
 					labResults.add(lbData);

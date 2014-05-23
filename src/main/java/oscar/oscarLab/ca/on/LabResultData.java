@@ -345,6 +345,10 @@ public class LabResultData implements Comparable{
 	public CompareId getComparatorId() {
 		return new CompareId();
 	}
+	
+	public SegmentCompareId getSegmentComparatorId() {
+		return new SegmentCompareId();
+	}
 
 
 	public class CompareId implements Comparator {
@@ -359,6 +363,23 @@ public class LabResultData implements Comparable{
 			if( labPatientId1 < labPatientId2 )
 				return -1;
 			else if( labPatientId1 > labPatientId2 )
+				return 1;
+			else
+				return 0;
+		}
+	}
+	
+	public class SegmentCompareId implements Comparator<LabResultData> {
+
+		public int compare( LabResultData lab1, LabResultData lab2 ) {
+
+			
+			int segmentId1 = Integer.parseInt(lab1.segmentID);
+			int segmentId2 = Integer.parseInt(lab2.segmentID);
+
+			if( segmentId1 < segmentId2 )
+				return -1;
+			else if( segmentId1 > segmentId2 )
 				return 1;
 			else
 				return 0;
