@@ -34,12 +34,9 @@
 <%@ page import="org.oscarehr.common.model.MyGroupPrimaryKey" %>
 <%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
 
-
 <%
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
-%>
 
-<%
     String curProvider_no = (String) session.getAttribute("user");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
@@ -50,16 +47,15 @@
 	<%isSiteAccessPrivacy=true; %>
 </security:oscarSec>
 
-
-
 <%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp"%>
 
+<!DOCTYPE html>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <title><bean:message key="admin.admindisplaymygroup.title" /></title>
-</head>
-<script language="javascript">
+
+<script>
 <!-- start javascript ---- check to see if it is really empty in database
 
 //function upCaseCtrl(ctrl) {
@@ -69,30 +65,30 @@
 // stop javascript -->
 </script>
 
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<FORM NAME="UPDATEPRE" METHOD="post" ACTION="adminnewgroup.jsp">
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
-	<tr bgcolor="#486ebd">
-		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
-			key="admin.admindisplaymygroup.description" /></font></th>
-	</tr>
-</table>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-<center>
-<table border="0" cellpadding="0" cellspacing="0" width="80%">
-	<tr>
-		<td width="100%">
 
-		<table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%"
-			BGCOLOR="#C0C0C0">
-			<tr BGCOLOR="#CCFFFF">
-				<td ALIGN="center" colspan="2"><font face="arial"><bean:message
-					key="admin.adminmygroup.formGroupNo" /></font></td>
-				<td ALIGN="center"><font face="arial"><bean:message
-					key="admin.admindisplaymygroup.formProviderName" /></font></td>
+<body>
+<FORM NAME="UPDATEPRE" id="groupForm"  METHOD="post" ACTION="adminnewgroup.jsp">
+
+<h3><bean:message key="admin.admin.btnSearchGroupNoRecords" /></h3>
+			
+
+		<table class="table table-condensed table-hover">
+		<thead>
+			<tr class="btn-inverse">
+				<th></th>
+				<th>
+					<bean:message key="admin.adminmygroup.formGroupNo" />
+				</th>
+				<th>
+					<bean:message key="admin.admindisplaymygroup.formProviderName" />
+				</th>
 			</tr>
+		</thead>
 			
-			
+		<tbody>		
 <%
 
 String oldNumber="";
@@ -113,38 +109,57 @@ for(MyGroup myGroup : groupList) {
 		oldNumber = myGroup.getId().getMyGroupNo();
 	}
 %>
-			<tr BGCOLOR="<%=toggleLine?"white":"ivory"%>">
-				<td width="10%" align="center"><input type="checkbox"
+			<tr class="<%=toggleLine?"":"info"%>">
+				<td width="20px">
+					<input type="checkbox"
 					name="<%=myGroup.getId().getMyGroupNo() + myGroup.getId().getProviderNo()%>"
-					value="<%=myGroup.getId().getMyGroupNo()%>"></td>
-				<td ALIGN="center"><font face="arial"> <%=myGroup.getId().getMyGroupNo()%></font></td>
-				<td ALIGN="center"><font face="arial"> <%=myGroup.getLastName()+","+ myGroup.getFirstName()%></font>
+					value="<%=myGroup.getId().getMyGroupNo()%>">
+				</td>
+				<td><%=myGroup.getId().getMyGroupNo()%></td>
+				<td> <%=myGroup.getLastName()+","+ myGroup.getFirstName()%>
 				</td>
 			</tr>
 <%
    }
 %>
-		
+		</tbody>
 		</table>
 
-		</td>
-	</tr>
-</table>
-</center>
 
-<table width="100%" BGCOLOR="#486ebd">
-	<tr>
-		<TD align="center"><INPUT TYPE="submit" name="submit"
+
+			<INPUT TYPE="submit" name="submit" class="btn btn-danger"
 			VALUE="<bean:message key="admin.admindisplaymygroup.btnSubmit1"/>"
-			SIZE="7"> <INPUT TYPE="submit" name="submit"
-			VALUE="<bean:message key="admin.admindisplaymygroup.btnSubmit2"/>"
-			SIZE="7"> <INPUT TYPE="RESET"
-			VALUE='<bean:message key="global.btnClose"/>'
-			onClick="window.close();"></TD>
-	</tr>
-</TABLE>
+			SIZE="7"> 
+					
+			<a href="adminnewgroup.jsp" class="btn btn-primary"><bean:message key="admin.admindisplaymygroup.btnSubmit2"/></a>
 
 </FORM>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+
+<script>
+function anyChecks(){
+    if ($("#groupForm input:checkbox:checked").length > 0)
+    {
+        // any one is checked
+    	return true;
+    }
+    else
+    {
+       // none is checked
+        alert('please select provider(s)');
+    	return false;
+    }
+}
+
+$('#groupForm').submit(anyChecks);
+
+
+$( document ).ready(function() {
+parent.parent.resizeIframe($('html').height());      
+
+});
+
+</script>
 </body>
 </html:html>

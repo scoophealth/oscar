@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
-  if(session.getValue("user") == null)
+  if((String) session.getAttribute("user") == null)
     response.sendRedirect("../logout.htm");
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="../errorpage.jsp"%>
@@ -39,25 +39,27 @@
 <%
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
 %>
+
+<!DOCTYPE html>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script LANGUAGE="JavaScript">
+
+<script>
     <!--
     function start(){
       this.focus();
     }
     //-->
 </script>
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+
+
 </head>
+
 <body onload="start()">
-<center>
-<table border="0" cellspacing="0" cellpadding="0" width="90%">
-	<tr bgcolor="#486ebd">
-		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
-			key="admin.adminsavemygroup.title" /></font></th>
-	</tr>
-</table>
+
+<br>
 <%
 	int rowsAffected=0;
 	String[] nums = request.getParameterValues("data");
@@ -79,26 +81,25 @@
 
   if (rowsAffected > 0) {
 %>
-<p>
-<h1><bean:message key="admin.adminsavemygroup.msgAdditionSuccess" /></h1>
-</p>
-<script LANGUAGE="JavaScript">
-      self.close();
-     	//self.opener.refresh();
-</script> <%
+
+    <div class="alert alert-success">
+ 		<bean:message key="admin.adminsavemygroup.msgAdditionSuccess" />
+    </div>
+ <%
   }  else {
 %>
-<p>
-<h1><bean:message key="admin.adminsavemygroup.msgAdditionFailure" /></h1>
-</p>
+	<div class="alert alert-error">
+		<bean:message key="admin.adminsavemygroup.msgAdditionFailure" />
+	</div>
 <%
   }
 %>
-<p></p>
-<hr width="90%"></hr>
-<form><input type="button"
-	value="<bean:message key="global.btnClose"/>" onClick="window.close()">
-</form>
-</center>
+
+
+<a href="admindisplaymygroup.jsp" class="btn btn-primary">View Group List</a>
+
+<a href="adminnewgroup.jsp" class="btn"><bean:message key="admin.admindisplaymygroup.btnSubmit2"/></a>
+
+
 </body>
 </html:html>

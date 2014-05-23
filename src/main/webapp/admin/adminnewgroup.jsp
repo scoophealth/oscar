@@ -50,12 +50,13 @@
 	<%isSiteAccessPrivacy=true; %>
 </security:oscarSec>
 
+<!DOCTYPE html>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+
 <title><bean:message key="admin.adminnewgroup.title" /></title>
-</head>
-<script language="javascript">
+
+<script>
 
 function setfocus() {
   this.focus();
@@ -89,11 +90,16 @@ function validate() {
 }
 </script>
 
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+
+
+<body onload="setfocus();">
 <%
   ResourceBundle properties = ResourceBundle.getBundle("oscarResources", request.getLocale());
 
-  if(request.getParameter("submit").equals(properties.getString("admin.admindisplaymygroup.btnSubmit1")) ) { //delete the group member
+  if(request.getParameter("submit")!=null && request.getParameter("submit").equals(properties.getString("admin.admindisplaymygroup.btnSubmit1")) ) { //delete the group member
     int rowsAffected=0;
     String[] param =new String[2];
     StringBuffer strbuf=new StringBuffer();
@@ -107,34 +113,42 @@ function validate() {
 	    myGroupDao.deleteGroupMember(param[0],param[1]);
       	rowsAffected = 1;
     }
-    out.println("<script language='JavaScript'>self.close();</script>");
   }
 %>
 
 <FORM NAME="UPDATEPRE" METHOD="post" ACTION="adminsavemygroup.jsp" onsubmit="return validate();">
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
-	<tr bgcolor="#486ebd">
-		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">
-		<bean:message key="admin.adminnewgroup.description" /></font></th>
-	</tr>
-</table>
 
-<center>
-<table border="0" cellpadding="0" cellspacing="0" width="80%">
-	<tr>
-		<td width="100%">
+<%if(request.getParameter("submit")!=null && request.getParameter("submit").equals(properties.getString("admin.admindisplaymygroup.btnSubmit1")) ) { %>
+<br>
+    <div class="alert alert-success">
+ 		<strong>Success!</strong> record(s) have been deleted.
+    </div>
+    
+    <a href="admindisplaymygroup.jsp" class="btn btn-primary">View Group List</a>
 
-		<table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%"
-			BGCOLOR="#C0C0C0">
-			<tr BGCOLOR="#CCFFFF">
-				<td ALIGN="center"><font face="arial">
-					<bean:message key="admin.adminmygroup.formGroupNo" /></font></td>
-				<td ALIGN="center"><font face="arial"> </font> 
-					<input type="text" name="mygroup_no" size="10" maxlength="10">
-					<font size="-2">(Max. 10 chars.)</font></td>
+	<a href="adminnewgroup.jsp" class="btn"><bean:message key="admin.admindisplaymygroup.btnSubmit2"/></a>
+<%}else{%>    
+    
+<h3><bean:message key="admin.adminnewgroup.description" /></h3>
+
+
+					
+				 
+					<input type="text" name="mygroup_no" size="10" maxlength="10" placeholder="<bean:message key="admin.adminmygroup.formGroupNo" />" title="Enter an existing or new group name.">
+					<small>(Max. 10 chars.)</small>
+					
+		<table class="table table-condensed table-hover">	
+		<thead>
+			<tr class="btn-inverse">
+				<th></th>
+				<th>
+					<bean:message key="admin.admindisplaymygroup.formProviderName" />
+				</th>
 			</tr>
+		</thead>
+			
+		<tbody>
 <%
-
 	// find all active providers
 	int i=0;
 	List<ProviderData> providerList = providerDao.findAll(false);
@@ -142,38 +156,40 @@ function validate() {
    for(ProviderData provider : providerList) {
 		i++;
 %>
-			<tr BGCOLOR="<%=i%2==0?"ivory":"white"%>">
-				<td>&nbsp; <%= provider.getLastName() %>, <%= provider.getFirstName() %></td>
-				<td ALIGN="center">
+			<tr class="<%=i%2==0?"":"info"%>">
+				<td width="20px" ALIGN="center">
 				<input type="checkbox" name="data" value="<%=i%>"> 
 				<input type="hidden" name="provider_no<%=i%>" value="<%= provider.getId() %>"> 
 				<input type="hidden" name="last_name<%=i%>" value='<%= provider.getLastName() %>'> 
 				<input type="hidden" name="first_name<%=i%>" value='<%= provider.getFirstName() %>'>
 				</td>
+				
+				<td><%= provider.getLastName() %>, <%= provider.getFirstName() %></td>
+
 			</tr>
 <%
    }
 %>
-		
+		</tbody>
 		</table>
 
-		</td>
-	</tr>
-</table>
-</center>
 
-<table width="100%" BGCOLOR="#486ebd">
-	<tr>
-		<TD align="center"><input type="submit" name="Submit"
-			value="<bean:message key="admin.adminnewgroup.btnSubmit"/>">
-		<INPUT TYPE="RESET" VALUE="<bean:message key="global.btnClose"/>"
-			onClick="window.close();"></TD>
-	</tr>
-</TABLE>
+<input type="submit" name="Submit"	class="btn btn-primary" value="<bean:message key="admin.adminnewgroup.btnSubmit"/>">
+
+<a href="admindisplaymygroup.jsp" class="btn btn-default">Cancel</a>
 
 </FORM>
 
-<div align="center"><font size="1" face="Verdana" color="#0000FF"><B></B></font></div>
+<%} %>
 
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+
+<script>
+$( document ).ready(function() {
+parent.parent.resizeIframe($('html').height());      
+
+});
+</script>
 </body>
 </html:html>
