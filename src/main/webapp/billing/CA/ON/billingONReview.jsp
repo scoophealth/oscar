@@ -1017,9 +1017,12 @@ if (bMultisites) {
 			<% } %>
 			</td></tr>
 			<tr>
-				<td colspan='2' align='center' bgcolor="silver"><input type="submit" name="submit" value="Save & Print Invoice"
-					style="width: 120px;" onclick="return checkPaymentMethod('');" /><input type="submit" name="submit" id="settlePrintBtn"
-					value="Settle & Print Invoice" onClick="return checkPaymentMethod('Settle');" style="width: 120px;" />
+				<td colspan='2' align='center' bgcolor="silver">
+				
+					<input type="submit" name="submit" value="Save & Print Invoice"	style="width: 150px;" onclick="return checkPaymentMethod('');" />
+					
+					<input type="submit" name="submit" id="settlePrintBtn"	value="Settle & Print Invoice" onClick="return checkPaymentMethod('Settle');" style="width: 150px;" />
+					
 				<input type="hidden"  name="btnPressed" value="">
 				</td>
 			</tr>
