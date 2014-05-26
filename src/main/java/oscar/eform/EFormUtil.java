@@ -812,7 +812,7 @@ public class EFormUtil {
 		 * 		<location>{optional}</location>
 		 * 		<comments>{optional}</comments>
 		 * 		<reason>{optional}</reason>
-		 * 		<result>{optional:pending/normal/abnormal}</result>
+		 * 		<result>{optional:pending/normal/abnormal/other}</result>
 		 * </prevention>
 		 */
 		
@@ -848,7 +848,7 @@ public class EFormUtil {
 			if ((extData = getContent("reason", template, null)) != null) extHash.put("reason", extData);
 			if ((extData = getContent("result", template, null)) != null) {
 				extData = extData.toLowerCase();
-				if (extData.equals("pending") || extData.equals("normal") || extData.equals("abnormal")) {
+				if (extData.equals("pending") || extData.equals("normal") || extData.equals("abnormal") || extData.equals("other")) {
 					extHash.put("result", extData);
 				}
 			}
