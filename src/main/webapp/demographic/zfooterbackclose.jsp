@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <hr width="100%">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<table border="0" cellspacing="0" cellpadding="0" width="100%" class="noprint">
 	<tr>
 		<td><a href=# onClick="javascript:history.go(-1);return false;">
 		<img src="../images/leftarrow.gif" border="0" width="25" height="20"
