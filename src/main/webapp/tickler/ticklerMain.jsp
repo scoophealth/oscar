@@ -553,7 +553,7 @@ var beginD = "1900-01-01"
 </tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000">
+  <tr bgcolor="#000000" class="noprint">
     <td height="40" width="10%"><input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()' class="sbttn"></td>
     <td width="80%" align="left">
       <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="tickler.ticklerMain.msgTickler"/></font></b></font>
@@ -685,7 +685,7 @@ function changeSite(sel) {
       <td -->
         <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">
         <input type="hidden" name="Submit" value="">
-        <input type="button" value="<bean:message key="tickler.ticklerMain.btnCreateReport"/>" class="mbttn" onclick="document.forms['serviceform'].Submit.value='Create Report'; document.forms['serviceform'].submit();">
+        <input type="button" value="<bean:message key="tickler.ticklerMain.btnCreateReport"/>" class="mbttn noprint" onclick="document.forms['serviceform'].Submit.value='Create Report'; document.forms['serviceform'].submit();">
         <oscar:oscarPropertiesCheck property="TICKLERSAVEVIEW" value="yes">
         &nbsp;
         <input type="button" value="<bean:message key="tickler.ticklerMain.msgSaveView"/>" class="mbttn" onclick="saveView();">
@@ -722,12 +722,12 @@ function changeSite(sel) {
 
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.msgStatus"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="39%"><bean:message key="tickler.ticklerMain.msgMessage"/></th>
-			<th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;">&nbsp;</th>
+			<th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" class="noprint">&nbsp;</th>
         </TR>
     </thead>
     <tfoot>
 
-                                <tr><td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                <tr class="noprint"><td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                     <input type="button" name="button" value="<bean:message key="tickler.ticklerMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn">
                                     <input type="hidden" name="submit_form" value="">
                                     <%
@@ -832,7 +832,7 @@ function changeSite(sel) {
                             %>
 
                                 <tr >
-                                    <TD width="3%"  ROWSPAN="1" class="<%=cellColour%>"><input type="checkbox" name="checkbox" value="<%=t.getId()%>"></TD>
+                                    <TD width="3%"  ROWSPAN="1" class="<%=cellColour%>"><input type="checkbox" name="checkbox" value="<%=t.getId()%>" class="noprint"></TD>
                                     <%
                                     	if (ticklerEditEnabled) {
                                     %>
@@ -885,7 +885,7 @@ function changeSite(sel) {
                                         %>
                                         
                                     </TD>
-                                    <td ROWSPAN="1" class="<%=cellColour%>">
+                                    <td ROWSPAN="1" class="<%=cellColour%> noprint">
                                     	<a href="#" onClick="return openNoteDialog('<%=demo.getDemographicNo() %>','<%=t.getId() %>');return false;">
                                     		<img border="0" src="<%=request.getContextPath()%>/images/notepad.gif"/>
                                     	</a>
@@ -927,9 +927,10 @@ function changeSite(sel) {
 </table></td></tr></table></form>
                         
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
-  <p>&nbsp; </p>
+  <p></p>
 <%@ include file="../demographic/zfooterbackclose.jsp" %>
-
+  
+  
 <p class="yesprint">
 	<%=OscarProperties.getConfidentialityStatement()%>
 </p>
