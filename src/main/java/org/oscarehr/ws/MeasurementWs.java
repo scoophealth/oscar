@@ -79,7 +79,7 @@ public class MeasurementWs extends AbstractWs {
 		return (results);
 	}
 
-	public MeasurementTransfer[] getCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public MeasurementTransfer[] getMeasurementsCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Measurement> results=measurementManager.getCreatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
 		return(MeasurementTransfer.toTransfers(results));
 	}

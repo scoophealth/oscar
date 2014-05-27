@@ -90,7 +90,7 @@ public class AllergyWs extends AbstractWs {
 		return(result);
 	}
 	
-	public AllergyTransfer[] getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public AllergyTransfer[] getAllergiesUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> allergies=allergyManager.getUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
 		return(AllergyTransfer.toTransfers(allergies));
 	}
