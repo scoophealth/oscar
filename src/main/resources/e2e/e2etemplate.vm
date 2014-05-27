@@ -46,7 +46,7 @@ CDA Header
   </code>
   <title>PITO EMR-2-EMR Record of $!demographic.firstName $!demographic.lastName</title>
   <effectiveTime value="$dateTool.get('yyyyMMddHHmm')"/>
-  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="normal"/>
+  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal"/>
   <languageCode code="en-CA"/>
   <!--
   ********************************************************
@@ -162,12 +162,8 @@ CDA Header
   Information Recipient
   ********************************************************
   -->
-  <informationRecipient typeCode="PRCP">
-    <intendedRecipient classCode="ASSIGNED">
-      <id extension="$patient.authorId" root="2.16.840.1.113883.3.40.2.11"/>
-##    <e2e:code code="MD" codeSystem="2.16.840.1.113883.5.111" codeSystemName="RoleCode" displayName="Medical Doctor"/>
-## Addr, telecom, informationRecipient and receivedOrganization omitted - no source to populate from.
-    </intendedRecipient>
+  <informationRecipient typeCode="PRCP" nullFlavor="NA">
+    <intendedRecipient/>
   </informationRecipient>
 <!--
 ********************************************************
@@ -176,20 +172,28 @@ e-MS CDA Structured Body
 -->
   <component typeCode="COMP" contextConductionInd="true">
     <structuredBody classCode="DOCBODY" moodCode="EVN">
-      <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+      <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal"/>
       <languageCode code="en-CA"/>
 <!--
 ********************************************************
 Advance Directives
 ********************************************************
 -->
-## TODO Populate with data from EMR
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
           <templateId root="2.16.840.1.113883.3.1818.10.2.2"/>
           <code code="42348-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Advance Directives"/>
           <title>Advance Directives Section [without entries]</title>
-          <text>No Advance Directives</text>
+          <text mediaType="text/x-hl7-text+xml">$notSupported</text>
+          <entry nullFlavor="NA" typeCode="DRIV" contextConductionInd="true">
+            <observation nullFlavor="NA" classCode="OBS" moodCode="EVN">
+              <id extension="AdvanceDirectives-0" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NA"/>
+              <text nullFlavor="NA"/>
+              <statusCode code="Completed"/>
+              <effectiveTime nullFlavor="NA"/>
+            </observation>
+          </entry>
         </section>
       </component>
 <!--
@@ -203,7 +207,7 @@ Alerts
           <templateId root="2.16.840.1.113883.3.1818.10.2.3.1"/>
           <code code="ALERTS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Alerts"/>
           <title>Alerts [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $alert in $patient.getAlerts() )
               <item>$!alert.note</item>
@@ -212,21 +216,23 @@ Alerts
           </text>
 #**##foreach ( $alert in $patient.getAlerts() )
           <!--Alert Observation-->
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.2"/>
             <observation classCode="OBS" moodCode="EVN">
-              <id extension="$alert.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
-              <code code="OTHERALRT" displayName="Other Alert" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-              <text>$alert.note</text>
+              <id extension="Alerts-$alert.id" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NA"/>
+              <text representation="TXT" mediaType="text/plain">$alert.note</text>
 #*    *##if ( !$alert.isArchived() )
               <statusCode code="active"/>
 #*    *##else
               <statusCode code="complete"/>
 #*    *##end
 #*    *##if ( $alert.getObservation_date() )
-              <effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $alert.getObservation_date())"/>
+              <effectiveTime xsi:type="IVL_TS">
+                <low value="$dateTool.format('yyyyMMddHHmmss', $alert.getObservation_date())"/>
+              </effectiveTime>
 #*    *##else
-              <effectiveTime nullFlavor="UNK"/>
+              <effectiveTime nullFlavor="NI"/>
 #*    *##end
               <e2e:confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal"/>
             </observation>
@@ -240,7 +246,18 @@ Alerts
           <templateId root="2.16.840.1.113883.3.1818.10.2.3"/>
           <code code="ALERTS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Alerts"/>
           <title>Alerts [without entries]</title>
-          <text>No Alerts</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.2" />
+            <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+              <id extension="Alerts-0" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NI"/>
+              <text nullFlavor="NI"/>
+              <statusCode code="completed"/>
+              <effectiveTime nullFlavor="NI"/>
+              <e2e:confidentialityCode nullFlavor="NI"/>
+            </observation>
+          </entry>
         </section>
       </component>
 #end
@@ -253,9 +270,9 @@ Allergies and Intolerances - (Reaction List)
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
           <templateId root="2.16.840.1.113883.3.1818.10.2.4.1"/>
-          <code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies andor Adverse Reactions Doc"/>
-          <title>Allergies and Intolerances (Reaction List) [with entries]</title>
-          <text>
+          <code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies and or Adverse Reactions Doc"/>
+          <title>Allergies &amp; Intolerances (Reaction List) [with entries]</title>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $allergy in $patient.getAllergies() )
               <item>$!allergy.description</item>
@@ -263,19 +280,21 @@ Allergies and Intolerances - (Reaction List)
             </list>
           </text>
 #**##foreach ( $allergy in $patient.getAllergies() )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.3"/>
             <!-- Allergy and Intolerance Observation -->
             <act classCode="ACT" moodCode="EVN">
-              <id extension="$allergy.id" root="2.16.840.1.113883.3.1818.10.2.10.1"/>
-              <code nullFlavor="NA"/>
+              <id extension="Allergies-$allergy.id" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code code="CONC" displayName="Concern" codeSystem="2.16.840.1.113883.5.6" codeSystemName="ActClass"/>
 #*    *##if ( !$allergy.archived )
               <statusCode code="active"/>
 #*    *##else
               <statusCode code="completed"/>
 #*    *##end
 #*    *##if ( $allergy.getLastUpdateDate() )
-              <effectiveTime value="$dateTool.format('yyyyMMdd', $allergy.getLastUpdateDate())"/>
+              <effectiveTime xsi:type="IVL_TS">
+                <low value="$dateTool.format('yyyyMMdd', $allergy.getLastUpdateDate())"/>
+              </effectiveTime>
 #*    *##else
               <effectiveTime nullFlavor="UNK"/>
 #*    *##end
@@ -289,7 +308,7 @@ Allergies and Intolerances - (Reaction List)
                   <code nullFlavor="UNK"/>
 #*    *##end
 #*    *##if ( $allergy.getStartDate() )
-                  <effectiveTime>
+                  <effectiveTime xsi:type="IVL_TS">
                     <low value="$dateTool.format('yyyyMMdd', $allergy.getStartDate())"/>
                   </effectiveTime>
 #*    *##else
@@ -298,10 +317,10 @@ Allergies and Intolerances - (Reaction List)
                   <participant typeCode="CSM" contextControlCode="OP">
                     <participantRole classCode="MANU">
                       <playingEntity classCode="MMAT" determinerCode="INSTANCE">
-#*    *##if ( $allergy.regionalIdentifier && $allergy.regionalIdentifier.length() > 0 )
+#*    *##if ( !$stringUtils.isNullOrEmpty($allergy.regionalIdentifier) )
                         <code code="$allergy.regionalIdentifier" displayName="$allergy.description" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN"/>
 #*    *##else
-                        <code nullFlavor="NA"/>
+                        <code nullFlavor="NI"/>
 #*    *##end
                         <name>$allergy.description</name>
                       </playingEntity>
@@ -342,9 +361,9 @@ Allergies and Intolerances - (Reaction List)
                     <!-- Reaction Observation -->
                     <observation classCode="OBS" moodCode="EVN">
                       <code code="REACTOBS" displayName="Reaction Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                      <text>$!allergy.reaction</text>
+                      <text representation="TXT" mediaType="text/plain">$!allergy.reaction</text>
 #*        *##if ( $allergy.getStartDate() )
-                      <effectiveTime>
+                      <effectiveTime xsi:type="IVL_TS">
                         <low value="$dateTool.format('yyyyMMdd', $allergy.getStartDate())"/>
                       </effectiveTime>
 #*        *##else
@@ -362,7 +381,7 @@ Allergies and Intolerances - (Reaction List)
                         <time nullFlavor="UNK"/>
 #*            *##end
                         <assignedAuthor classCode="ASSIGNED">
-                          <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                          <id use="BUS" extension="$allergy.providerNo" root="2.16.840.1.113883.3.163.5.0.10.2"/>
                           <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                             <name use="L">
                               <given>$patient.getProviderFirstName($allergy.providerNo)</given>
@@ -379,11 +398,11 @@ Allergies and Intolerances - (Reaction List)
                         <observation classCode="OBS" moodCode="EVN">
                           <code code="SEV" displayName="Severity" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
 #*        *##if ( $allergy.severityOfReaction == 1 )
-                          <value xsi:type="CD" code="A2" displayName="Mild" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                          <value xsi:type="CD" code="A2" displayName="Mild reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*        *##elseif ( $allergy.severityOfReaction == 2 )
-                          <value xsi:type="CD" code="A3" displayName="Moderate" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                          <value xsi:type="CD" code="A3" displayName="Moderate reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*        *##elseif ( $allergy.severityOfReaction == 3 )
-                          <value xsi:type="CD" code="A4" displayName="Severe" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                          <value xsi:type="CD" code="A4" displayName="Severe reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*        *##else
                           <value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*        *##end
@@ -399,11 +418,11 @@ Allergies and Intolerances - (Reaction List)
                     <observation classCode="OBS" moodCode="EVN">
                       <code code="SEV" displayName="Severity" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
 #*    *##if ( $allergy.severityOfReaction == 1 )
-                      <value xsi:type="CD" code="A2" displayName="Mild" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                      <value xsi:type="CD" code="A2" displayName="Mild reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*    *##elseif ( $allergy.severityOfReaction == 2 )
-                      <value xsi:type="CD" code="A3" displayName="Moderate" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                      <value xsi:type="CD" code="A3" displayName="Moderate reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*    *##elseif ( $allergy.severityOfReaction == 3 )
-                      <value xsi:type="CD" code="A4" displayName="Severe" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                      <value xsi:type="CD" code="A4" displayName="Severe reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*    *##else
                       <value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*    *##end
@@ -413,8 +432,13 @@ Allergies and Intolerances - (Reaction List)
                   <entryRelationship typeCode="SUBJ" contextConductionInd="true">
                     <observation classCode="OBS" moodCode="EVN">
                       <code code="CLINSTAT" displayName="Allergy Clinical Status" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" />
-                      <text>Confirmed</text>
-                      <value xsi:type="CD" code="C" displayName="Confirmed" codeSystem="2.16.840.1.113883.3.1818.10.2.8.2" codeSystemName="PITO AllergyClinicalStatus"/>
+#*    *##if ( !$allergy.archived )
+                      <text representation="TXT" mediaType="text/plain">Confirmed present</text>
+                      <value xsi:type="CD" code="410605003" displayName="Confirmed present" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT"/>
+#*    *##else
+                      <text representation="TXT" mediaType="text/plain">Cancelled</text>
+                      <value xsi:type="CD" code="89925002" displayName="Cancelled" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT"/>
+#*    *##end
                     </observation>
                   </entryRelationship>
                 </observation>
@@ -430,7 +454,42 @@ Allergies and Intolerances - (Reaction List)
           <templateId root="2.16.840.1.113883.3.1818.10.2.4"/>
           <code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies andor Adverse Reactions Doc"/>
           <title>Allergies and Intolerances (Reaction List) [without entries]</title>
-          <text>No Allergy Entries</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.3" />
+            <act nullFlavor="NI" classCode="ACT" moodCode="EVN">
+              <id extension="Allergies-0" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code code="CONC" codeSystem="2.16.840.1.113883.5.6" codeSystemName="ActClass"/>
+              <statusCode nullFlavor="NI"/>
+              <effectiveTime nullFlavor="NI"/>
+              <entryRelationship nullFlavor="NI" typeCode="COMP" contextConductionInd="true">
+                <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+                  <code nullFlavor="NI"/>
+                  <effectiveTime nullFlavor="NI"/>
+                  <participant nullFlavor="NI" typeCode="CSM" contextControlCode="OP">
+                    <participantRole nullFlavor="NI" classCode="MANU">
+                      <playingEntity nullFlavor="NI" classCode="MMAT" determinerCode="INSTANCE">
+                        <code nullFlavor="NI"/>
+                        <name nullFlavor="NI"/>
+                      </playingEntity>
+                    </participantRole>
+                  </participant>
+                  <entryRelationship nullFlavor="NI" typeCode="SUBJ" contextConductionInd="true">
+                    <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+                      <code code="SEV" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+                    </observation>
+                  </entryRelationship>
+                  <entryRelationship nullFlavor="NI" typeCode="SUBJ" contextConductionInd="true">
+                    <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+                      <code code="CLINSTAT" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+                      <text nullFlavor="NI"/>
+                      <value xsi:type="CD" nullFlavor="NI"/>
+                    </observation>
+                  </entryRelationship>
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
         </section>
       </component>
 #end
@@ -445,7 +504,7 @@ Clinically Measured Observation
           <templateId root="2.16.840.1.113883.3.1818.10.2.8.1"/>
           <code code="CLINOBS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Clinically Measured Observations"/>
           <title>Clinical Measured Observations [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $measurement in $patient.getMeasurements() )
               <item>$!patient.getTypeDescription($measurement.type): $!measurement.dataField $!e2e.measurementUnitMap($measurement.type) ($!measurement.measuringInstruction)</item>
@@ -453,13 +512,13 @@ Clinically Measured Observation
             </list>
           </text>
 #**##foreach ( $measurement in $patient.getMeasurements() )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.7"/>
             <!-- Clinically Measured Observations Organizer -->
             <organizer classCode="CLUSTER" moodCode="EVN">
-              <id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
-              <code code="MEAOBSORG" displayName="Measured Observations Organizer" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-              <statusCode code="active"/>
+              <id extension="ClinicalMeasuredObservations-$measurement.id" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NA"/>
+              <statusCode code="completed"/>
               <author typeCode="AUT" contextControlCode="OP">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
                 <!-- Author Participation -->
@@ -469,7 +528,7 @@ Clinically Measured Observation
                 <time nullFlavor="UNK"/>
 #*    *##end
                 <assignedAuthor classCode="ASSIGNED">
-                  <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                  <id use="BUS" extension="$measurement.providerNo" root="2.16.840.1.113883.3.163.5.0.10.2"/>
                   <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                     <name use="L">
                       <given>$patient.getProviderFirstName($measurement.providerNo)</given>
@@ -480,16 +539,18 @@ Clinically Measured Observation
               </author>
               <component typeCode="COMP" contextConductionInd="true">
                 <observation classCode="OBS" moodCode="EVN">
-                  <id extension="$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
+                  <id extension="ClinicalMeasuredObservations-$measurement.id" root="2.16.840.1.113883.3.1818.10.2.10.15"/>
                   <!-- OSCAR Type Code: $measurement.type -->
 #*    *##if ( $e2e.measurementCodeMap($measurement.type) )
-                  <code code="$e2e.measurementCodeMap($measurement.type)" displayName="$patient.getTypeDescription($measurement.type)" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
+                  <code code="$e2e.measurementCodeMap($measurement.type)" displayName="$patient.getTypeDescription($measurement.type)" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" codeSystemVersion="2.44"/>
 #*    *##else
                   <code nullFlavor="UNK"/>
 #*    *##end
-                  <text>$patient.getTypeDescription($measurement.type) ($measurement.measuringInstruction)</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.getTypeDescription($measurement.type) ($measurement.measuringInstruction)</text>
 #*    *##if ( $measurement.getDateObserved() )
-                  <effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
+                  <effectiveTime xsi:type="IVL_TS">
+                    <low value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
+                  </effectiveTime>
 #*    *##else
                   <effectiveTime nullFlavor="UNK"/>
 #*    *##end
@@ -506,14 +567,15 @@ Clinically Measured Observation
         </section>
       </component>
 #else
-      <component typeCode="COMP" contextConductionInd="true">
+## Section cardinality is optional
+#*      <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
           <templateId root="2.16.840.1.113883.3.1818.10.2.8"/>
           <code code="CLINOBS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Clinically Measured Observations"/>
           <title>Clinical Measured Observations [without entries]</title>
-          <text>No Clinical Measured Observations</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
-      </component>
+      </component>*#
 #end
 <!--
 ********************************************************
@@ -609,7 +671,7 @@ Encounter History and Notes
           <templateId root="2.16.840.1.113883.3.1818.10.2.12"/>
           <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
           <title>Encounter History and Notes [without entries]</title>
-          <text>No Encounter History</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
       </component>
 #end
@@ -723,7 +785,7 @@ Family History
           <templateId root="2.16.840.1.113883.3.1818.10.2.13"/>
           <code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
           <title>Family History [without entries]</title>
-          <text>No Family History</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
       </component>
 #end
@@ -917,7 +979,7 @@ Immunization List
           <templateId root="2.16.840.1.113883.3.1818.10.2.14"/>
           <code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
           <title>Immunizations List [without entries]</title>
-          <text>No Immunization Entries</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
       </component>
 #end
@@ -1134,7 +1196,7 @@ Laboratory Results & Results
           <templateId root="2.16.840.1.113883.3.1818.10.2.16"/>
           <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant Diagnostic Tests and/or Laboratory Data"/>
           <title>Laboratory Results and Reports [without entries]</title>
-          <text>No Laboratory Report Entries</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
       </component>
 #end
@@ -1638,7 +1700,7 @@ Code"/>
           <templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
           <code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
           <title>Medications and Prescriptions - Medication List [without entries]</title>
-          <text>No Medication Entries</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
       </component>
 #end
@@ -1749,7 +1811,7 @@ Problems and Conditions - Problem List
           <templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
           <code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
           <title>Problems and Conditions - Problem List [without entries]</title>
-          <text>No Problem Entries</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
       </component>
 #end
@@ -1842,7 +1904,7 @@ Risk Factors
           <templateId root="2.16.840.1.113883.3.1818.10.2.24"/>
           <code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
           <title>Risk Factors [without entries]</title>
-          <text>No Risk Factors</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
       </component>
 #end
