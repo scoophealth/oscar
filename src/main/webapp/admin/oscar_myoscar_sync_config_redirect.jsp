@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="org.bouncycastle.util.encoders.UrlBase64"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -30,11 +31,19 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="oscar.OscarProperties"%>
 <%
-	String syncConfigUrl=OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url");
-	String oscarWsUrl=OscarProperties.getInstance().getProperty("ws_endpoint_url_base");
+	String syncConfigUrl=StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"));
+	String oscarWsUrl=StringUtils.trimToNull(OscarProperties.getInstance().getProperty("ws_endpoint_url_base"));
 	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	
-	if (syncConfigUrl==null || oscarWsUrl==null) MiscUtils.getLogger().error("Some one is running the sync config admin page but the urls are not set. syncConfigUrl="+syncConfigUrl+", oscarWsUrl="+oscarWsUrl);
+	if (syncConfigUrl==null || oscarWsUrl==null)
+	{
+		String errorMsg="Some one is running the sync config admin page but the urls are not set. syncConfigUrl="+syncConfigUrl+", oscarWsUrl="+oscarWsUrl;
+		MiscUtils.getLogger().error(errorMsg);
+		%>
+			<%=errorMsg%>
+			return;
+		<%
+	}
 
 	StringBuilder sb=new StringBuilder();
 	sb.append(syncConfigUrl);
@@ -53,6 +62,10 @@
 	sb.append("&oscarWsUrl=");
 	sb.append(URLEncoder.encode(oscarWsUrl, "UTF-8"));
 	
+	String resultUrl=sb.toString();
+	
+	MiscUtils.getLogger().debug("data sync url : "+resultUrl);
+	
 	// redirect
-	response.sendRedirect(sb.toString());
+	response.sendRedirect(resultUrl);
 %>
