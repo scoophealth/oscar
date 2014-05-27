@@ -769,6 +769,7 @@ String curProvider_no = (String)session.getAttribute("user");
 		                        %>		
 			
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/updateDrugref.jsp" ><bean:message key="admin.admin.UpdateDrugref"/></a></li>		
+					<li><a href="${ctx}/admin/oscar_myoscar_sync_config_redirect.jsp" target="myoscar_sync"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>		
 				</ul>
 				</div>
 				</div>
