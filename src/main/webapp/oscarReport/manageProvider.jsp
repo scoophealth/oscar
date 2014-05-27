@@ -85,26 +85,23 @@ function refresh() {
 
 </head>
 <body>
-<input class="btn" type='button' name='print' value='<bean:message key="global.btnPrint"/>'onClick='window.print()'> oscarReport
-<br><br>
 
-<div class="container-fluid well">
+<div class="container-fluid">
 <form name="form1" action="dbManageProvider.jsp" method="post">
-	<table class="table table-striped  table-condensed">
-		<tr>
-			<td width="100%" colspan="3" align="center"><b><bean:message
-				key="oscarReport.manageProvider.msgManageProvider" /> <%=action.toUpperCase()%></b>
-			</td>
-		</tr>
-		<tr>
-			<td width="40%"><bean:message
-				key="oscarReport.manageProvider.msgTeam" /></td>
-			<td width="50%" align="left"><bean:message
-				key="oscarReport.manageProvider.msgProviderName" /></td>
-			<td width="10%" align="left"><bean:message
-				key="oscarReport.manageProvider.msgCheck" /></td>
-		</tr>
+
+<h3><bean:message key="oscarReport.manageProvider.msgManageProvider" /> <span class="text-info"><%=action.toUpperCase()%></span></h3>
+
+	<table class="table table-hover table-condensed">
 	
+	<thead>
+		<tr>
+			<td width="40%"><bean:message key="oscarReport.manageProvider.msgTeam" /></td>
+			<td width="50%" align="left"><bean:message key="oscarReport.manageProvider.msgProviderName" /></td>
+			<td width="10%" align="left"><bean:message	key="oscarReport.manageProvider.msgCheck" /></td>
+		</tr>
+	</thead>
+	
+	<tbody>
 		<% 
 			boolean bodd=true;	
 		    int count1 = 0;
@@ -126,15 +123,17 @@ function refresh() {
 	           
 	%>
 	
-		<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+		<tr class="<%=bodd?"info":" "%>">
 			<td width="40%"><%=mg.getId().getMyGroupNo()%></td>
-			<td width="50%" align="left"><%=p.getLastName()%>,
-			<%=p.getFirstName()%>
-		</tr>
-		<td width="10%" align="left"><input type="checkbox"
+			<td width="50%" align="left">
+			<%=p.getLastName()%>, <%=p.getFirstName()%>
+			</td>
+		<td>
+			<input type="checkbox"
 			name="provider<%=count1%>"
 			value="<%=p.getProviderNo()%>|<%=mg.getId().getMyGroupNo()%>"
-			<%=status.equals("A")?"checked":""%>></td>
+			<%=status.equals("A")?"checked":""%>>
+		</td>
 		</tr>
 	
 		<%
@@ -144,7 +143,10 @@ function refresh() {
 	}
 	 	    
 	%>
+	</tbody>
 	</table>
+	
+	<input class="btn" type='button' name='print' value='<bean:message key="global.btnPrint"/>'onClick='window.print()'> 
 	<input type="hidden" name="submit" value="Submit">
 	<input class="btn btn-primary" type=submit value=<bean:message key="oscarReport.manageProvider.btnSubmit"/>>
 	<input type=hidden name=action value=<%=action%>> <input type=hidden name=count value=<%=count1%>>
