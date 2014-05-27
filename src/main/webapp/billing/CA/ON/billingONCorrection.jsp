@@ -18,7 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%@page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" errorPage="errorpage.jsp"%>
+<%@page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" %> <!-- errorPage="errorpage.jsp" -->
 <%@page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@page import="oscar.oscarDemographic.data.*"%>
@@ -347,6 +347,7 @@ function checkSettle(status) {
     
     // bFlag - fill in data?
     boolean bFlag = false;
+    boolean billNoErr = false;
     
     String billNo = request.getParameter("billing_no").trim();
     String claimNo = request.getParameter("claim_no");
@@ -376,7 +377,7 @@ function checkSettle(status) {
     if (bFlag) {
 
         billingNo = Integer.parseInt(billNo);
-	bCh1 = bCh1Dao.find(billingNo);
+		bCh1 = bCh1Dao.find(billingNo);
 
         if (bCh1 != null) {	
 
@@ -469,8 +470,16 @@ function checkSettle(status) {
             bExtBillTo = bExtDao.getBillToInactive(bCh1);	            				
         } 
         else {
-            thirdParty = true;                             
-            bExtBillTo = bExtDao.getBillTo(bCh1);
+            thirdParty = true; 
+            
+            try {
+            	bExtBillTo = bExtDao.getBillTo(bCh1);
+            }
+    		catch (Exception e) {
+    			bExtBillTo = null;
+    			bFlag=false;
+    			billNoErr=true;
+    		}
         }     
                  
         if (bExtBillTo != null) {										
@@ -487,6 +496,13 @@ function checkSettle(status) {
     <div class="alert alert-success" id="alert_message">
     	<button type="button" class="close" data-dismiss="alert">&times;</button>
   		<strong>Success! </strong> Your entry was saved!
+    </div>
+<%} %>
+
+<%if(billNoErr){ %>
+    <div class="alert alert-error" id="alert_message">
+    	<button type="button" class="close" data-dismiss="alert">&times;</button>
+  		<strong>Error! </strong> Invoice number does not exist!
     </div>
 <%} %>
 
