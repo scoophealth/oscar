@@ -212,5 +212,13 @@
 </table>
 
 </form>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script>
+$( document ).ready(function() {
+parent.parent.resizeIframe($('html').height());      
+
+});
+</script>
 </body>
 </html:html>
