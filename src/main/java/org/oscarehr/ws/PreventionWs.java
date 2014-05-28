@@ -59,7 +59,7 @@ public class PreventionWs extends AbstractWs {
 		return (null);
 	}
 
-	public PreventionTransfer[] getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public PreventionTransfer[] getPreventionsUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
 		ArrayList<PreventionTransfer> results=new ArrayList<PreventionTransfer>();
 		
