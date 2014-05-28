@@ -207,6 +207,7 @@
         <div class="doNotPrint">
             <div class="titleBar">
                 <input type="button" name="printInvoice" value="<bean:message key="billing.billing3rdInv.printPDF"/>" onClick="submitForm('print')"/>
+                <input type="button" name="printHtml" value="Print" onclick="window.print();">
                 <input type="button" name="emailInvoice" value="<bean:message key="billing.billing3rdInv.email"/>" onClick="submitForm('email')"/>
             </div>
         </div>

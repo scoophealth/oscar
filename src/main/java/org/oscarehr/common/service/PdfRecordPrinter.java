@@ -103,7 +103,7 @@ public class PdfRecordPrinter {
     private static Logger logger = MiscUtils.getLogger();
 
     private static final String BILLING_INVOICE_TEMPLATE_FILE = "org/oscarehr/common/web/BillingInvoiceTemplate.jrxml";
-    private static final String OSCAR_LOGO_FILE = "org/oscarehr/common/web/images/Oscar.jpg";
+    //private static final String OSCAR_LOGO_FILE = "org/oscarehr/common/web/images/Oscar.jpg";
 
     private OutputStream os;
 
@@ -325,7 +325,7 @@ public class PdfRecordPrinter {
                             else if (paramName.equals("clinic_logo")) {                               
                                 String imagePath = props.getProperty("clinic_logo","");  
                                 if (imagePath.isEmpty()) {
-                                    imageIS = this.getClass().getClassLoader().getResourceAsStream(OSCAR_LOGO_FILE);
+                                    //DO NOTHING imageIS = this.getClass().getClassLoader().getResourceAsStream(OSCAR_LOGO_FILE);
                                 }
                                 else {
                                     imageIS = new FileInputStream(imagePath);
