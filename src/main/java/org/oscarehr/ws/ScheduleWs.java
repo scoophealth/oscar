@@ -143,12 +143,12 @@ public class ScheduleWs extends AbstractWs {
 		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentTransfer[] getAppointmentUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
+	public AppointmentTransfer[] getAppointmentsUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
 		List<Appointment> appointments=scheduleManager.getAppointmentUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
 		return(AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentArchiveTransfer[] getAppointmentArchiveUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
+	public AppointmentArchiveTransfer[] getAppointmentArchivesUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
 		List<AppointmentArchive> appointments=scheduleManager.getAppointmentArchiveUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
 		return(AppointmentArchiveTransfer.toTransfers(appointments, useGMTTime));
 	}
