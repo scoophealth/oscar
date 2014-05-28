@@ -93,7 +93,7 @@ for(ReportProvider rp:res) {
 %> <%
 }
 %> <script type="text/javascript">      
-      window.opener.location.reload();
+	  window.opener.document.location.href="<%=request.getContextPath() %>/administration/?show=VisitReport";
       window.close();
 </script> <%
 %>
