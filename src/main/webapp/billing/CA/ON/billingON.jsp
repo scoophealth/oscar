@@ -1128,47 +1128,44 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 			<%} %>
 		</div>
 		<%} %>
-
-		</table>
+		
 	</div>
 
-	<form method="post" id="titlesearch" name="titlesearch"
-		action="billingONReview.jsp" onsubmit="return onNext();">
-		<%String checkFlag = request.getParameter("checkFlag");
-	if(checkFlag == null) checkFlag = "0";
+	<form method="post" id="titlesearch" name="titlesearch" action="billingONReview.jsp" onsubmit="return onNext();">
+<%
+String checkFlag = request.getParameter("checkFlag");
+if(checkFlag == null) checkFlag = "0";
 %>
-		<input type="hidden" name="checkFlag" id="checkFlag"
-			value="<%=checkFlag %>" />
-
-		<table border="0" cellpadding="0" cellspacing="2" width="100%"
-			class="myIvory">
-			<tr>
-				<td>
-					<table border="0" cellspacing="0" cellpadding="0" width="100%"
-						class="myDarkGreen">
-						<tr>
-							<td><b><font color="#FFFFFF">Ontario Billing</font> </b></td>
-							<td align="right"><oscar:help keywords="1.4 Billing"
-									key="app.top1" style="color: #FFFFFF" /> <font color="#FFFFFF">
-								| </font> <a href=#
-								onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;">
-									<font color="#FFFFFF">Edit</font>
-							</a> <select name="cutlist" id="cutlist" onchange="changeCut(this)">
-									<option selected="selected" value="">- SUPER CODES -</option>
-									<% //
-			    List sL = tdbObj.getBillingFavouriteList();
-			    for (int i = 0; i < sL.size(); i = i + 2) { %>
-									<option value="<%=(String) sL.get(i+1)%>"><%=(String) sL.get(i)%></option>
-									<% } %>
-							</select></td>
-							<td align="right" width="10%" nowrap><input type="submit"
-								name="submit" value="Next" style="width: 120px;" /> <input
-								type="button" name="button" value="Exit" style="width: 120px;"
-								onclick="self.close();" />&nbsp;</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+		<input type="hidden" name="checkFlag" id="checkFlag" value="<%=checkFlag %>" />
+		
+		<table border="0" cellspacing="0" cellpadding="0" class="myDarkGreen" width="100%">
+				<tr>
+					<td><b><font color="#FFFFFF">Ontario Billing</font></b></td>
+					<td align="right" >
+						<oscar:help keywords="1.4 Billing"	key="app.top1" style="color: #FFFFFF" /> 
+						<font color="#FFFFFF"> | </font> 
+						<a href=# onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;">
+								<font color="#FFFFFF">Edit</font>
+						</a> 
+						
+						<select name="cutlist" id="cutlist" onchange="changeCut(this)">
+								<option selected="selected" value="">- SUPER CODES -</option>
+								<% //
+		    List sL = tdbObj.getBillingFavouriteList();
+		    for (int i = 0; i < sL.size(); i = i + 2) { %>
+								<option value="<%=(String) sL.get(i+1)%>"><%=(String) sL.get(i)%></option>
+								<% } %>
+						</select>
+					</td>
+					<td align="right" width="10%" nowrap>
+						<input type="submit" name="submit" value="Next" style="width: 120px;" /> 
+						<input type="button" name="button" value="Exit" style="width: 120px;" onclick="self.close();" />
+						&nbsp;
+					</td>
+				</tr>
+		</table>
+					
+		<table border="0" cellpadding="0" cellspacing="2" width="100%">
 			<tr>
 				<td>
 					<table border="0" cellspacing="0" cellpadding="0" width="100%"

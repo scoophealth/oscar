@@ -20,16 +20,13 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page
-	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page errorPage="errorpage.jsp" import="java.util.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-<%@ page
-	import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
 
 <%//
-
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
         UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
 			if (session.getAttribute("user") == null) {
@@ -40,7 +37,7 @@
 			String apptNo = request.getParameter("appointment_no");
 
 			if (request.getParameter("submit") != null && "Back to Edit".equals(request.getParameter("button"))) { %>
-<jsp:forward page="billingON.jsp" />
+				<jsp:forward page="billingON.jsp" />
 <%			}
 
 			// save the billing if needed
@@ -70,9 +67,11 @@
 					
 				//if you are editing previous billing, the previous billing should be deleted(flag "D") after edit (insert a new billing)�      
 		%>
-				<jsp:include page="billingDeleteWithBillNo.jsp"/>
-<p>
-<h1>Successful Addition of a billing Record.</h1>
+			
+<jsp:include page="billingDeleteWithBillNo.jsp"/><!-- TODO: look at handling of actions from different submits -->
+
+<!-- let billingDeleteWithBillNo.jsp handle messages at this point to prevent duplicate or contradicting msgs-->  
+			
 <% if (request.getParameter("submit") != null && "Save & Add Another Bill".equals(request.getParameter("submit"))) { %>
 <script LANGUAGE="JavaScript">
 					self.opener.refresh();  
@@ -105,7 +104,7 @@ invoice</a>
                                             self.location.href="<%=urlBack%>";
                                         
                                         <%}else{%>
-					    self.close();
+					    self.close(); 
 					    self.opener.refresh();
                                         <% }%>
 					</script>
@@ -129,12 +128,11 @@ invoice</a>
 <% } %>
 <%} else {
 				%>
-<p>
+
 <h1>Sorry, billing has failed. Please do it again!</h1>
 
 <%}
-			}
-			%>
-<p>
-<h1>Sorry, billing has failed. Please do it again!</h1>
+}
+%>
+
 

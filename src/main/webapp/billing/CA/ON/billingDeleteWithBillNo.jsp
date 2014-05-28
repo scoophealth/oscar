@@ -47,22 +47,18 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script LANGUAGE="JavaScript">
-    
     function start(){
       this.focus();
     }
-    function closeit() {
-     
-    }   
-    
 </script>
 </head>
 <body onload="start()">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
 	<tr bgcolor="#486ebd">
-		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-		DELETE A BILLING RECORD</font></th>
+		<th align="CENTER">
+		<font face="Helvetica" color="#FFFFFF">BILLING RECORD</font>
+		</th>
 	</tr>
 </table>
 <%
@@ -82,14 +78,10 @@
   	
    	if (billCode.substring(0,1).compareTo("B") == 0) {
    %>
-<p>
+
 <h1>Sorry, cannot delete billed items.</h1>
-</p>
-<form><input type="button" value="Back to previous page"
-	onClick="window.close()"></form>
-<% }
-   else{
-     
+
+<% }else{
    
   int rowsAffected=0;
   OscarProperties props = OscarProperties.getInstance();
@@ -121,9 +113,9 @@
  
   if (rowsAffected ==1) {
 %>
-<p>
+
 <h1>Successful Addition of a billing Record.</h1>
-</p>
+
 <script LANGUAGE="JavaScript">
       self.close();
       self.opener.refresh();
@@ -131,9 +123,9 @@
   
  }  else {
 %>
-<p>
+
 <h1>Sorry, addition has failed.</h1>
-</p>
+
 <%  
   }
   
@@ -141,8 +133,7 @@
 %>
 <p></p>
 <hr width="90%"></hr>
-<form><input type="button" value="Close this window"
-	onClick="window.close()"></form>
+<form><input type="button" value="Close this window" onClick="window.close()"></form>
 </center>
 </body>
 </html>
