@@ -27,17 +27,18 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+
+<!DOCTYPE html>
 <html:html locale="true">
 
-<html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarMessenger.config.MessengerCreateGroup.title" /></title>
 <html:base />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-</head>
-<script language="javascript">
+
+<script>
 function BackToOscar()
 {
     if (opener.callRefreshTabAlerts) {
@@ -49,11 +50,9 @@ function BackToOscar()
 }
 </script>
 
-
-
-
-
 <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
 
@@ -62,16 +61,7 @@ function BackToOscar()
 <table border="0" cellpadding="0" cellspacing="0"
 	style="border-collapse: collapse" bordercolor="#111111" width="100%"
 	id="AutoNumber1" height="100%">
-	<tr>
-		<td width="100%"
-			style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
-			height="0%" colspan="2">
-		<p class="HelpAboutLogout"><span class="FakeLink"><a
-			href="Help.htm">Help</a></span> | <span class="FakeLink"><a
-			href="About.htm">About</a></span> | <span class="FakeLink"> <a
-			href="Disclaimer.htm">Disclaimer</a></span></p>
-		</td>
-	</tr>
+
 	<tr>
 		<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
 		<td width="100%" bgcolor="#000000"
@@ -87,7 +77,7 @@ function BackToOscar()
 			style="border-collapse: collapse" bordercolor="#111111" width="100%"
 			height="100%">
 
-			<!----Start new rows here-->
+			<!-- Start new rows here -->
 			<tr>
 				<td>
 				<div class="DivContentTitle">
@@ -118,10 +108,6 @@ function BackToOscar()
 			<tr>
 				<td><br>
 
-
-
-
-
 				<html:form action="/oscarMessenger/AddGroup">
 					<br>
 					<br>
@@ -148,7 +134,7 @@ function BackToOscar()
 				<br>
 				</td>
 			</tr>
-			<!----End new rows here-->
+			<!-- End new rows here -->
 
 			<tr height="100%">
 				<td></td>
@@ -171,5 +157,14 @@ function BackToOscar()
 			colspan="2"></td>
 	</tr>
 </table>
+
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+
+<script>
+$( document ).ready(function() {	
+    parent.parent.resizeIframe($('html').height());
+});
+</script>
 </body>
 </html:html>
