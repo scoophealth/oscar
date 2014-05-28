@@ -196,7 +196,9 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
 		}
 		else {
 			div = document.getElementById("summaryView");
-		}				
+		}	
+		jQuery("#readerSwitcher").prop("disabled",true);
+		jQuery("#listSwitcher").prop("disabled",true);
 		return new Ajax.Updater(div,url,{method:'get',parameters:query,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
 			loadingDocs = false;
 			var tmp = jQuery("#tempLoader");
@@ -222,6 +224,9 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
 				// to create a scroll bar. So we fake a scroll (since no scroll bar is equivalent to reaching the bottom).
 				setTimeout("fakeScroll();", 1000);
 			}
+			
+			jQuery("#readerSwitcher").prop("disabled",false);
+			jQuery("#listSwitcher").prop("disabled",false);
 		}});
 	}
 
