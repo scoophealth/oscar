@@ -122,7 +122,19 @@ public class GDMLHandler implements MessageHandler {
                     headers.add(header);
                 }
 
+            }		
             }
+        //Add OBR of the parsed lab
+        msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
+        int obrCount = msg.getRESPONSE().getORDER_OBSERVATIONReps();
+        for (int j=0; j < obrCount; j++){
+        	// ADD OBR SEGMENTS
+        	OBR obrSeg = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBR();
+        	// ADD THE HEADER TO THE HEADERS ARRAYLIST 
+        	String header = getString(obrSeg.getUniversalServiceIdentifier().getAlternateIdentifier().getValue());
+        	if (!headers.contains(header)){
+        		headers.add(header);
+        		}
         }
     }
 
