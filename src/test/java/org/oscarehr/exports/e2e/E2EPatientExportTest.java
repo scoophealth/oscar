@@ -223,6 +223,23 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 		assertTrue(provider.equals(list.get(0).getEmail()));
 	}
 
+	@Test
+	public void testGetID() {
+		PatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+
+		String provider = p.getProviderID(list.get(0).getId());
+		assertNotNull(provider);
+	}
+
 	// Testing booleans
 	@Test
 	public void testSetExAllTrue() {

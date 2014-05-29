@@ -54,6 +54,8 @@ import org.oscarehr.common.model.ProviderData;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.util.StringUtils;
+
 /**
  * Abstract data model for a patient object
  * 
@@ -325,6 +327,30 @@ public abstract class PatientExport {
 			email = "";
 		}
 		return email;
+	}
+
+	/**
+	 * Get Provider's ID based on provider number
+	 * Order of Preference: CPSID > MSP Billing # > providerNo
+	 * 
+	 * @param providerNo
+	 * @return String of id if available, else return providerNo
+	 */
+	public String getProviderID(String providerNo) {
+		String id;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			if(!StringUtils.isNullOrEmpty(providerData.getPractitionerNo())) {
+				id = providerData.getPractitionerNo();
+			} else if (!StringUtils.isNullOrEmpty(providerData.getOhipNo())) {
+				id = providerData.getOhipNo();
+			} else {
+				id = providerNo;
+			}
+		} catch (Exception e) {
+			id = providerNo;
+		}
+		return id;
 	}
 
 	/**

@@ -108,7 +108,7 @@ CDA Header
   <author typeCode="AUT" contextControlCode="OP">
     <time value="$dateTool.get('yyyyMMdd')"/>
     <assignedAuthor classCode="ASSIGNED">
-      <id extension="$patient.authorId" root="2.16.840.1.113883.3.40.2.11"/>
+      <id extension="$patient.getProviderID($patient.authorId)" root="2.16.840.1.113883.3.40.2.11"/>
 #if ( !$stringUtils.isNullOrEmpty($patient.getProviderHomePhone($patient.authorId)) )
       <telecom value="tel:$patient.getProviderHomePhone($patient.authorId).replaceAll("-","")" use="H"/>
 #end
@@ -129,7 +129,7 @@ CDA Header
   <author typeCode="AUT" contextControlCode="OP">
     <time value="$dateTool.get('yyyyMMdd')"/>
     <assignedAuthor classCode="ASSIGNED">
-      <id extension="$patient.authorId" root="2.16.840.1.113883.3.40.2.11"/>
+      <id extension="$patient.getProviderID($patient.authorId)" root="2.16.840.1.113883.3.40.2.11"/>
 #if ( !$stringUtils.isNullOrEmpty($patient.getProviderHomePhone($patient.authorId)) )
       <telecom value="tel:$patient.getProviderHomePhone($patient.authorId).replaceAll("-","")" use="H"/>
 #end
@@ -381,7 +381,7 @@ Allergies and Intolerances - (Reaction List)
                         <time nullFlavor="UNK"/>
 #*            *##end
                         <assignedAuthor classCode="ASSIGNED">
-                          <id use="BUS" extension="$allergy.providerNo" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                          <id use="BUS" extension="$patient.getProviderID($allergy.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                           <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                             <name use="L">
                               <given>$patient.getProviderFirstName($allergy.providerNo)</given>
@@ -528,7 +528,7 @@ Clinically Measured Observation
                 <time nullFlavor="UNK"/>
 #*    *##end
                 <assignedAuthor classCode="ASSIGNED">
-                  <id use="BUS" extension="$measurement.providerNo" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                  <id use="BUS" extension="$patient.getProviderID($measurement.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                   <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                     <name use="L">
                       <given>$patient.getProviderFirstName($measurement.providerNo)</given>
@@ -588,7 +588,7 @@ Encounter History and Notes
           <templateId root="2.16.840.1.113883.3.1818.10.2.12.1"/>
           <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
           <title>Encounter History and Notes [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $encounter in $patient.getEncounters() )
               <item>$!dateTool.format('MMM dd, yyyy', $encounter.getObservation_date()) $!patient.cleanString($encounter.note)</item>
@@ -596,45 +596,57 @@ Encounter History and Notes
             </list>
           </text>
 #**##foreach ( $encounter in $patient.getEncounters() )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.9"/>
             <!-- Encounter Event -->
             <encounter classCode="ENC" moodCode="EVN">
-              <id extension="$encounter.id" root="2.16.840.1.113883.3.1818.10.2.10.12" use="BUS"/>
+              <id extension="Encounters-$encounter.id" root="2.16.840.1.113883.3.3331" use="BUS" assigningAuthorityName="OSCAR EMR"/>
 #*    *##if ( $encounter.observation_date )
-              <effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $encounter.getObservation_date())"/>
+              <effectiveTime xsi:type="IVL_TS">
+                <low value="$dateTool.format('yyyyMMddHHmmss', $encounter.getObservation_date())"/>
+              </effectiveTime>
 #*    *##else
               <effectiveTime nullFlavor="UNK"/>
 #*    *##end
               <!-- Encounter Location -->
               <participant typeCode="LOC" contextControlCode="OP">
-                <participantRole classCode="SDLOC">
-                  <id extension="$custodian.id" root="2.16.840.1.113883.3.1818.10.2.10.19" use="BUS"/>
+                <templateId root="2.16.840.1.113883.3.1818.10.4.21"/>
+                <participantRole classCode="ROL">
+                  <id use="BUS" extension="$custodian.id" root="2.16.840.1.113883.3.40.2.11"/>
                 </participantRole>
               </participant>
               <!-- Encounter Provider -->
               <participant typeCode="PRF" contextControlCode="OP">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.21"/>
                 <!-- Provider Participation -->
-                <participantRole>
-                  <id extension="$encounter.providerNo" root="2.16.840.1.113883.3.1818.10.2.10.19" use="BUS"/>
+                <participantRole classCode="PROV">
+                  <id use="BUS" extension="$patient.getProviderID($encounter.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                   <playingEntity classCode="PSN" determinerCode="INSTANCE">
                     <name use="L">
                       <given>$patient.getProviderFirstName($encounter.providerNo)</given>
                       <family>$patient.getProviderLastName($encounter.providerNo)</family>
                     </name>
+                    <desc>Provider</desc>
                   </playingEntity>
                 </participantRole>
               </participant>
               <!-- Encounter Reason -->
-              <entryRelationship typeCode="RSON" contextConductionInd="true">
+              <entryRelationship typeCode="SUBJ" contextConductionInd="true">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.24"/>
                 <!-- Reason Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <!-- Record ID -->
+                  <id nullFlavor="NI"/>
                   <code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" />
-                  <text>$patient.cleanString($encounter.note)</text>
-#*    *##if ( !$encounter.Billing_code.isEmpty() )
+                  <text representation="TXT" mediaType="text/plain">$patient.cleanString($encounter.note)</text>
+#*    *##if ( $encounter.getObservation_date() )
+                  <effectiveTime xsi:type="IVL_TS">
+                    <low value="$dateTool.format('yyyyMMddHHmmss', $encounter.getObservation_date())"/>
+                  </effectiveTime>
+#*    *##else
+                  <effectiveTime nullFlavor="UNK"/>
+#*    *##end
+#*    *##if ( !$stringUtils.isNullOrEmpty($encounter.Billing_code) )
                   <value xsi:type="CD" code="$encounter.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="$patient.getICD9Description("$encounter.getBilling_code()").replaceAll("&","AND")"/>
 #*    *##else
                   <value xsi:type="CD" nullFlavor="NA"/>
@@ -649,7 +661,7 @@ Encounter History and Notes
                     <time nullFlavor="UNK"/>
 #*    *##end
                     <assignedAuthor classCode="ASSIGNED">
-                      <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                      <id use="BUS" extension="$patient.getProviderID($encounter.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                       <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                         <name use="L">
                           <given>$patient.getProviderFirstName($encounter.providerNo)</given>
@@ -658,6 +670,14 @@ Encounter History and Notes
                       </assignedPerson>
                     </assignedAuthor>
                   </author>
+                  <!-- Record ID Link -->
+                  <entryRelationship typeCode="SUBJ" contextConductionInd="true">
+                    <templateId root="2.16.840.1.113883.3.1818.10.4.38"/>
+                    <observation classCode="OBS" moodCode="EVN">
+                      <id nullFlavor="NI"/>
+                      <code code="RECLINK" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" />
+                    </observation>
+                  </entryRelationship>
                 </observation>
               </entryRelationship>
             </encounter>
@@ -672,6 +692,21 @@ Encounter History and Notes
           <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of hospitalizations+History of outpatient visits"/>
           <title>Encounter History and Notes [without entries]</title>
           <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.9" />
+            <encounter nullFlavor="NI" classCode="ENC" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.3331" extension="Encounters-0" assigningAuthorityName="OSCAR EMR"/>
+              <effectiveTime nullFlavor="NI"/>
+              <participant nullFlavor="NI" typeCode="LOC" contextControlCode="OP">
+                <templateId root="2.16.840.1.113883.3.1818.10.4.21"/>
+                <participantRole nullFlavor="NI" classCode="ROL"/>
+              </participant>
+              <participant nullFlavor="NI" typeCode="PRF" contextControlCode="OP">
+                <templateId root="2.16.840.1.113883.3.1818.10.4.21"/>
+                <participantRole nullFlavor="NI" classCode="PROV"/>
+              </participant>
+            </encounter>
+          </entry>
         </section>
       </component>
 #end
@@ -686,7 +721,7 @@ Family History
           <templateId root="2.16.840.1.113883.3.1818.10.2.13.1"/>
           <code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
           <title>Family History [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $family in $patient.getFamilyHistory() )
               <item>$!family.note</item>
@@ -694,19 +729,21 @@ Family History
             </list>
           </text>
 #**##foreach ( $family in $patient.getFamilyHistory() )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.10"/>
             <!-- Family History Observation -->
             <observation classCode="OBS" moodCode="EVN">
-              <id extension="$family.id" root="2.16.840.1.113883.3.1818.10.2.10.33"/>
-              <code code="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="Act Code" displayName="Diagnosis"/>
-              <text>$family.note</text>
-#*    *##if ( $family.getObservation_date() )
-              <effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $family.getObservation_date())"/>
+              <id extension="FamilyHistory-$family.id" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NI"/>
+              <text representation="TXT" mediaType="text/plain">$family.note</text>
+#*    *##if ( $family.observation_date )
+              <effectiveTime xsi:type="IVL_TS">
+                <low value="$dateTool.format('yyyyMMddHHmmss', $family.getObservation_date())"/>
+              </effectiveTime>
 #*    *##else
               <effectiveTime nullFlavor="UNK"/>
 #*    *##end
-              <value xsi:type="CD" nullFlavor="NA"/>
+              <value xsi:type="CD" nullFlavor="UNK"/>
               <!--Relationship to the Patient-->
               <subject typeCode="SBJ" contextControlCode="OP">
                 <relatedSubject classCode="PRS">
@@ -717,18 +754,18 @@ Family History
                   <code code="OTH" displayName="$patient.getCMNoteExtValue("$family.getId()", "Relationship")" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
 #*        *##end
 #*    *##else
-                  <code code="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.111" codeSystemName="PersonalRelationshipRoleType"/>
+                  <code nullFlavor="UNK"/>
 #*    *##end
                 </relatedSubject>
               </subject>
-#*    *##if ( !$family.Billing_code.isEmpty() )
+#*    *##if ( !$stringUtils.isNullOrEmpty($family.Billing_code) )
               <!-- Diagnosis Billing Code -->
               <entryRelationship typeCode="COMP" contextConductionInd="true">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
                 <!-- Secondary Code (ICD9) -->
                 <observation classCode="OBS" moodCode="EVN">
-                  <code code="BILLINGCODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                  <value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="$patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")"/>
+                  <code code="ICD9CODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+                  <value xsi:type="CD" code="$family.Billing_code" codeSystem="2.16.840.1.113883.1.11.15931" codeSystemName="ICD9" displayName="$patient.getICD9Description("$family.getBilling_code()").replaceAll("&","AND")"/>
                 </observation>
               </entryRelationship>
 #*    *##end
@@ -769,7 +806,7 @@ Family History
                 <!-- Comment Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="TRTNOTE" displayName="Treatment Note" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                  <text>$patient.getCMNoteExtValue("$family.getId()", "Treatment")</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.getCMNoteExtValue("$family.getId()", "Treatment")</text>
                   <value xsi:type="CD" nullFlavor="NA"/>
                 </observation>
               </entryRelationship>
@@ -786,6 +823,20 @@ Family History
           <code code="10157-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Family Member Diseases"/>
           <title>Family History [without entries]</title>
           <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.10"/>
+            <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.3331" extension="FamilyHistory-0" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NI"/>
+              <effectiveTime nullFlavor="NI"/>
+              <value xsi:type="CD" nullFlavor="NI"/>
+              <subject nullFlavor="NI" typeCode="SBJ" contextControlCode="OP">
+                <relatedSubject nullFlavor="NI" classCode="PRS">
+                  <code nullFlavor="NI"/>
+                </relatedSubject>
+              </subject>
+            </observation>
+          </entry>
         </section>
       </component>
 #end
@@ -864,7 +915,7 @@ Immunization List
                 <time nullFlavor="UNK"/>
 #*    *##end
                 <assignedAuthor classCode="ASSIGNED">
-                  <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                  <id use="BUS" extension="$patient.getProviderID($immunization.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                   <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                     <name use="L">
                       <given>$patient.getProviderFirstName($immunization.providerNo)</given>
@@ -910,7 +961,7 @@ Immunization List
                     <time nullFlavor="UNK"/>
 #*        *##end
                     <assignedAuthor classCode="ASSIGNED">
-                      <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                      <id use="BUS" extension="$patient.getProviderID($immunization.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                       <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                         <name use="L">
                           <given>$patient.getProviderFirstName($immunization.providerNo)</given>
@@ -956,7 +1007,7 @@ Immunization List
                     <time nullFlavor="UNK"/>
 #*        *##end
                     <assignedAuthor classCode="ASSIGNED">
-                      <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                      <id use="BUS" extension="$patient.getProviderID($immunization.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                       <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                         <name use="L">
                           <given>$patient.getProviderFirstName($immunization.providerNo)</given>
@@ -1044,7 +1095,7 @@ Laboratory Results & Results
                 <time nullFlavor="UNK"/>
 #*    *##end
                 <assignedAuthor classCode="ASSIGNED">
-                  <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                  <id nullFlavor="UNK"/>
                   <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                     <name>$patient.cleanString($lab.hl7TextInfo.requestingProvider)</name>
                   </assignedPerson>
@@ -1446,7 +1497,7 @@ Code"/>
                     <time nullFlavor="UNK"/>
 #*    *##end
                     <assignedAuthor classCode="ASSIGNED">
-                      <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                      <id use="BUS" extension="$patient.getProviderID($med.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                       <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                         <name use="L">
                           <given>$patient.getProviderFirstName($med.providerNo)</given>
@@ -1768,7 +1819,7 @@ Problems and Conditions - Problem List
                 <time nullFlavor="UNK"/>
 #*        *##end
                 <assignedAuthor classCode="ASSIGNED">
-                  <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                  <id use="BUS" extension="$patient.getProviderID($demographic.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                   <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                     <name use="L">
                       <given>$patient.getProviderFirstName($demographic.providerNo)</given>
@@ -1782,7 +1833,7 @@ Problems and Conditions - Problem List
                 <templateId root="2.16.840.1.113883.3.1818.10.4.28"/>
                 <!-- Secondary Code (ICD9) -->
                 <observation classCode="OBS" moodCode="EVN">
-                  <code code="BILLINGCODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+                  <code code="ICD9CODE" displayName="Billing Code" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
                   <value xsi:type="CD" code="$problem.getDxresearchCode()" displayName="$patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9"/>
                 </observation>
               </entryRelationship>
@@ -1870,7 +1921,7 @@ Risk Factors
                 <time nullFlavor="UNK"/>
 #*    *##end
                 <assignedAuthor classCode="ASSIGNED">
-                  <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.2"/>
+                  <id use="BUS" extension="$patient.getProviderID($risk.providerNo)" root="2.16.840.1.113883.3.40.2.11"/>
                   <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                     <name use="L">
                       <given>$patient.getProviderFirstName($risk.providerNo)</given>
