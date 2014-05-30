@@ -493,12 +493,12 @@ Allergies and Intolerances - (Reaction List)
         </section>
       </component>
 #end
+#if ( $patient.hasMeasurements() )
 <!--
 ********************************************************
 Clinically Measured Observation
 ********************************************************
 -->
-#if ( $patient.hasMeasurements() )
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
           <templateId root="2.16.840.1.113883.3.1818.10.2.8.1"/>
@@ -851,7 +851,7 @@ Immunization List
           <templateId root="2.16.840.1.113883.3.1818.10.2.14.1"/>
           <code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
           <title>Immunizations List [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach( $immunization in $patient.getImmunizations() )
 #*    *##if ( $immunization.isRefused() )
@@ -865,7 +865,7 @@ Immunization List
             </list>
           </text>
 #**##foreach( $immunization in $patient.getImmunizations() )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
             <!-- Immunization Observation -->
 #*    *##if ( $immunization.isRefused() || $immunization.isIneligible() )
@@ -873,21 +873,26 @@ Immunization List
 #*    *##else
             <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
 #*    *##end
-              <id extension="$immunization.id" root="2.16.840.1.113883.3.1818.10.10.3"/>
-              <code code="IMMUNIZ" displayName="Immunization" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act Code"/>
+              <id extension="Immunizations-$immunization.id" root="2.16.840.1.113883.3.3331" assigningAuthorityName="OSCAR EMR"/>
+              <code code="IMMUNIZ" displayName="Immunization" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
               <!-- Immunization Date -->
 #*    *##if ( $immunization.getPreventionDate() )
-              <effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
+              <effectiveTime xsi:type="IVL_TS">
+                <low value="$dateTool.format('yyyyMMdd', $immunization.getPreventionDate())"/>
+              </effectiveTime>
 #*    *##else
               <effectiveTime nullFlavor="UNK"/>
 #*    *##end
 #*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "route").isEmpty() )
-              <routeCode code="$patient.getImmuExtValue("$immunization.getId()", "route")" displayName="$patient.getImmuExtValue("$immunization.getId()", "route")" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration"/>
+              <routeCode nullFlavor="OTH" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration">
+                <originalText representation="TXT" mediaType="text/plain">$patient.getImmuExtValue("$immunization.getId()", "route")</originalText>
+              </routeCode>
 #*    *##end
+## Dose Quantity can't be safely converted from a string to IVL_PQ representation
 #*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "dose").isEmpty() )
               <!-- Dose Quantity and Type-->
               <!-- OSCAR Dose: $!patient.getImmuExtValue("$immunization.getId()", "dose") -->
-              <doseQuantity nullFlavor="UNK"/>
+              <doseQuantity nullFlavor="OTH"/>
 #*    *##end
               <!-- Immunization Product (i.e. DIN) -->
               <consumable typeCode="CSM">
@@ -924,19 +929,37 @@ Immunization List
                   </assignedPerson>
                 </assignedAuthor>
               </author>
-#*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "location").isEmpty() )
               <!-- Immunization Administration Location -->
+#*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "location").isEmpty() )
               <participant typeCode="LOC" contextControlCode="OP">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
                 <!-- Location Participation -->
                 <participantRole classCode="SDLOC">
-                  <id use="BUS" extension="38809" root="2.16.840.1.113883.3.163.5.0.10.22"/>
                   <playingEntity>
                     <name>$patient.getImmuExtValue("$immunization.getId()", "location")</name>
                   </playingEntity>
                 </participantRole>
-              </participant>
+#*    *##else
+              <participant nullFlavor="UNK" typeCode="LOC" contextControlCode="OP">
+                <templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
+                <!-- Location Participation -->
+                <participantRole nullFlavor="UNK" classCode="SDLOC"/>
 #*    *##end
+              </participant>
+              <!-- Antigen Vaccine Type (PHAC Antigen code) -->
+              <entryRelationship typeCode="COMP" contextConductionInd="true">
+                <substanceAdministration classCode="SBADM" moodCode="EVN">
+                  <code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+                  <consumable typeCode="CSM">
+                    <manufacturedProduct classCode="MANU">
+                      <manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+                        <code nullFlavor="NI"/>
+                        <name nullFlavor="NI"/>
+                      </manufacturedMaterial>
+                    </manufacturedProduct>
+                  </consumable>
+                </substanceAdministration>
+              </entryRelationship>
 #*    *##if ( !$patient.getImmuExtValue("$immunization.getId()", "comments").isEmpty() )
               <!-- Immunization Administration Comments -->
               <entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
@@ -944,9 +967,11 @@ Immunization List
                 <!-- Comment Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="COMMENT" displayName="Comment Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                  <text>$patient.getImmuExtValue("$immunization.getId()", "comments")</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.getImmuExtValue("$immunization.getId()", "comments")</text>
 #*        *##if ( $immunization.getLastUpdateDate() )
-                  <effectiveTime value="$dateTool.format('yyyyMMdd', $immunization.getLastUpdateDate())"/>
+                  <effectiveTime xsi:type="IVL_TS">
+                    <low value="$dateTool.format('yyyyMMdd', $immunization.getLastUpdateDate())"/>
+                  </effectiveTime>
 #*        *##else
                   <effectiveTime nullFlavor"UNK"/>
 #*        *##end
@@ -975,27 +1000,25 @@ Immunization List
 #*    *##end
 #*    *##if ( $immunizaton.getNextDate() )
               <!-- Next Immunization Date -->
-              <entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
+              <entryRelationship typeCode="SUBJ" contextConductionInd="true">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
                 <!-- Date Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-#*    *##if ( $immunizaton.getNextDate() )
-                  <effectiveTime value="$dateTool.format('yyyyMMdd', $immunizaton.getNextDate())"/>
-#*    *##else
-                  <effectiveTime nullFlavor="UNK"/>
-#*    *##end
+                  <effectiveTime xsi:type="IVL_TS">
+                    <low value="$dateTool.format('yyyyMMdd', $immunizaton.getNextDate())"/>
+                  </effectiveTime>
                 </observation>
               </entryRelationship>
 #*    *##end
 #*    *##if ( ( $immunization.isRefused() || $immunization.isIneligible() ) && $patient.getImmuExtValue("$immunization.getId()", "neverReason") )
               <!-- Immunization or Refusal Reason -->
-              <entryRelationship typeCode="RSON" contextConductionInd="true">
+              <entryRelationship typeCode="SUBJ" contextConductionInd="true">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.24"/>
                 <!-- Reason Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                  <text>$patient.getImmuExtValue("$immunization.getId()", "neverReason")</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.getImmuExtValue("$immunization.getId()", "neverReason")</text>
                   <value xsi:type="ST">$patient.getImmuExtValue("$immunization.getId()", "neverReason")</value>
                   <!-- Reason Author -->
                   <author typeCode="AUT" contextControlCode="OP">
@@ -1031,23 +1054,66 @@ Immunization List
           <code code="11369-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Immunization"/>
           <title>Immunizations List [without entries]</title>
           <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.11"/>
+            <substanceAdministration nullFlavor="NI" classCode="SBADM" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.3331" extension="Immunizations-0" assigningAuthorityName="OSCAR EMR"/>
+              <code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+              <effectiveTime nullFlavor="NI"/>
+              <consumable typeCode="CSM">
+                <manufacturedProduct classCode="MANU">
+                  <manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+                    <code nullFlavor="NI"/>
+                    <name nullFlavor="NI"/>
+                  </manufacturedMaterial>
+                </manufacturedProduct>
+              </consumable>
+              <author nullFlavor="UNK" typeCode="AUT" contextControlCode="OP">
+                <time nullFlavor="UNK"/>
+                <assignedAuthor classCode="ASSIGNED">
+                  <id nullFlavor="UNK"/>
+                  <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                    <name nullFlavor="UNK"/>
+                  </assignedPerson>
+                </assignedAuthor>
+              </author>
+              <participant nullFlavor="UNK" typeCode="LOC" contextControlCode="OP">
+                <templateId root="2.16.840.1.113883.3.1818.10.4.13"/>
+                <participantRole nullFlavor="UNK" classCode="SDLOC"/>
+              </participant>
+              <entryRelationship typeCode="COMP" contextConductionInd="true">
+                <substanceAdministration classCode="SBADM" moodCode="EVN">
+                  <code code="ANTIGEN" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
+                  <consumable typeCode="CSM">
+                    <manufacturedProduct classCode="MANU">
+                      <manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+                        <code nullFlavor="NI"/>
+                        <name nullFlavor="NI"/>
+                      </manufacturedMaterial>
+                    </manufacturedProduct>
+                  </consumable>
+                </substanceAdministration>
+              </entryRelationship>
+            </substanceAdministration>
+          </entry>
         </section>
       </component>
 #end
+#*
 <!--
 ********************************************************
 Investigative Procedure History
 ********************************************************
 -->
-## TODO Populate with data from EMR
+## Section cardinality is optional
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
           <templateId root="2.16.840.1.113883.3.1818.10.2.15"/>
           <code code="INVPROC" displayName="Investigative Procedure Section" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" />
           <title>Investigative Procedure History (without entries)</title>
-          <text>No Investigative Procedure History</text>
+          <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
-      </component>
+      </component>*#
 <!--
 ********************************************************
 Laboratory Results & Results
