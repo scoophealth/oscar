@@ -420,21 +420,16 @@ function generateRenalLabReq(demographicNo) {
 	-->
 </style>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/print.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="../css/print.css"  />
 
 </head>
 <oscar:customInterface section="ticklerMain"/>
-<body onload="setup();" bgcolor="#FFFFFF" text="#000000" leftmargin="0"
-	rightmargin="0" topmargin="10">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#FFFFFF">
-		<td height="10" width="70%"></td>
-		<td height="10" width="30%" align=right></td>
-	</tr>
-</table>
+<body onload="setup();" bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
+
+
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr bgcolor="#000000">
-		<td height="40" width="10%"><input type='button' name='print'
+		<td height="40" width="10%" class="noprint"><input type='button' name='print'
 			value=<bean:message key="global.btnPrint"/>
 			' onClick='window.print()' class="sbttn"></td>
 		<td width="90%" align="left">
@@ -445,9 +440,9 @@ function generateRenalLabReq(demographicNo) {
 		</td>
 	</tr>
 </table>
+<form name="serviceform" method="get" action="ticklerDemoMain.jsp">
 <table width="100%" border="0" bgcolor="#EEEEFF">
-	<form name="serviceform" method="get" action="ticklerDemoMain.jsp">
-	<tr>
+	<tr class="noprint">
 		<td width="20%">
 		<div align="right"><font
 			face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message
@@ -484,18 +479,19 @@ function generateRenalLabReq(demographicNo) {
 		</div>
 		</td>
 	</tr>
-	</form>
 </table>
-
-<table bgcolor=#666699 border=0 cellspacing=0 width=100%>
+	</form>
+	
 	<form name="ticklerform" method="post" action="dbTicklerDemoMain.jsp">
+<table bgcolor=#666699 border=0 cellspacing=0 width=100%>
+	
 	<tr>
 		<td><input type="hidden" name="demoview" value="<%=demoview%>">
 		<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
 		<input type="hidden" name="updateParent" value="true">
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">
 			<TR bgcolor=#666699>
-				<TD width="3%"><FONT FACE="verdana,arial,helvetica"
+				<TD width="3%" class="noprint"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
 				<TD width="17%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
@@ -522,7 +518,7 @@ function generateRenalLabReq(demographicNo) {
 				<TD width="39%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
 					key="tickler.ticklerMain.msgMessage" /></B></FONT></TD>
-				<td COLOR="#FFFFFF" SIZE="-2">&nbsp;</td>
+				<td COLOR="#FFFFFF" SIZE="-2" class="noprint">&nbsp;</td>
 			</TR>
 			<%
 				String vGrantdate = "1980-01-07 00:00:00.0";
@@ -592,7 +588,7 @@ function generateRenalLabReq(demographicNo) {
 			%>
 
 			<tr>
-				<TD ROWSPAN="1" class="<%=cellColour%>"><input
+				<TD ROWSPAN="1" class="<%=cellColour%> noprint"><input
 					type="checkbox" name="checkbox"
 					value="<%=t.getId()%>"></TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><a
@@ -619,7 +615,7 @@ function generateRenalLabReq(demographicNo) {
 				<TD ROWSPAN="1" class="<%=cellColour%>"><%=taskAssignedTo%></TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><%=String.valueOf(t.getStatus()).equals("A")?"Active":String.valueOf(t.getStatus()).equals("C")?"Completed":String.valueOf(t.getStatus()).equals("D")?"Deleted":String.valueOf(t.getStatus())%></TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getMessage()%></TD>
-				  <td ROWSPAN="1" class="<%=cellColour%>">
+				  <td ROWSPAN="1" class="<%=cellColour%> noprint">
                 	<a href="javascript:void(0)" onClick="openNoteDialog('<%=t.getDemographicNo() %>','<%=t.getId() %>');return false;">
                 		<img border="0" src="<%=request.getContextPath()%>/images/notepad.gif"/>
                 	</a>
@@ -659,7 +655,7 @@ if (nItems == 0) {
 			<%}
 			Demographic d = demographicDao.getDemographicById(request.getParameter("demoview")==null?null: Integer.parseInt(request.getParameter("demoview")));
 			%>
-			<tr bgcolor=#FFFFFF>
+			<tr bgcolor=#FFFFFF class="noprint">
 				<td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnCheckAll" /></a> - <a
 					href="javascript:ClearAll();"><bean:message
@@ -688,9 +684,8 @@ if (nItems == 0) {
 		</table>
 		</td>
 	</tr>	
-	</form>
 </table>
-
+	</form>
 
 <div id="note-form" title="Tickler Note">
 	<form>
@@ -725,14 +720,11 @@ if (nItems == 0) {
 	</form>	
 </div>
 
-<p class="yesprint">
-	<%=OscarProperties.getConfidentialityStatement()%>
-</p>
 
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
-<p>&nbsp;</p>
+<p class="noprint">
 <%@ include file="../demographic/zfooterbackclose.jsp"%>
-
+</p>
 
 
 </body>
