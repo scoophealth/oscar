@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.model;
 
 import java.util.Date;
@@ -60,7 +59,7 @@ public class PatientLabRouting extends AbstractModel<Integer> {
 	private Date dateModified = new Date();
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date created;
+	private Date created = new Date();
 	
 	public int getLabNo() {
     	return labNo;
