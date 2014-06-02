@@ -825,4 +825,24 @@
         </ap-sql>
         <ap-output>${billing_fee}</ap-output>
     </databaseap>
+    <databaseap>
+    	<ap-name>urine_tox_test_json</ap-name>
+        <ap-sql>select type, dataField, comments, dateObserved, dateEntered from measurements
+        		where demographicNo=${demographic}
+        		and (type="OPID" or type="MAMP" or type="BZD" or type="CANB" or type="Uetc")
+        		order by dateEntered;
+        </ap-sql>
+        <ap-output>${type}, ${dataField}, ${comments}, ${dateObserved}, ${dateEntered}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>methadone_induction_assessment_json</ap-name>
+        <ap-sql>select type, dataField, comments, dateObserved, dateEntered from measurements
+        		where demographicNo=${demographic}
+        		and (type="RHU" or type="ORDU" or type="MDD" or type="GWS")
+        		order by dateEntered;
+        </ap-sql>
+        <ap-output>${type}, ${dataField}, ${comments}, ${dateObserved}, ${dateEntered}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
 </eformap-config>
