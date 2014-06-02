@@ -106,7 +106,7 @@ function checkAll(formId){
 <div class="well">
 
 <div>
-1. Download the text file from <a href="http://www.health.gov.on.ca/english/providers/program/ohip/sob/schedule_master.html">OHIP Fee Schedule</a> and save it to your computer.
+1. Download the text file from <a href="http://www.health.gov.on.ca/english/providers/program/ohip/sob/schedule_master.html" target="_blank">OHIP Fee Schedule</a> and save it to your computer.
 </div><!--#1-->
 
 <div>
