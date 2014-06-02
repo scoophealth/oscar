@@ -362,10 +362,11 @@ $( document ).ready(function( $ ) {
 			    	var msg = "Sorry but there was an error: ";
 			    	$("#dynamic-content").html(msg + xhr.status + " " + xhr.statusText);
 				}
-			}
-		);
+
+		  		$("html, body").animate({ scrollTop: 0 }, "slow");
+			});
 	});
-		
+	
 });
 
 function registerFormSubmit(formId, divId) {
@@ -453,6 +454,7 @@ function validDate(value, format, separator){
 function resizeIframe(newHgt)
 {
     $('#myFrame').height((parseInt(newHgt)+75)+'px');
+    $("html, body").animate({ scrollTop: 0 }, "slow");
 }
 
 $(document).ready(function() {
