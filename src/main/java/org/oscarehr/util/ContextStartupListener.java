@@ -31,6 +31,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.utility.ProgramAccessCache;
 import org.oscarehr.PMmodule.utility.RoleCache;
+import org.oscarehr.common.jobs.OscarJobUtils;
 import org.oscarehr.threads.WaitListEmailThread;
 
 import oscar.OscarProperties;
@@ -65,6 +66,8 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			
 			CaisiIntegratorUpdateTask.startTask();
 
+			OscarJobUtils.initializeJobExecutionFramework();
+			
 			WaitListEmailThread.startTaskIfEnabled();
 						
 			//Run some optimizations
