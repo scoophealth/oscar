@@ -1,4 +1,4 @@
-<a ng-repeat="patient in patients | startFrom:currentPage*pageSize | limitTo:pageSize | filter:query" href="#/patient/{{patient.demographicNo}}" class="list-group-item " ng-class="getAppointmentStyle(patient)" class="default">
+<a ng-repeat="patient in patients | startFrom:currentPage*pageSize | limitTo:pageSize | filter:query" ui-sref="record({demographicNo:patient.demographicNo})" class="list-group-item " ng-class="getAppointmentStyle(patient)" class="default">
 	<!-- 
 	<span ng-if="patient.status.length>0 && patient.status != 't'" class="badge">{{patient.status}}</span>
 	-->
