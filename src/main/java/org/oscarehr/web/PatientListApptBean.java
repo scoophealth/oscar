@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {"template", "patients" })
 public class PatientListApptBean implements Serializable{
 	
-	private String template = "partials/patientList1.html";
+	private String template = "patientlist/patientList1.html";
 	
 	private List<PatientListApptItemBean> patients = new ArrayList<PatientListApptItemBean>(); 
 	
