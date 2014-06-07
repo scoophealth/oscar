@@ -44,7 +44,7 @@ create index patientLabRouting_ikey on patientLabRouting(created);
 create index labPatientPhysicianInfo_ikey on labPatientPhysicianInfo(lastUpdateDate);
 create index mdsMSH_ikey on mdsMSH(dateTime);
 create index appointment_ikey on appointment(demographic_no,updatedatetime);
-create index preventions_ikey on preventions(lastUpdateDate)
+create index preventions_ikey on preventions(lastUpdateDate);
 create index document_ikey on document(public1,doctype,status,updatedatetime);
 create index formLabReq07_ikey on formLabReq07(demographic_no,formEdited);
 create index billing_on_cheader1_ikey on billing_on_cheader1(timestamp1);
