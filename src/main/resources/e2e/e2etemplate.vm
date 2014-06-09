@@ -1390,12 +1390,12 @@ Medications and Prescriptions - Medication List
           <templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
           <code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
           <title>Medications and Prescriptions - Medication List [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##set( $previousDin = "0" )
 #**##set( $currentDin = "0" )
 #**##foreach ( $med in $patient.getMedications() )
-#*    *##if( !$med.regionalIdentifier || $med.regionalIdentifier.length() == 0 )
+#*    *##if( $stringUtils.isNullOrEmpty($med.regionalIdentifier) )
 #*        *##set( $currentDin = "null" )
 #*    *##else
 #*        *##set( $currentDin = $med.regionalIdentifier )
@@ -1414,7 +1414,7 @@ Medications and Prescriptions - Medication List
 #**##set( $previousDin = "0" )
 #**##set( $currentDin = "0" )
 #**##foreach ( $med in $patient.getMedications() )
-#*    *##if( !$med.regionalIdentifier || $med.regionalIdentifier.length() == 0 )
+#*    *##if( $stringUtils.isNullOrEmpty($med.regionalIdentifier) )
 #*        *##set( $currentDin = "null" )
 #*    *##else
 #*        *##set( $currentDin = $med.regionalIdentifier )
@@ -1424,12 +1424,11 @@ Medications and Prescriptions - Medication List
           </entry>
 #*    *##end
 #*    *##if( !$previousDin.equals($currentDin) || $currentDin.equals("null") )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.18"/>
             <substanceAdministration classCode="SBADM" moodCode="EVN">
-              <id root="2.16.840.1.113883.3.1818.10.10.3" extension="BC20120201RXA-1452388BN"/>
-              <code code="DRUG" displayName="Drug Therapy" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Act
-Code"/>
+              <id root="2.16.840.1.113883.3.1818.10.10.3" extension="Medications-$med.id" assigningAuthorityName="OSCAR EMR"/>
+              <code code="DRUG" displayName="Drug Therapy" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
 #*        *##if ( $med.longTerm || $patient.isActiveDrug($med.getEndDate()) )
               <statusCode code="active"/>
 #*        *##else
@@ -1441,42 +1440,44 @@ Code"/>
                 <!-- Medication Identification -->
                 <manufacturedProduct classCode="MANU">
                   <manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
-#*        *##if ( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() )
-#*            *##if ( $med.genericName )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.regionalIdentifier) )
+#*            *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                     <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
 #*            *##else
-                    <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="Unknown"/>
+                    <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN"/>
 #*            *##end
 #*        *##end
-#*        *##if ( $med.atc && !$med.atc.isEmpty() )
-#*            *##if ( $med.genericName )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.atc) )
+#*            *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                     <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
 #*            *##else
-                    <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
+                    <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC"/>
 #*            *##end
 #*        *##end
-#*        *##if ( !( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() ) && !( $med.atc && !$med.atc.isEmpty() ) )
+#*        *##if ( $stringUtils.isNullOrEmpty($med.regionalIdentifier) && $stringUtils.isNullOrEmpty($med.atc) )
                     <code nullFlavor="UNK"/>
 #*        *##end
-#*        *##if ( $med.genericName )
-                    <name>$!med.genericName</name>
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
+                    <name>$med.genericName</name>
+#*        *##elseif ( !$stringUtils.isNullOrEmpty($med.brandName) )
+                    <name>$med.brandName</name>
 #*        *##else
-                    <name>$!med.brandName</name>
+                    <name nullFlavor="UNK"/>
 #*        *##end
-#*        *##if ( $med.brandName )
-                    <e2e:desc>$!med.brandName</e2e:desc>
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.brandName) )
+                    <e2e:desc>$med.brandName</e2e:desc>
 #*        *##end
 #*        *##if( $e2e.formCodeMap($med.drugForm) )
                     <e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
-#*        *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
+#*        *##elseif ( !$stringUtils.isNullOrEmpty($med.drugForm) )
                     <e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
 #*        *##end
-#*        *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
+#*        *##if ( ( !$stringUtils.isNullOrEmpty($med.dosage) && !$stringUtils.isNullOrEmpty($med.unit) ) || !$stringUtils.isNullOrEmpty($med.genericName) )
                     <e2e:ingredient classCode="INGR">
-#*            *##if ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() )
+#*            *##if ( !$stringUtils.isNullOrEmpty($med.dosage) && !$stringUtils.isNullOrEmpty($med.unit) )
                       <e2e:quantity value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
 #*            *##end
-#*            *##if ( $med.genericName )
+#*            *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                       <e2e:ingredient classCode="MMAT" determinerCode="KIND">
                         <e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
                         <e2e:name>$med.genericName</e2e:name>
@@ -1496,32 +1497,32 @@ Code"/>
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="UNBOUND" displayName="Unbound Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
 #*        *##if ( $med.longTerm )
-                  <text>Long Term</text>
+                  <text representation="TXT" mediaType="text/plain">Long Term</text>
 #*        *##else
-                  <text>Short Term</text>
+                  <text representation="TXT" mediaType="text/plain">Short Term</text>
 #*        *##end
                 </observation>
               </entryRelationship>
+#*        *##if ( $med.getLastUpdateDate() )
               <!-- Last Review Date -->
               <entryRelationship typeCode="SUBJ" contextConductionInd="true" inversionInd="true">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.4"/>
                 <!-- Date Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-#*        *##if ( $med.getLastUpdateDate() )
-                  <effectiveTime value="$dateTool.format('yyyyMMdd', $med.getLastUpdateDate())"/>
-#*        *##else
-                  <effectiveTime nullFlavor="UNK"/>
-#*        *##end
+                  <effectiveTime xsi:type="IVL_TS">
+                    <low value="$dateTool.format('yyyyMMdd', $med.getLastUpdateDate())"/>
+                  </effectiveTime>
                 </observation>
               </entryRelationship>
+#*        *##end
 #*    *##end
               <!-- Prescription Information -->
               <entryRelationship typeCode="COMP" contextConductionInd="true">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.20"/>
                 <!-- Medication Prescription Event-->
                 <substanceAdministration classCode="SBADM" moodCode="RQO">
-                  <id root="2.16.840.1.113883.3.1818.10.10.3" extension="$med.id"/>
+                  <id root="2.16.840.1.113883.3.3331" extension="MedicationPrescriptions-$med.id" assigningAuthorityName="OSCAR EMR"/>
                   <code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
                   <!-- Start/Stop Date -->
                   <effectiveTime xsi:type="IVL_TS" operator="I">
@@ -1539,42 +1540,44 @@ Code"/>
                     <!-- Medication Identification -->
                     <manufacturedProduct classCode="MANU">
                       <manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
-#*    *##if ( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() )
-#*        *##if ( $med.genericName )
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.regionalIdentifier) )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                         <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
 #*        *##else
-                        <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="Unknown"/>
+                        <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN"/>
 #*        *##end
 #*    *##end
-#*    *##if ( $med.atc && !$med.atc.isEmpty() )
-#*        *##if ( $med.genericName )
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.atc) )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                         <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
 #*        *##else
-                        <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
+                        <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC"/>
 #*        *##end
 #*    *##end
-#*    *##if ( !( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() ) && !( $med.atc && !$med.atc.isEmpty() ) )
+#*    *##if ( $stringUtils.isNullOrEmpty($med.regionalIdentifier) && $stringUtils.isNullOrEmpty($med.atc) )
                         <code nullFlavor="UNK"/>
 #*    *##end
-#*    *##if ( $med.genericName )
-                        <name>$!med.genericName</name>
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
+                        <name>$med.genericName</name>
+#*    *##elseif ( !$stringUtils.isNullOrEmpty($med.brandName) )
+                        <name>$med.brandName</name>
 #*    *##else
-                        <name>$!med.brandName</name>
+                        <name nullFlavor="UNK"/>
 #*    *##end
-#*    *##if ( $med.brandName )
-                        <e2e:desc>$!med.brandName</e2e:desc>
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.brandName) )
+                        <e2e:desc>$med.brandName</e2e:desc>
 #*    *##end
 #*    *##if( $e2e.formCodeMap($med.drugForm) )
                         <e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
-#*    *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
+#*    *##elseif ( !$stringUtils.isNullOrEmpty($med.drugForm) )
                         <e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
 #*    *##end
-#*    *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
+#*    *##if ( ( !$stringUtils.isNullOrEmpty($med.dosage) && !$stringUtils.isNullOrEmpty($med.unit) ) || !$stringUtils.isNullOrEmpty($med.genericName) )
                         <e2e:ingredient classCode="INGR">
-#*        *##if ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.dosage) && !$stringUtils.isNullOrEmpty($med.unit) )
                           <e2e:quantity value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
 #*        *##end
-#*        *##if ( $med.genericName )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                           <e2e:ingredient classCode="MMAT" determinerCode="KIND">
                             <e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
                             <e2e:name>$med.genericName</e2e:name>
@@ -1597,12 +1600,26 @@ Code"/>
                     <time nullFlavor="UNK"/>
 #*    *##end
                     <assignedAuthor classCode="ASSIGNED">
+#*    *##if ( $med.isExternal() )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.outsideProviderOhip) )
+                      <id root="2.16.840.1.113883.3.40.2.11" extension="$med.outsideProviderOhip" use="BUS"/>
+#*        *##else
+                      <id nullFlavor="NI"/>
+#*        *##end
+                      <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.outsideProviderName) )
+                        <name use="L">$med.outsideProviderName</name>
+#*        *##else
+                        <name nullFlavor="NI"/>
+#*        *##end
+#*    *##else
                       <id root="2.16.840.1.113883.3.40.2.11" extension="$patient.getProviderID($med.providerNo)" use="BUS"/>
                       <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                         <name use="L">
                           <given>$patient.getProviderFirstName($med.providerNo)</given>
                           <family>$patient.getProviderLastName($med.providerNo)</family>
                         </name>
+#*    *##end
                       </assignedPerson>
                     </assignedAuthor>
                   </author>
@@ -1612,7 +1629,7 @@ Code"/>
                     <substanceAdministration classCode="SBADM" moodCode="RQO">
 #*    *##if ( $stringUtils.isNumeric($med.duration) && $med.duration != "0" && $med.durUnit )
                       <!-- Duration -->
-                      <text>$!med.duration $!med.durUnit</text>
+                      <text representation="TXT" mediaType="text/plain">$!med.duration $!med.durUnit</text>
 #*    *##end
                       <!-- Frequency -->
                       <!-- OSCAR Frequency Code $!med.freqCode -->
@@ -1736,18 +1753,22 @@ Code"/>
                         </frequency>
                       </effectiveTime>
 #*    *##else
-                      <effectiveTime nullFlavor="UNK"/>
+                      <effectiveTime nullFlavor="NI"/>
 #*    *##end
                       <!-- Route -->
-#*    *##if ( $med.route && !$med.route.isEmpty() )
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.route) )
                       <routeCode code="$med.route" displayName="$med.route" codeSystem="2.16.840.1.113883.5.112" codeSystemName="RouteOfAdministration"/>
 #*    *##end
-                      <approachSiteCode nullFlavor="NA"/>
                       <!-- Dose -->
-## OSCAR stores min/max number by pill/unit count, not milligrams
                       <doseQuantity>
+## OSCAR stores min/max number by pill/unit count, not milligrams
+#*    *##if( !$stringUtils.isNullOrEmpty($med.unitName) )
+                        <low value="$med.takeMin" unit="$med.unitName.replaceAll("\s","_")"/>
+                        <high value="$med.takeMax" unit="$med.unitName.replaceAll("\s","_")"/>
+#*    *##else
                         <low value="$med.takeMin"/>
                         <high value="$med.takeMax"/>
+#*    *##end
                       </doseQuantity>
                       <!-- Form -->
 #*    *##if( $e2e.formCodeMap($med.drugForm) )
@@ -1760,42 +1781,44 @@ Code"/>
                         <!-- Medication Identification -->
                         <manufacturedProduct classCode="MANU">
                           <manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
-#*    *##if ( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() )
-#*        *##if ( $med.genericName )
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.regionalIdentifier) )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                             <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
 #*        *##else
-                            <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="Unknown"/>
+                            <code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN"/>
 #*        *##end
 #*    *##end
-#*    *##if ( $med.atc && !$med.atc.isEmpty() )
-#*        *##if ( $med.genericName )
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.atc) )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                             <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
 #*        *##else
-                            <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="Unknown"/>
+                            <code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC"/>
 #*        *##end
 #*    *##end
-#*    *##if ( !( $med.regionalIdentifier && !$med.regionalIdentifier.isEmpty() ) && !( $med.atc && !$med.atc.isEmpty() ) )
+#*    *##if ( $stringUtils.isNullOrEmpty($med.regionalIdentifier) && $stringUtils.isNullOrEmpty($med.atc) )
                             <code nullFlavor="UNK"/>
 #*    *##end
-#*    *##if ( $med.genericName )
-                            <name>$!med.genericName</name>
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
+                            <name>$med.genericName</name>
+#*    *##elseif ( !$stringUtils.isNullOrEmpty($med.brandName) )
+                            <name>$med.brandName</name>
 #*    *##else
-                            <name>$!med.brandName</name>
+                            <name nullFlavor="UNK"/>
 #*    *##end
-#*    *##if ( $med.brandName )
-                            <e2e:desc>$!med.brandName</e2e:desc>
+#*    *##if ( !$stringUtils.isNullOrEmpty($med.brandName) )
+                            <e2e:desc>$med.brandName</e2e:desc>
 #*    *##end
 #*    *##if( $e2e.formCodeMap($med.drugForm) )
                             <e2e:formCode code="$e2e.formCodeMap($med.drugForm)" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
-#*    *##elseif ( $med.drugForm && !$med.drugForm.isEmpty() )
+#*    *##elseif ( !$stringUtils.isNullOrEmpty($med.drugForm) )
                             <e2e:formCode code="TBD" displayName="$med.drugForm" codeSystem="2.16.840.1.113883.19.5.3" codeSystemName="HL7 Orderable Drug Form"/>
 #*    *##end
-#*    *##if ( ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() ) || $med.genericName )
+#*    *##if ( ( !$stringUtils.isNullOrEmpty($med.dosage) && !$stringUtils.isNullOrEmpty($med.unit) ) || !$stringUtils.isNullOrEmpty($med.genericName) )
                             <e2e:ingredient classCode="INGR">
-#*        *##if ( $med.dosage && !$med.dosage.isEmpty() && $med.unit && !$med.unit.isEmpty() )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.dosage) && !$stringUtils.isNullOrEmpty($med.unit) )
                               <e2e:quantity value="$med.dosage.trim().replaceAll(" .*", "")" unit="$med.unit"/>
 #*        *##end
-#*        *##if ( $med.genericName )
+#*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                               <e2e:ingredient classCode="MMAT" determinerCode="KIND">
                                 <e2e:code code="TBD" displayName="$med.genericName" codeSystem="TBD" codeSystemName="ClinicalDrug"/>
                                 <e2e:name>$med.genericName</e2e:name>
@@ -1811,9 +1834,9 @@ Code"/>
                     </substanceAdministration>
                   </entryRelationship>
                   <!-- PRN -->
-                  <entryRelationship typeCode="COMP" contextConductionInd="true">
+                  <entryRelationship typeCode="SUBJ" contextConductionInd="true">
                     <templateId root="2.16.840.1.113883.3.1818.10.4.37"/>
-                    <!-- Order Indicator-->
+                    <!-- Order Indicator -->
                     <observation classCode="OBS" moodCode="EVN">
                       <code code="PRNIND" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" displayName="PRN Indicator"/>
 #*    *##if( $med.isPrn() )
@@ -1826,13 +1849,14 @@ Code"/>
 #*    *##if( $med.specialInstruction )
                   <!-- Instructions to Patient -->
                   <entryRelationship typeCode="SUBJ" inversionInd="true">
+                    <templateId root="2.16.840.1.113883.3.1818.10.4.35"/>
+                    <!--Instruction Observation-->
                     <observation classCode="OBS" moodCode="EVN">
-                      <templateId root="2.16.840.1.113883.3.1818.10.4.35"/>
-                      <!--Instruction Observation-->
                       <code code="INSTRUCT" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" displayName="Instructions"/>
-                      <text>$med.specialInstruction</text>
+                      <text representation="TXT" mediaType="text/plain">$med.specialInstruction</text>
                       <participant typeCode="PRCP" contextControlCode="OP">
-                        <participantRole classCode="PAT"/>
+                        <participantRole classCode="ROL"/>
+                        <code code="PAT" codeSystem="2.16.840.1.113883.3.3068.10.8.30" codeSystemName="RoleClass" displayName="InstructionTargetRole"/>
                       </participant>
                     </observation>
                   </entryRelationship>
@@ -1848,19 +1872,39 @@ Code"/>
 #else
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
+          <templateId root="2.16.840.1.113883.3.1818.10.2.19"/>
           <code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
           <title>Medications and Prescriptions - Medication List [without entries]</title>
           <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.18"/>
+            <substanceAdministration nullFlavor="NI" classCode="SBADM" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.3331" extension="Medications-0" assigningAuthorityName="OSCAR EMR"/>
+              <consumable typeCode="CSM">
+                <templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+                <manufacturedProduct classCode="MANU">
+                  <manufacturedLabeledDrug classCode="MMAT" determinerCode="KIND">
+                    <code nullFlavor="NI"/>
+                    <name nullFlavor="NI"/>
+                  </manufacturedLabeledDrug>
+                </manufacturedProduct>
+              </consumable>
+              <entryRelationship nullFlavor="NI" typeCode="SUBJ" contextConductionInd="true">
+                <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+                  <code code="UNBOUND" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
+                </observation>
+              </entryRelationship>
+            </substanceAdministration>
+          </entry>
         </section>
       </component>
 #end
-<!--
+#*<!--
 ********************************************************
 Orders & Requests
 ********************************************************
 -->
-## TODO Populate with data from EMR
+## Section cardinality is optional
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
           <templateId root="2.16.840.1.113883.3.1818.10.2.20"/>
@@ -1869,7 +1913,7 @@ Orders & Requests
           <text>No Orders and Requests</text>
         </section>
       </component>
-<!--
+*#<!--
 ********************************************************
 Problems and Conditions - Problem List
 ********************************************************
