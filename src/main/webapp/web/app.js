@@ -8,7 +8,7 @@ patientDetailServices.factory('PatientDetail', ['$resource', function($resource)
 }]);
   */  
     
-var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices']);
+var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','formServices']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -25,7 +25,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	    })
 	    .state('record', {
 	    	url: '/record/:demographicNo', 
-            templateUrl: 'record/index.jsp',
+            templateUrl: 'record/record.jsp',
             controller: 'RecordCtrl',
             resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
         })
@@ -37,16 +37,27 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
         })
         .state('record.summary', {
 	    	url: '^/record/:demographicNo/summary', 
-            templateUrl: 'record/summary.jsp',
+            templateUrl: 'record/summary/summary.jsp',
             controller: 'SummaryCtrl'
             //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
         })
         .state('record.forms', {
 	    	url: '^/record/:demographicNo/forms', 
-            templateUrl: 'record/forms.jsp',
+            templateUrl: 'record/forms/forms.jsp',
+            controller: 'FormCtrl'
+            //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
+        }).state('record.forms.new', {
+	    	url: '^/record/:demographicNo/forms/:type/:id', 
+            templateUrl: 'record/forms/forms.jsp',
+            controller: 'FormCtrl'
+            //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
+        }).state('record.forms.existing', {
+	    	url: '^/record/:demographicNo/forms/:type/id/:id', 
+            templateUrl: 'record/forms/forms.jsp',
             controller: 'FormCtrl'
             //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
         })
+        
 	    
 }]);
 
