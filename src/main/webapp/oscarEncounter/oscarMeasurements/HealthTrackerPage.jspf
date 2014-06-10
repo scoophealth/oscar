@@ -1439,13 +1439,14 @@ if(!btnLabel.equals("PHV")){
     
     <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
 
-
-
 <p align="center">
 <span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=hdata.get("provider_name")%>'  data-trigger="hover">
 <font size="3">
-<!--Age: <%=hdata.get("age")%> <br/> <%=hdata.get("age")%> -->
+<%if( result.equals("pending") && refused(hdata.get("refused")).equals("Completed") ){ %>
+Pending 
+<%}else{%>
 <%=refused(hdata.get("refused"))%>
+<%}%>
 </font>
 
 <font size="1"><%=hdata.get("prevention_date")%></font>
@@ -1458,7 +1459,7 @@ if(!btnLabel.equals("PHV")){
 </p>
 
 <p width="16px" <%=r(hdata.get("refused"))%> ></p>
-<%if(result!=null && result.equals("abnormal")){%><small style="color:#b94a48">result: <%=result%></small><%}%>
+<%if(result!=null && result.equals("abnormal")){%><font size="3" style="color:#b94a48"><%=result%></font><%}%>
 
     </div> <!-- prevention procedure -->
 
