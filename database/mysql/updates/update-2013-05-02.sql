@@ -18,9 +18,8 @@ BEGIN
                         key_val       ,
                         max(date_time) date_time
                  FROM   demographicExt
-                 GROUP  BY demographic_no, provider_no, key_val) latest
+                 GROUP  BY demographic_no, key_val) latest
         WHERE    ext.demographic_no = latest.demographic_no
-        AND      ext.provider_no    = latest.provider_no
         AND      ext.key_val        = latest.key_val
         AND      ext.date_time      < latest.date_time;
 
