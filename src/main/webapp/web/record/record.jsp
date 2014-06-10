@@ -48,27 +48,20 @@
 			<a class="navbar-brand navbar-toggle pull-left" href="#">Select Module</a>
 		</div>
 
-		<!-- Collect the nav links, forms, and other content for toggling -->
+		<!-- Collect the nav links, forms, and other content for toggling   removed data-toggle="tab"  from a ngclick changeTab3 -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse"
 			style="padding-left: 0px;">
 			<ul class="nav navbar-nav" id="myTabs">
-	
-			<li ng-repeat="tab in recordtabs2" ng-class="{'active': isActive(tab.id)}">
-			<a ng-click="changeTab3(tab.id)" data-toggle="tab">{{tab.displayName}}</a>
-			</li>
-			
-				 
-			
+				<li ng-repeat="tab in recordtabs2" ng-class="isTabActive(tab)">
+				<a ng-click="changeTab(tab.id)" >{{tab.displayName}}</a>
+				</li>
 			</ul>
 		</div>
 		<!-- /.navbar-collapse -->
 	</nav>
-
 			<!-- -->
-
 	<div class="row">
         <div class="include-record-peice" ui-view></div>
-        
     </div>
     
     <div class="row">
