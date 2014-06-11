@@ -23,6 +23,7 @@
     Ontario, Canada
 
 */
+
 oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state) {
 	
 	console.log("in patient Ctrl ",demo);
@@ -31,7 +32,6 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 	$scope.demographic= demo;
 
 	/*
-	
 	$scope.recordtabs2 = [ 
 	 {id : 0,name : 'Master',url : 'partials/master.html'},
 	 {id : 1,name : 'Summary',url : 'partials/summary.html'},
@@ -46,8 +46,7 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 	 {id : 10,name : 'Allergies',url : 'partials/summary.html'},
 	 {id : 11,name : 'CPP',url : 'partials/cpp.html'},
 	 {id : 12,name : 'Labs/Docs',url : 'partials/labview.html'},
-	 {id : 13,name : 'Billing',url : 'partials/billing.jsp'}
-	
+	 {id : 13,name : 'Billing',url : 'partials/billing.jsp'}	
 	*/
 	$scope.recordtabs2 = [ 
 	                 	 {id : 0,displayName : 'Details'  ,path : 'record.details'},
@@ -56,26 +55,29 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 	                 	 {id : 3,displayName : 'Labs/Docs',path : 'partials/eform.jsp'},
 	                 	 {id : 4,displayName : 'Rx'       ,path : 'partials/eform.jsp'}];
 	
-
+	//var transitionP = $state.transitionTo($scope.recordtabs2[0].path,$stateParams,{location:'replace',notify:true});
+	//console.log("transition ",transitionP);	
 	
-	var transitionP = $state.transitionTo($scope.recordtabs2[0].path,$stateParams,{location:'replace',notify:true});
-	
-	console.log("transition ",transitionP);
-	
-	console.log($scope.recordtabs2[0].path);
-	
-	$scope.changeTab2 = function(temp) {
-		console.log("tepm " + temp);
-		$scope.currenttab2 = $scope.recordtabs2[temp];
-	}
-	
-	$scope.changeTab3 = function(temp) {
+	$scope.changeTab = function(temp) {
 		console.log($scope.recordtabs2[temp].path);
 		$scope.currenttab2 = $scope.recordtabs2[temp];
 		$state.go($scope.recordtabs2[temp].path);
 		
 	}
 	
-	console.log('RecordCtrlEnd',$state);
+	$scope.isTabActive = function(tab){
+		//console.log('current state '+$state.current.name.substring(0,tab.path.length)+" -- "+($state.current.name.substring(0,tab.path.length) == tab.path),$state.current.name,tab);
+		//console.log('ddd '+$state.current.name.length+"  eee "+tab.path.length);
+		//if($state.current.name.length < tab.path.length) return "";
+		if($state.current.name.substring(0,tab.path.length) == tab.path){
+			return "active";
+		}
+	}
 	
+	console.log('RecordCtrlEnd',$state);
+});
+
+
+oscarApp.controller('PatientDetailCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state) {
+	console.log("in patientDetail Ctrl");
 });

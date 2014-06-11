@@ -77,3 +77,11 @@ function hideDiv() {
   thisEForm.setAction();
   out.print(thisEForm.getFormHtml());
 %>
+<%
+String iframeResize = (String) session.getAttribute("useIframeResizing");
+if(iframeResize !=null && "true".equalsIgnoreCase(iframeResize)){ %>
+<script src="<%=request.getContextPath() %>/library/pym.js"></script>
+<script>
+    var pymChild = new pym.Child({ polling: 500 });
+</script>
+<%}%>

@@ -1,0 +1,115 @@
+/**
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
+package org.oscarehr.managers;
+
+import java.util.List;
+
+import org.oscarehr.common.dao.EFormDao;
+import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.dao.EFormGroupDao;
+import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
+import org.oscarehr.common.model.EForm;
+import org.oscarehr.common.model.EFormData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import oscar.log.LogAction;
+/**
+ * 
+ * This class will change soon to incorporate dealing with forms
+ *
+ */
+@Service
+public class FormsManager {
+	   
+	
+	@Autowired
+	private EFormDao eformDao;
+	
+	@Autowired
+	private EFormGroupDao eFormGroupDao;
+
+	@Autowired
+	private EFormDataDao eFormDataDao; 
+
+	public static final String EFORM = "eform"; 
+	public static final String FORM = "form";
+	
+	
+	
+	/**
+	 * Finds all eforms based on the status. 
+	 * 
+	 * @param status	
+	 * 		Status to be used when looking up forms. 
+	 * @param sortOrder
+	 * 		Order how records should be sorted. Providing no sort order delegates to the default sorting order of the persistence provider 
+	 * @return
+	 * 		Returns the list of all forms with the specified status.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<EForm> findByStatus(boolean status, EFormSortOrder sortOrder) {
+		List<EForm> results = eformDao.findByStatus(status, sortOrder);
+		
+		if (results.size() > 0) {
+			String resultIds = EForm.getIdsAsStringList(results);
+			LogAction.addLogSynchronous("FormsManager.findByStatus", "ids returned=" + resultIds);
+		}
+
+		return (results);
+	}
+
+
+    /**
+     * get eform in group by group name
+     * @param groupName
+     * @return list of EForms
+     */
+    public List<EForm> getEfromInGroupByGroupName(String groupName){
+    	List<EForm> results = eformDao.getEfromInGroupByGroupName(groupName);
+    	if (results.size() > 0) {
+			String resultIds = EForm.getIdsAsStringList(results);
+			LogAction.addLogSynchronous("FormsManager.getEfromInGroupByGroupName", "ids returned=" + resultIds);
+		}
+
+		return (results);
+    }
+    
+    
+    public List<String> getGroupNames(){
+    	return eFormGroupDao.getGroupNames();
+    }
+    
+    
+    public List<EFormData> findByDemographicId(Integer demographicId){
+    	List<EFormData> results = eFormDataDao.findByDemographicId(demographicId);
+    	if (results.size() > 0) {
+			String resultIds = EForm.getIdsAsStringList(results);
+			LogAction.addLogSynchronous("FormsManager.findByDemographicId", "ids returned=" + resultIds);
+		}
+
+		return (results);
+    	
+    }
+}
