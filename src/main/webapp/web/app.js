@@ -31,31 +31,26 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
         })
         .state('record.details', {
 	    	url: '^/record/:demographicNo/details', 
-            templateUrl: 'record/master.html',
-            controller: 'PatientDetailCtrl'
-            //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
+            templateUrl: 'record/details/details.jsp',
+            controller: 'DetailsCtrl'
         })
         .state('record.summary', {
 	    	url: '^/record/:demographicNo/summary', 
             templateUrl: 'record/summary/summary.jsp',
             controller: 'SummaryCtrl'
-            //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
         })
         .state('record.forms', {
 	    	url: '^/record/:demographicNo/forms', 
             templateUrl: 'record/forms/forms.jsp',
             controller: 'FormCtrl'
-            //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
         }).state('record.forms.new', {
 	    	url: '^/record/:demographicNo/forms/:type/:id', 
             templateUrl: 'record/forms/forms.jsp',
             controller: 'FormCtrl'
-            //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
         }).state('record.forms.existing', {
 	    	url: '^/record/:demographicNo/forms/:type/id/:id', 
             templateUrl: 'record/forms/forms.jsp',
             controller: 'FormCtrl'
-            //resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
         })
         
 	    
