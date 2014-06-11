@@ -300,6 +300,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 	<script src="record/recordController.js"></script>
 	<script src="record/summary/summaryController.js"></script>
 	<script src="record/forms/formsController.js"></script>
+	<script src="record/details/detailsController.js"></script>
 	<!-- script src="js/inboxController.js"></script>
 	
 	
