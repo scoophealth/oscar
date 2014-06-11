@@ -566,7 +566,7 @@ Clinically Measured Observation
 #**##end
         </section>
       </component>
-#else
+#end
 ## Section cardinality is optional
 #*      <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
@@ -575,9 +575,8 @@ Clinically Measured Observation
           <title>Clinical Measured Observations [without entries]</title>
           <text mediaType="text/x-hl7-text+xml">$noInformation</text>
         </section>
-      </component>*#
-#end
-<!--
+      </component>
+*#<!--
 ********************************************************
 Encounter History and Notes
 ********************************************************
@@ -1099,21 +1098,7 @@ Immunization List
         </section>
       </component>
 #end
-#*<!--
-********************************************************
-Investigative Procedure History
-********************************************************
--->
-## Section cardinality is optional
-      <component typeCode="COMP" contextConductionInd="true">
-        <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.15"/>
-          <code code="INVPROC" displayName="Investigative Procedure Section" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending"/>
-          <title>Investigative Procedure History (without entries)</title>
-          <text mediaType="text/x-hl7-text+xml">$notSupported</text>
-        </section>
-      </component>
-*#<!--
+<!--
 ********************************************************
 Laboratory Results & Results
 ********************************************************
@@ -1351,35 +1336,7 @@ Laboratory Results & Results
         </section>
       </component>
 #end
-#*<!--
-********************************************************
-Medical History
-********************************************************
--->
-## Section cardinality is optional
-      <component typeCode="COMP" contextConductionInd="true">
-        <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.17"/>
-          <code code="11348-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Past Illness"/>
-          <title>Medical History (without entries)</title>
-          <text mediaType="text/x-hl7-text+xml">$notSupported</text>
-        </section>
-      </component>
-*##*<!--
-********************************************************
-Medical Imaging History Results & Reports
-********************************************************
--->
-## Section cardinality is optional
-      <component typeCode="COMP" contextConductionInd="true">
-        <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.18"/>
-          <code code="55115-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Requested imaging studies information"/>
-          <title>Medical Imaging Results and Reports (without entries)</title>
-          <text mediaType="text/x-hl7-text+xml">$notSupported</text>
-        </section>
-      </component>
-*#<!--
+<!--
 ********************************************************
 Medications and Prescriptions - Medication List
 ********************************************************
@@ -1899,21 +1856,42 @@ Medications and Prescriptions - Medication List
         </section>
       </component>
 #end
-#*<!--
+<!--
 ********************************************************
 Orders & Requests
 ********************************************************
 -->
-## Section cardinality is optional
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
           <templateId root="2.16.840.1.113883.3.1818.10.2.20"/>
           <code code="REQS" codeSystem="2.16.840.1.113883.3.3068.10.6.2" codeSystemName="SectionType-CA-Pending" displayName="Problems list Reported"/>
           <title>Orders and Requests (without entries)</title>
-          <text>No Orders and Requests</text>
+          <text mediaType="text/x-hl7-text+xml">$notSupported</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <observation nullFlavor="NI" classCode="OBS" moodCode="RQO">
+              <id root="2.16.840.1.113883.3.3331" extension="Referrals-0" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NA"/>
+              <text nullFlavor="NI"/>
+              <effectiveTime nullFlavor="NI"/>
+              <performer nullFlavor="NI" typeCode="PRF">
+                <assignedEntity nullFlavor="NI" classCode="ASSIGNED">
+                  <id nullFlavor="NI"/>
+                </assignedEntity>
+              </performer>
+              <author nullFlavor="NI" typeCode="AUT" contextControlCode="OP">
+                <time nullFlavor="NI"/>
+                <assignedAuthor classCode="ASSIGNED">
+                  <id nullFlavor="NI"/>
+                  <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                    <name nullFlavor="NI"/>
+                  </assignedPerson>
+                </assignedAuthor>
+              </author>
+            </observation>
+          </entry>
         </section>
       </component>
-*#<!--
+<!--
 ********************************************************
 Problems and Conditions - Problem List
 ********************************************************
@@ -1924,7 +1902,7 @@ Problems and Conditions - Problem List
           <templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
           <code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
           <title>Problems and Conditions - Problem List [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $problem in $patient.getProblems() )
               <item>$!patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND") (ICD9: $problem.getDxresearchCode())</item>
@@ -1933,26 +1911,26 @@ Problems and Conditions - Problem List
           </text>
 #**##foreach ( $problem in $patient.getProblems() )
 #*    *##if ( $problem.codingSystem == "icd9" )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
             <!-- Problem List Observation -->
             <observation classCode="OBS" moodCode="EVN">
-              <id root="2.16.840.1.113883.3.1818.10.2.10.31" extension="$problem.id"/>
-              <code code="DX" displayName="DX" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode"/>
-              <text>$patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")</text>
+              <id root="2.16.840.1.113883.3.3331" extension="ProblemList-$problem.id"  assigningAuthorityName="OSCAR EMR"/>
+              <code code="282291009" displayName="Diagnosis" codeSystem="2.16.840.1.113883.6.69" codeSystemName="SNOMED-CT"/>
+              <text representation="TXT" mediaType="text/plain">$patient.getICD9Description("$problem.getDxresearchCode()").replaceAll("&","AND")</text>
 #*        *##if ( $problem.status == "A" )
               <statusCode code="active"/>
 #*        *##else
               <statusCode code="completed"/>
 #*        *##end
-              <effectiveTime xsi:type="IVL_TS">
 #*    *##if ( $problem.getStartDate() )
+              <effectiveTime xsi:type="IVL_TS">
                 <low value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
-#*    *##else
-                <low nullFlavor="UNK"/>
-#*    *##end
               </effectiveTime>
-              <value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
+#*    *##else
+              <effectiveTime nullFlavor="UNK"/>
+#*    *##end
+              <value xsi:type="CD" nullFlavor="UNK" />
               <!-- Diagnosing Provider -->
               <author typeCode="AUT" contextControlCode="OP">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
@@ -1987,8 +1965,10 @@ Problems and Conditions - Problem List
                 <!-- Date Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="DATEOBS" displayName="Date Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-#*        *##if ( $problem.getStartDate() )
-                  <effectiveTime value="$dateTool.format('yyyyMMdd', $problem.getStartDate())"/>
+#*        *##if ( $problem.getUpdateDate() )
+                  <effectiveTime xsi:type="IVL_TS">
+                    <low value="$dateTool.format('yyyyMMddhhmmss', $problem.getUpdateDate())"/>
+                  </effectiveTime>
 #*        *##else
                   <effectiveTime nullFlavor="UNK"/>
 #*        *##end
@@ -2003,28 +1983,29 @@ Problems and Conditions - Problem List
 #else
       <component typeCode="COMP" contextConductionInd="true">
         <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.21.1"/>
+          <templateId root="2.16.840.1.113883.3.1818.10.2.21"/>
           <code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problems List Reported"/>
           <title>Problems and Conditions - Problem List [without entries]</title>
           <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.15"/>
+            <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.3331" extension="ProblemList-0" assigningAuthorityName="OSCAR EMR"/>
+              <code nullFlavor="NI"/>
+              <author nullFlavor="NI" typeCode="AUT" contextControlCode="OP">
+                <time nullFlavor="NI"/>
+                <assignedAuthor classCode="ASSIGNED">
+                  <id nullFlavor="NI"/>
+                  <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                    <name nullFlavor="NI"/>
+                  </assignedPerson>
+                </assignedAuthor>
+              </author>
+            </observation>
+          </entry>
         </section>
       </component>
 #end
-<!--
-********************************************************
-Purpose
-********************************************************
--->
-## TODO Populate with data from EMR
-      <component typeCode="COMP" contextConductionInd="true">
-        <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.22"/>
-          <!-- Purpose Section -->
-          <code code="42349-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Reason For Referral"/>
-          <title>Purpose [without entries]</title>
-          <text>Purpose not defined</text>
-        </section>
-      </component>
 <!--
 ********************************************************
 Risk Factors
@@ -2036,7 +2017,7 @@ Risk Factors
           <templateId root="2.16.840.1.113883.3.1818.10.2.24.1"/>
           <code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
           <title>Risk Factors [with entries]</title>
-          <text>
+          <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
               <item>$!risk.note</item>
@@ -2044,12 +2025,12 @@ Risk Factors
             </list>
           </text>
 #**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
-          <entry typeCode="COMP" contextConductionInd="true">
+          <entry typeCode="DRIV" contextConductionInd="true">
             <templateId root="2.16.840.1.113883.3.1818.10.3.17"/>
             <!-- Risk Factors Organizer -->
             <organizer classCode="CLUSTER" moodCode="EVN">
-              <id root="2.16.840.1.113883.3.1818.10.2.10.15" extension="$risk.id"/>
-              <code code="80943009"  displayName="Risk factor (observable entity)" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
+              <id root="2.16.840.1.113883.3.3331" extension="RiskFactors-$risk.id" assigningAuthorityName="OSCAR EMR"/>
+              <code code="80943009" displayName="Risk factor (observable entity)" codeSystem="2.16.840.1.113883.3.1818.10.2.8.3" codeSystemName="SNOMED-CT"/>
 #*    *##if ( !$risk.isArchived() )
               <statusCode code="active"/>
 #*    *##else
@@ -2077,15 +2058,21 @@ Risk Factors
               <!-- Component Observation -->
               <component typeCode="COMP" contextConductionInd="true">
                 <observation classCode="OBS" moodCode="EVN">
-                  <id nullFlavor="NA"/>
-                  <code nullFlavor="UNK"/>
-                  <text>$risk.note</text>
+                  <id root="2.16.840.1.113883.3.3331" extension="RiskFactors-$risk.id" assigningAuthorityName="OSCAR EMR"/>
+#*    *##if ( !$stringUtils.isNullOrEmpty($risk.Billing_code) )
+                  <code code="$risk.Billing_code" displayName="$patient.getICD9Description("$risk.getBilling_code()").replaceAll("&","AND")" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9"/>
+#*    *##else
+                  <code nullFlavor="NI"/>
+#*    *##end
+                  <text representation="TXT" mediaType="text/plain">$risk.note</text>
 #*    *##if ( $risk.getObservation_date() )
-                  <effectiveTime value="$dateTool.format('yyyyMMddHHmmss', $risk.getObservation_date())"/>
+                  <effectiveTime xsi:type="IVL_TS">
+                    <low value="$dateTool.format('yyyyMMddHHmmss', $risk.getObservation_date())"/>
+                  </effectiveTime>
 #*    *##else
                   <effectiveTime nullFlavor="UNK"/>
 #*    *##end
-                  <value xsi:type="BL" value="true"/>
+                  <value xsi:type="CD" nullFlavor="NI"/>
                 </observation>
               </component>
             </organizer>
@@ -2100,37 +2087,23 @@ Risk Factors
           <code code="46467-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Risk Factors"/>
           <title>Risk Factors [without entries]</title>
           <text mediaType="text/x-hl7-text+xml">$noInformation</text>
+          <entry nullFlavor="NI" typeCode="DRIV" contextConductionInd="true">
+            <templateId root="2.16.840.1.113883.3.1818.10.3.17"/>
+            <organizer nullFlavor="NI" classCode="CLUSTER" moodCode="EVN">
+              <code nullFlavor="NA"/>
+              <statusCode nullFlavor="NA"/>
+              <component nullFlavor="NI" typeCode="COMP" contextConductionInd="true">
+                <observation nullFlavor="NI" classCode="OBS" moodCode="EVN">
+                  <id root="2.16.840.1.113883.3.3331" extension="RiskFactors-0" assigningAuthorityName="OSCAR EMR"/>
+                  <code nullFlavor="NI"/>
+                  <value xsi:type="CD" nullFlavor="NI"/>
+                </observation>
+              </component>
+            </organizer>
+          </entry>
         </section>
       </component>
 #end
-<!--
-********************************************************
-Surgical Procedure History
-********************************************************
--->
-## TODO Populate with data from EMR
-      <component typeCode="COMP" contextConductionInd="true">
-        <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.25"/>
-          <code code="10167-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of surgical procedures"/>
-          <title>Care History [without entries]</title>
-          <text>No Care History</text>
-        </section>
-      </component>
-<!--
-********************************************************
-Treatment History
-********************************************************
--->
-## TODO Populate with data from EMR
-      <component typeCode="COMP" contextConductionInd="true">
-        <section classCode="DOCSECT" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.3.1818.10.2.26"/>
-          <code code="62387-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Interventions "/>
-          <title>Treatment History [without entries]</title>
-          <text>No Treatment History</text>
-        </section>
-      </component>
     </structuredBody>
   </component>
 </hl7:ClinicalDocument>
