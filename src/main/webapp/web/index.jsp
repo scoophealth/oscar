@@ -26,6 +26,7 @@
 <%
 //Initialize some variables
 String userName = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName();
+session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 %>
 
 <!DOCTYPE html>
@@ -291,6 +292,7 @@ String userName = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProv
  
 	<!-- we'll combine/minify later -->
 	<script src="common/demographicServices.js"></script>
+	<script src="common/formServices.js"></script>
 	<script src="app.js"></script>
 	<script src="dashboard/dashboardController.js"></script>
 	<script src="common/navBarController.js"></script>
