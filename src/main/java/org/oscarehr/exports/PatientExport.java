@@ -54,6 +54,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
+import oscar.util.StringUtils;
 
 /**
  * Abstract data model for a patient object
@@ -274,6 +275,84 @@ public abstract class PatientExport {
 			name = "";
 		}
 		return name;
+	}
+
+	/**
+	 * Get Provider's Home Phone based on provider number
+	 * 
+	 * @param providerNo
+	 * @return String of home phone if available, else empty string
+	 */
+	public String getProviderHomePhone(String providerNo) {
+		String phone;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			phone = providerData.getPhone();
+		} catch (Exception e) {
+			log.warn("getProviderHomePhone - Provider ".concat(providerNo).concat(" not found"));
+			phone = "";
+		}
+		return phone;
+	}
+
+	/**
+	 * Get Provider's Work Phone based on provider number
+	 * 
+	 * @param providerNo
+	 * @return String of work phone if available, else empty string
+	 */
+	public String getProviderWorkPhone(String providerNo) {
+		String phone;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			phone = providerData.getWorkPhone();
+		} catch (Exception e) {
+			log.warn("getProviderWorkPhone - Provider ".concat(providerNo).concat(" not found"));
+			phone = "";
+		}
+		return phone;
+	}
+
+	/**
+	 * Get Provider's Email based on provider number
+	 * 
+	 * @param providerNo
+	 * @return String of email if available, else empty string
+	 */
+	public String getProviderEmail(String providerNo) {
+		String email;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			email = providerData.getEmail();
+		} catch (Exception e) {
+			log.warn("getProviderEmail - Provider ".concat(providerNo).concat(" not found"));
+			email = "";
+		}
+		return email;
+	}
+
+	/**
+	 * Get Provider's ID based on provider number
+	 * Order of Preference: CPSID > MSP Billing # > providerNo
+	 * 
+	 * @param providerNo
+	 * @return String of id if available, else return providerNo
+	 */
+	public String getProviderID(String providerNo) {
+		String id;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			if(!StringUtils.isNullOrEmpty(providerData.getPractitionerNo())) {
+				id = providerData.getPractitionerNo();
+			} else if (!StringUtils.isNullOrEmpty(providerData.getOhipNo())) {
+				id = providerData.getOhipNo();
+			} else {
+				id = providerNo;
+			}
+		} catch (Exception e) {
+			id = providerNo;
+		}
+		return id;
 	}
 
 	/**

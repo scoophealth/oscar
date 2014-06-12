@@ -170,6 +170,77 @@ public class E2EPatientExportTest extends DaoTestFixtures {
 		assertTrue(provider.equals(list.get(0).getLastName()));
 	}
 
+	@Test
+	public void testGetProviderHomePhone() {
+		PatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+
+		String provider = p.getProviderHomePhone(list.get(0).getId());
+		assertNotNull(provider);
+		assertTrue(provider.equals(list.get(0).getPhone()));
+	}
+
+	@Test
+	public void testGetProviderWorkPhone() {
+		PatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+
+		String provider = p.getProviderWorkPhone(list.get(0).getId());
+		assertNotNull(provider);
+		assertTrue(provider.equals(list.get(0).getWorkPhone()));
+	}
+
+	@Test
+	public void testGetProviderEmail() {
+		PatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+
+		String provider = p.getProviderEmail(list.get(0).getId());
+		assertNotNull(provider);
+		assertTrue(provider.equals(list.get(0).getEmail()));
+	}
+
+	@Test
+	public void testGetID() {
+		PatientExport p = new E2EPatientExport();
+		p.loadPatient(demographicNo.toString());
+
+		assertNotNull(providerDataDao);
+		List<ProviderData> list = providerDataDao.findAllOrderByLastName();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertNotNull(list.get(0));
+		assertNotNull(list.get(0).getId());
+		assertFalse(list.get(0).getId().isEmpty());
+
+		String provider = p.getProviderID(list.get(0).getId());
+		assertNotNull(provider);
+	}
+
 	// Testing booleans
 	@Test
 	public void testSetExAllTrue() {

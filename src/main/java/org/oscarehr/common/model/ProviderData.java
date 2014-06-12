@@ -208,7 +208,7 @@ public class ProviderData extends AbstractModel<String> implements Serializable 
 		workPhone = s;
 	}
 
-	public String setOhipNo() {
+	public String getOhipNo() {
 		return ohipNo;
 	}
 	public void setOhipNo(String s) {
