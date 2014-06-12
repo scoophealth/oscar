@@ -220,7 +220,7 @@ Alerts
             <templateId root="2.16.840.1.113883.3.1818.10.3.2"/>
             <observation classCode="OBS" moodCode="EVN">
               <id root="2.16.840.1.113883.3.3331" extension="Alerts-$alert.id" assigningAuthorityName="OSCAR EMR"/>
-              <code nullFlavor="NA"/>
+              <code nullFlavor="NI"/>
               <text representation="TXT" mediaType="text/plain">$alert.note</text>
 #*    *##if ( !$alert.isArchived() )
               <statusCode code="active"/>
@@ -404,7 +404,7 @@ Allergies and Intolerances - (Reaction List)
 #*        *##elseif ( $allergy.severityOfReaction == 3 )
                           <value xsi:type="CD" code="A4" displayName="Severe reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*        *##else
-                          <value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                          <value xsi:type="CD" nullFlavor="UNK" displayName="Unknown"/>
 #*        *##end
                         </observation>
                       </entryRelationship>
@@ -424,7 +424,7 @@ Allergies and Intolerances - (Reaction List)
 #*    *##elseif ( $allergy.severityOfReaction == 3 )
                       <value xsi:type="CD" code="A4" displayName="Severe reaction" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
 #*    *##else
-                      <value xsi:type="CD" nullFlavor="UNK" displayName="Unknown" codeSystem="2.16.840.1.113883.5.1063" codeSystemName="HL7 ObservationValue"/>
+                      <value xsi:type="CD" nullFlavor="UNK" displayName="Unknown"/>
 #*    *##end
                     </observation>
                   </entryRelationship>
@@ -517,7 +517,7 @@ Clinically Measured Observation
             <!-- Clinically Measured Observations Organizer -->
             <organizer classCode="CLUSTER" moodCode="EVN">
               <id root="2.16.840.1.113883.3.3331" extension="ClinicalMeasuredObservations-$measurement.id" assigningAuthorityName="OSCAR EMR"/>
-              <code nullFlavor="NA"/>
+              <code nullFlavor="NI"/>
               <statusCode code="completed"/>
               <author typeCode="AUT" contextControlCode="OP">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
@@ -648,7 +648,7 @@ Encounter History and Notes
 #*    *##if ( !$stringUtils.isNullOrEmpty($encounter.Billing_code) )
                   <value xsi:type="CD" code="$encounter.Billing_code" codeSystem="2.16.840.1.113883.6.42" codeSystemName="ICD9" displayName="$patient.getICD9Description("$encounter.getBilling_code()").replaceAll("&","AND")"/>
 #*    *##else
-                  <value xsi:type="CD" nullFlavor="NA"/>
+                  <value xsi:type="CD" nullFlavor="NI"/>
 #*    *##end
                   <!-- Reason Author -->
                   <author typeCode="AUT" contextControlCode="OP">
@@ -806,7 +806,7 @@ Family History
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="TRTNOTE" displayName="Treatment Note" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
                   <text representation="TXT" mediaType="text/plain">$patient.getCMNoteExtValue("$family.getId()", "Treatment")</text>
-                  <value xsi:type="CD" nullFlavor="NA"/>
+                  <value xsi:type="CD" nullFlavor="NI"/>
                 </observation>
               </entryRelationship>
 #*    *##end
@@ -1412,14 +1412,14 @@ Medications and Prescriptions - Medication List
 #*            *##end
 #*        *##end
 #*        *##if ( $stringUtils.isNullOrEmpty($med.regionalIdentifier) && $stringUtils.isNullOrEmpty($med.atc) )
-                    <code nullFlavor="UNK"/>
+                    <code nullFlavor="NI"/>
 #*        *##end
 #*        *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                     <name>$med.genericName</name>
 #*        *##elseif ( !$stringUtils.isNullOrEmpty($med.brandName) )
                     <name>$med.brandName</name>
 #*        *##else
-                    <name nullFlavor="UNK"/>
+                    <name nullFlavor="NI"/>
 #*        *##end
 #*        *##if ( !$stringUtils.isNullOrEmpty($med.brandName) )
                     <e2e:desc>$med.brandName</e2e:desc>
@@ -1440,7 +1440,7 @@ Medications and Prescriptions - Medication List
                         <e2e:name>$med.genericName</e2e:name>
                       </e2e:ingredient>
 #*            *##else
-                      <e2e:ingredient nullFlavor="UNK"/>
+                      <e2e:ingredient nullFlavor="NI"/>
 #*            *##end
                     </e2e:ingredient>
 #*        *##end
@@ -1512,14 +1512,14 @@ Medications and Prescriptions - Medication List
 #*        *##end
 #*    *##end
 #*    *##if ( $stringUtils.isNullOrEmpty($med.regionalIdentifier) && $stringUtils.isNullOrEmpty($med.atc) )
-                        <code nullFlavor="UNK"/>
+                        <code nullFlavor="NI"/>
 #*    *##end
 #*    *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                         <name>$med.genericName</name>
 #*    *##elseif ( !$stringUtils.isNullOrEmpty($med.brandName) )
                         <name>$med.brandName</name>
 #*    *##else
-                        <name nullFlavor="UNK"/>
+                        <name nullFlavor="NI"/>
 #*    *##end
 #*    *##if ( !$stringUtils.isNullOrEmpty($med.brandName) )
                         <e2e:desc>$med.brandName</e2e:desc>
@@ -1540,7 +1540,7 @@ Medications and Prescriptions - Medication List
                             <e2e:name>$med.genericName</e2e:name>
                           </e2e:ingredient>
 #*        *##else
-                          <e2e:ingredient nullFlavor="UNK"/>
+                          <e2e:ingredient nullFlavor="NI"/>
 #*        *##end
                         </e2e:ingredient>
 #*    *##end
@@ -1753,14 +1753,14 @@ Medications and Prescriptions - Medication List
 #*        *##end
 #*    *##end
 #*    *##if ( $stringUtils.isNullOrEmpty($med.regionalIdentifier) && $stringUtils.isNullOrEmpty($med.atc) )
-                            <code nullFlavor="UNK"/>
+                            <code nullFlavor="NI"/>
 #*    *##end
 #*    *##if ( !$stringUtils.isNullOrEmpty($med.genericName) )
                             <name>$med.genericName</name>
 #*    *##elseif ( !$stringUtils.isNullOrEmpty($med.brandName) )
                             <name>$med.brandName</name>
 #*    *##else
-                            <name nullFlavor="UNK"/>
+                            <name nullFlavor="NI"/>
 #*    *##end
 #*    *##if ( !$stringUtils.isNullOrEmpty($med.brandName) )
                             <e2e:desc>$med.brandName</e2e:desc>
@@ -1781,7 +1781,7 @@ Medications and Prescriptions - Medication List
                                 <e2e:name>$med.genericName</e2e:name>
                               </e2e:ingredient>
 #*        *##else
-                              <e2e:ingredient nullFlavor="UNK"/>
+                              <e2e:ingredient nullFlavor="NI"/>
 #*        *##end
                             </e2e:ingredient>
 #*    *##end
@@ -1930,7 +1930,7 @@ Problems and Conditions - Problem List
 #*    *##else
               <effectiveTime nullFlavor="UNK"/>
 #*    *##end
-              <value xsi:type="CD" nullFlavor="UNK" />
+              <value xsi:type="CD" nullFlavor="UNK"/>
               <!-- Diagnosing Provider -->
               <author typeCode="AUT" contextControlCode="OP">
                 <templateId root="2.16.840.1.113883.3.1818.10.4.2"/>
