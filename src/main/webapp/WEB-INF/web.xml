@@ -414,7 +414,7 @@
 	</servlet-mapping>
 
 	<session-config>
-		<session-timeout>120</session-timeout> <!-- 120minutes -->
+		<session-timeout>0</session-timeout> <!-- 0 minutes -->
 	</session-config>
 
 	<welcome-file-list>

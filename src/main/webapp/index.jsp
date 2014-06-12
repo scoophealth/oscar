@@ -151,23 +151,28 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
         
         <table border=0 width="100%">
             <tr>
+                <%--
                 <td align="center" class="leftbar" height="20px" width="200px"><%
                     String key = "loginApplication.formLabel" ;
                     if(request.getParameter("login")!=null && request.getParameter("login").equals("failed") )
                     key = "loginApplication.formFailedLabel" ;
                     %><bean:message key="<%=key%>"/>        
                 </td>
+                --%>
                 <td  class="topbar" align="center" >
                     <span id="buildInfo">build date: <%= OscarProperties.getBuildDate() %> <br/> build tag: <%=OscarProperties.getBuildTag()%> </span>
+                    <%--
                     <%=props.getProperty("logintitle", "")%>
                     <% if (props.getProperty("logintitle", "").equals("")) { %>
                     <bean:message key="loginApplication.alert"/>
                     <% } %>                    
+                    --%>OSCAR Service - Login Disabled
                 </td>
             </tr>
         </table>
         <table class="leftinput" border="0" width="100%">
             <tr>
+                <%--
                 <td id="loginText" valign="top">
                     <!--- left side -->
                         
@@ -219,6 +224,7 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                         </span>
                     <!-- left side end-->
                 </td>
+                --%>
                 <td id="logoImg" align="center" valign="top">
                 	<%if (AcceptableUseAgreementManager.hasAUA()){ %>
                 	<div style="float:right;text-align:center;z-index:3;display:none;" id="auaText">
