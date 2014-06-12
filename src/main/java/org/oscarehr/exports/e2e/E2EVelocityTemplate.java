@@ -57,8 +57,8 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	private static final String notSupported = "This section is not supported by the Originating Application";
 	private static final String noInformation = "No information for this section for this patient";
 	private static final StringUtils stringUtils = new StringUtils();
-	private static String template = null;
-	private static E2EResources e2eResources = null;
+	private static volatile String template = null;
+	private static volatile E2EResources e2eResources = null;
 	private static ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
 	private Clinic clinic = clinicDao.getClinic();
 	private boolean validate = true;
@@ -67,8 +67,10 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 		super();
 
 		// Load E2E Resources
-		if(e2eResources == null) {
-			e2eResources = new E2EResources();
+		synchronized(E2EVelocityTemplate.class) {
+			if(e2eResources == null) {
+				e2eResources = new E2EResources();
+			}
 		}
 	}
 
@@ -76,19 +78,21 @@ public class E2EVelocityTemplate extends VelocityTemplate {
 	 * Loads the velocity template
 	 */
 	protected void loadTemplate() {
-		if(template == null) {
-			InputStream is = null;
-			try {
-				is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_TEMPLATE_FILE);
-				template = IOUtils.toString(is);
-				log.info("Loaded E2E Velocity Template");
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			} finally {
+		synchronized(E2EVelocityTemplate.class) {
+			if(template == null) {
+				InputStream is = null;
 				try {
-					is.close();
+					is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_TEMPLATE_FILE);
+					template = IOUtils.toString(is);
+					log.info("Loaded E2E Velocity Template");
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
+				} finally {
+					try {
+						is.close();
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
 				}
 			}
 		}
