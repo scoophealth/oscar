@@ -437,6 +437,7 @@ public abstract class PatientExport {
 		str = str.replaceAll("&", "&amp;");
 		str = str.replaceAll("<", "&lt;");
 		str = str.replaceAll(">", "&gt;");
+		str = str.replaceAll("\\$", "&#36;");
 		return str;
 	}
 
