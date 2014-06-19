@@ -29,10 +29,6 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -56,7 +52,6 @@ import oscar.util.StringUtils;
 /**
  * An E2E scheduler object for periodically exporting all available patient summaries via HTTP POST
  * This object extends the JDK TimerTask, but applicationContextE2E.xml uses Quartz scheduling instead
- * The task is multithreaded and bases it off of how many cores are available in the system
  * 
  * @author Marc Dumontier, Jeremy Ho
  */
@@ -67,20 +62,15 @@ public class E2ESchedulerJob extends TimerTask {
 	private static final String e2eDiffDays = OscarProperties.getInstance().getProperty("E2E_DIFF_DAYS");
 	private static final boolean diffMode = e2eDiff != null && e2eDiff.toLowerCase().equals("on");
 
-	private AtomicInteger success = null;
-	private AtomicInteger failure = null;
-	private AtomicInteger skipped = null;
-
 	@Override
 	public void run() {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 		OscarLogDao oscarLogDao = SpringUtils.getBean(OscarLogDao.class);
-		final StringBuilder sb = new StringBuilder(255);
-		success = new AtomicInteger(0);
-		failure = new AtomicInteger(0);
-		skipped = new AtomicInteger(0);
+		StringBuilder sb = new StringBuilder(255);
+		int success = 0;
+		int failure = 0;
+		int skipped = 0;
 		int diffDays = 14;
-		int threads = Runtime.getRuntime().availableProcessors();
 		List<Integer> ids = null;
 
 		try {
@@ -106,7 +96,6 @@ public class E2ESchedulerJob extends TimerTask {
 			} else {
 				sbStart.append("\nExport Mode: Full");
 			}
-			sbStart.append(String.format("\nUsing %d thread(s) for export", threads));
 			logger.info(sbStart.toString());
 			StringBuilder sbStartRec = reuseStringBuilder(sb);
 			sbStartRec.append(ids.size()).append(" records pending");
@@ -119,110 +108,96 @@ public class E2ESchedulerJob extends TimerTask {
 			long startJob = System.currentTimeMillis();
 			long endJob = startJob;
 
-			// Start multithreaded patient processing
-			ExecutorService exec = Executors.newFixedThreadPool(threads);
-			try {
-				for(final Integer id:ids) {
-					exec.submit(new Runnable() {
-						@Override
-						public void run() {
-							// Select Template
-							E2EVelocityTemplate t = new E2EVelocityTemplate();
+			for(Integer id:ids) {
+				// Select Template
+				E2EVelocityTemplate t = new E2EVelocityTemplate();
 
-							// Create and load Patient data
-							long startLoad = System.currentTimeMillis();
-							E2EPatientExport patient = new E2EPatientExport();
-							patient.setExAllTrue();
-							long endLoad = startLoad;
+				// Create and load Patient data
+				long startLoad = System.currentTimeMillis();
+				E2EPatientExport patient = new E2EPatientExport();
+				patient.setExAllTrue();
+				long endLoad = startLoad;
 
-							long startTemplate = 0;
-							long endTemplate = startTemplate;
-							// Load patient data and merge to template
-							String output = "";
-							if(patient.loadPatient(id.toString())) {
-								endLoad = System.currentTimeMillis();
-								if(patient.isActive()) {
-									startTemplate = System.currentTimeMillis();
-									output = t.export(patient);
-									endTemplate = System.currentTimeMillis();
-								} else {
-									logger.info("[Demo: ".concat(id.toString()).concat("] Not active - skipped"));
-									skipped.getAndIncrement();
-									return;
-								}
-							} else {
-								endLoad = System.currentTimeMillis();
-								logger.error("[Demo: ".concat(id.toString()).concat("] Failed to load"));
-								failure.getAndIncrement();
-								return;
-							}
-
-							long startPost = System.currentTimeMillis();
-							long endPost = startPost;
-
-							// Attempt to perform HTTP POST request
-							try {
-								HttpClient httpclient = new DefaultHttpClient();
-								HttpPost httpPost = new HttpPost(e2eUrl);
-
-								// Assemble Multi-part Request
-								StringBuilder sbFile = reuseStringBuilder(sb);
-								sbFile.append("output_").append(id).append(".xml");
-								ByteArrayBody body = new ByteArrayBody(output.getBytes(), "text/xml", sbFile.toString());
-								MultipartEntity reqEntity = new MultipartEntity();
-								reqEntity.addPart("content", body);
-								httpPost.setEntity(reqEntity);
-
-								// Send HTTP POST request
-								HttpResponse response = httpclient.execute(httpPost);
-								if(response != null && response.getStatusLine().getStatusCode() == 201) {
-									success.getAndIncrement();
-								} else {
-									logger.warn(response.getStatusLine());
-									failure.getAndIncrement();
-								}
-							} catch (HttpHostConnectException e) {
-								logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
-								failure.getAndIncrement();
-							} catch (NoRouteToHostException e) {
-								logger.error("Can't resolve route to ".concat(e2eUrl));
-								failure.getAndIncrement();
-							} catch (Exception e) {
-								logger.error("Error", e);
-								failure.getAndIncrement();
-							} finally {
-								endPost = System.currentTimeMillis();
-							}
-
-							// Log Record completion + benchmarks
-							StringBuilder sbTimer = reuseStringBuilder(sb);
-							sbTimer.append("[Demo: ").append(id);
-							sbTimer.append("] L:").append( (endLoad - startLoad)/1000.0 );
-							sbTimer.append(" T:").append( (endTemplate - startTemplate)/1000.0 );
-							sbTimer.append(" P:").append( (endPost - startPost)/1000.0 );
-							logger.info(sbTimer.toString());
-							return;
-						}
-					});
+				long startTemplate = 0;
+				long endTemplate = startTemplate;
+				// Load patient data and merge to template
+				String output = "";
+				if(patient.loadPatient(id.toString())) {
+					endLoad = System.currentTimeMillis();
+					if(patient.isActive()) {
+						startTemplate = System.currentTimeMillis();
+						output = t.export(patient);
+						endTemplate = System.currentTimeMillis();
+					} else {
+						logger.info("[Demo: ".concat(id.toString()).concat("] Not active - skipped"));
+						skipped++;
+						continue;
+					}
+				} else {
+					endLoad = System.currentTimeMillis();
+					logger.error("[Demo: ".concat(id.toString()).concat("] Failed to load"));
+					failure++;
+					continue;
 				}
-			} finally {
-				exec.shutdown();
-				exec.awaitTermination(23, TimeUnit.HOURS); // There's a problem if exporting takes 23+ hours
-				exec.shutdownNow();
-				endJob = System.currentTimeMillis();
 
-				logger.info("Done E2E export job (" + convertTime(endJob - startJob) + ")");
+				long startPost = System.currentTimeMillis();
+				long endPost = startPost;
+
+				// Attempt to perform HTTP POST request
+				try {
+					HttpClient httpclient = new DefaultHttpClient();
+					HttpPost httpPost = new HttpPost(e2eUrl);
+
+					// Assemble Multi-part Request
+					StringBuilder sbFile = reuseStringBuilder(sb);
+					sbFile.append("output_").append(id).append(".xml");
+					ByteArrayBody body = new ByteArrayBody(output.getBytes(), "text/xml", sbFile.toString());
+					MultipartEntity reqEntity = new MultipartEntity();
+					reqEntity.addPart("content", body);
+					httpPost.setEntity(reqEntity);
+
+					// Send HTTP POST request
+					HttpResponse response = httpclient.execute(httpPost);
+					if(response != null && response.getStatusLine().getStatusCode() == 201) {
+						success++;
+					} else {
+						logger.warn(response.getStatusLine());
+						failure++;
+					}
+				} catch (HttpHostConnectException e) {
+					logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
+					failure++;
+				} catch (NoRouteToHostException e) {
+					logger.error("Can't resolve route to ".concat(e2eUrl));
+					failure++;
+				} catch (Exception e) {
+					logger.error("Error", e);
+					failure++;
+				} finally {
+					endPost = System.currentTimeMillis();
+				}
+
+				// Log Record completion + benchmarks
+				StringBuilder sbTimer = reuseStringBuilder(sb);
+				sbTimer.append("[Demo: ").append(id);
+				sbTimer.append("] L:").append( (endLoad - startLoad)/1000.0 );
+				sbTimer.append(" T:").append( (endTemplate - startTemplate)/1000.0 );
+				sbTimer.append(" P:").append( (endPost - startPost)/1000.0 );
+				logger.info(sbTimer.toString());
 			}
+
+			endJob = System.currentTimeMillis();
+			logger.info("Done E2E export job (" + convertTime(endJob - startJob) + ")");
 		} catch(Throwable e) {
 			logger.error("Error", e);
 			logger.info("E2E export job aborted");
 		} finally {
 			// Log final record counts
-			int unaccounted = ids.size() - success.get() - failure.get() - skipped.get();
-			reuseStringBuilder(sb);
+			int unaccounted = ids.size() - success - failure - skipped;
+			sb = reuseStringBuilder(sb);
 			sb.append(success).append(" records processed");
-			if(failure.get() > 0) sb.append("\n").append(failure).append(" records failed");
-			if(skipped.get() > 0) sb.append("\n").append(skipped).append(" records skipped");
+			if(failure > 0) sb.append("\n").append(failure).append(" records failed");
+			if(skipped > 0) sb.append("\n").append(skipped).append(" records skipped");
 			if(unaccounted > 0) sb.append("\n").append(unaccounted).append(" records unaccounted");
 			logger.info(sb.toString());
 			DbConnectionFilter.releaseAllThreadDbResources();
@@ -246,11 +221,11 @@ public class E2ESchedulerJob extends TimerTask {
 	 * @param time
 	 * @return string
 	 */
-	public String convertTime(long time){
-		Long hours = TimeUnit.MILLISECONDS.toHours(time);
-		Long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
-		Long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
-		Long milliseconds = time % 1000;
-		return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+	public String convertTime(long time) {
+		Long ms = time;
+		Long seconds = time / 1000L;
+		Long minutes = time / 60000L;
+		Long hours = time / 3600000L;
+		return String.format("%02d:%02d:%02d.%03d", hours%24, minutes%60, seconds%60, ms%1000);
 	}
 }

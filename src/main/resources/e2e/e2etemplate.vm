@@ -210,7 +210,7 @@ Alerts
           <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $alert in $patient.getAlerts() )
-              <item>$!alert.note</item>
+              <item>$!patient.cleanString($alert.note)</item>
 #**##end
             </list>
           </text>
@@ -221,7 +221,7 @@ Alerts
             <observation classCode="OBS" moodCode="EVN">
               <id root="2.16.840.1.113883.3.3331" extension="Alerts-$alert.id" assigningAuthorityName="OSCAR EMR"/>
               <code nullFlavor="NI"/>
-              <text representation="TXT" mediaType="text/plain">$alert.note</text>
+              <text representation="TXT" mediaType="text/plain">$!patient.cleanString($alert.note)</text>
 #*    *##if ( !$alert.isArchived() )
               <statusCode code="active"/>
 #*    *##else
@@ -275,7 +275,7 @@ Allergies and Intolerances - (Reaction List)
           <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $allergy in $patient.getAllergies() )
-              <item>$!allergy.description</item>
+              <item>$!patient.cleanString($allergy.description)</item>
 #**##end
             </list>
           </text>
@@ -361,7 +361,7 @@ Allergies and Intolerances - (Reaction List)
                     <!-- Reaction Observation -->
                     <observation classCode="OBS" moodCode="EVN">
                       <code code="REACTOBS" displayName="Reaction Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                      <text representation="TXT" mediaType="text/plain">$!allergy.reaction</text>
+                      <text representation="TXT" mediaType="text/plain">$patient.cleanString($allergy.reaction)</text>
 #*        *##if ( $allergy.getStartDate() )
                       <effectiveTime xsi:type="IVL_TS">
                         <low value="$dateTool.format('yyyyMMdd', $allergy.getStartDate())"/>
@@ -507,7 +507,7 @@ Clinically Measured Observation
           <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $measurement in $patient.getMeasurements() )
-              <item>$!patient.getTypeDescription($measurement.type): $!measurement.dataField $!e2e.measurementUnitMap($measurement.type) ($!measurement.measuringInstruction)</item>
+              <item>$!patient.cleanString($!patient.getTypeDescription($measurement.type)): $!patient.cleanString($!measurement.dataField) $!patient.cleanString($!e2e.measurementUnitMap($measurement.type)) ($!patient.cleanString($!measurement.measuringInstruction))</item>
 #**##end
             </list>
           </text>
@@ -546,7 +546,7 @@ Clinically Measured Observation
 #*    *##else
                   <code nullFlavor="UNK"/>
 #*    *##end
-                  <text representation="TXT" mediaType="text/plain">$patient.getTypeDescription($measurement.type) ($measurement.measuringInstruction)</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.cleanString($patient.getTypeDescription($measurement.type)) ($patient.cleanString($measurement.measuringInstruction))</text>
 #*    *##if ( $measurement.getDateObserved() )
                   <effectiveTime xsi:type="IVL_TS">
                     <low value="$dateTool.format('yyyyMMddHHmmss', $measurement.getDateObserved())"/>
@@ -723,7 +723,7 @@ Family History
           <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $family in $patient.getFamilyHistory() )
-              <item>$!family.note</item>
+              <item>$!patient.cleanString($family.note)</item>
 #**##end
             </list>
           </text>
@@ -734,7 +734,7 @@ Family History
             <observation classCode="OBS" moodCode="EVN">
               <id root="2.16.840.1.113883.3.3331" extension="FamilyHistory-$family.id" assigningAuthorityName="OSCAR EMR"/>
               <code nullFlavor="NI"/>
-              <text representation="TXT" mediaType="text/plain">$family.note</text>
+              <text representation="TXT" mediaType="text/plain">$!patient.cleanString($family.note)</text>
 #*    *##if ( $family.observation_date )
               <effectiveTime xsi:type="IVL_TS">
                 <low value="$dateTool.format('yyyyMMddHHmmss', $family.getObservation_date())"/>
@@ -805,7 +805,7 @@ Family History
                 <!-- Comment Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="TRTNOTE" displayName="Treatment Note" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                  <text representation="TXT" mediaType="text/plain">$patient.getCMNoteExtValue("$family.getId()", "Treatment")</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.cleanString($patient.getCMNoteExtValue("$family.getId()", "Treatment"))</text>
                   <value xsi:type="CD" nullFlavor="NI"/>
                 </observation>
               </entryRelationship>
@@ -854,11 +854,11 @@ Immunization List
             <list>
 #**##foreach( $immunization in $patient.getImmunizations() )
 #*    *##if ( $immunization.isRefused() )
-              <item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Refused</item>
+              <item>$!patient.cleanString($!immunization.preventionType) $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Refused</item>
 #*    *##elseif ( $immunization.isIneligible() )
-              <item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Ineligible</item>
+              <item>$!patient.cleanString($!immunization.preventionType) $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Ineligible</item>
 #*    *##else
-              <item>$!immunization.preventionType $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Completed</item>
+              <item>$!patient.cleanString($!immunization.preventionType) $!dateTool.format('MMM dd, yyyy', $immunization.getPreventionDate()) Completed</item>
 #*    *##end
 #**##end
             </list>
@@ -966,7 +966,7 @@ Immunization List
                 <!-- Comment Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="COMMENT" displayName="Comment Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                  <text representation="TXT" mediaType="text/plain">$patient.getImmuExtValue("$immunization.getId()", "comments")</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.cleanString($patient.getImmuExtValue("$immunization.getId()", "comments"))</text>
 #*        *##if ( $immunization.getLastUpdateDate() )
                   <effectiveTime xsi:type="IVL_TS">
                     <low value="$dateTool.format('yyyyMMdd', $immunization.getLastUpdateDate())"/>
@@ -1017,7 +1017,7 @@ Immunization List
                 <!-- Reason Observation -->
                 <observation classCode="OBS" moodCode="EVN">
                   <code code="REASON" displayName="Reason Observation" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending"/>
-                  <text representation="TXT" mediaType="text/plain">$patient.getImmuExtValue("$immunization.getId()", "neverReason")</text>
+                  <text representation="TXT" mediaType="text/plain">$patient.cleanString($patient.getImmuExtValue("$immunization.getId()", "neverReason"))</text>
                   <value xsi:type="ST">$patient.getImmuExtValue("$immunization.getId()", "neverReason")</value>
                   <!-- Reason Author -->
                   <author typeCode="AUT" contextControlCode="OP">
@@ -1113,7 +1113,7 @@ Laboratory Results & Results
 #**##foreach( $lab in $patient.getLabs() )
 #*    *##foreach( $labGroup in $lab.getGroup() )
             <list>
-              <item>$!lab.hl7TextInfo.discipline  $!dateTool.format('MMM dd, yyyy', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))</item>
+              <item>$!patient.cleanString($!lab.hl7TextInfo.discipline)  $!dateTool.format('MMM dd, yyyy', $patient.stringToDate($lab.hl7TextInfo.getObrDate()))</item>
 #*        *##foreach( $labEntry in $labGroup.getMeasurement() )
 #*            *##if ( !$patient.getLabExtValue("$labEntry.id", "unit").isEmpty() )
               <item>$!patient.getLabExtValue("$labEntry.id", "name"): $!patient.cleanString($labEntry.dataField) $!patient.getLabExtValue("$labEntry.id", "unit")</item>
@@ -1133,7 +1133,7 @@ Laboratory Results & Results
               <id root="2.16.840.1.113883.3.3331" extension="Lab-$lab.hl7TextInfo.id"/>
               <code nullFlavor='NA'/>
 #*    *##if ( !$stringUtils.isNullOrEmpty($lab.hl7TextInfo.discipline) )
-              <text representation="TXT" mediaType="text/plain">$!lab.hl7TextInfo.discipline</text>
+              <text representation="TXT" mediaType="text/plain">$patient.cleanString($lab.hl7TextInfo.discipline)</text>
 #*    *##end
               <!-- Ordering Provider -->
               <author typeCode="AUT" contextControlCode="OP">
@@ -1181,7 +1181,7 @@ Laboratory Results & Results
                       <code nullFlavor='UNK'/>
 #*            *##end
 #*            *##if ( !$patient.getLabExtValue("$labEntry.id", "name").isEmpty() )
-                      <text representation="TXT" mediaType="text/plain">$patient.getLabExtValue("$labEntry.id", "name")</text>
+                      <text representation="TXT" mediaType="text/plain">$patient.cleanString($patient.getLabExtValue("$labEntry.id", "name"))</text>
 #*            *##end
 #*            *##if ( $patient.getLabExtValue("$labEntry.id", "olis_status") == "P" )
                       <statusCode code="active"/>
@@ -1803,17 +1803,18 @@ Medications and Prescriptions - Medication List
 #*    *##end
                     </observation>
                   </entryRelationship>
-#*    *##if( $med.specialInstruction )
+#*    *##if( !$stringUtils.isNullOrEmpty($med.specialInstruction) )
                   <!-- Instructions to Patient -->
                   <entryRelationship typeCode="SUBJ" inversionInd="true">
                     <templateId root="2.16.840.1.113883.3.1818.10.4.35"/>
                     <!--Instruction Observation-->
                     <observation classCode="OBS" moodCode="EVN">
                       <code code="INSTRUCT" codeSystem="2.16.840.1.113883.3.3068.10.6.3" codeSystemName="ObservationType-CA-Pending" displayName="Instructions"/>
-                      <text representation="TXT" mediaType="text/plain">$med.specialInstruction</text>
+                      <text representation="TXT" mediaType="text/plain">$patient.cleanString($med.specialInstruction)</text>
                       <participant typeCode="PRCP" contextControlCode="OP">
-                        <participantRole classCode="ROL"/>
-                        <code code="PAT" codeSystem="2.16.840.1.113883.3.3068.10.8.30" codeSystemName="RoleClass" displayName="InstructionTargetRole"/>
+                        <participantRole classCode="ROL">
+                          <code code="PAT" codeSystem="2.16.840.1.113883.3.3068.10.8.30" codeSystemName="RoleClass" displayName="InstructionTargetRole"/>
+                        </participantRole>
                       </participant>
                     </observation>
                   </entryRelationship>
@@ -2020,7 +2021,7 @@ Risk Factors
           <text mediaType="text/x-hl7-text+xml">
             <list>
 #**##foreach ( $risk in $patient.getRiskFactorsandPersonalHistory() )
-              <item>$!risk.note</item>
+              <item>$!patient.cleanString($risk.note)</item>
 #**##end
             </list>
           </text>
@@ -2064,7 +2065,7 @@ Risk Factors
 #*    *##else
                   <code nullFlavor="NI"/>
 #*    *##end
-                  <text representation="TXT" mediaType="text/plain">$risk.note</text>
+                  <text representation="TXT" mediaType="text/plain">$!patient.cleanString($risk.note)</text>
 #*    *##if ( $risk.getObservation_date() )
                   <effectiveTime xsi:type="IVL_TS">
                     <low value="$dateTool.format('yyyyMMddHHmmss', $risk.getObservation_date())"/>
