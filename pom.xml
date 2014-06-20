@@ -230,12 +230,12 @@
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
-			<version>1.2.2</version>
+			<version>1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>3.0.11</version> <!-- can't change this version until we fix our code to stop using the 3.0.11 glitches -->
+			<version>5.1.31</version> <!-- can't change this version until we fix our code to stop using the 3.0.11 glitches -->
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
