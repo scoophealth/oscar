@@ -17,7 +17,7 @@
 	<echo message="Using CATALINA_HOME=${catalina.home}" />
 	<import file="${catalina.home}/bin/catalina-tasks.xml" />
 
-	<property name="jspc.expandedWarDir" value="target/oscar-SNAPSHOT" />
+	<property name="jspc.expandedWarDir" value="target/${jspc_target}" />
 	<property name="jspc.generatedDir" value="target/generated_jsp_classes" />
 
 	<target name="jspc" depends="jspc.clean">

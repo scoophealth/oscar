@@ -3,7 +3,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>oscar</artifactId>
 	<packaging>war</packaging>
-	<version>SNAPSHOT</version>
+	<version>12.1.1-SNAPSHOT</version>
 	<name>oscar</name>
 	<url>http://www.oscarcanada.org</url>
 	<scm>
@@ -1112,6 +1112,7 @@
 						<configuration>
 							<tasks>
 								<property name="build.compiler" value="extJavac" />
+								<property name='jspc_target' value="${project.name}-${project.version}" />
 								<ant antfile="jspc.xml" target="jspc" />
 							</tasks>
 						</configuration>
