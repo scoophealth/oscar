@@ -61,6 +61,9 @@ import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.service.OscarSuperManager;
 
 public class BillingSaveBillingAction extends Action {
+	
+	private static final int BC_PHN_CHAR_LENGTH = 11;
+	private static final int ALTERNATE_PHN_CHAR_LENGTH = 13;
 
     private static Logger log = MiscUtils.getLogger();
     AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
@@ -430,83 +433,163 @@ public class BillingSaveBillingAction extends Action {
         return saveBill(billingid, billingAccountStatus, dataCenterId,billedAmount , paymentMode, bean,  "" + billItem.getUnit()  ,"" + billItem.getServiceCode());
     }
     private Billingmaster saveBill(String billingid, String billingAccountStatus, String dataCenterId, String billedAmount, String paymentMode, BillingSessionBean bean, String billingUnit,String serviceCode) {
-        Billingmaster bill = new Billingmaster();
+        Billingmaster billingMaster= new Billingmaster();
 
-        bill.setBillingNo(Integer.parseInt(billingid));
-        bill.setCreatedate(new Date());
-        bill.setBillingstatus(billingAccountStatus);
-        bill.setDemographicNo(Integer.parseInt(bean.getPatientNo()));
-        bill.setAppointmentNo(Integer.parseInt(bean.getApptNo()));
-        bill.setClaimcode("C02");
-        bill.setDatacenter(dataCenterId);
-        bill.setPayeeNo(bean.getBillingGroupNo());
-        bill.setPractitionerNo(bean.getBillingPracNo());
-        bill.setPhn(bean.getPatientPHN());
-
-
-
-        bill.setNameVerify(bean.getPatientFirstName(),bean.getPatientLastName());
-        bill.setDependentNum(bean.getDependent());
-        bill.setBillingUnit(billingUnit); //"" + billItem.getUnit());
-        bill.setClarificationCode(bean.getVisitLocation().substring(0, 2));
-
+        // Added by Dennis Warren o/a Colcamex Resources 2013 - InsurerCode override for Opted-Out billing.        
+        boolean enableOinForm = false;
+        String[] split = null;
+        String providerNumber = bean.getBillingProvider().trim();
+        String billingType = bean.getBillingType();
+        String billingProvince = bean.getBillRegion().trim();
+        String patientProvince = bean.getPatientHCType().trim();
+        String patientPostal = bean.getPatientPostal();
+        String patientPhn = bean.getPatientPHN();
+        String oinInsurerCode = OverrideInsurerCode.getOinInsurerCode(providerNumber, billingType);
+        String visitType = bean.getVisitType();
         String anatomicalArea = "00";
-        bill.setAnatomicalArea(anatomicalArea);
-        bill.setAfterHour(bean.getAfterHours());
         String newProgram = "00";
-        bill.setNewProgram(newProgram);
-        bill.setBillingCode(serviceCode);//billItem.getServiceCode());
-        bill.setBillAmount(billedAmount);
-        bill.setPaymentMode(paymentMode);
-        bill.setServiceDate(convertDate8Char(bean.getServiceDate()));
-        bill.setServiceToDay(bean.getService_to_date());
-        bill.setSubmissionCode(bean.getSubmissionCode());
-        bill.setExtendedSubmissionCode(" ");
-        bill.setDxCode1(bean.getDx1());
-        bill.setDxCode2(bean.getDx2());
-        bill.setDxCode3(bean.getDx3());
-        bill.setDxExpansion(" ");
+        String claimCode = "C02";
+        
+        if(patientPostal != null) {
+        	patientPostal = patientPostal.replaceAll("\\W", "");
+        }
 
-        bill.setServiceLocation(bean.getVisitType().substring(0, 1));
-        bill.setReferralFlag1(bean.getReferType1());
-        bill.setReferralNo1(bean.getReferral1());
-        bill.setReferralFlag2(bean.getReferType2());
-        bill.setReferralNo2(bean.getReferral2());
-        bill.setTimeCall(bean.getTimeCall());
-        bill.setServiceStartTime(bean.getStartTime());
-        bill.setServiceEndTime(bean.getEndTime());
-        bill.setBirthDate(convertDate8Char(bean.getPatientDoB()));
-        bill.setOfficeNumber("");
-        bill.setCorrespondenceCode(bean.getCorrespondenceCode());
-        bill.setClaimComment(bean.getShortClaimNote());
-        bill.setMvaClaimCode(bean.getMva_claim_code());
-        bill.setIcbcClaimNo(bean.getIcbc_claim_no());
-        bill.setFacilityNo(bean.getFacilityNum());
-        bill.setFacilitySubNo(bean.getFacilitySubNum());
-        bill.setPaymentMethod(Integer.parseInt(bean.getPaymentType()));
+        if( visitType != null ) { 
+	        if( visitType.contains("\\|") ) {
+	        	split = visitType.split("\\|", 2);
+	        	if(split != null) {
+	        		visitType = split[0].trim();
+	        	}
+	        } else {
+	        	visitType = visitType.substring(0, 1); 
+	        }
+        }
 
-        if (!bean.getPatientHCType().trim().equals(bean.getBillRegion().trim())) {
+        if (billingType.equals("WCB")) {
+        	int wcbId = Integer.parseInt(bean.getWcbId());    	
+            if(wcbId > 0) {
+            	billingMaster.setWcbId(wcbId);
+            }
+        } 
+               
+        billingMaster.setBillingNo(Integer.parseInt(billingid));
+        billingMaster.setCreatedate(new Date());
+        billingMaster.setBillingstatus(billingAccountStatus);
+        billingMaster.setDemographicNo(Integer.parseInt(bean.getPatientNo()));
+        billingMaster.setAppointmentNo(Integer.parseInt(bean.getApptNo()));
+        billingMaster.setClaimcode("C02");
+        billingMaster.setDatacenter(dataCenterId);
+        billingMaster.setPayeeNo(bean.getBillingGroupNo());
+        billingMaster.setPractitionerNo(bean.getBillingPracNo());
 
-            bill.setOinInsurerCode(bean.getPatientHCType());
-            bill.setOinRegistrationNo(bean.getPatientPHN());
-            bill.setOinBirthdate(convertDate8Char(bean.getPatientDoB()));
-            bill.setOinFirstName(bean.getPatientFirstName());
-            bill.setOinSecondName(" ");
-            bill.setOinSurname(bean.getPatientLastName());
-            bill.setOinSexCode(bean.getPatientSex());
-            bill.setOinAddress(bean.getPatientAddress1());
-            bill.setOinAddress2(bean.getPatientAddress2());
-            bill.setOinAddress3("");
-            bill.setOinAddress4("");
-            bill.setOinPostalcode(bean.getPatientPostal());
+        if( ( patientPhn != null ) && ( patientPhn.length() < BC_PHN_CHAR_LENGTH ) ) {
+        	billingMaster.setPhn(patientPhn);
+        } else {
+        	billingMaster.setPhn("0000000000");
+        }
 
-            bill.setPhn("0000000000");
-            bill.setNameVerify("0000");
-            bill.setDependentNum("00");
-            bill.setBirthDate("00000000");
+        billingMaster.setNameVerify(bean.getPatientFirstName(),bean.getPatientLastName());
+        billingMaster.setDependentNum(bean.getDependent());
+        billingMaster.setBillingUnit(billingUnit); //"" + billItem.getUnit());
+        billingMaster.setClarificationCode(bean.getVisitLocation().substring(0, 2));
+
+        billingMaster.setAnatomicalArea(anatomicalArea);
+        billingMaster.setAfterHour(bean.getAfterHours());
+        billingMaster.setNewProgram(newProgram);
+        billingMaster.setBillingCode(serviceCode);//billItem.getServiceCode());
+        billingMaster.setBillAmount(billedAmount);
+        billingMaster.setPaymentMode(paymentMode);
+        billingMaster.setServiceDate(convertDate8Char(bean.getServiceDate()));
+        billingMaster.setServiceToDay(bean.getService_to_date());
+        billingMaster.setSubmissionCode(bean.getSubmissionCode());
+        billingMaster.setExtendedSubmissionCode(" ");
+        billingMaster.setDxCode1(bean.getDx1());
+        billingMaster.setDxCode2(bean.getDx2());
+        billingMaster.setDxCode3(bean.getDx3());
+        billingMaster.setDxExpansion(" ");
+
+        billingMaster.setServiceLocation(bean.getVisitType().substring(0, 1));
+        billingMaster.setReferralFlag1(bean.getReferType1());
+        billingMaster.setReferralNo1(bean.getReferral1());
+        billingMaster.setReferralFlag2(bean.getReferType2());
+        billingMaster.setReferralNo2(bean.getReferral2());
+        billingMaster.setTimeCall(bean.getTimeCall());
+        billingMaster.setServiceStartTime(bean.getStartTime());
+        billingMaster.setServiceEndTime(bean.getEndTime());
+        billingMaster.setBirthDate(convertDate8Char(bean.getPatientDoB()));
+        billingMaster.setOfficeNumber("");
+        billingMaster.setCorrespondenceCode(bean.getCorrespondenceCode());
+        billingMaster.setClaimComment(bean.getShortClaimNote());
+        billingMaster.setMvaClaimCode(bean.getMva_claim_code());
+        billingMaster.setIcbcClaimNo(bean.getIcbc_claim_no());
+        billingMaster.setFacilityNo(bean.getFacilityNum());
+        billingMaster.setFacilitySubNo(bean.getFacilitySubNum());
+        billingMaster.setPaymentMethod(Integer.parseInt(bean.getPaymentType()));
+
+        
+        // Other insurer portion of Teleplan4 C02 claim
+        // Covers claim codes for out of province reciprocol: AB, SK, MB ...
+        // Institutional: IN, Opted-Out: PP and Work Safe: WC
+        // Added by Dennis Warren o/a Colcamex Resources 2013 - InsurerCode override for Opted-Out billing.        
+        if(oinInsurerCode != null) {        	 
+        	enableOinForm = true;
+        }
+        
+        if ( ! patientProvince.equalsIgnoreCase(billingProvince) ) {          	
+        	oinInsurerCode = patientProvince;
+        	enableOinForm = true;
+        }
+        	
+        if(enableOinForm) {
+
+            billingMaster.setOinInsurerCode(oinInsurerCode); 
+            if( ( patientPhn != null ) && ( patientPhn.length() < ALTERNATE_PHN_CHAR_LENGTH ) ) {
+            	billingMaster.setOinRegistrationNo(patientPhn);
+            } else {
+            	billingMaster.setOinRegistrationNo("0000000000");
+            }
+            
+            billingMaster.setOinBirthdate(convertDate8Char(bean.getPatientDoB()));
+            billingMaster.setOinFirstName(bean.getPatientFirstName());
+            billingMaster.setOinSecondName(" ");
+            billingMaster.setOinSurname(bean.getPatientLastName());
+            billingMaster.setOinSexCode(bean.getPatientSex());
+            billingMaster.setOinAddress(bean.getPatientAddress1());
+            billingMaster.setOinAddress2(bean.getPatientAddress2());
+            billingMaster.setOinAddress3("");
+            billingMaster.setOinAddress4("");
+            billingMaster.setOinPostalcode(patientPostal);
+
+            billingMaster.setPhn("0000000000");
+            billingMaster.setNameVerify("0000");
+            billingMaster.setDependentNum("00");
+            billingMaster.setBirthDate("00000000");
 
         }
-        log.debug("Bill "+bill.getBillingCode()+" "+bill.getBillAmount());
-        return bill;
+        
+        
+//        if (!bean.getPatientHCType().trim().equals(bean.getBillRegion().trim())) {
+//
+//            billingMaster.setOinInsurerCode(bean.getPatientHCType());
+//            billingMaster.setOinRegistrationNo(bean.getPatientPHN());
+//            billingMaster.setOinBirthdate(convertDate8Char(bean.getPatientDoB()));
+//            billingMaster.setOinFirstName(bean.getPatientFirstName());
+//            billingMaster.setOinSecondName(" ");
+//            billingMaster.setOinSurname(bean.getPatientLastName());
+//            billingMaster.setOinSexCode(bean.getPatientSex());
+//            billingMaster.setOinAddress(bean.getPatientAddress1());
+//            billingMaster.setOinAddress2(bean.getPatientAddress2());
+//            billingMaster.setOinAddress3("");
+//            billingMaster.setOinAddress4("");
+//            billingMaster.setOinPostalcode(bean.getPatientPostal());
+//
+//            billingMaster.setPhn("0000000000");
+//            billingMaster.setNameVerify("0000");
+//            billingMaster.setDependentNum("00");
+//            billingMaster.setBirthDate("00000000");
+//
+//        }
+        log.debug("Bill "+billingMaster.getBillingCode()+" "+billingMaster.getBillAmount());
+        return billingMaster;
     }
 }
